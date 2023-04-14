@@ -16,4 +16,6 @@ namespace Barrway.Utility.Common
         public static int token_expire_time = 24 * 60;
         public static string app_name = "MOODIES CARE";
     }
+
+
 }

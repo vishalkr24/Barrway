@@ -23,6 +23,7 @@ namespace Barrway.Utility.Common
 
     public enum FormRole
     {
-        
+        BusinessUser = 1,
+        PubilcUser = 2
     }
 }
