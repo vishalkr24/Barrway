@@ -15,6 +15,7 @@ namespace Barrway.Controllers
         {
             this.logger = logger;
         }
+
         public ActionResult Index()
         {
             logger.Info("Hello");
