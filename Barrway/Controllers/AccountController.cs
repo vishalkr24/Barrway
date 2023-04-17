@@ -13,16 +13,24 @@ using System.Web.UI.WebControls;
 using Barrway.Service.IRepository;
 using Barrway.Models;
 using Barrway.Utility.Common;
+using Barrway.DTO.AuthViewModel;
+using Barrway.DTO.Common;
+using FormGeneratorDTOs.DTOs;
+using Barrway.DTO.BusinessModels;
 
 namespace Barrway.Controllers
 {
     public class AccountController : Controller
     {
         private readonly IAuthService authService;
+        private readonly ISqlFunction sqlFunction;
+        private readonly ISignupService signupService;
 
-        public AccountController(IAuthService authService)
+        public AccountController(IAuthService authService, ISqlFunction sqlFunction, ISignupService signupService)
         {
             this.authService = authService;
+            this.sqlFunction = sqlFunction;
+            this.signupService = signupService;
         }
         // GET: Account
         [AllowAnonymous]
@@ -62,6 +70,91 @@ namespace Barrway.Controllers
             }
 
             return View(model);
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<ActionResult> SignUp()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SignUp(BusinessEmailSignUpViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var userByEmail = await authService.GetUserByEmail(model.USER_EMAIL);
+            var userByID = await authService.GetUser(model.USER_NAME);
+            var adminRoleData = await sqlFunction.ExecuteSqlQuery("select Id from ROLE_MASTER_1917 where ROLE_NAME = 'BUSINESS'");
+
+            string adminRoleId = "1";
+
+            if (userByEmail.Message == AppMessage.NotFound && userByID.Message == AppMessage.NotFound)
+            {
+                // insert data
+
+                UserMaserModel userMaserModel = new UserMaserModel(){
+                    USER_PHONE = "",
+                    IS_ACTIVE = "NO",
+                    IS_EMAIL_VERIFIED = "NO",
+                    IS_PHONE_VERIFIED = "NO",
+                    IS_EXTERNAL_SIGNUP = "NO",
+                    PROFILE_STATUS = "PENDING",
+                    SIGNUP_TYPE = "EMAIL",
+                    USER_EMAIL = model.USER_EMAIL,
+                    USER_PASSWORD = model.USER_PASSWORD,
+                    USER_ID = model.USER_NAME,
+                    ROLE_ID = adminRoleId
+                };
+
+                AddUpdateDelete result = await signupService.RegisterUser(userMaserModel.ToDictionary());
+
+                TempData["VERIFICATION"] = "Pending";
+                TempData["VERIFICATION_EMAIL"] = model.USER_EMAIL;
+                return RedirectToAction("EmailVerification", "Account");
+            }
+            else
+            {
+                if (userByEmail.Message != AppMessage.NotFound)
+                {
+                    ModelState.AddModelError("USER_EMAIL", "Email already registered");
+                }
+
+                if (userByID.Message == AppMessage.NotFound)
+                {
+                    ModelState.AddModelError("USER_NAME", "User name already taken");
+                }
+                
+                return View();
+            }
+
+        }
+
+        public async Task<ActionResult> EmailVerification()
+        {
+            if (TempData.Peek("VERIFICATION") == "Pending")
+            {
+                try
+                {
+                    ViewBag.VerificationEmail = TempData.Peek("VERIFICATION_EMAIL").ToString();
+                }catch (Exception ex)
+                {
+                    ViewBag.VerificationEmail = TempData.Peek("VERIFICATION_EMAIL");
+                }
+                
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Home", "Index");
+            }
+            
         }
 
 

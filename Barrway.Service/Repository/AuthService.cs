@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
-using MOODIES_CARE.DTO.Common;
 using System.Data;
 using Barrway.DTO.AuthViewModel;
 using Barrway.Utility.Common;
@@ -36,7 +35,7 @@ namespace Barrway.Service.Repository
             //this.formAPIRepository = formAPIRepository;
             //this.userIdentity = userIdentity;
             //this.zoomService = zoomService;
-            _client = new RestClient(_url);
+            //_client = new RestClient("www.google.com");
         }
 
 
@@ -45,10 +44,10 @@ namespace Barrway.Service.Repository
             try
             {
 
-                string sqlQuery = $@"select user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_NAME],                [USER_EMAIL],[USER_PHONE],[USER_UID],[USER_SOURCE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
-                                [IS_PHONE_VERIFIED],[USER_ROLE],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD]
-                                from USER_MASTER_1921 user_m 
-                                left join [dbo].[USER_ROLE_1924] user_role on user_role.Id=user_m.[USER_ROLE]
+                string sqlQuery = $@"select user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
+                                [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD]
+                                from USER_MASTER_1915 user_m 
+                                left join [dbo].[ROLE_MASTER_1917] user_role on user_role.Id=user_m.[ROLE_ID]
                                 where [USER_EMAIL]='{email}'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
@@ -264,11 +263,11 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string sqlQuery = $@"select user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_NAME],                [USER_EMAIL],[USER_PHONE],[USER_UID],[USER_SOURCE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
-                                [IS_PHONE_VERIFIED],[USER_ROLE],user_role.[ROLE_NAME],[PROFILE_STATUS]
-                                from USER_MASTER_1921 user_m 
-                                left join [dbo].[USER_ROLE_1924] user_role on user_role.Id=user_m.[USER_ROLE]
-                                where [USER_NAME]=N'{userName}'";
+                string sqlQuery = $@"select user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
+                                [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD]
+                                from USER_MASTER_1915 user_m 
+                                left join [dbo].[ROLE_MASTER_1917] user_role on user_role.Id=user_m.[ROLE_ID]
+                                where [USER_ID]='{userName}'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
@@ -332,11 +331,11 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string sqlQuery = $@"select user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_NAME],                [USER_EMAIL],[USER_PHONE],[USER_UID],[USER_SOURCE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
-                                [IS_PHONE_VERIFIED],[USER_ROLE],user_role.[ROLE_NAME],[PROFILE_STATUS]
-                                from USER_MASTER_1921 user_m 
-                                left join [dbo].[USER_ROLE_1924] user_role on user_role.Id=user_m.[USER_ROLE]
-                                where [USER_EMAIL]=N'{email}'";
+                string sqlQuery = $@"select user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
+                                [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD]
+                                from USER_MASTER_1915 user_m 
+                                left join [dbo].[ROLE_MASTER_1917] user_role on user_role.Id=user_m.[ROLE_ID]
+                                where [USER_EMAIL]='{email}'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
