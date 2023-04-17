@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MOODIES_CARE.DTO.Common
+namespace Barrway.DTO.Common
 {
     public class AppMessage
     {

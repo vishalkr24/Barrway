@@ -1,5 +1,7 @@
 using AutoMapper;
 using Barrway.Mapping;
+using Barrway.Service.IRepository;
+using Barrway.Service.Repository;
 using NLog;
 using System;
 
@@ -46,13 +48,14 @@ namespace Barrway
 
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
+            
             var mapper = AutoMapperConfiguration.InitializeAutoMapper().CreateMapper();
             container.RegisterInstance<IMapper>(mapper);
-
-            container.RegisterType<ILogger>(new InjectionFactory(c =>
-            {
-                return LogManager.GetCurrentClassLogger();
-            }));
+            container.RegisterType<ILogger>(new InjectionFactory(c =>{return LogManager.GetCurrentClassLogger();}));
+            container.RegisterType<IAuthService, AuthService>();
+            container.RegisterType<ISqlFunction, SqlFunction>();
+            container.RegisterType<IFormAPIRepository, FormAPIRepository>();
+            container.RegisterType<ISignupService, SignupService>();
 
         }
     }

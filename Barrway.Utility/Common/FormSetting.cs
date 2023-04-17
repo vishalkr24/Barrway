@@ -9,7 +9,14 @@ namespace Barrway.Utility.Common
 
     public enum FormSetting
     {
-        
+        CreatedUser = 30314,
+        USER_MASTER = 2287,
+        ROLE_MASTER = 2288,
+        BUSINESS_ACCOUNT_WEBSITE = 2289,
+        SUBSCRIPTION_PLAN_MASTER = 2290,
+        COMPANY_CATEGORY_MASTER = 2291,
+        COMPANY_SUB_CATEGORY = 2292,
+        BUSINESS_PHOTO_ALBUM = 2293
     }
 
     public enum FormAction

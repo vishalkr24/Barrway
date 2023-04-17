@@ -49,12 +49,14 @@
     <Compile Include="AuthViewModel\BusinessExternalEmailLogiViewModel.cs" />
     <Compile Include="AuthViewModel\BarrwayViewModel.cs" />
     <Compile Include="AuthViewModel\UserToken.cs" />
-    <Compile Include="BusinessModels\AccountRegistrationModel.cs" />
+    <Compile Include="BusinessModels\BusinessAccountWebsiteModel.cs" />
     <Compile Include="BusinessModels\UserMaserModel.cs" />
     <Compile Include="Common\AddUpdateDelete.cs" />
     <Compile Include="Common\AppMessage.cs" />
     <Compile Include="Common\FilterViewModel.cs" />
     <Compile Include="Common\RoleMasterModel.cs" />
+    <Compile Include="FormAPI\CounsellorUploadFileViewModel.cs" />
+    <Compile Include="FormAPI\GetFormRecordListResponseModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
