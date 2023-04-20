@@ -22,11 +22,11 @@ namespace Barrway.Service.IRepository
         
         Task<AddUpdateDelete> GetToken(string token, string userName);
         Task<AddUpdateDelete> GetToken(string token);
-        Task<AddUpdateDelete> UserVerificatiom(string token, string userName);
+        Task<AddUpdateDelete> UserVerification(string token, string userID);
         Task<AddUpdateDelete> forgotPassword(string email);
         Task<AddUpdateDelete> ResetPassword(string token, string userName, string newPassword);
         Task<AddUpdateDelete> GetUser(string userName, FormRole formRole);
-
+        Task<AddUpdateDelete> sendActivationLink(string userID, string Email, FormRole Role);
         //Task<AddUpdateDelete> GuestUserSignUp();
         //Task<AddUpdateDelete> CounsellorSignup(CounsellorSignupViewModel model);
         //Task<AddUpdateDelete> UpdateMoodiesProfile(MoodiesUpdateProfileViewModel model);

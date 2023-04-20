@@ -1,0 +1,57 @@
+﻿
+@{
+    ViewBag.Title = "Setup your busines profile";
+    Layout = "~/Views/Shared/_BusinessAdminLayout.cshtml";
+}
+
+<main id="content" role="main" class="main">
+    <!-- Content -->
+    <div class="content container">
+        <div class="row justify-content-lg-center pt-lg-5">
+            <div class="col-lg-9">
+                <!-- Title -->
+                <div class="text-center">
+                    <div class="profile-form">
+                        <h1>Let’s set up your company profile</h1>
+                        <div class="form-inner">
+                            <form action="/action_page.php">
+                                <div class="form-group">
+                                    <label for="companyname">Company Name (English) *</label>
+                                    <input type="text" class="form-control" id="companyname" placeholder="" name="companyname">
+                                </div>
+                                <div class="form-group">
+                                    <label for="companynamechinese">Company Name (Chinese)</label>
+                                    <input type="text" class="form-control" id="companynamechinese" placeholder="" name="companynamechinese">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pwd">Company category *</label>
+                                    <select class="form-control" id="sel1">
+                                        <option>Select</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pwd">Company Sub-category *</label>
+                                    <select class="form-control" id="sel1">
+                                        <option>Select</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-default">Save</button>
+                                <button class="skip">Skip for now</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Title -->
+            </div>
+        </div>
+        <!-- End Row -->
+    </div>
+    <!-- End Content -->
+</main>
+

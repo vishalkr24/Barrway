@@ -10,10 +10,16 @@ namespace Barrway.Models
     {
         [Required(ErrorMessage ="Please Enter Email!!")]
         [EmailAddress(ErrorMessage = "Please Enter Valid Email!!")]
-        public string Email  { get; set; }
+        public string USER_EMAIL  { get; set; }
+
+
         [Required(ErrorMessage = "Please Enter Password!!")]
-        public string Password { get; set; }
-        //public bool RememberMe { get; set; }
+        public string USER_PASSWORD { get; set; }
+        public bool REMEMBER_ME { get; set; }
+
+        public string ERROR_MESSAGE { get; set; }
+
+
     }
 
 }
