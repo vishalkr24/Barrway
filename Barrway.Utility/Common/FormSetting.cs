@@ -16,7 +16,8 @@ namespace Barrway.Utility.Common
         SUBSCRIPTION_PLAN_MASTER = 2290,
         COMPANY_CATEGORY_MASTER = 2291,
         COMPANY_SUB_CATEGORY = 2292,
-        BUSINESS_PHOTO_ALBUM = 2293
+        BUSINESS_PHOTO_ALBUM = 2293,
+        USER_TOKEN = 2294
     }
 
     public enum FormAction
@@ -30,7 +31,7 @@ namespace Barrway.Utility.Common
 
     public enum FormRole
     {
-        BusinessUser = 1,
-        PubilcUser = 2
+        BUSINESS_USER = 1,
+        PUBLIC_USER = 2
     }
 }

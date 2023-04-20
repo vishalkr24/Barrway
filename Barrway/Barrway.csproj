@@ -96,6 +96,9 @@
     <Reference Include="Microsoft.AspNet.WebUtilities, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebUtilities.1.0.0-rc1-final\lib\net451\Microsoft.AspNet.WebUtilities.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.7.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Extensions.Configuration, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Configuration.1.0.0-rc1-final\lib\net451\Microsoft.Extensions.Configuration.dll</HintPath>
@@ -127,8 +130,17 @@
     <Reference Include="Microsoft.Extensions.WebEncoders.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.WebEncoders.Core.1.0.0-rc1-final\lib\net451\Microsoft.Extensions.WebEncoders.Core.dll</HintPath>
     </Reference>
-    <Reference Include="microsoft.identitymodel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.7.0.0\lib\net35\microsoft.identitymodel.dll</HintPath>
+    <Reference Include="Microsoft.IdentityModel.Abstractions, Version=6.29.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Abstractions.6.29.0\lib\net472\Microsoft.IdentityModel.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.JsonWebTokens, Version=6.29.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.JsonWebTokens.6.29.0\lib\net472\Microsoft.IdentityModel.JsonWebTokens.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Logging, Version=6.29.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Logging.6.29.0\lib\net472\Microsoft.IdentityModel.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Tokens, Version=6.29.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Tokens.6.29.0\lib\net472\Microsoft.IdentityModel.Tokens.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Net.Http.Headers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Net.Http.Headers.1.0.0-rc1-final\lib\net451\Microsoft.Net.Http.Headers.dll</HintPath>
@@ -136,17 +148,20 @@
     <Reference Include="Microsoft.Owin, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.4.2.2\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Owin.Cors, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Cors.4.2.2\lib\net45\Microsoft.Owin.Cors.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.4.2.2\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Security, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.4.2.2\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.4.2.2\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.OAuth, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.4.2.2\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.5.1.3\lib\net46\NLog.dll</HintPath>
@@ -155,16 +170,44 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=6.29.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.6.29.0\lib\net472\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+    </Reference>
     <Reference Include="System.IO" />
     <Reference Include="System.IO.Compression" />
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Security" />
+    <Reference Include="System.Text.Encodings.Web, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.7.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=7.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.7.0.2\lib\net462\System.Text.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Cors, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.0.0\lib\net45\System.Web.Cors.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -172,6 +215,12 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Http, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.7\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.7\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -246,13 +295,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API Controllers\BusinessAdminApiController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BusinessAdminController.cs" />
+    <Compile Include="Controllers\BusinessCalendarController.cs" />
+    <Compile Include="Controllers\BusinessSiteController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\UserAdminController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -261,6 +316,9 @@
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\ResetPasswordViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\ApplicationAuthProvider.cs" />
+    <Compile Include="Security\TokenManager.cs" />
+    <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\css\docs.css" />
@@ -349,6 +407,14 @@
     <Content Include="assets\img\documentation\img3.jpg" />
     <Content Include="assets\img\documentation\img7.jpg" />
     <Content Include="assets\img\documentation\img8.jpg" />
+    <Content Include="assets\img\five.png" />
+    <Content Include="assets\img\four.png" />
+    <Content Include="assets\img\globe.png" />
+    <Content Include="assets\img\logback.png" />
+    <Content Include="assets\img\logback2.png" />
+    <Content Include="assets\img\logo.png" />
+    <Content Include="assets\img\one.png" />
+    <Content Include="assets\img\one1.png" />
     <Content Include="assets\img\others\img1-dark.png" />
     <Content Include="assets\img\others\img1.png" />
     <Content Include="assets\img\others\img2-dark.png" />
@@ -365,6 +431,8 @@
     <Content Include="assets\img\others\img7.png" />
     <Content Include="assets\img\others\img8-dark.png" />
     <Content Include="assets\img\others\img8.png" />
+    <Content Include="assets\img\three.png" />
+    <Content Include="assets\img\two.png" />
     <Content Include="assets\js\demo.js" />
     <Content Include="assets\js\hs.theme-appearance-charts.js" />
     <Content Include="assets\js\hs.theme-appearance.js" />
@@ -667,9 +735,11 @@
     <Content Include="assets\svg\layouts\sidebar-mini.svg" />
     <Content Include="assets\svg\logos-light\logo-short.svg" />
     <Content Include="assets\svg\logos-light\logo.svg" />
+    <Content Include="assets\svg\logos\favicon.png" />
     <Content Include="assets\svg\logos\logo-short-white.svg" />
     <Content Include="assets\svg\logos\logo-short.svg" />
     <Content Include="assets\svg\logos\logo-white.svg" />
+    <Content Include="assets\svg\logos\logo.png" />
     <Content Include="assets\svg\logos\logo.svg" />
     <Content Include="assets\vendor\chartjs-plugin-datalabels\dist\chartjs-plugin-datalabels.min.js" />
     <Content Include="assets\vendor\flag-icon-css\flags\1x1\ad.svg" />
@@ -1595,6 +1665,103 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="documentation\accordion.html" />
+    <Content Include="documentation\add-field.html" />
+    <Content Include="documentation\alerts.html" />
+    <Content Include="documentation\assets\css\docs.html" />
+    <Content Include="documentation\assets\css\theme-dark.html" />
+    <Content Include="documentation\assets\js\demo.html" />
+    <Content Include="documentation\assets\js\hs.theme-appearance-charts.html" />
+    <Content Include="documentation\assets\js\hs.theme-appearance.html" />
+    <Content Include="documentation\assets\vendor\hs-navbar-vertical-aside\dist\hs-navbar-vertical-aside-mini-cache.html" />
+    <Content Include="documentation\assets\vendor\icon-set\style.html" />
+    <Content Include="documentation\avatars.html" />
+    <Content Include="documentation\backgrounds.html" />
+    <Content Include="documentation\badge.html" />
+    <Content Include="documentation\basic-forms.html" />
+    <Content Include="documentation\borders.html" />
+    <Content Include="documentation\breadcrumb.html" />
+    <Content Include="documentation\bs-icons.html" />
+    <Content Include="documentation\button-group.html" />
+    <Content Include="documentation\buttons.html" />
+    <Content Include="documentation\calendar.html" />
+    <Content Include="documentation\cards.html" />
+    <Content Include="documentation\changelog.html" />
+    <Content Include="documentation\chartjs.html" />
+    <Content Include="documentation\checks-and-switches.html" />
+    <Content Include="documentation\circles.html" />
+    <Content Include="documentation\collapse.html" />
+    <Content Include="documentation\colors.html" />
+    <Content Include="documentation\column-divider.html" />
+    <Content Include="documentation\copy-to-clipboard.html" />
+    <Content Include="documentation\count-characters.html" />
+    <Content Include="documentation\counter.html" />
+    <Content Include="documentation\credits.html" />
+    <Content Include="documentation\customization.html" />
+    <Content Include="documentation\darkmode.html" />
+    <Content Include="documentation\datatables.html" />
+    <Content Include="documentation\datepicker.html" />
+    <Content Include="documentation\daterangepicker.html" />
+    <Content Include="documentation\devices.html" />
+    <Content Include="documentation\divider.html" />
+    <Content Include="documentation\dropdowns.html" />
+    <Content Include="documentation\dropzone.html" />
+    <Content Include="documentation\file-attachments.html" />
+    <Content Include="documentation\form-search.html" />
+    <Content Include="documentation\fslightbox.html" />
+    <Content Include="documentation\getting-started.html" />
+    <Content Include="documentation\go-to.html" />
+    <Content Include="documentation\google-recaptcha.html" />
+    <Content Include="documentation\gulp.html" />
+    <Content Include="documentation\icons.html" />
+    <Content Include="documentation\illustrations.html" />
+    <Content Include="documentation\index.html" />
+    <Content Include="documentation\input-group.html" />
+    <Content Include="documentation\input-mask.html" />
+    <Content Include="documentation\layout.html" />
+    <Content Include="documentation\legend-indicator.html" />
+    <Content Include="documentation\links.html" />
+    <Content Include="documentation\list-group.html" />
+    <Content Include="documentation\lists.html" />
+    <Content Include="documentation\maps-jsvectormap.html" />
+    <Content Include="documentation\maps-leaflet.html" />
+    <Content Include="documentation\mega-menu.html" />
+    <Content Include="documentation\modal.html" />
+    <Content Include="documentation\navbar-vertical-aside.html" />
+    <Content Include="documentation\navbar.html" />
+    <Content Include="documentation\navs.html" />
+    <Content Include="documentation\node_modules\chartjs-plugin-datalabels\dist\chartjs-plugin-datalabels.min.html" />
+    <Content Include="documentation\offcanvas.html" />
+    <Content Include="documentation\opacity.html" />
+    <Content Include="documentation\page-header.html" />
+    <Content Include="documentation\pagination.html" />
+    <Content Include="documentation\popovers.html" />
+    <Content Include="documentation\position.html" />
+    <Content Include="documentation\profile.html" />
+    <Content Include="documentation\progress.html" />
+    <Content Include="documentation\quantity-counter.html" />
+    <Content Include="documentation\quill.html" />
+    <Content Include="documentation\scrollspy.html" />
+    <Content Include="documentation\select.html" />
+    <Content Include="documentation\shadows.html" />
+    <Content Include="documentation\shapes.html" />
+    <Content Include="documentation\sizing.html" />
+    <Content Include="documentation\sliding-img.html" />
+    <Content Include="documentation\sortablejs.html" />
+    <Content Include="documentation\spacing.html" />
+    <Content Include="documentation\spinners.html" />
+    <Content Include="documentation\step-forms.html" />
+    <Content Include="documentation\steps.html" />
+    <Content Include="documentation\sticky-block.html" />
+    <Content Include="documentation\tab.html" />
+    <Content Include="documentation\table-sticky-header.html" />
+    <Content Include="documentation\tables.html" />
+    <Content Include="documentation\toasts.html" />
+    <Content Include="documentation\toggle-password.html" />
+    <Content Include="documentation\toggle-switch.html" />
+    <Content Include="documentation\tooltips.html" />
+    <Content Include="documentation\typography.html" />
+    <Content Include="documentation\z-index.html" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -1633,14 +1800,25 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\BusinessLogin.cshtml" />
     <Content Include="Views\Shared\_LayoutBusiness.cshtml" />
-    <Content Include="Views\Account\SignUp.cshtml" />
+    <Content Include="Views\Account\BusinessSignUp.cshtml" />
     <Content Include="Views\Account\EmailVerification.cshtml" />
+    <Content Include="Views\Account\verification.cshtml" />
+    <Content Include="Views\BusinessAdmin\Dashboard.cshtml" />
+    <Content Include="Views\Shared\_BusinessAdminLayout.cshtml" />
+    <Content Include="Views\BusinessAdmin\SetupBusinessProfile.cshtml" />
+    <Content Include="Views\BusinessAdmin\SetupBusinessCalendar.cshtml" />
+    <Content Include="Views\BusinessAdmin\SetupCalendar.cshtml" />
+    <Content Include="Views\BusinessAdmin\SetupBusinessCalendarInformation.cshtml" />
+    <Content Include="Views\Shared\_UserAdminLayout.cshtml" />
+    <Content Include="Views\BusinessSite\Index.cshtml" />
+    <Content Include="Views\UserAdmin\Dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Logs\" />
+    <Folder Include="Views\BusinessCalendar\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

@@ -56,6 +56,7 @@ namespace Barrway
             container.RegisterType<ISqlFunction, SqlFunction>();
             container.RegisterType<IFormAPIRepository, FormAPIRepository>();
             container.RegisterType<ISignupService, SignupService>();
+            container.RegisterType<IBusinessUserService, BusinessUserService>();
 
         }
     }

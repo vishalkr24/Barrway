@@ -33,9 +33,19 @@ namespace Barrway.Service.Repository
             data.formGroupKey = Guid.NewGuid().ToString();
             var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
 
-            
 
-            return new AddUpdateDelete() { Message = AppMessage.Success, Status = true };
+
+            if (formResult.res == 1)
+            {
+                return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Message = formResult.Message, Status = false };
+            }
+
+
+
         }
 
     }

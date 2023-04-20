@@ -26,7 +26,7 @@ namespace Barrway.DTO.BusinessModels
         public string IS_SEARCHABLE_IN_MARKETPLACE { get; set; }
         public string COMPANY_SERVICE { get; set; }
         public string COMPANY_DESCRIPTION { get; set; }
-        public string TOTAL_WEBSITE_VISITS { get; set; }
+        public float TOTAL_WEBSITE_VISITS { get; set; }
         public string COMPANY_CATEGORY_ID { get; set; }
         public string COMPANY_SUB_CATEGORY_ID { get; set; }
         public string COUNTRY_ID { get; set; }
@@ -34,6 +34,7 @@ namespace Barrway.DTO.BusinessModels
         public string DISTRICT_ID { get; set; }
         public string SUBSCRIPTION_PLAN_ID { get; set; }
         public string USER_ID { get; set; }
+        public string CURRENT_STEP { get; set; }
 
     }
 }
