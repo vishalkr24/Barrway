@@ -7531,6 +7531,18 @@ fieldset:disabled .btn {
 .w-70 {
     width: 70% !important;
 }
+.w-30 {
+    width: 30%!important;
+}
+.w-80 {
+    width: 80%!important;
+}
+.w-20 {
+    width: 20%!important;
+}
+.w-l, .w-r {
+    float: left;
+}
 .w-85 {
     width: 85% !important;
 }
@@ -19830,7 +19842,24 @@ label.form-control {
 }
 .nav-link.active,
 .navbar-nav .nav-link.active {
-    color: #377dff;
+    color: #482271;
+    font-weight: 700;
+
+}
+.nav-link.active {
+    position: relative;
+}
+.custtome-navbar-dark .nav-link.active:after{
+    display: none;
+}
+.nav-link.active:after {
+    width: 87%;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    background-color: #482271;
+    content: "";
 }
 .nav-item.show .nav-link-svg path,
 .nav-link.active .nav-link-svg path {
@@ -20430,7 +20459,8 @@ label.form-control {
     padding-left: 0;
 }
 .navbar .nav-item:hover > .nav-link {
-    color: #ffffff;
+    color: #482271;
+    font-weight: 700;
 }
 .navbar .dropdown-menu {
     border-top: 0.1875rem solid #377dff;
@@ -24330,7 +24360,8 @@ label.form-control {
 .navbar-dark .navbar-nav .nav-item:hover .nav-link,
 .navbar-dark .navbar-nav .nav-item:hover .nav-link:focus,
 .navbar-dark .navbar-nav .nav-item:hover .nav-link:hover {
-    color: #fff;
+    color: #482271;
+    font-weight: 700;
 }
 .navbar-dark .navbar-nav .navbar-dropdown-menu .nav-link {
     color: rgba(255, 255, 255, 0.55);
@@ -28160,4 +28191,200 @@ span.bui {
     span.bui:before {
         display: none;
     }
+}
+
+/*===================================== business dashbord =======================================*/
+
+.wraping {
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    width: 100%;
+    float: left;
+    overflow: hidden;
+    margin-bottom: 15px;
+    position: relative;
+}
+.purple {
+    background-color: #72328A;
+}
+.light-purple{
+    background-color: #8171B0;
+}
+.salmon{
+   background-color: #F38592;
+}
+.barrway-red {
+    background-color: #E2476C;
+}
+.wraping .top-head {
+    padding: 15px;
+}
+.wraping .top-head h3 {
+    margin-bottom: 0px;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 24px;
+    color: #FFFFFF;
+    }
+.wraping .top-head img
+ {
+    float: right;
+    top: -19px;
+    position: relative;
+}
+.wrap-body {
+    width: 100%;
+    float: left;
+    padding: 15px 15px;
+}
+.w-l h1 {
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 36px;
+    color: #222222;
+    margin-bottom: 20px;
+}
+
+.w-r h3 {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 24px;
+    color: #222222;
+    padding-top: 5px;
+}
+.w-r h3 img {
+    position: relative;
+    top: -2px;
+}
+.w-r {
+    text-align: right;
+}
+.w-l p{
+font-weight: 400;
+font-size: 15px;
+line-height: 21px;
+color: #222222;
+}
+.w-r p a {
+    color: #72328a;
+}
+.w-l table tbody tr td {
+    padding: 8px;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 21px;
+    color: #222222;
+}
+a.see-plan {
+    position: absolute;
+    bottom: 25px;
+    right: 12px;
+    color: #fff !important;
+    padding: 10px 15px;
+    border-radius: 40px;
+}
+select.select-company {
+    border: none;
+    padding: 10px;
+    font-weight: 400;
+    font-size: 15px;
+    color: #222222;
+    outline: none;
+    box-shadow: none;
+}
+.custtome-navbar-dark {
+    box-shadow: 0px 1px 7px -5px #4c4c4c;
+}
+.bredcrump {
+    width: 100%;
+    float: left;
+    margin-bottom: 25px;
+}
+.bredcrump a:nth-child(1) {
+    color: #222;
+}
+.bredcrump a:nth-child(2) {
+    color: #72328A;
+}
+@media screen and (min-width:769px) and (max-width:1024px){
+    .wraping .top-head h3 {
+        font-size: 14px;
+    }
+    .w-l p {
+        font-size: 13px;
+    }
+}
+@media screen and (max-width:767px){
+    select.select-company {
+    padding: 2px;
+}
+.cp-10 {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.w-l table tbody tr td {
+    padding: 2px;
+    font-size: 13px;
+}
+}
+
+
+/*================================= manage =================================*/
+
+.tabbing-main .nav-tabs li.active {
+    padding: 10px 15px;
+    border-top: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-radius: 4px 4px 0px 0px;
+}
+
+.tabbing-main ul#navTab5 {
+    width: 100%;
+    float: left;    
+    background-color: transparent;
+}
+.tabbing-main ul#navTab5 li.nav-item .nav-link.active{
+    padding: 10px 15px;
+    border-top: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-radius: 4px 4px 0px 0px;
+}
+.tabbing-main div#navTabContent5 {
+    width: 100%;
+    float: left;
+}
+
+/*============================ user-dashbord ===========================*/
+
+.startbusiness {
+    max-width: 80%;
+    margin: 0 auto;
+}
+.startbusiness .setup {
+    padding: 15px 10px;
+    background: #FFFFFF;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+.startbusiness .setup span {
+    font-weight: 700;
+    font-size: 24px;
+}
+.startbusiness .setup span:nth-child(1) {
+    color: #E2476C;
+}
+.startbusiness .setup span:nth-child(2) {
+    color: #222222;
+}
+.startbusiness .setup span:nth-child(3) a {
+    border-radius: 30px;
+    font-size: 16px;
+    color: #FFFFFF;
+    font-weight: 400;
+    line-height: 40px;
+    text-align: center;
+    padding: 5px 25px;
 }
