@@ -143,6 +143,8 @@ namespace Barrway.Controllers
                 BusinessAccountWebsiteModel businessModel = new BusinessAccountWebsiteModel()
                 {
                     USER_ID = model.USER_NAME,
+                    COMPANY_PROFILE_STATUS = "N",
+                    COMPANY_CALENDAR_STATUS = "N",
                     TOTAL_WEBSITE_VISITS = 0,
                     CURRENT_STEP = "REGISTRATION",
                     IS_SEARCHABLE_IN_MARKETPLACE = "N"

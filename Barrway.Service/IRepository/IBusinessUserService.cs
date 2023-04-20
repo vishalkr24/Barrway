@@ -14,5 +14,6 @@ namespace Barrway.Service.IRepository
     public interface IBusinessUserService
     {
         Task<AddUpdateDelete> CreateBusinessWebsite(BusinessAccountWebsiteModel model);
+        Task<AddUpdateDelete> GetSingleBusinessWebsite(string UserId);
     }
 }
