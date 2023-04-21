@@ -21,34 +21,30 @@
                                     <label for="companyname">Company Name (English) *</label>
 
                                     @Html.TextBoxFor(model => model.COMPANY_NAME_ENGLISH, new { @class = "form-control", @placeholder = "Company name", @required = "true" })
-                                    @Html.ValidationMessageFor(model => model.COMPANY_NAME_ENGLISH, "", new { @class = "invalid-feedback" })
+                                    @Html.ValidationMessageFor(model => model.COMPANY_NAME_ENGLISH, "", new { @class = "invalid-feedback-2" })
 
                                 </div>
                                 <div class="form-group">
                                     <label for="companynamechinese">Company Name (Chinese)</label>
 
                                     @Html.TextBoxFor(model => model.COMPANY_NAME_CHINESE, new { @class = "form-control", @placeholder = "Company name Chinese", @required = "true" })
-                                    @Html.ValidationMessageFor(model => model.COMPANY_NAME_CHINESE, "", new { @class = "invalid-feedback" })
+                                    @Html.ValidationMessageFor(model => model.COMPANY_NAME_CHINESE, "", new { @class = "invalid-feedback-2" })
 
                                 </div>
                                 <div class="form-group">
                                     <label for="pwd">Company category *</label>
 
                                     @Html.DropDownListFor(model => model.COMPANY_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(CompanyCategory))), "Select Company Category", new { @class = "form-control", @required = "true" })
-                                    @Html.ValidationMessageFor(model => model.COMPANY_CATEGORY_ID, "", new { @class = "invalid-feedback" })
+                                    @Html.ValidationMessageFor(model => model.COMPANY_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
 
                                 </div>
                                 <div class="form-group">
                                     <label for="pwd">Company Sub-category *</label>
-                                    <select class="form-control" id="sel1">
-                                        <option>Select</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                    </select>
+                                    @Html.DropDownListFor(model => model.COMPANY_SUB_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(CompanyCategory))), "Select Company Sub Category", new { @class = "form-control", @required = "true" })
+                                    @Html.ValidationMessageFor(model => model.COMPANY_SUB_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
                                 </div>
                                 <button type="submit" class="btn btn-default">Save</button>
-                                <button type="button" class="skip" onclick="location.href = '@Url.Action("SetupBusinessCalendar", "BusinessAdmin")'">Skip for now</button>
+                                <button type="button" id="companyProfileSkipButton" class="skip" onclick="location.href = '@Url.Action("SetupBusinessCalendar", "BusinessAdmin")'">Skip for now</button>
                             </form>
                         </div>
                     </div>
@@ -60,4 +56,9 @@
     </div>
     <!-- End Content -->
 </main>
+
+@section scripts{
+    <script src="~/Scripts/BusinessScripts/SetupCompanyProfile.js"></script>
+}
+
 

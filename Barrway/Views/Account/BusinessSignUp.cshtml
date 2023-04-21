@@ -401,27 +401,27 @@
                                             <label for="username">User name</label>
                                             @*<input type="text" class="form-control" id="USER_NAME" name="USER_NAME" required placeholder="Username">*@
                                             @Html.TextBoxFor(model => model.USER_NAME, new { @class="form-control", @placeholder="Username", @required="true" })
-                                            @Html.ValidationMessageFor(model => model.USER_NAME, "", new { @class = "invalid-feedback" })
+                                            @Html.ValidationMessageFor(model => model.USER_NAME, "", new { @class = "invalid-feedback-2" })
                                             
                                         </div>
                                         <div class="form-group">
                                             <label for="email">Email</label>
                                             @*<input type="email" class="form-control" id="USER_EMAIL" name="USER_EMAIL" required placeholder="Email">*@
                                             @Html.TextBoxFor(model => model.USER_EMAIL, new { @class = "form-control", @placeholder = "Email", @required = "true" })
-                                            @Html.ValidationMessageFor(model => model.USER_EMAIL, "", new { @class = "invalid-feedback" })
+                                            @Html.ValidationMessageFor(model => model.USER_EMAIL, "", new { @class = "invalid-feedback-2" })
 
                                         </div>
                                         <div class="form-group">
                                             <label for="pwd">Password</label>
                                             @*<input type="password" class="form-control" id="USER_PASSWORD" name="USER_PASSWORD" required placeholder="********">*@
                                             @Html.PasswordFor(model => model.USER_PASSWORD, new { @class = "form-control", @placeholder = "********", @required = "true" })
-                                            @Html.ValidationMessageFor(model => model.USER_PASSWORD, "", new { @class = "invalid-feedback" })
+                                            @Html.ValidationMessageFor(model => model.USER_PASSWORD, "", new { @class = "invalid-feedback-2" })
                                         </div>
                                         <div class="form-group">
                                             <label for="repwd">Retype Password</label>
                                             @*<input type="password" class="form-control" id="USER_CONFIRM_PASSWORD" name="USER_CONFIRM_PASSWORD" required placeholder="********">*@
                                             @Html.PasswordFor(model => model.USER_CONFIRM_PASSWORD, new { @class = "form-control", @placeholder = "********", @required = "true" })
-                                            @Html.ValidationMessageFor(model => model.USER_CONFIRM_PASSWORD, "", new { @class = "invalid-feedback" })
+                                            @Html.ValidationMessageFor(model => model.USER_CONFIRM_PASSWORD, "", new { @class = "invalid-feedback-2" })
                                         </div>
                                         <div class="checkbox">
                                             <label class="container-label">
@@ -430,7 +430,7 @@
                                                 @*<input type="checkbox" name="TERMS_ACCEPTED" id="TERMS_ACCEPTED">*@
                                                 <span class="checkmark"></span>
 
-                                                @Html.ValidationMessageFor(model => model.TERMS_ACCEPTED, "", new { @class = "invalid-feedback" })
+                                                @Html.ValidationMessageFor(model => model.TERMS_ACCEPTED, "", new { @class = "invalid-feedback-2" })
                                             </label>
                                         </div>
 
@@ -441,66 +441,6 @@
                                             <a href="#">Register with Google</a>
                                             <a href="#">Register with Facebook</a>
                                         </div>
-
-                                        <!--<div class="">
-
-                                            <div class="mb-4">
-                                                <label class="form-label" for="USER_NAME">User Name</label>
-                                                <div class="">
-                                                    
-                                                </div>
-                                            </div>
-
-                                            <div class="mb-4">
-                                                <label class="form-label" for="USER_EMAIL">Email</label>
-                                                <div class="">
-                                                    @Html.EditorFor(model => model.USER_EMAIL, new { htmlAttributes = new { @class = "form-control form-control-lg", @required = "true", @placeholder = "Davidclark01@domain.com" } })
-                                                    
-                                                </div>
-                                            </div>
-
-                                            <div class="mb-4">
-                                                <label class="form-label" for="USER_PASSWORD">Password</label>
-                                                <div class="">
-
-                                                    <div class="input-group input-group-merge" data-hs-validation-validate-class>
-                                                        <input type="password" class="js-toggle-password form-control form-control-lg" name="USER_PASSWORD" id="USER_PASSWORD" placeholder="8+ characters required" aria-label="8+ characters required" required minlength="8" data-hs-toggle-password-options='{"target": [".js-toggle-password-target-1", ".js-toggle-password-target-2"],"defaultClass": "bi-eye-slash","showClass": "bi-eye", "classChangeTarget": ".js-toggle-password-show-icon-1"}'>
-                                                        <a class="js-toggle-password-target-1 input-group-append input-group-text" href="javascript:;">
-                                                            <i class="js-toggle-password-show-icon-1 bi-eye"></i>
-                                                        </a>
-                                                    </div>-->
-
-
-                                                    @*@Html.EditorFor(model => model.USER_PASSWORD, new { htmlAttributes = new { @class = "form-control form-control-lg js-toggle-password", @placeholder = "8+ characters required", @data - hs - toggle - password - options = '{"target": [".js-toggle-password-target-1", ".js-toggle-password-target-2"],"defaultClass": "bi-eye-slash","showClass": "bi-eye", "classChangeTarget": ".js-toggle-password-show-icon-2"}' } })*@
-                                                    
-                                                <!--</div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label class="form-label" for="signupSrConfirmPassword">Confirm password</label>
-                                                <input type="password" name="USER_CONFIRM_PASSWORD" onkeyup="validateConfirmPassword()" id="USER_CONFIRM_PASSWORD" placeholder="8+ characters required" aria-label="8+ characters required" required minlength="8">
-
-                                                <span class="invalid-feedback hide">Password does not match the confirm password.</span>
-                                            </div>
-
-                                            <div class="checkbox">
-                                                <label class="container-label" for="termsCheckbox">
-                                                    Check here to accept the <a href="#">temrs & conditions.</a>
-                                                    <input type="checkbox" id="termsCheckbox" required>
-                                                    <span class="checkmark"></span>
-                                                </label>-->
-                                                @*<input type="checkbox" value="" id="termsCheckbox" required>
-                <label class="checkmark" for="termsCheckbox">
-                    I accept the <a href="#">Terms and Conditions</a>
-                </label>*@
-                                                <!--<span class="invalid-feedback hide">Please accept our Terms and Conditions.</span>
-                                            </div>
-
-                                            <div class="d-grid gap-2">
-                                                <button type="submit" class="btn btn-default">Create an account</button>
-
-                                            </div>
-                                        </div>-->
 
                                     </form>
 

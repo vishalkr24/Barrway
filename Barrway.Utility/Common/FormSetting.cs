@@ -17,7 +17,8 @@ namespace Barrway.Utility.Common
         COMPANY_CATEGORY_MASTER = 2291,
         COMPANY_SUB_CATEGORY = 2292,
         BUSINESS_PHOTO_ALBUM = 2293,
-        USER_TOKEN = 2294
+        USER_TOKEN = 2294,
+        BUSINESS_COMPANY_MASTER = 2295
     }
 
     public enum FormAction

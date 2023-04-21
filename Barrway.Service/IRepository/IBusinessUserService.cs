@@ -15,5 +15,11 @@ namespace Barrway.Service.IRepository
     {
         Task<AddUpdateDelete> CreateBusinessWebsite(BusinessAccountWebsiteModel model);
         Task<AddUpdateDelete> GetSingleBusinessWebsite(string UserId);
+        Task<AddUpdateDelete> GetCompanyCategoryMaster();
+        Task<AddUpdateDelete> GetCompanySubCategoryMaster();
+        Task<AddUpdateDelete> GetCompanySubCategoryMaster(int CategoryId);
+        Task<AddUpdateDelete> SaveBusinessProfileDetails(CompanyProfileModel model);
+        Task<AddUpdateDelete> CreateCompanyForBusiness(BusinessCompanyModel model);
+
     }
 }
