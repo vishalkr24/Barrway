@@ -99,41 +99,26 @@
 <script>
 
     $(document).ready(function(){
-        getCompanyWebsite();
+        setPageStatus();
     });
 
-    function getCompanyWebsite() {
+    function setPageStatus() {
+        var response = getCompanyWebsite();
 
-        $.ajax({
-            url: "/BusinessAdmin/GetBusinessAccountWebsite/",
-            data: {
-                UserId: "@UserIdentity.UserName"
-            },
-            type: "GET",
-            success: function (response) {
-                response = JSON.parse(response);
-                console.log(response)
-
-                if (response.CURRENT_STEP == "COMPLETED") {
-                    window.location.replace("/BusinessAdmin/BusinessDashboard")
-                } else {
-                    if (response.COMPANY_PROFILE_STATUS == "Y") {
-                        $("#CompanyProfileSetupBtn a").text("Done");
-                    }
-
-                    if (response.COMPANY_CALENDAR_STATUS == "Y") {
-                        $("#CalendarSetupBtn a").text("Done");
-                    }
-                }
-                
-
-
-            },
-            error: function (errorResponse) {
-
+        if (response.Data.CURRENT_STEP == "COMPLETED") {
+            window.location.replace("/BusinessAdmin/BusinessDashboard")
+        } else {
+            if (response.Data.COMPANY_PROFILE_STATUS == "Y") {
+                $("#CompanyProfileSetupBtn a").text("Done");
+                /*$("#CompanyProfileSetupBtn").attr("onclick", "");*/
             }
-        })
 
+            if (response.Data.COMPANY_CALENDAR_STATUS == "Y") {
+                $("#CalendarSetupBtn a").text("Done");
+                $("#CalendarSetupBtn").attr("onclick", "");
+            }
+        }
     }
+     
 
 </script>

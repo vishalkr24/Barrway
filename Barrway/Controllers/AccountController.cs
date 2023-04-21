@@ -122,7 +122,7 @@ namespace Barrway.Controllers
 
             if (!userByEmail.Status && !userByID.Status)
             {
-                // insert data
+                // Insert Data in User Master
 
                 UserMaserModel userMaserModel = new UserMaserModel(){
                     USER_PHONE = "",
@@ -140,6 +140,8 @@ namespace Barrway.Controllers
 
                 AddUpdateDelete result = await signupService.RegisterUser(userMaserModel.ToDictionary());
 
+                // Business Account Creation START
+
                 BusinessAccountWebsiteModel businessModel = new BusinessAccountWebsiteModel()
                 {
                     USER_ID = model.USER_NAME,
@@ -151,6 +153,16 @@ namespace Barrway.Controllers
                 };
 
                 AddUpdateDelete businessResult = await businessUserService.CreateBusinessWebsite(businessModel);
+
+                //string CompanyCode = "CMP" + businessResult.Data.ToString().PadLeft(5, '0');
+
+                //int updateCompanyCode = await sqlFunction.ExecuteSqlCommandQuery("update BUSINESS_ACCOUNT_WEBSITE_1918 set COMPANY_CODE = '" + CompanyCode + "' where Id = '" + businessResult.ToString() + "'");
+
+                // Business Account Creation END
+
+
+
+                // Send Activation Link
 
                 var linkResult = await authService.sendActivationLink(model.USER_NAME, model.USER_EMAIL, FormRole.BUSINESS_USER);
                 

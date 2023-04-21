@@ -117,21 +117,80 @@ namespace Barrway.Controllers
 
                 if (userWebsite.Status)
                 {
-                    return Json(JsonConvert.SerializeObject(userWebsite.Data), JsonRequestBehavior.AllowGet);
+                    return Json(new AddUpdateDelete() { Status = true, Data = userWebsite.Data, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
-                    return Json(null, JsonRequestBehavior.AllowGet);
+                    return Json(new AddUpdateDelete() { Status = false, Message = "Website Not Found" }, JsonRequestBehavior.AllowGet);
                 }
-
-
             }
             catch (Exception ex)
             {
-                return Json(null, JsonRequestBehavior.AllowGet);
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
             }
 
         }
+
+        
+
+        public async Task<ActionResult> GetCompanyCategory()
+        {
+            try
+            {
+                var categoryData = await businessUserService.GetCompanyCategoryMaster();
+
+                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = categoryData.Data }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString()}, JsonRequestBehavior.AllowGet);
+            }
+            
+        }
+
+        public async Task<ActionResult> GetCompanySubCategory(int CategoryId)
+        {
+            try
+            {
+                var subCategoryData = await businessUserService.GetCompanySubCategoryMaster(CategoryId);
+
+                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = subCategoryData.Data }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        public async Task<ActionResult> SaveBusinessProfileDetails(CompanyProfileModel model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return View("SetupBusinessProfile");
+                }
+
+                model.USER_ID = User.Identity.Name.ToString();
+                var saveDataResult = await businessUserService.SaveBusinessProfileDetails(model);
+
+                if (saveDataResult.Status)
+                {
+                    return RedirectToAction("SetupBusinessCalendar");
+                }
+                else
+                {
+                    return View("SetupBusinessProfile");
+                }
+                
+            }
+            catch(Exception ex)
+            {
+                return View("SetupBusinessProfile");
+            }
+        }
+
 
         #endregion
     }

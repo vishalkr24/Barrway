@@ -1776,6 +1776,8 @@
     <Content Include="assets\css\fonts\bootstrap-iconsd862.woff2" />
     <Content Include="assets\svg\logos-light.zip" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\BusinessScripts\Common\CommonFunctions.js" />
+    <Content Include="Scripts\BusinessScripts\SetupCompanyProfile.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
