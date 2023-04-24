@@ -147,9 +147,7 @@ namespace Barrway.Controllers
                     USER_ID = model.USER_NAME,
                     COMPANY_PROFILE_STATUS = "N",
                     COMPANY_CALENDAR_STATUS = "N",
-                    TOTAL_WEBSITE_VISITS = 0,
-                    CURRENT_STEP = "REGISTRATION",
-                    IS_SEARCHABLE_IN_MARKETPLACE = "N"
+                    CURRENT_STEP = "REGISTRATION"
                 };
 
                 AddUpdateDelete businessResult = await businessUserService.CreateBusinessWebsite(businessModel);
@@ -204,6 +202,13 @@ namespace Barrway.Controllers
             {
                 try
                 {
+                    var data = await authService.GetUserByEmail(TempData.Peek("VERIFICATION_EMAIL").ToString());
+
+                    if (data.Data["IS_EMAIL_VERIFIED"].ToString() == "Y")
+                    {
+                        return RedirectToAction("BusinessLogin");
+                    }
+
                     ViewBag.VerificationEmail = TempData.Peek("VERIFICATION_EMAIL").ToString();
                 }catch (Exception ex)
                 {

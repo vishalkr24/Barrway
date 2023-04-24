@@ -38,9 +38,7 @@ namespace Barrway.Controllers
                 if (userWebsite.Status)
                 {
                     string currentStep = userWebsite.Data["CURRENT_STEP"].ToString();
-                    //string companyProfileStatus = userWebsite.Data["COMPANY_PROFILE_STATUS"].ToString();
-                    //string companyCalendarStatus = userWebsite.Data["COMPANY_CALENDAR_STATUS"].ToString();
-
+                    
                     if (currentStep == "REGISTRATION")
                     {
                         TempData["VERIFICATION"] = "Pending";
@@ -49,36 +47,23 @@ namespace Barrway.Controllers
                     }
                     else
                     {
-                        //if (companyProfileStatus == "N")
-                        //{
-                        //    ViewBag.CurrentStep = 1;
-                        //    return View();
-                        //}
-
-                        //if (companyCalendarStatus == "N")
-                        //{
-                        //    ViewBag.CurrentStep = 2;
-                        //    return View();
-                        //}
-
-                        //if (currentStep == "COMPANY WEBSITE")
-                        //{
-                        //    ViewBag.CurrentStep = 3;
-                        //    return View();
-                        //}
-
-                        //if (currentStep == "COMPLETED")
-                        //{
-                        //    ViewBag.CurrentStep = 0;
-                        //}
-                        return View();
-                        
+                        return View();   
                     }
                 }
                 else
                 {
                     // Business Website Entry not found
-                    return RedirectToAction("Logout", "Account");
+                    Session.Clear();
+                    Session.RemoveAll();
+                    Session.Abandon();
+                    TempData.Clear();
+                    if (HttpContext != null)
+                    {
+                        HttpContext.Request.Cookies.Clear();
+                    }
+
+                    HttpContext.GetOwinContext().Authentication.SignOut();
+                    return RedirectToAction("BusinessLogin", "Account");
                 }
                 
             }
@@ -91,21 +76,38 @@ namespace Barrway.Controllers
             return View();
         }
 
-        public async Task<ActionResult> SetupBusinessProfile()
+        public async Task<ActionResult> SetupCompanyProfile()
+        {
+            var website = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
+            var company = await businessUserService.GetDefaultCompanyByBusinessId(((int)website.Data["Id"]).ToString());
+
+            if (company.Status)
+            {
+                CompanyProfileViewModel model = new CompanyProfileViewModel()
+                {
+                    Id = ((int)company.Data["Id"]).ToString(),
+                    COMPANY_NAME_CHINESE = company.Data["COMPANY_NAME_CHINESE"].ToString(),
+                    COMPANY_NAME_ENGLISH = company.Data["COMPANY_NAME_ENGLISH"].ToString(),
+                };
+
+                return View(model);
+            }
+            else
+            {
+                return View();
+            }
+           
+
+        }
+
+        public async Task<ActionResult> SetupCompanyCalendar()
         {
             return View();
         }
 
-        public async Task<ActionResult> SetupBusinessCalendar()
-        {
-            return View();
-        }
-
-        public async Task<ActionResult> SetupBusinessCalendarInformation()
-        {
-            return View();
-        }
         #endregion
+
+
 
         #region Data Methods
 
@@ -131,7 +133,51 @@ namespace Barrway.Controllers
 
         }
 
-        
+        public async Task<ActionResult> GetDefaultCompany()
+        {
+            try
+            {
+                var website = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
+
+                var company = await businessUserService.GetDefaultCompanyByBusinessId(((int)website.Data["Id"]).ToString());
+
+                if (company.Status)
+                {
+                    return Json(new AddUpdateDelete() { Status = true, Data = company.Data, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new AddUpdateDelete() { Status = false, Message = "Company Not Found" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        public async Task<ActionResult> GetSingleCompanyByCompanyId(string CompanyId)
+        {
+            try
+            {
+                var company = await businessUserService.GetSingleCompanyById(CompanyId);
+
+                if (company.Status)
+                {
+                    return Json(new AddUpdateDelete() { Status = true, Data = company.Data, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new AddUpdateDelete() { Status = false, Message = "Company Not Found" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
 
         public async Task<ActionResult> GetCompanyCategory()
         {
@@ -163,31 +209,51 @@ namespace Barrway.Controllers
 
         }
 
-        public async Task<ActionResult> SaveBusinessProfileDetails(CompanyProfileModel model)
+        public async Task<ActionResult> SaveCompanyProfileDetails(CompanyProfileViewModel model)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return View("SetupBusinessProfile");
+                    return View("SetupCompanyProfile");
                 }
 
-                model.USER_ID = User.Identity.Name.ToString();
-                var saveDataResult = await businessUserService.SaveBusinessProfileDetails(model);
+                var website = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
 
-                if (saveDataResult.Status)
+                if (website.Status)
                 {
-                    return RedirectToAction("SetupBusinessCalendar");
+                    BusinessCompanyModel businessCompanyModel = new BusinessCompanyModel()
+                    {
+                        BUSINESS_ACCOUNT_ID = ((int)website.Data["Id"]).ToString(),
+                        COMPANY_NAME_ENGLISH = model.COMPANY_NAME_ENGLISH,
+                        COMPANY_NAME_CHINESE = model.COMPANY_NAME_CHINESE,
+                        Id = model.Id,
+                        COMPANY_CATEGORY_ID = model.COMPANY_CATEGORY_ID,
+                        COMPANY_SUB_CATEGORY_ID = model.COMPANY_SUB_CATEGORY_ID
+                    };
+
+                    var saveDataResult = await businessUserService.AddCompany(businessCompanyModel, User.Identity.Name.ToString(), true);
+
+                    if (saveDataResult.Status)
+                    {
+                        return RedirectToAction("SetupCompanyCalendar");
+                    }
+                    else
+                    {
+                        return View("SetupCompanyProfile");
+                    }
                 }
                 else
                 {
-                    return View("SetupBusinessProfile");
+                    return View("SetupCompanyProfile");
                 }
+
+                
                 
             }
             catch(Exception ex)
             {
-                return View("SetupBusinessProfile");
+                return View("SetupCompanyProfile");
             }
         }
 
