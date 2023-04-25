@@ -1,24 +1,24 @@
-﻿
+﻿@using Barrway.DTO.BusinessModels
+@model Barrway.DTO.BusinessModels.BusinessCalendarViewModel
 @{
     ViewBag.Title = "Setup your business calendar";
     Layout = "~/Views/Shared/_BusinessAdminLayout.cshtml";
 }
 
 <style>
-    .rectangle:hover{
-        cursor:pointer;
+    .rectangle:hover {
+        cursor: pointer;
     }
 
-    .error-div{
-        border-radius:6px;
+    .error-div {
+        border-radius: 6px;
         background: red;
-        color:white;
-        padding:20px;
-        font-size:14px;
-        display:none;
-        font-weight:bold;
+        color: white;
+        padding: 20px;
+        font-size: 14px;
+        display: none;
+        font-weight: bold;
     }
-
 </style>
 
 <div class="main">
@@ -32,7 +32,7 @@
                         </div>
                     </div>
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -46,7 +46,7 @@
             <div class="col-md-10">
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="rectangle" onclick="renderForm()">
+                        <div class="rectangle" onclick="renderForm(1)">
                             <div class="rac-img">
                                 <img src="../assets/img/one1.png">
                             </div>
@@ -57,7 +57,7 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="rectangle" onclick="renderForm()">
+                        <div class="rectangle" onclick="renderForm(2)">
                             <div class="rac-img">
                                 <img src="../assets/img/two.png">
                             </div>
@@ -68,7 +68,7 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="rectangle" onclick="renderForm()">
+                        <div class="rectangle" onclick="renderForm(3)">
                             <div class="rac-img">
                                 <img src="../assets/img/three.png">
                             </div>
@@ -79,7 +79,7 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="rectangle" onclick="renderForm()">
+                        <div class="rectangle" onclick="renderForm(4)">
                             <div class="rac-img">
                                 <img src="../assets/img/four.png">
                             </div>
@@ -89,7 +89,7 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="rectangle" onclick="renderForm()">
+                        <div class="rectangle" onclick="renderForm(5)">
                             <div class="rac-img">
                                 <img src="../assets/img/five.png">
                             </div>
@@ -118,79 +118,121 @@
                     <div class="profile-form">
                         <h1>Let’s finish up with calendar information</h1>
                         <div class="form-inner">
-                            <form>
+                            @using (Html.BeginForm("AddCalendar", "BusinessAdmin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {
                                 <div class="form-group">
                                     <label for="calendarname">Calendar name *</label>
-                                    <input type="text" class="form-control" id="calendarname" placeholder="" name="calendarname">
+
+                                    @Html.TextBoxFor(model => model.CALENDAR_NAME, new { @class = "form-control", @placeholder = "Calendar name", @required = "true" })
+                                    @Html.ValidationMessageFor(model => model.CALENDAR_NAME, "", new { @class = "invalid-feedback-2" })
+
+                                    @*<input type="text" class="form-control" id="calendarname" placeholder="" name="calendarname">*@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="country">Country *</label>
-                                            <select class="form-control" id="sel1">
-                                                <option>China</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                                <option>4</option>
-                                            </select>
+
+                                            @Html.DropDownListFor(model => model.COUNTRY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select Country", @required = "true" })
+                                            @Html.ValidationMessageFor(model => model.COUNTRY_ID, "", new { @class = "invalid-feedback-2" })
+
+
+                                            @*<select class="form-control" id="sel1">
+                                                    <option>China</option>
+                                                    <option>2</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                </select>*@
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="city">City *</label>
-                                            <select class="form-control" id="sel1">
-                                                <option>Hong Kong</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                                <option>4</option>
-                                            </select>
+
+                                            @Html.DropDownListFor(model => model.CITY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select City", @required = "true" })
+                                            @Html.ValidationMessageFor(model => model.CITY_ID, "", new { @class = "invalid-feedback-2" })
+
+
+                                            @*<select class="form-control" id="sel1">
+                                                    <option>Hong Kong</option>
+                                                    <option>2</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                </select>*@
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="district">District *</label>
-                                    <select class="form-control" id="sel1">
-                                        <option>Select</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                    </select>
+
+                                    @Html.DropDownListFor(model => model.DISTRICT_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select District", @required = "true" })
+                                    @Html.ValidationMessageFor(model => model.DISTRICT_ID, "", new { @class = "invalid-feedback-2" })
+
+
+                                    @*<select class="form-control" id="sel1">
+                                            <option>Select</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                        </select>*@
                                 </div>
                                 <div class="form-group">
                                     <label for="companynamechinese">Company Name (Chinese)</label>
-                                    <input type="text" class="form-control" id="companynamechinese" placeholder="" name="companynamechinese">
+
+                                    @Html.TextBoxFor(model => model.COMPANY_NAME_CHINESE, new { @class = "form-control", @placeholder = "Company name", @readonly = "true", @required = "true" })
+                                    @Html.ValidationMessageFor(model => model.COMPANY_NAME_CHINESE, "", new { @class = "invalid-feedback-2" })
+
+
+                                    @*<input type="text" class="form-control" id="companynamechinese" placeholder="" name="companynamechinese">*@
                                 </div>
                                 <div class="form-group">
                                     <label for="cala">Calendar category *</label>
-                                    <select class="form-control" id="sel1">
-                                        <option>Select</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                    </select>
+
+                                    @Html.DropDownListFor(model => model.CALENDAR_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select Calendar Category", @required = "true" })
+                                    @Html.ValidationMessageFor(model => model.CALENDAR_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
+
+
+                                    @*<select class="form-control" id="sel1">
+                                            <option>Select</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                        </select>*@
                                 </div>
                                 <div class="form-group">
                                     <label for="sub">Calendar Sub-category *</label>
-                                    <select class="form-control" id="sel1">
-                                        <option>Select</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                    </select>
+
+                                    @Html.DropDownListFor(model => model.CALENDAR_SUB_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select Calendar Sub Category", @required = "true" })
+                                    @Html.ValidationMessageFor(model => model.CALENDAR_SUB_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
+
+
+                                    @*<select class="form-control" id="sel1">
+                                            <option>Select</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                        </select>*@
                                 </div>
                                 <div class="form-group">
                                     <p style="margin-bottom: 0px;"><label for="file">Calendar  photo</label></p>
                                     <div class="custome-uploade">
-                                        <input id="uploadFile" class="f-input" placeholder="This photo will be seen in market place" />
+                                        @*<input type="text" id="uploadFile" class="f-input" placeholder="This photo will be seen in market place" />*@
+
+                                        @Html.TextBoxFor(model => model.CALENDAR_PHOTO_NAME, new { @class = "f-input", @placeholder = "This photo will be seen in market place", @required = "true" })
+
                                         <div class="fileUpload btn btn--browse">
                                             <span>Browse</span>
-                                            <input id="uploadBtn" type="file" class="upload" />
+                                            @Html.TextBoxFor(model => model.CALENDAR_PHOTO_PATH, new { @class= "upload", Type = "File" })
+                                            @*<input id="CALENDAR_PHOTO_PATH" type="file" class="upload" />*@
                                         </div>
                                     </div>
+
+                                    @Html.ValidationMessageFor(model => model.CALENDAR_PHOTO_NAME, "", new { @class = "invalid-feedback-2" })
+
                                 </div>
                                 <button type="button" onclick="renderCategory()" class="back">Back</button>
                                 <button type="submit" class="btn btn-default">Save</button>
-                            </form>
+                            }
                         </div>
                     </div>
                 </div>

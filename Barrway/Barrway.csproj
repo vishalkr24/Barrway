@@ -1820,6 +1820,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Logs\" />
+    <Folder Include="UploadCalendar\CalendarImages\" />
     <Folder Include="Views\BusinessCalendar\" />
   </ItemGroup>
   <ItemGroup>

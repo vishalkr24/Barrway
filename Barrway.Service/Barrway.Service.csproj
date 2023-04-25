@@ -118,12 +118,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IRepository\IAuthService.cs" />
+    <Compile Include="IRepository\IGlobalMasterService.cs" />
     <Compile Include="IRepository\IFormAPIRepository.cs" />
     <Compile Include="IRepository\ISignupService.cs" />
     <Compile Include="IRepository\IBusinessUserService.cs" />
     <Compile Include="IRepository\ISqlFunction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\AuthService.cs" />
+    <Compile Include="Repository\GlobalMasterService.cs" />
     <Compile Include="Repository\FormAPIRepository.cs" />
     <Compile Include="Repository\SignupService.cs" />
     <Compile Include="Repository\BusinessUserService.cs" />
