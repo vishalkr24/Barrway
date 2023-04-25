@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Barrway.DTO.Common;
+using System.IO;
 
 namespace Barrway.Controllers
 {
@@ -16,10 +17,12 @@ namespace Barrway.Controllers
     {
 
         private readonly IBusinessUserService businessUserService;
+        private readonly IGlobalMasterService globalMasterService;
 
-        public BusinessAdminController(IBusinessUserService businessUserService)
+        public BusinessAdminController(IBusinessUserService businessUserService, IGlobalMasterService globalMasterService)
         {
             this.businessUserService = businessUserService;
+            this.globalMasterService = globalMasterService;
         }
 
         #region View Methods
@@ -38,7 +41,7 @@ namespace Barrway.Controllers
                 if (userWebsite.Status)
                 {
                     string currentStep = userWebsite.Data["CURRENT_STEP"].ToString();
-                    
+
                     if (currentStep == "REGISTRATION")
                     {
                         TempData["VERIFICATION"] = "Pending";
@@ -47,7 +50,7 @@ namespace Barrway.Controllers
                     }
                     else
                     {
-                        return View();   
+                        return View();
                     }
                 }
                 else
@@ -65,21 +68,20 @@ namespace Barrway.Controllers
                     HttpContext.GetOwinContext().Authentication.SignOut();
                     return RedirectToAction("BusinessLogin", "Account");
                 }
-                
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
-           
+
 
             return View();
         }
 
         public async Task<ActionResult> SetupCompanyProfile()
         {
-            var website = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
-            var company = await businessUserService.GetDefaultCompanyByBusinessId(((int)website.Data["Id"]).ToString());
+            var company = await businessUserService.GetDefaultCompanyByUserId(User.Identity.Name.ToString());
 
             if (company.Status)
             {
@@ -96,13 +98,53 @@ namespace Barrway.Controllers
             {
                 return View();
             }
-           
+
 
         }
 
-        public async Task<ActionResult> SetupCompanyCalendar()
+        public async Task<ActionResult> SetupCompanyCalendar(string CompanyId = null)
         {
-            return View();
+            try
+            {
+                BusinessCalendarViewModel calendarModel = new BusinessCalendarViewModel();
+                if (string.IsNullOrEmpty(CompanyId))
+                {
+                    // If Company Id is not passed
+                    var company = await businessUserService.GetDefaultCompanyByUserId(User.Identity.Name.ToString());
+
+                    if (company.Status)
+                    {
+                        calendarModel.COMPANY_CODE = company.Data["COMPANY_CODE"].ToString();
+                        calendarModel.COMPANY_NAME_CHINESE = company.Data["COMPANY_NAME_CHINESE"].ToString();
+                    }
+
+                }
+                else
+                {
+                    // If Company Id is passed
+                    var company = await businessUserService.GetSingleCompanyById(CompanyId);
+
+                    if (company.Status)
+                    {
+                        calendarModel.COMPANY_CODE = company.Data["COMPANY_CODE"].ToString();
+                        calendarModel.COMPANY_NAME_CHINESE = company.Data["COMPANY_NAME_CHINESE"].ToString();
+                    }
+                    else
+                    {
+                        // Company Id is passed but company is not found
+
+                        // BLUNDER
+                    }
+                }
+
+                return View(calendarModel);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "Some Error Occured";
+                return View();
+            }
+
         }
 
         #endregion
@@ -133,22 +175,97 @@ namespace Barrway.Controllers
 
         }
 
+        public async Task<ActionResult> GetCountryMaster()
+        {
+            try
+            {
+                var result = await globalMasterService.GetCountryMaster();
+
+                if (result.Status)
+                {
+                    return Json(new AddUpdateDelete() { Status = true, Data = result.Data, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public async Task<ActionResult> GetCityMaster(string CountryId)
+        {
+            try
+            {
+                var result = await globalMasterService.GetCityMaster(CountryId);
+
+                if (result.Status)
+                {
+                    return Json(new AddUpdateDelete() { Status = true, Data = result.Data, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public async Task<ActionResult> GetDistrictMaster(string CityId)
+        {
+            try
+            {
+                var result = await globalMasterService.GetDistrictMaster(CityId);
+
+                if (result.Status)
+                {
+                    return Json(new AddUpdateDelete() { Status = true, Data = result.Data, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         public async Task<ActionResult> GetDefaultCompany()
         {
             try
             {
                 var website = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
 
-                var company = await businessUserService.GetDefaultCompanyByBusinessId(((int)website.Data["Id"]).ToString());
-
-                if (company.Status)
+                if (website.Data["COMPANY_PROFILE_STATUS"].ToString() == "Y")
                 {
-                    return Json(new AddUpdateDelete() { Status = true, Data = company.Data, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
+                    var company = await businessUserService.GetDefaultCompanyByBusinessId(((int)website.Data["Id"]).ToString());
+
+                    if (company.Status)
+                    {
+                        return Json(new AddUpdateDelete() { Status = true, Data = company.Data, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        // change the flag to 'N' (in case entry is deleted and flag is still yes)
+                        var result = businessUserService.UpdateBusinessCompanyProfileStatusByUserId(User.Identity.Name.ToString(), false);
+
+                        return Json(new AddUpdateDelete() { Status = false, Message = "Company Not Found" }, JsonRequestBehavior.AllowGet);
+                    }
                 }
                 else
                 {
                     return Json(new AddUpdateDelete() { Status = false, Message = "Company Not Found" }, JsonRequestBehavior.AllowGet);
                 }
+
+
             }
             catch (Exception ex)
             {
@@ -183,22 +300,22 @@ namespace Barrway.Controllers
         {
             try
             {
-                var categoryData = await businessUserService.GetCompanyCategoryMaster();
+                var categoryData = await globalMasterService.GetCompanyCategoryMaster();
 
                 return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = categoryData.Data }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString()}, JsonRequestBehavior.AllowGet);
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
             }
-            
+
         }
 
-        public async Task<ActionResult> GetCompanySubCategory(int CategoryId)
+        public async Task<ActionResult> GetCompanySubCategory(string CategoryId)
         {
             try
             {
-                var subCategoryData = await businessUserService.GetCompanySubCategoryMaster(CategoryId);
+                var subCategoryData = await globalMasterService.GetCompanySubCategoryMaster(CategoryId);
 
                 return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = subCategoryData.Data }, JsonRequestBehavior.AllowGet);
             }
@@ -209,6 +326,37 @@ namespace Barrway.Controllers
 
         }
 
+        public async Task<ActionResult> GetCalendarCategory()
+        {
+            try
+            {
+                var categoryData = await globalMasterService.GetCalendarCategoryMaster();
+
+                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = categoryData.Data }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        public async Task<ActionResult> GetCalendarSubCategory(string CalendarCategoryId)
+        {
+            try
+            {
+                var subCategoryData = await globalMasterService.GetCalendarSubCategoryMaster(CalendarCategoryId);
+
+                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = subCategoryData.Data }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        [HttpPost]
         public async Task<ActionResult> SaveCompanyProfileDetails(CompanyProfileViewModel model)
         {
             try
@@ -236,7 +384,7 @@ namespace Barrway.Controllers
 
                     if (saveDataResult.Status)
                     {
-                        return RedirectToAction("SetupCompanyCalendar");
+                        return RedirectToAction("SetupCompanyCalendar", saveDataResult);
                     }
                     else
                     {
@@ -248,15 +396,80 @@ namespace Barrway.Controllers
                     return View("SetupCompanyProfile");
                 }
 
-                
-                
+
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return View("SetupCompanyProfile");
             }
         }
 
+        [HttpPost]
+        public async Task<ActionResult> AddCalendar(BusinessCalendarViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("SetupCompanyCalendar", model);
+            }
+            else
+            {
+                var company = await businessUserService.GetSingleCompanyByCompanyCode(model.COMPANY_CODE);
+
+                if (company.Status)
+                {
+                    string folderPath = Server.MapPath("UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString());
+
+                    if (!Directory.Exists(folderPath))
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
+                    else
+                    {
+                        Directory.Delete(folderPath);
+                        Directory.CreateDirectory(folderPath);
+                    }
+
+                    string path = "~/UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString() + "/" + model.CALENDAR_PHOTO_NAME.ToString();
+                    BusinessCalendarModel calendarModel = new BusinessCalendarModel()
+                    {
+                        CALENDAR_CATEGORY_ID = model.CALENDAR_CATEGORY_ID.ToString(),
+                        CALENDAR_NAME = model.CALENDAR_NAME.ToString(),
+                        COMPANY_NAME_CHINESE = company.Data["COMPANY_NAME_CHINESE"].ToString(),
+                        CALENDAR_SUB_CATEGORY_ID = model.CALENDAR_SUB_CATEGORY_ID.ToString(),
+                        CALENDAR_PHOTO_NAME = model.CALENDAR_PHOTO_NAME.ToString(),
+                        CALENDAR_PHOTO_PATH = path,
+                        IS_VISIBLE = "Y",
+                        DISTRICT_ID = model.DISTRICT_ID.ToString(),
+                        CITY_ID = model.CITY_ID.ToString(),
+                        COMPANY_CODE = model.COMPANY_CODE.ToString(),
+                        COUNTRY_ID = model.COUNTRY_ID.ToString()
+                    };
+
+                    var result = await businessUserService.AddCalendar(calendarModel, User.Identity.Name.ToString());
+
+                    if (result.Status)
+                    {
+                        // Save image in folder
+                        model.CALENDAR_PHOTO_PATH.SaveAs(Server.MapPath("UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString()) + "/" + model.CALENDAR_PHOTO_NAME.ToString());
+                        return RedirectToAction("Dashboard");
+                    }
+                    else
+                    {
+                        return View("SetupCompanyCalendar", model);
+                    }
+                    
+                    
+                }
+                else
+                {
+                    return RedirectToAction("SetupCompanyCalendar");
+                }
+
+
+            }
+
+        }
 
         #endregion
     }

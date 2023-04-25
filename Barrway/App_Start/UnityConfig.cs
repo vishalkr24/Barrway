@@ -57,7 +57,8 @@ namespace Barrway
             container.RegisterType<IFormAPIRepository, FormAPIRepository>();
             container.RegisterType<ISignupService, SignupService>();
             container.RegisterType<IBusinessUserService, BusinessUserService>();
-            
+            container.RegisterType<IGlobalMasterService, GlobalMasterService>();
+
 
         }
     }

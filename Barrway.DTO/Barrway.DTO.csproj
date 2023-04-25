@@ -37,6 +37,7 @@
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,6 +51,7 @@
     <Compile Include="AuthViewModel\BarrwayViewModel.cs" />
     <Compile Include="AuthViewModel\UserToken.cs" />
     <Compile Include="BusinessModels\BusinessAccountWebsiteModel.cs" />
+    <Compile Include="BusinessModels\BusinessCalendarModel.cs" />
     <Compile Include="BusinessModels\BusinessCalendarViewModel.cs" />
     <Compile Include="BusinessModels\BusinessCompanyModel.cs" />
     <Compile Include="BusinessModels\CompanyProfileViewModel.cs" />
