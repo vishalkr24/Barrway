@@ -1,5 +1,5 @@
 ﻿@using Barrway.DTO.BusinessModels
-@model Barrway.DTO.BusinessModels.CompanyProfileModel
+@model Barrway.DTO.BusinessModels.CompanyProfileViewModel
 @{
     ViewBag.Title = "Setup your busines profile";
     Layout = "~/Views/Shared/_BusinessAdminLayout.cshtml";
@@ -15,8 +15,8 @@
                     <div class="profile-form">
                         <h1>Let’s set up your company profile</h1>
                         <div class="form-inner">
-                            <form class="js-validate needs-validation" method="post" action="/BusinessAdmin/SaveBusinessProfileDetails" novalidate>
-
+                            <form class="js-validate needs-validation" method="post" action="/BusinessAdmin/SaveCompanyProfileDetails" novalidate>
+                                @Html.TextBoxFor(model => model.Id, new { @class = "form-control", @placeholder = "Company name", @style="display:none", @required = "true" })
                                 <div class="form-group">
                                     <label for="companyname">Company Name (English) *</label>
 
@@ -44,7 +44,7 @@
                                     @Html.ValidationMessageFor(model => model.COMPANY_SUB_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
                                 </div>
                                 <button type="submit" class="btn btn-default">Save</button>
-                                <button type="button" id="companyProfileSkipButton" class="skip" onclick="location.href = '@Url.Action("SetupBusinessCalendar", "BusinessAdmin")'">Skip for now</button>
+                                <button type="button" id="companyProfileSkipButton" class="skip" onclick="location.href = '@Url.Action("SetupCompanyCalendar", "BusinessAdmin")'">Skip for now</button>
                             </form>
                         </div>
                     </div>

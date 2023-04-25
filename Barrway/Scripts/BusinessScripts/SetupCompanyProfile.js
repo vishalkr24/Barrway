@@ -17,11 +17,13 @@ function setCompanyWebsite() {
         $("#companyProfileSkipButton").hide();
     }
 
-    $("#COMPANY_NAME_ENGLISH").val(response.Data.COMPANY_NAME_ENGLISH);
-    $("#COMPANY_NAME_CHINESE").val(response.Data.COMPANY_NAME_CHINESE);
-    $("#COMPANY_CATEGORY_ID").val(response.Data.COMPANY_CATEGORY_ID);
-    BindCompanySubCategory(response.Data.COMPANY_CATEGORY_ID);
-    $("#COMPANY_SUB_CATEGORY_ID").val(response.Data.COMPANY_SUB_CATEGORY_ID);
+    var data = getSingleDefaultCompany();
+
+    $("#COMPANY_NAME_ENGLISH").val(data.Data.COMPANY_NAME_ENGLISH);
+    $("#COMPANY_NAME_CHINESE").val(data.Data.COMPANY_NAME_CHINESE);
+    $("#COMPANY_CATEGORY_ID").val(data.Data.COMPANY_CATEGORY_ID);
+    BindCompanySubCategory(data.Data.COMPANY_CATEGORY_ID);
+    $("#COMPANY_SUB_CATEGORY_ID").val(data.Data.COMPANY_SUB_CATEGORY_ID);
 
 }
 

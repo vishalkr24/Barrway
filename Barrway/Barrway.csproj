@@ -1777,6 +1777,7 @@
     <Content Include="assets\svg\logos-light.zip" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\BusinessScripts\Common\CommonFunctions.js" />
+    <Content Include="Scripts\BusinessScripts\SetupCompanyCalendar.js" />
     <Content Include="Scripts\BusinessScripts\SetupCompanyProfile.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -1809,10 +1810,9 @@
     <Content Include="Views\Account\verification.cshtml" />
     <Content Include="Views\BusinessAdmin\Dashboard.cshtml" />
     <Content Include="Views\Shared\_BusinessAdminLayout.cshtml" />
-    <Content Include="Views\BusinessAdmin\SetupBusinessProfile.cshtml" />
-    <Content Include="Views\BusinessAdmin\SetupBusinessCalendar.cshtml" />
+    <Content Include="Views\BusinessAdmin\SetupCompanyProfile.cshtml" />
+    <Content Include="Views\BusinessAdmin\SetupCompanyCalendar.cshtml" />
     <Content Include="Views\BusinessAdmin\SetupCalendar.cshtml" />
-    <Content Include="Views\BusinessAdmin\SetupBusinessCalendarInformation.cshtml" />
     <Content Include="Views\Shared\_UserAdminLayout.cshtml" />
     <Content Include="Views\BusinessSite\Index.cshtml" />
     <Content Include="Views\UserAdmin\Dashboard.cshtml" />

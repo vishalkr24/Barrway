@@ -1,10 +1,114 @@
 ﻿
 @{
-    ViewBag.Title = "Setup your business calendar Information";
+    ViewBag.Title = "Setup your business calendar";
     Layout = "~/Views/Shared/_BusinessAdminLayout.cshtml";
 }
 
+<style>
+    .rectangle:hover{
+        cursor:pointer;
+    }
+
+    .error-div{
+        border-radius:6px;
+        background: red;
+        color:white;
+        padding:20px;
+        font-size:14px;
+        display:none;
+        font-weight:bold;
+    }
+
+</style>
+
+<div class="main">
+    <div class="content container">
+        <div class="row pt-lg-5">
+            <div class="col-md-10" style="margin:auto;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="error-div" class="error-div">
+                            Kindly complete the Step 1 - Setup your company profile <a href="/BusinessAdmin/SetupCompanyProfile" style="padding-left: 8px;">Click here to setup now</a>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <main id="content" role="main" class="main">
+    <!-- Content -->
+    <div class="content container">
+        <div class="row pt-lg-1 d-flex justify-content-center">
+            <div class="col-md-10">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="rectangle" onclick="renderForm()">
+                            <div class="rac-img">
+                                <img src="../assets/img/one1.png">
+                            </div>
+                            <div class="rac-text">
+                                <h2>Class and workshop</h2>
+                                <p>eg. Yoga class, Piano class, Baking workshop</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="rectangle" onclick="renderForm()">
+                            <div class="rac-img">
+                                <img src="../assets/img/two.png">
+                            </div>
+                            <div class="rac-text">
+                                <h2>Service appointment</h2>
+                                <p>eg. doctor, massage, hair cut, nail treatment</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="rectangle" onclick="renderForm()">
+                            <div class="rac-img">
+                                <img src="../assets/img/three.png">
+                            </div>
+                            <div class="rac-text">
+                                <h2>Room rental</h2>
+                                <p>eg. Party room, co-working space, dance studio</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="rectangle" onclick="renderForm()">
+                            <div class="rac-img">
+                                <img src="../assets/img/four.png">
+                            </div>
+                            <div class="rac-text">
+                                <h2>Private office room booking</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="rectangle" onclick="renderForm()">
+                            <div class="rac-img">
+                                <img src="../assets/img/five.png">
+                            </div>
+                            <div class="rac-text">
+                                <h2>Event registration</h2>
+                                <p>eg. Volunteering event, Dinner event</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- End Row -->
+    </div>
+    <!-- End Content -->
+</main>
+
+<main id="content-2" role="main" class="main" style="display:none;">
     <!-- Content -->
     <div class="content container">
         <div class="row justify-content-lg-center pt-lg-5">
@@ -14,7 +118,7 @@
                     <div class="profile-form">
                         <h1>Let’s finish up with calendar information</h1>
                         <div class="form-inner">
-                            <form action="/action_page.php">
+                            <form>
                                 <div class="form-group">
                                     <label for="calendarname">Calendar name *</label>
                                     <input type="text" class="form-control" id="calendarname" placeholder="" name="calendarname">
@@ -84,7 +188,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button class="back">Back</button>
+                                <button type="button" onclick="renderCategory()" class="back">Back</button>
                                 <button type="submit" class="btn btn-default">Save</button>
                             </form>
                         </div>
@@ -98,3 +202,6 @@
     <!-- End Content -->
 </main>
 
+@section scripts{
+    <script src="~/Scripts/BusinessScripts/SetupCompanyCalendar.js"></script>
+}
