@@ -52,6 +52,22 @@ function getSingleCompanyByCompanyId(companyId) {
     return data;
 }
 
+function getAllCompanies() {
+    var data;
+    $.ajax({
+        url: "/BusinessAdmin/GetAllCompanies/",
+        async: false,
+        type: "GET",
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    })
+    return data;
+}
+
 function getCompanyCategory() {
     var data;
     $.ajax({

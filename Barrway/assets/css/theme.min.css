@@ -28296,6 +28296,10 @@ select.select-company {
     color: #222222;
     outline: none;
     box-shadow: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 250px;
 }
 .custtome-navbar-dark {
     box-shadow: 0px 1px 7px -5px #4c4c4c;

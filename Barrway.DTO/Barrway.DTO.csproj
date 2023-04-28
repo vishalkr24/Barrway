@@ -68,5 +68,11 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FormGeneratorDTOs\FormGeneratorDTOs.csproj">
+      <Project>{2C758655-D4E2-4AB7-98C5-F815EAB66C53}</Project>
+      <Name>FormGeneratorDTOs</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
