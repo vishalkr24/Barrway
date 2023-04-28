@@ -17,6 +17,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetSingleBusinessWebsite(string UserId);
        
         Task<AddUpdateDelete> GetSingleCompanyById(string Id);
+        Task<AddUpdateDelete> GetAllCompaniesByUserId(string UserId); 
         Task<AddUpdateDelete> GetSingleCalendarById(string Id);
 
         Task<AddUpdateDelete> AddCompany(BusinessCompanyModel model, string UserId, bool IsDefault = false);

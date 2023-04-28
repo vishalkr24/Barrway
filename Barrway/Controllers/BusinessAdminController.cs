@@ -146,6 +146,94 @@ namespace Barrway.Controllers
             }
 
         }
+        T GetObject<T>(Dictionary<string, object> dict)
+        {
+            Type type = typeof(T);
+            var obj = Activator.CreateInstance(type);
+
+            foreach (var kv in dict)
+            {
+                type.GetProperty(kv.Key).SetValue(obj, kv.Value);
+            }
+            return (T)obj;
+        }
+
+
+        public async Task<ActionResult> ManageCompanyWebsite(string CompanyId)
+        {
+            AddUpdateDelete userWebsite = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name);
+
+            if (userWebsite.Status)
+            {
+                
+                if (userWebsite.Data["COMPANY_PROFILE_STATUS"].ToString() == "Y" && userWebsite.Data["COMPANY_CALENDAR_STATUS"].ToString() == "Y")
+                {
+
+                    var company = await businessUserService.GetSingleCompanyById(CompanyId);
+
+                    if (company.Status)
+                    {
+                        BusinessCompanyModel businessCompanyModel = new BusinessCompanyModel()
+                        {
+                            BUSINESS_ACCOUNT_ID = company.Data["BUSINESS_ACCOUNT_ID"].ToString(),
+                            COMPANY_ADDRESS = company.Data["COMPANY_ADDRESS"].ToString(),
+                            COMPANY_BANNER_NAME = company.Data["COMPANY_BANNER_NAME"].ToString(),
+                            COMPANY_BANNER_PATH = company.Data["COMPANY_BANNER_PATH"].ToString(),
+                            CITY_ID = company.Data["CITY_ID"].ToString(),
+                            COMPANY_CATEGORY_ID = company.Data["COMPANY_CATEGORY_ID"].ToString(),
+                            COMPANY_CODE = company.Data["COMPANY_CODE"].ToString(),
+                            COMPANY_DESCRIPTION = company.Data["COMPANY_DESCRIPTION"].ToString(),
+                            COMPANY_LOGO_NAME = company.Data["COMPANY_LOGO_NAME"].ToString(),
+                            COMPANY_LOGO_PATH = company.Data["COMPANY_LOGO_PATH"].ToString(),
+                            COMPANY_NAME_CHINESE = company.Data["COMPANY_NAME_CHINESE"].ToString(),
+                            COMPANY_NAME_ENGLISH = company.Data["COMPANY_NAME_ENGLISH"].ToString(),
+                            COMPANY_PHONE = company.Data["COMPANY_PHONE"].ToString(),
+                            COMPANY_SERVICE = company.Data["COMPANY_SERVICE"].ToString(),
+                            COMPANY_SUB_CATEGORY_ID = company.Data["COMPANY_SUB_CATEGORY_ID"].ToString(),
+                            FACEBOOK_URL = company.Data["FACEBOOK_URL"].ToString(),
+                            INSTAGRAM_URL = company.Data["INSTAGRAM_URL"].ToString(),
+                            IS_DEFAULT = company.Data["IS_DEFAULT"].ToString(),
+                            IS_SEARCHABLE_IN_MARKETPLACE = company.Data["IS_SEARCHABLE_IN_MARKETPLACE"].ToString(),
+                            PAGE_URL = company.Data["PAGE_URL"].ToString(),
+                            TAGS = company.Data["TAGS"].ToString(),
+                            TOTAL_WEBSITE_VISITS = (float)Convert.ToDouble(company.Data["TOTAL_WEBSITE_VISITS"].ToString()),
+                            WECHAT_URL = company.Data["WECHAT_URL"].ToString(),
+                            COUNTRY_ID = company.Data["COUNTRY_ID"].ToString(),
+                            DISTRICT_ID = company.Data["DISTRICT_ID"].ToString(),
+                            Id = company.Data["Id"].ToString(),
+                            TWITTER_URL = company.Data["TWITTER_URL"].ToString()
+                        };
+
+                        return View(businessCompanyModel);
+                    }
+                    else
+                    {
+                        return RedirectToAction("Dashboard");
+                    }
+
+                }
+                else
+                {
+                    return RedirectToAction("Dashboard");
+                }
+            }
+            else
+            {
+                // Business Website Entry not found
+                Session.Clear();
+                Session.RemoveAll();
+                Session.Abandon();
+                TempData.Clear();
+                if (HttpContext != null)
+                {
+                    HttpContext.Request.Cookies.Clear();
+                }
+
+                HttpContext.GetOwinContext().Authentication.SignOut();
+                return RedirectToAction("BusinessLogin", "Account");
+            }
+            return View();
+        }
 
         #endregion
 
@@ -296,6 +384,28 @@ namespace Barrway.Controllers
 
         }
 
+        public async Task<ActionResult> GetAllCompanies()
+        {
+            try
+            {
+                var company = await businessUserService.GetAllCompaniesByUserId(User.Identity.Name.ToString());
+
+                if (company.Status)
+                {
+                    return Json(new AddUpdateDelete() { Status = true, Data = company.Data, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new AddUpdateDelete() { Status = false, Message = "Company Not Found" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
         public async Task<ActionResult> GetCompanyCategory()
         {
             try
@@ -384,7 +494,17 @@ namespace Barrway.Controllers
 
                     if (saveDataResult.Status)
                     {
-                        return RedirectToAction("SetupCompanyCalendar", saveDataResult);
+                        website = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
+
+                        if (website.Data["COMPANY_CALENDAR_STATUS"].ToString() == "Y")
+                        {
+                            return RedirectToAction("Dashboard");
+                        }
+                        else
+                        {
+                            return RedirectToAction("SetupCompanyCalendar", saveDataResult);
+                        }
+
                     }
                     else
                     {
@@ -402,6 +522,31 @@ namespace Barrway.Controllers
             catch (Exception ex)
             {
                 return View("SetupCompanyProfile");
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> SaveCompanyWebsiteDetails(BusinessCompanyModel model)
+        {
+            try
+            {
+                var saveDataResult = await businessUserService.AddCompany(model, User.Identity.Name.ToString());
+
+                if (saveDataResult.Status)
+                {
+                    var website = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
+
+                    return RedirectToAction("Dashboard");
+
+                }
+                else
+                {
+                    return View("ManageWebiste");
+                }
+            }
+            catch (Exception ex)
+            {
+                return View("ManageWebiste");
             }
         }
 

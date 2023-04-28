@@ -1776,7 +1776,10 @@
     <Content Include="assets\css\fonts\bootstrap-iconsd862.woff2" />
     <Content Include="assets\svg\logos-light.zip" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\BusinessScripts\AdminDashboard.js" />
+    <Content Include="Scripts\BusinessScripts\AdminLayoutManager.js" />
     <Content Include="Scripts\BusinessScripts\Common\CommonFunctions.js" />
+    <Content Include="Scripts\BusinessScripts\ManageCompanyWebsite.js" />
     <Content Include="Scripts\BusinessScripts\SetupCompanyCalendar.js" />
     <Content Include="Scripts\BusinessScripts\SetupCompanyProfile.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
@@ -1816,6 +1819,7 @@
     <Content Include="Views\Shared\_UserAdminLayout.cshtml" />
     <Content Include="Views\BusinessSite\Index.cshtml" />
     <Content Include="Views\UserAdmin\Dashboard.cshtml" />
+    <Content Include="Views\BusinessAdmin\ManageCompanyWebsite.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

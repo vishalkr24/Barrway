@@ -83,6 +83,24 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> GetAllCompaniesByUserId(string UserId)
+        {
+            string query = $@"SELECT company.[Id]      ,company.[created_at]      ,company.[updated_at]      ,company.[created_by]      ,company.[updated_by]     ,[BUSINESS_ACCOUNT_ID]      ,[COMPANY_CODE]      ,[COMPANY_NAME_ENGLISH]      ,[COMPANY_NAME_CHINESE]      ,[COMPANY_LOGO_NAME]      ,[COMPANY_LOGO_PATH]      ,[COMPANY_BANNER_NAME]      ,[COMPANY_BANNER_PATH]      ,[COMPANY_PHONE]      ,[COMPANY_ADDRESS]      ,[FACEBOOK_URL]      ,[INSTAGRAM_URL]      ,[WECHAT_URL]      ,[TWITTER_URL]      ,[PAGE_URL]      ,[COMPANY_DESCRIPTION]      ,[COMPANY_SERVICE]      ,[TAGS]      ,[IS_SEARCHABLE_IN_MARKETPLACE]      ,[COMPANY_CATEGORY_ID]      ,[COMPANY_SUB_CATEGORY_ID]      ,[COUNTRY_ID]      ,[CITY_ID]      ,[DISTRICT_ID]      ,[TOTAL_WEBSITE_VISITS]      ,[IS_DEFAULT]  FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company
+                                JOIN BUSINESS_ACCOUNT_WEBSITE_1918 business on business.Id = company.BUSINESS_ACCOUNT_ID
+                                where business.USER_ID = '{UserId}'";
+
+            List<IDictionary<string, object>> BusinessCompanyResult = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (BusinessCompanyResult.Count > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = BusinessCompanyResult.ToList() };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
         public async Task<AddUpdateDelete> GetSingleCalendarById(string Id)
         {
             string query = "SELECT [Id]      ,[created_at]      ,[updated_at]      ,[created_by]     ,[COMPANY_NAME_CHINESE]      ,[updated_by]      ,[CALENDAR_NAME]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,[COUNTRY_ID]      ,[CITY_ID]      ,[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] where Id =  '" + Id + "'";
@@ -276,7 +294,6 @@ namespace Barrway.Service.Repository
                 string query = $@"UPDATE [dbo].[BUSINESS_COMPANY_MASTER_1924] SET 
                                [updated_at] = '{DateTime.Now.ToString()}'
                               ,[BUSINESS_ACCOUNT_ID] = '{model.BUSINESS_ACCOUNT_ID}'
-                              ,[COMPANY_CODE] = '{model.COMPANY_CODE}'
                               ,[COMPANY_NAME_ENGLISH] = '{model.COMPANY_NAME_ENGLISH}'
                               ,[COMPANY_NAME_CHINESE] = '{model.COMPANY_NAME_CHINESE}'
                               ,[COMPANY_LOGO_NAME] = '{model.COMPANY_LOGO_NAME}'
@@ -357,8 +374,7 @@ namespace Barrway.Service.Repository
 
                 if (formResult.res == 1)
                 {
-                    string CompanyCode = "CMP" + formResult.Id.ToString().PadLeft(5, '0');
-
+                    
                     var website = await GetSingleBusinessWebsite(UserId);
 
                     if (website.Status)

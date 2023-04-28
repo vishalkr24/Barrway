@@ -4,13 +4,13 @@
     ViewBag.Title = "Dashboard";
 }
 
-<main id="content" role="main" class="main">
+<main id="content" role="main" class="main" style="display:none;">
     <!-- Content -->
     <div class="content container-fluid">
         <div class="row">
             <div class="col-md-12">
                 <div class="bredcrump">
-                    <span><a href="#">Company name</a> / <a href="#">Dashboard</a> </span>
+                    <span><a class="lbl-company-name" href="#">Company name</a> / <a href="#">Dashboard</a> </span>
                 </div>
             </div>
         </div>
@@ -26,7 +26,7 @@
                                 <span>Step 2</span><span> - Set up calendar</span><span id="CalendarSetupBtn" style="float: right;" onclick="location.href = '@Url.Action("SetupCompanyCalendar", "BusinessAdmin")'"><a href="#" class="purple">Go</a> </span>
                             </div>
                             <div class="setup">
-                                <span>Step 3</span><span> - Set up company webiste</span><span style="float: right;"><a href="#" class="purple">Go</a> </span>
+                                <span>Step 3</span><span> - Set up company webiste</span><span style="float: right;" onclick="showComapanyWebsiteDetails()"><a href="#" class="purple">Go</a> </span>
                             </div>
                         </div>
                     </div>
@@ -42,7 +42,7 @@
                             </div>
                             <div class="wrap-body">
                                 <div class="wb-top">
-                                    <p>Let’s set up your website. <a href="#" style="color: #72328A;"><u>Set up now.</u></a></p>
+                                    <p>Let’s set up your website. <a  onclick="showComapanyWebsiteDetails()" href="#" style="color: #72328A;"><u>Set up now.</u></a></p>
                                 </div>
                                 <div class="wb-bottom">
 
@@ -93,32 +93,317 @@
             </div>
         </div>
         <!-- End Content -->
+    </div>
 </main>
 
 
-<script>
+<main id="content-2" role="main" class="main" style="display:none;">
+    <!-- Content -->
+    <div class="content container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="bredcrump">
+                    <span><a class="lbl-company-name" href="#">Company name</a> / <a href="#">Dashboard</a> </span>
+                </div>
+            </div>
+        </div>
+        <div class="row pt-lg-5">
+            <div class="col-lg-7">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="wraping">
+                            <div class="top-head purple">
+                                <h3>Booking todays</h3>
+                                <img src="../assets/img/ques.png">
+                            </div>
+                            <div class="wrap-body">
+                                <div class="wb-top">
+                                    <div class="w-l w-80">
+                                        <h1>10</h1>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <h3><img src="../assets/img/angle-red.png" /> 2%</h3>
+                                    </div>
+                                </div>
+                                <div class="wb-bottom">
+                                    <div class="w-l w-80">
+                                        <p><span>2023-02-21</span> <span></span> <span></span></p>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <p><a href="#"> View ></a></p>
+                                    </div>
+                                </div>
 
-    $(document).ready(function(){
-        setPageStatus();
-    });
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="wraping">
+                            <div class="top-head light-purple">
+                                <h3>Number of calendars</h3>
+                                <img src="">
+                            </div>
+                            <div class="wrap-body">
+                                <div class="wb-top">
+                                    <div class="w-l w-80">
+                                        <h1>2</h1>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <h3><img src="" /> </h3>
+                                    </div>
+                                </div>
+                                <div class="wb-bottom">
+                                    <div class="w-l w-80">
+                                        <p><span></span> <span></span> <span></span></p>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <p><a href="#"> View ></a></p>
+                                    </div>
+                                </div>
 
-    function setPageStatus() {
-        var response = getCompanyWebsite();
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="wraping">
+                            <div class="top-head purple">
+                                <h3>Booking this week</h3>
+                                <img src="../assets/img/ques.png">
+                            </div>
+                            <div class="wrap-body">
+                                <div class="wb-top">
+                                    <div class="w-l w-80">
+                                        <h1>34</h1>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <h3><img src="../assets/img/angle-blue.png" /> 2%</h3>
+                                    </div>
+                                </div>
+                                <div class="wb-bottom">
+                                    <div class="w-l w-80">
+                                        <p><span>2023-02-20</span> - <span>2023 02 -26</span></p>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <p><a href="#"> View ></a></p>
+                                    </div>
+                                </div>
 
-        if (response.Data.CURRENT_STEP == "COMPLETED") {
-            window.location.replace("/BusinessAdmin/BusinessDashboard")
-        } else {
-            if (response.Data.COMPANY_PROFILE_STATUS == "Y") {
-                $("#CompanyProfileSetupBtn a").text("Done");
-                /*$("#CompanyProfileSetupBtn").attr("onclick", "");*/
-            }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="wraping">
+                            <div class="top-head light-purple">
+                                <h3>Number of Services</h3>
+                                <img src="../assets/img/ques.png">
+                            </div>
+                            <div class="wrap-body">
+                                <div class="wb-top">
+                                    <div class="w-l w-80">
+                                        <h1>1</h1>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <h3><img src="" /></h3>
+                                    </div>
+                                </div>
+                                <div class="wb-bottom">
+                                    <div class="w-l w-80">
+                                        <p><span></span> <span></span> <span></span></p>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <p><a href="#"> View ></a></p>
+                                    </div>
+                                </div>
 
-            if (response.Data.COMPANY_CALENDAR_STATUS == "Y") {
-                $("#CalendarSetupBtn a").text("Done");
-                $("#CalendarSetupBtn").attr("onclick", "");
-            }
-        }
-    }
-     
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="wraping">
+                            <div class="top-head purple">
+                                <h3>Booking this week</h3>
+                                <img src="../assets/img/ques.png">
+                            </div>
+                            <div class="wrap-body">
+                                <div class="wb-top">
+                                    <div class="w-l w-80">
+                                        <h1>34</h1>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <h3><img src="../assets/img/angle-blue.png" /> 2%</h3>
+                                    </div>
+                                </div>
+                                <div class="wb-bottom">
+                                    <div class="w-l w-80">
+                                        <p><span>2023-02-20</span> - <span>2023 02 -26</span></p>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <p><a href="#"> View ></a></p>
+                                    </div>
+                                </div>
 
-</script>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="wraping">
+                            <div class="top-head light-purple">
+                                <h3>Number of Service Provider</h3>
+                                <img src="../assets/img/ques.png">
+                            </div>
+                            <div class="wrap-body">
+                                <div class="wb-top">
+                                    <div class="w-l w-80">
+                                        <h1>3</h1>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <h3><img src="" /></h3>
+                                    </div>
+                                </div>
+                                <div class="wb-bottom">
+                                    <div class="w-l w-80">
+                                        <p><span></span>  <span></span></p>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <p><a href="#"> View ></a></p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="wraping">
+                            <div class="top-head salmon">
+                                <h3>Booking todays</h3>
+                                <img src="../assets/img/ques.png">
+                            </div>
+                            <div class="wrap-body">
+                                <div class="wb-top">
+                                    <div class="w-l w-80">
+                                        <h1>34</h1>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <h3><img src="../assets/img/angle-blue.png" /> 2%</h3>
+                                    </div>
+                                </div>
+                                <div class="wb-bottom">
+                                    <div class="w-l w-80">
+                                        <p><span>2023-02-20</span> - <span>2023 02 -26</span></p>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <p><a href="#"> View ></a></p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="wraping">
+                            <div class="top-head light-purple">
+                                <h3>Number of Clients</h3>
+                                <img src="../assets/img/ques.png">
+                            </div>
+                            <div class="wrap-body">
+                                <div class="wb-top">
+                                    <div class="w-l w-80">
+                                        <h1>88</h1>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <h3><img src="" /></h3>
+                                    </div>
+                                </div>
+                                <div class="wb-bottom">
+                                    <div class="w-l w-80">
+                                        <p><span></span>  <span></span></p>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <p><a href="#"> View ></a></p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="wraping">
+                            <div class="top-head barrway-red">
+                                <h3>Website visits</h3>
+                                <img src="../assets/img/ques.png">
+                            </div>
+                            <div class="wrap-body">
+                                <div class="wb-top">
+                                    <div class="w-l w-80">
+                                        <h1>12</h1>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <h3><img src="../assets/img/angle-red.png" /> 2%</h3>
+                                    </div>
+                                </div>
+                                <div class="wb-bottom">
+                                    <div class="w-l w-80">
+                                        <p><span>2023-02-20</span> <span>-</span> <span> 2023 02 -26</span></p>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <p><a href="#"> View ></a></p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="wraping">
+                            <div class="top-head barrway-red">
+                                <h3>Your plans & subscription</h3>
+                                <img src="../assets/img/ques.png">
+                            </div>
+                            <div class="wrap-body">
+                                <div class="wb-top">
+                                    <div class="w-l w-80">
+                                        <h3>Basic Plan HK$299/month</h3>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <h3><img src="" /></h3>
+                                    </div>
+                                </div>
+                                <div class="wb-bottom">
+                                    <div class="w-l w-80">
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Vaid till:</td>
+                                                    <td>YYYY-MM-DD</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Booking available</td>
+                                                    <td>1,000/5,000</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <p><a href="#" class="see-plan barrway-red"> See plans</a></p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Row -->
+    </div>
+    <!-- End Content -->
+</main>
+
+
+@section scripts{
+    <script src="~/Scripts/BusinessScripts/AdminDashboard.js"></script>
+}
