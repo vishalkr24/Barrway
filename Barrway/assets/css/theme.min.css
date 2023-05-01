@@ -28138,6 +28138,7 @@ button#backtomarketplace {
 .form-inner .back {
     background-color: #EBEBEB;
     color: #777777;
+    border: 1px solid grey;
 }
 .rectangle {
     text-align: center;
