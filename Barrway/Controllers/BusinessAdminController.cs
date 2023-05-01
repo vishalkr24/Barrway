@@ -146,19 +146,7 @@ namespace Barrway.Controllers
             }
 
         }
-        T GetObject<T>(Dictionary<string, object> dict)
-        {
-            Type type = typeof(T);
-            var obj = Activator.CreateInstance(type);
-
-            foreach (var kv in dict)
-            {
-                type.GetProperty(kv.Key).SetValue(obj, kv.Value);
-            }
-            return (T)obj;
-        }
-
-
+        
         public async Task<ActionResult> ManageCompanyWebsite(string CompanyId)
         {
             AddUpdateDelete userWebsite = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name);
@@ -173,18 +161,18 @@ namespace Barrway.Controllers
 
                     if (company.Status)
                     {
-                        BusinessCompanyModel businessCompanyModel = new BusinessCompanyModel()
+                        BusinessCompanyViewModel businessCompanyModel = new BusinessCompanyViewModel()
                         {
                             BUSINESS_ACCOUNT_ID = company.Data["BUSINESS_ACCOUNT_ID"].ToString(),
                             COMPANY_ADDRESS = company.Data["COMPANY_ADDRESS"].ToString(),
                             COMPANY_BANNER_NAME = company.Data["COMPANY_BANNER_NAME"].ToString(),
-                            COMPANY_BANNER_PATH = company.Data["COMPANY_BANNER_PATH"].ToString(),
+                            
                             CITY_ID = company.Data["CITY_ID"].ToString(),
                             COMPANY_CATEGORY_ID = company.Data["COMPANY_CATEGORY_ID"].ToString(),
                             COMPANY_CODE = company.Data["COMPANY_CODE"].ToString(),
                             COMPANY_DESCRIPTION = company.Data["COMPANY_DESCRIPTION"].ToString(),
                             COMPANY_LOGO_NAME = company.Data["COMPANY_LOGO_NAME"].ToString(),
-                            COMPANY_LOGO_PATH = company.Data["COMPANY_LOGO_PATH"].ToString(),
+                            
                             COMPANY_NAME_CHINESE = company.Data["COMPANY_NAME_CHINESE"].ToString(),
                             COMPANY_NAME_ENGLISH = company.Data["COMPANY_NAME_ENGLISH"].ToString(),
                             COMPANY_PHONE = company.Data["COMPANY_PHONE"].ToString(),
@@ -525,28 +513,129 @@ namespace Barrway.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<ActionResult> SaveCompanyWebsiteDetails(BusinessCompanyModel model)
+
+        public async Task<ActionResult> SaveCompanyServiceDetails(BusinessCompanyViewModel model)
         {
             try
             {
-                var saveDataResult = await businessUserService.AddCompany(model, User.Identity.Name.ToString());
+
+                BusinessCompanyModel companyModel = new BusinessCompanyModel()
+                {
+                    BUSINESS_ACCOUNT_ID = model.BUSINESS_ACCOUNT_ID,
+                    COMPANY_SERVICE = model.COMPANY_SERVICE,
+                    Id = model.Id                   
+                };
+
+                var saveDataResult = await businessUserService.UpdateCompanyService(companyModel);
+
+                if (saveDataResult.Status)
+                {
+                    return RedirectToAction("Dashboard");
+                }
+                else
+                {
+                    return View("ManageCompanyWebsite");
+                }
+            }
+            catch (Exception ex)
+            {
+                return View("ManageCompanyWebsite");
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> SaveCompanyWebsiteDetails(BusinessCompanyViewModel model)
+        {
+            try
+            {
+
+                if (!ModelState.IsValid)
+                {
+                    return View("ManageCompanyWebsite", model);
+                }
+
+                string folderPath = Server.MapPath("UploadCompany/CompanyLogos/" + model.COMPANY_CODE.ToString());
+                string folderPath2 = Server.MapPath("UploadCompany/CompanyBanners/" + model.COMPANY_CODE.ToString());
+
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+                else
+                {
+                    Directory.Delete(folderPath);
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                if (!Directory.Exists(folderPath2))
+                {
+                    Directory.CreateDirectory(folderPath2);
+                }
+                else
+                {
+                    Directory.Delete(folderPath2);
+                    Directory.CreateDirectory(folderPath2);
+                }
+
+                string path = "~/UploadCompany/CompanyLogos/" + model.COMPANY_CODE.ToString() + "/" + model.COMPANY_LOGO_NAME.ToString();
+                string path2 = "~/UploadCompany/CompanyBanners/" + model.COMPANY_CODE.ToString() + "/" + model.COMPANY_BANNER_NAME.ToString();
+
+                BusinessCompanyModel companyModel = new BusinessCompanyModel()
+                {
+                    BUSINESS_ACCOUNT_ID = model.BUSINESS_ACCOUNT_ID,
+                    CITY_ID = model.CITY_ID,
+                    COMPANY_ADDRESS = model.COMPANY_ADDRESS,
+                    COMPANY_BANNER_NAME = model.COMPANY_BANNER_NAME,
+                    COMPANY_CATEGORY_ID = model.COMPANY_CATEGORY_ID,
+                    COMPANY_DESCRIPTION = model.COMPANY_DESCRIPTION,
+                    COMPANY_EMAIL = model.COMPANY_EMAIL,
+                    COMPANY_LOGO_NAME = model.COMPANY_LOGO_NAME,
+                    COMPANY_BANNER_PATH = path2,
+                    COMPANY_LOGO_PATH = path,
+                    COMPANY_NAME_CHINESE = model.COMPANY_NAME_CHINESE,
+                    COMPANY_NAME_ENGLISH = model.COMPANY_NAME_ENGLISH,
+                    COMPANY_PHONE = model.COMPANY_PHONE,
+                    COMPANY_SUB_CATEGORY_ID = model.COMPANY_SUB_CATEGORY_ID,
+                    COUNTRY_ID = model.COUNTRY_ID,
+                    DISTRICT_ID = model.DISTRICT_ID,
+                    FACEBOOK_URL = model.FACEBOOK_URL,
+                    Id = model.Id,
+                    INSTAGRAM_URL = model.INSTAGRAM_URL,
+                    IS_SEARCHABLE_IN_MARKETPLACE = model.IS_SEARCHABLE_IN_MARKETPLACE,
+                    PAGE_URL = model.PAGE_URL,
+                    TAGS = model.TAGS,
+                    TWITTER_URL = model.TWITTER_URL,
+                    WECHAT_URL = model.WECHAT_URL
+                };
+
+                var saveDataResult = await businessUserService.AddCompany(companyModel, User.Identity.Name.ToString());
 
                 if (saveDataResult.Status)
                 {
                     var website = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
+
+                    if (model.COMPANY_LOGO_PATH != null)
+                    {
+                        model.COMPANY_LOGO_PATH.SaveAs(Server.MapPath("UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString()) + "/" + model.COMPANY_LOGO_NAME.ToString());
+                    }
+
+                    if (model.COMPANY_BANNER_PATH != null)
+                    {
+                        model.COMPANY_BANNER_PATH.SaveAs(Server.MapPath("UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString()) + "/" + model.COMPANY_BANNER_NAME.ToString());
+                    }
+                    
 
                     return RedirectToAction("Dashboard");
 
                 }
                 else
                 {
-                    return View("ManageWebiste");
+                    return View("ManageCompanyWebsite");
                 }
             }
             catch (Exception ex)
             {
-                return View("ManageWebiste");
+                return View("ManageCompanyWebsite");
             }
         }
 

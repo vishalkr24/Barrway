@@ -1,13 +1,106 @@
-﻿@model Barrway.DTO.BusinessModels.BusinessCompanyModel
+﻿@using Barrway.DTO.BusinessModels
+@model Barrway.DTO.BusinessModels.BusinessCompanyViewModel
 @{
     ViewBag.Title = "ManageCompanyWebsite";
     Layout = "~/Views/Shared/_BusinessAdminLayout.cshtml";
 }
 
-<h2>Manage Website</h2>
+<style>
+    .form-navigation .nav-link {
+        color: unset;
+    }
+
+    .form-navigation .nav-tabs .nav-link.active {
+        border-color: none !important;
+    }
+
+    .form-navigation .nav-link.active:after {
+        background: none;
+    }
+
+    .form-inner input, .form-inner select, textarea {
+        border: 1px solid #8171B0 !important;
+        box-shadow: none;
+    }
+</style>
+
+<div class="content container-fluid">
+
+    <div class="row justify-content-lg-center mt-5">
+        <div class="bredcrump">
+            <span><a class="lbl-company-name" href="#">Company name</a> / <a href="#">Manage</a> </span>
+        </div>
+    </div>
+
+    <div class="js-nav-scroller hs-nav-scroller-horizontal mb-5 form-navigation" style="position:sticky; top:0px; background:white;">
+        <span class="hs-nav-scroller-arrow-prev" style="display: none;">
+            <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                <i class="bi-chevron-left"></i>
+            </a>
+        </span>
+
+        <span class="hs-nav-scroller-arrow-next" style="display: none;">
+            <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                <i class="bi-chevron-right"></i>
+            </a>
+        </span>
+
+        <ul class="nav nav-tabs align-items-center">
+            <li id="btn1" class="nav-item" onclick="renderPage('1')">
+                <a class="nav-link active" href="#">Basic Information</a>
+            </li>
+            <li id="btn2" class="nav-item" onclick="renderPage('2')">
+                <a class="nav-link " href="#">Service</a>
+            </li>
+            <li id="btn3" class="nav-item" onclick="renderPage('3')">
+                <a class="nav-link " href="#">Calendar Package</a>
+            </li>
+            <li id="btn4" class="nav-item" onclick="renderPage('4')">
+                <a class="nav-link " href="#">Photo Album</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="form-inner" style="max-width:unset;">
+
+        <div id="div1">
+            @RenderPage("~/Views/BusinessAdmin/_EditCompanyInformation.cshtml", Model)
+        </div>
+
+        <div id="div2" style="display:none;">
+            @RenderPage("~/Views/BusinessAdmin/_EditCompanyService.cshtml", Model)
+        </div>
+
+        <div id="div3" style="display:none;">
+            <div style="float:right">
+
+            </div>
+        </div>
+
+        <div id="div4" style="display:none;">
+
+            <div style="float:right">
+                <button type="button" onclick="renderCategory()" class="btn back">Cancel</button>
+                <button type="button" class="btn btn-default">Upload Photo</button>
+                <button type="button" class="btn btn-default">Save</button>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+</div>
+
+@*@RenderPage("~/Views/BusinessAdmin/")*@
+
 
 @section scripts{
 
     <script src="~/Scripts/BusinessScripts/ManageCompanyWebsite.js"></script>
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
 }
 

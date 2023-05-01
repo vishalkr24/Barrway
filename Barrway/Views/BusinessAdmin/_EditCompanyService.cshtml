@@ -1,0 +1,14 @@
+﻿@model Barrway.DTO.BusinessModels.BusinessCompanyViewModel
+
+@using (Html.BeginForm("SaveCompanyServiceDetails", "BusinessAdmin", FormMethod.Post))
+{
+    <div style="text-align:right">
+        <button type="button" onclick="" class="btn back">Cancel</button>
+        <button type="submit" class="btn btn-default">Save</button>
+    </div>
+    <br />
+
+    @Html.TextAreaFor(model => model.COMPANY_SERVICE)
+    @Html.TextBoxFor(model => model.Id, new { @readonly = "true", @style = "visibility:hidden" })
+    @Html.TextBoxFor(model => model.BUSINESS_ACCOUNT_ID, new { @readonly = "true", @style = "visibility:hidden" })
+}

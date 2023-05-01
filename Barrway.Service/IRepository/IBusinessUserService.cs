@@ -21,6 +21,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetSingleCalendarById(string Id);
 
         Task<AddUpdateDelete> AddCompany(BusinessCompanyModel model, string UserId, bool IsDefault = false);
+        Task<AddUpdateDelete> UpdateCompanyService(BusinessCompanyModel model);
 
         Task<AddUpdateDelete> AddCalendar(BusinessCalendarModel model, string UserId);
 

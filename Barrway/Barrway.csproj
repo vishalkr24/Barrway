@@ -1820,11 +1820,15 @@
     <Content Include="Views\BusinessSite\Index.cshtml" />
     <Content Include="Views\UserAdmin\Dashboard.cshtml" />
     <Content Include="Views\BusinessAdmin\ManageCompanyWebsite.cshtml" />
+    <Content Include="Views\BusinessAdmin\_EditCompanyInformation.cshtml" />
+    <Content Include="Views\BusinessAdmin\_EditCompanyService.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Logs\" />
     <Folder Include="UploadCalendar\CalendarImages\" />
+    <Folder Include="UploadCompany\CompanyBanners\" />
+    <Folder Include="UploadCompany\CompanyLogos\" />
     <Folder Include="Views\BusinessCalendar\" />
   </ItemGroup>
   <ItemGroup>
