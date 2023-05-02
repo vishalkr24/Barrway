@@ -62,7 +62,7 @@
     setCountryData();
     setCompanyCategory();
     SetCompanyDetails(companyId);
-    
+    renderPage($("#pageCheckId").val());
 });
 
 $(document).on("change", "#COUNTRY_ID", function () {
@@ -223,7 +223,6 @@ function SetCompanyDetails(companyId) {
 
     console.log(data);
 
-
     $("#COMPANY_NAME_ENGLISH").val(data.Data.COMPANY_NAME_ENGLISH);
     $("#COMPANY_NAME_CHINESE").val(data.Data.COMPANY_NAME_CHINESE);
     $("#COMPANY_CATEGORY_ID").val(data.Data.COMPANY_CATEGORY_ID);
@@ -235,4 +234,54 @@ function SetCompanyDetails(companyId) {
     bindDistrictData(data.Data.DISTRICT_ID);
     $("#DISTRICT_ID").val(data.Data.DISTRICT_ID);
 
+}
+
+function openUploadPhotoModal() {
+    $("#uploadPhotoModal").modal("show");
+}
+
+function closeUploadPhotoModal() {
+    $("#uploadPhotoModal").modal("hide");
+}
+
+function savePhotoAlbum() {
+    var fileUpload = $("#photoAlbumForm_ALBUM_PHOTO_PATH").get(0);
+    var files = fileUpload.files;
+
+    var fileData = new FormData();
+
+    // Looping over all files and add it to FormData object  
+    if (files.length <= 0) {
+        $("#ALBUM_PHOTO_ERROR").show();
+        return;
+    } else {
+        $("#ALBUM_PHOTO_ERROR").hide();
+    }
+
+    for (var i = 0; i < files.length; i++) {
+        fileData.append(files[i].name, files[i]);
+    }
+
+    // Adding one more key to FormData object  
+    fileData.append('CompanyCode', localStorage.getItem("COMPANY_CODE"));
+    fileData.append('CompanyId', localStorage.getItem("COMPANY_ID"));
+
+    $.ajax({
+        url: '/BusinessAdmin/AddCompanyPhotoAlbum',
+        type: "POST",
+        contentType: false, // Not to set any content header  
+        processData: false, // Not to process data  
+        data: fileData,
+        success: function (result) {
+            if (result == "Success") {
+                $("#photoAlbumForm_ALBUM_PHOTO_PATH").val("");
+                $("#uploadPhotoModal").modal("hide");
+            } else {
+                alert(result);
+            }
+        },
+        error: function (err) {
+            alert(err.statusText);
+        }
+    });
 }

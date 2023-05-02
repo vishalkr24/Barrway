@@ -321,6 +321,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\css\custom-styles.css" />
     <Content Include="assets\css\docs.css" />
     <Content Include="assets\css\images\layers-2x.html" />
     <Content Include="assets\css\images\layers.html" />
@@ -1818,7 +1819,6 @@
     <Content Include="Views\BusinessAdmin\SetupCalendar.cshtml" />
     <Content Include="Views\Shared\_UserAdminLayout.cshtml" />
     <Content Include="Views\BusinessSite\Index.cshtml" />
-    <Content Include="Views\UserAdmin\Dashboard.cshtml" />
     <Content Include="Views\BusinessAdmin\ManageCompanyWebsite.cshtml" />
     <Content Include="Views\BusinessAdmin\_EditCompanyInformation.cshtml" />
     <Content Include="Views\BusinessAdmin\_EditCompanyService.cshtml" />
@@ -1827,9 +1827,11 @@
     <Folder Include="App_Data\" />
     <Folder Include="Logs\" />
     <Folder Include="UploadCalendar\CalendarImages\" />
+    <Folder Include="UploadCompanyPhotoAlbum\" />
     <Folder Include="UploadCompany\CompanyBanners\" />
     <Folder Include="UploadCompany\CompanyLogos\" />
     <Folder Include="Views\BusinessCalendar\" />
+    <Folder Include="Views\UserAdmin\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

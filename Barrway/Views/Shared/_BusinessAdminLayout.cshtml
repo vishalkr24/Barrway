@@ -22,7 +22,7 @@
 
     <link rel="preload" href="../assets/css/theme.min.css" data-hs-appearance="default" as="style">
     <link rel="preload" href="../assets/css/theme-dark.min.css" data-hs-appearance="dark" as="style">
-
+    <link href="~/assets/css/custom-styles.css" rel="stylesheet" />
 
     <style data-hs-appearance-onload-styles>
         * {
@@ -33,11 +33,7 @@
             opacity: 0;
         }
 
-        .invalid-feedback-2 {
-            color: red !important;
-            margin-bottom: 11px;
-            display: block !important;
-        }
+        
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="~/Scripts/BusinessScripts/Common/CommonFunctions.js"></script>
@@ -519,7 +515,7 @@
                                 <a class="dropdown-item " href="#">File Manager</a>
                             </div>*@
 
-                            <a class="nav-link" id="manage-website" onclick="showComapanyWebsiteDetails()" href="#">
+                            <a class="nav-link" id="manage-website" onclick="showComapanyWebsiteDetails(1)" href="#">
                                 Website
                             </a>
 

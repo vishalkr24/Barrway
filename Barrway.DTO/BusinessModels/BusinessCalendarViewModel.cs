@@ -17,8 +17,6 @@ namespace Barrway.DTO.BusinessModels
         public string IS_VISIBLE { get; set; }
         public string COMPANY_CODE { get; set; }
 
-        [Required(ErrorMessage = "Please select a company first")]
-        public string COMPANY_NAME_CHINESE { get; set; }
 
         [Required(ErrorMessage = "Calendar name is required")]
         public string CALENDAR_NAME { get; set; }

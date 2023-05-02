@@ -77,6 +77,6 @@ function setCompanyDetails() {
 
 }
 
-function showComapanyWebsiteDetails() {
-    window.location.href = "/BusinessAdmin/ManageCompanyWebsite?CompanyId=" + localStorage.getItem('COMPANY_ID');
+function showComapanyWebsiteDetails(pageId = 1) {
+    window.location.href = "/BusinessAdmin/ManageCompanyWebsite?CompanyId=" + localStorage.getItem('COMPANY_ID') + "&PId=" + pageId;
 }

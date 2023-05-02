@@ -21,7 +21,6 @@ namespace Barrway.DTO.BusinessModels
 
         public string COMPANY_CODE { get; set; }
 
-        public string COMPANY_NAME_CHINESE { get; set; }
 
         public string CALENDAR_NAME { get; set; }
         

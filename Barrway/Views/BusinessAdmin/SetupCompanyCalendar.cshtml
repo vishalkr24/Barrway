@@ -138,12 +138,6 @@
                                             @Html.ValidationMessageFor(model => model.COUNTRY_ID, "", new { @class = "invalid-feedback-2" })
 
 
-                                            @*<select class="form-control" id="sel1">
-                            <option>China</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                        </select>*@
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -154,12 +148,6 @@
                                             @Html.ValidationMessageFor(model => model.CITY_ID, "", new { @class = "invalid-feedback-2" })
 
 
-                                            @*<select class="form-control" id="sel1">
-                            <option>Hong Kong</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                        </select>*@
                                         </div>
                                     </div>
                                 </div>
@@ -170,22 +158,8 @@
                                     @Html.ValidationMessageFor(model => model.DISTRICT_ID, "", new { @class = "invalid-feedback-2" })
 
 
-                                    @*<select class="form-control" id="sel1">
-                    <option>Select</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                </select>*@
                                 </div>
-                                <div class="form-group">
-                                    <label for="companynamechinese">Company Name (Chinese)</label>
-
-                                    @Html.TextBoxFor(model => model.COMPANY_NAME_CHINESE, new { @class = "form-control", @placeholder = "Company name", @readonly = "true", @required = "true" })
-                                    @Html.ValidationMessageFor(model => model.COMPANY_NAME_CHINESE, "", new { @class = "invalid-feedback-2" })
-
-
-                                    @*<input type="text" class="form-control" id="companynamechinese" placeholder="" name="companynamechinese">*@
-                                </div>
+                                
                                 <div class="form-group">
                                     <label for="cala">Calendar category *</label>
 
@@ -193,12 +167,6 @@
                                     @Html.ValidationMessageFor(model => model.CALENDAR_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
 
 
-                                    @*<select class="form-control" id="sel1">
-                    <option>Select</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                </select>*@
                                 </div>
                                 <div class="form-group">
                                     <label for="sub">Calendar Sub-category *</label>
@@ -207,24 +175,17 @@
                                     @Html.ValidationMessageFor(model => model.CALENDAR_SUB_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
 
 
-                                    @*<select class="form-control" id="sel1">
-                    <option>Select</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                </select>*@
                                 </div>
                                 <div class="form-group">
                                     <p style="margin-bottom: 0px;"><label for="file">Calendar  photo</label></p>
                                     <div class="custome-uploade">
-                                        @*<input type="text" id="uploadFile" class="f-input" placeholder="This photo will be seen in market place" />*@
-
-                                        @Html.TextBoxFor(model => model.CALENDAR_PHOTO_NAME, new { @class = "f-input", @placeholder = "This photo will be seen in market place", @required = "true" })
+                                       
+                                        <label for="CALENDAR_PHOTO_PATH" id="CALENDAR_PHOTO_NAME" style="width:80%; max-width:300px; padding-left:16px;">This photo will be seen in market place</label>
 
                                         <div class="fileUpload btn btn--browse">
                                             <span>Browse</span>
-                                            @Html.TextBoxFor(model => model.CALENDAR_PHOTO_PATH, new { @class = "upload", Type = "File" })
-                                            @*<input id="CALENDAR_PHOTO_PATH" type="file" class="upload" />*@
+                                            @Html.TextBoxFor(model => model.CALENDAR_PHOTO_PATH, new { @class = "upload", Type = "File", @onchange = "BindLogoName('CALENDAR_PHOTO_PATH', 'CALENDAR_PHOTO_NAME')" })
+                                            
                                         </div>
                                     </div>
 

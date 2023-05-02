@@ -96,6 +96,20 @@ namespace Barrway.Controllers
         [HttpGet]
         public async Task<ActionResult> BusinessSignUp()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = await authService.GetUser(User.Identity.Name, FormRole.BUSINESS_USER);
+                if (user.Status)
+                {
+                    return RedirectToAction("Dashboard", "BusinessAdmin");
+                }
+                else
+                {
+                    Logout();
+                }
+
+
+            }
             return View();
         }
 

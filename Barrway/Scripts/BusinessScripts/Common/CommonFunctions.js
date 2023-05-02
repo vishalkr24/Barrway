@@ -197,3 +197,28 @@ function getDistrictMaster(cityId) {
     })
     return data;
 }
+
+function getCompanyPhotoAlbum(companyId) {
+    var data;
+    $.ajax({
+        url: "/BusinessAdmin/GetCompanyPhotoAlbum/",
+        type: "GET",
+        data: {
+            CompanyId: companyId
+        },
+        async: false,
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    })
+    return data;
+}
+
+function BindLogoName(inputId, labelId) {
+    var value = $("#" + inputId).get(0);
+    var files = value.files;
+    $("#" + labelId).text(files[0].name);
+}

@@ -22,8 +22,12 @@ namespace Barrway.DTO.BusinessModels
         public string COMPANY_CODE { get; set; } = String.Empty;
 
         public string COMPANY_LOGO_NAME { get; set; }
+
+        [ValidImageFile(ErrorMessage = "Please select an image")]
         public HttpPostedFileBase COMPANY_LOGO_PATH { get; set; }
         public string COMPANY_BANNER_NAME { get; set; }
+
+        [ValidImageFile(ErrorMessage = "Please select an image")]
         public HttpPostedFileBase COMPANY_BANNER_PATH { get; set; }
 
         [Required(ErrorMessage = "Company name is required")]
@@ -63,6 +67,11 @@ namespace Barrway.DTO.BusinessModels
 
         [ValidDropdownValue(ErrorMessage = "Please select your district")]
         public string DISTRICT_ID { get; set; } = String.Empty;
+
+
+        public CompanyPhotoAlbumViewModel photoAlbumForm { get; set; }
+
+        public List<CompanyPhotoAlbumModel> photoAlbumList { get; set; }
 
     }
 
