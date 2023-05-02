@@ -83,6 +83,57 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> GetCompanyPhotoAlbumByCompanyId(string CompanyId, bool checkVisibility = false)
+        {
+            string visibilityQuery = "";
+            if (checkVisibility)
+            {
+                visibilityQuery = " and IS_VISIBLE = 'Y'";
+            }
+
+            string query = $@"SELECT [Id]
+                              ,[ALBUM_PHOTO_NAME]
+                              ,[ALBUM_PHOTO_PATH]
+                              ,[IS_VISIBLE]
+	                          ,[COMPANY_ID]
+                              ,[created_at]
+                              ,[updated_at]
+                              ,[created_by]
+                              ,[updated_by]
+                          FROM [dbo].[BUSINESS_PHOTO_ALBUM_1922] where COMPANY_ID = '{CompanyId}' {visibilityQuery}";
+
+            List<IDictionary<string, object>> Result = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (Result.Count > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = Result.ToList() };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
+        public async Task<AddUpdateDelete> AddCompanyPhotoAlbum(CompanyPhotoAlbumModel model)
+        {
+            Form_DataTable data = new Form_DataTable();
+            data.action = (int)FormAction.Save;
+            data.formId = (int)FormSetting.BUSINESS_PHOTO_ALBUM;
+
+            data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.ToDictionary());
+            data.formGroupKey = Guid.NewGuid().ToString();
+            var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+            if (formResult.res == 1)
+            {
+                return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Message = formResult.Message, Status = false };
+            }
+        }
+
         public async Task<AddUpdateDelete> GetAllCompaniesByUserId(string UserId)
         {
             string query = $@"SELECT company.[Id]      ,company.[created_at]      ,company.[updated_at]      ,company.[created_by]      ,company.[updated_by]     ,[BUSINESS_ACCOUNT_ID]      ,[COMPANY_CODE]      ,[COMPANY_NAME_ENGLISH]      ,[COMPANY_NAME_CHINESE]      ,[COMPANY_LOGO_NAME]      ,[COMPANY_LOGO_PATH]      ,[COMPANY_BANNER_NAME]      ,[COMPANY_BANNER_PATH]      ,[COMPANY_PHONE]      ,[COMPANY_ADDRESS]      ,[FACEBOOK_URL]      ,[INSTAGRAM_URL]      ,[WECHAT_URL]      ,[TWITTER_URL]      ,[PAGE_URL]      ,[COMPANY_DESCRIPTION]      ,[COMPANY_SERVICE]      ,[TAGS]      ,[IS_SEARCHABLE_IN_MARKETPLACE]      ,[COMPANY_CATEGORY_ID]      ,[COMPANY_SUB_CATEGORY_ID]      ,[COUNTRY_ID]      ,[CITY_ID]      ,[DISTRICT_ID]      ,[TOTAL_WEBSITE_VISITS]      ,[IS_DEFAULT]  FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company
@@ -103,7 +154,7 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetSingleCalendarById(string Id)
         {
-            string query = "SELECT [Id]      ,[created_at]      ,[updated_at]      ,[created_by]     ,[COMPANY_NAME_CHINESE]      ,[updated_by]      ,[CALENDAR_NAME]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,[COUNTRY_ID]      ,[CITY_ID]      ,[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] where Id =  '" + Id + "'";
+            string query = "SELECT [Id]      ,[created_at]      ,[updated_at]      ,[created_by]      ,[updated_by]      ,[CALENDAR_NAME]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,[COUNTRY_ID]      ,[CITY_ID]      ,[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] where Id =  '" + Id + "'";
 
             List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -293,7 +344,7 @@ namespace Barrway.Service.Repository
                                [updated_at] = '{DateTime.Now.ToString()}'
                               ,[BUSINESS_ACCOUNT_ID] = '{model.BUSINESS_ACCOUNT_ID}'
                               ,[COMPANY_NAME_ENGLISH] = '{model.COMPANY_NAME_ENGLISH}'
-                              ,[COMPANY_NAME_CHINESE] = '{model.COMPANY_NAME_CHINESE}'
+                              ,[COMPANY_NAME_CHINESE] = N'{model.COMPANY_NAME_CHINESE}'
                               ,[COMPANY_LOGO_NAME] = '{model.COMPANY_LOGO_NAME}'
                               ,[COMPANY_LOGO_PATH] = '{model.COMPANY_LOGO_PATH}'
                               ,[COMPANY_BANNER_NAME] = '{model.COMPANY_BANNER_NAME}'
@@ -329,11 +380,21 @@ namespace Barrway.Service.Repository
                             saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                         }
 
-                        if (website.Data["CURRENT_STEP"].ToString() == "COMPANY PROFILE")
+
+                        if (website.Data["CURRENT_STEP"].ToString() != "COMPLETED")
                         {
-                            query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'CALENDAR', updated_at = '" + DateTime.Now.ToString() + "'  where USER_ID = '" + UserId + "'";
-                            saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
+                            if (website.Data["CURRENT_STEP"].ToString() == "COMPANY PROFILE")
+                            {
+                                query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'CALENDAR', updated_at = '" + DateTime.Now.ToString() + "'  where USER_ID = '" + UserId + "'";
+                                saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
+                            }
+                            else if (website.Data["CURRENT_STEP"].ToString() == "COMPANY WEBSITE")
+                            {
+                                query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'COMPLETED', updated_at = '" + DateTime.Now.ToString() + "'  where USER_ID = '" + UserId + "'";
+                                saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
+                            }
                         }
+                        
                     }
 
 
@@ -428,7 +489,6 @@ namespace Barrway.Service.Repository
                                       ,[CALENDAR_CATEGORY_ID] = '{model.CALENDAR_CATEGORY_ID}'
                                       ,[CALENDAR_SUB_CATEGORY_ID] = '{model.CALENDAR_SUB_CATEGORY_ID}'
                                       ,[COMPANY_CODE] = '{model.COMPANY_CODE}'
-                                      ,[COMPANY_NAME_CHINESE] = '{model.COMPANY_NAME_CHINESE}'
                                  WHERE Id = '{model.Id}'";
 
                 int saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);

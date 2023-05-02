@@ -115,7 +115,6 @@ namespace Barrway.Controllers
                     if (company.Status)
                     {
                         calendarModel.COMPANY_CODE = company.Data["COMPANY_CODE"].ToString();
-                        calendarModel.COMPANY_NAME_CHINESE = company.Data["COMPANY_NAME_CHINESE"].ToString();
                     }
 
                 }
@@ -127,7 +126,6 @@ namespace Barrway.Controllers
                     if (company.Status)
                     {
                         calendarModel.COMPANY_CODE = company.Data["COMPANY_CODE"].ToString();
-                        calendarModel.COMPANY_NAME_CHINESE = company.Data["COMPANY_NAME_CHINESE"].ToString();
                     }
                     else
                     {
@@ -146,19 +144,19 @@ namespace Barrway.Controllers
             }
 
         }
-        
-        public async Task<ActionResult> ManageCompanyWebsite(string CompanyId)
+
+        public async Task<ActionResult> ManageCompanyWebsite(string CompanyId, int PId = 1) // PID is page id 1 for company details, 2 for service, 3 for calendar package, 4 for photo album
         {
             AddUpdateDelete userWebsite = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name);
 
             if (userWebsite.Status)
             {
-                
+
                 if (userWebsite.Data["COMPANY_PROFILE_STATUS"].ToString() == "Y" && userWebsite.Data["COMPANY_CALENDAR_STATUS"].ToString() == "Y")
                 {
 
                     var company = await businessUserService.GetSingleCompanyById(CompanyId);
-
+                    var photoAlbumData = await businessUserService.GetCompanyPhotoAlbumByCompanyId(CompanyId);
                     if (company.Status)
                     {
                         BusinessCompanyViewModel businessCompanyModel = new BusinessCompanyViewModel()
@@ -166,13 +164,13 @@ namespace Barrway.Controllers
                             BUSINESS_ACCOUNT_ID = company.Data["BUSINESS_ACCOUNT_ID"].ToString(),
                             COMPANY_ADDRESS = company.Data["COMPANY_ADDRESS"].ToString(),
                             COMPANY_BANNER_NAME = company.Data["COMPANY_BANNER_NAME"].ToString(),
-                            
+
                             CITY_ID = company.Data["CITY_ID"].ToString(),
                             COMPANY_CATEGORY_ID = company.Data["COMPANY_CATEGORY_ID"].ToString(),
                             COMPANY_CODE = company.Data["COMPANY_CODE"].ToString(),
                             COMPANY_DESCRIPTION = company.Data["COMPANY_DESCRIPTION"].ToString(),
                             COMPANY_LOGO_NAME = company.Data["COMPANY_LOGO_NAME"].ToString(),
-                            
+
                             COMPANY_NAME_CHINESE = company.Data["COMPANY_NAME_CHINESE"].ToString(),
                             COMPANY_NAME_ENGLISH = company.Data["COMPANY_NAME_ENGLISH"].ToString(),
                             COMPANY_PHONE = company.Data["COMPANY_PHONE"].ToString(),
@@ -189,9 +187,29 @@ namespace Barrway.Controllers
                             COUNTRY_ID = company.Data["COUNTRY_ID"].ToString(),
                             DISTRICT_ID = company.Data["DISTRICT_ID"].ToString(),
                             Id = company.Data["Id"].ToString(),
-                            TWITTER_URL = company.Data["TWITTER_URL"].ToString()
+                            TWITTER_URL = company.Data["TWITTER_URL"].ToString(),
+                            photoAlbumList = new List<CompanyPhotoAlbumModel>()
+
                         };
 
+                        if (photoAlbumData.Status)
+                        {
+                            List<CompanyPhotoAlbumModel> photoAlbums = new List<CompanyPhotoAlbumModel>();
+
+                            foreach (var item in photoAlbumData.Data)
+                            {
+                                CompanyPhotoAlbumModel photoAlbum = new CompanyPhotoAlbumModel();
+                                photoAlbum.COMPANY_ID = item["COMPANY_ID"].ToString();
+                                photoAlbum.IS_VISIBLE = item["IS_VISIBLE"].ToString();
+                                photoAlbum.ALBUM_PHOTO_NAME = item["ALBUM_PHOTO_NAME"].ToString();
+                                photoAlbum.ALBUM_PHOTO_PATH = item["ALBUM_PHOTO_PATH"].ToString();
+                                photoAlbums.Add(photoAlbum);
+                            }
+
+                            businessCompanyModel.photoAlbumList = photoAlbums;
+                        }
+
+                        ViewBag.PageId = PId;
                         return View(businessCompanyModel);
                     }
                     else
@@ -224,8 +242,6 @@ namespace Barrway.Controllers
         }
 
         #endregion
-
-
 
         #region Data Methods
 
@@ -523,7 +539,7 @@ namespace Barrway.Controllers
                 {
                     BUSINESS_ACCOUNT_ID = model.BUSINESS_ACCOUNT_ID,
                     COMPANY_SERVICE = model.COMPANY_SERVICE,
-                    Id = model.Id                   
+                    Id = model.Id
                 };
 
                 var saveDataResult = await businessUserService.UpdateCompanyService(companyModel);
@@ -554,8 +570,8 @@ namespace Barrway.Controllers
                     return View("ManageCompanyWebsite", model);
                 }
 
-                string folderPath = Server.MapPath("UploadCompany/CompanyLogos/" + model.COMPANY_CODE.ToString());
-                string folderPath2 = Server.MapPath("UploadCompany/CompanyBanners/" + model.COMPANY_CODE.ToString());
+                string folderPath = Server.MapPath("~/UploadCompany/CompanyLogos/" + model.COMPANY_CODE.ToString());
+                string folderPath2 = Server.MapPath("~/UploadCompany/CompanyBanners/" + model.COMPANY_CODE.ToString());
 
                 if (!Directory.Exists(folderPath))
                 {
@@ -577,8 +593,8 @@ namespace Barrway.Controllers
                     Directory.CreateDirectory(folderPath2);
                 }
 
-                string path = "~/UploadCompany/CompanyLogos/" + model.COMPANY_CODE.ToString() + "/" + model.COMPANY_LOGO_NAME.ToString();
-                string path2 = "~/UploadCompany/CompanyBanners/" + model.COMPANY_CODE.ToString() + "/" + model.COMPANY_BANNER_NAME.ToString();
+                string path = "~/UploadCompany/CompanyLogos/" + model.COMPANY_CODE.ToString() + "/" + model.COMPANY_LOGO_PATH.FileName.ToString();
+                string path2 = "~/UploadCompany/CompanyBanners/" + model.COMPANY_CODE.ToString() + "/" + model.COMPANY_BANNER_PATH.FileName.ToString();
 
                 BusinessCompanyModel companyModel = new BusinessCompanyModel()
                 {
@@ -616,14 +632,14 @@ namespace Barrway.Controllers
 
                     if (model.COMPANY_LOGO_PATH != null)
                     {
-                        model.COMPANY_LOGO_PATH.SaveAs(Server.MapPath("UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString()) + "/" + model.COMPANY_LOGO_NAME.ToString());
+                        model.COMPANY_LOGO_PATH.SaveAs(Server.MapPath("~/UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString()) + "/" + model.COMPANY_LOGO_PATH.FileName.ToString());
                     }
 
                     if (model.COMPANY_BANNER_PATH != null)
                     {
-                        model.COMPANY_BANNER_PATH.SaveAs(Server.MapPath("UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString()) + "/" + model.COMPANY_BANNER_NAME.ToString());
+                        model.COMPANY_BANNER_PATH.SaveAs(Server.MapPath("~/UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString()) + "/" + model.COMPANY_BANNER_PATH.FileName.ToString());
                     }
-                    
+
 
                     return RedirectToAction("Dashboard");
 
@@ -652,7 +668,7 @@ namespace Barrway.Controllers
 
                 if (company.Status)
                 {
-                    string folderPath = Server.MapPath("UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString());
+                    string folderPath = Server.MapPath("~/UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString());
 
                     if (!Directory.Exists(folderPath))
                     {
@@ -669,7 +685,6 @@ namespace Barrway.Controllers
                     {
                         CALENDAR_CATEGORY_ID = model.CALENDAR_CATEGORY_ID.ToString(),
                         CALENDAR_NAME = model.CALENDAR_NAME.ToString(),
-                        COMPANY_NAME_CHINESE = company.Data["COMPANY_NAME_CHINESE"].ToString(),
                         CALENDAR_SUB_CATEGORY_ID = model.CALENDAR_SUB_CATEGORY_ID.ToString(),
                         CALENDAR_PHOTO_NAME = model.CALENDAR_PHOTO_NAME.ToString(),
                         CALENDAR_PHOTO_PATH = path,
@@ -685,15 +700,15 @@ namespace Barrway.Controllers
                     if (result.Status)
                     {
                         // Save image in folder
-                        model.CALENDAR_PHOTO_PATH.SaveAs(Server.MapPath("UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString()) + "/" + model.CALENDAR_PHOTO_NAME.ToString());
+                        model.CALENDAR_PHOTO_PATH.SaveAs(Server.MapPath("~/UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString()) + "/" + model.CALENDAR_PHOTO_NAME.ToString());
                         return RedirectToAction("Dashboard");
                     }
                     else
                     {
                         return View("SetupCompanyCalendar", model);
                     }
-                    
-                    
+
+
                 }
                 else
                 {
@@ -701,6 +716,110 @@ namespace Barrway.Controllers
                 }
 
 
+            }
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AddCompanyPhotoAlbum()
+        {
+            if (Request.Files.Count > 0)
+            {
+                try
+                {
+                    // for business id
+                    var business = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
+                    
+                    HttpFileCollectionBase files = Request.Files;
+                    HttpPostedFileBase file = files[0];
+                    string fname;
+                    string CompanyCode = Request.Form["CompanyCode"].ToString();
+                    string CompanyId = Request.Form["CompanyId"].ToString();
+
+                    // Checking for Internet Explorer  
+                    if (Request.Browser.Browser.ToUpper() == "IE" || Request.Browser.Browser.ToUpper() == "INTERNETEXPLORER")
+                    {
+                        string[] testfiles = file.FileName.Split(new char[] { '\\' });
+                        fname = testfiles[testfiles.Length - 1];
+                    }
+                    else
+                    {
+                        fname = file.FileName;
+                    }
+
+                    string folderPath = Server.MapPath("~/UploadCompanyPhotoAlbum/" + business.Data["Id"].ToString() + "/" + CompanyCode);
+
+                    if (!Directory.Exists(folderPath))
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
+                    else
+                    {
+                        var fileName = Path.GetFileName(fname);
+                        var fullpath = System.Web.HttpContext.Current.Server.MapPath("~/UploadCompanyPhotoAlbum/" + business.Data["Id"].ToString() + "/" + CompanyCode);
+
+                        //deleting code starts here
+                        string[] checkfiles = System.IO.Directory.GetFiles(fullpath, $"{fname}.*");
+                        foreach (string f in checkfiles)
+                        {
+                            System.IO.File.Delete(f);
+                        }
+                    }
+
+                    string path = "~/UploadCompanyPhotoAlbum/" + business.Data["Id"].ToString() + "/" + CompanyCode + "/" + fname;
+                    CompanyPhotoAlbumModel albumModel = new CompanyPhotoAlbumModel()
+                    {
+                       ALBUM_PHOTO_NAME = fname,
+                       ALBUM_PHOTO_PATH = path,
+                       COMPANY_ID = CompanyId,
+                       IS_VISIBLE = "Y"
+                    };
+
+                    var result = await businessUserService.AddCompanyPhotoAlbum(albumModel);
+
+                    if (result.Status)
+                    {
+                        // Save image in folder
+                        file.SaveAs(Server.MapPath("~/UploadCompanyPhotoAlbum/" + business.Data["Id"].ToString() + "/" + CompanyCode + "/" + fname));
+                        return Json("Success", JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        return Json("Failed to add photo", JsonRequestBehavior.AllowGet);
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    return Json("Error occurred. Error details: " + ex.Message, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else
+            {
+                return Json("No files selected.", JsonRequestBehavior.AllowGet);
+            }
+            return null;
+        }
+
+        public async Task<ActionResult> GetCompanyPhotoAlbum(string CompanyId)
+        {
+            try
+            {
+                var album = await businessUserService.GetCompanyPhotoAlbumByCompanyId(CompanyId);
+
+                if (album.Status)
+                {
+                    return Json(new AddUpdateDelete() { Status = true, Data = album.Data, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new AddUpdateDelete() { Status = false, Message = "Website Not Found" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
             }
 
         }

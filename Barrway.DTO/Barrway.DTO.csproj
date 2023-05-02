@@ -76,12 +76,15 @@
     <Compile Include="BusinessModels\BusinessCalendarViewModel.cs" />
     <Compile Include="BusinessModels\BusinessCompanyViewModel.cs" />
     <Compile Include="BusinessModels\BusinessCompanyModel.cs" />
+    <Compile Include="BusinessModels\CompanyPhotoAlbumViewModel.cs" />
+    <Compile Include="BusinessModels\CompanyPhotoAlbumModel.cs" />
     <Compile Include="BusinessModels\CompanyProfileViewModel.cs" />
     <Compile Include="BusinessModels\UserMaserModel.cs" />
     <Compile Include="Common\AddUpdateDelete.cs" />
     <Compile Include="Common\AppMessage.cs" />
     <Compile Include="Common\FilterViewModel.cs" />
     <Compile Include="Common\RoleMasterModel.cs" />
+    <Compile Include="CustomValidations\ValidImageFile.cs" />
     <Compile Include="CustomValidations\ValidDropdownValue.cs" />
     <Compile Include="FormAPI\CounsellorUploadFileViewModel.cs" />
     <Compile Include="FormAPI\GetFormRecordListResponseModel.cs" />
