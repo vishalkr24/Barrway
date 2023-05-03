@@ -1,0 +1,675 @@
+﻿<link href="assets/lightbox/css/lightbox.css" rel="stylesheet" />
+<script src="assets/lightbox/js/lightbox-2.6.min.js"></script>
+<script src="assets/fullcalendar/dist/fullcalendar.min.js"></script>
+<link href="assets/fullcalendar/dist/fullcalendar.min.css" rel="stylesheet" />
+<link href="assets/fullcalendar-scheduler/dist/scheduler.min.css" rel="stylesheet" />
+<script src="assets/js/jquery-ui.js"></script>
+<script src="assets/fullcalendar-scheduler/dist/scheduler.js"></script>
+<script src="assets/fullcalendar-scheduler/dist/bootstrap-datetimepicker.js"></script>
+<link href="assets/fullcalendar-scheduler/dist/bootstrap-colorpicker.min.css" rel="stylesheet" />
+<link href="assets/fullcalendar-scheduler/dist/bootstrap-datetimepicker.css" rel="stylesheet" />
+<script src="assets/js/code/theme-chooser.js"></script>
+
+<!--<link href="assets/css/jquery-ui.css" rel="stylesheet" />-->
+<link href="assets/css/jquery.jgrowl.min.css" rel="stylesheet" />
+<script src="assets/js/jquery.jgrowl.min.js"></script>
+<script src="assets/js/moment.js"></script>
+
+
+<!--<script src="../../Scripts/fullCalender/Scripts/jquery-1.4.1.min.js"></script>-->
+<style>
+
+    .lightbox {
+        display: none;
+    }
+</style>
+
+<div class="container container-cs">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span id="menuName"> </span>
+                    <span class="hidden" id="menuDescription">
+                        This is the description of the Folder.
+                    </span>
+                    <input type="hidden" name="tabulator" value="applicationDetail" />
+                    <input type="hidden" name="tabulatorStorage" value="appDetail" />
+                    <div class="pull-right text-right rightbtn">
+                        <!--<a href="https://geligulu.com/form-generator/public/index.php" class="btn btn-primary pull-left redirectMenuPage" title="Home"><i class="fa fa-home"></i></a>
+                        <a href="https://geligulu.com/form-generator/public/index.php/chat/summary" class="btn btn-primary pull-left chatSummary" title="Chat"><i class="fa fa-commenting"></i></a>-->
+                        <a href="javascript:;" id="qrCodeNew" class="btn btn-primary pull-left" title="QR Code"><i class="fa fa-qrcode"></i></a>
+                        <!--<a href="javascript:;" class="btn pull-left btn-success" id="configurator" data-toggle="modal" data-target="#tabulatorConfigModal" title="Tabulator Configurations"><i class="fa fa-sliders-h"></i></a>
+                        <a href="javascript:;" id="redirectMenuPageNew" class="btn btn-warning pull-left" title="Add to packery menu"><i class="fa fa-bookmark"></i></a>
+                        <a href="javascript:;" id="pageActionBtn" class="btn btn-primary pull-left" data-toggle="modal" data-target="#pageActionModal" title="Page Actions"><i class="fa fa-cog"></i></a>-->
+                        <a href="javascript:;" class="pull-left hide-page-actions ml-10" title="Hide Page Actions"><i class="glyphicon glyphicon-chevron-up"></i></a>
+                    </div>
+
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="panel panel-default bg-none">
+                            <div class="panel-heading">
+                                <input type="hidden" value="0" id="FormTypeStatus" />
+                                {{formDetailsDataInfo.title}}
+                                <small>
+                                    ({{(formDetailsDataInfo.applicationTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.applicationTitle}},
+                                    {{(formDetailsDataInfo.topicTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.topicTitle}})
+                                </small>
+                                <input type="hidden" name="tabulator" value="records">
+                                <span id="menuName" class="hidden">
+                                    Records Untitled name (newform,newform)
+                                </span>
+                                <span class="hidden" id="menuDescription">
+                                    This is the description of the Untitled name (newform,newform) records form.
+                                </span>
+                            </div>
+                            <div class="panel-body">
+                                <form id="pageActions" class="form-inline">
+                                    <a class="btn btn-md btn-success" ui-sref="saveFormEntryData({formId: {{id}}})">
+                                        <i class="fa fa-plus">
+                                        </i> <span class="action-name">Entry</span>
+                                    </a>
+                                    <!--<a class="btn btn-md btn-success" href="#"><i class="fa fa-plus"></i> Entry</a>-->
+                                    <a class="btn btn-md btn-default"
+                                       ng-if="currentUserFormRole==3"
+                                       href ui-sref="summary({formId: currentFormId})"><i class="fa fa-th-list"></i> Summary</a>
+                                    <a href="javascript:;" class="btn btn-md btn-primary" ng-click="toggle()" id="change_per_view"><i class="fa fa-window-restore"></i> Toggle</a>
+                                    <a ng-if="currentUserFormRole==3" class="btn btn-sm btn-primary" ng-click="editFormRedirect()"><i class="fa fa-edit" aria-hidden="true" disabled></i> Edit Form</a>
+
+                                    <div class="form-group">
+                                        <div id='theme-system-selector' class='selector'>
+                                            <strong>Theme System:</strong>
+
+                                            <select class="form-control">
+                                                <option value='standard' selected>Default</option>
+
+                                                <option value='jquery-ui'>jQuery UI</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div data-theme-system="jquery-ui" class='selector form-group' style='display:none'>
+                                        Theme Name:
+
+                                        <select class="form-control">
+                                            <option value='base' selected>Base</option>
+                                            <option value='black-tie'>Black Tie</option>
+                                            <option value='blitzer'>Blitzer</option>
+                                            <option value='cupertino'>Cupertino</option>
+                                            <option value='dark-hive'>Dark Hive</option>
+                                            <option value='dot-luv'>Dot Luv</option>
+                                            <option value='eggplant'>Eggplant</option>
+                                            <option value='excite-bike'>Excite Bike</option>
+                                            <option value='flick'>Flick</option>
+                                            <option value='hot-sneaks'>Hot Sneaks</option>
+                                            <option value='humanity'>Humanity</option>
+                                            <option value='le-frog'>Le Frog</option>
+                                            <option value='mint-choc'>Mint Choc</option>
+                                            <option value='overcast'>Overcast</option>
+                                            <option value='pepper-grinder'>Pepper Grinder</option>
+                                            <option value='redmond'>Redmond</option>
+                                            <option value='smoothness'>Smoothness</option>
+                                            <option value='south-street'>South Street</option>
+                                            <option value='start'>Start</option>
+                                            <option value='sunny'>Sunny</option>
+                                            <option value='swanky-purse'>Swanky Purse</option>
+                                            <option value='trontastic'>Trontastic</option>
+                                            <option value='ui-darkness'>UI Darkness</option>
+                                            <option value='ui-lightness'>UI Lightness</option>
+                                            <option value='vader'>Vader</option>
+                                        </select>
+                                    </div>
+
+                                    <div data-theme-system="bootstrap3" class='selector form-group' style='display:none'>
+                                        Theme Name:
+
+                                        <select class="form-control">
+                                            <option value='' selected>Default</option>
+                                            <option value='cosmo'>Cosmo</option>
+                                            <option value='cyborg'>Cyborg</option>
+                                            <option value='darkly'>Darkly</option>
+                                            <option value='flatly'>Flatly</option>
+                                            <option value='journal'>Journal</option>
+                                            <option value='lumen'>Lumen</option>
+                                            <option value='paper'>Paper</option>
+                                            <option value='readable'>Readable</option>
+                                            <option value='sandstone'>Sandstone</option>
+                                            <option value='simplex'>Simplex</option>
+                                            <option value='slate'>Slate</option>
+                                            <option value='solar'>Solar</option>
+                                            <option value='spacelab'>Spacelab</option>
+                                            <option value='superhero'>Superhero</option>
+                                            <option value='united'>United</option>
+                                            <option value='yeti'>Yeti</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group"><span id='loading' style='display:none'> <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i></span></div>
+
+
+
+
+
+                                    <a class="flat-buttons pageActionsToggleer" onclick="pageActionsToggleer()"><i class="fa fa-chevron-left"></i></a>
+
+                                </form>
+
+
+                                <div class="table-controls-legend">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive mt-10" style="overflow-x: inherit; height: 200px;">
+
+                        <div id="dialog" style="width: auto; min-height: 29px; max-height: none; height: auto;" class="ui-dialog-content ui-widget-content">
+                            <form autocomplete="off">
+                                <fieldset class="ui-helper-reset">
+                                    <label for="tab_title">Title</label>
+                                    <input type="text" name="title" id="tab_title" class="ui-widget-content ui-corner-all form-control">
+
+                                    <label for="tab_start">Start</label>
+                                    <input type="text" name="start" id="tab_start" class="ui-widget-content ui-corner-all form-control">
+
+                                    <label for="tab_end">End</label>
+                                    <input type="text" name="end" id="tab_end" class="ui-widget-content ui-corner-all form-control">
+
+                                    <label for="tab_end">Color</label>
+                                    <input type="text" name="color" id="tab_color" class="ui-widget-content ui-corner-all form-control colorpicker-element">
+
+                                    <input type="hidden" name="allDay" id="allDay" class="form-control" value="true">
+                                    <input type="hidden" name="resourceId" id="resourceId" class="form-control">
+                                    <input type="hidden" name="resources" id="resources" class="form-control">
+                                </fieldset>
+                            </form>
+                        </div>
+
+
+                        <div class="col-sm-12 mb-10">
+                            <div class="col-sm-12 external-events-list">
+                                <h4>{{label.fieldLabel}}<a class="btn btn-sm btn-default" ng-click="openTabulator()">Open Tabulator</a></h4>
+
+                                <!--data-color="{{item.color!=null?item.color:'#7d606c'}}"-->
+                                <div ng-repeat="item in formDetails" class="col-xs-6 col-sm-4 col-md-2 col-lg-1"><div class='fc-event' data-id="{{item.value}}" data-color="{{item.color!=null?item.color:'#7d606c'}}" data-duration="{{item.durationField!=null ? item.durationField :'01:00:00'}}" style="background-color: {{item.color!=null?item.color:'#7d606c'}}; border: 1px solid rgb(125, 96, 108); z-index: 2; left: 0px; top: 0px; position: relative;">{{item.label}}</div></div>
+
+                                <div class="col-sm-12">
+                                    <input type='checkbox' id='drop-remove' /> <label for='drop-remove'>Remove after drop</label>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                    <div id="calendar" style="padding: 0px 12px; margin: 12px  8px; min-height: 420px">
+
+
+                        <div id="tabs" style="display: none;">
+                            <ul>
+                                <li data-value="Basic view"><a href="#basic-view">Basic view</a></li>
+                                <li data-value="List view"><a href="#list-view">List view</a></li>
+                                <li data-value="External Events"><a href="#agenda-view">Agenda view</a></li>
+                                <li data-value="Timeline resource view"><a href="#timeline-resource-view">Timeline resource view</a></li>
+                                <li data-value="Vertical resource view"><a href="#vertical-resource-view">Vertical resource view</a></li>
+                                <li data-value="Vertical activities view"><a href="#vertical-activities-view">Vertical activities view</a></li>
+                            </ul>
+                            <div id="basic-view"><div class="calendar"></div></div>
+                            <div id="list-view"><div class="calendar"></div></div>
+                            <div id="agenda-view"><div class='calendar'></div></div>
+                            <div id="timeline-resource-view"><div class="calendar"></div></div>
+                            <div id="vertical-resource-view"><div class="calendar"></div></div>
+                            <div id="vertical-activities-view"><div class="calendar"></div></div>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="searchModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h4 class="modal-title"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div id="search-results" class="list-group">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="galleryModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h4 class="modal-title"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+
+
+
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">
+
+                    Close
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="tabulatorConfigModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h4 class="modal-title">Tabulator Configurations</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+
+
+
+                <div class="alert-area"></div>
+                <a class="btn btn-sm btn-success" href=""><i class="fa fa-plus"></i> Create New</a>
+                <a href="javascript:;" class="btn btn-sm btn-primary" id="toggle_responsive"></a>
+                <a class="btn btn-primary btn-sm pull-right" href="javascript:;" id="delete_per_cookie"> Default Configuration</a>
+
+
+
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<div id="galleryModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h4 class="modal-title"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<script type="text/javascript" src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/2.3.2/jspdf.plugin.autotable.js"></script>-->
+<script src="assets/lightbox/js/lightbox-2.6.min.js"></script>
+<!-- <script src="assets/js/jquery.qrcode.js"></script>
+<script src="assets/js/qrcode.js"></script> -->
+<script>
+    function userAccessRightsDelete() {
+        var result = false;
+        var scope = angular.element($("#calendar")).scope();
+        var formDetailsInfo = scope.formDetailsDataInfo;
+        var userId = json.parse(localStorage.getItem('detail').Id);
+        if (userId.toString() === formDetailsInfo.created_by.toString()) {
+            var _own = formDetailsDataInfo.recordAccessSecurity.own;
+            if (_own.delete == true)
+                result = true;
+
+        }
+        else {
+            var _other = formDetailsDataInfo.recordAccessSecurity.other;
+            if (_other.delete == true)
+                result = true;
+        }
+
+        return result;
+
+    }
+
+    $(document).on('click', '.delete-event', function (event) {
+
+        if (!(userAccessRightsDelete)) {
+            swal({
+                title: 'Form Edit',
+                text: 'You are not allowed to do this operation. Form Based Roles',
+                type: 'error'
+            });
+            return false;
+        }
+
+        event.preventDefault();
+        console.log(event);
+        var $button = $(this);
+        var eventBasicData = window["EventBasicDetail"];
+
+        var confirm = window.confirm("Are you sure to delete?");
+        if (confirm) {
+            var Id = $button.data('formgroupkey');
+            console.log('id is :' + $button.data('formgroupkey'));
+            setTimeout(function () {
+                $.ajax({
+                    method: 'POST',
+                    url: "api/FormAPI/EditEventData",
+                    dataType: 'json',
+                    contentType: "application/json",
+                    data: "{'action':3,'Id':" + parseInt(Id) + ",'formId':" + eventBasicData.formId + ",'topicId':" + eventBasicData.formData.topicId + "}", //$.param(formData)
+                    success: function (response) {
+                        if (response.res > 0) {
+                            eventBasicData.formGroupKey = create_UUID();
+                            window["EventBasicDetail"] = eventBasicData;
+
+                            var CalendarEventList = window["CalendarEventList"];
+                            var ActivityEventList = window["ActivityEventList"];
+                            console.log('before deletion ');
+                            console.log(CalendarEventList);
+
+                            CalendarEventList = $.grep(CalendarEventList, function (e) {
+                                return e.value != Id;
+                            });
+
+                            ActivityEventList = $.grep(ActivityEventList, function (e) {
+                                return e.value != Id;
+                            });
+
+                            window["CalendarEventList"] = CalendarEventList;
+                            window["ActivityEventList"] = ActivityEventList;
+                            console.log('after  deletion ');
+                            console.log(CalendarEventList);
+                            $('.calendar').fullCalendar('destroy');
+                            //  loadCalendar('BasicView', CalendarEventList);
+                            loadCalendar('BasicView', CalendarEventList, eventBasicData.resourceData, eventBasicData.resColumns, eventBasicData.activityData, eventBasicData.activityColumn, ActivityEventList);
+                            $('#basic-view div.calendar').fullCalendar('refetchEvents');
+                            //$(".calendar").fullCalendar('removeEvents', Id);
+                            // $('#agenda-view div.calendar').fullCalendar('removeEvents', Id);
+                            $button.parents('.popover').remove();
+                            $.jGrowl(response.Message, { position: 'center' });
+
+                        } else
+                            console.log(response);
+
+                    },
+
+                    beforeSend: function () {
+                        showLoader();
+                    },
+
+                    complete: function () {
+                        $.unblockUI();
+                    }
+                });
+            }, 150);
+        }
+    });
+
+    $(document).on('click', '.edit-event  ', function (event) {
+        event.preventDefault();
+        console.log(event);
+        var $button = $(this);
+        $button.parents('.popover').remove();
+    }
+    );
+
+    // Initialize jquery ui tabs
+    $("#tabs").tabs({
+        create: function (event, ui) {
+            //console.info(ui.tab.data('value'))
+        },
+        activate: function (event, ui) {
+            //console.info($(ui.newTab).find('a').attr('href'));//ui.oldTab.data('value')
+            var target = $(ui.newTab).find('a').attr('href');
+            $(target + ' div.calendar').fullCalendar('render');
+            $(target + ' div.calendar').fullCalendar('refetchEvents');
+            $('body .popover').remove();
+            $.cookie("calendar-activeView", $('a[href="' + target + '"]').parent().index(), { expires: 365, path: '/' });
+        }
+    });
+    $("#tabs").show();
+
+    if (checkCookie('calendar-activeView') !== '') {
+        $("#tabs").tabs("option", "active", parseInt(checkCookie('calendar-activeView')));
+    }
+
+
+
+
+    var dialog = $("#dialog").dialog({
+        autoOpen: false,
+        modal: true,
+        resizable: false,
+        draggable: false,
+        show: { effect: "clip", duration: 250 },
+        hide: { effect: "explode", duration: 500 },
+        buttons: {
+            Add: function () {
+                addEvent(form);
+                $(this).dialog("close");
+            },
+            Cancel: function () {
+                $(this).dialog("close");
+            }
+        },
+        close: function () {
+            form[0].reset();
+        }
+    });
+    // AddTab form: calls addTab function on submit and closes the dialog
+    var form = dialog.find("form").on("submit", function (event) {
+        //addEvent();
+        dialog.dialog("close");
+        event.preventDefault();
+    });
+
+
+
+    // Datetime picker in create event dialoge
+    $("#tab_start, #tab_end").datetimepicker({
+        format: "yyyy-mm-dd hh:ii",
+        minView: 0,
+        maxView: 1,
+        startView: 1,
+        autoclose: true,
+        //todayBtn: true,
+        //todayHighlight: true,
+        minuteStep: 10,
+        //pickerPosition: "bottom-left"
+    }).on('changeDate', function (e) {
+
+    });
+    // Color picker in create event dialoge
+    $("#tab_color").colorpicker({ format: "rgba" });
+   // setTimeout(  timeout() , 5000);
+
+    var loader = "";
+    $('#galleryModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        //var form_id = button.attr('data-formID'),
+        //    form_name = button.attr('data-fieldName'),
+         var files = button.attr('data-files');
+
+        var modal = $(this);
+        var _images = files.split(','); var ImgString = '';
+        if (_images.length > 0) {
+            for (var count = 0; count < _images.length; count++)
+            {
+
+              //  ImgString += "<div class='" + _images[count].toString() + "'><img height='150' src='" + _images[count].toString() + "'></div>";
+
+                ImgString += "<a class='example-image-link' u-sref='" + _images[count].toString() + "' data-lightbox='example-set' title='tick-877.jpg'><img class='example-image' src='" + _images[count].toString()+"' alt='tick-877.jpg' height='150'></a>";
+
+
+            }
+        }
+
+
+        modal.find('.modal-title').html("File Uploads:");
+        modal.find('.modal-body').html("");
+        modal.find('.modal-body').block({ message: '<img src="' + loader + '" />', css: { position: 'relative', width: '100%', border: 'none' } });
+        modal.find('.modal-body').unblock();
+        modal.find('.modal-body').html(ImgString);
+        //$.post("{{ url('subforms/getAllFiles') }}", { formID: form_id, fieldName: form_name, formGroupKey: form_key }, function (data) {
+        //    modal.find('.modal-body').unblock();
+        //    modal.find('.modal-body').html(data);
+        //});
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("body").on('click', 'a#qrCodeNew', function () {
+            bootbox.dialog({
+                onEscape: true,
+                title: "QR Code",
+                message: '<div id="menuId" class="list-group text-center clearfix">' +
+                    '<div id="codeSection"></div>' +
+                    '<p class="mt-10">Scan me to access this form page.</p>' +
+
+                    '</div>'
+            });
+            new QRCode(document.getElementById("codeSection"), {
+                    width: 400,
+                    height: 400,
+                    dotScale: 1 ,
+                    text: window.location.href + "?check=anonymous",
+                    logo: "./newAssets/images/favicons/qr-logo.png",
+                    logoWidth:80, // width. default is automatic width
+                    logoHeight:80, // height. default is automatic height
+                    logoBackgroundColor:'rgb(0, 0, 0, 0)', // Logo backgroud color, Invalid when `logBgTransparent` is true; default is '#ffffff'
+                    logoBackgroundTransparent:true, 
+
+            });
+            // jQuery('#codeSection').qrcode({
+            //     width: 400,
+            //     height: 400,
+            //     render: "canvas",
+            //     text: window.location.href + "?check=anonymous"
+            //     //text:"https://github.com/jeromeetienne/jquery-qrcode"
+            // });
+
+            //$('#codeSection').qrcode({
+            //    'text': window.location.href + "?request=qr",
+            //    'url': window.location.href + "?request=qr", // users will be redirected to this URL when scanning the QR-Code
+            //    'width': 400, // image width in pixel
+            //    'height': 400, // image height in pixel
+
+            //    'qrsize': 100 // quality of the QR-Code in pixel
+            //});
+        });
+    });
+
+    function quickSignUp(reqType) {
+
+
+        var userName = $('#name').val();
+        var password = $('#password').val();
+        var confirmPass = $('#re-password').val();
+
+        var anonymousUserId = $('#txtAnonymousUserId').val();
+        var anonymousPassword = $('#txtAnonymousPassword').val();
+        var param = {};
+        param.uid = (new Date().getTime()).toString(36);
+        param.isQuickSignUp = true;
+        param.action = 7;
+        if (reqType == "signUp") {
+            param.fullName = 'name title';
+            param.name = userName;
+            param.newPassword = password;
+            param.confirmPassword = confirmPass;
+        }
+        else if (reqType == "anonymous") {
+            param.fullName = 'Anonymous User';
+            param.name = anonymousUserId;
+            param.newPassword = anonymousPassword;
+            param.confirmPassword = anonymousPassword;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "api/FormAPI/profile",
+            data: JSON.stringify(param),
+            contentType: "application/json",
+            datatype: "json",
+            success: function (data) {
+                var respData = data;
+                if (respData.res == 1) {
+                    if (reqType == "signUp")
+                        alert(respData.Message);
+                    if (reqType == "anonymous") {
+                        respData.reqType = "anonymous";
+                    }
+                    localStorage.setItem("detail", JSON.stringify(respData));
+                    location.reload(true);
+                }
+                else {
+                    alert(data.Message);
+                }
+            }
+        });
+
+    }
+    function quickLogin() {
+        var param = {};
+        param.action = 1;
+        param.name = $('#loginUserName').val();
+        param.username = $('#loginUserName').val();
+        param.email = $('#loginUserName').val();
+        param.phoneNumber = $('#loginUserName').val();
+        param.password = $('#loginPassword').val();
+        $.ajax({
+            type: "POST",
+            url: "api/FormAPI/Login",
+            data: JSON.stringify(param),
+            contentType: "application/json",
+            datatype: "json",
+            success: function (data) {
+                console.log(data);
+                if (data.res == 1) {
+                    alert(data.Message);
+                    localStorage.setItem("detail", JSON.stringify(data));
+                    location.reload(true);
+                }
+                else {
+                    alert(data.Message);
+                }
+            }
+        });
+    }
+
+</script>

@@ -1,0 +1,300 @@
+
+$green: #c8dc5d;
+$teal: #27eacb;
+$skyBlue: #7ed7ff;
+$purple: #ad8eff;
+$red: #fe8484;
+$yellow: #ffef8f;
+$light: #eaeaea;
+
+.tabulator-section{
+	.nav-pills{
+		.nav-link{
+			border-bottom-left-radius: 0;
+			padding: 10px 25px;
+			letter-spacing:.8px;
+			margin-right: 4px;
+			border-bottom-right-radius: 0;
+			background-color: $tabBar;
+			color: $white;
+			font-family: $fontMontserrat;
+
+			font-size:14px;
+			&.active{
+				background-color: $navbar;
+				font-weight:700;
+			}
+		}
+	}
+	.tabulator{
+		// border:0;
+		padding: 0px 0px;
+		background-color:$tabulatorTop;
+		// border: 1px solid $filterSidebar;
+		border-color: $filterSidebar;
+		border-radius: 4px;	
+		border: 0;
+		// width: calc(100% - 30px);
+		.blockMsg {
+			&.blockElement{
+				top: calc(50% - 20px) !important;
+				left: calc(50% - 200px) !important;
+			}
+		}
+		.badge{
+			&.badge-success{
+				background-color: $green !important;
+				border-radius: 10px;
+				padding: 9px;
+				font-size: 14px;
+				font-family: $fontArialBold;
+				color: transparentize($colorBlk, 0.2);
+			
+			}
+			&.badge-teal{
+				@extend .badge-success;
+				background-color: $teal !important;
+			}
+			&.badge-primary{
+				@extend .badge-success;
+				background-color: $skyBlue !important;
+			}
+			&.badge-darkPrimary{
+				@extend .badge-success;
+				background-color: $purple !important;
+			}
+			&.badge-danger{
+				@extend .badge-success;
+				background-color: $red !important;
+			}
+			&.badge-warning{
+				@extend .badge-success;
+				background-color: $yellow !important;
+			}
+			&.badge-default{
+				@extend .badge-success;
+				background-color: $light !important;
+			}
+		}
+
+		a{
+			color: $primaryColorPallet;	   
+		}			  
+		.tabulator-cell.tabulator-row-handle {
+			.tabulator-row-handle-box {
+				.tabulator-row-handle-bar {
+					background-color: $navbar !important;
+				}
+			}
+		}
+		.tabulator-header{
+			background-color:$tabulatorTop;
+			border-bottom: 2px solid $borderColor;
+			// padding: 0 15px;
+			.tabulator-col{
+				border-right:2px solid $borderColor;
+				background:$tabulatorTop;
+				padding: 5px 15px;
+				font-size: 16px;
+				font-weight:500;
+				color:$black;
+				// font-family: $fontArialBold;
+				&:hover{
+					background-color:$Lightgry !important;
+				}
+			}
+			.tabulator-frozen{
+				&.tabulator-frozen-left{
+					border-color: $borderColor;
+				}
+			}
+			.tabulator-col.tabulator-sortable[aria-sort=desc] {
+				.tabulator-col-content {
+					.tabulator-col-sorter {
+						.tabulator-arrow {
+							border-top: 6px solid $primary;
+							color: $primary;
+						}
+					}
+				}
+			}
+			.tabulator-col.tabulator-sortable[aria-sort="asc"] {
+				.tabulator-col-content {
+					.tabulator-col-sorter {
+						.tabulator-arrow {
+							border-bottom: 6px solid $primary;
+						}
+					}
+				}
+			}
+			.tabulator-header-filter{
+				&:before{
+					content:"\f002";
+					position: absolute;
+					font-family: "FontAwesome";
+					right: 8px;
+					color:$colorGrey;
+					top: 8px;
+				}
+				input{
+					border: 2px solid $borderColor;
+					height: 30px;
+					margin-top: 5px;
+					&[type="search"]{
+						padding-right: 24px !important;
+					}
+					&:focus{
+						border-color: $primary;
+						outline: none;
+					}
+				}
+			}
+		}
+		.tabulator-row{
+			background-color:$white;
+			border-bottom: 1px solid $borderColor;
+			&.tabulator-row-even{
+				background-color: $white;
+				&.tabulator-selected{
+					background: $tabulatorSelected;
+				}
+			}
+			&.tabulator-selected{
+				background: $tabulatorSelected;
+			}
+			
+			.tabulator-cell{
+				border-right:2px solid $borderColor;
+				padding: 11px;
+				font-size: 16px;
+				letter-spacing: .2px;
+				
+				.btn-sm{
+					i{
+						font-size: 12px !important;
+					}
+				}
+				a{
+				    i{
+					   font-size: 20px !important;
+				   }
+				   ~ a{
+					   margin-left: 5px !important;
+				   }
+				}
+				> i{
+					color: $navbar;
+			
+				}
+				svg{
+					width:20px;
+					height:20px;
+					fill:$navbar;
+					path{
+						fill: $primary;
+					}
+				}
+
+			}
+			&:not(.tabulator-selected){
+				&:hover{
+					background-color:$Lightgry;
+				}
+			}
+			&.tabulator-group{
+				border-right: 1px solid  $borderColor;
+				border-top: 1px solid $primary;
+				border-bottom: 2px solid $primary;
+				background: $tabulatorTop;
+				color: $black;
+				.tabulator-arrow{
+					border-left-color: $primaryColorPallet;
+				}
+				&.tabulator-group-visible{
+					.tabulator-arrow{
+						border-left-color: transparent;
+						border-top-color: $primaryColorPallet;
+					}
+
+				}
+				span {
+					color: $primaryColorPallet;
+				}
+			}
+		}
+		.tabulator-row-even{
+			background:$tabulatorTop;
+		}
+		.tabulator-tableHolder {
+			// padding: 0 15px;
+			// width: calc(100% - 30px);
+			// padding: 0 15px;
+			.tabulator-placeholder {
+				span {
+					display: inline-block;
+					margin: 0 auto;
+					padding: 10px;
+					color: $primary;
+					font-weight: 700;
+					font-size: 20px;
+				}
+			}
+		}
+		&.tabulator-block-select {
+			.tabulator-col.tabulator-moving {
+				background: $primaryColorPallet !important;
+				border-color: $primary !important;
+				color: $white !important;
+			}
+		}
+		.tabulator-footer{
+			border-top: 1px solid $borderColor;
+			background-color: $white;
+			display: flex;
+			justify-content: space-between;
+			font-family: $fontArialBold;
+			// display: none;
+			.tabulator-calcs-holder{
+				>.tabulator-row{
+					background-color:  $navbar !important;
+					>.tabulator-cell{
+						>img{
+							display: none;
+						}
+						>.tabulator-row-handle-box{
+							@extend img
+						}
+					}
+				}
+			}
+			button{
+				background-color: $white;
+				&.tabulator-page{
+					font-family: $fontArialBold;
+					font-weight: 400;
+					border-color: $navbar;
+					color: $navbar;
+					&.active{
+						background-color: $navbar;
+						color: $white;
+					
+					}
+					&:hover{
+						background-color: $navbar;
+						color: $white;
+					}
+				}
+			}
+		}
+	}
+}
+
+
+.tabulator{
+	a {
+		color: $primaryColorPallet;
+
+	}
+   
+}
+

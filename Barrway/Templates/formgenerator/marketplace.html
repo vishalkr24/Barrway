@@ -1,0 +1,77 @@
+﻿
+<div class="card card-default">
+    <!--<div class="card-header">
+        <span id="menuName"> Market_Place</span>
+        <a ng-click="showTooltipHelpModelPopUp(7)" data-toggle="modal" data-target="#myModal"><span class="fa fa-question-circle"></span></a>
+        <input type="hidden" name="tabulator" value="">
+        <input type="hidden" name="tabulatorStorage" value="">
+        <a href="javascript:;" class="btn btn-primary user-form-action anchor-action hidden mb-0" onclick="user_form_actions(0);"><i class="fa fa-wrench"></i></a>
+    </div>-->
+    <div class="card-body">
+        <div id="pageActions" class="form-inline pageActions">
+            <form class="d-flex w-100 justify-content-between" id="search-form">
+                <div class="form-group mb-0 col-xl-6 row">
+                    <label for="staticEmail" class="col-form-label text-left">Default Grouping</label>
+                    <div class="col-sm-6 text-left">
+                        <select class="form-control ng-pristine ng-valid ng-empty ng-touched ng-untouched" id="ddlGroupBy" ng-model="tabulatorConfig.groupBy" name="ddlGroupBy" style=""
+                                ng-change="onGroupByChange(tabulatorConfig)">
+                            <option value="" selected="selected">No Grouping</option>
+                            <option value="{{f.field}}" ng-repeat="f in filterFieldsList">
+                                {{f.title}}
+                            </option>
+                        </select>
+
+                    </div>
+                </div>
+                <div class="d-flex flex-fill justify-content-end">
+                    <div class="form-group mb-0">
+                        <button ng-click="groupBy('fullName')" name="group-rows" class="btn btn-primary fullName"> <span class="show-rating"><i class="fa fa-object-group"></i> <span class="action-name">Group by Creator </span></span> <span class="hide-rating"><i class="fa fa-object-ungroup"></i> <span class="action-name">Remove Creator </span></span> </button>
+                        <button ng-click="getFunction('copy-application')" class="btn btn-primary" title="Copy Folder"><i class="fa fa-copy"></i> <span class="action-name">Copy Folder</span></button>
+                        <a ng-click="saveTabulatorLayout('marketplaceList',false)" class="btn btn-primary " data-toggle="tooltip" title="Save Layout">
+                            <i class="fa fa-bookmark"></i>
+                            <span class="action-name">Save Layout</span>
+                        </a>
+                        <a class="flat-buttons pageActionsToggleer" onclick="pageActionsToggleer()"><i class="fa fa-chevron-left"></i></a>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="tabulator-section">
+            <div id="marketplaceFormTabulator"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="./assets/tabulator/js/tabulator.js"></script>
+
+<script type="text/ng-template" id="copyApplication.html">
+    <div class="row">
+
+        <div class="col-sm-12">
+
+            <form class="form-horizontal" id="quickFrm">
+
+                <input type="hidden" name="form_type" value="copy_application" /><input type="hidden" name="form_id" value="' + applicationId + '" />
+                <div class="form-group">
+                    <label class="control-label col-sm-4">Folder Name :</label><div class="col-sm-6">
+                        <input type="text" name="form_name" class="form-control" ng-model="applicationCopyTemp.applicationTitle">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-4">Folder Tag :</label><div class="col-sm-6">
+                        <input type="text" name="app_tag" class="form-control" ng-model="applicationCopyTemp.applicationTag">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-8">
+
+                        <button class="btn btn-primary" ng-click="copyApplicationFunc()">Save</button> &nbsp;
+                        <button class="btn btn-warning" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</script>

@@ -1,0 +1,103 @@
+﻿<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-sm mb-2 mb-sm-0">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb breadcrumb-no-gutter">
+                    <li class="breadcrumb-item"><a class="breadcrumb-link" href="#/home">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Admin Users</li>
+                </ol>
+            </nav>
+
+            <h1 class="page-header-title ms-2">Admin Users</h1>
+
+
+        </div>
+        <!-- End Col -->
+        <!-- End Col -->
+    </div>
+    <!-- End Row -->
+</div>
+
+
+<div class="row mt-2">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="tabulator-section w-100">
+                            <div class="row mb-3">
+                                <div class="col-xl-4 mb-2 mb-lg-0">
+                                </div>
+                                <div class="col-xl-8 text-lg-end text-md-start">
+                                    <a data-action="entry" class="btn btn-primary mb-2 mb-lg-0"
+                                       ui-sref="saveFormEntryData({formId: 2238})">
+                                        <i class="fa fa-plus"></i>
+                                        <span class="action-name">{{translation.Entry}}</span>
+                                    </a>
+                                    <a data-action="delete" ng-click="deleteRecords()"
+                                       class="btn btn-danger text-white mb-2 mb-lg-0"
+                                       id="delete-json">
+                                        <i class="fa fa-trash"> </i>
+                                        <span class="action-name">{{translation.Delete_Record}}</span>
+                                    </a>
+                                    <a class="btn btn-primary mb-2 mb-lg-0" ng-click="uploaddownloadPopup()">
+                                        <i class="fa fa-download"></i><span class="action-name">
+                                            Export
+                                        </span>
+                                    </a>
+
+                                    <script id="uploaddownload.html"
+                                            type="text/ng-template">
+                                        <div class="wrap" ng-controller="CommonCustomDialogController">
+                                            <div class="col-md-12">
+                                                <a ng-click="exportAll(1)" class="btn btn-primary m-1">
+                                                    <i class="fa fa-download">
+                                                    </i> <span class="action-name">{{translation.JSON}}</span>
+                                                </a>
+                                                <a ng-click="exportAll(2)" class="btn btn-primary m-1">
+                                                    <i class="fa fa-download">
+                                                    </i> <span class="action-name">{{translation.XLSX}}</span>
+                                                </a>
+
+                                                <a ng-click="exportAll(3)" class="btn btn-primary m-1">
+                                                    <i class="fa fa-download">
+                                                    </i> <span class="action-name">{{translation.CSV}}</span>
+                                                </a>
+                                                <a ng-click="exportAll(4)" class="btn btn-primary m-1">
+                                                    <i class="fa fa-download">
+                                                    </i> <span class="action-name">{{translation.PDF}}</span>
+                                                </a>
+                                                <a ng-click="exportAll(6)" class="btn btn-primary m-1">
+                                                    <i class="fa fa-download">
+                                                    </i> <span class="action-name">{{translation.Download_all_records_XLSX}}</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </script>
+
+                                </div>
+                            </div>
+                            <div class="form-builder-loader">
+                                <div class="loader">
+                                    <i class="fa fa-spinner fa-pulse fa-fw"> </i>
+                                    <div>
+                                        Loading Form Tabulator...
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="form-records"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript"
+        src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.0.5/jspdf.plugin.autotable.js"></script>

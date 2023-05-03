@@ -1,0 +1,264 @@
+﻿<style>
+    #pills-tab1 {
+        display: none;
+    }
+
+    .img-wrapclose {
+        position: absolute;
+        top: 0px;
+        right: 22px;
+        z-index: 100;
+        background-color: #C2B8B8;
+        padding: 5px 3px;
+        color: #000;
+        font-weight: bold;
+        cursor: pointer;
+        text-align: center;
+        font-size: 22px;
+        line-height: 10px;
+        border-radius: 50%;
+        opacity: 1;
+        display: block;
+    }
+
+    .checked {
+        color: orange;
+    }
+</style>
+<script type="text/javascript" src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-sm mb-2 mb-sm-0">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb breadcrumb-no-gutter">
+                    <li class="breadcrumb-item"><a class="breadcrumb-link" href="#/home">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Payment history</li>
+                </ol>
+            </nav>
+            <h1 class="page-header-title ms-2">Payment history</h1>
+        </div>
+        <!-- End Col -->
+        <!-- End Col -->
+    </div>
+    <!-- End Row -->
+</div>
+
+<div class="page-content">
+   
+    <div class="col-xl-12 col-lg-12 col-12 mt-5">
+        <div class="card radius-15">
+            <div class="card-body">
+                <form name="myForm" id="myForm">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="formDate">From Date</label>
+                                <input type="text" class="js-flatpickr form-control flatpickr-custom" id="formdate" required ng-model="fromdate" name="formdate" placeholder="Select dates"
+                                       data-hs-flatpickr-options='{"dateFormat": "d/m/Y"}'>
+                                <!--<input type="text" required class="form-control datepicker" id="formdate" ng-model="fromdate" name="formdate" />-->
+                                <div ng-messages="myForm.formdate.$error" ng-show="myForm.formdate.$error.required && invalid" style="color:red" role="alert">
+                                    <div ng-message="required">Field is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="toDate">To Date</label>
+                                <input type="text" class="js-flatpickr form-control flatpickr-custom" id="todate" ng-model="todate" name="todate" placeholder="Select dates"
+                                       data-hs-flatpickr-options='{"dateFormat": "d/m/Y"}'>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group mt-4">
+                                <label></label>
+                                <button type="button" ng-click="filterDate(myForm)" class="btn btn-primary">FILTER</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card radius-15">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-xl-12 text-lg-right text-md-left" style="text-align:end">
+
+
+
+                        <a class="btn btn-primary mb-2 mb-lg-0"
+                           ng-click="uploaddownloadPopup()">
+                            <i class="fa fa-download"></i>
+                            <span class="action-name">
+                                Download
+                            </span>
+                        </a>
+                        <script id="uploaddownload.html"
+                                type="text/ng-template">
+                            <div class="wrap" ng-controller="CommonCustomDialogController">
+                                <div class="row">
+                                    <a ng-click="exportAll(6)" class="btn btn-primary" id="download-pdf">
+                                        <i class="fa fa-download">
+                                        </i> <span class="action-name">Download all records (XLSX)</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </script>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="tabulator-section w-100">
+                            <div class="form-builder-loader">
+                                <div class="loader">
+                                    <i class="fa fa-spinner fa-pulse fa-fw"> </i>
+                                    <div>
+                                        Loading Form Tabulator...
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="form-records"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="OpenOrderDetailsPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Order Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-12">
+                                    <div class="form-group">
+                                        <h4>USER NAME</h4>
+                                        <p class="text-boder">{{userData.M_USER_NAME}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-12">
+                                    <div class="form-group">
+                                        <h4>USER NICK NAME</h4>
+                                        <p class="text-boder">{{userData.M_NICK_NAME}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-12">
+                                    <div class="form-group">
+                                        <h4>PACKAGE NAME</h4>
+                                        <p class="text-boder">{{packageMaster.PACKAGE_NAME}}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-12">
+                                    <div class="form-group">
+                                        <h4>PAYMENT METHOD</h4>
+                                        <p class="text-boder">{{orderMaster.PAYMENT_TYPE}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-12" ng-if="orderMaster.PAYMENT_TYPE=='OTHER'">
+                                    <div class="form-group">
+                                        <h4>Uploaded Receipt</h4>
+                                        <p><a href="{{orderMaster.PAYMENT_FILE}}" target="_blank" class="btn btn-default">Download</a> </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container">
+                                <!-- Title -->
+                                <div class="d-flex justify-content-between align-items-center py-3">
+                                    <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Order #{{orderMaster.ORDER_NO}}</h2>
+                                </div>
+
+                                <!-- Main content -->
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <!-- Details -->
+                                        <div class="card mb-4" style="padding-left:0">
+                                            <div class="card-body">
+                                                <div class="mb-3 d-flex justify-content-between">
+                                                    <div>
+                                                        <span class="me-3">{{orderDate}}</span>
+                                                        <span class="me-3">#{{orderMaster.ORDER_NO}}</span>
+                                                    </div>
+
+                                                </div>
+                                                <table class="table table-borderless">
+                                                    <tbody>
+                                                        <t>
+                                                            <td style="padding:0">
+                                                                <div class="d-flex mb-2">
+
+                                                                    <div class="flex-lg-grow-1">
+                                                                        <h6 class="small mb-0"><a href="javascript:void(0)" class="text-reset">{{packageMaster.PACKAGE_NAME}}</a></h6>
+                                                                        <span class="small">COIN: M${{packageMaster.PACKAGE_COIN}}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>1</td>
+                                                            <td class="text-end">${{packageMaster.PACKAGE_PRICE}} HKD</td>
+                                                        </t>
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td style="padding:0" colspan="2">Subtotal</td>
+                                                            <td class="text-end">${{packageMaster.PACKAGE_PRICE| number : 2}} HKD</td>
+                                                        </tr>
+                                                        <tr class="fw-bold">
+                                                            <td style="padding:0" colspan="2">TOTAL</td>
+                                                            <td class="text-end">${{packageMaster.PACKAGE_PRICE| number : 2}} HKD</td>
+                                                        </tr>
+
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row" ng-if="orderMaster.PAYMENT_STATUS=='OPEN'">
+                                    <div class="col-md-12" >
+                                        <button class="btn btn-success me-3 float-end" ng-click="AcceptPayment(orderMaster.ORDER_NO)">Accept</button>
+                                        <button class="btn btn-danger me-3 float-end" ng-click="RejectPayment(orderMaster.ORDER_NO)">Reject</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="modal-footer">
+                <button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>-->
+        </div>
+    </div>
+</div>
+
+<script>
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+</script>
+<script>
+    (function () {
+        // INITIALIZATION OF FLATPICKR
+        // =======================================================
+        HSCore.components.HSFlatpickr.init('.js-flatpickr')
+    })();
+</script>

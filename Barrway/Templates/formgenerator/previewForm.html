@@ -1,0 +1,167 @@
+﻿<style>
+    form label.pull-left {
+        float: none !important;
+        margin-bottom: 0px !important;
+    }
+
+    .tab-content .tab-pane.active {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .tab-content .tab-pane .clearfix {
+        width: 100%;
+    }
+    /*.tab-content .tab-pane .form-group.col-sm-12 > *{
+        padding: 0px 15px;
+    }*/
+    /*.tab-content .tab-pane > .btn {
+        margin: 0px 15px;
+    }*/
+        .jqbtk-container .jqbtk-row {
+            display: flex;
+        }
+
+        .jqbtk-container .jqbtk-row .btn {
+            flex: 1;
+            border: 1px solid #9174ed;
+            border-color: #9174ed;
+            background-color: #b29af8;
+            background-image: -webkit-gradient(linear, left top, left bottom, from(#b29af8), to(#9174ed));
+            background-image: -webkit-linear-gradient(top, #b29af8, #9174ed);
+            background-image: -moz-linear-gradient(top, #b29af8, #9174ed);
+            background-image: -ms-linear-gradient(top, #b29af8, #9174ed);
+            background-image: -o-linear-gradient(top, #b29af8, #9174ed);
+            background-image: linear-gradient(to bottom, #b29af8, #9174ed);
+            filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr=#b29af8, endColorstr=#9174ed);
+            font-size: 21px;
+            padding: 8px;
+            border-radius: 6px !important;
+        }
+    .card.card-default {
+        background-color: transparent !important;
+   
+    }
+    .card.card-default::after {
+        content: "";
+        /*background-image: url(newAssets/images/carousel/Shcool2.jpg);*/
+        background-size: auto;
+        opacity: 1;
+        filter: alpha(opacity=100);
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        position: absolute;
+        z-index: -1;
+    }
+    .input-group.date.text-with-date-control > .input-group {
+        align-items: center;
+    }
+
+    .input-group.date.text-with-date-control > .input-group .form-control.inputClass {
+        margin-left: 3px;
+    }
+
+    .input-group.date.text-with-date-control > .input-group .input-group-append {
+        margin-right: 6px;
+    }
+</style>
+<!--<img src="newAssets/images/carousel/clinic1.jpg" />-->
+<h2 class="text-center">{{translation.Preview_Mode}}</h2>
+<h4 class="text-center">{{translation.This_is_just_the_basic_preview_and_it_may_look_different_when_used_in_frontend_as_per_your_theme_styles}}</h4>
+<div class="card card-default">
+
+    <!-- <div class="row">
+        <div class="content">
+            <div class="breadcrumbUi">
+
+
+               <span> {{importFormSettings.title}}</span>
+
+    <small>
+        ({{(importFormSettings.applicationTitle==importFormSettings.title)?'*':importFormSettings.applicationTitle}},
+        {{(importFormSettings.topicTitle==importFormSettings.title)?'*':importFormSettings.topicTitle}})
+    </small>-->
+    <!--<span class="hidden" id="menuDescription"></span>-->
+    <!--<div class="card-body">-->
+    <!--<div id="fb-rendered-form" class="col-sm-12 col-lg-offset-2 col-lg-8">
+        <div class="form-group">
+            <button class="btn btn-primary edit-form pull-right">Back to Edit Mode</button>
+        </div>
+        <form action="#"></form>
+    </div>-->
+    <!--  <ul class="nav nav-pills  justify-content-center">
+    <li class="nav-item"><a class="nav-link superControls" ui-sref="records({formId:importFormSettings.formId})">Form Data</a></li>
+    <li class="nav-item"><a class="nav-link  superControls" data-target="#all_controls" ui-sref="formEdit({formId:importFormSettings.formId})" data-toggle="tab">Edit Form</a></li>
+
+
+
+    <li class="nav-item ng-scope">
+        <a class="nav-link active superControls" data-target="#preview" data-toggle="tab">Preview</a>
+    </li>
+    <li class="nav-item" ng-if="isEditForm || isCreateNew">
+
+        <a class="nav-link superControls" data-toggle="modal" ng-click="gotoSettings()">Form Settings</a>
+    </li>
+          </ul>
+            </div>
+        </div>
+    </div>-->
+    <div class="card-header">
+        <div class="row">
+            <div class="col d-flex align-items-center ng-binding">
+                <h4 class="card-title text-dark">  {{importFormSettings.title}}</h4>
+            </div>
+            <!--<div class="col text-right">
+                <button type="button" class="btn btn-primary mb-0" onclick="window.close();"><i class="fa fa-times-circle" aria-hidden="true"></i> Close Window</button>
+            </div>-->
+        </div>
+
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="table-controls col-sm-12 col-lg-12" ng-show="isEdit && formDataInfo">
+                <div class="row">
+                    <div class="col-sm-4 created_by"><h4><strong>{{translation.Created_By}}:</strong> {{userDetail.name}}</h4></div>
+                    <div class="col-sm-4 created_at"><h4><strong>{{translation.Created_At}}:</strong> {{customDate(formDataInfo.created_at)}}</h4></div>
+                    <div class="col-sm-4 updated_at"><h4><strong>{{translation.Last_Updated_At}}:</strong> {{customDate(formDataInfo.created_at)}}</h4></div>
+                </div>
+            </div>
+            <div id="tabs" class="col-sm-12 col-lg-12 text-left">
+                <!--<ul class="nav nav-tabs" role="tablist" ng-show="pageLength>1">
+                    <li role="presentation" ng-class="{ 'active': $index == 0}" ng-repeat="(key, value) in formFields track by $index"><a data-target="#page-{{$index}}" aria-controls="page-1" role="tab" data-toggle="tab" aria-expanded="true">{{key}}<i class="fa"></i></a></li>
+                </ul>-->
+
+                <input type="hidden" name="formGroupKey" value="3" id="formGroupKey">
+                <form name="myForm" class="content tab-content" id="customFormNew" autocomplete="off">
+
+                    <!--{{myForm.$valid}}-->
+                    <button type="submit" class="fv-hidden-submit" style="display: none; width: 0px; height: 0px;"></button>
+
+                    <div ng-bind-html="htmlContentData | to_trustedControl"></div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<link href="../../assets/css/bootstrap.min.css" rel="stylesheet" />-->
+<script src="assets/js/bootstrap-datetimepicker.js"></script>
+<link rel="stylesheet" href="assets/css/bootstrap-datetimepicker.css">
+<script src="assets/js/jAutoCalc.js"></script>
+<!--<script src="assets/formValidation/js/formValidation.min.js"></script>-->
+<script src="assets/js/jqbtk.min.js"></script>
+<!--<script src="assets/formValidation/js/framework/bootstrap.min.js"></script>-->
+<link rel="stylesheet" href="assets/easy-autocomplete/easy-autocomplete.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="assets/js/bootstrap-slider.js"></script>
+<link rel="stylesheet" href="assets/captcha/MotionCAPTCHA/jquery.motionCaptcha.0.2.css">
+<link rel="stylesheet" href="assets/css/quill.snow.css">
+<script type="text/javascript" src="assets/js/quill.js"></script>
+<!-- <script src="assets/js/qrcode.js"></script>
+<script src="assets/js/jquery.qrcode.js"></script> -->
+<script src="Scripts/jquery.cascadingdropdown.min.js"></script>
+
+<!-- JS file -->

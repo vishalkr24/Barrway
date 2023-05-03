@@ -1,0 +1,67 @@
+﻿<!-- external libs from cdnjs -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<!-- optional: mobile support with jqueryui-touch-punch -->
+<script type="text/javascript" src="assets/js/jquery.ui.touch-punch.min.js"></script>
+<!--<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTbZdxD_WljG9TxPQDiJL3znki9JNmXro&v=3.exp&amp;libraries=drawing;&callback=initMap">
+</script>-->
+<!-- PivotTable.js libs -->
+
+
+
+
+
+<style>
+    .bootbox-close-button {
+        margin: 1px 1px 1px !important;
+        padding: 0px 11px 0px !important;
+        font-size: 31px !important;
+    }
+
+
+</style>
+
+
+<div class="card card-default">
+
+    <div class="card-header">
+
+        {{formDetailsDataInfo.title}}
+        <small>
+            ({{(formDetailsDataInfo.applicationTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.applicationTitle}},
+            {{(formDetailsDataInfo.topicTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.topicTitle}})
+        </small>
+
+        <a target="_blank" href="" style="vertical-align: middle;" title="Show information page"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+
+        <span id="menuName" class="hidden">Summary</span>       
+        <input type="hidden" name="tabulator" value="summary">
+    </div>
+    <div class="card-body">
+        <div class="clearfix"></div>
+        <div class="row">
+            <div class="col-md-12 mt-3">
+                <div id="map" style="height:800px;">
+                </div>
+            </div>
+
+            </div>
+        </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(document).on('click', function (e) {
+            if ($(e.target).closest('.webix_pivot_config_msg').length || $(e.target).is('.webix_pivot_config_msg'))
+                setTimeout(function () {
+                    $(document).find('.webix_modal').on('click', function () {
+                        $(document).find('.webix_button').click()
+                    })
+                }, 500);
+
+        })
+
+    })
+</script>
+

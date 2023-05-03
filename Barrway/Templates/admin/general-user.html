@@ -1,0 +1,144 @@
+﻿
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-sm mb-2 mb-sm-0">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb breadcrumb-no-gutter">
+                    <li class="breadcrumb-item"><a class="breadcrumb-link" href="#/home">Home</a></li>
+                    <li class="breadcrumb-item"><a class="breadcrumb-link" href="#/form/records/2240">User Masters</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{clientUser.M_USER_NAME}}</li>
+                </ol>
+            </nav>
+
+            <h1 class="page-header-title ms-2">General User Profile</h1>
+            
+
+        </div>
+        <!-- End Col -->
+
+        
+        <!-- End Col -->
+    </div>
+    <!-- End Row -->
+</div>
+
+<div class="row">
+
+    <h3 ng-if="NoDataFound" class="text-danger">No Data Found</h3>
+
+    <div class="col-md-3">
+       
+        <div class="row">
+            <div class="col-sm-2">
+
+            </div>
+            <div class="col-sm-8 mt-2">
+                <!--<h4>PROFILE PIC</h4>-->
+                <img ng-src="{{clientUser.M_PROFILE_PIC}}" ng-if="(clientUser.M_PROFILE_PIC && clientUser.M_PROFILE_PIC!='' && clientUser.M_PROFILE_PIC!='null')" style="max-width:200px;width:100%;height:200px;border-radius:50%" />
+                <img ng-src="/Content/assets/img/400x400/img2.jpg" ng-if="!(clientUser.M_PROFILE_PIC && clientUser.M_PROFILE_PIC!='' && clientUser.M_PROFILE_PIC!='null')" style="max-width:200px;width:100%;height:200px;border-radius:50%" />
+            </div>
+            <div class="col-sm-2">
+
+            </div>
+        </div>
+           
+    </div>
+    <div class="col-md-9">
+        <form name="myForm" class="content tab-content ng-pristine ng-valid" id="customFormNew" autocomplete="off">
+
+            <div class="row">
+
+                <div class="form-group borderSet col-sm-6 border-M_USER_NAME">
+                    <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="M_USER_NAME">USER NAME</label><input name="M_USER_NAME" id="M_USER_NAME" type="Text Field" placeholder="" disabled class="inputClass form-control" value="{{clientUser.M_USER_NAME}}" maxlength="255" minlength="1"></div>
+                </div>
+                <div class="form-group borderSet col-sm-6"></div>
+                <div class="form-group borderSet col-sm-4 border-M_FIRST_NAME">
+                    <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="M_FIRST_NAME">FIRST NAME</label><input name="M_FIRST_NAME" id="M_FIRST_NAME" type="Text Field" placeholder="" disabled class="inputClass form-control" value="{{clientUser.M_FIRST_NAME}}" maxlength="255" minlength="1"></div>
+                </div>
+
+                <div class="form-group borderSet col-sm-4 border-M_LAST_NAME">
+                    <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="M_LAST_NAME">LAST NAME</label><input name="M_LAST_NAME" id="M_LAST_NAME" type="Text Field" placeholder="" disabled class="inputClass form-control" value="{{clientUser.M_LAST_NAME}}" maxlength="255" minlength="1"></div>
+                </div>
+
+                <div class="form-group borderSet col-sm-4 border-M_NICK_NAME">
+                    <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="M_NICK_NAME">NICK NAME</label><input name="M_NICK_NAME" id="M_NICK_NAME" type="Text Field" placeholder="" disabled class="inputClass form-control" value="{{clientUser.M_NICK_NAME}}" maxlength="255" minlength="1"></div>
+                </div>
+                <div class="form-group borderSet col-sm-6 border-M_SEX">
+                    <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="M_SEX">GENDER</label><select name="M_SEX" id="M_SEX" class="inputClass form-select form-control" disabled>
+                        <option value="MALE" ng-selected="clientUser.M_SEX=='male'">MALE</option><option ng-selected="clientUser.M_SEX=='famale'" value="FEMALE">FEMALE</option></select></div>
+                </div>
+                <div class="form-group borderSet col-sm-6 border-M_AGE_RANGE">
+                    <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="M_AGE_RANGE">AGE</label>
+                    <input name="M_AGE_RANGE" id="M_AGE_RANGE" type="text" placeholder="" disabled class="inputClass form-control" value="{{clientUser.M_AGE_RANGE}}" maxlength="255" minlength="1">
+                    </div>
+                </div>
+
+                <div class="form-group borderSet col-sm-6 border-M_EMAIL">
+                    <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="M_EMAIL">EMAIL</label><input name="M_EMAIL" id="M_EMAIL" type="Text Field" placeholder="" disabled class="inputClass form-control" value="{{clientUser.M_EMAIL}}" maxlength="255" minlength="1"></div>
+                </div>
+
+                <div class="form-group borderSet col-sm-6 border-M_PHONE">
+                    <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="M_PHONE">PHONE</label><input name="M_PHONE" id="M_PHONE" type="Text Field" placeholder="" disabled class="inputClass form-control" value="{{clientUser.M_PHONE}}" maxlength="255" minlength="1"></div>
+                </div>
+
+                <div class="form-group borderSet col-sm-12 border-header_1679394212233">
+                    <h4 name="header_1679394212233" align="left" style="border-left:;border-right:;border-top:;border-bottom:;" class="header">EMERGENCY CONTACT</h4>
+                </div>
+
+                <div class="form-group borderSet col-sm-6 border-M_EMERG_NAME">
+                    <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="M_EMERG_NAME">EMERG NAME</label><input name="M_EMERG_NAME" id="M_EMERG_NAME" type="Text Field" placeholder="" disabled class="inputClass form-control" value="{{clientUser.M_EMERG_NAME}}" maxlength="255" minlength="1"></div>
+                </div>
+
+                <div class="form-group borderSet col-sm-6 border-M_EMERG_PHONE">
+                    <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="M_EMERG_PHONE">EMERG PHONE</label><input name="M_EMERG_PHONE" id="M_EMERG_PHONE" type="Text Field" placeholder="" disabled class="inputClass form-control" value="{{clientUser.M_EMERG_PHONE}}" maxlength="255" minlength="1"></div>
+                </div>
+
+                <div class="form-group borderSet col-sm-12 border-M_EMERG_ADDRESS">
+                    <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="M_EMERG_ADDRESS">EMERG ADDRESS</label><textarea disabled name="M_EMERG_ADDRESS" id="M_EMERG_ADDRESS" rows="3" placeholder="" maxlength="255" minlength="1" class="form-control">{{clientUser.M_EMERG_ADDRESS}}</textarea></div>
+                </div>
+
+                <div class="form-group borderSet col-sm-6 border-M_PAST_COUNSELLING">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <label style="display: block;text-align: left;!important" class="pull-left" for="M_PAST_COUNSELLING">HAVE YOU RECIEVED COUNSELLING IN THE PAST?</label>
+                        </div>
+
+                    </div>
+                    <div>
+                        <div class="form-check-inline"> <label class="form-check-label" for="M_PAST_COUNSELLING0"> <input type="radio" disabled class="form-check-input" id="M_PAST_COUNSELLING0" name="M_PAST_COUNSELLING" value="YES" ng-checked="clientUser.M_PAST_COUNSELLING=='yes'">  YES</label></div>
+
+                        <div class="form-check-inline"> <label class="form-check-label" for="M_PAST_COUNSELLING1"><input type="radio" disabled class="form-check-input" id="M_PAST_COUNSELLING1" name="M_PAST_COUNSELLING" value="NO" ng-checked="clientUser.M_PAST_COUNSELLING=='no'">   NO</label></div>
+                    </div>
+                   
+                    
+                   
+                </div>
+
+                <div class="form-group borderSet col-sm-6 border-M_PAST_DIAGNOSIS">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <label style="display: block;text-align: left;!important" class="pull-left" for="M_PAST_DIAGNOSIS">DIAGNOSIS IN THE PAST?</label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="form-check-inline"> <label class="form-check-label" for="M_PAST_DIAGNOSIS0"> <input type="radio" disabled class="form-check-input" id="M_PAST_DIAGNOSIS0" name="M_PAST_DIAGNOSIS" value="YES" ng-checked="clientUser.M_PAST_DIAGNOSIS=='yes'">  YES</label></div>
+
+                        <div class="form-check-inline"> <label class="form-check-label" for="M_PAST_DIAGNOSIS1"><input type="radio" disabled class="form-check-input" id="M_PAST_DIAGNOSIS1" name="M_PAST_DIAGNOSIS" value="NO" ng-checked="clientUser.M_PAST_DIAGNOSIS=='no'">   NO</label></div>
+
+                    </div>
+                    
+                    
+                    
+                </div>
+
+                <div class="form-group borderSet col-sm-12 border-M_ABOUT">
+                    <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="M_ABOUT">ABOUT YOURSELF</label><textarea disabled name="M_ABOUT" id="M_ABOUT" rows="5" placeholder="" maxlength="255" minlength="1" class="form-control">{{clientUser.M_ABOUT}}</textarea></div>
+                </div>
+               
+            </div>
+
+
+</form>
+    </div>
+</div>

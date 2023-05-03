@@ -1,0 +1,301 @@
+﻿<!-- external libs from cdnjs -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<!-- optional: mobile support with jqueryui-touch-punch -->
+<script type="text/javascript" src="assets/js/jquery.ui.touch-punch.min.js"></script>
+
+<!-- PivotTable.js libs -->
+<link rel="stylesheet" href="assets/pivottable/css/pivot.min.css">
+
+<script type="text/javascript" src="assets/pivottable/js/pivot.min.js"></script>
+<script type="text/javascript" src="assets/pivottable/js/export_renderers.js"></script>
+<script type="text/javascript" src="assets/pivottable/js/c3_renderers.js"></script>
+<script type="text/javascript" src="assets/pivottable/js/d3_renderers.js"></script>
+
+<style>
+    body[ng-app="FormGeneratorApp"] {
+        overflow: auto !important;
+    }
+
+    .pvtUi {
+        width: 100%;
+    }
+
+    .webix_list_item {
+        line-height: 18px !important;
+        display: flex;
+        align-items: center;
+    }
+
+    div#pivotsummaryconfig .tabulator-row:not(.tabulator-selected) span.pull-right {
+        pointer-events: none;
+        opacity: 0.5;
+    }
+
+    div#pivotsummaryconfig .tabulator-row.tabulator-selected span.pull-right {
+        pointer-events: all;
+        opacity: 1;
+    }
+
+    .tabulator-section .tabulator {
+        border-radius: 0px !important;
+    }
+
+    .tabulator .tabulator-tableHolder .tabulator-table {
+        width: 100%;
+        border: 1px solid #ddd;
+        border-bottom: 0;
+    }
+
+        .tabulator .tabulator-tableHolder .tabulator-table .tabulator-cell {
+            width: 100% !important;
+        }
+
+    .tabulator-section .tabulator .tabulator-row.tabulator-selected {
+        background: #F7F4FF !important;
+    }
+
+    .webix_view.webix_window.webix_popup.webix_pivot {
+        z-index: 999999 !important;
+        margin-top: 50px !important;
+    }
+</style>
+
+<div id="createConfigModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Create New Configuration</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="jss3726" ng-include="'bg-svg.html'"></div>
+                <form id="formProperties" role="form" class="form-horizontal" ng-submit="createSummaryConfig()">
+
+                    <input type="hidden" id="form_password" value="">
+
+                    <input type="hidden" id="formID" name="formID" value="">
+
+                    <input type="hidden" id="topicID" name="topicID" value="">
+
+                    <div class="form-group row">
+                        <label class="control-label col-sm-4" for="configName">Name:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="configName" id="configName" ng-model="formSummaryParam.configName" placeholder="Enter Configuration Name" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-sm-4" for="configDescription">Description:</label>
+                        <div class="col-sm-8">
+<textarea class="form-control" rows="10" cols="50" id="configDescription" ng-model="formSummaryParam.configDescription" name="configDescription" placeholder="Enter Configuration Description"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-sm-4" for="fixedPlaces">Fixed Decimal Places:</label>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" name="fixedPlaces" id="fixedPlaces" ng-model="formSummaryParam.fixedPlaces" placeholder="Enter Fixed Decimal Places">
+                        </div>
+                    </div>
+                    <input type="hidden" id="configSettings" name="configSettings">
+
+                    <input type="hidden" id="configExpandBy" name="configExpandBy">
+
+                    <div class="modal-footer">
+
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="card card-default">
+    <div class="col-xl-12">
+        <nav aria-label="breadcrumb">
+            <!-- ngIf: isLoginPage -->
+            <ol class="breadcrumb ng-scope ng-isolate-scope" ncy-breadcrumb="" ng-if="isLoginPage" style="">
+                <!-- ngRepeat: step in steps-->
+                <li ng-repeat="step in steps" ng-class="{active: $last}" ng-switch="$last || !!step.abstract" class="ng-scope">
+                    <!--ngSwitchWhen: false-->
+                    <a ng-switch-when="false" href="#/forms" class="ng-binding ng-scope">Forms</a>
+                    <!--end ngSwitchWhen:  ngSwitchWhen: true-->
+
+                </li> end ngRepeat: step in steps-->
+                <li ng-repeat="step in steps" ng-class="{active: $last}" ng-switch="$last || !!step.abstract" class="ng-scope">
+                    <!--ngSwitchWhen: false-->
+                    <a ng-switch-when="false" href="#/form/records/227942" class="ng-binding ng-scope">Records</a>
+                    <!-- end ngSwitchWhen:  ngSwitchWhen: true-->
+                </li> end ngRepeat: step in steps-->
+                <li ng-repeat="step in steps" ng-class="{active: $last}" ng-switch="$last || !!step.abstract" class="ng-scope active">
+                    <!-- ngSwitchWhen: false  ngSwitchWhen: true--> <span ng-switch-when="true" class="ng-binding ng-scope">Pivot Summary</span>
+                    <!-- end ngSwitchWhen:-->
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+
+
+
+    <div class="card-header">
+
+        {{formDetailsDataInfo.title}}
+        <small>
+            ({{(formDetailsDataInfo.applicationTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.applicationTitle}},
+            {{(formDetailsDataInfo.topicTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.topicTitle}})
+        </small>
+
+        <a target="_blank" href="" style="vertical-align: middle;" title="Show information page"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+
+        <span id="menuName" class="hidden">Summary</span>
+        <!--<span class="hidden" id="menuDescription">This is the description of the form.</span>-->
+        <input type="hidden" name="tabulator" value="summary">
+    </div>
+    <div class="card-body">
+        <!--<div class="jss3726" ng-include="'bg-svg.html'"></div>-->
+        <div id="pageActions" class="form-inline mb-10">
+            <!--<a href="javascript:;" class="btn btn-primary" data-toggle="modal" data-target="#allConfigModal"><i class="fa fa-list"></i> My Configurations</a>-->
+            <a href="javascript:;" class="btn btn-primary" id="create-config"><i class="fa fa-plus"></i>&nbsp;&nbsp;Create new</a>
+            <a href="javascript:;" class="btn btn-success" id="save-config-as"><i class="fa fa-save"></i>&nbsp;&nbsp;Save Configuration As</a>
+        </div>
+
+
+        <div class="col-sm-12 table-controls" ng-if="expandFieldList.length>0 || expandFieldListTable.length>0">
+            <!-- Checkbox/Select expand fields -->
+            <!--<form id="expandForm" role="form" class="form-inline" ng-submit="applyExpand(1)">-->
+            <form id="expandForm" role="form" class="form-inline">
+                <input type="hidden" name="formID" value="">
+
+                <div class="form-group col-xl-1 mb-2">
+                    <label for="Expand Data Field" class="control-label">Expand Field </label>
+                </div>
+                <div class="form-group col-xl-2 mx-sm-3 mb-2">
+                    <select class="form-control w-100" name="expandColumn" ng-change="applyExpand(1)" ng-model="configExpandBy.expandColumn">
+                        <option value="0">None</option>
+                        <option ng-repeat="e in expandFieldList" value="{{e.fieldName}}">
+                            {{e.fieldLabel}}
+                        </option>
+
+                    </select>
+                </div>
+                <!--<button type="submit" class="btn btn-primary mb-2">Apply</button>-->
+                <button type="reset" ng-click="reset(1)" class="btn btn-danger mb-2">Reset</button>
+            </form>
+
+
+            <!-- Table expand fields -->
+
+            <form id="tableExpansion" role="form" class="form-inline" ng-if="expandFieldListTable.length>0">
+                <input type="hidden" name="formID" value="">
+                <div class="form-group col-xl-1 mb-0">
+                    <label for="Table Field" class="control-label">Table Field</label>
+                </div>
+                <div class="form-group col-xl-2 mx-sm-3 mb-2">
+                    <select class="form-control w-100" name="tableField" ng-model="configExpandBy.tableField" ng-change="selectTableField(configExpandBy.tableField)">
+                        <option value="0">None</option>
+                        <option ng-repeat="e in expandFieldListTable" value="{{e.fieldName}}">
+                            {{e.fieldLabel}}
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group mb-0">
+                    <label for="Expand Column" class="control-label">Expand Column</label>
+                </div>
+                <div class="form-group mx-sm-3 mb-0">
+                    <select class="form-control" name="columnField" ng-change="applyExpand(2)" ng-model="configExpandBy.columnField" ng-disabled="configExpandBy.tableField=='0'">
+                        <option value="0">None</option>
+                        <option ng-repeat="c in expandFieldListTableList" value="{{c.name}}">
+                            {{c.label}}
+                        </option>
+                    </select>
+                </div>
+                <!--<button type="submit" class="btn btn-primary mb0">Apply</button>-->
+                <button type="reset" ng-click="reset(2)" class="btn btn-danger mb-0">Reset</button>
+
+            </form>
+
+
+        </div>
+        <div class="clearfix"></div>
+
+
+        <div class="row">
+            <!-- My Saved Configurations -->
+            <div id="savedConfigurations" class="col-xl-3 pr-1" ng-show="formSummaryConfigListNew.length>0">
+
+                <div class="list-group pivot-list-group ">
+
+                    <!--<div class="list-group-item show-config d-flex align-items-center" ng-click="selectedFormSummaryPivot(summary)" ng-class="{'active':currentconfig_id==summary.Id}" ng-repeat="summary in formSummaryConfigListNew track by $index" data-config-name="{{summary.label}}" data-config-id="{{summary.label}}">
+                        <span class="d-flex h6 justify-content-center flex-fill list-group-item-heading mb-0">
+                            {{summary.label}}
+
+                        </span>
+
+                            <span class="d-flex justify-content-end">
+                                <a ng-class="{'disabled':currentconfig_id!=summary.Id}" class="delete-config fa-lg" data-config-name="{{summary.configName}}" data-config-id="{{summary.Id}}" title="Delete Config">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                                <a ng-class="{'disabled':currentconfig_id!=summary.Id}" class="save-config  fa-lg ml-2" ng-disabled="currentconfig_id!=summary.Id" data-config-id="{{summary.Id}}" title="Save Config">
+                                    <i class="fa fa-save"></i>
+                                </a>
+                            </span>
+
+                        </div>-->
+                    <div class="tabulator-section">
+                        <div id="pivotsummaryconfig" class="mt-0 bg-none"></div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="pivot pl-1" ng-class="{'col-xl-12':formSummaryConfigListNew.length==0,'col-xl-9':formSummaryConfigListNew.length>0}">
+
+                <!--<div id="pivotoutput"></div>-->
+
+                <link href="newAssets/webixNPM_licensed/pivot_8.3.0_com/codebase/webix/webix.css" rel="stylesheet" />
+                <script src="newAssets/webixNPM_licensed/pivot_8.3.0_com/codebase/webix/webix.js"></script>
+                <link href="newAssets/webixNPM_licensed/pivot_8.3.0_com/codebase/pivot.css" rel="stylesheet" />
+                <script src="newAssets/webixNPM_licensed/pivot_8.3.0_com/codebase/pivot.js"></script>
+
+
+                <div id="pivotResult"></div>
+                <style type="text/css">
+
+                    html, body {
+                        width: 100%;
+                        height: 100%;
+                        padding: 0;
+                        margin: 0;
+                    }
+                </style>
+            </div>
+
+
+
+
+
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(document).on('click', function (e) {
+            if ($(e.target).closest('.webix_pivot_config_msg').length || $(e.target).is('.webix_pivot_config_msg'))
+
+                setTimeout(function () {
+                    $(document).find('.webix_modal').on('click', function () {
+                        $(document).find('.webix_button').click()
+                    })
+                }, 500);
+
+        })
+
+    })
+</script>
+

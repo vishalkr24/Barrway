@@ -1,0 +1,228 @@
+﻿.queue-service {
+    font-family: $fontMontserrat;
+
+    .carousel {
+        .carousel-item {
+            img {
+                height: 200px;
+                object-fit: cover;
+            }
+        }
+
+        > .carousel-indicators {
+            > li {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                border: 1px solid $navbar;
+                background-color: $white;
+                opacity: 1;
+
+                &.active {
+                    background-color: $navbar;
+                }
+            }
+        }
+    }
+
+    .bg-light {
+        background-color: $tabulatorTop !important;
+    }
+
+    .card {
+        border: 1px solid $svgFill;
+        border-radius: 0;
+
+        .card-img {
+            object-fit: cover;
+            border-radius: 0;
+            // height: 215px;
+        }
+        // .card-title{
+        // }
+        .card-body {
+            border-top: 0px;
+
+            .btn {
+                &.btn-primary {
+                    border: 1px solid $primary;
+
+                    &:hover {
+                        background-color: $white !important;
+                        color: $primary !important;
+                        // border: 1px solid $primary;
+                    }
+                }
+            }
+        }
+    }
+
+    hr {
+        &.d-sm-block {
+            margin-top: -0.5rem;
+            border-top: 1px solid $svgFill;
+        }
+    }
+}
+
+
+footer {
+    &.bg-primary {
+        $fontRoboto: $fontRoboto;
+        background: $primary !important;
+        background: linear-gradient(270deg, transparentize($primaryColorPallet, 0.05) 20%, $primary 70%) !important;
+        padding: 50px 0;
+        color: $white;
+        position: relative;
+        overflow: hidden;
+
+        > .svgContainer {
+            position: absolute;
+            bottom: -60%;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            fill: transparentize($navbar,0.8);
+
+            > .bgCurveSvg {
+                fill: rgba(62, 36, 107, 0.2);
+                width: 100%;
+                height: 100%;
+                transform: scale(2);
+            }
+        }
+
+        ul {
+            padding-left: 0px;
+
+            &.d-flex {
+                > li {
+                    list-style-type: none;
+                    padding: 20px;
+
+                    > a {
+                        cursor: pointer;
+                        opacity: 0.6;
+                        transition: all linear .3s;
+
+                        > .footer-logo {
+                            max-width: 100%;
+                            height: 60px;
+                            object-fit: contain;
+                        }
+
+                        &:hover {
+                            opacity: 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+//User Screen page //
+.queue__room {
+    .queue__wrapper {
+        .queue__item {
+            &.card {
+                background: $svgFill;
+                border-color: $primaryColorPallet !important;
+
+                .card-header {
+                    background: $primaryColorPallet;
+                    border-color: $primaryColorPallet !important;
+                }
+
+                .card-body {
+                    color: $primaryColorPallet !important;
+                }
+
+                &:nth-of-type(2n) {
+                    background: $svgFill;
+                    border-color: $lightPurple !important;
+
+                    .card-header {
+                        background: $lightPurple;
+                        border-color: $lightPurple !important;
+                    }
+
+                    .card-body {
+                        color: $lightPurple !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: $desktop-width) {
+    .queue-service {
+        .carousel {
+            .carousel-item {
+                img {
+                    height: 400px;
+                }
+            }
+        }
+
+        .bg-light {
+            background-color: $tabulatorTop !important;
+        }
+
+        .card {
+
+            .card-img {
+                height: 215px;
+            }
+        }
+    }
+}
+
+@media (max-width: $tablet-width) {
+    .queueVerticalList {
+        .queue-banner {
+            height: 200px;
+            width: 100%;
+        }
+
+        .queueList {
+            max-width: 100%;
+            overflow-x: auto;
+
+            > .queueItem {
+                min-width: 210px;
+
+                .display-4 {
+                    font-size: 250%;
+                }
+            }
+        }
+    }
+
+    footer {
+        &.bg-primary {
+            ul {
+                flex-direction: column;
+                padding-left: 0;
+
+                &.d-flex {
+                    > li {
+                        list-style-type: none;
+                        padding: 20px;
+
+                        &:nth-of-type(1) {
+                            display: flex !important;
+                            flex: 1;
+                        }
+
+                        &.ml-auto {
+                            margin-left: 0 !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
