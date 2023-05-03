@@ -217,6 +217,26 @@ function getCompanyPhotoAlbum(companyId) {
     return data;
 }
 
+function GetCompanyCalendars(companyId) {
+    var data;
+    $.ajax({
+        url: "/BusinessAdmin/GetCompanyCalendarByCompanyId/",
+        type: "GET",
+        data: {
+            CompanyId: companyId
+        },
+        async: false,
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    })
+    return data;
+}
+
+
 function BindLogoName(inputId, labelId) {
     var value = $("#" + inputId).get(0);
     var files = value.files;

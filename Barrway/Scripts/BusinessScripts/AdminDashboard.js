@@ -23,3 +23,18 @@ function setPageStatus() {
         $("#content").show();
     }
 }
+
+function setCalendarData() {
+    var data = GetCompanyCalendars(localStorage.getItem("COMPANY_ID"));
+
+    if (data.Status) {
+
+        var calendarData = data.Data;
+
+        for (var i = 0; i < calendarData.length; i++) {
+
+        }
+
+    }
+
+}

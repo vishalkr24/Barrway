@@ -244,6 +244,23 @@ function closeUploadPhotoModal() {
     $("#uploadPhotoModal").modal("hide");
 }
 
+function setCompanyPhotoAlbum() {
+    var data = getCompanyPhotoAlbum(localStorage.getItem("COMPANY_ID"));
+
+    console.log(data);
+
+    if (data.Status) {
+        $("#photoAlbumRow").empty();
+        for (var i = 0; i < data.Data.length; i++) {
+            $("#photoAlbumRow").append(`<div class="col-md-4 mt-4">
+                                        <img src="${data.Data[i].ALBUM_PHOTO_PATH.replace("~", "..")}" class="photo-album" />
+                                    </div>`)
+        }
+        
+    }
+
+}
+
 function savePhotoAlbum() {
     var fileUpload = $("#photoAlbumForm_ALBUM_PHOTO_PATH").get(0);
     var files = fileUpload.files;
@@ -256,6 +273,15 @@ function savePhotoAlbum() {
         return;
     } else {
         $("#ALBUM_PHOTO_ERROR").hide();
+        var fileType = files[0].type.split("/")[1];
+        if (fileType == "jpg" || fileType == "png" || fileType == "jpeg" || fileType == "JPG" || fileType == "PNG" || fileType == "JPEG") {
+
+        } else {
+            $("#photoAlbumForm_ALBUM_PHOTO_PATH").val("");
+            $("#ALBUM_PHOTO_ERROR").show();
+            return;
+        }
+
     }
 
     for (var i = 0; i < files.length; i++) {
@@ -276,8 +302,10 @@ function savePhotoAlbum() {
             if (result == "Success") {
                 $("#photoAlbumForm_ALBUM_PHOTO_PATH").val("");
                 $("#uploadPhotoModal").modal("hide");
+                setCompanyPhotoAlbum();
             } else {
-                alert(result);
+                console.log(result);
+                alert();
             }
         },
         error: function (err) {

@@ -318,6 +318,8 @@
     <Compile Include="Models\ResetPasswordViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\ApplicationAuthProvider.cs" />
+    <Compile Include="Security\PublicAuthorizeAttribute.cs" />
+    <Compile Include="Security\BusinessAuthorizeAttribute.cs" />
     <Compile Include="Security\TokenManager.cs" />
     <Compile Include="Security\UserIdentity.cs" />
     <Compile Include="Startup.cs" />
@@ -3014,12 +3016,16 @@
     <Content Include="Views\BusinessAdmin\ManageCompanyWebsite.cshtml" />
     <Content Include="Views\BusinessAdmin\_EditCompanyInformation.cshtml" />
     <Content Include="Views\BusinessAdmin\_EditCompanyService.cshtml" />
+
+    <Content Include="Views\BusinessAdmin\_CompanyPhotoAlbum.cshtml" />
+
     <Content Include="Views\Shared\_LayoutCalendar.cshtml" />
     <Content Include="Views\Calendar\Index.cshtml" />
     <Content Include="Scripts\translation\translation.json" />
     <Content Include="Scripts\translation\translation_ch.json" />
     <Content Include="Scripts\translation\translation_en.json" />
     <Content Include="Scripts\translation\translation_tc.json" />
+
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

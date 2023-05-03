@@ -9,10 +9,11 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Barrway.DTO.Common;
 using System.IO;
+using Barrway.Security;
 
 namespace Barrway.Controllers
 {
-    [Authorize(Roles = "BUSINESS_USER")]
+    [BusinessAuthorize(Roles = "BUSINESS_USER")]
     public class BusinessAdminController : Controller
     {
 
@@ -799,7 +800,7 @@ namespace Barrway.Controllers
             {
                 return Json("No files selected.", JsonRequestBehavior.AllowGet);
             }
-            return null;
+            
         }
 
         public async Task<ActionResult> GetCompanyPhotoAlbum(string CompanyId)
@@ -814,7 +815,7 @@ namespace Barrway.Controllers
                 }
                 else
                 {
-                    return Json(new AddUpdateDelete() { Status = false, Message = "Website Not Found" }, JsonRequestBehavior.AllowGet);
+                    return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound }, JsonRequestBehavior.AllowGet);
                 }
             }
             catch (Exception ex)
@@ -822,6 +823,27 @@ namespace Barrway.Controllers
                 return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
             }
 
+        }
+
+        public async Task<ActionResult> GetCompanyCalendarByCompanyId(string CompanyId)
+        {
+            try
+            {
+                var album = await businessUserService.GetCompanyCalendarByCompanyId(CompanyId);
+
+                if (album.Status)
+                {
+                    return Json(new AddUpdateDelete() { Status = true, Data = album.Data, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         #endregion
