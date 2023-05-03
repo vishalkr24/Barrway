@@ -1,0 +1,105 @@
+.pivot-list-group{
+    .list-group-item {
+        border-radius: 0px;
+        a{
+            cursor: pointer !important;
+            opacity: 0.5;
+            pointer-events: none;
+            &.delete-config{
+                color: $danger;
+            }
+            &.delete-config{
+                color: $primary;
+              
+            }
+        }
+        &.active{
+            a{
+                opacity: 1;
+                pointer-events: all;
+                &.delete-config{
+                    color: $white;
+                }
+                &.delete-config{
+                    color: $white;
+                }
+            }
+        }
+    }
+}
+.pivot{
+    .webix_view {
+        max-width: 100%;
+    }
+    .webix_pivot {
+        .webix_layout_toolbar{
+            &.webix_toolbar{
+                background-color: $primary;
+            }
+        }
+        .webix_ss_header{
+            .webix_hcell{
+                background-color: $tabulatorTop;
+                border-bottom: 1px solid $primary;
+            }
+        }
+        .pt-settings{
+            color: $primary;
+        }
+        .webix_cell {
+            .webix_tree_folder_open {
+    
+                color: $primary;
+            }
+            .webix_tree_folder {
+                @extend .webix_tree_folder_open;
+            }
+            .webix_tree_file {
+                @extend .webix_tree_folder_open;
+            }
+        }
+        .webix_ss_left{
+            .webix_cell{
+                background-color: $tabulatorTop;
+                border-color: $borderColor;
+            }
+        }
+       
+    }
+     
+    
+    .webix_pivot_operation {
+        color: $primary;
+    }
+
+}
+
+//popup 
+.webix_popup {
+    &.webix_pivot{
+        position: absolute !important;
+        left: 50% !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        .webix_layout_toolbar.webix_toolbar{
+            background-color: $primary;
+          
+        }
+        .webix_pivot_header_fields,.webix_pivot_popup_title{
+            background-color: $tabulatorTop;
+            border-color: $borderColor;
+        }
+        .webix_pivot_popup_title{
+            background-color: $tabulatorTop !important;
+            border-color: $borderColor !important;
+            .webix_pivot_header_icon{
+                color: $primary;
+            }
+        }
+        
+        .webix_link_selection{
+            color: $primary;
+        }
+    }
+}
+

@@ -1,0 +1,33 @@
+.queueVerticalList{
+	font-family: $fontMontserrat;
+	.queue-banner{
+		height: 400px;
+		object-fit: cover;
+		width: 100%;
+	}
+	.queueList {
+		max-width: 100%;
+		overflow-x: auto;
+		>.queueItem {
+		   margin: 10px 15px;
+		   border: 1px solid  $primary;
+		   flex-basis: 25%;
+		   max-width: 25%;
+		   &.card{
+				border-color: $primary;
+				border-radius: 2px;
+				background-color: $tabulatorTop;
+				hr{
+					border-top-color: $primary;
+				}
+			}
+		   &:nth-of-type(1){
+			  margin-left: 0; 
+		   }
+		   &:nth-last-of-type(1){
+			margin-right: 0; 
+		 }
+
+		}
+	}
+}

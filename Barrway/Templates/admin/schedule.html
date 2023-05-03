@@ -1,0 +1,71 @@
+﻿
+<link href="Content/jqueryui/themes/base/jquery-ui.css" rel="stylesheet" />
+
+<script src="Content/jqueryui/jquery-ui.js"></script>
+<link href="fg-assets/fullcalendar/dist/fullcalendar.css" rel="stylesheet" />
+<script src="fg-assets/fullcalendar/dist/fullcalendar.js"></script>
+<style>
+    .fc .fc-toolbar {
+        display: block !important;
+    }
+</style>
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-sm mb-2 mb-sm-0">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb breadcrumb-no-gutter">
+                    <li class="breadcrumb-item"><a class="breadcrumb-link" href="#/home">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Schedule</li>
+                </ol>
+            </nav>
+
+            <h1 class="page-header-title ms-2">Schedule</h1>
+
+
+        </div>
+        <!-- End Col -->
+        <!-- End Col -->
+    </div>
+    <!-- End Row -->
+</div>
+
+<div class="row mt-2">
+    <div class="card">
+        <div class="card-body">
+            <div class="row mb-3">
+                <div id="agenda-view">
+                    <div class="calendar" id="agenda-view-calendar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasRightLabel">Event Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="event-detail div-flex">
+            <div class="div-flex" id="event-detail">
+
+
+
+            </div>
+            <button type="button" id="btn-cancel" ng-click="CancelBooking()" class="btn btn-primary">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- modal -->
+
+<script>
+    $(document).ready(function () {
+        $(".select-means").on('click', 'li', 'a', function () {
+            $(".select-means li a").toggleClass("active");
+            $('#phonediv, #emaildiv').toggleClass("show");
+        });
+    });
+</script>

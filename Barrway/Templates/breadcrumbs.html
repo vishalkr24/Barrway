@@ -1,0 +1,17 @@
+﻿<!--<ul class="breadcrumbs">
+    <li ng-repeat="breadcrumb in breadcrumbList">
+        <a ng-if="breadcrumb.state && !$last" ui-sref="{{breadcrumb.state}}">{{breadcrumb.title}}</a>
+        <span class="active" ng-show="$last">{{breadcrumb.title}}</span>
+        <span ng-hide="$last" class="divider"><i class="fa fa-angle-right"></i></span>
+    </li>
+</ul>-->
+
+
+
+<h1>Sdsddddddif</h1>
+    <ul class="breadcrumbs">
+        <li data-ng-repeat="state in $state.$current.path | filter:show" data-ng-class="{ 'current': $last }">
+            <a data-ng-if="!$last" class="breadcrumb" href="{{ state.url.format($stateParams) }}">{{ state.data.title }}</a>
+            <span data-ng-if="$last" class="breadcrumb">{{ state.data.title }}</span>
+        </li>
+    </ul>

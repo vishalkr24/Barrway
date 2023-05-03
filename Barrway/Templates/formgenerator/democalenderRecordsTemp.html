@@ -1,0 +1,1309 @@
+﻿<link href="assets/lightbox/css/lightbox.css" rel="stylesheet" />
+<link href="assets/fullcalendar/dist/fullcalendar.css" rel="stylesheet" />
+
+<link href="Content/sidebar/css/mscustom-scroller.min.css" rel="stylesheet" />
+<link href="Content/sidebar/css/sidebar.css" rel="stylesheet" />
+<link href="assets/fullcalendar-scheduler/dist/scheduler.min.css"
+      rel="stylesheet" />
+<link href="assets/fullcalendar-scheduler/dist/bootstrap-colorpicker.min.css"
+      rel="stylesheet" />
+<link href="assets/fullcalendar-scheduler/dist/bootstrap-datetimepicker.css"
+      rel="stylesheet" />
+<link href="assets/css/jquery.jgrowl.min.css" rel="stylesheet" />
+
+<script src="assets/lightbox/js/lightbox-2.6.min.js"></script>
+<script src="assets/fullcalendar/dist/fullcalendar.min.js"></script>
+
+
+<script src="assets/js/jquery-ui.js"></script>
+<script src="assets/fullcalendar-scheduler/dist/scheduler.js"></script>
+<script src="assets/fullcalendar-scheduler/dist/bootstrap-datetimepicker.js"></script>
+
+<script src="assets/js/code/theme-chooser.js"></script>
+
+
+<script src="assets/js/jquery.jgrowl.min.js"></script>
+<script src="assets/js/moment.js"></script>
+
+<style>
+    .fc-timeline .fc-body .fc-scroller {
+        height: 500px !important;
+    }
+    /*Agenda & Timeline Source event design*/
+    .fc-event-container .fc-timeline-event .fc-content:nth-of-type(1),
+    .fc-event-container .fc-time-grid-event .fc-content:nth-of-type(1),
+    .fc-event-container .fc-day-grid-event .fc-content:nth-of-type(1) {
+        margin-top: 0px;
+    }
+
+    .fc-event-container .fc-timeline-event .fc-content,
+    .fc-event-container .fc-time-grid-event .fc-content,
+    .fc-event-container .fc-day-grid-event .fc-content {
+        margin-top: 3px;
+        margin-bottom: 0px;
+        padding: 0px 8px;
+    }
+
+        .fc-event-container .fc-timeline-event .fc-content .fc-title,
+        .fc-event-container .fc-time-grid-event .fc-content .fc-title,
+        .fc-event-container .fc-day-grid-event .fc-content .fc-title {
+            font-size: 16px;
+            font-family: Arial;
+        }
+
+        .fc-event-container .fc-timeline-event .fc-content:nth-last-of-type(1),
+        .fc-event-container .fc-time-grid-event .fc-content:nth-last-of-type(1),
+        .fc-event-container .fc-day-grid-event .fc-content:nth-last-of-type(1) {
+            margin-bottom: 0px;
+        }
+
+    .fc th {
+        text-align: center;
+        font-weight: 400;
+        font-family: 'Montserrat-bold';
+        font-size: 80%;
+    }
+
+    .fc button {
+        font-family: 'Montserrat';
+    }
+
+    .ui-widget .ui-widget, .calendar {
+        font-family: 'Montserrat' !important;
+    }
+
+    #vertical-resource-view .fc-view-container {
+        overflow-x: scroll;
+    }
+
+
+    #vertical-resource-view .fc-view.fc-agendaDay-view.fc-agenda-view {
+        width: 100%;
+    }
+    /* **For 2 day view** */
+    #vertical-resource-view .fc-view.fc-agendaTwoDays-view.fc-agenda-view {
+        width: 500%;
+    }
+
+    #vertical-resource-view .fc-view.fc-agendaThreeDays-view.fc-agenda-view {
+        width: 600%;
+    }
+
+    #vertical-resource-view .fc-view.fc-agendaWeek-view.fc-agenda-view {
+        width: 1500%;
+    }
+    /*end*/
+
+    .lightbox {
+        display: none;
+    }
+
+    .popover {
+        z-index: 99;
+    }
+
+    .ui-state-highlight,
+    .ui-widget-content .ui-state-highlight {
+        border: 1px solid #72c3ec !important;
+        background: #e9f3fc url(images/ui-bg_highlight-soft_25_ffef8f_1x100.png) 50% top repeat-x !important;
+    }
+
+    .fa-sm {
+        font-size: 12px;
+    }
+
+    .titleContainer,
+    .popoverSelect {
+        display: flex;
+        align-items: center;
+    }
+
+    .sidebar ul li a {
+        color: #3e246b !important;
+    }
+
+    .customTitle {
+        background: rgb(255, 255, 255);
+        border-color: #aaa;
+        padding: 2px;
+        border-radius: 5px;
+        z-index: 1;
+    }
+
+    .btn.btn-outline-success {
+        color: #3e246b;
+        border: 1px solid #3e246b;
+        background-color: transparent;
+    }
+
+        .btn.btn-outline-success:hover {
+            background-color: #3e246b !important;
+            color: #fff;
+        }
+
+    .btn-group > .btn-group:not(:first-child) > .btn,
+    .btn-group > .btn:not(:first-child) {
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+        margin-right: 0px;
+    }
+
+    .btn-group > .btn-group:not(:last-child) > .btn,
+    .btn-group > .btn:not(:last-child):not(.dropdown-toggle) {
+        border-top-right-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .fc-listYear-view tr.fc-list-item,
+    .fc-listMonth-view tr.fc-list-item,
+    .fc-listWeek-view tr.fc-list-item,
+    .fc-listDay-view tr.fc-list-item {
+        background: #e2e2e2 !important;
+        margin-bottom: 10px;
+        display: flex;
+        margin: 3px;
+    }
+
+    #list-view table.fc-list-table tr .fc-content {
+        margin: 3px;
+        margin-top: 10px;
+        margin-bottom: 4px;
+    }
+
+    .fc-content.fcTime .fc-content {
+        color: #fff;
+        padding: 0px 5px;
+        margin: 3px 3px 3px;
+    }
+
+    .fc-content.fcTime small.time {
+        color: #7b7b7b;
+    }
+
+    .fc-content.fcTime {
+        margin: 7px 0px !important;
+    }
+
+    .breadcrumbUi.row {
+        margin-left: -20px !important;
+    }
+
+    .custom-br {
+        font-size: 14px;
+        font-style: italic;
+        font-family: Roboto;
+        font-weight: 500;
+        letter-spacing: .2px;
+    }
+
+    .course-click {
+        transition: all linear .3s;
+        cursor: pointer;
+    }
+
+        .course-click.right {
+            transform: rotate(90deg);
+        }
+
+
+
+    .modal-dialog-slideout {
+        min-height: 100%;
+        margin: 0 0 0 auto;
+        background: #fff;
+    }
+
+    .modal.fade {
+        padding-right: 0px !important;
+    }
+
+        .modal.fade .modal-dialog.modal-dialog-slideout {
+            -webkit-transform: translate(100%,0)scale(1);
+            transform: translate(100%,0)scale(1);
+        }
+
+        .modal.fade.show .modal-dialog.modal-dialog-slideout {
+            -webkit-transform: translate(0,0);
+            transform: translate(0,0);
+            display: flex;
+            align-items: stretch;
+            -webkit-box-align: stretch;
+            height: 100%;
+        }
+
+            .modal.fade.show .modal-dialog.modal-dialog-slideout .modal-body {
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+
+    .modal-dialog-slideout .modal-content {
+        border: 0;
+    }
+
+    .modal-dialog-slideout .modal-header, .modal-dialog-slideout .modal-footer {
+        height: 69px;
+        display: block;
+    }
+
+        .modal-dialog-slideout .modal-header h5 {
+            float: left;
+        }
+
+    .fc-event-container .fc-timeline-event .fc-content:nth-of-type(1), .fc-event-container .fc-time-grid-event .fc-content:nth-of-type(1), .fc-event-container .fc-day-grid-event .fc-content:nth-of-type(1) {
+        display: none;
+    }
+
+    #agenda-view .fc-event-container .fc-timeline-event .fc-content .fc-title, #agenda-view .fc-event-container .fc-time-grid-event .fc-content .fc-title,
+    #agenda-view .fc-event-container .fc-day-grid-event .fc-content .fc-title {
+        font-size: 12px;
+    }
+
+    #agenda-view .fc-event-container .fc-timeline-event .fc-content, #agenda-view .fc-event-container .fc-time-grid-event .fc-content,
+    #agenda-view .fc-event-container .fc-day-grid-event .fc-content {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-right: 30px !important;
+    }
+
+        #agenda-view .fc-event-container .fc-timeline-event .fc-content, #agenda-view .fc-event-container .fc-time-grid-event .fc-content,
+        #agenda-view .fc-event-container .fc-day-grid-event .fc-content .fc-customtime {
+            position: absolute;
+            right: 1px;
+            top: 4px;
+            font-size: 12px;
+        }
+
+    #vertical-resource-view .fc table {
+        table-layout: auto;
+    }
+
+    #vertical-resource-view .fc-view > table {
+        min-width: 0;
+        width: auto;
+    }
+
+    #vertical-resource-view .fc-axis {
+        min-width: 100px; /*the width of times column*/
+        width: 100px; /*the width of times column*/
+    }
+
+    #vertical-resource-view .fc-day, .fc-resource-cell, .fc-content-col {
+        min-width: 350px;
+        width: 100%;
+    }
+
+    div#calendar .fc-timeline .fc-body .fc-scroller {
+        height: auto !important;
+    }
+    .modalscrollable {
+        overflow-y: auto;
+        max-height: 500px;
+        min-height: 500px;
+    }
+
+
+   
+
+    /* Important part */
+    /*.modal-dialog {
+        overflow-y: initial !important
+    }
+
+    .modal-body {
+        height: 80vh;
+        overflow-y: auto;
+    }*/
+
+    .modalscrollable {
+        overflow-y: auto;
+        max-height: 500px;
+        min-height: 500px;
+    }
+
+
+    /* Important part */
+    /*.modal-dialog {
+        overflow-y: initial !important
+    }
+    .modal-body {
+        height: 80vh;
+        overflow-y: auto;
+    }*/
+    div#calendar .fc-timeline .fc-body .fc-scroller {
+        height: auto !important;
+        min-height: 400px;
+    }
+    .menu-icon_box {
+        display: inline-block;
+        height: 25px;
+        position: relative;
+        text-align: left;
+        width: 25px;
+    }
+
+    .Hideleftmenu {
+        padding: 56px 0px 0;
+        margin-left: -20px;
+        position: relative;
+    }
+
+
+</style>
+
+<!--<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ToggleSideMenu">
+    <span class="navbar-toggler-icon">
+        <svg version="1.1" id="Capa_1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 384 384" style="enable-background:new 0 0 384 384;" xml:space="preserve" class="menu-color">
+        <g><rect x="0" y="277.333" width="384" height="42.667"></rect><rect x="0" y="170.667" width="384" height="42.667"></rect><rect x="0" y="64" width="384" height="42.667"></rect></g></svg>
+    </span>
+</button>-->
+
+<section class="sidebar">
+    <div class="sedebar__tInner">
+        <div class="form-top">
+            <label>{{translation.Activities}}</label>
+
+            <select class="form-control"
+                    ng-model="xSelection"
+                    id="xAxis"
+                    ng-change="xSelectionChange(xSelection)"
+                    ng-options="v.resourceActivityForm as v.title for v in xaxisFormList"></select>
+        </div>
+        <div class="form-top">
+            <label>{{translation.Resources}}</label>
+
+            <select class="form-control"
+                    ng-model="ySelection"
+                    ng-change="ySelectionChange(ySelection)"
+                    ng-options="v.resourceActivityForm as v.title for v in yaxisFormList"></select>
+        </div>
+
+        <div class="form-top mt-2 text-center">
+            <button class="btn btn-primary btn-sm mb-0"
+                    ng-click="resetFilter()">
+                {{translation.Reset_Filter}}
+            </button>
+        </div>
+    </div>
+    <div class="sedebar__inner">
+        <div class="sidebar-toggle">
+            <i class="fa fa-chevron-left"></i>
+        </div>
+        <div class="scrollbar">
+            <div class="card card-default" ng-if="otherformDetails.title.length>0">
+                <div class="from-group search-filter text-center"></div>
+                <div class="card-header pt-0 pb-0">
+                    <span class="arrow">
+                        <i class="fa fa-chevron-down"></i>
+                    </span>
+                    <h3>      {{otherformDetails.title}}</h3>
+
+                </div>
+                <div class="card-body pt-1 text-left">
+                    <div id="tree-custom">
+                        <div class="input-group">
+                            <input type="text"
+                                   id="keyword"
+                                   name="keywordSearch"
+                                   class="form-control ng-pristine ng-untouched ng-valid ng-empty"
+                                   ng-model="otherformDetails.searchTextData"
+                                   placeholder="{{ otherformDetails.title}} " />
+                            <span class="input-group-append">
+                                <button class="btn btn-primary"
+                                        ng-click="searchTabulatorDataInEvent(otherformDetails)"
+                                        type="button">
+                                    <i class="fa fa-search"
+                                       aria-hidden="true">
+                                    </i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+            <div class="card card-default"
+                 ng-repeat="(key, list) in calenderSettingsFormDetailsDataList track by $index"
+                 ng-if="list.majorGroupParseList.length>0">
+                <div class="from-group search-filter text-center">
+                    <!--<input
+                        type="search"
+                        class="search-input"
+                        id="search-input-{{$index}}"
+                        ng-model="list.searchtext"
+                        placeholder="Search {{list.title}}"
+                    />-->
+                </div>
+                <div class="card-header pt-0 pb-0">
+                    <span class="arrow">
+                        <i class="fa fa-chevron-down"></i>
+                    </span>
+                    <h3>
+                        {{list.title}}
+
+                    </h3>
+
+                    <a class="morebutton" id="more-button-{{list.resourceActivityForm}}" data-formid="{{list.resourceActivityForm}}">
+                        <i class="fa fa-search"></i>
+                    </a>
+                </div>
+                <div class="card-body pt-1 text-left">
+                    <span ng-if="selectedTreeList.length>0">
+                        <span ng-if="selectedTreeList[0].original.formId==list.resourceActivityForm"> {{selectedTreeList.length}} items selected</span>
+                    </span>
+                    <div id="tree-{{$index}}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="breadcrumbUi row flex-wrap">
+    <!--<button class="navbar-toggler" type="button" data-toggle="collapse" id="ToggleSideMenu"  style="border: 1px solid;padding: 3px;border-radius: 4px;margin: -2px;">
+        <span class="navbar-toggler-icon">
+            <svg version="1.1" id="Capa_1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 384 384"  xml:space="preserve" class="menu-color">
+            <g><rect x="0" y="277.333" width="384" height="42.667"></rect><rect x="0" y="170.667" width="384" height="42.667"></rect><rect x="0" y="64" width="384" height="42.667"></rect></g></svg>
+        </span>
+    </button>-->
+    <!--<span class="navbar-toggler-icon">
+        <svg version="1.1" id="Capa_1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 384 384" xml:space="preserve" class="menu-color">
+        <g><rect x="0" y="277.333" width="384" height="42.667"></rect><rect x="0" y="170.667" width="384" height="42.667"></rect><rect x="0" y="64" width="384" height="42.667"></rect></g></svg>
+    </span>-->  
+    <div class="col-lg-6 col-md-12 text-md-center text-xl-left mb-2 mb-lg-0">
+        <a onclick="HideSiseMenu()" class="btn btn-primary mb-0 ml-1" title="Hide menu">
+            <i id="Hide_menu_Icon" class="fa fa-arrow-left" aria-hidden="true"></i>
+        </a>
+
+        <a ui-sref="userappforms({appId:formDetailsDataInfo.applicationId})"
+           class="text-muted custom-br">{{formDetailsDataInfo.applicationTitle}}></a>
+        <span class="custom-br">{{formDetailsDataInfo.title}}</span>
+        <a onclick="showQR()"
+           id="qrCodeNew"
+           class="btn btn-primary mb-0 ml-1"
+           title="{{translation.QR_Code}}">
+            <i class="fa fa-qrcode"></i>
+        </a>
+        <a href="javascript:;"
+           class="pull-left hide-page-actions ml-10"
+           title="Hide Page Actions">
+            <i class="glyphicon glyphicon-chevron-up"></i>
+        </a>
+
+    </div>
+    <div class="col-lg-6 col-md-12 text-md-center text-xl-right">
+        <div class="btn-group d-inline-flex"
+             role="group"
+             aria-label="Basic example">
+            <button type="button"
+                    class="btn btn-outline-success cursor-pointer mb-0"
+                    ui-sref="records({formId: currentFormId})"
+                    id="change_per_view">
+                <i class="fa fa-table" aria-hidden="true"> </i>
+                <span class="action-name">{{translation.Table_View}}</span>
+            </button>
+            <button type="button"
+                    class="btn btn-success cursor-pointer mb-0" style="border-top-left-radius: 0 !important; border-bottom-left-radius: 0 !important; ">
+                <i class="fa fa-calendar" aria-hidden="true"> </i>
+                <span class="action-name">{{translation.Calendar_View}}</span>
+            </button>
+            <button type="button"
+                    class="btn btn-outline-success cursor-pointer mb-0"
+                    ui-sref="CalendarStatus({formId:currentFormId})"
+                    ng-if="Is_Kanban_Status==true">
+                <i class="fa fa-columns" aria-hidden="true"> </i>
+                <span class="action-name">{{translation.Kanban_Board}}</span>
+            </button>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="card">
+
+    <span id="menuName"> </span>
+    <span class="hidden" id="menuDescription"> </span>
+    <input type="hidden" name="tabulator" value="applicationDetail" />
+    <input type="hidden" name="tabulatorStorage" value="appDetail" />
+    <input type="hidden"
+           name="onetomany"
+           value="{{multiDcalendar}}"
+           id="onetomany" />
+
+
+
+
+    <input type="hidden" value="0" id="FormTypeStatus" />
+    <!--{{formDetailsDataInfo.title}}-->
+    <!-- <small>
+        ({{(formDetailsDataInfo.applicationTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.applicationTitle}},
+        {{(formDetailsDataInfo.topicTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.topicTitle}})
+    </small> -->
+    <input type="hidden" name="tabulator" value="records" />
+    <span id="menuName" class="hidden">
+        {{translation.Records_Untitled_name_newform_newform}}
+    </span>
+    <span class="hidden" id="menuDescription">
+        {{translation.This_is_the_description_of_the_Untitled_name_newform_newform}}
+        records form.
+    </span>
+
+    <div class="card-body pl-0 pr-0">
+        <div class="col-sm-12">
+            <div class="row">
+                <form id="pageActions" class="form-inline w-100">
+                    <a class="btn btn-md btn-default"
+                       ng-if="currentUserFormRole==3"
+                       href
+                       ui-sref="summary({formId: currentFormId})"><i class="fa fa-th-list mr-2"></i>{{translation.Summary}}</a>
+
+                    <a ng-if="currentUserFormRole==3"
+                       class="btn btn-primary cursor-pointer"
+                       ng-click="editFormRedirect()">
+                        <i class="fa fa-edit mr-2"
+                           aria-hidden="true"
+                           disabled></i>{{translation.Edit_Form}}
+                    </a>
+                    <a ng-click="showAdvanced()" class="btn btn-primary mt-3 mt-lg-0 ml-2" data-toggle="tooltip" title="Advanced ">
+                        <span class="action-name"> </span>
+                        <i class="fa fa-chevron-down" ng-class="{'fa-chevron-down':!isShowAdvance,'fa-chevron-up':isShowAdvance}"></i>
+                    </a>
+                    <div class="form-group d-flex justify-content-end flex-fill"></div>
+
+                    <div data-theme-system="jquery-ui"
+                         class="selector form-group"
+                         style="display: none;">
+                        {{translation.Theme}}
+                        <select class="form-control" style="margin-left: 5px;">
+                            <option value="base" selected>{{translation.Base}}</option>
+                            <option value="black-tie">{{translation.Black_Tie}}</option>
+                            <option value="blitzer">{{translation.Blitzer}}</option>
+                            <option value="cupertino">{{translation.Cupertino}}</option>
+                            <option value="dark-hive">{{translation.Dark_Hive}}</option>
+                            <option value="dot-luv">{{translation.Dot_Luv}}</option>
+                            <option value="eggplant">{{translation.Eggplant}}</option>
+                            <option value="excite-bike">{{translation.Excite_Bike}}</option>
+                            <option value="flick">{{translation.Flick}}</option>
+                            <option value="hot-sneaks">{{translation.Hot_Sneaks}}</option>
+                            <option value="humanity">{{translation.Humanity}}</option>
+                            <option value="le-frog">{{translation.Le_Frog}}</option>
+                            <option value="mint-choc">{{translation.Mint_Choc}}</option>
+                            <option value="overcast">{{translation.Overcast}}</option>
+                            <option value="pepper-grinder">{{translation.Pepper_Grinder}}</option>
+                            <option value="redmond">{{translation.Redmond}}</option>
+                            <option value="smoothness">{{translation.Smoothness}}</option>
+                            <option value="south-street">{{translation.South_Street}}</option>
+                            <option value="start">{{translation.Start}}</option>
+                            <option value="sunny">{{translation.Sunny}}</option>
+                            <option value="swanky-purse">{{translation.Swanky_Purse}}</option>
+                            <option value="trontastic">{{translation.Trontastic}}</option>
+                            <option value="ui-darkness">{{translation.UI_Darkness}}</option>
+                            <option value="ui-lightness">{{translation.ui_lightness}}</option>
+                            <option value="vader">{{translation.Vader}}</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="control-label text-right" style="padding: 6px;"> {{translation.Filter_By_Selected_Date}}</label>
+                        <input type="text"
+                               id="datecontrol"
+                               class="form-control"
+                               ng-model="formDetailsDataInfo.searchByDate"
+                               data-date=""
+                               data-date-format="dd-mm-yyyy"
+                               placeholder="yyyy-mm-dd"
+                               autocomplete="off"
+                               value="" />
+                        <span class="input-group-append">
+                            <button class="btn btn-primary"
+                                    ng-click="filterBySelectedDate(formDetailsDataInfo)"
+                                    type="button">
+                                <i class="fa fa-search"
+                                   aria-hidden="true">
+                                </i>
+                                {{translation.Search}}
+                            </button>
+                        </span>
+                    </div>
+
+
+                    <div data-theme-system="bootstrap3"
+                         class="selector form-group"
+                         style="display: none;">
+                        {{translation.Theme_Name}}:
+
+                        <select class="form-control">
+                            <option value="" selected>{{translation.Default}}</option>
+                            <option value="cosmo">{{translation.Cosmo}}</option>
+                            <option value="cyborg">{{translation.Cyborg}}</option>
+                            <option value="darkly">{{translation.Darkly}}</option>
+                            <option value="flatly">Flatly</option>
+                            <option value="journal">Journal</option>
+                            <option value="lumen">Lumen</option>
+                            <option value="paper">Paper</option>
+                            <option value="readable">Readable</option>
+                            <option value="sandstone">Sandstone</option>
+                            <option value="simplex">Simplex</option>
+                            <option value="slate">Slate</option>
+                            <option value="solar">Solar</option>
+                            <option value="spacelab">Spacelab</option>
+                            <option value="superhero">Superhero</option>
+                            <option value="united">United</option>
+                            <option value="yeti">Yeti</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <span id="loading" style="display: none;">
+                            <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+                        </span>
+                    </div>
+
+                    <a class="flat-buttons pageActionsToggleer"
+                       onclick="pageActionsToggleer()"
+                       style="display: none;">
+                        <i class="fa fa-chevron-left"></i>
+                    </a>
+                </form>
+            </div>
+        </div>
+        <div class="col-sm-12 nopadding">
+            <div class="row">
+                <div class="table-responsive mt-10"
+                     style="overflow-x: inherit; min-height: 200px;">
+                    <div class="col-sm-12 mb-10">
+                        <div class="col-sm-12 external-events-list" ng-show="isShowAdvance">
+                            <!--<div class="form-group row mt-2"
+                                 ng-if="otherformDetails.title">
+                                <label class="col-md-2 control-label">
+                                    {{otherformDetails.title}}
+                                </label>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input type="text"
+                                               id="keyword"
+                                               name="keywordSearch"
+                                               class="form-control ng-pristine ng-untouched ng-valid ng-empty"
+                                               ng-model="otherformDetails.searchTextData"
+                                               placeholder="{{ otherformDetails.title}} " />
+                                        <span class="input-group-append">
+                                            <button class="btn btn-primary"
+                                                    ng-click="searchTabulatorDataInEvent(otherformDetails)"
+                                                    type="button">
+                                                <i class="fa fa-search"
+                                                   aria-hidden="true">
+                                                </i>
+                                                Search
+                                            </button>
+                                        </span>
+                                    </div>
+
+                                </div>
+                            </div>-->
+                            <div class="form-group row">
+                                <label class="col-sm-2 control-label mb-4">
+                                    {{ selectedAxis.selectedFormName}}
+                                    <i class="fa fa-chevron-right course-click"></i>
+                                </label>
+                                <div class="col-md-3 ">
+                                    <!--/*
+                                    Donot remove this function and HTML , filtering for event on the basis of selected activity
+                                    */
+                                    <div class="input-group ">
+                                        <input type="text"
+                                               id="resourcekeywordSearch"
+                                               name="resourcekeywordSearch"
+                                               ng-model="selectedAxis.resourceSearchTextData"
+                                               class="form-control ng-pristine ng-untouched ng-valid ng-empty"
+                                               placeholder="{{ selectedAxis.selectedFormName}} " />
+                                        <span class="input-group-append">
+                                            <button class="btn btn-primary"
+                                                    type="button" ng-click="searchTabulatorDataInEventByResources(selectedAxis)">
+                                                <i class="fa fa-search"
+                                                   aria-hidden="true">
+                                                </i>
+                                                Search
+                                            </button>
+                                        </span>
+                                    </div>-->
+                                    <div class="input-group ">
+                                        <input type="text"
+                                               id="activitykeywordSearch"
+                                               name="activitykeywordSearch"
+                                               ng-model="selectedAxis.activitySearchTextData"
+                                               class="form-control ng-pristine ng-untouched ng-valid ng-empty"
+                                               placeholder="{{ selectedAxis.selectedFormName}} " />
+                                        <span class="input-group-append">
+                                            <button class="btn btn-primary"
+                                                    type="button" ng-click="searchSelectedActivityBoxes(selectedAxis)">
+                                                <i class="fa fa-search"
+                                                   aria-hidden="true">
+                                                </i>
+                                                Search
+                                            </button>
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-sm-auto">
+                                    <input type="checkbox" id="drop-remove" />
+                                    <label for="drop-remove">
+                                        Remove after drop
+                                    </label>
+                                    <input type="checkbox" id="allDay-check" />
+                                    <label for="allDay-check">
+                                        All Day
+                                    </label>
+                                </div>
+                                <!--<div class="col form-group row ">
+                                    <label class="col-md-5 control-label text-left">
+                                        Filter By Selected Date
+                                    </label>
+                                    <div class="col-md-7">
+                                        <div class="input-group">
+                                            <input type="text"
+                                                   id="datecontrol"
+                                                   class="form-control"
+                                                   ng-model="formDetailsDataInfo.searchByDate"
+                                                   data-date=""
+                                                   data-date-format="dd-mm-yyyy"
+                                                   placeholder="yyyy-mm-dd"
+                                                   value="" />
+                                            <span class="input-group-append">
+                                                <button class="btn btn-primary"
+                                                        ng-click="filterBySelectedDate(formDetailsDataInfo)"
+                                                        type="button">
+                                                    <i class="fa fa-search"
+                                                       aria-hidden="true">
+                                                    </i>
+                                                    Search
+                                                </button>
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                </div>-->
+
+                                <div class="row w-100 align-items-center toggle-course-master" style="display: none;">
+                                    <div ng-repeat="item in Xdraggables.draggableSlips"
+                                         class="col-xs-6 col-sm-4 col-md-4 col-lg-2">
+
+                                        <div class="fc-event"
+                                             data-id="{{item.Id}}"
+                                             data-formId="{{item.formId}}"
+                                             data-activityfield="{{item.activityField}}"
+                                             data-categoryfield="{{item.categoryField}}"
+                                             data-servicefield="{{item.category}}"
+                                             data-dropin="{{item.dropIn}}"
+                                             data-dimensiontype="{{item.dimensionType}}"
+                                             data-groupingvaluesact="{{item.groupingValuesActivity}}"
+                                             data-groupingfieldsres="{{item.groupingFieldsRes}}"
+                                             data-colorfield="{{item.colorField}}"
+                                             data-color="{{item.color!=null?item.color:'#7d606c'}}"
+                                             data-duration="{{item.durationField!=null ? item.durationField :'01:00:00'}}"
+                                             style="background-color: {{item.color!=null?item.color:'#7d606c'}}; border: 1px solid rgb(125, 96, 108); z-index: 2; left: 0px; top: 0px; position: relative;">
+                                            {{item.displayValue}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+
+
+                            </div>
+                        </div>
+                        <div id="calendar"
+                             style="padding: 0px; margin-top: 15px;">
+
+
+
+                            <div id="tabs" style="display: none;">
+                                <ul>
+                                    <li data-value="List view">
+                                        <a href="#list-view">{{translation.List_view}}</a>
+                                    </li>
+                                    <li data-value="External Events">
+                                        <a href="#agenda-view">{{translation.Agenda_view}}</a>
+                                    </li>
+                                    <li data-value="Timeline resource view">
+                                        <a href="#timeline-resource-view">{{translation.Timeline_resource_view}}</a>
+                                    </li>
+                                    <li data-value="Vertical resource view">
+                                        <a href="#vertical-resource-view">{{translation.Vertical_resource_view}}</a>
+                                    </li>
+                                </ul>
+
+                                <div id="list-view">
+                                    <div class="calendar"></div>
+                                </div>
+                                <div id="agenda-view">
+                                    <div class="calendar"></div>
+                                </div>
+                                <div id="timeline-resource-view">
+                                    <div class="calendar"></div>
+                                </div>
+                                <div id="vertical-resource-view">
+                                    <div class="calendar"></div>
+                                </div>
+                            </div>
+                            <div ui-calendar="{{uiConfig.calendar}}"
+                                 calendar="myCalendar"
+                                 class="span8 calendar"
+                                 ng-model="eventSources"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row"></div>
+        </div>
+    </div>
+</div>
+
+<div id="searchModal"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div id="search-results" class="list-group"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-default"
+                        data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="galleryModal"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-default"
+                        data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="tabulatorConfigModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    &times;
+                </button>
+                <h4 class="modal-title">Tabulator Configurations</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert-area"></div>
+                <a class="btn btn-sm btn-success" href=""><i class="fa fa-plus"></i> Create New</a>
+                <a href="javascript:;"
+                   class="btn btn-sm btn-primary"
+                   id="toggle_responsive"></a>
+                <a class="btn btn-default btn-sm pull-right"
+                   href="javascript:;"
+                   id="delete_per_cookie">
+                    Default Configuration
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="galleryModal"
+     class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-default"
+                        data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade"
+     id="filterModal"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header d-flex">
+                <div class="col-md-4 form-group search-filter">
+                    <input id="search-input"
+                           ng-model="nodechildModelSearch"
+                           placeholder="search {{filterPopupPlaceHolder.title}}"
+                           class="search-input col-md-16 form-control" />
+                </div>
+
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row m-0">
+                    <input type="hidden" id="treeIndex" value="" />
+                    <div class="col-md-3"
+                         ng-repeat="(key,ldata) in lastNodeDataList | groupBy:'firstChar'"
+                         ng-if="(ldata|filter:nodechildModelSearch).length>0">
+                        <div class="form-group">
+                            <h5 ng-if="(ldata|filter:nodechildModelSearch).length>0">
+                                <strong>{{key}}</strong>
+                            </h5>
+                            <div class="checkbox"
+                                 ng-repeat="(itemkey,item) in ldata | filter: nodechildModelSearch">
+                                <label>
+                                    <input type="checkbox"
+                                           ng-change="applyCheckBoxesChanges(item,item.checked)"
+                                           id="{{itemkey}}"
+                                           ng-model="item.checked"
+                                           value="" />
+                                    {{item.text}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="tabulatorModal.html" type="text/ng-template">
+
+    <div id="tabulatorModal">
+
+        <div class="modal-body">
+            <input type="hidden" name="formID" />
+            <input type="hidden" name="modal-one-to-many" value="0" />
+            <input type="hidden" name="tabulator-id" />
+            <input type="hidden" name="modal-field-map" />
+
+            <div class="tabulator-section">
+                <div id="form-table"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+        </div>
+    </div>
+</script>
+
+<script id="addTransactionRecordTabulatorModal.html" type="text/ng-template">
+
+    <div class="row" id="addTransactionRecordTabulatorModal">
+
+        <div class="col-sm-12 modalscrollable">
+            <input type="hidden" name="formID" />
+            <input type="hidden" name="modal-one-to-many" value="0" />
+            <input type="hidden" name="tabulator-id" />
+            <input type="hidden" name="modal-field-map" />
+            <div class="col-md-12">
+                <!--<span ng-repeat="v in selectedRecords">{{v.value}}</span>-->
+                <div class="input-group">
+                    <!--<input type="text"  name="selectedrec" class="form-control"
+                    ng-model="selectedRecords" style="color:green"/>-->
+                    <!--<textarea name='selectedrec' placeholder='Selected entries'>{{selectedRecords}}</textarea>-->
+                    <!--<input type="text" name='selectedrec' ng-value="selectedRecords" readonly />-->
+                    <input type="text" name='selectedrec' style="background-color:rgb(165 139 241 / 0.41)" placeholder="Type here..." />
+                </div>
+            </div>
+            <div class="tabulator-section">
+                <div id="form-tableStudent"></div>
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="get-tabulator-valuescalender" data-dismiss="modal">Save changes</button>
+        </div>
+    </div>
+
+</script>
+
+
+<div class="modal fade right" id="createCustomEventDetailsModelPopUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel4" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-slideout" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{translation.Create_New_Event}}Create New Event</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="event-detail div-flex">
+                    <div class="div-flex">
+                        <div class="title">
+                            <!--<label class="pr-2">
+
+                                {{createEventDetails.description}}
+                            </label>-->
+                            <div class="temp" ng-repeat="d in createEventDetails.dropdownList">
+                                <span class="titleContainer">
+                                    <span class="title1"> {{d.formTitle}}</span>
+
+                                </span>
+                                <div class="popoverSelect">
+                                    <select class="form-control serchselectChossen form-control-sm w-50" data-id="dropdwn_{{d.formId}}" ng-init="d.selectionDropdown=d.Id" ng-model="d.selectionDropdown">
+                                        <option value="{{dform.id}}" ng-repeat="dform in d.dropdownListData.formDataList|orderBy:d.dropdownListData.activities">{{dform[d.dropdownListData.activities]}}</option>
+                                    </select>
+                                </div>
+                                
+                            </div>
+                            <div class="temp">
+                                <span class="titleContainer">
+                                    <span class="title1"> {{ otherformDetails.title}}</span>
+                                </span>
+                                <div ng-show="formDetailsDataInfo.otherformid!=0" class="popoverSelect">
+
+                                    <select class="form-control serchselectChossen form-control-sm w-50" id="otherformDropDwn" ng-model="otherformSelectionDropdown">
+                                        <option value="{{dform.Id}}" ng-repeat="dform in OtherFormDrpDwnList|orderBy:OtherFormOrderByFieldname">{{dform[OtherFormOrderByFieldname]}}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="{{createEventDetails.customDate}}">{{createEventDetails.customDate}}</div>
+                        <div>{{createEventDetails.customTime}}</div>
+
+
+
+                        <input value="{{createEventDetails.Id}}" id="createnewtag-inputHidden" type="hidden">
+
+
+                        <!--<input id="newtag-inputnew" type="text" value="{{createEventDetails.tags}}" placeholder="Add tags">-->
+
+                        <div ng-repeat="tag in totalSelectListTagify">
+                            <input value="{{createEventDetails[tag.name]}}" id="createnewtag-inputHidden{{tag.name}}" type="hidden">
+                            <input id="createnewtag-input{{tag.name}}" type="text" value="{{createEventDetails[tag.name]}}" placeholder="Add tags">
+                        </div>
+                        <input type="text" class="form-control" ng-model="createEventDetails.description" placeholder="Description" />
+
+
+
+                    </div>
+                    <button type="button" class="btn btn-primary" ng-click="createNewEvent()">Create Event</button>
+                </div>
+
+                <!--<div class="div-flex div-list-bar"></div>-->
+                <!--<div class="div-flex div-list">
+                    <div class="d-flex justify-content-between align-items-center p-0">
+                        <h5 class="list-title mb-0" id="newtabuList"><strong id="strongFormName">0 Student in this Slot</strong></h5>
+                        <div class="d-block">
+                            <div id="newaddTransactionRecord" class="edit-event-student cursor-pointer d-inline-block"><i class="fa fa-plus"></i></div> <div id="newtabuListLink" class="edit-event-student mr-0 ml-1 cursor-pointer d-inline-block" title="Edit"><i class="fa fa-pencil"></i></div>
+                        </div>
+                    </div>
+                    <ul id="newtabuListUl">
+                    </ul>
+                    <label id="labelWaiting"></label>
+                    <ul id="newtabuListUlWaiting">
+                    </ul>
+                </div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade right" id="customEventDetailsModelPopUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-slideout" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Event Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="event-detail div-flex">
+                    <div class="div-flex">
+                        <div class="title">
+                            <label class="pr-2">
+                                {{selectEventDetails.description}}
+                            </label>
+                            <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
+                                <span class="titleContainer">
+                                    <span ng-class="{'text-muted': d.customClass == 'true' , 'title1': d.customClass == 'false'}"> {{d.formTitle}}</span>
+                                    <i ng-if="d.customClass== 'false'" class="fa fa-pencil editTitle ml-2 cursor-pointer fa-sm"></i>
+                                    <i ng-if="d.customClass== 'false'" class="fa fa-trash deleteTitle ml-2 cursor-pointer fa-sm" ng-click="deleteDimensionClick(selectEventDetails,d,$event);"></i>
+                                    <i ng-if="d.customClass== 'true'" class="fa fa-plus editTitle ml-2 cursor-pointer fa-sm"></i>
+                                </span>
+                                <div class="d-none popoverSelect">
+                                    <select class="form-control form-control-sm w-50 selectCustom" ng-init="d.selectionDropdown=d.Id" ng-model="d.selectionDropdown"
+                                            ng-change="updateDimensionCalenderEventClick(d,d.selectionDropdown,selectEventDetails,$this);">
+                                        <option value="{{dform.id}}" ng-repeat="dform in d.dropdownListData.formDataList">{{dform[d.dropdownListData.activities]}}</option>
+                                    </select>
+                                    <i class="fa fa-times closeSelect cursor-pointer ml-2 fa-sm"></i>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
+                        <div ng-if="!selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
+                        <div ng-if="!selectEventDetails.allDay">{{selectEventDetails.customTime}}</div>
+
+                        <div ng-if="selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
+
+                        <input value="{{selectEventDetails.Id}}" id="newtag-inputHidden" type="hidden">
+
+
+
+                        <div ng-repeat="tag in totalSelectListTagify">
+                            <input value="{{selectEventDetails[tag.name]}}" id="newtag-inputHidden{{tag.name}}" type="hidden">
+                            <input value="{{tag.name}}" id="newtag-inputHidden{{selectEventDetails.Id}}" type="hidden">
+                            <input id="newtag-input{{tag.name}}" type="text" value="{{selectEventDetails[tag.name]}}" placeholder="Add tags">
+                        </div>
+
+                    </div>
+                </div>
+                <div class="btn-box d-flex">
+                    <div id="eventCopy" class="mr-10 cursor-pointer" data-formid="{{selectEventDetails.formID}}" data-formgroupkey="{{selectEventDetails.formGroupKey}}" data-eventid="{{selectEventDetails.Id}}"><a> <i class="fa fa-copy"></i></a></div><div id="eventEdit" class="mr-10 cursor-pointer" data-formid="{{selectEventDetails.formID}}" data-formgroupkey="{{selectEventDetails.formGroupKey}}" data-eventid="{{selectEventDetails.Id}}"><a> <i class="fa fa-pencil"></i></a></div><div id="eventDelete" data-formid="{{selectEventDetails.formID}}" data-formgroupkey="{{selectEventDetails.formGroupKey}}" data-eventid="{{selectEventDetails.Id}}" class="delete-event cursor-pointer"><i class="fa fa-trash"></i></div>
+                    <!--<a class="btn close-event cursor-pointer" title="close" data-dismiss="modal" aria-label="Close"> <i class="fa fa-times"></i></a>-->
+                </div>
+                <div class="div-flex div-list-bar"></div>
+                <div class="div-flex div-list">
+                    <div class="d-flex justify-content-between align-items-center p-0">
+                        <h5 class="list-title mb-0" id="newtabuList"><strong id="strongFormName">0 Student in this Slot</strong></h5>
+                        <div class="d-block">
+                            <div id="newaddTransactionRecord" class="edit-event-student cursor-pointer d-inline-block"><i class="fa fa-plus"></i></div> <div id="newtabuListLink" class="edit-event-student mr-0 ml-1 cursor-pointer d-inline-block" title="Edit"><i class="fa fa-pencil"></i></div>
+                        </div>
+                    </div>
+                    <ol id="newtabuListUl">
+                    </ol>
+                    <label id="labelWaiting"></label>
+                    <ul id="newtabuListUlWaiting">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--<div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+        </div>-->
+    </div>
+</div>
+
+<script src="assets/lightbox/js/lightbox-2.6.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // $('.selectCustom').selectpicker({ liveSearch: true, container: 'body' }); $('.selectCustom').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) { $('.selectCustom').selectpicker('refresh') });
+
+        /*$(".serchselectChossen").chosen();*/
+        $('.course-click').on('click', function () {
+            $('.toggle-course-master').slideToggle("slow");
+            $(this).toggleClass('right');
+        })
+        $("#xAxis").on("change", function () {
+            //console.log("eee");
+            setTimeout(function () {
+                $(".external-events-list .fc-event").each(function () {
+                    // store data so the calendar knows to render an event upon drop
+                    $(this).data("event", {
+                        title: $.trim($(this).text()), // use the element's text as the event title
+                        color: $.trim($(this).data("color")),
+                        duration: $.trim($(this).data("duration")),
+                        stick: false, // maintain when user navigates (see docs on the renderEvent method)
+                        id: $.trim($(this).data("id")),
+                        formid: $.trim($(this).data("formid")),
+                        activityfield: $.trim($(this).data("activityfield")),
+                        colorfield: $.trim($(this).data("colorfield")),
+                        categoryfield: $.trim($(this).data("categoryfield")),
+                        servicefield: $.trim($(this).data("servicefield")),
+                        dropin: $.trim($(this).data("dropin")),
+                        dimensiontype: $.trim($(this).data("dimensiontype")),
+                        groupingvaluesact: $.trim(
+                            $(this).data("groupingvaluesact")
+                        ),
+                        groupingfieldsres: $.trim(
+                            $(this).data("groupingfieldsres")
+                        ),
+                    });
+                    // make the event draggable using jQuery UI
+                    $(this).draggable({
+                        zIndex: 999,
+                        revert: true, // will cause the event to go back to its
+                        containment: ".table-responsive",
+                        scroll: true,
+                        revertDuration: 0, //  original position after the drag
+                    });
+                });
+            }, 1000);
+        });
+    });
+
+    function HideSiseMenu() {        
+
+        if ($('.sidebar').is(":hidden")) {
+            $(".sidebar").show();
+            $("#sidebarStrip_menu").show();
+            $('.showSection').removeClass('Hideleftmenu').addClass('contentsection');
+            $('#Hide_menu_Icon').removeClass('fa-arrow-right').addClass('fa-arrow-left');
+        }
+        else {
+            $(".sidebar").hide();
+            $("#sidebarStrip_menu").hide();
+            $('.showSection').removeClass('contentsection').addClass('Hideleftmenu');
+            $('#Hide_menu_Icon').removeClass('fa-arrow-left').addClass('fa-arrow-right');
+            
+        }
+    }
+</script>
+<script src="Content/sidebar/js/sidebar-script.js"></script>

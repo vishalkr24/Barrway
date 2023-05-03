@@ -1,0 +1,895 @@
+﻿<link href="assets/lightbox/css/lightbox.css" rel="stylesheet" />
+<script src="assets/lightbox/js/lightbox-2.6.min.js"></script>
+
+<script src="assets/fullcalendar/dist/fullcalendar.min.js"></script>
+<link href="assets/fullcalendar/dist/fullcalendar.min.css" rel="stylesheet" />
+
+<link href="Content/sidebar/css/mscustom-scroller.min.css" rel="stylesheet" />
+<link href="Content/sidebar/css/sidebar.css" rel="stylesheet" />
+<link href="assets/fullcalendar-scheduler/dist/scheduler.min.css" rel="stylesheet" />
+
+<script src="assets/js/jquery-ui.js"></script>
+<script src="assets/fullcalendar-scheduler/dist/scheduler.js"></script>
+<script src="assets/fullcalendar-scheduler/dist/bootstrap-datetimepicker.js"></script>
+<link href="assets/fullcalendar-scheduler/dist/bootstrap-colorpicker.min.css" rel="stylesheet" />
+<link href="assets/fullcalendar-scheduler/dist/bootstrap-datetimepicker.css" rel="stylesheet" />
+<script src="assets/js/code/theme-chooser.js"></script>
+<!--<link href="assets/css/jquery-ui.css" rel="stylesheet" />-->
+<link href="assets/css/jquery.jgrowl.min.css" rel="stylesheet" />
+<script src="assets/js/jquery.jgrowl.min.js"></script>
+<script src="assets/js/moment.js"></script>
+
+<!--<script src="../../Scripts/fullCalender/Scripts/jquery-1.4.1.min.js"></script>-->
+
+
+<style>
+
+    .fc-event-container .fc-timeline-event .fc-content:nth-of-type(1) {
+        margin-top: 0px;
+    }
+
+    .fc-event-container .fc-timeline-event .fc-content {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+        .fc-event-container .fc-timeline-event .fc-content:nth-last-of-type(1) {
+            margin-bottom: 0px;
+        }
+
+    .lightbox {
+        display: none;
+    }
+
+    .popover {
+        z-index: 99;
+    }
+    .ui-state-highlight, .ui-widget-content .ui-state-highlight {
+        border: 1px solid #72c3ec !important;
+        background: #e9f3fc url(images/ui-bg_highlight-soft_25_ffef8f_1x100.png) 50% top repeat-x !important;
+    }
+
+</style>
+
+
+<section class="sidebar">
+    <div class="sedebar__tInner">
+        <div class="form-top">
+            <label>Activities</label>
+
+            <select class="form-control" ng-model="xSelection" id="xAxis" ng-change="xSelectionChange(xSelection)"
+                    ng-options="v.resourceActivityForm as v.title for v in xaxisFormList"></select>
+            <!--<select class="form-control" ng-model="c.targetFormFields"
+                    ng-options="v.fieldName as v.fieldLabel for v in formReferenceFieldsList | orderBy: 'fieldName'">-->
+        </div>
+        <div class="form-top">
+            <label>Resources</label>
+
+            <select class="form-control" ng-model="ySelection" ng-change="ySelectionChange(ySelection)" 
+                    ng-options="v.resourceActivityForm as v.title for v in yaxisFormList"></select>
+        </div>
+
+        <!--<ul>
+            <li ng-repeat="t in calenderSettingsFormDetailsDataList">
+                {{t.title}}
+            </li>
+        </ul>-->
+    </div>
+    <div class="sedebar__inner">
+        <div class="sidebar-toggle">
+            <i class="fa fa-chevron-left"></i>
+        </div>
+        <div class="scrollbar">
+            <div class="card card-default" ng-repeat="(key, list) in calenderSettingsFormDetailsDataList track by $index" ng-if="list.majorGroupParseList.length>0">
+                <div class="from-group search-filter text-center">
+                    <input type="search" class="search-input" id="search-input-{{$index}}" ng-model="list.searchtext" placeholder="Search {{list.title}}" />
+                </div>
+                <div class="card-header pt-0 pb-0">
+
+                    <span class="arrow"><i class="fa fa-chevron-down"></i> </span>
+                    <h3> {{list.title}} </h3>
+                    <span class="search-icon"><i class="fa fa-search"></i> </span>
+                </div>
+                <div class="card-body pt-1 text-left">
+                    <div id="tree-{{$index}}"></div>
+                </div>
+            </div>
+
+
+            <!--<button type="button" class="btn btn-default" ng-click="applyChanges()">Apply Changes</button>-->
+            <!--<div class="card panel-default">
+                <div class="from-group search-filter text-center">
+                    <input type="search" class="search-input" placeholder="Search Categories" />
+                </div>
+                <div class="card-header">
+
+                    <span class="arrow"><i class="fa fa-chevron-down"></i> </span>
+                    <h3> Teacher </h3>
+                    <span class="search-icon"><i class="fa fa-search"></i> </span>
+                </div>
+                <div class="card-body">
+                    <div id="teacherTree"></div>
+                    <a class="more-button"><i class="fa fa-plus"></i> 38 more </a>
+                </div>
+            </div>
+
+            <div class="card panel-default">
+                <div class="from-group search-filter text-center">
+                    <input type="search" class="search-input" placeholder="Search Categories" />
+                </div>
+                <div class="card-header">
+                    <span class="arrow"><i class="fa fa-chevron-down"></i> </span>
+                    <h3> Course </h3>
+                    <span class="search-icon"><i class="fa fa-search"></i> </span>
+                </div>
+                <div class="card-body">
+                    <div id="courseTree"></div>
+                    <a class="more-button"><i class="fa fa-plus"></i> 38 more </a>
+                </div>
+            </div>-->
+        </div>
+    </div>
+</section>
+
+<div class="card panel-default">
+    <div class="card-header">
+        <span id="menuName"> </span>
+        <span class="hidden" id="menuDescription">
+        </span>
+        <input type="hidden" name="tabulator" value="applicationDetail" />
+        <input type="hidden" name="tabulatorStorage" value="appDetail" />
+        <input type="hidden" name="onetomany"value="{{multiDcalendar}}"id ="onetomany"  />
+        <div class="pull-right text-right rightbtn">
+            <!--<a href="javascript:;" id="qrCodeNew" class="btn btn-primary pull-left" title="QR Code"><i class="fa fa-qrcode"></i></a>-->
+            <a onclick="showQR()" id="qrCodeNew" class="btn btn-primary pull-left" title="QR Code"><i class="fa fa-qrcode"></i></a>
+            <a href="javascript:;" class="pull-left hide-page-actions ml-10" title="Hide Page Actions"><i class="glyphicon glyphicon-chevron-up"></i></a>
+        </div>
+
+        <input type="hidden" value="0" id="FormTypeStatus" />
+        {{formDetailsDataInfo.title}}
+        <small>
+            ({{(formDetailsDataInfo.applicationTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.applicationTitle}},
+            {{(formDetailsDataInfo.topicTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.topicTitle}})
+        </small>
+        <input type="hidden" name="tabulator" value="records">
+        <span id="menuName" class="hidden">
+            Records Untitled name (newform,newform)
+        </span>
+        <span class="hidden" id="menuDescription">
+            This is the description of the Untitled name (newform,newform) records form.
+        </span>
+
+
+    </div>
+    <div class="card-body">
+
+        <div class="col-sm-12 ">
+            <div class="row">
+
+                <form id="pageActions" class="form-inline w-100  ">
+                    <!--<a class="btn btn-primary" ui-sref="saveFormEntryData({formId: {{id}}})">
+                        <i class="fa fa-plus">
+                        </i> <span class="action-name">Entry</span>
+                    </a>-->
+                    <!--<a class="btn btn-md btn-success" href="#"><i class="fa fa-plus"></i> Entry</a>-->
+                    <a class="btn btn-md btn-default"
+                       ng-if="currentUserFormRole==3"
+                       href ui-sref="summary({formId: currentFormId})"><i class="fa fa-th-list mr-2"></i>Summary</a>
+                    <a  class="btn btn-md btn-primary"   id="change_per_view" ><i class="fa fa-window-restoremr-2"></i>Toggle</a>
+                    <a ng-if="currentUserFormRole==3" class="btn  btn-primary" ng-click="editFormRedirect()"><i class="fa fa-edit mr-2" aria-hidden="true" disabled></i>Edit Form</a>
+                    <div class="form-group d-flex justify-content-end flex-fill">
+                        <div id='theme-system-selector' class='selector'>
+                            <strong>Theme System:</strong>
+                            <select class="form-control">
+                                <option value='standard' selected>Default</option>
+                                <option value='jquery-ui'>jQuery UI</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div data-theme-system="jquery-ui" class='selector form-group' style='display:none'>
+                        Theme Name:
+
+                        <select class="form-control">
+                            <option value='base' selected>Base</option>
+                            <option value='black-tie'>Black Tie</option>
+                            <option value='blitzer'>Blitzer</option>
+                            <option value='cupertino'>Cupertino</option>
+                            <option value='dark-hive'>Dark Hive</option>
+                            <option value='dot-luv'>Dot Luv</option>
+                            <option value='eggplant'>Eggplant</option>
+                            <option value='excite-bike'>Excite Bike</option>
+                            <option value='flick'>Flick</option>
+                            <option value='hot-sneaks'>Hot Sneaks</option>
+                            <option value='humanity'>Humanity</option>
+                            <option value='le-frog'>Le Frog</option>
+                            <option value='mint-choc'>Mint Choc</option>
+                            <option value='overcast'>Overcast</option>
+                            <option value='pepper-grinder'>Pepper Grinder</option>
+                            <option value='redmond'>Redmond</option>
+                            <option value='smoothness'>Smoothness</option>
+                            <option value='south-street'>South Street</option>
+                            <option value='start'>Start</option>
+                            <option value='sunny'>Sunny</option>
+                            <option value='swanky-purse'>Swanky Purse</option>
+                            <option value='trontastic'>Trontastic</option>
+                            <option value='ui-darkness'>UI Darkness</option>
+                            <option value='ui-lightness'>UI Lightness</option>
+                            <option value='vader'>Vader</option>
+                        </select>
+                    </div>
+                    <div data-theme-system="bootstrap3" class='selector form-group' style='display:none'>
+                        Theme Name:
+
+                        <select class="form-control">
+                            <option value='' selected>Default</option>
+                            <option value='cosmo'>Cosmo</option>
+                            <option value='cyborg'>Cyborg</option>
+                            <option value='darkly'>Darkly</option>
+                            <option value='flatly'>Flatly</option>
+                            <option value='journal'>Journal</option>
+                            <option value='lumen'>Lumen</option>
+                            <option value='paper'>Paper</option>
+                            <option value='readable'>Readable</option>
+                            <option value='sandstone'>Sandstone</option>
+                            <option value='simplex'>Simplex</option>
+                            <option value='slate'>Slate</option>
+                            <option value='solar'>Solar</option>
+                            <option value='spacelab'>Spacelab</option>
+                            <option value='superhero'>Superhero</option>
+                            <option value='united'>United</option>
+                            <option value='yeti'>Yeti</option>
+                        </select>
+                    </div>
+                    <div class="form-group"  ><span  id='loading' style='display:none'> <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i></span></div>
+
+
+                    <a class="flat-buttons pageActionsToggleer" onclick="pageActionsToggleer()" style="display:none"><i class="fa fa-chevron-left"></i></a>
+                </form>
+
+
+
+
+            </div>
+        </div>
+        <div class="col-sm-12 nopadding">
+            <div class="row">
+                <div class="table-responsive mt-10" style="overflow-x: inherit; min-height: 200px">
+                    <div id="dialog" style="width: auto; min-height: 29px; max-height: none; height: auto;" class="ui-dialog-content ui-widget-content">
+                        <form autocomplete="off">
+                            <fieldset class="ui-helper-reset">
+                                <label for="tab_title">Title</label>
+                                <input type="text" name="title" id="tab_title" class="ui-widget-content ui-corner-all form-control">
+                                <label for="tab_start">Start</label>
+                                <input type="text" name="start" id="tab_start" class="ui-widget-content ui-corner-all form-control">
+                                <label for="tab_end">End</label>
+                                <input type="text" name="end" id="tab_end" class="ui-widget-content ui-corner-all form-control">
+                                <label for="tab_end">Color</label>
+                                <input type="text" name="color" id="tab_color" class="ui-widget-content ui-corner-all form-control colorpicker-element">
+                                <input type="hidden" name="allDay" id="allDay" class="form-control" value="true">
+                                <input type="hidden" name="resourceId" id="resourceId" class="form-control">
+                                <input type="hidden" name="resources" id="resources" class="form-control">
+                            </fieldset>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-12 mb-10">
+
+                        <div class="col-sm-12 external-events-list">
+                            <!--<div class="form-group row">
+                            <label class="col-md-2 control-label">
+                                {{formDetailsDataInfo.title}}
+                             <a ng-click="openTabulator(formDetailsDataInfo.formId)"><span class="fa-stack fa-lg"><i class="fa fa-square-o fa-stack-2x"></i><i class="fa fa-table fa-stack-1x"></i></span></a>
+                                                               </label>
+
+                                                           </div>-->
+
+
+                            <div class="form-group row" ng-if="listTabulator.length>0" ng-repeat="tabu in listTabulator | filter : 'student'">
+                                <label class="col-md-2 control-label">
+                                    {{tabu.fieldLabel}}
+                                    <!--<a ng-click="openTabulator(tabu.formId)"><span class="fa-stack fa-lg"><i class="fa fa-square-o fa-stack-2x"></i><i class="fa fa-table fa-stack-1x"></i></span></a>-->
+                                </label>
+                                <div class="col-md-6">
+                                   
+                                    <input type="text" class="form-control" ng-model="tabu.searchTextData" placeholder="search by typing student name " ng-keypress="($event.charCode==13)? searchTabulatorDataInEvent(tabu) : return">
+                                </div>
+                            </div>
+
+
+
+
+                            <!--<div class="col-sm-12" ng-if="listTabulator.length>0" ng-repeat="tabu in listTabulator | filter : 'student'">
+                                <div class="col-sm-6">
+                                    <label>{{tabu.fieldLabel}} </label>
+                                    <input type="text" class="form-control" ng-model="tabu.searchTextData" placeholder="search by insert {{tabu.fieldLabel}}" />
+                                </div>
+                                <div class="col-sm-6 mt-15">
+                                    <label> </label>
+                                    <button type="button" class="btn btn-primary" ng-click="searchTabulatorDataInEvent(tabu)">Search</button>
+                                </div>
+                            </div>-->
+
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 control-label">
+                                    {{        selectedAxis.selectedFormName}}
+                                    <!--<a ng-click="openTabulator(xSelection)"><span class="fa-stack fa-lg"><i class="fa fa-square-o fa-stack-2x"></i><i class="fa fa-table fa-stack-1x"></i></span></a>-->
+
+                                </label>
+                                <div ng-repeat="item in Xdraggables.draggableSlips" class="col-xs-6 col-sm-4 col-md-4 col-lg-2">
+                                    <div class='fc-event' data-id="{{item.Id}}" data-formId="{{item.formId}}" data-activityfield="{{item.activityField}}" data-categoryfield="{{item.categoryField}}" data-servicefield="{{item.category}}" data-dropin="{{item.dropIn}}"  data-dimensiontype="{{item.dimensionType}}"      data-groupingvaluesact="{{item.groupingValuesActivity}}"   data-groupingfieldsres="{{item.groupingFieldsRes}}"        data-colorfield="{{item.colorField}}" data-color="{{item.color!=null?item.color:'#7d606c'}}" data-duration="{{item.durationField!=null ? item.durationField :'01:00:00'}}"
+                                         style="background-color: {{item.color!=null?item.color:'#7d606c'}}; border: 1px solid rgb(125, 96, 108); z-index: 2; left: 0px; top: 0px; position: relative;">
+                                        {{item.displayValue}}
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
+
+                            <div class="col-sm-12">
+
+                                <input type='checkbox' id='drop-remove' /> <label for='drop-remove'>
+                                    Remove after drop
+                                </label>
+
+
+                            </div>
+                        </div>
+                        <div id="calendar" style="padding: 0px; margin-top: 15px;">
+
+                            <div id="tabs" style="display: none;">
+                                <ul>
+                                    <li data-value="Basic view"><a href="#basic-view">Basic view</a></li>
+                                    <li data-value="List view"><a href="#list-view">List view</a></li>
+                                    <li data-value="External Events"><a href="#agenda-view">Agenda view</a></li>
+                                    <li data-value="Timeline resource view"><a href="#timeline-resource-view">Timeline resource view</a></li>
+                                    <li data-value="Vertical resource view"><a href="#vertical-resource-view">Vertical resource view</a></li>
+                                    <li data-value="Vertical activities view"><a href="#vertical-activities-view">Vertical activities view</a></li>
+                                </ul>
+                                <div id="basic-view"><div class="calendar"></div></div>
+                                <div id="list-view"><div class="calendar"></div></div>
+                                <div id="agenda-view"><div class='calendar'></div></div>
+                                <div id="timeline-resource-view"><div class="calendar"></div></div>
+                                <div id="vertical-resource-view"><div class="calendar"></div></div>
+                                <div id="vertical-activities-view"><div class="calendar"></div></div>
+                            </div>
+                            <div ui-calendar="{{uiConfig.calendar}}" calendar="myCalendar" class="span8 calendar" ng-model="eventSources"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="searchModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div id="search-results" class="list-group">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="galleryModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="tabulatorConfigModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Tabulator Configurations</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="alert-area"></div>
+                <a class="btn btn-sm btn-success" href=""><i class="fa fa-plus"></i> Create New</a>
+                <a href="javascript:;" class="btn btn-sm btn-primary" id="toggle_responsive"></a>
+                <a class="btn btn-default btn-sm pull-right" href="javascript:;" id="delete_per_cookie"> Default Configuration</a>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="galleryModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header d-flex" >
+                <div class="col-md-4 form-group search-filter ">
+                    <input id="search-input" ng-model="nodechildModelSearch" placeholder="search {{filterPopupPlaceHolder.title}}" class="search-input col-md-16 form-control" />
+                </div>
+
+
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+            </div>
+            <div class="modal-body">
+                <div class="row m-0">
+                    <input type="hidden" id="treeIndex" value="" />
+                    <div class="col-md-3" ng-repeat="(key,ldata) in lastNodeDataList | groupBy:'firstChar'" ng-if="(ldata|filter:nodechildModelSearch).length>0">
+                        <div class="form-group">
+                            <h5 ng-if="(ldata|filter:nodechildModelSearch).length>0"><strong>{{key}}</strong></h5>
+                            <div class="checkbox" ng-repeat="(itemkey,item) in ldata | filter: nodechildModelSearch">
+                                <label>
+                                    <input type="checkbox" ng-change="applyCheckBoxesChanges(item,item.checked)" id="{{itemkey}}" ng-model="item.checked" value="">
+                                    {{item.text}} <!--<small class="text-muted">682</small>-->
+                                </label>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="tabulatorModal.html" type="text/ng-template">
+
+    <div id="tabulatorModal">
+
+        <div class="modal-body">
+            <input type="hidden" name="formID" />
+            <input type="hidden" name="modal-one-to-many" value="0" />
+            <input type="hidden" name="tabulator-id" />
+            <input type="hidden" name="modal-field-map" />
+            <div class="form-group">
+                <label class="col-md-12 control-label">
+                    {{tabuListLink.title}}
+                    <a ng-click="openFormEntry(tabuListLink)"><span class="fa-stack fa-lg"><i class="fa fa-square-o fa-stack-2x"></i><i class="fa fa-table fa-stack-1x"></i></span></a>
+                </label>
+
+            </div>
+            <div class="tabulator-section">
+                <div id="form-table"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="get-tabulator-valuescalender" data-dismiss="modal">Save changes</button>
+        </div>
+    </div>
+</script>
+<!--<script type="text/javascript" src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/2.3.2/jspdf.plugin.autotable.js"></script>-->
+<script src="assets/lightbox/js/lightbox-2.6.min.js"></script>
+<!-- <script src="assets/js/jquery.qrcode.js"></script>
+<script src="assets/js/qrcode.js"></script> -->
+<script>
+    function userAccessRightsDelete() {
+        var result = false;
+        var scope = angular.element($("#calendar")).scope();
+        var formDetailsInfo = scope.formDetailsDataInfo;
+        var userId = json.parse(localStorage.getItem('detail').Id);
+        if (userId.toString() === formDetailsInfo.created_by.toString()) {
+            var _own = formDetailsDataInfo.recordAccessSecurity.own;
+            if (_own.delete == true)
+                result = true;
+
+        }
+        else {
+            var _other = formDetailsDataInfo.recordAccessSecurity.other;
+            if (_other.delete == true)
+                result = true;
+        }
+
+        return result;
+
+    }
+
+    $(document).on('click', '.delete-event', function (event) {
+
+        window["scrollOffset"] = $(window).scrollTop();
+        if (!(userAccessRightsDelete)) {
+            swal({
+                title: 'Form Edit',
+                text: 'You are not allowed to do this operation. Form Based Roles',
+                type: 'error'
+            });
+            return false;
+        }
+
+        event.preventDefault();
+        console.log(event);
+        var $button = $(this);
+        var eventBasicData = window["EventBasicDetail"];
+
+        var confirm = window.confirm("Are you sure to delete?");
+        if (confirm) {
+            var Id = $button.data('formgroupkey');
+            console.log('id is :' + $button.data('formgroupkey'));
+            setTimeout(function () {
+                $.ajax({
+                    method: 'POST',
+                    url: "api/FormAPI/EditEventData",
+                    dataType: 'json',
+                    contentType: "application/json",
+                    data: "{'action':3,'Id':" + parseInt(Id) + ",'formId':" + eventBasicData.formId + ",'topicId':" + eventBasicData.formData.topicId + "}", //$.param(formData)
+                    success: function (response) {
+                        if (response.res > 0) {
+                            eventBasicData.formGroupKey = create_UUID();
+                            window["EventBasicDetail"] = eventBasicData;
+
+                            var CalendarEventList = window["CalendarEventList"];
+                            var ActivityEventList = window["ActivityEventList"];
+                            console.log('before deletion ');
+                            console.log(CalendarEventList);
+
+                            CalendarEventList = $.grep(CalendarEventList, function (e) {
+                                return e.Id != Id;
+                            });
+
+                            ActivityEventList = $.grep(ActivityEventList, function (e) {
+                                return e.Id != Id;
+                            });
+
+                            window["CalendarEventList"] = CalendarEventList;
+                            window["ActivityEventList"] = ActivityEventList;
+                            console.log('after  deletion ');
+                            console.log(CalendarEventList);
+                            $('.calendar').fullCalendar('destroy');
+                            //  loadCalendar('BasicView', CalendarEventList);
+                            loadCalendar('BasicView', CalendarEventList, eventBasicData.resourceData, eventBasicData.resColumns, eventBasicData.activityData, eventBasicData.activityColumn, ActivityEventList);
+                            $('#basic-view div.calendar').fullCalendar('refetchEvents');
+                            //$(".calendar").fullCalendar('removeEvents', Id);
+                            // $('#agenda-view div.calendar').fullCalendar('removeEvents', Id);
+                            $button.parents('.popover').remove();
+                            $.jGrowl(response.Message, { position: 'center' });
+
+                        } else
+                            console.log(response);
+
+                    },
+
+                    beforeSend: function () {
+                        showLoader();
+                    },
+
+                    complete: function () {
+
+                        var _ScrollOffset = window["scrollOffset"];
+                        window.scrollTo(0, _ScrollOffset);
+                        $.unblockUI();
+                    }
+                });
+            }, 150);
+        }
+    });
+
+    $(document).on('click', '.edit-event  ', function (event) {
+        event.preventDefault();
+        console.log(event);
+        var $button = $(this);
+        $button.parents('.popover').remove();
+    }
+    );
+
+    // Initialize jquery ui tabs
+    $("#tabs").tabs({
+        create: function (event, ui) {
+            //console.info(ui.tab.data('value'))
+        },
+        activate: function (event, ui) {
+            //console.info($(ui.newTab).find('a').attr('href'));//ui.oldTab.data('value')
+            var target = $(ui.newTab).find('a').attr('href');
+            $(target + ' div.calendar').fullCalendar('render');
+            $(target + ' div.calendar').fullCalendar('refetchEvents');
+            $('body .popover').remove();
+            $.cookie("calendar-activeView", $('a[href="' + target + '"]').parent().index(), { expires: 365, path: '/' });
+        }
+    });
+    $("#tabs").show();
+
+    if (checkCookie('calendar-activeView') !== '') {
+        $("#tabs").tabs("option", "active", parseInt(checkCookie('calendar-activeView')));
+    }
+
+
+
+
+    var dialog = $("#dialog").dialog({
+        autoOpen: false,
+        modal: true,
+        resizable: false,
+        draggable: false,
+        show: { effect: "clip", duration: 250 },
+        hide: { effect: "explode", duration: 500 },
+        buttons: {
+            Add: function () {
+                addEvent(form);
+                $(this).dialog("close");
+            },
+            Cancel: function () {
+                $(this).dialog("close");
+            }
+        },
+        close: function () {
+            form[0].reset();
+        }
+    });
+    // AddTab form: calls addTab function on submit and closes the dialog
+    var form = dialog.find("form").on("submit", function (event) {
+        //addEvent();
+        dialog.dialog("close");
+        event.preventDefault();
+    });
+
+
+
+    // Datetime picker in create event dialoge
+    $("#tab_start, #tab_end").datetimepicker({
+        format: "yyyy-mm-dd hh:ii",
+        minView: 0,
+        maxView: 1,
+        startView: 1,
+        autoclose: true,
+        //todayBtn: true,
+        //todayHighlight: true,
+        minuteStep: 10,
+        //pickerPosition: "bottom-left"
+    }).on('changeDate', function (e) {
+
+    });
+    // Color picker in create event dialoge
+    $("#tab_color").colorpicker({ format: "rgba" });
+   // setTimeout(  timeout() , 5000);
+
+    var loader = "";
+    $('#galleryModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        //var form_id = button.attr('data-formID'),
+        //    form_name = button.attr('data-fieldName'),
+         var files = button.attr('data-files');
+
+        var modal = $(this);
+        var _images = files.split(','); var ImgString = '';
+        if (_images.length > 0) {
+            for (var count = 0; count < _images.length; count++)
+            {
+
+              //  ImgString += "<div class='" + _images[count].toString() + "'><img height='150' src='" + _images[count].toString() + "'></div>";
+
+                ImgString += "<a class='example-image-link' u-sref='" + _images[count].toString() + "' data-lightbox='example-set' title='tick-877.jpg'><img class='example-image' src='" + _images[count].toString()+"' alt='tick-877.jpg' height='150'></a>";
+
+
+            }
+        }
+
+
+        modal.find('.modal-title').html("File Uploads:");
+        modal.find('.modal-body').html("");
+        modal.find('.modal-body').block({ message: '<img src="' + loader + '" />', css: { position: 'relative', width: '100%', border: 'none' } });
+        modal.find('.modal-body').unblock();
+        modal.find('.modal-body').html(ImgString);
+        //$.post("{{ url('subforms/getAllFiles') }}", { formID: form_id, fieldName: form_name, formGroupKey: form_key }, function (data) {
+        //    modal.find('.modal-body').unblock();
+        //    modal.find('.modal-body').html(data);
+        //});
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+<script>
+
+
+
+    $(document).ready(function () {
+
+        $('#xAxis').on('change', function () {
+            console.log('eee');
+            setTimeout(function () {
+                $('.external-events-list .fc-event').each(function () {
+
+                    // store data so the calendar knows to render an event upon drop
+                    $(this).data('event', {
+                        title: $.trim($(this).text()), // use the element's text as the event title
+                        color: $.trim($(this).data('color')),
+                        duration: $.trim($(this).data('duration')),
+                        stick: false, // maintain when user navigates (see docs on the renderEvent method)
+                        id: $.trim($(this).data('id')),
+                        formid: $.trim($(this).data('formid')),
+                        activityfield: $.trim($(this).data('activityfield')),
+                        colorfield: $.trim($(this).data('colorfield')),
+                        categoryfield: $.trim($(this).data('categoryfield')),
+                        servicefield: $.trim($(this).data('servicefield')),
+                        dropin: $.trim($(this).data('dropin')),
+                        dimensiontype: $.trim($(this).data('dimensiontype')),
+                        groupingvaluesact: $.trim($(this).data('groupingvaluesact')),
+                        groupingfieldsres: $.trim($(this).data('groupingfieldsres')),
+                    });
+
+                    // make the event draggable using jQuery UI
+                    $(this).draggable({
+                        zIndex: 999,
+                        revert: true,      // will cause the event to go back to its
+                        containment: ".table-responsive", scroll: true,
+                        revertDuration: 0  //  original position after the drag
+                    });
+
+                });
+            }, 1000)
+
+        })
+        //$("body").on('click', 'a#qrCodeNew', function () {
+        //    bootbox.dialog({
+        //        onEscape: true,
+        //        title: "QR Code",
+        //        message: '<div id="menuId" class="list-group text-center clearfix">' +
+        //            '<div id="codeSection"></div>' +
+        //            '<p class="mt-10">Scan me to access this form page.</p>' +
+
+        //            '</div>'
+        //    });
+        //    jQuery('#codeSection').qrcode({
+        //        width: 400,
+        //        height: 400,
+        //        render: "canvas",
+        //        text: window.location.href + "?check=anonymous"
+        //        //text:"https://github.com/jeromeetienne/jquery-qrcode"
+        //    });
+
+        //    //$('#codeSection').qrcode({
+        //    //    'text': window.location.href + "?request=qr",
+        //    //    'url': window.location.href + "?request=qr", // users will be redirected to this URL when scanning the QR-Code
+        //    //    'width': 400, // image width in pixel
+        //    //    'height': 400, // image height in pixel
+
+        //    //    'qrsize': 100 // quality of the QR-Code in pixel
+        //    //});
+        //});
+    });
+
+    function quickSignUp(reqType) {
+
+
+        var userName = $('#name').val();
+        var password = $('#password').val();
+        var confirmPass = $('#re-password').val();
+
+        var anonymousUserId = $('#txtAnonymousUserId').val();
+        var anonymousPassword = $('#txtAnonymousPassword').val();
+        var param = {};
+        param.uid = (new Date().getTime()).toString(36);
+        param.isQuickSignUp = true;
+        param.action = 7;
+        if (reqType == "signUp") {
+            param.fullName = 'name title';
+            param.name = userName;
+            param.newPassword = password;
+            param.confirmPassword = confirmPass;
+        }
+        else if (reqType == "anonymous") {
+            param.fullName = 'Anonymous User';
+            param.name = anonymousUserId;
+            param.newPassword = anonymousPassword;
+            param.confirmPassword = anonymousPassword;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "api/FormAPI/profile",
+            data: JSON.stringify(param),
+            contentType: "application/json",
+            datatype: "json",
+            success: function (data) {
+                var respData = data;
+                if (respData.res == 1) {
+                    if (reqType == "signUp")
+                        alert(respData.Message);
+                    if (reqType == "anonymous") {
+                        respData.reqType = "anonymous";
+                    }
+                    localStorage.setItem("detail", JSON.stringify(respData));
+                    location.reload(true);
+                }
+                else {
+                    alert(data.Message);
+                }
+            }
+        });
+
+    }
+    function quickLogin() {
+        var param = {};
+        param.action = 1;
+        param.name = $('#loginUserName').val();
+        param.username = $('#loginUserName').val();
+        param.email = $('#loginUserName').val();
+        param.phoneNumber = $('#loginUserName').val();
+        param.password = $('#loginPassword').val();
+        $.ajax({
+            type: "POST",
+            url: "api/FormAPI/Login",
+            data: JSON.stringify(param),
+            contentType: "application/json",
+            datatype: "json",
+            success: function (data) {
+                console.log(data);
+                if (data.res == 1) {
+                    alert(data.Message);
+                    localStorage.setItem("detail", JSON.stringify(data));
+                    location.reload(true);
+                }
+                else {
+                    alert(data.Message);
+                }
+            }
+        });
+    }
+
+</script>
+
+
+<script src="Content/sidebar/js/mscustom-scroller.js"></script>
+<script src="Content/sidebar/js/sidebar-script.js"></script>

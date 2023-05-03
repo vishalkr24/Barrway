@@ -1,0 +1,237 @@
+﻿<style>
+    .jss3467 {
+        height: auto !important;
+    }
+</style>
+
+<section id="home-page">
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <div class="col-auto pt-3  bg-light leftSideBar">
+
+                <div class="d-flex">
+                    <button class="btn btn-primary btn-lg btn-block text-left" ng-click="createaform(1)">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="mr-3" width="24" height="24" viewBox="0 0 55.82 55.82">
+                            <path id="ic_library_books_24px" d="M7.582,13.164H2V52.238A5.6,5.6,0,0,0,7.582,57.82H46.656V52.238H7.582ZM52.238,2H18.746a5.6,5.6,0,0,0-5.582,5.582V41.074a5.6,5.6,0,0,0,5.582,5.582H52.238a5.6,5.6,0,0,0,5.582-5.582V7.582A5.6,5.6,0,0,0,52.238,2ZM49.447,27.119H21.537V21.537h27.91ZM38.283,38.283H21.537V32.7H38.283ZM49.447,15.955H21.537V10.373h27.91Z" transform="translate(-2 -2)" fill="#fff"></path>
+                        </svg>
+                        Create a form
+                    </button>
+                </div>
+
+                <ul class="nav flex-column nav-pills" id="pills-tab" role="tablist">
+
+                    <!--<li class="nav-item">
+                        <a href class="nav-link active" id="pills-home-tab" data-toggle="pill" data-target="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="mr-3" width="24" height="24" viewBox="0 0 55.82 55.82">
+                                <path id="ic_library_books_24px" d="M7.582,13.164H2V52.238A5.6,5.6,0,0,0,7.582,57.82H46.656V52.238H7.582ZM52.238,2H18.746a5.6,5.6,0,0,0-5.582,5.582V41.074a5.6,5.6,0,0,0,5.582,5.582H52.238a5.6,5.6,0,0,0,5.582-5.582V7.582A5.6,5.6,0,0,0,52.238,2ZM49.447,27.119H21.537V21.537h27.91ZM38.283,38.283H21.537V32.7H38.283ZM49.447,15.955H21.537V10.373h27.91Z" transform="translate(-2 -2)" fill="#fff" />
+                            </svg>
+                            My recent form
+                        </a>
+                    </li>-->
+                    <li class="nav-item" ng-click="changeTab(1)">
+                        <a href class="nav-link active" id="pills-profile-tab" data-toggle="pill" data-target="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="mr-3" width="24" height="24" viewBox="0 0 55.82 55.82">
+                                <path id="ic_library_books_24px" d="M7.582,13.164H2V52.238A5.6,5.6,0,0,0,7.582,57.82H46.656V52.238H7.582ZM52.238,2H18.746a5.6,5.6,0,0,0-5.582,5.582V41.074a5.6,5.6,0,0,0,5.582,5.582H52.238a5.6,5.6,0,0,0,5.582-5.582V7.582A5.6,5.6,0,0,0,52.238,2ZM49.447,27.119H21.537V21.537h27.91ZM38.283,38.283H21.537V32.7H38.283ZM49.447,15.955H21.537V10.373h27.91Z" transform="translate(-2 -2)" fill="#fff"></path>
+                            </svg>
+                            My Form
+                        </a>
+                    </li>
+                    <li class="nav-item" ng-click="changeTab(2)">
+                        <a href class="nav-link" id="pills-contact-tab" data-toggle="pill" data-target="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">
+                            <svg class="mr-3" width="24" height="24" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                 viewBox="0 0 469.333 469.333" style="enable-background:new 0 0 469.333 469.333;" xml:space="preserve">
+                            <g>
+                            <path d="M320,213.333c35.307,0,63.787-28.693,63.787-64c0-35.307-28.48-64-63.787-64c-35.307,0-64,28.693-64,64
+				                    C256,184.64,284.693,213.333,320,213.333z" />
+
+                            <path d="M149.333,213.333c35.307,0,63.787-28.693,63.787-64c0-35.307-28.48-64-63.787-64c-35.307,0-64,28.693-64,64
+				                    C85.333,184.64,114.027,213.333,149.333,213.333z" />
+
+                            <path d="M149.333,256C99.52,256,0,280.96,0,330.667V384h298.667v-53.333C298.667,280.96,199.147,256,149.333,256z" />
+
+                            <path d="M320,256c-6.187,0-13.12,0.427-20.587,1.173c24.747,17.813,41.92,41.813,41.92,73.493V384h128v-53.333
+				                    C469.333,280.96,369.813,256,320,256z" />
+
+		                        </g>
+                            </svg>
+
+                            From shared with me
+
+                        </a>
+                    </li>
+                </ul>
+
+                <!--<a><i class="fa fa-users fa-lg"></i> Form shared with me</a>-->
+
+
+
+            </div>
+            <div class="col leftSidebarContainer">
+                <div class="tab-content  tabulator-section pt-3" id="pills-tabContent">
+                    <div class="tab-pane fade " id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                        <div id="example-table0"></div>
+                    </div>
+                    <div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                        <div class="form-group mb-0 col-xl-6">
+                            <div class="row">
+                                <label for="staticEmail" class="col-form-label text-left">Default Grouping</label>
+                                <div class="col-sm-6 text-left">
+                                    <select class="form-control ng-pristine ng-valid ng-empty ng-touched ng-untouched" id="ddlGroupBy" ng-model="tabulatorConfig.groupByTabOne" name="ddlGroupBy" style=""
+                                            ng-change="onGroupByChange(tabulatorConfig)">
+                                        <option value="" selected="selected">No Grouping</option>
+                                        <option value="{{f.field}}" ng-repeat="f in filterFieldsList">
+                                            {{f.title}}
+                                        </option>
+                                    </select>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-12 table-responsive">
+                                <div id="example-table1"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                        <div class="form-group mb-0 col-xl-6 row">
+                            <label for="staticEmail" class="col-form-label text-left">Default Grouping</label>
+                            <div class="col-sm-6 text-left">
+                                <select class="form-control ng-pristine ng-valid ng-empty ng-touched ng-untouched" id="ddlGroupBy" ng-model="tabulatorConfig.groupByTabTwo" name="ddlGroupBy" style=""
+                                        ng-change="onGroupByChange(tabulatorConfig)">
+                                    <option value="" selected="selected">No Grouping</option>
+                                    <option value="{{f.field}}" ng-repeat="f in filterFieldsList">
+                                        {{f.title}}
+                                    </option>
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                        <div id="example-table2"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--<div class="jss3467">
+        <div class="jss3478">
+            <div class="jss3483">
+                <div class="jss3477 jss3479"></div>
+                <div class="jss3477 jss3480"></div>
+            </div>
+            <div class="jss3477 jss3481"></div>
+        </div>
+    </div>-->
+    <!--<div class="container-fluid">-->
+    <!--<div class="row">
+        <div class="col-xl-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a ui-sref="Home">Home</a></li>
+
+                </ol>
+            </nav>
+        </div>
+    </div>-->
+    <!--<div class="wrap">-->
+    <!--<div class="row">
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            <a ng-click="addFormQueueFunc(1)" class="cursor-pointer">
+                <div class="card card-info">
+                    <div class="card-body">
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="55.82" height="55.82" viewBox="0 0 55.82 55.82">
+                                <path id="ic_library_books_24px" d="M7.582,13.164H2V52.238A5.6,5.6,0,0,0,7.582,57.82H46.656V52.238H7.582ZM52.238,2H18.746a5.6,5.6,0,0,0-5.582,5.582V41.074a5.6,5.6,0,0,0,5.582,5.582H52.238a5.6,5.6,0,0,0,5.582-5.582V7.582A5.6,5.6,0,0,0,52.238,2ZM49.447,27.119H21.537V21.537h27.91ZM38.283,38.283H21.537V32.7H38.283ZM49.447,15.955H21.537V10.373h27.91Z" transform="translate(-2 -2)" fill="#fff" />
+                            </svg>
+                        </div>
+                        <h5 class="card-title">Create a form</h5>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            <a ng-click="addFormQueueFunc(3)" class="cursor-pointer">
+                <div class="card card-blue">
+                    <div class="card-body">
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="59.85" height="66.5" viewBox="0 0 59.85 66.5">
+                                <g id="Group_4" data-name="Group 4" transform="translate(-469 -328)">
+                                    <path id="ic_date_range_24px" d="M22.95,31.925H16.3v6.65h6.65Zm13.3,0H29.6v6.65h6.65Zm13.3,0H42.9v6.65h6.65ZM56.2,8.65H52.875V2h-6.65V8.65h-26.6V2h-6.65V8.65H9.65A6.62,6.62,0,0,0,3.033,15.3L3,61.85A6.648,6.648,0,0,0,9.65,68.5H56.2a6.67,6.67,0,0,0,6.65-6.65V15.3A6.67,6.67,0,0,0,56.2,8.65Zm0,53.2H9.65V25.275H56.2Z" transform="translate(466 326)" fill="#fff" />
+                                </g>
+                            </svg>
+                        </div>
+                        <h5 class="card-title">Create a calendar </h5>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            <a ng-click="addFormQueueFunc(2)" class="cursor-pointer">
+                <div class="card card-danger">
+                    <div class="card-body">
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="71" height="73" viewBox="0 0 71 73">
+                                <text id="_" data-name="" transform="translate(0 61)" fill="#fff" font-size="71" font-family="FontAwesome"><tspan x="0" y="0"></tspan></text>
+                            </svg>
+                        </div>
+                        <h5 class="card-title">Create a queue</h5>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>-->
+    <!--</div>
+    </div>-->
+    <!--<div class="container-fluid">
+        <div class="wrap">-->
+    <!--<div class="row" ng-if="true">
+        <div class="col-xl-12">
+            <section id="demos">
+                <h5>My favourite</h5>
+                <div class="owl-carousel owl-theme">
+                    <div class="item">
+                        <img src="newAssets/images/carousel/rest1.jpg">
+                        <p>Restaurant</p>
+                    </div>
+                    <div class="item">
+                        <img src="newAssets/images/carousel/clinic1.jpg">
+                        <p>Clinic</p>
+                    </div>
+                    <div class="item">
+                        <img src="newAssets/images/carousel/Shcool1.jpg">
+                        <p>School</p>
+                    </div>
+                    <div class="item">
+                        <img src="newAssets/images/carousel/rest2.jpg">
+                        <p>Restaurant</p>
+                    </div>
+                    <div class="item">
+                        <img src="newAssets/images/carousel/clinic2.jpg">
+                        <p>Clinic</p>
+                    </div>
+                    <div class="item">
+                        <img src="newAssets/images/carousel/Shcool2.jpg">
+                        <p>School</p>
+                    </div>
+                    <div class="item">
+                        <img src="newAssets/images/carousel/clinic3.jpg">
+                        <p>Clinic</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>-->
+    <!--</div>
+    </div>-->
+</section>
+
+<script>
+            //$(window).on('load', function () {
+            //    $(document).ajaxComplete(() => console.log($('[data-target="#pills-profile"]')));
+            //})
+</script>
