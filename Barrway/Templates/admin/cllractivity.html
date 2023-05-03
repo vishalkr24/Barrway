@@ -1,0 +1,206 @@
+﻿<style>
+    #pills-tab1 {
+        display: none;
+    }
+
+    .img-wrapclose {
+        position: absolute;
+        top: 0px;
+        right: 22px;
+        z-index: 100;
+        background-color: #C2B8B8;
+        padding: 5px 3px;
+        color: #000;
+        font-weight: bold;
+        cursor: pointer;
+        text-align: center;
+        font-size: 22px;
+        line-height: 10px;
+        border-radius: 50%;
+        opacity: 1;
+        display: block;
+    }
+
+    .checked {
+        color: orange;
+    }
+</style>
+<script type="text/javascript" src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-sm mb-2 mb-sm-0">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb breadcrumb-no-gutter">
+                    <li class="breadcrumb-item"><a class="breadcrumb-link" href="#/home">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Counsellor work activity</li>
+                </ol>
+            </nav>
+            <h1 class="page-header-title ms-2">Counsellor work activity</h1>
+        </div>
+        <!-- End Col -->
+        <!-- End Col -->
+    </div>
+    <!-- End Row -->
+</div>
+
+
+<div class="page-content">
+    <div class="col-xl-12 col-lg-12 col-12 mt-5">
+        <div class="card radius-15">
+            <div class="card-body">
+                <form name="myForm" id="myForm">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="formDate">From Date</label>
+                                <input type="text" class="js-flatpickr form-control flatpickr-custom" id="formdate" required ng-model="fromdate" name="formdate" placeholder="Select dates"
+                                       data-hs-flatpickr-options='{"dateFormat": "d/m/Y"}'>
+                                <!--<input type="text" required class="form-control datepicker" id="formdate" ng-model="fromdate" name="formdate" />-->
+                                <div ng-messages="myForm.formdate.$error" ng-show="myForm.formdate.$error.required && invalid" style="color:red" role="alert">
+                                    <div ng-message="required">Field is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="toDate">To Date</label>
+                                <input type="text" class="js-flatpickr form-control flatpickr-custom" id="todate" ng-model="todate" name="todate" placeholder="Select dates"
+                                       data-hs-flatpickr-options='{"dateFormat": "d/m/Y"}'>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group mt-4">
+                                <label></label>
+                                <button type="button" ng-click="filterDate(myForm)" class="btn btn-primary">FILTER</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <button type="button" data-bs-toggle="modal" data-bs-target="#OpenOrderDetailsPopup" class="btn btn-success">GENERATE PAY SLIP</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card radius-15">
+            <div class="card-body">
+                
+                <div class="row">
+                    <div class="col-xl-12 text-lg-right text-md-left" style="text-align:end">
+                        <a class="btn btn-primary mb-2 mb-lg-0"
+                           ng-click="uploaddownloadPopup()">
+                            <i class="fa fa-download"></i>
+                            <span class="action-name">
+                                Download
+                            </span>
+                        </a>
+                        <script id="uploaddownload.html"
+                                type="text/ng-template">
+                            <div class="wrap" ng-controller="CommonCustomDialogController">
+                                <div class="row">
+                                    <a ng-click="exportAll(6)" class="btn btn-primary" id="download-pdf">
+                                        <i class="fa fa-download">
+                                        </i> <span class="action-name">Download all records (XLSX)</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </script>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="tabulator-section w-100">
+                            <div class="form-builder-loader">
+                                <div class="loader">
+                                    <i class="fa fa-spinner fa-pulse fa-fw"> </i>
+                                    <div>
+                                        Loading Form Tabulator...
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="form-records"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="OpenOrderDetailsPopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">GENERATE PAY SLIP</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form name="myform2" id="myform2">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="year">Year</label>
+                                <select name="year" required ng-model="year" id="year" class="form-select">
+                                    <option value="">--SELECT YEAR--</option>
+                                    <option ng-repeat="y in years" value="{{y}}">{{y}}</option>
+                                </select>
+                                <div ng-messages="myform2.year.$error" ng-show="myform2.year.$error.required && invalid2" style="color:red" role="alert">
+                                    <div ng-message="required">Field is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="month">Month</label>
+                                <select name="month" required ng-model="month" id="month" class="form-select">
+                                    <option value="">--SELECT MONTH--</option>
+                                    <option ng-repeat="m in months" value="{{m.value}}">{{m.name}}</option>
+                                </select>
+                                <div ng-messages="myform2.month.$error" ng-show="myform2.month.$error.required && invalid2" style="color:red" role="alert">
+                                    <div ng-message="required">Field is required</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 mt-3">
+                            <div class="form-group">
+                                <button type="button" name="btnsubmit" ng-click="generatePaySlip(myform2)" id="btnsubmit" class="btn btn-primary">GENERATE</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!--<div class="modal-footer">
+                <button type="button" class="btn btn-white" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>-->
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+</script>
+
+<script>
+    (function () {
+        // INITIALIZATION OF FLATPICKR
+        // =======================================================
+        HSCore.components.HSFlatpickr.init('.js-flatpickr')
+    })();
+</script>

@@ -1,0 +1,66 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Oct 5, 2018, 6:34:08 PM
+    Author     : Shashank Shekhar
+*/
+
+.chat-box {
+    position:fixed;
+    right:50px;
+    bottom:0;
+    width: 350px;
+    z-index: 999;
+}
+
+.chat-closed, .chat-header {
+/*    width: 250px;*/
+/*    height: 35px;*/
+    background: #d7ebf9;
+/*    line-height: 35px;*/
+    font-size: 16px;
+    border:1px solid #aed0ea;
+    border-bottom: none;
+    color: #2779aa;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.chat-content{
+    height:454px;
+    background:#ffffff;
+    border:1px solid #aed0ea;
+    border-bottom: none;
+    overflow-y:auto;
+    word-wrap: break-word;
+}
+
+.box{
+    width:10px;
+    height:10px;
+    background:green;
+    float:left;
+    position:relative;
+    top: 11px;
+    left: 10px;
+    border:1px solid #ededed;
+}
+
+.hide {
+    display:none;
+}
+
+@media only screen and (max-width : 767px) {
+    .chat-box {
+        width: 65%;
+    }
+}
+
+.chat-box .searchChatMessage {
+    width: 90% !important;
+}

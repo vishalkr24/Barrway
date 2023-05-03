@@ -1,0 +1,156 @@
+﻿<!-- external libs from cdnjs -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<!-- optional: mobile support with jqueryui-touch-punch -->
+<script type="text/javascript" src="assets/js/jquery.ui.touch-punch.min.js"></script>
+
+<!-- PivotTable.js libs -->
+
+<!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.js"></script>-->
+
+
+<link rel="stylesheet" type="text/css" href="../../assets/PivotTablejs/dist/pivot.css">
+<script type="text/javascript" src="../../assets/PivotTablejs/dist/pivot.js"></script>
+<script type="text/javascript" src="../../assets/PivotTablejs/dist/export_renderers.js"></script>
+<script type="text/javascript" src="../../assets/PivotTablejs/dist/d3_renderers.js"></script>
+<script type="text/javascript" src="../../assets/PivotTablejs/dist/c3_renderers.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.js" integrity="sha512-eSeh0V+8U3qoxFnK3KgBsM69hrMOGMBy3CNxq/T4BArsSQJfKVsKb5joMqIPrNMjRQSTl4xG8oJRpgU2o9I7HQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.css" integrity="sha512-0nkKORjFgcyxv3HbE4rzFUlENUMNqic/EzDIeYCgsKa/nwqr2B91Vu/tNAu4Q0cBuG4Xe/D1f/freEci/7GDRA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<style>
+    .bootbox-close-button {
+        margin: 1px 1px 1px !important;
+        padding: 0px 11px 0px !important;
+        font-size: 31px !important;
+    }
+</style>
+
+
+<div class="card card-default">
+    <div class="col-xl-12">
+        <nav aria-label="breadcrumb">
+            <!-- ngIf: isLoginPage -->
+            <ol class="breadcrumb ng-scope ng-isolate-scope" ncy-breadcrumb="" ng-if="isLoginPage" style="">
+                <!-- ngRepeat: step in steps-->
+                <li ng-repeat="step in steps" ng-class="{active: $last}" ng-switch="$last || !!step.abstract" class="ng-scope">
+                    <!--ngSwitchWhen: false-->
+                    <a ng-switch-when="false" href="#/forms" class="ng-binding ng-scope">Forms</a>
+                    <!--end ngSwitchWhen:  ngSwitchWhen: true-->
+
+                </li> end ngRepeat: step in steps-->
+                <li ng-repeat="step in steps" ng-class="{active: $last}" ng-switch="$last || !!step.abstract" class="ng-scope">
+                    <!--ngSwitchWhen: false-->
+                    <a ng-switch-when="false" href="#/form/records/227942" class="ng-binding ng-scope">Records</a>
+                    <!-- end ngSwitchWhen:  ngSwitchWhen: true-->
+                </li> end ngRepeat: step in steps-->
+                <li ng-repeat="step in steps" ng-class="{active: $last}" ng-switch="$last || !!step.abstract" class="ng-scope active">
+                    <!-- ngSwitchWhen: false  ngSwitchWhen: true--> <span ng-switch-when="true" class="ng-binding ng-scope">Pivot Summary</span>
+                    <!-- end ngSwitchWhen:-->
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+
+
+
+    <div class="card-header">
+
+        {{formDetailsDataInfo.title}}
+        <small>
+            ({{(formDetailsDataInfo.applicationTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.applicationTitle}},
+            {{(formDetailsDataInfo.topicTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.topicTitle}})
+        </small>
+
+        <a target="_blank" href="" style="vertical-align: middle;" title="Show information page"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+
+        <span id="menuName" class="hidden">Summary</span>       
+        <input type="hidden" name="tabulator" value="summary">
+    </div>
+    <div class="card-body">        
+        <div id="pageActions" class="form-inline mb-10">
+            <!--<a href="javascript:;" class="btn btn-primary" ng-click="uploaddownloadPopup()"><i class="fa fa-cog"></i>&nbsp;&nbsp;Configure pivot table</a>-->
+            <!--<a href="javascript:;" class="btn btn-success" id="save-config-as"><i class="fa fa-save"></i>&nbsp;&nbsp;Save Configuration As</a>-->
+            <input type="button" class="btn btn-primary" value="Save Config" id="saveconfiguration"  />
+            <!--<input type="button" class="btn btn-primary" value="Restore Config from Cookie" id="restore" />-->
+
+        </div>
+
+
+        <script id="uploaddownload.html"
+                type="text/ng-template">
+            <div class="jss3726" ng-include="'bg-svg.html'"></div>
+            <div class="wrap" ng-controller="CommonCustomDialogController">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <form class="ng-valid" id="search-form">
+                            <div class="form-group">
+                                <label for="filter-field" class="pr-2">
+                                    Select rows
+                                </label>
+                                <select id="Pivotrows" style="max-width:750px;" class="form-control ng-pristine ng-valid ng-empty ng-touched chosen-select" name="Pivotrows[]" multiple>
+                                    <option class="ng-binding ng-scope" data-ng-repeat="t in tempFieldsData" value="{{t.fieldName}}">{{t.fieldName}}</option>
+                                </select>
+
+
+                            </div>
+
+                            <div class="form-group">
+                                <label for="filter-field" class="pr-2">
+                                    Select columns
+                                </label>
+                                <select id="PivotColumns" style="max-width: 750px;" class="form-control ng-pristine ng-valid ng-empty ng-touched chosen-select" name="PivotColumns[]" multiple>
+                                    <option class="ng-binding ng-scope" data-ng-repeat="t in tempFieldsData" value="{{t.fieldName}}">{{t.fieldName}}</option>
+                                </select>
+
+
+                            </div>
+                            <a href="javascript:;" class="btn btn-primary" ng-click="loadPivatTablewithconfig()">&nbsp;&nbsp;Ok &nbsp;&nbsp;</a>
+
+
+                        </form>
+                    </div>
+
+                </div>
+
+
+
+            </div>
+        </script>
+
+
+      
+        <div class="clearfix"></div>
+
+
+        <div class="row">   
+            <div class="pivot pl-1 col-xl-12 col-sm-12">                
+                <div id="output" style="margin: 10px;"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(document).on('click', function (e) {
+            //if ($(e.target).closest('.webix_pivot_config_msg').length || $(e.target).is('.webix_pivot_config_msg'))
+            //    setTimeout(function () {
+            //        $(document).find('.webix_modal').on('click', function () {
+            //            $(document).find('.webix_button').click()
+            //        })
+            //    }, 500);
+
+        })
+
+    })
+</script>
+

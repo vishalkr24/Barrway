@@ -1,0 +1,95 @@
+@mixin msCustomScrollBar($scollBar, $scrollLine) {
+    .mCS-dark.mCSB_scrollTools {
+        .mCSB_draggerRail{
+            background-color:  transparentize($scollBar, 0);
+        }
+
+        .mCSB_dragger{
+            .mCSB_dragger_bar{
+                background-color: $scrollLine;
+            }
+        }
+    }
+}
+
+@mixin customScrollBar( $navbar, $lightGrey, $width, $radius) {
+    &::-webkit-scrollbar {
+        width: $width;
+        background:  $lightGrey;
+        border-radius: $radius;
+    }
+    &::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    }
+    &::-webkit-scrollbar-thumb {
+        background: $navbar;
+        width: $width;
+        border-radius: $radius;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+        &:active {
+            background: $navbar;
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+            width: $width;
+        }
+    }
+   
+    
+}
+
+@mixin dropDownMenu{
+    .dropdown-menu{
+        // &.show{
+        border: 0;
+        padding: 0;
+        filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.25));
+        .dropdown-item{
+            color: $colorGrey;
+            cursor: pointer;
+            &:hover{
+                background-color: $tabulatorTop;
+                color: $colorBlk;
+            }
+        }
+        // }
+    }
+}
+
+
+@mixin searchBox{
+    .input-group {
+        .input-group-append{
+            .input-group-text{
+                .fa{
+                    color: $navbar;
+                }
+            }
+        }
+        .form-control{
+          &:focus{
+              ~ .input-group-append{
+                  .input-group-text{
+                      border-color: $primary;
+                      box-shadow: 0 0 5px transparentize($primary, 0.6);
+                  }
+              }
+          }
+        }
+    }
+}
+
+
+.input-group {
+    .form-control{
+      &:focus{
+          ~ .input-group-append{
+              .input-group-text{
+                  .fa{
+                      color: $navbar;
+                  }
+                  border-color: $primary;
+                  box-shadow: 0 0 5px transparentize($primary, 0.6);
+              }
+          }
+      }
+    }
+}

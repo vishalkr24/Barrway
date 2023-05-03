@@ -1,0 +1,22 @@
+.nav{
+    &.tab-underline{
+        li.nav-item{
+            a{
+                &.nav-link{
+                    border-bottom: 4px solid transparent;
+                    color: $navbar;
+                    border-radius: 0;
+                    cursor: pointer;
+                    &.active{
+                        background-color: transparent;
+                        color: $navbar;
+                        border-bottom: 4px solid $navbar;
+                        font-family: $fontMontserratBold;
+                    }
+
+                }
+            }
+        }
+    }
+
+}

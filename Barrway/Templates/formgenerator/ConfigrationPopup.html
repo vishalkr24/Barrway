@@ -1,0 +1,52 @@
+﻿
+
+<div id="createConfigModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Create New Configuration</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="jss3726" ng-include="'bg-svg.html'"></div>
+                <form id="formProperties" role="form" class="form-horizontal" ng-submit="createSummaryConfig()">
+
+                    <input type="hidden" id="form_password" value="">
+
+                    <input type="hidden" id="formID" name="formID" value="">
+
+                    <input type="hidden" id="topicID" name="topicID" value="">
+
+                    <div class="form-group row">
+                        <label class="control-label col-sm-4" for="configName">Name:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="configName" id="configName" ng-model="formSummaryParam.configName" placeholder="Enter Configuration Name" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-sm-4" for="configDescription">Description:</label>
+                        <div class="col-sm-8">
+                            <textarea class="form-control" rows="10" cols="50" id="configDescription" ng-model="formSummaryParam.configDescription" name="configDescription" placeholder="Enter Configuration Description"></textarea>
+                        </div>
+                    </div>
+                    <input type="hidden" id="configSettings" name="configSettings">
+
+                    <input type="hidden" id="configExpandBy" name="configExpandBy">
+
+                    <div class="modal-footer">
+
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+

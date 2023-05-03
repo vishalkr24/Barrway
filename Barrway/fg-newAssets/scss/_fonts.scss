@@ -1,0 +1,35 @@
+
+@font-face{
+	font-family: Montserrat;
+	src: url("../fonts/Montserrat/Montserrat-Regular.ttf");
+}
+@font-face{
+	font-family: Montserrat-bold;
+	src: url("../fonts/Montserrat/Montserrat-Bold.ttf");
+}
+@font-face{
+	font-family: Roboto;
+	src: url("../fonts/Roboto/Roboto-Regular.ttf");
+}
+@font-face{
+	font-family: Roboto-bold;
+	src: url("../fonts/Roboto/Roboto-Bold.ttf");
+}
+
+@font-face{
+	font-family: arial;
+	src: url("../fonts/Arial/arial.ttf");
+}
+@font-face{
+	font-family: Arial-bold;
+	src: url("../fonts/Arial/ARIALBD1.woff");
+}
+
+
+
+$fontMontserrat: Montserrat;
+$fontMontserratBold:  Montserrat-bold;
+$fontRoboto: Roboto;
+$fontRobotoBold: Roboto-bold;
+$fontArial: arial;
+$fontArialBold: Arial-bold;

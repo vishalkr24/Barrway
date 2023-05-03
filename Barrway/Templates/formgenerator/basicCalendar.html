@@ -1,0 +1,321 @@
+﻿<link href="assets/lightbox/css/lightbox.css" rel="stylesheet" />
+<script src="assets/lightbox/js/lightbox-2.6.min.js"></script>
+<script src="assets/fullcalendar/dist/fullcalendar.min.js"></script>
+<link href="assets/fullcalendar/dist/fullcalendar.min.css" rel="stylesheet" />
+<link href="Content/sidebar/css/mscustom-scroller.min.css" rel="stylesheet" />
+<link href="Content/sidebar/css/sidebar.css" rel="stylesheet" />
+<link href="assets/fullcalendar-scheduler/dist/scheduler.min.css" rel="stylesheet" />
+
+<script src="assets/js/jquery-ui.js"></script>
+<script src="assets/fullcalendar-scheduler/dist/scheduler.js"></script>
+<script src="assets/fullcalendar-scheduler/dist/bootstrap-datetimepicker.js"></script>
+<link href="assets/fullcalendar-scheduler/dist/bootstrap-colorpicker.min.css" rel="stylesheet" />
+<link href="assets/fullcalendar-scheduler/dist/bootstrap-datetimepicker.css" rel="stylesheet" />
+<!--<script src="assets/js/code/theme-chooser.js"></script>-->
+<script src="/assets/js/code/basic-calendar-theme.js"></script>
+<!--<link href="assets/css/jquery-ui.css" rel="stylesheet" />-->
+<link href="assets/css/jquery.jgrowl.min.css" rel="stylesheet" />
+<script src="assets/js/jquery.jgrowl.min.js"></script>
+<script src="assets/js/moment.js"></script>
+
+<!--<script src="../../Scripts/fullCalender/Scripts/jquery-1.4.1.min.js"></script>-->
+
+<style>
+
+    .fc-event-container .fc-timeline-event .fc-content:nth-of-type(1) {
+        margin-top: 0px;
+    }
+
+    .fc-event-container .fc-timeline-event .fc-content {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+        .fc-event-container .fc-timeline-event .fc-content:nth-last-of-type(1) {
+            margin-bottom: 0px;
+        }
+
+    .lightbox {
+        display: none;
+    }
+
+    .popover {
+        z-index: 99;
+    }
+
+    .ui-state-highlight, .ui-widget-content .ui-state-highlight {
+        border: 1px solid #72c3ec !important;
+        background: #e9f3fc url(images/ui-bg_highlight-soft_25_ffef8f_1x100.png) 50% top repeat-x !important;
+    }
+
+    .btn-group > .btn-group:not(:first-child) > .btn, .btn-group > .btn:not(:first-child) {
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+        margin-right: 0px;
+    }
+
+    .btn-group > .btn-group:not(:last-child) > .btn, .btn-group > .btn:not(:last-child):not(.dropdown-toggle) {
+        border-top-right-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .btn.btn-outline-success {
+        color: #3E246B;
+        border: 1px solid #3E246B;
+        background-color: transparent;
+    }
+
+        .btn.btn-outline-success:hover {
+            background-color: #3E246B !important;
+            color: #fff;
+        }
+</style>
+
+<div class="card panel-default">
+    <div class="card-header">
+        <span id="menuName"> </span>
+        <span class="hidden" id="menuDescription">
+        </span>
+        <input type="hidden" name="tabulator" value="applicationDetail" />
+        <input type="hidden" name="tabulatorStorage" value="appDetail" />
+        <input type="hidden" name="onetomany" value="{{multiDcalendar}}" id="onetomany" />
+        <div class="pull-right text-right rightbtn">
+            <!--<a href="javascript:;" id="qrCodeNew" class="btn btn-primary pull-left" title="QR Code"><i class="fa fa-qrcode"></i></a>-->
+            <a onclick="showQR()" id="qrCodeNew" class="btn btn-primary pull-left" title="QR Code"><i class="fa fa-qrcode"></i></a>
+            <a href="javascript:;" class="pull-left hide-page-actions ml-10" title="Hide Page Actions"><i class="glyphicon glyphicon-chevron-up"></i></a>
+        </div>
+
+        <input type="hidden" value="0" id="FormTypeStatus" />
+        {{formDetailsDataInfo.title}}
+        <small>
+            ({{(formDetailsDataInfo.applicationTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.applicationTitle}},
+            {{(formDetailsDataInfo.topicTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.topicTitle}})
+        </small>
+        <input type="hidden" name="tabulator" value="records">
+        <span id="menuName" class="hidden">
+            Records Untitled name (newform,newform)
+        </span>
+        <span class="hidden" id="menuDescription">
+            This is the description of the Untitled name (newform,newform) records form.
+        </span>
+
+
+    </div>
+    <div class="card-body pt-0">
+
+        <div id="pageActions">
+            <div class="row">
+                <div class="col-md-6 text-left">
+                    <div class="row">
+                        <!--<div id='theme-system-selector' class='selector col-lg-6'>
+                            <strong>Theme System:</strong>
+                            <select class="form-control">
+                                <option value='standard' selected>Default</option>
+                                <option value='jquery-ui'>jQuery UI</option>
+                            </select>
+                        </div>-->
+                        <div basic-calendar-theme-system="jquery-ui" class='selector form-group col-lg-6' style='display:none'>
+                            Theme Name:
+
+                            <select class="form-control">
+                                <option value='base' selected>Base</option>
+                                <option value='black-tie'>Black Tie</option>
+                                <option value='blitzer'>Blitzer</option>
+                                <option value='cupertino'>Cupertino</option>
+                                <option value='dark-hive'>Dark Hive</option>
+                                <option value='dot-luv'>Dot Luv</option>
+                                <option value='eggplant'>Eggplant</option>
+                                <option value='excite-bike'>Excite Bike</option>
+                                <option value='flick'>Flick</option>
+                                <option value='hot-sneaks'>Hot Sneaks</option>
+                                <option value='humanity'>Humanity</option>
+                                <option value='le-frog'>Le Frog</option>
+                                <option value='mint-choc'>Mint Choc</option>
+                                <option value='overcast'>Overcast</option>
+                                <option value='pepper-grinder'>Pepper Grinder</option>
+                                <option value='redmond'>Redmond</option>
+                                <option value='smoothness'>Smoothness</option>
+                                <option value='south-street'>South Street</option>
+                                <option value='start'>Start</option>
+                                <option value='sunny'>Sunny</option>
+                                <option value='swanky-purse'>Swanky Purse</option>
+                                <option value='trontastic'>Trontastic</option>
+                                <option value='ui-darkness'>UI Darkness</option>
+                                <option value='ui-lightness'>UI Lightness</option>
+                                <option value='vader'>Vader</option>
+                            </select>
+                        </div>
+                        <div data-theme-system="bootstrap3" class='selector form-group' style='display:none'>
+                            Theme Name:
+
+                            <select class="form-control">
+                                <option value='' selected>Default</option>
+                                <option value='cosmo'>Cosmo</option>
+                                <option value='cyborg'>Cyborg</option>
+                                <option value='darkly'>Darkly</option>
+                                <option value='flatly'>Flatly</option>
+                                <option value='journal'>Journal</option>
+                                <option value='lumen'>Lumen</option>
+                                <option value='paper'>Paper</option>
+                                <option value='readable'>Readable</option>
+                                <option value='sandstone'>Sandstone</option>
+                                <option value='simplex'>Simplex</option>
+                                <option value='slate'>Slate</option>
+                                <option value='solar'>Solar</option>
+                                <option value='spacelab'>Spacelab</option>
+                                <option value='superhero'>Superhero</option>
+                                <option value='united'>United</option>
+                                <option value='yeti'>Yeti</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 text-right btnalign">
+                    <div class="btn-group d-inline-flex" role="group" aria-label="Basic example" ng-if="Is_Kanban_Status==true && basicCalendar_active==false">
+                        <button type="button" class="btn btn-outline-success" ui-sref="kanban({formId:currentFormId})">
+                            <i class="fa fa-columns" aria-hidden="true">
+                            </i> <span class="action-name">Kanban Board</span>
+                        </button>
+                        <button type="button" class="btn btn-success" ng-click="clearTab()">
+                            <i class="fa fa-table" aria-hidden="true">
+                            </i> <span class="action-name">Table View</span>
+                        </button>
+                    </div>
+                    <div class="btn-group d-inline-flex" role="group" aria-label="Basic example" ng-if="Is_Kanban_Status==false && basicCalendar_active==true">
+                        <button type="button" class="btn btn-success" ui-sref="basiccalendar({formId:currentFormId})">
+                            <i class="fa fa-calendar" aria-hidden="true">
+                            </i> <span class="action-name">Calendar</span>
+                        </button>
+                        <button type="button" class="btn btn-outline-success" ng-click="clearTab()">
+                            <i class="fa fa-table" aria-hidden="true">
+                            </i> <span class="action-name">Table View</span>
+                        </button>
+                    </div>
+                    <div class="btn-group d-inline-flex" role="group" aria-label="Basic example" ng-if="Is_Kanban_Status==true && basicCalendar_active==true">
+                        <button type="button" class="btn btn-outline-success" ui-sref="kanban({formId:currentFormId})">
+                            <i class="fa fa-columns" aria-hidden="true">
+                            </i> <span class="action-name">Kanban Board</span>
+                        </button>
+                        <button type="button" class="btn btn-success" ui-sref="basiccalendar({formId:currentFormId})">
+                            <i class="fa fa-calendar" aria-hidden="true">
+                            </i> <span class="action-name">Calendar</span>
+                        </button>
+                        <button type="button" class="btn btn-outline-success" ng-click="clearTab()">
+                            <i class="fa fa-table" aria-hidden="true">
+                            </i> <span class="action-name">Table View</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group"><span id='loading' style='display:none'> <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i></span></div>
+                <a class="flat-buttons pageActionsToggleer" onclick="pageActionsToggleer()" style="display:none"><i class="fa fa-chevron-left"></i></a>
+
+            </div>
+        </div>
+        <div class="col-sm-12 nopadding">
+            <div class="row">
+                <div class="table-responsive mt-10" style="overflow-x: inherit; min-height: 200px">
+                    <div id="dialog" style="width: auto; min-height: 29px; max-height: none; height: auto;" class="ui-dialog-content ui-widget-content">
+                        <form autocomplete="off">
+                            <fieldset class="ui-helper-reset">
+                                <label for="tab_title">Title</label>
+                                <input type="text" name="title" id="tab_title" class="ui-widget-content ui-corner-all form-control">
+                                <label for="tab_start">Start</label>
+                                <input type="text" name="start" id="tab_start" class="ui-widget-content ui-corner-all form-control">
+                                <label for="tab_end">End</label>
+                                <input type="text" name="end" id="tab_end" class="ui-widget-content ui-corner-all form-control">
+                                <label for="tab_end">Color</label>
+                                <input type="text" name="color" id="tab_color" class="ui-widget-content ui-corner-all form-control colorpicker-element">
+                                <input type="hidden" name="allDay" id="allDay" class="form-control" value="true">
+                                <input type="hidden" name="resourceId" id="resourceId" class="form-control">
+                                <input type="hidden" name="resources" id="resources" class="form-control">
+                            </fieldset>
+                        </form>
+                    </div>
+                    <div id="basic-view" aria-labelledby="ui-id-1" role="tabpanel" class="ui-tabs-panel ui-corner-bottom ui-widget-content" aria-hidden="false" style="display: block;">
+                        <div id='basiccalendar' class="calendar fc ui-widget fc-ltr"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="assets/lightbox/js/lightbox-2.6.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        var dialog = $("#dialog").dialog({
+            autoOpen: false,
+            modal: true,
+            resizable: false,
+            draggable: false,
+            show: { effect: "clip", duration: 250 },
+            hide: { effect: "explode", duration: 500 },
+            buttons: {
+                Add: function () {
+                    addEvent(form);
+                    $(this).dialog("close");
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+                }
+            },
+            close: function () {
+                form[0].reset();
+            }
+        });
+    });
+
+
+</script>
+<script>
+
+    // Initialize jquery ui tabs
+    $("#tabs").tabs({
+        create: function (event, ui) {
+            //console.info(ui.tab.data('value'))
+        },
+        activate: function (event, ui) {
+            //console.info($(ui.newTab).find('a').attr('href'));//ui.oldTab.data('value')
+            var target = $(ui.newTab).find('a').attr('href');
+            $(target + ' div.calendar').fullCalendar('render');
+            $(target + ' div.calendar').fullCalendar('refetchEvents');
+            $('body .popover').remove();
+            $.cookie("calendar-activeView", $('a[href="' + target + '"]').parent().index(), { expires: 365, path: '/' });
+        }
+    });
+    $("#tabs").show();
+
+    // Datetime picker in create event dialoge
+    $("#tab_start, #tab_end").datetimepicker({
+        format: "yyyy-mm-dd hh:ii",
+        minView: 0,
+        maxView: 1,
+        startView: 1,
+        autoclose: true,
+        //todayBtn: true,
+        //todayHighlight: true,
+        minuteStep: 10,
+        //pickerPosition: "bottom-left"
+    }).on('changeDate', function (e) {
+
+    });
+    // Color picker in create event dialoge
+    $("#tab_color").colorpicker({ format: "rgba" });
+    // setTimeout(  timeout() , 5000);
+
+    var loader = "";
+
+</script>
+
+
+
+<script src="Content/sidebar/js/mscustom-scroller.js"></script>
+<script src="Content/sidebar/js/sidebar-script.js"></script>

@@ -1,0 +1,28 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 26 Oct, 2016, 10:10:08 PM
+    Author     : MAT
+*/
+
+.modal.modal-wide .modal-dialog {
+  width: 90%;
+}
+.modal-wide .modal-body {
+  overflow-y: auto;
+}
+.content-wrapper {
+    background: url(../../images/bg.jpg);
+    background-repeat: no-repeat !important;
+    -webkit-background-size: cover !important;
+    -moz-background-size: cover !important;
+    -o-background-size: cover !important;
+    background-size: cover !important;
+    font-family: 'Aller', Arial, sans-serif;
+}
+.max-421 {
+    max-width: 421px;
+}        

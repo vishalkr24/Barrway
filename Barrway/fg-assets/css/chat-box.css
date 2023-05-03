@@ -1,0 +1,93 @@
+﻿
+.chat-box .chat-closed, .chat-box .chat-header {
+    background: #3E246B;
+    color: #fff;
+    border-color: #7E3D99;
+    border-radius: 6px 6px 0 0;
+}
+
+.chat-box .chat-content {
+    background: #ffffff;
+    border: 1px solid #f7f7f7;
+}
+
+.chat-box #firechat a:visited, .chat-box #firechat a:hover, .chat-box #firechat a:active {
+    color: #3E246B;
+}
+
+.chat-box #firechat .message.message-self {
+    color: #3E246B;
+    text-align: right;
+}
+
+
+.chat-box #firechat a {
+    color: #3E246B;
+}
+
+    .chat-box #firechat a.delteIcon {
+        color: #f93e9f;
+    }
+
+.chat-box #firechat .btn.btn-small {
+    border: 0px solid #fff;
+    background: transparent
+}
+
+
+/*for private chat box*/
+
+.chat-box-private .chat-closed, .chat-box .chat-header {
+    background: #3E246B;
+    color: #fff;
+    border-color: #7E3D99;
+    border-radius: 6px 6px 0 0;
+}
+
+.chat-box-private .chat-content {
+    background: #ffffff;
+    border: 1px solid #f7f7f7;
+}
+
+.chat-box-private #firechat a:visited, .chat-box #firechat a:hover, .chat-box #firechat a:active {
+    color: #3E246B;
+}
+
+.chat-box-private #firechat .message.message-self {
+    color: #3E246B;
+    text-align: right;
+}
+
+.chat-box-private {
+    position: fixed;
+    right: 440px;
+    bottom: 0;
+    width: 350px;
+    z-index: 999;
+}
+
+    .chat-box-private .searchChatMessage {
+        width: 90% !important;
+    }
+
+.chat-box-private #firechat a {
+    color: #3E246B;
+}
+
+    .chat-box-private #firechat a.delteIcon {
+        color: #f93e9f;
+    }
+
+.chat-box-private #firechat .btn.btn-small {
+    border: 0px solid #fff;
+    background: transparent
+}
+
+
+.cursorClass {
+    cursor: pointer;
+}
+
+.red {
+    color: red;
+}

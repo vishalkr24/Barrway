@@ -1,0 +1,43 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Oct 9, 2017, 12:45:53 PM
+    Author     : Shashank Shekhar
+*/
+.cb-wrap.pull-left { right: auto !important; top: 20px !important; }
+.frmb .form-elements { padding: 10px; }
+.frmb .form-elements .false-label:first-child, .frmb .form-elements label:first-child { width: 20% !important; overflow: visible; }
+.frmb .form-elements .input-wrap, .frmb .sortable-options-wrap { width: 75% !important; }
+.form-wrap.form-builder .field-actions .icon-cancel:before, .form-wrap.form-builder .field-actions .icon-pencil:before, .form-wrap.form-builder .field-actions .icon-copy:before { line-height: 28px; }
+.frmb .form-elements .input-wrap>input[type=checkbox] {margin-top: 12px;}
+.frm-holder div.form-group.form_setup-wrap label { color: green; cursor: pointer; }
+.frm-holder div.form-group.more_setup-wrap label { color: #003eff; cursor: pointer; }
+.frm-holder div.form-group.advance_setup-wrap label { color: #c12e2a; cursor: pointer; }
+.form-group.access-wrap .available-roles label {margin-right: 15px;}
+.form-wrap.form-builder .frmb .form-elements input[type=color]{width: 10%;}
+.form-wrap.form-builder .frmb .form-elements select, .form-wrap.form-builder .frmb .form-elements .fld-background_color, .fld-hyperlink_color { width:auto !important; max-width: 100%; }
+.form-wrap.form-builder .field-actions .cut-button:hover { background-color: #c66865 !important; color: #fff !important; } 
+#form-builder-pages .ui-widget-content .stage-wrap table th{ text-align: center;}
+.form-wrap.form-builder .frmb .form-elements input[type=number] {width: 100px !important;}
+input.editable-area {
+    border: none !important;
+    border-bottom: 1px solid #000 !important;
+    background-color: transparent !important;
+    outline: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    height: 32px;
+}
+input.editable-area:focus {
+    box-shadow: none !important;
+}
+/*@media (min-width: 1200px) {
+    .form-builder-attr { width: 50% !important; display: inline-block !important; }
+    .frmb .form-elements .form-builder-attr .false-label:first-child, .frmb .form-elements label:first-child { min-width: 30%; width: auto !important; overflow: visible; }
+    .frmb .form-elements .form-builder-attr .input-wrap, .frmb .sortable-options-wrap { width: auto !important; }
+}*/
+.form-elements .progress { margin-top: 10px !important; margin-bottom: 0 !important;}
+.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button{    font-size: small;}
