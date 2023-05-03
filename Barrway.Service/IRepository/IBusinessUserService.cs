@@ -31,8 +31,6 @@ namespace Barrway.Service.IRepository
         #region Business Company
         Task<AddUpdateDelete> GetSingleCompanyById(string Id);
         Task<AddUpdateDelete> GetAllCompaniesByUserId(string UserId); 
-        Task<AddUpdateDelete> GetSingleCalendarById(string Id);
-
         Task<AddUpdateDelete> AddCompany(BusinessCompanyModel model, string UserId, bool IsDefault = false);
         Task<AddUpdateDelete> UpdateCompanyService(BusinessCompanyModel model);
         Task<AddUpdateDelete> GetSingleCompanyByCompanyCode(string CompanyCode);
@@ -46,7 +44,8 @@ namespace Barrway.Service.IRepository
         #region Business Calendar
 
         Task<AddUpdateDelete> AddCalendar(BusinessCalendarModel model, string UserId);
-
+        Task<AddUpdateDelete> GetSingleCalendarById(string Id);
+        Task<AddUpdateDelete> GetCompanyCalendarByCompanyId(string CompanyId);
         #endregion
 
     }

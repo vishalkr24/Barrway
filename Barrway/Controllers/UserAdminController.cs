@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Barrway.Security;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -6,7 +7,7 @@ using System.Web.Mvc;
 
 namespace Barrway.Controllers
 {
-    [Authorize(Roles = "PUBLIC_USER")]
+    [PublicAuthorize(Roles = "PUBLIC_USER")]
     public class UserAdminController : Controller
     {
         // GET: UserAdmin

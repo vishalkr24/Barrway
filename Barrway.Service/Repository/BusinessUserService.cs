@@ -100,7 +100,7 @@ namespace Barrway.Service.Repository
                               ,[updated_at]
                               ,[created_by]
                               ,[updated_by]
-                          FROM [dbo].[BUSINESS_PHOTO_ALBUM_1922] where COMPANY_ID = '{CompanyId}' {visibilityQuery}";
+                          FROM [dbo].[BUSINESS_PHOTO_ALBUM_1922] where COMPANY_ID = '{CompanyId}' {visibilityQuery} Order by Id desc";
 
             List<IDictionary<string, object>> Result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -154,7 +154,26 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetSingleCalendarById(string Id)
         {
-            string query = "SELECT [Id]      ,[created_at]      ,[updated_at]      ,[created_by]      ,[updated_by]      ,[CALENDAR_NAME]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,[COUNTRY_ID]      ,[CITY_ID]      ,[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] where Id =  '" + Id + "'";
+            string query = "SELECT [Id]      ,[created_at]      ,[updated_at]      ,[created_by]      ,[updated_by]      ,[CALENDAR_NAME]     ,[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,[COUNTRY_ID]      ,[CITY_ID]      ,[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] where Id =  '" + Id + "'";
+
+            List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (result.Count > 0)
+            {
+                var calendar = result.FirstOrDefault();
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = calendar };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetCompanyCalendarByCompanyId(string CompanyId)
+        {
+            string query = $@"SELECT calendar.[Id]      ,calendar.[created_at]      ,calendar.[updated_at]      ,calendar.[created_by]      ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
+                                join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE 
+                                where company.Id = '${CompanyId}'";                                                                  
 
             List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -448,21 +467,28 @@ namespace Barrway.Service.Repository
 
                 if (formResult.res == 1)
                 {
-                    
+                    model.CALENDAR_CODE = "CLR" + formResult.Id.ToString().PadLeft(5, '0');
+
+                    string query = $@"UPDATE [dbo].[BUSINESS_CALENDAR_MASTER_1925]
+                                   SET [CALENDAR_CODE] = '{model.CALENDAR_CODE}'
+                                 WHERE Id = '{formResult.Id.ToString()}'";
+
+                    int saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
+
                     var website = await GetSingleBusinessWebsite(UserId);
 
                     if (website.Status)
                     {
                         if (website.Data["COMPANY_CALENDAR_STATUS"].ToString() == "N")
                         {
-                            string query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set COMPANY_CALENDAR_STATUS = 'Y', updated_at = '" + DateTime.Now.ToString() + "' where USER_ID = '" + UserId + "'";
-                            int saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
+                            query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set COMPANY_CALENDAR_STATUS = 'Y', updated_at = '" + DateTime.Now.ToString() + "' where USER_ID = '" + UserId + "'";
+                            saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                         }
 
                         if (website.Data["CURRENT_STEP"].ToString() == "CALENDAR")
                         {
-                            string query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'COMPANY WEBSITE', updated_at = '" + DateTime.Now.ToString() + "'  where USER_ID = '" + UserId + "'";
-                            int saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
+                            query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'COMPANY WEBSITE', updated_at = '" + DateTime.Now.ToString() + "'  where USER_ID = '" + UserId + "'";
+                            saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                         }
                     }
 
