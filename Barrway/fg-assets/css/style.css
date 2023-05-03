@@ -1,0 +1,205 @@
+hr.line {
+    display: block;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+    border-style: inset;
+    border-width: 1px;
+}
+
+h4 small{color:#000}
+#field {
+    margin-left: .5em;
+    float: left;
+}
+/*#field, label {
+    float: left;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: small;
+}*/
+br {
+    clear: both;
+}
+input {
+    border: 1px solid black;    
+    /*margin-bottom: .5em;*/
+}
+input.error {
+    border: 1px solid red;
+}
+label span.asteriskField{ color: #c10000; }
+.text-left { text-align: left !important }
+.no-pad { /*padding-left: 0 !important; padding-right: 0 !important;*/ }
+label.valid {
+    background: url('../images/checked.gif') no-repeat;
+    display:none;
+    width:16px; height:16px;
+}
+label.error {
+    background: url('../images/unchecked.gif') no-repeat;
+    padding-left: 20px;
+}
+#customForm .form-control-feedback {
+    pointer-events: auto;
+}
+#customForm .form-control-feedback:hover {
+    cursor: pointer;
+}
+.radio-inline+.radio-inline {
+    margin-left: 0px;
+}
+.checkbox-inline + .checkbox-inline {
+    margin-left: 0px;
+}
+/* For altering margins of div */
+#customForm .col-sm-12 {
+    /*    margin-top: 5px !important;
+    margin-bottom: 5px !important;*/
+}
+/* For altering paddings of div */
+#customForm .form-group {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+/*    margin-bottom: 10px !important;*/
+}
+#customForm table input[type=number]{ padding-right: 12px; }
+.ui-tabs .ui-tabs-panel{ padding: 0 !important; }
+.ui-widget-content a.btn { color: #fff !important; }
+input.editable-area {
+    border: none !important;
+    border-bottom: 1px solid #000 !important;
+    background-color: transparent !important;
+    outline: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    height: 32px;
+    padding: 8px 5px !important;
+}
+input.editable-area:focus {
+    box-shadow: none !important;
+}
+.text-with-input-control {
+    width: auto !important;
+    display: inline-block !important;
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+}
+.col-sm-3 .text-with-input-control {width: 60% !important;}
+.text-with-date-control {
+    width: auto !important;
+    display: inline-flex !important;
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+}
+.col-sm-3 .text-with-date-control {width: 60% !important;}
+.text-with-date-control .input-group-addon {padding: 10px 20px 8px 8px !important;}
+
+div.figure {
+  float: left;
+  width: auto;
+  border: thin silver solid;
+  margin: 0.5em;
+  margin-left: 0;
+  padding: 0.5em;
+  text-align: center;
+  text-indent: 0;
+  position: relative;
+}
+div.figure.single-file{
+    width: auto;
+}
+div.figure p{
+    margin: 5px 0 0 0;
+}
+img.scaled {
+/*  width: 100%;*/
+}
+/* Five, Seven, Eight Column CSS */
+.col-sm-5 {
+    width: 20% !important;
+    float: left !important;
+}
+.col-sm-7 {
+    width: 14.285% !important;
+    float: left !important;
+}
+.col-sm-eight {
+    width: 12.5% !important;
+    float: left !important;
+}
+
+@media only screen and (min-width : 320px) {
+    .col-sm-5 {
+        width: 50% !important;
+        float: left !important;
+    }
+    .col-sm-7 {
+        width: 33.33333333% !important;
+        float: left !important;
+    }
+    .col-sm-eight {
+        width: 33.33333333% !important;
+        float: left !important;
+    }
+}
+
+@media only screen and (min-width : 480px) {
+    .col-sm-5 {
+        width: 50% !important;
+        float: left !important;
+    }
+    .col-sm-7 {
+        width: 33.33333333% !important;
+        float: left !important;
+    }
+    .col-sm-eight {
+        width: 33.33333333% !important;
+        float: left !important;
+    }
+}
+
+@media only screen and (min-width : 768px) {
+    .col-sm-5 {
+        width: 20% !important;
+        float: left !important;
+    }
+    .col-sm-7 {
+        width: 14.285% !important;
+        float: left !important;
+    }
+    .col-sm-eight {
+        width: 12.5% !important;
+        float: left !important;
+    }
+}
+
+@media only screen and (min-width : 992px) {
+    .col-sm-5 {
+        width: 20% !important;
+        float: left !important;
+    }
+    .col-sm-7 {
+        width: 14.285% !important;
+        float: left !important;
+    }
+    .col-sm-eight {
+        width: 12.5% !important;
+        float: left !important;
+    }
+}
+
+@media only screen and (min-width : 1200px) {
+    .col-sm-5 {
+        width: 20% !important;
+        float: left !important;
+    }
+    .col-sm-7 {
+        width: 14.285% !important;
+        float: left !important;
+    }
+    .col-sm-eight {
+        width: 12.5% !important;
+        float: left !important;
+    }
+}

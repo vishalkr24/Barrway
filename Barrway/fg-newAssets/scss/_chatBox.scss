@@ -1,0 +1,467 @@
+body {
+    .chat-box {
+        > .chat-closed {
+            border-radius: 3px;
+        }
+
+        > .chat-header {
+            border-radius: 3px;
+        }
+
+        #firechat {
+            .search-wrapper {
+                border-radius: 3px;
+
+                > input[type="text"] {
+                    border-radius: 3px;
+                }
+            }
+
+            .message {
+                border-bottom: 0px solid transparent;
+                letter-spacing: 0.1px;
+
+                .message-content {
+                    letter-spacing: 0.1px;
+                }
+            }
+
+            .message.message-self {
+                border-bottom: 1px solid $borderColor;
+                position: relative;
+                letter-spacing: 0.1px;
+
+                .fifth {
+                    position: absolute;
+                    top: calc(50% - 6.5px);
+                    left: 20px;
+                    text-align: left !important;
+                    margin-left: 0 !important;
+                    letter-spacing: 0.1px;
+
+                    > a {
+                        background-image: none;
+                        opacity: 1;
+                        font-size: inherit;
+                        font-family: inherit;
+                        overflow: inherit;
+                        color: $colorBlk;
+
+                        > i.fa {
+                            font: normal normal normal 14px/1 FontAwesome;
+
+                            &.fa-lg {
+                                font-size: 1.33333333em !important;
+                            }
+                        }
+
+                        &.delteIcon {
+                            color: $colorBlk;
+                        }
+                    }
+                }
+
+                .typingMsg_box {
+                    margin-bottom: 5px;
+                }
+            }
+
+            .form-div {
+                padding-bottom: 5px;
+
+                button {
+
+                    &.upload-file-btn {
+                        background-color: transparent !important;
+                        background-image: none !important;
+                        border: 0px solid transparent !important;
+                        box-shadow: 0 0 0 transparent !important;
+
+                        margin-top:5px !important;
+                        input{
+
+                            cursor: pointer;
+                        }
+
+                        svg {
+                            fill: $navbar;
+
+                            &:hover {
+                                fill: $primary;
+                            }
+                        }
+                    }
+
+                    &.send-mesage-btn {
+                        @extend .upload-file-btn;
+                    }
+                }
+            }
+        }
+    }
+
+    form {
+        &.chatboot__form {
+            // border: 0px;
+            // background-color: $navbar;
+            // color: $white;
+            padding: 20px 20px 10px;
+            border-radius: 4px;
+            background: $tabulatorTop;
+
+            .input-group {
+                input {
+                    border-radius: 4px;
+                    &.form-control{
+                        &:focus{
+                            border: 1px solid  $primary;
+                        }
+                    }
+                }
+            }
+
+            .btn-outline-primary {
+                svg {
+                    fill: $primary;
+                }
+
+                &:hover {
+                    svg {
+                        fill: $white;
+                    }
+                }
+
+                &:active {
+                    svg {
+                        fill: $white;
+                    }
+                }
+            }
+
+            .btn-primary {
+                svg {
+                    fill: $white;
+                }
+
+                &:hover {
+                    svg {
+                        fill: $primary;
+                    }
+                }
+
+                &:active {
+                    svg {
+                        fill: $primary;
+                    }
+                }
+            }
+
+            .btn {
+                font-size: 16px;
+            }
+
+            .message__body {
+                // border-bottom: 1px solid $borderColor;
+
+                .message__item {
+                    padding: 5px 10px;
+                    border: 1px solid $borderColor;
+                    display: flex;
+                    align-items: center;
+                    &:nth-of-type(1) {
+                        border-top: 0;
+                    }
+                    &:not(:nth-of-type(1)) {
+                        border-top: 0;
+                    }
+
+                    &:nth-last-of-type(1){
+                        margin-bottom: 10px;
+                        // border-bottom: 0;
+                    }
+
+
+                    .message__tool {
+                        // left: 10px;
+                        // top: 20px;
+                        position: static;
+    
+                        span {
+                            color: $colorBlk;
+    
+                            &:hover {
+                                color: $primary;
+                            }
+                        }
+                    }
+                    .message__text{
+                        flex: 1;
+                        >.name__date {
+                            >i{
+                                font-weight: normal;
+                                font-size: 12px;
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            .typingMsg_box {
+                padding: 0px;
+          
+                textarea{
+                    &:focus{
+                        border: 1px solid  $primary;
+                    }
+                }
+             }
+             .keywordSearch__wrapper {
+                @extend .typingMsg_box;
+             }
+           
+             
+          
+
+            .keywordSearch__wrapper {
+                @extend .typingMsg_box;
+            }
+        }
+    }
+    .chatUi{
+        display: flex;
+        .leftChatList{
+            background-color:  transparentize($tabBar, 0.5);
+            width: 400px;
+            height: calc(100vh - 56px);
+            // padding: 20px;
+            .nav-pills{
+                background-color: $sideBarInner;
+            }
+            .tab-content{
+                padding: 10px 20px;
+            }
+            .chat-user-list{
+                height: calc(100vh - 238px);
+                overflow-y: auto;
+                ul{
+                    display: flex;
+                    flex-direction: column;
+                    li{
+                        display: flex;
+                        align-items: center;
+                        padding: 8px 10px 8px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        img{
+                            margin-right: 10px;
+                        }
+                        > .group-container{
+                            flex: 1;
+                            white-space: normal;
+                            word-break: break-word;
+                            .group-name{
+                                cursor: pointer;
+                               
+                               
+                            }
+                            &:hover{
+                                 .dropdown-menu{
+                                    display: block;
+                                    right: 10%;
+                                    left: auto;
+                                    top: 50;
+                                    z-index: 9;
+
+                                }
+                            }
+                        }
+                        &:nth-last-of-type(1), &:nth-last-of-type(2){
+                            > .group-container{
+                                &:hover{
+                                    .dropdown-menu{
+                                        top: auto;
+                                        bottom: 0;
+                                    }
+                                }
+                            }
+                        }
+                        &.active{
+                            background-color: $sideBarInner;
+                        }
+                    }
+                }
+            }
+        }
+        .rightChatContainer{
+            width: calc(100% - 400px);
+            .chats-list{
+                height: calc(100vh - 280px);
+                overflow-y: auto;
+                transform:  all linear .8s;
+                ul{
+                    display: flex;
+                    flex-direction: column;
+                    li{
+                        display: flex;
+                        // align-items: center;
+                        padding: 10px 10px;
+                        cursor: pointer;
+                        img{
+                            margin-right: 10px;
+                        }
+                        > .group-container{
+                            // flex: 1;
+                            white-space: normal;
+                            word-break: break-word;
+                            padding-right: 20px;
+                            border-radius: 4px;
+                            padding: 5px 10px;
+                            max-width: 70%;
+                            display: flex;
+                            .group-name{
+                                cursor: pointer;
+                                 &.c_nm {
+                                     font-weight: bold;
+                                     font-size: 14px;
+                                     color: #666666;
+                                 }
+                                
+                                &:hover{
+                                    ~ .dropdown-menu{
+                                        display: block;
+                                        right: 10%;
+                                        left: auto;
+                                        top: 0px;
+                                    }
+                                }
+                            }
+                            .figure{
+                                margin: 5px 0 0;
+                                img{
+                                    max-width: 200px;
+                                    object-fit: contain;
+                                }
+                            }
+                        }
+                        &.sender{
+                            justify-content: flex-end;
+                            .group-container{
+                                background-color: $tabulatorTop;
+                            }
+                        }
+                        &.receiver{
+                            justify-content: flex-start;
+                            .group-container{
+                                .group-name{
+                                     &.c_nm {
+                                         font-weight: bold;
+                                         font-size: 14px;
+                                         color: #666666;
+                                     }
+                                }
+                                background-color: transparentize($tabBar, 0.5);
+                            }
+                        }
+                    }
+                }
+               
+                @include customScrollBar($navbar, $tabulatorTop, 5px, 8px);
+                .scrollable {
+                    width:100%;
+                    // height:500%;
+                }
+                  
+            }
+        }
+        @include searchBox;
+        @include dropDownMenu;
+        @include msCustomScrollBar($tabBar, $navbar);
+
+    }
+    .chatPopup{
+        background-color: $white;
+        right: 4px;
+        filter: drop-shadow(2px 4px 6px rgba(0 ,0, 0, 0.5));
+        transition: all linear .3s;
+        .card{
+            border-radius: 0;
+            background-color: transparent;
+            .chatListContainer{
+                height: 300px;
+                overflow: auto;
+                ul{
+                    list-style-type: none;
+                    li{
+                        display: flex;
+                        padding: 5px  5px;
+                        .group-container{
+                            display: flex;
+                            max-width: 80%;
+                            padding: 5px  10px;
+                            border-radius: 4px;
+                        }
+                        &.sender{
+                            justify-content: flex-end;
+                            .group-container{
+
+                                background-color: $tabulatorTop;
+                            }
+                        }
+                        &.receiver{
+                            justify-content: flex-start;
+                            .group-container{
+                                background-color: transparentize($tabBar, 0.5);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        &:not(.show){
+            opacity: 0;
+            transform: scale(0) translate(100%, 100%);
+        }
+        &.show{
+            opacity: 1;
+            transform: scale(1) translate(0%, 0%);
+        }
+        &.expand{
+            width: 90%;
+            left: 50%;
+            right: auto;
+            top: 50%;
+            bottom: auto;
+            transform: translate(-50%, -50%);
+        }
+        @include searchBox;
+        @include dropDownMenu;
+        @include msCustomScrollBar($tabBar, $navbar);
+        
+    }
+}
+
+.file-attachments{
+    position: relative;
+    overflow: hidden;
+    input[type="file"]{
+        position: absolute;
+        z-index: 9;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.fa-25{
+    font-size: 25px;
+}
+
+.height-55{
+    height: 55px;
+}
+
+.addFileIcon{
+    right: 30px;
+    bottom: 0;
+}

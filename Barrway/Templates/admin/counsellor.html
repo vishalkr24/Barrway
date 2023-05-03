@@ -1,0 +1,390 @@
+﻿
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-sm mb-2 mb-sm-0">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb breadcrumb-no-gutter">
+                    <li class="breadcrumb-item"><a class="breadcrumb-link" href="#/home">Home</a></li>
+                    <li class="breadcrumb-item"><a class="breadcrumb-link" href="#/form/records/2242">Counsellor Masters</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{counsellor.CLLR_USER_NAME}}</li>
+                </ol>
+            </nav>
+
+            <h1 class="page-header-title ms-2">Counselllor Profile</h1>
+
+
+        </div>
+        <!-- End Col -->
+        <!-- End Col -->
+    </div>
+    <!-- End Row -->
+</div>
+
+<div class="row">
+
+    <h3 ng-if="NoDataFound" class="text-danger">No Data Found</h3>
+
+    <div class="col-md-3">
+
+        <div class="row">
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-8 mt-2 text-center">
+                <!--<h4>PROFILE PIC</h4>-->
+                <img class="avatarImg" ng-src="{{counsellor.CLLR_PROFILE_PIC}}" style="max-width:200px;width:100%;height:200px;border-radius:50%" />
+
+                <div class="mt-3 text-center edit-buuton-div" style="display:none">
+
+                    <!--<button type="button" class="btn btn-primary">ADD PIC</button>-->
+                    <div class="form-attachment-btn btn btn-sm btn-primary">
+                        ADD PIC
+                        <input type="file" class="form-attachment-btn-label" id="avatarUploader"
+                               data-hs-file-attach-options='{
+                  "textTarget": ".avatarImg",
+                  "mode": "image",
+                  "targetAttr": "src",
+                  "resetTarget": ".js-file-attach-reset-img",
+                  "resetImg": "/Content/assets/img/400x400/img2.jpg",
+                  "allowTypes": [".png", ".jpeg", ".jpg"]
+               }'>
+                    </div>
+                    <button type="button" class="js-file-attach-reset-img btn btn-white btn-sm" style="display:none">Delete</button>
+                </div>
+            </div>
+            <div class="col-sm-2">
+
+            </div>
+        </div>
+
+        <div class="row mt-2" ng-if="alert_success">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <span class="fw-semibold">{{alert.title}}</span> {{alert.message}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+        <div class="row mt-2" ng-if="alert_error">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span class="fw-semibold">{{alert.title}}</span> {{alert.message}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-9">
+        <div class="row">
+
+            <div class="col-sm-11 edit-buuton-div" style="display:none">
+                <button id="edit-data" class="btn btn-primary float-end ms-2" ng-click="UpdateProfile()">EDIT</button>
+                <a href="#/form/records/2242" id="edit-data" onclick="return confirm('Are you sure cancel this?')" class="btn btn-default float-end">CANCEL</a>
+            </div>
+            <div class="col-sm-1">
+
+            </div>
+        </div>
+        <form name="myForm" class="content tab-content ng-pristine ng-valid" id="customFormNew" autocomplete="off">
+
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">BASIC INFORMATION</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">ADMIN PAGE</button>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+                    <div class="row mt-2">
+
+
+
+                        <div class="form-group borderSet col-sm-6 border-CLLR_USER_NAME">
+                            <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="CLLR_USER_NAME">USER NAME</label><input name="CLLR_USER_NAME" id="CLLR_USER_NAME" type="text" placeholder="" disabled class="inputClass form-control" value="{{counsellor.CLLR_USER_NAME}}" maxlength="255" minlength="1"></div>
+                        </div>
+                        <div class="col-sm-6">
+
+                        </div>
+
+                        <div class="form-group borderSet col-sm-4 border-CLLR_FIRST_NAME">
+                            <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="CLLR_FIRST_NAME">FIRST NAME</label><input name="CLLR_FIRST_NAME" id="CLLR_FIRST_NAME" type="text" placeholder="" disabled class="inputClass form-control" value="{{counsellor.CLLR_FIRST_NAME}}" maxlength="255" minlength="1"></div>
+                        </div>
+
+                        <div class="form-group borderSet col-sm-4 border-CLLR_LAST_NAME">
+                            <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="CLLR_LAST_NAME">LAST NAME</label><input name="CLLR_LAST_NAME" id="CLLR_LAST_NAME" type="text" placeholder="" disabled class="inputClass form-control" value="{{counsellor.CLLR_LAST_NAME}}" maxlength="255" minlength="1"></div>
+                        </div>
+
+                        <div class="form-group borderSet col-sm-4 border-CLLR_NICK_NAME">
+                            <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="CLLR_NICK_NAME">NICK NAME</label><input name="CLLR_NICK_NAME" id="CLLR_NICK_NAME" type="text" placeholder="" disabled class="inputClass form-control" value="{{counsellor.CLLR_NICK_NAME}}" maxlength="255" minlength="1"></div>
+                        </div>
+
+                        <div class="form-group borderSet col-sm-6 border-CLLR_GENDER">
+                            <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="CLLR_GENDER">GENDER</label><select disabled name="CLLR_GENDER" id="CLLR_GENDER" class="form-control inputClass form-control "><option value="MALE" ng-selected="counsellor.CLLR_GENDER=='male'">MALE</option><option ng-selected="counsellor.CLLR_GENDER=='female'" value="FEMALE">FEMALE</option></select></div>
+                        </div>
+                        <div class="form-group borderSet col-sm-6 border-CLLR_AGE_RANGE">
+                            <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="CLLR_AGE_RANGE">AGE RANGE</label><select disabled name="CLLR_AGE_RANGE" id="CLLR_AGE_RANGE" class="form-control inputClass form-control "><option value="18-25" selected="">18-25</option><option value="25-35">25-35</option><option value="35-45">35-45</option><option value="45-55">45-55</option></select></div>
+                        </div>
+
+                        <div class="form-group borderSet col-sm-6 border-CLLR_EMAIL">
+                            <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="CLLR_EMAIL">EMAIL</label><input name="CLLR_EMAIL" id="CLLR_EMAIL" type="text" placeholder="" disabled class="inputClass form-control" value="{{counsellor.CLLR_EMAIL}}" maxlength="255" minlength="1"></div>
+                        </div>
+
+                        <div class="form-group borderSet col-sm-6 border-CLLR_PHONE">
+                            <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="CLLR_PHONE">PHONE</label><input name="CLLR_PHONE" id="CLLR_PHONE" type="text" placeholder="" disabled class="inputClass form-control" value="{{counsellor.CLLR_PHONE}}" maxlength="255" minlength="1"></div>
+                        </div>
+
+
+
+
+
+                        <div class="form-group borderSet col-sm-6 border-CLLR_HIGH_QUALI">
+                            <div class="col-sm-12">
+                                <label style="display: block;text-align: left;!important" class="pull-left" for="CLLR_HIGH_QUALI">HIGHEST QUALIFICATION ATTAINED</label>
+                                <input name="CLLR_HIGH_QUALI" id="CLLR_HIGH_QUALI" type="text" placeholder="" disabled class="inputClass form-control" value="{{counsellor.CLLR_HIGH_QUALI}}" maxlength="255" minlength="1">
+                            </div>
+                        </div>
+
+                        <div class="form-group borderSet col-sm-6 border-CLLR_EDU_PROOF">
+                            <div class="col-sm-12">
+                                <label style="display: block;text-align: left;!important" class="pull-left" for="CLLR_EDU_PROOF">EDUCATION PROOF</label>
+                                <input name="CLLR_EDU_PROOF" id="CLLR_EDU_PROOF" type="text" placeholder="" disabled class="inputClass form-control" value="{{counsellor.CLLR_EDU_PROOF}}" maxlength="255" minlength="1">
+                            </div>
+                        </div>
+
+                        <div class="form-group borderSet col-sm-6 border-CLLR_SCHOOL">
+                            <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="CLLR_SCHOOL">SCHOOL</label><input name="CLLR_SCHOOL" id="CLLR_SCHOOL" type="text" placeholder="" disabled class="inputClass form-control" value="{{counsellor.CLLR_SCHOOL}}" maxlength="255" minlength="1"></div>
+                        </div>
+
+                        <div class="form-group borderSet col-sm-6 border-CLLR_CERTIFICATE">
+                            <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="CLLR_CERTIFICATE">CERTIFICATE</label><input name="CLLR_CERTIFICATE" id="CLLR_CERTIFICATE" type="text" placeholder="" disabled class="inputClass form-control" value="{{counsellor.CLLR_CERTIFICATE}}" maxlength="255" minlength="1"></div>
+                        </div>
+
+                        <div class="form-group borderSet col-sm-12 border-CLLR_EXP_COUNS">
+                            <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="CLLR_EXP_COUNS">EXPERIENCE IN COUNSELLING</label><textarea name="CLLR_EXP_COUNS" id="CLLR_EXP_COUNS" disabled rows="5" placeholder="" maxlength="255" minlength="1" class="form-control">{{counsellor.CLLR_EXP_COUNS}}</textarea></div>
+                        </div>
+
+                        <div class="form-group borderSet col-sm-12 border-CLLR_ABOUT">
+                            <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="CLLR_ABOUT">DESCRIPTION ABOUT YOURSELF</label><textarea name="CLLR_ABOUT" id="CLLR_ABOUT" rows="5" placeholder="" disabled maxlength="255" minlength="1" class="form-control">{{counsellor.CLLR_ABOUT}}</textarea></div>
+                        </div>
+
+                        <div class="form-group borderSet col-sm-12 border-CLLR_ABOUT">
+                            <div class="col-sm-12">
+                                <label style="display: block;text-align: left;!important" class="pull-left" for="CLLR_ABOUT">SPECIALITY (MULTI-SELECT)</label>
+
+                                <div id="counsellor-specilities" class="tom-select-custom tom-select-custom-with-tags">
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group borderSet col-sm-4 border-CLLR_TEXT_CHARGE">
+                            <div class="col-sm-12">
+                                <label style="display: block;text-align: left;!important" class="pull-left fw-bold" for="CLLR_TEXT_CHARGE">TEXT COUNSELLING CHARGE</label>
+                                <br />
+                                <small>pay rate (HK$, hourly)</small>
+                                <input name="CLLR_TEXT_CHARGE" id="CLLR_TEXT_CHARGE" type="text" placeholder="" disabled class="inputClass form-control" value="{{counsellor.CLLR_TEXT_CHARGE}}" maxlength="255" minlength="1">
+                            </div>
+                        </div>
+
+                        <div class="form-group borderSet col-sm-4 border-CLLR_AUDIO_CHARGE">
+                            <div class="col-sm-12">
+                                <label style="display: block;text-align: left;!important" class="pull-left fw-bold" for="CLLR_AUDIO_CHARGE">AUDIO COUNSELLING CHARGE</label>
+                                <br />
+                                <small>pay rate (HK$, hourly)</small>
+                                <input name="CLLR_AUDIO_CHARGE" id="CLLR_AUDIO_CHARGE" type="text" placeholder="" disabled class="inputClass form-control" value="{{counsellor.CLLR_AUDIO_CHARGE}}" maxlength="255" minlength="1">
+                            </div>
+                        </div>
+
+                        <div class="form-group borderSet col-sm-4 border-CLLR_VIDEO_CHARGE">
+                            <div class="col-sm-12">
+                                <label style="display: block;text-align: left;!important" class="pull-left fw-bold" for="CLLR_VIDEO_CHARGE">VIDEO COUNSELLING CHARGE</label>
+                                <br />
+                                <small>pay rate (HK$, hourly)</small>
+                                <input name="CLLR_VIDEO_CHARGE" id="CLLR_VIDEO_CHARGE" type="text" placeholder="" disabled class="inputClass form-control" value="{{counsellor.CLLR_VIDEO_CHARGE}}" maxlength="255" minlength="1">
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group borderSet col-sm-12 border-CLLR_MAIN_APPROACH">
+                            <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="CLLR_MAIN_APPROACH">MAIN APPROACHES OF COUSELLING</label><textarea name="CLLR_MAIN_APPROACH" disabled id="CLLR_MAIN_APPROACH" rows="5" placeholder="" maxlength="255" minlength="1" class="form-control">{{counsellor.CLLR_MAIN_APPROACH}}</textarea></div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <div class="row mt-2">
+
+
+                        <div class="form-group borderSet col-sm-12 border-IS_ADMIN_APPROVED">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <label class="pull-left fw-bold" for="IS_ADMIN_APPROVED">ACCOUNT STATUS</label>
+                                </div>
+                                <div>
+                                    <div class="form-check-inline">
+                                        <label class="form-check-label" for="IS_ADMIN_APPROVED0">
+                                            <input type="radio" class="form-check-input" id="IS_ADMIN_APPROVED0" name="IS_ADMIN_APPROVED" ng-checked="counsellor.IS_ADMIN_APPROVED=='yes'" value="YES"> ACTIVE
+                                        </label>
+                                    </div>
+                                    <div class="form-check-inline">
+                                        <label class="form-check-label" for="IS_ADMIN_APPROVED1"> <input type="radio" class="form-check-input" id="IS_ADMIN_APPROVED1" ng-checked="counsellor.IS_ADMIN_APPROVED=='no'" name="IS_ADMIN_APPROVED" value="NO"> INACTIVE</label>
+                                    </div>
+
+                                    <div class="form-check-inline">
+                                        <label class="form-check-label" for="IS_ADMIN_APPROVED2"> <input type="radio" class="form-check-input" id="IS_ADMIN_APPROVED2" ng-checked="counsellor.IS_ADMIN_APPROVED=='reject'" name="IS_ADMIN_APPROVED" value="REJECT"> REJECT</label>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="form-group borderSet col-sm-4 border-CLLR_IS_TEXT">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <label class="pull-left fw-bold" for="CLLR_IS_TEXT">IS TEXT COUNSELOR</label>
+                                </div>
+                                <div>
+                                    <div class="form-check-inline"> <label class="form-check-label" for="CLLR_IS_TEXT0"> <input type="radio" class="form-check-input" id="CLLR_IS_TEXT0" name="CLLR_IS_TEXT" value="YES" ng-checked="counsellor.CLLR_IS_TEXT=='yes'">  YES</label></div>
+                                    <div class="form-check-inline"> <label class="form-check-label" for="CLLR_IS_TEXT1"><input type="radio" class="form-check-input" id="CLLR_IS_TEXT1" name="CLLR_IS_TEXT" value="NO" ng-checked="counsellor.CLLR_IS_TEXT=='no'">   NO</label></div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group borderSet col-sm-4 border-CLLR_IS_AUDIO">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <label class="pull-left fw-bold" for="CLLR_IS_AUDIO">IS AUDIO COUNSELLOR</label>
+                                </div>
+                                <div>
+                                    <div class="form-check-inline"> <label class="form-check-label" for="CLLR_IS_AUDIO0"> <input type="radio" class="form-check-input" id="CLLR_IS_AUDIO0" name="CLLR_IS_AUDIO" value="YES" ng-checked="counsellor.CLLR_IS_AUDIO=='yes'">  YES</label></div><div class="form-check-inline"> <label class="form-check-label" for="CLLR_IS_AUDIO1"><input type="radio" class="form-check-input" id="CLLR_IS_AUDIO1" name="CLLR_IS_AUDIO" value="NO" ng-checked="counsellor.CLLR_IS_AUDIO=='no'">   NO</label></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group borderSet col-sm-4 border-CLLR_IS_VIDEO">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <label class="pull-left fw-bold" for="CLLR_IS_VIDEO">IS VIDEO COUNSELLOR</label>
+                                </div>
+                                <div>
+                                    <div class="form-check-inline"> <label class="form-check-label" for="CLLR_IS_VIDEO0"> <input type="radio" class="form-check-input" id="CLLR_IS_VIDEO0" name="CLLR_IS_VIDEO" value="YES" ng-checked="counsellor.CLLR_IS_VIDEO=='yes'">  YES</label></div><div class="form-check-inline"> <label class="form-check-label" for="CLLR_IS_VIDEO1"><input type="radio" class="form-check-input" id="CLLR_IS_VIDEO1" name="CLLR_IS_VIDEO" value="NO" ng-checked="counsellor.CLLR_IS_VIDEO=='no'">   NO</label></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group borderSet col-sm-12 border-CLLR_IS_VIDEO">
+                            <div class="col-sm-12">
+                                <div class="form-check mb-3">
+                                    <input type="checkbox" id="CLLR_RECOMMENDED" name="CLLR_RECOMMENDED" value="1" class="form-check-input" ng-checked="counsellor.CLLR_RECOMMENDED=='1'">
+                                    <label class="form-check-label fw-bold" for="CLLR_RECOMMENDED">RECOMMEND COUNSELLOR</label>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <h4 class="mt-2 ms-2">TEXT COUNSELLING RATE</h4>
+                        <div class="form-group borderSet col-sm-4 border-CLLR_TEXT_CHARGE">
+                            <div class="col-sm-12">
+                                <label style="display: block;text-align: left;!important" class="pull-left fw-bold" for="CLLR_TEXT_CHARGE">PAY RATE (HK$, HOURLY)</label>
+
+                                <input name="CLLR_TEXT_CHARGE" id="CLLR_TEXT_CHARGE" type="text" placeholder="" disabled class="inputClass form-control" value="{{counsellor.CLLR_TEXT_CHARGE}}" maxlength="255" minlength="1">
+                            </div>
+                        </div>
+                        <div class="form-group borderSet col-sm-4 border-CLLR_TEXT_MARKUP">
+                            <div class="col-sm-12">
+                                <label style="display: block;text-align: left;!important" class="pull-left fw-bold" for="CLLR_TEXT_MARKUP">Mark up %</label>
+                                <input name="CLLR_TEXT_MARKUP" id="CLLR_TEXT_MARKUP" type="text" placeholder="" class="inputClass form-control" ng-change="ChangeMarkup('text')" ng-model="counsellor.CLLR_TEXT_MARKUP" maxlength="255" minlength="1">
+                            </div>
+                        </div>
+                        <div class="form-group borderSet col-sm-4 border-CLLR_TEXT_CHARGE_CAL">
+                            <div class="col-sm-12">
+                                <label style="display: block;text-align: left;!important" class="pull-left fw-bold" for="CLLR_TEXT_MARKUP_CAL">PLATFORM RATE (M$, HOURLY)</label>
+                                <input name="CLLR_TEXT_MARKUP_CAL" id="CLLR_TEXT_MARKUP_CAL" type="text" disabled placeholder="" class="inputClass form-control" value="{{counsellor.CLLR_TEXT_MARKUP_CAL}}" maxlength="255" minlength="1">
+                            </div>
+                        </div>
+
+                        <h4 class="mt-2 ms-2">AUDIO COUNSELLING RATE</h4>
+                        <div class="form-group borderSet col-sm-4 border-CLLR_TEXT_CHARGE">
+                            <div class="col-sm-12">
+                                <label style="display: block;text-align: left;!important" class="pull-left fw-bold" for="CLLR_TEXT_CHARGE">PAY RATE (HK$, HOURLY)</label>
+                                <input name="CLLR_TEXT_CHARGE" id="CLLR_TEXT_CHARGE" type="text" placeholder="" disabled class="inputClass form-control" value="{{counsellor.CLLR_AUDIO_CHARGE}}" maxlength="255" minlength="1">
+                            </div>
+                        </div>
+                        <div class="form-group borderSet col-sm-4 border-CLLR_AUDIO_MARKUP">
+                            <div class="col-sm-12">
+                                <label style="display: block;text-align: left;!important" class="pull-left fw-bold" for="CLLR_AUDIO_MARKUP">MARK UP %</label>
+                                <input name="CLLR_AUDIO_MARKUP" id="CLLR_AUDIO_MARKUP" type="text" placeholder="" class="inputClass form-control" ng-change="ChangeMarkup('audio')" ng-model="counsellor.CLLR_AUDIO_MARKUP" maxlength="255" minlength="1">
+                            </div>
+                        </div>
+                        <div class="form-group borderSet col-sm-4 border-CLLR_AUDIO_MARKUP_CAL">
+                            <div class="col-sm-12">
+                                <label style="display: block;text-align: left;!important" class="pull-left fw-bold" for="CLLR_AUDIO_MARKUP_CAL">PLATFORM RATE (M$, HOURLY)</label>
+                                <input name="CLLR_AUDIO_MARKUP_CAL" id="CLLR_AUDIO_MARKUP_CAL" type="text" disabled placeholder="" class="inputClass form-control" value="{{counsellor.CLLR_AUDIO_MARKUP_CAL}}" maxlength="255" minlength="1">
+                            </div>
+                        </div>
+
+
+                        <h4 class="mt-2 ms-2">VIDEO COUNSELLING RATE</h4>
+                        <div class="form-group borderSet col-sm-4 border-CLLR_TEXT_CHARGE">
+                            <div class="col-sm-12">
+                                <label style="display: block;text-align: left;!important" class="pull-left fw-bold" for="CLLR_TEXT_CHARGE">PAY RATE (HK$, HOURLY)</label>
+                                <input name="CLLR_TEXT_CHARGE" id="CLLR_TEXT_CHARGE" type="text" placeholder="" disabled class="inputClass form-control" value="{{counsellor.CLLR_VIDEO_CHARGE}}" maxlength="255" minlength="1">
+                            </div>
+                        </div>
+                        <div class="form-group borderSet col-sm-4 border-CLLR_VIDEO_MARKUP">
+                            <div class="col-sm-12">
+                                <label style="display: block;text-align: left;!important" class="pull-left fw-bold" for="CLLR_VIDEO_MARKUP">MARK UP %</label>
+                                <input name="CLLR_VIDEO_MARKUP" id="CLLR_VIDEO_MARKUP" type="text" placeholder="" class="inputClass form-control" ng-change="ChangeMarkup('video')" ng-model="counsellor.CLLR_VIDEO_MARKUP" maxlength="255" minlength="1">
+                            </div>
+                        </div>
+                        <div class="form-group borderSet col-sm-4 border-CLLR_VIDEO_MARKUP_CAL">
+                            <div class="col-sm-12">
+                                <label style="display: block;text-align: left;!important" class="pull-left fw-bold" for="CLLR_VIDEO_MARKUP_CAL">PLATFORM RATE (M$, HOURLY)</label>
+                                <input name="CLLR_VIDEO_MARKUP_CAL" id="CLLR_VIDEO_MARKUP_CAL" type="text" disabled placeholder="" class="inputClass form-control" value="{{counsellor.CLLR_VIDEO_MARKUP_CAL}}" maxlength="255" minlength="1">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-sm-11">
+                            <a href="#/form/records/2242" id="edit-data" onclick="return confirm('Are you sure cancel this?')" class="btn btn-default float-start">CANCEL</a>
+                            <button class="btn btn-primary float-start ms-2" ng-click="UpdateProfile()">SAVE</button>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    console.log(HSFileAttach);
+    var triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'))
+    triggerTabList.forEach(function (triggerEl) {
+        var tabTrigger = new bootstrap.Tab(triggerEl);
+        triggerEl.addEventListener('click', function (event) {
+            var tab_id = event.delegateTarget.id;
+
+            if (tab_id == 'profile-tab') {
+                $('.edit-buuton-div').show();
+            } else {
+                $('.edit-buuton-div').hide();
+            }
+            event.preventDefault()
+            tabTrigger.show()
+        })
+    })
+</script>
+

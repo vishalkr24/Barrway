@@ -1,0 +1,69 @@
+
+@import './checkBox';
+// selectpicker
+.bootstrap-select{
+    >.dropdown-toggle{
+        background: $white;
+        border: 1px solid $borderColor;
+        border-radius: 4px !important;
+        color: $colorBlk;
+        font-size: 1rem;
+        font-weight: 500;
+        &:focus, &:active{
+            outline: 0px !important;
+            border-color: $primary;
+            box-shadow: 0 0px 5px transparentize($primary, 0.6);
+        }
+       
+       
+    }
+    .dropdown-menu {
+        ul{
+            &.dropdown-menu {
+                li{
+                    &.active{
+                        &.disable{
+                            background-color: transparentize($navbar , 0.2) !important;
+                            color: $white;
+                        }
+                        a{
+                            font-style: normal;
+                            background-color: $navbar !important;
+                            color: $white;
+
+                        }
+                        &:active{
+                            @extend a;
+                        }
+                        &:focus{
+                            @extend a;
+                        }
+                        &.dropdown-item{
+                            &.active{
+                                background-color: $navbar !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+input{
+	&.form-control{
+		&:focus{
+			border-color: $primary;
+			box-shadow: 0 0px 5px transparentize($primary, 0.6);
+		}
+	}
+}
+select{
+	@extend input;	
+}
+textarea{
+	@extend input;	
+	
+}

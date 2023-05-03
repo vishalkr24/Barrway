@@ -1,0 +1,34 @@
+.packery{
+//    display: flex;
+//    flex-wrap: wrap;
+// //    justify-content: space-between;
+//    align-items: flex-start;
+    &.grid{
+        max-width: 100%;
+
+    }
+
+    // .test{
+        .grid-item{
+            border: 0px;
+            // margin:0 10px 10px;
+            white-space: normal;
+            word-break: break-word;
+            .badge{
+                font-weight: 600;
+                color: $navbar;
+                padding: 9px;
+                border-radius: 10px;
+                margin: 0 5px 5px 0;
+                filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.15));
+
+                &.badge-green{
+                    background-color: #27eacb;
+                }
+                &.badge-orange{
+                    background-color: #fe8484;
+                }
+            }
+        }
+    // }
+}

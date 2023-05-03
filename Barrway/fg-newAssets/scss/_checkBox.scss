@@ -1,0 +1,113 @@
+/* The container */
+/* Hide the browser's default checkbox */
+/* Create a custom checkbox */
+/* On mouse-over, add a grey background color */
+/* When the checkbox is checked, add a blue background */
+/* Create the checkmark/indicator (hidden when not checked) */
+/* Show the checkmark when checked */
+/* Style the checkmark/indicator */
+.new_checkbox_design {
+	.checkbox.available-roles {
+		>span {
+			display: block;
+			width: 100%;
+			margin-bottom: 10px;
+			&:last-child {
+				margin-bottom: 0px;
+			}
+		}
+	}
+}
+.checkbox.available-roles {
+	background: $filterSidebar;
+	border-radius: 2px;
+	padding: 20px;
+}
+.custom_chkbox {
+	display: block;
+	position: relative;
+	padding-left: 35px;
+	margin-bottom: 20px;
+	cursor: pointer;
+	font-size: 1rem;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	&:last-child {
+		margin-bottom: 0px;
+	}
+	input {
+		position: absolute;
+		opacity: 0;
+		cursor: pointer;
+		height: 0;
+		width: 0;
+		&:checked {
+			~ {
+				.checkmarks {
+					background-color: $sideBarInner;
+					&:after {
+						display: block;
+					}
+				}
+			}
+		}
+	}
+	&:hover {
+		input {
+			~ {
+				.checkmarks {
+					background-color: $sideBarInner;
+				}
+			}
+		}
+	}
+	.checkmarks {
+		&:after {
+			left: 8px;
+			top: 3px;
+			width: 8px;
+			height: 15px;
+			border: solid $navbar;
+			border-radius: 2px;
+			border-width: 0 5px 5px 0;
+			-webkit-transform: rotate(45deg);
+			-ms-transform: rotate(45deg);
+			transform: rotate(45deg);
+		}
+	}
+	.checkmarks-lg {
+		&:after {
+			left: 9px;
+			top: 5px;
+			width: 10px;
+			height: 17px;
+		}
+	}
+}
+.checkmarks {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 23px;
+	border-radius: 50%;
+	width: 23px;
+	background-color: $sideBarInner;
+	&:after {
+		content: "";
+		position: absolute;
+		display: none;
+	}
+}
+.heading_style {
+	color: $navbar;
+	margin-bottom: 20px;
+}
+.checkmarks-lg {
+	height: 27px;
+	width: 27px;
+	top: -2px;
+}
+
+

@@ -1,0 +1,163 @@
+﻿<link href="Content/slick/slick.css" rel="stylesheet" />
+<link href="Content/slick/slick-theme.css" rel="stylesheet" />
+<style>
+    .slick-prev:before, .slick-next:before {
+        font-family: 'slick';
+        font-size: 20px;
+        line-height: 1;
+        opacity: .75;
+        color: #132144;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    .badge-custom {
+        background-color: #fff !important;
+        color: #132144;
+        border: 2px solid #132144;
+        font-size: 18px;
+        border-radius: 30px;
+        width: auto !important;
+        padding: 10px 30px;
+        cursor: pointer;
+    }
+    .badge-active {
+        background-color: #132144!important;
+        color:#fff;
+        border-color:#000;
+    }
+</style>
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-sm mb-2 mb-sm-0">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb breadcrumb-no-gutter">
+                    <li class="breadcrumb-item"><a class="breadcrumb-link" href="#/home">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Forum Master</li>
+                </ol>
+            </nav>
+
+            <h1 class="page-header-title ms-2">Forum Master</h1>
+
+
+        </div>
+        <!-- End Col -->
+        <!-- End Col -->
+    </div>
+    <!-- End Row -->
+</div>
+
+<div class="row">
+    <div class="col-md-1"></div>
+
+    <div class="col-md-10">
+        <div class="slider row">
+            <div class="card ms-3 me-3" ng-repeat="item in allHotTopic" style="width:300px">
+                <div class="card-body">
+                    <h2><a href="#/admin/forum/{{item.Id}}">{{item.FRM_TITLE}}</a></h2>
+                    <h6>{{item.FRM_CAT_NAME}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{item.forum_user_name}}</h6>
+
+                    <p>{{item.FRM_COMMENTS_COUNT}} Replies {{item.FRM_VIEW_COUNT}} views <span class="float-end">{{item.updated_at}}</span> </p>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+<div class="row">
+
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <div class="slider2 row">
+            <div class="badge badge-custom ms-3 me-3" ng-click="filterCategory($event)" data-id="{{item.Id}}" ng-repeat="item in allCategory">
+                {{item.FRM_CAT_NAME}}
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+
+<div class="row mt-2">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="tabulator-section w-100">
+                            <div class="row mb-3">
+                                <div class="col-xl-4 mb-2 mb-lg-0">
+                                </div>
+                                <div class="col-xl-8 text-lg-end text-md-start">
+                                    <a data-action="entry" class="btn btn-primary mb-2 mb-lg-0"
+                                       ui-sref="saveFormEntryData({formId: 2246})">
+                                        <i class="fa fa-plus"></i>
+                                        <span class="action-name">{{translation.Entry}}</span>
+                                    </a>
+                                    <a data-action="delete" ng-click="deleteRecords()"
+                                       class="btn btn-danger text-white mb-2 mb-lg-0"
+                                       id="delete-json">
+                                        <i class="fa fa-trash"> </i>
+                                        <span class="action-name">{{translation.Delete_Record}}</span>
+                                    </a>
+                                    <a class="btn btn-primary mb-2 mb-lg-0" ng-click="uploaddownloadPopup()">
+                                        <i class="fa fa-download"></i><span class="action-name">Export</span>
+                                    </a>
+                                    <script id="uploaddownload.html"
+                                            type="text/ng-template">
+                                        <div class="wrap" ng-controller="CommonCustomDialogController">
+                                            <div class="col-md-12">
+                                                <a ng-click="exportAll(1)" class="btn btn-primary m-1">
+                                                    <i class="fa fa-download">
+                                                    </i> <span class="action-name">{{translation.JSON}}</span>
+                                                </a>
+                                                <a ng-click="exportAll(2)" class="btn btn-primary m-1">
+                                                    <i class="fa fa-download">
+                                                    </i> <span class="action-name">{{translation.XLSX}}</span>
+                                                </a>
+
+                                                <a ng-click="exportAll(3)" class="btn btn-primary m-1">
+                                                    <i class="fa fa-download">
+                                                    </i> <span class="action-name">{{translation.CSV}}</span>
+                                                </a>
+                                                <a ng-click="exportAll(4)" class="btn btn-primary m-1">
+                                                    <i class="fa fa-download">
+                                                    </i> <span class="action-name">{{translation.PDF}}</span>
+                                                </a>
+                                                <a ng-click="exportAll(6)" class="btn btn-primary m-1">
+                                                    <i class="fa fa-download">
+                                                    </i> <span class="action-name">{{translation.Download_all_records_XLSX}}</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </script>
+
+                                </div>
+                            </div>
+                            <div class="form-builder-loader">
+                                <div class="loader">
+                                    <i class="fa fa-spinner fa-pulse fa-fw"> </i>
+                                    <div>
+                                        Loading Form Tabulator...
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="form-records"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="Content/slick/slick.min.js"></script>
+<script type="text/javascript"
+        src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.0.5/jspdf.plugin.autotable.js"></script>

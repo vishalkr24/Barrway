@@ -1,0 +1,124 @@
+.leftSideBar{
+    min-height:calc(100vh - 60px);
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    background-color: $filterSidebar;
+    width: 300px;
+    font-family: $fontMontserrat;
+    max-height: 100%;
+    transition: all ease-in-out .3s;
+    button{
+
+        &.btn{
+            border-radius: 6px !important;
+            font-weight: 500;
+            &.btng-lg{
+                padding: .8rem 1rem;
+            }
+        }
+    }
+    ul {
+        &.nav-pills{
+            > li {
+                padding: 10px 0;
+                >a{
+                    cursor: pointer;
+            
+                    &.nav-link{
+                        border-radius: 6px;
+                        border-bottom-right-radius: 6px;
+                        display: inline-flex;
+                        align-items: center;
+                        color: transparentize($navbar, 0.5);
+                        // color: #6d6189;
+                        font-family: $fontMontserratBold;
+                        i{
+                            color: $tabBar;
+                            &.fa-lg{
+                                font-size: 1.5em;
+                            }
+                        }
+                        svg{
+                            path{
+                                fill: $tabBar;
+                            }
+                        }
+                        &.active{
+                         
+                            i{
+                                color: $navbar;
+                            }
+                            background-color: $tabBar;
+                            color: $navbar;
+                            svg{
+                                path{
+                                    fill: $navbar;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    #packerySidebar{
+        max-height: calc(100vh - 120px);
+        .card{
+            overflow: visible !important;
+            > .card-header{
+                .nav-link{
+                    &[aria-expanded="true"]{
+                        border-radius: 6px !important;
+                        background-color: $tabBar;
+                    }
+                }
+                >.dropdown-menu{
+                    // top: 60px !important;
+                    box-shadow: 0px 0px 5px rgba(0, 0, 0, .25);
+                    padding: 20px 10px;
+                    max-height: 300px;
+                    max-width: 100%;
+                    overflow-y: auto;
+                    width: 100%;
+                    .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{
+                        background-color: $navbar;
+                    }
+                    
+                }
+            }
+            // .collapse{
+                ul{
+                    &.action-form-list{
+                        margin-left: 1px;
+                    }
+                    li{
+                        a{
+                            margin-bottom: 5px;
+                            white-space: normal;
+                            word-break: break-word;
+                            font-size: 14px;
+                            &:hover{
+                                background-color: $tabBar;
+                            }
+                        }
+                    }
+                }
+                
+            // }
+        }
+    }   
+ 
+
+}
+
+.leftSidebarContainer{
+    max-width: calc(100% - 300px);
+    transition: all ease-in-out .3s;
+
+}
+
+// .packery-dash .leftSidebarContainer{
+//     max-width: calc(100% - (27% + 10px));
+// }

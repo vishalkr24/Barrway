@@ -1,0 +1,182 @@
+﻿<style>
+    /*.items div {
+        border: 1px solid gray;
+        margin: 5px;
+        padding: 10px;
+    }*/
+
+    .pager div {
+        float: left;
+        border: 1px solid gray;
+        margin: 5px;
+        padding: 10px;
+    }
+
+        .pager div.disabled {
+            opacity: 0.25;
+        }
+
+    .pager .pageNumbers a {
+        display: inline-block;
+        padding: 0 10px;
+        color: gray;
+    }
+
+        .pager .pageNumbers a.active {
+            color: orange;
+        }
+
+    .pager {
+        overflow: hidden;
+    }
+
+    .paginate-no-scroll .items div {
+        height: 250px;
+    }
+</style>
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-sm mb-2 mb-sm-0">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb breadcrumb-no-gutter">
+                    <li class="breadcrumb-item"><a class="breadcrumb-link" href="#/home">Home</a></li>
+                    <li class="breadcrumb-item"><a class="breadcrumb-link" href="#/admin/forum">Forum Master</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ForumData.FRM_TITLE}}</li>
+                </ol>
+            </nav>
+            <!--<h1 class="page-header-title ms-2">Counselllor Profile</h1>-->
+        </div>
+        <!-- End Col -->
+        <!-- End Col -->
+    </div>
+    <!-- End Row -->
+</div>
+
+
+<div class="row mt-2">
+    <div class="col-md-12">
+        <a class="btn btn-primary" href="#/admin/forum">Back</a>
+    </div>
+    
+</div>
+
+<div class="row mt-3">
+    <div class="col-md-8">
+        <div class="row ms-3">
+            <div class="col-md-8">
+                <div class="form-check-inline">
+                    <label class="form-check-label" for="formInlineCheck1"><input type="radio" id="formInlineCheck1" name="IS_APPROVED" ng-click="ApprovedRejectForum()" ng-checked="ForumData.IS_APPROVED=='YES'" value="YES" class="form-check-input"> Approve (default)</label>
+                </div>
+
+                <!-- End Form Check -->
+                <!-- Form Check -->
+                <div class="form-check-inline">
+                    <label class="form-check-label" for="formInlineCheck2"><input type="radio" id="formInlineCheck2" name="IS_APPROVED" value="NO" ng-click="ApprovedRejectForum()" ng-checked="ForumData.IS_APPROVED=='NO'" class="form-check-input"> Reject</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-check-inline float-end">
+                    <label class="form-check-label" for="IS_RECOMMENDED"><input type="checkbox" id="IS_RECOMMENDED" name="IS_RECOMMENDED" value="YES" ng-click="MarkHotTopic()" ng-checked="ForumData.IS_RECOMMENDED=='YES'" class="form-check-input"> Hot topic</label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="row mt-2 ms-3">
+    <div class="col-md-12 mt-2">
+        <h3>{{ForumData.FRM_TITLE}}</h3>
+    </div>
+    <div class="col-md-12">
+        <h6>{{ForumData.FRM_CAT_NAME}}</h6>
+    </div>
+    <div class="col-md-12">
+        <h6>Author {{ForumData.forum_user_name}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Posted on {{ForumData.created_at}}</h6>
+    </div>
+
+    <div class="col-md-8">
+        <p>{{ForumData.FRM_CONTENT}}</p>
+    </div>
+    <div class="col-md-8">
+        <div class="card">
+            <img class="card-img card-img-top" ng-src="{{ForumData.FRM_BANNER}}" alt="Card image cap">
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="row col-divider">
+                            <div class="col">
+                                <span class="h4">{{ForumData.FRM_VIEW_COUNT}} <i ng-class="{'bi-eye':ForumData.IS_VIEWED==0,'bi-eye-fill':ForumData.IS_VIEWED==1}"></i></span>
+                            </div>
+                            <!-- End Col -->
+
+                            <div class="col">
+                                <span class="h4">{{ForumData.FRM_LIKE_COUNT}} <i ng-click="LikedForum(ForumData.IS_LIKED)" ng-class="{'bi-hand-thumbs-up':ForumData.IS_LIKED==0,'bi-hand-thumbs-up-fill':ForumData.IS_LIKED==1}"></i> LIKE</span>
+                            </div>
+                            <!-- End Col -->
+
+                            <div class="col">
+                                <span class="h4"><i class="bi-flag" ng-class="{'bi-flag':ForumData.IS_REPORTED==0,'bi-flag-fill':ForumData.IS_REPORTED==1}"></i> REPORT</span>
+                            </div>
+                            <!-- End Col -->
+                        </div>
+                    </div>
+                    <div class="col-md-8" ng-init="isReply=false">
+                        <button class="btn btn-primary float-end" ng-class="{'show':!isReply,'hide':isReply}" ng-click="isReply=!isReply">Reply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8" ng-class="{'show':isReply,'hide':!isReply}">
+        <textarea rows="10" id="reply-text" class="form-control" style="resize:none"></textarea>
+    </div>
+    <div class="col-md-8 mt-2" ng-class="{'show':isReply,'hide':!isReply}">
+        <button class="btn btn-primary float-end" ng-click="ReplySumbit()">Submit</button>
+        <button class="btn btn-default float-end me-2" ng-click="isReply=!isReply">Cancel</button>
+    </div>
+    <div class="col-md-8 mt-2">
+        <h3>{{ForumData.comments.length}} Replies</h3>
+    </div>
+    <div class="col-md-8">
+        <div id="paginate">
+            <!--<div class="paginate">
+
+               <div class="card items" ng-repeat="item in ForumData.comments">
+            <div class="card-body">
+                <h6 class="card-title">{{item.FORUM_USER_NAME}} &nbsp;&nbsp;&nbsp;&nbsp; Posted on {{item.created_at}}</h6>-->
+                <!--<h6 class="card-title">#1</h6>-->
+                <!--<p class="card-text">{{item.FRM_COMMENT}}</p>
+        <div class="row card-text">
+            <div class="col-md-3">
+                <div class="row col-divider">
+                    <div class="col">
+                        <span class="h4">{{item.FRM_COMMNETS_LIKE_COUNT}} <i ng-class="{'bi-hand-thumbs-up':item.IS_LIKED==0,'bi-hand-thumbs-up-fill':item.IS_LIKED==1}"></i> LIKE</span>
+                    </div>-->
+                <!-- End Col -->
+                <!--<div class="col">
+            <span class="h4"><i class="bi-flag" ng-class="{'bi-flag':item.IS_REPORTED==0,'bi-flag-fill':item.IS_REPORTED==1}"></i> REPORT</span>
+        </div>-->
+                <!-- End Col -->
+                <!--</div>
+                    </div>
+                    <div class="col-md-9">
+                        <button class="btn btn-danger float-end" ng-click="DeleteForumComment(item.Id)">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="pager" class="pager">
+            <div class="firstPage">&laquo;</div>
+            <div class="previousPage">&lsaquo;</div>
+            <div class="pageNumbers"></div>
+            <div class="nextPage">&rsaquo;</div>
+            <div class="lastPage">&raquo;</div>
+        </div>
+            </div>-->
+        </div>
+    </div>
+</div>
+<script src="Content/assets/js/paginga.jquery.min.js"></script>
+
+

@@ -1,0 +1,69 @@
+﻿<div class="container container-cs">
+    <div class="row">
+        <div class="col-sm-12">
+
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {{importFormSettings.title}}
+                    <div class="pull-right text-right"></div>
+                </div>
+                <div class="panel-body">
+                    <div class="table-controls col-sm-12 col-lg-12" ng-show="isEdit">
+                        <div class="row">
+                            <div class="col-sm-4 created_by"><h4>    <strong>Created By:</strong> {{formDataInfo.created_by}}</h4></div>
+                            <div class="col-sm-4 created_at"><h4><strong>Created At:</strong> {{formDataInfo.created_at}}</h4></div>
+                            <div class="col-sm-4 updated_at"><h4><strong>Last Updated At:</strong> {{formDataInfo.created_at}}</h4></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-lg-12 text-left">
+                        <div id="tabs" class="">
+                            <ul class="nav nav-tabs" role="tablist" >
+                                <li role="presentation"  ng-class="{'active':$index==0}" ng-repeat="(key, value) in formFields track by $index"><a data-target="#page-{{$index}}" aria-controls="page-1" role="tab" data-toggle="tab" aria-expanded="true"> {{key}} <i class="fa"></i></a></li>
+                            </ul>
+                            <form name="myForm"
+                                  ng-submit="onEntryFormSubmit(formFields)"
+                                  class="render-wrap form-horizontal fv-form fv-form-bootstrap" id="customFormNew"
+                                  style="display: block" autocomplete="off" novalidate="novalidate">
+                                <button type="submit" class="fv-hidden-submit" style="display: none; width: 0px; height: 0px;"></button>
+                                <!--<input name="_token" type="hidden" value="mhDY2Y1ox2HlLH7zemhDnie27Z5jURmDAyrWJZ8D">-->
+                                <div class="content tab-content">
+                                    <div id="page-{{$index
+    }}" role="tabpanel" class="tab-pane" ng-class="{'active':$index==0}" ng-repeat="(key, value) in formFields track by $index">
+    <!--<div > {{key    }}</div>-->
+    <div ng-repeat="v in value">
+        <div ng-bind-html="v.labelHtml"></div>
+        <div class="clearfix"></div>
+        <div ng-bind-html="v.controlHtml | to_trustedControl"></div>
+
+    </div>
+
+</div>
+
+
+                                    <div class="clearfix"></div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="assets/js/bootstrap-datetimepicker.js"></script>
+<link rel="stylesheet" href="assets/css/bootstrap-datetimepicker.css">
+<script src="assets/js/jAutoCalc.js"></script>
+<script src="assets/formValidation/js/formValidation.min.js"></script>
+<script src="assets/js/jqbtk.min.js"></script>
+<script src="assets/formValidation/js/framework/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="assets/easy-autocomplete/easy-autocomplete.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="assets/js/bootstrap-slider.js"></script>
+<link rel="stylesheet" href="assets/captcha/MotionCAPTCHA/jquery.motionCaptcha.0.2.css">
+<link rel="stylesheet" href="assets/css/quill.snow.css">
+<script type="text/javascript" src="assets/js/quill.js"></script>
+

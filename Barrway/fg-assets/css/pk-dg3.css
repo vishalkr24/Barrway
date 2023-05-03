@@ -1,0 +1,157 @@
+* { box-sizing: border-box; } 
+
+.element-item {
+  position: relative;
+  float: left;
+  width: 100px;
+  height: 100px;
+  margin: 0px;
+  padding: 0px;
+  background: #888;
+  color: #262524;
+}
+.element-item > * {
+  margin: 0;
+  padding: 0;
+  margin-bottom: 3px;
+}
+.element-item .name {
+  position: relative;
+  top: 0px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 14px;
+  font-weight: normal;
+  /*max-height: 27px;*/
+  overflow: hidden;
+  word-wrap: break-word;
+  width: 100%;
+}
+.element-item .symbol {
+  position: relative;
+  top: 0px;
+  font-weight: bold;
+  color: white;
+}
+.element-item .number {
+  position: relative;
+  right: 8px;
+  top: 0px;
+}
+.element-item .weight {
+  position: relative;
+  top: 18px;
+  font-size: 13px;
+}
+.element-item .type {
+  position: relative;
+  top: 3px;
+  font-size: 12px;
+}
+.element-item.alkali          { background: #F00; background: hsl(   0, 100%, 50%); }
+.element-item.alkaline-earth  { background: #F80; background: hsl(  36, 100%, 50%); }
+.element-item.lanthanoid      { background: #FF0; background: hsl(  72, 100%, 50%); }
+.element-item.actinoid        { background: #0F0; background: hsl( 108, 100%, 50%); }
+.element-item.transition      { background: #0F8; background: hsl( 144, 100%, 50%); }
+.element-item.post-transition { background: #0FF; background: hsl( 180, 100%, 50%); }
+.element-item.metalloid       { background: #08F; background: hsl( 216, 100%, 50%); }
+.element-item.diatomic        { background: #00F; background: hsl( 252, 100%, 50%); }
+.element-item.halogen         { background: #F0F; background: hsl( 288, 100%, 50%); }
+.element-item.noble-gas       { background: #F08; background: hsl( 324, 100%, 50%); }
+/* ---- grid ---- */
+.grids {
+  background: #DDD;
+  max-width: 100%;
+}
+@media screen and (min-width: 315px) and (max-width: 515px) {
+   .grids {
+        background: #DDD;
+        max-width: 100%;
+        overflow-x:scroll;
+    } 
+}
+/* clear fix */
+.grids:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+/* ---- .grid-item ---- */
+.grid-item,.small-square, .small-vertical-rectangle{
+  float: left;
+  width: 100px;
+  overflow: hidden;
+  height: 100px;
+  padding:10px;
+}
+.grid-item--width1 { width: 100px; }
+.grid-item--height1 { height: 100px; }
+.grid-item--width2, .small-horizontal-rectangle, .medium-square, .small-vertical, .medium-vertical-rectangle { width: 200px; }
+.grid-item--height2, .medium-square { height: 200px; }
+.grid-item--large, .large-square, .medium-vertical{
+  width: 300px;
+  height: 300px;
+  background: #C90;
+}
+.btn-click{
+    float: left;
+    position: absolute;
+    margin-top: 100;
+}
+.small-vertical-rectangle{}
+.medium-horizontal-rectangle,.medium-vertical,.small-vertical-rectangle{height:200px !important;}
+.large-vertical-rectangle, .large-horizontal, .medium-horizontal-rectangle{width:300px !important;}
+.large-horizontal-rectangle, .medium-vertical-rectangle{height:300px !important;}
+.extra-large-horizontal-rectangle{width:500px !important;height: 400px !important;}
+.extra-large-vertical-rectangle{width:400px !important;height:500px !important;}
+.extra-large-square, .large-horizontal-rectangle, .extra-large-horizontal, .large-vertical-rectangle{
+    width: 400px;
+    height: 400px;
+    background: #C90;
+}
+.image_bg {
+  background: rgba(255,255,255,0.4);
+}
+.image_bg:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  background-position: center;
+  background-size: cover;
+  transition: all linear 0.3s;
+}
+@media screen and (min-width: 768px) {
+    .grid-item:not(.image_bg):hover{
+        cursor: pointer;
+    }
+}
+@media screen and (min-width: 26px) and (max-width: 700px) {
+    .image_bg {
+        opacity: 1;
+    }
+}
+.grid-sizer{
+    width: 100px;
+}
+.packery-drop-placeholder {
+    border: 3px dotted #333;
+    background: hsla(0, 0%, 0%, 0.3);
+}
+.modal-ax {
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba( 255, 255, 255, .8 ) url(assets/images/loader.gif) 50% 50% no-repeat;
+}
+.bottom-left{
+    position: absolute;
+    bottom: 4px;
+    left: 5px;
+}

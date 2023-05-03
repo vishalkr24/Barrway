@@ -1,0 +1,503 @@
+﻿
+<style>
+    form label.pull-left {
+        float: none !important;
+        margin-bottom: 0px !important;
+    }
+
+    .tab-content .tab-pane.active {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .tab-content .tab-pane .clearfix {
+        width: 100%;
+    }
+
+    .form-check-inline > label {
+        display: flex;
+    }
+
+        .form-check-inline > label > img {
+            max-height: 30px;
+            object-fit: cover;
+        }
+
+    .form-check > label > img {
+        margin-bottom: 5px;
+        /*max-height:  30px;*/
+    }
+    /*.tagify__input {
+        display: block;
+        width: 100%;
+        height: calc(1.5em + .75rem + 2px);
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }*/
+    .tags-look .tagify__dropdown__item {
+        display: inline-block;
+        border-radius: 3px;
+        padding: .3em .5em;
+        border: 1px solid #CCC;
+        background: #F3F3F3;
+        margin: .2em;
+        font-size: .85em;
+        color: black;
+        transition: 0s;
+    }
+
+    .tags-look .tagify__dropdown__item--active {
+        color: black;
+    }
+
+    .tags-look .tagify__dropdown__item:hover {
+        background: lightyellow;
+        border-color: gold;
+    }
+    .theme-darkPrimary .nav-item .nav-link {
+        border: 1px solid #c3c3c3;
+        background: #efefef;
+        margin-left: 5px;
+        border-radius: 0;
+        font-family: 'Montserrat-bold' !important;
+        color: #000;
+        font-size: 14px;
+    }
+
+        .theme-darkPrimary .nav-item .nav-link.active {
+            background: #3E246B;
+            color: #fff;
+        }
+
+    .theme-darkPrimary-page .nav-item .nav-link {
+        border: 1px solid #c3c3c3;
+        background: #efefef;
+        margin-left: 2px;
+        font-family: 'Montserrat-bold' !important;
+        font-size: 14px;
+    }
+
+        .theme-darkPrimary-page .nav-item .nav-link.active {
+            background: #3E246B;
+            color: #fff;
+        }
+    h6 {
+        font-size: 14px;
+    }
+
+</style>
+<div class="card card-default">
+    <div class="card-header">
+
+        <span> {{importFormSettings.title}}</span>
+
+        <small>
+
+            ({{(importFormSettings.applicationTitle==importFormSettings.title)?'*':importFormSettings.applicationTitle}},
+            {{(importFormSettings.topicTitle==importFormSettings.title)?'*':importFormSettings.topicTitle}})
+        </small><!--href="{{InformationLink.url}}"-->
+        <a ng-click="gotoInformationPage()" ng-show="InformationLink.isAllow!='true' && importFormSettings.informationFormID!=0" style="vertical-align: middle;" title="Show information page"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+        <div class="pull-right text-right rightbtn">
+            <form class="pull-left">
+                <select class="form-control mr-2" id="ddlLanguage" ng-model="importFormSettings.language" ng-change="selectFormLanguage(importFormSettings.language)" name="language">
+                    <option value="{{l.Id}}" ng-repeat="l in languageList track by $index">{{l.language}}</option>
+
+                </select>
+            </form>
+            <!--<a href="https://geligulu.com/form-generator/public/index.php" class="btn btn-primary pull-left redirectMenuPage" title="Home"><i class="fa fa-home"></i></a>
+            <a href="https://geligulu.com/form-generator/public/index.php/chat/summary" class="btn btn-primary pull-left chatSummary" title="Chat"><i class="fa fa-commenting"></i></a>-->
+            <a onclick="showQR()" id="qrCodeNew" class="btn btn-primary pull-left" title="QR Code"><i class="fa fa-qrcode"></i></a>
+            <!--<a href="javascript:;" class="btn pull-left btn-success" id="configurator" data-toggle="modal" data-target="#tabulatorConfigModal" title="Tabulator Configurations"><i class="fa fa-sliders-h"></i></a>
+            <a href="javascript:;" id="redirectMenuPageNew" class="btn btn-warning pull-left" title="Add to packery menu"><i class="fa fa-bookmark"></i></a>
+            <a href="javascript:;" id="pageActionBtn" class="btn btn-primary pull-left" data-toggle="modal" data-target="#pageActionModal" title="Page Actions"><i class="fa fa-cog"></i></a>-->
+            <a href="javascript:;" class="pull-left hide-page-actions ml-10" title="Hide Page Actions"><i class="glyphicon glyphicon-chevron-up"></i></a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div ng-repeat="m_nm in macros">
+                <a class="btn btn-primary" ng-click="ExcecuteMacro(m_nm)">
+                    <i class="fa fa-plus ">
+                    </i> <span class="action-name">{{m_nm}}</span>
+                </a>
+            </div>
+            <div class="table-controls col-sm-12 col-lg-12" ng-show="formDataInfo.created_byname!=undefined && (!isSaveEvent || isEdit)">
+                <div class="row">
+                    <div class="col-sm-4 created_by"><h6>Created By:<strong> {{(formDataInfo.userID==userDetail.Id)?'You':formDataInfo.created_byname}}</strong> </h6></div>
+                    <div class="col-sm-4 created_at"><h6>Created At:  <strong>{{ToCustomDateTime(formDataInfo.created_at)}} </strong></h6></div>
+                    <div class="col-sm-4 updated_at"><h6>Last Updated At: <strong> {{ToCustomDateTime(formDataInfo.updated_at)}}</strong> </h6></div>
+                    
+                    <div class="col-sm-4 PaymentStatus" ng-if="PPControl==true" ng-switch="formDataInfo.PaymentStatus">
+                        <h4 ng-switch-when="1"><strong>Payment :</strong> Completed</h4><!--Payment status-->
+                        <h4 ng-switch-default><strong>Payment :</strong>Not Done</h4>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-lg-12 text-left" ng-show="formDataInfo.created_byname!=undefined && (!isSaveEvent || isEdit)">
+                <a class="btn btn-primary btn-sm" ng-disabled="formDataInfo.presId==0" ui-sref="editFormEntryData({formId:currentFormId,formGroupKey:formGroupKey,Id:formDataInfo.presId})" title="Previous"><i class="fa fa-backward"></i></a>
+                <a class="btn btn-primary btn-sm" ng-disabled="formDataInfo.nextId==0" ui-sref="editFormEntryData({formId:currentFormId,formGroupKey:formGroupKey,Id:formDataInfo.nextId})" title="Next">
+
+                    <i class="fa fa-forward"></i>
+                </a>
+            </div>
+            <div id="tabs" class="col-sm-12 col-lg-12 text-left">
+                <!--<ul class="nav nav-tabs" role="tablist" ng-show="pageLength>1">
+                    <li role="presentation" ng-class="{ 'active': $index == 0}" ng-repeat="(key, value) in formFields track by $index"><a data-target="#page-{{$index}}" aria-controls="page-1" role="tab" data-toggle="tab" aria-expanded="true">{{key}}<i class="fa"></i></a></li>
+                </ul>-->
+
+                <input type="hidden" name="formGroupKey" value="3" id="formGroupKey">
+                <form name="myForm" class="content tab-content" id="customFormNew" autocomplete="off">
+
+                    <!--{{myForm.$valid}}-->
+                    <button type="submit" class="fv-hidden-submit" style="display: none; width: 0px; height: 0px;"></button>
+
+                    <div ng-bind-html="htmlContentData | to_trustedControl"></div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="tabulatorModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+
+                <h4 class="modal-title">
+
+                    {{allReferrenceData.formDetails.title}}
+
+                    <small>
+                        ({{(allReferrenceData.formDetails.applicationTitle==allReferrenceData.formDetails.title)?'*':allReferrenceData.formDetails.applicationTitle}},
+                        {{(allReferrenceData.formDetails.topicTitle==allReferrenceData.formDetails.title)?'*':allReferrenceData.formDetails.topicTitle}})
+                    </small>
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="formID" />
+                <input type="hidden" name="modal-one-to-many" value="0" />
+                <input type="hidden" name="tabulator-id" />
+                <input type="hidden" name="modal-field-map" />
+                <div id="tabs"></div>
+                <div id="page-tabs" class="ui-tabs ui-corner-all ui-widget ui-widget-content" ng-if="tabList.length>0">
+                    <ul class="ui-tabs-nav ui-corner-all ui-helper-reset ui-helper-clearfix ui-widget-header">
+                        <li tabindex="-1" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab" id="tab-{{$index}}" ng-repeat="l in tabList track by $index" ng-click="selectedTabFilter(l,$index)">
+                            <a data-target="#{{l.value}}" tabindex="-1" class="ui-tabs-anchor">{{l.label}}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tabulator-section">
+                    <div id="form-table"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="get-tabulator-values">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="galleryModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h4 class="modal-title"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<link href="../../assets/css/bootstrap.min.css" rel="stylesheet" />-->
+<script src="assets/js/bootstrap-datetimepicker.js"></script>
+<link rel="stylesheet" href="assets/css/bootstrap-datetimepicker.css">
+<script src="assets/js/jAutoCalc.js"></script>
+<!--<script src="assets/formValidation/js/formValidation.min.js"></script>-->
+<script src="assets/js/jqbtk.min.js"></script>
+<!--<script src="assets/formValidation/js/framework/bootstrap.min.js"></script>-->
+<link rel="stylesheet" href="assets/easy-autocomplete/easy-autocomplete.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="assets/js/bootstrap-slider.js"></script>
+<link rel="stylesheet" href="assets/captcha/MotionCAPTCHA/jquery.motionCaptcha.0.2.css">
+<link rel="stylesheet" href="assets/css/quill.snow.css">
+<script type="text/javascript" src="assets/js/quill.js"></script>
+<!-- <script src="assets/js/qrcode.js"></script>
+<script src="assets/js/jquery.qrcode.js"></script> -->
+<script src="Scripts/jquery.cascadingdropdown.min.js"></script>
+<script>
+    $(document).ready(function () {
+        //setTimeout(function () {
+        //    var inputTest = localStorage.getItem('objectToPass');
+        //    console.log(inputTest, 'inputTest');
+        //    var mapDiv = localStorage.getItem('mapDiv');
+        //    $("#" + mapDiv).val(inputTest);
+        //    document.getElementsByName(mapDiv)[0].value = inputTest;
+        //    console.log(mapDiv, 'mapDiv');
+        //    localStorage.removeItem('objectToPass');
+
+        //}, 2000);
+       // document.getElementsByName(mapDiv)[0].value = inputTest;
+        //$('#form-table').tabulator({ document.getElementsByName(mapDiv)[0].value  = inputTest;
+        //    height: '60%',
+        //    layout: "fitDataFill",
+        //    selectable: $("input[name=multiple_records]").val() !== '1' ? true : 1
+        //});
+       // var uploadPath = "", popupTabulator, tabulators;
+        $(".delete-tabulator-row-hard").click(function (event) {
+            event.preventDefault();
+            var tabulatorID = $(this).data('tabulator');
+            var formID = $(this).data('reference-form-id');
+            var counter = 0;
+            var selectedRows = $("#" + tabulatorID).tabulator("getSelectedRows");
+
+            var confirm = window.confirm("Are you sure to delete the selected record(s)?");
+            if (confirm && selectedRows.length > 0) {
+                selectedRows.forEach(function (row) {
+                    var formGroupKey = row.getIndex();
+
+                    $.ajax({
+                        type: "POST",
+                        url: 'tempURLlink/form-generator/public/tempRecordDelete/' + formGroupKey,
+                        data: { formId: formID },
+                        async: false,
+                        success: function (deleted) {
+                            if (deleted == 1) {
+                                $("#" + tabulatorID).tabulator("deselectRow", formGroupKey);
+                                row.delete();
+                                counter++;
+                            }
+                        }
+                    });
+                });
+            }
+            if (counter > 0) {
+                alert(counter + "@Resources.Resource.Recordsdeletedsuccessfully");
+                $("#" + tabulatorID).tabulator("redraw");
+            } else {
+                alert("Record(s) could not be deleted!");
+            }
+            setTabulatorCalc(tabulatorID);
+        });
+        if (getParameterByName('optid') != null) {
+            if (getParameterByName('optid') > 0) {
+                updatetable = $("#lblFormName").val().trim().replace('_EDIT', '');
+                $.ajax({
+                    url: '/FormMaster/GetTableData',
+                    type: "POST",
+                    data: { tableName: updatetable, optionalId: $('#hfIsOptId').val() },
+                    success: function (result) {
+                        console.log(result);
+                        $('#customForm :input').each(function () {
+                            $this = $(this);
+                            $.each(result[0], function (key, value) {
+
+
+                                if (key.trim() == $this.attr('id')) {
+                                    if ($this.parent().hasClass('date')) {
+                                        var date = new Date((parseInt(result[0][key].substr(6))))
+                                        date.setDate(date.getDate() + 1)
+                                        console.log(date.toString());
+
+                                        showdate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getUTCDate());
+                                        $this.val(showdate);
+                                    }
+                                    else
+                                        $this.val(result[0][key]);
+
+                                }
+
+                            });
+
+
+                        });
+
+
+
+
+                        $('select').not('#ddlLanguage').each(function () {
+                            $this = $(this);
+                            $.each(result[0], function (key, value) {
+
+                                if ($this.attr('name') != 'undefined') {
+                                    if (key.trim() == $this.attr('name').replace('[]', '')) {
+
+                                        $this.val(result[0][key]);
+
+                                    }
+                                }
+
+
+                            });
+
+
+
+
+
+                        });
+                    },
+                    error: function (err) {
+                        //alert(err.statusText);
+                    },
+                    complete: function () {
+                        DisableCtrls();
+                    }
+                });
+            }
+
+
+        }
+    });
+    function DisableCtrls() {
+        if ($("#hfIsOptId").val() > 0) {
+
+            $('#FormBody .form-group select,input[type=text],input[type=number],textarea').attr('readonly', 'readonly');
+            $('#FormBody .form-group select,input[type=text],input[type=number],textarea,.date').addClass('form-control editable-area')
+            $('#FormBody .form-group select').attr('disabled', 'disabled');
+            $('#FormBody .form-group .date input[type=text]').attr('disabled', 'disabled');
+            $('#FormBody .form-group  input[type=email]').attr('disabled', 'disabled');
+            $('#FormBody .form-group  input[type=password]').attr('disabled', 'disabled');
+            $('#btn_save').removeClass('btn-success').addClass('btn-edit');
+            $('#btn_save').attr('value', '@Resources.Resource.Edit');
+        }
+
+    }
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+    $(document).ready(function () {
+
+    });
+</script>
+
+
+
+<!---Queue Model popup after saving-->
+
+<style>
+    #printThis .tm-val {
+        display: inline-block;
+        vertical-align: bottom;
+        padding: 0px 7px;
+        border-radius: 2px;
+    }
+
+    #printThis .tm-name {
+        font-weight: 600;
+        padding: 0 7px;
+        display: inline-block;
+        vertical-align: bottom;
+        font-size: 16px;
+    }
+</style>
+<script>
+    //document.getElementById("printTicket").onclick = function () {
+    //    printElement(document.getElementById("printThis"));
+    //};
+    function printElement() {
+        var elem = document.getElementById("printThis");
+        var domClone = elem.cloneNode(true);
+        var $printSection = document.getElementById("printSection");
+        if (!$printSection) {
+            var $printSection = document.createElement("div");
+            $printSection.id = "printSection";
+            document.body.appendChild($printSection);
+        }
+        $printSection.innerHTML = "";
+        $printSection.appendChild(domClone);
+        window.print();
+
+    }
+</script>
+<script type="text/ng-template" id="autogenerateModelUp.html">
+
+
+
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-light ticket-container">
+            <div class="jss3726" ng-include="'bg-svg.html'"></div>
+
+            <div class="modal-body" id="printThis">
+                <p><span class="tm-name">Current Position:</span><span id="model-current-position" class="tm-val">    {{autoGeneratedIdTemp.currentposition}}</span></p>
+                <br>
+                <p><span class="tm-name">User Name:</span><span class="tm-val">{{userDetail.name}}</span></p>
+                <p><span class="tm-name">Current Time:</span><span class="tm-val">{{currentDateTime | date:'yyyy-MM-dd hh:mm a'}}</span></p>
+                <br>
+                <p>
+                    <span class="tm-name">Your Number:</span><span class="tm-val" style="background-color: yellowgreen">
+                        {{autoGeneratedIdTemp.oldId}}
+                    </span>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <a ui-sref="queueRecords({topicId:importFormSettings.topicId})" class="btn btn-primary pull-left">
+                    <i class="fa fa-caret-left" aria-hidden="true"></i> Go back to Summary
+                </a>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="insertNewRecordQueue()"><i class="fa fa-plus" aria-hidden="true"></i> Insert another record</button>
+                <button type="button" class="btn btn-primary" id="printTicket" onclick="printElement();angular.element(this).scope().insertNewRecordQueue()"><i class="fa fa-print" aria-hidden="true"></i> Print</button>
+            </div>
+
+        </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="payment.html">
+
+
+
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-light ticket-container">
+            <div class="jss3726" ng-include="'bg-svg.html'"></div>
+
+            <div class="modal-body" id="printThis">
+                <p><span class="tm-name">Payment Amount:</span><span id="model-current-position" class="tm-val">    {{amount}} {{paypal_currency}}</span></p>
+                <br>
+                <p><span class="tm-name">Payment Method:</span><span class="tm-val">PayPal</span></p>
+                <!--<p><span class="tm-name">Current Time:</span><span class="tm-val">{{currentDateTime | date:'yyyy-MM-dd hh:mm a'}}</span></p>-->
+            </div>
+            <div class="modal-footer">
+			 <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="proceedtoPay(importFormSettings.formId,rec_id,amount,paypal_id,paypal_currency)"><i class="fa fa-credit-card" aria-hidden="true"></i> Proceed</button>
+                
+                <!-- <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="proceedtoPay(importFormSettings.formId,rec_id,amount)"><i class="fa fa-credit-card" aria-hidden="true"></i> Proceed</button> -->
+                <a ui-sref="records({formId:importFormSettings.formId})" class="btn btn-primary pull-left">
+                    <i class="fa" aria-hidden="true"></i> Cancel
+                </a>
+                <!--<button type="button" class="btn btn-primary" id="printTicket" onclick="printElement();angular.element(this).scope().insertNewRecordQueue()"><i class="fa fa-print" aria-hidden="true"></i> Print</button>-->
+            </div>
+
+        </div>
+    </div>
+</script>
+
+<style>
+    .tabulator-footer{
+        display:none;
+    }
+</style>

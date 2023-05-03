@@ -1,0 +1,33 @@
+﻿
+            <div class="card card-default">
+                <div class="card-header">
+
+                    {{applicationName}}
+
+
+                    <a target="_blank" href="" style="vertical-align: middle;" title="Show information page">
+                        <i class="fa fa-question-circle" aria-hidden="true"></i>
+                    </a>
+
+                    <span id="menuName" class="hidden">Form Roles</span>
+                    <!--<span class="hidden" id="menuDescription">This is the description of the form.</span>-->
+                    <input type="hidden" name="tabulator" value="FormRoles">
+                    <h6 ng-if="isShowTabulatorMessage">Group has not been set to this form.</h6>
+                </div>
+                <div class="card-body" ng-show="isShowTabulator">
+                    <div class="form-group">
+                        <div class="tabulator-section">
+                            <div id="tabulator-applicationroles">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="myModal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- Content will be loaded here from "remote.php" file -->
+                    </div>
+                </div>
+            </div>
+ 
