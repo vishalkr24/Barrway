@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewBag.Title = "Calandar Master";
+    Layout = "~/Views/Shared/_BusinessAdminLayout.cshtml";
+}
+
+
+<main id="content" role="main" class="main">
+    <div class="content container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="bredcrump">
+                    <span><a class="lbl-company-name" href="#">Company name</a> / <a href="#">Calendar Master</a> </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h2><b>Calendar Master</b></h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div id="CalendarMaster">
+                    <table id="CalendarMasterTable">
+                        <thead>
+                            <tr>
+                                <td>Company Code</td>
+                                <td>Company Name</td>
+                                <td>Calendar Name</td>
+                                <td>Calendar Type</td>
+                                <td>Create Date</td>
+                                <td>Update Date</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+@section scripts{
+    <script src="~/Scripts/BusinessScripts/CalendarMaster.js"></script>    
+}
