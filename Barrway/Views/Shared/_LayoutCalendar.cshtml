@@ -308,62 +308,38 @@
 
             <div class="navbar-nav-wrap-content-end">
                 <!-- Navbar -->
-                <ul class="navbar-nav">
-                    <li class="nav-item d-none d-sm-inline-block">
-                        <!-- back to marketplace -->
-                        <button type="button" class="btn btn-ghost-secondary" id="backtomarketplace" data-bs-dropdown-animation>
-                            back to Market place
-                        </button>
-                        <!-- End Notification -->
+                <ul class="navbar-nav custome-nav no-underline">
+                    <!-- Dashboards -->
+                    <li class="hs-has-sub-menu nav-item">
+                        <a id="" class="hs-mega-menu-invoker nav-link active" href="#" role="button"> Home</a>
                     </li>
-
-                    <li class="nav-item d-none d-sm-inline-block">
-                        <!-- Apps -->
-                        <div class="dropdown">
-                            <button type="button" class="btn btn-ghost-secondary" id="navbarAppsDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-dropdown-animation>
-                                <i class="bi bi-globe"></i> English
-                            </button>
-
-                            <div class="dropdown-menu dropdown-menu-end dropdown-card navbar-dropdown-menu navbar-dropdown-menu-borderless" aria-labelledby="navbarAppsDropdown">
-                                <div class="card">
-                                    <!-- Header -->
-                                    <!-- <div class="card-header">
-                                      <h4 class="card-title">Web apps &amp; services</h4>
-                                    </div> -->
-                                    <!-- End Header -->
-                                    <!-- Body -->
-                                    <div class="card-body">
-                                        <a class="dropdown-item" href="#">
-                                            English
-                                        </a>
-
-                                        <a class="dropdown-item" href="#">
-                                            Chinees
-                                        </a>
-
-
-                                    </div>
-                                    <!-- End Body -->
-                                    <!-- Footer -->
-                                    <!-- <a class="card-footer text-center" href="#">
-                                      View all apps <i class="bi-chevron-right"></i>
-                                    </a> -->
-                                    <!-- End Footer -->
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End Apps -->
+                    <!-- End Dashboards -->
+                    <!-- Pages -->
+                    <li class="hs-has-sub-menu nav-item">
+                        <a id="" class="hs-mega-menu-invoker nav-link " href="#" role="button">My Business </a>
                     </li>
+                    <!-- End Pages -->
+                    <!-- Apps -->
+                    <li class="hs-has-sub-menu nav-item">
+                        <a id="" class="hs-mega-menu-invoker nav-link" href="#" role="button">sMarket Place</a>
+                    </li>
+                    <!-- End Apps -->
 
-                    <li class="nav-item d-none d-sm-inline-block">
-                        <!-- Activity -->
-                        <span style="color:#222222"><b>B$ <span>1,000</span></b></span>
+                    <li class="nav-item">
+                        <a class="nav-link " href="#">
+                            Contact
+                        </a>
                     </li>
 
                     <li class="nav-item">
+                        <a class="nav-link " href="#" data-placement="left">
+                            Pricing
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <!-- Account -->
                         <div class="dropdown">
-                            <a class="navbar-dropdown-account-wrapper" href="javascript:;" id="accountNavbarDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" data-bs-dropdown-animation>
+                            <a class="navbar-dropdown-account-wrapper" href="javascript:;" id="accountNavbarDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" data-bs-dropdown-animation="">
                                 <div class="avatar avatar-sm avatar-circle">
                                     <img class="avatar-img" src="assets/img/160x160/img6.jpg" alt="TL">
                                     <span class="avatar-status avatar-sm-status avatar-status-success"></span>
@@ -436,7 +412,7 @@
 
                                 <div class="dropdown-divider"></div>
 
-                                <form id="mySignOutForm" name="mySignOutForm" method="post" action="@Url.Action("Logout","Account")">
+                                <form id="mySignOutForm" name="mySignOutForm" method="post" action="/Account/Logout" class="ng-pristine ng-valid">
                                     <a class="dropdown-item" href="#" onclick="$('#mySignOutForm').submit()">Sign out</a>
                                 </form>
                             </div>
@@ -454,7 +430,11 @@
     <!-- Navbar Vertical -->
     <aside class="js-navbar-vertical-aside navbar navbar-vertical-aside navbar-vertical navbar-vertical-fixed navbar-expand-xl navbar-bordered bg-black  ">
         <div class="navbar-vertical-container">
-            <div class="navbar-brand d-flex justify-content-center">
+            <div class="navbar-brand cal-name">
+
+                <select class="calendar-name">
+                    <option>Calendar name</option>
+                </select>
 
                 <!-- Navbar Vertical Toggle -->
                 <!-- <div class="d-flex justify-content-end">
@@ -569,6 +549,29 @@
 
     <main id="content" role="main" class="main">
         <!-- Content -->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="main-log-com-name">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="logo-comapany-name">
+                                    <img src="" alt="Logo" />
+                                    <span>Company name</span>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <p class="btcd">
+                                    <a href="#">back to Company dashboard</a>
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                
+            </div>
+        </div>
         <div class="content container-fluid" ui-view="content">
             @RenderBody()
             <!-- End Row -->
