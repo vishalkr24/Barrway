@@ -188,6 +188,9 @@
     <script>
         localStorage.setItem("detail", '{"Id":30314,"firebase_uid":null,"chatId":"jXZMF2dU3Uyz2okULv6shQuu","uid":"kk53yimj","fullName":"AG Ashutosh Shukla","name":"augursuser","email":"formgeneratorclient@gmail.com","emailVerified":"0","emailCheck":"0","isEmailCheck":false,"isQuickSignUp":false,"password":"","newPassword":null,"password_confirmation":null,"confirmPassword":null,"isUpdatePassword":0,"remember_token":null,"userIcon":"user-avatar-with-check-mark.png","phoneNumber":null,"phoneVerified":"No","isPhoneVerified":null,"phoneCheck":"No","isPhoneCheck":false,"role":1,"status":"Active","planID":9,"planSequence":"1,2,5,13","tooltipSequence":null,"FB_id":null,"GPlus_id":null,"created_ip":"","groupId":0,"checkType":null,"title":null,"verificationCode":null,"isVerificationReq":false,"ayCheck":0,"specialAccess":"1","reset_token":null,"reset_valid_till":null,"isUsable":0,"action":0,"created_by":0,"updated_by":0,"created_at":"Jan 20 2021  3:32PM","newcreated_at":null,"updated_at":"Jan 20 2021  3:32PM","newupdated_at":null,"res":1,"Message":"Login Success|登錄成功|登录成功","IsActive":false,"IsDeleted":false,"IsUnique":false,"page":0,"size":0,"total_records":0,"last_page":0,"page_records":0,"filters":null,"sorters":null,"query":null}');
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="~/Scripts/CalendarScripts/CalendarLayoutManage.js"></script>
+    <script src="~/Scripts/BusinessScripts/Common/CommonFunctions.js"></script>
     <!--end setup-->
 </head>
 
@@ -432,8 +435,8 @@
         <div class="navbar-vertical-container">
             <div class="navbar-brand cal-name">
 
-                <select class="calendar-name">
-                    <option>Calendar name</option>
+                <select class="calendar-name select-company" onchange="changeCompany()" id="navbar-company-selector">
+                    
                 </select>
 
                 <!-- Navbar Vertical Toggle -->
@@ -557,7 +560,7 @@
                             <div class="col-md-7">
                                 <div class="logo-comapany-name">
                                     <img src="" alt="Logo" />
-                                    <span>Company name</span>
+                                    <span class="lbl-company-name">Company name</span>
                                 </div>
                             </div>
                             <div class="col-md-5">
