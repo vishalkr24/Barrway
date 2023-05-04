@@ -217,13 +217,16 @@ function getCompanyPhotoAlbum(companyId) {
     return data;
 }
 
-function GetCompanyCalendars(companyId) {
+function GetCompanyCalendars(companyId, calendarCategoryId, calendarSubCategoryId) {
     var data;
+    
     $.ajax({
-        url: "/BusinessAdmin/GetCompanyCalendarByCompanyId/",
+        url: "/BusinessAdmin/GetCompanyCalendars/",
         type: "GET",
         data: {
-            CompanyId: companyId
+            CompanyId: companyId,
+            CalendarCategoryId: calendarCategoryId,
+            CalendarSubCategoryId: calendarSubCategoryId
         },
         async: false,
         success: function (response) {

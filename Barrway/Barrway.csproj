@@ -439,6 +439,8 @@
     <Content Include="assets\js\demo.js" />
     <Content Include="assets\js\hs.theme-appearance-charts.js" />
     <Content Include="assets\js\hs.theme-appearance.js" />
+    <Content Include="assets\js\paginga.jquery.js" />
+    <Content Include="assets\js\paginga.jquery.min.js" />
     <Content Include="assets\js\theme.min.js" />
     <Content Include="assets\js\vendor.min.js" />
     <Content Include="assets\svg\brands\atlassian-icon.svg" />
@@ -2931,10 +2933,12 @@
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\BusinessScripts\AdminDashboard.js" />
     <Content Include="Scripts\BusinessScripts\AdminLayoutManager.js" />
+    <Content Include="Scripts\BusinessScripts\CalendarMaster.js" />
     <Content Include="Scripts\BusinessScripts\Common\CommonFunctions.js" />
     <Content Include="Scripts\BusinessScripts\ManageCompanyWebsite.js" />
     <Content Include="Scripts\BusinessScripts\SetupCompanyCalendar.js" />
     <Content Include="Scripts\BusinessScripts\SetupCompanyProfile.js" />
+    <Content Include="Scripts\CalendarScripts\CalendarLayoutManage.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
@@ -3021,6 +3025,7 @@
     <Content Include="Scripts\translation\translation_ch.json" />
     <Content Include="Scripts\translation\translation_en.json" />
     <Content Include="Scripts\translation\translation_tc.json" />
+    <Content Include="Views\BusinessAdmin\CalendarMaster.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

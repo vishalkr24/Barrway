@@ -188,6 +188,56 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> GetCompanyCalendars(GenerateDynamicFormData data, string CompanyId, string CalendarCategoryId, string CalendarSubCategoryId)
+        {
+            
+            string column = "", dir = "";
+            if (data.sorters != null && data.sorters.Count() > 0)
+            {
+                column = data.sorters.FirstOrDefault().field;
+                dir = data.sorters.FirstOrDefault().dir;
+            }
+            else
+            {
+                column = "created_at";
+                dir = "desc";
+            }
+
+            string filter = "";
+
+            if (!string.IsNullOrEmpty(CalendarCategoryId))
+            {
+                filter += " and calendar.CALENDAR_CATEGORY_ID = '" + CalendarCategoryId + "' ";
+            }
+
+            if (!string.IsNullOrEmpty(CalendarSubCategoryId))
+            {
+                filter += " and calendar.CALENDAR_SUB_CATEGORY_ID = '" + CalendarSubCategoryId + "' ";
+            }
+
+            int PageSize = data.size > 0 ? data.size : 20;
+            int PageNumber = data.page > 0 ? data.page : 1;
+
+            string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+                                    SELECT calendar.[Id]      ,calendar.[created_at]      ,calendar.[updated_at]      ,calendar.[created_by]      ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,calendar.[CALENDAR_CATEGORY_ID], category.CALENDAR_CATEGORY_NAME, subCategory.CALENDAR_SUB_CATEGORY_NAME      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
+                                    join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE 
+                                    join CALENDAR_CATEGORY_MASTER_1929 category on category.Id = calendar.CALENDAR_CATEGORY_ID
+									join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendar.CALENDAR_SUB_CATEGORY_ID
+									where company.Id = '{CompanyId}' {filter}
+                                    )
+                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+            var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+            if (result.Count > 0)
+            {   
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
         public async Task<AddUpdateDelete> GetDefaultCompanyByBusinessId(string BusinessAccountId)
         {
             string query = "SELECT [Id]      ,[created_at]      ,[updated_at]      ,[created_by]      ,[updated_by]     ,[BUSINESS_ACCOUNT_ID]      ,[COMPANY_CODE]      ,[COMPANY_NAME_ENGLISH]      ,[COMPANY_NAME_CHINESE]      ,[COMPANY_LOGO_NAME]      ,[COMPANY_LOGO_PATH]      ,[COMPANY_BANNER_NAME]      ,[COMPANY_BANNER_PATH]      ,[COMPANY_PHONE]      ,[COMPANY_ADDRESS]      ,[FACEBOOK_URL]      ,[INSTAGRAM_URL]      ,[WECHAT_URL]      ,[TWITTER_URL]      ,[PAGE_URL]      ,[COMPANY_DESCRIPTION]      ,[COMPANY_SERVICE]      ,[TAGS]      ,[IS_SEARCHABLE_IN_MARKETPLACE]      ,[COMPANY_CATEGORY_ID]      ,[COMPANY_SUB_CATEGORY_ID],     [COMPANY_EMAIL]      ,[COUNTRY_ID]      ,[CITY_ID]      ,[DISTRICT_ID]      ,[TOTAL_WEBSITE_VISITS]      ,[IS_DEFAULT]  FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] where BUSINESS_ACCOUNT_ID = '" + BusinessAccountId + "' and IS_DEFAULT = 'Y'";
