@@ -173,14 +173,13 @@ namespace Barrway.Service.Repository
         {
             string query = $@"SELECT calendar.[Id]      ,calendar.[created_at]      ,calendar.[updated_at]      ,calendar.[created_by]      ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                                 join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE 
-                                where company.Id = '${CompanyId}'";                                                                  
+                                where company.Id = '{CompanyId}'";                                                                  
 
             List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
             if (result.Count > 0)
             {
-                var calendar = result.FirstOrDefault();
-                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = calendar };
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
             }
             else
             {
@@ -188,9 +187,18 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> GetCompanyCalendars(GenerateDynamicFormData data, string CompanyId, string CalendarCategoryId, string CalendarSubCategoryId)
+
+        public async Task<AddUpdateDelete> GetCompanyCalendars(GenerateDynamicFormData data, string CompanyId)
         {
-            
+            Dictionary<string, string> filters = new Dictionary<string, string>() {
+                    { "COMPANY_CODE","company.COMPANY_CODE"},
+                    { "COMPANY_NAME_ENGLISH","company.COMPANY_NAME"},
+                    { "CALENDAR_NAME","calendar.CALENDAR_NAME_ENGLISH"},
+                    { "CALENDAR_CATEGORY_NAME","category.CALENDAR_CATEGORY_NAME"},
+                    { "created_at","calendar.created_at"},
+                    { "updated_at","calendar.updated_at"},
+            };
+
             string column = "", dir = "";
             if (data.sorters != null && data.sorters.Count() > 0)
             {
@@ -203,27 +211,33 @@ namespace Barrway.Service.Repository
                 dir = "desc";
             }
 
-            string filter = "";
-
-            if (!string.IsNullOrEmpty(CalendarCategoryId))
+            List<string> applyFilter = new List<string>();
+            if (data.filters != null && data.filters.Count() > 0)
             {
-                filter += " and calendar.CALENDAR_CATEGORY_ID = '" + CalendarCategoryId + "' ";
+                foreach (var item in data.filters)
+                {
+                    if (filters.Any(x => x.Key == item.field) && !string.IsNullOrEmpty(item.value))
+                    {
+                        var filter = filters[item.field];
+
+                        filter = filter + " like N'%" + item.value + "%'";
+                        applyFilter.Add(filter);
+                    }
+                }
             }
 
-            if (!string.IsNullOrEmpty(CalendarSubCategoryId))
-            {
-                filter += " and calendar.CALENDAR_SUB_CATEGORY_ID = '" + CalendarSubCategoryId + "' ";
-            }
+            string applyFilterQuery = string.Join(" and ", applyFilter);
+            applyFilterQuery = applyFilterQuery.TrimEnd("and ".ToCharArray());
 
             int PageSize = data.size > 0 ? data.size : 20;
             int PageNumber = data.page > 0 ? data.page : 1;
 
             string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
-                                    SELECT calendar.[Id]      ,calendar.[created_at]      ,calendar.[updated_at]      ,calendar.[created_by]      ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,calendar.[CALENDAR_CATEGORY_ID], category.CALENDAR_CATEGORY_NAME, subCategory.CALENDAR_SUB_CATEGORY_NAME      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
+                                    SELECT calendar.[Id]      ,calendar.[created_at]      ,calendar.[updated_at]      ,calendar.[created_by], company.[COMPANY_NAME_ENGLISH]      ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,calendar.[CALENDAR_CATEGORY_ID], category.CALENDAR_CATEGORY_NAME, subCategory.CALENDAR_SUB_CATEGORY_NAME      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                                     join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE 
                                     join CALENDAR_CATEGORY_MASTER_1929 category on category.Id = calendar.CALENDAR_CATEGORY_ID
 									join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendar.CALENDAR_SUB_CATEGORY_ID
-									where company.Id = '{CompanyId}' {filter}
+									where company.Id = '{CompanyId}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
                                     )
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
             var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
