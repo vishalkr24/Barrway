@@ -224,9 +224,7 @@ function GetCompanyCalendars(companyId, calendarCategoryId, calendarSubCategoryI
         url: "/BusinessAdmin/GetCompanyCalendars/",
         type: "GET",
         data: {
-            CompanyId: companyId,
-            CalendarCategoryId: calendarCategoryId,
-            CalendarSubCategoryId: calendarSubCategoryId
+            CompanyId: companyId
         },
         async: false,
         success: function (response) {

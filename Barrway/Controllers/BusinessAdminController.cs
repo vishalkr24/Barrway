@@ -587,7 +587,7 @@ namespace Barrway.Controllers
                 }
                 else
                 {
-                    Directory.Delete(folderPath);
+                    Directory.Delete(folderPath, true);
                     Directory.CreateDirectory(folderPath);
                 }
 
@@ -597,12 +597,22 @@ namespace Barrway.Controllers
                 }
                 else
                 {
-                    Directory.Delete(folderPath2);
+                    Directory.Delete(folderPath2, true);
                     Directory.CreateDirectory(folderPath2);
                 }
 
-                string path = "~/UploadCompany/CompanyLogos/" + model.COMPANY_CODE.ToString() + "/" + model.COMPANY_LOGO_PATH.FileName.ToString();
-                string path2 = "~/UploadCompany/CompanyBanners/" + model.COMPANY_CODE.ToString() + "/" + model.COMPANY_BANNER_PATH.FileName.ToString();
+                string path = "";
+                string path2 = "";
+                if (model.COMPANY_LOGO_PATH != null)
+                {
+                    path = "~/UploadCompany/CompanyLogos/" + model.COMPANY_CODE.ToString() + "/" + model.COMPANY_LOGO_PATH.FileName.ToString();
+                }
+
+                if (model.COMPANY_BANNER_PATH != null)
+                {
+                    path2 = "~/UploadCompany/CompanyBanners/" + model.COMPANY_CODE.ToString() + "/" + model.COMPANY_BANNER_PATH.FileName.ToString();
+                }
+                
 
                 BusinessCompanyModel companyModel = new BusinessCompanyModel()
                 {
@@ -640,12 +650,12 @@ namespace Barrway.Controllers
 
                     if (model.COMPANY_LOGO_PATH != null)
                     {
-                        model.COMPANY_LOGO_PATH.SaveAs(Server.MapPath("~/UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString()) + "/" + model.COMPANY_LOGO_PATH.FileName.ToString());
+                        model.COMPANY_LOGO_PATH.SaveAs(Server.MapPath("~/UploadCompany/CompanyLogos/" + model.COMPANY_CODE.ToString()) + "/" + model.COMPANY_LOGO_PATH.FileName.ToString());
                     }
 
                     if (model.COMPANY_BANNER_PATH != null)
                     {
-                        model.COMPANY_BANNER_PATH.SaveAs(Server.MapPath("~/UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString()) + "/" + model.COMPANY_BANNER_PATH.FileName.ToString());
+                        model.COMPANY_BANNER_PATH.SaveAs(Server.MapPath("~/UploadCompany/CompanyBanners/" + model.COMPANY_CODE.ToString()) + "/" + model.COMPANY_BANNER_PATH.FileName.ToString());
                     }
 
 
@@ -654,12 +664,12 @@ namespace Barrway.Controllers
                 }
                 else
                 {
-                    return View("ManageCompanyWebsite");
+                    return View("ManageCompanyWebsite", model);
                 }
             }
             catch (Exception ex)
             {
-                return View("ManageCompanyWebsite");
+                return View("ManageCompanyWebsite", model);
             }
         }
 
@@ -684,7 +694,7 @@ namespace Barrway.Controllers
                     }
                     else
                     {
-                        Directory.Delete(folderPath);
+                        Directory.Delete(folderPath, true);
                         Directory.CreateDirectory(folderPath);
                     }
 
@@ -853,11 +863,11 @@ namespace Barrway.Controllers
             }
         }
 
-        public async Task<ActionResult> GetCompanyCalendars(GenerateDynamicFormData data, string CompanyId, string CalendarCategoryId = "", string CalendarSubCategoryId = "")
+        public async Task<ActionResult> GetCompanyCalendars(GenerateDynamicFormData data, string CompanyId)
         {
             try
             {
-                var transactionData = await businessUserService.GetCompanyCalendars(data, CompanyId, CalendarCategoryId, CalendarSubCategoryId);
+                var transactionData = await businessUserService.GetCompanyCalendars(data, CompanyId);
                 var transactionList = transactionData.Data;
                 double last_page = 0;
                 if (transactionList != null && transactionList.Count > 0)
@@ -879,6 +889,21 @@ namespace Barrway.Controllers
                 //{
                 //    return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound }, JsonRequestBehavior.AllowGet);
                 //}
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public async Task<ActionResult> GetAllCompanyCalendars(string CompanyId)
+        {
+            try
+            {
+                var transactionData = await businessUserService.GetCompanyCalendarByCompanyId(CompanyId);
+                
+                return Json(transactionData.Data, JsonRequestBehavior.AllowGet);
+
             }
             catch (Exception ex)
             {

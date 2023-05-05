@@ -5,6 +5,8 @@
 }
 
 
+
+
 <main id="content" role="main" class="main">
     <div class="content container-fluid">
         <div class="row">
@@ -23,23 +25,15 @@
 
         <div class="row">
             <div class="col-md-12">
-                <div id="CalendarMaster">
-                    <table id="CalendarMasterTable" class="table table-striped table-bordered table-sm" width="100%">
-                        <thead>
-                            <tr>
-                                <td>Company Code</td>
-                                <td>Company Name</td>
-                                <td>Calendar Name</td>
-                                <td>Calendar Type</td>
-                                <td>Create Date</td>
-                                <td>Update Date</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                        </tbody>
-                    </table>
+                <div class="form-builder-loader">
+                    <div class="loader">
+                        <i class="fa fa-spinner fa-pulse fa-fw"> </i>
+                        <div>
+                            Loading Form Tabulator...
+                        </div>
+                    </div>
                 </div>
+                <div id="form-records"></div>
             </div>
         </div>
 
@@ -47,5 +41,7 @@
 </main>
 
 @section scripts{
-    <script src="~/Scripts/BusinessScripts/CalendarMaster.js"></script>    
+    <script src="~/Scripts/jquery.blockUI/jquery.blockUI.min.js"></script>
+    <script src="/fg-assets/tabulator/js/tabulator.js"></script>
+    <script src="/Scripts/BusinessScripts/CalendarMaster.js"></script>
 }

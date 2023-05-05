@@ -5,7 +5,7 @@ FormGeneratorApp.run(function ($rootScope, $templateCache, notifierService, $q, 
     $rootScope.isStateLoading = false;
     $rootScope.isLoginPage = false;
     $rootScope.isOtherPage = true;
-   
+
     $rootScope.ConnectionStarted = false;
     var canceller = $q.defer();
 
@@ -32,7 +32,7 @@ FormGeneratorApp.run(function ($rootScope, $templateCache, notifierService, $q, 
     $rootScope.isRecordPage = false;
     $rootScope.formrecordPage = false;
     $rootScope.isHomePage = false;
-    
+
     $rootScope.HandleError = function (error, message) {
         $rootScope.$emit('HideLoading');
         if (error != undefined && error.statusText != undefined && error.statusText.length > 0) {
@@ -104,15 +104,15 @@ FormGeneratorApp.run(function ($rootScope, $templateCache, notifierService, $q, 
         }
     };
 
-  
+
 
 });
 
-FormGeneratorApp.controller('IndexController', function ($scope, $http, $timeout, $state, DataService, $ngBootbox, $location, $window, $rootScope, mainService, CookiesPersistenceService, notifierService, translationService) {
+FormGeneratorApp.controller('IndexController', function ($scope, $http, $timeout, $state, DataService, $ngBootbox, $location, $window, $rootScope, mainService, adminService, CookiesPersistenceService, notifierService, translationService) {
     var breadCrumb;
     //Functions
-    
-    if (localStorage.getItem("globalLang") == null || localStorage.getItem("globalLang") =="") {
+
+    if (localStorage.getItem("globalLang") == null || localStorage.getItem("globalLang") == "") {
         localStorage.setItem('globalLang', '1');
     }
     if (localStorage.getItem("globalLangForm") == null || localStorage.getItem("globalLang") == "") {
@@ -201,9 +201,11 @@ FormGeneratorApp.controller('IndexController', function ($scope, $http, $timeout
         $scope.setSpecialAccess(mainService.loginDetails());
         loadText(mainService.loginDetails());
         $scope.getLanguage();
+        $scope.bindCalendarDropdown();
+        $scope.ManageCalendarMaster();
         /*Theme List*/
         $scope.allFormsList = [];
-       
+
         $scope.isShowHeader = true;
         $scope.importFormSettings = { language: 1 };
         $scope.SetLanguage();
@@ -326,7 +328,7 @@ FormGeneratorApp.controller('IndexController', function ($scope, $http, $timeout
     };
 
     $scope.getLanguage = function () {
-         
+
         var param = {};
         param.action = 5;
         param.formId = $scope.currentFormId;
@@ -351,7 +353,7 @@ FormGeneratorApp.controller('IndexController', function ($scope, $http, $timeout
     };
 
     $scope.ApplyMultilingualText = function () {
-        
+
         var langId = '1';
         if (localStorage.getItem("globalLangForm") != null && localStorage.getItem("globalLangForm") != 'null') {
             langId = localStorage.getItem("globalLangForm");
@@ -387,12 +389,12 @@ FormGeneratorApp.controller('IndexController', function ($scope, $http, $timeout
             $scope.selectedLanguage = 'en';
         }
 
-        
+
         translationService.getTranslation($scope, $scope.selectedLanguage);
         //$scope.ApplyMultilingualText();
     };
 
-    $scope.showAlertError = function (title,message) {
+    $scope.showAlertError = function (title, message) {
         $scope.alert_error = true;
         $scope.alert = { title: title, message: message }
     }
@@ -401,11 +403,31 @@ FormGeneratorApp.controller('IndexController', function ($scope, $http, $timeout
         $scope.alert = { title: title, message: message }
     }
 
+    $scope.bindCalendarDropdown = function () {
+        adminService.postAsync('/BusinessAdmin/GetAllCompanyCalendars/', { companyId: localStorage.getItem("COMPANY_ID") }).then(function (res) {
+            console.log(res);
+            $scope.calendarList = res.data;
+
+        }, function (err) {
+
+        });
+    }
+
+    $scope.ManageCalendarMaster = function () {
+
+        if (localStorage.getItem("CALENDAR_ID") == undefined || localStorage.getItem("CALENDAR_ID") == null) {
+            localStorage.setItem("CALENDAR_ID", $("#ddlMasterCalendar option:selected").val());
+        } else {
+            $("#ddlMasterCalendar").val(localStorage.getItem("CALENDAR_ID"));
+        }
+
+    }
 
     $scope.init();
+
 });
 FormGeneratorApp.controller('DashboardController', function ($scope, $http, $timeout, $state, DataService, $ngBootbox, $location, $window, $rootScope, mainService, adminService, CookiesPersistenceService, notifierService, translationService) {
-  
+
 
 });
 FormGeneratorApp.controller('CommonCustomDialogController', function ($scope, $ngBootbox, DataService, notifierService, $rootScope, $state, $rootScope, $timeout, $http, $location, $window, mainService, $filter) {
@@ -1602,7 +1624,7 @@ FormGeneratorApp.controller('tabulatorConfigurationsController', function ($scop
             else {
                 $scope.selectedLanguage = 'en';
             }
-            
+
 
             translationService.getTranslation($scope, $scope.selectedLanguage);
 
