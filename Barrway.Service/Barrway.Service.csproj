@@ -127,6 +127,7 @@
     <Compile Include="Repository\AuthService.cs" />
     <Compile Include="Repository\GlobalMasterService.cs" />
     <Compile Include="Repository\FormAPIRepository.cs" />
+    <Compile Include="Repository\MasterService.cs" />
     <Compile Include="Repository\SignupService.cs" />
     <Compile Include="Repository\BusinessUserService.cs" />
     <Compile Include="Repository\SqlFunction.cs" />
