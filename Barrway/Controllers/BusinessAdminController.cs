@@ -249,6 +249,16 @@ namespace Barrway.Controllers
             return View();
         }
 
+        public async Task<ActionResult> SubscriptionPlan()
+        {
+            return View();
+        }
+
+        public async Task<ActionResult> PaymentHistory()
+        {
+            return View();
+        }
+
         #endregion
 
         #region Data Methods
@@ -508,7 +518,7 @@ namespace Barrway.Controllers
                     {
                         website = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
 
-                        if (website.Data["COMPANY_CALENDAR_STATUS"].ToString() == "Y")
+                        if (website.Data["COMPANY_PROFILE_STATUS"].ToString() == "Y")
                         {
                             return RedirectToAction("Dashboard");
                         }
@@ -536,7 +546,21 @@ namespace Barrway.Controllers
                 return View("SetupCompanyProfile");
             }
         }
+        
+        public async Task<ActionResult> GetCompanyActiveSubscriptionPlan(string CompanyId)
+        {
+            try
+            {
+                var activeSubscription = await businessUserService.GetCompanyActiveSubscriptionDetails(CompanyId);
 
+                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = activeSubscription.Data }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
 
         public async Task<ActionResult> SaveCompanyServiceDetails(BusinessCompanyViewModel model)
         {
@@ -698,13 +722,13 @@ namespace Barrway.Controllers
                         Directory.CreateDirectory(folderPath);
                     }
 
-                    string path = "~/UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString() + "/" + model.CALENDAR_PHOTO_NAME.ToString();
+                    string path = "~/UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString() + "/" + model.CALENDAR_PHOTO_PATH.FileName.ToString();
                     BusinessCalendarModel calendarModel = new BusinessCalendarModel()
                     {
                         CALENDAR_CATEGORY_ID = model.CALENDAR_CATEGORY_ID.ToString(),
                         CALENDAR_NAME = model.CALENDAR_NAME.ToString(),
                         CALENDAR_SUB_CATEGORY_ID = model.CALENDAR_SUB_CATEGORY_ID.ToString(),
-                        CALENDAR_PHOTO_NAME = model.CALENDAR_PHOTO_NAME.ToString(),
+                        CALENDAR_PHOTO_NAME = model.CALENDAR_PHOTO_PATH.FileName.ToString(),
                         CALENDAR_PHOTO_PATH = path,
                         IS_VISIBLE = "Y",
                         DISTRICT_ID = model.DISTRICT_ID.ToString(),
@@ -718,7 +742,7 @@ namespace Barrway.Controllers
                     if (result.Status)
                     {
                         // Save image in folder
-                        model.CALENDAR_PHOTO_PATH.SaveAs(Server.MapPath("~/UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString()) + "/" + model.CALENDAR_PHOTO_NAME.ToString());
+                        model.CALENDAR_PHOTO_PATH.SaveAs(Server.MapPath("~/UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString()) + "/" + model.CALENDAR_PHOTO_PATH.FileName.ToString());
                         return RedirectToAction("Dashboard");
                     }
                     else
@@ -880,15 +904,6 @@ namespace Barrway.Controllers
                 }
 
                 return Json(new { data = transactionList, last_page }, JsonRequestBehavior.AllowGet);
-
-                //if (album.Status)
-                //{
-                //    return Json(new AddUpdateDelete() { Status = true, Data = album.Data, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
-                //}
-                //else
-                //{
-                //    return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound }, JsonRequestBehavior.AllowGet);
-                //}
             }
             catch (Exception ex)
             {
@@ -900,10 +915,49 @@ namespace Barrway.Controllers
         {
             try
             {
-                var transactionData = await businessUserService.GetCompanyCalendarByCompanyId(CompanyId);
+                var calendarData = await businessUserService.GetCompanyCalendarByCompanyId(CompanyId);
                 
-                return Json(transactionData.Data, JsonRequestBehavior.AllowGet);
+                return Json(calendarData.Data, JsonRequestBehavior.AllowGet);
 
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public async Task<ActionResult> GetAllSubscriptionPlansForBusiness()
+        {
+            try
+            {
+                var subscriptionPlanData = await businessUserService.GetAllSubscriptionPlansForBusiness();
+
+                return Json(new AddUpdateDelete() { Status = true, Message = "Sucess", Data = subscriptionPlanData.Data }, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public async Task<ActionResult> GetCompanyPaymentHistory(GenerateDynamicFormData data, string CompanyId)
+        {
+            try
+            {
+                var transactionData = await businessUserService.GetCompanyPaymentHistory(data, CompanyId);
+                var transactionList = transactionData.Data;
+                double last_page = 0;
+                if (transactionList != null && transactionList.Count > 0)
+                {
+                    var singData = transactionList[0];
+                    var total_records = Convert.ToInt32(singData["total_records"].ToString());
+                    var size = Convert.ToInt32(singData["size"].ToString());
+                    double paging = (double)total_records / size;
+                    last_page = Math.Floor(paging) + 1;
+                }
+
+                return Json(new { data = transactionList, last_page }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

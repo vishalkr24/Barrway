@@ -52,6 +52,41 @@ function getSingleCompanyByCompanyId(companyId) {
     return data;
 }
 
+function GetAllSubscriptionPlansForBusiness() {
+    var data;
+    $.ajax({
+        url: "/BusinessAdmin/GetAllSubscriptionPlansForBusiness/",
+        async: false,
+        type: "GET",
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    })
+    return data;
+}
+
+function GetCompanyActiveSubscriptionPlan(companyId) {
+    var data;
+    $.ajax({
+        url: "/BusinessAdmin/GetCompanyActiveSubscriptionPlan/",
+        async: false,
+        data: {
+            CompanyId: companyId
+        },
+        type: "GET",
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    })
+    return data;
+}
+
 function getAllCompanies() {
     var data;
     $.ajax({
@@ -75,11 +110,11 @@ function getCompanyCategory() {
         type: "GET",
         async: false,
         success: function (response) {
-            
+
             data = response;
         },
         error: function (errorResponse) {
-            
+
             data = null;
         }
     })
@@ -96,7 +131,7 @@ function getCompanySubCategory(categoryId) {
         },
         async: false,
         success: function (response) {
-            
+
             data = response;
         },
         error: function (errorResponse) {
@@ -159,7 +194,7 @@ function getCountryMaster() {
 }
 
 function getCityMaster(countryId) {
-    
+
     var data;
     $.ajax({
         url: "/BusinessAdmin/GetCityMaster/",
@@ -173,7 +208,7 @@ function getCityMaster(countryId) {
         async: false,
         error: function (errorResponse) {
             data = null;
-           
+
         }
     })
     return data;
@@ -219,7 +254,7 @@ function getCompanyPhotoAlbum(companyId) {
 
 function GetCompanyCalendars(companyId, calendarCategoryId, calendarSubCategoryId) {
     var data;
-    
+
     $.ajax({
         url: "/BusinessAdmin/GetCompanyCalendars/",
         type: "GET",

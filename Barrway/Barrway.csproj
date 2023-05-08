@@ -2933,6 +2933,8 @@
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\BusinessScripts\AdminDashboard.js" />
     <Content Include="Scripts\BusinessScripts\AdminLayoutManager.js" />
+    <Content Include="Scripts\BusinessScripts\SubscriptionPlan.js" />
+    <Content Include="Scripts\BusinessScripts\PaymentHistory.js" />
     <Content Include="Scripts\BusinessScripts\CalendarMaster.js" />
     <Content Include="Scripts\BusinessScripts\Common\CommonFunctions.js" />
     <Content Include="Scripts\BusinessScripts\ManageCompanyWebsite.js" />
@@ -3063,6 +3065,8 @@
     <Content Include="Scripts\translation\translation_en.json" />
     <Content Include="Scripts\translation\translation_tc.json" />
     <Content Include="Views\BusinessAdmin\CalendarMaster.cshtml" />
+    <Content Include="Views\BusinessAdmin\SubscriptionPlan.cshtml" />
+    <Content Include="Views\BusinessAdmin\PaymentHistory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
