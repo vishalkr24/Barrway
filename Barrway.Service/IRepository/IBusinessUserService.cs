@@ -50,5 +50,20 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetCompanyCalendars(GenerateDynamicFormData data, string CompanyId);
         #endregion
 
+
+        #region Company Suscription
+
+        Task<AddUpdateDelete> GetAllSubscriptionPlansForBusiness();
+
+        Task<AddUpdateDelete> GetCompanyPaymentHistory(GenerateDynamicFormData data, string CompanyId);
+
+        Task<AddUpdateDelete> GetCompanyFreeSubscriptionDetails(string CompanyId);
+
+        Task<AddUpdateDelete> GetCompanyActiveSubscriptionDetails(string CompanyId);
+
+        Task<AddUpdateDelete> AddCompanySubscriptionDetails(CompanySubscriptionDetailsModel model);
+
+        #endregion
+
     }
 }

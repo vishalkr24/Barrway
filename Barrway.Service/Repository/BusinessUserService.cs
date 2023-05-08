@@ -15,7 +15,7 @@ using Barrway.Utility.Common;
 
 namespace Barrway.Service.Repository
 {
-    public class BusinessUserService: IBusinessUserService
+    public class BusinessUserService : IBusinessUserService
     {
         private readonly string connectionString;
         private readonly ISqlFunction sqlFunction;
@@ -52,7 +52,7 @@ namespace Barrway.Service.Repository
         public async Task<AddUpdateDelete> GetSingleBusinessWebsite(string UserId)
         {
             string query = "SELECT [Id]          ,[created_at]      ,[updated_at]      ,[created_by]      ,[updated_by]      ,[CURRENT_STEP]      ,[SUBSCRIPTION_PLAN_ID]      ,[USER_ID]      ,[COMPANY_CALENDAR_STATUS]      ,[COMPANY_PROFILE_STATUS]  FROM [dbo].[BUSINESS_ACCOUNT_WEBSITE_1918] where USER_ID = '" + UserId + "'";
-            
+
             List<IDictionary<string, object>> businessWebsiteResult = await sqlFunction.ExecuteSqlQuery(query);
 
             if (businessWebsiteResult.Count > 0)
@@ -173,7 +173,7 @@ namespace Barrway.Service.Repository
         {
             string query = $@"SELECT calendar.[Id]      ,calendar.[created_at]      ,calendar.[updated_at]      ,calendar.[created_by]      ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                                 join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE 
-                                where company.Id = '{CompanyId}'";                                                                  
+                                where company.Id = '{CompanyId}'";
 
             List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -187,6 +187,41 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> GetAllSubscriptionPlansForBusiness()
+        {
+            string query = $@"SELECT [Id]
+                                  ,[SUBSCRIPTION_PLAN_NAME]
+                                  ,[SUBSCRIPTION_PLAN_PRICE]
+                                  ,[SUBSCRIPTION_PLAN_VALIDITY]
+                                  ,[VALIDITY_IN_MONTHS]
+                                  ,[BOOKING_TRANSACTIONS]
+                                  ,[SUBSCRIPTION_PLAN_HAS_VALIDITY]
+                                  ,[IS_VISIBLE]
+                                  ,[CALENDAR_AVAILABLE]
+                                  ,[CLIENT_PACKAGE_AVAILABLE]
+                                  ,[NO_OF_ADMIN]
+                                  ,[PROMOTION_IN_MARKETPLACE]
+                                  ,[CHAT_WITH_CLIENT]
+                                  ,[CLIENT_PAYMENT]
+                                  ,[PHOTO_ALBUM]
+                                  ,[SUBSCRIPTION_PLAN_TYPE]
+                                  ,[created_at]
+                                  ,[updated_at]
+                                  ,[created_by]
+                                  ,[updated_by]
+                              FROM [dbo].[SUBSCRIPTION_PLAN_MASTER_1919] where SUBSCRIPTION_PLAN_TYPE = 'BUSINESS' and IS_VISIBLE = 'Y'";
+
+            List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (result.Count > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
 
         public async Task<AddUpdateDelete> GetCompanyCalendars(GenerateDynamicFormData data, string CompanyId)
         {
@@ -243,7 +278,7 @@ namespace Barrway.Service.Repository
             var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
             if (result.Count > 0)
-            {   
+            {
                 return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
             }
             else
@@ -251,6 +286,8 @@ namespace Barrway.Service.Repository
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
             }
         }
+
+
 
         public async Task<AddUpdateDelete> GetDefaultCompanyByBusinessId(string BusinessAccountId)
         {
@@ -360,7 +397,7 @@ namespace Barrway.Service.Repository
             {
                 CompanyDetails = await GetSingleCompanyById(model.Id);
             }
-            
+
             if (!CompanyDetails.Status)
             {
 
@@ -390,23 +427,6 @@ namespace Barrway.Service.Repository
                               ,[COMPANY_CODE] = '{CompanyCode}'
                               WHERE Id = '{formResult.Id.ToString()}'";
                     int saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
-
-                    var website = await GetSingleBusinessWebsite(UserId);
-
-                    if (website.Status)
-                    {
-                        if (website.Data["COMPANY_PROFILE_STATUS"].ToString() == "N")
-                        {
-                            query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set COMPANY_PROFILE_STATUS = 'Y', updated_at = '" + DateTime.Now.ToString() + "' where USER_ID = '" + UserId + "'";
-                            saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
-                        }
-
-                        if (website.Data["CURRENT_STEP"].ToString() == "COMPANY PROFILE")
-                        {
-                            query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'CALENDAR', updated_at = '" + DateTime.Now.ToString() + "'  where USER_ID = '" + UserId + "'";
-                            saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
-                        }
-                    }
 
                     return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() };
                 }
@@ -475,9 +495,39 @@ namespace Barrway.Service.Repository
                             {
                                 query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'COMPLETED', updated_at = '" + DateTime.Now.ToString() + "'  where USER_ID = '" + UserId + "'";
                                 saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                                // registration and 3 steps are completed here and now activate free plan of user
+
+                                if (saveResult > 0)
+                                {
+                                    AddUpdateDelete freeSubscription = await GetCompanyFreeSubscriptionDetails(CompanyDetails.Data["Id"].ToString());
+
+                                    if (!freeSubscription.Status)
+                                    {
+                                        CompanySubscriptionDetailsModel companySubscriptionDetailsModel = new CompanySubscriptionDetailsModel()
+                                        {
+                                            BOOKING_TRANSACTIONS = 500,
+                                            CALENDAR_AVAILABLE = 1,
+                                            CLIENT_PACKAGE_AVAILABLE = 1,
+                                            NO_OF_ADMIN = 1,
+                                            PHOTO_ALBUM = "N",
+                                            CLIENT_PAYMENT = "N",
+                                            CHAT_WITH_CLIENT = "N",
+                                            PROMOTION_IN_MARKETPLACE = "N",
+                                            COMPANY_ID = CompanyDetails.Data["Id"].ToString(),
+                                            IS_FREE_PLAN = "Y",
+                                            IS_ACTIVE = "Y",
+                                            PURCHASE_DATE = DateTime.Now,
+                                        };
+                                        var subscriptionSaveResult = await AddCompanySubscriptionDetails(companySubscriptionDetailsModel);
+                                    }
+
+                                    
+                                }
+
                             }
                         }
-                        
+
                     }
 
 
@@ -492,7 +542,7 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> UpdateCompanyService(BusinessCompanyModel model)
         {
-            
+
             string query = $@"UPDATE BUSINESS_COMPANY_MASTER_1924 SET COMPANY_SERVICE = '{model.COMPANY_SERVICE}' WHERE Id = '{model.Id}'";
 
             int result = await sqlFunction.ExecuteSqlCommandQuery(query);
@@ -609,6 +659,200 @@ namespace Barrway.Service.Repository
                 {
                     return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
                 }
+            }
+        }
+
+        public async Task<AddUpdateDelete> AddCompanySubscriptionDetails(CompanySubscriptionDetailsModel model)
+        {
+            AddUpdateDelete CompanyDetails = new AddUpdateDelete()
+            {
+                Status = false
+            };
+
+            if (!string.IsNullOrEmpty(model.COMPANY_ID))
+            {
+                CompanyDetails = await GetSingleCompanyById(model.COMPANY_ID);
+            }
+
+            if (CompanyDetails.Status)
+            {
+                Form_DataTable data = new Form_DataTable();
+                data.action = (int)FormAction.Save;
+                data.formId = (int)FormSetting.COMPANY_SUBSCRIPTION_DETAILS;
+
+                data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.ToDictionary());
+                data.formGroupKey = Guid.NewGuid().ToString();
+                var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+                if (formResult.res == 1)
+                {
+                    return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Message = formResult.Message, Status = false };
+                }
+
+            }
+            else
+            {
+                return new AddUpdateDelete() { Message = AppMessage.NotFound, Status = false };
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetCompanyFreeSubscriptionDetails(string CompanyId)
+        {
+            string query = $@"SELECT [Id]
+                              ,[created_at]
+                              ,[updated_at]
+                              ,[created_by]
+                              ,[updated_by]
+                              ,[CALENDAR_AVAILABLE]
+                              ,[CLIENT_PACKAGE_AVAILABLE]
+                              ,[NO_OF_ADMIN]
+                              ,[PHOTO_ALBUM]
+                              ,[CLIENT_PAYMENT]
+                              ,[PROMOTION_IN_MARKETPLACE]
+                              ,[CHAT_WITH_CLIENT]
+                              ,[PURCHASE_DATE]
+                              ,[PAYMENT_ID]
+                              ,[ORDER_ID]
+                              ,[PAYMENT_METHOD]
+                              ,[PAYMENT_STATUS]
+                              ,[IS_ACTIVE]
+                              ,[IS_FREE_PLAN]
+                              ,[PLAN_ID]
+                              ,[COMPANY_ID]
+                          FROM [dbo].[COMPANY_SUBSCRIPTION_DETAILS_1939] WHERE IS_FREE_PLAN = 'Y' and IS_ACTIVE = 'Y' and COMPANY_ID = '{CompanyId}' order by created_at desc";
+
+            List<IDictionary<string, object>> Result = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (Result.Count > 0)
+            {
+                var freeSubscription = Result.FirstOrDefault();
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = freeSubscription };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetCompanyActiveSubscriptionDetails(string CompanyId)
+        {
+            string query = $@"SELECT [Id]
+                              ,[created_at]
+                              ,[updated_at]
+                              ,[created_by]
+                              ,[updated_by]
+                              ,[CALENDAR_AVAILABLE]
+                              ,[BOOKING_TRANSACTIONS]
+                              ,[CLIENT_PACKAGE_AVAILABLE]
+                              ,[NO_OF_ADMIN]
+                              ,[PHOTO_ALBUM]
+                              ,[CLIENT_PAYMENT]
+                              ,[PROMOTION_IN_MARKETPLACE]
+                              ,[CHAT_WITH_CLIENT]
+                              ,[PURCHASE_DATE]
+                              ,[PAYMENT_ID]
+                              ,[ORDER_ID]
+                              ,[PAYMENT_METHOD]
+                              ,[PAYMENT_STATUS]
+                              ,[IS_ACTIVE]
+                              ,[IS_FREE_PLAN]
+                              ,[PLAN_ID]
+                              ,[COMPANY_ID]
+                          FROM [dbo].[COMPANY_SUBSCRIPTION_DETAILS_1939] WHERE COMPANY_ID = '{CompanyId}' and IS_ACTIVE = 'Y' order by created_at desc";
+
+            List<IDictionary<string, object>> Result = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (Result.Count > 0)
+            {
+                var freeSubscription = Result.FirstOrDefault();
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = freeSubscription };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetCompanyPaymentHistory(GenerateDynamicFormData data, string CompanyId)
+        {
+            Dictionary<string, string> filters = new Dictionary<string, string>() {
+                    { "ORDER_ID","history.ORDER_ID"},
+                    { "SUBSCRIPTION_PLAN_NAME","subscriptionPlan.SUBSCRIPTION_PLAN_NAME"},
+                    { "PAYMENT_DESCRIPTION","history.PAYMENT_DESCRIPTION"},
+                    { "PAYMENT_METHOD","history.PAYMENT_METHOD"},
+                    { "HKD","history.HKD"},
+                    { "PAYMENT_DATE","history.PAYMENT_DATE"},
+                    { "PAYMENT_STATUS","history.PAYMENT_STATUS"},
+            };
+
+            string column = "", dir = "";
+            if (data.sorters != null && data.sorters.Count() > 0)
+            {
+                column = data.sorters.FirstOrDefault().field;
+                dir = data.sorters.FirstOrDefault().dir;
+            }
+            else
+            {
+                column = "PAYMENT_DATE";
+                dir = "desc";
+            }
+
+            List<string> applyFilter = new List<string>();
+            if (data.filters != null && data.filters.Count() > 0)
+            {
+                foreach (var item in data.filters)
+                {
+                    if (filters.Any(x => x.Key == item.field) && !string.IsNullOrEmpty(item.value))
+                    {
+                        var filter = filters[item.field];
+
+                        filter = filter + " like N'%" + item.value + "%'";
+                        applyFilter.Add(filter);
+                    }
+                }
+            }
+
+            string applyFilterQuery = string.Join(" and ", applyFilter);
+            applyFilterQuery = applyFilterQuery.TrimEnd("and ".ToCharArray());
+
+            int PageSize = data.size > 0 ? data.size : 20;
+            int PageNumber = data.page > 0 ? data.page : 1;
+
+            string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+                                    SELECT history.[Id]
+                                          ,history.[created_at] 
+                                          ,history.[updated_at]
+                                          ,history.[created_by]
+                                          ,history.[updated_by]
+                                          ,[ORDER_ID]
+                                          ,[PAYMENT_ID]
+                                          ,[PLAN_ID]
+	                                      ,subscriptionPlan.SUBSCRIPTION_PLAN_NAME
+                                          ,[PAYMENT_DESCRIPTION]
+                                          ,[PAYMENT_METHOD]
+                                          ,[HKD]
+                                          ,[PAYMENT_DATE]
+                                          ,[PAYMENT_STATUS]
+                                          ,[COMPANY_ID]
+                                      FROM [dbo].[COMPANY_PAYMENT_HISTORY_MASTER_1937] history
+                                      join BUSINESS_COMPANY_MASTER_1924 company on company.Id = history.COMPANY_ID
+                                      join SUBSCRIPTION_PLAN_MASTER_1919 subscriptionPlan on subscriptionPlan.Id = history.PLAN_ID
+                                      where company.Id = 4 {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+                                    )
+                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+            var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+            if (result.Count > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
             }
         }
 

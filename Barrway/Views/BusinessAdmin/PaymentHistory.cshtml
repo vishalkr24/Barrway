@@ -1,0 +1,49 @@
+﻿
+@{
+    ViewBag.Title = "Payment History";
+    Layout = "~/Views/Shared/_BusinessAdminLayout.cshtml";
+}
+
+<main id="content" role="main" class="main">
+    <!-- Content -->
+    <div class="content container-fluid">
+        <!-- row start -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="bredcrump">
+                    <span><a href="#" class="lbl-company-name">Company name</a></span> <span>/ <a href="#">Subscription</span></a> <span><a href="#">/ Company Payment History</a> </span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="heading">
+                    <h2>Company Payment History</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-builder-loader">
+                    <div class="loader">
+                        <i class="fa fa-spinner fa-pulse fa-fw"> </i>
+                        <div>
+                            Loading Form Tabulator...
+                        </div>
+                    </div>
+                </div>
+                <div id="form-records"></div>
+            </div>
+        </div>
+
+    </div>
+    <!-- End Content -->
+</main>
+
+@section scripts{
+    <script src="~/Scripts/jquery.blockUI/jquery.blockUI.min.js"></script>
+    <script src="/fg-assets/tabulator/js/tabulator.js"></script>
+    <script src="/Scripts/BusinessScripts/PaymentHistory.js"></script>
+}
+

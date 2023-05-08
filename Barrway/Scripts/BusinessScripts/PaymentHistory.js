@@ -1,37 +1,30 @@
 ﻿$(document).ready(function () {
-    setCalendarMaster();
+    setSubscriptionHistoryMaster();
 })
 
-function GoToCalendarLayout(CalendarId) {
-    localStorage.setItem("CALENDAR_ID", CalendarId);
-    window.location.replace("/Calendar/Index");
-}
-
-function setCalendarMaster() {
+function setSubscriptionHistoryMaster() {
     //var data = GetCompanyCalendars(localStorage.getItem("COMPANY_ID"), "", "");
     //console.log(data);
     var companyId = localStorage.getItem("COMPANY_ID")
-    var CalendarMasterList = function () {
+    var PaymentHistoryMasterList = function () {
         var columns = [
             {
-                title: '', field: 'ACTION', formatter: function (cell, formatter) {
-                    return `<a href='#' onclick="GoToCalendarLayout(${cell.getRow().getData().Id})" class="btn btn-warning text-light" style="border-radius:300px; background:#E2476C;">Calendar</a>`;
+                title: 'Action', field: 'ACTION', formatter: function (cell, formatter) {
+                    return `<a href='#' class="btn btn-warning text-light" style="border-radius:300px; background:#E2476C;"><i class="bi-info-circle"></i></a>
+                            <a href='#' class="btn btn-primary text-light" style="border-radius:300px;">PDF</a>`;
                 }, headerSort: false
             },
-            { title: 'Company Code', field: 'COMPANY_CODE', headerFilter: "input" },
-            { title: 'Company Name', field: 'COMPANY_NAME_ENGLISH', headerFilter: "input" },
-            { title: 'Calendar Name', field: 'CALENDAR_NAME', headerFilter: "input" },
-            { title: 'Calendar Type', field: 'CALENDAR_CATEGORY_NAME', headerFilter: "input"},
+            { title: 'Order Id', field: 'ORDER_ID', headerFilter: "input" },
+            { title: 'Plan Name', field: 'SUBSCRIPTION_PLAN_NAME', headerFilter: "input" },
+            { title: 'Description', field: 'PAYMENT_DESCRIPTION', headerFilter: "input" },
+            { title: 'Method', field: 'PAYMENT_METHOD', headerFilter: "input" },
+            { title: 'HKD', field: 'HKD', headerFilter: "input" },
             {
-                title: 'Created Date', field: 'created_at', formatter: function (cell, formatter) {
+                title: 'Paid Date', field: 'PAYMENT_DATE', formatter: function (cell, formatter) {
                     return moment(cell.getData().created_at).format("DD-MM-YYYY HH:mm:ss")
                 }
             },
-            {
-                title: 'Updated Date', field: 'updated_at', formatter: function (cell, formatter) {
-                    return moment(cell.getData().created_at).format("DD-MM-YYYY HH:mm:ss")
-                }
-            }
+            { title: 'Status', field: 'PAYMENT_STATUS', headerFilter: "input" }
         ];
 
         setTimeout(function () {
@@ -41,6 +34,7 @@ function setCalendarMaster() {
                     return cell.getValue();
                 },
                 height: "530px",
+                /*layout: "fitDataFill",*/
                 layout: "fitColumns",
                 responsiveLayout: false,
                 initialSort: [
@@ -91,7 +85,7 @@ function setCalendarMaster() {
                 ajaxFiltering: true,
                 ajaxSorting: true,
                 ajaxLoader: true,
-                ajaxURL: "/BusinessAdmin/GetCompanyCalendars",
+                ajaxURL: "/BusinessAdmin/GetCompanyPaymentHistory",
                 ajaxConfig: "POST", //ajax HTTP request type
                 ajaxContentType: "json",
                 ajaxParams: { //ajax parameters
@@ -132,11 +126,9 @@ function setCalendarMaster() {
 
     };
 
-    CalendarMasterList();
+    PaymentHistoryMasterList();
 
 }
-
-
 
 function initTabulator(elementID, options) {
     if (!elementID) {
