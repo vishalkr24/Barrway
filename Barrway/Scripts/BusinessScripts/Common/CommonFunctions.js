@@ -252,7 +252,7 @@ function getCompanyPhotoAlbum(companyId) {
     return data;
 }
 
-function GetCompanyCalendars(companyId, calendarCategoryId, calendarSubCategoryId) {
+function GetCompanyCalendars(companyId) {
     var data;
 
     $.ajax({
@@ -277,4 +277,10 @@ function BindLogoName(inputId, labelId) {
     var value = $("#" + inputId).get(0);
     var files = value.files;
     $("#" + labelId).text(files[0].name);
+}
+
+function GoToCalendarLayout(CalendarId, CalendarCode) {
+    localStorage.setItem("CALENDAR_ID", CalendarId);
+    localStorage.setItem("CALENDAR_CODE", CalendarCode);
+    window.location.replace("/Calendar/Index");
 }

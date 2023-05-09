@@ -87,20 +87,21 @@ namespace Barrway.Service.Repository
             return affectedRows;
         }
 
-        public async Task<string> GetDateFilter(FilterDTO filtr)
+        public async Task<string> GetDateFilter(FilterDTO filtr, string prefix = "f")
         {
             string customWhere="";
-            if (filtr.field.ToString() == "created_at" || filtr.field.ToString() == "updated_at")
+            //if (filtr.field.ToString() == "created_at" || filtr.field.ToString() == "updated_at")
+            if (filtr.field.ToString() == "created_at" || filtr.field.ToString() == "updated_at" || filtr.field.ToString() == "PAYMENT_DATE")
             {
                 if (filtr.value.Length == 7)
                 {
 
-                    customWhere = " month(f.[" + filtr.field + "]) = month('" + Convert.ToDateTime(filtr.value).ToString("MM-dd-yyyy") + "') and year(f.[" + filtr.field + "]) = year('" + Convert.ToDateTime(filtr.value).ToString("MM-dd-yyyy") + "') ";
+                    customWhere = " month(" + prefix + ".[" + filtr.field + "]) = month('" + Convert.ToDateTime(filtr.value).ToString("MM-dd-yyyy") + "') and year(" + prefix + ".[" + filtr.field + "]) = year('" + Convert.ToDateTime(filtr.value).ToString("MM-dd-yyyy") + "') ";
 
                 }
                 else if (filtr.value.Length == 4)
                 {
-                    customWhere = " year(f.[" + filtr.field + "]) = year('" + "01-01-" + filtr.value + "') ";
+                    customWhere = " year(" + prefix + ".[" + filtr.field + "]) = year('" + "01-01-" + filtr.value + "') ";
 
                 }
                 else if (filtr.value.Length == 5)
@@ -110,7 +111,7 @@ namespace Barrway.Service.Repository
                     var Fvalue = filtr.value.Split('-')[0];
                     if (Fvalue != "0")
                     {
-                        customWhere = " year(f.[" + filtr.field + "]) = year('" + "01-01-" + Fvalue + "') ";
+                        customWhere = " year(" + prefix + ".[" + filtr.field + "]) = year('" + "01-01-" + Fvalue + "') ";
                     }
 
 
@@ -120,11 +121,11 @@ namespace Barrway.Service.Repository
                     var Fvalue = filtr.value.Split('-')[1];
                     if (Fvalue != "0")
                     {
-                        customWhere = " day(f.[" + filtr.field + "]) = day('" + Convert.ToDateTime(filtr.value).ToString("MM-dd-yyyy") + "') and month(f.[" + filtr.field + "]) = month('" + Convert.ToDateTime(filtr.value).ToString("MM-dd-yyyy") + "') ";
+                        customWhere = " day(" + prefix + ".[" + filtr.field + "]) = day('" + Convert.ToDateTime(filtr.value).ToString("MM-dd-yyyy") + "') and month(" + prefix + ".[" + filtr.field + "]) = month('" + Convert.ToDateTime(filtr.value).ToString("MM-dd-yyyy") + "') ";
                     }
                     else
                     {
-                        customWhere = " year(f.[" + filtr.field + "]) = year('" + "01-01-" + filtr.value.Split('-')[0] + "') ";
+                        customWhere = " year(" + prefix + ".[" + filtr.field + "]) = year('" + "01-01-" + filtr.value.Split('-')[0] + "') ";
                     }
 
 
@@ -138,7 +139,7 @@ namespace Barrway.Service.Repository
                     if (Year != "" && month != "")
                     {
                         var filterValue = Year + "-" + month;
-                        customWhere = " month(f.[" + filtr.field + "]) = month('" + Convert.ToDateTime(filterValue).ToString("MM-dd-yyyy") + "') and year(f.[" + filtr.field + "]) = year('" + Convert.ToDateTime(filterValue).ToString("MM-dd-yyyy") + "') ";
+                        customWhere = " month(" + prefix + ".[" + filtr.field + "]) = month('" + Convert.ToDateTime(filterValue).ToString("MM-dd-yyyy") + "') and year(" + prefix + ".[" + filtr.field + "]) = year('" + Convert.ToDateTime(filterValue).ToString("MM-dd-yyyy") + "') ";
                     }
 
 
@@ -156,13 +157,13 @@ namespace Barrway.Service.Repository
                         if (Day != "00" && Day.Length == 2)
                         {
                             var filterValue = Year + "-" + month + "-" + Day;
-                            customWhere = " day(f.[" + filtr.field + "]) = day('" + Convert.ToDateTime(filterValue).ToString("MM-dd-yyyy") + "') and month(f.[" + filtr.field + "]) = month('" + Convert.ToDateTime(filterValue).ToString("MM-dd-yyyy") + "') and year(f.[" + filtr.field + "]) = year('" + Convert.ToDateTime(filterValue).ToString("MM-dd-yyyy") + "') ";
+                            customWhere = " day(" + prefix + ".[" + filtr.field + "]) = day('" + Convert.ToDateTime(filterValue).ToString("MM-dd-yyyy") + "') and month(" + prefix + ".[" + filtr.field + "]) = month('" + Convert.ToDateTime(filterValue).ToString("MM-dd-yyyy") + "') and year(" + prefix + ".[" + filtr.field + "]) = year('" + Convert.ToDateTime(filterValue).ToString("MM-dd-yyyy") + "') ";
 
                         }
                         else
                         {
                             var filterValue = Year + "-" + month;
-                            customWhere = " month(f.[" + filtr.field + "]) = month('" + Convert.ToDateTime(filterValue).ToString("MM-dd-yyyy") + "') and year(f.[" + filtr.field + "]) = year('" + Convert.ToDateTime(filterValue).ToString("MM-dd-yyyy") + "') ";
+                            customWhere = " month(" + prefix + ".[" + filtr.field + "]) = month('" + Convert.ToDateTime(filterValue).ToString("MM-dd-yyyy") + "') and year(" + prefix + ".[" + filtr.field + "]) = year('" + Convert.ToDateTime(filterValue).ToString("MM-dd-yyyy") + "') ";
 
 
                         }
@@ -172,7 +173,7 @@ namespace Barrway.Service.Repository
                 }
                 else if (filtr.value.Length == 10)
                 {
-                    customWhere = " day(f.[" + filtr.field + "]) = day('" + Convert.ToDateTime(filtr.value).ToString("MM-dd-yyyy") + "') and month(f.[" + filtr.field + "]) = month('" + Convert.ToDateTime(filtr.value).ToString("MM-dd-yyyy") + "') and year(f.[" + filtr.field + "]) = year('" + Convert.ToDateTime(filtr.value).ToString("MM-dd-yyyy") + "') ";
+                    customWhere = " day(" + prefix + ".[" + filtr.field + "]) = day('" + Convert.ToDateTime(filtr.value).ToString("MM-dd-yyyy") + "') and month(" + prefix + ".[" + filtr.field + "]) = month('" + Convert.ToDateTime(filtr.value).ToString("MM-dd-yyyy") + "') and year(" + prefix + ".[" + filtr.field + "]) = year('" + Convert.ToDateTime(filtr.value).ToString("MM-dd-yyyy") + "') ";
 
                 }
             }

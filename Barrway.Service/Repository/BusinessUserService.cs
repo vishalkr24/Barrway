@@ -253,10 +253,17 @@ namespace Barrway.Service.Repository
                 {
                     if (filters.Any(x => x.Key == item.field) && !string.IsNullOrEmpty(item.value))
                     {
-                        var filter = filters[item.field];
+                        if (item.field == "created_at" || item.field == "updated_at")
+                        {
+                            string filter = await sqlFunction.GetDateFilter(item, "calendar");
+                            applyFilter.Add(filter);
+                        }
+                        else
+                        {
+                            string filter = filters[item.field] + " like N'%" + item.value + "%'";
+                            applyFilter.Add(filter);
+                        }
 
-                        filter = filter + " like N'%" + item.value + "%'";
-                        applyFilter.Add(filter);
                     }
                 }
             }
@@ -808,10 +815,16 @@ namespace Barrway.Service.Repository
                 {
                     if (filters.Any(x => x.Key == item.field) && !string.IsNullOrEmpty(item.value))
                     {
-                        var filter = filters[item.field];
-
-                        filter = filter + " like N'%" + item.value + "%'";
-                        applyFilter.Add(filter);
+                        if (item.field == "PAYMENT_DATE")
+                        {
+                            string filter = await sqlFunction.GetDateFilter(item, "history");
+                            applyFilter.Add(filter);
+                        }
+                        else
+                        {
+                            string filter = filters[item.field] + " like N'%" + item.value + "%'";
+                            applyFilter.Add(filter);
+                        }
                     }
                 }
             }
@@ -841,7 +854,7 @@ namespace Barrway.Service.Repository
                                       FROM [dbo].[COMPANY_PAYMENT_HISTORY_MASTER_1937] history
                                       join BUSINESS_COMPANY_MASTER_1924 company on company.Id = history.COMPANY_ID
                                       join SUBSCRIPTION_PLAN_MASTER_1919 subscriptionPlan on subscriptionPlan.Id = history.PLAN_ID
-                                      where company.Id = 4 {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+                                      where company.Id = '{CompanyId}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
                                     )
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
             var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);

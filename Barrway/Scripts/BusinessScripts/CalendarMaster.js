@@ -1,11 +1,8 @@
 ﻿$(document).ready(function () {
+    showNavbarNavigation('calendarsMegaMenu');
     setCalendarMaster();
+    
 })
-
-function GoToCalendarLayout(CalendarId) {
-    localStorage.setItem("CALENDAR_ID", CalendarId);
-    window.location.replace("/Calendar/Index");
-}
 
 function setCalendarMaster() {
     //var data = GetCompanyCalendars(localStorage.getItem("COMPANY_ID"), "", "");
@@ -15,7 +12,7 @@ function setCalendarMaster() {
         var columns = [
             {
                 title: '', field: 'ACTION', formatter: function (cell, formatter) {
-                    return `<a href='#' onclick="GoToCalendarLayout(${cell.getRow().getData().Id})" class="btn btn-warning text-light" style="border-radius:300px; background:#E2476C;">Calendar</a>`;
+                    return `<a href='#' onclick="GoToCalendarLayout(${cell.getRow().getData().Id}, '${cell.getRow().getData().CALENDAR_CODE}')" class="btn btn-warning text-light" style="border-radius:300px; background:#E2476C;">Calendar</a>`;
                 }, headerSort: false
             },
             { title: 'Company Code', field: 'COMPANY_CODE', headerFilter: "input" },
@@ -23,12 +20,12 @@ function setCalendarMaster() {
             { title: 'Calendar Name', field: 'CALENDAR_NAME', headerFilter: "input" },
             { title: 'Calendar Type', field: 'CALENDAR_CATEGORY_NAME', headerFilter: "input"},
             {
-                title: 'Created Date', field: 'created_at', formatter: function (cell, formatter) {
+                title: 'Created Date', field: 'created_at', headerFilter: "input", formatter: function (cell, formatter) {
                     return moment(cell.getData().created_at).format("DD-MM-YYYY HH:mm:ss")
                 }
             },
             {
-                title: 'Updated Date', field: 'updated_at', formatter: function (cell, formatter) {
+                title: 'Updated Date', field: 'updated_at', headerFilter: "input", formatter: function (cell, formatter) {
                     return moment(cell.getData().created_at).format("DD-MM-YYYY HH:mm:ss")
                 }
             }
@@ -41,7 +38,7 @@ function setCalendarMaster() {
                     return cell.getValue();
                 },
                 height: "530px",
-                layout: "fitColumns",
+                layout: "fitDataFill",
                 responsiveLayout: false,
                 initialSort: [
                     { column: "created_at", dir: "desc" }

@@ -324,7 +324,7 @@
                     <!-- End Pages -->
                     <!-- Apps -->
                     <li class="hs-has-sub-menu nav-item">
-                        <a id="" class="hs-mega-menu-invoker nav-link" href="#" role="button">sMarket Place</a>
+                        <a id="" class="hs-mega-menu-invoker nav-link" href="#" role="button">Market Place</a>
                     </li>
                     <!-- End Apps -->
 
@@ -435,8 +435,8 @@
         <div class="navbar-vertical-container">
             <div class="navbar-brand cal-name">
 
-                <select class="calendar-name select-company" id="ddlMasterCalendar">
-                    <option value="{{calendar.CALENDAR_CODE}}" ng-repeat="calendar in calendarList">{{calendar.CALENDAR_NAME}}</option>
+                <select class="calendar-name select-company" style="border-radius:4px; padding: 6px 12px; text-overflow:ellipsis;" id="ddlMasterCalendar">
+                    <option value="{{calendar.CALENDAR_CODE}}" ng-repeat="calendar in calendarList">{{calendar.CALENDAR_NAME}} [{{calendar.CALENDAR_CODE}}]</option>
                 </select>
 
                 <!-- Navbar Vertical Toggle -->
@@ -486,8 +486,8 @@
 
                                 <div id="navbarVerticalMenuPagesUsersMenu" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
                                     <a class="nav-link " ui-sref="calendar_location({formId:2306})">Location Master</a>
-                                    <a class="nav-link " ui-sref="records({formId:2303})">Service Master</a>
-                                    <a class="nav-link " ui-sref="records({formId:2304})">Service Provider Master</a>
+                                    <a class="nav-link " ui-sref="calendar_service({formId:2303})">Service Master</a>
+                                    <a class="nav-link " ui-sref="calendar_service_provider({formId:2304})">Service Provider Master</a>
                                 </div>
                             </div>
                             <!-- End Collapse -->
