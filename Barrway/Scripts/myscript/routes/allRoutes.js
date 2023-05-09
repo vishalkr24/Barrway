@@ -1829,5 +1829,19 @@
                     parent: 'home'
                 }
             })
+            .state('calendar_location', {
+                url: '/calendar/location-master/:formId',
+                onEnter: function ($window) { $window.document.title = "Location Master"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/calendar-master/location-master.html?token=' + uuid,
+                        controller: 'FormRecordsController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
     }]);
 }(FormGeneratorApp));

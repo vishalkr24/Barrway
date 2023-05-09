@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
-    FormGeneratorApp.controller('FormEntryController', function ($scope, $rootScope, CookiesPersistenceService, $http, $state, $location, $window, $ngBootbox, $timeout, mainService, notifierService, $stateParams, DataService, translationService) {
-
+    FormGeneratorApp.controller('FormEntryController', function ($scope, $rootScope, CookiesPersistenceService, $http, $state, $location, $window, $ngBootbox, $timeout, mainService, adminService, notifierService, $stateParams, DataService, translationService) {
+        
         function showFooter(type) {
             if (!DataService.isEmpty(type.column_calculation))
                 return type.column_calculation;
@@ -6778,7 +6778,7 @@
 
             var generatedFormDataLink = GetGeneratedFormDataUrl($scope.currentFormId, $scope.isEdit);
 
-            mainService.manageGeneratedFormData(generatedFormDataLink, dataParam)
+            adminService.postAsync(generatedFormDataLink, dataParam)
                 .then(function (response) {
                     if (response.data != null && angular.isDefined(response.data)) {
                         if (!DataService.isEmpty(response.data.Message)) {

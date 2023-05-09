@@ -202,7 +202,7 @@ FormGeneratorApp.controller('IndexController', function ($scope, $http, $timeout
         loadText(mainService.loginDetails());
         $scope.getLanguage();
         $scope.bindCalendarDropdown();
-        $scope.ManageCalendarMaster();
+        
         /*Theme List*/
         $scope.allFormsList = [];
 
@@ -405,22 +405,24 @@ FormGeneratorApp.controller('IndexController', function ($scope, $http, $timeout
 
     $scope.bindCalendarDropdown = function () {
         adminService.postAsync('/BusinessAdmin/GetAllCompanyCalendars/', { companyId: localStorage.getItem("COMPANY_ID") }).then(function (res) {
-            console.log(res);
+           
             $scope.calendarList = res.data;
-
+            $timeout(function () {
+                $scope.ManageCalendarMaster();
+            },500);
+            
         }, function (err) {
 
         });
     }
 
     $scope.ManageCalendarMaster = function () {
-
-        if (localStorage.getItem("CALENDAR_ID") == undefined || localStorage.getItem("CALENDAR_ID") == null) {
-            localStorage.setItem("CALENDAR_ID", $("#ddlMasterCalendar option:selected").val());
+        
+        if (localStorage.getItem("CALENDAR_CODE") == undefined || localStorage.getItem("CALENDAR_CODE") == null) {
+            localStorage.setItem("CALENDAR_CODE", $("#ddlMasterCalendar option:selected").val());
         } else {
-            $("#ddlMasterCalendar").val(localStorage.getItem("CALENDAR_ID"));
+            $("#ddlMasterCalendar").val(localStorage.getItem("CALENDAR_CODE"));
         }
-
     }
 
     $scope.init();

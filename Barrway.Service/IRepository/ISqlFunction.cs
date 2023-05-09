@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using FormGeneratorDTOs.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,5 +15,6 @@ namespace Barrway.Service.IRepository
         Task<int> ExecuteSqlCommandQuery(string sqlQuery, DynamicParameters param, CommandType commandType);
         Task<List<IDictionary<string, object>>> ExecuteSqlQuery(string sqlQuery);
         Task<List<IDictionary<string, object>>> ExecuteSqlQuery(string sqlQuery, DynamicParameters param, CommandType commandType);
+        Task<string> GetDateFilter(FilterDTO filtr);
     }
 }
