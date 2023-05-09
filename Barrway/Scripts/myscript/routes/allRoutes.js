@@ -1843,5 +1843,35 @@
                     parent: 'home'
                 }
             })
+            // service master route state
+            .state('calendar_service', {
+                url: '/calendar/service-master/:formId',
+                onEnter: function ($window) { $window.document.title = "Service Master"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/calendar-master/service-master.html?token=' + uuid,
+                        controller: 'FormRecordsController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
+            // service provider master route state
+            .state('calendar_service_provider', {
+                url: '/calendar/service-provider-master/:formId',
+                onEnter: function ($window) { $window.document.title = "Service Provider Master"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/calendar-master/service-provider-master.html?token=' + uuid,
+                        controller: 'FormRecordsController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
     }]);
 }(FormGeneratorApp));

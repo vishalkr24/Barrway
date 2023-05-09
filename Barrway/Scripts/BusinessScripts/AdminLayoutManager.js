@@ -1,5 +1,6 @@
 ﻿$(document).ready(function () {
     setCompanyDetails();
+    setTop5Calendars();
 });
 
 function changeCompany() {
@@ -79,4 +80,28 @@ function setCompanyDetails() {
 
 function showComapanyWebsiteDetails(pageId = 1) {
     window.location.href = "/BusinessAdmin/ManageCompanyWebsite?CompanyId=" + localStorage.getItem('COMPANY_ID') + "&PId=" + pageId;
+}
+
+function setTop5Calendars() {
+    var data = GetCompanyCalendars(localStorage.getItem("COMPANY_ID"));
+
+    if (data.data != null) {
+        var calendars = data.data;
+
+        $("#calendarsSubMenu").empty();
+
+        var len = 0;
+
+        if (calendars.length < 5) {
+            len = calendars.length;
+        } else {
+            len = 5;
+        }
+        
+        for (var i = 0; i < len; i++) {
+            $("#calendarsSubMenu").append(`<a class="dropdown-item" onclick="GoToCalendarLayout(${calendars[i].Id}, '${calendars[i].CALENDAR_CODE}')" href="#" data-placement="left">${calendars[i].CALENDAR_NAME}</a>`);
+        }
+
+    }
+
 }

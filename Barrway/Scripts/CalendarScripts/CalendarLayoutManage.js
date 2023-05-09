@@ -1,6 +1,11 @@
 ﻿$(document).ready(function () {
     setCompanyDetails();
+    setSelectedCalendar();
 });
+
+function setSelectedCalendar() {
+    $("#ddlMasterCalendar").val(localStorage.getItem('CALENDAR_CODE'));
+}
 
 function Logout() {
     localStorage.removeItem("COMPANY_ID");

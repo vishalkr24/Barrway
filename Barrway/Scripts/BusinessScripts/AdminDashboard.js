@@ -1,5 +1,6 @@
 ﻿$(document).ready(function () {
     setPageStatus();
+    showNavbarNavigation('dashboardsMegaMenu');
 });
 
 function setPageStatus() {

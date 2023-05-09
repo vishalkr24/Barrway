@@ -1,5 +1,7 @@
 ﻿$(document).ready(function () {
+    showNavbarNavigation('subscriptionsMegaMenu');
     setSubscriptionHistoryMaster();
+    
 })
 
 function setSubscriptionHistoryMaster() {
@@ -20,7 +22,7 @@ function setSubscriptionHistoryMaster() {
             { title: 'Method', field: 'PAYMENT_METHOD', headerFilter: "input" },
             { title: 'HKD', field: 'HKD', headerFilter: "input" },
             {
-                title: 'Paid Date', field: 'PAYMENT_DATE', formatter: function (cell, formatter) {
+                title: 'Paid Date', field: 'PAYMENT_DATE', headerFilter: "input", formatter: function (cell, formatter) {
                     return moment(cell.getData().created_at).format("DD-MM-YYYY HH:mm:ss")
                 }
             },
@@ -34,8 +36,7 @@ function setSubscriptionHistoryMaster() {
                     return cell.getValue();
                 },
                 height: "530px",
-                /*layout: "fitDataFill",*/
-                layout: "fitColumns",
+                layout: "fitDataFill",
                 responsiveLayout: false,
                 initialSort: [
                     { column: "created_at", dir: "desc" }

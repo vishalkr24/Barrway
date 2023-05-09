@@ -3002,6 +3002,8 @@
     <Content Include="Templates\admin\schedule.html" />
     <Content Include="Templates\admin\transaction.html" />
     <Content Include="Templates\breadcrumbs.html" />
+    <Content Include="Templates\calendar-master\service-provider-master.html" />
+    <Content Include="Templates\calendar-master\service-master.html" />
     <Content Include="Templates\calendar-master\location-master.html" />
     <Content Include="Templates\dashboard\dashboard.html" />
     <Content Include="Templates\error\error-500.html" />
