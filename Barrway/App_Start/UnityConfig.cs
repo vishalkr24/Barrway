@@ -58,6 +58,7 @@ namespace Barrway
             container.RegisterType<ISignupService, SignupService>();
             container.RegisterType<IBusinessUserService, BusinessUserService>();
             container.RegisterType<IGlobalMasterService, GlobalMasterService>();
+            container.RegisterType<IMasterService, MasterService>();
 
 
         }

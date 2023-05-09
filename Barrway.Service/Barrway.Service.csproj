@@ -120,6 +120,7 @@
     <Compile Include="IRepository\IAuthService.cs" />
     <Compile Include="IRepository\IGlobalMasterService.cs" />
     <Compile Include="IRepository\IFormAPIRepository.cs" />
+    <Compile Include="IRepository\IMasterService.cs" />
     <Compile Include="IRepository\ISignupService.cs" />
     <Compile Include="IRepository\IBusinessUserService.cs" />
     <Compile Include="IRepository\ISqlFunction.cs" />

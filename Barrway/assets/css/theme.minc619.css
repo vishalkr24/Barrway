@@ -5384,7 +5384,7 @@ fieldset:disabled .btn {
 .btn-close-white {
     -webkit-filter: invert(1) grayscale(100%) brightness(200%);
     filter: invert(1) grayscale(100%) brightness(200%);
-}
+}/*
 .toast {
     --bs-toast-zindex: 1090;
     --bs-toast-padding-x: 1rem;
@@ -5450,7 +5450,7 @@ fieldset:disabled .btn {
 .toast-body {
     padding: var(--bs-toast-padding-x);
     word-wrap: break-word;
-}
+}*/
 .modal {
     --bs-modal-zindex: 101;
     --bs-modal-width: 550px;

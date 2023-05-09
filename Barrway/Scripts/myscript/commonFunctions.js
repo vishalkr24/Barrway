@@ -15384,64 +15384,22 @@ function removeActionButtion(formid) {
 
 function NewformEntryfunctionality(formid, isEdit) {
 
-    if (formid == 2246) {
+    
 
+    if (formid == 2306) {
+        $('div.border-header_1683116492931').hide();
+        $('input#COMPANY_CODE').attr("readonly", true);
+        $('input#COMPANY_CODE').val(localStorage.getItem("COMPANY_CODE"));
+        $('input#CALENDAR_CODE').attr("readonly", true);
+        $('input#CALENDAR_CODE').val(localStorage.getItem("CALENDAR_CODE"));
+        if ($('a.breadcrumb-link').length > 1) {
+            var ele = $('a.breadcrumb-link')[1]
+            $(ele).attr("href", window.location.href.split('#')[0] +"#/calendar/location-master/2306");
+        }
         if (isEdit) {
-            $('#FRM_USER_ID').attr('disabled', true);
-        }
-        else {
-            $('label[for="FRM_USER_ID"]').hide();
-            $('#FRM_USER_ID').hide();
-            $('#FRM_USER_ID').val($('#logusername').val());
-        }
-    }
-
-    if (formid == 2244) {
-
-        if (isEdit) {
-            //$('#FRM_USER_ID').attr('disabled', true);
-        }
-        else {
-            $('div.border-AR_ADMIN_COMMENT').hide();
-            $('div.border-IS_ADMIN_APPROVED').hide();
-            $('div.border-AR_APPROVED_DATE').hide();
-            $('div.border-IS_RECOMMENDED').hide();
-            $('div.border-CLLR_ID').hide();
-            $('#AR_APPROVED_DATE').val(moment().format("YYYY-MM-DD HH:mm:ss"));
-        }
-    }
-
-    if (formid == 2238) {
-
-        if (isEdit) {
-            $('div.border-USER_PASSWORD').hide();
-            $('div.border-USER_UID').hide();
-            $('div.border-PROFILE_STATUS').hide();
-            $('div.border-ZOOM_USER_ID').hide();
-            //$('div.border-IS_EMAIL_VERIFIED').hide();
-            //$('div.border-IS_PHONE_VERIFIED').hide();
-            $('input#USER_NAME').attr("readonly",true);
-            $('input#USER_EMAIL').attr("readonly",true);
-            $('input#USER_SOURCE').attr("readonly",true);
-            $('select#USER_ROLE').attr("readonly", true);
-            if ($('a.breadcrumb-link').length > 1) {
-                var ele = $('a.breadcrumb-link')[1]
-                $(ele).attr("href", "#/admin/admin-users");
-                $(ele).html("ADMIN USERS");
-            }
-        }
-        else {
-            $('div.border-PROFILE_STATUS').hide();
-            $('div.border-ZOOM_USER_ID').hide();
-            $('div.border-USER_UID').hide();
-            $("#USER_ROLE option:contains('ADMIN')").prop('selected', true);
-            $("#USER_ROLE").attr("readonly", true);
-            $('input#USER_SOURCE').val('web').attr("readonly", true);
-            if ($('a.breadcrumb-link').length > 1) {
-                var ele = $('a.breadcrumb-link')[1]
-                $(ele).attr("href", "#/admin/admin-users");
-                $(ele).html("ADMIN USERS");
-            }
+            $('input#LOCATION_CODE').attr("readonly", true);
+        } else {
+            $('div.border-LOCATION_CODE').hide();
         }
     }
 }
@@ -15449,8 +15407,17 @@ function NewformEntryfunctionality(formid, isEdit) {
 
 function GetGeneratedFormDataUrl(formid, isEdit) {
 
-    if (formid == 2238) {
-        return "AdminGeneratedFormData";
+    if (formid == 2306) {
+        return "Calendar/AddLocationMaster";
     }
-    return "GeneratedFormData";
+    return "FormAPI/GeneratedFormData";
+}
+
+
+function GetFormRecordsUrl(formid) {
+
+    if (formid == 2306) {
+        return BASE_URL +"Calendar/GetLocationMasterList";
+    }
+    return BASE_URL + "FormAPI/GetFormRecordList";
 }

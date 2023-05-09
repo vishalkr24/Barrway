@@ -18,6 +18,9 @@
                 getBaseUrl: function () {
                     return this.baseUrl;
                 },
+                getOtherBaseUrl: function () {
+                    return window.location.href.split("#")[0];
+                },
                 getCurrentEndPointUrl: function () {
                     return this.endpoint;
                 },

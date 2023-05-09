@@ -436,7 +436,7 @@
             <div class="navbar-brand cal-name">
 
                 <select class="calendar-name select-company" id="ddlMasterCalendar">
-                    <option value="{{calendar.Id}}" ng-repeat="calendar in calendarList">{{calendar.CALENDAR_NAME}}</option>
+                    <option value="{{calendar.CALENDAR_CODE}}" ng-repeat="calendar in calendarList">{{calendar.CALENDAR_NAME}}</option>
                 </select>
 
                 <!-- Navbar Vertical Toggle -->
@@ -485,7 +485,7 @@
                                 </a>
 
                                 <div id="navbarVerticalMenuPagesUsersMenu" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
-                                    <a class="nav-link " ui-sref="records({formId:2302})">Location Master</a>
+                                    <a class="nav-link " ui-sref="calendar_location({formId:2306})">Location Master</a>
                                     <a class="nav-link " ui-sref="records({formId:2303})">Service Master</a>
                                     <a class="nav-link " ui-sref="records({formId:2304})">Service Provider Master</a>
                                 </div>

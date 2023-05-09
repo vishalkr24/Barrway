@@ -1633,7 +1633,7 @@
             var reference_form = "2196";
             var params = setWindowScreenSize($scope.screenSize);
 
-            var baseUrl = mainService.getBaseUrl();
+            var baseUrl = mainService.getOtherBaseUrl();
             $scope.isEdit = isEdit;
             var fullPath = "";
             var qrString = $location.search();
@@ -4196,7 +4196,7 @@
             var details = JSON.parse(localStorage.getItem("detail"));
             var languageIdForm = localStorage.getItem("globalLangForm");
             var languageId = localStorage.getItem("globalLang");
-            localStorage.clear();
+            //localStorage.clear();
             localStorage.setItem("detail", JSON.stringify(details));
             localStorage.setItem("globalLang", languageId);
             localStorage.setItem("globalLangForm", languageIdForm);
@@ -4491,12 +4491,12 @@
                         ajaxFiltering: true,
                         ajaxSorting: true,
                         ajaxLoader: true,
-                        ajaxURL: $scope.currentUrl + "/GetFormRecordList",
+                        ajaxURL: GetFormRecordsUrl($scope.currentFormId),
                         ajaxConfig: "POST", //ajax HTTP request type
                         ajaxContentType: "json",
                         ajaxParams: {
                             action: 32, formId: $scope.currentFormId, created_by: $scope.userDetail.Id, update_by: $scope.userDetail.Id, topicId: $scope.formDetailsDataInfo.topicId,
-                            currentFormType: $scope.formDetailsDataInfo.currentFormType
+                            currentFormType: $scope.formDetailsDataInfo.currentFormType, companyCode: localStorage.getItem("COMPANY_CODE"), calendarCode: localStorage.getItem("CALENDAR_CODE")
                         }, //ajax parameters
                         ajaxProgressiveLoad: "scroll",
                         ajaxProgressiveLoadScrollMargin: 75,

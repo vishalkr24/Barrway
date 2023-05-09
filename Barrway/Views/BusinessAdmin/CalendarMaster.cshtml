@@ -4,9 +4,9 @@
     Layout = "~/Views/Shared/_BusinessAdminLayout.cshtml";
 }
 
-
-
-
+<link href="~/fg-assets/tabulator/css/tabulator_site.min.css" rel="stylesheet" />
+<link href="~/fg-newAssets/css/style.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 <main id="content" role="main" class="main">
     <div class="content container-fluid">
         <div class="row">
@@ -25,15 +25,17 @@
 
         <div class="row">
             <div class="col-md-12">
-                <div class="form-builder-loader">
-                    <div class="loader">
-                        <i class="fa fa-spinner fa-pulse fa-fw"> </i>
-                        <div>
-                            Loading Form Tabulator...
+                <div class="tabulator-section">
+                    <div class="form-builder-loader text-center">
+                        <div class="loader">
+                            <i class="fa fa-spinner fa-pulse fa-fw"> </i>
+                            <div>
+                                Loading Form Tabulator...
+                            </div>
                         </div>
                     </div>
+                    <div id="form-records"></div>
                 </div>
-                <div id="form-records"></div>
             </div>
         </div>
 
