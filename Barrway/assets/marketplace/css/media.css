@@ -1,0 +1,116 @@
+@media screen and (min-width:768px) and (max-width:768px){
+  .user-name p {
+    top: 60px;
+}
+}
+@media screen and (max-width:767px){
+  .top-bar span:last-child {
+    font-size: 13px;
+  }
+  .top-bar span {
+      font-size: 12px;
+      padding: 0px 2px;
+  }
+  .logo-serch{
+    display: block;
+  }
+  .main-menu {
+    position: absolute;
+    top: 85px;
+    left: 0;
+    width: 100%;
+    float: left;    
+  }
+  .main-menu .navbar .navbar-collapse {
+    background-color: #fff;
+    z-index: 9;
+    width: 100%;
+    float: left;
+    position: relative;
+    margin-left: auto;
+    padding: 10px 25px;
+    box-shadow: 0px 5px 4px -4px #ddd;
+   }
+  .main-menu .navbar-right{
+    margin-bottom: 0px;
+  }
+  button.navbar-toggle {
+    border: 1px solid #e2476c;
+    position: absolute;
+    top: -45px;
+    right: -1px;
+  }
+  .navbar-toggle .icon-bar {
+      background-color: #e2476c;
+  }
+  .search-bar {
+    width: 100%;
+    margin: 8px 0px;
+  }
+  .main-menu nav.navbar {
+      margin-bottom: 0px;
+  }
+  div#myNavbar .navbar-nav li.rl a {
+    border-radius: 10px 10px 10px 10px;
+  }
+  div#myNavbar .navbar-nav li.rl ul a {
+    background-color: transparent;
+    color: #222;
+    border: 1px solid #ddd;
+    margin: 6px 0px;
+  }
+  .user-name p {
+    margin-bottom: 0px;
+    line-height: 2;
+    text-align: revert;
+    position: relative;
+    right: 0px;
+    top: 0px;
+    text-align: right;
+}
+.media-left, .media-body {
+    width: 100%;
+    float: left;
+}
+
+/* ================================= banner ================================= */
+  .banner-form {
+      padding-top: 0px;
+  }
+  .banner-form h1 {
+      font-size: 20px;
+  }
+  .form-inner p {
+      font-size: 14px;
+      width: 100%;
+  }
+  .fields .form-group {
+      width: 100%;
+      float: left;
+      margin-right: 0px;
+  }
+  .fields p a {
+      top: 0;
+      width: 100%;
+      float: left;
+      text-align: center;
+  }
+  .fields .form-group select {
+      height: 45px;
+  }
+  .banner-image img {
+      top: 15px;
+  }
+
+/* footer */
+.fooetr-link a {
+    display: block;
+    margin-bottom: 5px;
+    border: none !important;
+}
+.social-links {
+    text-align: left;
+    margin: 9px 0px;
+    padding: 0px 10px;
+}
+}
