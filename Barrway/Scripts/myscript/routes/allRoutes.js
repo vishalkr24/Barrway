@@ -1873,5 +1873,50 @@
                     parent: 'home'
                 }
             })
+            // participant master route state
+            .state('calendar_participant', {
+                url: '/calendar/participant-master/:formId',
+                onEnter: function ($window) { $window.document.title = "Calendar Participant Master"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/calendar-master/participant-master.html?token=' + uuid,
+                        controller: 'FormRecordsController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
+            // Schedular form route state
+            .state('schedular_form', {
+                url: '/calendar/schedular-form/:formId',
+                onEnter: function ($window) { $window.document.title = "Schedular Form"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/calendar-master/schedular-form.html?token=' + uuid,
+                        controller: 'FormRecordsController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
+            // Transaction Master route state
+            .state('transaction_master', {
+                url: '/calendar/transaction-master/:formId',
+                onEnter: function ($window) { $window.document.title = "Transaction Master"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/calendar-master/transaction-master.html?token=' + uuid,
+                        controller: 'FormRecordsController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
     }]);
 }(FormGeneratorApp));

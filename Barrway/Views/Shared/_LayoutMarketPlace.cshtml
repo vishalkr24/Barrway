@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Barrway | @ViewBag.Title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <!-- font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- Owl Stylesheets -->
+    <link rel="stylesheet" href="~/assets/marketplace/owl/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/assets/marketplace/owl/owl.theme.default.min.css">
+
+    <!-- javascript -->
+    <script src="~/assets/marketplace/owl/jquery.min.js"></script>
+    <script src="~/assets/marketplace/owl/owl.carousel.js"></script>
+
+
+
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/style.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/media.css">
+    
+
+</head>
+<body>
+
+    <section class="main-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="top-bar">
+                        <span class="lang"><img src="~/assets/marketplace/image/glo.png" /> English</span>
+                        <span class="location"><img src="~/assets/marketplace/image/lo.png" /> Hong Cong</span>
+                        <span class="pyb">Post your business</span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="logo-serch">
+                        <div class="logo"><a href="index.html"><img src="~/assets/marketplace/image/logo.png" /></a></div>
+                        <div class="search-bar">
+                            <form>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Search for business, service">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-default" type="submit">
+                                            <i class="glyphicon glyphicon-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="main-menu">
+                        <nav class="navbar">
+                            <div class="container-fluid">
+                                <div class="navbar-header">
+                                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                    </button>
+                                </div>
+                                <div class="collapse navbar-collapse" id="myNavbar">
+                                    <ul class="nav navbar-nav">
+                                        <li class="active"><a href="/Marketplace/Index">Home</a></li>
+                                        <!-- <li class="dropdown">
+                                          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1 <span class="caret"></span></a>
+                                          <ul class="dropdown-menu">
+                                            <li><a href="#">Page 1-1</a></li>
+                                            <li><a href="#">Page 1-2</a></li>
+                                            <li><a href="#">Page 1-3</a></li>
+                                          </ul>
+                                        </li> -->
+                                        <li><a href="/Marketplace/BusinessSite">Business</a></li>
+                                        <li><a href="/Marketplace/News">News</a></li>
+                                    </ul>
+                                    <ul class="nav navbar-nav navbar-right">
+                                        <li class="rl">
+                                            <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Register / Login</a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#">Register</a></li>
+                                                <li><a href="#">Login</a></li>
+                                            </ul>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div>
+        @RenderBody()
+    </div>
+
+    <section class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="fooetr-link">
+                        <a href="#">Terms & condition</a>
+                        <a href="#">Privacy policy</a>
+                        <a href="#">Contact us</a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="social-links">
+                        <a href="#">social media links</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- my script -->
+    <script src="~/assets/marketplace/owl/myjq.js"></script>
+
+</body>
+</html>

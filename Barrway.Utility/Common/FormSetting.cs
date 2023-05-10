@@ -30,7 +30,10 @@ namespace Barrway.Utility.Common
         CALENDAR_FORM = 2305,
         LOCATION_MASTER = 2306,
         COMPANY_PAYMENT_HISTORY_MASTER = 2307,
-        COMPANY_SUBSCRIPTION_DETAILS = 2309
+        COMPANY_SUBSCRIPTION_DETAILS = 2309,
+        PARTICIPANT_MASTER = 2310,
+        SCHEDULAR_FORM = 2311,
+        TRANSACTION_MASTER = 2312
     }
 
     public enum FormAction
