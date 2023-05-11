@@ -1348,7 +1348,7 @@
                                                 $scope.formDataInfo = $scope.formDataList[0];
                                             }
                                         }
-                                        loadcssjsfile("assets/js/code/form-entry.js", "js", "entryform");
+                                        loadcssjsfile("fg-assets/js/code/form-entry.js", "js", "entryform");
                                         $rootScope.safeApply();
                                         if (param.action == 6) {
                                             if ($stateParams.popup == 3) {
@@ -6264,7 +6264,7 @@
                                                 $scope.formDataInfo = $scope.formDataList[0];
                                             }
                                         }
-                                        loadcssjsfile("assets/js/code/form-entry.js", "js", "entryform");
+                                        loadcssjsfile("fg-assets/js/code/form-entry.js", "js", "entryform");
                                         $rootScope.safeApply();
                                         if (param.action == 6) {
                                             if ($stateParams.popup == 3) {
@@ -10693,12 +10693,13 @@
             //}
         };
         $scope.openPopupOverFormEntry = function (temp) {
+            debugger;
             //console.log('openFormEntry');           
             var formId = $scope.formDetailsDataInfo.otherformid;
             //var params = windowParams();
             var params = setWindowScreenSize($scope.formDetailsDataInfo.screenMode);
             var newWindow = {};
-            var baseUrl = mainService.getBaseUrl();
+            var baseUrl = mainService.getEditbaseUrl();
             var formGroupKey = temp.formgroupkey;
             var eventId = temp.entryid;
             //url: '/form/editEntry/:formId/:formGroupKey/:Id?popup',
@@ -11240,7 +11241,7 @@
         function loadEventTabulator() {
             window["tabulators"] = {};
             var form_id = $scope.tabuListLink.formId;
-            loadcssjsfile("assets/js/code/form-entry.js", "js", "entryform")
+            loadcssjsfile("fg-assets/js/code/form-entry.js", "js", "entryform")
             $rootScope.safeApply();
             $rootScope.$emit("ShowLoading");
             // one to many form control           
@@ -11409,7 +11410,7 @@
                 var form_id = $scope.otherformDetails.formId;
                 $scope.selectedRecords = [];
 
-                loadcssjsfile("assets/js/code/form-entry.js", "js", "entryform")
+                loadcssjsfile("fg-assets/js/code/form-entry.js", "js", "entryform")
                 $rootScope.safeApply();
                 $rootScope.$emit("ShowLoading");
                 // one to many form control           
@@ -15190,7 +15191,7 @@
         $scope.init();
     });
 
-    FormGeneratorApp.controller('NewDemoCalenderRecordsControllerTemp', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
+    FormGeneratorApp.controller('NewDemoCalenderRecordsControllerTemp', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
         var tabulatorChildren = {};
         //var tabulator = '';
         var arrowImage = function (cell, formatterParams) {
@@ -15414,14 +15415,14 @@
                                 Wparam.formId = $scope.formDetailsDataInfo.formId;
                                 Wparam.action = 1;
                                 Wparam.record_id = response.data.Id;
-                                mainService.manageCRUDWhatsAppN("ManageCRUDWhatsAppN", Wparam)
-                                    .then(function (responseW) {
-                                        var data = responseW.data;
-                                        console.log(responseW.data, 'responseW.data;');
-                                        if (data != null && angular.isDefined(data)) {
-                                            console.log('success');
-                                        }
-                                    });
+                                //mainService.manageCRUDWhatsAppN("ManageCRUDWhatsAppN", Wparam)
+                                //    .then(function (responseW) {
+                                //        var data = responseW.data;
+                                //        console.log(responseW.data, 'responseW.data;');
+                                //        if (data != null && angular.isDefined(data)) {
+                                //            console.log('success');
+                                //        }
+                                //    });
                                 $scope.currentDateTime = new Date();
                                 if ($scope.formDetailsDataInfo.currentFormType != 2) {
 
@@ -16419,7 +16420,7 @@
             //var params = windowParams();
             var params = setWindowScreenSize($scope.formDetailsDataInfo.screenMode);
             var newWindow = {};
-            var baseUrl = mainService.getBaseUrl();
+            var baseUrl = mainService.getEditbaseUrl();
             var formGroupKey = temp.formgroupkey;
             var eventId = temp.entryid;
             //url: '/form/editEntry/:formId/:formGroupKey/:Id?popup',
@@ -17299,7 +17300,7 @@
         function loadEventTabulator() {
             window["tabulators"] = {};
             var form_id = $scope.tabuListLink.formId;
-            loadcssjsfile("assets/js/code/form-entry.js", "js", "entryform")
+            loadcssjsfile("fg-assets/js/code/form-entry.js", "js", "entryform")
             $rootScope.safeApply();
             $rootScope.$emit("ShowLoading");
             // one to many form control           
@@ -17468,7 +17469,7 @@
                 var form_id = $scope.otherformDetails.formId;
                 $scope.selectedRecords = [];
 
-                loadcssjsfile("assets/js/code/form-entry.js", "js", "entryform")
+                loadcssjsfile("fg-assets/js/code/form-entry.js", "js", "entryform")
                 $rootScope.safeApply();
                 $rootScope.$emit("ShowLoading");
                 // one to many form control           
@@ -17632,7 +17633,7 @@
                             paramNew.formId = form_id;
                             paramNew.primaryFormId = $scope.tabuListLink.formId;
                             paramNew.formGroupKey = $scope.tabuListLink.formGroupKey;
-                            $.getJSON($scope.currentUrl + "/getReferralFormFieldsAndDataGET?action=2&formID=" + paramNew.primaryFormId + "&formGroupKey=" + paramNew.formGroupKey + "", function (data) {
+                            $.getJSON($scope.currentUrl + "/getReferralFormFieldsAndDataGET?actionid=2&formID=" + paramNew.primaryFormId + "&formGroupKey=" + paramNew.formGroupKey + "", function (data) {
                                 var selectedData = data;
                                 //console.log(selectedData);
                                 var exist = _.findWhere(selectedData.formDataHeaders, { "Referral_Forms": $scope.otherformDetails.formId.toString() });
@@ -20142,13 +20143,14 @@
 
             }
         }
-        $scope.$on("getFormList", function (event, data) {
+        adminService.postAsync("FormAPI/GetFormList", { "action": 21, "applicationId": 351 }).then(function (res) {
+            var data = res.data;
             if (!DataService.isEmpty(data)) {
                 $scope.allFormsList = data;
                 if ($scope.allFormsList.length > 0) {
-                    var exists = _.filter($scope.allFormsList, function (item) {                  
+                    var exists = _.filter($scope.allFormsList, function (item) {
                         return (!DataService.isEmpty(item.formTag) ? (item.formTag.toLowerCase().contains("course")
-                            || item.formTag.toLowerCase().contains("slot"))                            
+                            || item.formTag.toLowerCase().contains("slot"))
                             : false);
                     });
                     if (exists.length > 0) {
@@ -20157,6 +20159,7 @@
                     }
                 }
             }
+
         });
 
         $scope.filterBySelectedDate = function () {
@@ -21108,7 +21111,7 @@
             //var params = windowParams();
             var params = setWindowScreenSize($scope.formDetailsDataInfo.screenMode);
             var newWindow = {};
-            var baseUrl = $scope.BaseUrl;
+            var baseUrl = mainService.getEditbaseUrl();
             newWindow = window.open(baseUrl + "#/form/editEvent/" + formId + "/" + formGroupKey + "/" + rowId + '?popup=1&customForms=' + customForms + '&customFormIds=' + customFormIds + '', 'example', params, true);
             newWindow.focus();
             localStorage.setItem("newWindow", newWindow);
@@ -21253,28 +21256,28 @@
 
         // Initialize jquery ui tabs
         $("#tabs").tabs({
-            create: function (event, ui) {
-                //console.info(ui.tab.data('value'))
-            },
+                create: function (event, ui) {
+                    //console.info(ui.tab.data('value'))
+                },
             activate: function (event, ui) {
-                //console.info($(ui.newTab).find('a').attr('href'));//ui.oldTab.data('value')
-                var target = $(ui.newTab).find('a').attr('href');
-               // $(target + ' div.calendar').fullCalendar('render');            
-                //$(target + ' div.calendar').fullCalendar('refetchEvents');
-                $('body .popover').remove();
-                $.cookie("calendar-activeView", $('a[href="' + target + '"]').parent().index(), { expires: 365, path: '/' });
-             
-                $(target + ' div.calendar').fullCalendar('rerenderEvents');
-            }
-        });
+                    //console.info($(ui.newTab).find('a').attr('href'));//ui.oldTab.data('value')
+                    var target = $(ui.newTab).find('a').attr('href');
+                    // $(target + ' div.calendar').fullCalendar('render');
+                    //$(target + ' div.calendar').fullCalendar('refetchEvents');
+                    $('body .popover').remove();
+                    $.cookie("calendar-activeView", $('a[href="' + target + '"]').parent().index(), { expires: 365, path: '/' });
+
+                    $(target + ' div.calendar').fullCalendar('rerenderEvents');
+                }
+            });    
         $("#tabs").show();
 
         if (checkCookie('calendar-activeView') !== '') {
             $("#tabs").tabs("option", "active", parseInt(checkCookie('calendar-activeView')));
         } else {
-            $("#tabs").tabs("option", "active", 2);
+           $("#tabs").tabs("option", "active", 2);
         }
-
+        
         var dialog = $("#dialog").dialog({
             autoOpen: false,
             modal: true,

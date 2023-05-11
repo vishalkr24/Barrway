@@ -64,8 +64,10 @@ namespace Barrway.Service.Repository
         {
             try
             {
+                var dataDic = data.ToDictionary();
+                dataDic.Add("query", data.Query);
                 var request = new RestRequest("api/FormAPI/GetFormRecordList", Method.Post) { RequestFormat = DataFormat.Json };
-                request.AddBody(data);
+                request.AddBody(dataDic);
                 request.AddHeader("content-type", "application/json");
                 var response = await _client.ExecuteAsync(request);
                 if (response.Content != null)
@@ -215,6 +217,67 @@ namespace Barrway.Service.Repository
                 return new AddUpdateDelete<List<FormTable>>() { Status = false, Data = new List<FormTable>(),Message=ex.Message };
             }
         }
+        public async Task<AddUpdateDelete<FormTable>> ManageFormApp(FormTable data)
+        {
+            try
+            {
+                var request = new RestRequest("api/FormAPI/ManageFormApp", Method.Post) { RequestFormat = DataFormat.Json };
+                request.AddBody(data);
+                request.AddHeader("content-type", "application/json");
+                var response = await _client.ExecuteAsync(request);
+                if (response.Content != null)
+                {
+                    var result = JsonConvert.DeserializeObject<FormTable>(response.Content);
+                    if (result != null)
+                    {
+                        return new AddUpdateDelete<FormTable>() { Status = true, Data = result };
+                    }
+                    else
+                    {
+                        return new AddUpdateDelete<FormTable>() { Status = false, Message = AppMessage.NotFound };
+                    }
+                }
+                else
+                {
+                    return new AddUpdateDelete<FormTable>() { Status = false, Message = response.ErrorMessage };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete<FormTable>() { Status = false,Message=ex.Message };
+            }
+        }
+
+        public async Task<AddUpdateDelete<List<Form_Roles>>> ManageFormRoles(Form_Roles data)
+        {
+            try
+            {
+                var request = new RestRequest("api/FormAPI/ManageFormRoles", Method.Post) { RequestFormat = DataFormat.Json };
+                request.AddBody(data);
+                request.AddHeader("content-type", "application/json");
+                var response = await _client.ExecuteAsync(request);
+                if (response.Content != null)
+                {
+                    var result = JsonConvert.DeserializeObject<List<Form_Roles>>(response.Content);
+                    if (result != null)
+                    {
+                        return new AddUpdateDelete<List<Form_Roles>>() { Status = true, Data = result };
+                    }
+                    else
+                    {
+                        return new AddUpdateDelete<List<Form_Roles>>() { Status = false, Message = AppMessage.NotFound };
+                    }
+                }
+                else
+                {
+                    return new AddUpdateDelete<List<Form_Roles>>() { Status = false, Message = response.ErrorMessage };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete<List<Form_Roles>>() { Status = false, Data = new List<Form_Roles>(), Message = ex.Message };
+            }
+        }
 
 
         public async Task<AddUpdateDelete<List<Languages>>> ManageLanguages(Languages data)
@@ -301,6 +364,201 @@ namespace Barrway.Service.Repository
             catch (Exception ex)
             {
                 return new List<calenderSettingsFormDetails>();
+            }
+        }
+
+        public async Task<AxixColumnsResponseModel> getAxisColumns(calenderSettingsFormDetails data)
+        {
+            try
+            {
+                var request = new RestRequest("api/FormAPI/getAxisColumns", Method.Post) { RequestFormat = DataFormat.Json };
+                request.AddBody(data);
+                request.AddHeader("content-type", "application/json");
+                var response = await _client.ExecuteAsync(request);
+                if (response.Content != null)
+                {
+                    var result = JsonConvert.DeserializeObject<AxixColumnsResponseModel>(response.Content);
+                    if (result != null)
+                    {
+                        return result;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        
+        public async Task<ReferalFormDataResponseModel> getReferralFormFields(Form_DataTable data)
+        {
+            try
+            {
+                var request = new RestRequest("api/FormAPI/getReferralFormFields", Method.Post) { RequestFormat = DataFormat.Json };
+                request.AddBody(data);
+                request.AddHeader("content-type", "application/json");
+                var response = await _client.ExecuteAsync(request);
+                if (response.Content != null)
+                {
+                    var result = JsonConvert.DeserializeObject<ReferalFormDataResponseModel>(response.Content);
+                    if (result != null)
+                    {
+                        return result;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<formDataHeadersList> getReferralFormFieldsAndData(Form_DataTable data)
+        {
+            try
+            {
+                var request = new RestRequest("api/FormAPI/getReferralFormFieldsAndData", Method.Post) { RequestFormat = DataFormat.Json };
+                request.AddBody(data);
+                request.AddHeader("content-type", "application/json");
+                var response = await _client.ExecuteAsync(request);
+                if (response.Content != null)
+                {
+                    var result = JsonConvert.DeserializeObject<formDataHeadersList>(response.Content);
+                    if (result != null)
+                    {
+                        return result;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+
+        public async Task<IEnumerable<FormCalenderReferrenceTable>> ManageCalenderReferrenceNew(FormCalenderReferrenceTable data)
+        {
+            try
+            {
+                var request = new RestRequest("api/FormAPI/ManageCalenderReferrenceNew", Method.Post) { RequestFormat = DataFormat.Json };
+                request.AddBody(data);
+                request.AddHeader("content-type", "application/json");
+                var response = await _client.ExecuteAsync(request);
+                if (response.Content != null)
+                {
+                    var result = JsonConvert.DeserializeObject<IEnumerable<FormCalenderReferrenceTable>>(response.Content);
+                    if (result != null)
+                    {
+                        return result;
+                    }
+                }
+                else
+                {
+                    return new List<FormCalenderReferrenceTable>();
+                }
+                return new List<FormCalenderReferrenceTable>(); ;
+            }
+            catch (Exception ex)
+            {
+                return new List<FormCalenderReferrenceTable>(); ;
+            }
+        }
+
+        public async Task<List<IDictionary<string,object>>> getJSONjsTree(int root, string title, string formId, string resourceActivityForm, string previousSelection, string selectedRoot, string query, string id)
+        {
+            try
+            {
+                var request = new RestRequest($"api/FormAPI/getJSONjsTree?root={root}&title={title}&formId={formId}&resourceActivityForm={resourceActivityForm}&previousSelection={previousSelection}&selectedRoot={selectedRoot}&query={query}&id={id}", Method.Post) { RequestFormat = DataFormat.Json };
+                request.AddHeader("content-type", "application/json");
+                var response = await _client.ExecuteAsync(request);
+                if (response.Content != null)
+                {
+                    var result = JsonConvert.DeserializeObject<List<IDictionary<string, object>>>(response.Content);
+                    if (result != null && result.Count() > 0)
+                    {
+                        return result;
+                    }
+                }
+                else
+                {
+                    return new List<IDictionary<string, object>>();
+                }
+                return new List<IDictionary<string, object>>();
+            }
+            catch (Exception ex)
+            {
+                return new List<IDictionary<string, object>>();
+            }
+        }
+        public async Task<IEnumerable<FormListDataView>> GetFormList(FormListDataView data)
+        {
+            try
+            {
+                var request = new RestRequest("api/FormAPI/GetFormList", Method.Post) { RequestFormat = DataFormat.Json };
+                request.AddBody(data);
+                request.AddHeader("content-type", "application/json");
+                var response = await _client.ExecuteAsync(request);
+                if (response.Content != null)
+                {
+                    var result = JsonConvert.DeserializeObject<IEnumerable<FormListDataView>>(response.Content);
+                    if (result != null)
+                    {
+                        return result;
+                    }
+                }
+                else
+                {
+                    return new List<FormListDataView>();
+                }
+                return new List<FormListDataView>(); ;
+            }
+            catch (Exception ex)
+            {
+                return new List<FormListDataView>(); ;
+            }
+        }
+        
+       
+        public async Task<formDataHeadersList> getReferralFormFieldsAndDataGET(int action, string formID, string formGroupKey)
+        {
+            try
+            {
+                var request = new RestRequest($"api/FormAPI/getReferralFormFieldsAndDataGET?action={action}&formID={formID}&formGroupKey={formGroupKey}", Method.Get);
+                //request.AddHeader("content-type", "application/json");
+                var response = await _client.ExecuteAsync(request);
+                if (response.Content != null)
+                {
+                    var result = JsonConvert.DeserializeObject<formDataHeadersList>(response.Content);
+                    if (result != null)
+                    {
+                        return result;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+                return null; ;
+            }
+            catch (Exception ex)
+            {
+                return null;
             }
         }
     }

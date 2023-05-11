@@ -14,7 +14,7 @@ namespace Barrway.Utility.Common
         public static string email = "info@geligulu.com";
         public static string dateformat = "dd/MM/yyyy";
         public static int token_expire_time = 24 * 60;
-        public static string app_name = "MOODIES CARE";
+        public static string app_name = "Barrway";
     }
 
 

@@ -994,7 +994,8 @@ function changeResourceIDByYSelection(calenderData) {
                                     item.end = moment(item.end).format("YYYY-MM-DD");
                                 }
                             }
-                        } else if (item.customForms!=""){
+                        }
+                        else if (item.customForms != "") {
                             var tempformidList = item.customForms.split(",");
                             var tempformentryidList = item.customFormIds.split(",");
                             // var indx = _.indexOf(tempformidList, $scope.ySelection.toString());
@@ -1019,17 +1020,7 @@ function changeResourceIDByYSelection(calenderData) {
                             }
                         }
                     }
-                //if (item.seperatedResFormIDs != undefined)
-                //    if ($scope.ySelection != undefined && $scope.ySelection != "") {
-                //        if (item.seperatedResFormIDs.contains(",") == true) {
-                //            var tempformidList = item.seperatedResFormIDs.split(",");
-                //            var tempformentryidList = item.seperatedResEntryIDs.split(",");
-                //            var indx = _.indexOf(tempformidList, $scope.ySelection.toString());
-                //            if (indx != -1) {
-                //                item.resourceId = tempformentryidList[indx];
-                //            }
-                //        }
-                //    }
+                
             }
         });
     return result;
@@ -1550,7 +1541,7 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
         editable: true,
         eventLimit: 4, // allow "more" link when too many events            
         loading: function (bool) {
-            //var current_tab = $('#tabs .ui-tabs-panel:eq(' + $( "#tabs" ).tabs( "option", "active" ) + ')').attr('id');
+            var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs( "option", "active" ) + ')').attr('id');
             if (bool) {
                 showLoader(".calendar .fc-view-container");
             }
@@ -2679,11 +2670,11 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                 jQuery.curCSS = function (element, prop, val) {
                     return jQuery(element).css(prop, val);
                 };
-                $('.fc-content').bstooltip();
-                $('.fc-timeline-event').bstooltip();
-                $('.fc-list-item').bstooltip();
-                $('.fc-day-grid-event').bstooltip();
-                $('.fc-time-grid-event').bstooltip();
+                $('.fc-content').bstooltip({ html: true });
+                $('.fc-timeline-event').bstooltip({ html: true });
+                $('.fc-list-item').bstooltip({ html: true });
+                $('.fc-day-grid-event').bstooltip({ html: true });
+                $('.fc-time-grid-event').bstooltip({ html: true });
                 setTimeout(function () {
                     $('#agenda-view div.calendar').fullCalendar('render');
                     $('#timeline-resource-view div.calendar').fullCalendar('render');
@@ -2737,7 +2728,7 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                 //showLoader();
                 $.ajax({
                     method: 'POST',
-                    url: "api/FormAPI/getReferralFormFields",
+                    url: BASE_URL + "/FormAPI/getReferralFormFields",
                     dataType: 'json',
                     contentType: "application/json",
                     data: JSON.stringify(param),
@@ -2799,7 +2790,7 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
             param.filter.field = "start";           
             $.ajax({
                 method: 'POST',
-                url: "api/FormAPI/getReferralFormFields",
+                url: BASE_URL + "/FormAPI/getReferralFormFields",
                 dataType: 'json',
                 contentType: "application/json",
                 data: JSON.stringify(param),
@@ -4019,7 +4010,7 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
             async function callCategory(eventData) {
                 // inputOptions can be an object or Promise
                 const inputOptions = new Promise((resolve) => {
-                    $.post("api/FormAPI/getReferralFormFields", postData, function (response) {
+                    $.post(BASE_URL + "/FormAPI/getReferralFormFields", postData, function (response) {
                         if (typeof response.overlapMesage !== 'undefined') {
                             swal({ type: 'error', title: '', text: response.overlapMesage });
                             rebindCalenderWithEvents("deleteEvent");
@@ -4201,7 +4192,7 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
       
             $.ajax({
                 method: 'POST',
-                url: "api/FormAPI/getReferralFormFields",
+                url: BASE_URL + "/FormAPI/getReferralFormFields",
                 dataType: 'json',
                 contentType: "application/json",
                 data: JSON.stringify(param),
@@ -4480,7 +4471,7 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
             param.filter.field = "start";        
             $.ajax({
                 method: 'POST',
-                url: "api/FormAPI/getReferralFormFields",
+                url: BASE_URL + "/FormAPI/getReferralFormFields",
                 dataType: 'json',
                 contentType: "application/json",
                 data: JSON.stringify(param),
@@ -5992,7 +5983,7 @@ function loadCalendarWithOutEventFunction(calenderType, calenderData, resourceDa
                 showLoader();
                 $.ajax({
                     method: 'POST',
-                    url: "api/FormAPI/getReferralFormFields",
+                    url: BASE_URL+ "/FormAPI/getReferralFormFields",
                     dataType: 'json',
                     contentType: "application/json",
                     data: JSON.stringify(param),
@@ -7129,7 +7120,7 @@ function loadCalendarWithOutEventFunction(calenderType, calenderData, resourceDa
             async function callCategory(eventData) {
                 // inputOptions can be an object or Promise
                 const inputOptions = new Promise((resolve) => {
-                    $.post("api/FormAPI/getReferralFormFields", postData, function (response) {
+                    $.post(BASE_URL + "/FormAPI/getReferralFormFields", postData, function (response) {
                         if (typeof response.overlapMesage !== 'undefined') {
                             swal({ type: 'error', title: '', text: response.overlapMesage });
                             $("#" + current_tab + " .calendar").fullCalendar('refetchEvents');
@@ -7302,7 +7293,7 @@ function loadCalendarWithOutEventFunction(calenderType, calenderData, resourceDa
             showLoader();
             $.ajax({
                 method: 'POST',
-                url: "api/FormAPI/getReferralFormFields",
+                url: BASE_URL + "/FormAPI/getReferralFormFields",
                 dataType: 'json',
                 contentType: "application/json",
                 data: JSON.stringify(param),
@@ -8774,7 +8765,7 @@ function loadCalendartemp(calenderType, calenderData, resourceData, resColumns, 
                 param.filter.field = "start";
                 $.ajax({
                     method: 'POST',
-                    url: "api/FormAPI/getReferralFormFields",
+                    url: BASE_URL + "/FormAPI/getReferralFormFields",
                     dataType: 'json',
                     contentType: "application/json",
                     data: JSON.stringify(param),
@@ -9522,7 +9513,7 @@ function loadCalendartemp(calenderType, calenderData, resourceData, resColumns, 
             async function callCategory(eventData) {
                 // inputOptions can be an object or Promise
                 const inputOptions = new Promise((resolve) => {
-                    $.post("api/FormAPI/getReferralFormFields", postData, function (response) {
+                    $.post(BASE_URL + "/FormAPI/getReferralFormFields", postData, function (response) {
                         if (typeof response.overlapMesage !== 'undefined') {
                             swal({ type: 'error', title: '', text: response.overlapMesage });
                             $("#" + current_tab + " .calendar").fullCalendar('refetchEvents');
@@ -11679,7 +11670,7 @@ function loadCalendarold1(calenderType, calenderData, resourceData, resColumns, 
             async function callCategory(eventData) {
                 // inputOptions can be an object or Promise
                 const inputOptions = new Promise((resolve) => {
-                    $.post("api/FormAPI/getReferralFormFields", postData, function (response) {
+                    $.post(BASE_URL + "/FormAPI/getReferralFormFields", postData, function (response) {
                         if (typeof response.overlapMesage !== 'undefined') {
                             swal({ type: 'error', title: '', text: response.overlapMesage });
                             $("#" + current_tab + " .calendar").fullCalendar('refetchEvents');
@@ -14535,7 +14526,7 @@ function loadCalendar(calenderType, calenderData, resourceData, resColumns, acti
             async function callCategory(eventData) {
                 // inputOptions can be an object or Promise
                 const inputOptions = new Promise((resolve) => {
-                    $.post("api/FormAPI/getReferralFormFields", postData, function (response) {
+                    $.post(BASE_URL + "/FormAPI/getReferralFormFields", postData, function (response) {
                         if (typeof response.overlapMesage !== 'undefined') {
                             swal({ type: 'error', title: '', text: response.overlapMesage });
                             $("#" + current_tab + " .calendar").fullCalendar('refetchEvents');

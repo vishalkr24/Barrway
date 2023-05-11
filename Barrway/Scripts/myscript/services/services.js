@@ -21,6 +21,9 @@
                 getOtherBaseUrl: function () {
                     return window.location.href.split("#")[0];
                 },
+                getEditbaseUrl: function () {
+                    return window.location.href.split("#")[0].replace("Index","EditIndex");
+                },
                 getCurrentEndPointUrl: function () {
                     return this.endpoint;
                 },

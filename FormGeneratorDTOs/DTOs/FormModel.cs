@@ -28,7 +28,7 @@ namespace FormGeneratorDTOs.DTOs
         public int page_records { get; set; }
         public List<FilterDTO> filters { get; set; }
         public List<SortDTO> sorters { get; set; }
-        public string query { get; set; }
+        public string Query { get; set; }
 
 
     }

@@ -139,6 +139,11 @@
     <link href="fg-assets/css/app.css" rel="stylesheet" />
     <link href="fg-assets/tabulator/css/tabulator_site.min.css" rel="stylesheet" />
     <link href="Content/myStyle.css" rel="stylesheet" />
+    <link id="tabulator-css" rel="stylesheet" href="fg-assets/formValidation/css/formValidation.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/themes/default/style.min.css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" id="jquery-ui-change">
+    <link href="Content/tagify.css" rel="stylesheet" />
+    <link href="Content/sidebar/css/sidebar.css?token=@token" rel="stylesheet" />
     <style>
         .form-inline {
             display: -ms-flexbox;
@@ -184,19 +189,107 @@
         .form-group {
             margin-bottom: 1rem
         }
+
+        .form-inline {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-flow: row wrap;
+            flex-flow: row wrap;
+            -ms-flex-align: center;
+            align-items: center
+        }
+
+            .form-inline .form-check {
+                width: 100%
+            }
+
+        @@media (min-width: 576px) {
+            .form-inline label {
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex-align: center;
+                align-items: center;
+                -ms-flex-pack: center;
+                justify-content: center;
+                margin-bottom: 0
+            }
+
+            .form-inline .form-group {
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex: 0 0 auto;
+                flex: 0 0 auto;
+                -ms-flex-flow: row wrap;
+                flex-flow: row wrap;
+                -ms-flex-align: center;
+                align-items: center;
+                margin-bottom: 0
+            }
+
+            .form-inline .form-control {
+                display: inline-block;
+                width: auto;
+                vertical-align: middle
+            }
+
+            .form-inline .form-control-plaintext {
+                display: inline-block
+            }
+
+            .form-inline .custom-select, .form-inline .input-group {
+                width: auto
+            }
+
+            .form-inline .form-check {
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex-align: center;
+                align-items: center;
+                -ms-flex-pack: center;
+                justify-content: center;
+                width: auto;
+                padding-left: 0
+            }
+
+            .form-inline .form-check-input {
+                position: relative;
+                -ms-flex-negative: 0;
+                flex-shrink: 0;
+                margin-top: 0;
+                margin-right: .25rem;
+                margin-left: 0
+            }
+
+            .form-inline .custom-control {
+                -ms-flex-align: center;
+                align-items: center;
+                -ms-flex-pack: center;
+                justify-content: center
+            }
+
+            .form-inline .custom-control-label {
+                margin-bottom: 0
+            }
+        }
+
+        .chosen-container {
+            width: 100% !important;
+        }
+
+        .tagify {
+            padding: 0px !important
+        }
     </style>
     <script>
         localStorage.setItem("detail", '{"Id":30314,"firebase_uid":null,"chatId":"jXZMF2dU3Uyz2okULv6shQuu","uid":"kk53yimj","fullName":"AG Ashutosh Shukla","name":"augursuser","email":"formgeneratorclient@gmail.com","emailVerified":"0","emailCheck":"0","isEmailCheck":false,"isQuickSignUp":false,"password":"","newPassword":null,"password_confirmation":null,"confirmPassword":null,"isUpdatePassword":0,"remember_token":null,"userIcon":"user-avatar-with-check-mark.png","phoneNumber":null,"phoneVerified":"No","isPhoneVerified":null,"phoneCheck":"No","isPhoneCheck":false,"role":1,"status":"Active","planID":9,"planSequence":"1,2,5,13","tooltipSequence":null,"FB_id":null,"GPlus_id":null,"created_ip":"","groupId":0,"checkType":null,"title":null,"verificationCode":null,"isVerificationReq":false,"ayCheck":0,"specialAccess":"1","reset_token":null,"reset_valid_till":null,"isUsable":0,"action":0,"created_by":0,"updated_by":0,"created_at":"Jan 20 2021  3:32PM","newcreated_at":null,"updated_at":"Jan 20 2021  3:32PM","newupdated_at":null,"res":1,"Message":"Login Success|登錄成功|登录成功","IsActive":false,"IsDeleted":false,"IsUnique":false,"page":0,"size":0,"total_records":0,"last_page":0,"page_records":0,"filters":null,"sorters":null,"query":null}');
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="~/Scripts/CalendarScripts/CalendarLayoutManage.js"></script>
-    <script src="~/Scripts/BusinessScripts/Common/CommonFunctions.js"></script>
+
     <!--end setup-->
 </head>
 
 <body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl navbar-vertical-aside-compact-mini-mode navbar-vertical-aside-compact-mode" ng-app="FormGeneratorApp" ng-controller="IndexController">
 
-   
+
 
     <!--Formgenerator Common component-->
     <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-bottom-right'}"></toaster-container>
@@ -460,26 +553,24 @@
                 <div class="navbar-nav nav-compact">
                     <div id="navbarVerticalMenu" class="nav nav-vertical card-navbar-nav">
                         <!-- Collapse -->
-                        
-
                         <!-- Collapse -->
                         <div id="navbarVerticalMenuPagesMenu">
                             <!-- Collapse -->
                             <div class="nav-item show">
-                                <a class="nav-link active" href="#navbarVerticalMenuDashboards" role="button" data-bs-target="#navbarVerticalMenuDashboards" aria-expanded="false" aria-controls="navbarVerticalMenuDashboards">
+                                <a class="nav-link active" ui-sref="Home()" role="button" data-bs-target="#navbarVerticalMenuDashboards" aria-expanded="false" aria-controls="navbarVerticalMenuDashboards">
                                     <i class="bi-house-door nav-icon"></i>
                                     <span class="nav-link-title">Dashboard</span>
                                 </a>
                             </div>
                             <div class="nav-item">
-                                <a class="nav-link" href="#navbarVerticalMenuDashboards" role="button" data-bs-target="#navbarVerticalMenuDashboards" aria-expanded="false" aria-controls="navbarVerticalMenuDashboards">
+                                <a class="nav-link" href="#navbarVerticalMenuDashboards" ui-sref="calendar_view({formId:2305})" role="button" data-bs-target="#navbarVerticalMenuDashboards" aria-expanded="false" aria-controls="navbarVerticalMenuDashboards">
                                     <i class="bi-calendar nav-icon"></i>
                                     <span class="nav-link-title">Calendar</span>
                                 </a>
                             </div>
 
                             <div class="nav-item">
-                                <a class="nav-link " href="#navbarVerticalMenuPagesUsersMenu" role="button" data-bs-target="#navbarVerticalMenuPagesUsersMenu" aria-expanded="false" aria-controls="navbarVerticalMenuPagesUsersMenu">
+                                <a class="nav-link" href="javascript:void(0)" role="button" data-bs-target="#navbarVerticalMenuPagesUsersMenu" aria-expanded="false" aria-controls="navbarVerticalMenuPagesUsersMenu">
                                     <i class="bi-gear nav-icon"></i>
                                     <span class="nav-link-title">Manage</span>
                                 </a>
@@ -574,7 +665,7 @@
 
                     </div>
                 </div>
-                
+
             </div>
         </div>
         <div class="content container-fluid" ui-view="content">
@@ -1085,12 +1176,20 @@
     <!-- End Welcome Message Modal -->
     <!-- ========== END SECONDARY CONTENTS ========== -->
     <!-- JS Implementing Plugins -->
+
     <script src="assets/js/vendor.min.js"></script>
+    <script src="fg-assets/js/jquery.min.js" type="text/javascript"></script>
+    <script src="fg-assets/js/jquery-ui.js"></script>
+
 
     <!-- JS Front -->
     <script src="assets/js/theme.min.js"></script>
 
-
+    <script src="Scripts/CalendarScripts/CalendarLayoutManage.js"></script>
+    <script src="Scripts/BusinessScripts/Common/CommonFunctions.js"></script>
+    <script src="Scripts/tagify.min.js"></script>
+    <script src="Scripts/tagify.polyfills.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/jstree.min.js"></script>
 
     <script src="fg-assets/tabulator/js/tabulator.js"></script>
     <script src="fg-assets/js/waves.js"></script>
@@ -1115,20 +1214,18 @@
     <script src="Scripts/myscript/controller/adminController.js?token=@token"></script>
     <script src="Scripts/myscript/controller/FormRecordsController.js?token=@token"></script>
     <script src="Scripts/myscript/controller/FormEntryController.js?token=@token"></script>
+    <script src="Scripts/myscript/controller/calendarController.js?token=@token"></script>
     <script src="Scripts/myscript/routes/allRoutes.js?token=@token"></script>
     <script src="Scripts/myscript/services/services.js?token=@token"></script>
     <script src="Scripts/myscript/directives/directives.js?token=@token"></script>
+    <script type="text/javascript" src="fg-assets/formValidation/js/formValidation.min.js"></script>
+    <script type="text/javascript" src="fg-assets/formValidation/js/framework/bootstrap.min.js"></script>
     <script src="fg-assets/js/app.js"></script>
     <script src="fg-assets/js/jquery.cookie.min.js"></script>
-    <script src="fg-assets/js/jquery-ui.js"></script>
-
-    <!-- END formgenerator plugin -->
-
-
 
     <!-- JS Plugins Init. -->
     <script>
-(function () {
+        (function () {
             // INITIALIZATION OF NAVBAR VERTICAL ASIDE
             // =======================================================
             new HSSideNav('.js-navbar-vertical-aside').init()
@@ -1137,7 +1234,7 @@
             // INITIALIZATION OF BOOTSTRAP DROPDOWN
             // =======================================================
             HSBsDropdown.init()
-})()</script>
+        })()</script>
 
     <!-- Style Switcher JS -->
 
@@ -1176,8 +1273,29 @@
             })
         })()</script>
 
+    <script>
+
+        $(document).ready(function () {
+            $.fn.bstooltip = $.fn.tooltip.noConflict(true);
+        })
+        $('.nav-link').click(function () {
+
+            $('.nav-link').not(this).removeClass('active');
+            $(this).addClass('active');
+        });
+
+        document.querySelectorAll(".nav-link").forEach((link) => {
+            if (link.href === window.location.href) {
+                $('.nav-link').not(this).removeClass('active');
+                link.classList.add("active");
+                link.setAttribute("aria-current", "page");
+            }
+        });
+
+    </script>
+
+    @RenderSection("scripts", required: false)
+
     <!-- End Style Switcher JS -->
 </body>
-
-<!-- Mirrored from htmlstream.com/preview/front-dashboard-v2.1.1/layouts/sidebar-compact.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 20 Feb 2023 07:48:18 GMT -->
 </html>

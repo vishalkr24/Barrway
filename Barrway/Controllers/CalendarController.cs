@@ -31,6 +31,11 @@ namespace Barrway.Controllers
             return View();
         }
 
+        public ActionResult EditIndex()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<ActionResult> GetLocationMasterList(GenerateDynamicFormData data, string companyCode, string calendarCode)
         {
