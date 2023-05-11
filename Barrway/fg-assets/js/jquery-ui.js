@@ -17312,7 +17312,7 @@ var widgetsSpinner = $.ui.spinner;
 
 
 
-$.widget( "ui.tabs", {
+	$.widget( "ui.tabs", {
 	version: "1.12.1",
 	delay: 300,
 	options: {
@@ -17342,18 +17342,18 @@ $.widget( "ui.tabs", {
 		return function( anchor ) {
 			var anchorUrl, locationUrl;
 
-			anchorUrl = anchor.href.replace( rhash, "" );
-			locationUrl = location.href.replace( rhash, "" );
+			//anchorUrl = anchor.href.replace( rhash, "" );
+			//locationUrl = location.href.replace( rhash, "" );
 
-			// Decoding may throw an error if the URL isn't UTF-8 (#9518)
-			try {
-				anchorUrl = decodeURIComponent( anchorUrl );
-			} catch ( error ) {}
-			try {
-				locationUrl = decodeURIComponent( locationUrl );
-			} catch ( error ) {}
+			//// Decoding may throw an error if the URL isn't UTF-8 (#9518)
+			//try {
+			//	anchorUrl = decodeURIComponent( anchorUrl );
+			//} catch ( error ) {}
+			//try {
+			//	locationUrl = decodeURIComponent( locationUrl );
+			//} catch ( error ) {}
 
-			return anchor.hash.length > 1 && anchorUrl === locationUrl;
+			return true;
 		};
 	} )(),
 

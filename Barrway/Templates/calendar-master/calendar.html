@@ -1,8 +1,8 @@
 ﻿<link href="fg-assets/lightbox/css/lightbox.css" rel="stylesheet" />
 <link href="fg-assets/fullcalendar/dist/fullcalendar.css" rel="stylesheet" />
-
+<script src="fg-assets/fullcalendar/dist/fullcalendar.js"></script>
 <link href="Content/sidebar/css/mscustom-scroller.min.css" rel="stylesheet" />
-<link href="Content/sidebar/css/sidebar.css" rel="stylesheet" />
+
 <link href="fg-assets/fullcalendar-scheduler/dist/scheduler.min.css"
       rel="stylesheet" />
 <link href="fg-assets/fullcalendar-scheduler/dist/bootstrap-colorpicker.min.css"
@@ -12,10 +12,10 @@
 <link href="fg-assets/css/jquery.jgrowl.min.css" rel="stylesheet" />
 
 <script src="fg-assets/lightbox/js/lightbox-2.6.min.js"></script>
-<script src="fg-assets/fullcalendar/dist/fullcalendar.min.js"></script>
 
 
-<script src="fg-assets/js/jquery-ui.js"></script>
+
+<!--<script src="fg-assets/js/jquery-ui.js"></script>-->
 <script src="fg-assets/fullcalendar-scheduler/dist/scheduler.js"></script>
 <script src="fg-assets/fullcalendar-scheduler/dist/bootstrap-datetimepicker.js"></script>
 
@@ -24,7 +24,11 @@
 
 <script src="fg-assets/js/jquery.jgrowl.min.js"></script>
 <script src="fg-assets/js/moment.js"></script>
-
+<link rel="stylesheet" href="fg-assets/css/bootstrap-colorpicker.min.css">
+<script src="fg-assets/js/bootstrap-colorpicker.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.js"></script>
+<script type="text/javascript" src="fg-assets/js/jAutoCalc.js"></script>
 <style>
     .fc-timeline .fc-body .fc-scroller {
         height: 500px !important;
@@ -186,7 +190,7 @@
     }
 
     .breadcrumbUi.row {
-        margin-left: -20px !important;
+        /*margin-left: -20px !important;*/
     }
 
     .custom-br {
@@ -242,8 +246,8 @@
     }
 
     .modal-dialog-slideout .modal-header, .modal-dialog-slideout .modal-footer {
-        height: 69px;
-        display: block;
+        /* height: 69px;
+        display: block;*/
     }
 
         .modal-dialog-slideout .modal-header h5 {
@@ -296,6 +300,7 @@
     div#calendar .fc-timeline .fc-body .fc-scroller {
         height: auto !important;
     }
+
     .modalscrollable {
         overflow-y: auto;
         max-height: 500px;
@@ -303,7 +308,7 @@
     }
 
 
-   
+
 
     /* Important part */
     /*.modal-dialog {
@@ -334,6 +339,7 @@
         height: auto !important;
         min-height: 400px;
     }
+
     .menu-icon_box {
         display: inline-block;
         height: 25px;
@@ -347,8 +353,6 @@
         margin-left: -20px;
         position: relative;
     }
-
-
 </style>
 
 <!--<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ToggleSideMenu">
@@ -358,134 +362,24 @@
     </span>
 </button>-->
 
-<section class="sidebar">
-    <div class="sedebar__tInner">
-        <div class="form-top">
-            <label>{{translation.Activities}}</label>
 
-            <select class="form-control"
-                    ng-model="xSelection"
-                    id="xAxis"
-                    ng-change="xSelectionChange(xSelection)"
-                    ng-options="v.resourceActivityForm as v.title for v in xaxisFormList"></select>
-        </div>
-        <div class="form-top">
-            <label>{{translation.Resources}}</label>
-
-            <select class="form-control"
-                    ng-model="ySelection"
-                    ng-change="ySelectionChange(ySelection)"
-                    ng-options="v.resourceActivityForm as v.title for v in yaxisFormList"></select>
-        </div>
-
-        <div class="form-top mt-2 text-center">
-            <button class="btn btn-primary btn-sm mb-0"
-                    ng-click="resetFilter()">
-                {{translation.Reset_Filter}}
-            </button>
-        </div>
-    </div>
-    <div class="sedebar__inner">
-        <div class="sidebar-toggle">
-            <i class="fa fa-chevron-left"></i>
-        </div>
-        <div class="scrollbar">
-            <div class="card card-default" ng-if="otherformDetails.title.length>0">
-                <div class="from-group search-filter text-center"></div>
-                <div class="card-header pt-0 pb-0">
-                    <span class="arrow">
-                        <i class="fa fa-chevron-down"></i>
-                    </span>
-                    <h3>      {{otherformDetails.title}}</h3>
-
-                </div>
-                <div class="card-body pt-1 text-left">
-                    <div id="tree-custom">
-                        <div class="input-group">
-                            <input type="text"
-                                   id="keyword"
-                                   name="keywordSearch"
-                                   class="form-control ng-pristine ng-untouched ng-valid ng-empty"
-                                   ng-model="otherformDetails.searchTextData"
-                                   placeholder="{{ otherformDetails.title}} " />
-                            <span class="input-group-append">
-                                <button class="btn btn-primary"
-                                        ng-click="searchTabulatorDataInEvent(otherformDetails)"
-                                        type="button">
-                                    <i class="fa fa-search"
-                                       aria-hidden="true">
-                                    </i>
-                                </button>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-
-
-
-            </div>
-            <div class="card card-default"
-                 ng-repeat="(key, list) in calenderSettingsFormDetailsDataList track by $index"
-                 ng-if="list.majorGroupParseList.length>0">
-                <div class="from-group search-filter text-center">
-                    <!--<input
-                        type="search"
-                        class="search-input"
-                        id="search-input-{{$index}}"
-                        ng-model="list.searchtext"
-                        placeholder="Search {{list.title}}"
-                    />-->
-                </div>
-                <div class="card-header pt-0 pb-0">
-                    <span class="arrow">
-                        <i class="fa fa-chevron-down"></i>
-                    </span>
-                    <h3>
-                        {{list.title}}
-
-                    </h3>
-
-                    <a class="morebutton" id="more-button-{{list.resourceActivityForm}}" data-formid="{{list.resourceActivityForm}}">
-                        <i class="fa fa-search"></i>
-                    </a>
-                </div>
-                <div class="card-body pt-1 text-left">
-                    <span ng-if="selectedTreeList.length>0">
-                        <span ng-if="selectedTreeList[0].original.formId==list.resourceActivityForm"> {{selectedTreeList.length}} items selected</span>
-                    </span>
-                    <div id="tree-{{$index}}"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
 <div class="breadcrumbUi row flex-wrap">
-    <!--<button class="navbar-toggler" type="button" data-toggle="collapse" id="ToggleSideMenu"  style="border: 1px solid;padding: 3px;border-radius: 4px;margin: -2px;">
-        <span class="navbar-toggler-icon">
-            <svg version="1.1" id="Capa_1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 384 384"  xml:space="preserve" class="menu-color">
-            <g><rect x="0" y="277.333" width="384" height="42.667"></rect><rect x="0" y="170.667" width="384" height="42.667"></rect><rect x="0" y="64" width="384" height="42.667"></rect></g></svg>
-        </span>
-    </button>-->
-    <!--<span class="navbar-toggler-icon">
-        <svg version="1.1" id="Capa_1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 384 384" xml:space="preserve" class="menu-color">
-        <g><rect x="0" y="277.333" width="384" height="42.667"></rect><rect x="0" y="170.667" width="384" height="42.667"></rect><rect x="0" y="64" width="384" height="42.667"></rect></g></svg>
-    </span>-->  
-    <div class="col-lg-6 col-md-12 text-md-center text-xl-left mb-2 mb-lg-0">
-        <a onclick="HideSiseMenu()" class="btn btn-primary mb-0 ml-1" title="Hide menu">
-            <i id="Hide_menu_Icon" class="fa fa-arrow-left" aria-hidden="true"></i>
-        </a>
 
-        <a ui-sref="userappforms({appId:formDetailsDataInfo.applicationId})"
+    <div class="col-lg-6 col-md-12 text-xl-left mb-2 mb-lg-0">
+        <!--<a onclick="HideSiseMenu()" class="btn btn-primary mb-0 ml-1" title="Hide menu">
+            <i id="Hide_menu_Icon" class="fa fa-arrow-left" aria-hidden="true"></i>
+        </a>-->
+
+        <a ui-sref="Home()"
            class="text-muted custom-br">{{formDetailsDataInfo.applicationTitle}}></a>
         <span class="custom-br">{{formDetailsDataInfo.title}}</span>
-        <a onclick="showQR()"
+        <!--<a onclick="showQR()"
            id="qrCodeNew"
            class="btn btn-primary mb-0 ml-1"
            title="{{translation.QR_Code}}">
             <i class="fa fa-qrcode"></i>
-        </a>
+        </a>-->
         <a href="javascript:;"
            class="pull-left hide-page-actions ml-10"
            title="Hide Page Actions">
@@ -493,8 +387,8 @@
         </a>
 
     </div>
-    <div class="col-lg-6 col-md-12 text-md-center text-xl-right">
-        <div class="btn-group d-inline-flex"
+    <div class="col-lg-6 col-md-12 text-xl-right">
+        <div class="btn-group d-inline-flex float-end"
              role="group"
              aria-label="Basic example">
             <button type="button"
@@ -521,348 +415,462 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-2" style="background-color: #bcb3cc; ">
+        <section class="sidebar">
+            <div class="sedebar__tInner">
+                <div class="form-top">
+                    <label>{{translation.Activities}}</label>
 
-<div class="card">
+                    <select class="form-control"
+                            ng-model="xSelection"
+                            id="xAxis"
+                            ng-change="xSelectionChange(xSelection)"
+                            ng-options="v.resourceActivityForm as v.title for v in xaxisFormList"></select>
+                </div>
+                <div class="form-top">
+                    <label>{{translation.Resources}}</label>
 
-    <span id="menuName"> </span>
-    <span class="hidden" id="menuDescription"> </span>
-    <input type="hidden" name="tabulator" value="applicationDetail" />
-    <input type="hidden" name="tabulatorStorage" value="appDetail" />
-    <input type="hidden"
-           name="onetomany"
-           value="{{multiDcalendar}}"
-           id="onetomany" />
+                    <select class="form-control"
+                            ng-model="ySelection"
+                            ng-change="ySelectionChange(ySelection)"
+                            ng-options="v.resourceActivityForm as v.title for v in yaxisFormList"></select>
+                </div>
 
-
-
-
-    <input type="hidden" value="0" id="FormTypeStatus" />
-    <!--{{formDetailsDataInfo.title}}-->
-    <!-- <small>
-        ({{(formDetailsDataInfo.applicationTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.applicationTitle}},
-        {{(formDetailsDataInfo.topicTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.topicTitle}})
-    </small> -->
-    <input type="hidden" name="tabulator" value="records" />
-    <span id="menuName" class="hidden">
-        {{translation.Records_Untitled_name_newform_newform}}
-    </span>
-    <span class="hidden" id="menuDescription">
-        {{translation.This_is_the_description_of_the_Untitled_name_newform_newform}}
-        records form.
-    </span>
-
-    <div class="card-body pl-0 pr-0">
-        <div class="col-sm-12">
-            <div class="row">
-                <form id="pageActions" class="form-inline w-100">
-                    <a class="btn btn-md btn-default"
-                       ng-if="currentUserFormRole==3"
-                       href
-                       ui-sref="summary({formId: currentFormId})"><i class="fa fa-th-list mr-2"></i>{{translation.Summary}}</a>
-
-                    <a ng-if="currentUserFormRole==3"
-                       class="btn btn-primary cursor-pointer"
-                       ng-click="editFormRedirect()">
-                        <i class="fa fa-edit mr-2"
-                           aria-hidden="true"
-                           disabled></i>{{translation.Edit_Form}}
-                    </a>
-                    <a ng-click="showAdvanced()" class="btn btn-primary mt-3 mt-lg-0 ml-2" data-toggle="tooltip" title="Advanced ">
-                        <span class="action-name"> </span>
-                        <i class="fa fa-chevron-down" ng-class="{'fa-chevron-down':!isShowAdvance,'fa-chevron-up':isShowAdvance}"></i>
-                    </a>
-                    <div class="form-group d-flex justify-content-end flex-fill"></div>
-
-                    <div data-theme-system="jquery-ui"
-                         class="selector form-group"
-                         style="display: none;">
-                        {{translation.Theme}}
-                        <select class="form-control" style="margin-left: 5px;">
-                            <option value="base" selected>{{translation.Base}}</option>
-                            <option value="black-tie">{{translation.Black_Tie}}</option>
-                            <option value="blitzer">{{translation.Blitzer}}</option>
-                            <option value="cupertino">{{translation.Cupertino}}</option>
-                            <option value="dark-hive">{{translation.Dark_Hive}}</option>
-                            <option value="dot-luv">{{translation.Dot_Luv}}</option>
-                            <option value="eggplant">{{translation.Eggplant}}</option>
-                            <option value="excite-bike">{{translation.Excite_Bike}}</option>
-                            <option value="flick">{{translation.Flick}}</option>
-                            <option value="hot-sneaks">{{translation.Hot_Sneaks}}</option>
-                            <option value="humanity">{{translation.Humanity}}</option>
-                            <option value="le-frog">{{translation.Le_Frog}}</option>
-                            <option value="mint-choc">{{translation.Mint_Choc}}</option>
-                            <option value="overcast">{{translation.Overcast}}</option>
-                            <option value="pepper-grinder">{{translation.Pepper_Grinder}}</option>
-                            <option value="redmond">{{translation.Redmond}}</option>
-                            <option value="smoothness">{{translation.Smoothness}}</option>
-                            <option value="south-street">{{translation.South_Street}}</option>
-                            <option value="start">{{translation.Start}}</option>
-                            <option value="sunny">{{translation.Sunny}}</option>
-                            <option value="swanky-purse">{{translation.Swanky_Purse}}</option>
-                            <option value="trontastic">{{translation.Trontastic}}</option>
-                            <option value="ui-darkness">{{translation.UI_Darkness}}</option>
-                            <option value="ui-lightness">{{translation.ui_lightness}}</option>
-                            <option value="vader">{{translation.Vader}}</option>
-                        </select>
-                    </div>
-
-                    <div class="input-group">
-                        <label class="control-label text-right" style="padding: 6px;"> {{translation.Filter_By_Selected_Date}}</label>
-                        <input type="text"
-                               id="datecontrol"
-                               class="form-control"
-                               ng-model="formDetailsDataInfo.searchByDate"
-                               data-date=""
-                               data-date-format="dd-mm-yyyy"
-                               placeholder="yyyy-mm-dd"
-                               autocomplete="off"
-                               value="" />
-                        <span class="input-group-append">
-                            <button class="btn btn-primary"
-                                    ng-click="filterBySelectedDate(formDetailsDataInfo)"
-                                    type="button">
-                                <i class="fa fa-search"
-                                   aria-hidden="true">
-                                </i>
-                                {{translation.Search}}
-                            </button>
-                        </span>
-                    </div>
-
-
-                    <div data-theme-system="bootstrap3"
-                         class="selector form-group"
-                         style="display: none;">
-                        {{translation.Theme_Name}}:
-
-                        <select class="form-control">
-                            <option value="" selected>{{translation.Default}}</option>
-                            <option value="cosmo">{{translation.Cosmo}}</option>
-                            <option value="cyborg">{{translation.Cyborg}}</option>
-                            <option value="darkly">{{translation.Darkly}}</option>
-                            <option value="flatly">Flatly</option>
-                            <option value="journal">Journal</option>
-                            <option value="lumen">Lumen</option>
-                            <option value="paper">Paper</option>
-                            <option value="readable">Readable</option>
-                            <option value="sandstone">Sandstone</option>
-                            <option value="simplex">Simplex</option>
-                            <option value="slate">Slate</option>
-                            <option value="solar">Solar</option>
-                            <option value="spacelab">Spacelab</option>
-                            <option value="superhero">Superhero</option>
-                            <option value="united">United</option>
-                            <option value="yeti">Yeti</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <span id="loading" style="display: none;">
-                            <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
-                        </span>
-                    </div>
-
-                    <a class="flat-buttons pageActionsToggleer"
-                       onclick="pageActionsToggleer()"
-                       style="display: none;">
-                        <i class="fa fa-chevron-left"></i>
-                    </a>
-                </form>
+                <div class="form-top mt-2 text-center">
+                    <button class="btn btn-primary btn-sm mb-0"
+                            ng-click="resetFilter()">
+                        {{translation.Reset_Filter}}
+                    </button>
+                </div>
             </div>
-        </div>
-        <div class="col-sm-12 nopadding">
-            <div class="row">
-                <div class="table-responsive mt-10"
-                     style="overflow-x: inherit; min-height: 200px;">
-                    <div class="col-sm-12 mb-10">
-                        <div class="col-sm-12 external-events-list" ng-show="isShowAdvance">
-                            <!--<div class="form-group row mt-2"
-                                 ng-if="otherformDetails.title">
-                                <label class="col-md-2 control-label">
-                                    {{otherformDetails.title}}
-                                </label>
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <input type="text"
-                                               id="keyword"
-                                               name="keywordSearch"
-                                               class="form-control ng-pristine ng-untouched ng-valid ng-empty"
-                                               ng-model="otherformDetails.searchTextData"
-                                               placeholder="{{ otherformDetails.title}} " />
-                                        <span class="input-group-append">
-                                            <button class="btn btn-primary"
-                                                    ng-click="searchTabulatorDataInEvent(otherformDetails)"
-                                                    type="button">
-                                                <i class="fa fa-search"
-                                                   aria-hidden="true">
-                                                </i>
-                                                Search
-                                            </button>
-                                        </span>
-                                    </div>
+            <div class="sedebar__inner">
+                <!--<div class="sidebar-toggle">
+                    <i class="fa fa-chevron-left"></i>
+                </div>-->
+                <div class="scrollbar">
+                    <div class="card card-default" ng-if="otherformDetails.title.length>0">
+                        <div class="from-group search-filter text-center"></div>
+                        <div class="card-header pt-0 pb-0">
+                            <span class="arrow">
+                                <i class="fa fa-chevron-down"></i>
+                            </span>
+                            <h3>      {{otherformDetails.title}}</h3>
 
+                        </div>
+                        <div class="card-body pt-1 text-left">
+                            <div id="tree-custom">
+                                <div class="input-group">
+                                    <input type="text"
+                                           id="keyword"
+                                           name="keywordSearch"
+                                           class="form-control ng-pristine ng-untouched ng-valid ng-empty"
+                                           ng-model="otherformDetails.searchTextData"
+                                           placeholder="{{ otherformDetails.title}} " />
+                                    <span class="input-group-append">
+                                        <button class="btn btn-primary"
+                                                ng-click="searchTabulatorDataInEvent(otherformDetails)"
+                                                type="button">
+                                            <i class="fa fa-search"
+                                               aria-hidden="true">
+                                            </i>
+                                        </button>
+                                    </span>
                                 </div>
-                            </div>-->
-                            <div class="form-group row">
-                                <label class="col-sm-2 control-label mb-4">
-                                    {{ selectedAxis.selectedFormName}}
-                                    <i class="fa fa-chevron-right course-click"></i>
-                                </label>
-                                <div class="col-md-3 ">
-                                    <!--/*
-                                    Donot remove this function and HTML , filtering for event on the basis of selected activity
-                                    */
-                                    <div class="input-group ">
-                                        <input type="text"
-                                               id="resourcekeywordSearch"
-                                               name="resourcekeywordSearch"
-                                               ng-model="selectedAxis.resourceSearchTextData"
-                                               class="form-control ng-pristine ng-untouched ng-valid ng-empty"
-                                               placeholder="{{ selectedAxis.selectedFormName}} " />
-                                        <span class="input-group-append">
-                                            <button class="btn btn-primary"
-                                                    type="button" ng-click="searchTabulatorDataInEventByResources(selectedAxis)">
-                                                <i class="fa fa-search"
-                                                   aria-hidden="true">
-                                                </i>
-                                                Search
-                                            </button>
-                                        </span>
-                                    </div>-->
-                                    <div class="input-group ">
-                                        <input type="text"
-                                               id="activitykeywordSearch"
-                                               name="activitykeywordSearch"
-                                               ng-model="selectedAxis.activitySearchTextData"
-                                               class="form-control ng-pristine ng-untouched ng-valid ng-empty"
-                                               placeholder="{{ selectedAxis.selectedFormName}} " />
-                                        <span class="input-group-append">
-                                            <button class="btn btn-primary"
-                                                    type="button" ng-click="searchSelectedActivityBoxes(selectedAxis)">
-                                                <i class="fa fa-search"
-                                                   aria-hidden="true">
-                                                </i>
-                                                Search
-                                            </button>
-                                        </span>
-                                    </div>
-
-                                </div>
-
-                                <div class="col-sm-auto">
-                                    <input type="checkbox" id="drop-remove" />
-                                    <label for="drop-remove">
-                                        Remove after drop
-                                    </label>
-                                    <input type="checkbox" id="allDay-check" />
-                                    <label for="allDay-check">
-                                        All Day
-                                    </label>
-                                </div>
-                                <!--<div class="col form-group row ">
-                                    <label class="col-md-5 control-label text-left">
-                                        Filter By Selected Date
-                                    </label>
-                                    <div class="col-md-7">
-                                        <div class="input-group">
-                                            <input type="text"
-                                                   id="datecontrol"
-                                                   class="form-control"
-                                                   ng-model="formDetailsDataInfo.searchByDate"
-                                                   data-date=""
-                                                   data-date-format="dd-mm-yyyy"
-                                                   placeholder="yyyy-mm-dd"
-                                                   value="" />
-                                            <span class="input-group-append">
-                                                <button class="btn btn-primary"
-                                                        ng-click="filterBySelectedDate(formDetailsDataInfo)"
-                                                        type="button">
-                                                    <i class="fa fa-search"
-                                                       aria-hidden="true">
-                                                    </i>
-                                                    Search
-                                                </button>
-                                            </span>
-                                        </div>
-
-                                    </div>
-                                </div>-->
-
-                                <div class="row w-100 align-items-center toggle-course-master" style="display: none;">
-                                    <div ng-repeat="item in Xdraggables.draggableSlips"
-                                         class="col-xs-6 col-sm-4 col-md-4 col-lg-2">
-
-                                        <div class="fc-event"
-                                             data-id="{{item.Id}}"
-                                             data-formId="{{item.formId}}"
-                                             data-activityfield="{{item.activityField}}"
-                                             data-categoryfield="{{item.categoryField}}"
-                                             data-servicefield="{{item.category}}"
-                                             data-dropin="{{item.dropIn}}"
-                                             data-dimensiontype="{{item.dimensionType}}"
-                                             data-groupingvaluesact="{{item.groupingValuesActivity}}"
-                                             data-groupingfieldsres="{{item.groupingFieldsRes}}"
-                                             data-colorfield="{{item.colorField}}"
-                                             data-color="{{item.color!=null?item.color:'#7d606c'}}"
-                                             data-duration="{{item.durationField!=null ? item.durationField :'01:00:00'}}"
-                                             style="background-color: {{item.color!=null?item.color:'#7d606c'}}; border: 1px solid rgb(125, 96, 108); z-index: 2; left: 0px; top: 0px; position: relative;">
-                                            {{item.displayValue}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-
-
-
                             </div>
                         </div>
-                        <div id="calendar"
-                             style="padding: 0px; margin-top: 15px;">
 
 
 
-                            <div id="tabs" style="display: none;">
-                                <ul>
-                                    <li data-value="List view">
-                                        <a href="#list-view">{{translation.List_view}}</a>
-                                    </li>
-                                    <li data-value="External Events">
-                                        <a href="#agenda-view">{{translation.Agenda_view}}</a>
-                                    </li>
-                                    <li data-value="Timeline resource view">
-                                        <a href="#timeline-resource-view">{{translation.Timeline_resource_view}}</a>
-                                    </li>
-                                    <li data-value="Vertical resource view">
-                                        <a href="#vertical-resource-view">{{translation.Vertical_resource_view}}</a>
-                                    </li>
-                                </ul>
 
-                                <div id="list-view">
-                                    <div class="calendar"></div>
-                                </div>
-                                <div id="agenda-view">
-                                    <div class="calendar"></div>
-                                </div>
-                                <div id="timeline-resource-view">
-                                    <div class="calendar"></div>
-                                </div>
-                                <div id="vertical-resource-view">
-                                    <div class="calendar"></div>
-                                </div>
-                            </div>
-                            <div ui-calendar="{{uiConfig.calendar}}"
-                                 calendar="myCalendar"
-                                 class="span8 calendar"
-                                 ng-model="eventSources"></div>
+                    </div>
+                    <div class="card card-default"
+                         ng-repeat="(key, list) in calenderSettingsFormDetailsDataList track by $index"
+                         ng-if="list.majorGroupParseList.length>0">
+                        <div class="from-group search-filter text-center">
+                            <!--<input
+                                type="search"
+                                class="search-input"
+                                id="search-input-{{$index}}"
+                                ng-model="list.searchtext"
+                                placeholder="Search {{list.title}}"
+                            />-->
+                        </div>
+                        <div class="card-header pt-0 pb-0">
+                            <span class="arrow">
+                                <i class="fa fa-chevron-down"></i>
+                            </span>
+                            <h3>
+                                {{list.title}}
+
+                            </h3>
+
+                            <a class="morebutton" id="more-button-{{list.resourceActivityForm}}" data-formid="{{list.resourceActivityForm}}">
+                                <i class="fa fa-search"></i>
+                            </a>
+                        </div>
+                        <div class="card-body pt-1 text-left">
+                            <span ng-if="selectedTreeList.length>0">
+                                <span ng-if="selectedTreeList[0].original.formId==list.resourceActivityForm"> {{selectedTreeList.length}} items selected</span>
+                            </span>
+                            <div id="tree-{{$index}}"></div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row"></div>
+        </section>
+    </div>
+    <div class="col-md-10">
+        <div class="card">
+
+            <span id="menuName"> </span>
+            <span class="hidden" id="menuDescription"> </span>
+            <input type="hidden" name="tabulator" value="applicationDetail" />
+            <input type="hidden" name="tabulatorStorage" value="appDetail" />
+            <input type="hidden"
+                   name="onetomany"
+                   value="{{multiDcalendar}}"
+                   id="onetomany" />
+
+
+
+
+            <input type="hidden" value="0" id="FormTypeStatus" />
+            <!--{{formDetailsDataInfo.title}}-->
+            <!-- <small>
+                ({{(formDetailsDataInfo.applicationTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.applicationTitle}},
+                {{(formDetailsDataInfo.topicTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.topicTitle}})
+            </small> -->
+            <input type="hidden" name="tabulator" value="records" />
+            <span id="menuName" class="hidden">
+                {{translation.Records_Untitled_name_newform_newform}}
+            </span>
+            <span class="hidden" id="menuDescription">
+                {{translation.This_is_the_description_of_the_Untitled_name_newform_newform}}
+                records form.
+            </span>
+
+            <div class="card-body pl-0 pr-0">
+                <div class="col-sm-12">
+                    <div class="row">
+                        <form id="pageActions" class="form-inline w-100">
+                            <!--<a class="btn btn-md btn-default"
+                            ng-if="currentUserFormRole==3"
+                            href
+                            ui-sref="summary({formId: currentFormId})"><i class="fa fa-th-list mr-2"></i>{{translation.Summary}}</a>-->
+
+                            <a class="btn btn-primary cursor-pointer">
+                                <i class="fa fa-cog mr-2"
+                                   aria-hidden="true"
+                                   disabled></i>Setting
+                            </a>
+                            <a ng-click="showAdvanced()" class="btn btn-primary mt-3 mt-lg-0 ml-2" data-toggle="tooltip" title="Advanced ">
+                                <span class="action-name"> </span>
+                                <i class="fa fa-chevron-down" ng-class="{'fa-chevron-down':!isShowAdvance,'fa-chevron-up':isShowAdvance}"></i>
+                            </a>
+                            <div class="form-group d-flex justify-content-end flex-fill"></div>
+
+                            <div data-theme-system="jquery-ui"
+                                 class="selector form-group"
+                                 style="display: none;">
+                                {{translation.Theme}}
+                                <select class="form-control" style="margin-left: 5px;">
+                                    <option value="base" selected>{{translation.Base}}</option>
+                                    <option value="black-tie">{{translation.Black_Tie}}</option>
+                                    <option value="blitzer">{{translation.Blitzer}}</option>
+                                    <option value="cupertino">{{translation.Cupertino}}</option>
+                                    <option value="dark-hive">{{translation.Dark_Hive}}</option>
+                                    <option value="dot-luv">{{translation.Dot_Luv}}</option>
+                                    <option value="eggplant">{{translation.Eggplant}}</option>
+                                    <option value="excite-bike">{{translation.Excite_Bike}}</option>
+                                    <option value="flick">{{translation.Flick}}</option>
+                                    <option value="hot-sneaks">{{translation.Hot_Sneaks}}</option>
+                                    <option value="humanity">{{translation.Humanity}}</option>
+                                    <option value="le-frog">{{translation.Le_Frog}}</option>
+                                    <option value="mint-choc">{{translation.Mint_Choc}}</option>
+                                    <option value="overcast">{{translation.Overcast}}</option>
+                                    <option value="pepper-grinder">{{translation.Pepper_Grinder}}</option>
+                                    <option value="redmond">{{translation.Redmond}}</option>
+                                    <option value="smoothness">{{translation.Smoothness}}</option>
+                                    <option value="south-street">{{translation.South_Street}}</option>
+                                    <option value="start">{{translation.Start}}</option>
+                                    <option value="sunny">{{translation.Sunny}}</option>
+                                    <option value="swanky-purse">{{translation.Swanky_Purse}}</option>
+                                    <option value="trontastic">{{translation.Trontastic}}</option>
+                                    <option value="ui-darkness">{{translation.UI_Darkness}}</option>
+                                    <option value="ui-lightness">{{translation.ui_lightness}}</option>
+                                    <option value="vader">{{translation.Vader}}</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label class="control-label text-right" style="padding: 6px;"> {{translation.Filter_By_Selected_Date}}</label>
+                                <input type="text"
+                                       id="datecontrol"
+                                       class="form-control"
+                                       ng-model="formDetailsDataInfo.searchByDate"
+                                       data-date=""
+                                       data-date-format="dd-mm-yyyy"
+                                       placeholder="yyyy-mm-dd"
+                                       autocomplete="off"
+                                       value="" />
+                                <span class="input-group-append">
+                                    <button class="btn btn-primary"
+                                            ng-click="filterBySelectedDate(formDetailsDataInfo)"
+                                            type="button">
+                                        <i class="fa fa-search"
+                                           aria-hidden="true">
+                                        </i>
+                                        {{translation.Search}}
+                                    </button>
+                                </span>
+                            </div>
+
+
+                            <div data-theme-system="bootstrap3"
+                                 class="selector form-group"
+                                 style="display: none;">
+                                {{translation.Theme_Name}}:
+
+                                <select class="form-control">
+                                    <option value="" selected>{{translation.Default}}</option>
+                                    <option value="cosmo">{{translation.Cosmo}}</option>
+                                    <option value="cyborg">{{translation.Cyborg}}</option>
+                                    <option value="darkly">{{translation.Darkly}}</option>
+                                    <option value="flatly">Flatly</option>
+                                    <option value="journal">Journal</option>
+                                    <option value="lumen">Lumen</option>
+                                    <option value="paper">Paper</option>
+                                    <option value="readable">Readable</option>
+                                    <option value="sandstone">Sandstone</option>
+                                    <option value="simplex">Simplex</option>
+                                    <option value="slate">Slate</option>
+                                    <option value="solar">Solar</option>
+                                    <option value="spacelab">Spacelab</option>
+                                    <option value="superhero">Superhero</option>
+                                    <option value="united">United</option>
+                                    <option value="yeti">Yeti</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <span id="loading" style="display: none;">
+                                    <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+                                </span>
+                            </div>
+
+                            <a class="flat-buttons pageActionsToggleer"
+                               onclick="pageActionsToggleer()"
+                               style="display: none;">
+                                <i class="fa fa-chevron-left"></i>
+                            </a>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-sm-12 nopadding">
+                    <div class="row">
+                        <div class="table-responsive mt-10"
+                             style="overflow-x: inherit; min-height: 200px;">
+                            <div class="col-sm-12 mb-10">
+                                <div class="col-sm-12 external-events-list" ng-show="isShowAdvance">
+                                    <!--<div class="form-group row mt-2"
+                                         ng-if="otherformDetails.title">
+                                        <label class="col-md-2 control-label">
+                                            {{otherformDetails.title}}
+                                        </label>
+                                        <div class="col-md-6">
+                                            <div class="input-group">
+                                                <input type="text"
+                                                       id="keyword"
+                                                       name="keywordSearch"
+                                                       class="form-control ng-pristine ng-untouched ng-valid ng-empty"
+                                                       ng-model="otherformDetails.searchTextData"
+                                                       placeholder="{{ otherformDetails.title}} " />
+                                                <span class="input-group-append">
+                                                    <button class="btn btn-primary"
+                                                            ng-click="searchTabulatorDataInEvent(otherformDetails)"
+                                                            type="button">
+                                                        <i class="fa fa-search"
+                                                           aria-hidden="true">
+                                                        </i>
+                                                        Search
+                                                    </button>
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                    </div>-->
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 control-label mb-4">
+                                            {{ selectedAxis.selectedFormName}}
+                                            <i class="fa fa-chevron-right course-click"></i>
+                                        </label>
+                                        <div class="col-md-3 ">
+                                            <!--/*
+                                            Donot remove this function and HTML , filtering for event on the basis of selected activity
+                                            */
+                                            <div class="input-group ">
+                                                <input type="text"
+                                                       id="resourcekeywordSearch"
+                                                       name="resourcekeywordSearch"
+                                                       ng-model="selectedAxis.resourceSearchTextData"
+                                                       class="form-control ng-pristine ng-untouched ng-valid ng-empty"
+                                                       placeholder="{{ selectedAxis.selectedFormName}} " />
+                                                <span class="input-group-append">
+                                                    <button class="btn btn-primary"
+                                                            type="button" ng-click="searchTabulatorDataInEventByResources(selectedAxis)">
+                                                        <i class="fa fa-search"
+                                                           aria-hidden="true">
+                                                        </i>
+                                                        Search
+                                                    </button>
+                                                </span>
+                                            </div>-->
+                                            <div class="input-group ">
+                                                <input type="text"
+                                                       id="activitykeywordSearch"
+                                                       name="activitykeywordSearch"
+                                                       ng-model="selectedAxis.activitySearchTextData"
+                                                       class="form-control ng-pristine ng-untouched ng-valid ng-empty"
+                                                       placeholder="{{ selectedAxis.selectedFormName}} " />
+                                                <span class="input-group-append">
+                                                    <button class="btn btn-primary"
+                                                            type="button" ng-click="searchSelectedActivityBoxes(selectedAxis)">
+                                                        <i class="fa fa-search"
+                                                           aria-hidden="true">
+                                                        </i>
+                                                        Search
+                                                    </button>
+                                                </span>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-sm-auto">
+                                            <input type="checkbox" id="drop-remove" />
+                                            <label for="drop-remove">
+                                                Remove after drop
+                                            </label>
+                                            <input type="checkbox" id="allDay-check" />
+                                            <label for="allDay-check">
+                                                All Day
+                                            </label>
+                                        </div>
+                                        <!--<div class="col form-group row ">
+                                            <label class="col-md-5 control-label text-left">
+                                                Filter By Selected Date
+                                            </label>
+                                            <div class="col-md-7">
+                                                <div class="input-group">
+                                                    <input type="text"
+                                                           id="datecontrol"
+                                                           class="form-control"
+                                                           ng-model="formDetailsDataInfo.searchByDate"
+                                                           data-date=""
+                                                           data-date-format="dd-mm-yyyy"
+                                                           placeholder="yyyy-mm-dd"
+                                                           value="" />
+                                                    <span class="input-group-append">
+                                                        <button class="btn btn-primary"
+                                                                ng-click="filterBySelectedDate(formDetailsDataInfo)"
+                                                                type="button">
+                                                            <i class="fa fa-search"
+                                                               aria-hidden="true">
+                                                            </i>
+                                                            Search
+                                                        </button>
+                                                    </span>
+                                                </div>
+
+                                            </div>
+                                        </div>-->
+
+                                        <div class="row w-100 align-items-center toggle-course-master" style="display: none;">
+                                            <div ng-repeat="item in Xdraggables.draggableSlips"
+                                                 class="col-xs-6 col-sm-4 col-md-4 col-lg-2">
+
+                                                <div class="fc-event"
+                                                     data-id="{{item.Id}}"
+                                                     data-formId="{{item.formId}}"
+                                                     data-activityfield="{{item.activityField}}"
+                                                     data-categoryfield="{{item.categoryField}}"
+                                                     data-servicefield="{{item.category}}"
+                                                     data-dropin="{{item.dropIn}}"
+                                                     data-dimensiontype="{{item.dimensionType}}"
+                                                     data-groupingvaluesact="{{item.groupingValuesActivity}}"
+                                                     data-groupingfieldsres="{{item.groupingFieldsRes}}"
+                                                     data-colorfield="{{item.colorField}}"
+                                                     data-color="{{item.color!=null?item.color:'#7d606c'}}"
+                                                     data-duration="{{item.durationField!=null ? item.durationField :'01:00:00'}}"
+                                                     style="background-color: {{item.color!=null?item.color:'#7d606c'}}; border: 1px solid rgb(125, 96, 108); z-index: 2; left: 0px; top: 0px; position: relative;">
+                                                    {{item.displayValue}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+
+
+
+                                    </div>
+                                </div>
+                                <div id="calendar"
+                                     style="padding: 0px; margin-top: 15px;">
+
+
+
+                                    <div id="tabs" clas style="display: none;">
+                                        <ul>
+                                            <li data-value="List view">
+                                                <a href="#list-view">{{translation.List_view}}</a>
+                                            </li>
+                                            <li data-value="External Events">
+                                                <a href="#agenda-view">{{translation.Agenda_view}}</a>
+                                            </li>
+                                            <li data-value="Timeline resource view">
+                                                <a href="#timeline-resource-view">{{translation.Timeline_resource_view}}</a>
+                                            </li>
+                                            <li data-value="Vertical resource view">
+                                                <a href="#vertical-resource-view">{{translation.Vertical_resource_view}}</a>
+                                            </li>
+                                        </ul>
+
+                                        <div id="list-view">
+                                            <div class="calendar"></div>
+                                        </div>
+                                        <div id="agenda-view">
+                                            <div class="calendar"></div>
+                                        </div>
+                                        <div id="timeline-resource-view">
+                                            <div class="calendar"></div>
+                                        </div>
+                                        <div id="vertical-resource-view">
+                                            <div class="calendar"></div>
+                                        </div>
+
+
+                                    </div>
+
+
+
+
+
+                                    <div ui-calendar="{{uiConfig.calendar}}"
+                                         calendar="myCalendar"
+                                         class="span8 calendar"
+                                         ng-model="eventSources"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+
 
 <div id="searchModal"
      class="modal fade"
@@ -873,11 +881,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 <h4 class="modal-title"></h4>
             </div>
             <div class="modal-body">
@@ -886,7 +892,7 @@
             <div class="modal-footer">
                 <button type="button"
                         class="btn btn-default"
-                        data-dismiss="modal">
+                        data-bs-dismiss="modal">
                     Close
                 </button>
             </div>
@@ -902,8 +908,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button"
-                        class="close"
-                        data-dismiss="modal"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
                         aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -913,7 +919,7 @@
             <div class="modal-footer">
                 <button type="button"
                         class="btn btn-default"
-                        data-dismiss="modal">
+                        data-bs-dismiss="modal">
                     Close
                 </button>
             </div>
@@ -924,9 +930,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
-                    &times;
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 <h4 class="modal-title">Tabulator Configurations</h4>
             </div>
             <div class="modal-body">
@@ -953,8 +957,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button"
-                        class="close"
-                        data-dismiss="modal"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
                         aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -964,7 +968,7 @@
             <div class="modal-footer">
                 <button type="button"
                         class="btn btn-default"
-                        data-dismiss="modal">
+                        data-bs-dismiss="modal">
                     Close
                 </button>
             </div>
@@ -988,17 +992,17 @@
                 </div>
 
                 <button type="button"
-                        class="close"
-                        data-dismiss="modal"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
                         aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true"></span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="row m-0">
                     <input type="hidden" id="treeIndex" value="" />
                     <div class="col-md-3"
-                         ng-repeat="(key,ldata) in lastNodeDataList | groupBy:'firstChar'"
+                         ng-repeat="(key,ldata) in lastNodeDataList"
                          ng-if="(ldata|filter:nodechildModelSearch).length>0">
                         <div class="form-group">
                             <h5 ng-if="(ldata|filter:nodechildModelSearch).length>0">
@@ -1037,7 +1041,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
 
         </div>
     </div>
@@ -1067,8 +1071,8 @@
             </div>
         </div>
         <div class="col-sm-12">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" id="get-tabulator-valuescalender" data-dismiss="modal">Save changes</button>
+            <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="get-tabulator-valuescalender" data-bs-dismiss="modal">Save changes</button>
         </div>
     </div>
 
@@ -1080,9 +1084,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">{{translation.Create_New_Event}}Create New Event</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="event-detail div-flex">
@@ -1102,7 +1104,7 @@
                                         <option value="{{dform.id}}" ng-repeat="dform in d.dropdownListData.formDataList|orderBy:d.dropdownListData.activities">{{dform[d.dropdownListData.activities]}}</option>
                                     </select>
                                 </div>
-                                
+
                             </div>
                             <div class="temp">
                                 <span class="titleContainer">
@@ -1166,9 +1168,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Event Details</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="event-detail div-flex">
@@ -1289,7 +1289,7 @@
         });
     });
 
-    function HideSiseMenu() {        
+    function HideSiseMenu() {
 
         if ($('.sidebar').is(":hidden")) {
             $(".sidebar").show();
@@ -1302,7 +1302,7 @@
             $("#sidebarStrip_menu").hide();
             $('.showSection').removeClass('contentsection').addClass('Hideleftmenu');
             $('#Hide_menu_Icon').removeClass('fa-arrow-left').addClass('fa-arrow-right');
-            
+
         }
     }
 </script>

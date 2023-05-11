@@ -2854,9 +2854,7 @@
     <Content Include="fg-newAssets\scss\_helper.scss" />
     <Content Include="fg-newAssets\scss\_leftSideBar.scss" />
     <Content Include="fg-newAssets\scss\_loader.scss" />
-    <Content Include="fg-newAssets\scss\_mixin.scss" />
     <Content Include="fg-newAssets\scss\_modal.scss" />
-    <Content Include="fg-newAssets\scss\_packery.scss" />
     <Content Include="fg-newAssets\scss\_pivot.scss" />
     <Content Include="fg-newAssets\scss\_primaryTheme.scss" />
     <Content Include="fg-newAssets\scss\_publicQueue.scss" />
@@ -3002,6 +3000,7 @@
     <Content Include="Templates\admin\schedule.html" />
     <Content Include="Templates\admin\transaction.html" />
     <Content Include="Templates\breadcrumbs.html" />
+    <Content Include="Templates\calendar-master\calendar.html" />
     <Content Include="Templates\calendar-master\location-master.html" />
     <Content Include="Templates\dashboard\dashboard.html" />
     <Content Include="Templates\error\error-500.html" />
@@ -3068,6 +3067,7 @@
     <Content Include="Views\BusinessAdmin\CalendarMaster.cshtml" />
     <Content Include="Views\BusinessAdmin\SubscriptionPlan.cshtml" />
     <Content Include="Views\BusinessAdmin\PaymentHistory.cshtml" />
+    <Content Include="Views\Calendar\EditIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

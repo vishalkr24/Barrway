@@ -13,7 +13,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 
-namespace MOODIES_CARE.Controllers
+namespace Barrway.Controllers
 {
    
     public class FormAPIController : Controller
@@ -34,12 +34,83 @@ namespace MOODIES_CARE.Controllers
         [HttpPost]
         public async Task<ActionResult> ManageForm(FormTable data)
         {
-            return Json((await formAPIRepository.ManageForm(data)).Data);
+            var result = (await formAPIRepository.ManageForm(data)).Data;
+            if (data.formId == (int)FormSetting.CALENDAR_FORM && data.action == (int)FormAction.ManageForm)
+            {
+                if(result!=null && result.Count() > 0)
+                {
+                    result.ForEach(x =>
+                    {
+                        if (x.FormDataToOneListDynamic != null && x.FormDataToOneListDynamic.Count()>0)
+                        {
+                            x.FormDataToOneListDynamic.ForEach(e =>
+                            {
+                                if (e.ContainsKey("start") && e["start"] != null)
+                                {
+                                    e["start"] = Convert.ToDateTime(e["start"]).ToString("yyyy-MM-ddTHH:mm:ss");
+                                }
+                                if (e.ContainsKey("end") && e["end"] != null)
+                                {
+                                    e["end"] = Convert.ToDateTime(e["end"]).ToString("yyyy-MM-ddTHH:mm:ss");
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+
+            return Json(result);
+        }
+        [HttpPost]
+        public async Task<ActionResult> ManageFormApp(FormTable data)
+        {
+            return Json((await formAPIRepository.ManageFormApp(data)).Data);
+        }
+        
+        [HttpPost]
+        public async Task<ActionResult> GetFormList(FormListDataView data)
+        {
+            return Json((await formAPIRepository.GetFormList(data)));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> getReferralFormFieldsAndDataGET(int actionid, string formID, string formGroupKey)
+        {
+            return Json(await formAPIRepository.getReferralFormFieldsAndDataGET(actionid, formID, formGroupKey),JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public async Task<ActionResult> ManageFormRoles(Form_Roles data)
+        {
+            return Json((await formAPIRepository.ManageFormRoles(data)).Data);
+        }
+        
+        [HttpPost]
+        public async Task<ActionResult> getEventDetails(FormCalenderReferrenceTable data)
+        {
+            return Json((await formAPIRepository.getEventDetails(data)));
         }
         [HttpPost]
         public async Task<ActionResult> GetFormRecordList(GenerateDynamicFormData data)
         {
-            return Json((await formAPIRepository.GetFormRecordList(data)).Data);
+            var result= (await formAPIRepository.GetFormRecordList(data)).Data;
+            if (data.formId == (int)FormSetting.CALENDAR_FORM)
+            {
+                if (result.data!=null && result.data.Count()>0)
+                {
+                    result.data.ForEach(e =>
+                    {
+                        if (e.ContainsKey("start") && e["start"] != null)
+                        {
+                            e["start"] = Convert.ToDateTime(e["start"]).ToString("yyyy-MM-ddTHH:mm:ss");
+                        }
+                        if (e.ContainsKey("end") && e["end"] != null)
+                        {
+                            e["end"] = Convert.ToDateTime(e["end"]).ToString("yyyy-MM-ddTHH:mm:ss");
+                        }
+                    });
+                }
+            }
+            return Json(result);
         }
 
         [HttpPost]
@@ -53,6 +124,66 @@ namespace MOODIES_CARE.Controllers
         {
             return Json((await formAPIRepository.manageTabulatorConfig(data)).Data);
         }
+        
+        [HttpPost]
+        public async Task<ActionResult> getCalenderSettingsFormData(calenderSettingsFormDetails data)
+        {
+            return Json((await formAPIRepository.getCalenderSettingsFormData(data)));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> getAxisColumns(calenderSettingsFormDetails data)
+        {
+            return Json((await formAPIRepository.getAxisColumns(data)));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> getReferralFormFields(Form_DataTable data)
+        {
+            var result = await formAPIRepository.getReferralFormFields(data);
+
+            if (result != null)
+            {
+                if(result.events!=null && result.events.Count() > 0)
+                {
+                    result.events.ForEach(e =>
+                    {
+                        if (e.ContainsKey("start") && e["start"]!=null)
+                        {
+                            e["start"] = Convert.ToDateTime(e["start"]).ToString("yyyy-MM-ddTHH:mm:ss");
+                        }
+                        if (e.ContainsKey("end") && e["end"] != null)
+                        {
+                            e["end"] = Convert.ToDateTime(e["end"]).ToString("yyyy-MM-ddTHH:mm:ss");
+                        }
+                    });
+                }
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ManageCalenderReferrenceNew(FormCalenderReferrenceTable data)
+        {
+            return Json(await formAPIRepository.ManageCalenderReferrenceNew(data));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> getReferralFormFieldsAndData(Form_DataTable data)
+        {
+            return Json(await formAPIRepository.getReferralFormFieldsAndData(data));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> getJSONjsTree(int root, string title, string formId, string resourceActivityForm, string previousSelection, string selectedRoot, string query, string id)
+        {
+            return Json((await formAPIRepository.getJSONjsTree(root,title,formId,resourceActivityForm,  previousSelection,  selectedRoot,  query,  id)),JsonRequestBehavior.AllowGet);
+        }
+
+
+
+
 
         private static bool IsJson(string str)
         {

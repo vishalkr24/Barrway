@@ -88,8 +88,9 @@
     <Compile Include="Common\RoleMasterModel.cs" />
     <Compile Include="CustomValidations\ValidImageFile.cs" />
     <Compile Include="CustomValidations\ValidDropdownValue.cs" />
-    <Compile Include="FormAPI\CounsellorUploadFileViewModel.cs" />
+    <Compile Include="FormAPI\AxixColumnsResponseModel.cs" />
     <Compile Include="FormAPI\GetFormRecordListResponseModel.cs" />
+    <Compile Include="FormAPI\ReferalFormDataResponseModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

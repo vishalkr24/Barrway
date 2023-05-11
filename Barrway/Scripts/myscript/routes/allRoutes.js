@@ -1843,5 +1843,20 @@
                     parent: 'home'
                 }
             })
+            .state('calendar_view', {
+                url: '/calender/:formId',
+                onEnter: function ($window) { $window.document.title = "Calendar"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/calendar-master/calendar.html?token=' + uuid,
+                        controller: 'NewDemoCalenderRecordsControllerTemp'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
+
     }]);
 }(FormGeneratorApp));
