@@ -1843,7 +1843,82 @@
                     parent: 'home'
                 }
             })
-            .state('calendar_view', {
+            // service master route state
+            .state('calendar_service', {
+                url: '/calendar/service-master/:formId',
+                onEnter: function ($window) { $window.document.title = "Service Master"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/calendar-master/service-master.html?token=' + uuid,
+                        controller: 'FormRecordsController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
+            // service provider master route state
+            .state('calendar_service_provider', {
+                url: '/calendar/service-provider-master/:formId',
+                onEnter: function ($window) { $window.document.title = "Service Provider Master"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/calendar-master/service-provider-master.html?token=' + uuid,
+                        controller: 'FormRecordsController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
+            // participant master route state
+            .state('calendar_participant', {
+                url: '/calendar/participant-master/:formId',
+                onEnter: function ($window) { $window.document.title = "Calendar Participant Master"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/calendar-master/participant-master.html?token=' + uuid,
+                        controller: 'FormRecordsController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
+            // Schedular form route state
+            .state('schedular_form', {
+                url: '/calendar/schedular-form/:formId',
+                onEnter: function ($window) { $window.document.title = "Schedular Form"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/calendar-master/schedular-form.html?token=' + uuid,
+                        controller: 'FormRecordsController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
+            // Transaction Master route state
+            .state('transaction_master', {
+                url: '/calendar/transaction-master/:formId',
+                onEnter: function ($window) { $window.document.title = "Transaction Master"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/calendar-master/transaction-master.html?token=' + uuid,
+                        controller: 'FormRecordsController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
+          .state('calendar_view', {
                 url: '/calender/:formId',
                 onEnter: function ($window) { $window.document.title = "Calendar"; },
                 views: {
@@ -1857,6 +1932,5 @@
                     parent: 'home'
                 }
             })
-
     }]);
 }(FormGeneratorApp));

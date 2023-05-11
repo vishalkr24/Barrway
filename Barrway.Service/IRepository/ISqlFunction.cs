@@ -15,6 +15,6 @@ namespace Barrway.Service.IRepository
         Task<int> ExecuteSqlCommandQuery(string sqlQuery, DynamicParameters param, CommandType commandType);
         Task<List<IDictionary<string, object>>> ExecuteSqlQuery(string sqlQuery);
         Task<List<IDictionary<string, object>>> ExecuteSqlQuery(string sqlQuery, DynamicParameters param, CommandType commandType);
-        Task<string> GetDateFilter(FilterDTO filtr);
+        Task<string> GetDateFilter(FilterDTO filtr, string prefix = "f");
     }
 }

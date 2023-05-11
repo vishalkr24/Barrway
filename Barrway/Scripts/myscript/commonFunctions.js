@@ -15375,8 +15375,38 @@ function removeActionButtion(formid) {
 
 function NewformEntryfunctionality(formid, isEdit) {
 
-    
-
+    if (formid == 2303) {
+        $('div.border-header_1683116492931').hide();
+        $('input#COMPANY_CODE').attr("readonly", true);
+        $('input#COMPANY_CODE').val(localStorage.getItem("COMPANY_CODE"));
+        $('input#CALENDAR_CODE').attr("readonly", true);
+        $('input#CALENDAR_CODE').val(localStorage.getItem("CALENDAR_CODE"));
+        if ($('a.breadcrumb-link').length > 1) {
+            var ele = $('a.breadcrumb-link')[1]
+            $(ele).attr("href", window.location.href.split('#')[0] + "#/calendar/service-master/2303");
+        }
+        if (isEdit) {
+            $('input#ACTIVITY_CODE').attr("readonly", true);
+        } else {
+            $('div.border-ACTIVITY_CODE').hide();
+        }
+    }
+    if (formid == 2304) {
+        $('div.border-header_1683116492931').hide();
+        $('input#COMPANY_CODE').attr("readonly", true);
+        $('input#COMPANY_CODE').val(localStorage.getItem("COMPANY_CODE"));
+        $('input#CALENDAR_CODE').attr("readonly", true);
+        $('input#CALENDAR_CODE').val(localStorage.getItem("CALENDAR_CODE"));
+        if ($('a.breadcrumb-link').length > 1) {
+            var ele = $('a.breadcrumb-link')[1]
+            $(ele).attr("href", window.location.href.split('#')[0] + "#/calendar/service-provider-master/2304");
+        }
+        if (isEdit) {
+            $('input#RESOURCE_CODE').attr("readonly", true);
+        } else {
+            $('div.border-RESOURCE_CODE').hide();
+        }
+    }
     if (formid == 2306) {
         $('div.border-header_1683116492931').hide();
         $('input#COMPANY_CODE').attr("readonly", true);
@@ -15393,23 +15423,98 @@ function NewformEntryfunctionality(formid, isEdit) {
             $('div.border-LOCATION_CODE').hide();
         }
     }
+    if (formid == 2310) {
+        $('div.border-header_1683116492931').hide();
+        $('input#COMPANY_CODE').attr("readonly", true);
+        $('input#COMPANY_CODE').val(localStorage.getItem("COMPANY_CODE"));
+        $('input#CALENDAR_CODE').attr("readonly", true);
+        $('input#CALENDAR_CODE').val(localStorage.getItem("CALENDAR_CODE"));
+        if ($('a.breadcrumb-link').length > 1) {
+            var ele = $('a.breadcrumb-link')[1]
+            $(ele).attr("href", window.location.href.split('#')[0] + "#/calendar/participant-master/2310");
+        }
+        if (isEdit) {
+            $('input#PARTICIPANT_CODE').attr("readonly", true);
+        } else {
+            $('div.border-PARTICIPANT_CODE').hide();
+        }
+    }
+    if (formid == 2311) {
+        $('div.border-header_1683116492931').hide();
+        $('input#COMPANY_CODE').attr("readonly", true);
+        $('input#COMPANY_CODE').val(localStorage.getItem("COMPANY_CODE"));
+        $('input#CALENDAR_CODE').attr("readonly", true);
+        $('input#CALENDAR_CODE').val(localStorage.getItem("CALENDAR_CODE"));
+        if ($('a.breadcrumb-link').length > 1) {
+            var ele = $('a.breadcrumb-link')[1]
+            $(ele).attr("href", window.location.href.split('#')[0] + "#/calendar/schedular-form/2311");
+        }
+       
+    }
+    if (formid == 2312) {
+        $('div.border-header_1683116492931').hide();
+        $('input#COMPANY_CODE').attr("readonly", true);
+        $('input#COMPANY_CODE').val(localStorage.getItem("COMPANY_CODE"));
+        $('input#CALENDAR_CODE').attr("readonly", true);
+        $('input#CALENDAR_CODE').val(localStorage.getItem("CALENDAR_CODE"));
+        if ($('a.breadcrumb-link').length > 1) {
+            var ele = $('a.breadcrumb-link')[1]
+            $(ele).attr("href", window.location.href.split('#')[0] + "#/calendar/transaction-master/2312");
+        }
+
+    }
+
 }
 
 
 function GetGeneratedFormDataUrl(formid, isEdit) {
 
+    
+    if (formid == 2303) {
+        return "Calendar/AddServiceMaster";
+    }
+    if (formid == 2304) {
+        return "Calendar/AddServiceProviderMaster";
+    }
     if (formid == 2306) {
         return "Calendar/AddLocationMaster";
     }
+    if (formid == 2310) {
+        return "Calendar/AddParticipantMaster";
+    }
+    if (formid == 2311) {
+        return "Calendar/AddSchedularForm";
+    }
+    if (formid == 2312) {
+        return "Calendar/AddTransactionMaster";
+    }
+
     return "FormAPI/GeneratedFormData";
 }
 
 
 function GetFormRecordsUrl(formid) {
 
-    if (formid == 2306) {
-        return BASE_URL +"Calendar/GetLocationMasterList";
+    
+    if (formid == 2303) {
+        return BASE_URL + "Calendar/GetServiceMasterList";
     }
+    if (formid == 2304) {
+        return BASE_URL + "Calendar/GetServiceProviderMasterList";
+    }
+    if (formid == 2306) {
+        return BASE_URL + "Calendar/GetLocationMasterList";
+    }
+    if (formid == 2310) {
+        return BASE_URL + "Calendar/GetParticipantMasterList";
+    }
+    if (formid == 2311) {
+        return BASE_URL + "Calendar/GetSchedularFormList";
+    }
+    if (formid == 2312) {
+        return BASE_URL + "Calendar/GetTransactionMasterList";
+    }
+
     return BASE_URL + "FormAPI/GetFormRecordList";
 }
 

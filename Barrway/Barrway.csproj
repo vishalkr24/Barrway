@@ -302,10 +302,10 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BusinessAdminController.cs" />
     <Compile Include="Controllers\BusinessCalendarController.cs" />
-    <Compile Include="Controllers\BusinessSiteController.cs" />
     <Compile Include="Controllers\CalendarController.cs" />
     <Compile Include="Controllers\FormAPIController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MarketPlaceController.cs" />
     <Compile Include="Controllers\UserAdminController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -443,6 +443,40 @@
     <Content Include="assets\js\paginga.jquery.min.js" />
     <Content Include="assets\js\theme.min.js" />
     <Content Include="assets\js\vendor.min.js" />
+    <Content Include="assets\marketplace\css\media.css" />
+    <Content Include="assets\marketplace\css\style.css" />
+    <Content Include="assets\marketplace\image\aerrow.png" />
+    <Content Include="assets\marketplace\image\alogo.png" />
+    <Content Include="assets\marketplace\image\alogo2.png" />
+    <Content Include="assets\marketplace\image\alogo22.png" />
+    <Content Include="assets\marketplace\image\ban-img.png" />
+    <Content Include="assets\marketplace\image\banner-back.jpg" />
+    <Content Include="assets\marketplace\image\chat.png" />
+    <Content Include="assets\marketplace\image\facebook.png" />
+    <Content Include="assets\marketplace\image\filter.png" />
+    <Content Include="assets\marketplace\image\glo.png" />
+    <Content Include="assets\marketplace\image\hdiw.png" />
+    <Content Include="assets\marketplace\image\insta.png" />
+    <Content Include="assets\marketplace\image\lo.png" />
+    <Content Include="assets\marketplace\image\logo.png" />
+    <Content Include="assets\marketplace\image\marketplace-detail.jpg" />
+    <Content Include="assets\marketplace\image\p1.png" />
+    <Content Include="assets\marketplace\image\p11.png" />
+    <Content Include="assets\marketplace\image\p12.png" />
+    <Content Include="assets\marketplace\image\p2.png" />
+    <Content Include="assets\marketplace\image\pro.png" />
+    <Content Include="assets\marketplace\image\rectangle.png" />
+    <Content Include="assets\marketplace\image\search-icon.png" />
+    <Content Include="assets\marketplace\image\service.jpg" />
+    <Content Include="assets\marketplace\image\slogan.png" />
+    <Content Include="assets\marketplace\image\star.png" />
+    <Content Include="assets\marketplace\image\tagre.png" />
+    <Content Include="assets\marketplace\image\whatsapp.png" />
+    <Content Include="assets\marketplace\owl\jquery.min.js" />
+    <Content Include="assets\marketplace\owl\myjq.js" />
+    <Content Include="assets\marketplace\owl\owl.carousel.js" />
+    <Content Include="assets\marketplace\owl\owl.carousel.min.css" />
+    <Content Include="assets\marketplace\owl\owl.theme.default.min.css" />
     <Content Include="assets\svg\brands\atlassian-icon.svg" />
     <Content Include="assets\svg\brands\bank-of-america-icon.svg" />
     <Content Include="assets\svg\brands\bookingcom-icon.svg" />
@@ -3000,7 +3034,15 @@
     <Content Include="Templates\admin\schedule.html" />
     <Content Include="Templates\admin\transaction.html" />
     <Content Include="Templates\breadcrumbs.html" />
+
     <Content Include="Templates\calendar-master\calendar.html" />
+
+    <Content Include="Templates\calendar-master\transaction-master.html" />
+    <Content Include="Templates\calendar-master\schedular-form.html" />
+    <Content Include="Templates\calendar-master\participant-master.html" />
+    <Content Include="Templates\calendar-master\service-provider-master.html" />
+    <Content Include="Templates\calendar-master\service-master.html" />
+
     <Content Include="Templates\calendar-master\location-master.html" />
     <Content Include="Templates\dashboard\dashboard.html" />
     <Content Include="Templates\error\error-500.html" />
@@ -3053,7 +3095,6 @@
     <Content Include="Views\BusinessAdmin\SetupCompanyCalendar.cshtml" />
     <Content Include="Views\BusinessAdmin\SetupCalendar.cshtml" />
     <Content Include="Views\Shared\_UserAdminLayout.cshtml" />
-    <Content Include="Views\BusinessSite\Index.cshtml" />
     <Content Include="Views\BusinessAdmin\ManageCompanyWebsite.cshtml" />
     <Content Include="Views\BusinessAdmin\_EditCompanyInformation.cshtml" />
     <Content Include="Views\BusinessAdmin\_EditCompanyService.cshtml" />
@@ -3067,7 +3108,22 @@
     <Content Include="Views\BusinessAdmin\CalendarMaster.cshtml" />
     <Content Include="Views\BusinessAdmin\SubscriptionPlan.cshtml" />
     <Content Include="Views\BusinessAdmin\PaymentHistory.cshtml" />
+
     <Content Include="Views\Calendar\EditIndex.cshtml" />
+
+    <Content Include="Views\Shared\_LayoutMarketPlace.cshtml" />
+    <Content Include="Views\MarketPlace\index.cshtml" />
+    <Content Include="Views\MarketPlace\BusinessSite.cshtml" />
+    <Content Include="Views\MarketPlace\Tag.cshtml" />
+    <Content Include="Views\MarketPlace\News.cshtml" />
+    <Content Include="Views\MarketPlace\BusinessPost.cshtml" />
+    <Content Include="Views\Shared\_LayoutMarketPlaceCompany.cshtml" />
+    <Content Include="Views\MarketPlace\CompanyDetail.cshtml" />
+    <Content Include="Views\MarketPlace\CompanyService.cshtml" />
+    <Content Include="Views\MarketPlace\CompanyPackage.cshtml" />
+    <Content Include="Views\MarketPlace\CompanySchedule.cshtml" />
+    <Content Include="Views\MarketPlace\CompanyPhotoAlbum.cshtml" />
+
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
