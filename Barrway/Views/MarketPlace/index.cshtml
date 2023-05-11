@@ -16,8 +16,8 @@
                         <div class="fields">
                             <div class="form-group">
                                 <label for="sel1">Subcategory</label>
-                                <select class="form-control" id="sel1">
-                                    <option>Select</option>
+                                <select class="form-control" id="filter-sub-category-master">
+                                    <option>Select a sub-category</option>
                                     <option>2</option>
                                     <option>3</option>
                                     <option>4</option>
@@ -25,14 +25,14 @@
                             </div>
                             <div class="form-group">
                                 <label for="sel1">District</label>
-                                <select class="form-control" id="sel1">
-                                    <option>Select</option>
+                                <select class="form-control" id="filter-district-master">
+                                    <option>Select your district</option>
                                     <option>2</option>
                                     <option>3</option>
                                     <option>4</option>
                                 </select>
                             </div>
-                            <p class="search"><a href="#"> <img src="~/assets/marketplace/image/search-icon.png"> </a></p>
+                            <p class="search"><a href="#" onclick="setCompanySubCategoryWise(true, true)"> <img src="~/assets/marketplace/image/search-icon.png"> </a></p>
                         </div>
                     </div>
                 </div>
@@ -50,91 +50,13 @@
 <section class="subcatageory" id="common">
     <div class="container">
         <div class="row">
-            <div class="col-md-12">
-                <div class="my-slide one">
+            <div class="col-md-12" id="lblFilterLabel" style="display:none;">Showing results for  <b><span id="lblSelectedSubCategory"></span></b> and <b><span id="lblSelectedDistrict"></span></b></div>
+            <div class="col-md-12" id="company-category-wise-area">
+                @*<div class="my-slide one">
                     <div class="heading-cata">
                         <h3>Service subcategory 1 </h3>
                     </div>
-                    <div id="owl-demo1" class="owl-carousel owl-theme">
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="#"> Tag1</a>, <a href="#"> Tag2</a>, <a href="#"> Tag3</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="#"> Tag1</a>, <a href="#"> Tag2</a>, <a href="#"> Tag3</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="#"> Tag1</a>, <a href="#"> Tag2</a>, <a href="#"> Tag3</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="#"> Tag1</a>, <a href="#"> Tag2</a>, <a href="#"> Tag3</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="#"> Tag1</a>, <a href="#"> Tag2</a>, <a href="#"> Tag3</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="#"> Tag1</a>, <a href="#"> Tag2</a>, <a href="#"> Tag3</a></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
                 <div class="my-slide two">
                     <div class="heading-cata">
@@ -220,7 +142,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>*@
             </div>
         </div>
     </div>
@@ -304,187 +226,6 @@
         </div>
     </div>
 </section>
-
-<!-- sliders 2 -->
-<section class="subcatageory" id="common">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="my-slide three">
-                    <div class="heading-cata">
-                        <h3>Service subcategory 3 </h3>
-                    </div>
-                    <div id="owl-demo3" class="owl-carousel owl-theme">
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="#"> Tag1</a>, <a href="#"> Tag2</a>, <a href="#"> Tag3</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="#"> Tag1</a>, <a href="#"> Tag2</a>, <a href="#"> Tag3</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="#"> Tag1</a>, <a href="#"> Tag2</a>, <a href="#"> Tag3</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="#"> Tag1</a>, <a href="#"> Tag2</a>, <a href="#"> Tag3</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="#"> Tag1</a>, <a href="#"> Tag2</a>, <a href="#"> Tag3</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="#"> Tag1</a>, <a href="#"> Tag2</a>, <a href="#"> Tag3</a></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="my-slide four">
-                    <div class="heading-cata">
-                        <h3>Service subcategory 4 </h3>
-                    </div>
-                    <div id="owl-demo4" class="owl-carousel owl-theme">
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="#"> Tag1</a>, <a href="#"> Tag2</a>, <a href="#"> Tag3</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="#"> Tag1</a>, <a href="#"> Tag2</a>, <a href="#"> Tag3</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="#"> Tag1</a>, <a href="#"> Tag2</a>, <a href="#"> Tag3</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="#"> Tag1</a>, <a href="#"> Tag2</a>, <a href="#"> Tag3</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="#"> Tag1</a>, <a href="#"> Tag2</a>, <a href="#"> Tag3</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="#"> Tag1</a>, <a href="#"> Tag2</a>, <a href="#"> Tag3</a></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
 
 <!-- Barrway -->
 <section class="Barrway mt-80">
@@ -623,3 +364,7 @@
     </div>
 </section>
 
+@section scripts{
+
+    <script src="~/Scripts/MarketplaceScripts/homepage.js"></script>
+}

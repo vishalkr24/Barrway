@@ -348,6 +348,27 @@ namespace Barrway.Controllers
             }
         }
 
+        public async Task<ActionResult> GetAllDistrictMaster()
+        {
+            try
+            {
+                var result = await globalMasterService.GetDistrictMaster();
+
+                if (result.Status)
+                {
+                    return Json(new AddUpdateDelete() { Status = true, Data = result.Data, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         public async Task<ActionResult> GetDefaultCompany()
         {
             try
@@ -458,6 +479,36 @@ namespace Barrway.Controllers
 
         }
 
+        public async Task<ActionResult> GetAllCompanySubCategory()
+        {
+            try
+            {
+                var subCategoryData = await globalMasterService.GetCompanySubCategoryMaster();
+
+                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = subCategoryData.Data }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        public async Task<ActionResult> GetFilterCompanyData(string SubCategoryId, string DistrictId)
+        {
+            try
+            {
+                var Data = await globalMasterService.GetFilterCompanyData(SubCategoryId, DistrictId);
+
+                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = Data.Data }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
         public async Task<ActionResult> GetCalendarCategory()
         {
             try
@@ -508,6 +559,7 @@ namespace Barrway.Controllers
                         COMPANY_NAME_ENGLISH = model.COMPANY_NAME_ENGLISH,
                         COMPANY_NAME_CHINESE = model.COMPANY_NAME_CHINESE,
                         Id = model.Id,
+                        IS_ACTIVE = "Y",
                         COMPANY_CATEGORY_ID = model.COMPANY_CATEGORY_ID,
                         COMPANY_SUB_CATEGORY_ID = model.COMPANY_SUB_CATEGORY_ID
                     };
@@ -658,6 +710,7 @@ namespace Barrway.Controllers
                     DISTRICT_ID = model.DISTRICT_ID,
                     FACEBOOK_URL = model.FACEBOOK_URL,
                     Id = model.Id,
+                    IS_ACTIVE = "Y",
                     INSTAGRAM_URL = model.INSTAGRAM_URL,
                     IS_SEARCHABLE_IN_MARKETPLACE = model.IS_SEARCHABLE_IN_MARKETPLACE,
                     PAGE_URL = model.PAGE_URL,

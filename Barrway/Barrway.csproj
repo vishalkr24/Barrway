@@ -460,10 +460,12 @@
     <Content Include="assets\marketplace\image\lo.png" />
     <Content Include="assets\marketplace\image\logo.png" />
     <Content Include="assets\marketplace\image\marketplace-detail.jpg" />
+    <Content Include="assets\marketplace\image\news.jpg" />
     <Content Include="assets\marketplace\image\p1.png" />
     <Content Include="assets\marketplace\image\p11.png" />
     <Content Include="assets\marketplace\image\p12.png" />
     <Content Include="assets\marketplace\image\p2.png" />
+    <Content Include="assets\marketplace\image\post_img.jpg" />
     <Content Include="assets\marketplace\image\pro.png" />
     <Content Include="assets\marketplace\image\rectangle.png" />
     <Content Include="assets\marketplace\image\search-icon.png" />
@@ -2987,6 +2989,9 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\MarketplaceScripts\News.js" />
+    <Content Include="Scripts\MarketplaceScripts\BusinessSite.js" />
+    <Content Include="Scripts\MarketplaceScripts\homepage.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\myscript\commonFunctions - Copy.js" />
     <Content Include="Scripts\myscript\commonFunctions-16032021.js" />

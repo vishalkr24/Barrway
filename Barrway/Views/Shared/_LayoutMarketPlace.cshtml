@@ -20,13 +20,14 @@
     <!-- javascript -->
     <script src="~/assets/marketplace/owl/jquery.min.js"></script>
     <script src="~/assets/marketplace/owl/owl.carousel.js"></script>
-
+    <script src="~/Scripts/BusinessScripts/Common/CommonFunctions.js"></script>
+    @RenderSection("scripts", false)
 
 
     <!-- css -->
     <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/style.css">
     <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/media.css">
-    
+
 
 </head>
 <body>
@@ -71,7 +72,7 @@
                                 </div>
                                 <div class="collapse navbar-collapse" id="myNavbar">
                                     <ul class="nav navbar-nav">
-                                        <li class="active"><a href="/Marketplace/Index">Home</a></li>
+                                        <li id="nv-home"><a href="/Marketplace/Index">Home</a></li>
                                         <!-- <li class="dropdown">
                                           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1 <span class="caret"></span></a>
                                           <ul class="dropdown-menu">
@@ -80,8 +81,8 @@
                                             <li><a href="#">Page 1-3</a></li>
                                           </ul>
                                         </li> -->
-                                        <li><a href="/Marketplace/BusinessSite">Business</a></li>
-                                        <li><a href="/Marketplace/News">News</a></li>
+                                        <li id="nv-business"><a href="/Marketplace/BusinessSite">Business</a></li>
+                                        <li id="nv-news"><a href="/Marketplace/News">News</a></li>
                                     </ul>
                                     <ul class="nav navbar-nav navbar-right">
                                         <li class="rl">

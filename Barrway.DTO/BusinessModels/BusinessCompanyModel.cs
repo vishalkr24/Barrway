@@ -39,6 +39,7 @@ namespace Barrway.DTO.BusinessModels
         public string COUNTRY_ID { get; set; } = String.Empty;
         public string CITY_ID { get; set; } = String.Empty;
         public string DISTRICT_ID { get; set; } = String.Empty;
+        public string IS_ACTIVE { get; set; } = String.Empty;
 
     }
 

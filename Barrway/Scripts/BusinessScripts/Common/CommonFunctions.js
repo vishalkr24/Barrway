@@ -141,6 +141,23 @@ function getCompanySubCategory(categoryId) {
     return data;
 }
 
+function GetAllCompanySubCategory() {
+    var data;
+    $.ajax({
+        url: "/BusinessAdmin/GetAllCompanySubCategory/",
+        type: "GET",
+        async: false,
+        success: function (response) {
+
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    })
+    return data;
+}
+
 function getCalendarCategory() {
     var data;
     $.ajax({
@@ -175,6 +192,28 @@ function getCalendarSubCategory(categoryId) {
         }
     })
     return data;
+}
+
+function GetFilterCompanyData(subCategoryId, districtId) {
+
+    var data;
+    $.ajax({
+        url: "/BusinessAdmin/GetFilterCompanyData/",
+        async: false,
+        type: "GET",
+        data: {
+            SubCategoryId: subCategoryId,
+            DistrictId: districtId
+        },
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    })
+    return data;
+
 }
 
 function getCountryMaster() {
@@ -222,6 +261,22 @@ function getDistrictMaster(cityId) {
         data: {
             CityId: cityId
         },
+        async: false,
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    })
+    return data;
+}
+
+function getDistrictMaster() {
+    var data;
+    $.ajax({
+        url: "/BusinessAdmin/GetAllDistrictMaster/",
+        type: "GET",
         async: false,
         success: function (response) {
             data = response;
