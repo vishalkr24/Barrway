@@ -2,7 +2,7 @@
     $("#nv-home").addClass("active");
     setDistrictMaster();
     setCompanySubCategory();
-    setCompanySubCategoryWise();
+    setCompanySubCategoryWise(false, false);
 });
 
 function setDistrictMaster() {
@@ -13,7 +13,7 @@ function setDistrictMaster() {
         var districts = data.Data;
 
         $("#filter-district-master").empty();
-        $("#filter-district-master").append(`<option value="-1" selected disabled>select your district</option>`);
+        $("#filter-district-master").append(`<option value="-1" selected>All districts</option>`);
 
         for (var i = 0; i < districts.length; i++) {
             $("#filter-district-master").append(`<option value="${districts[i].Id}">${districts[i].DISTRICT_NAME}</option>`);
@@ -31,7 +31,7 @@ function setCompanySubCategory() {
         var districts = data.Data;
 
         $("#filter-sub-category-master").empty();
-        $("#filter-sub-category-master").append(`<option value="-1" selected disabled>select a sub-category</option>`);
+        $("#filter-sub-category-master").append(`<option value="-1" selected>All sub-category</option>`);
 
         for (var i = 0; i < districts.length; i++) {
             $("#filter-sub-category-master").append(`<option value="${districts[i].Id}">${districts[i].COMPANY_SUB_CATEGORY_NAME}</option>`);
@@ -51,14 +51,18 @@ function setCompanySubCategoryWise(showFilterQuery = false, requestFromButton = 
     if (queryString == null) {
 
     } else {
-        queryString = queryString.split("=")[1];
+        queryString = queryString.split("&");
         try {
             var object = queryString;
+            
             if (requestFromButton) {
 
             } else {
                 fltr_subCategoryId = object[0].split("=")[1];
                 fltr_districtId = object[1].split("=")[1];
+                if (fltr_districtId[fltr_districtId.length-1]=="#") {
+                    fltr_districtId = fltr_districtId.substring(0, fltr_districtId.length-1)
+                }
                 $("#filter-sub-category-master").val(fltr_subCategoryId);
                 $("#filter-district-master").val(fltr_districtId);
             }
@@ -110,7 +114,7 @@ function setCompanySubCategoryWise(showFilterQuery = false, requestFromButton = 
         var corouselCounter = 0;
 
         var categories = data.Data;
-        console.log(categories);
+        
         $("#company-category-wise-area").empty();
         for (var i = 0; i < categories.length; i++) {
 
@@ -130,15 +134,15 @@ function setCompanySubCategoryWise(showFilterQuery = false, requestFromButton = 
 
                 for (var j = 0; j < companies.length; j++) {
 
-                    var tags = companies[j].TAGS.split("#");
+                    var tags = companies[j].TAGS.split(",");
 
                     var tagString = "";
                     for (var k = 0; k < tags.length; k++) {
-                        tagString += "<a href=''>"+tags[k]+"</a>, ";
+                        tagString += "<a href='/Marketplace/Tag?tag=" + tags[k].trim() + "'>"+tags[k]+"</a>, ";
                     }
                     
                     $("#owl-demo" + corouselCounter).append(` <div class="item">
-                                                    <div class="item-inner">
+                                                    <div class="item-inner" onclick="viewMarketplaceCompanyDetails(${companies[j].Id})">
                                                         <div class="pro-im">
                                                             <img src="${(companies[j].COMPANY_BANNER_PATH == "") ? "../assets/marketplace/image/pro.png" : companies[j].COMPANY_BANNER_PATH.replaceAll("~", "..") }" onerror="this.src='../assets/marketplace/image/pro.png'">
                                                         </div>

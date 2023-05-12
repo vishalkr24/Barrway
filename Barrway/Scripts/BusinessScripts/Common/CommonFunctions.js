@@ -339,3 +339,7 @@ function GoToCalendarLayout(CalendarId, CalendarCode) {
     localStorage.setItem("CALENDAR_CODE", CalendarCode);
     window.location.replace("/Calendar/Index");
 }
+
+function viewMarketplaceCompanyDetails(companyId) {
+    window.location.replace("/Marketplace/CompanyDetail?CompanyId=" + companyId);
+}

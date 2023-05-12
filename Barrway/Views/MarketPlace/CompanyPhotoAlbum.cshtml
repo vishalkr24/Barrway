@@ -1,7 +1,9 @@
-﻿
+﻿@model Barrway.DTO.MarketplaceModels.MarketplaceCompanyGalleryModel
 @{
     ViewBag.Title = "Company Photo Album";
     Layout = "~/Views/Shared/_LayoutMarketPlaceCompany.cshtml";
+    ViewBag.COMPANY_LOGO_PATH = Model.COMPANY_LOGO_PATH.Replace("~", "..");
+    ViewBag.COMPANY_ID = Model.Id.ToString();
 }
 
 <!-- heading -->
@@ -11,25 +13,16 @@
             <div class="col-md-12">
                 <div class="photo-album-inner">
                     <div class="gallery-wrapper">
-                        <div class="gallery-inner">
-                            <div class="gallery-img">
-                                <img src="~/assets/marketplace/image/hdiw.png" alt="">
-                            </div>
-                            <div class="gallery-img">
-                                <img src="~/assets/marketplace/image/hdiw.png" alt="">
-                            </div>
-                            <div class="gallery-img">
-                                <img src="~/assets/marketplace/image/hdiw.png" alt="">
-                            </div>
-                            <div class="gallery-img">
-                                <img src="~/assets/marketplace/image/hdiw.png" alt="">
-                            </div>
-                            <div class="gallery-img">
-                                <img src="~/assets/marketplace/image/hdiw.png" alt="">
-                            </div>
-                            <div class="gallery-img">
-                                <img src="~/assets/marketplace/image/hdiw.png" alt="">
-                            </div>
+                        <div class="gallery-inner" style="min-height:75vh">
+                            @if (Model.photoAlbumList.Count > 0)
+                            {
+                                foreach (var photo in Model.photoAlbumList)
+                                {
+                                    <div class="gallery-img">
+                                        <img src="@photo.ALBUM_PHOTO_PATH.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/hdiw.png'" alt="">
+                                    </div>
+                                }
+                            }
                         </div>
                     </div>
                 </div>
@@ -39,3 +32,7 @@
 </section>
 
 
+@section scripts{
+
+    <script src="~/Scripts/MarketplaceScripts/CompanyPhotoAlbum.js"></script>
+}

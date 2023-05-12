@@ -2987,6 +2987,11 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\MarketplaceScripts\CompanyPhotoAlbum.js" />
+    <Content Include="Scripts\MarketplaceScripts\CompanyPackage.js" />
+    <Content Include="Scripts\MarketplaceScripts\CompanySchedule.js" />
+    <Content Include="Scripts\MarketplaceScripts\CompanyService.js" />
+    <Content Include="Scripts\MarketplaceScripts\CompanyDetail.js" />
     <Content Include="Scripts\MarketplaceScripts\News.js" />
     <Content Include="Scripts\MarketplaceScripts\BusinessSite.js" />
     <Content Include="Scripts\MarketplaceScripts\homepage.js" />
@@ -3039,15 +3044,12 @@
     <Content Include="Templates\admin\schedule.html" />
     <Content Include="Templates\admin\transaction.html" />
     <Content Include="Templates\breadcrumbs.html" />
-
     <Content Include="Templates\calendar-master\calendar.html" />
-
     <Content Include="Templates\calendar-master\transaction-master.html" />
     <Content Include="Templates\calendar-master\schedular-form.html" />
     <Content Include="Templates\calendar-master\participant-master.html" />
     <Content Include="Templates\calendar-master\service-provider-master.html" />
     <Content Include="Templates\calendar-master\service-master.html" />
-
     <Content Include="Templates\calendar-master\location-master.html" />
     <Content Include="Templates\dashboard\dashboard.html" />
     <Content Include="Templates\error\error-500.html" />
@@ -3113,9 +3115,7 @@
     <Content Include="Views\BusinessAdmin\CalendarMaster.cshtml" />
     <Content Include="Views\BusinessAdmin\SubscriptionPlan.cshtml" />
     <Content Include="Views\BusinessAdmin\PaymentHistory.cshtml" />
-
     <Content Include="Views\Calendar\EditIndex.cshtml" />
-
     <Content Include="Views\Shared\_LayoutMarketPlace.cshtml" />
     <Content Include="Views\MarketPlace\index.cshtml" />
     <Content Include="Views\MarketPlace\BusinessSite.cshtml" />
@@ -3128,7 +3128,6 @@
     <Content Include="Views\MarketPlace\CompanyPackage.cshtml" />
     <Content Include="Views\MarketPlace\CompanySchedule.cshtml" />
     <Content Include="Views\MarketPlace\CompanyPhotoAlbum.cshtml" />
-
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
