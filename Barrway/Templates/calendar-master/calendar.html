@@ -364,60 +364,10 @@
 
 
 
-<div class="breadcrumbUi row flex-wrap">
-
-    <div class="col-lg-6 col-md-12 text-xl-left mb-2 mb-lg-0">
-        <!--<a onclick="HideSiseMenu()" class="btn btn-primary mb-0 ml-1" title="Hide menu">
-            <i id="Hide_menu_Icon" class="fa fa-arrow-left" aria-hidden="true"></i>
-        </a>-->
-
-        <a ui-sref="Home()"
-           class="text-muted custom-br">{{formDetailsDataInfo.applicationTitle}}></a>
-        <span class="custom-br">{{formDetailsDataInfo.title}}</span>
-        <!--<a onclick="showQR()"
-           id="qrCodeNew"
-           class="btn btn-primary mb-0 ml-1"
-           title="{{translation.QR_Code}}">
-            <i class="fa fa-qrcode"></i>
-        </a>-->
-        <a href="javascript:;"
-           class="pull-left hide-page-actions ml-10"
-           title="Hide Page Actions">
-            <i class="glyphicon glyphicon-chevron-up"></i>
-        </a>
-
-    </div>
-    <div class="col-lg-6 col-md-12 text-xl-right">
-        <div class="btn-group d-inline-flex float-end"
-             role="group"
-             aria-label="Basic example">
-            <button type="button"
-                    class="btn btn-outline-success cursor-pointer mb-0"
-                    ui-sref="records({formId: currentFormId})"
-                    id="change_per_view">
-                <i class="fa fa-table" aria-hidden="true"> </i>
-                <span class="action-name">{{translation.Table_View}}</span>
-            </button>
-            <button type="button"
-                    class="btn btn-success cursor-pointer mb-0" style="border-top-left-radius: 0 !important; border-bottom-left-radius: 0 !important; ">
-                <i class="fa fa-calendar" aria-hidden="true"> </i>
-                <span class="action-name">{{translation.Calendar_View}}</span>
-            </button>
-            <button type="button"
-                    class="btn btn-outline-success cursor-pointer mb-0"
-                    ui-sref="CalendarStatus({formId:currentFormId})"
-                    ng-if="Is_Kanban_Status==true">
-                <i class="fa fa-columns" aria-hidden="true"> </i>
-                <span class="action-name">{{translation.Kanban_Board}}</span>
-            </button>
-        </div>
-
-    </div>
-</div>
 
 <div class="row">
-    <div class="col-md-2" style="background-color: #bcb3cc; ">
-        <section class="sidebar">
+    <div class="col-md-2" style="background-color: #bcb3cc; padding:0px;">
+        <section class="sidebar" style="margin-right:0px;">
             <div class="sedebar__tInner">
                 <div class="form-top">
                     <label>{{translation.Activities}}</label>
@@ -521,6 +471,57 @@
         </section>
     </div>
     <div class="col-md-10">
+        <div class="breadcrumbUi row flex-wrap" style="background:white;">
+
+            <div class="col-lg-6 col-md-12 text-xl-left mb-2 mb-lg-0">
+                <!--<a onclick="HideSiseMenu()" class="btn btn-primary mb-0 ml-1" title="Hide menu">
+                <i id="Hide_menu_Icon" class="fa fa-arrow-left" aria-hidden="true"></i>
+            </a>-->
+
+                <a ui-sref="Home()"
+                   class="text-muted custom-br">{{formDetailsDataInfo.applicationTitle}}></a>
+                <span class="custom-br">{{formDetailsDataInfo.title}}</span>
+                <!--<a onclick="showQR()"
+               id="qrCodeNew"
+               class="btn btn-primary mb-0 ml-1"
+               title="{{translation.QR_Code}}">
+                <i class="fa fa-qrcode"></i>
+            </a>-->
+                <a href="javascript:;"
+                   class="pull-left hide-page-actions ml-10"
+                   title="Hide Page Actions">
+                    <i class="glyphicon glyphicon-chevron-up"></i>
+                </a>
+
+            </div>
+            <div class="col-lg-6 col-md-12 text-xl-right">
+                <div class="btn-group d-inline-flex float-end"
+                     role="group"
+                     aria-label="Basic example">
+                    <button type="button"
+                            class="btn btn-outline-success cursor-pointer mb-0"
+                            ui-sref="records({formId: currentFormId})"
+                            id="change_per_view">
+                        <i class="fa fa-table" aria-hidden="true"> </i>
+                        <span class="action-name">{{translation.Table_View}}</span>
+                    </button>
+                    <button type="button"
+                            class="btn btn-success cursor-pointer mb-0" style="border-top-left-radius: 0 !important; border-bottom-left-radius: 0 !important; ">
+                        <i class="fa fa-calendar" aria-hidden="true"> </i>
+                        <span class="action-name">{{translation.Calendar_View}}</span>
+                    </button>
+                    <button type="button"
+                            class="btn btn-outline-success cursor-pointer mb-0"
+                            ui-sref="CalendarStatus({formId:currentFormId})"
+                            ng-if="Is_Kanban_Status==true">
+                        <i class="fa fa-columns" aria-hidden="true"> </i>
+                        <span class="action-name">{{translation.Kanban_Board}}</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
         <div class="card">
 
             <span id="menuName"> </span>
@@ -538,9 +539,9 @@
             <input type="hidden" value="0" id="FormTypeStatus" />
             <!--{{formDetailsDataInfo.title}}-->
             <!-- <small>
-                ({{(formDetailsDataInfo.applicationTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.applicationTitle}},
-                {{(formDetailsDataInfo.topicTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.topicTitle}})
-            </small> -->
+            ({{(formDetailsDataInfo.applicationTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.applicationTitle}},
+            {{(formDetailsDataInfo.topicTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.topicTitle}})
+        </small> -->
             <input type="hidden" name="tabulator" value="records" />
             <span id="menuName" class="hidden">
                 {{translation.Records_Untitled_name_newform_newform}}
@@ -555,9 +556,9 @@
                     <div class="row">
                         <form id="pageActions" class="form-inline w-100">
                             <!--<a class="btn btn-md btn-default"
-                            ng-if="currentUserFormRole==3"
-                            href
-                            ui-sref="summary({formId: currentFormId})"><i class="fa fa-th-list mr-2"></i>{{translation.Summary}}</a>-->
+                        ng-if="currentUserFormRole==3"
+                        href
+                        ui-sref="summary({formId: currentFormId})"><i class="fa fa-th-list mr-2"></i>{{translation.Summary}}</a>-->
 
                             <a class="btn btn-primary cursor-pointer">
                                 <i class="fa fa-cog mr-2"
@@ -673,32 +674,32 @@
                             <div class="col-sm-12 mb-10">
                                 <div class="col-sm-12 external-events-list" ng-show="isShowAdvance">
                                     <!--<div class="form-group row mt-2"
-                                         ng-if="otherformDetails.title">
-                                        <label class="col-md-2 control-label">
-                                            {{otherformDetails.title}}
-                                        </label>
-                                        <div class="col-md-6">
-                                            <div class="input-group">
-                                                <input type="text"
-                                                       id="keyword"
-                                                       name="keywordSearch"
-                                                       class="form-control ng-pristine ng-untouched ng-valid ng-empty"
-                                                       ng-model="otherformDetails.searchTextData"
-                                                       placeholder="{{ otherformDetails.title}} " />
-                                                <span class="input-group-append">
-                                                    <button class="btn btn-primary"
-                                                            ng-click="searchTabulatorDataInEvent(otherformDetails)"
-                                                            type="button">
-                                                        <i class="fa fa-search"
-                                                           aria-hidden="true">
-                                                        </i>
-                                                        Search
-                                                    </button>
-                                                </span>
-                                            </div>
-
+                                     ng-if="otherformDetails.title">
+                                    <label class="col-md-2 control-label">
+                                        {{otherformDetails.title}}
+                                    </label>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <input type="text"
+                                                   id="keyword"
+                                                   name="keywordSearch"
+                                                   class="form-control ng-pristine ng-untouched ng-valid ng-empty"
+                                                   ng-model="otherformDetails.searchTextData"
+                                                   placeholder="{{ otherformDetails.title}} " />
+                                            <span class="input-group-append">
+                                                <button class="btn btn-primary"
+                                                        ng-click="searchTabulatorDataInEvent(otherformDetails)"
+                                                        type="button">
+                                                    <i class="fa fa-search"
+                                                       aria-hidden="true">
+                                                    </i>
+                                                    Search
+                                                </button>
+                                            </span>
                                         </div>
-                                    </div>-->
+
+                                    </div>
+                                </div>-->
                                     <div class="form-group row">
                                         <label class="col-sm-2 control-label mb-4">
                                             {{ selectedAxis.selectedFormName}}
@@ -706,25 +707,25 @@
                                         </label>
                                         <div class="col-md-3 ">
                                             <!--/*
-                                            Donot remove this function and HTML , filtering for event on the basis of selected activity
-                                            */
-                                            <div class="input-group ">
-                                                <input type="text"
-                                                       id="resourcekeywordSearch"
-                                                       name="resourcekeywordSearch"
-                                                       ng-model="selectedAxis.resourceSearchTextData"
-                                                       class="form-control ng-pristine ng-untouched ng-valid ng-empty"
-                                                       placeholder="{{ selectedAxis.selectedFormName}} " />
-                                                <span class="input-group-append">
-                                                    <button class="btn btn-primary"
-                                                            type="button" ng-click="searchTabulatorDataInEventByResources(selectedAxis)">
-                                                        <i class="fa fa-search"
-                                                           aria-hidden="true">
-                                                        </i>
-                                                        Search
-                                                    </button>
-                                                </span>
-                                            </div>-->
+                                        Donot remove this function and HTML , filtering for event on the basis of selected activity
+                                        */
+                                        <div class="input-group ">
+                                            <input type="text"
+                                                   id="resourcekeywordSearch"
+                                                   name="resourcekeywordSearch"
+                                                   ng-model="selectedAxis.resourceSearchTextData"
+                                                   class="form-control ng-pristine ng-untouched ng-valid ng-empty"
+                                                   placeholder="{{ selectedAxis.selectedFormName}} " />
+                                            <span class="input-group-append">
+                                                <button class="btn btn-primary"
+                                                        type="button" ng-click="searchTabulatorDataInEventByResources(selectedAxis)">
+                                                    <i class="fa fa-search"
+                                                       aria-hidden="true">
+                                                    </i>
+                                                    Search
+                                                </button>
+                                            </span>
+                                        </div>-->
                                             <div class="input-group ">
                                                 <input type="text"
                                                        id="activitykeywordSearch"
@@ -756,33 +757,33 @@
                                             </label>
                                         </div>
                                         <!--<div class="col form-group row ">
-                                            <label class="col-md-5 control-label text-left">
-                                                Filter By Selected Date
-                                            </label>
-                                            <div class="col-md-7">
-                                                <div class="input-group">
-                                                    <input type="text"
-                                                           id="datecontrol"
-                                                           class="form-control"
-                                                           ng-model="formDetailsDataInfo.searchByDate"
-                                                           data-date=""
-                                                           data-date-format="dd-mm-yyyy"
-                                                           placeholder="yyyy-mm-dd"
-                                                           value="" />
-                                                    <span class="input-group-append">
-                                                        <button class="btn btn-primary"
-                                                                ng-click="filterBySelectedDate(formDetailsDataInfo)"
-                                                                type="button">
-                                                            <i class="fa fa-search"
-                                                               aria-hidden="true">
-                                                            </i>
-                                                            Search
-                                                        </button>
-                                                    </span>
-                                                </div>
-
+                                        <label class="col-md-5 control-label text-left">
+                                            Filter By Selected Date
+                                        </label>
+                                        <div class="col-md-7">
+                                            <div class="input-group">
+                                                <input type="text"
+                                                       id="datecontrol"
+                                                       class="form-control"
+                                                       ng-model="formDetailsDataInfo.searchByDate"
+                                                       data-date=""
+                                                       data-date-format="dd-mm-yyyy"
+                                                       placeholder="yyyy-mm-dd"
+                                                       value="" />
+                                                <span class="input-group-append">
+                                                    <button class="btn btn-primary"
+                                                            ng-click="filterBySelectedDate(formDetailsDataInfo)"
+                                                            type="button">
+                                                        <i class="fa fa-search"
+                                                           aria-hidden="true">
+                                                        </i>
+                                                        Search
+                                                    </button>
+                                                </span>
                                             </div>
-                                        </div>-->
+
+                                        </div>
+                                    </div>-->
 
                                         <div class="row w-100 align-items-center toggle-course-master" style="display: none;">
                                             <div ng-repeat="item in Xdraggables.draggableSlips"

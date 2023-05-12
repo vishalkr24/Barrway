@@ -263,5 +263,22 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> GetSingleTagData(string TagName)
+        {
+            //string query = $@"";
+
+            //List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+
+            //if (result.Count > 0)
+            //{
+            //    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result.ToList() };
+            //}
+            //else
+            //{
+            //    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            //}
+            return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+        }
+
     }
 }

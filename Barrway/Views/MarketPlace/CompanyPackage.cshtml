@@ -1,7 +1,8 @@
-﻿
+﻿@model Barrway.DTO.MarketplaceModels.MarketplaceCompanyModel
 @{
     ViewBag.Title = "Company Package";
     Layout = "~/Views/Shared/_LayoutMarketPlaceCompany.cshtml";
+    ViewBag.COMPANY_ID = Model.Id.ToString();
 }
 
 
@@ -11,7 +12,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="head">
-                    <h2>Company name english (Company name Chinese)</h2>
+                    <h2>@Model.COMPANY_NAME_ENGLISH (@Model.COMPANY_NAME_CHINESE)</h2>
                 </div>
             </div>
         </div>
@@ -63,3 +64,8 @@
     </div>
 </section>
 
+
+@section scripts{
+
+    <script src="~/Scripts/MarketplaceScripts/CompanyPackage.js"></script>
+}
