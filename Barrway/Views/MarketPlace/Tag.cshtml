@@ -1,4 +1,4 @@
-﻿
+﻿@model Barrway.DTO.PublicModels.PublicTagDataModel
 @{
     ViewBag.Title = "Tag";
     Layout = "~/Views/Shared/_LayoutMarketPlace.cshtml";
@@ -24,7 +24,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="head">
-                    <h2>Tag 1</h2>
+                    <h2>@ViewBag.TagName</h2>
                 </div>
             </div>
         </div>
@@ -39,150 +39,105 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="sub-hed">
-                                <p>Service contains Tag1</p>
+                                <p>Service contains @ViewBag.TagName</p>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="media">
-                                <div class="media-left">
-                                    <img src="~/assets/marketplace/image/pro.png" class="media-object" style="width:150px">
-                                </div>
-                                <div class="media-body">
-                                    <h4 class="media-heading">ABC Company</h4>
-                                    <p><b>Yoga and health class</b></p>
-                                    <p>Tsim Sha Tsui</p>
-                                    <p><a href=""> Tag1, </a> <a href="#">  Tag2, </a> <a href="#">  Tag3 </a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="media">
-                                <div class="media-left">
-                                    <img src="~/assets/marketplace/image/pro.png" class="media-object" style="width:150px">
-                                </div>
-                                <div class="media-body">
-                                    <h4 class="media-heading">ABC Company</h4>
-                                    <p><b>Yoga and health class</b></p>
-                                    <p>Tsim Sha Tsui</p>
-                                    <p><a href=""> Tag1, </a> <a href="#">  Tag2, </a> <a href="#">  Tag3 </a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="media">
-                                <div class="media-left">
-                                    <img src="~/assets/marketplace/image/pro.png" class="media-object" style="width:150px">
-                                </div>
-                                <div class="media-body">
-                                    <h4 class="media-heading">ABC Company</h4>
-                                    <p><b>Yoga and health class</b></p>
-                                    <p>Tsim Sha Tsui</p>
-                                    <p><a href=""> Tag1, </a> <a href="#">  Tag2, </a> <a href="#">  Tag3 </a></p>
+                        @foreach (var item in Model.calendars)
+                        {
+                            <div class="col-md-6">
+                                <div class="media">
+                                    <div class="media-left" style="">
+                                        <img src="@item.CALENDAR_PHOTO_PATH.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px">
+                                    </div>
+                                    <div class="media-body">
+                                        <h4 class="media-heading">@item.COMPANY_NAME_ENGLISH</h4>
+                                        <p><b>@item.CALENDAR_NAME</b></p>
+                                        <p>@item.CITY_NAME</p>
+                                        <p>
+                                            @{
+                                                if (!string.IsNullOrEmpty(item.TAGS))
+                                                {
+                                                    var tags = item.TAGS.Split(',');
+                                                    for (int i = 0; i < tags.Length; i++)
+                                                    {
+                                                        <a href="/Marketplace/Tag?tag=@tags[i].Trim()"> @tags[i],</a>
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="media">
-                                <div class="media-left">
-                                    <img src="~/assets/marketplace/image/pro.png" class="media-object" style="width:150px">
-                                </div>
-                                <div class="media-body">
-                                    <h4 class="media-heading">ABC Company</h4>
-                                    <p><b>Yoga and health class</b></p>
-                                    <p>Tsim Sha Tsui</p>
-                                    <p><a href=""> Tag1, </a> <a href="#">  Tag2, </a> <a href="#">  Tag3 </a></p>
-                                </div>
-                            </div>
-                        </div>
+                        }
+
                     </div>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="sub-hed">
-                                <p>Company contains Tag1</p>
+                                <p>Company contains @ViewBag.TagName</p>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="media">
-                                <div class="media-left">
-                                    <img src="~/assets/marketplace/image/alogo2.png" class="media-object" style="width:150px">
-                                </div>
-                                <div class="media-body">
-                                    <h4 class="media-heading">Featured company</h4>
-                                    <p><a href=""> Yoga,</a> <a href="#"> Gym </a></p>
-                                    <p>Description here owhe eworh eow o weohrwe qpowef wqelfrqweoifjq;lsjd wqeoiqjw</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="media">
-                                <div class="media-left">
-                                    <img src="~/assets/marketplace/image/alogo2.png" class="media-object" style="width:150px">
-                                </div>
-                                <div class="media-body">
-                                    <h4 class="media-heading">Featured company</h4>
-                                    <p><a href=""> Yoga,</a> <a href="#"> Gym </a></p>
-                                    <p>Description here owhe eworh eow o weohrwe qpowef wqelfrqweoifjq;lsjd wqeoiqjw</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="media">
-                                <div class="media-left">
-                                    <img src="~/assets/marketplace/image/alogo2.png" class="media-object" style="width:150px">
-                                </div>
-                                <div class="media-body">
-                                    <h4 class="media-heading">Featured company</h4>
-                                    <p><a href=""> Yoga,</a> <a href="#"> Gym </a></p>
-                                    <p>Description here owhe eworh eow o weohrwe qpowef wqelfrqweoifjq;lsjd wqeoiqjw</p>
+                        @foreach (var item in Model.companies)
+                        {
+                            <div class="col-md-6">
+                                <div class="media">
+                                    <div class="media-left">
+                                        <img src="@item.COMPANY_LOGO_PATH.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/tagre.png'" class="media-object" style="width:150px">
+                                    </div>
+                                    <div class="media-body">
+                                        <h4 class="media-heading">@item.COMPANY_NAME_ENGLISH</h4>
+                                        <p>
+                                            @{
+                                                if (!string.IsNullOrEmpty(item.TAGS))
+                                                {
+                                                    var tags = item.TAGS.Split(',');
+                                                    for (int i = 0; i < tags.Length; i++)
+                                                    {
+                                                        <a href="/Marketplace/Tag?tag=@tags[i].Trim()"> @tags[i],</a>
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p>@item.COMPANY_DESCRIPTION</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="media">
-                                <div class="media-left">
-                                    <img src="~/assets/marketplace/image/alogo2.png" class="media-object" style="width:150px">
-                                </div>
-                                <div class="media-body">
-                                    <h4 class="media-heading">Featured company</h4>
-                                    <p><a href=""> Yoga,</a> <a href="#"> Gym </a></p>
-                                    <p>Description here owhe eworh eow o weohrwe qpowef wqelfrqweoifjq;lsjd wqeoiqjw</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="sub-hed">
-                                <p>Blog contains Tag1</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="media">
-                                <div class="media-left">
-                                    <img src="~/assets/marketplace/image/tagre.png" class="media-object" style="width:150px">
-                                </div>
-                                <div class="media-body">
-                                    <p><a href="">Tag1</a></p>
-                                    <h4 class="media-heading">Post title</h4>
-                                    <p><span>Author name,</span> <span>YYYY-MM-DD</span></p>
+                        }
 
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="media">
-                                <div class="media-left">
-                                    <img src="~/assets/marketplace/image/tagre.png" class="media-object" style="width:150px">
-                                </div>
-                                <div class="media-body">
-                                    <p><a href="">Tag1</a></p>
-                                    <h4 class="media-heading">Post title</h4>
-                                    <p><span>Author name,</span> <span>YYYY-MM-DD</span></p>
-
-                                </div>
-                            </div>
-                        </div>
                     </div>
+                    @*<div class="row">
+                            <div class="col-md-12">
+                                <div class="sub-hed">
+                                    <p>Blog contains Tag1</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="media">
+                                    <div class="media-left">
+                                        <img src="~/assets/marketplace/image/tagre.png" class="media-object" style="width:150px">
+                                    </div>
+                                    <div class="media-body">
+                                        <p><a href="">Tag1</a></p>
+                                        <h4 class="media-heading">Post title</h4>
+                                        <p><span>Author name,</span> <span>YYYY-MM-DD</span></p>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="media">
+                                    <div class="media-left">
+                                        <img src="~/assets/marketplace/image/tagre.png" class="media-object" style="width:150px">
+                                    </div>
+                                    <div class="media-body">
+                                        <p><a href="">Tag1</a></p>
+                                        <h4 class="media-heading">Post title</h4>
+                                        <p><span>Author name,</span> <span>YYYY-MM-DD</span></p>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>*@
                 </div>
             </div>
         </div>

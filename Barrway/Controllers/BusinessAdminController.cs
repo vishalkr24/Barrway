@@ -285,90 +285,6 @@ namespace Barrway.Controllers
 
         }
 
-        public async Task<ActionResult> GetCountryMaster()
-        {
-            try
-            {
-                var result = await globalMasterService.GetCountryMaster();
-
-                if (result.Status)
-                {
-                    return Json(new AddUpdateDelete() { Status = true, Data = result.Data, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
-                }
-                else
-                {
-                    return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound }, JsonRequestBehavior.AllowGet);
-                }
-            }
-            catch (Exception ex)
-            {
-                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
-            }
-        }
-
-        public async Task<ActionResult> GetCityMaster(string CountryId)
-        {
-            try
-            {
-                var result = await globalMasterService.GetCityMaster(CountryId);
-
-                if (result.Status)
-                {
-                    return Json(new AddUpdateDelete() { Status = true, Data = result.Data, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
-                }
-                else
-                {
-                    return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound }, JsonRequestBehavior.AllowGet);
-                }
-            }
-            catch (Exception ex)
-            {
-                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
-            }
-        }
-
-        public async Task<ActionResult> GetDistrictMaster(string CityId)
-        {
-            try
-            {
-                var result = await globalMasterService.GetDistrictMaster(CityId);
-
-                if (result.Status)
-                {
-                    return Json(new AddUpdateDelete() { Status = true, Data = result.Data, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
-                }
-                else
-                {
-                    return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound }, JsonRequestBehavior.AllowGet);
-                }
-            }
-            catch (Exception ex)
-            {
-                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
-            }
-        }
-
-        public async Task<ActionResult> GetAllDistrictMaster()
-        {
-            try
-            {
-                var result = await globalMasterService.GetDistrictMaster();
-
-                if (result.Status)
-                {
-                    return Json(new AddUpdateDelete() { Status = true, Data = result.Data, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
-                }
-                else
-                {
-                    return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound }, JsonRequestBehavior.AllowGet);
-                }
-            }
-            catch (Exception ex)
-            {
-                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
-            }
-        }
-
         public async Task<ActionResult> GetDefaultCompany()
         {
             try
@@ -441,96 +357,6 @@ namespace Barrway.Controllers
                 {
                     return Json(new AddUpdateDelete() { Status = false, Message = "Company Not Found" }, JsonRequestBehavior.AllowGet);
                 }
-            }
-            catch (Exception ex)
-            {
-                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
-            }
-
-        }
-
-        public async Task<ActionResult> GetCompanyCategory()
-        {
-            try
-            {
-                var categoryData = await globalMasterService.GetCompanyCategoryMaster();
-
-                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = categoryData.Data }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
-            }
-
-        }
-
-        public async Task<ActionResult> GetCompanySubCategory(string CategoryId)
-        {
-            try
-            {
-                var subCategoryData = await globalMasterService.GetCompanySubCategoryMaster(CategoryId);
-
-                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = subCategoryData.Data }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
-            }
-
-        }
-
-        public async Task<ActionResult> GetAllCompanySubCategory()
-        {
-            try
-            {
-                var subCategoryData = await globalMasterService.GetCompanySubCategoryMaster();
-
-                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = subCategoryData.Data }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
-            }
-
-        }
-
-        public async Task<ActionResult> GetFilterCompanyData(string SubCategoryId, string DistrictId)
-        {
-            try
-            {
-                var Data = await globalMasterService.GetFilterCompanyData(SubCategoryId, DistrictId);
-
-                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = Data.Data }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
-            }
-
-        }
-
-        public async Task<ActionResult> GetCalendarCategory()
-        {
-            try
-            {
-                var categoryData = await globalMasterService.GetCalendarCategoryMaster();
-
-                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = categoryData.Data }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
-            }
-
-        }
-
-        public async Task<ActionResult> GetCalendarSubCategory(string CalendarCategoryId)
-        {
-            try
-            {
-                var subCategoryData = await globalMasterService.GetCalendarSubCategoryMaster(CalendarCategoryId);
-
-                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = subCategoryData.Data }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -787,7 +613,8 @@ namespace Barrway.Controllers
                         DISTRICT_ID = model.DISTRICT_ID.ToString(),
                         CITY_ID = model.CITY_ID.ToString(),
                         COMPANY_CODE = model.COMPANY_CODE.ToString(),
-                        COUNTRY_ID = model.COUNTRY_ID.ToString()
+                        COUNTRY_ID = model.COUNTRY_ID.ToString(),
+                        TAGS = ((model.TAGS!=null)? string.Join(", ", model.TAGS): "")
                     };
 
                     var result = await businessUserService.AddCalendar(calendarModel, User.Identity.Name.ToString());
@@ -807,7 +634,7 @@ namespace Barrway.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("SetupCompanyCalendar");
+                    return RedirectToAction("SetupCompanyCalendar", model);
                 }
 
 

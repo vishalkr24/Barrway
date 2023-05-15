@@ -1,8 +1,10 @@
-﻿
+﻿@model Barrway.DTO.MarketplaceModels.MarketplaceCompanyModel
 @{
     ViewBag.Title = "Company Schedule";
     Layout = "~/Views/Shared/_LayoutMarketPlaceCompany.cshtml";
-
+    ViewBag.COMPANY_LOGO_PATH = Model.COMPANY_LOGO_PATH.Replace("~", "..");
+    ViewBag.COMPANY_ID = Model.COMPANY_CODE.ToString();
+    ViewBag.CALENDAR_ID = Model.DEFAULT_CALENDAR_ID;
 }
 
 <section class="schedule mihi-71">
@@ -15,11 +17,13 @@
                             <div class="schedule-drop">
                                 <div class="form-group">
                                     <label for="calendar">Calendar</label>
-                                    <select class="form-control" id="calendar">
-                                        <option>Yoga</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
+                                    
+                                    <select class="form-control" id="calendar-selector" onchange="showCalendar('@Model.COMPANY_CODE')">
+                                       <option value="-1" disabled selected>select a calendar</option>
+                                       @foreach (var item in Model.calendars)
+                                       {
+                                           <option value="@item.Id" @((item.Id == Model.DEFAULT_CALENDAR_ID)? "selected": "")>@item.CALENDAR_NAME</option>
+                                       }
                                     </select>
                                 </div>
                             </div>
@@ -28,11 +32,12 @@
                             <div class="schedule-drop">
                                 <div class="form-group">
                                     <label for="service">Service</label>
+
                                     <select class="form-control" id="service">
-                                        <option>All service</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
+                                        @foreach (var item in Model.services)
+                                        {
+                                            <option value="@item.Id">@item.COMPANY_CATEGORY_NAME</option>
+                                        }
                                     </select>
                                 </div>
                             </div>

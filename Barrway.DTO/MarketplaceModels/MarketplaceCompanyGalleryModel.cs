@@ -13,6 +13,8 @@ namespace Barrway.DTO.MarketplaceModels
     {
         public string Id { get; set; }
         public string COMPANY_LOGO_PATH { get; set; }
+        public string COMPANY_CODE { get; set; }
+        public string DEFAULT_CALENDAR_ID { get; set; }
         public List<CompanyPhotoAlbumModel> photoAlbumList { get; set; }
     }
 

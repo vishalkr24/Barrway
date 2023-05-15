@@ -300,6 +300,7 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\PublicController.cs" />
     <Compile Include="Controllers\BusinessAdminController.cs" />
     <Compile Include="Controllers\BusinessCalendarController.cs" />
     <Compile Include="Controllers\CalendarController.cs" />
@@ -2970,7 +2971,7 @@
     <Content Include="Scripts\BusinessScripts\SubscriptionPlan.js" />
     <Content Include="Scripts\BusinessScripts\PaymentHistory.js" />
     <Content Include="Scripts\BusinessScripts\CalendarMaster.js" />
-    <Content Include="Scripts\BusinessScripts\Common\CommonFunctions.js" />
+    <Content Include="Scripts\BusinessScripts\Common\BusinessAdminCommonFunctions.js" />
     <Content Include="Scripts\BusinessScripts\ManageCompanyWebsite.js" />
     <Content Include="Scripts\BusinessScripts\SetupCompanyCalendar.js" />
     <Content Include="Scripts\BusinessScripts\SetupCompanyProfile.js" />
@@ -3030,6 +3031,7 @@
     <Content Include="Scripts\myscript\routes\allRoutesOld.js" />
     <Content Include="Scripts\myscript\services\services.js" />
     <Content Include="Scripts\ngBootbox.min.js" />
+    <Content Include="Scripts\PublicCommonFunction.js" />
     <Content Include="Scripts\scripts.js" />
     <Content Include="Scripts\ui-bootstrap-tpls.js" />
     <Content Include="Scripts\ui-bootstrap-tpls.min.js" />

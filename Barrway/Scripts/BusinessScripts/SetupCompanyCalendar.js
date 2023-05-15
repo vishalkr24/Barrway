@@ -11,6 +11,11 @@ $(document).on("change", "#CALENDAR_CATEGORY_ID", function () {
 })
 
 $(document).ready(function () {
+
+    var obj = { 'create': true, 'placeholder': 'Add tags...' };
+    $("#TAGS").attr("data-hs-tom-select-options", JSON.stringify(obj) );
+    HSCore.components.HSTomSelect.init('.js-select')
+
     setCalendarCategory();
     checkRegistrationStep();
     setCountryData();

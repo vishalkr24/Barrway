@@ -20,7 +20,7 @@
     <!-- javascript -->
     <script src="~/assets/marketplace/owl/jquery.min.js"></script>
     <script src="~/assets/marketplace/owl/owl.carousel.js"></script>
-    <script src="~/Scripts/BusinessScripts/Common/CommonFunctions.js"></script>
+    <script src="~/Scripts/PublicCommonFunction.js"></script>
     @RenderSection("scripts", false)
 
     <!-- css -->
@@ -40,7 +40,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#"><img src="~/assets/marketplace/image/logo.png"></a>
+                    <a class="navbar-brand" href="/Marketplace/Index"><img src="~/assets/marketplace/image/logo.png"></a>
                 </div>
                 <form class="navbar-form navbar-left com-nav" action="/action_page.php">
                     <div class="input-group">
@@ -94,13 +94,13 @@
                 </div>
                 <div class="collapse navbar-collapse" id="secondry-nav">
                     <ul class="nav navbar-nav navbar-right">
-                        <li id="nv-company-basic-information"><a href="/Marketplace/CompanyDetail?CompanyId=@ViewBag.COMPANY_ID">Basic Information</a></li>
+                        <li id="nv-company-basic-information"><a href="/Marketplace/CompanyDetail?CompanyCode=@ViewBag.COMPANY_ID&CalendarId=@ViewBag.CALENDAR_ID">Basic Information</a></li>
                         <li id="nv-company-service">
-                            <a class="" href="/Marketplace/CompanyService?CompanyId=@ViewBag.COMPANY_ID">Service</a>
+                            <a class="" href="/Marketplace/CompanyService?CompanyCode=@ViewBag.COMPANY_ID&CalendarId=@ViewBag.CALENDAR_ID">Service</a>
                         </li>
-                        <li id="nv-company-package"><a href="/Marketplace/CompanyPackage?CompanyId=@ViewBag.COMPANY_ID">Package</a></li>
-                        <li id="nv-company-schedule"><a href="/Marketplace/CompanySchedule">Schedule</a></li>
-                        <li id="nv-company-photo-album"><a href="/Marketplace/CompanyPhotoAlbum?CompanyId=@ViewBag.COMPANY_ID">Photo album</a></li>
+                        <li id="nv-company-package"><a href="/Marketplace/CompanyPackage?CompanyCode=@ViewBag.COMPANY_ID&CalendarId=@ViewBag.CALENDAR_ID">Package</a></li>
+                        <li id="nv-company-schedule"><a href="/Marketplace/CompanySchedule?CompanyCode=@ViewBag.COMPANY_ID&CalendarId=@ViewBag.CALENDAR_ID">Schedule</a></li>
+                        <li id="nv-company-photo-album"><a href="/Marketplace/CompanyPhotoAlbum?CompanyCode=@ViewBag.COMPANY_ID&CalendarId=@ViewBag.CALENDAR_ID">Photo album</a></li>
                     </ul>
 
                 </div>
