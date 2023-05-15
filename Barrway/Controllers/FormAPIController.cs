@@ -15,15 +15,17 @@ using System.Web.Security;
 
 namespace Barrway.Controllers
 {
-   
+    [Authorize]
     public class FormAPIController : Controller
     {
         private readonly IFormAPIRepository formAPIRepository;
+        private readonly ICalendarService calendarService;
 
         // GET: FormAPI
-        public FormAPIController(IFormAPIRepository formAPIRepository)
+        public FormAPIController(IFormAPIRepository formAPIRepository,ICalendarService calendarService)
         {
             this.formAPIRepository = formAPIRepository;
+            this.calendarService = calendarService;
         }
 
         [HttpPost]
@@ -66,7 +68,12 @@ namespace Barrway.Controllers
         {
             return Json((await formAPIRepository.ManageFormApp(data)).Data);
         }
-        
+        [HttpPost]
+        public async Task<ActionResult> EditEventData(Form_DataTable data)
+        {
+            return Json((await formAPIRepository.EditEventData(data)).Data);
+        }
+
         [HttpPost]
         public async Task<ActionResult> GetFormList(FormListDataView data)
         {
@@ -166,7 +173,12 @@ namespace Barrway.Controllers
         [HttpPost]
         public async Task<ActionResult> ManageCalenderReferrenceNew(FormCalenderReferrenceTable data)
         {
-            return Json(await formAPIRepository.ManageCalenderReferrenceNew(data));
+            var result = await formAPIRepository.ManageCalenderReferrenceNew(data);
+            if(result!=null && result.Any(x=>x.res==1))
+            { 
+                await calendarService.UpdateCalendarReference(data);
+            }
+            return Json(result);
         }
 
         [HttpPost]

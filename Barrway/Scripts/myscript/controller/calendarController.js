@@ -11690,6 +11690,9 @@
                         param.formId = $scope.tabuListLink.formId;
                         param.formGroupKey = $scope.tabuListLink.formGroupKey;
                         $scope.formGroupKey = $scope.tabuListLink.formGroupKey;
+
+                        param.COMPANY_CODE = localStorage.getItem("COMPANY_CODE");
+                        param.CALENDAR_CODE = localStorage.getItem("CALENDAR_CODE");
                         $scope.manageCalenderReferrenceControl(param);
                         //$scope.GetTabOneToManyDynamimc(param, param.action);
                         ////console.log(recordArr);
@@ -15374,7 +15377,14 @@
                     temp.push({ "name": item.name, "value": param.fieldDataText });
                 });
             }
-            temp.push({"name": "description", "value": $scope.createEventDetails.description  });
+            temp.push({ "name": "description", "value": $scope.createEventDetails.description });
+
+            /*Company Code and Calendar Code add */
+            
+            temp.push({ "name": "COMPANY_CODE", "value": localStorage.getItem("COMPANY_CODE") });
+            temp.push({ "name": "CALENDAR_CODE", "value": localStorage.getItem("CALENDAR_CODE") });
+
+
             param.formfieldDataListTemp = JSON.stringify(temp);
             if (angular.isDefined($scope.formDetailsDataInfo.recordAccessSecurity)) {
                 if (!DataService.isEmpty($scope.formDetailsDataInfo.recordAccessSecurity.max_one_record_per_user))
@@ -17660,6 +17670,7 @@
                 var oneToMany = $("#addTransactionRecordTabulatorModal input[name='modal-one-to-many']").val();
                 $rootScope.onetomany = $("#addTransactionRecordTabulatorModal input[name='modal-one-to-many']").val();
                 var selectedRows = window["popupTabulatorstudent"].getSelectedRows();
+                debugger;
                 ////console.log(selectedRows);
                 var existsCourse = {};
                 var fees_1 = 0;
@@ -21194,7 +21205,7 @@
                     setTimeout(function () {
                         $.ajax({
                             method: 'POST',
-                            url: "api/FormAPI/EditEventData",
+                            url: BASE_URL+"FormAPI/EditEventData",
                             dataType: 'json',
                             contentType: "application/json",
                             data: "{'action':3,'Id':" + parseInt(Id) +

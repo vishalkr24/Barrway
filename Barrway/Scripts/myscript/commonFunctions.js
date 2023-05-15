@@ -1735,7 +1735,7 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                 ];
                 $.ajax({
                     method: 'POST',
-                    url: "api/FormAPI/EditEventData",
+                    url: BASE_URL + "FormAPI/EditEventData",
                     dataType: 'json',
                     contentType: "application/json",
                     data: "{'action':2,'resourceFormId':" + resFormId + ",'ActivityFormId':" + activityFormId + ",'userid':" + eventBasicData.userId + ",'Id':" + parseInt(Id) + ", 'formId':" + eventBasicData.formId + ",'topicId':" + eventBasicData.formData.topicId + ",'created_by':" + eventBasicData.created_by + ",'updated_by':" + eventBasicData.update_by + ",'formfieldDataListTemp':'" + JSON.stringify(formfieldDataListTempData) + "' ,'isInternalDrop':" + isInternalDropParam + ",startDate:'" + start + "','endDate':'" + end + "','eventOverlap': '','activitiesOverlap':" + activitiesOverlap + "}", //$.param(formData)
@@ -2023,7 +2023,7 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                 }
                 $.ajax({
                     method: 'POST',
-                    url: "api/FormAPI/EditEventData",
+                    url: BASE_URL + "FormAPI/EditEventData",
                     dataType: 'json',
                     contentType: "application/json",
                     data: "{'action':2,'resourceFormId':" + resFormId + ",'ActivityFormId':" + activityFormId + ",'userid':" + eventBasicData.userId + ",'Id':" + parseInt(Id) + ", 'formId':" + eventBasicData.formId + ",'topicId':" + eventBasicData.formData.topicId + ",'created_by':" + eventBasicData.created_by + ",'updated_by':" + eventBasicData.update_by + ",'formfieldDataListTemp':'" + JSON.stringify(formfieldDataListTempData) + "' ,'isResizedEvent':" + parseInt(isResizedEvent) + ",startDate:'" + start + "','endDate':'" + end + "','eventOverlap':" + eventOverlap + ",'activitiesOverlap':" + activitiesOverlap + "}", //$.param(formData)
@@ -4628,7 +4628,8 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                     }
                 });
 
-                if ($scopeVar.formDetailsDataInfo.otherformid && $scopeVar.formDetailsDataInfo.otherformid != 0) {
+                //if ($scopeVar.formDetailsDataInfo.otherformid && $scopeVar.formDetailsDataInfo.otherformid != 0) {
+                if (false) {
                     if (lastMonthEvents.customFourthTitle && lastMonthEvents.customFourthTitle != "") {
                         var splitTitle = lastMonthEvents.customFourthTitle.split(',');
                         splitTitle = splitTitle[0];
@@ -4955,7 +4956,7 @@ function loadCalendarWithOutEventFunction(calenderType, calenderData, resourceDa
 
                 $.ajax({
                     method: 'POST',
-                    url: "api/FormAPI/EditEventData",
+                    url: BASE_URL+"FormAPI/EditEventData",
                     dataType: 'json',
                     contentType: "application/json",
                     data: "{'action':2,'resourceFormId':" + resFormId + ",'ActivityFormId':" + activityFormId + ",'userid':" + eventBasicData.userId + ",'Id':" + parseInt(Id) + ", 'formId':" + eventBasicData.formId + ",'topicId':" + eventBasicData.formData.topicId + ",'created_by':" + eventBasicData.created_by + ",'updated_by':" + eventBasicData.update_by + ",'formfieldDataListTemp':'" + JSON.stringify(formfieldDataListTempData) + "' ,'isInternalDrop':" + isInternalDropParam + ",startDate:'" + start + "','endDate':'" + end + "','eventOverlap': '','activitiesOverlap':" + activitiesOverlap + "}", //$.param(formData)
@@ -5236,7 +5237,7 @@ function loadCalendarWithOutEventFunction(calenderType, calenderData, resourceDa
                 }
                 $.ajax({
                     method: 'POST',
-                    url: "api/FormAPI/EditEventData",
+                    url: BASE_URL + "FormAPI/EditEventData",
                     dataType: 'json',
                     contentType: "application/json",
                     data: "{'action':2,'resourceFormId':" + resFormId + ",'ActivityFormId':" + activityFormId + ",'userid':" + eventBasicData.userId + ",'Id':" + parseInt(Id) + ", 'formId':" + eventBasicData.formId + ",'topicId':" + eventBasicData.formData.topicId + ",'created_by':" + eventBasicData.created_by + ",'updated_by':" + eventBasicData.update_by + ",'formfieldDataListTemp':'" + JSON.stringify(formfieldDataListTempData) + "' ,'isResizedEvent':" + parseInt(isResizedEvent) + ",startDate:'" + start + "','endDate':'" + end + "','eventOverlap':" + eventOverlap + ",'activitiesOverlap':" + activitiesOverlap + "}", //$.param(formData)
@@ -7649,7 +7650,7 @@ function loadCalendartemp(calenderType, calenderData, resourceData, resColumns, 
 
                 $.ajax({
                     method: 'POST',
-                    url: "api/FormAPI/EditEventData",
+                    url: BASE_URL + "FormAPI/EditEventData",
                     dataType: 'json',
                     contentType: "application/json",
                     data: "{'action':2,'resourceFormId':" + resFormId + ",'ActivityFormId':" + activityFormId + ",'userid':" + eventBasicData.userId + ",'Id':" + parseInt(Id) + ", 'formId':" + eventBasicData.formId + ",'topicId':" + eventBasicData.formData.topicId + ",'created_by':" + eventBasicData.created_by + ",'updated_by':" + eventBasicData.update_by + ",'formfieldDataListTemp':'" + JSON.stringify(formfieldDataListTempData) + "' ,'isInternalDrop':" + isInternalDropParam + ",startDate:'" + start + "','endDate':'" + end + "','eventOverlap': '','activitiesOverlap':" + activitiesOverlap + "}", //$.param(formData)
@@ -7930,7 +7931,7 @@ function loadCalendartemp(calenderType, calenderData, resourceData, resColumns, 
                 }
                 $.ajax({
                     method: 'POST',
-                    url: "api/FormAPI/EditEventData",
+                    url: BASE_URL + "FormAPI/EditEventData",
                     dataType: 'json',
                     contentType: "application/json",
                     data: "{'action':2,'resourceFormId':" + resFormId + ",'ActivityFormId':" + activityFormId + ",'userid':" + eventBasicData.userId + ",'Id':" + parseInt(Id) + ", 'formId':" + eventBasicData.formId + ",'topicId':" + eventBasicData.formData.topicId + ",'created_by':" + eventBasicData.created_by + ",'updated_by':" + eventBasicData.update_by + ",'formfieldDataListTemp':'" + JSON.stringify(formfieldDataListTempData) + "' ,'isResizedEvent':" + parseInt(isResizedEvent) + ",startDate:'" + start + "','endDate':'" + end + "','eventOverlap':" + eventOverlap + ",'activitiesOverlap':" + activitiesOverlap + "}", //$.param(formData)
@@ -9859,7 +9860,7 @@ function loadCalendarold1(calenderType, calenderData, resourceData, resColumns, 
 
                 $.ajax({
                     method: 'POST',
-                    url: "api/FormAPI/EditEventData",
+                    url: BASE_URL + "FormAPI/EditEventData",
                     dataType: 'json',
                     contentType: "application/json",
                     data: "{'action':2,'resourceFormId':" + resFormId + ",'ActivityFormId':" + activityFormId + ",'userid':" + eventBasicData.userId + ",'Id':" + parseInt(Id) + ", 'formId':" + eventBasicData.formId + ",'topicId':" + eventBasicData.formData.topicId + ",'created_by':" + eventBasicData.created_by + ",'updated_by':" + eventBasicData.update_by + ",'formfieldDataListTemp':'" + JSON.stringify(formfieldDataListTempData) + "' ,'isInternalDrop':" + isInternalDropParam + ",startDate:'" + start + "','endDate':'" + end + "','eventOverlap': '','activitiesOverlap':" + activitiesOverlap + "}", //$.param(formData)
@@ -10140,7 +10141,7 @@ function loadCalendarold1(calenderType, calenderData, resourceData, resColumns, 
                 }
                 $.ajax({
                     method: 'POST',
-                    url: "api/FormAPI/EditEventData",
+                    url: BASE_URL + "FormAPI/EditEventData",
                     dataType: 'json',
                     contentType: "application/json",
                     data: "{'action':2,'resourceFormId':" + resFormId + ",'ActivityFormId':" + activityFormId + ",'userid':" + eventBasicData.userId + ",'Id':" + parseInt(Id) + ", 'formId':" + eventBasicData.formId + ",'topicId':" + eventBasicData.formData.topicId + ",'created_by':" + eventBasicData.created_by + ",'updated_by':" + eventBasicData.update_by + ",'formfieldDataListTemp':'" + JSON.stringify(formfieldDataListTempData) + "' ,'isResizedEvent':" + parseInt(isResizedEvent) + ",startDate:'" + start + "','endDate':'" + end + "','eventOverlap':" + eventOverlap + ",'activitiesOverlap':" + activitiesOverlap + "}", //$.param(formData)
@@ -12254,7 +12255,7 @@ function loadCalendar(calenderType, calenderData, resourceData, resColumns, acti
 
                 $.ajax({
                     method: 'POST',
-                    url: "api/FormAPI/EditEventData",
+                    url: BASE_URL + "FormAPI/EditEventData",
                     dataType: 'json',
                     contentType: "application/json",
                     data: "{'action':2,'resourceFormId':" + resFormId + ",'ActivityFormId':" + activityFormId + ",'userid':" + eventBasicData.userId + ",'Id':" + parseInt(Id) + ", 'formId':" + eventBasicData.formId + ",'topicId':" + eventBasicData.formData.topicId + ",'created_by':" + eventBasicData.created_by + ",'updated_by':" + eventBasicData.update_by + ",'formfieldDataListTemp':'" + JSON.stringify(formfieldDataListTempData) + "' ,'isInternalDrop':" + isInternalDropParam + ",startDate:'" + start + "','endDate':'" + end + "','eventOverlap': '','activitiesOverlap':" + activitiesOverlap + "}", //$.param(formData)
@@ -12535,7 +12536,7 @@ function loadCalendar(calenderType, calenderData, resourceData, resColumns, acti
                 }
                 $.ajax({
                     method: 'POST',
-                    url: "api/FormAPI/EditEventData",
+                    url: BASE_URL + "FormAPI/EditEventData",
                     dataType: 'json',
                     contentType: "application/json",
                     data: "{'action':2,'resourceFormId':" + resFormId + ",'ActivityFormId':" + activityFormId + ",'userid':" + eventBasicData.userId + ",'Id':" + parseInt(Id) + ", 'formId':" + eventBasicData.formId + ",'topicId':" + eventBasicData.formData.topicId + ",'created_by':" + eventBasicData.created_by + ",'updated_by':" + eventBasicData.update_by + ",'formfieldDataListTemp':'" + JSON.stringify(formfieldDataListTempData) + "' ,'isResizedEvent':" + parseInt(isResizedEvent) + ",startDate:'" + start + "','endDate':'" + end + "','eventOverlap':" + eventOverlap + ",'activitiesOverlap':" + activitiesOverlap + "}", //$.param(formData)

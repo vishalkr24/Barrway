@@ -29,6 +29,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.js"></script>
 <script type="text/javascript" src="fg-assets/js/jAutoCalc.js"></script>
+<link rel="stylesheet" href="fg-assets/sweetalert2/sweetalert2.min.css">
+<script src="fg-assets/sweetalert2/sweetalert2.min.js"></script>
 <style>
     .fc-timeline .fc-body .fc-scroller {
         height: 500px !important;
@@ -1101,7 +1103,8 @@
 
                                 </span>
                                 <div class="popoverSelect">
-                                    <select class="form-control serchselectChossen form-control-sm w-50" data-id="dropdwn_{{d.formId}}" ng-init="d.selectionDropdown=d.Id" ng-model="d.selectionDropdown">
+                                    <select class="form-control serchselectChossen form-control-sm w-50" data-placeholder="Choose a Option..." data-id="dropdwn_{{d.formId}}" ng-init="d.selectionDropdown=d.Id" ng-model="d.selectionDropdown">
+                                        <option value=""></option>
                                         <option value="{{dform.id}}" ng-repeat="dform in d.dropdownListData.formDataList|orderBy:d.dropdownListData.activities">{{dform[d.dropdownListData.activities]}}</option>
                                     </select>
                                 </div>
