@@ -13,6 +13,7 @@ using System.Web.Mvc;
 
 namespace Barrway.Controllers
 {
+    [Authorize]
     public class CalendarController : Controller
     {
         private readonly IMasterService masterService;

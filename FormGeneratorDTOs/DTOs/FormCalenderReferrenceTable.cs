@@ -29,5 +29,7 @@ namespace FormGeneratorDTOs.DTOs
         public string formfieldDataListTemp { get; set; }
         public List<IDictionary<string, object>> formDataList { get; set; }
         public string title { get; set; }
+        public string COMPANY_CODE { get; set; }
+        public string CALENDAR_CODE { get; set; }
     }
 }
