@@ -2738,4 +2738,107 @@
 
 
 
+
+    FormGeneratorApp.controller('SchedularFormController', function ($scope, $compile, $rootScope, $http, $location, $window, mainService, adminService, DataService, notifierService, $state, $stateParams, $timeout, $ngBootbox) {
+
+        HSCore.components.HSFlatpickr.init('.js-flatpickr');
+
+        adminService.postAsync('/Calendar/GetLocationMasterList/', { companyCode: localStorage.getItem("COMPANY_CODE"), calendarCode: localStorage.getItem("CALENDAR_CODE") }).then(function (res) {
+            
+            $scope.locationList = res.data.data;
+
+        }, function (err) {
+
+        });
+
+        adminService.postAsync('/Calendar/GetServiceMasterList/', { companyCode: localStorage.getItem("COMPANY_CODE"), calendarCode: localStorage.getItem("CALENDAR_CODE") }).then(function (res) {
+
+            $scope.serviceList = res.data.data;
+
+        }, function (err) {
+
+        });
+
+        adminService.postAsync('/Calendar/GetServiceProviderMasterList/', { companyCode: localStorage.getItem("COMPANY_CODE"), calendarCode: localStorage.getItem("CALENDAR_CODE") }).then(function (res) {
+            
+            $scope.serviceProviderList = res.data.data;
+        }, function (err) {
+
+        });
+
+        $scope.saveSchedularForm = function () {
+
+            var scheduleTableData = {
+                "Monday": {
+                    "Start": $("#Monday_Start_Time").val(),
+                    "End": $("#Monday_End_Time").val()
+                },
+                "Tuesday": {
+                    "Start": $("#Tuesday_Start_Time").val(),
+                    "End": $("#Tuesday_End_Time").val(),
+                },
+                "Wednesday": {
+                    "Start": $("#Wednesday_Start_Time").val(),
+                    "End": $("#Wednesday_End_Time").val(),
+                },
+                "Thursday": {
+                    "Start": $("#Thursday_Start_Time").val(),
+                    "End": $("#Thursday_End_Time").val(),
+                },
+                "Friday": {
+                    "Start": $("#Friday_Start_Time").val(),
+                    "End": $("#Friday_End_Time").val()
+                },
+                "Saturday": {
+                    "Start": $("#Saturday_Start_Time").val(),
+                    "End": $("#Saturday_End_Time").val()
+                },
+                "Sunday": {
+                    "Start": $("#Sunday_Start_Time").val(),
+                    "End": $("#Saturday_End_Time").val()
+                }
+            };
+
+            var data = {
+                COMPANY_CODE: localStorage.getItem("COMPANY_CODE"),
+                CALENDAR_CODE: localStorage.getItem("CALENDAR_CODE"),
+                SCH__NAME: "",
+                SCH_LOCATION: $("#SCH_LOCATION option:selected").val(),
+                SCH_ACTIVITY: $("#SCH_ACTIVITY option:selected").val(),
+                SCH_RESOURCE: $("#SCH_RESOURCE option:selected").val(),
+                SCH_MEDIUM: "ZOOM",
+                SCH_DESCRIPTION: "",
+                SCH_FROM_DATE: $("#SCH_FROM_DATE").val(),
+                SCH_TO_DATE: $("#SCH_TO_DATE").val(),
+                SCH_ALTERNATIVE_WEEK: $("input[name='alternate-week']:checked").val(),
+                IF_SLOT_EXIST: "SKIP",
+                IF_SLOT_DOES_NOT_EXIST: "INSERT",
+                SCH_SCHEDULE_TABLE: scheduleTableData
+            }
+
+            data = JSON.stringify(data);
+
+            adminService.postAsync('/Calendar/AddSchedule/', { data: data }).then(function (res) {
+                alert();
+            }, function (err) {
+                alert("No");
+            });
+
+        }
+
+        $scope.hideSchedularFormModal = function () {
+            $(".schedular-form input").val("")
+            $("#schedularFormNew").modal("hide");
+        }
+        
+        $scope.showSchedularFormModal = function () {
+            $("#schedularFormNew").modal("show");
+        }
+
+
+    });
+
+
+
+
 }(FormGeneratorApp));
