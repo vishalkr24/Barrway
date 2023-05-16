@@ -1,4 +1,5 @@
-﻿using FormGeneratorDTOs.DTOs;
+﻿using Barrway.DTO.BusinessModels;
+using FormGeneratorDTOs.DTOs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -44,6 +45,10 @@ namespace Barrway.DTO.MarketplaceModels
         public string COMPANY_CITY_NAME { get; set; } = String.Empty;
         public string COMPANY_COUNTRY_NAME { get; set; } = String.Empty;
         public string COMPANY_DISTRICT_NAME { get; set; } = String.Empty;
+
+        public List<BusinessCalendarModel> calendars { get; set; }
+        public string DEFAULT_CALENDAR_ID { get; set; }
+        public List<BusinessCompanyCategoryModel> services { get; set; }
 
     }
 

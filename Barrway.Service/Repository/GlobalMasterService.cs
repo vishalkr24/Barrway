@@ -12,6 +12,8 @@ using Barrway.DTO.Common;
 using Barrway.DTO.BusinessModels;
 using FormGeneratorDTOs.DTOs;
 using Barrway.Utility.Common;
+using Barrway.DTO.PublicModels;
+using Newtonsoft.Json;
 
 namespace Barrway.Service.Repository
 {
@@ -67,7 +69,7 @@ namespace Barrway.Service.Repository
 
             if (!string.IsNullOrEmpty(SubCategoryId))
             {
-                filter += "and COMPANY_SUB_CATEGORY_ID = '" + SubCategoryId + "'";
+                filter += "and CALENDAR_SUB_CATEGORY_ID = '" + SubCategoryId + "'";
             }
 
             if (!string.IsNullOrEmpty(DistrictId))
@@ -75,80 +77,65 @@ namespace Barrway.Service.Repository
                 filter += "and company.DISTRICT_ID = '" + DistrictId + "'";
             }
 
-            string query = $@"SELECT company.[Id]
-                              ,company.[created_at]
-                              ,company.[updated_at]
-                              ,company.[created_by]
-                              ,company.[updated_by]
-                              ,[BUSINESS_ACCOUNT_ID]
-                              ,[COMPANY_CODE]
-                              ,[COMPANY_NAME_ENGLISH]
+            string query = $@"SELECT calendar.[Id]
+                              ,calendar.[created_at]
+                              ,calendar.[updated_at]
+                              ,calendar.[created_by]
+                              ,calendar.[updated_by]
+                              ,[CALENDAR_NAME]
+                              ,[CALENDAR_PHOTO_NAME]
+                              ,[CALENDAR_PHOTO_PATH]
+                              ,[IS_VISIBLE]
+                              ,calendar.[COUNTRY_ID]
+                              ,calendar.[CITY_ID]
+                              ,calendar.[DISTRICT_ID]
+                              ,calendar.[CALENDAR_CATEGORY_ID]
+                              ,[CALENDAR_SUB_CATEGORY_ID]
+                              ,calendar.[COMPANY_CODE]
+                              ,[CALENDAR_CODE]
+	                          ,[CALENDAR_SUB_CATEGORY_NAME]
+	                          ,[CALENDAR_CATEGORY_NAME]
+	                          ,[DISTRICT_NAME]
+	                          ,calendar.TAGS
+	                          ,[COMPANY_NAME_ENGLISH]
                               ,[COMPANY_NAME_CHINESE]
                               ,[COMPANY_LOGO_NAME]
                               ,[COMPANY_LOGO_PATH]
                               ,[COMPANY_BANNER_NAME]
                               ,[COMPANY_BANNER_PATH]
-                              ,[COMPANY_PHONE]
-                              ,[COMPANY_ADDRESS]
-                              ,[FACEBOOK_URL]
-                              ,[INSTAGRAM_URL]
-                              ,[WECHAT_URL]
-                              ,[TWITTER_URL]
-                              ,[PAGE_URL]
-                              ,[COMPANY_DESCRIPTION]
-                              ,[COMPANY_SERVICE]
-                              ,[TAGS]
-                              ,[IS_SEARCHABLE_IN_MARKETPLACE]
-                              ,company.[COMPANY_CATEGORY_ID]
-                              ,[COMPANY_SUB_CATEGORY_ID]
-                              ,[COUNTRY_ID]
-                              ,company.[CITY_ID]
-                              ,[DISTRICT_ID]
-                              ,[TOTAL_WEBSITE_VISITS]
-                              ,[IS_DEFAULT]
-                              ,[COMPANY_EMAIL]
-	                          ,[COMPANY_SUB_CATEGORY_NAME]
-	                          ,[COMPANY_CATEGORY_NAME]
-	                          ,[DISTRICT_NAME]
-                          FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company
-                          join COMPANY_SUB_CATEGORY_MASTER_1921 subCategory on subCategory.Id = company.COMPANY_SUB_CATEGORY_ID
-                          join COMPANY_CATEGORY_MASTER_1920 category on category.Id = company.COMPANY_CATEGORY_ID
-                          join DISTRICT_MASTER_1928 district on district.Id = company.DISTRICT_ID
-                          where IS_SEARCHABLE_IN_MARKETPLACE = 'Y' and company.IS_ACTIVE = 'Y' {(!string.IsNullOrEmpty(filter) ? filter : "")}";
+							  ,[IS_SEARCHABLE_IN_MARKETPLACE]
+                         FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
+                         join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendar.CALENDAR_SUB_CATEGORY_ID
+                         join CALENDAR_CATEGORY_MASTER_1929 category on category.Id = calendar.CALENDAR_CATEGORY_ID
+                         join DISTRICT_MASTER_1928 district on district.Id = calendar.DISTRICT_ID
+                         join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
+                         where company.IS_SEARCHABLE_IN_MARKETPLACE = 'Y' and company.IS_ACTIVE = 'Y' {(!string.IsNullOrEmpty(filter) ? filter : "")}";
 
             List<IDictionary<string, object>> companyResult = await sqlFunction.ExecuteSqlQuery(query);
 
-            if (companyResult.Count > 0)
+            var subCategoryData = await GetCalendarSubCategoryMaster();
+            List<IDictionary<string, object>> subCategory = subCategoryData.Data;
+
+
+            List<List<IDictionary<string, object>>> finalList = new List<List<IDictionary<string, object>>>();
+
+            for (int i = 0; i < subCategory.Count; i++)
             {
+                List<IDictionary<string, object>> tempList = new List<IDictionary<string, object>>();
 
-                var subCategoryData = await GetCompanySubCategoryMaster();
-                List<IDictionary<string, object>> subCategory = subCategoryData.Data;
-
-
-                List<List<IDictionary<string, object>>> finalList = new List<List<IDictionary<string, object>>>();
-
-                for (int i = 0; i < subCategory.Count; i++)
+                for (int j = 0; j < companyResult.Count; j++)
                 {
-                    List<IDictionary<string, object>> tempList = new List<IDictionary<string, object>>();
-
-                    for (int j = 0; j < companyResult.Count; j++)
+                    if (subCategory[i]["Id"].ToString() == companyResult[j]["CALENDAR_SUB_CATEGORY_ID"].ToString())
                     {
-                        if (subCategory[i]["Id"].ToString() == companyResult[j]["COMPANY_SUB_CATEGORY_ID"].ToString())
-                        {
-                            IDictionary<string, object> tempData = companyResult[j];
-                            tempList.Add(tempData);
-                        }
+                        IDictionary<string, object> tempData = companyResult[j];
+                        tempList.Add(tempData);
                     }
-
-                    finalList.Add(tempList);
                 }
 
-                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = finalList };
+                finalList.Add(tempList);
             }
-            else
-            {
-                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
-            }
+
+            return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = finalList };
         }
 
         public async Task<AddUpdateDelete> GetCompanySubCategoryMaster(string CategoryId)
@@ -263,21 +250,104 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> GetCalendarSubCategoryMaster()
+        {
+            string query = $@"SELECT [Id]      ,[created_at]      ,[updated_at]      ,[created_by]      ,[updated_by]      ,[CALENDAR_SUB_CATEGORY_NAME]      ,[CALENDAR_CATEGORY_ID]  FROM [dbo].[CALENDAR_SUB_CATEGORY_MASTER_1930]";
+
+            List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (result.Count > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result.ToList() };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
         public async Task<AddUpdateDelete> GetSingleTagData(string TagName)
         {
-            //string query = $@"";
+            if (string.IsNullOrEmpty(TagName))
+            {
+                TagName = "";
+            }
 
-            //List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+            PublicTagDataModel TagData = new PublicTagDataModel();
 
-            //if (result.Count > 0)
-            //{
-            //    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result.ToList() };
-            //}
-            //else
-            //{
-            //    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
-            //}
-            return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            string query = $@"SELECT company.[Id]
+                              ,company.[created_at]
+                              ,company.[updated_at]
+                              ,company.[created_by]
+                              ,company.[updated_by]
+                              ,[CALENDAR_NAME]
+                              ,[CALENDAR_PHOTO_NAME]
+                              ,[CALENDAR_PHOTO_PATH]
+                              ,[IS_VISIBLE]
+                              ,company.[COUNTRY_ID]
+                              ,company.[CITY_ID]
+                              ,company.[DISTRICT_ID]
+                              ,[CALENDAR_CATEGORY_ID]
+                              ,[CALENDAR_SUB_CATEGORY_ID]
+                              ,company.[COMPANY_CODE]
+                              ,[CALENDAR_CODE]
+                              ,company.[TAGS]
+	                          ,[CITY_NAME]
+	                          ,[COMPANY_NAME_ENGLISH]
+	                          ,[COMPANY_NAME_CHINESE]
+                          FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
+                          join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
+                          join CITY_MASTER_1927 city on city.Id = calendar.CITY_ID
+                          where calendar.Tags like '%{TagName}%'";
+
+            List<IDictionary<string, object>> calendarTagResult = await sqlFunction.ExecuteSqlQuery(query);
+
+            var calendarDataEncrypt = JsonConvert.SerializeObject(calendarTagResult);
+
+            TagData.calendars = JsonConvert.DeserializeObject<List<BusinessCalendarModel>>(calendarDataEncrypt);
+            
+            query = $@"SELECT [Id]
+                      ,[created_at]
+                      ,[updated_at]
+                      ,[created_by]
+                      ,[updated_by]
+                      ,[BUSINESS_ACCOUNT_ID]
+                      ,[COMPANY_CODE]
+                      ,[COMPANY_NAME_ENGLISH]
+                      ,[COMPANY_NAME_CHINESE]
+                      ,[COMPANY_LOGO_NAME]
+                      ,[COMPANY_LOGO_PATH]
+                      ,[COMPANY_BANNER_NAME]
+                      ,[COMPANY_BANNER_PATH]
+                      ,[COMPANY_PHONE]
+                      ,[COMPANY_ADDRESS]
+                      ,[FACEBOOK_URL]
+                      ,[INSTAGRAM_URL]
+                      ,[WECHAT_URL]
+                      ,[TWITTER_URL]
+                      ,[PAGE_URL]
+                      ,[COMPANY_DESCRIPTION]
+                      ,[COMPANY_SERVICE]
+                      ,[TAGS]
+                      ,[IS_SEARCHABLE_IN_MARKETPLACE]
+                      ,[COMPANY_CATEGORY_ID]
+                      ,[COMPANY_SUB_CATEGORY_ID]
+                      ,[COUNTRY_ID]
+                      ,[CITY_ID]
+                      ,[DISTRICT_ID]
+                      ,[TOTAL_WEBSITE_VISITS]
+                      ,[IS_DEFAULT]
+                      ,[COMPANY_EMAIL]
+                      ,[IS_ACTIVE]
+                  FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] where TAGS like '%{TagName}%'";
+
+            List<IDictionary<string, object>> companyTagResult = await sqlFunction.ExecuteSqlQuery(query);
+
+            var companyDataEncrypt = JsonConvert.SerializeObject(calendarTagResult);
+
+            TagData.companies = JsonConvert.DeserializeObject<List<BusinessCompanyModel>>(companyDataEncrypt);
+
+            return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = TagData };
         }
 
     }

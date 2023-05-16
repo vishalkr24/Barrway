@@ -1,8 +1,8 @@
 ﻿$(document).ready(function () {
     $("#nv-home").addClass("active");
     setDistrictMaster();
-    setCompanySubCategory();
-    setCompanySubCategoryWise(false, false);
+    setCalendarSubCategory();
+    setCalendarSubCategoryWise(false, false);
 });
 
 function setDistrictMaster() {
@@ -23,8 +23,8 @@ function setDistrictMaster() {
 
 }
 
-function setCompanySubCategory() {
-    var data = GetAllCompanySubCategory();
+function setCalendarSubCategory() {
+    var data = getAllCalendarSubCategory();
 
     if (data.Status) {
 
@@ -34,14 +34,14 @@ function setCompanySubCategory() {
         $("#filter-sub-category-master").append(`<option value="-1" selected>All sub-category</option>`);
 
         for (var i = 0; i < districts.length; i++) {
-            $("#filter-sub-category-master").append(`<option value="${districts[i].Id}">${districts[i].COMPANY_SUB_CATEGORY_NAME}</option>`);
+            $("#filter-sub-category-master").append(`<option value="${districts[i].Id}">${districts[i].CALENDAR_SUB_CATEGORY_NAME}</option>`);
         }
 
     }
 
 }
 
-function setCompanySubCategoryWise(showFilterQuery = false, requestFromButton = false) {
+function setCalendarSubCategoryWise(showFilterQuery = false, requestFromButton = false) {
 
     var fltr_subCategoryId = $("#filter-sub-category-master option:selected").val();
     var fltr_districtId = $("#filter-district-master option:selected").val();
@@ -108,7 +108,7 @@ function setCompanySubCategoryWise(showFilterQuery = false, requestFromButton = 
     }
 
     var data = GetFilterCompanyData(fltr_subCategoryId, fltr_districtId);
-
+    console.log(data);
     if (data.Status) {
         var corouselClassMaster = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
         var corouselCounter = 0;
@@ -118,23 +118,28 @@ function setCompanySubCategoryWise(showFilterQuery = false, requestFromButton = 
         $("#company-category-wise-area").empty();
         for (var i = 0; i < categories.length; i++) {
 
-            var companies = data.Data[i];
+            var calendars = data.Data[i];
 
-            if (companies.length > 0) {
+            if (calendars.length > 0) {
              
                 corouselCounter++;
 
                 $("#company-category-wise-area").append(`<div class="my-slide ${corouselClassMaster[corouselCounter]}">
                                                             <div class="heading-cata">
-                                                                <h3>${companies[0].COMPANY_SUB_CATEGORY_NAME}</h3>
+                                                                <h3>${calendars[0].CALENDAR_SUB_CATEGORY_NAME}</h3>
                                                             </div>
                                                             <div id="owl-demo${corouselCounter}" class="owl-carousel owl-theme"></div>
 
                                                         </div>`);
 
-                for (var j = 0; j < companies.length; j++) {
+                for (var j = 0; j < calendars.length; j++) {
 
-                    var tags = companies[j].TAGS.split(",");
+                    var tags = [];
+
+                    if (calendars[j].TAGS != null) {
+                        tags = calendars[j].TAGS.split(",");
+                    }
+                    
 
                     var tagString = "";
                     for (var k = 0; k < tags.length; k++) {
@@ -142,43 +147,44 @@ function setCompanySubCategoryWise(showFilterQuery = false, requestFromButton = 
                     }
                     
                     $("#owl-demo" + corouselCounter).append(` <div class="item">
-                                                    <div class="item-inner" onclick="viewMarketplaceCompanyDetails(${companies[j].Id})">
+                                                    <div class="item-inner" onclick="viewMarketplaceCompanyCalendar('${calendars[j].COMPANY_CODE}', '${calendars[j].Id}')">
                                                         <div class="pro-im">
-                                                            <img src="${(companies[j].COMPANY_BANNER_PATH == "") ? "../assets/marketplace/image/pro.png" : companies[j].COMPANY_BANNER_PATH.replaceAll("~", "..") }" onerror="this.src='../assets/marketplace/image/pro.png'">
+                                                            <img src="${(calendars[j].CALENDAR_PHOTO_PATH == "") ? "../assets/marketplace/image/pro.png" : calendars[j].CALENDAR_PHOTO_PATH.replaceAll("~", "..") }" onerror="this.src='../assets/marketplace/image/pro.png'">
                                                         </div>
                                                         <div class="pro-text">
-                                                            <p class="p1"><b>${companies[j].COMPANY_NAME_ENGLISH}</b></p>
-                                                            <p class="p2">${companies[j].COMPANY_CATEGORY_NAME}</p>
-                                                            <p class="p3">${companies[j].DISTRICT_NAME}</p>
+                                                            <p class="p1"><b>${calendars[j].COMPANY_NAME_ENGLISH}</b></p>
+                                                            <p class="p2">${calendars[j].CALENDAR_CATEGORY_NAME}</p>
+                                                            <p class="p3">${calendars[j].DISTRICT_NAME}</p>
                                                             <p class="p4">${tagString}</p>
                                                         </div>
                                                     </div>
                                                 </div>`);
-
-                    $("#owl-demo" + corouselCounter).owlCarousel({
-                        loop: true,
-                        margin: 10,
-                        dots: false,
-                        responsiveClass: true,
-                        responsive: {
-                            0: {
-                                items: 1,
-                                nav: false
-                            },
-                            600: {
-                                items: 3,
-                                nav: false
-                            },
-                            1000: {
-                                items: 5,
-                                nav: true,
-                                loop: false,
-                                margin: 20
-                            }
-                        }
-                    });
-
+                    
                 }
+
+                $("#owl-demo" + corouselCounter).owlCarousel({
+                    loop: true,
+                    margin: 10,
+                    dots: false,
+                    responsiveClass: true,
+                    responsive: {
+                        0: {
+                            items: 1,
+                            nav: false
+                        },
+                        600: {
+                            items: 3,
+                            nav: false
+                        },
+                        1000: {
+                            items: 5,
+                            nav: true,
+                            loop: false,
+                            margin: 20
+                        }
+                    }
+                });
+
             }
             
 

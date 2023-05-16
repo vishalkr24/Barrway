@@ -39,9 +39,16 @@ namespace Barrway.Controllers
             try
             {
                 ViewBag.TagName = tag;
-                var data = globalMasterService.GetSingleTagData(tag);
-                return View();
+                var data = await globalMasterService.GetSingleTagData(tag);
 
+                if (data.Status)
+                {
+                    return View(data.Data);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Marketplace");
+                }
 
             }catch (Exception ex)
             {
@@ -60,16 +67,16 @@ namespace Barrway.Controllers
             return View();
         }
 
-        public async Task<ActionResult> CompanyDetail(string CompanyId)
+        public async Task<ActionResult> CompanyDetail(string CompanyCode, string CalendarId = null)
         {
             try
             {
-                var companyData = await businessUserService.GetSingleCompanyById(CompanyId);
+                var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
 
                 var data = JsonConvert.SerializeObject(companyData.Data);
 
                 MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
-
+                companyModel.DEFAULT_CALENDAR_ID = CalendarId;
 
                 ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
 
@@ -83,15 +90,16 @@ namespace Barrway.Controllers
             
         }
 
-        public async Task<ActionResult> CompanyService(string CompanyId)
+        public async Task<ActionResult> CompanyService(string CompanyCode, string CalendarId = null)
         {
             try
             {
-                var companyData = await businessUserService.GetSingleCompanyById(CompanyId);
+                var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
 
                 var data = JsonConvert.SerializeObject(companyData.Data);
 
                 MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
+                companyModel.DEFAULT_CALENDAR_ID = CalendarId;
 
                 ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
 
@@ -104,15 +112,16 @@ namespace Barrway.Controllers
             
         }
 
-        public async Task<ActionResult> CompanyPackage(string CompanyId)
+        public async Task<ActionResult> CompanyPackage(string CompanyCode, string CalendarId = null)
         {
             try
             {
-                var companyData = await businessUserService.GetSingleCompanyById(CompanyId);
+                var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
 
                 var data = JsonConvert.SerializeObject(companyData.Data);
 
                 MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
+                companyModel.DEFAULT_CALENDAR_ID = CalendarId;
 
                 ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
 
@@ -124,25 +133,51 @@ namespace Barrway.Controllers
             }
         }
 
-        public async Task<ActionResult> CompanySchedule()
+        public async Task<ActionResult> CompanySchedule(string CompanyCode, string CalendarId = null)
         {
-            return View();
+
+            try
+            {
+                var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
+                var calendarData = await businessUserService.GetCompanyCalendarByCompanyId(companyData.Data["Id"].ToString());
+                var serviceData = await globalMasterService.GetCompanyCategoryMaster();
+
+                var data = JsonConvert.SerializeObject(companyData.Data);
+                var calendarEncrypted = JsonConvert.SerializeObject(calendarData.Data);
+                var serviceEncrypted = JsonConvert.SerializeObject(serviceData.Data);
+
+                MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
+                companyModel.DEFAULT_CALENDAR_ID = CalendarId;
+                companyModel.calendars = JsonConvert.DeserializeObject<List<BusinessCalendarModel>>(calendarEncrypted);
+                companyModel.services = JsonConvert.DeserializeObject<List<BusinessCompanyCategoryModel>>(serviceEncrypted);
+
+                ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
+
+                return View(companyModel);
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Index", "Marketplace");
+            }
+
         }
 
-        public async Task<ActionResult> CompanyPhotoAlbum(string CompanyId)
+        public async Task<ActionResult> CompanyPhotoAlbum(string CompanyCode, string CalendarId = null)
         {
             try
             {
-                var companyData = await businessUserService.GetSingleCompanyById(CompanyId);
-                var photoAlbumData = await businessUserService.GetCompanyPhotoAlbumByCompanyId(CompanyId);
+                var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
+                var photoAlbumData = await businessUserService.GetCompanyPhotoAlbumByCompanyId(companyData.Data["Id"].ToString());
 
                 var photoAlbumEncrypt = JsonConvert.SerializeObject(photoAlbumData.Data);
 
                 MarketplaceCompanyGalleryModel albumModel = new MarketplaceCompanyGalleryModel();
 
                 albumModel.photoAlbumList = JsonConvert.DeserializeObject<List<CompanyPhotoAlbumModel>>(photoAlbumEncrypt);
-                albumModel.Id = CompanyId;
+                albumModel.Id = companyData.Data["Id"].ToString();
+                albumModel.COMPANY_CODE = CompanyCode;
                 albumModel.COMPANY_LOGO_PATH = companyData.Data["COMPANY_LOGO_PATH"].ToString();
+                albumModel.DEFAULT_CALENDAR_ID = CalendarId;
 
                 ViewBag.Title = companyData.Data["COMPANY_NAME_ENGLISH"].ToString();
 

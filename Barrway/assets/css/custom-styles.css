@@ -14,3 +14,11 @@
 .pricing-custome-inner {
     min-height: 60vh!important;
 }
+
+.pro-im{
+    min-height:140px;
+    display:flex;
+    align-content:center;
+    align-items:center;
+
+}

@@ -159,7 +159,7 @@
 
 
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label for="cala">Calendar category *</label>
 
@@ -177,15 +177,32 @@
 
                                 </div>
                                 <div class="form-group">
+                                    <label for="TAGS">Tags</label>
+                                    <div class="tom-select-custom">
+                                        @Html.DropDownListFor(model => model.TAGS, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "js-select form-select", @multiple = "true", @autocomplete = "off" })
+                                    </div>
+                                    
+
+                                    @*<div class="tom-select-custom">
+                                        <select class="js-select form-select" autocomplete="off" multiple
+                                                data-hs-tom-select-options='{ "create": true, "placeholder": "Create custom tag..." }'>
+                                        </select>
+                                    </div>*@
+
+                                    @Html.ValidationMessageFor(model => model.TAGS, "", new { @class = "invalid-feedback-2" })
+
+                                    @*<input type="text" class="form-control" id="calendarname" placeholder="" name="calendarname">*@
+                                </div>
+                                <div class="form-group">
                                     <p style="margin-bottom: 0px;"><label for="file">Calendar  photo</label></p>
                                     <div class="custome-uploade">
-                                       
+
                                         <label for="CALENDAR_PHOTO_PATH" id="CALENDAR_PHOTO_NAME" style="width:80%; max-width:300px; padding-left:16px;">This photo will be seen in market place</label>
 
                                         <div class="fileUpload btn btn--browse">
                                             <span>Browse</span>
                                             @Html.TextBoxFor(model => model.CALENDAR_PHOTO_PATH, new { @class = "upload", Type = "File", @onchange = "BindLogoName('CALENDAR_PHOTO_PATH', 'CALENDAR_PHOTO_NAME')" })
-                                            
+
                                         </div>
                                     </div>
 

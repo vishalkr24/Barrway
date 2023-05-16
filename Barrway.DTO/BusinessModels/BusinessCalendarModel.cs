@@ -34,6 +34,11 @@ namespace Barrway.DTO.BusinessModels
         public string CALENDAR_CATEGORY_ID { get; set; }
 
         public string CALENDAR_SUB_CATEGORY_ID { get; set; }
+        
+        public string TAGS { get; set; }
+
+        public string COMPANY_NAME_ENGLISH { get; set; }
+        public string CITY_NAME { get; set; }
     }
 
 }

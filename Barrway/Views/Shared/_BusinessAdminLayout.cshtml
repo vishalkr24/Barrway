@@ -33,13 +33,19 @@
         body {
             opacity: 0;
         }
-        
     </style>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <script src="~/Scripts/BusinessScripts/Common/CommonFunctions.js"></script>
+    <script src="~/Scripts/BusinessScripts/Common/BusinessAdminCommonFunctions.js"></script>
+    <script src="~/Scripts/PublicCommonFunction.js"></script>
     <script src="~/Scripts/BusinessScripts/AdminLayoutManager.js"></script>
+    
+    
+    @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.2.2/css/tom-select.bootstrap5.min.css" integrity="sha512-mNN7o87hQqtNCCGWxFVdlVdaKF6d4S1wVMi3+ftJYnW572YIo0KPjK1Cns5SPlyCtKGp1Nu+z26MJUNXmpbjKA==" crossorigin="anonymous" referrerpolicy="no-referrer" />*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.2.2/esm/tom-select.complete.min.js" integrity="sha512-Mq5sbsECkh++vpFvzKegopkWOHTuj2D3503BOVdaH8tTczPn74LEOkMK1Sd0BHbjwGEgVYDKM6CYSYeXJ5FaLA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
 
     @RenderSection("scripts", required: false)
     <script>
@@ -136,7 +142,7 @@
                 <nav class="navbar-nav-wrap">
                     <!-- Logo -->
 
-                    <a class="navbar-brand" href="../index.html" aria-label="Front">
+                    <a class="navbar-brand" href="/BusinessAdmin/Dashboard" aria-label="Front">
                         <img class="navbar-brand-logo" src="../assets/svg/logos/logo.png" alt="Logo" data-hs-theme-appearance="default">
                         <span class="bui">Business</span>
                     </a>
