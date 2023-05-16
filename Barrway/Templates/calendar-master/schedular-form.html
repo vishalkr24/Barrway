@@ -118,6 +118,38 @@
         font-weight: 500;
         letter-spacing: 0.2px;
     }
+
+    .schedular-form .col-md-4,.col-md-12{
+        padding-top:32px;
+    }
+
+    .schedular-form label{
+        font-weight:bold;
+        padding-bottom:8px;
+    }
+
+    .schedular-form .schedular-table thead{
+        border-bottom:1px solid lightgrey;
+    }
+
+    .schedular-form .schedular-table thead tr td {
+        font-weight: bold;
+        text-align: center;
+        padding: 8px;
+    }
+
+    .schedular-form .schedular-table tbody tr td:first-child {
+        font-weight: bold;
+        padding: 8px;
+        border-right: 1px solid lightgrey;
+        text-align: center;
+    }
+
+    .schedular-form .schedular-table tbody tr td {
+        padding: 8px;
+        text-align: center;
+    }
+
 </style>
 
 <div class="page-header">
@@ -140,7 +172,7 @@
     <!-- End Row -->
 </div>
 
-<div class="row">
+<div class="row" ng-controller="SchedularFormController">
     <div class="col-md-12">
         <div class="card card-default">
             <!--<div class="row">
@@ -218,10 +250,8 @@
                                         <i class="fa fa-plus"> </i>
                                         <span class="action-name">{{translation.Execute}}</span>
                                     </a>
-                                    <a data-action="entry" class="btn btn-primary mb-2 mb-lg-0"
-                                       ui-sref="saveFormEntryData({formId: currentFormId})"
-                                       ng-show="allowAddDelete==true && formDetailsDataInfo.currentFormType!=1 && !isInvoiceForm"
-                                       ng-if="!isTransactionForm">
+                                    <a data-action="entry" class="btn btn-primary mb-2 mb-lg-0" ng-click="showSchedularFormModal()" ng-show="allowAddDelete==true && formDetailsDataInfo.currentFormType!=1 && !isInvoiceForm" ng-if="!isTransactionForm">
+
                                         <i class="fa fa-plus"></i>
                                         <span class="action-name">{{translation.Entry}}</span>
                                     </a>
@@ -403,6 +433,108 @@
                         </div>
                         <div id="form-records"></div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="schedularFormNew" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header d-flex">
+                    <h4 class="modal-title">SCHEDULAR FORM</h4>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="myForm">
+                        <div class="row schedular-form">
+                            <div class="col-md-4">
+                                <div><label>Location</label></div>
+                                <select class="form-control" id="SCH_LOCATION">
+                                    <option value="{{l.Id}}" ng-repeat="l in locationList">{{l.LOCATION_BUILDING_NAME}}, {{l.LOCATION_FLOOR}} floor</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <div><label>Service</label></div>
+                                <select class="form-control" id="SCH_ACTIVITY">
+                                    <option value="{{l.Id}}" ng-repeat="l in serviceList">{{l.ACTIVITY_NAME}}</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <div><label>Service Provider</label></div>
+                                <select class="form-control" id="SCH_RESOURCE">
+                                    <option value="{{l.Id}}" ng-repeat="l in serviceProviderList">{{l.FIRST_NAME}} {{l.LAST_NAME}}</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div><label>From</label></div>
+                                <input type="date" id="SCH_FROM_DATE" class="js-flatpickr form-control flatpickr-custom" data-hs-flatpickr-options='{ "dateFormat": "d/m/Y" }' placeholder="select from date" />
+                            </div>
+                            <div class="col-md-4">
+                                <div>
+                                    <label>To</label>
+                                </div>
+
+                                <input type="date" id="SCH_TO_DATE" class="js-flatpickr form-control flatpickr-custom" data-hs-flatpickr-options='{ "dateFormat": "d/m/Y" }' placeholder="select to date" />
+                            </div>
+                            <div class="col-md-4">
+                                <div><label>Alternative week</label></div>
+                                <div><input type="radio" name="alternate-week" value="EVERY-WEEK" /> Every Week</div>
+                                <div><input type="radio" name="alternate-week" value="ALTERNATE-WEEK" /> Alternate Week</div>
+                                <div><input type="radio" name="alternate-week" value="EVERY-3-WEEK" /> Every 3 Week</div>
+                                <div><input type="radio" name="alternate-week" value="EVERY-4-WEEK" /> Every 4 Week</div>
+                            </div>
+                            <div class="col-md-12">
+                                <table class="schedular-table" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <td>Time</td>
+                                            <td>MON</td>
+                                            <td>TUE</td>
+                                            <td>WED</td>
+                                            <td>THU</td>
+                                            <td>FRI</td>
+                                            <td>SAT</td>
+                                            <td>SUN</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Start Time</td>
+                                            <td><input type="time" id="Monday_Start_Time" class="form-control" /></td>
+                                            <td><input type="time" id="Tuesday_Start_Time" class="form-control" /></td>
+                                            <td><input type="time" id="Wednesday_Start_Time" class="form-control" /></td>
+                                            <td><input type="time" id="Thursday_Start_Time" class="form-control" /></td>
+                                            <td><input type="time" id="Friday_Start_Time" class="form-control" /></td>
+                                            <td><input type="time" id="Saturday_Start_Time" class="form-control" /></td>
+                                            <td><input type="time" id="Sunday_Start_Time" class="form-control" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td>End Time</td>
+                                            <td><input type="time" id="Monday_End_Time" class="form-control" /></td>
+                                            <td><input type="time" id="Tuesday_End_Time" class="form-control" /></td>
+                                            <td><input type="time" id="Wednesday_End_Time" class="form-control" /></td>
+                                            <td><input type="time" id="Thursday_End_Time" class="form-control" /></td>
+                                            <td><input type="time" id="Friday_End_Time" class="form-control" /></td>
+                                            <td><input type="time" id="Saturday_End_Time" class="form-control" /></td>
+                                            <td><input type="time" id="Sunday_End_Time" class="form-control" /></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-12">
+                                <button class="btn btn-default" ng-click="hideSchedularFormModal()">Cancel</button> <button class="btn btn-success" ng-click="saveSchedularForm()">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                    
+
                 </div>
             </div>
         </div>
