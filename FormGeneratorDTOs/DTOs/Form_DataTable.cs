@@ -103,6 +103,10 @@ namespace FormGeneratorDTOs.DTOs
         public string resourceSearchTextData { get; set; }
         public string resourceSearchTextJoin { get; set; }
         public string resourceSearchTextWhereClouse { get; set; }
+        public string COMPANY_CODE { get; set; }
+        public string CALENDAR_CODE { get; set; }
+        public bool IsCustomFilter { get; set; }
+        public List<CustomFilter> CustomFilters { get; set; }
         //public string Query { get; set; }
 
     }

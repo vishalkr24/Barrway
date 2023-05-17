@@ -2725,6 +2725,8 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                 param.filter = {};
                 param.filter = changeStateOfCalender(view, start, end);
                 param.filter.field = "start";
+                param.COMPANY_CODE = localStorage.getItem("COMPANY_CODE");
+                param.CALENDAR_CODE = localStorage.getItem("CALENDAR_CODE");
                 //showLoader();
                 $.ajax({
                     method: 'POST',
@@ -2788,6 +2790,8 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
             start = $('#agenda-view div.calendar').fullCalendar('getDate');
             param.filter = changeStateOfCalender(view, start, end);
             param.filter.field = "start";           
+            param.COMPANY_CODE = localStorage.getItem("COMPANY_CODE");
+            param.CALENDAR_CODE = localStorage.getItem("CALENDAR_CODE");
             $.ajax({
                 method: 'POST',
                 url: BASE_URL + "/FormAPI/getReferralFormFields",
@@ -4189,6 +4193,8 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
             param.filter = {};
             param.filter = changeStateOfCalender(view, start, end);
             param.filter.field = "start";
+            param.COMPANY_CODE = localStorage.getItem("COMPANY_CODE");
+            param.CALENDAR_CODE = localStorage.getItem("CALENDAR_CODE");
       
             $.ajax({
                 method: 'POST',
@@ -4469,6 +4475,8 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
             param.filter = {};
             param.filter = changeStateOfCalender(view, start, end);
             param.filter.field = "start";        
+            param.COMPANY_CODE = localStorage.getItem("COMPANY_CODE");
+            param.CALENDAR_CODE = localStorage.getItem("CALENDAR_CODE");
             $.ajax({
                 method: 'POST',
                 url: BASE_URL + "/FormAPI/getReferralFormFields",
@@ -15512,9 +15520,9 @@ function GetFormRecordsUrl(formid) {
     if (formid == 2311) {
         return BASE_URL + "Calendar/GetSchedularFormList";
     }
-    if (formid == 2312) {
-        return BASE_URL + "Calendar/GetTransactionMasterList";
-    }
+    //if (formid == 2312) {
+    //    return BASE_URL + "Calendar/GetTransactionMasterList";
+    //}
 
     return BASE_URL + "FormAPI/GetFormRecordList";
 }

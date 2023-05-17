@@ -23,7 +23,7 @@ namespace Barrway.Service.IRepository
         Task<IEnumerable<FormCalenderReferrenceTable>> getEventDetails(FormCalenderReferrenceTable data);
         Task<IEnumerable<calenderSettingsFormDetails>> getCalenderSettingsFormData(calenderSettingsFormDetails data);
         Task<AddUpdateDelete<List<Form_Roles>>> ManageFormRoles(Form_Roles data);
-        Task<List<IDictionary<string, object>>> getJSONjsTree(int root, string title, string formId, string resourceActivityForm, string previousSelection, string selectedRoot, string query, string id);
+        Task<List<IDictionary<string, object>>> getJSONjsTree(int root, string title, string formId, string resourceActivityForm, string previousSelection, string selectedRoot, string query, string id, string companyCode, string calendarCode);
         Task<AxixColumnsResponseModel> getAxisColumns(calenderSettingsFormDetails data);
         Task<ReferalFormDataResponseModel> getReferralFormFields(Form_DataTable data);
         Task<IEnumerable<FormCalenderReferrenceTable>> ManageCalenderReferrenceNew(FormCalenderReferrenceTable data);

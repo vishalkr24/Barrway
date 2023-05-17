@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Spire.Xls.Core.Spreadsheet.AutoFilter;
+using System.Collections.Generic;
 
 namespace FormGeneratorDTOs.DTOs
 {
@@ -73,7 +74,26 @@ namespace FormGeneratorDTOs.DTOs
         public List<IDictionary<string, object>> formDataList { get; set; }
 
         public List<IDictionary<string, object>> formDataListGroupBy { get; set; }
+        public bool IsCustomFilter { get; set; }
+        public List<CustomFilter> CustomFilters { get; set; }
 
+    }
+    public class CustomFilter
+    {
+        public string FieldName { get; set; }
+        public string Value { get; set; }
+    }
+    public class JsonTreeModel
+    {
+        public int root { get; set; }
+        public string title { get; set; }
+        public string formId { get; set; }
+        public string resourceActivityForm { get; set; }
+        public string previousSelection { get; set; }
+        public string selectedRoot { get; set; }
+        public string query { get; set; }
+        public string id { get; set; }
+        public List<CustomFilter> CustomFilters { get; set; }
     }
 
 }
