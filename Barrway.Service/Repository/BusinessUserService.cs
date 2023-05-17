@@ -876,5 +876,83 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> AddSchedularForm(SchedularFormModel model)
+        {
+            Form_DataTable data = new Form_DataTable();
+            var a = model.ToDictionary();
+            a.Remove("table");
+            data.action = (int)FormAction.Save;
+            data.formId = (int)FormSetting.SCHEDULAR_FORM;
+            data.userId = (int)FormSetting.CreatedUser;
+            data.created_by = (int)FormSetting.CreatedUser;
+            data.updated_by = (int)FormSetting.CreatedUser;
+            data.created_at = DateTime.Now.ToString();
+            data.updated_at = DateTime.Now.ToString();
+            data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(a);
+            data.formGroupKey = Guid.NewGuid().ToString();
+
+            var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+            if (formResult.res == 1)
+            {
+                Form_DataTable result = new Form_DataTable()
+                {
+                    Id = formResult.Id,
+                    formGroupKey = data.formGroupKey
+                };
+
+
+                return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = result };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Message = formResult.Message, Status = false };
+            }
+        }
+
+        public async Task<AddUpdateDelete> AddCalendarEventSlot(CalendarFormModel model, string formGroupKey)
+        {
+            model.allDay = "false";
+
+            Form_DataTable data = new Form_DataTable();
+            data.action = (int)FormAction.Save;
+            data.formId = (int)FormSetting.CALENDAR_FORM;
+            data.userId = (int)FormSetting.CreatedUser;
+            data.created_by = (int)FormSetting.CreatedUser;
+            data.updated_by = (int)FormSetting.CreatedUser;
+            data.created_at = DateTime.Now.ToString();
+            data.updated_at = DateTime.Now.ToString();
+            data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.ToDictionary());
+            data.formGroupKey = formGroupKey;
+
+            var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+            if (formResult.res == 1)
+            {
+                return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Message = formResult.Message, Status = false };
+            }
+        }
+
+        public async Task<AddUpdateDelete> AddCalendarReference(CalendarReferenceModel model)
+        {
+            string query = $@"insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
+                              values('{model.formId}', '{model.formgroupkey}', '0', '{model.referrenceFormId}', '{model.referrenceId}', '{model.referrenceFormTable}', '{model.referrenceColumnName}', '{model.resourceFormId}', '{model.resourceId}', '{FormSetting.CreatedUser}', getDate(), '{FormSetting.CreatedUser}', getDate())";
+
+            int result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+            if (result > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
     }
 }

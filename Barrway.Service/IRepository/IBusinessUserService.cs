@@ -48,6 +48,13 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetSingleCalendarById(string Id);
         Task<AddUpdateDelete> GetCompanyCalendarByCompanyId(string CompanyId);
         Task<AddUpdateDelete> GetCompanyCalendars(GenerateDynamicFormData data, string CompanyId);
+
+        Task<AddUpdateDelete> AddSchedularForm(SchedularFormModel model);
+
+        Task<AddUpdateDelete> AddCalendarEventSlot(CalendarFormModel model, string formGroupKey);
+
+        Task<AddUpdateDelete> AddCalendarReference(CalendarReferenceModel model);
+
         #endregion
 
 
@@ -64,6 +71,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> AddCompanySubscriptionDetails(CompanySubscriptionDetailsModel model);
 
         #endregion
+
 
     }
 }
