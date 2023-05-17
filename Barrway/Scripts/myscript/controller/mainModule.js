@@ -425,6 +425,13 @@ FormGeneratorApp.controller('IndexController', function ($scope, $http, $timeout
         }
     }
 
+    $scope.ChangeCalendarDropDown = function () {
+
+        localStorage.setItem("CALENDAR_CODE", $scope.selectedCalendarCode);
+
+        window.location.reload();
+    };
+
     $scope.init();
 
 });

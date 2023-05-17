@@ -480,11 +480,28 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<List<IDictionary<string,object>>> getJSONjsTree(int root, string title, string formId, string resourceActivityForm, string previousSelection, string selectedRoot, string query, string id)
+        public async Task<List<IDictionary<string,object>>> getJSONjsTree(int root, string title, string formId, string resourceActivityForm, string previousSelection, string selectedRoot, string query, string id, string companyCode, string calendarCode)
         {
             try
             {
-                var request = new RestRequest($"api/FormAPI/getJSONjsTree?root={root}&title={title}&formId={formId}&resourceActivityForm={resourceActivityForm}&previousSelection={previousSelection}&selectedRoot={selectedRoot}&query={query}&id={id}", Method.Post) { RequestFormat = DataFormat.Json };
+                List<CustomFilter> customFilters = new List<CustomFilter>();
+                customFilters.Add(new CustomFilter() { FieldName = "COMPANY_CODE", Value = companyCode });
+                customFilters.Add(new CustomFilter() { FieldName = "CALENDAR_CODE", Value = calendarCode });
+                JsonTreeModel jsonTree = new JsonTreeModel() { 
+                root= root,
+                title= title,
+                formId= formId, 
+                resourceActivityForm= resourceActivityForm,
+                previousSelection= previousSelection,
+                selectedRoot= selectedRoot,
+                query= query,
+                id= id,
+                CustomFilters= customFilters
+                };
+               
+
+                var request = new RestRequest($"api/FormAPI/getJSONjsTreeCustomFilter", Method.Post) { RequestFormat = DataFormat.Json };
+                request.AddBody(jsonTree);
                 request.AddHeader("content-type", "application/json");
                 var response = await _client.ExecuteAsync(request);
                 if (response.Content != null)

@@ -147,6 +147,13 @@ namespace Barrway.Controllers
         [HttpPost]
         public async Task<ActionResult> getReferralFormFields(Form_DataTable data)
         {
+            if(!string.IsNullOrEmpty(data?.COMPANY_CODE) && !string.IsNullOrEmpty(data?.CALENDAR_CODE))
+            {
+                if (data.filter != null)
+                {
+                    data.filter.value=data.filter.value+ " and F.COMPANY_CODE=N'"+ data.COMPANY_CODE+ "' and F.CALENDAR_CODE=N'"+data.CALENDAR_CODE+"'";
+                }
+            }
             var result = await formAPIRepository.getReferralFormFields(data);
 
             if (result != null)
@@ -188,9 +195,9 @@ namespace Barrway.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> getJSONjsTree(int root, string title, string formId, string resourceActivityForm, string previousSelection, string selectedRoot, string query, string id)
+        public async Task<ActionResult> getJSONjsTree(int root, string title, string formId, string resourceActivityForm, string previousSelection, string selectedRoot, string query, string id, string companyCode, string calendarCode)
         {
-            return Json((await formAPIRepository.getJSONjsTree(root,title,formId,resourceActivityForm,  previousSelection,  selectedRoot,  query,  id)),JsonRequestBehavior.AllowGet);
+            return Json((await formAPIRepository.getJSONjsTree(root,title,formId,resourceActivityForm,  previousSelection,  selectedRoot,  query,  id,companyCode,calendarCode)),JsonRequestBehavior.AllowGet);
         }
 
 

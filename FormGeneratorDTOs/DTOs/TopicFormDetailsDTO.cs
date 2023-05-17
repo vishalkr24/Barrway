@@ -104,6 +104,8 @@ namespace FormGeneratorDTOs.DTOs
         public string resourceSearchTextJoin { get; set; }
         public string resourceSearchTextWhereClouse { get; set; }
         public string language { get; set; }
+        public bool IsCustomFilter { get; set; }
+        public List<CustomFilter> CustomFilters { get; set; }
     }
 
 
