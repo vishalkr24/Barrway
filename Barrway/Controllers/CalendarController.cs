@@ -243,6 +243,12 @@ namespace Barrway.Controllers
         {
             try
             {
+                var startObject = data.SCH_FROM_DATE.Split('/');
+                var endObject = data.SCH_TO_DATE.Split('/');
+
+                data.SCH_FROM_DATE = Convert.ToDateTime(startObject[2] + "-" + startObject[1] + "-" + startObject[0]).ToString();
+                data.SCH_TO_DATE = Convert.ToDateTime(endObject[2] + "-" + endObject[1] + "-" + endObject[0]).ToString();
+
                 var b = data.ToDictionary();
 
                 data.SCH_SCHEDULE_TABLE = JsonConvert.SerializeObject(b["table"]).ToString();
@@ -252,11 +258,9 @@ namespace Barrway.Controllers
                 if (response.Status)
                 {
                     string formGroupKey = response.Data.formGroupKey;
-
-                    var startObject = data.SCH_FROM_DATE.Split('/');
-
+                    
                     var start = Convert.ToDateTime(startObject[2] + "-" + startObject[1] + "-" + startObject[0]);
-                    var endObject = data.SCH_TO_DATE.Split('/');
+                    
                     var end = Convert.ToDateTime(endObject[2] + "-" + endObject[1] + "-" + endObject[0]);
                     
                     DateTime dateTracker = start;
@@ -424,6 +428,20 @@ namespace Barrway.Controllers
                                       ,[allDay]
                                       ,[resources]
                                       ,[activities]
+
+                                      ,[description]
+                                      ,[created_at], [updated_at])
+	                                  values('{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter++}', '{SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{data.SCH_RESOURCE}', '{data.SCH_ACTIVITY}', '{data.SCH_DESCRIPTION}', getDate(), getDate() );
+                                
+                                    insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
+                                    values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_PROVIDER_MASTER}, '{data.SCH_RESOURCE}', 'SERVICE_PROVIDER_MASTER_1934', 'FIRST_NAME', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_RESOURCE}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+
+                                    insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
+                                    values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_MASTER}, '{data.SCH_ACTIVITY}', 'SERVICE_MASTER_1933', 'ACTIVITY_NAME', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_ACTIVITY}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                        
+                                    insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
+                                    values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{data.SCH_LOCATION}', 'LOCATION_MASTER_1936', 'LOCATION_CODE', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_LOCATION}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+
                                       ,[description])
 	                                  values('{formGroupKey}', '{(int)FormSetting.CALENDAR_FORM}', '30314', '0', '0', '0', '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter++}', '{SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{data.SCH_RESOURCE}', '{data.SCH_ACTIVITY}', '{data.SCH_DESCRIPTION}' );
                                 
@@ -469,6 +487,7 @@ namespace Barrway.Controllers
                     }
 
                 }
+
             }
             catch (Exception ex)
             {

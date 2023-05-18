@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Barrway.DTO.AuthViewModel
 {
-    public class BusinessEmailSignUpViewModel
+    public class EmailSignUpViewModel
     {
         [Required(ErrorMessage = "User name is required.")]
         public string USER_NAME { get; set; }

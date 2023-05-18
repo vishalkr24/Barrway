@@ -103,6 +103,89 @@ namespace Barrway.Service.Repository
 
         }
 
+        public async Task<AddUpdateDelete<IDictionary<string, object>>> GetUser(string email, string password, int RoleId, bool isToken = false)
+        {
+            try
+            {
+
+                string sqlQuery = $@"select user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
+                                [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD]
+                                from USER_MASTER_1915 user_m 
+                                left join [dbo].[ROLE_MASTER_1917] user_role on user_role.Id=user_m.[ROLE_ID]
+                                where [USER_EMAIL]='{email}' and user_m.ROLE_ID = '{RoleId.ToString()}'";
+
+                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+                if (result.Count() > 0)
+                {
+                    var user = result.FirstOrDefault();
+                    if (string.IsNullOrEmpty(user["USER_PASSWORD"]?.ToString()) || user["USER_PASSWORD"].ToString() != password)
+                    {
+                        return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Invalid Password" };
+                    }
+
+                    if (!(user["IS_EMAIL_VERIFIED"]?.ToString() == "Y"))
+                    {
+                        return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Email not verified, please contact support team." };
+                    }
+
+                    if (user["IS_ACTIVE"]?.ToString() == "Y")
+                    {
+                        if (string.IsNullOrEmpty(user["ROLE_NAME"]?.ToString()))
+                        {
+                            return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Access denied!!" };
+                        }
+                        if (isToken)
+                        {
+                            return new AddUpdateDelete<IDictionary<string, object>>() { Status = true, Message = "Success", Data = user };
+                        }
+
+                        if (RoleId == 1)
+                        {
+                            if (user["ROLE_NAME"].ToString().ToUpper() == "BUSINESS_USER")
+                            {
+                                return new AddUpdateDelete<IDictionary<string, object>>() { Status = true, Message = "Success", Data = user };
+                            }
+                            else
+                            {
+                                return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Access denied!!" };
+                            }
+                        }
+                        else if(RoleId == 2)
+                        {
+                            if (user["ROLE_NAME"].ToString().ToUpper() == "PUBLIC_USER")
+                            {
+                                return new AddUpdateDelete<IDictionary<string, object>>() { Status = true, Message = "Success", Data = user };
+                            }
+                            else
+                            {
+                                return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Access denied!!" };
+                            }
+                        }
+                        else
+                        {
+                            return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Something went wrong!!" };
+                        }
+
+                        
+                    }
+                    else
+                    {
+                        return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Account is deactive, please contact support team." };
+                    }
+
+                }
+                else
+                {
+                    return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Invalid Email" };
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = ex.Message };
+            }
+
+        }
 
         public async Task<AddUpdateDelete> userEmaillogin(string email, string password)
         {
@@ -366,6 +449,43 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> GetUserByEmail(string email, int Role_Id)
+        {
+            try
+            {
+                string sqlQuery = $@"select user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
+                                [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD]
+                                from USER_MASTER_1915 user_m 
+                                left join [dbo].[ROLE_MASTER_1917] user_role on user_role.Id=user_m.[ROLE_ID]
+                                where [USER_EMAIL]='{email}' and user_m.ROLE_ID = '{Role_Id.ToString()}'";
+
+                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+                if (result.Count() > 0)
+                {
+                    var user = result.FirstOrDefault();
+
+
+                    string role = user["ROLE_NAME"].ToString();
+                    string username = user["USER_ID"].ToString();
+
+                    var userResult = await GetUserByRole(username, role);
+                    if (!userResult.Status)
+                        return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                    else
+                        return userResult;
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
         public async Task<AddUpdateDelete> GetUserByPhone(string phone)
         {
             try
@@ -404,7 +524,7 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> BarrwayBusinessEmailSignup(BusinessEmailSignUpViewModel model)
+        public async Task<AddUpdateDelete> BarrwayBusinessEmailSignup(EmailSignUpViewModel model)
         {
             return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
         }
@@ -529,7 +649,7 @@ namespace Barrway.Service.Repository
         {
             if (role == "BUSINESS_USER")
             {
-                string sqlQuery = "SELECT business_user.*,user_m.[USER_ID],user_m.[USER_EMAIL],user_m.[USER_PHONE],user_m.[SIGNUP_TYPE],user_m.[IS_ACTIVE],user_m.[IS_EMAIL_VERIFIED], user_m.[IS_PHONE_VERIFIED],user_m.[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS]                             FROM[dbo].[BUSINESS_ACCOUNT_WEBSITE_1918] business_user join USER_MASTER_1915 user_m  on user_m.[USER_ID]= business_user.[USER_ID]                              join[dbo].[ROLE_MASTER_1917] user_role on user_role.Id = user_m.[ROLE_ID]                             where business_user.[USER_ID]= '" + userID + "'";
+                string sqlQuery = "SELECT business_user.*,user_m.[USER_ID],user_m.[USER_EMAIL],user_m.[USER_PHONE],user_m.[SIGNUP_TYPE],user_m.[IS_ACTIVE],user_m.[IS_EMAIL_VERIFIED], user_m.[IS_PHONE_VERIFIED],user_m.[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS]                             FROM[dbo].[BUSINESS_ACCOUNT_WEBSITE_1918] business_user join USER_MASTER_1915 user_m  on user_m.[USER_ID]= business_user.[USER_ID]                              join[dbo].[ROLE_MASTER_1917] user_role on user_role.Id = user_m.[ROLE_ID]                             where business_user.[USER_ID]= '" + userID + "' and user_m.ROLE_ID = '1'";
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
                 if (result.Count() > 0)
@@ -544,7 +664,7 @@ namespace Barrway.Service.Repository
 
             if (role == "PUBLIC_USER")
             {
-                string sqlQuery = $@"";
+                string sqlQuery = $@"SELECT public_user.*,user_m.[USER_ID],user_m.[USER_EMAIL],user_m.[USER_PHONE],user_m.[SIGNUP_TYPE],user_m.[IS_ACTIVE],user_m.[IS_EMAIL_VERIFIED], user_m.[IS_PHONE_VERIFIED],user_m.[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS]                             FROM[dbo].[PUBLIC_USER_ACCOUNT_1943] public_user join USER_MASTER_1915 user_m  on user_m.[USER_ID]= public_user.[USER_ID]                              join[dbo].[ROLE_MASTER_1917] user_role on user_role.Id = user_m.[ROLE_ID]                             where public_user.[USER_ID]= '" + userID + "' and user_m.ROLE_ID = '2'";
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
                 if (result.Count() > 0)

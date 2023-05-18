@@ -117,7 +117,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IRepository\IPublicUserService.cs" />
     <Compile Include="IRepository\ICalendarService.cs" />
+    <Compile Include="Repository\PublicUserService.cs" />
     <Compile Include="Repository\CalendarService.cs" />
     <Compile Include="IRepository\IAuthService.cs" />
     <Compile Include="IRepository\IGlobalMasterService.cs" />

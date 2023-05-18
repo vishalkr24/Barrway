@@ -67,7 +67,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AuthViewModel\BusinessEmailSignUpViewModel.cs" />
+    <Compile Include="AuthViewModel\EmailSignUpViewModel.cs" />
     <Compile Include="AuthViewModel\BusinessExternalEmailLogiViewModel.cs" />
     <Compile Include="AuthViewModel\BarrwayViewModel.cs" />
     <Compile Include="AuthViewModel\UserToken.cs" />
@@ -98,6 +98,7 @@
     <Compile Include="MarketplaceModels\MarketplaceCompanyGalleryModel.cs" />
     <Compile Include="MarketplaceModels\MarketplaceCompanyModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PublicModels\PublicAccountModel.cs" />
     <Compile Include="PublicModels\PublicTagDataModel.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -2819,7 +2819,7 @@
             //data = JSON.stringify(data);
 
             adminService.postAsync('/Calendar/AddSchedule/', { data: data }).then(function (res) {
-                alert();
+                window.location.reload();                
             }, function (err) {
                 alert("No");
             });

@@ -18,6 +18,7 @@ using Barrway.DTO.Common;
 using FormGeneratorDTOs.DTOs;
 using Barrway.DTO.BusinessModels;
 using System.Web.Security;
+using Barrway.DTO.PublicModels;
 
 namespace Barrway.Controllers
 {
@@ -27,14 +28,17 @@ namespace Barrway.Controllers
         private readonly ISqlFunction sqlFunction;
         private readonly ISignupService signupService;
         private readonly IBusinessUserService businessUserService;
+        private readonly IPublicUserService publicUserService;
 
-        public AccountController(IAuthService authService, ISqlFunction sqlFunction, ISignupService signupService, IBusinessUserService businessUserService)
+        public AccountController(IAuthService authService, ISqlFunction sqlFunction, ISignupService signupService, IBusinessUserService businessUserService, IPublicUserService publicUserService)
         {
             this.authService = authService;
             this.sqlFunction = sqlFunction;
             this.signupService = signupService;
             this.businessUserService = businessUserService;
+            this.publicUserService = publicUserService;
         }
+
         // GET: Account
         [AllowAnonymous]
         [HttpGet]
@@ -58,6 +62,27 @@ namespace Barrway.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet]
+        public async Task<ActionResult> Login()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = await authService.GetUser(User.Identity.Name, FormRole.PUBLIC_USER);
+                if (user.Status)
+                {
+                    return RedirectToAction("Dashboard", "UserAdmin");
+                }
+                else
+                {
+                    Logout();
+                }
+
+
+            }
+            return View();
+        }
+
+        [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> BusinessLogin(LoginViewModel model)
@@ -66,7 +91,7 @@ namespace Barrway.Controllers
                 return View();
             }
 
-            var loginresult = await authService.GetUser(model.USER_EMAIL, model.USER_PASSWORD, true);
+            var loginresult = await authService.GetUser(model.USER_EMAIL, model.USER_PASSWORD, (int)FormRole.BUSINESS_USER, true);
 
             if (loginresult.Status)
             {
@@ -93,6 +118,43 @@ namespace Barrway.Controllers
         }
 
         [AllowAnonymous]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Login(LoginViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var loginresult = await authService.GetUser(model.USER_EMAIL, model.USER_PASSWORD, (int)FormRole.PUBLIC_USER, true );
+
+            if (loginresult.Status)
+            {
+                var user = loginresult.Data;
+                var claims = new ClaimsIdentity(new[] {
+                                                    new Claim(ClaimTypes.NameIdentifier,user["USER_ID"].ToString()),
+                                                    new Claim(ClaimTypes.Name,user["USER_ID"].ToString()),
+                                                    new Claim(ClaimTypes.Email, user["USER_EMAIL"].ToString()),
+                                                    new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
+                                                    new Claim(ClaimTypes.Sid, user["Id"].ToString()),
+                                                    //new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
+                                                    }, CookieAuthenticationDefaults.AuthenticationType);
+
+
+                HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = model.REMEMBER_ME }, claims);
+                return RedirectToAction("Dashboard", "UserAdmin");
+            }
+            else
+            {
+                ModelState.AddModelError("ERROR_MESSAGE", loginresult.Message);
+            }
+
+            return View(model);
+        }
+
+
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult> BusinessSignUp()
         {
@@ -114,9 +176,30 @@ namespace Barrway.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet]
+        public async Task<ActionResult> SignUp()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = await authService.GetUser(User.Identity.Name, FormRole.PUBLIC_USER);
+                if (user.Status)
+                {
+                    return RedirectToAction("Dashboard", "UserAdmin");
+                }
+                else
+                {
+                    Logout();
+                }
+
+
+            }
+            return View();
+        }
+
+        [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> BusinessSignUp(BusinessEmailSignUpViewModel model)
+        public async Task<ActionResult> BusinessSignUp(EmailSignUpViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -129,8 +212,8 @@ namespace Barrway.Controllers
                 return View(model);
             }
 
-            var userByEmail = await authService.GetUserByEmail(model.USER_EMAIL);
-            var userByID = await authService.GetUser(model.USER_NAME);
+            var userByEmail = await authService.GetUserByEmail(model.USER_EMAIL, (int)FormRole.BUSINESS_USER);
+            var userByID = await authService.GetUser(model.USER_NAME, FormRole.BUSINESS_USER);
 
             string BusinessRoleId = ((int)FormRole.BUSINESS_USER).ToString();
 
@@ -138,7 +221,8 @@ namespace Barrway.Controllers
             {
                 // Insert Data in User Master
 
-                UserMaserModel userMaserModel = new UserMaserModel(){
+                UserMaserModel userMaserModel = new UserMaserModel()
+                {
                     USER_PHONE = "",
                     IS_ACTIVE = "N",
                     IS_EMAIL_VERIFIED = "N",
@@ -166,19 +250,98 @@ namespace Barrway.Controllers
 
                 AddUpdateDelete businessResult = await businessUserService.CreateBusinessWebsite(businessModel);
 
-                //string CompanyCode = "CMP" + businessResult.Data.ToString().PadLeft(5, '0');
+                // Send Activation Link
 
-                //int updateCompanyCode = await sqlFunction.ExecuteSqlCommandQuery("update BUSINESS_ACCOUNT_WEBSITE_1918 set COMPANY_CODE = '" + CompanyCode + "' where Id = '" + businessResult.ToString() + "'");
+                var linkResult = await authService.sendActivationLink(model.USER_NAME, model.USER_EMAIL, FormRole.BUSINESS_USER);
 
-                // Business Account Creation END
+                if (result.Status && businessResult.Status)
+                {
+                    TempData["VERIFICATION"] = "Pending";
+                    TempData["VERIFICATION_EMAIL"] = model.USER_EMAIL;
+                    return RedirectToAction("EmailVerification", "Account");
 
+                }
+                else
+                {
+                    ModelState.AddModelError("USER_NAME", result.Message);
+                    return View(model);
+                }
 
+            }
+            else
+            {
+                if (userByEmail.Status)
+                {
+                    ModelState.AddModelError("USER_EMAIL", "Email already registered");
+
+                }
+
+                if (userByID.Status)
+                {
+                    ModelState.AddModelError("USER_NAME", "User name is already taken");
+                }
+
+                return View(model);
+            }
+
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SignUp(EmailSignUpViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (!model.TERMS_ACCEPTED)
+            {
+                ModelState.AddModelError("TERMS_ACCEPTED", "Please check our terms & conditions.");
+                return View(model);
+            }
+
+            var userByEmail = await authService.GetUserByEmail(model.USER_EMAIL, (int)FormRole.PUBLIC_USER);
+            var userByID = await authService.GetUser(model.USER_NAME, FormRole.PUBLIC_USER);
+
+            string PublicRoleId = ((int)FormRole.PUBLIC_USER).ToString();
+
+            if (!userByEmail.Status && !userByID.Status)
+            {
+                // Insert Data in User Master
+
+                UserMaserModel userMaserModel = new UserMaserModel(){
+                    USER_PHONE = "",
+                    IS_ACTIVE = "N",
+                    IS_EMAIL_VERIFIED = "N",
+                    IS_PHONE_VERIFIED = "N",
+                    IS_EXTERNAL_SIGNUP = "N",
+                    PROFILE_STATUS = "COMPLETED",
+                    SIGNUP_TYPE = "EMAIL",
+                    USER_EMAIL = model.USER_EMAIL,
+                    USER_PASSWORD = model.USER_PASSWORD,
+                    USER_ID = model.USER_NAME,
+                    ROLE_ID = PublicRoleId
+                };
+
+                AddUpdateDelete result = await signupService.RegisterUser(userMaserModel.ToDictionary());
+
+                // Business Account Creation START
+
+                PublicAccountModel businessModel = new PublicAccountModel()
+                {
+                    USER_ID = model.USER_NAME,
+                    CURRENT_STEP = "PENDING"
+                };
+
+                AddUpdateDelete publicResult = await publicUserService.CreatePublicUserAccount(businessModel);
 
                 // Send Activation Link
 
                 var linkResult = await authService.sendActivationLink(model.USER_NAME, model.USER_EMAIL, FormRole.BUSINESS_USER);
                 
-                if (result.Status && businessResult.Status)
+                if (result.Status && publicResult.Status)
                 {
                     TempData["VERIFICATION"] = "Pending";
                     TempData["VERIFICATION_EMAIL"] = model.USER_EMAIL;
@@ -292,6 +455,10 @@ namespace Barrway.Controllers
                         if (role == "BUSINESS_USER")
                         {
                             int affectedRows = await sqlFunction.ExecuteSqlCommandQuery("update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'COMPANY PROFILE' where USER_ID = '" + userName + "'");
+                            return View();
+                        }else if (role == "PUBLIC_USER")
+                        {
+                            int affectedRows = await sqlFunction.ExecuteSqlCommandQuery("update PUBLIC_USER_ACCOUNT_1943 set CURRENT_STEP = 'COMPLETED' where USER_ID = '" + userName + "'");
                             return View();
                         }
 

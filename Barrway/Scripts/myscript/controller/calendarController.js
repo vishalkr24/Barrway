@@ -9716,16 +9716,9 @@
                 });
         };
 
-
-
-
         $scope.init();
 
-
-
     });
-
-
 
     FormGeneratorApp.controller('NewDemoCalenderRecordsControllerTemp', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
         var tabulatorChildren = {};
@@ -16088,5 +16081,17 @@
 
         $scope.init();
     });
-  
+
+    FormGeneratorApp.controller('UserAdminCalendarController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
+
+    })
+
+    FormGeneratorApp.controller('UserDashboardController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
+
+    })
+
+    FormGeneratorApp.controller('UserMyFavoriteController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
+
+    })
+
 }(FormGeneratorApp));
