@@ -2813,10 +2813,10 @@
                 SCH_ALTERNATIVE_WEEK: $("input[name='alternate-week']:checked").val(),
                 IF_SLOT_EXIST: "SKIP",
                 IF_SLOT_DOES_NOT_EXIST: "INSERT",
-                SCH_SCHEDULE_TABLE: scheduleTableData
+                table: scheduleTableData
             }
 
-            data = JSON.stringify(data);
+            //data = JSON.stringify(data);
 
             adminService.postAsync('/Calendar/AddSchedule/', { data: data }).then(function (res) {
                 window.location.reload();                
