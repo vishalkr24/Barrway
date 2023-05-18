@@ -3079,6 +3079,10 @@
     <Content Include="Templates\formgenerator\ssssssssssss.html" />
     <Content Include="Templates\formgenerator\summary.html" />
     <Content Include="Templates\Index.html" />
+    <Content Include="Templates\user-admin\dashboard.html" />
+    <Content Include="Templates\user-admin\my-calendar.html" />
+    <Content Include="Templates\user-admin\my-attendance.html" />
+    <Content Include="Templates\user-admin\my-favorite.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -3130,6 +3134,9 @@
     <Content Include="Views\MarketPlace\CompanyPackage.cshtml" />
     <Content Include="Views\MarketPlace\CompanySchedule.cshtml" />
     <Content Include="Views\MarketPlace\CompanyPhotoAlbum.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\SignUp.cshtml" />
+    <Content Include="Views\UserAdmin\Dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3139,7 +3146,6 @@
     <Folder Include="UploadCompany\CompanyBanners\" />
     <Folder Include="UploadCompany\CompanyLogos\" />
     <Folder Include="Views\BusinessCalendar\" />
-    <Folder Include="Views\UserAdmin\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

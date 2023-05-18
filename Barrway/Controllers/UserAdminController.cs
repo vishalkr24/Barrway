@@ -11,9 +11,9 @@ namespace Barrway.Controllers
     public class UserAdminController : Controller
     {
         // GET: UserAdmin
-        //public ActionResult Dashboard()
-        //{
-        //    return View();
-        //}
+        public ActionResult Dashboard()
+        {
+            return View();
+        }
     }
 }

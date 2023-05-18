@@ -12,13 +12,15 @@ namespace Barrway.Service.IRepository
     public interface IAuthService
     {
         Task<AddUpdateDelete<IDictionary<string, object>>> GetUser(string email, string password, bool isToken=false);
+        Task<AddUpdateDelete<IDictionary<string, object>>> GetUser(string email, string password, int RoleId, bool isToken = false);
         Task<AddUpdateDelete> userEmaillogin(string email, string password);
         Task<AddUpdateDelete> userPhonelogin(string phone, string password);
         Task<AddUpdateDelete> LoginWithExternalEmail(string email);
         Task<AddUpdateDelete> GetUser(string userName);
         Task<AddUpdateDelete> GetUserByEmail(string email);
+        Task<AddUpdateDelete> GetUserByEmail(string email, int RoleId);
         Task<AddUpdateDelete> GetUserByPhone(string phone);
-        Task<AddUpdateDelete> BarrwayBusinessEmailSignup(BusinessEmailSignUpViewModel model);
+        Task<AddUpdateDelete> BarrwayBusinessEmailSignup(EmailSignUpViewModel model);
         
         Task<AddUpdateDelete> GetToken(string token, string userName);
         Task<AddUpdateDelete> GetToken(string token);

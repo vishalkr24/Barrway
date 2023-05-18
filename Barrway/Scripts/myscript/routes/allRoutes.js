@@ -11,9 +11,9 @@
             prefixStateName: 'home',
             template: 'bootstrap3',
             includeAbstract: true
-        });      
+        });
     });
-   
+
     FormGeneratorApp.config(['$stateProvider', '$locationProvider', '$urlRouterProvider', '$qProvider', function ($stateProvider, $locationProvider, $urlRouterProvider, $qProvider) {
 
         $locationProvider.hashPrefix('');
@@ -25,7 +25,7 @@
             onEnter: function ($window) { $window.document.title = "Form Builder-Login"; },
             views: {
                 'content': {
-                    templateUrl: '/Templates/auth/login.html?token='+uuid,
+                    templateUrl: '/Templates/auth/login.html?token=' + uuid,
                     controller: 'loginController'
                 }
             }
@@ -33,20 +33,20 @@
             url: '/logout',
             views: {
                 'content': {
-                    templateUrl: '/Templates/auth/logout.html?token='+uuid,
+                    templateUrl: '/Templates/auth/logout.html?token=' + uuid,
                     controller: 'logoutController'
                 }
             },
             ncyBreadcrumb: {
                 label: 'register'
             }
-            }).state('register', {
-                cache: false, //required
+        }).state('register', {
+            cache: false, //required
             url: '/register',
             onEnter: function ($window) { $window.document.title = "Form Builder-Register"; },
             views: {
                 'content': {
-                    templateUrl: '/Templates/auth/register.html?token='+uuid,
+                    templateUrl: '/Templates/auth/register.html?token=' + uuid,
                     controller: 'registerController'
                 }
             },
@@ -58,7 +58,7 @@
             onEnter: function ($window) { $window.document.title = "Form Builder-Forget Password"; },
             views: {
                 'content': {
-                    templateUrl: '/Templates/auth/forgot_password.html?token='+uuid,
+                    templateUrl: '/Templates/auth/forgot_password.html?token=' + uuid,
                     controller: 'forgetController'
                 }
             }
@@ -72,7 +72,7 @@
                 onEnter: function ($window) { $window.document.title = "Form Builder-Reset Password"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/auth/resetPassword.html?token='+uuid,
+                        templateUrl: '/Templates/auth/resetPassword.html?token=' + uuid,
                         controller: 'forgetController'
                     }
                 }
@@ -80,7 +80,7 @@
                 ncyBreadcrumb: {
                     label: 'forgotpassword'
                 }
-            })         
+            })
 
             .state('Home', {
                 url: '/home',
@@ -91,8 +91,27 @@
                     'content': {
                         //templateUrl: '/Templates/Index.html?token='+uuid,
                         //controller: 'MainDashboardController'
-                        templateUrl: '/Templates/dashboard/dashboard.html?token='+uuid,
-                        controller: 'DashboardController'                        
+                        templateUrl: '/Templates/dashboard/dashboard.html?token=' + uuid,
+                        controller: 'DashboardController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'Home',
+                    parent: ''
+                }
+
+            })
+            .state('UserHome', {
+                url: '/UserHome',
+                onEnter: function ($window) { $window.document.title = "Home"; },
+                abstract: false,
+
+                views: {
+                    'content': {
+                        //templateUrl: '/Templates/Index.html?token='+uuid,
+                        //controller: 'MainDashboardController'
+                        templateUrl: '/Templates/user-admin/dashboard.html?token=' + uuid,
+                        controller: 'DashboardController'
                     }
                 },
                 ncyBreadcrumb: {
@@ -107,7 +126,7 @@
 
                 views: {
                     'content': {
-                        templateUrl: '/Templates/packery/packeryDashboard.html?token='+uuid,
+                        templateUrl: '/Templates/packery/packeryDashboard.html?token=' + uuid,
                         controller: 'packeryDashboardController'
                     }
                 },
@@ -121,7 +140,7 @@
                 onEnter: function ($window) { $window.document.title = "Folder"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/application/editApplication.html?token='+uuid,
+                        templateUrl: '/Templates/application/editApplication.html?token=' + uuid,
                         controller: 'EditApplicationController'
                     }
                 },
@@ -142,7 +161,7 @@
                 onEnter: function ($window) { $window.document.title = "Create"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/application/createApplication.html?token='+uuid,
+                        templateUrl: '/Templates/application/createApplication.html?token=' + uuid,
                         controller: 'CreateApplicationController'
                     }
                 },
@@ -157,7 +176,7 @@
                 abstract: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/application/applicationList.html?token='+uuid,
+                        templateUrl: '/Templates/application/applicationList.html?token=' + uuid,
                         controller: 'ApplicationListController'
                     }
                 },
@@ -178,7 +197,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/forms.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/forms.html?token=' + uuid,
                         controller: 'FormGeneratorController'
                     }
                 },
@@ -192,7 +211,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/settings/form-setting.html?token='+uuid,
+                        templateUrl: '/Templates/settings/form-setting.html?token=' + uuid,
                         controller: 'BasicFormSettingController'
                     }
                 },
@@ -207,7 +226,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/settings/form-setting.html?token='+uuid,
+                        templateUrl: '/Templates/settings/form-setting.html?token=' + uuid,
                         controller: 'BasicFormSettingController'
                     }
                 },
@@ -223,7 +242,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/forms.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/forms.html?token=' + uuid,
                         controller: 'FormGeneratorController'
                     }
                 },
@@ -237,7 +256,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/forms.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/forms.html?token=' + uuid,
                         controller: 'FormGeneratorController'
                     }
                 }
@@ -252,7 +271,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/forms.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/forms.html?token=' + uuid,
                         controller: 'FormGeneratorController'
                     }
                 },
@@ -267,7 +286,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/forms.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/forms.html?token=' + uuid,
                         controller: 'FormGeneratorController'
                     }
                 },
@@ -283,7 +302,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/queue/queue.html?token='+uuid,
+                        templateUrl: '/Templates/queue/queue.html?token=' + uuid,
                         controller: 'QueueGeneratorController'
                     }
                 },
@@ -297,7 +316,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/queue/queue.html?token='+uuid,
+                        templateUrl: '/Templates/queue/queue.html?token=' + uuid,
                         controller: 'QueueGeneratorController'
                     }
                 }
@@ -312,7 +331,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/queue/queue.html?token='+uuid,
+                        templateUrl: '/Templates/queue/queue.html?token=' + uuid,
                         controller: 'QueueGeneratorController'
                     }
                 },
@@ -328,7 +347,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/previewForm.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/previewForm.html?token=' + uuid,
                         controller: 'PreviewFormController'
                     }
                 },
@@ -341,7 +360,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/previewForm.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/previewForm.html?token=' + uuid,
                         controller: 'PreviewFormController'
                     }
                 },
@@ -354,7 +373,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/formEntryPage.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/formEntryPage.html?token=' + uuid,
                         controller: 'FormEntryController'
                     }
                 },
@@ -373,7 +392,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/embed/formEntryPage.html?token='+uuid,
+                        templateUrl: '/Templates/embed/formEntryPage.html?token=' + uuid,
                         controller: 'FormEntryEmbedController'
                     }
                 },
@@ -392,7 +411,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/formEntryPage.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/formEntryPage.html?token=' + uuid,
                         controller: 'FormEntryController'
                     }
                 },
@@ -407,7 +426,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/formEntryPage.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/formEntryPage.html?token=' + uuid,
                         controller: 'FormEntryController'
                     }
                 },
@@ -421,7 +440,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/formEntryPage.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/formEntryPage.html?token=' + uuid,
                         controller: 'FormEntryController'
                     }
                 },
@@ -434,7 +453,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/formEntryPage.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/formEntryPage.html?token=' + uuid,
                         controller: 'FormEntryController'
                     }
                 },
@@ -446,11 +465,11 @@
             })
             .state('editFormEventData', {
                 onEnter: function ($window) { $window.document.title = "Edit Event"; },
-                url: '/form/editEvent/:formId/:formGroupKey/:Id?popup&type&customForms&customFormIds&parentFormId&cname&value',            
+                url: '/form/editEvent/:formId/:formGroupKey/:Id?popup&type&customForms&customFormIds&parentFormId&cname&value',
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/formEntryPageCalender.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/formEntryPageCalender.html?token=' + uuid,
                         controller: 'FormEntryCalenderController'
                     }
                 },
@@ -466,7 +485,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/formEntryPageCalender.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/formEntryPageCalender.html?token=' + uuid,
                         controller: 'FormEntryCalenderController'
                     }
                 },
@@ -482,7 +501,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/formEntryPageCalender.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/formEntryPageCalender.html?token=' + uuid,
                         controller: 'FormEntryCalenderController'
                     }
                 },
@@ -498,7 +517,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/formRecords.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/formRecords.html?token=' + uuid,
                         controller: 'FormRecordsController'
                     }
                 },
@@ -512,7 +531,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/formRecords.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/formRecords.html?token=' + uuid,
                         controller: 'FormRecordsController'
                     }
                 },
@@ -525,9 +544,9 @@
                 onEnter: function ($window) { $window.document.title = "Calendar Records"; },
                 cache: false,
                 views: {
-                    'content': {                      
-                        templateUrl: '/Templates/formgenerator/demoCalenderRecordsTemp.html?token='+uuid,      
-                          controller: 'NewDemoCalenderRecordsControllerTemp'
+                    'content': {
+                        templateUrl: '/Templates/formgenerator/demoCalenderRecordsTemp.html?token=' + uuid,
+                        controller: 'NewDemoCalenderRecordsControllerTemp'
                         //controller: 'DemoCalenderRecordsControllerTemp'
                     }
                 },
@@ -541,7 +560,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/demoCalenderRecordsTemp.html?token='+uuid,                 
+                        templateUrl: '/Templates/formgenerator/demoCalenderRecordsTemp.html?token=' + uuid,
                         controller: 'NewDemoCalenderRecordsControllerTemp'
                     }
                 },
@@ -557,7 +576,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/queue/queueRecords.html?token='+uuid,
+                        templateUrl: '/Templates/queue/queueRecords.html?token=' + uuid,
                         controller: 'queueRecordsController'
                     }
                 },
@@ -571,7 +590,7 @@
                 onEnter: function ($window) { $window.document.title = "Group Creation"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/groups/groupcreate.html?token='+uuid,
+                        templateUrl: '/Templates/groups/groupcreate.html?token=' + uuid,
                         controller: 'CreateGroupController'
                     }
                 },
@@ -584,7 +603,7 @@
                 onEnter: function ($window) { $window.document.title = "Update Group"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/groups/groupcreate.html?token='+uuid,
+                        templateUrl: '/Templates/groups/groupcreate.html?token=' + uuid,
                         controller: 'CreateGroupController'
                     }
                 },
@@ -597,7 +616,7 @@
                 onEnter: function ($window) { $window.document.title = "Update Sub-Group"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/groups/groupcreate.html?token='+uuid,
+                        templateUrl: '/Templates/groups/groupcreate.html?token=' + uuid,
                         controller: 'CreateGroupController'
                     }
                 }
@@ -606,7 +625,7 @@
                 onEnter: function ($window) { $window.document.title = "Create Sub-group"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/groups/groupcreate.html?token='+uuid,
+                        templateUrl: '/Templates/groups/groupcreate.html?token=' + uuid,
                         controller: 'CreateGroupController'
                     }
                 },
@@ -619,7 +638,7 @@
                 onEnter: function ($window) { $window.document.title = "Groups"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/groups/grouplist.html?token='+uuid,
+                        templateUrl: '/Templates/groups/grouplist.html?token=' + uuid,
                         controller: 'GroupListController'
                     }
                 },
@@ -636,12 +655,12 @@
                 onEnter: function ($window) { $window.document.title = "Group Details"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/groups/groupdetails.html?token='+uuid,
+                        templateUrl: '/Templates/groups/groupdetails.html?token=' + uuid,
                         controller: 'GroupDetailsController'
                     }
                 },
                 ncyBreadcrumb: {
-                    label: "{{route}}",                   
+                    label: "{{route}}",
                     parent: 'grouplist'
                 }
 
@@ -650,12 +669,12 @@
                 onEnter: function ($window) { $window.document.title = "Assign Forms"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/groups/assignFormsToGroup.html?token='+uuid,
+                        templateUrl: '/Templates/groups/assignFormsToGroup.html?token=' + uuid,
                         controller: 'AssignGroupFormsController'
                     }
                 },
                 ncyBreadcrumb: {
-                    label: "Assign Forms",                    
+                    label: "Assign Forms",
                     parent: function ($scope) {
                         var param = $scope.groupId; // Or wherever is the slug value.
                         return 'group_details({groupId: ' + param + '})';
@@ -672,7 +691,7 @@
                 onEnter: function ($window) { $window.document.title = "Contacts"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/user/contactlist.html?token='+uuid,
+                        templateUrl: '/Templates/user/contactlist.html?token=' + uuid,
                         controller: 'ContactListController'
                     }
                 },
@@ -692,7 +711,7 @@
                 onEnter: function ($window) { $window.document.title = "Create"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/user/createcontact.html?token='+uuid,
+                        templateUrl: '/Templates/user/createcontact.html?token=' + uuid,
                         controller: 'CreateContactApplicationController'
                     }
                 },
@@ -700,13 +719,13 @@
                     label: 'Create',
                     parent: 'contactlist'
                 }
-            })           
+            })
             .state('userprofile', {
                 url: '/userprofile',
                 onEnter: function ($window) { $window.document.title = "My Profile"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/user/userprofile.html?token='+uuid,
+                        templateUrl: '/Templates/user/userprofile.html?token=' + uuid,
                         controller: 'userProfileUpdateController'
                     }
                 },
@@ -719,7 +738,7 @@
                 onEnter: function ($window) { $window.document.title = "Order History"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/user/orderHistory.html?token='+uuid,
+                        templateUrl: '/Templates/user/orderHistory.html?token=' + uuid,
                         controller: 'orderHistoryController'
                     }
                 },
@@ -739,7 +758,7 @@
                 onEnter: function ($window) { $window.document.title = "Plans"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/user/plan.html?token='+uuid,
+                        templateUrl: '/Templates/user/plan.html?token=' + uuid,
                         controller: 'userPlanController'
                     }
                 },
@@ -752,7 +771,7 @@
                 onEnter: function ($window) { $window.document.title = "Subscription History"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/subscription/subscriptionHistory.html?token='+uuid,
+                        templateUrl: '/Templates/subscription/subscriptionHistory.html?token=' + uuid,
                         controller: 'subscriptionHistoryController'
                     }
                 },
@@ -772,7 +791,7 @@
                 onEnter: function ($window) { $window.document.title = "Forms"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/user/forms.html?token='+uuid,
+                        templateUrl: '/Templates/user/forms.html?token=' + uuid,
                         controller: 'userformsController'
                     }
                 },
@@ -792,7 +811,7 @@
                 onEnter: function ($window) { $window.document.title = "Github"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/settings/github.html?token='+uuid,
+                        templateUrl: '/Templates/settings/github.html?token=' + uuid,
                         controller: 'githubApplicationController'
                     }
                 },
@@ -804,7 +823,7 @@
                 onEnter: function ($window) { $window.document.title = "Global"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/settings/global.html?token='+uuid,
+                        templateUrl: '/Templates/settings/global.html?token=' + uuid,
                         controller: 'globalController'
                     }
                 },
@@ -817,7 +836,7 @@
                 onEnter: function ($window) { $window.document.title = "Menus"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/menu/menus.html?token='+uuid,
+                        templateUrl: '/Templates/menu/menus.html?token=' + uuid,
                         controller: 'menusController'
                     }
                 },
@@ -830,7 +849,7 @@
                 onEnter: function ($window) { $window.document.title = "MenusItem"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/menu/menuitem.html?token='+uuid,
+                        templateUrl: '/Templates/menu/menuitem.html?token=' + uuid,
                         controller: 'MenuItemController'
                     }
                 },
@@ -843,7 +862,7 @@
                 onEnter: function ($window) { $window.document.title = "Search"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/menu/menuSearch.html?token='+uuid,
+                        templateUrl: '/Templates/menu/menuSearch.html?token=' + uuid,
                         controller: 'menuSearchApplicationController'
                     }
                 },
@@ -855,7 +874,7 @@
                 onEnter: function ($window) { $window.document.title = "Create Menu"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/menu/createmenu.html?token='+uuid,
+                        templateUrl: '/Templates/menu/createmenu.html?token=' + uuid,
                         controller: 'menuController'
                     }
                 },
@@ -869,7 +888,7 @@
                 onEnter: function ($window) { $window.document.title = "Update Menu"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/menu/createmenu.html?token='+uuid,
+                        templateUrl: '/Templates/menu/createmenu.html?token=' + uuid,
                         controller: 'menuController'
                     }
                 },
@@ -883,7 +902,7 @@
                 onEnter: function ($window) { $window.document.title = "Personal Forms"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/forms/personal.html?token='+uuid,
+                        templateUrl: '/Templates/forms/personal.html?token=' + uuid,
                         controller: 'personalFormsController'
                     }
                 },
@@ -902,7 +921,7 @@
                 onEnter: function ($window) { $window.document.title = "Private Group Forms"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/forms/private.html?token='+uuid,
+                        templateUrl: '/Templates/forms/private.html?token=' + uuid,
                         controller: 'privateFormsController'
                     }
                 },
@@ -921,7 +940,7 @@
                 onEnter: function ($window) { $window.document.title = "Subscribed Public Forms"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/forms/subscribed.html?token='+uuid,
+                        templateUrl: '/Templates/forms/subscribed.html?token=' + uuid,
                         controller: 'subscribedFormsController'
                     }
                 },
@@ -940,7 +959,7 @@
                 onEnter: function ($window) { $window.document.title = "Public Forms"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/forms/public.html?token='+uuid,
+                        templateUrl: '/Templates/forms/public.html?token=' + uuid,
                         controller: 'publicFormsController'
                     }
                 },
@@ -960,7 +979,7 @@
                 onEnter: function ($window) { $window.document.title = "Create"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/create/form.html?token='+uuid,
+                        templateUrl: '/Templates/create/form.html?token=' + uuid,
                         controller: 'createFormController'
                     }
                 },
@@ -973,7 +992,7 @@
                 onEnter: function ($window) { $window.document.title = "Queues"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/create/queues.html?token='+uuid,
+                        templateUrl: '/Templates/create/queues.html?token=' + uuid,
                         controller: 'createQueuesController'
                     }
                 },
@@ -985,7 +1004,7 @@
                 onEnter: function ($window) { $window.document.title = "Calendar"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/create/calendar.html?token='+uuid,
+                        templateUrl: '/Templates/create/calendar.html?token=' + uuid,
                         controller: 'createCalendarController'
                     }
                 },
@@ -998,8 +1017,8 @@
                 cache: false,
                 views: {
                     'content': {
-                       
-                        templateUrl: '/Templates/formgenerator/basicCalendar.html?token='+uuid,
+
+                        templateUrl: '/Templates/formgenerator/basicCalendar.html?token=' + uuid,
                         controller: 'calendarbasicController'
                     }
                 },
@@ -1012,8 +1031,8 @@
                 onEnter: function ($window) { $window.document.title = "Filter Criteria"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/forms/filter-criteria.html?token='+uuid,
-                        controller: 'MergefilterCriteriaController'                      
+                        templateUrl: '/Templates/forms/filter-criteria.html?token=' + uuid,
+                        controller: 'MergefilterCriteriaController'
                     }
                 },
                 ncyBreadcrumb: {
@@ -1026,7 +1045,7 @@
                 onEnter: function ($window) { $window.document.title = "Record Access Rights"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/forms/record-access-rights.html?token='+uuid,
+                        templateUrl: '/Templates/forms/record-access-rights.html?token=' + uuid,
                         controller: 'recordAccessRightController'
                     }
                 },
@@ -1040,7 +1059,7 @@
                 onEnter: function ($window) { $window.document.title = "Quick Actions"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/quick-edit.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/quick-edit.html?token=' + uuid,
                         controller: 'quickEditController'
                     }
                 },
@@ -1053,7 +1072,7 @@
                 onEnter: function ($window) { $window.document.title = "Summary"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/summary.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/summary.html?token=' + uuid,
                         controller: 'summaryController'
                     }
                 },
@@ -1066,7 +1085,7 @@
                 onEnter: function ($window) { $window.document.title = "Payment Process"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/user/paymentStatus.html?token='+uuid,
+                        templateUrl: '/Templates/user/paymentStatus.html?token=' + uuid,
                         controller: 'paymentController'
                     }
                 },
@@ -1078,7 +1097,7 @@
                 onEnter: function ($window) { $window.document.title = "Payment Process"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/user/paymentPage.html?token='+uuid,
+                        templateUrl: '/Templates/user/paymentPage.html?token=' + uuid,
                         controller: 'paymentCheckoutController'
                     }
                 },
@@ -1090,7 +1109,7 @@
                 onEnter: function ($window) { $window.document.title = "Payment Status"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/user/paymentPage.html?token='+uuid,
+                        templateUrl: '/Templates/user/paymentPage.html?token=' + uuid,
                         controller: 'paymentResultController'
                     }
                 },
@@ -1102,19 +1121,19 @@
                 onEnter: function ($window) { $window.document.title = "Payment Process"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/user/ppPaymentPage.html?token='+uuid,
+                        templateUrl: '/Templates/user/ppPaymentPage.html?token=' + uuid,
                         controller: 'PPpaymentController'
                     }
                 },
                 ncyBreadcrumb: {
 
                 }
-            }).state('paypalpaymentStatus', {          
+            }).state('paypalpaymentStatus', {
                 url: '/paypalpaymentStatus?amount&cc&item_name&item_number&st&tx',
                 onEnter: function ($window) { $window.document.title = "Paypal Payment Status"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/user/paypalPaymentStatus.html?token='+uuid,
+                        templateUrl: '/Templates/user/paypalPaymentStatus.html?token=' + uuid,
                         controller: 'paypalpaymentResultController'
                     }
                 },
@@ -1127,7 +1146,7 @@
                 onEnter: function ($window) { $window.document.title = "Form Roles"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/formRoles.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/formRoles.html?token=' + uuid,
                         controller: 'formRolesController'
                     }
                 },
@@ -1141,7 +1160,7 @@
                 onEnter: function ($window) { $window.document.title = "Roles"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/applicationRoles.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/applicationRoles.html?token=' + uuid,
                         controller: 'applicationRolesController'
                     }
                 },
@@ -1155,7 +1174,7 @@
                 onEnter: function ($window) { $window.document.title = "Chat"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/chat/chatSummary.html?token='+uuid,
+                        templateUrl: '/Templates/chat/chatSummary.html?token=' + uuid,
                         controller: 'chatSummaryController'
                     }
                 },
@@ -1174,7 +1193,7 @@
                 onEnter: function ($window) { $window.document.title = "User Chat"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/chat/chatting.html?token='+uuid,
+                        templateUrl: '/Templates/chat/chatting.html?token=' + uuid,
                         controller: 'userChatController'
                     }
                 },
@@ -1188,7 +1207,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/queue/queueHistory.html?token='+uuid,
+                        templateUrl: '/Templates/queue/queueHistory.html?token=' + uuid,
                         controller: 'queueHistoryController'
                     }
                 },
@@ -1208,7 +1227,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/queue/userMasterHistory.html?token='+uuid,
+                        templateUrl: '/Templates/queue/userMasterHistory.html?token=' + uuid,
                         controller: 'userHistoryController'
                     }
                 },
@@ -1227,7 +1246,7 @@
                 onEnter: function ($window) { $window.document.title = "New User"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/queue/newUserRegister.html?token='+uuid,
+                        templateUrl: '/Templates/queue/newUserRegister.html?token=' + uuid,
                         controller: 'newUserRegisterController'
                     }
                 },
@@ -1240,7 +1259,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/queue/userQueueScreen.html?token='+uuid,
+                        templateUrl: '/Templates/queue/userQueueScreen.html?token=' + uuid,
                         controller: 'userQueueScreenController'
                     }
                 },
@@ -1253,7 +1272,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: 'tabulatorConfigurationsModelPopup.html?token='+uuid,
+                        templateUrl: 'tabulatorConfigurationsModelPopup.html?token=' + uuid,
                         controller: 'tabulatorConfigurationsController'
                     }
                 }
@@ -1262,7 +1281,7 @@
                 onEnter: function ($window) { $window.document.title = "Tasklist"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/Approval/tasklist.html?token='+uuid,
+                        templateUrl: '/Templates/Approval/tasklist.html?token=' + uuid,
                         controller: 'TaskListController'
                     }
                 },
@@ -1282,7 +1301,7 @@
                 onEnter: function ($window) { $window.document.title = "Approval Task"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/Approval/approvalRecords.html?token='+uuid,
+                        templateUrl: '/Templates/Approval/approvalRecords.html?token=' + uuid,
                         controller: 'FormApprovalRecordsController'
                     }
                 },
@@ -1295,7 +1314,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/Approval/approvalRecords.html?token='+uuid,
+                        templateUrl: '/Templates/Approval/approvalRecords.html?token=' + uuid,
                         controller: 'FormApprovalRecordsController'
                     }
                 },
@@ -1309,7 +1328,7 @@
                 onEnter: function ($window) { $window.document.title = "Approval History"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/Approval/approvalhistory.html?token='+uuid,
+                        templateUrl: '/Templates/Approval/approvalhistory.html?token=' + uuid,
                         controller: 'ApprovalHistoryController'
                     }
                 },
@@ -1330,7 +1349,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/Approval/formEntryPageofApproval.html?token='+uuid,
+                        templateUrl: '/Templates/Approval/formEntryPageofApproval.html?token=' + uuid,
                         controller: 'EntryDetailController'
                     }
                 },
@@ -1345,7 +1364,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/Approval/formEntryPageofApproval.html?token='+uuid,
+                        templateUrl: '/Templates/Approval/formEntryPageofApproval.html?token=' + uuid,
                         controller: 'EntryDetailController'
                     }
                 },
@@ -1359,7 +1378,7 @@
                 onEnter: function ($window) { $window.document.title = "Calendar"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/user/calendar.html?token='+uuid,
+                        templateUrl: '/Templates/user/calendar.html?token=' + uuid,
                         controller: 'userCalendarAllDetailsController'
                     }
                 },
@@ -1379,7 +1398,7 @@
                 onEnter: function ($window) { $window.document.title = "Queue"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/user/queue.html?token='+uuid,
+                        templateUrl: '/Templates/user/queue.html?token=' + uuid,
                         controller: 'userQueueAllDetailsController'
                     }
                 },
@@ -1399,7 +1418,7 @@
                 onEnter: function ($window) { $window.document.title = "Approval Config"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/Approval/approvalconfig.html?token='+uuid,
+                        templateUrl: '/Templates/Approval/approvalconfig.html?token=' + uuid,
                         controller: 'ApprovalConfigController'
                     }
                 },
@@ -1419,7 +1438,7 @@
                 url: '/publicqueue',
                 views: {
                     'content': {
-                        templateUrl: '/Templates/publicqueue/publicqueue.html?token='+uuid,
+                        templateUrl: '/Templates/publicqueue/publicqueue.html?token=' + uuid,
                         controller: 'publicQueueController'
                     }
                 },
@@ -1432,7 +1451,7 @@
                 url: '/publicqueuelist',
                 views: {
                     'content': {
-                        templateUrl: '/Templates/publicqueue/publicqueue-list.html?token='+uuid,
+                        templateUrl: '/Templates/publicqueue/publicqueue-list.html?token=' + uuid,
                         controller: 'publicQueueListController'
                     }
                 },
@@ -1447,7 +1466,7 @@
                 onEnter: function ($window) { $window.document.title = "Template Forms"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/forms/templateform.html?token='+uuid,
+                        templateUrl: '/Templates/forms/templateform.html?token=' + uuid,
                         controller: 'templateFormsController'
                     }
                 },
@@ -1466,7 +1485,7 @@
                 onEnter: function ($window) { $window.document.title = "pivot"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/pivotsummary.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/pivotsummary.html?token=' + uuid,
                         controller: 'pivotSummaryController'
                     }
                 },
@@ -1479,7 +1498,7 @@
                 onEnter: function ($window) { $window.document.title = "pivotTable"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/pivotTableSummery.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/pivotTableSummery.html?token=' + uuid,
                         controller: 'pivotTableDataSummaryController'
                     }
                 },
@@ -1492,7 +1511,7 @@
                 onEnter: function ($window) { $window.document.title = "GoogleMap"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/GoogleMapLocation.html?token='+uuid,
+                        templateUrl: '/Templates/formgenerator/GoogleMapLocation.html?token=' + uuid,
                         controller: 'GoogleMapController'
                     }
                 },
@@ -1505,7 +1524,7 @@
                 onEnter: function ($window) { $window.document.title = "Kanban"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/kanban/kanbanView.html?token='+uuid,
+                        templateUrl: '/Templates/kanban/kanbanView.html?token=' + uuid,
                         controller: 'kanbanController'
                     }
                 },
@@ -1518,7 +1537,7 @@
                 onEnter: function ($window) { $window.document.title = "Calendar Resources"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/kanban/calendarKanban.html?token='+uuid,
+                        templateUrl: '/Templates/kanban/calendarKanban.html?token=' + uuid,
                         controller: 'CalendarkanbanController'
                     }
                 },
@@ -1526,7 +1545,7 @@
                 //    label: 'Kanban View',
                 //    parent: 'forms'
                 //}
-                 ncyBreadcrumb: {
+                ncyBreadcrumb: {
                     label: 'Records',
                     parent: 'forms'
 
@@ -1536,7 +1555,7 @@
                 onEnter: function ($window) { $window.document.title = "Folder"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/packery/packery.html?token='+uuid,
+                        templateUrl: '/Templates/packery/packery.html?token=' + uuid,
                         controller: 'PackeryController'
                     }
                 },
@@ -1549,7 +1568,7 @@
                 onEnter: function ($window) { $window.document.title = "Marketplace"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/packery/Marketplace.html?token='+uuid,
+                        templateUrl: '/Templates/packery/Marketplace.html?token=' + uuid,
                         controller: 'packeryMarketplaceController'
                     }
                 },
@@ -1561,7 +1580,7 @@
                 onEnter: function ($window) { $window.document.title = "Folder Items"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/packery/userappforms.html?token='+uuid,
+                        templateUrl: '/Templates/packery/userappforms.html?token=' + uuid,
                         controller: 'userAppformsController'
                     }
                 },
@@ -1580,7 +1599,7 @@
                 onEnter: function ($window) { $window.document.title = "Marketplace"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/packery/mappforms.html?token='+uuid,
+                        templateUrl: '/Templates/packery/mappforms.html?token=' + uuid,
                         controller: 'mAppformsController'
                     }
                 },
@@ -1599,7 +1618,7 @@
                 onEnter: function ($window) { $window.document.title = "Folder Forms"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/packery/applicationforms.html?token='+uuid,
+                        templateUrl: '/Templates/packery/applicationforms.html?token=' + uuid,
                         controller: 'applicationformController'
                     }
                 },
@@ -1613,12 +1632,12 @@
                         })
                     }
                 }
-            }).state('chat', {               
+            }).state('chat', {
                 url: '/chat',
                 onEnter: function ($window) { $window.document.title = "Chat"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/chat/userchat.html?token='+uuid,
+                        templateUrl: '/Templates/chat/userchat.html?token=' + uuid,
                         controller: 'wChatController'
                     }
                 },
@@ -1627,11 +1646,11 @@
                     parent: ''
                 }
             }).state('chatroom', {
-                url: '/chatroom/:chatType/:Id',              
+                url: '/chatroom/:chatType/:Id',
                 onEnter: function ($window) { $window.document.title = "Chat Room"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/chat/chatroom.html?token='+uuid,
+                        templateUrl: '/Templates/chat/chatroom.html?token=' + uuid,
                         controller: 'ChatRoomController'
                     }
                 },
@@ -1645,7 +1664,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/topics/topiclist.html?token='+uuid,
+                        templateUrl: '/Templates/topics/topiclist.html?token=' + uuid,
                         controller: 'topicController'
                     }
                 }
@@ -1666,7 +1685,7 @@
                 onEnter: function ($window) { $window.document.title = "printInvoice"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/printPages/printInvoice.html?token='+uuid,
+                        templateUrl: '/Templates/printPages/printInvoice.html?token=' + uuid,
                         controller: 'printController'
                     }
                 },
@@ -1918,13 +1937,69 @@
                     parent: 'home'
                 }
             })
-          .state('calendar_view', {
+            .state('calendar_view', {
                 url: '/calender/:formId',
                 onEnter: function ($window) { $window.document.title = "Calendar"; },
                 views: {
                     'content': {
                         templateUrl: '/Templates/calendar-master/calendar.html?token=' + uuid,
                         controller: 'NewDemoCalenderRecordsControllerTemp'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
+            .state('my_calendar', {
+                url: '/mycalendar/:formId',
+                onEnter: function ($window) { $window.document.title = "My Calendar"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/user-admin/my-calendar.html?token=' + uuid,
+                        controller: 'UserAdminCalendarController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
+            .state('my_favorite', {
+                url: '/myfavorite/:formId',
+                onEnter: function ($window) { $window.document.title = "My Favorite"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/user-admin/my-favorite.html?token=' + uuid,
+                        controller: 'UserMyFavoriteController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
+            .state('user_dashboard', {
+                url: '/userdashboard/:formId',
+                onEnter: function ($window) { $window.document.title = "Dashboard"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/user-admin/dashboard.html?token=' + uuid,
+                        controller: 'UserDashboardController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
+            .state('my_attendance', {
+                url: '/myattendance/:formId',
+                onEnter: function ($window) { $window.document.title = "My Attendance"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/user-admin/my-attendance.html?token=' + uuid,
+                        controller: 'UserAttendanceController'
                     }
                 },
                 ncyBreadcrumb: {

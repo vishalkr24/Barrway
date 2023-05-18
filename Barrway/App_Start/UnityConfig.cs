@@ -60,6 +60,7 @@ namespace Barrway
             container.RegisterType<IGlobalMasterService, GlobalMasterService>();
             container.RegisterType<IMasterService, MasterService>();
             container.RegisterType<ICalendarService, CalendarService>();
+            container.RegisterType<IPublicUserService, PublicUserService>();
 
 
         }

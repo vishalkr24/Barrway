@@ -242,25 +242,26 @@ namespace Barrway.Controllers
             {
                 IDictionary<string, object> requestData = JsonSerializer.Deserialize<IDictionary<string, object>>(data);
 
-                var data2 = JsonSerializer.Deserialize<IDictionary<string, object>>(requestData["SCH_SCHEDULE_TABLE"].ToString());
+                data.SCH_SCHEDULE_TABLE = JsonConvert.SerializeObject(b["table"]).ToString();
 
-                // check the table data and entry to be done
+                var startObject = data.SCH_FROM_DATE.Split('/');
+                var endObject = data.SCH_TO_DATE.Split('/');
 
-                Form_DataTable requestSave = new Form_DataTable();
+                data.SCH_FROM_DATE = Convert.ToDateTime(startObject[2] + "-" + startObject[1] + "-" + startObject[0]).ToString();
+                data.SCH_TO_DATE = Convert.ToDateTime(endObject[2] + "-" + endObject[1] + "-" + endObject[0]).ToString();
 
+                var response = await businessUserService.AddSchedularForm(data);
 
-                requestSave.action = (int)FormAction.Save;
-                requestSave.userId = (int)FormSetting.CreatedUser;
-                requestSave.created_by = (int)FormSetting.CreatedUser;
-                requestSave.updated_by = (int)FormSetting.CreatedUser;
-                requestSave.created_at = DateTime.Now.ToString();
-                requestSave.updated_at = DateTime.Now.ToString();
-                requestSave.formId = (int)FormSetting.SCHEDULAR_FORM;
-                string formGroupKey = Guid.NewGuid().ToString();
-                requestSave.formGroupKey = formGroupKey;
-                requestSave.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(requestData);
-
-                //GenerateDynamicFormData response = await patientRegistration.GeneratedFormData(requestSave);
+                if (response.Status)
+                {
+                    string formGroupKey = response.Data.formGroupKey;
+                    
+                    var start = Convert.ToDateTime(startObject[2] + "-" + startObject[1] + "-" + startObject[0]);
+                    
+                    var end = Convert.ToDateTime(endObject[2] + "-" + endObject[1] + "-" + endObject[0]);
+                    
+                    DateTime dateTracker = start;
+                    int slotCounter = 1;
 
                 //TempData["TmpMsg"] = response.Message;
 
@@ -373,22 +374,36 @@ namespace Barrway.Controllers
                 //                    var requestActivity = new { TITLE = "Slot " + j, DURATION_FIELD = "00:00:60", COLOR_FIELD = "#2ecc71" };
                 //                    requestSave.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(requestActivity.AsDictionary());
 
-                //                    GenerateDynamicFormData responseActivity = await patientRegistration.GeneratedFormData(requestSave);
-                //                    //#2ecc71
+                        script += $@"insert into CALENDAR_FORM_1935(
+                                       [formGroupKey]
+                                      ,[formID]
+                                      ,[userID]
+                                      ,[Current_Status]
+                                      ,[cycle]
+                                      ,[MasterFormID]
+                                      ,[MasterFormRow]
+                                      ,[formRecordOrder]
+                                      ,[formRecordStatus]
+                                      ,[COMPANY_CODE]
+                                      ,[CALENDAR_CODE]
+                                      ,[title]
+                                      ,[start]
+                                      ,[end]
+                                      ,[allDay]
+                                      ,[resources]
+                                      ,[activities]
+                                      ,[description]
+                                      ,[created_at], [updated_at])
+	                                  values('{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter++}', '{SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{data.SCH_RESOURCE}', '{data.SCH_ACTIVITY}', '{data.SCH_DESCRIPTION}', getDate(), getDate() );
+                                
+                                    insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
+                                    values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_PROVIDER_MASTER}, '{data.SCH_RESOURCE}', 'SERVICE_PROVIDER_MASTER_1934', 'FIRST_NAME', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_RESOURCE}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
 
-
-                //                    if (responseActivity.res == 1)
-                //                    {
-                //                        Form_DataTable requestCreateEvent = new Form_DataTable();
-
-                //                        requestCreateEvent.action = (int)FormAction.Save;
-                //                        requestCreateEvent.userId = (int)FormSetting.CreatedUser;
-                //                        requestCreateEvent.formId = (int)FormSetting.CalendarForm;
-                //                        requestCreateEvent.resourceFormId = (int)FormSetting.StaffMasterForm;
-                //                        requestCreateEvent.ActivityFormId = (int)FormSetting.ActivityForm;
-                //                        requestCreateEvent.parentID = 0;
-                //                        requestCreateEvent.isDyEvent = true;
-                //                        requestCreateEvent.isEventUpdatable = false;
+                                    insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
+                                    values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_MASTER}, '{data.SCH_ACTIVITY}', 'SERVICE_MASTER_1933', 'ACTIVITY_NAME', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_ACTIVITY}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                        
+                                    insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
+                                    values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{data.SCH_LOCATION}', 'LOCATION_MASTER_1936', 'LOCATION_CODE', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_LOCATION}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
 
                 //                        requestCreateEvent.seperatedResColValues = staffDta["text_1594036165685"] + "," + "Slot " + j;
                 //                        requestCreateEvent.seperatedColorValues = staffDta["text_1598596816783"]?.ToString() + ",#2ecc71";
@@ -402,22 +417,7 @@ namespace Barrway.Controllers
 
                 //                        GenerateDynamicFormData eventResponse = await patientRegistration.GeneratedFormData(requestCreateEvent);
 
-                //                        if (eventResponse.res == 1)
-                //                        {
-                //                            FormCalenderReferrenceTable request2 = new FormCalenderReferrenceTable()
-                //                            {
-                //                                action = 10,
-                //                                formId = (int)FormSetting.CalendarForm,
-                //                                created_by = (int)FormSetting.CreatedUser,
-                //                                updated_by = (int)FormSetting.CreatedUser,
-                //                                formGroupKey = formGroupKey,
-                //                                resourceFormId = (int)FormSetting.StaffMasterForm,
-                //                                activityFormId = (int)FormSetting.ActivityForm,
-                //                                resourceId = requestData["STAFF"].ToString(),
-                //                                activityId = responseActivity.Id.ToString()
-                //                            };
-                //                            await patientRegistration.ManageFormCalenderReferrenceResp(request2);
-                //                        }
+                        //var responseActivity = await businessUserService.AddCalendarEventSlot(eventData, formGroupKey);
 
                 //                    }
                 //                    else
