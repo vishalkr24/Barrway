@@ -485,11 +485,16 @@
                             </div>
                             <div class="col-md-4">
                                 <div><label>Alternative week</label></div>
-                                <div><input type="radio" name="alternate-week" value="EVERY-WEEK" /> Every Week</div>
+                                <div><input type="radio" checked name="alternate-week" value="EVERY-WEEK" /> Every Week</div>
                                 <div><input type="radio" name="alternate-week" value="ALTERNATE-WEEK" /> Alternate Week</div>
                                 <div><input type="radio" name="alternate-week" value="EVERY-3-WEEK" /> Every 3 Week</div>
                                 <div><input type="radio" name="alternate-week" value="EVERY-4-WEEK" /> Every 4 Week</div>
                             </div>
+
+                            <div class="col-md-12">
+                                <input type="checkbox" name="TimeSameAsMonday" onclick="setSameTime()" /> Time same as monday
+                            </div>
+
                             <div class="col-md-12">
                                 <table class="schedular-table" width="100%">
                                     <thead>
@@ -507,7 +512,7 @@
                                     <tbody>
                                         <tr>
                                             <td>Start Time</td>
-                                            <td><input type="time" id="Monday_Start_Time" class="form-control" /></td>
+                                            <td><input type="time" id="Monday_Start_Time" onchange="setSameDateValue()" class="form-control" /></td>
                                             <td><input type="time" id="Tuesday_Start_Time" class="form-control" /></td>
                                             <td><input type="time" id="Wednesday_Start_Time" class="form-control" /></td>
                                             <td><input type="time" id="Thursday_Start_Time" class="form-control" /></td>
@@ -517,7 +522,7 @@
                                         </tr>
                                         <tr>
                                             <td>End Time</td>
-                                            <td><input type="time" id="Monday_End_Time" class="form-control" /></td>
+                                            <td><input type="time" id="Monday_End_Time" onchange="setSameDateValue()" class="form-control" /></td>
                                             <td><input type="time" id="Tuesday_End_Time" class="form-control" /></td>
                                             <td><input type="time" id="Wednesday_End_Time" class="form-control" /></td>
                                             <td><input type="time" id="Thursday_End_Time" class="form-control" /></td>
@@ -540,6 +545,36 @@
         </div>
     </div>
 </div>
+
+<script>
+
+    function setSameTime () {
+        $("#Tuesday_Start_Time").val($("#Monday_Start_Time").val());
+        $("#Tuesday_End_Time").val($("#Monday_End_Time").val());
+
+        $("#Wednesday_Start_Time").val($("#Monday_Start_Time").val());
+        $("#Wednesday_End_Time").val($("#Monday_End_Time").val());
+
+        $("#Thursday_Start_Time").val($("#Monday_Start_Time").val());
+        $("#Thursday_End_Time").val($("#Monday_End_Time").val());
+
+        $("#Friday_Start_Time").val($("#Monday_Start_Time").val());
+        $("#Friday_End_Time").val($("#Monday_End_Time").val());
+
+        $("#Saturday_Start_Time").val($("#Monday_Start_Time").val());
+        $("#Saturday_End_Time").val($("#Monday_End_Time").val());
+
+        $("#Sunday_Start_Time").val($("#Monday_Start_Time").val());
+        $("#Sunday_End_Time").val($("#Monday_End_Time").val());
+    }
+
+    function setSameDateValue() {
+
+        if ($("input[name=TimeSameAsMonday]:checked").val() == "on") {
+            setSameTime();
+        }
+    }
+</script>
 
 <div id="searchModal"
      class="modal fade"

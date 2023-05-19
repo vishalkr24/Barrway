@@ -16090,6 +16090,27 @@
 
     })
 
+    FormGeneratorApp.controller('UserAttendanceController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
+
+    })
+
+    FormGeneratorApp.controller('UserProfileController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
+
+        adminService.postAsync('/UserAdmin/GetSingleUserByUserId/', { UserId: $("#userIdHidden").val() }).then(function (res) {
+
+            console.log(res.data.data.Data);
+
+            if (res.data.data.Status) {
+                $scope.userData = res.data.data.Data;
+            }
+            
+            
+        }, function (err) {
+
+        });
+
+    })
+
     FormGeneratorApp.controller('UserMyFavoriteController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
 
     })

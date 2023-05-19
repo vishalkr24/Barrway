@@ -287,7 +287,7 @@
     <!--end setup-->
 </head>
 
-<body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl navbar-vertical-aside-compact-mini-mode navbar-vertical-aside-compact-mode" ng-app="FormGeneratorApp" ng-controller="PublicIndexController">
+<body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl navbar-vertical-aside-compact-mini-mode navbar-vertical-aside-compact-mode" ng-app="FormGeneratorApp" ng-controller="IndexController">
 
 
 
@@ -301,7 +301,7 @@
             </div>
         </div>
     </div>
-
+    <input style="display:none" id="userIdHidden" value="@UserIdentity.UserName" />
     <script src="assets/js/hs.theme-appearance.js"></script>
 
     <script src="assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js"></script>
@@ -508,8 +508,8 @@
 
                                 <div class="dropdown-divider"></div>
 
-                                <form id="mySignOutForm" name="mySignOutForm" method="post" action="/Account/Logout" class="ng-pristine ng-valid">
-                                    <a class="dropdown-item" href="#" onclick="$('#mySignOutForm').submit()">Sign out</a>
+                                <form id="mySignOutForm" name="mySignOutForm" method="post" action="@Url.Action("LogoutPublicUser","Account")">
+                                    <a class="dropdown-item" href="javascript:void(0)" onclick="Logout()">Sign out</a>
                                 </form>
                             </div>
                         </div>
@@ -536,7 +536,7 @@
                         <div id="navbarVerticalMenuPagesMenu">
                             <!-- Collapse -->
                             <div class="nav-item show">
-                                <a class="nav-link active" ui-sref="UserHome()" role="button" data-bs-target="#navbarVerticalMenuDashboards" aria-expanded="false" aria-controls="navbarVerticalMenuDashboards">
+                                <a class="nav-link active" ui-sref="user_dashboard()" role="button" data-bs-target="#navbarVerticalMenuDashboards" aria-expanded="false" aria-controls="navbarVerticalMenuDashboards">
                                     <i class="bi-house-door nav-icon"></i>
                                     <span class="nav-link-title">Dashboard</span>
                                 </a>
@@ -579,15 +579,15 @@
                             </div>
 
                             <div class="nav-item">
-                                <a class="nav-link " href="" ui-sref="my_favorite({formId:2305})" data-placement="left">
+                                <a class="nav-link " href="" ui-sref="my_profile()" data-placement="left">
                                     <i class="bi-person nav-icon"></i>
                                     <span class="nav-link-title">My Profile</span>
                                 </a>
                             </div>
 
                         </div>
-                        
-                       
+
+
 
                     </div>
 
@@ -1112,12 +1112,12 @@
     <script src="fg-assets/js/jquery-ui.js"></script>
 
 
+    <script src="~/Scripts/UserAdminScripts/AdminLayoutManager.js"></script>
+    <script src="~/Scripts/UserAdminScripts/Common/UserAdminCommonFunctions.js"></script>
     <!-- JS Front -->
     <script src="assets/js/theme.min.js"></script>
 
-    <script src="Scripts/CalendarScripts/CalendarLayoutManage.js"></script>
     <script src="Scripts/PublicCommonFunction.js"></script>
-    <script src="~/Scripts/BusinessScripts/Common/BusinessAdminCommonFunctions.js"></script>
     <script src="Scripts/tagify.min.js"></script>
     <script src="Scripts/tagify.polyfills.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/jstree.min.js"></script>
@@ -1166,6 +1166,7 @@
             // =======================================================
             HSBsDropdown.init()
         })()
+
     </script>
 
     <!-- Style Switcher JS -->

@@ -70,11 +70,11 @@ namespace Barrway.Controllers
                 var user = await authService.GetUser(User.Identity.Name, FormRole.PUBLIC_USER);
                 if (user.Status)
                 {
-                    return RedirectToAction("Dashboard", "UserAdmin");
+                    return RedirectToAction("Index", "UserAdmin");
                 }
                 else
                 {
-                    Logout();
+                    LogoutPublicUser();
                 }
 
 
@@ -143,7 +143,7 @@ namespace Barrway.Controllers
 
 
                 HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = model.REMEMBER_ME }, claims);
-                return RedirectToAction("Dashboard", "UserAdmin");
+                return RedirectToAction("Index", "UserAdmin");
             }
             else
             {
@@ -184,11 +184,11 @@ namespace Barrway.Controllers
                 var user = await authService.GetUser(User.Identity.Name, FormRole.PUBLIC_USER);
                 if (user.Status)
                 {
-                    return RedirectToAction("Dashboard", "UserAdmin");
+                    return RedirectToAction("Index", "UserAdmin");
                 }
                 else
                 {
-                    Logout();
+                    LogoutPublicUser();
                 }
 
 
@@ -417,6 +417,24 @@ namespace Barrway.Controllers
             HttpContext.GetOwinContext().Authentication.SignOut();
             return RedirectToAction("BusinessLogin");
         }
+
+        [HttpPost]
+        public ActionResult LogoutPublicUser()
+        {
+            Session.Clear();
+            Session.RemoveAll();
+            Session.Abandon();
+            TempData.Clear();
+            if (HttpContext != null)
+            {
+                HttpContext.Request.Cookies.Clear();
+            }
+
+            HttpContext.GetOwinContext().Authentication.SignOut();
+            return RedirectToAction("Login");
+        }
+
+        
 
         public ActionResult AcessDenied() {
 

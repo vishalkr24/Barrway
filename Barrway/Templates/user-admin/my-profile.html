@@ -1,0 +1,164 @@
+﻿<div class="container-fluid">
+
+
+
+    <div class="form-inner" style="max-width:unset;">
+        <div class="row">
+            <div class="col-lg-6 col-xl-6">
+                <div class="main-left">
+                    <div class="">
+                        <span><a href="#">User</a> / <span> <a href="#">My profile</a> </span></span>
+                    </div>
+                    <div class="ml-content">
+                        <h2>My Profile</h2>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5 col-xl-5">
+                <div class="">
+                    <button class="btn btn-default" style="float:right; margin-left:16px;">Save</button>
+                    <button class="back" style="float:right;">cancel</button>
+
+                </div>
+
+            </div>
+
+        </div>
+        <div class="row mt-5">
+
+            <div class="col-md-3 text-center">
+                <div>
+                    <img style="border:1px solid black; height:200px; width:200px; border-radius:200px;" />
+                </div>
+
+                <div class="mt-6">
+                    <button>Add pic</button>
+                </div>
+            </div>
+            <div class="col-md-8" style="padding:0px;">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div>
+                                <label>User Level</label>
+                            </div>
+                            <input type="text" class="form-control" placeholder="user level" disabled value="Admin"/>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+
+                    </div>
+                    <div class="col-md-6 mt-4">
+                        <div class="form-group">
+                            <div>
+                                <label>User name</label>
+                            </div>
+                            <input type="text" class="form-control" placeholder="user name" value="{{userData.USER_ID}}" />
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mt-4">
+                        <div class="form-group">
+                            <div>
+                                <label>Password</label>
+                            </div>
+                            <input type="text" class="form-control" placeholder="password" value="{{userData.USER_PASSWORD}}" />
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mt-4">
+                        <div class="form-group">
+                            <div>
+                                <label>First name</label>
+                            </div>
+                            <input type="text" class="form-control" placeholder="first name" />
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 mt-4">
+                        <div class="form-group">
+                            <div>
+                                <label>Last name</label>
+                            </div>
+                            <input type="text" class="form-control" placeholder="last name" />
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6 mt-4">
+                        <div class="form-group">
+                            <div>
+                                <label>Chinese name</label>
+                            </div>
+                            <input type="text" class="form-control" placeholder="chinese name" />
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6 mt-4">
+                        <div class="form-group">
+                            <div>
+                                <label>Nick name (this will appear on dashboard) *</label>
+                            </div>
+                            <input type="text" class="form-control" placeholder="nick name" />
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6 mt-4">
+                        <div class="form-group">
+                            <div>
+                                <label>Email</label>
+                            </div>
+                            <input type="text" class="form-control" placeholder="email"  value="{{userData.USER_EMAIL}}" />
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6 mt-4">
+                        <div class="form-group">
+                            <div>
+                                <label>Phone</label>
+                            </div>
+                            <input type="text" class="form-control" placeholder="phone" value="{{userData.USER_PHONE}}" />
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6 mt-4">
+                        <div class="form-group">
+                            <div>
+                                <label>Gender</label>
+                            </div>
+                            <input type="radio" style="display:none;" class="form-control" name="gender-selector" checked id="gender-male" /> <label for="gender-male" style="margin-right:16px">Male</label> 
+                            <input type="radio" style="display:none;" name="gender-selector" class="form-control" id="gender-female" /> <label for="gender-female" style="margin-right:16px">Female</label> 
+                            <input type="radio" style="display:none;" class="form-control" name="gender-selector" id="gender-other" /> <label for="gender-other" style="margin-right:16px">Rather not say</label>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6 mt-4">
+                        <div class="form-group">
+                            <div>
+                                <label>Birthday</label>
+                            </div>
+                            <input type="text" class="form-control" placeholder="birthday" />
+                        </div>
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+
+
+        </div>
+        <!-- End Row -->
+    </div>
+</div>

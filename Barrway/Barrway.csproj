@@ -3035,6 +3035,8 @@
     <Content Include="Scripts\scripts.js" />
     <Content Include="Scripts\ui-bootstrap-tpls.js" />
     <Content Include="Scripts\ui-bootstrap-tpls.min.js" />
+    <Content Include="Scripts\UserAdminScripts\AdminLayoutManager.js" />
+    <Content Include="Scripts\UserAdminScripts\Common\UserAdminCommonFunctions.js" />
     <Content Include="Templates\admin\admin-users.html" />
     <Content Include="Templates\admin\article-details.html" />
     <Content Include="Templates\admin\cllractivity.html" />
@@ -3083,6 +3085,7 @@
     <Content Include="Templates\user-admin\my-calendar.html" />
     <Content Include="Templates\user-admin\my-attendance.html" />
     <Content Include="Templates\user-admin\my-favorite.html" />
+    <Content Include="Templates\user-admin\my-profile.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -3136,7 +3139,7 @@
     <Content Include="Views\MarketPlace\CompanyPhotoAlbum.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\SignUp.cshtml" />
-    <Content Include="Views\UserAdmin\Dashboard.cshtml" />
+    <Content Include="Views\UserAdmin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

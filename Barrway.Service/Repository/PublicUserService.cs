@@ -51,7 +51,25 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetSinglePublicUserAccount(string UserId)
         {
-            string query = "SELECT [Id]      ,[created_at]      ,[updated_at]      ,[created_by]      ,[updated_by]      ,[USER_ID]      ,[SUBSCRIPTION_PLAN_ID]      ,[CURRENT_STEP]  FROM[dbo].[PUBLIC_USER_ACCOUNT_1943] where USER_ID = '" + UserId + "'";
+            string query = $@"SELECT publicUser.[Id]
+                              ,publicUser.[USER_ID]
+                              ,publicUser.[USER_PASSWORD]
+                              ,publicUser.[USER_EMAIL]
+                              ,publicUser.[USER_PHONE]
+                              ,publicUser.[IS_EXTERNAL_SIGNUP]
+                              ,publicUser.[IS_EMAIL_VERIFIED]
+                              ,publicUser.[IS_PHONE_VERIFIED]
+                              ,publicUser.[created_at]
+                              ,publicUser.[updated_at]
+                              ,publicUser.[created_by]
+                              ,publicUser.[updated_by]
+                              ,publicUser.[IS_ACTIVE]
+                              ,publicUser.[PROFILE_STATUS]
+                              ,publicUser.[ROLE_ID]
+                              ,publicUser.[SIGNUP_TYPE], publicUser.[Id]      ,publicUser.[created_at]      ,publicUser.[updated_at]      ,publicUser.[created_by]      ,publicUser.[updated_by]      ,publicUser.[USER_ID]      ,[SUBSCRIPTION_PLAN_ID]      ,[CURRENT_STEP]  
+                        FROM[dbo].[PUBLIC_USER_ACCOUNT_1943] account 
+                        join USER_MASTER_1915 publicUser on publicUser.USER_ID = account.USER_ID
+                        where publicUser.USER_ID = '" + UserId + "'";
 
             List<IDictionary<string, object>> businessWebsiteResult = await sqlFunction.ExecuteSqlQuery(query);
 

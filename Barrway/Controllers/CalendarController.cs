@@ -1,4 +1,5 @@
 ﻿using Barrway.DTO.BusinessModels;
+using Barrway.Security;
 using Barrway.Service.IRepository;
 using Barrway.Service.Repository;
 using Barrway.Utility.Common;
@@ -16,7 +17,7 @@ using System.Web.Mvc;
 
 namespace Barrway.Controllers
 {
-    [Authorize]
+    [BusinessAuthorize(Roles = "BUSINESS_USER")]
     public class CalendarController : Controller
     {
         private readonly IMasterService masterService;
@@ -442,38 +443,7 @@ namespace Barrway.Controllers
                                     insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
                                     values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{data.SCH_LOCATION}', 'LOCATION_MASTER_1936', 'LOCATION_CODE', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_LOCATION}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
 
-                                      ,[description])
-	                                  values('{formGroupKey}', '{(int)FormSetting.CALENDAR_FORM}', '30314', '0', '0', '0', '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter++}', '{SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{data.SCH_RESOURCE}', '{data.SCH_ACTIVITY}', '{data.SCH_DESCRIPTION}' );
-                                
-                                    insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
-                                    values('{FormSetting.CALENDAR_FORM.ToString()}', '{formGroupKey}', '0', '{FormSetting.SERVICE_PROVIDER_MASTER.ToString()}', '{data.SCH_RESOURCE}', 'SERVICE_PROVIDER_MASTER_1934', 'FIRST_NAME', '{FormSetting.CALENDAR_FORM.ToString()}', '{data.SCH_RESOURCE}', '{FormSetting.CreatedUser}', getDate(), '{FormSetting.CreatedUser}', getDate())
-
-                                    insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
-                                    values('{FormSetting.CALENDAR_FORM.ToString()}', '{formGroupKey}', '0', '{FormSetting.SERVICE_MASTER.ToString()}', '{data.SCH_ACTIVITY}', 'SERVICE_MASTER_1933', 'ACTIVITY_NAME', '{FormSetting.CALENDAR_FORM.ToString()}', '{data.SCH_ACTIVITY}', '{FormSetting.CreatedUser}', getDate(), '{FormSetting.CreatedUser}', getDate())
-                        
-                                    insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
-                                    values('{FormSetting.CALENDAR_FORM.ToString()}', '{formGroupKey}', '0', '{FormSetting.LOCATION_MASTER.ToString()}', '{data.SCH_LOCATION}', 'LOCATION_MASTER_1936', 'LOCATION_CODE', '{FormSetting.CALENDAR_FORM.ToString()}', '{data.SCH_LOCATION}', '{FormSetting.CreatedUser}', getDate(), '{FormSetting.CreatedUser}', getDate())
-
-
                                     ";
-
-                        var responseActivity = await businessUserService.AddCalendarEventSlot(eventData, formGroupKey);
-
-                        //if (responseActivity.Status)
-                        //{
-                        //    CalendarReferenceModel request2 = new CalendarReferenceModel()
-                        //    {
-                        //        formId = FormSetting.CALENDAR_FORM.ToString(),
-                        //        formgroupkey = formGroupKey,
-                        //        referrenceFormId = FormSetting.SERVICE_MASTER.ToString(),
-
-                        //        resourceFormId = FormSetting.SERVICE_MASTER.ToString(),
-
-                        //    };
-                        //    await businessUserService.AddCalendarReference(request2);
-
-                        //}
-                       
 
                         dateTracker = dateTracker.AddDays(1);
 
@@ -485,16 +455,14 @@ namespace Barrway.Controllers
                     {
                         return Json("Success", JsonRequestBehavior.AllowGet);
                     }
-
                 }
-
             }
             catch (Exception ex)
             {
 
             }
 
-            return View();
+            return Json("Failed", JsonRequestBehavior.DenyGet);
         }
         private int GetWeekNumberOfMonth(DateTime date)
         {
