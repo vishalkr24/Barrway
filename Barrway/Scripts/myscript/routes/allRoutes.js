@@ -84,7 +84,9 @@
 
             .state('Home', {
                 url: '/home',
-                onEnter: function ($window) { $window.document.title = "Home"; },
+                onEnter: function ($window) {
+                    $window.document.title = "Home";
+                },
                 abstract: false,
 
                 views: {
@@ -101,25 +103,26 @@
                 }
 
             })
-            .state('UserHome', {
-                url: '/UserHome',
-                onEnter: function ($window) { $window.document.title = "Home"; },
-                abstract: false,
+            //.state('UserHome', {
+            //    url: '/UserHome',
+            //    onEnter: function ($window) { $window.document.title = "Home"; },
+            //    abstract: false,
 
-                views: {
-                    'content': {
-                        //templateUrl: '/Templates/Index.html?token='+uuid,
-                        //controller: 'MainDashboardController'
-                        templateUrl: '/Templates/user-admin/dashboard.html?token=' + uuid,
-                        controller: 'DashboardController'
-                    }
-                },
-                ncyBreadcrumb: {
-                    label: 'Home',
-                    parent: ''
-                }
+            //    views: {
+            //        'content': {
+            //            //templateUrl: '/Templates/Index.html?token='+uuid,
+            //            //controller: 'MainDashboardController'
+            //            templateUrl: '/Templates/user-admin/dashboard.html?token=' + uuid,
+            //            controller: 'DashboardController'
+            //        }
+            //    },
+            //    ncyBreadcrumb: {
+            //        label: 'Home',
+            //        parent: ''
+            //    }
 
-            }).state('homep', {
+            //})
+            .state('homep', {
                 url: '/homep',
                 onEnter: function ($window) { $window.document.title = "Home"; },
                 abstract: false,
@@ -1980,7 +1983,7 @@
                 }
             })
             .state('user_dashboard', {
-                url: '/userdashboard/:formId',
+                url: '/userdashboard',
                 onEnter: function ($window) { $window.document.title = "Dashboard"; },
                 views: {
                     'content': {
@@ -2007,5 +2010,20 @@
                     parent: 'home'
                 }
             })
+            .state('my_profile', {
+                url: '/myprofile',
+                onEnter: function ($window) { $window.document.title = "My Profile"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/user-admin/my-profile.html?token=' + uuid,
+                        controller: 'UserProfileController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
     }]);
 }(FormGeneratorApp));
+

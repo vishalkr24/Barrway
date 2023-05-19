@@ -37,7 +37,7 @@
                 //HSCore.components.HSTomSelect.init('.js-select');
                 var optionLayout = '<option value=""></option>';
                 $scope.counsellor.specilities.forEach(function (item) {
-                    optionLayout +=`<option selected value="${item.CLLR_SPECIALITY}">${item.SPECIALITY_ENG}</option>`
+                    optionLayout += `<option selected value="${item.CLLR_SPECIALITY}">${item.SPECIALITY_ENG}</option>`
                 });
                 var uid = uuidv4();
                 var speciliies_select = `<select disabled class="js-select-${uid} form-select" autocomplete="off" multiple data-hs-tom-select-options='{ "placeholder": ""}'>
@@ -151,7 +151,7 @@
                 CLLR_IS_TEXT: $('input[name="CLLR_IS_TEXT"]:checked').val(),
                 CLLR_IS_AUDIO: $('input[name="CLLR_IS_AUDIO"]:checked').val(),
                 CLLR_IS_VIDEO: $('input[name="CLLR_IS_VIDEO"]:checked').val(),
-                CLLR_RECOMMENDED: $('input[name="CLLR_RECOMMENDED"]').is(":checked")?"1":"0",
+                CLLR_RECOMMENDED: $('input[name="CLLR_RECOMMENDED"]').is(":checked") ? "1" : "0",
                 CLLR_TEXT_MARKUP: $scope.counsellor.CLLR_TEXT_MARKUP,
                 CLLR_VIDEO_MARKUP: $scope.counsellor.CLLR_VIDEO_MARKUP,
                 CLLR_AUDIO_MARKUP: $scope.counsellor.CLLR_AUDIO_MARKUP,
@@ -222,7 +222,7 @@
                 }
             },
             eventRender: function (event, element) {
-                
+
                 var view = $('#agenda-view div.calendar').fullCalendar('getView');
 
                 var current_tab = "agenda-view";
@@ -424,35 +424,35 @@
                                 if (dataRow == "2240") {
                                     studenttemp['student'] = `<span style="font-size:14px;">${colorRow.M_USER_NAME}</span>`;
                                 }
-                                
+
                                 if (dataRow == "2242") {
                                     var teacherNames = colorRow.CLLR_USER_NAME;
                                     if (event.customTitle.split(',').length > position) {
-                                        
+
                                         teacherNames = event.customTitle.split(',')[position];
                                         teacherNames = teacherNames.replace("|", ",");
                                     }
 
                                     studenttemp['teacher'] = `<span style="font-size:14px;font-weight:600">${teacherNames}</span>`;
                                 }
-                              
+
                             }
                         }
 
                     });
 
 
-                    
+
                     if (event.SESSION_STATUS == 'CONFIRMED' || event.SESSION_STATUS == 'COMPLETE') {
                         var service = `<spen style="text-transform:capitalize">${event.service?.toLowerCase()} Counselling</span>`;
                         packgesessiontemplate = `<span style="font-size:16px;font-weight:bold">${TimeFormatCalender(eventData, true).split('-')[0].trim()} ${service} </span><br>`;
-                        } else {
+                    } else {
                         iswaitingTemp = true;
-                        var service = `<spen style="text-transform:capitalize">${event.service?.toLowerCase() } Counselling</span>`;
+                        var service = `<spen style="text-transform:capitalize">${event.service?.toLowerCase()} Counselling</span>`;
                         packgesessiontemplate = `<span style="font-size:16px;font-weight:bold">${TimeFormatCalender(eventData, true).split('-')[0].trim()} ${service} </span><br>`;
-                            studenttemp['waiting'] = `<br/><span style="font-size:14px;font-weight:600">wait for counsellor confirm</span>`;
-                        }
-                    
+                        studenttemp['waiting'] = `<br/><span style="font-size:14px;font-weight:600">wait for counsellor confirm</span>`;
+                    }
+
 
 
                     if (iswaitingTemp) {
@@ -503,7 +503,7 @@
 
                 }
                 event.newdata = [];
-                
+
                 element.find('.fc-content').remove();
                 element.append(_mainTempHtml)
                 tableTempHtml = "<div class='event-detail div-flex'><div class='div-flex'>" + rowRecord + "</div><div class='btn-box'>" + actionRow + "</div><div class='div-flex div-list-bar'></div>" + tempHtmlTable + "</div>";
@@ -562,7 +562,7 @@
                 if (Diffhours >= 24) {
                     btnShow = true;
                 }
-               
+
                 var myOffcanvas = document.getElementById('offcanvasRight')
                 bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas)
                 bsOffcanvas.show();
@@ -632,12 +632,12 @@
                     $('#btn-cancel').attr('data-id', calEvent.SESSION_ID);
                     $('#btn-cancel').show();
                 }
-               
+
                 var customTime = TimeFormatCalender(calEvent, true);
                 var eventHtml = `<h4><span style="text-transform:capitalize">${calEvent.service?.toLowerCase()}</span> Counselling</h4>
                         <p>Time: ${customTime}</p>
                         <h4>Attendee</h4>
-                        <p>${$scope.selectEventDetails.customTitleSplit.length > 1 ? $scope.selectEventDetails.customTitleSplit[2]:""}</p>`;
+                        <p>${$scope.selectEventDetails.customTitleSplit.length > 1 ? $scope.selectEventDetails.customTitleSplit[2] : ""}</p>`;
                 $('#event-detail').html(eventHtml);
 
 
@@ -657,7 +657,7 @@
 
             },
             eventAfterAllRender: function (event, element, view) {
-                
+
                 var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
 
                 if (current_tab == "agenda-view") {
@@ -863,11 +863,11 @@
         var tabulator;
         $scope.TransactionHistory = function () {
             var columns = [
-                {title: 'USER NAME', field: 'USER_NAME', headerFilter: "input"},
-                {title: 'USER NICK NAME', field: 'USER_NICK_NAME', headerFilter: "input"},
-                {title: 'COUNSELLOR FIRST NAME', field: 'CLLR_FIRST_NAME', headerFilter: "input"},
-                {title: 'COUNSELLOR LAST NAME', field: 'CLLR_LAST_NAME', headerFilter: "input", formatter: "html"},
-                {title: 'COUNSELLING TYPE', field: 'SERVICE_TYPE', headerFilter: "input"},
+                { title: 'USER NAME', field: 'USER_NAME', headerFilter: "input" },
+                { title: 'USER NICK NAME', field: 'USER_NICK_NAME', headerFilter: "input" },
+                { title: 'COUNSELLOR FIRST NAME', field: 'CLLR_FIRST_NAME', headerFilter: "input" },
+                { title: 'COUNSELLOR LAST NAME', field: 'CLLR_LAST_NAME', headerFilter: "input", formatter: "html" },
+                { title: 'COUNSELLING TYPE', field: 'SERVICE_TYPE', headerFilter: "input" },
                 {
                     title: 'START TIME', field: 'start', formatter: function (cell, formatter) {
                         return moment(cell.getData().PAYMENT_DATE).format("DD-MM-YYYY HH:mm:ss")
@@ -878,25 +878,26 @@
                         return moment(cell.getData().PAYMENT_DATE).format("DD-MM-YYYY HH:mm:ss")
                     }
                 },
-                {title: 'STATUS', field: 'SESSION_STATUS', headerFilter: "input"},
-                { title: 'ATTENDANCE', field: 'ATTENDANCE', headerFilter: "input"},
-                { title: 'HOW DO YOU FEEL?', field: 'M_USER_FEEDBACK', headerFilter: "input"},
+                { title: 'STATUS', field: 'SESSION_STATUS', headerFilter: "input" },
+                { title: 'ATTENDANCE', field: 'ATTENDANCE', headerFilter: "input" },
+                { title: 'HOW DO YOU FEEL?', field: 'M_USER_FEEDBACK', headerFilter: "input" },
                 {
-                    title: 'COUNSELLING RATTING', formatter: function(cell, formatterParams, onRendered) {
+                    title: 'COUNSELLING RATTING', formatter: function (cell, formatterParams, onRendered) {
                         var value = cell.getValue();
                         var stars = "";
                         for (var i = 0; i < 5; i++) {
                             if (value != null && value == i + 0.5) {
                                 stars += "<i class='fa fa-star-half-o'></i>";
-                            } else if (value!=null && value > i) {
+                            } else if (value != null && value > i) {
                                 stars += "<i class='fa fa-star'></i>";
                             } else {
                                 stars += "<i class='fa fa-star-o'></i>";
                             }
                         }
                         return stars;
-                    }, hozAlign: "center", field: 'RATTING_POINT'},
-                { title: 'COUNSELLOR FEEDBACK', field: 'CLLR_FEEDBCAK', headerFilter: "input"},
+                    }, hozAlign: "center", field: 'RATTING_POINT'
+                },
+                { title: 'COUNSELLOR FEEDBACK', field: 'CLLR_FEEDBCAK', headerFilter: "input" },
                 {
                     title: 'CREATE DATE', field: 'created_at', formatter: function (cell, formatter) {
                         return moment(cell.getData().created_at).format("DD-MM-YYYY HH:mm:ss")
@@ -1074,7 +1075,7 @@
                 $scope.ForumData = result.Data[0];
                 $scope.ForumData.created_at = moment($scope.ForumData.created_at).format("YYYY-MM-DD HH:mm");
                 $scope.ForumData.comments = $scope.ForumData.comments != null ? $scope.ForumData.comments : [];
-                $scope.ForumData.comments.forEach(x => x.created_at = moment(x.created_at).format("YYYY-MM-DD HH:mm"));    
+                $scope.ForumData.comments.forEach(x => x.created_at = moment(x.created_at).format("YYYY-MM-DD HH:mm"));
 
                 var layout = '<div class="paginate">';
 
@@ -1170,7 +1171,7 @@
         $scope.ApprovedRejectForum = function () {
             var status = $('input[name="IS_APPROVED"]:checked').val();
             var url = "";
-            if (status=="YES") {
+            if (status == "YES") {
                 url = "admin/ForumApproved/" + $stateParams.forumId;
             } else {
                 url = "admin/ForumReject/" + $stateParams.forumId;
@@ -1208,7 +1209,7 @@
                 var result = res.data;
                 if (result.Status) {
                     $scope.ForumData.IS_LIKED = IS_LIKED == 0 ? 1 : 0;
-                    $scope.ForumData.FRM_LIKE_COUNT = IS_LIKED == 0 ? $scope.ForumData.FRM_LIKE_COUNT + 1 : $scope.ForumData.FRM_LIKE_COUNT-1;
+                    $scope.ForumData.FRM_LIKE_COUNT = IS_LIKED == 0 ? $scope.ForumData.FRM_LIKE_COUNT + 1 : $scope.ForumData.FRM_LIKE_COUNT - 1;
                     notifierService.notifyMessage('success', 'Forum', result.Message);
                 } else {
                     notifierService.notifyMessage('error', 'Forum', result.Message);
@@ -1299,7 +1300,7 @@
                 return;
             }
             $rootScope.$emit("ShowLoading");
-            adminService.postAsync("admin/DeleteComment/"+id, {}).then(function (res) {
+            adminService.postAsync("admin/DeleteComment/" + id, {}).then(function (res) {
                 var result = res.data;
                 if (result.Status) {
                     notifierService.notifyMessage('success', 'Forum', result.Message);
@@ -1349,7 +1350,7 @@
                 }
                 return '';
             }
-            
+
         }
 
 
@@ -1576,14 +1577,15 @@
                 {
                     title: 'Action', field: 'ACTION', formatter: function (cell, formatter) {
                         return `<a href='#/admin/forum/${cell.getRow().getData().Id}' class="btn btn-primary text-light"><i class="bi-info-circle"></i></a>`;
-                    }, headerSort: false },
+                    }, headerSort: false
+                },
                 { title: 'Topic Title', field: 'FRM_TITLE', headerFilter: "input" },
                 { title: 'Category', field: 'FRM_CAT_NAME', headerFilter: "input" },
                 { title: 'Replies', field: 'FRM_COMMENTS_COUNT' },
                 { title: 'Views', field: 'FRM_VIEW_COUNT' },
                 { title: 'Hot topic', field: 'IS_RECOMMENDED', headerFilter: "input" },
                 {
-                    title: 'Created by', field: 'FORUM_USER_NAME', headerFilter: "input" 
+                    title: 'Created by', field: 'FORUM_USER_NAME', headerFilter: "input"
                 },
                 {
                     title: 'Last updates', field: 'updated_at', formatter: function (cell, formatter) {
@@ -1663,9 +1665,9 @@
                         if (params.sorters.length == 0) {
                             params.sorters.push({ field: "created_at", dir: "desc" });
                         }
-                            if ($('.badge-active').length > 0) {
-                                params.catId = $('.badge-active').data("id");
-                            }
+                        if ($('.badge-active').length > 0) {
+                            params.catId = $('.badge-active').data("id");
+                        }
 
                         if (called)
                             $('#form-records').block({ message: '<h4>Getting Form Records...</h4>' });
@@ -1771,7 +1773,7 @@
             adminService.postAsync("admin/GetForumHotTopic", {}).then(function (res) {
                 var result = res.data;
                 $scope.allHotTopic = result.Data ? result.Data : [];
-                $scope.allHotTopic.forEach(x => { x.created_at = moment(x.created_at).format("YYYY-MM-DD HH:mm"); x.updated_at = moment(x.updated_at).format("YYYY-MM-DD HH:mm") });    
+                $scope.allHotTopic.forEach(x => { x.created_at = moment(x.created_at).format("YYYY-MM-DD HH:mm"); x.updated_at = moment(x.updated_at).format("YYYY-MM-DD HH:mm") });
 
                 $timeout(function () {
                     $('.slider').slick({
@@ -1829,7 +1831,7 @@
                     newformGroupKeyDeletedList.push(item.formGroupKey);
                 });
 
-             
+
 
                 if (newDeletedList.length > 0) {
                     param.formGroupKeyList = newDeletedList.join();
@@ -2218,7 +2220,7 @@
                 });
         }
 
-     
+
         var tabulator = undefined;
         $scope.PaymentHistory = function (fromdate = "", todate = "") {
             var columns = [
@@ -2488,8 +2490,8 @@
                 { title: 'USER NAME', field: 'USER_NAME', headerFilter: "input" },
                 { title: 'USER EMAIL', field: 'USER_EMAIL', headerFilter: "input" },
                 { title: 'USER PHONE', field: 'USER_PHONE', headerFilter: "input" },
-                { title: 'USER ROLE', field: 'ROLE_NAME', headerFilter: "input"},
-                { title: 'IS ACTIVE', field: 'IS_ACTIVE', headerFilter: "input"},
+                { title: 'USER ROLE', field: 'ROLE_NAME', headerFilter: "input" },
+                { title: 'IS ACTIVE', field: 'IS_ACTIVE', headerFilter: "input" },
                 {
                     title: 'CREATE DATE', field: 'created_at', formatter: function (cell, formatter) {
                         return moment(cell.getData().created_at).format("DD-MM-YYYY HH:mm:ss")
@@ -2744,7 +2746,7 @@
         HSCore.components.HSFlatpickr.init('.js-flatpickr');
 
         adminService.postAsync('/Calendar/GetLocationMasterList/', { companyCode: localStorage.getItem("COMPANY_CODE"), calendarCode: localStorage.getItem("CALENDAR_CODE") }).then(function (res) {
-            
+
             $scope.locationList = res.data.data;
 
         }, function (err) {
@@ -2760,7 +2762,7 @@
         });
 
         adminService.postAsync('/Calendar/GetServiceProviderMasterList/', { companyCode: localStorage.getItem("COMPANY_CODE"), calendarCode: localStorage.getItem("CALENDAR_CODE") }).then(function (res) {
-            
+
             $scope.serviceProviderList = res.data.data;
         }, function (err) {
 
@@ -2819,9 +2821,9 @@
             //data = JSON.stringify(data);
 
             adminService.postAsync('/Calendar/AddSchedule/', { data: data }).then(function (res) {
-                window.location.reload();                
+                window.location.reload();
             }, function (err) {
-                alert("No");
+                alert("something went wrong!!");
             });
 
         }
@@ -2830,14 +2832,13 @@
             $(".schedular-form input").val("")
             $("#schedularFormNew").modal("hide");
         }
-        
+
         $scope.showSchedularFormModal = function () {
             $("#schedularFormNew").modal("show");
         }
 
 
     });
-
 
 
 
