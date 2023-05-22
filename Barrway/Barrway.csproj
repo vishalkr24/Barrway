@@ -3148,6 +3148,7 @@
     <Folder Include="UploadCompanyPhotoAlbum\" />
     <Folder Include="UploadCompany\CompanyBanners\" />
     <Folder Include="UploadCompany\CompanyLogos\" />
+    <Folder Include="UploadPublicUser\ProfilePhoto\" />
     <Folder Include="Views\BusinessCalendar\" />
   </ItemGroup>
   <ItemGroup>

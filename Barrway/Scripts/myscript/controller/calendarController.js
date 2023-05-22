@@ -16098,16 +16098,143 @@
 
         adminService.postAsync('/UserAdmin/GetSingleUserByUserId/', { UserId: $("#userIdHidden").val() }).then(function (res) {
 
-            console.log(res.data.data.Data);
+            if (res.data.data.Status) {                
+                res.data.data.Data.PROFILE_PHOTO_PATH = res.data.data.Data.PROFILE_PHOTO_PATH.replace("~", "..");
+                res.data.data.Data.DATE_OF_BIRTH = res.data.data.Data.DATE_OF_BIRTH.substring(0, 10);
 
-            if (res.data.data.Status) {
+                $("#gender-" + res.data.data.Data.GENDER.toLowerCase()).attr("checked", true);
+
                 $scope.userData = res.data.data.Data;
             }
-            
             
         }, function (err) {
 
         });
+
+        $scope.updateUserProfilePic = function (file) {
+
+            var fileData = new FormData();
+
+            fileData.append(file.name, file);
+
+            $.ajax({
+                url: '/UserAdmin/UpdateUserProfilePhoto',
+                type: "POST",
+                contentType: false, // Not to set any content header  
+                processData: false, // Not to process data  
+                data: fileData,
+                success: function (result) {
+                    console.log(result)
+
+                    if (result.Status) {
+                        $("#PROFILE_PHOTO_IMG").attr("src", result.Data.replaceAll("~", ".."));
+                        $("#PROFILE_PHOTO_ERROR").hide();
+                    } else {
+                        $("#PROFILE_PHOTO_ERROR").show();
+                    }
+
+                },
+                error: function (err) {
+                    alert(err.statusText);
+                }
+            });
+
+
+        }
+
+        $scope.saveUserProfileData = function () {
+
+            var postData = {
+                FIRST_NAME: $("#FIRST_NAME").val(),
+                LAST_NAME: $("#LAST_NAME").val(),
+                CHINESE_NAME: $("#CHINESE_NAME").val(),
+                NICK_NAME: $("#NICK_NAME").val(),
+                USER_ID: $("#USER_ID").val(),
+                USER_PASSWORD: $("#USER_PASSWORD").val(),
+                USER_EMAIL: $("#USER_EMAIL").val(),
+                USER_PHONE: $("#USER_PHONE").val(),
+                GENDER: $("input[name=gender-selector]:checked").val(),
+                DATE_OF_BIRTH: $("#DATE_OF_BIRTH").val(),
+            }
+
+            if (validateMyProfileForm(postData)) {
+            
+                $.ajax({
+                    url: '/UserAdmin/UpdateUserProfileData',
+                    type: "POST",
+                    data: postData,
+                    success: function (result) {
+                        console.log(result)
+
+                        if (result.Status) {
+                            if (result.Message == "Success") {
+                                alert("Details Saved Successfully!!");
+                            } else if (result.Message == "Error") {
+                                var errors = result.Data;
+                                
+                                for (var i = 0; i < errors.length; i++) {
+                                    $("#" + errors[i].key + "_ERROR").show();
+                                    $("#" + errors[i].key + "_ERROR").text(errors[i].message);
+                                    
+                                }
+                            }
+                        }
+
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                    }
+                });
+
+            } else {
+
+            }
+
+        }
+
+        function validateMyProfileForm(data) {
+
+            var check = true;
+
+            if (data.FIRST_NAME == "") {
+                check = false;
+                $("#FIRST_NAME_ERROR").show();
+            } else {
+                $("#FIRST_NAME_ERROR").hide();
+            }
+
+            if (data.USER_ID == "") {
+                check = false;
+                $("#USER_ID_ERROR").show();
+            } else {
+                $("#USER_ID_ERROR").hide();
+            }
+
+            if (data.USER_PASSWORD.length < 6 || data.USER_PASSWORD.length > 12) {
+                check = false;
+                $("#USER_PASSWORD_ERROR").show();
+            } else {
+                $("#USER_PASSWORD_ERROR").hide();
+            }
+
+            if (data.NICK_NAME == "") {
+                check = false;
+                $("#NICK_NAME_ERROR").show();
+            } else {
+                $("#NICK_NAME_ERROR").hide();
+            }
+
+            if (data.USER_EMAIL.length < 3) {
+                check = false;
+                $("#USER_EMAIL_ERROR").text("Enter a valid Email Id");
+                $("#USER_EMAIL_ERROR").show();
+            } else {
+                $("#USER_EMAIL_ERROR").hide();
+            }
+
+            return check;
+
+        }
 
     })
 

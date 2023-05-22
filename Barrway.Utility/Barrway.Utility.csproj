@@ -139,6 +139,7 @@
   <ItemGroup>
     <Compile Include="Common\Aes256CbcEncrypter.cs" />
     <Compile Include="Common\AppSettings.cs" />
+    <Compile Include="Common\CustomErrorModel.cs" />
     <Compile Include="Common\CustomMethods.cs" />
     <Compile Include="Common\DateTimeHelper.cs" />
     <Compile Include="Common\DictionaryToClass.cs" />

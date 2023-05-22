@@ -664,7 +664,7 @@ namespace Barrway.Service.Repository
 
             if (role == "PUBLIC_USER")
             {
-                string sqlQuery = $@"SELECT public_user.*,user_m.[USER_ID],user_m.[USER_EMAIL],user_m.[USER_PHONE],user_m.[SIGNUP_TYPE],user_m.[IS_ACTIVE],user_m.[IS_EMAIL_VERIFIED], user_m.[IS_PHONE_VERIFIED],user_m.[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS]                             FROM[dbo].[PUBLIC_USER_ACCOUNT_1943] public_user join USER_MASTER_1915 user_m  on user_m.[USER_ID]= public_user.[USER_ID]                              join[dbo].[ROLE_MASTER_1917] user_role on user_role.Id = user_m.[ROLE_ID]                             where public_user.[USER_ID]= '" + userID + "' and user_m.ROLE_ID = '2'";
+                string sqlQuery = $@"SELECT public_user.*,user_m.[USER_ID],user_m.[USER_EMAIL],user_m.[USER_PASSWORD],user_m.[USER_PHONE],user_m.[SIGNUP_TYPE],user_m.[IS_ACTIVE],user_m.[IS_EMAIL_VERIFIED], user_m.[IS_PHONE_VERIFIED],user_m.[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS]                             FROM[dbo].[PUBLIC_USER_ACCOUNT_1943] public_user join USER_MASTER_1915 user_m  on user_m.[USER_ID]= public_user.[USER_ID]                              join[dbo].[ROLE_MASTER_1917] user_role on user_role.Id = user_m.[ROLE_ID]                             where public_user.[USER_ID]= '" + userID + "' and user_m.ROLE_ID = '2'";
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
                 if (result.Count() > 0)
