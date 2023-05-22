@@ -7,10 +7,11 @@ var themes = {
     dark: 'vader',
     lightgreen: 'south-street',
     lightblue: 'cupertino',
-    darkblue: 'dot-luv'
+    darkblue: 'dot-luv',
+    base: 'base',
 };
 $(document).ready(function(){    
-    var defaultTheme = themes['lightblue'];
+    var defaultTheme = themes['base'];
 
     if(checkCookie('change-theme'))
         defaultTheme = themes[getCookie('change-theme')];

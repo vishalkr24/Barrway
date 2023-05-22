@@ -514,8 +514,10 @@ const galleryOverlay = document.createElement("div");
 galleryOverlay.className = "gallery-overlay";
 body.prepend(galleryOverlay);
 body.prepend(galleryPopup);
-
-const images = [...galleryWrapper.querySelectorAll(".gallery-img img")];
+let images = [];
+if (galleryWrapper) {
+    images = [...galleryWrapper.querySelectorAll(".gallery-img img")];
+}
 const closeBtn = galleryPopup.querySelector(".close");
 const nextBtn = galleryPopup.querySelector(".next");
 const prevBtn = galleryPopup.querySelector(".prev");

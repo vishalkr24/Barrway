@@ -67,7 +67,7 @@ namespace Barrway.Controllers
             return View();
         }
 
-        public async Task<ActionResult> CompanyDetail(string CompanyCode, string CalendarId = null)
+        public async Task<ActionResult> CompanyDetail(string CompanyCode, string CalendarCode = null)
         {
             try
             {
@@ -76,7 +76,7 @@ namespace Barrway.Controllers
                 var data = JsonConvert.SerializeObject(companyData.Data);
 
                 MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
-                companyModel.DEFAULT_CALENDAR_ID = CalendarId;
+                companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
 
                 ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
 
@@ -90,7 +90,7 @@ namespace Barrway.Controllers
             
         }
 
-        public async Task<ActionResult> CompanyService(string CompanyCode, string CalendarId = null)
+        public async Task<ActionResult> CompanyService(string CompanyCode, string CalendarCode = null)
         {
             try
             {
@@ -99,7 +99,7 @@ namespace Barrway.Controllers
                 var data = JsonConvert.SerializeObject(companyData.Data);
 
                 MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
-                companyModel.DEFAULT_CALENDAR_ID = CalendarId;
+                companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
 
                 ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
 
@@ -112,7 +112,7 @@ namespace Barrway.Controllers
             
         }
 
-        public async Task<ActionResult> CompanyPackage(string CompanyCode, string CalendarId = null)
+        public async Task<ActionResult> CompanyPackage(string CompanyCode, string CalendarCode = null)
         {
             try
             {
@@ -121,7 +121,7 @@ namespace Barrway.Controllers
                 var data = JsonConvert.SerializeObject(companyData.Data);
 
                 MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
-                companyModel.DEFAULT_CALENDAR_ID = CalendarId;
+                companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
 
                 ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
 
@@ -133,23 +133,23 @@ namespace Barrway.Controllers
             }
         }
 
-        public async Task<ActionResult> CompanySchedule(string CompanyCode, string CalendarId = null)
+        public async Task<ActionResult> CompanySchedule(string CompanyCode, string CalendarCode = null)
         {
 
             try
             {
                 var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
                 var calendarData = await businessUserService.GetCompanyCalendarByCompanyId(companyData.Data["Id"].ToString());
-                var serviceData = await globalMasterService.GetCompanyCategoryMaster();
+                //var serviceData = await globalMasterService.GetCompanyCategoryMaster();
 
                 var data = JsonConvert.SerializeObject(companyData.Data);
                 var calendarEncrypted = JsonConvert.SerializeObject(calendarData.Data);
-                var serviceEncrypted = JsonConvert.SerializeObject(serviceData.Data);
+                //var serviceEncrypted = JsonConvert.SerializeObject(serviceData.Data);
 
                 MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
-                companyModel.DEFAULT_CALENDAR_ID = CalendarId;
+                companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
                 companyModel.calendars = JsonConvert.DeserializeObject<List<BusinessCalendarModel>>(calendarEncrypted);
-                companyModel.services = JsonConvert.DeserializeObject<List<BusinessCompanyCategoryModel>>(serviceEncrypted);
+                //companyModel.services = JsonConvert.DeserializeObject<List<BusinessCompanyCategoryModel>>(serviceEncrypted);
 
                 ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
 
@@ -162,7 +162,7 @@ namespace Barrway.Controllers
 
         }
 
-        public async Task<ActionResult> CompanyPhotoAlbum(string CompanyCode, string CalendarId = null)
+        public async Task<ActionResult> CompanyPhotoAlbum(string CompanyCode, string CalendarCode = null)
         {
             try
             {
@@ -177,7 +177,7 @@ namespace Barrway.Controllers
                 albumModel.Id = companyData.Data["Id"].ToString();
                 albumModel.COMPANY_CODE = CompanyCode;
                 albumModel.COMPANY_LOGO_PATH = companyData.Data["COMPANY_LOGO_PATH"].ToString();
-                albumModel.DEFAULT_CALENDAR_ID = CalendarId;
+                albumModel.DEFAULT_CALENDAR_ID = CalendarCode;
 
                 ViewBag.Title = companyData.Data["COMPANY_NAME_ENGLISH"].ToString();
 

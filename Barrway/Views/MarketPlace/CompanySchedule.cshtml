@@ -7,6 +7,364 @@
     ViewBag.CALENDAR_ID = Model.DEFAULT_CALENDAR_ID;
 }
 
+
+@section styles{
+    <link href="/fg-assets/fullcalendar/dist/fullcalendar.css" rel="stylesheet" />
+
+    <link href="/fg-assets/fullcalendar-scheduler/dist/scheduler.min.css"
+          rel="stylesheet" />
+
+    <script src="/fg-assets/js/moment.js"></script>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" id="jquery-ui-change">
+    <script src="/fg-assets/js/app.js"></script>
+    <script src="/fg-assets/js/jquery-ui.js"></script>
+    <script src="/fg-assets/fullcalendar/dist/fullcalendar.js"></script>
+    <script src="/fg-assets/fullcalendar-scheduler/dist/scheduler.js"></script>
+    <script src="/fg-assets/js/jquery.cookie.min.js"></script>
+    <script src="~/fg-assets/js/scripts.js"></script>
+    <script src="/Content/underscore.js/underscore.min.js"></script>
+    <script src="/Scripts/jquery.blockUI/jquery.blockUI.min.js"></script>
+    <script src="~/Scripts/myscript/commonFunctions.js"></script>
+    <script type="text/javascript" src="/Content/angular.js/angular.min.js"></script>
+    <script src="/Content/angular-filter/angular-filter.min.js"></script>
+    <script src="~/Scripts/myscript/globalScript.js"></script>
+    <link href="~/fg-assets/css/app.css" rel="stylesheet" />
+
+    <script>
+        localStorage.setItem("detail", '{"Id":30314,"firebase_uid":null,"chatId":"jXZMF2dU3Uyz2okULv6shQuu","uid":"kk53yimj","fullName":"AG Ashutosh Shukla","name":"augursuser","email":"formgeneratorclient@gmail.com","emailVerified":"0","emailCheck":"0","isEmailCheck":false,"isQuickSignUp":false,"password":"","newPassword":null,"password_confirmation":null,"confirmPassword":null,"isUpdatePassword":0,"remember_token":null,"userIcon":"user-avatar-with-check-mark.png","phoneNumber":null,"phoneVerified":"No","isPhoneVerified":null,"phoneCheck":"No","isPhoneCheck":false,"role":1,"status":"Active","planID":9,"planSequence":"1,2,5,13","tooltipSequence":null,"FB_id":null,"GPlus_id":null,"created_ip":"","groupId":0,"checkType":null,"title":null,"verificationCode":null,"isVerificationReq":false,"ayCheck":0,"specialAccess":"1","reset_token":null,"reset_valid_till":null,"isUsable":0,"action":0,"created_by":0,"updated_by":0,"created_at":"Jan 20 2021  3:32PM","newcreated_at":null,"updated_at":"Jan 20 2021  3:32PM","newupdated_at":null,"res":1,"Message":"Login Success|登錄成功|登录成功","IsActive":false,"IsDeleted":false,"IsUnique":false,"page":0,"size":0,"total_records":0,"last_page":0,"page_records":0,"filters":null,"sorters":null,"query":null}');
+    </script>
+    <style>
+            .fc-timeline .fc-body .fc-scroller {
+                height: 500px !important;
+            }
+            /*Agenda & Timeline Source event design*/
+            .fc-event-container .fc-timeline-event .fc-content:nth-of-type(1),
+            .fc-event-container .fc-time-grid-event .fc-content:nth-of-type(1),
+            .fc-event-container .fc-day-grid-event .fc-content:nth-of-type(1) {
+                margin-top: 0px;
+            }
+
+            .fc-event-container .fc-timeline-event .fc-content,
+            .fc-event-container .fc-time-grid-event .fc-content,
+            .fc-event-container .fc-day-grid-event .fc-content {
+                margin-top: 3px;
+                margin-bottom: 0px;
+                padding: 0px 8px;
+            }
+
+                .fc-event-container .fc-timeline-event .fc-content .fc-title,
+                .fc-event-container .fc-time-grid-event .fc-content .fc-title,
+                .fc-event-container .fc-day-grid-event .fc-content .fc-title {
+                    font-size: 16px;
+                    font-family: Arial;
+                }
+
+                .fc-event-container .fc-timeline-event .fc-content:nth-last-of-type(1),
+                .fc-event-container .fc-time-grid-event .fc-content:nth-last-of-type(1),
+                .fc-event-container .fc-day-grid-event .fc-content:nth-last-of-type(1) {
+                    margin-bottom: 0px;
+                }
+
+            .fc th {
+                text-align: center;
+                font-weight: 400;
+                font-family: 'Montserrat-bold';
+                font-size: 80%;
+            }
+
+            .fc button {
+                font-family: 'Montserrat';
+            }
+
+            .ui-widget .ui-widget, .calendar {
+                font-family: 'Montserrat' !important;
+            }
+
+            #vertical-resource-view .fc-view-container {
+                overflow-x: scroll;
+            }
+     /*   div#agenda-view .fc-view-container {
+            height: auto !important;
+        }*/
+
+
+            #vertical-resource-view .fc-view.fc-agendaDay-view.fc-agenda-view {
+                width: 100%;
+            }
+            /* **For 2 day view** */
+            #vertical-resource-view .fc-view.fc-agendaTwoDays-view.fc-agenda-view {
+                width: 500%;
+            }
+
+            #vertical-resource-view .fc-view.fc-agendaThreeDays-view.fc-agenda-view {
+                width: 600%;
+            }
+
+            #vertical-resource-view .fc-view.fc-agendaWeek-view.fc-agenda-view {
+                width: 1500%;
+            }
+            /*end*/
+
+            .lightbox {
+                display: none;
+            }
+
+            .popover {
+                z-index: 99;
+            }
+
+            .ui-state-highlight,
+            .ui-widget-content .ui-state-highlight {
+                border: 1px solid #72c3ec !important;
+                background: #e9f3fc url(images/ui-bg_highlight-soft_25_ffef8f_1x100.png) 50% top repeat-x !important;
+            }
+
+            .fa-sm {
+                font-size: 12px;
+            }
+
+            .titleContainer,
+            .popoverSelect {
+                display: flex;
+                align-items: center;
+            }
+
+            .sidebar ul li a {
+                color: #3e246b !important;
+            }
+
+            .customTitle {
+                background: rgb(255, 255, 255);
+                border-color: #aaa;
+                padding: 2px;
+                border-radius: 5px;
+                z-index: 1;
+            }
+
+            .btn.btn-outline-success {
+                color: #3e246b;
+                border: 1px solid #3e246b;
+                background-color: transparent;
+            }
+
+                .btn.btn-outline-success:hover {
+                    background-color: #3e246b !important;
+                    color: #fff;
+                }
+
+            .btn-group > .btn-group:not(:first-child) > .btn,
+            .btn-group > .btn:not(:first-child) {
+                border-top-left-radius: 0 !important;
+                border-bottom-left-radius: 0 !important;
+                margin-right: 0px;
+            }
+
+            .btn-group > .btn-group:not(:last-child) > .btn,
+            .btn-group > .btn:not(:last-child):not(.dropdown-toggle) {
+                border-top-right-radius: 0 !important;
+                border-bottom-right-radius: 0 !important;
+                margin-right: 0 !important;
+            }
+
+            .fc-listYear-view tr.fc-list-item,
+            .fc-listMonth-view tr.fc-list-item,
+            .fc-listWeek-view tr.fc-list-item,
+            .fc-listDay-view tr.fc-list-item {
+                background: #e2e2e2 !important;
+                margin-bottom: 10px;
+                display: flex;
+                margin: 3px;
+            }
+
+            #list-view table.fc-list-table tr .fc-content {
+                margin: 3px;
+                margin-top: 10px;
+                margin-bottom: 4px;
+            }
+
+            .fc-content.fcTime .fc-content {
+                color: #fff;
+                padding: 0px 5px;
+                margin: 3px 3px 3px;
+            }
+
+            .fc-content.fcTime small.time {
+                color: #7b7b7b;
+            }
+
+            .fc-content.fcTime {
+                margin: 7px 0px !important;
+            }
+
+            .breadcrumbUi.row {
+                /*margin-left: -20px !important;*/
+            }
+
+            .custom-br {
+                font-size: 14px;
+                font-style: italic;
+                font-family: Roboto;
+                font-weight: 500;
+                letter-spacing: .2px;
+            }
+
+            .course-click {
+                transition: all linear .3s;
+                cursor: pointer;
+            }
+
+                .course-click.right {
+                    transform: rotate(90deg);
+                }
+
+
+
+            .modal-dialog-slideout {
+                min-height: 100%;
+                margin: 0 0 0 auto;
+                background: #fff;
+            }
+
+            .modal.fade {
+                padding-right: 0px !important;
+            }
+
+                .modal.fade .modal-dialog.modal-dialog-slideout {
+                    -webkit-transform: translate(100%,0)scale(1);
+                    transform: translate(100%,0)scale(1);
+                }
+
+                .modal.fade.show .modal-dialog.modal-dialog-slideout {
+                    -webkit-transform: translate(0,0);
+                    transform: translate(0,0);
+                    display: flex;
+                    align-items: stretch;
+                    -webkit-box-align: stretch;
+                    height: 100%;
+                }
+
+                    .modal.fade.show .modal-dialog.modal-dialog-slideout .modal-body {
+                        overflow-y: auto;
+                        overflow-x: hidden;
+                    }
+
+            .modal-dialog-slideout .modal-content {
+                border: 0;
+            }
+
+            .modal-dialog-slideout .modal-header, .modal-dialog-slideout .modal-footer {
+                /* height: 69px;
+            display: block;*/
+            }
+
+                .modal-dialog-slideout .modal-header h5 {
+                    float: left;
+                }
+
+            .fc-event-container .fc-timeline-event .fc-content:nth-of-type(1), .fc-event-container .fc-time-grid-event .fc-content:nth-of-type(1), .fc-event-container .fc-day-grid-event .fc-content:nth-of-type(1) {
+                display: none;
+            }
+
+            #agenda-view .fc-event-container .fc-timeline-event .fc-content .fc-title, #agenda-view .fc-event-container .fc-time-grid-event .fc-content .fc-title,
+            #agenda-view .fc-event-container .fc-day-grid-event .fc-content .fc-title {
+                font-size: 12px;
+            }
+
+            #agenda-view .fc-event-container .fc-timeline-event .fc-content, #agenda-view .fc-event-container .fc-time-grid-event .fc-content,
+            #agenda-view .fc-event-container .fc-day-grid-event .fc-content {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                padding-right: 30px !important;
+            }
+
+                #agenda-view .fc-event-container .fc-timeline-event .fc-content, #agenda-view .fc-event-container .fc-time-grid-event .fc-content,
+                #agenda-view .fc-event-container .fc-day-grid-event .fc-content .fc-customtime {
+                    position: absolute;
+                    right: 1px;
+                    top: 4px;
+                    font-size: 12px;
+                }
+
+            #vertical-resource-view .fc table {
+                table-layout: auto;
+            }
+
+            #vertical-resource-view .fc-view > table {
+                min-width: 0;
+                width: auto;
+            }
+
+            #vertical-resource-view .fc-axis {
+                min-width: 100px; /*the width of times column*/
+                width: 100px; /*the width of times column*/
+            }
+
+            #vertical-resource-view .fc-day, .fc-resource-cell, .fc-content-col {
+                min-width: 350px;
+                width: 100%;
+            }
+
+            div#calendar .fc-timeline .fc-body .fc-scroller {
+                height: auto !important;
+            }
+
+            .modalscrollable {
+                overflow-y: auto;
+                max-height: 500px;
+                min-height: 500px;
+            }
+
+
+
+
+            /* Important part */
+            /*.modal-dialog {
+            overflow-y: initial !important
+        }
+
+        .modal-body {
+            height: 80vh;
+            overflow-y: auto;
+        }*/
+
+            .modalscrollable {
+                overflow-y: auto;
+                max-height: 500px;
+                min-height: 500px;
+            }
+
+
+            /* Important part */
+            /*.modal-dialog {
+            overflow-y: initial !important
+        }
+        .modal-body {
+            height: 80vh;
+            overflow-y: auto;
+        }*/
+            div#calendar .fc-timeline .fc-body .fc-scroller {
+                height: auto !important;
+                min-height: 400px;
+            }
+
+            .menu-icon_box {
+                display: inline-block;
+                height: 25px;
+                position: relative;
+                text-align: left;
+                width: 25px;
+            }
+
+            .Hideleftmenu {
+                padding: 56px 0px 0;
+                margin-left: -20px;
+                position: relative;
+            }
+    </style>
+
+}
+
 <section class="schedule mihi-71">
     <div class="container">
         <div class="row">
@@ -17,13 +375,13 @@
                             <div class="schedule-drop">
                                 <div class="form-group">
                                     <label for="calendar">Calendar</label>
-                                    
+
                                     <select class="form-control" id="calendar-selector" onchange="showCalendar('@Model.COMPANY_CODE')">
-                                       <option value="-1" disabled selected>select a calendar</option>
-                                       @foreach (var item in Model.calendars)
-                                       {
-                                           <option value="@item.Id" @((item.Id == Model.DEFAULT_CALENDAR_ID)? "selected": "")>@item.CALENDAR_NAME</option>
-                                       }
+                                        <option value="-1" disabled selected>select a calendar</option>
+                                        @foreach (var item in Model.calendars)
+                                        {
+                                            <option value="@item.CALENDAR_CODE" @((item.Id == Model.DEFAULT_CALENDAR_ID) ? "selected" : "")>@item.CALENDAR_NAME</option>
+                                        }
                                     </select>
                                 </div>
                             </div>
@@ -33,11 +391,7 @@
                                 <div class="form-group">
                                     <label for="service">Service</label>
 
-                                    <select class="form-control" id="service">
-                                        @foreach (var item in Model.services)
-                                        {
-                                            <option value="@item.Id">@item.COMPANY_CATEGORY_NAME</option>
-                                        }
+                                    <select class="form-control" id="calendar-service">
                                     </select>
                                 </div>
                             </div>
@@ -51,11 +405,70 @@
                 </div>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div id="calendar"
+                         style="padding: 0px; margin-top: 15px;">
+
+
+
+                        <div id="tabs" style="display:none">
+                            <ul>
+                                <li data-value="List view">
+                                    <a href="#list-view">List View</a>
+                                </li>
+                                <li data-value="External Events">
+                                    <a href="#agenda-view">Agenda View</a>
+                                </li>
+                                <li data-value="Timeline resource view">
+                                    <a href="#timeline-resource-view">Timeline Resource View</a>
+                                </li>
+                                <li data-value="Vertical resource view">
+                                    <a href="#vertical-resource-view">Vertical Resource View</a>
+                                </li>
+                            </ul>
+
+                            <div id="list-view">
+                                <div class="calendar"></div>
+                            </div>
+                            <div id="agenda-view">
+                                <div class="calendar"></div>
+                            </div>
+                            <div id="timeline-resource-view">
+                                <div class="calendar"></div>
+                            </div>
+                            <div id="vertical-resource-view">
+                                <div class="calendar"></div>
+                            </div>
+
+
+                        </div>
+
+
+
+
+
+                        <div ui-calendar="{{uiConfig.calendar}}"
+                             calendar="myCalendar"
+                             class="span8 calendar"
+                             ng-model="eventSources"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </section>
 
 
 @section scripts{
-
-    <script src="~/Scripts/MarketplaceScripts/CompanySchedule.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.fn.bstooltip = $.fn.tooltip.noConflict(true);
+        })
+    </script>
+    <script src="~/Scripts/MarketplaceScripts/CompanySchedule.js?@DateTime.Now.ToString("yyyyMmddHHMMssffff")"></script>
+    @*<script src="~/Scripts/MarketplaceScripts/CompanySchedule.js"></script>*@
 }

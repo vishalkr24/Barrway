@@ -12975,6 +12975,7 @@
             return queryText;
         };
         function reBindCalender() {
+            debugger;
             $scope.basicViewCalenderDataTemp.newFilteredEventList = [];
             var whereClouse = " ";
             var joinClouse = "";
