@@ -19,8 +19,13 @@ namespace Barrway.Service.IRepository
         #region Business Webiste
         Task<AddUpdateDelete> CreatePublicUserAccount(PublicAccountModel model);
         Task<AddUpdateDelete> GetSinglePublicUserAccount(string UserId);
+
+        Task<AddUpdateDelete> UpdatePublicUserProfilePic(PublicAccountModel model);
+
+        Task<AddUpdateDelete> UpdatePublicUserProfileData(PublicUserProfileModel model, bool updatePassword = false);
+
         #endregion
-        
+
 
     }
 }

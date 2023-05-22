@@ -145,6 +145,16 @@
     <link href="Content/tagify.css" rel="stylesheet" />
     <link href="Content/sidebar/css/sidebar.css?token=@token" rel="stylesheet" />
     <style>
+        .invalid-feedback-2 {
+            color: red !important;
+            margin-bottom: 11px;
+            display: none;
+        }
+
+        .invalid-feedback-2.error-active {
+            display:block;
+        }
+
         .form-inline {
             display: -ms-flexbox;
             display: flex;
@@ -305,7 +315,7 @@
     <script src="assets/js/hs.theme-appearance.js"></script>
 
     <script src="assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js"></script>
-
+    
     <script type="text/ng-template" id="bg-svg.html">
         <svg fill="#cccccc">
             @*
