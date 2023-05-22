@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var baseUrl = System.Web.Configuration.WebConfigurationManager.AppSettings["baseURL"].ToString();
+    string token = DateTime.Now.ToString("ddMMyyyyHHmmssffffff");
+}
+<!DOCTYPE html>
 
 <html>
 <head>
@@ -17,7 +21,13 @@
     <link rel="stylesheet" href="~/assets/marketplace/owl/owl.carousel.min.css">
     <link rel="stylesheet" href="~/assets/marketplace/owl/owl.theme.default.min.css">
 
+
+
     <!-- javascript -->
+    <script>
+        var BASE_URL = '@baseUrl';
+    </script>
+
     <script src="~/assets/marketplace/owl/jquery.min.js"></script>
     <script src="~/assets/marketplace/owl/owl.carousel.js"></script>
     <script src="~/Scripts/PublicCommonFunction.js"></script>

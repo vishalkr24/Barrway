@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿
+@{
+    var baseUrl = System.Web.Configuration.WebConfigurationManager.AppSettings["baseURL"].ToString();
+    string token = DateTime.Now.ToString("ddMMyyyyHHmmssffffff");
+}
+<!DOCTYPE html>
 
 <html>
 <head>
@@ -6,9 +11,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <link rel="stylesheet" href="/assets/css/vendor.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>*@
 
     <!-- font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -18,15 +24,20 @@
     <link rel="stylesheet" href="~/assets/marketplace/owl/owl.theme.default.min.css">
 
     <!-- javascript -->
+    <script>
+        var BASE_URL = '@baseUrl';
+        var ASSET_URL = '@baseUrl';
+    </script>
+    <script src="/assets/js/vendor.min.js"></script>
     <script src="~/assets/marketplace/owl/jquery.min.js"></script>
     <script src="~/assets/marketplace/owl/owl.carousel.js"></script>
     <script src="~/Scripts/PublicCommonFunction.js"></script>
-    @RenderSection("scripts", false)
+
 
     <!-- css -->
     <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/style.css">
     <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/media.css">
-
+    @RenderSection("styles", false)
 
 </head>
 <body>
@@ -94,13 +105,13 @@
                 </div>
                 <div class="collapse navbar-collapse" id="secondry-nav">
                     <ul class="nav navbar-nav navbar-right">
-                        <li id="nv-company-basic-information"><a href="/Marketplace/CompanyDetail?CompanyCode=@ViewBag.COMPANY_ID&CalendarId=@ViewBag.CALENDAR_ID">Basic Information</a></li>
+                        <li id="nv-company-basic-information"><a href="/Marketplace/CompanyDetail?CompanyCode=@ViewBag.COMPANY_ID&CalendarCode=@ViewBag.CALENDAR_ID">Basic Information</a></li>
                         <li id="nv-company-service">
-                            <a class="" href="/Marketplace/CompanyService?CompanyCode=@ViewBag.COMPANY_ID&CalendarId=@ViewBag.CALENDAR_ID">Service</a>
+                            <a class="" href="/Marketplace/CompanyService?CompanyCode=@ViewBag.COMPANY_ID&CalendarCode=@ViewBag.CALENDAR_ID">Service</a>
                         </li>
-                        <li id="nv-company-package"><a href="/Marketplace/CompanyPackage?CompanyCode=@ViewBag.COMPANY_ID&CalendarId=@ViewBag.CALENDAR_ID">Package</a></li>
-                        <li id="nv-company-schedule"><a href="/Marketplace/CompanySchedule?CompanyCode=@ViewBag.COMPANY_ID&CalendarId=@ViewBag.CALENDAR_ID">Schedule</a></li>
-                        <li id="nv-company-photo-album"><a href="/Marketplace/CompanyPhotoAlbum?CompanyCode=@ViewBag.COMPANY_ID&CalendarId=@ViewBag.CALENDAR_ID">Photo album</a></li>
+                        <li id="nv-company-package"><a href="/Marketplace/CompanyPackage?CompanyCode=@ViewBag.COMPANY_ID&CalendarCode=@ViewBag.CALENDAR_ID">Package</a></li>
+                        <li id="nv-company-schedule"><a href="/Marketplace/CompanySchedule?CompanyCode=@ViewBag.COMPANY_ID&CalendarCode=@ViewBag.CALENDAR_ID">Schedule</a></li>
+                        <li id="nv-company-photo-album"><a href="/Marketplace/CompanyPhotoAlbum?CompanyCode=@ViewBag.COMPANY_ID&CalendarCode=@ViewBag.CALENDAR_ID">Photo album</a></li>
                     </ul>
 
                 </div>
@@ -133,6 +144,6 @@
 
     <!-- my script -->
     <script src="~/assets/marketplace/owl/myjq.js"></script>
-    
+    @RenderSection("scripts", false)
 </body>
 </html>
