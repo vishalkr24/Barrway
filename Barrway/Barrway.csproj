@@ -2965,6 +2965,8 @@
     <Content Include="Content\underscore.js\underscore-node.mjs.map" />
     <Content Include="Content\underscore.js\underscore-umd-min.js.map" />
     <Content Include="Content\underscore.js\underscore-umd.js.map" />
+    <Content Include="CalendarConfiguration\TypeB1Configuration.json" />
+    <Content Include="CalendarConfiguration\TypeB2Configuration.json" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\BusinessScripts\AdminDashboard.js" />
     <Content Include="Scripts\BusinessScripts\AdminLayoutManager.js" />

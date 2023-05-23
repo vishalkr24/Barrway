@@ -571,7 +571,7 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> AddCalendar(BusinessCalendarModel model, string UserId)
+        public async Task<AddUpdateDelete> AddCalendar(BusinessCalendarModel model, string UserId, CalendarControlModel calendarControlModel)
         {
             AddUpdateDelete CalendarDetails = new AddUpdateDelete()
             {
@@ -619,6 +619,20 @@ namespace Barrway.Service.Repository
                             saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                         }
                     }
+
+
+                    // map data in model
+                    calendarControlModel.CALENDAR_CODE = model.CALENDAR_CODE;
+                    calendarControlModel.COMPANY_CODE = model.COMPANY_CODE;
+                    calendarControlModel.USER_ADMIN_GROUP_NAME = model.COMPANY_CODE.ToString() + model.CALENDAR_CODE.ToString();
+                    calendarControlModel.CALENDAR_GROUP_NAME = model.CALENDAR_CODE.ToString() + model.COMPANY_CODE.ToString();
+
+                    data = new Form_DataTable();
+                    data.action = (int)FormAction.Save;
+                    data.formId = (int)FormSetting.CALENDAR_CONTROL_SHEET;
+                    data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(calendarControlModel.ToDictionary());
+                    data.formGroupKey = Guid.NewGuid().ToString();
+                    formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
 
                     return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() };
                 }
