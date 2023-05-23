@@ -77,6 +77,7 @@
     <Compile Include="BusinessModels\BusinessCalendarViewModel.cs" />
     <Compile Include="BusinessModels\BusinessCompanyViewModel.cs" />
     <Compile Include="BusinessModels\BusinessCompanyModel.cs" />
+    <Compile Include="BusinessModels\CalendarControlModel.cs" />
     <Compile Include="BusinessModels\CalendarFormModel.cs" />
     <Compile Include="BusinessModels\CalendarReferenceModel.cs" />
     <Compile Include="BusinessModels\CompanyPaymentHistoryModel.cs" />

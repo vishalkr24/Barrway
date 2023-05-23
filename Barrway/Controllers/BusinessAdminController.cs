@@ -617,7 +617,17 @@ namespace Barrway.Controllers
                         TAGS = ((model.TAGS!=null)? string.Join(", ", model.TAGS): "")
                     };
 
-                    var result = await businessUserService.AddCalendar(calendarModel, User.Identity.Name.ToString());
+                    CalendarControlModel calendarControlModel = new CalendarControlModel();
+
+                    if (calendarModel.CALENDAR_CATEGORY_ID == "1")
+                    {
+                        using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarConfiguration/TypeB1Configuration.json")))
+                        {
+                            calendarControlModel = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
+                        }
+                    }
+
+                    var result = await businessUserService.AddCalendar(calendarModel, User.Identity.Name.ToString(), calendarControlModel);
 
                     if (result.Status)
                     {
