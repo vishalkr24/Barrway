@@ -76,9 +76,8 @@ namespace Barrway.Controllers
                 {
                     LogoutPublicUser();
                 }
-
-
             }
+
             return View();
         }
 
