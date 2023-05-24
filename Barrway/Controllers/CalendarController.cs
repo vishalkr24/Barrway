@@ -253,13 +253,14 @@ namespace Barrway.Controllers
                 var b = data.ToDictionary();
 
                 data.SCH_SCHEDULE_TABLE = JsonConvert.SerializeObject(b["table"]).ToString();
-                
-                var response = await businessUserService.AddSchedularForm(data);
+
+                string formGroupKey = Guid.NewGuid().ToString();
+
+                var response = await businessUserService.AddSchedularForm(data, formGroupKey);
 
                 if (response.Status)
                 {
-                    string formGroupKey = response.Data.formGroupKey;
-                    
+
                     var start = Convert.ToDateTime(startObject[2] + "-" + startObject[1] + "-" + startObject[0]);
                     
                     var end = Convert.ToDateTime(endObject[2] + "-" + endObject[1] + "-" + endObject[0]);
@@ -446,7 +447,7 @@ namespace Barrway.Controllers
                                     ";
 
                         dateTracker = dateTracker.AddDays(1);
-
+                        formGroupKey = Guid.NewGuid().ToString();
                     }
 
                     var count = await sqlFunction.ExecuteSqlCommandQuery(script);

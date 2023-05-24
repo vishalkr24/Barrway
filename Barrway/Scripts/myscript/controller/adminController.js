@@ -2769,7 +2769,6 @@
         });
 
         $scope.saveSchedularForm = function () {
-
             var scheduleTableData = {
                 "Monday": {
                     "Start": $("#Monday_Start_Time").val(),
@@ -2818,13 +2817,17 @@
                 table: scheduleTableData
             }
 
-            //data = JSON.stringify(data);
+            if (validateSchedularFormData(data)) {
+                //data = JSON.stringify(data);
 
-            adminService.postAsync('/Calendar/AddSchedule/', { data: data }).then(function (res) {
-                window.location.reload();
-            }, function (err) {
-                alert("something went wrong!!");
-            });
+                adminService.postAsync('/Calendar/AddSchedule/', { data: data }).then(function (res) {
+                    window.location.reload();
+                }, function (err) {
+                    alert("something went wrong!!");
+                });
+            }
+
+            
 
         }
 
@@ -2840,6 +2843,47 @@
 
     });
 
-
-
 }(FormGeneratorApp));
+
+function validateSchedularFormData(data) {
+
+    var finalCheck = true;
+
+    if (data.SCH_LOCATION == "" || data.SCH_LOCATION == null) {
+        finalCheck = false;
+        $("#SCH_LOCATION_ERROR").show();
+    } else {
+        $("#SCH_LOCATION_ERROR").hide();
+    }
+
+    if (data.SCH_ACTIVITY == "" || data.SCH_ACTIVITY == null) {
+        finalCheck = false;
+        $("#SCH_ACTIVITY_ERROR").show();
+    } else {
+        $("#SCH_ACTIVITY_ERROR").hide();
+    }
+
+    if (data.SCH_RESOURCE == "" || data.SCH_RESOURCE == null) {
+        finalCheck = false;
+        $("#SCH_RESOURCE_ERROR").show();
+    } else {
+        $("#SCH_RESOURCE_ERROR").hide();
+    }
+
+    if (data.SCH_FROM_DATE == "" || data.SCH_FROM_DATE == null) {
+        finalCheck = false;
+        $("#SCH_FROM_DATE_ERROR").show();
+    } else {
+        $("#SCH_FROM_DATE_ERROR").hide();
+    }
+
+    if (data.SCH_TO_DATE == "" || data.SCH_TO_DATE == null) {
+        finalCheck = false;
+        $("#SCH_TO_DATE_ERROR").show();
+    } else {
+        $("#SCH_TO_DATE_ERROR").hide();
+    }
+
+
+    return finalCheck;
+}

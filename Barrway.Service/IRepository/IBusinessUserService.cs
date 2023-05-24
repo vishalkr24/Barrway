@@ -49,7 +49,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetCompanyCalendarByCompanyId(string CompanyId);
         Task<AddUpdateDelete> GetCompanyCalendars(GenerateDynamicFormData data, string CompanyId);
 
-        Task<AddUpdateDelete> AddSchedularForm(SchedularFormModel model);
+        Task<AddUpdateDelete> AddSchedularForm(SchedularFormModel model, string formGroupKey);
 
         Task<AddUpdateDelete> AddCalendarEventSlot(CalendarFormModel model, string formGroupKey);
 

@@ -15,7 +15,7 @@ using System.Web.Security;
 
 namespace Barrway.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class FormAPIController : Controller
     {
         private readonly IFormAPIRepository formAPIRepository;

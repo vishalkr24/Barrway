@@ -145,6 +145,12 @@
     <link href="Content/tagify.css" rel="stylesheet" />
     <link href="Content/sidebar/css/sidebar.css?token=@token" rel="stylesheet" />
     <style>
+        .invalid-feedback-2 {
+            color: red !important;
+            margin-bottom: 11px;
+            display: none;
+        }
+
         .form-inline {
             display: -ms-flexbox;
             display: flex;
@@ -284,14 +290,10 @@
         localStorage.setItem("detail", '{"Id":30314,"firebase_uid":null,"chatId":"jXZMF2dU3Uyz2okULv6shQuu","uid":"kk53yimj","fullName":"AG Ashutosh Shukla","name":"augursuser","email":"formgeneratorclient@gmail.com","emailVerified":"0","emailCheck":"0","isEmailCheck":false,"isQuickSignUp":false,"password":"","newPassword":null,"password_confirmation":null,"confirmPassword":null,"isUpdatePassword":0,"remember_token":null,"userIcon":"user-avatar-with-check-mark.png","phoneNumber":null,"phoneVerified":"No","isPhoneVerified":null,"phoneCheck":"No","isPhoneCheck":false,"role":1,"status":"Active","planID":9,"planSequence":"1,2,5,13","tooltipSequence":null,"FB_id":null,"GPlus_id":null,"created_ip":"","groupId":0,"checkType":null,"title":null,"verificationCode":null,"isVerificationReq":false,"ayCheck":0,"specialAccess":"1","reset_token":null,"reset_valid_till":null,"isUsable":0,"action":0,"created_by":0,"updated_by":0,"created_at":"Jan 20 2021  3:32PM","newcreated_at":null,"updated_at":"Jan 20 2021  3:32PM","newupdated_at":null,"res":1,"Message":"Login Success|登錄成功|登录成功","IsActive":false,"IsDeleted":false,"IsUnique":false,"page":0,"size":0,"total_records":0,"last_page":0,"page_records":0,"filters":null,"sorters":null,"query":null}');
     </script>
 
-    <!--end setup-->
 </head>
 
 <body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl navbar-vertical-aside-compact-mini-mode navbar-vertical-aside-compact-mode" ng-app="FormGeneratorApp" ng-controller="IndexController">
 
-
-
-    <!--Formgenerator Common component-->
     <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-bottom-right'}"></toaster-container>
     <div class="favicon-loader-overlay active" ng-show="IND_loading">
         <div class="favicon-loader">
@@ -532,20 +534,6 @@
                     <option value="{{calendar.CALENDAR_CODE}}" ng-repeat="calendar in calendarList">{{calendar.CALENDAR_NAME}} [{{calendar.CALENDAR_CODE}}]</option>
                 </select>
 
-                <!-- Navbar Vertical Toggle -->
-                <!-- <div class="d-flex justify-content-end">
-                  <button type="button" class="js-navbar-vertical-aside-toggle-invoker navbar-aside-toggler position-static">
-                    <i class="bi-arrow-bar-left navbar-toggler-short-align" data-bs-toggle="tooltip" data-bs-placement="right" title="Collapse"></i>
-                    <i class="bi-arrow-bar-right navbar-toggler-full-align" data-bs-template='<div class="tooltip d-none d-sm-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>' data-bs-toggle="tooltip" data-bs-placement="right" title="Expand"></i>
-                  </button>
-                </div> -->
-                <!-- End Navbar Vertical Toggle -->
-                <!-- Logo -->
-                <!-- <a class="navbar-brand" href="../index.html" aria-label="Front">
-                  <img class="navbar-brand-logo-short" src="../assets/svg/logos/logo-short.svg" alt="Logo" data-hs-theme-appearance="default">
-                  <img class="navbar-brand-logo-short" src="../assets/svg/logos-light/logo-short.svg" alt="Logo" data-hs-theme-appearance="dark">
-                </a> -->
-                <!-- End Logo -->
             </div>
 
             <!-- Content -->
@@ -556,7 +544,7 @@
                         <!-- Collapse -->
                         <div id="navbarVerticalMenuPagesMenu">
                             <!-- Collapse -->
-                            <div class="nav-item show">
+                            <div class="nav-item">
                                 <a class="nav-link active" ui-sref="Home()" role="button" data-bs-target="#navbarVerticalMenuDashboards" aria-expanded="false" aria-controls="navbarVerticalMenuDashboards">
                                     <i class="bi-house-door nav-icon"></i>
                                     <span class="nav-link-title">Dashboard</span>
@@ -587,52 +575,41 @@
                             <!-- Collapse -->
                             <div class="nav-item ">
                                 <a class="nav-link " href="#" ui-sref="transaction_master({formId:2312})" role="button" data-bs-target="#navbarVerticalMenuPagesProjectsMenu" aria-expanded="false" aria-controls="navbarVerticalMenuPagesProjectsMenu">
-                                    <i class="bi-stickies nav-icon"></i>
+                                    <i class="bi-arrow-left-right nav-icon"></i>
                                     <span class="nav-link-title">Transactions</span>
                                 </a>
 
                                 @*<div id="navbarVerticalMenuPagesProjectsMenu" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
-                                        <a class="nav-link " href="../projects.html">Overview</a>
-                                        <a class="nav-link " href="../projects-timeline.html">Timeline</a>
-                                    </div>*@
+                <a class="nav-link " href="../projects.html">Overview</a>
+                <a class="nav-link " href="../projects-timeline.html">Timeline</a>
+            </div>*@
                             </div>
                             <!-- End Collapse -->
                             <!-- Collapse -->
                             <div class="nav-item ">
                                 <a class="nav-link " href="#navbarVerticalMenuPagesProjectMenu" role="button" data-bs-target="#navbarVerticalMenuPagesProjectMenu" aria-expanded="false" aria-controls="navbarVerticalMenuPagesProjectMenu">
-                                    <i class="bi-briefcase nav-icon"></i>
-                                    <span class="nav-link-title">Project</span>
+                                    <i class="bi-currency-dollar nav-icon"></i>
+                                    <span class="nav-link-title">Payment</span>
                                 </a>
 
                                 <div id="navbarVerticalMenuPagesProjectMenu" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
-                                    <a class="nav-link " href="../project.html">Overview</a>
-                                    <a class="nav-link " href="../project-files.html">Files</a>
-                                    <a class="nav-link " href="../project-activity.html">Activity</a>
-                                    <a class="nav-link " href="../project-teams.html">Teams</a>
-                                    <a class="nav-link " href="../project-settings.html">Settings</a>
+                                    <a class="nav-link " href="">Service provider work record</a>
+                                    <a class="nav-link " href="">Client payment history</a>
+                                    <a class="nav-link " href="">Service package master</a>
                                 </div>
+                            </div>
+
+                            <div class="nav-item">
+                                <a class="nav-link " href="index.html" data-placement="left">
+                                    <i class="bi-person nav-icon"></i>
+                                    <span class="nav-link-title">User</span>
+                                </a>
                             </div>
                             <!-- End Collapse -->
                         </div>
                         <!-- End Collapse -->
 
-                        <span class="dropdown-header mt-4">Layouts</span>
 
-                        <div class="nav-item">
-                            <a class="nav-link " href="index.html" data-placement="left">
-                                <i class="bi-grid-1x2 nav-icon"></i>
-                                <span class="nav-link-title">Layouts</span>
-                            </a>
-                        </div>
-
-                        <span class="dropdown-header mt-4">Documentation</span>
-
-                        <div class="nav-item">
-                            <a class="nav-link " href="../documentation/typography.html" data-placement="left">
-                                <i class="bi-layers nav-icon"></i>
-                                <span class="nav-link-title">Components</span>
-                            </a>
-                        </div>
                     </div>
 
                 </div>
