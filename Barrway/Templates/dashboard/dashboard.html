@@ -1,88 +1,172 @@
-﻿<div class="page-header">
-    <div class="row align-items-center">
-        <div class="col">
-            <h1 class="page-header-title">Dashboard</h1>
+﻿<div class="" ng-controller="IndexController">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bredcrump">
+                <span><a class="lbl-company-name" href="/BusinessAdmin/Dashboard">Company name</a> / <a class="lbl-calendar-name" ui-sref="Home()" href="#/home">Company name</a> / <a ui-sref="Home()" href="#/home">Dashboard</a> </span>
+            </div>
         </div>
-        <!-- End Col -->
+    </div>
+    <div class="row pt-lg-2">
+        <div class="col-lg-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="wraping">
+                        <div class="top-head purple">
+                            <h3>Booking todays</h3>
+                            <img src="">
+                        </div>
+                        <div class="wrap-body">
+                            <div class="wb-top">
+                                <div class="w-l w-80">
+                                    <h1>10</h1>
+                                </div>
+                                <div class="w-r w-20">
+                                    <h3><img src="/assets/img/angle-red.png" /> 2%</h3>
+                                </div>
+                            </div>
+                            <div class="wb-bottom">
+                                <div class="w-l w-80">
+                                    <p><span>2023-02-21</span> <span></span> <span></span></p>
+                                </div>
+                                <div class="w-r w-20">
+                                    <p><a href="#"> View ></a></p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="wraping">
+                        <div class="top-head purple">
+                            <h3>Booking this week</h3>
+                            <img src="/assets/img/ques.png">
+                        </div>
+                        <div class="wrap-body">
+                            <div class="wb-top">
+                                <div class="w-l w-80">
+                                    <h1>34</h1>
+                                </div>
+                                <div class="w-r w-20">
+                                    <h3><img src="/assets/img/angle-blue.png" /> 2%</h3>
+                                </div>
+                            </div>
+                            <div class="wb-bottom">
+                                <div class="w-l w-80">
+                                    <p><span>2023-02-20</span> - <span>2023 02 -26</span></p>
+                                </div>
+                                <div class="w-r w-20">
+                                    <p><a href="#"> View ></a></p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="wraping">
+                        <div class="top-head purple">
+                            <h3>Workload this week</h3>
+                            <img src="/assets/img/ques.png">
+                        </div>
+                        <div class="wrap-body">
+                            <div class="wb-top">
+                                <div class="w-l w-80">
+                                    <h1>4h</h1>
+                                </div>
+                                <div class="w-r w-20">
+                                    
+                                </div>
+                            </div>
+                            <div class="wb-bottom">
+                                <div class="w-l w-80">
+                                    <p><span>2023-02-20</span> - <span>2023 02 -26</span></p>
+                                </div>
+                                <div class="w-r w-20">
+                                    <p><a href="#"> View ></a></p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="wraping">
+                        <div class="top-head salmon">
+                            <h3>Income this month</h3>
+                            <img src="/assets/img/ques.png">
+                        </div>
+                        <div class="wrap-body">
+                            <div class="wb-top">
+                                <div class="w-l w-80">
+                                    <h1>HK$2,000</h1>
+                                </div>
+                                <div class="w-r w-20">
+                                   
+                                </div>
+                            </div>
+                            <div class="wb-bottom">
+                                <div class="w-l w-80">
+                                    <p><span>2023-02-20</span> - <span>2023 02 -26</span></p>
+                                </div>
+                                <div class="w-r w-20">
+                                    <p><a href="#"> View ></a></p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-9">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="">
+                        <div class="calendar-dashboard-top">
+                            <span style="position: relative;top: 2px;">Upcoming bookings</span>
+                            <span><button>See All</button></span>
+
+                        </div>
+
+                        <div class="card-body pt-0 mp-0 p-1">
+                            <div id="pageActions">
+                                <div class="tabulator-section">
+                                    <div id="page-tabs"
+                                         class="ui-tabs ui-corner-all ui-widget ui-widget-content"
+                                         ng-if="tabList.length>0">
+                                        <ul class="ui-tabs-nav ui-corner-all ui-helper-reset ui-helper-clearfix ui-widget-header">
+                                            <li tabindex="-1"
+                                                class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
+                                                id="tab-{{$index}}"
+                                                ng-repeat="l in tabList track by $index"
+                                                ng-click="selectedTabFilter(l,$index)">
+                                                <a data-target="#{{l.value}}"
+                                                   tabindex="-1"
+                                                   class="ui-tabs-anchor">{{l.label}}</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="form-builder-loader text-center">
+                                        <div class="loader">
+                                            <i class="fa fa-spinner fa-pulse fa-fw"> </i>
+                                            <div>
+                                                {{translation.Loading_Form_Tabulator}}...
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="form-records"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
     <!-- End Row -->
-</div>
-
-<div class="row">
-    <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
-        <!-- Card -->
-        <a class="card card-hover-shadow h-100" href="#">
-            <div class="card-body">
-                <h6 class="card-subtitle">Total Register Client</h6>
-
-                <div class="row align-items-center gx-2 mb-1">
-                    <div class="col-12">
-                        <h2 class="card-title text-inherit">{{dashboardInfo.TOTAL_REG_USER}}</h2>
-                    </div>
-                    <!-- End Col -->
-                </div>
-                <!-- End Row -->
-            </div>
-        </a>
-        <!-- End Card -->
-    </div>
-
-    <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
-        <!-- Card -->
-        <a class="card card-hover-shadow h-100" href="#">
-            <div class="card-body">
-                <h6 class="card-subtitle">Total Active Client</h6>
-
-                <div class="row align-items-center gx-2 mb-1">
-                    <div class="col-12">
-                        <h2 class="card-title text-inherit">{{dashboardInfo.TOTAL_ACTIVE_USER}}</h2>
-                    </div>
-                    <!-- End Col -->
-                </div>
-                <!-- End Row -->
-            </div>
-        </a>
-        <!-- End Card -->
-    </div>
-
-    <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
-        <!-- Card -->
-        <a class="card card-hover-shadow h-100" href="#">
-            <div class="card-body">
-                <h6 class="card-subtitle">Total Register Counsellor</h6>
-
-                <div class="row align-items-center gx-2 mb-1">
-                    <div class="col-12">
-                        <h2 class="card-title text-inherit">{{dashboardInfo.TOTAL_REG_CLLR}}</h2>
-                    </div>
-                    <!-- End Col -->
-
-                </div>
-                <!-- End Row -->
-            </div>
-        </a>
-        <!-- End Card -->
-    </div>
-
-    
-
-    <div class="col-sm-6 col-lg-3 mb-3 mb-lg-5">
-        <!-- Card -->
-        <a class="card card-hover-shadow h-100" href="#">
-            <div class="card-body">
-                <h6 class="card-subtitle">Total Active Counsellor</h6>
-
-                <div class="row align-items-center gx-2 mb-1">
-                    <div class="col-12">
-                        <h2 class="card-title text-inherit">{{dashboardInfo.TOTAL_ACTIVE_CLLR}}</h2>
-                    </div>
-                    <!-- End Col -->
-                </div>
-                <!-- End Row -->
-
-
-            </div>
-        </a>
-        <!-- End Card -->
-    </div>
 </div>

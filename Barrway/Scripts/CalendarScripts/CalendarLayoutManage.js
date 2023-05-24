@@ -27,7 +27,7 @@ function setCompanyDetails() {
 
     if (data.Status) {
         var company = data.Data;
-
+        
         $(".lbl-company-name").text(company.COMPANY_NAME_ENGLISH);
         $(".img-company-logo").attr("src", company.COMPANY_LOGO_PATH.replace("~", ".."));
     }

@@ -422,6 +422,10 @@ FormGeneratorApp.controller('IndexController', function ($scope, $http, $timeout
         } else {
             $("#ddlMasterCalendar").val(localStorage.getItem("CALENDAR_CODE"));
         }
+
+        $(".lbl-company-name").text(localStorage.getItem("COMPANY_NAME_ENGLISH"));
+        $(".lbl-calendar-name").text($("#ddlMasterCalendar option:selected").text());
+
     }
 
     $scope.ChangeCalendarDropDown = function () {

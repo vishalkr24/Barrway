@@ -890,7 +890,7 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> AddSchedularForm(SchedularFormModel model)
+        public async Task<AddUpdateDelete> AddSchedularForm(SchedularFormModel model, string formGroupKey)
         {
             Form_DataTable data = new Form_DataTable();
             var a = model.ToDictionary();
@@ -903,7 +903,7 @@ namespace Barrway.Service.Repository
             data.created_at = DateTime.Now.ToString();
             data.updated_at = DateTime.Now.ToString();
             data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(a);
-            data.formGroupKey = Guid.NewGuid().ToString();
+            data.formGroupKey = formGroupKey;
 
             var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
 
