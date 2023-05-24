@@ -2814,7 +2814,8 @@
                 SCH_ALTERNATIVE_WEEK: $("input[name='alternate-week']:checked").val(),
                 IF_SLOT_EXIST: "SKIP",
                 IF_SLOT_DOES_NOT_EXIST: "INSERT",
-                table: scheduleTableData
+                table: scheduleTableData,
+                CREATION_TYPE: "AUTOMATIC"
             }
 
             if (validateSchedularFormData(data)) {

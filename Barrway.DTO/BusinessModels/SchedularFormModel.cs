@@ -35,6 +35,7 @@ namespace Barrway.DTO.BusinessModels
         public string SCH_ALTERNATIVE_WEEK { get; set; }
         public SCHSCHEDULETABLE table { get; set; }
         public string SCH_SCHEDULE_TABLE { get; set; }
+        public string CREATION_TYPE { get; set; }
     }
 
     public class Saturday
