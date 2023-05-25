@@ -104,7 +104,7 @@ namespace Barrway.Controllers
 
         }
 
-        public async Task<ActionResult> SetupCompanyCalendar(string CompanyId = null)
+        public async Task<ActionResult> SetupCompanyCalendar(string CompanyId = null, bool IsPartial = false)
         {
             try
             {
@@ -137,7 +137,10 @@ namespace Barrway.Controllers
                     }
                 }
 
+                ViewBag.IsPartial = IsPartial;
+
                 return View(calendarModel);
+
             }
             catch (Exception ex)
             {
@@ -146,7 +149,6 @@ namespace Barrway.Controllers
             }
 
         }
-
         public async Task<ActionResult> ManageCompanyWebsite(string CompanyId, int PId = 1) // PID is page id 1 for company details, 2 for service, 3 for calendar package, 4 for photo album
         {
             AddUpdateDelete userWebsite = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name);
@@ -585,6 +587,27 @@ namespace Barrway.Controllers
             }
             else
             {
+                if (model.CALENDAR_CATEGORY_ID == "1" || model.CALENDAR_CATEGORY_ID == "2" || model.CALENDAR_CATEGORY_ID == "5")
+                {
+                    if (string.IsNullOrEmpty(model.SLOT_DURATION_IN_MINS))
+                    {
+                        ModelState.AddModelError("SLOT_DURATION_IN_MINS", "Slot duration is required");
+                        return View("SetupCompanyCalendar", model);
+                    }
+                    else
+                    {
+                        try
+                        {
+                            int duration = Convert.ToInt32(model.SLOT_DURATION_IN_MINS);
+                        }
+                        catch (Exception ex)
+                        {
+                            ModelState.AddModelError("SLOT_DURATION_IN_MINS", "Enter slot duration in minutes (number)");
+                            return View("SetupCompanyCalendar", model);
+                        }
+                    }
+                }
+
                 var company = await businessUserService.GetSingleCompanyByCompanyCode(model.COMPANY_CODE);
 
                 if (company.Status)
@@ -621,7 +644,42 @@ namespace Barrway.Controllers
 
                     if (calendarModel.CALENDAR_CATEGORY_ID == "1")
                     {
+                        calendarModel.SLOT_DURATION_IN_MINS = model.SLOT_DURATION_IN_MINS;
                         using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarConfiguration/TypeB1Configuration.json")))
+                        {
+                            calendarControlModel = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
+                        }
+                    }
+                    else if (calendarModel.CALENDAR_CATEGORY_ID == "2")
+                    {
+                        calendarModel.SLOT_DURATION_IN_MINS = model.SLOT_DURATION_IN_MINS;
+                        using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarConfiguration/TypeCConfiguration.json")))
+                        {
+                            calendarControlModel = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
+                        }
+                    }
+                    else if (calendarModel.CALENDAR_CATEGORY_ID == "3")
+                    {
+                        calendarModel.SLOT_DURATION_IN_MINS = "0";
+                        
+                        using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarConfiguration/TypeAConfiguration.json")))
+                        {
+                            calendarControlModel = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
+                        }
+                    }
+                    else if (calendarModel.CALENDAR_CATEGORY_ID == "4")
+                    {
+                        calendarModel.SLOT_DURATION_IN_MINS = "0";
+                        
+                        using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarConfiguration/TypeAConfiguration.json")))
+                        {
+                            calendarControlModel = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
+                        }
+                    }
+                    else if (calendarModel.CALENDAR_CATEGORY_ID == "5")
+                    {
+                        calendarModel.SLOT_DURATION_IN_MINS = model.SLOT_DURATION_IN_MINS;
+                        using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarConfiguration/TypeB2Configuration.json")))
                         {
                             calendarControlModel = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
                         }
@@ -631,7 +689,6 @@ namespace Barrway.Controllers
 
                     if (result.Status)
                     {
-                        // Save image in folder
                         model.CALENDAR_PHOTO_PATH.SaveAs(Server.MapPath("~/UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString()) + "/" + model.CALENDAR_PHOTO_PATH.FileName.ToString());
                         return RedirectToAction("Dashboard");
                     }
@@ -639,17 +696,12 @@ namespace Barrway.Controllers
                     {
                         return View("SetupCompanyCalendar", model);
                     }
-
-
                 }
                 else
                 {
                     return RedirectToAction("SetupCompanyCalendar", model);
                 }
-
-
             }
-
         }
 
         [HttpPost]

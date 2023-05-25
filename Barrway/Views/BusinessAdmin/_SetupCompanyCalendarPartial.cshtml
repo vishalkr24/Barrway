@@ -1,0 +1,184 @@
+﻿
+<main id="category-section" role="main" class="main">
+    <!-- Content -->
+    <div class="content container">
+        <div class="row pt-lg-1 d-flex justify-content-center">
+            <div class="col-md-10">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="rectangle" onclick="renderForm(1)">
+                            <div class="rac-img">
+                                <img src="../assets/img/one1.png">
+                            </div>
+                            <div class="rac-text">
+                                <h2>Class and workshop</h2>
+                                <p>eg. Yoga class, Piano class, Baking workshop</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="rectangle" onclick="renderForm(2)">
+                            <div class="rac-img">
+                                <img src="../assets/img/two.png">
+                            </div>
+                            <div class="rac-text">
+                                <h2>Service appointment</h2>
+                                <p>eg. doctor, massage, hair cut, nail treatment</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="rectangle" onclick="renderForm(3)">
+                            <div class="rac-img">
+                                <img src="../assets/img/three.png">
+                            </div>
+                            <div class="rac-text">
+                                <h2>Room rental</h2>
+                                <p>eg. Party room, co-working space, dance studio</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="rectangle" onclick="renderForm(4)">
+                            <div class="rac-img">
+                                <img src="../assets/img/four.png">
+                            </div>
+                            <div class="rac-text">
+                                <h2>Private office room booking</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="rectangle" onclick="renderForm(5)">
+                            <div class="rac-img">
+                                <img src="../assets/img/five.png">
+                            </div>
+                            <div class="rac-text">
+                                <h2>Event registration</h2>
+                                <p>eg. Volunteering event, Dinner event</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- End Row -->
+    </div>
+    <!-- End Content -->
+</main>
+
+<main id="form-section" role="main" class="main" style="display:none;">
+    <!-- Content -->
+    <div class="content container">
+        <div class="row justify-content-lg-center pt-lg-5">
+            <div class="col-lg-9">
+                <!-- Title -->
+                <div class="text-center">
+                    <div class="profile-form">
+                        <h1></h1>
+                        <div class="form-inner">
+                            @using (Html.BeginForm("AddCalendar", "BusinessAdmin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {
+                                @Html.TextBoxFor(model => model.COMPANY_CODE, new { @style = "display:none" })
+                                <div class="form-group">
+                                    <label for="calendarname">Calendar name *</label>
+
+                                    @Html.TextBoxFor(model => model.CALENDAR_NAME, new { @class = "form-control", @placeholder = "Calendar name", @required = "true" })
+                                    @Html.ValidationMessageFor(model => model.CALENDAR_NAME, "", new { @class = "invalid-feedback-2" })
+
+                                    @*<input type="text" class="form-control" id="calendarname" placeholder="" name="calendarname">*@
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="country">Country *</label>
+
+                                            @Html.DropDownListFor(model => model.COUNTRY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select Country", @required = "true" })
+                                            @Html.ValidationMessageFor(model => model.COUNTRY_ID, "", new { @class = "invalid-feedback-2" })
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="city">City *</label>
+
+                                            @Html.DropDownListFor(model => model.CITY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select City", @required = "true" })
+                                            @Html.ValidationMessageFor(model => model.CITY_ID, "", new { @class = "invalid-feedback-2" })
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="district">District *</label>
+
+                                    @Html.DropDownListFor(model => model.DISTRICT_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select District", @required = "true" })
+                                    @Html.ValidationMessageFor(model => model.DISTRICT_ID, "", new { @class = "invalid-feedback-2" })
+
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="cala">Calendar category *</label>
+
+                                    @Html.DropDownListFor(model => model.CALENDAR_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select Calendar Category", @required = "true" })
+                                    @Html.ValidationMessageFor(model => model.CALENDAR_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
+
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="sub">Calendar Sub-category *</label>
+
+                                    @Html.DropDownListFor(model => model.CALENDAR_SUB_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select Calendar Sub Category", @required = "true" })
+                                    @Html.ValidationMessageFor(model => model.CALENDAR_SUB_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
+
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="TAGS">Tags</label>
+                                    <div class="tom-select-custom">
+                                        @Html.DropDownListFor(model => model.TAGS, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "js-select form-select", @multiple = "true", @autocomplete = "off" })
+                                    </div>
+
+
+                                    @*<div class="tom-select-custom">
+                                            <select class="js-select form-select" autocomplete="off" multiple
+                                                    data-hs-tom-select-options='{ "create": true, "placeholder": "Create custom tag..." }'>
+                                            </select>
+                                        </div>*@
+
+                                    @Html.ValidationMessageFor(model => model.TAGS, "", new { @class = "invalid-feedback-2" })
+
+                                    @*<input type="text" class="form-control" id="calendarname" placeholder="" name="calendarname">*@
+                                </div>
+                                <div class="form-group">
+                                    <p style="margin-bottom: 0px;"><label for="file">Calendar  photo</label></p>
+                                    <div class="custome-uploade">
+
+                                        <label for="CALENDAR_PHOTO_PATH" id="CALENDAR_PHOTO_NAME" style="width:80%; max-width:300px; padding-left:16px;">This photo will be seen in market place</label>
+
+                                        <div class="fileUpload btn btn--browse">
+                                            <span>Browse</span>
+                                            @Html.TextBoxFor(model => model.CALENDAR_PHOTO_PATH, new { @class = "upload", Type = "File", @onchange = "BindLogoName('CALENDAR_PHOTO_PATH', 'CALENDAR_PHOTO_NAME')" })
+
+                                        </div>
+                                    </div>
+
+                                    @Html.ValidationMessageFor(model => model.CALENDAR_PHOTO_NAME, "", new { @class = "invalid-feedback-2" })
+
+                                </div>
+                                <button type="button" onclick="renderCategory()" class="back">Back</button>
+                                <button type="submit" class="btn btn-default">Save</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <!-- End Title -->
+            </div>
+        </div>
+        <!-- End Row -->
+    </div>
+    <!-- End Content -->
+</main>

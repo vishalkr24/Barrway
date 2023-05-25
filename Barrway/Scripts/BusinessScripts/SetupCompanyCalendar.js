@@ -27,7 +27,9 @@ function renderForm(CategoryId) {
     bindCalendarSubCategoryData($("#CALENDAR_CATEGORY_ID option:selected").val());
     $("#content").hide();
     $("#content-2").show();
+    checkSlot();
 }
+
 
 function renderCategory() {
     $("#content-2").hide();
@@ -39,6 +41,17 @@ function checkRegistrationStep() {
 
     if (data.COMPANY_PROFILE_STATUS == "N") {
         lockCalendarSetup();
+    }
+
+}
+
+function checkSlot() {
+    categoryId = $("#CALENDAR_CATEGORY_ID option:selected").val();
+
+    if (categoryId == 1 || categoryId == 2 || categoryId == 5) {
+        $("#duration-entry-field").show();
+    } else {
+        $("#duration-entry-field").hide();
     }
 
 }

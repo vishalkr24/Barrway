@@ -156,3 +156,23 @@ function GoToCalendarLayout(CalendarId, CalendarCode) {
     localStorage.setItem("CALENDAR_CODE", CalendarCode);
     window.location.replace("/Calendar/Index");
 }
+
+function setupNewCompanyCalendar() {
+    var companyId = localStorage.getItem("COMPANY_ID");
+
+    window.location.href = "/BusinessAdmin/SetupCompanyCalendar?CompanyId=" + companyId + "&IsPartial=true";
+
+    //$.ajax({
+    //    url: "/BusinessAdmin/SetupCompanyCalendar?CompanyId=" + companyId + "&returnPartial=true",
+    //    type: "GET",
+    //    success: function (data) {
+    //        $("#AddNewCalendarModal .modal-body").html(data);
+    //        $("#AddNewCalendarModal").modal("show");
+    //        $(".hide-on-partial").hide();
+    //    },
+    //    error: function () {
+
+    //    }
+    //})
+
+}
