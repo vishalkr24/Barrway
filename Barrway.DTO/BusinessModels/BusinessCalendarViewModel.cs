@@ -41,6 +41,8 @@ namespace Barrway.DTO.BusinessModels
         [ValidDropdownValue(ErrorMessage = "Please select a sub category")]
         public string CALENDAR_SUB_CATEGORY_ID { get; set; }
         public List<string> TAGS { get; set; }
+        
+        public string SLOT_DURATION_IN_MINS { get; set; }
     }
 
     public enum CalendarCategory

@@ -2967,6 +2967,8 @@
     <Content Include="Content\underscore.js\underscore-umd.js.map" />
     <Content Include="CalendarConfiguration\TypeB1Configuration.json" />
     <Content Include="CalendarConfiguration\TypeB2Configuration.json" />
+    <Content Include="CalendarConfiguration\TypeAConfiguration.json" />
+    <Content Include="CalendarConfiguration\TypeCConfiguration.json" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\BusinessScripts\AdminDashboard.js" />
     <Content Include="Scripts\BusinessScripts\AdminLayoutManager.js" />
@@ -3143,6 +3145,7 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\SignUp.cshtml" />
     <Content Include="Views\UserAdmin\Index.cshtml" />
+    <Content Include="Views\BusinessAdmin\_SetupCompanyCalendarPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
