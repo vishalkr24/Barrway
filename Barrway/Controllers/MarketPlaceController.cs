@@ -139,7 +139,7 @@ namespace Barrway.Controllers
             try
             {
                 var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
-                var calendarData = await businessUserService.GetCompanyCalendarByCompanyId(companyData.Data["Id"].ToString());
+                var calendarData = await businessUserService.GetMarcketPlaceCompanyCalendarByCompanyId(companyData.Data["Id"].ToString());
                 //var serviceData = await globalMasterService.GetCompanyCategoryMaster();
 
                 var data = JsonConvert.SerializeObject(companyData.Data);

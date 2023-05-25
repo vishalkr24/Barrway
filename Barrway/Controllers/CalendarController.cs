@@ -410,6 +410,7 @@ namespace Barrway.Controllers
                             start = SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss"),
                             title = "Slot " + slotCounter++
                         };
+                        formGroupKey = CustomMethods.CreateUUID();
 
                         script += $@"insert into CALENDAR_FORM_1935(
                                        [formGroupKey]

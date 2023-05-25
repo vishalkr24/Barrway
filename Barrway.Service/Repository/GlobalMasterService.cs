@@ -109,7 +109,7 @@ namespace Barrway.Service.Repository
                          join CALENDAR_CATEGORY_MASTER_1929 category on category.Id = calendar.CALENDAR_CATEGORY_ID
                          join DISTRICT_MASTER_1928 district on district.Id = calendar.DISTRICT_ID
                          join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
-                         where company.IS_SEARCHABLE_IN_MARKETPLACE = 'Y' and company.IS_ACTIVE = 'Y' {(!string.IsNullOrEmpty(filter) ? filter : "")}";
+                         where company.IS_SEARCHABLE_IN_MARKETPLACE = 'Y' and company.IS_ACTIVE = 'Y' and category.[CALENDAR_FORM_TYPE]='PUBLIC' {(!string.IsNullOrEmpty(filter) ? filter : "")}";
 
             List<IDictionary<string, object>> companyResult = await sqlFunction.ExecuteSqlQuery(query);
 
