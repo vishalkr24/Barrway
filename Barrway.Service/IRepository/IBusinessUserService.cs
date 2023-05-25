@@ -47,6 +47,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> AddCalendar(BusinessCalendarModel model, string UserId, CalendarControlModel calendarControlModel);
         Task<AddUpdateDelete> GetSingleCalendarById(string Id);
         Task<AddUpdateDelete> GetCompanyCalendarByCompanyId(string CompanyId);
+        Task<AddUpdateDelete> GetMarcketPlaceCompanyCalendarByCompanyId(string CompanyId);
         Task<AddUpdateDelete> GetCompanyCalendars(GenerateDynamicFormData data, string CompanyId);
 
         Task<AddUpdateDelete> AddSchedularForm(SchedularFormModel model, string formGroupKey);

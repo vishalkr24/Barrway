@@ -1,8 +1,8 @@
 ﻿var CalendarFormId = "2305", ySelection = "", xSelection = "", COMPANY_CODE, CALENDAR_CODE, formDetailsDataInfo, counterLoader, xaxisFormList, formAllDatafields, listTabulator;
 $(document).ready(async function () {
     $("#nv-company-schedule").addClass("active");
-  
-    
+
+
 
     COMPANY_CODE = getQueryParamValue("CompanyCode");
     CALENDAR_CODE = getQueryParamValue("CalendarCode");
@@ -13,6 +13,7 @@ $(document).ready(async function () {
     var formdetail = await getFormDetails();
     formDetailsDataInfo = formdetail[0];
 
+    
 
     var formFields = [];
     var formData = JSON.parse(formDetailsDataInfo.fields);
@@ -24,7 +25,7 @@ $(document).ready(async function () {
         });
 
     });
-    var formFields = formData;
+    //var formFields = formData;
     formAllDatafields = formFields;
     listTabulator = _.where(formAllDatafields, { type: "tabulator" });
 
@@ -46,6 +47,37 @@ $(document).ready(async function () {
         var activityConfig = caledarConfig.find(x => x.activitiesForm != 0 && x.IsDefault);
         ySelection = resourceConfig.resourceForm;
         xSelection = activityConfig.activitiesForm;
+        var $scope = angular.element($("#calendar")).scope();
+
+        $scope.otherFormId = 0;
+        $scope.otherFormId = formDetailsDataInfo.otherformid;
+
+        if ($scope.otherFormId != 0) {
+            $scope.otherformDetails=   await ManageFormApp($scope.otherFormId);
+        }
+
+
+        var allForm = await GetFormList();
+        
+        if (!DataService.isEmpty(allForm)) {
+            $scope.allFormsList = allForm;
+            if ($scope.allFormsList.length > 0) {
+                var exists = _.filter($scope.allFormsList, function (item) {
+                    return (!DataService.isEmpty(item.formTag) ? (item.formTag.toLowerCase().contains("course")
+                        || item.formTag.toLowerCase().contains("slot"))
+                        : false);
+                });
+                if (exists.length > 0) {
+                    $scope.isCourseForm = true;
+                    $scope.courseFormId = exists[0].formId;
+                }
+            }
+        }
+
+
+
+        $scope.ySelection = ySelection;
+        $scope.xSelection = xSelection;
         window["ySelected"] = ySelection;
         window["xSelected"] = xSelection;
         xaxisFormList = [];
@@ -71,6 +103,35 @@ $(document).ready(async function () {
                 value: item.id,
                 text: item[activityConfig.activities]
             }));
+        });
+
+
+        $('#calendar-service').change(async function () {
+
+            if ($(this).val() != '') {
+                var searchSrevice = $('#calendar-service option:selected').text();
+                var param = { "action": 29, "formTableColumnData": `   (   (   SERVICE_MASTER_1933.ACTIVITY_NAME like N'${searchSrevice}'    )        )   `, "formTableColumnName": "    left join SERVICE_MASTER_1933 on SERVICE_MASTER_1933.formId=f1.referrenceFormId and SERVICE_MASTER_1933.Id=f1.referrenceId  ", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 }
+
+                var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+                var view = $('#' + current_tab + ' div.calendar').fullCalendar('getView');
+                param.filter = changeStateOfCalenderController(view);
+                var filterredFormDataTemp = await reBindCalender(param);
+                var eventBasicData = window["EventBasicDetail"];
+                var eventData = filterredFormDataTemp.data;
+                refreshEventResourcesActivityNew('deleteEvent', eventData, eventBasicData.resourceData, eventBasicData.resColumns, eventBasicData.activityData, eventBasicData.activityColumn, eventData);
+
+
+            } else {
+                var param = { "action": 29, "formTableColumnData": "", "formTableColumnName": "", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 };
+                var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+                var view = $('#' + current_tab + ' div.calendar').fullCalendar('getView');
+                param.filter = changeStateOfCalenderController(view);
+                var filterredFormDataTemp = await reBindCalender(param);
+                var eventBasicData = window["EventBasicDetail"];
+                var eventData = filterredFormDataTemp.data;
+                refreshEventResourcesActivityNew('deleteEvent', eventData, eventBasicData.resourceData, eventBasicData.resColumns, eventBasicData.activityData, eventBasicData.activityColumn, eventData);
+
+            };
         });
 
 
@@ -167,9 +228,46 @@ $(document).ready(async function () {
 
 
     }
-        
-    
-})
+
+
+});
+function changeStateOfCalenderController(view) {
+    var temp = {};
+    temp.field = "start";
+    if (view.type.toLowerCase().contains("month")) {
+        temp.value = " datepart(mm,[start]) =month('" + view.intervalStart.format("YYYY-MM-DD") + "')   and datepart(yyyy, [start]) = year('" + view.intervalStart.format("YYYY-MM-DD") + "') ";
+    }
+    else if (view.type.toLowerCase().contains("year")) {
+        temp.value = " datepart(yyyy, [start]) = year('" + view.intervalStart.format("YYYY-MM-DD") + "') ";
+    }
+    else if (view.type.toLowerCase().contains("week") || view.type.toLowerCase().contains("twodays") || view.type.toLowerCase().contains("threedays")) {
+        temp.value = " CAST([start] as date) between CAST('" + view.intervalStart.format("YYYY-MM-DD") + "' as date) and CAST('" + view.intervalEnd.format("YYYY-MM-DD") + "' as date)  ";
+    }
+    else if (view.type.toLowerCase().contains("day")) {
+        temp.value = " CAST([start] as date) =CAST('" + view.intervalStart.format("YYYY-MM-DD") + "' as date) ";
+    }
+    return temp;
+}
+
+
+async function reBindCalender(param) {
+    showLoader();
+    param.IsCustomFilter = true;
+    param.CustomFilters = [{ "FieldName": "COMPANY_CODE", "Value": COMPANY_CODE }, { "FieldName": "CALENDAR_CODE", "Value": CALENDAR_CODE }];
+    return new Promise(resolve => {
+        $.ajax({
+            type: "POST",
+            url: BASE_URL + "FormAPI/GetFormRecordList",
+            data: JSON.stringify(param),
+            contentType: "application/json",
+            success: function (response) {
+                hideLoader();
+                resolve(response);
+            }
+        });
+
+    });
+}
 
 function tabsActive() {
 
@@ -296,14 +394,14 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
     }
     calenderData = changeResourceIDByYSelection((calenderData.data != undefined) ? calenderData.data : calenderData);
     window["eventListTemp"] = calenderData;
-    var $scopeVar = angular.element($("#calendar")).scope();
+    var $scope = angular.element($("#calendar")).scope();
 
 
 
     var basicDetails = window["EventBasicDetail"];
 
     var GroupingData = window["colGrouping"];
-    var $scopeVar = angular.element($("#calendar")).scope();
+    var $scope = angular.element($("#calendar")).scope();
    
     var resourceColumn = '';
     var majorGroup = "";
@@ -759,10 +857,10 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
             var $scope = angular.element($("#calendar")).scope();
             $scope.selectEventDetails = calEvent;
             if (calEvent.formID == undefined) {
-                $scope.selectEventDetails.formID = $scope.currentFormId;
+                $scope.selectEventDetails.formID = CalendarFormId;
             }
-            $scope.selectEventDetails.resourceFormId = $scope.ySelection;
-            $scope.selectEventDetails.ActivityFormId = $scope.xSelection;
+            $scope.selectEventDetails.resourceFormId = ySelection;
+            $scope.selectEventDetails.ActivityFormId = xSelection;
             $scope.selectEventDetails.start = $scope.selectEventDetails.start != null && $scope.selectEventDetails.start != undefined && $scope.selectEventDetails.start != '' ? customDate($scope.selectEventDetails.start.format()) : ''
             $scope.selectEventDetails.end = $scope.selectEventDetails.end != null && $scope.selectEventDetails.end != undefined && $scope.selectEventDetails.end != '' ? customDate($scope.selectEventDetails.end.format()) : ''
             $scope.selectEventDetails.customDate = DateWithDayName($scope.selectEventDetails, true);
@@ -775,9 +873,11 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
             //$scope.selectEventDetails.customFormIdsSplit
             //$scope.selectEventDetails.customFormsSplit
             $scope.selectEventDetails.customTitleSplit = $scope.selectEventDetails.customTitle.split(',');
-            var listFormDropdown = _.filter($scope.selectEventDetails.customFormsSplit, function (item) { return item != $scope.ySelection.toString(); });
+            
+            var listFormDropdown = _.filter($scope.selectEventDetails.customFormsSplit, function (item) { return item != ySelection.toString(); });
             if (listFormDropdown.length > 0) {
-                var listActivities = _.filter($scope.xaxisFormList, function (item) { return item.activitiesForm != $scope.ySelection; });
+                //var listActivities = _.filter(xaxisFormList, function (item) { return item.activitiesForm != ySelection; });
+                var listActivities = xaxisFormList;
                 $scope.selectEventDetails.dropdownList = [];
                 _.each(listActivities, function (item, key) {
                     var tempDrop = {};
@@ -877,7 +977,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
             if (selectedId != "") {
                 var param = {};
                 param.selectedId = selectedId;
-                $scope.getTabulatorListFromEvents(param);
+                getTabulatorListFromEvents(param);
             }
             $(document).on('click', function (e) {
                 if ($('.favicon-loader-overlay.active').length) {
@@ -952,7 +1052,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
             // events: calenderData,
             events: function (start, end, timezone, callback) {
 
-                var $scopeVar = angular.element($("#calendar")).scope();
+                var $scope = angular.element($("#calendar")).scope();
                 var param = {};
                 param.action = 1;
                 param.formId = CalendarFormId;
@@ -1016,7 +1116,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         //events: [],  
         events: function (start, end, timezone, callback) {
 
-            var $scopeVar = angular.element($("#calendar")).scope();
+            var $scope = angular.element($("#calendar")).scope();
             var param = {};
             param.action = 1;
             param.formId = CalendarFormId;
@@ -1211,8 +1311,8 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                         typeView = 2;
                     var dates = GetCalendarDateRange();
                     var currentDate = moment(dates.start).format("YYYY-MM-DD");
-                    var newpath = $scopeVar.EndPointUrl + '/downloadCalenderExcel?formId=' + formId + '&resourceFormId=' + resourceFormId + '&userId=' + userId + '&typeView=' + typeView + '&currentDate=' + currentDate + '';
-                    window.location.href = $scopeVar.EndPointUrl + '/downloadCalenderExcel?formId=' + formId + '&resourceFormId=' + resourceFormId + '&userId=' + userId + '&typeView=' + typeView + '&currentDate=' + currentDate + '';
+                    var newpath = $scope.EndPointUrl + '/downloadCalenderExcel?formId=' + formId + '&resourceFormId=' + resourceFormId + '&userId=' + userId + '&typeView=' + typeView + '&currentDate=' + currentDate + '';
+                    window.location.href = $scope.EndPointUrl + '/downloadCalenderExcel?formId=' + formId + '&resourceFormId=' + resourceFormId + '&userId=' + userId + '&typeView=' + typeView + '&currentDate=' + currentDate + '';
                 }
             }
         },
@@ -1237,7 +1337,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         //events: [],
         events: function (start, end, timezone, callback) {
 
-            var $scopeVar = angular.element($("#calendar")).scope();
+            var $scope = angular.element($("#calendar")).scope();
             var param = {};
             param.action = 1;
             param.formId = CalendarFormId;
@@ -1337,8 +1437,8 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                         }
                     }
         }
-    if ($scopeVar != undefined)
-        if ($scopeVar.isFilterApply) {
+    if ($scope != undefined)
+        if ($scope.isFilterApply) {
             var uniqEvents = _.uniq(calenderData, "resourceId");
             var tempFormData = [];
             _.each(resourceData, function (item) {
@@ -1386,7 +1486,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         //events: [],
         aspectRation: 1.35,
         events: function (start, end, timezone, callback) {
-            var $scopeVar = angular.element($("#calendar")).scope();
+            var $scope = angular.element($("#calendar")).scope();
             var param = {};
             param.action = 1;
             param.formId = CalendarFormId;
@@ -1485,3 +1585,264 @@ var DataService = {
             return false;
     }
 };
+
+var getTabulatorListFromEvents = async function (param) {
+    
+    var userDetail = GetUserDetails();
+    var $scope = angular.element($("#calendar")).scope();
+    var newParam = {};
+    newParam.action = 11;
+    newParam.formTableColumnNameList = "";
+    newParam.formTableColumnData = "";
+    if (listTabulator.length > 0) {
+        var temp = listTabulator[0];
+        newParam.searchTextData = temp.searchTextData;
+        newParam.fieldLabel = temp.label;
+        newParam.title = temp.label;
+        newParam.fieldName = temp.name;
+        newParam.formId = temp.reference_form;
+        newParam.otherreference_form = temp.otherreference_form;
+    }
+    if (param.selectedId != "") {
+        var list = window["EventBasicDetail"];
+        var eventlist = window["CalendarEventList"];
+        var rowId = parseInt(param.selectedId);
+        var exists = _.findWhere(eventlist, {
+            Id: rowId
+        });
+        if (!DataService.isEmpty(exists)) {
+            //  if (newParam.formId == exists.resFormID) {
+            newParam.formGroupKey = exists.formGroupKey;
+            var rowResource = _.findWhere(list.resourceData, {
+                id: exists.resources
+            });
+            if (!DataService.isEmpty(rowResource)) {
+                _.each(rowResource, function (item, key) {
+                    if (key != "id" && key != "title") {
+                        newParam.formTableColumnNameList += key + ","
+                        newParam.formTableColumnData += key + " like '" + item + "' and ";
+                    }
+                });
+            }
+            //}
+        }
+        newParam.selectedId = param.selectedId;
+    }
+    if (listTabulator.length > 0) {
+        newParam.formTableColumnName = listTabulator[0].searchTextData;
+
+    }
+
+    newParam.formTableColumnData = newParam.formTableColumnData.substring(0, newParam.formTableColumnData.length - 4);
+    newParam.formTableColumnNameList = newParam.formTableColumnNameList.substring(0, newParam.formTableColumnNameList.length - 1);
+
+    //$rootScope.$emit("ShowLoading");
+    newParam.created_by = userDetail.Id;
+    newParam.update_by = userDetail.Id;
+    $scope.tabuListLink = newParam;
+    $scope.selectedTabulatorList = [];
+
+    $("#strongFormName").remove();
+
+
+    /* get Student List from one to many controls based*/
+    var paramTemp = {};
+    paramTemp.action = 4;
+    $scope.formGroupKey = $scope.selectEventDetails.formGroupKey;
+    if (!DataService.isEmpty($scope.tabuListLink.formId))
+        paramTemp.formId = $scope.tabuListLink.formId;
+    else
+        paramTemp.formId = formDetailsDataInfo.otherformid;
+    paramTemp.Id = param.selectedId;
+    paramTemp.formGroupKey = $scope.formGroupKey;
+    if (paramTemp.formId == "0" || paramTemp.formId == 0 || paramTemp.formId == "" || paramTemp.formId == undefined || paramTemp.formId == null) {
+        paramTemp.formId = 0;
+        //return false;
+    }
+    await loadEventRecordDetails(paramTemp);
+    // $scope.manageOneToManyControl(paramTemp);
+
+
+    //$rootScope.safeApply();
+
+};
+ async function getReferralFormFieldsAndData(param) {
+
+    return new Promise(resolve => {
+        $.ajax({
+            type: "POST",
+            url: BASE_URL + "FormAPI/getReferralFormFieldsAndData",
+            data: JSON.stringify(param),
+            contentType: "application/json",
+            success: function (response) {
+               
+                hideLoader();
+                resolve(response);
+            }, error: function (err) {
+
+                
+            },
+        });
+
+    });
+}
+
+async function loadEventRecordDetails(paramTemp) {
+    
+    showLoader();
+    $("#tabuListUl").empty();
+    var $scope = angular.element($("#calendar")).scope();
+    if (!DataService.isEmpty(paramTemp.formId) || paramTemp.formId == 0) {
+        var param = {};
+        param = paramTemp;
+        param.action = 10;
+        param.formId = (paramTemp.formId == 0 ? CalendarFormId : paramTemp.formId).toString();
+        param.parentID = CalendarFormId;
+        param.fieldName = "";
+        var response = await getReferralFormFieldsAndData(param);
+
+        console.log(response, "response");
+        $scope.eventData = response;
+        console.log('Transaction table', $scope.eventData)
+        if (!DataService.isEmpty($scope.otherformDetails)) {
+            if (!DataService.isEmpty($scope.otherformDetails.formId)) {
+                var exist = _.findWhere($scope.eventData.formDataHeaders, { "Referral_Forms": $scope.otherformDetails.formId.toString() });
+                if (!DataService.isEmpty(exist)) {
+                    var exist1 = _.findWhere($scope.eventData.formDataHeaders, { "columnType": "text" });
+                    if (!DataService.isEmpty(exist1)) {
+                        $scope.selectedKeyFieldSecond = exist1.field;
+                    }
+                    $scope.selectedKeyField = exist.field;
+                }
+            }
+            else {
+
+            }
+        }
+        //else {
+        //    $scope.selectedKeyField = $scope.formDetailsDataInfo.otherFormFieldName;
+        //}
+
+        $scope.eventDataWithoutGroupBy = $scope.eventData.formDataListNew;
+
+        $scope.eventDataWithoutGroupByMinRecord = [];
+        $scope.eventDataWithoutGroupByMinRecordForWaiting = [];
+
+        var courseExists = _.findWhere(xaxisFormList, { resourceActivityForm: $scope.courseFormId });
+        if (!DataService.isEmpty(courseExists)) {
+           
+            var courseFormEntry = _.findWhere($scope.eventData.currentEventCalenderReferrenceList, { referrenceFormId: $scope.courseFormId });
+            if (!DataService.isEmpty(courseFormEntry)) {
+                var courseFormEntryExists = _.findWhere(courseExists.formDataList, { id: courseFormEntry.referrenceId });
+                if (!DataService.isEmpty(courseFormEntryExists)) {
+                    
+                    $scope.selectEventDetails.DESCRIPTION = courseFormEntryExists.DESCRIPTION;
+                    var maxrecordList = 0;
+                    var maxrecordWaitingList = 0;
+                    _.each(courseFormEntryExists, function (item, keyItem) {
+                        if (keyItem.contains("MAXIMUM_NO_OF_PARTICIPANTS")) {
+                            maxrecordList = item;
+                        }
+                        if (keyItem.contains("maxwaitingstudent")) {
+                            maxrecordWaitingList = item;
+                        }
+                    });
+                    if (DataService.isEmpty(maxrecordList)) {
+                        $scope.eventDataWithoutGroupByMinRecord = $scope.eventDataWithoutGroupBy;
+                        $scope.eventDataWithoutGroupByMinRecordForWaiting = [];
+                    }
+                    if (DataService.isEmpty(maxrecordWaitingList)) {
+                        $scope.eventDataWithoutGroupByMinRecordForWaiting = [];
+                    }
+                    $("#labelWaiting").empty();
+                    if (!DataService.isEmpty(maxrecordList) && !DataService.isEmpty(maxrecordWaitingList)) {
+                        $scope.eventDataWithoutGroupByMinRecord = $scope.eventDataWithoutGroupBy.slice(0, maxrecordList);
+                        $scope.eventDataWithoutGroupByMinRecordForWaiting = $scope.eventDataWithoutGroupBy.slice(maxrecordList, (maxrecordList + maxrecordWaitingList));
+                        if ($scope.eventDataWithoutGroupByMinRecordForWaiting.length > 0)
+                            $("#labelWaiting").append('<strong> Wait list</strong>');
+                    }
+                }
+
+            }
+            else {
+                $scope.eventDataWithoutGroupByMinRecord = $scope.eventDataWithoutGroupBy;
+                $("#labelWaiting").empty();
+            }
+        }
+        $("#tabuListUl").empty();
+        $("#newtabuListUl").empty();
+        $("#newtabuListUlWaiting").empty();
+
+        if (param.parentID != param.formId) {
+
+            if (!DataService.isEmpty($scope.eventDataWithoutGroupBy)) {
+                if ($scope.eventDataWithoutGroupBy.length > 0) {
+                    $("#tabuList").empty();
+                    $("#newtabuList").empty();
+                    $("#tabuList").append('<strong id="strongFormName">' + $scope.eventDataWithoutGroupBy.length + ' ' + $scope.otherformDetails.title + ' in this Slot</strong>');
+                    $("#newtabuList").append('<strong id="strongFormName">' + $scope.eventDataWithoutGroupBy.length + ' ' + $scope.otherformDetails.title + ' in this Slot</strong>');
+                }
+                else {
+                    $("#tabuList").empty();
+                    $("#newtabuList").empty();
+                    if (!DataService.isEmpty($scope.otherformDetails)) {
+                        if (!DataService.isEmpty($scope.otherformDetails.title)) {
+                            $("#tabuList").append('<strong id="strongFormName"> 0 ' + $scope.otherformDetails.title + ' in this Slot </strong>');
+                            $("#newtabuList").append('<strong id="strongFormName"> 0 ' + $scope.otherformDetails.title + ' in this Slot </strong>');
+                        }
+                    }
+                }
+            } else {
+                $("#labelWaiting").empty();
+            }
+        }
+        else {
+            $("#addTransactionRecord").remove();
+            $("#newaddTransactionRecord").remove();
+        }
+        // $("#tabuListLink");
+        $scope.rootScopeSafe();
+        removeTitleNew();
+        hideLoader();
+
+
+        
+    }
+};
+
+async function ManageFormApp(otherFormId) {
+    var otherRefParam = {};
+    otherRefParam.action = 4;
+    otherRefParam.formId = otherFormId;
+    return new Promise(resolve => {
+        $.ajax({
+            type: "POST",
+            url: BASE_URL + "FormAPI/ManageFormApp",
+            data: JSON.stringify(otherRefParam),
+            contentType: "application/json",
+            success: function (response) {
+                hideLoader();
+                resolve(response);
+            }
+        });
+
+    });
+}
+
+async function GetFormList() {
+    var param = { "action": 21, "applicationId": 351 }
+    return new Promise(resolve => {
+        $.ajax({
+            type: "POST",
+            url: BASE_URL + "FormAPI/GetFormList",
+            data: JSON.stringify(param),
+            contentType: "application/json",
+            success: function (response) {
+                hideLoader();
+                resolve(response);
+            }
+        });
+
+    });
+
+}
