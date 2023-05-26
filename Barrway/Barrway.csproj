@@ -3024,9 +3024,11 @@
     <Content Include="Scripts\myscript\controller\formPreviewModule.js" />
     <Content Include="Scripts\myscript\controller\FormRecordsController.js" />
     <Content Include="Scripts\myscript\controller\GoogleMapController.js" />
+    <Content Include="Scripts\myscript\controller\IndexController.js" />
     <Content Include="Scripts\myscript\controller\mainModule.js" />
     <Content Include="Scripts\myscript\controller\pivotTableDataSummaryController.js" />
     <Content Include="Scripts\myscript\controller\PreviewFormController.js" />
+    <Content Include="Scripts\myscript\controller\publicIndexController.js" />
     <Content Include="Scripts\myscript\controller\QueueGeneratorController.js" />
     <Content Include="Scripts\myscript\controller\quickEditController.js" />
     <Content Include="Scripts\myscript\directives\directives.js" />

@@ -368,7 +368,7 @@
 
 
 <div class="row">
-    <div class="col-md-2" style="background-color: #bcb3cc; padding:0px;">
+    <div class="col-md-2" ng-show="IS_EXIST_PRE_DEFINED_ACTIVITIES" style="background-color: #bcb3cc; padding:0px;">
         <section class="sidebar" style="border-right:none!important;">
             <div class="sedebar__tInner" style="text-align:center">
                 <div class="form-top">
@@ -472,7 +472,7 @@
             </div>
         </section>
     </div>
-    <div class="col-md-10">
+    <div class="col-md-10" ng-class="{'col-md-12':!IS_EXIST_PRE_DEFINED_ACTIVITIES}">
         <div class="breadcrumbUi row flex-wrap" style="background:white;">
 
             <div class="col-lg-6 col-md-12 text-xl-left mb-2 mb-lg-0">
@@ -567,7 +567,7 @@
                                    aria-hidden="true"
                                    disabled></i>Setting
                             </a>
-                            <a ng-click="showAdvanced()" class="btn btn-primary mt-3 mt-lg-0 ml-2" data-toggle="tooltip" title="Advanced ">
+                            <a ng-click="showAdvanced()" ng-show="IS_EXIST_PRE_DEFINED_ACTIVITIES" class="btn btn-primary mt-3 mt-lg-0 ml-2" data-toggle="tooltip" title="Advanced ">
                                 <span class="action-name"> </span>
                                 <i class="fa fa-chevron-down" ng-class="{'fa-chevron-down':!isShowAdvance,'fa-chevron-up':isShowAdvance}"></i>
                             </a>
@@ -1092,7 +1092,7 @@
             <div class="modal-body">
                 <div class="event-detail div-flex">
                     <div class="div-flex">
-                        <div class="title">
+                        <div class="title" ng-show="IS_EXIST_PRE_DEFINED_ACTIVITIES">
                             <!--<label class="pr-2">
 
                                 {{createEventDetails.description}}
@@ -1110,7 +1110,7 @@
                                 </div>
 
                             </div>
-                            <div class="temp">
+                            <div class="temp" style="display:none">
                                 <span class="titleContainer">
                                     <span class="title1"> {{ otherformDetails.title}}</span>
                                 </span>
@@ -1122,6 +1122,13 @@
                                 </div>
                             </div>
 
+                        </div>
+
+                        <div ng-show="!IS_EXIST_PRE_DEFINED_ACTIVITIES">
+                            <div class="form-group">
+                                <label>Activity Name</label>
+                                <input type="text" class="form-control" ng-model="createEventDetails.activityTitle" placeholder="Activity Name" />
+                            </div>
                         </div>
 
 
@@ -1144,7 +1151,8 @@
 
 
                     </div>
-                    <button type="button" class="btn btn-primary" ng-click="createNewEvent()">Create Event</button>
+                    <button type="button" class="btn btn-primary" ng-click="createNewEvent()" ng-show="IS_EXIST_PRE_DEFINED_ACTIVITIES">Create Event</button>
+                    <button type="button" class="btn btn-primary" ng-click="createNewEventWithoutPredefinedActivity()" ng-show="!IS_EXIST_PRE_DEFINED_ACTIVITIES">Create Event</button>
                 </div>
 
                 <!--<div class="div-flex div-list-bar"></div>-->

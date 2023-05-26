@@ -987,5 +987,27 @@ namespace Barrway.Service.Repository
             }
         }
 
+
+        public async Task<AddUpdateDelete> GetCalendarDetails(string calendarCode)
+        {
+            string sqlString = $@"select *from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE='{calendarCode}'";
+            var result = (await sqlFunction.ExecuteSqlQuery(sqlString)).FirstOrDefault();
+            if (result != null)
+            {
+                string categoryId = result["CALENDAR_CATEGORY_ID"]?.ToString() ?? "";
+                sqlString = $@"select *from CALENDAR_CONTROL_SHEET_1944 where CALENDAR_CODE='{calendarCode}'";
+                var controlSheet = (await sqlFunction.ExecuteSqlQuery(sqlString)).FirstOrDefault();
+
+                result.Add("controlSheet", controlSheet);
+                sqlString = $@"select *from CALENDAR_CATEGORY_MASTER_1929 where Id={categoryId}";
+
+                var category = (await sqlFunction.ExecuteSqlQuery(sqlString)).FirstOrDefault();
+                result.Add("category", category);
+                return new AddUpdateDelete() {Data= result, Message=AppMessage.Success,Status=true };
+
+            }
+            return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+        }
+
     }
 }

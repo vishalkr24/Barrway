@@ -74,5 +74,7 @@ namespace Barrway.Service.IRepository
         #endregion
 
 
+        Task<AddUpdateDelete> GetCalendarDetails(string calendarCode);
+
     }
 }
