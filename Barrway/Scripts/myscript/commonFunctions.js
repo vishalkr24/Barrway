@@ -191,7 +191,7 @@
 function changeFormStatus(formId) {
     $.ajax({
         type: "POST",
-        url: "api/FormAPI/GetFormList",
+        url: BASE_URL +"FormAPI/GetFormList",
         data: "{'formId':" + formId + " ,'action':9}",
         contentType: "application/json",
         datatype: "json",
@@ -204,7 +204,7 @@ function changeFormStatus(formId) {
 function publishToOpen(formId, groupId) {
     $.ajax({
         type: "POST",
-        url: "api/FormAPI/GetFormList",
+        url: BASE_URL +"FormAPI/GetFormList",
         data: "{'formId':" + formId + " ,'action':12}",
         contentType: "application/json",
         datatype: "json",
@@ -216,7 +216,7 @@ function publishToOpen(formId, groupId) {
 function backToPrivate(formId) {
     $.ajax({
         type: "POST",
-        url: "api/FormAPI/GetFormList",
+        url: BASE_URL +"FormAPI/GetFormList",
         data: "{'formId':" + formId + " ,'action':12}",
         contentType: "application/json",
         datatype: "json",
@@ -230,7 +230,7 @@ function openBoot(formid, userId, btnType) {
 
     $.ajax({
         type: "POST",
-        url: "api/FormAPI/ManageGroups",
+        url: BASE_URL +"FormAPI/ManageGroups",
         data: "{'userId':" + userId + " ,'action':4}",
         contentType: "application/json",
         datatype: "json",
@@ -434,7 +434,7 @@ function submitToPublish() {
 
         $.ajax({
             type: "POST",
-            url: "api/FormAPI/ManageForm",
+            url: BASE_URL +"FormAPI/ManageForm",
             data: "{'userId':" + JSON.parse(localStorage.detail).Id + " ,'action':" + action + ",'created_by':" + JSON.parse(localStorage.detail).Id + ",'updated_by':" + JSON.parse(localStorage.detail).Id + ",'groupID':" + $('select#ddlGroups option:selected').val() + ",'formId':" + $('#frmIdHidden').val() + ",'clearData':" + clearData + ",'formType':" + formType + "}",
             contentType: "application/json",
             datatype: "json",
@@ -458,7 +458,7 @@ function createNewGroup() {
         var isEdit = false;
         $.ajax({
             type: "POST",
-            url: "api/FormAPI/ManageGroups",
+            url: BASE_URL +"FormAPI/ManageGroups",
             data: "{'userId':" + JSON.parse(localStorage.detail).Id + " ,'action':10,'created_by':" + JSON.parse(localStorage.detail).Id + ",'updated_by':" + JSON.parse(localStorage.detail).Id + ",'groupName':'" + $('#txtGroupName').val() + "','isEdit':" + isEdit + "}",
             contentType: "application/json",
             datatype: "json",
@@ -500,7 +500,7 @@ function subscribeForm(grpId, topicId) {
             //});
             $.ajax({
                 type: "POST",
-                url: "api/FormAPI/ManageForm",
+                url: BASE_URL +"FormAPI/ManageForm",
                 data: "{'userId':" + JSON.parse(localStorage.detail).Id + " ,'action':11,'created_by':" + JSON.parse(localStorage.detail).Id + ",'updated_by':" + JSON.parse(localStorage.detail).Id + ",'groupID':" + grpId + ",'subscribleAll':" + subscribleAllParam + "}",
                 contentType: "application/json",
                 datatype: "json",
@@ -515,7 +515,7 @@ function subscribeForm(grpId, topicId) {
         else {
             $.ajax({
                 type: "POST",
-                url: "api/FormAPI/ManageForm",
+                url: BASE_URL +"FormAPI/ManageForm",
                 data: "{'userId':" + JSON.parse(localStorage.detail).Id + " ,'action':11,'created_by':" + JSON.parse(localStorage.detail).Id + ",'updated_by':" + JSON.parse(localStorage.detail).Id + ",'groupID':" + grpId + ",'subscribleAll':" + subscribleAllParam + "}",
                 contentType: "application/json",
                 datatype: "json",
@@ -546,7 +546,7 @@ function deleteGroup(groupId, reqType) {
     if (confirm('delete this group?')) {
         $.ajax({
             type: "POST",
-            url: "api/FormAPI/ManageGroups",
+            url: BASE_URL +"FormAPI/ManageGroups",
             data: "{'userId':" + JSON.parse(localStorage.detail).Id + " ,'action':11,'updated_by':" + JSON.parse(localStorage.detail).Id + ",'groupId':" + groupId + ",'IsDeleted':true}",
             contentType: "application/json",
             datatype: "json",
@@ -570,7 +570,7 @@ function exportGroupUsers(groupId, groupName) {
 
         $.ajax({
             type: "POST",
-            url: "api/FormAPI/ManageUserGroup",
+            url: BASE_URL +"FormAPI/ManageUserGroup",
             data: "{'action':6,'userId':" + JSON.parse(localStorage.detail).Id + ",'groupId':" + groupId + "}",
             contentType: "application/json",
             datatype: "json",
@@ -626,7 +626,7 @@ function verifyPhone() {
                 alert('matched');
                 $.ajax({
                     type: "POST",
-                    url: "api/FormAPI/profile",
+                    url: BASE_URL +"FormAPI/profile",
                     data: "{'Id':" + JSON.parse(localStorage.detail).Id + " ,'action':10}",
                     contentType: "application/json",
                     datatype: "json",
@@ -826,7 +826,7 @@ function addEvent(form) {
 
         $.ajax({
             method: 'POST',
-            url: "api/FormAPI/GeneratedFormData",
+            url: BASE_URL +"FormAPI/GeneratedFormData",
             dataType: 'json',
             contentType: "application/json",
             // data: "{'action':" + param.action + ",'formId':" + param.formId + ",'topicId':" + param.topicId + ",'created_by':" + param.created_by + ",'updated_by':" + param.update_by + ",'formGroupKey':" + param.formGroupKey + ",'formfieldDataListTemp':" + JSON.stringify(param.formfieldDataListTemp) + "}", //$.param(formData)
@@ -1091,7 +1091,7 @@ function manageOneToManyReferrenceForm(param) {
     param.action = 10;
     $.ajax({
         method: 'POST',
-        url: "api/FormAPI/ManageCalenderReferrenceNew",
+        url: BASE_URL +"FormAPI/ManageCalenderReferrenceNew",
         dataType: 'jsonp',
         contentType: "application/json",
         //data:param,
@@ -2681,6 +2681,9 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                     $('#vertical-resource-view div.calendar').fullCalendar('render');
                 }, 150);
             }, 150);
+
+
+            
         },
 
       //  eventDragStop: function (event, jsEvent, ui, view) {
@@ -2690,8 +2693,10 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
     },
 
 
+
+
         // List View
-        myOptions = {
+    myOptions = {
             header: {
                 left: 'prev,next today',
                 center: 'title',
@@ -3369,7 +3374,7 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
 
         $.ajax({
             method: 'POST',
-            url: "api/FormAPI/GeneratedFormData",
+            url: BASE_URL +"FormAPI/GeneratedFormData",
             dataType: 'json',
             contentType: "application/json",
             data: "{'action':" + param.action + ",'userId':" + param.userId + ",'formId':" + param.formId + ",'resourceFormId':" + resFormIdParam + ",'ActivityFormId':" + actFormIdParam + ",'parentID':" + param.parentID + ",'isDyEvent':" + param.isDyEvent + ",'isEventUpdatable':" + param.isEventUpdatable + ",'seperatedResColValues':'" + param.seperatedResColValues + "','seperatedColorValues':'" + param.seperatedColorValues + "',   'topicId':" + param.topicId + ",'created_by':" + param.created_by + ",'updated_by':" + param.update_by + ",'formGroupKey':'" + param.formGroupKey + "','formfieldDataListTemp':'" + JSON.stringify(param.formfieldDataListTemp) + "'}", //$.param(formData)
@@ -4127,7 +4132,7 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
         var dates = { start: start, end: end };
         return dates;
     }
-
+    var calendarDetails = angular.copy($scopeVar.calendarMaster);
     var myOptions1 = {
         //defaultDate: '2017-12-07',
         scrollTime: '00:00', // undo default 6am scrollTime
@@ -4234,47 +4239,6 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
         resourceColumns: resColumns,
         resources: resourceData,
         height: 'auto', // will activate stickyHeaderDates automatically!
-        //resources: function (callback) {
-        //    var $scopeVar = angular.element($("#calendar")).scope();
-        //    var param = {};
-        //    param.action = 1;
-        //    param.formId = $scopeVar.currentFormId;
-
-        //    param.isCalender = 1;
-        //    param.isEvent = 1;
-
-        //    param.resourceFormId = $scopeVar.ySelection;
-        //    param.ActivityFormId = $scopeVar.xSelection;
-       
-     
-
-        //    $.ajax({
-        //        method: 'POST',
-        //        url: "api/FormAPI/getCalendarResourceActivity",
-        //        dataType: 'json',
-        //        contentType: "application/json",
-        //        data: JSON.stringify(param),
-        //        success: function (response) {
-        //            //$.unblockUI();
-        //            var resourceDetails = response.resourceDetails;
-        //            if (resourceDetails != undefined) {             
-        //                callback(resourceDetails);
-        //            }
-        //            else
-        //                callback([]);
-        //        },
-        //        beforeSend: function () {
-        //            //showLoader();
-        //        },
-        //        complete: function () {
-        //            var _ScrollOffset = window["scrollOffset"];
-        //            window.scrollTo(0, _ScrollOffset);
-        //            $.unblockUI();
-        //            // $("#" + current_tab + " div.calendar").unblock();
-        //        }
-        //    });
-        //},
-
         allDaySlot: true,
         resourceRender: function (resourceObj, labelTds, bodyTds) {
             var cellText = '';
@@ -4396,7 +4360,11 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
     };
     countLoader = 0;
     calendarOptions = $.extend({}, defaultOptions, resourceOptions, myOptions1);
+    
     $('#timeline-resource-view div.calendar').fullCalendar(calendarOptions);
+   
+  
+    
     if ($scopeVar != undefined)
         if ($scopeVar.ySelection != 0) {
             if ($scopeVar.formDetailsDataInfo != null)
@@ -4407,8 +4375,11 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                             if (exists.minTime != "" && exists.minTime != null && exists.minTime != undefined && exists.maxTime != null && exists.maxTime != undefined && exists.maxTime != "") {
                                 var minTime = exists.minTime.trim().replace(' ', ':');
                                 var maxTime = exists.maxTime.trim().replace(' ', ':');
-                                $('#timeline-resource-view div.calendar').fullCalendar('option', 'minTime', minTime + ":00");
-                                $('#timeline-resource-view div.calendar').fullCalendar('option', 'maxTime', maxTime + ":00");
+                                if (Check_EXIST_FIXED_OPERATING_HOURS(calendarDetails)) {
+                                    $('#timeline-resource-view div.calendar').fullCalendar('option', 'minTime', minTime + ":00");
+                                    $('#timeline-resource-view div.calendar').fullCalendar('option', 'maxTime', maxTime + ":00");
+                                }
+                                
                             }
                         }
                     }
@@ -4508,54 +4479,6 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
             });
         },
         resources: resourceData,
-        //resources: function (callback) {
-        //    var $scopeVar = angular.element($("#calendar")).scope();
-        //    var param = {};
-        //    param.action = 1;
-        //    param.formId = $scopeVar.currentFormId;
-
-        //    param.isCalender = 1;
-        //    param.isEvent = 1;
-
-        //    param.resourceFormId = $scopeVar.ySelection;
-        //    param.ActivityFormId = $scopeVar.xSelection;
-
-
-
-        //    $.ajax({
-        //        method: 'POST',
-        //        url: "api/FormAPI/getCalendarResourceActivity",
-        //        dataType: 'json',
-        //        contentType: "application/json",
-        //        data: JSON.stringify(param),
-        //        success: function (response) {
-        //            //$.unblockUI();
-        //            var resourceDetails = response.resourceDetails;
-        //            if (resourceDetails != undefined) {
-        //                callback(resourceDetails);
-        //                var resourceData = response.resourceDetails;
-        //                var activityData = response.activityDetails;
-        //                resourceData = _.without(resourceData, _.findWhere(resourceData, { value: "0" })); // resource data 
-        //                var ResourceInputFields = $scope.filterInputControls($scope.ResourcefieldsData);                      
-        //                var resourceColumns = $scope.getResourceColumns(resourceData, ResourceInputFields, 'resource');
-        //                var resourceFormData = $scope.arrangeData(resourceData, resourceColumns, 'resource');
-        //                $scopeVar.resourceFormData = $filter('orderBy')(resourceFormData, 'title', false);
-                       
-        //            }
-        //            else
-        //                callback([]);
-        //        },
-        //        beforeSend: function () {
-        //            //showLoader();
-        //        },
-        //        complete: function () {
-        //            var _ScrollOffset = window["scrollOffset"];
-        //            window.scrollTo(0, _ScrollOffset);
-        //            $.unblockUI();
-        //            // $("#" + current_tab + " div.calendar").unblock();
-        //        }
-        //    });
-        //},
         allDaySlot: true,
         selectable: true,
         select: function (startDate, endDate, jsEvent, view, resource) {
@@ -4589,7 +4512,7 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                 tempDrop.customClass = "true";
                 $scopeVar.createEventDetails.dropdownList.push(tempDrop);
             });
-
+            
 
             $scopeVar.rootScopeSafe();
             setTimeout(function () {                
@@ -4668,8 +4591,10 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
             if (exists.minTime != "" && exists.minTime != null && exists.minTime != undefined && exists.maxTime != null && exists.maxTime != undefined && exists.maxTime != "") {
                 var minTime = exists.minTime.trim().replace(' ', ':');
                 var maxTime = exists.maxTime.trim().replace(' ', ':');
-                myOptions2.minTime = minTime + ":00";
-                myOptions2.maxTime = maxTime + ":00";
+                if (Check_EXIST_FIXED_OPERATING_HOURS(calendarDetails)) {
+                    myOptions2.minTime = minTime + ":00";
+                    myOptions2.maxTime = maxTime + ":00";
+                }
             }
         }
     }
@@ -6569,7 +6494,7 @@ function loadCalendarWithOutEventFunction(calenderType, calenderData, resourceDa
 
         $.ajax({
             method: 'POST',
-            url: "api/FormAPI/GeneratedFormData",
+            url: BASE_URL+"FormAPI/GeneratedFormData",
             dataType: 'json',
             contentType: "application/json",
             data: "{'action':" + param.action + ",'userId':" + param.userId + ",'formId':" + param.formId + ",'resourceFormId':" + resFormIdParam + ",'ActivityFormId':" + actFormIdParam + ",'parentID':" + param.parentID + ",'isDyEvent':" + param.isDyEvent + ",'isEventUpdatable':" + param.isEventUpdatable + ",'seperatedResColValues':'" + param.seperatedResColValues + "','seperatedColorValues':'" + param.seperatedColorValues + "',   'topicId':" + param.topicId + ",'created_by':" + param.created_by + ",'updated_by':" + param.update_by + ",'formGroupKey':'" + param.formGroupKey + "','formfieldDataListTemp':'" + JSON.stringify(param.formfieldDataListTemp) + "'}", //$.param(formData)
@@ -8962,7 +8887,7 @@ function loadCalendartemp(calenderType, calenderData, resourceData, resColumns, 
 
         $.ajax({
             method: 'POST',
-            url: "api/FormAPI/GeneratedFormData",
+            url: BASE_URL +"FormAPI/GeneratedFormData",
             dataType: 'json',
             contentType: "application/json",
             data: "{'action':" + param.action + ",'userId':" + param.userId + ",'formId':" + param.formId + ",'resourceFormId':" + resFormIdParam + ",'ActivityFormId':" + actFormIdParam + ",'parentID':" + param.parentID + ",'isDyEvent':" + param.isDyEvent + ",'isEventUpdatable':" + param.isEventUpdatable + ",'seperatedResColValues':'" + param.seperatedResColValues + "','seperatedColorValues':'" + param.seperatedColorValues + "',   'topicId':" + param.topicId + ",'created_by':" + param.created_by + ",'updated_by':" + param.update_by + ",'formGroupKey':'" + param.formGroupKey + "','formfieldDataListTemp':'" + JSON.stringify(param.formfieldDataListTemp) + "'}", //$.param(formData)
@@ -11119,7 +11044,7 @@ function loadCalendarold1(calenderType, calenderData, resourceData, resColumns, 
 
         $.ajax({
             method: 'POST',
-            url: "api/FormAPI/GeneratedFormData",
+            url: BASE_URL +"FormAPI/GeneratedFormData",
             dataType: 'json',
             contentType: "application/json",
             data: "{'action':" + param.action + ",'userId':" + param.userId + ",'formId':" + param.formId + ",'resourceFormId':" + resFormIdParam + ",'ActivityFormId':" + actFormIdParam + ",'parentID':" + param.parentID + ",'isDyEvent':" + param.isDyEvent + ",'isEventUpdatable':" + param.isEventUpdatable + ",'seperatedResColValues':'" + param.seperatedResColValues + "','seperatedColorValues':'" + param.seperatedColorValues + "',   'topicId':" + param.topicId + ",'created_by':" + param.created_by + ",'updated_by':" + param.update_by + ",'formGroupKey':'" + param.formGroupKey + "','formfieldDataListTemp':'" + JSON.stringify(param.formfieldDataListTemp) + "'}", //$.param(formData)
@@ -13975,7 +13900,7 @@ function loadCalendar(calenderType, calenderData, resourceData, resColumns, acti
 
         $.ajax({
             method: 'POST',
-            url: "api/FormAPI/GeneratedFormData",
+            url: BASE_URL +"FormAPI/GeneratedFormData",
             dataType: 'json',
             contentType: "application/json",
             data: "{'action':" + param.action + ",'userId':" + param.userId + ",'formId':" + param.formId + ",'resourceFormId':" + resFormIdParam + ",'ActivityFormId':" + actFormIdParam + ",'parentID':" + param.parentID + ",'isDyEvent':" + param.isDyEvent + ",'isEventUpdatable':" + param.isEventUpdatable + ",'seperatedResColValues':'" + param.seperatedResColValues + "','seperatedColorValues':'" + param.seperatedColorValues + "',   'topicId':" + param.topicId + ",'created_by':" + param.created_by + ",'updated_by':" + param.update_by + ",'formGroupKey':'" + param.formGroupKey + "','formfieldDataListTemp':'" + JSON.stringify(param.formfieldDataListTemp) + "'}", //$.param(formData)
@@ -14900,7 +14825,7 @@ function checkIfCalenderControl(formId) {
     try {
         $.ajax({
             type: "POST",
-            url: "api/FormAPI/ManageForm",
+            url: BASE_URL +"FormAPI/ManageForm",
             data: "{'action':12,'formId':" + formId + "}",
             contentType: "application/json",
             datatype: "json",
@@ -14984,7 +14909,7 @@ function quickSignUp(reqType) {
     }
     $.ajax({
         type: "POST",
-        url: "api/FormAPI/profile",
+        url: BASE_URL +"FormAPI/profile",
         data: JSON.stringify(param),
         contentType: "application/json",
         datatype: "json",
@@ -15022,7 +14947,7 @@ function quickLogin() {
     param.password = $('#loginPassword').val();
     $.ajax({
         type: "POST",
-        url: "api/FormAPI/Login",
+        url: BASE_URL +"FormAPI/Login",
         data: JSON.stringify(param),
         contentType: "application/json",
         datatype: "json",
@@ -15527,3 +15452,14 @@ function GetFormRecordsUrl(formid) {
     return BASE_URL + "FormAPI/GetFormRecordList";
 }
 
+function Check_EXIST_FIXED_OPERATING_HOURS(calendarDetails) {
+    return calendarDetails && calendarDetails.category && calendarDetails.category.EXIST_FIXED_OPERATING_HOURS != 'N';
+}
+
+function Check_EXIST_FIXED_SESSIONS(calendarDetails) {
+    return calendarDetails && calendarDetails.category && calendarDetails.category.EXIST_FIXED_OPERATING_HOURS != 'N';
+}
+
+function Check_EXIST_PRE_DEFINED_ACTIVITIES(calendarDetails) {
+    return calendarDetails && calendarDetails.category && calendarDetails.category.EXIST_PRE_DEFINED_ACTIVITIES != 'N';
+}

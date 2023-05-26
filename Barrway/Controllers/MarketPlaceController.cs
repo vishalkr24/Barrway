@@ -189,8 +189,11 @@ namespace Barrway.Controllers
             }
             
         }
-
-
+        [HttpPost]
+        public async Task<ActionResult> GetCalendarDetails(string id)
+        {
+            return Json(await businessUserService.GetCalendarDetails(id));
+        }
 
 
     }
