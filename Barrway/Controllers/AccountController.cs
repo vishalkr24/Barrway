@@ -393,7 +393,7 @@ namespace Barrway.Controllers
             }
             else
             {
-                return RedirectToAction("Home", "Index");
+                return RedirectToAction("Index", "Home");
             }
             
         }

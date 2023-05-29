@@ -2885,6 +2885,11 @@ function validateSchedularFormData(data) {
         $("#SCH_TO_DATE_ERROR").hide();
     }
 
+    if (data.SCH_FROM_DATE > data.SCH_TO_DATE) {
+        alert("From date should be earlier than To date.");
+        finalCheck = false;
+    }
+
 
     return finalCheck;
 }
