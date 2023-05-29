@@ -50,7 +50,7 @@ function setCompanyDetails() {
         for (var i = 0; i < data.length; i++) {
 
             if (data[i].IS_DEFAULT == "Y") {
-                if (localStorage.getItem("COMPANY_ID") == null || localStorage.getItem("COMPANY_ID") == undefined) {
+                if (localStorage.getItem("COMPANY_ID") == null || localStorage.getItem("COMPANY_ID") == "null" || localStorage.getItem("COMPANY_ID") == undefined) {
                     localStorage.setItem("COMPANY_ID", data[i].Id);
                     localStorage.setItem("COMPANY_CODE", data[i].COMPANY_CODE);
                     localStorage.setItem("COMPANY_NAME_ENGLISH", data[i].COMPANY_NAME_ENGLISH);

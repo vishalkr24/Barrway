@@ -41,6 +41,8 @@ function checkRegistrationStep() {
 
     if (data.COMPANY_PROFILE_STATUS == "N") {
         lockCalendarSetup();
+    } else {
+        $("#error-div").hide();
     }
 
 }

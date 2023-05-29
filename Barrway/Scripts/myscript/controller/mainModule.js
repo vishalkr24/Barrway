@@ -114,7 +114,13 @@ FormGeneratorApp.run(function ($rootScope, $templateCache, notifierService, $q, 
 FormGeneratorApp.controller('DashboardController', function ($scope, $http, $timeout, $state, DataService, $ngBootbox, $location, $window, $rootScope, mainService, adminService, CookiesPersistenceService, notifierService, translationService) {
     if (window.location.href.includes("UserAdmin")) {
         $state.go("user_dashboard");
+    } else {
+        setCompanyDetails();
+        setSelectedCalendar();
+        $scope.ManageCalendarMaster();
     }
+
+
 
 });
 FormGeneratorApp.controller('CommonCustomDialogController', function ($scope, $ngBootbox, DataService, notifierService, $rootScope, $state, $rootScope, $timeout, $http, $location, $window, mainService, $filter) {
