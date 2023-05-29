@@ -221,6 +221,7 @@ namespace Barrway.Controllers
                         return RedirectToAction("Dashboard");
                     }
 
+
                 }
                 else
                 {
@@ -458,16 +459,20 @@ namespace Barrway.Controllers
 
                 if (saveDataResult.Status)
                 {
-                    return RedirectToAction("Dashboard");
+                    ViewBag.PageId = 2;
+                    return View("ManageCompanyWebsite", model);
                 }
                 else
                 {
-                    return View("ManageCompanyWebsite");
+                    ViewBag.PageId = 2;
+                    return View("ManageCompanyWebsite", model);
                 }
             }
             catch (Exception ex)
             {
-                return View("ManageCompanyWebsite");
+                ViewBag.PageId = 2;
+                ViewBag.ServiceError = "Remove single quote from the content and Try again!";
+                return View("ManageCompanyWebsite", model);
             }
         }
 
@@ -612,6 +617,12 @@ namespace Barrway.Controllers
 
                 if (company.Status)
                 {
+                    if (model.CALENDAR_PHOTO_PATH == null)
+                    {
+                        ModelState.AddModelError("CALENDAR_PHOTO_NAME", "Please select a calendar photo");
+                        return View("SetupCompanyCalendar", model);
+                    }
+
                     string folderPath = Server.MapPath("~/UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString());
 
                     if (!Directory.Exists(folderPath))

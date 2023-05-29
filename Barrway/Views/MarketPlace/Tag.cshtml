@@ -46,7 +46,7 @@
                         {
                             <div class="col-md-6">
                                 <div class="media">
-                                    <div class="media-left" style="">
+                                    <div class="media-left" style="" onclick="viewMarketplaceCompanyCalendar('@item.COMPANY_CODE', '@item.CALENDAR_CODE')">
                                         <img src="@item.CALENDAR_PHOTO_PATH.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px">
                                     </div>
                                     <div class="media-body">
