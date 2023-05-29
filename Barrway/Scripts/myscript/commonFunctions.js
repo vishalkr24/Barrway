@@ -15463,3 +15463,6 @@ function Check_EXIST_FIXED_SESSIONS(calendarDetails) {
 function Check_EXIST_PRE_DEFINED_ACTIVITIES(calendarDetails) {
     return calendarDetails && calendarDetails.category && calendarDetails.category.EXIST_PRE_DEFINED_ACTIVITIES != 'N';
 }
+function Check_IS_SERVICE_TYPE(calendarDetails) {
+    return calendarDetails && calendarDetails.category && calendarDetails.category.IS_SERVICE_TYPE != 'N';
+}
