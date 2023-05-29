@@ -55,8 +55,6 @@ namespace Barrway.Controllers
                 {
                     Logout();
                 }
-
-                
             }
             return View();
         }

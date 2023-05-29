@@ -262,13 +262,11 @@ namespace Barrway.Controllers
                 int slotCounter = 1;
 
                 string script = "";
-
-                while (dateTracker <= end)
+                string formGroupKey = CustomMethods.CreateUUID();
+                var response = await businessUserService.AddSchedularForm(data, formGroupKey);
+                if (response.Status)
                 {
-                    string formGroupKey = Guid.NewGuid().ToString();
-
-                    var response = await businessUserService.AddSchedularForm(data, formGroupKey);
-                    if (response.Status)
+                    while (dateTracker <= end)
                     {
                         string SchedularFormId = response.Data.Id.ToString();
                         DateTime SlotStartTime = DateTime.Now;
@@ -410,7 +408,7 @@ namespace Barrway.Controllers
                             start = SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss"),
                             title = "Slot " + slotCounter++
                         };
-                        formGroupKey = CustomMethods.CreateUUID();
+                        formGroupKey =Guid.NewGuid().ToString();
 
                         script += $@"insert into CALENDAR_FORM_1935(
                                        [SCHEDULAR_FORM_ID]
@@ -433,8 +431,8 @@ namespace Barrway.Controllers
                                       ,[activities]
 
                                       ,[description]
-                                      ,[created_at], [updated_at])
-	                                  values('{SchedularFormId}', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter}', '{SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{data.SCH_RESOURCE}', '{data.SCH_ACTIVITY}', '{data.SCH_DESCRIPTION}', getDate(), getDate() );
+                                      ,[created_at], [updated_at],[EVENT_TYPE])
+	                                  values('{SchedularFormId}', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter}', '{SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{data.SCH_RESOURCE}', '{data.SCH_ACTIVITY}', '{data.SCH_DESCRIPTION}', getDate(), getDate(),'SCHEDULE');
                                 
                                     insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
                                     values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_PROVIDER_MASTER}, '{data.SCH_RESOURCE}', 'SERVICE_PROVIDER_MASTER_1934', 'FIRST_NAME', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_RESOURCE}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
@@ -448,8 +446,9 @@ namespace Barrway.Controllers
                                     ";
 
                         dateTracker = dateTracker.AddDays(1);
-                        
+
                     }
+                
                 }
 
                 var count = await sqlFunction.ExecuteSqlCommandQuery(script);
