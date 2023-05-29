@@ -30,6 +30,7 @@ function setCompanyDetails() {
         
         $(".lbl-company-name").text(company.COMPANY_NAME_ENGLISH);
         $(".img-company-logo").attr("src", company.COMPANY_LOGO_PATH.replace("~", ".."));
+
     }
 }
 

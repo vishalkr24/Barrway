@@ -16,19 +16,18 @@
         color: white;
         padding: 20px;
         font-size: 14px;
-        display: none;
         font-weight: bold;
     }
 </style>
 @if (!ViewBag.IsPartial)
 {
-    <div class="main">
+    <div class="main" id="error-div" style="display:none;">
         <div class="content container">
             <div class="row pt-lg-5">
                 <div class="col-md-10" style="margin:auto;">
                     <div class="row">
                         <div class="col-md-12">
-                            <div id="error-div" class="error-div">
+                            <div class="error-div">
                                 Kindly complete the Step 1 - Setup your company profile <a href="/BusinessAdmin/SetupCompanyProfile" style="padding-left: 8px;">Click here to setup now</a>
                             </div>
                         </div>
@@ -209,7 +208,7 @@
                             <div class="form-group" id="duration-entry-field">
                                 <label for="calendarname">Slot Duration in Mins*</label>
 
-                                @Html.TextBoxFor(model => model.SLOT_DURATION_IN_MINS, new { @type = "number", @class = "form-control", @placeholder = "eg.: 15", @required = "true" })
+                                @Html.TextBoxFor(model => model.SLOT_DURATION_IN_MINS, new { @type = "number", @class = "form-control", @placeholder = "eg.: 15" })
                                 @Html.ValidationMessageFor(model => model.SLOT_DURATION_IN_MINS, "", new { @class = "invalid-feedback-2" })
                                 
                                 @*<input type="text" class="form-control" id="calendarname" placeholder="" name="calendarname">*@
