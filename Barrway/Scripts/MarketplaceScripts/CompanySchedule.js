@@ -39,7 +39,7 @@ $(document).ready(async function () {
     window["EventBasicDetail"] = manageWindowParams();
 
     var calenderSettings = await getCalenderSettings();
-    calendarDetails = await getCalendarDetails(CALENDAR_CODE);
+    calendarDetails = (await getCalendarDetails(CALENDAR_CODE)).Data;
     if (calenderSettings.length > 0) {
 
         var caledarConfig = calenderSettings;
@@ -854,7 +854,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 }), $resize);
         },
         eventClick: async function (calEvent, jsEvent, view) {
-            if (!Check_IS_SERVICE_TYPE(calendarDetails)) {
+            if (Check_IS_SERVICE_TYPE(calendarDetails)) {
                 //customEventDetailsServiceModelPopUp.modal('show');
                 //customEventDetailsServiceModelPopUp.css({ "z-index": "9999" });
                 await rendarPopupCalendar(calEvent.start);
