@@ -403,6 +403,8 @@
     <Content Include="assets\img\900x562\img8.jpg" />
     <Content Include="assets\img\900x562\img9-dark.jpg" />
     <Content Include="assets\img\900x562\img9.jpg" />
+    <Content Include="assets\img\angle-blue.png" />
+    <Content Include="assets\img\angle-red.png" />
     <Content Include="assets\img\documentation\img1-lg.jpg" />
     <Content Include="assets\img\documentation\img1.jpg" />
     <Content Include="assets\img\documentation\img2-lg.jpg" />
@@ -435,6 +437,7 @@
     <Content Include="assets\img\others\img7.png" />
     <Content Include="assets\img\others\img8-dark.png" />
     <Content Include="assets\img\others\img8.png" />
+    <Content Include="assets\img\ques.png" />
     <Content Include="assets\img\three.png" />
     <Content Include="assets\img\two.png" />
     <Content Include="assets\js\demo.js" />

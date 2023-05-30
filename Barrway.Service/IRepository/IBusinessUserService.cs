@@ -39,6 +39,8 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetDefaultCompanyByUserId(string UserId);
         Task<AddUpdateDelete> UpdateBusinessCompanyProfileStatusByUserId(string userId, bool isActive);
         Task<AddUpdateDelete> UpdateBusinessCompanyProfileStatusByBusinessId(string businessId, bool isActive);
+        Task<AddUpdateDelete> getCompanyDashboardData(string CompanyCode);
+        Task<AddUpdateDelete> getCompanyCalendarDashboardData(string CompanyCode, string CalendarCode);
         #endregion
 
 
@@ -49,6 +51,8 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetCompanyCalendarByCompanyId(string CompanyId);
         Task<AddUpdateDelete> GetMarcketPlaceCompanyCalendarByCompanyId(string CompanyId);
         Task<AddUpdateDelete> GetCompanyCalendars(GenerateDynamicFormData data, string CompanyId);
+
+        Task<AddUpdateDelete> GetCalendarUpcomingBookings(GenerateDynamicFormData data, string CompanyCode, string CalendarCode);
 
         Task<AddUpdateDelete> AddSchedularForm(SchedularFormModel model, string formGroupKey);
 

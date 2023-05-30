@@ -90,6 +90,58 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> getCompanyDashboardData(string CompanyCode)
+        {
+            string query = $@"select COUNT(calendars.Id) as 'Calendars' from BUSINESS_CALENDAR_MASTER_1925 calendars where calendars.COMPANY_CODE = '{CompanyCode}'";
+
+            string query2 = $@"select COUNT(service_m.Id) as 'Services' from SERVICE_MASTER_1933 service_m where COMPANY_CODE = '{CompanyCode}'";
+
+            string query3 = $@"select COUNT(*) as 'BookingsToday' from TRANSACTION_MASTER_1942 where COMPANY_CODE = '{CompanyCode}' and (created_at < getDate() and created_at > DATEADD(d,0,DATEDIFF(d,0,GETDATE())))";
+
+            string query4 = $@"select COUNT(*) as 'BookingsThisWeek' from TRANSACTION_MASTER_1942 where COMPANY_CODE = '{CompanyCode}' 
+                                and (created_at >=  dateadd(day, 1-datepart(dw, getdate()), CONVERT(date,getdate())) 
+                                and created_at < getdate())";
+
+            string query5 = $@"select COUNT(serviceProvider_m.Id) as 'ServiceProviders' from SERVICE_PROVIDER_MASTER_1934 serviceProvider_m where COMPANY_CODE = '{CompanyCode}'";
+
+
+
+            List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+            List<IDictionary<string, object>> result2 = await sqlFunction.ExecuteSqlQuery(query2);
+            List<IDictionary<string, object>> result3 = await sqlFunction.ExecuteSqlQuery(query3);
+            List<IDictionary<string, object>> result4 = await sqlFunction.ExecuteSqlQuery(query4);
+            List<IDictionary<string, object>> result5 = await sqlFunction.ExecuteSqlQuery(query5);
+
+            List<IDictionary<string, object>> finalList = new List<IDictionary<string, object>>();
+
+            finalList.Add(result[0]);
+            finalList.Add(result2[0]);
+            finalList.Add(result3[0]);
+            finalList.Add(result4[0]);
+            finalList.Add(result5[0]);
+
+            return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = finalList };
+        }
+
+        public async Task<AddUpdateDelete> getCompanyCalendarDashboardData(string CompanyCode, string CalendarCode)
+        {
+            string query1 = $@"select COUNT(*) as 'BookingsToday' from TRANSACTION_MASTER_1942 where COMPANY_CODE = '{CompanyCode}' and (created_at < getDate() and created_at > DATEADD(d,0,DATEDIFF(d,0,GETDATE())))";
+
+            string query2 = $@"select COUNT(*) as 'BookingsThisWeek' from TRANSACTION_MASTER_1942 where COMPANY_CODE = '{CompanyCode}' 
+                                and (created_at >=  dateadd(day, 1-datepart(dw, getdate()), CONVERT(date,getdate())) 
+                                and created_at < getdate())";
+
+            List<IDictionary<string, object>> result1 = await sqlFunction.ExecuteSqlQuery(query1);
+            List<IDictionary<string, object>> result2 = await sqlFunction.ExecuteSqlQuery(query2);
+
+            List<IDictionary<string, object>> finalList = new List<IDictionary<string, object>>();
+
+            finalList.Add(result1[0]);
+            finalList.Add(result2[0]);
+
+            return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = finalList };
+        }
+
         public async Task<AddUpdateDelete> GetCompanyPhotoAlbumByCompanyId(string CompanyId, bool checkVisibility = false)
         {
             string visibilityQuery = "";
@@ -320,7 +372,85 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> GetCalendarUpcomingBookings(GenerateDynamicFormData data, string CompanyCode, string CalendarCode)
+        {
+            Dictionary<string, string> filters = new Dictionary<string, string>() {
+                    { "BOOKING_DATE","company.BOOKING_DATE"},
+                    { "SERVICE_NAME","company.SERVICE_NAME"},
+                    { "SERVICE_PROVIDER","calendar.SERVICE_PROVIDER"},
+                    { "CLIENT_NAME","category.CLIENT_NAME"},
+                    { "FROM_TIME","calendar.FROM_TIME"},
+                    { "TO_TIME","calendar.TO_TIME"},
+            };
 
+            string column = "", dir = "";
+            if (data.sorters != null && data.sorters.Count() > 0)
+            {
+                column = data.sorters.FirstOrDefault().field;
+                dir = data.sorters.FirstOrDefault().dir;
+            }
+            else
+            {
+                column = "created_at";
+                dir = "desc";
+            }
+
+            List<string> applyFilter = new List<string>();
+            if (data.filters != null && data.filters.Count() > 0)
+            {
+                foreach (var item in data.filters)
+                {
+                    if (filters.Any(x => x.Key == item.field) && !string.IsNullOrEmpty(item.value))
+                    {
+                        if (item.field == "created_at" || item.field == "updated_at")
+                        {
+                            string filter = await sqlFunction.GetDateFilter(item, "booking");
+                            applyFilter.Add(filter);
+                        }
+                        else
+                        {
+                            string filter = filters[item.field] + " like N'%" + item.value + "%'";
+                            applyFilter.Add(filter);
+                        }
+
+                    }
+                }
+            }
+
+            string applyFilterQuery = string.Join(" and ", applyFilter);
+            applyFilterQuery = applyFilterQuery.TrimEnd("and ".ToCharArray());
+
+            int PageSize = data.size > 0 ? data.size : 20;
+            int PageNumber = data.page > 0 ? data.page : 1;
+
+            string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+                                    SELECT [Id]
+                                          ,[created_at]
+                                          ,[updated_at]
+                                          ,[created_by]
+                                          ,[updated_by]
+                                          ,[COMPANY_CODE]
+                                          ,[CALENDAR_CODE]
+                                          ,[BOOKING_DATE]
+                                          ,[SERVICE_NAME]
+                                          ,[SERVICE_PROVIDER]
+                                          ,[CLIENT_NAME]
+                                          ,[FROM_TIME]
+                                          ,[TO_TIME]
+                                      FROM [dbo].[COMPANY_UPCOMING_BOOKINGS_1945] booking where COMPANY_CODE = '{CompanyCode}' and CALENDAR_CODE = '{CalendarCode}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+                                    )
+                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+            var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+            if (result.Count > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
 
         public async Task<AddUpdateDelete> GetDefaultCompanyByBusinessId(string BusinessAccountId)
         {
@@ -545,6 +675,8 @@ namespace Barrway.Service.Repository
                 {
                     model.IS_SEARCHABLE_IN_MARKETPLACE = "Y";
                 }
+
+
 
                 string query = $@"UPDATE [dbo].[BUSINESS_COMPANY_MASTER_1924] SET 
                                [updated_at] = getdate()

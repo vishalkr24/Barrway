@@ -1,4 +1,5 @@
 ﻿using Barrway.DTO.BusinessModels;
+using Barrway.DTO.Common;
 using Barrway.Security;
 using Barrway.Service.IRepository;
 using Barrway.Service.Repository;
@@ -477,5 +478,30 @@ namespace Barrway.Controllers
             }
             return (date - firstMonthMonday).Days / 7 + 1;
         }
+
+        public async Task<ActionResult> GetCalendarUpcomingBookingsData(GenerateDynamicFormData data, string CompanyCode, string CalendarCode)
+        {
+            try
+            {
+                var transactionData = await businessUserService.GetCalendarUpcomingBookings(data, CompanyCode, CalendarCode);
+                var transactionList = transactionData.Data;
+                double last_page = 0;
+                if (transactionList != null && transactionList.Count > 0)
+                {
+                    var singData = transactionList[0];
+                    var total_records = Convert.ToInt32(singData["total_records"].ToString());
+                    var size = Convert.ToInt32(singData["size"].ToString());
+                    double paging = (double)total_records / size;
+                    last_page = Math.Floor(paging) + 1;
+                }
+
+                return Json(new { data = transactionList, last_page }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
     }
 }
