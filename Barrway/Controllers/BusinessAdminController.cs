@@ -443,6 +443,34 @@ namespace Barrway.Controllers
 
         }
 
+        public async Task<ActionResult> getCompanyDashboardData(string CompanyCode)
+        {
+            try
+            {
+                var Data = await businessUserService.getCompanyDashboardData(CompanyCode);
+
+                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = Data.Data }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public async Task<ActionResult> getCompanyCalendarDashboardData(string CompanyCode, string CalendarCode)
+        {
+            try
+            {
+                var Data = await businessUserService.getCompanyCalendarDashboardData(CompanyCode, CalendarCode);
+
+                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = Data.Data }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         public async Task<ActionResult> SaveCompanyServiceDetails(BusinessCompanyViewModel model)
         {
             try

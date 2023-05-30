@@ -118,6 +118,7 @@ FormGeneratorApp.controller('DashboardController', function ($scope, $http, $tim
         setCompanyDetails();
         setSelectedCalendar();
         $scope.ManageCalendarMaster();
+        setCalendarDashboardData();
     }
 
 

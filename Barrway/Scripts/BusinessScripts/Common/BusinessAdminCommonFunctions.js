@@ -17,6 +17,45 @@
     return data;
 }
 
+function getCompanyDashboardData(companyCode) {
+    var data;
+    $.ajax({
+        url: "/BusinessAdmin/getCompanyDashboardData/",
+        data: {
+            CompanyCode: companyCode
+        },
+        async: false,
+        type: "GET",
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    })
+    return data;
+}
+
+function getCompanyCalendarDashboardData(companyCode, calendarCode) {
+    var data;
+    $.ajax({
+        url: "/BusinessAdmin/getCompanyCalendarDashboardData/",
+        data: {
+            CompanyCode: companyCode,
+            CalendarCode: calendarCode
+        },
+        async: false,
+        type: "GET",
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    })
+    return data;
+}
+
 function getSingleDefaultCompany() {
     var data;
     $.ajax({

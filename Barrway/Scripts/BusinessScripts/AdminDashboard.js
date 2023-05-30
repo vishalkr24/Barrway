@@ -1,7 +1,24 @@
 ﻿$(document).ready(function () {
     setPageStatus();
     showNavbarNavigation('dashboardsMegaMenu');
+    setDashboardData();
 });
+
+function setDashboardData() {
+    var response = getCompanyDashboardData(localStorage.getItem('COMPANY_CODE'));
+
+    console.log(response);
+
+    if (response.Status) {
+        data = response.Data;
+        $("#lblBookingToday").text(data[2].BookingsToday)
+        $("#lblBookingThisWeek").text(data[3].BookingsThisWeek)
+        $("#lblNumberOfServiceProvider").text(data[4].ServiceProviders)
+        $("#lblNumberOfCalendar").text(data[0].Calendars)
+        $("#lblNumberOfServices").text(data[1].Services)
+    }
+
+}
 
 function setPageStatus() {
     var response = getCompanyWebsite();
