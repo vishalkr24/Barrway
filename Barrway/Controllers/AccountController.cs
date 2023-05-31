@@ -61,7 +61,7 @@ namespace Barrway.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult> Login()
+        public async Task<ActionResult> Login(string returnUrl = null)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -76,6 +76,7 @@ namespace Barrway.Controllers
                 }
             }
 
+            ViewBag.ReturnUrl = (string.IsNullOrEmpty(returnUrl)) ? "" : returnUrl;
             return View();
         }
 
@@ -117,10 +118,11 @@ namespace Barrway.Controllers
         [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model)
+        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
             if (!ModelState.IsValid)
             {
+                ViewBag.ReturnUrl = returnUrl;
                 return View();
             }
 
@@ -140,14 +142,58 @@ namespace Barrway.Controllers
 
 
                 HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = model.REMEMBER_ME }, claims);
-                return RedirectToAction("Index", "UserAdmin");
+
+                if (string.IsNullOrEmpty(returnUrl))
+                {
+                    return RedirectToAction("Index", "UserAdmin");
+                }
+                else
+                {
+                    if (returnUrl.Contains("$"))
+                    {
+                        return Redirect(returnUrl.Replace("$", "&"));
+                    }
+                    else
+                    {
+                        return Redirect(returnUrl);
+                    }
+                    
+                }
+
+                
             }
             else
             {
+                ViewBag.ReturnUrl = returnUrl;
                 ModelState.AddModelError("ERROR_MESSAGE", loginresult.Message);
             }
 
             return View(model);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<ActionResult> CheckPublicUserLogin()
+        {
+            if (!string.IsNullOrEmpty(User.Identity.Name))
+            {
+                var loginresult = await authService.GetUser(User.Identity.Name, FormRole.PUBLIC_USER);
+
+                if (loginresult.Status)
+                {
+                    return Json(new AddUpdateDelete() { Status = true, Message = "Success" }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new AddUpdateDelete() { Status = false, Message = "Failed" }, JsonRequestBehavior.AllowGet);
+                }
+
+            }
+            else
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = "Failed" }, JsonRequestBehavior.AllowGet);
+            }
+
         }
 
 

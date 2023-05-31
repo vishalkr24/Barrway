@@ -99,9 +99,12 @@
     <Compile Include="MarketplaceModels\MarketplaceCompanyGalleryModel.cs" />
     <Compile Include="MarketplaceModels\MarketplaceCompanyModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PublicModels\CalendarParticipantModel.cs" />
     <Compile Include="PublicModels\PublicAccountModel.cs" />
     <Compile Include="PublicModels\PublicTagDataModel.cs" />
     <Compile Include="PublicModels\PublicUserProfileModel.cs" />
+    <Compile Include="PublicModels\TransactionMasterModel.cs" />
+    <Compile Include="UserAdminModels\CalendarEnrollModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

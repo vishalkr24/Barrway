@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Barrway.DTO.AuthViewModel;
 using FormGeneratorDTOs.DTOs;
 using Barrway.DTO.PublicModels;
+using Barrway.DTO.UserAdminModels;
 
 namespace Barrway.Service.IRepository
 {
@@ -23,7 +24,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> UpdatePublicUserProfilePic(PublicAccountModel model);
 
         Task<AddUpdateDelete> UpdatePublicUserProfileData(PublicUserProfileModel model, bool updatePassword = false);
-
+        Task<AddUpdateDelete> EnrollPublicUserForCalendar(CalendarEnrollModel model);
         #endregion
 
 

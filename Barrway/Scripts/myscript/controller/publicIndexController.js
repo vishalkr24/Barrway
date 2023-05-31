@@ -90,7 +90,7 @@
         $scope.setSpecialAccess(mainService.loginDetails());
         loadText(mainService.loginDetails());
         $scope.getLanguage();
-        $scope.bindCalendarDropdown();
+        //$scope.bindCalendarDropdown();
 
         /*Theme List*/
         $scope.allFormsList = [];
