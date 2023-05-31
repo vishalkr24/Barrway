@@ -13,6 +13,7 @@ using Barrway.DTO.BusinessModels;
 using FormGeneratorDTOs.DTOs;
 using Barrway.Utility.Common;
 using Barrway.DTO.PublicModels;
+using Barrway.DTO.UserAdminModels;
 
 namespace Barrway.Service.Repository
 {
@@ -21,12 +22,14 @@ namespace Barrway.Service.Repository
         private readonly string connectionString;
         private readonly ISqlFunction sqlFunction;
         private readonly IFormAPIRepository formAPIRepository;
+        private readonly IAuthService authService;
 
-        public PublicUserService(IFormAPIRepository formAPIRepository, ISqlFunction sqlFunction)
+        public PublicUserService(IFormAPIRepository formAPIRepository, ISqlFunction sqlFunction, IAuthService authService)
         {
             this.connectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
             this.formAPIRepository = formAPIRepository;
             this.sqlFunction = sqlFunction;
+            this.authService = authService;
         }
 
         public async Task<AddUpdateDelete> CreatePublicUserAccount(PublicAccountModel model)
@@ -123,6 +126,93 @@ namespace Barrway.Service.Repository
             {
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
             }
+        }
+
+        public async Task<AddUpdateDelete> EnrollPublicUserForCalendar(CalendarEnrollModel model)
+        {
+            var user = await authService.GetUser(model.USER_ID, FormRole.PUBLIC_USER);
+
+            // Check if the user already exist in the participant master
+            
+            List<IDictionary<string, object>> participantCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from PARTICIPANT_MASTER_1940 where EMAIL = '{user.Data["USER_EMAIL"]}' and COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE}'");
+
+            string StudentId = "";
+            if (participantCheckResult.Count > 0)
+            {
+                // Participant already exist so no need to check if it is enrolled with the selected activity and resource
+                
+                List<IDictionary<string, object>> transactionCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from TRANSACTION_MASTER_1942 where COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE}' and RESOURCE = '{model.transaction.RESOURCE}' and ACTIVITY = '{model.transaction.ACTIVITY}'");
+
+                if (transactionCheckResult.Count > 0)
+                {
+                    // user is already enrolled in the activity and resource
+                    return new AddUpdateDelete() { Message = "ALREADY-ENROLLED", Status = false };
+                }
+                else
+                {
+                    // User is not enrolled for the selected activity and resource
+                    StudentId = participantCheckResult.FirstOrDefault()["STUDENT_ID"].ToString();
+                }
+
+            }
+            else
+            {
+                // add entry in participant master table
+                var publicUser = await GetSinglePublicUserAccount(model.USER_ID);
+
+                model.participant.NICKNAME = publicUser.Data["NICK_NAME"].ToString();
+                model.participant.EMAIL = user.Data["USER_EMAIL"].ToString();
+                model.participant.DATE_OF_BIRTH = Convert.ToDateTime(publicUser.Data["DATE_OF_BIRTH"]);
+                model.participant.ADDRESS = "";
+                model.participant.GENDER = publicUser.Data["GENDER"].ToString();
+                model.participant.IS_ACTIVE = "Y";
+                model.participant.STUDENT_NAME = publicUser.Data["FIRST_NAME"].ToString() + " " + publicUser.Data["LAST_NAME"].ToString();
+                
+                Form_DataTable data = new Form_DataTable();
+                data.action = (int)FormAction.Save;
+                data.formId = (int)FormSetting.PARTICIPANT_MASTER;
+
+                data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.participant.ToDictionary());
+                data.formGroupKey = Guid.NewGuid().ToString();
+                var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+                if (formResult.res == 1)
+                {
+                    StudentId = formResult.Id.ToString();
+
+                    string ParticipantCode = "PC" + formResult.Id.ToString().PadLeft(5, '0');
+
+                    string query = $@"UPDATE [dbo].[PARTICIPANT_MASTER_1940]
+                                   SET [PARTICIPANT_CODE] = '{ParticipantCode}'
+                                 WHERE Id = '{formResult.Id.ToString()}'";
+
+                    int saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Message = "Failed to add participant", Status = false };
+                }
+
+            }
+
+            // send Entry into transaction master
+            model.transaction.STUDENT = StudentId;
+            Form_DataTable data2 = new Form_DataTable();
+            data2.action = (int)FormAction.Save;
+            data2.formId = (int)FormSetting.TRANSACTION_MASTER;
+
+            data2.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.transaction.ToDictionary());
+            data2.formGroupKey = Guid.NewGuid().ToString();
+            var formResult2 = (await formAPIRepository.GeneratedFormData(data2)).Data;
+            if (formResult2.res == 1)
+            {
+                return new AddUpdateDelete() { Message = "Success", Status = true };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Message = "Failed to enroll on calendar", Status = false };
+            }
+
         }
 
     }

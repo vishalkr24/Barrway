@@ -11,6 +11,7 @@ using System.IO;
 using Barrway.DTO.PublicModels;
 using Barrway.DTO.Common;
 using Barrway.Utility.Common;
+using Barrway.DTO.UserAdminModels;
 
 namespace Barrway.Controllers
 {
@@ -139,6 +140,24 @@ namespace Barrway.Controllers
             }
 
 
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EnrollPublicUserForCalendar(CalendarEnrollModel model)
+        {
+            try
+            {
+                model.USER_ID = User.Identity.Name;
+
+                var result = await publicUserService.EnrollPublicUserForCalendar(model);
+
+                return Json(result, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = "Failed" }, JsonRequestBehavior.AllowGet);
+            }
         }
 
     }

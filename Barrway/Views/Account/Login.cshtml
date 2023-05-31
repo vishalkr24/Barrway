@@ -375,7 +375,7 @@
                                 <div class="register">
                                     <h3>Login </h3>
 
-                                    <form class="js-validate needs-validation" method="post" action="/Account/Login" novalidate>
+                                    <form class="js-validate needs-validation" method="post" action="/Account/Login?returnUrl=@ViewBag.ReturnUrl.ToString()" novalidate>
 
                                         @Html.AntiForgeryToken()
 
