@@ -7,43 +7,25 @@
             <div class="col-lg-6 col-xl-6">
                 <div class="main-left">
                     <div class="bred-nav">
-                        <span><a href="#">User</a> / <span> <a href="#">Dashboard</a> </span></span>
+                        <span><a href="#" ui-sref="home()">User</a> / <span> <a href="#" ui-sref="home()">Dashboard</a> </span></span>
                     </div>
                     <div class="ml-content">
                         <h2>Your recently booked calendar</h2>
-                        <div class="wrap">
+
+
+
+                        <div class="wrap" ng-repeat="company in CalendarCompanyList">
                             <div class="wrap-im">
-                                <img src="../assets/img/one.png">
+                                <img src="{{company.COMPANY_LOGO_PATH}}">
                             </div>
                             <div class="wrap-con">
-                                <p><b>ABC Company</b></p>
-                                <P class="font-2">Yoga and health class</P>
-                                <p>Service subcategory1, service subcategory2 Balance: B $100</p>
-                                <p><button class="book">Book</button></p>
+                                <p><b>{{company.COMPANY_NAME_ENGLISH}}</b></p>
+                                <P class="font-2">{{company.ACTIVITY_NAME}}</P>
+                                <p>Service {{company.CALENDAR_SUB_CATEGORY_NAME}}</p>
+                                <p><button class="book" ng-click="GoToCalendar(company.CompanyId)">Book</button></p>
                             </div>
                         </div>
-                        <div class="wrap">
-                            <div class="wrap-im">
-                                <img src="../assets/img/one.png">
-                            </div>
-                            <div class="wrap-con">
-                                <p><b>ABC Company</b></p>
-                                <P class="font-2">Yoga and health class</P>
-                                <p>Service subcategory1, service subcategory2 Balance: B $100</p>
-                                <p><button class="book">Book</button></p>
-                            </div>
-                        </div>
-                        <div class="wrap">
-                            <div class="wrap-im">
-                                <img src="../assets/img/one.png">
-                            </div>
-                            <div class="wrap-con">
-                                <p><b>ABC Company</b></p>
-                                <P class="font-2">Yoga and health class</P>
-                                <p>Service subcategory1, service subcategory2 Balance: B $100</p>
-                                <p><button class="book">Book</button></p>
-                            </div>
-                        </div>
+                       
                     </div>
                 </div>
             </div>

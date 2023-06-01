@@ -3047,6 +3047,7 @@
     <Content Include="Scripts\ui-bootstrap-tpls.min.js" />
     <Content Include="Scripts\UserAdminScripts\AdminLayoutManager.js" />
     <Content Include="Scripts\UserAdminScripts\Common\UserAdminCommonFunctions.js" />
+    <Content Include="Scripts\UserAdminScripts\myCalendar.js" />
     <Content Include="Templates\admin\admin-users.html" />
     <Content Include="Templates\admin\article-details.html" />
     <Content Include="Templates\admin\cllractivity.html" />

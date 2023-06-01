@@ -1,4 +1,4 @@
-﻿FormGeneratorApp.controller('IndexController', function ($scope, $http, $timeout, $state, DataService, $ngBootbox, $location, $window, $rootScope, mainService, adminService, CookiesPersistenceService, notifierService, translationService) {
+﻿FormGeneratorApp.controller('PublicIndexController', function ($scope, $http, $timeout, $state, DataService, $ngBootbox, $location, $window, $rootScope, mainService, adminService, CookiesPersistenceService, notifierService, translationService) {
     var breadCrumb;
 
     if (localStorage.getItem("globalLang") == null || localStorage.getItem("globalLang") == "") {

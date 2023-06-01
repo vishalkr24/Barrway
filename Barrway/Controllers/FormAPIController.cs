@@ -1,4 +1,6 @@
-﻿using Barrway.Service.IRepository;
+﻿using Barrway.DTO.FormAPI;
+using Barrway.Security;
+using Barrway.Service.IRepository;
 using Barrway.Utility.Common;
 using FormGeneratorDTOs.DTOs;
 using Newtonsoft.Json;
@@ -20,12 +22,14 @@ namespace Barrway.Controllers
     {
         private readonly IFormAPIRepository formAPIRepository;
         private readonly ICalendarService calendarService;
+        private readonly IPublicUserService publicUserService;
 
         // GET: FormAPI
-        public FormAPIController(IFormAPIRepository formAPIRepository,ICalendarService calendarService)
+        public FormAPIController(IFormAPIRepository formAPIRepository,ICalendarService calendarService, IPublicUserService publicUserService)
         {
             this.formAPIRepository = formAPIRepository;
             this.calendarService = calendarService;
+            this.publicUserService = publicUserService;
         }
 
         [HttpPost]
@@ -154,7 +158,69 @@ namespace Barrway.Controllers
                     data.filter.value=data.filter.value+ " and F.COMPANY_CODE=N'"+ data.COMPANY_CODE+ "' and F.CALENDAR_CODE=N'"+data.CALENDAR_CODE+"'";
                 }
             }
-            var result = await formAPIRepository.getReferralFormFields(data);
+            ReferalFormDataResponseModel result = await formAPIRepository.getReferralFormFields(data);
+
+            ReferalFormDataResponseModel finalResult = new ReferalFormDataResponseModel();
+            
+            if (data.IsPublicUser)
+            {
+                var enrolledData = await publicUserService.GetAllEnrolledCalendarsData(data.COMPANY_CODE, UserIdentity.UserEmail);
+
+                if (enrolledData.Status)
+                {
+                    finalResult.activityDetails = new List<DynamicDropdownNew>();
+                    finalResult.resourceDetails = new List<DynamicDropdownNew>();
+                    finalResult.events = new List<IDictionary<string, object>>();
+                    finalResult.activityEvents = new List<IDictionary<string, object>>();
+
+                    for (int i = 0; i < enrolledData.Data.Count; i++)
+                    {
+                        
+                        // filter activity Details
+                        for (int j = 0; j < result.activityDetails.Count; j++)
+                        {
+                            if (enrolledData.Data[i]["CALENDAR_CODE"] == result.activityDetails[j].title)
+                            {
+                                finalResult.activityDetails.Add(result.activityDetails[j]);
+                            }
+                        }
+
+
+                        // filter events
+                        for (int j = 0; j < result.events.Count; j++)
+                        {
+                            if (enrolledData.Data[i]["SLOT"] == result.events[j]["Id"].ToString())
+                            {
+                                finalResult.events.Add(result.events[j]);
+                            }
+                        }
+
+                        // filter activity events
+                        for (int j = 0; j < result.activityEvents.Count; j++)
+                        {
+                            if (enrolledData.Data[i]["SLOT"] == result.activityEvents[j]["Id"].ToString())
+                            {
+                                finalResult.activityEvents.Add(result.activityEvents[j]);
+                            }
+                        }
+
+                        // filter resource details
+                        for (int j = 0; j < result.resourceDetails.Count; j++)
+                        {
+                            if (enrolledData.Data[i]["CALENDAR_CODE"] == result.resourceDetails[j].title)
+                            {
+                                finalResult.resourceDetails.Add(result.resourceDetails[j]);
+                            }
+                        }
+
+                    }
+
+                    result = finalResult;
+
+                }
+
+            }
+
 
             if (result != null)
             {

@@ -81,14 +81,14 @@ namespace Barrway.Controllers
                     var result = await publicUserService.UpdatePublicUserProfilePic(model);
 
                     file.SaveAs(Server.MapPath("~/UploadPublicUser/ProfilePhoto/" + userId + "/" + file.FileName.ToString()));
-                    return Json(new AddUpdateDelete() { Status = true, Message = "Success", Data = path}, JsonRequestBehavior.AllowGet);
+                    return Json(new AddUpdateDelete() { Status = true, Message = "Success", Data = path }, JsonRequestBehavior.AllowGet);
 
                 }
                 else
                 {
                     return Json(new AddUpdateDelete() { Status = true, Message = "Please select an image", Data = null }, JsonRequestBehavior.AllowGet);
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -119,7 +119,7 @@ namespace Barrway.Controllers
                         UpdatePassword = true;
                     }
                 }
-                
+
                 model.USER_ID = User.Identity.Name.ToString();
 
                 if (errorList.Count > 0)
@@ -130,7 +130,7 @@ namespace Barrway.Controllers
                 {
                     var result = await publicUserService.UpdatePublicUserProfileData(model, UpdatePassword);
                 }
-                
+
 
                 return Json(new AddUpdateDelete() { Status = true, Message = "Success" });
             }
@@ -157,6 +157,51 @@ namespace Barrway.Controllers
             catch (Exception ex)
             {
                 return Json(new AddUpdateDelete() { Status = false, Message = "Failed" }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GetAllEnrolledCompaniesData()
+        {
+            try
+            {
+                var result = await publicUserService.GetAllEnrolledCompaniesData(UserIdentity.UserEmail.ToString());
+
+                return Json(new { data = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Message = "Failed", Status = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GetRecentlyBookedCalendars()
+        {
+            try
+            {
+                var result = await publicUserService.GetRecentlyBookedCalendars(UserIdentity.UserEmail.ToString());
+
+                return Json(new { data = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Message = "Failed", Status = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GetAllEnrolledCalendarsData(string CompanyCode)
+        {
+            try
+            {
+                var result = await publicUserService.GetAllEnrolledCalendarsData(CompanyCode, UserIdentity.UserEmail);
+
+                return Json(new { data = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Message = "Failed", Status = false }, JsonRequestBehavior.AllowGet);
             }
         }
 
