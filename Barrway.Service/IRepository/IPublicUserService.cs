@@ -25,6 +25,9 @@ namespace Barrway.Service.IRepository
 
         Task<AddUpdateDelete> UpdatePublicUserProfileData(PublicUserProfileModel model, bool updatePassword = false);
         Task<AddUpdateDelete> EnrollPublicUserForCalendar(CalendarEnrollModel model);
+        Task<AddUpdateDelete> GetAllEnrolledCompaniesData(string userEmail);
+        Task<AddUpdateDelete> GetRecentlyBookedCalendars(string userEmail);
+        Task<AddUpdateDelete> GetAllEnrolledCalendarsData(string CompanyCode, string UserEmail);
         #endregion
 
 

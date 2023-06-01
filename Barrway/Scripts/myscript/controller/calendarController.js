@@ -10076,10 +10076,7 @@
            // $rootScope.$emit("HideLoading");
 
         }
-     
-
-       
-
+        
         $scope.updateCalenderReferrence = function (param) {
             var oneToManyParam = angular.copy(param);
             $rootScope.$emit("ShowLoading");
@@ -16165,11 +16162,82 @@
     });
 
     FormGeneratorApp.controller('UserAdminCalendarController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
+        
+        $scope.rootScopeSafe = function () {
+            $rootScope.safeApply();
+        };
+
+        $rootScope.safeApply = function (fn) {
+            var phase = this.$root.$$phase;
+            if (phase == '$apply' || phase == '$digest') {
+                if (fn && (typeof (fn) === 'function')) {
+                    fn();
+                }
+            } else {
+                this.$apply(fn);
+            }
+        };
+
+        adminService.postAsync('/UserAdmin/GetAllEnrolledCompaniesData/').then(function (res) {
+
+            $scope.CompanyList = res.data.data.Data;
+            setTimeout(function () {
+                $scope.manageSelectedCompany();
+                usercalendarLoad();
+            }, 500)
+
+        }, function (err) {
+
+        });
+
+        $scope.getCalendarData = function () {
+            
+            adminService.postAsync('/UserAdmin/GetAllEnrolledCalendarsData/', { CompanyCode: $("#company-filter-selector option:selected").val() }).then(function (res) {
+
+                $scope.selectedCalendarData = res.data.data.Data;
+                console.log($scope.selectedCalendarData);
+
+            }, function (err) {
+
+            });
+
+        }
+
+        $scope.manageSelectedCompany = function () {
+            if (localStorage.getItem("publicUserSelectedCompany") != null && localStorage.getItem("publicUserSelectedCompany") != undefined && localStorage.getItem("publicUserSelectedCompany") != "null") {
+                $("#company-filter-selector").val(localStorage.getItem("publicUserSelectedCompany"));
+            }
+        }
 
     })
 
     FormGeneratorApp.controller('UserDashboardController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
+        adminService.postAsync('/UserAdmin/GetRecentlyBookedCalendars/').then(function (res) {
 
+            console.log(res.data.data.Data)
+
+            for (var i = 0; i < res.data.data.Data.length; i++) {
+                res.data.data.Data[i].COMPANY_LOGO_PATH = res.data.data.Data[i].COMPANY_LOGO_PATH.replace('~', '..')
+            }
+
+            $scope.CalendarCompanyList = res.data.data.Data;
+
+            $scope.GoToCalendar = function (companyId) {
+                var companyCode = "";
+                for (var i = 0; i < $scope.CalendarCompanyList.length; i++) {
+                    if ($scope.CalendarCompanyList[i].CompanyId == companyId) {
+                        companyCode = $scope.CalendarCompanyList[i].COMPANY_CODE;
+                    }
+                }
+                
+                localStorage.setItem("publicUserSelectedCompany", companyCode);
+                $state.go("my_calendar", { "formId": 2305 });
+            }
+
+            
+        }, function (err) {
+
+        });
     })
 
     FormGeneratorApp.controller('UserAttendanceController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
