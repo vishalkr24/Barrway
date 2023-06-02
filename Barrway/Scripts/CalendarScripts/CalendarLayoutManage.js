@@ -33,7 +33,7 @@ function setCalendarDashboardData() {
             //},
             {
                 title: 'Date', field: 'BOOKING_DATE', headerFilter: "input", formatter: function (cell, formatter) {
-                    return moment(cell.getData().created_at).format("DD-MM-YYYY HH:mm:ss")
+                    return moment(cell.getData().BOOKING_DATE).format("DD-MM-YYYY")
                 }
             },
             { title: 'Service Name', field: 'SERVICE_NAME', headerFilter: "input" },
@@ -41,12 +41,12 @@ function setCalendarDashboardData() {
             { title: 'Client Name', field: 'CLIENT_NAME', headerFilter: "input" },
             {
                 title: 'From Time', field: 'FROM_TIME', headerFilter: "input", formatter: function (cell, formatter) {
-                    return moment(cell.getData().created_at).format("HH:mm:ss")
+                    return moment(cell.getData().FROM_TIME).format("HH:mm A")
                 }
             },
             {
                 title: 'To Time', field: 'TO_TIME', headerFilter: "input", formatter: function (cell, formatter) {
-                    return moment(cell.getData().created_at).format("HH:mm:ss")
+                    return moment(cell.getData().TO_TIME).format("HH:mm A")
                 }
             }
         ];

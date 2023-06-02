@@ -8,13 +8,6 @@ function changeCompany() {
     
     var data = getSingleCompanyByCompanyId(companyId).Data;
 
-    localStorage.removeItem("COMPANY_ID");
-    localStorage.removeItem("COMPANY_CODE");
-    localStorage.removeItem("COMPANY_NAME_ENGLISH");
-    localStorage.removeItem("COMPANY_NAME_CHINESE");
-    localStorage.removeItem("COMPANY_CATEGORY_ID");
-    localStorage.removeItem("COMPANY_SUB_CATEGORY_ID");
-    
     localStorage.setItem("COMPANY_ID", data.Id);
     localStorage.setItem("COMPANY_CODE", data.COMPANY_CODE);
     localStorage.setItem("COMPANY_NAME_ENGLISH", data.COMPANY_NAME_ENGLISH);
@@ -42,6 +35,7 @@ function showNavbarNavigation(divId) {
 }
 
 function setCompanyDetails() {
+    
     var allCompanies = getAllCompanies();
 
     if (allCompanies.Status) {
@@ -74,8 +68,6 @@ function setCompanyDetails() {
         $(".lbl-company-name").text(localStorage.getItem("COMPANY_NAME_ENGLISH"));
 
     }
-
-
 }
 
 function showComapanyWebsiteDetails(pageId = 1) {
