@@ -669,7 +669,7 @@
 
             $scope.enrollPublicUser = function () {
                 console.log($scope.selectEventDetails);
-
+                
                 $.ajax({
                     url: "/Account/CheckPublicUserLogin",
                     type: "POST",
@@ -680,11 +680,12 @@
                         } else {
 
                             // code to call the service
-
                             var eventData = $scope.selectEventDetails;
-
+                            
                             var obj = {
                                 USER_ID: "",
+                                RESOURCE_NAME: eventData.customTitleSplit[0],
+                                ACTIVITY_NAME: eventData.customTitleSplit[1],
                                 participant: {
                                     DESCRIPTION: eventData.description,
                                     COMPANY_CODE: eventData.COMPANY_CODE,

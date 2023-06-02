@@ -279,6 +279,7 @@ namespace Barrway.Controllers
                                 if (string.IsNullOrEmpty(data.table.Monday.Start) || string.IsNullOrEmpty(data.table.Monday.End))
                                 {
                                     // if time is not mentioned then skip that day
+                                    dateTracker = dateTracker.AddDays(1);
                                     continue;
                                 }
                                 else
@@ -293,6 +294,7 @@ namespace Barrway.Controllers
                                 if (string.IsNullOrEmpty(data.table.Tuesday.Start) || string.IsNullOrEmpty(data.table.Tuesday.End))
                                 {
                                     // if time is not mentioned then skip that day
+                                    dateTracker = dateTracker.AddDays(1);
                                     continue;
                                 }
                                 else
@@ -308,6 +310,7 @@ namespace Barrway.Controllers
                                 if (string.IsNullOrEmpty(data.table.Wednesday.Start) || string.IsNullOrEmpty(data.table.Wednesday.End))
                                 {
                                     // if time is not mentioned then skip that day
+                                    dateTracker = dateTracker.AddDays(1);
                                     continue;
                                 }
                                 else
@@ -322,6 +325,7 @@ namespace Barrway.Controllers
                                 if (string.IsNullOrEmpty(data.table.Thursday.Start) || string.IsNullOrEmpty(data.table.Thursday.End))
                                 {
                                     // if time is not mentioned then skip that day
+                                    dateTracker = dateTracker.AddDays(1);
                                     continue;
                                 }
                                 else
@@ -336,6 +340,7 @@ namespace Barrway.Controllers
                                 if (string.IsNullOrEmpty(data.table.Friday.Start) || string.IsNullOrEmpty(data.table.Friday.End))
                                 {
                                     // if time is not mentioned then skip that day
+                                    dateTracker = dateTracker.AddDays(1);
                                     continue;
                                 }
                                 else
@@ -350,6 +355,7 @@ namespace Barrway.Controllers
                                 if (string.IsNullOrEmpty(data.table.Saturday.Start) || string.IsNullOrEmpty(data.table.Saturday.End))
                                 {
                                     // if time is not mentioned then skip that day
+                                    dateTracker = dateTracker.AddDays(1);
                                     continue;
                                 }
                                 else
@@ -364,6 +370,7 @@ namespace Barrway.Controllers
                                 if (string.IsNullOrEmpty(data.table.Sunday.Start) || string.IsNullOrEmpty(data.table.Sunday.End))
                                 {
                                     // if time is not mentioned then skip that day
+                                    dateTracker = dateTracker.AddDays(1);
                                     continue;
                                 }
                                 else
@@ -381,6 +388,7 @@ namespace Barrway.Controllers
 
                             if (weekNum % 2 == 0)
                             {
+                                dateTracker = dateTracker.AddDays(7);
                                 continue;
                             }
                         }
@@ -389,6 +397,7 @@ namespace Barrway.Controllers
                             var weekNum = GetWeekNumberOfMonth(start);
                             if (weekNum > 3)
                             {
+                                dateTracker = dateTracker.AddDays((7 * 3));
                                 continue;
                             }
                         }
@@ -397,6 +406,7 @@ namespace Barrway.Controllers
                             var weekNum = GetWeekNumberOfMonth(start.AddDays(1));
                             if (weekNum > 4)
                             {
+                                dateTracker = dateTracker.AddDays((7 * 4));
                                 continue;
                             }
                         }

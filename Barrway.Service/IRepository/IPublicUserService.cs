@@ -27,7 +27,8 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> EnrollPublicUserForCalendar(CalendarEnrollModel model);
         Task<AddUpdateDelete> GetAllEnrolledCompaniesData(string userEmail);
         Task<AddUpdateDelete> GetRecentlyBookedCalendars(string userEmail);
-        Task<AddUpdateDelete> GetAllEnrolledCalendarsData(string CompanyCode, string UserEmail);
+        Task<AddUpdateDelete> GetAllEnrolledCalendarsData(string CompanyCode, string UserEmail, string filterDate = null);
+        Task<AddUpdateDelete> GetFullCalendarEvents(string StartDate, string EndDate, string UserEmail);
         #endregion
 
 

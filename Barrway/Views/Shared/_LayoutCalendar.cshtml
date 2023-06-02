@@ -129,8 +129,6 @@
             return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16)
         }</script>
 
-
-
     <!--Formgenerator setup-->
     <link href="fg-assets/css/waves.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/3.0.0/toaster.min.css" rel="stylesheet" />
@@ -144,6 +142,12 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" id="jquery-ui-change">
     <link href="Content/tagify.css" rel="stylesheet" />
     <link href="Content/sidebar/css/sidebar.css?token=@token" rel="stylesheet" />
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
     <style>
         .invalid-feedback-2 {
             color: red !important;
@@ -289,7 +293,9 @@
     <script>
         localStorage.setItem("detail", '{"Id":30314,"firebase_uid":null,"chatId":"jXZMF2dU3Uyz2okULv6shQuu","uid":"kk53yimj","fullName":"AG Ashutosh Shukla","name":"augursuser","email":"formgeneratorclient@gmail.com","emailVerified":"0","emailCheck":"0","isEmailCheck":false,"isQuickSignUp":false,"password":"","newPassword":null,"password_confirmation":null,"confirmPassword":null,"isUpdatePassword":0,"remember_token":null,"userIcon":"user-avatar-with-check-mark.png","phoneNumber":null,"phoneVerified":"No","isPhoneVerified":null,"phoneCheck":"No","isPhoneCheck":false,"role":1,"status":"Active","planID":9,"planSequence":"1,2,5,13","tooltipSequence":null,"FB_id":null,"GPlus_id":null,"created_ip":"","groupId":0,"checkType":null,"title":null,"verificationCode":null,"isVerificationReq":false,"ayCheck":0,"specialAccess":"1","reset_token":null,"reset_valid_till":null,"isUsable":0,"action":0,"created_by":0,"updated_by":0,"created_at":"Jan 20 2021  3:32PM","newcreated_at":null,"updated_at":"Jan 20 2021  3:32PM","newupdated_at":null,"res":1,"Message":"Login Success|登錄成功|登录成功","IsActive":false,"IsDeleted":false,"IsUnique":false,"page":0,"size":0,"total_records":0,"last_page":0,"page_records":0,"filters":null,"sorters":null,"query":null}');
     </script>
+    <script>
 
+    </script>
 </head>
 
 <body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl navbar-vertical-aside-compact-mini-mode navbar-vertical-aside-compact-mode" ng-app="FormGeneratorApp" ng-controller="IndexController">
@@ -580,9 +586,9 @@
                                 </a>
 
                                 @*<div id="navbarVerticalMenuPagesProjectsMenu" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
-                <a class="nav-link " href="../projects.html">Overview</a>
-                <a class="nav-link " href="../projects-timeline.html">Timeline</a>
-            </div>*@
+                                        <a class="nav-link " href="../projects.html">Overview</a>
+                                        <a class="nav-link " href="../projects-timeline.html">Timeline</a>
+                                    </div>*@
                             </div>
                             <!-- End Collapse -->
                             <!-- Collapse -->
@@ -629,7 +635,7 @@
                         <div class="row">
                             <div class="col-md-7">
                                 <div class="logo-comapany-name">
-                                    <img class="img-company-logo"  onerror="this.style= 'display:none;'" style="width:100%; max-width:200px; max-height:70px; height:auto;" alt="Logo" />
+                                    <img class="img-company-logo" onerror="this.style= 'display:none;'" style="width:100%; max-width:200px; max-height:70px; height:auto;" alt="Logo" />
                                     <span class="lbl-company-name">Company name</span>
                                 </div>
                             </div>
@@ -1157,7 +1163,6 @@
     <script src="assets/js/vendor.min.js"></script>
     <script src="fg-assets/js/jquery.min.js" type="text/javascript"></script>
     <script src="fg-assets/js/jquery-ui.js"></script>
-
 
     <!-- JS Front -->
     <script src="assets/js/theme.min.js"></script>
