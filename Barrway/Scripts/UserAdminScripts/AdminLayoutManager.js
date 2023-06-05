@@ -3,19 +3,25 @@
 });
 
 function setUserDetails() {
-    var user = getSingleUserDetailsByUserId();
-
+    var user = getSingleUserDetailsByUserId().data;
+    console.log(user);
     if (user.Status) {
-       
-        if (localStorage.getItem("COMPANY_CODE") == null || localStorage.getItem("COMPANY_CODE") == undefined) {
-   
-            localStorage.setItem("COMPANY_CODE", data[i].COMPANY_CODE);
-            localStorage.setItem("COMPANY_NAME_ENGLISH", data[i].COMPANY_NAME_ENGLISH);
-            localStorage.setItem("COMPANY_NAME_CHINESE", data[i].COMPANY_NAME_CHINESE);
-            localStorage.setItem("COMPANY_CATEGORY_ID", data[i].COMPANY_CATEGORY_ID);
-            localStorage.setItem("COMPANY_SUB_CATEGORY_ID", data[i].COMPANY_SUB_CATEGORY_ID);
+
+        var data = user.Data;
+
+        if (localStorage.getItem("USER_ID") == null || localStorage.getItem("USER_ID") == undefined) {
+            
+            localStorage.setItem("USER_ID", data.USER_EMAIL);
+            localStorage.setItem("USER_EMAIL", data.USER_EMAIL);
+            localStorage.setItem("USER_GENDER", data.GENDER);
+            localStorage.setItem("USER_FIRST_NAME", data.FIRST_NAME);
+            localStorage.setItem("USER_NICK_NAME", data.NICK_NAME);
         }
 
+        $(".layout-user-image").attr("src", data.PROFILE_PHOTO_PATH.replace('~', '..'));
+        $(".layout-first-name").text(data.FIRST_NAME);
+        $(".layout-last-name").text(data.LAST_NAME);
+        $(".layout-email").text(data.USER_EMAIL);
     }
 }
 

@@ -410,7 +410,7 @@
 
             <!-- End Navbar Vertical Toggle -->
             <!-- Logo -->
-            <a class="navbar-brand" href="index.html" aria-label="Front">
+            <a class="navbar-brand" href="/UserAdmin#/userdashboard" aria-label="Front">
                 <img class="navbar-brand-logo" src="assets/svg/logos/logo.png" alt="Logo" data-hs-theme-appearance="default">
                 <img class="navbar-brand-logo" src="assets/svg/logos-light/logo.svg" alt="Logo" data-hs-theme-appearance="dark">
             </a>
@@ -420,30 +420,15 @@
                 <!-- Navbar -->
                 <ul class="navbar-nav custome-nav no-underline">
                     <!-- Dashboards -->
-                    <li class="hs-has-sub-menu nav-item">
-                        <a id="" class="hs-mega-menu-invoker nav-link active" href="#" role="button"> Home</a>
-                    </li>
-                    <!-- End Dashboards -->
-                    <!-- Pages -->
-                    <li class="hs-has-sub-menu nav-item">
-                        <a id="" class="hs-mega-menu-invoker nav-link " href="#" role="button">My Business </a>
-                    </li>
-                    <!-- End Pages -->
-                    <!-- Apps -->
-                    <li class="hs-has-sub-menu nav-item">
-                        <a id="" class="hs-mega-menu-invoker nav-link" href="#" role="button">Market Place</a>
-                    </li>
-                    <!-- End Apps -->
 
                     <li class="nav-item">
-                        <a class="nav-link " href="#">
-                            Contact
-                        </a>
+                        <div class="">
+                            <button onclick="location.href = '@Url.Action("Index","Marketplace")'" style="box-sizing: border-box; color: #3FBFC7; padding:6px 18px; background: #FFFFFF; border: 1px solid #3FBFC7; border-radius: 30px; "> Back to Marketplace</button>
+                        </div>
                     </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link " href="#" data-placement="left">
-                            Pricing
+                    <li class="nav-item" style="width: 70px; text-align:right;">
+                        <a class="" style="font-style: normal; font-weight: 700; font-size: 18px; line-height: 21px; /* or 140% */ color: #000000; ">
+                            B$00
                         </a>
                     </li>
                     <li class="nav-item">
@@ -451,7 +436,7 @@
                         <div class="dropdown">
                             <a class="navbar-dropdown-account-wrapper" href="javascript:;" id="accountNavbarDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" data-bs-dropdown-animation="">
                                 <div class="avatar avatar-sm avatar-circle">
-                                    <img class="avatar-img" src="assets/img/160x160/img6.jpg" alt="TL">
+                                    <img class="avatar-img layout-user-image" onerror="this.src='assets/img/160x160/img6.jpg'" alt="TL">
                                     <span class="avatar-status avatar-sm-status avatar-status-success"></span>
                                 </div>
                             </a>
@@ -460,11 +445,11 @@
                                 <div class="dropdown-item-text">
                                     <div class="d-flex align-items-center">
                                         <div class="avatar avatar-sm avatar-circle">
-                                            <img class="avatar-img" src="assets/img/160x160/img6.jpg" alt="TL">
+                                            <img class="avatar-img layout-user-image" style="min-width:40px;" onerror="this.src='assets/img/160x160/img6.jpg'" alt="TL">
                                         </div>
-                                        <div class="flex-grow-1 ms-3">
-                                            <h5 class="mb-0">Mark Williams</h5>
-                                            <p class="card-text text-body">mark@site.com</p>
+                                        <div class="flex-grow-1 ms-3" style="overflow-wrap: break-word;">
+                                            <h5 class="mb-0"><span class="layout-first-name"></span> <span class="layout-last-name"></span></h5>
+                                            <p class="card-text text-body layout-email">mark@site.com</p>
                                         </div>
                                     </div>
                                 </div>
@@ -472,55 +457,52 @@
                                 <div class="dropdown-divider"></div>
 
                                 <!-- Dropdown -->
-                                <div class="dropdown">
-                                    <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown1" data-bs-toggle="dropdown" aria-expanded="false">Set status</a>
+                                @*<div class="dropdown">
+                        <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown1" data-bs-toggle="dropdown" aria-expanded="false">Set status</a>
 
-                                    <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown1">
-                                        <a class="dropdown-item" href="#">
-                                            <span class="legend-indicator bg-success me-1"></span> Available
-                                        </a>
-                                        <a class="dropdown-item" href="#">
-                                            <span class="legend-indicator bg-danger me-1"></span> Busy
-                                        </a>
-                                        <a class="dropdown-item" href="#">
-                                            <span class="legend-indicator bg-warning me-1"></span> Away
-                                        </a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">
-                                            Reset status
-                                        </a>
-                                    </div>
-                                </div>
+                        <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown1">
+                            <a class="dropdown-item" href="#">
+                                <span class="legend-indicator bg-success me-1"></span> Available
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <span class="legend-indicator bg-danger me-1"></span> Busy
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <span class="legend-indicator bg-warning me-1"></span> Away
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">
+                                Reset status
+                            </a>
+                        </div>
+                    </div>*@
                                 <!-- End Dropdown -->
 
-                                <a class="dropdown-item" href="#">Profile &amp; account</a>
-                                <a class="dropdown-item" href="#">Settings</a>
+                                <a class="dropdown-item" href="#" ui-sref="my_profile()">Profile &amp; account</a>
+                                @*<a class="dropdown-item" href="#">Settings</a>*@
 
                                 <div class="dropdown-divider"></div>
 
                                 <!-- Dropdown -->
-                                <div class="dropdown">
-                                    <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown2" data-bs-toggle="dropdown" aria-expanded="false">Customization</a>
+                                @*<div class="dropdown">
+                        <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown2" data-bs-toggle="dropdown" aria-expanded="false">Customization</a>
 
-                                    <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown2">
-                                        <a class="dropdown-item" href="#">
-                                            Invite people
-                                        </a>
-                                        <a class="dropdown-item" href="#">
-                                            Analytics
-                                            <i class="bi-box-arrow-in-up-right"></i>
-                                        </a>
-                                        <a class="dropdown-item" href="#">
-                                            Customize Front
-                                            <i class="bi-box-arrow-in-up-right"></i>
-                                        </a>
-                                    </div>
-                                </div>
+                        <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown2">
+                            <a class="dropdown-item" href="#">
+                                Invite people
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                Analytics
+                                <i class="bi-box-arrow-in-up-right"></i>
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                Customize Front
+                                <i class="bi-box-arrow-in-up-right"></i>
+                            </a>
+                        </div>
+                    </div>*@
                                 <!-- End Dropdown -->
-
-                                <a class="dropdown-item" href="#">Manage team</a>
-
-                                <div class="dropdown-divider"></div>
+                                @*<a class="dropdown-item" href="#">Manage team</a>*@
 
                                 <form id="mySignOutForm" name="mySignOutForm" method="post" action="@Url.Action("LogoutPublicUser","Account")">
                                     <a class="dropdown-item" href="javascript:void(0)" onclick="Logout()">Sign out</a>

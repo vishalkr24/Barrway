@@ -16212,17 +16212,6 @@
 
     FormGeneratorApp.controller('UserDashboardController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
 
-
-        $(document).on("click", ".fc-prev-button", function () {
-            $scope.startDate = $scope.startDate.subtract(1, "months");
-            $scope.getBookingDataForDate($scope.startDate.startOf('month').local().format('YYYY-MM-DD'), $scope.startDate.endOf('month').add('months', 1).local().format('YYYY-MM-DD'));
-        });
-
-        $(document).on("click", ".fc-next-button", function () {
-            $scope.startDate = $scope.startDate.add("months", 1);
-            $scope.getBookingDataForDate($scope.startDate.startOf('month').local().format('YYYY-MM-DD'), $scope.startDate.endOf('month').add('months', 1).local().format('YYYY-MM-DD'));
-        });
-
         adminService.postAsync('/UserAdmin/GetRecentlyBookedCalendars/').then(function (res) {
 
             console.log(res.data.data.Data)
@@ -16233,20 +16222,29 @@
 
             $scope.CalendarCompanyList = res.data.data.Data;
 
-
-
         }, function (err) {
 
         });
 
 
-        $scope.GoToCalendar = function (companyId) {
+        $scope.GoToCalendar = function (companyId, listId = 1) {//list id 2 is for the company event list data on right hand side of the screen, and list id 1 is for left/ recently booked calendars company data... used for mapping companyId with companyCode
             var companyCode = "";
-            for (var i = 0; i < $scope.CalendarCompanyList.length; i++) {
-                if ($scope.CalendarCompanyList[i].CompanyId == companyId) {
-                    companyCode = $scope.CalendarCompanyList[i].COMPANY_CODE;
+            
+            if (listId == 1) {
+                for (var i = 0; i < $scope.CalendarCompanyList.length; i++) {
+                    if ($scope.CalendarCompanyList[i].CompanyId == companyId) {
+                        companyCode = $scope.CalendarCompanyList[i].COMPANY_CODE;
+                    }
+                }
+            } else if (listId == 2) {
+                console.log($scope.CalendarCompanyList2);
+                for (var i = 0; i < $scope.CalendarCompanyList2.length; i++) {
+                    if ($scope.CalendarCompanyList2[i].COMPANY_ID == companyId) {
+                        companyCode = $scope.CalendarCompanyList2[i].COMPANY_CODE;
+                    }
                 }
             }
+            
 
             localStorage.setItem("publicUserSelectedCompany", companyCode);
             $state.go("my_calendar", { "formId": 2305 });
@@ -16256,7 +16254,6 @@
 
         $scope.getBookingDataForDate = function (date, endDate) {
             adminService.postAsync('/UserAdmin/GetFullCalendarEvents/', { StartDate: date, EndDate: endDate }).then(function (res) {
-
                 for (var i = 0; i < res.data.length; i++) {
                     var splitTime = res.data[i].start.split('T');
                     res.data[i].COMPANY_LOGO_PATH = res.data[i].COMPANY_LOGO_PATH.replace('~', '..')
@@ -16264,18 +16261,19 @@
                     res.data[i].title = res.data[i].customTitle;
                 }
 
-                console.log(res.data);
-
-                loadcalendar(res.data);
                 $scope.bookingEventData = res.data;
+                $scope.CalendarCompanyList2 = res.data;
+
             }, function (err) {
 
             });
         }
 
-        $scope.startDate = moment(new Date());
+        loadcalendar();
 
-        $scope.getBookingDataForDate($scope.startDate.startOf('month').local().format('YYYY-MM-DD'), $scope.startDate.endOf('month').add('months', 1).local().format('YYYY-MM-DD'));
+        //$scope.startDate = moment(new Date());
+
+        //$scope.getBookingDataForDate($scope.startDate.startOf('month').local().format('YYYY-MM-DD'), $scope.startDate.endOf('month').add('months', 1).local().format('YYYY-MM-DD'));
 
 
         function loadcalendar(events) {
@@ -16291,7 +16289,49 @@
                     /*right: ''*/
                 },
                 defaultDate: moment(new Date()).local().format('YYYY-MM-DD'),
-                events: events,
+                //events: events,
+
+                events: function (start, end, timezone, callback) {
+                    var param = {};
+                    param.StartDate = start;
+                    param.EndDate = end;
+                    $.ajax({
+                        method: 'POST',
+                        url: BASE_URL + "/UserAdmin/GetFullCalendarEvents/",
+                        dataType: 'json',
+                        contentType: "application/json",
+                        data: JSON.stringify(param),
+                        success: function (response) {
+
+                            var calenderData = changeResourceIDByYSelection((response != undefined) ? response : response);
+                            if (calenderData != undefined) {
+
+                                for (var i = 0; i < response.length; i++) {
+                                    var splitTime = response[i].start.split('T');
+                                    response[i].COMPANY_LOGO_PATH = response[i].COMPANY_LOGO_PATH.replace('~', '..')
+                                    response[i].start = splitTime[0] + " " + splitTime[1].substring(0, 5)
+                                    response[i].title = response[i].customTitle;
+                                }
+
+                                $scope.getBookingDataForDate(start, end);
+
+                                callback(calenderData);
+                                window["eventListTemp"] = calenderData;
+                                window["eventListTempAgenda"] = calenderData;
+
+                            }
+                            else
+                                callback([]);
+                        },
+                        complete: function () {
+                            var _ScrollOffset = window["scrollOffset"];
+                            window.scrollTo(0, _ScrollOffset);
+                            $.unblockUI();
+
+                        }
+                    });
+                },
+
                 viewRender: function (view, element) {
                     cur = view.intervalStart;
                     d = moment(cur).add('months', 1);
@@ -16333,7 +16373,38 @@
                     /*right: 'prev,next today'*/
                 },
                 defaultDate: moment(new Date()).local().add(1, 'months').format('YYYY-MM-DD'),
-                events: events,
+                /*events: events,*/
+                events: function (start, end, timezone, callback) {
+                    var param = {};
+                    param.StartDate = start;
+                    param.EndDate = end;
+                    $.ajax({
+                        method: 'POST',
+                        url: BASE_URL + "/UserAdmin/GetFullCalendarEvents/",
+                        dataType: 'json',
+                        contentType: "application/json",
+                        data: JSON.stringify(param),
+                        success: function (response) {
+
+                            var calenderData = changeResourceIDByYSelection((response != undefined) ? response : response);
+                            if (calenderData != undefined) {
+
+                                callback(calenderData);
+                                window["eventListTemp"] = calenderData;
+                                window["eventListTempAgenda"] = calenderData;
+
+                            }
+                            else
+                                callback([]);
+                        },
+                        complete: function () {
+                            var _ScrollOffset = window["scrollOffset"];
+                            window.scrollTo(0, _ScrollOffset);
+                            $.unblockUI();
+
+                        }
+                    });
+                },
                 eventRender: function (event, element) {
                     event.title = event.customTitle;
                     element.attr('title', event.tooltip);

@@ -50,7 +50,7 @@
                 <div class="main-right" style="min-height: 85vh;">
                     <div class="top">
                         <span style="position: relative;top: 2px;">Your booking reminder</span>
-                        <span><button>go to Calendar</button></span>
+                        <span><button ng-click="">go to Calendar</button></span>
                     </div>
                     <br /><br /><br />
                     <div class="row">
@@ -66,7 +66,7 @@
                     <div style="height: 400px; overflow: hidden; overflow-y: scroll;">
                         <div class="row">
                             <div class="col-md-12 mb-3" ng-repeat="event in bookingEventData">
-                                <div style="border-radius: 8px; background: #ECFAFB; min-height: 107px; ">
+                                <div ng-click="GoToCalendar(event.COMPANY_ID, 2)" style="border-radius: 8px; cursor:pointer; background: #ECFAFB; min-height: 107px; ">
 
                                     <div class="row">
                                         <div class="col-md-9" style="padding:16px 31px">
