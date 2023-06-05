@@ -13,7 +13,8 @@ async function usercalendarLoad() {
 
     COMPANY_CODE = $("#company-filter-selector option:selected").val();
      IsCustomFilter = true;
-     IsCustomInFilter = false;
+    IsCustomInFilter = false;
+    debugger;
 
     if (COMPANY_CODE == "-1") {
         var options = $('select option');

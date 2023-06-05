@@ -18,7 +18,11 @@ function setUserDetails() {
             localStorage.setItem("USER_NICK_NAME", data.NICK_NAME);
         }
 
-        $(".layout-user-image").attr("src", data.PROFILE_PHOTO_PATH.replace('~', '..'));
+        if (data.PROFILE_PHOTO_PATH != null && data.PROFILE_PHOTO_PATH != "null") {
+            $(".layout-user-image").attr("src", data.PROFILE_PHOTO_PATH.replace('~', '..'));
+        }
+
+        
         $(".layout-first-name").text(data.FIRST_NAME);
         $(".layout-last-name").text(data.LAST_NAME);
         $(".layout-email").text(data.USER_EMAIL);

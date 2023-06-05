@@ -43,7 +43,7 @@ namespace Barrway.Controllers
         [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult> BusinessLogin()
-        {
+       {
             if (User.Identity.IsAuthenticated)
             {
                 var user = await authService.GetUser(User.Identity.Name, FormRole.BUSINESS_USER);
@@ -53,7 +53,17 @@ namespace Barrway.Controllers
                 }
                 else
                 {
-                    Logout();
+                    Session.Clear();
+                    Session.RemoveAll();
+                    Session.Abandon();
+                    TempData.Clear();
+                    if (HttpContext != null)
+                    {
+                        HttpContext.Request.Cookies.Clear();
+                    }
+
+                    HttpContext.GetOwinContext().Authentication.SignOut();
+                    return RedirectToAction("BusinessLogin");
                 }
             }
             return View();
@@ -72,7 +82,17 @@ namespace Barrway.Controllers
                 }
                 else
                 {
-                    LogoutPublicUser();
+                    Session.Clear();
+                    Session.RemoveAll();
+                    Session.Abandon();
+                    TempData.Clear();
+                    if (HttpContext != null)
+                    {
+                        HttpContext.Request.Cookies.Clear();
+                    }
+
+                    HttpContext.GetOwinContext().Authentication.SignOut();
+                    return RedirectToAction("Login");
                 }
             }
 
@@ -382,13 +402,13 @@ namespace Barrway.Controllers
 
                 // Send Activation Link
 
-                var linkResult = await authService.sendActivationLink(model.USER_NAME, model.USER_EMAIL, FormRole.BUSINESS_USER);
+                var linkResult = await authService.sendActivationLink(model.USER_NAME, model.USER_EMAIL, FormRole.PUBLIC_USER);
                 
                 if (result.Status && publicResult.Status)
                 {
                     TempData["VERIFICATION"] = "Pending";
                     TempData["VERIFICATION_EMAIL"] = model.USER_EMAIL;
-                    return RedirectToAction("EmailVerification", "Account");
+                    return RedirectToAction("Login", "Account");
 
                 }
                 else

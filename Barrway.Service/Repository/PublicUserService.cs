@@ -162,7 +162,7 @@ namespace Barrway.Service.Repository
 
                 model.participant.NICKNAME = publicUser.Data["NICK_NAME"].ToString();
                 model.participant.EMAIL = user.Data["USER_EMAIL"].ToString();
-                model.participant.DATE_OF_BIRTH = Convert.ToDateTime(publicUser.Data["DATE_OF_BIRTH"]);
+                                
                 model.participant.ADDRESS = "";
                 model.participant.GENDER = publicUser.Data["GENDER"].ToString();
                 model.participant.IS_ACTIVE = "Y";

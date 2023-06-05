@@ -616,6 +616,7 @@ namespace Barrway.Controllers
         {
             if (!ModelState.IsValid)
             {
+                ViewBag.IsPartial = false;
                 return View("SetupCompanyCalendar", model);
             }
             else
@@ -625,6 +626,7 @@ namespace Barrway.Controllers
                     if (string.IsNullOrEmpty(model.SLOT_DURATION_IN_MINS))
                     {
                         ModelState.AddModelError("SLOT_DURATION_IN_MINS", "Slot duration is required");
+                        ViewBag.IsPartial = false;
                         return View("SetupCompanyCalendar", model);
                     }
                     else
@@ -636,6 +638,7 @@ namespace Barrway.Controllers
                         catch (Exception ex)
                         {
                             ModelState.AddModelError("SLOT_DURATION_IN_MINS", "Enter slot duration in minutes (number)");
+                            ViewBag.IsPartial = false;
                             return View("SetupCompanyCalendar", model);
                         }
                     }
@@ -648,6 +651,7 @@ namespace Barrway.Controllers
                     if (model.CALENDAR_PHOTO_PATH == null)
                     {
                         ModelState.AddModelError("CALENDAR_PHOTO_NAME", "Please select a calendar photo");
+                        ViewBag.IsPartial = false;
                         return View("SetupCompanyCalendar", model);
                     }
 
@@ -733,11 +737,13 @@ namespace Barrway.Controllers
                     }
                     else
                     {
+                        ViewBag.IsPartial = false;
                         return View("SetupCompanyCalendar", model);
                     }
                 }
                 else
                 {
+                    ViewBag.IsPartial = false;
                     return RedirectToAction("SetupCompanyCalendar", model);
                 }
             }
