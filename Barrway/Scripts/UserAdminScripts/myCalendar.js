@@ -53,6 +53,7 @@ async function usercalendarLoad() {
     window["EventBasicDetail"] = manageWindowParams();
 
     var calenderSettings = await getCalenderSettings();
+    
     calendarDetails = (await getCalendarDetails()).Data;
     if (calenderSettings.length > 0) {
 
@@ -181,6 +182,7 @@ async function usercalendarLoad() {
             })
         }
         resResults = resourceConfig.formDataList;
+        
         if (resResults.length) {
             _.each(resResults, function (item, key) {
                 var ac_column = "";
@@ -236,6 +238,7 @@ async function usercalendarLoad() {
 
             window["EventBasicDetail"] = eventBasicData;
             tabsActive();
+            
             marcketplaceCalendar("", [], resResults, resColumns, activityResults, activityColumns, []);
 
 
@@ -407,8 +410,6 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
     calenderData = changeResourceIDByYSelection((calenderData.data != undefined) ? calenderData.data : calenderData);
     window["eventListTemp"] = calenderData;
     var $scope = angular.element($("#calendar")).scope();
-
-
 
     var basicDetails = window["EventBasicDetail"];
 

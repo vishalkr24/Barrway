@@ -1,12 +1,12 @@
 ﻿function getSingleUserDetailsByUserId() {
     var data;
     $.ajax({
-        url: "/BusinessAdmin/GetBusinessAccountWebsite/",
+        url: "/UserAdmin/GetSingleUserByUserId/",
         data: {
             UserId: $("#userIdHidden").val()
         },
         async: false,
-        type: "GET",
+        type: "POST",
         success: function (response) {
             data = response;
         },
