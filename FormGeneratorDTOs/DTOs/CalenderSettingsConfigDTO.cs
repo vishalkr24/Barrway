@@ -75,6 +75,7 @@ namespace FormGeneratorDTOs.DTOs
 
         public List<IDictionary<string, object>> formDataListGroupBy { get; set; }
         public bool IsCustomFilter { get; set; }
+        public bool IsCustomInFilter { get; set; }
         public List<CustomFilter> CustomFilters { get; set; }
 
     }

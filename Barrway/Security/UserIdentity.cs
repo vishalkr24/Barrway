@@ -26,7 +26,7 @@ namespace Barrway.Security
             {
                 var identity = (System.Security.Claims.ClaimsIdentity)HttpContext.Current.User.Identity;
                 IEnumerable<System.Security.Claims.Claim> claims = identity.Claims;
-                string UID = claims.Where(x => x.Type == ClaimTypes.Email).FirstOrDefault().Value;
+                string UID = claims.Where(x => x.Type == ClaimTypes.Email).FirstOrDefault()?.Value;
                 return UID;
             }
         }

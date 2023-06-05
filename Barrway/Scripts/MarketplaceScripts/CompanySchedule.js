@@ -497,7 +497,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         //lazyFetching: true,
         now: new Date(),
         navLinks: true, // can click day/week names to navigate views
-        editable: true,
+        editable: false,
         eventLimit: 4, // allow "more" link when too many events            
         loading: function (bool) {
             var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');

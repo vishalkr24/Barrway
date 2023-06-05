@@ -151,11 +151,27 @@ namespace Barrway.Controllers
         [HttpPost]
         public async Task<ActionResult> getReferralFormFields(Form_DataTable data)
         {
-            if(!string.IsNullOrEmpty(data?.COMPANY_CODE) && !string.IsNullOrEmpty(data?.CALENDAR_CODE))
+            if(!string.IsNullOrEmpty(data?.COMPANY_CODE) || !string.IsNullOrEmpty(data?.CALENDAR_CODE))
             {
+                
                 if (data.filter != null)
                 {
-                    data.filter.value=data.filter.value+ " and F.COMPANY_CODE=N'"+ data.COMPANY_CODE+ "' and F.CALENDAR_CODE=N'"+data.CALENDAR_CODE+"'";
+                    if (data.IsPublicUser)
+                    {
+                        if (data.IsCustomInFilter)
+                        {
+                            data.filter.value = data.filter.value + " and F.COMPANY_CODE in (" + data.COMPANY_CODE + ")";
+                        }
+                        else
+                        {
+                            data.filter.value = data.filter.value + " and F.COMPANY_CODE=N'" + data.COMPANY_CODE + "'";
+                        }
+                    }
+                    else
+                    {
+                        data.filter.value = data.filter.value + " and F.COMPANY_CODE=N'" + data.COMPANY_CODE + "' and F.CALENDAR_CODE=N'" + data.CALENDAR_CODE + "'";
+                    }
+                    
                 }
             }
             ReferalFormDataResponseModel result = await formAPIRepository.getReferralFormFields(data);
@@ -164,7 +180,7 @@ namespace Barrway.Controllers
             
             if (data.IsPublicUser)
             {
-                var enrolledData = await publicUserService.GetAllEnrolledCalendarsData(data.COMPANY_CODE, UserIdentity.UserEmail);
+                var enrolledData = await publicUserService.GetAllEnrolledCalendarsData(data.COMPANY_CODE, UserIdentity.UserEmail,data.IsCustomInFilter);
 
                 if (enrolledData.Status)
                 {
@@ -235,6 +251,10 @@ namespace Barrway.Controllers
                         if (e.ContainsKey("end") && e["end"] != null)
                         {
                             e["end"] = Convert.ToDateTime(e["end"]).ToString("yyyy-MM-ddTHH:mm:ss");
+                        }
+                        if(e.ContainsKey("title") && e["title"] != null)
+                        {
+                            e["title"] = "";
                         }
                     });
                 }

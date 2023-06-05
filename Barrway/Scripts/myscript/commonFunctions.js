@@ -15464,6 +15464,5 @@ function Check_EXIST_PRE_DEFINED_ACTIVITIES(calendarDetails) {
     return calendarDetails && calendarDetails.category && calendarDetails.category.EXIST_PRE_DEFINED_ACTIVITIES != 'N';
 }
 function Check_IS_SERVICE_TYPE(calendarDetails) {
-    debugger;
     return calendarDetails && calendarDetails.category && calendarDetails.category.IS_SERVICE_TYPE != 'N';
 }
