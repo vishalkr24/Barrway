@@ -148,6 +148,7 @@
     <Compile Include="Common\FormSetting.cs" />
     <Compile Include="Common\ObjectToDictionaryHelper.cs" />
     <Compile Include="Common\SendActivationLink.cs" />
+    <Compile Include="Common\SQLUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

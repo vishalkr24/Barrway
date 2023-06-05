@@ -1,4 +1,4 @@
-*{
+* {
     margin: 0px;
     font-family: 'Poppins', sans-serif;
 }
@@ -33,31 +33,34 @@ section {
     text-align: right;
 }
 
-.top-bar span {
-    font-size: 14px;
-    font-weight: 400;
-    color: #777;
-    padding: 0px 15px;
-}
+    .top-bar span {
+        font-size: 14px;
+        font-weight: 400;
+        color: #777;
+        padding: 0px 15px;
+    }
 
-.top-bar span:last-child {
-    font-size: 18px;
-    font-weight: 700;
-    color: #E2476C;
-}
-.top-bar span:nth-child(2) img {
-    width: 10px;
-}
-.top-bar span img {
-    width: 12px;
-    top: -2px;
-    position: relative;
-}
+        .top-bar span:last-child {
+            font-size: 18px;
+            font-weight: 700;
+            color: #E2476C;
+        }
+
+        .top-bar span:nth-child(2) img {
+            width: 10px;
+        }
+
+        .top-bar span img {
+            width: 12px;
+            top: -2px;
+            position: relative;
+        }
 /* ========================= nav bar ========================= */
-.navbar-nav>li {
+.navbar-nav > li {
     float: left;
     margin: 0px 5px;
 }
+
 div#myNavbar .navbar-nav li a:hover {
     color: #ffffff !important;
     font-size: 18px;
@@ -65,6 +68,11 @@ div#myNavbar .navbar-nav li a:hover {
     background-color: #e3476c;
     border-radius: 10px 10px 0px 0px;
 }
+
+div#myNavbar .navbar-nav li ul li a:hover {
+    color: #E2476C !important;
+}
+
 .logo-serch {
     width: 100%;
     float: left;
@@ -72,31 +80,37 @@ div#myNavbar .navbar-nav li a:hover {
     flex-wrap: wrap;
     gap: 25px;
 }
+
 .user-name {
     width: 100%;
     float: left;
 }
-.user-name p {
-    margin-bottom: 0px;
-    line-height: 3;
-    text-align: revert;
-    position: absolute;
-    right: 35px;
-    top: 12px;
-}
+
+    .user-name p {
+        margin-bottom: 0px;
+        line-height: 3;
+        text-align: revert;
+        position: absolute;
+        right: 35px;
+        top: 12px;
+    }
+
 .search-bar {
     width: 290px;
 }
-.search-bar .input-group {
-    border: 1px solid #ddd;
-    font-weight: 400;
-    font-size: 15px;
-    padding: 5px;
-    border-radius: 40px;
-}
+
+    .search-bar .input-group {
+        border: 1px solid #ddd;
+        font-weight: 400;
+        font-size: 15px;
+        padding: 5px;
+        border-radius: 40px;
+    }
+
 .input-group-btn .glyphicon {
     color: #3fbfc8;
 }
+
 .search-bar .input-group input, .search-bar .input-group .input-group-btn .btn {
     border: none;
     box-shadow: none;
@@ -106,11 +120,11 @@ div#myNavbar .navbar-nav li a:hover {
     margin-bottom: -1px;
 }
 
-@media screen and (min-width:769px){
-.navbar-collapse.collapse {
-    display: flex !important;
-    justify-content: right;
-}
+@media screen and (min-width:769px) {
+    .navbar-collapse.collapse {
+        display: flex !important;
+        justify-content: right;
+    }
 }
 
 div#myNavbar .navbar-nav li.active a {
@@ -134,11 +148,11 @@ div#myNavbar .navbar-nav li.rl a {
     font-weight: 700;
     border-radius: 10px 10px 0px 0px;
 }
+
 div#myNavbar .navbar-nav li.rl ul a {
     background-color: transparent;
     color: #222;
-    
-  }
+}
 
 /*======================================= bnner section ==================================================*/
 
@@ -148,28 +162,33 @@ section.top-banner {
     background-repeat: no-repeat;
     background-size: 100% 100%;
 }
+
 .banner-form h1 {
     font-weight: 700;
     font-size: 40px;
     color: #fff;
     margin-bottom: 25px;
 }
+
 .banner-form {
     width: 100%;
     float: left;
     padding-top: 54px;
     padding-bottom: 35px;
 }
+
 .banner-image {
     width: 100%;
     float: left;
 }
-.banner-image img {
-    width: 95%;
-    position: relative;
-    top: 50px;
-    margin-left: 25px;
-}
+
+    .banner-image img {
+        width: 95%;
+        position: relative;
+        top: 50px;
+        margin-left: 25px;
+    }
+
 .form-inner {
     width: 100%;
     float: left;
@@ -183,34 +202,37 @@ section.top-banner {
     float: left;
     margin-top: 15px;
 }
+
 .form-inner p {
     color: #777777;
     font-weight: 400;
     font-size: 15px;
 }
+
 .fields .form-group {
     width: 42%;
     float: left;
     margin-right: 10px;
 }
 
-.fields .form-group select {
-    border: 1px solid #CCCCCC;
-    height: 50px;
-    border-radius: 50px;
-    padding: 0px 15px;
-    color: #000;
-}
-.fields .form-group select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background: transparent;
-    background-image: url("../image/aerrow.png");
-    background-repeat: no-repeat;
-    background-position-x: 90%;
-    background-position-y: 18px;
-    background-size: 14px;
-}
+    .fields .form-group select {
+        border: 1px solid #CCCCCC;
+        height: 50px;
+        border-radius: 50px;
+        padding: 0px 15px;
+        color: #000;
+    }
+
+    .fields .form-group select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background: transparent;
+        background-image: url("../image/aerrow.png");
+        background-repeat: no-repeat;
+        background-position-x: 90%;
+        background-position-y: 18px;
+        background-size: 14px;
+    }
 
 .fields p a {
     background-color: #e3476c;
@@ -219,6 +241,7 @@ section.top-banner {
     position: relative;
     top: 40px;
 }
+
 .fields p {
     width: 12%;
     float: left;
@@ -229,32 +252,38 @@ section.top-banner {
 .pro-text p {
     margin-bottom: 3px;
 }
+
 .pro-text {
     padding: 8px 0px;
 }
+
 p.p4, p.p1 {
     font-size: 13px;
 }
+
 p.p2 {
     font-size: 16px;
 }
+
 p.p3 {
     font-size: 14px;
 }
+
 p.p4 a {
     text-decoration: underline;
     color: #3fbfc8;
     padding: 0px 8px 0px 0px;
 }
+
 section.subcatageory {
     margin-top: 40px;
-} 
+}
 
 .heading-cata h3 {
     color: #E2476C;
     font-weight: 600;
     font-size: 18px;
-} 
+}
 
 .my-slide button.owl-prev {
     left: -60px;
@@ -262,16 +291,15 @@ section.subcatageory {
 }
 
 .my-slide button.owl-next {
-    
-    right: -60px;    
+    right: -60px;
     top: 45%;
-    
 }
-.my-slide button.owl-prev span, .my-slide button.owl-next span {
-    color: #3FBFC7;
-    display: block;
-    line-height: 12px;
-}
+
+    .my-slide button.owl-prev span, .my-slide button.owl-next span {
+        color: #3FBFC7;
+        display: block;
+        line-height: 12px;
+    }
 
 .owl-carousel .owl-nav button.owl-next, .owl-carousel .owl-nav button.owl-prev {
     position: absolute;
@@ -285,9 +313,10 @@ section.subcatageory {
 }
 
 /*======================================= booking ===============================================*/
-.mt-80{
+.mt-80 {
     margin-top: 80px;
 }
+
 .booking-text h2 {
     font-weight: 700;
     font-size: 40px;
@@ -295,6 +324,7 @@ section.subcatageory {
     align-items: center;
     color: #E2476C;
 }
+
 .booking-text p {
     font-weight: 400;
     font-size: 15px;
@@ -305,6 +335,7 @@ section.subcatageory {
 .booking-im img {
     width: 100%;
 }
+
 .booking-im {
     width: 100%;
     float: left;
@@ -312,11 +343,11 @@ section.subcatageory {
 
 
 /*===================================== how does it work ==========================================*/
-.mt-60{
+.mt-60 {
     margin-top: 60px;
 }
 
-.mb-60{
+.mb-60 {
     margin-bottom: 60px;
 }
 
@@ -331,15 +362,18 @@ section.subcatageory {
     width: 100%;
     margin-bottom: 15px;
 }
+
 .im {
     width: 100%;
     float: left;
 }
+
 .txt h3 {
     font-weight: 600;
     font-size: 18px;
     color: #E2476C;
 }
+
 .txt p {
     font-weight: 400;
     font-size: 14px;
@@ -354,16 +388,17 @@ button.learn-more {
     margin-top: 15px;
     background: transparent;
 }
-button.learn-more a {
-    background: #E2476C;
-    border-radius: 30px;
-    border: none;
-    color: #fff;
-    width: 100%;
-    float: left;
-    padding: 10px;
-    text-decoration: none;
-}
+
+    button.learn-more a {
+        background: #E2476C;
+        border-radius: 30px;
+        border: none;
+        color: #fff;
+        width: 100%;
+        float: left;
+        padding: 10px;
+        text-decoration: none;
+    }
 
 div#owl-demo5 .pro-im img {
     width: 100%;
@@ -373,6 +408,7 @@ div#owl-demo5 .pro-im img {
 .pro-text .f2 {
     font-size: 14px;
 }
+
 .pro-text .f1 {
     font-size: 13px;
 }
@@ -383,21 +419,25 @@ section.footer {
     background-color: #222222;
     margin-top: 40px;
 }
+
 .fooetr-link a {
     color: #fff;
     padding: 0px 10px;
     text-decoration: none;
 }
-.fooetr-link a:nth-child(2) {
-    border-left: 1px solid #fff;
-    border-right: 1px solid #fff;
-}
+
+    .fooetr-link a:nth-child(2) {
+        border-left: 1px solid #fff;
+        border-right: 1px solid #fff;
+    }
+
 .social-links {
     text-align: right;
 }
-.social-links a {
-    color: #fff;
-}
+
+    .social-links a {
+        color: #fff;
+    }
 
 
 /*============================= business ======================================*/
@@ -411,6 +451,7 @@ section.bredcrum {
     line-height: 36px;
     color: #000000;
 }
+
 .filter button.filter-btn {
     border: 1px solid #ddd;
     background-color: transparent;
@@ -421,31 +462,37 @@ section.bredcrum {
     font-size: 16px;
     text-align: center;
 }
+
 .filter p, .Search p {
     font-size: 14px;
     font-weight: 700;
     margin-bottom: 5px;
 }
+
 .filter button.filter-btn img {
     margin-right: 10px;
     width: 22px;
 }
+
 .filter-tags {
     width: 100%;
     float: left;
 }
-.filter-tags input {
-    width: 100%;
-    border: 1px solid #ddd;
-    height: 40px;
-    border-radius: 40px;
-    outline: none;
-}
+
+    .filter-tags input {
+        width: 100%;
+        border: 1px solid #ddd;
+        height: 40px;
+        border-radius: 40px;
+        outline: none;
+    }
+
 .inner-content {
     width: 100%;
     float: left;
     margin-top: 40px;
 }
+
 h4.media-heading {
     font-weight: 700;
     font-size: 15px;
@@ -454,9 +501,11 @@ h4.media-heading {
     align-items: center;
     color: #E2476C;
 }
+
 .media {
     margin-bottom: 25px;
 }
+
 .media-body p {
     font-size: 15px;
     margin-bottom: 5px;
@@ -473,59 +522,60 @@ h4.media-heading {
     justify-content: center;
 }
 
-.pagination .btn {
-    /* border: 1px solid #3fbfc7; */
-    height: 34px;
-    width: 34px;
-    border-radius: 50%;
-    background: none;
-    cursor: pointer;
-    margin-right: 10px;
-    padding: 0;
-    outline: none;
-}
-.pagination .btn img {
-    width: 34px;
-    height: 34px;
-}
+    .pagination .btn {
+        /* border: 1px solid #3fbfc7; */
+        height: 34px;
+        width: 34px;
+        border-radius: 50%;
+        background: none;
+        cursor: pointer;
+        margin-right: 10px;
+        padding: 0;
+        outline: none;
+    }
 
-.pagination .btn-icon {
-  width: 24px;
-  height: 24px;
-  stroke: #087f5b;
-}
+        .pagination .btn img {
+            width: 34px;
+            height: 34px;
+        }
 
-.pagination .btn:hover {
-  background-color:transparent;
-}
+    .pagination .btn-icon {
+        width: 24px;
+        height: 24px;
+        stroke: #087f5b;
+    }
 
-.pagination .btn:hover .btn-icon {
-  stroke: #fff;
-}
+    .pagination .btn:hover {
+        background-color: transparent;
+    }
 
-.pagination .page-link:link, .pagination .page-link:visited {
-    text-decoration: none;
-    font-size: 18px;
-    border-radius: 50%;
-    display: block;
-    width: 34px;
-    height: 34px;
-    line-height: 2;
-    border: 1px solid #3fbfc7;
-    margin-right: 10px;
-    color: #3fbfc7;
-}
+        .pagination .btn:hover .btn-icon {
+            stroke: #fff;
+        }
 
-.pagination .page-link:hover,
-.pagination .page-link:active,
-.pagination .page-link.page-link--current {
-  background-color: #3FBFC7;
-  color: #fff;
-}
+    .pagination .page-link:link, .pagination .page-link:visited {
+        text-decoration: none;
+        font-size: 18px;
+        border-radius: 50%;
+        display: block;
+        width: 34px;
+        height: 34px;
+        line-height: 2;
+        border: 1px solid #3fbfc7;
+        margin-right: 10px;
+        color: #3fbfc7;
+    }
 
-.pagination .dots {
-  color: #868e96;
-}
+    .pagination .page-link:hover,
+    .pagination .page-link:active,
+    .pagination .page-link.page-link--current {
+        background-color: #3FBFC7;
+        color: #fff;
+    }
+
+    .pagination .dots {
+        color: #868e96;
+    }
 
 /*============================= tag =============================*/
 .sub-hed p {
@@ -535,6 +585,7 @@ h4.media-heading {
     color: #E2476C;
     margin-bottom: 30px;
 }
+
 .tag h4.media-heading {
     color: #222222;
 }
@@ -546,9 +597,9 @@ h4.media-heading {
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
-.com-det a.navbar-brand {
-    padding: 7px 15px;
-}
+    .com-det a.navbar-brand {
+        padding: 7px 15px;
+    }
 
 .com-nav {
     margin: 5px 0px 0px 0px;
@@ -564,26 +615,26 @@ div#com-nav .navbar-nav li {
     margin: 0px 1px;
 }
 
-div#com-nav .navbar-nav li a {
-    color: #000000;
-    font-size: 18px;
-    font-weight: 400;
-}
+    div#com-nav .navbar-nav li a {
+        color: #000000;
+        font-size: 18px;
+        font-weight: 400;
+    }
 
-div#com-nav .navbar-nav li.active a {
-    color: #000000;
-    font-size: 18px;
-    font-weight: 700;
-}
+    div#com-nav .navbar-nav li.active a {
+        color: #000000;
+        font-size: 18px;
+        font-weight: 700;
+    }
 
-div#com-nav .navbar-nav li.rl a {
-    background-color: #E2476C;
-    color: #fff;
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: 700;
-    border-radius: 10px 10px 0px 0px;
-}
+    div#com-nav .navbar-nav li.rl a {
+        background-color: #E2476C;
+        color: #fff;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 700;
+        border-radius: 10px 10px 0px 0px;
+    }
 
 .com-nav .input-group {
     border: 1px solid #ddd;
@@ -594,53 +645,62 @@ div#com-nav .navbar-nav li.rl a {
     background-color: #fff;
 }
 
-.com-nav .input-group input, .com-nav .input-group .input-group-btn .btn {
-    border: none;
-    box-shadow: none;
-    background-color: transparent;
-}
+    .com-nav .input-group input, .com-nav .input-group .input-group-btn .btn {
+        border: none;
+        box-shadow: none;
+        background-color: transparent;
+    }
 
 /*secondry nav*/
 .no-mar-bott {
     margin-bottom: 0px;
     padding: 10px 0px;
 }
+
 .company-detail-hed .head h2 {
-    font-size:24px;
+    font-size: 24px;
 }
+
 .cd-banner {
     width: 100%;
     float: left;
     margin-top: 25px;
 }
-.cd-banner img {
-    width: 100%;
-}
+
+    .cd-banner img {
+        width: 100%;
+    }
+
 .address {
     width: 100%;
     float: left;
 }
-.address p.pink, .detail p.pink {
-    color: #E2476C;
-    font-size: 14px;
-    line-height: 22px;
-    letter-spacing: 0.22px;
-}
-.address p, .detail p {
-    font-weight: 400;
-    font-size: 18px;
-    line-height: 22px;
-    letter-spacing: 0.22px;
-    color: #222222;
-}
+
+    .address p.pink, .detail p.pink {
+        color: #E2476C;
+        font-size: 14px;
+        line-height: 22px;
+        letter-spacing: 0.22px;
+    }
+
+    .address p, .detail p {
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 22px;
+        letter-spacing: 0.22px;
+        color: #222222;
+    }
+
 .detail {
     width: 100%;
     float: left;
     margin-bottom: 30px;
 }
+
 .add-social, .mt-30 {
     margin-top: 30px;
 }
+
 span.location {
     color: #777;
     font-size: 14px;
@@ -650,6 +710,7 @@ span.location {
     width: 100%;
     float: left;
 }
+
 .bpgd {
     width: 30%;
     float: left;
@@ -659,22 +720,26 @@ span.location {
     margin-right: 14px;
     margin-bottom: 15px;
 }
-.bpgd h4 {
-    font-weight: 700;
-    font-size: 24px;
-    line-height: 30px;
-    color: #222222;
-}
-.bpgd p {
-    font-weight: 400;
-    font-size: 15px;
-    line-height: 21px;
-    color: #000000;
-    margin-bottom: 0px;
-}
+
+    .bpgd h4 {
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 30px;
+        color: #222222;
+    }
+
+    .bpgd p {
+        font-weight: 400;
+        font-size: 15px;
+        line-height: 21px;
+        color: #000000;
+        margin-bottom: 0px;
+    }
+
 p.mt-10 {
     margin-top: 10px;
 }
+
 .bpgd p button {
     width: 100%;
     color: #fff;
@@ -683,6 +748,7 @@ p.mt-10 {
     border-radius: 22px;
     background-color: #3FBFC7;
 }
+
 .card-pakage {
     width: 100%;
     float: left;
@@ -690,7 +756,8 @@ p.mt-10 {
     border: 2px solid #3FBFC7;
     border-radius: 10px;
 }
-.mihi-71{
+
+.mihi-71 {
     min-height: 71vh;
 }
 
@@ -701,10 +768,10 @@ p.mt-10 {
     border-radius: 30px;
     height: 40px;
     -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-
+    -moz-appearance: none;
+    appearance: none;
 }
+
 .favr button {
     border: 2px solid #3FBFC7;
     border-radius: 30px;
@@ -713,12 +780,14 @@ p.mt-10 {
     padding: 6px 20px;
     width: 200px;
 }
+
 .favr {
     width: 100%;
     float: left;
     text-align: right;
     padding-top: 28px;
 }
+
 .schedule-drop:after {
     content: "";
     position: absolute;
@@ -731,36 +800,45 @@ p.mt-10 {
     background-repeat: no-repeat;
     background-size: cover;
 }
+
 .schedule-drop {
     position: relative;
 }
+
 section.schedule {
     margin-top: 30px;
 }
+
 div#secondry-nav ul li a {
     background-color: transparent;
     font-weight: 400;
     color: #222222;
 }
+
 div#secondry-nav ul li.active a {
     font-weight: 700;
 }
+
 li.rl > ul > li > a {
     background-color: transparent !important;
     color: #222222 !important;
 }
+
 .fl-r {
     width: 150px;
     float: right;
 }
+
 .news-banner img {
     width: 100%;
 }
+
 .news-banner {
     width: 100%;
     float: left;
     margin-top: 15px;
 }
+
 button.blogtag_num {
     background-color: transparent;
     color: #3FBFC7;
@@ -768,11 +846,13 @@ button.blogtag_num {
     border: 2px solid #3FBFC7;
     border-radius: 30px;
 }
+
 .blog-slide {
     width: 100%;
     float: left;
     margin-top: 20px;
 }
+
 .sp-dis p {
     width: 100%;
     float: left;
@@ -780,35 +860,39 @@ button.blogtag_num {
     color: #222222;
     font-size: 14px;
 }
+
 .sidebar .media-body p {
     margin-bottom: 0px;
 }
-@media screen and (max-width:767px){
-.secondry-nav, .com-nav-btn {
-    top: 10px !important;
-    right: 0 !important;
-    position: relative;
-}
-div#com-nav ul li, div#secondry-nav ul li {
-    display: block;
-    width: 100%;
-    float: left;
-}
 
-div#com-nav ul, div#secondry-nav ul {
-    width: 100%;
-    float: left;
-}
+@media screen and (max-width:767px) {
+    .secondry-nav, .com-nav-btn {
+        top: 10px !important;
+        right: 0 !important;
+        position: relative;
+    }
 
-div#com-nav, div#secondry-nav {
-    background-color: #fff;
-    border-top: 1px solid #ddd;
-    margin-top: 10px;
-}
-.bpgd {
-    width: 100%;
-    float: left;
-}
+    div#com-nav ul li, div#secondry-nav ul li {
+        display: block;
+        width: 100%;
+        float: left;
+    }
+
+    div#com-nav ul, div#secondry-nav ul {
+        width: 100%;
+        float: left;
+    }
+
+    div#com-nav, div#secondry-nav {
+        background-color: #fff;
+        border-top: 1px solid #ddd;
+        margin-top: 10px;
+    }
+
+    .bpgd {
+        width: 100%;
+        float: left;
+    }
 }
 /*end*/
 

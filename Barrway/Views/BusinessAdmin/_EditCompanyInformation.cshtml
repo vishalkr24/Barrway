@@ -23,7 +23,7 @@
                 
                 @*@Html.TextBoxFor(model => model.COMPANY_LOGO_NAME, new { @class = "f-input", @required = "true", @style = "width: 75%; border:none!important;" })*@
 
-                <label for="COMPANY_LOGO_PATH" id="COMPANY_LOGO_NAME" style="width:80%; max-width:300px; padding-left:16px;"></label>
+                <label for="COMPANY_LOGO_PATH" id="COMPANY_LOGO_NAME" style="width:80%; max-width:300px; padding-left:16px;">@Model.COMPANY_LOGO_NAME</label>
 
                 <div class="fileUpload btn btn--browse">
                     <span>Browse</span>
@@ -41,7 +41,7 @@
                
                 @*@Html.TextBoxFor(model => model.COMPANY_BANNER_NAME, new { @class = "f-input", @required = "true", @style = "width: 75%; border:none!important;" })*@
 
-                <label for="COMPANY_BANNER_PATH" id="COMPANY_BANNER_NAME" style="width:80%; max-width:300px; padding-left:16px;"></label>
+                <label for="COMPANY_BANNER_PATH" id="COMPANY_BANNER_NAME" style="width:80%; max-width:300px; padding-left:16px;">@Model.COMPANY_BANNER_NAME</label>
 
                 <div class="fileUpload btn btn--browse">
                     <span>Browse</span>

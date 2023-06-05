@@ -490,7 +490,14 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetSingleCompanyByCompanyCode(string CompanyCode)
         {
-            string query = "SELECT [Id]      ,[created_at]      ,[updated_at]      ,[created_by]      ,[updated_by]      ,[BUSINESS_ACCOUNT_ID]      ,[COMPANY_CODE]      ,[COMPANY_NAME_ENGLISH]      ,[COMPANY_NAME_CHINESE]      ,[COMPANY_LOGO_NAME]      ,[COMPANY_LOGO_PATH]      ,[COMPANY_BANNER_NAME]      ,[COMPANY_BANNER_PATH]      ,[COMPANY_PHONE]      ,[COMPANY_ADDRESS]      ,[FACEBOOK_URL]      ,[INSTAGRAM_URL]      ,[WECHAT_URL]      ,[TWITTER_URL]      ,[PAGE_URL]      ,[COMPANY_DESCRIPTION]      ,[COMPANY_SERVICE]      ,[TAGS]      ,[IS_SEARCHABLE_IN_MARKETPLACE]      ,[COMPANY_CATEGORY_ID]      ,[COMPANY_SUB_CATEGORY_ID],     [COMPANY_EMAIL]      ,[COUNTRY_ID]      ,[CITY_ID]      ,[DISTRICT_ID]      ,[TOTAL_WEBSITE_VISITS]      ,[IS_DEFAULT],[IS_ACTIVE]  FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] where IS_ACTIVE = 'Y' and  COMPANY_CODE = '" + CompanyCode + "'";
+            string query = $@"SELECT company.[Id], category.COMPANY_CATEGORY_NAME as 'COMPANY_CATEGORY_NAME', subCategory.COMPANY_SUB_CATEGORY_NAME as 'COMPANY_SUB_CATEGORY_NAME', country.COUNTRY_NAME as 'COMPANY_COUNTRY_NAME', city.CITY_NAME as 'COMPANY_CITY_NAME', district.DISTRICT_NAME as 'COMPANY_DISTRICT_NAME'     ,company.[created_at]      ,company.[updated_at]      ,company.[created_by]      ,company.[updated_by]      ,[BUSINESS_ACCOUNT_ID]      ,[COMPANY_CODE]      ,[COMPANY_NAME_ENGLISH]      ,[COMPANY_NAME_CHINESE]      ,[COMPANY_LOGO_NAME]      ,[COMPANY_LOGO_PATH]      ,[COMPANY_BANNER_NAME]      ,[COMPANY_BANNER_PATH]      ,[COMPANY_PHONE]      ,[COMPANY_ADDRESS]      ,[FACEBOOK_URL]      ,[INSTAGRAM_URL]      ,[WECHAT_URL]      ,[TWITTER_URL]      ,[PAGE_URL]      ,[COMPANY_DESCRIPTION]      ,[COMPANY_SERVICE]      ,[TAGS]      ,[IS_SEARCHABLE_IN_MARKETPLACE]      ,company.[COMPANY_CATEGORY_ID]      ,[COMPANY_SUB_CATEGORY_ID],     [COMPANY_EMAIL]      ,company.[COUNTRY_ID]      ,company.[CITY_ID]      ,[DISTRICT_ID]      ,[TOTAL_WEBSITE_VISITS]      ,[IS_DEFAULT],[IS_ACTIVE]  
+                                FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company
+                                join COMPANY_CATEGORY_MASTER_1920 category on category.Id = company.COMPANY_CATEGORY_ID
+                                join COMPANY_SUB_CATEGORY_MASTER_1921 subCategory on subCategory.Id = company.COMPANY_SUB_CATEGORY_ID
+                                join COUNTRY_MASTER_1926 country on country.Id = company.COUNTRY_ID
+                                join CITY_MASTER_1927 city on city.Id = company.CITY_ID
+                                join DISTRICT_MASTER_1928 district on district.Id = company.DISTRICT_ID
+                                where IS_ACTIVE = 'Y' and  COMPANY_CODE = '{CompanyCode}'";
 
             List<IDictionary<string, object>> BusinessCompanyResult = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -676,26 +683,37 @@ namespace Barrway.Service.Repository
                     model.IS_SEARCHABLE_IN_MARKETPLACE = "Y";
                 }
 
+                string LogoUpdateQuery = "";
+                string BannerUpdateQuery = "";
 
+                if (!string.IsNullOrEmpty(model.COMPANY_LOGO_PATH))
+                {
+                    LogoUpdateQuery = $@",[COMPANY_LOGO_NAME] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_LOGO_NAME)}'
+                                            ,[COMPANY_LOGO_PATH] = '{model.COMPANY_LOGO_PATH}'";
+                }
+
+                if (!string.IsNullOrEmpty(model.COMPANY_BANNER_PATH))
+                {
+                    BannerUpdateQuery = $@",[COMPANY_BANNER_NAME] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_BANNER_NAME)}'
+                                            ,[COMPANY_BANNER_PATH] = '{model.COMPANY_BANNER_PATH}'";
+                }
 
                 string query = $@"UPDATE [dbo].[BUSINESS_COMPANY_MASTER_1924] SET 
                                [updated_at] = getdate()
                               ,[BUSINESS_ACCOUNT_ID] = '{model.BUSINESS_ACCOUNT_ID}'
-                              ,[COMPANY_NAME_ENGLISH] = '{model.COMPANY_NAME_ENGLISH}'
-                              ,[COMPANY_NAME_CHINESE] = N'{model.COMPANY_NAME_CHINESE}'
-                              ,[COMPANY_LOGO_NAME] = '{model.COMPANY_LOGO_NAME}'
-                              ,[COMPANY_LOGO_PATH] = '{model.COMPANY_LOGO_PATH}'
-                              ,[COMPANY_BANNER_NAME] = '{model.COMPANY_BANNER_NAME}'
-                              ,[COMPANY_BANNER_PATH] = '{model.COMPANY_BANNER_PATH}'
-                              ,[COMPANY_PHONE] = '{model.COMPANY_PHONE}'
-                              ,[COMPANY_ADDRESS] = '{model.COMPANY_ADDRESS}'
-                              ,[FACEBOOK_URL] = '{model.FACEBOOK_URL}'
-                              ,[INSTAGRAM_URL] = '{model.INSTAGRAM_URL}'
-                              ,[WECHAT_URL] = '{model.WECHAT_URL}'
-                              ,[TWITTER_URL] = '{model.TWITTER_URL}'
-                              ,[PAGE_URL] = '{model.PAGE_URL}'
-                              ,[COMPANY_DESCRIPTION] = '{model.COMPANY_DESCRIPTION}'
-                              ,[TAGS] = '{model.TAGS}'
+                              ,[COMPANY_NAME_ENGLISH] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_NAME_ENGLISH)}'
+                              ,[COMPANY_NAME_CHINESE] = N'{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_NAME_CHINESE)}'
+                              {LogoUpdateQuery}
+                              {BannerUpdateQuery}
+                              ,[COMPANY_PHONE] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_PHONE)}'
+                              ,[COMPANY_ADDRESS] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_ADDRESS)}'
+                              ,[FACEBOOK_URL] = '{SQLUtility.TreatSingleQuoteForQuery(model.FACEBOOK_URL)}'
+                              ,[INSTAGRAM_URL] = '{SQLUtility.TreatSingleQuoteForQuery(model.INSTAGRAM_URL)}'
+                              ,[WECHAT_URL] = '{SQLUtility.TreatSingleQuoteForQuery(model.WECHAT_URL)}'
+                              ,[TWITTER_URL] = '{SQLUtility.TreatSingleQuoteForQuery(model.TWITTER_URL)}'
+                              ,[PAGE_URL] = '{SQLUtility.TreatSingleQuoteForQuery(model.PAGE_URL)}'
+                              ,[COMPANY_DESCRIPTION] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_DESCRIPTION)}'
+                              ,[TAGS] = '{SQLUtility.TreatSingleQuoteForQuery(model.TAGS)}'
                               ,[IS_SEARCHABLE_IN_MARKETPLACE] = '{model.IS_SEARCHABLE_IN_MARKETPLACE}'
                               ,[COMPANY_CATEGORY_ID] = '{model.COMPANY_CATEGORY_ID}'
                               ,[COMPANY_SUB_CATEGORY_ID] = '{model.COMPANY_SUB_CATEGORY_ID}'
@@ -731,37 +749,31 @@ namespace Barrway.Service.Repository
                                 query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'COMPLETED', updated_at = getdate()  where USER_ID = '" + UserId + "'";
                                 saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
 
-                                // registration and 3 steps are completed here and now activate free plan of user
-
-                                if (saveResult > 0)
-                                {
-                                    AddUpdateDelete freeSubscription = await GetCompanyFreeSubscriptionDetails(CompanyDetails.Data["Id"].ToString());
-
-                                    if (!freeSubscription.Status)
-                                    {
-                                        CompanySubscriptionDetailsModel companySubscriptionDetailsModel = new CompanySubscriptionDetailsModel()
-                                        {
-                                            BOOKING_TRANSACTIONS = 500,
-                                            CALENDAR_AVAILABLE = 1,
-                                            CLIENT_PACKAGE_AVAILABLE = 1,
-                                            NO_OF_ADMIN = 1,
-                                            PHOTO_ALBUM = "N",
-                                            CLIENT_PAYMENT = "N",
-                                            CHAT_WITH_CLIENT = "N",
-                                            PROMOTION_IN_MARKETPLACE = "N",
-                                            COMPANY_ID = CompanyDetails.Data["Id"].ToString(),
-                                            IS_FREE_PLAN = "Y",
-                                            IS_ACTIVE = "Y",
-                                            PURCHASE_DATE = DateTime.Now,
-                                        };
-                                        var subscriptionSaveResult = await AddCompanySubscriptionDetails(companySubscriptionDetailsModel);
-                                    }
-
-                                    
-                                }
-
                             }
                         }
+
+                        AddUpdateDelete freeSubscription = await GetCompanyFreeSubscriptionDetails(CompanyDetails.Data["Id"].ToString());
+
+                        if (!freeSubscription.Status)
+                        {
+                            CompanySubscriptionDetailsModel companySubscriptionDetailsModel = new CompanySubscriptionDetailsModel()
+                            {
+                                BOOKING_TRANSACTIONS = 500,
+                                CALENDAR_AVAILABLE = 1,
+                                CLIENT_PACKAGE_AVAILABLE = 1,
+                                NO_OF_ADMIN = 1,
+                                PHOTO_ALBUM = "N",
+                                CLIENT_PAYMENT = "N",
+                                CHAT_WITH_CLIENT = "N",
+                                PROMOTION_IN_MARKETPLACE = "N",
+                                COMPANY_ID = CompanyDetails.Data["Id"].ToString(),
+                                IS_FREE_PLAN = "Y",
+                                IS_ACTIVE = "Y",
+                                PURCHASE_DATE = DateTime.Now,
+                            };
+                            var subscriptionSaveResult = await AddCompanySubscriptionDetails(companySubscriptionDetailsModel);
+                        }
+
 
                     }
 
@@ -868,16 +880,16 @@ namespace Barrway.Service.Repository
 
                 string query = $@"UPDATE [dbo].[BUSINESS_CALENDAR_MASTER_1925]
                                    SET [updated_at] = getdate()
-                                      ,[CALENDAR_NAME] = '{model.CALENDAR_NAME}'
-                                      ,[CALENDAR_PHOTO_NAME] = '{model.CALENDAR_PHOTO_NAME}'
-                                      ,[CALENDAR_PHOTO_PATH] = '{model.CALENDAR_PHOTO_PATH}'
+                                      ,[CALENDAR_NAME] = '{SQLUtility.TreatSingleQuoteForQuery(model.CALENDAR_NAME)}'
+                                      ,[CALENDAR_PHOTO_NAME] = '{SQLUtility.TreatSingleQuoteForQuery(model.CALENDAR_PHOTO_NAME)}'
+                                      ,[CALENDAR_PHOTO_PATH] = '{SQLUtility.TreatSingleQuoteForQuery(model.CALENDAR_PHOTO_PATH)}'
                                       ,[IS_VISIBLE] = '{model.IS_VISIBLE}'
                                       ,[COUNTRY_ID] = '{model.COUNTRY_ID}'
                                       ,[CITY_ID] = '{model.CITY_ID}'
                                       ,[DISTRICT_ID] = '{model.DISTRICT_ID}'
                                       ,[CALENDAR_CATEGORY_ID] = '{model.CALENDAR_CATEGORY_ID}'
                                       ,[CALENDAR_SUB_CATEGORY_ID] = '{model.CALENDAR_SUB_CATEGORY_ID}'
-                                      ,[COMPANY_CODE] = '{model.COMPANY_CODE}'
+                                      ,[COMPANY_CODE] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_CODE)}'
                                  WHERE Id = '{model.Id}'";
 
                 int saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);

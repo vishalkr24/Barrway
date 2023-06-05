@@ -17,14 +17,14 @@ namespace Barrway.DTO.PublicModels
         public string SUBSCRIPTION_PLAN_ID { get; set; }
         public string USER_ID { get; set; }
 
-        public string PROFILE_PHOTO_PATH { get; set; }
-        public string PROFILE_PHOTO_NAME { get; set; }
-        public string FIRST_NAME { get; set; }
-        public string LAST_NAME { get; set; }
-        public string CHINESE_NAME { get; set; }
-        public string NICK_NAME { get; set; }
-        public string GENDER { get; set; }
-        public string DATE_OF_BIRTH { get; set; }
+        public string PROFILE_PHOTO_PATH { get; set; } = string.Empty;
+        public string PROFILE_PHOTO_NAME { get; set; } = string.Empty;
+        public string FIRST_NAME { get; set; } = string.Empty;
+        public string LAST_NAME { get; set; } = string.Empty;
+        public string CHINESE_NAME { get; set; } = string.Empty;
+        public string NICK_NAME { get; set; } = string.Empty;
+        public string GENDER { get; set; } = string.Empty;
+        public string DATE_OF_BIRTH { get; set; } = DateTime.Now.ToString("yyyy-MM-dd");
 
     }
 
