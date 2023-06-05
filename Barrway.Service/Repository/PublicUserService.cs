@@ -340,7 +340,7 @@ namespace Barrway.Service.Repository
         }
 
 
-        public async Task<AddUpdateDelete> GetAllEnrolledCalendarsData(string CompanyCode, string UserEmail,bool IsCustomInFilter=false)
+        public async Task<AddUpdateDelete> GetAllEnrolledCalendarsData(string CompanyCode, string UserEmail,string filterDate = null, bool IsCustomInFilter=false)
         {
             try
             {
@@ -356,7 +356,6 @@ namespace Barrway.Service.Repository
                     {
                         CompanyCondition = " calendar.COMPANY_CODE in (" + CompanyCode + ") and ";
                     }
-                    
                 }
 
                 if (!string.IsNullOrEmpty(filterDate))

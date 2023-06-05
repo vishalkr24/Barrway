@@ -180,7 +180,7 @@ namespace Barrway.Controllers
             
             if (data.IsPublicUser)
             {
-                var enrolledData = await publicUserService.GetAllEnrolledCalendarsData(data.COMPANY_CODE, UserIdentity.UserEmail,data.IsCustomInFilter);
+                var enrolledData = await publicUserService.GetAllEnrolledCalendarsData(data.COMPANY_CODE, UserIdentity.UserEmail,"",data.IsCustomInFilter);
 
                 if (enrolledData.Status)
                 {
