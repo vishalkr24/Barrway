@@ -38,34 +38,27 @@
     <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/style.css">
     <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/media.css">
     <link href="~/assets/css/custom-styles.css" rel="stylesheet" />
-
+    <link href="~/assets/css/media.css" rel="stylesheet" />
+        <link href="~/assets/css/style.css" rel="stylesheet" />
 </head>
 <body>
 
+    
     <section class="main-header">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
                     <div class="top-bar">
-                        <span class="lang"><img src="~/assets/marketplace/image/glo.png" /> English</span>
-                        <span class="location"><img src="~/assets/marketplace/image/lo.png" /> Hong Cong</span>
-                        <span class="pyb" onclick="window.location.href='@Url.Action("Index", "BusinessMarketplace")'" style="cursor:pointer;">Post your business</span>
+                        <span class="lang"><img src="~/assets/img/glo.png" /> English</span>
+                        <span class="location"><img src="~/assets/img/lo.png" /> Hong Cong</span>
+                        <span class="pyb" style="cursor:pointer;" onclick="window.location.href = '@Url.Action("Index", "MarketPlace")'">Market Place</span>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="logo-serch">
-                        <div class="logo"><a href="/Marketplace/Index"><img src="~/assets/marketplace/image/logo.png" /></a></div>
+                        <div class="logo"><a href="/BusinessMarketplace/Index"><img src="~/assets/img/logo.png" style="height:42px; width:230px;"/></a></div>
                         <div class="search-bar">
-                            <form>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Search for business, service">
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-default" type="submit">
-                                            <i class="glyphicon glyphicon-search"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
+                            <span>| Business</span>
                         </div>
                     </div>
                 </div>
@@ -82,24 +75,16 @@
                                 </div>
                                 <div class="collapse navbar-collapse" id="myNavbar">
                                     <ul class="nav navbar-nav">
-                                        <li id="nv-home"><a href="/Marketplace/Index">Home</a></li>
-                                        <!-- <li class="dropdown">
-                                          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1 <span class="caret"></span></a>
-                                          <ul class="dropdown-menu">
-                                            <li><a href="#">Page 1-1</a></li>
-                                            <li><a href="#">Page 1-2</a></li>
-                                            <li><a href="#">Page 1-3</a></li>
-                                          </ul>
-                                        </li> -->
-                                        <li id="nv-business"><a href="/Marketplace/BusinessSite">Business</a></li>
-                                        <li id="nv-news"><a href="/Marketplace/News">News</a></li>
+                                        <li id="nav-home"><a href="/BusinessMarketplace/Index">Home</a></li>
+                                        <li id="nav-features"><a href="/BusinessMarketplace/Features">Features</a></li>
+                                        <li id="nav-pricing"><a href="#">Pricing</a></li>
                                     </ul>
                                     <ul class="nav navbar-nav navbar-right">
                                         <li class="rl">
                                             <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Register / Login</a>
                                             <ul class="dropdown-menu">
-                                                <li><a href="/Account/SignUp">Register</a></li>
-                                                <li><a href="/Account/Login">Login</a></li>
+                                                <li><a href="/Account/BusinessSignup">Register</a></li>
+                                                <li><a href="/Account/BusinessLogin">Login</a></li>
                                             </ul>
                                         </li>
 
@@ -112,7 +97,6 @@
             </div>
         </div>
     </section>
-
     <div>
         @RenderBody()
     </div>

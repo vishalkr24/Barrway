@@ -7,8 +7,6 @@
 function setSubscriptionPlans() {
     var data = GetAllSubscriptionPlansForBusiness();
 
-    console.log(data);
-
     var colorTheme = ["purple", "turquois", "salmon"];
 
     $("#divSubscriptionPlans").empty();
@@ -18,7 +16,9 @@ function setSubscriptionPlans() {
 
         var currentPlanData = GetCompanyActiveSubscriptionPlan(localStorage.getItem("COMPANY_ID"));
 
-        if (currentPlanData.data != null) {
+        console.log(currentPlanData)
+        debugger;
+        if (currentPlanData.Data != null) {
             var currentPlan = currentPlanData.Data;
 
             var colorCounter = 0;
@@ -80,6 +80,9 @@ function setSubscriptionPlans() {
                                         </tr>
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="mt-4">
+                                ${(plans[i].Id == currentPlan.PLAN_ID) ? "" : "<div class='price-btn'><button class='upgrade'>Upgrade</button></div>"}
                             </div>
                         </div>
                     </div>`;

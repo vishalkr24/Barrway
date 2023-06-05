@@ -5,7 +5,12 @@
 
 function changeCompany() {
     var companyId = $("#navbar-company-selector option:selected").val();
-    
+
+    if (companyId == "NEWCOMPANY") {
+        window.location.href = '/BusinessAdmin/SetupCompanyProfile';
+        return;
+    }
+
     var data = getSingleCompanyByCompanyId(companyId).Data;
 
     localStorage.setItem("COMPANY_ID", data.Id);
@@ -41,6 +46,7 @@ function setCompanyDetails() {
     if (allCompanies.Status) {
         var data = allCompanies.Data;
         $("#navbar-company-selector").empty();
+        /*$("#navbar-company-selector").append(`<option selected value="NEWCOMPANY">+ Add New Company</option>`); */
         for (var i = 0; i < data.length; i++) {
 
             if (data[i].IS_DEFAULT == "Y") {
@@ -63,6 +69,8 @@ function setCompanyDetails() {
                 $("#navbar-company-selector").append(`<option value="${data[i].Id}">${data[i].COMPANY_NAME_ENGLISH} [${data[i].COMPANY_CODE}]</option>`);
             }
         }
+
+        
         
         $("#navbar-company-selector").val(localStorage.getItem("COMPANY_ID"));
         $(".lbl-company-name").text(localStorage.getItem("COMPANY_NAME_ENGLISH"));

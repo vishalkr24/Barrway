@@ -438,30 +438,24 @@ namespace Barrway.Controllers
 
         public async Task<ActionResult> EmailVerification()
         {
-            if (TempData.Peek("VERIFICATION") == "Pending")
+            try
             {
-                try
-                {
-                    var data = await authService.GetUserByEmail(TempData.Peek("VERIFICATION_EMAIL").ToString());
+                var data = await authService.GetUserByEmail(TempData.Peek("VERIFICATION_EMAIL").ToString());
 
-                    if (data.Data["IS_EMAIL_VERIFIED"].ToString() == "Y")
-                    {
-                        return RedirectToAction("BusinessLogin");
-                    }
-
-                    ViewBag.VerificationEmail = TempData.Peek("VERIFICATION_EMAIL").ToString();
-                }catch (Exception ex)
+                if (data.Data["IS_EMAIL_VERIFIED"].ToString() == "Y")
                 {
-                    ViewBag.VerificationEmail = TempData.Peek("VERIFICATION_EMAIL");
+                    return RedirectToAction("BusinessLogin");
                 }
-                
-                return View();
+
+                ViewBag.VerificationEmail = TempData.Peek("VERIFICATION_EMAIL").ToString();
             }
-            else
+            catch (Exception ex)
             {
-                return RedirectToAction("Index", "Home");
+                ViewBag.VerificationEmail = TempData.Peek("VERIFICATION_EMAIL");
             }
-            
+
+            return View();
+
         }
 
 

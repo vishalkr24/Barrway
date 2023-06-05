@@ -515,42 +515,6 @@ namespace Barrway.Controllers
                     return View("ManageCompanyWebsite", model);
                 }
 
-                string folderPath = Server.MapPath("~/UploadCompany/CompanyLogos/" + model.COMPANY_CODE.ToString());
-                string folderPath2 = Server.MapPath("~/UploadCompany/CompanyBanners/" + model.COMPANY_CODE.ToString());
-
-                if (!Directory.Exists(folderPath))
-                {
-                    Directory.CreateDirectory(folderPath);
-                }
-                else
-                {
-                    Directory.Delete(folderPath, true);
-                    Directory.CreateDirectory(folderPath);
-                }
-
-                if (!Directory.Exists(folderPath2))
-                {
-                    Directory.CreateDirectory(folderPath2);
-                }
-                else
-                {
-                    Directory.Delete(folderPath2, true);
-                    Directory.CreateDirectory(folderPath2);
-                }
-
-                string path = "";
-                string path2 = "";
-                if (model.COMPANY_LOGO_PATH != null)
-                {
-                    path = "~/UploadCompany/CompanyLogos/" + model.COMPANY_CODE.ToString() + "/" + model.COMPANY_LOGO_PATH.FileName.ToString();
-                }
-
-                if (model.COMPANY_BANNER_PATH != null)
-                {
-                    path2 = "~/UploadCompany/CompanyBanners/" + model.COMPANY_CODE.ToString() + "/" + model.COMPANY_BANNER_PATH.FileName.ToString();
-                }
-                
-
                 BusinessCompanyModel companyModel = new BusinessCompanyModel()
                 {
                     BUSINESS_ACCOUNT_ID = model.BUSINESS_ACCOUNT_ID,
@@ -561,8 +525,8 @@ namespace Barrway.Controllers
                     COMPANY_DESCRIPTION = model.COMPANY_DESCRIPTION,
                     COMPANY_EMAIL = model.COMPANY_EMAIL,
                     COMPANY_LOGO_NAME = model.COMPANY_LOGO_NAME,
-                    COMPANY_BANNER_PATH = path2,
-                    COMPANY_LOGO_PATH = path,
+                    //COMPANY_BANNER_PATH = path2,
+                    //COMPANY_LOGO_PATH = path,
                     COMPANY_NAME_CHINESE = model.COMPANY_NAME_CHINESE,
                     COMPANY_NAME_ENGLISH = model.COMPANY_NAME_ENGLISH,
                     COMPANY_PHONE = model.COMPANY_PHONE,
@@ -580,12 +544,60 @@ namespace Barrway.Controllers
                     WECHAT_URL = model.WECHAT_URL
                 };
 
+                if (model.COMPANY_LOGO_PATH != null)
+                {
+                    string folderPath = Server.MapPath("~/UploadCompany/CompanyLogos/" + model.COMPANY_CODE.ToString());
+                    if (!Directory.Exists(folderPath))
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
+                    else
+                    {
+                        Directory.Delete(folderPath, true);
+                        Directory.CreateDirectory(folderPath);
+                    }
+                    string path = "";
+                    if (model.COMPANY_LOGO_PATH != null)
+                    {
+                        path = "~/UploadCompany/CompanyLogos/" + model.COMPANY_CODE.ToString() + "/" + model.COMPANY_LOGO_PATH.FileName.ToString();
+                    }
+                    companyModel.COMPANY_LOGO_NAME = model.COMPANY_LOGO_PATH.FileName.ToString();
+                    companyModel.COMPANY_LOGO_PATH = path;
+                }
+
+                if (model.COMPANY_BANNER_PATH != null)
+                {
+                    string folderPath2 = Server.MapPath("~/UploadCompany/CompanyBanners/" + model.COMPANY_CODE.ToString());
+
+                    if (!Directory.Exists(folderPath2))
+                    {
+                        Directory.CreateDirectory(folderPath2);
+                    }
+                    else
+                    {
+                        Directory.Delete(folderPath2, true);
+                        Directory.CreateDirectory(folderPath2);
+                    }
+
+                    string path2 = "";
+
+                    if (model.COMPANY_BANNER_PATH != null)
+                    {
+                        path2 = "~/UploadCompany/CompanyBanners/" + model.COMPANY_CODE.ToString() + "/" + model.COMPANY_BANNER_PATH.FileName.ToString();
+                    }
+                    companyModel.COMPANY_BANNER_NAME = model.COMPANY_BANNER_PATH.FileName.ToString();
+                    companyModel.COMPANY_BANNER_PATH = path2;
+                }
+                
+
+                
+                
+
+
                 var saveDataResult = await businessUserService.AddCompany(companyModel, User.Identity.Name.ToString());
 
                 if (saveDataResult.Status)
                 {
-                    var website = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
-
                     if (model.COMPANY_LOGO_PATH != null)
                     {
                         model.COMPANY_LOGO_PATH.SaveAs(Server.MapPath("~/UploadCompany/CompanyLogos/" + model.COMPANY_CODE.ToString()) + "/" + model.COMPANY_LOGO_PATH.FileName.ToString());

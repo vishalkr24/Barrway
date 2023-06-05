@@ -15,15 +15,19 @@
                 <div class="photo-album-inner">
                     <div class="gallery-wrapper">
                         <div class="gallery-inner" style="min-height:75vh">
-                            @if (Model.photoAlbumList.Count > 0)
+                            @if (Model.photoAlbumList != null)
                             {
-                                foreach (var photo in Model.photoAlbumList)
+                                if (Model.photoAlbumList.Count > 0)
                                 {
-                                    <div class="gallery-img">
-                                        <img src="@photo.ALBUM_PHOTO_PATH.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/hdiw.png'" alt="">
-                                    </div>
+                                    foreach (var photo in Model.photoAlbumList)
+                                    {
+                                        <div class="gallery-img">
+                                            <img src="@photo.ALBUM_PHOTO_PATH.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/hdiw.png'" alt="">
+                                        </div>
+                                    }
                                 }
                             }
+
                         </div>
                     </div>
                 </div>
