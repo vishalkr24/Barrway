@@ -1,4 +1,4 @@
-﻿var CalendarFormId = "2305", ySelection = "", xSelection = "", COMPANY_CODE, CALENDAR_CODE, formDetailsDataInfo, counterLoader, xaxisFormList, formAllDatafields, listTabulator, calendarDetails;
+﻿var CalendarFormId = "2305", ySelection = "", xSelection = "", COMPANY_CODE, CALENDAR_CODE, formDetailsDataInfo, counterLoader, xaxisFormList, formAllDatafields, listTabulator, calendarDetails, IsCustomFilter, IsCustomInFilter;
 
 $(document).on("change", "#company-filter-selector", function () {
 
@@ -9,10 +9,24 @@ $(document).on("change", "#company-filter-selector", function () {
     $('.calendar').fullCalendar('destroy');
     usercalendarLoad();
 })
-
 async function usercalendarLoad() {
-  
+
     COMPANY_CODE = $("#company-filter-selector option:selected").val();
+     IsCustomFilter = true;
+     IsCustomInFilter = false;
+
+    if (COMPANY_CODE == "-1") {
+        var options = $('select option');
+        var values = options.map(function () {
+            var value = $(this).val();
+            if (value !== '-1') {
+                return "'" + value + "'";
+            }
+        }).get().join(',');
+        COMPANY_CODE = values;
+        IsCustomFilter = false;
+        IsCustomInFilter = true;
+    }
     
     var formdetail = await getFormDetails();
     formDetailsDataInfo = formdetail[0];
@@ -256,7 +270,8 @@ function changeStateOfCalenderController(view) {
 
 async function reBindCalender(param) {
     showLoader();
-    param.IsCustomFilter = true;
+    param.IsCustomFilter = IsCustomFilter;
+    param.IsCustomInFilter = IsCustomInFilter;
     param.CustomFilters = [{ "FieldName": "COMPANY_CODE", "Value": COMPANY_CODE }];
     return new Promise(resolve => {
         $.ajax({
@@ -328,7 +343,7 @@ async function getCalenderSettings() {
         $.ajax({
             type: "POST",
             url: BASE_URL + "FormAPI/getCalenderSettingsFormData",
-            data: JSON.stringify({ "action": 4, "formId": CalendarFormId, "IsCustomFilter": true, "CustomFilters": [{ "FieldName": "COMPANY_CODE", "Value": COMPANY_CODE }] }),
+            data: JSON.stringify({ "action": 4, "formId": CalendarFormId, "IsCustomFilter": IsCustomFilter, IsCustomInFilter:IsCustomInFilter, "CustomFilters": [{ "FieldName": "COMPANY_CODE", "Value": COMPANY_CODE }] }),
             contentType: "application/json",
             success: function (response) {
                 hideLoader();
@@ -493,7 +508,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         //lazyFetching: true,
         now: new Date(),
         navLinks: true, // can click day/week names to navigate views
-        editable: true,
+        editable: false,
         eventLimit: 4, // allow "more" link when too many events            
         loading: function (bool) {
             var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
@@ -1077,6 +1092,9 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 param.filter.field = "start";
                 param.COMPANY_CODE = COMPANY_CODE;
                 param.IsPublicUser = true;
+                param.IsCustomFilter = IsCustomFilter;
+                param.IsCustomInFilter = IsCustomInFilter;
+                param.CustomFilters = [{ "FieldName": "COMPANY_CODE", "Value": COMPANY_CODE }];
                 //showLoader();
                 $.ajax({
                     method: 'POST',
@@ -1141,6 +1159,9 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
             param.filter = changeStateOfCalender(view, start, end);
             param.filter.field = "start";
             param.COMPANY_CODE = COMPANY_CODE;
+            param.IsCustomFilter = IsCustomFilter;
+            param.IsCustomInFilter = IsCustomInFilter;
+            param.CustomFilters = [{ "FieldName": "COMPANY_CODE", "Value": COMPANY_CODE }];
             param.IsPublicUser = true;
             $.ajax({
                 method: 'POST',
@@ -1361,6 +1382,9 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
             param.filter = changeStateOfCalender(view, start, end);
             param.filter.field = "start";
             param.COMPANY_CODE = COMPANY_CODE;
+            param.IsCustomFilter = IsCustomFilter;
+            param.IsCustomInFilter = IsCustomInFilter;
+            param.CustomFilters = [{ "FieldName": "COMPANY_CODE", "Value": COMPANY_CODE }];
             param.IsPublicUser = true;
             $.ajax({
                 method: 'POST',
@@ -1438,8 +1462,8 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                         if (exists.minTime != "" && exists.minTime != null && exists.minTime != undefined && exists.maxTime != null && exists.maxTime != undefined && exists.maxTime != "") {
                             var minTime = exists.minTime.trim().replace(' ', ':');
                             var maxTime = exists.maxTime.trim().replace(' ', ':');
-                            $('#timeline-resource-view div.calendar').fullCalendar('option', 'minTime', minTime + ":00");
-                            $('#timeline-resource-view div.calendar').fullCalendar('option', 'maxTime', maxTime + ":00");
+                            //$('#timeline-resource-view div.calendar').fullCalendar('option', 'minTime', minTime + ":00");
+                            //$('#timeline-resource-view div.calendar').fullCalendar('option', 'maxTime', maxTime + ":00");
                         }
                     }
                 }
@@ -1507,6 +1531,9 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
             param.filter = changeStateOfCalender(view, start, end);
             param.filter.field = "start";
             param.COMPANY_CODE = COMPANY_CODE;
+            param.IsCustomFilter = IsCustomFilter;
+            param.IsCustomInFilter = IsCustomInFilter;
+            param.CustomFilters = [{ "FieldName": "COMPANY_CODE", "Value": COMPANY_CODE }];
             param.IsPublicUser = true;
             $.ajax({
                 method: 'POST',
@@ -1555,8 +1582,8 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
             if (exists.minTime != "" && exists.minTime != null && exists.minTime != undefined && exists.maxTime != null && exists.maxTime != undefined && exists.maxTime != "") {
                 var minTime = exists.minTime.trim().replace(' ', ':');
                 var maxTime = exists.maxTime.trim().replace(' ', ':');
-                myOptions2.minTime = minTime + ":00";
-                myOptions2.maxTime = maxTime + ":00";
+                //myOptions2.minTime = minTime + ":00";
+               // myOptions2.maxTime = maxTime + ":00";
             }
         }
     }
@@ -2278,8 +2305,10 @@ async function rendarPopupCalendar(assignDate) {
             param.startDate = moment(start.format()).format("YYYY-MM-DD HH:mm:ss");
             param.endDate = moment(end.format()).format("YYYY-MM-DD HH:mm:ss");
             param.COMPANY_CODE = COMPANY_CODE;
+            param.IsCustomFilter = IsCustomFilter;
+            param.IsCustomInFilter = IsCustomInFilter;
+            param.CustomFilters = [{ "FieldName": "COMPANY_CODE", "Value": COMPANY_CODE }];
             param.IsPublicUser = true;
-
             var postUrl = BASE_URL + "/FormAPI/getReferralFormFields";
 
 

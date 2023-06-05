@@ -339,15 +339,24 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> GetAllEnrolledCalendarsData(string CompanyCode, string UserEmail, string filterDate = null)
+
+        public async Task<AddUpdateDelete> GetAllEnrolledCalendarsData(string CompanyCode, string UserEmail,bool IsCustomInFilter=false)
         {
             try
             {
                 string CompanyCondition = "";
-
+                
                 if (!string.IsNullOrEmpty(CompanyCode) && CompanyCode != "0")
                 {
-                    CompanyCondition = " calendar.COMPANY_CODE='" + CompanyCode + "' and ";
+                    if (!IsCustomInFilter)
+                    {
+                        CompanyCondition = " calendar.COMPANY_CODE='" + CompanyCode + "' and ";
+                    }
+                    else
+                    {
+                        CompanyCondition = " calendar.COMPANY_CODE in (" + CompanyCode + ") and ";
+                    }
+                    
                 }
 
                 if (!string.IsNullOrEmpty(filterDate))
