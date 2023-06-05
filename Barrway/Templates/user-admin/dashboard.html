@@ -1,10 +1,27 @@
-﻿<main id="content" role="main" class="">
+﻿<style>
+    #date-range {
+        width: 100%;
+        height: 100%;
+    }
+
+    .current-date {
+        background-color: red;
+        color: white;
+    }
+
+    .selected-date {
+        background-color: lightblue;
+        color: white;
+    }
+
+</style>
+<main id="content" role="main" class="">
     <!-- Content -->
     <div class="container-fluid">
 
 
         <div class="row">
-            <div class="col-lg-6 col-xl-6">
+            <div class="col-lg-5 col-xl-5">
                 <div class="main-left">
                     <div class="bred-nav">
                         <span><a href="#" ui-sref="home()">User</a> / <span> <a href="#" ui-sref="home()">Dashboard</a> </span></span>
@@ -25,16 +42,61 @@
                                 <p><button class="book" ng-click="GoToCalendar(company.CompanyId)">Book</button></p>
                             </div>
                         </div>
-                       
+
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 col-xl-6">
-                <div class="main-right">
+            <div class="col-lg-6 col-xl-7">
+                <div class="main-right" style="min-height: 85vh;">
                     <div class="top">
                         <span style="position: relative;top: 2px;">Your booking reminder</span>
                         <span><button>go to Calendar</button></span>
                     </div>
+                    <br /><br /><br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="calendar0" class="fc fc-unthemed fc-ltr"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="calendar1" class="fc fc-unthemed fc-ltr"></div>
+                        </div>
+
+                    </div>
+                    <br /><br />
+                    <div style="height: 400px; overflow: hidden; overflow-y: scroll;">
+                        <div class="row">
+                            <div class="col-md-12 mb-3" ng-repeat="event in bookingEventData">
+                                <div style="border-radius: 8px; background: #ECFAFB; min-height: 107px; ">
+
+                                    <div class="row">
+                                        <div class="col-md-9" style="padding:16px 31px">
+                                            <h3>{{event.customTitleSplit[1]}}</h3>
+                                            <div>
+                                                {{event.customTitleSplit[0]}}
+                                            </div>
+                                            <div>
+                                                {{event.customTitleSplit[2]}}
+                                            </div>
+                                            <div>
+                                                {{event.start}}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 text-center">
+                                            <img src="{{event.COMPANY_LOGO_PATH}}" style="height:70px; width:70px; border-radius: 100px; border: 1px solid grey; margin-top:18px;" />
+                                            <div>
+                                                {{event.COMPANY_NAME_ENGLISH}}
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
                 </div>
             </div>
         </div>
@@ -42,3 +104,7 @@
     </div>
     <!-- End Content -->
 </main>
+<script>
+
+
+</script>

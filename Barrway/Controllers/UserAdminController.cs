@@ -191,13 +191,41 @@ namespace Barrway.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> GetAllEnrolledCalendarsData(string CompanyCode)
+        public async Task<ActionResult> GetAllEnrolledCalendarsData(string CompanyCode, string filterDate = null)
         {
             try
             {
-                var result = await publicUserService.GetAllEnrolledCalendarsData(CompanyCode, UserIdentity.UserEmail);
+                var result = await publicUserService.GetAllEnrolledCalendarsData(CompanyCode, UserIdentity.UserEmail, Convert.ToDateTime(filterDate).ToString("yyyy-MM-dd"));
 
                 return Json(new { data = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Message = "Failed", Status = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GetFullCalendarEvents(string StartDate, string EndDate)
+        {
+            try
+            {
+                var result = await publicUserService.GetFullCalendarEvents(StartDate, EndDate,UserIdentity.UserEmail);
+                List<IDictionary<string, object>> finalResult = new List<IDictionary<string, object>>();
+
+                for (int i = 0; i < result.Data.Count; i++)
+                {
+                    if (result.Data[i].Count > 0)
+                    {
+                        var splitData = result.Data[i]["customTitle"].Split(',');
+
+                        result.Data[i].Add("customTitleSplit", splitData);
+                        finalResult.Add(result.Data[i]);
+                    }
+                    
+                }
+
+                return Json(finalResult, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

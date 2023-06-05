@@ -204,6 +204,59 @@ namespace Barrway.Service.Repository
             data2.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.transaction.ToDictionary());
             data2.formGroupKey = Guid.NewGuid().ToString();
             var formResult2 = (await formAPIRepository.GeneratedFormData(data2)).Data;
+
+            // send Entry into Upcoming Bookings
+            
+            string upcomingBookingQuery = $@"INSERT INTO [dbo].[COMPANY_UPCOMING_BOOKINGS_1945]
+                                                   ([formGroupKey]
+                                                   ,[formID]
+                                                   ,[userID]
+                                                   ,[Current_Status]
+                                                   ,[cycle]
+                                                   ,[MasterFormID]
+                                                   ,[MasterFormRow]
+                                                   ,[formRecordOrder]
+                                                   ,[formRecordStatus]
+                                                   ,[ApprovalStatus]
+                                                   ,[created_at]
+                                                   ,[updated_at]
+                                                   ,[created_by]
+                                                   ,[updated_by]
+                                                   ,[COMPANY_CODE]
+                                                   ,[CALENDAR_CODE]
+                                                   ,[BOOKING_DATE]
+                                                   ,[SERVICE_NAME]
+                                                   ,[SERVICE_PROVIDER]
+                                                   ,[CLIENT_NAME]
+                                                   ,[FROM_TIME]
+                                                   ,[TO_TIME])
+                                             VALUES
+                                                   ('{Guid.NewGuid().ToString()}'
+                                                   ,2315
+                                                   ,30314
+                                                   ,0
+                                                   ,0
+                                                   ,0
+                                                   ,0
+                                                   ,0
+                                                   ,(select ISNULL(Max(formRecordOrder), 0) from COMPANY_UPCOMING_BOOKINGS_1945)
+                                                   ,0
+                                                   ,getdate()
+                                                   ,getdate()
+                                                   ,null
+                                                   ,null
+                                                   ,'{model.transaction.COMPANY_CODE}'
+                                                   ,'{model.transaction.CALENDAR_CODE}'
+                                                   ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = '{model.transaction.SLOT}')                                                                                                                                                                                                     
+                                                   ,'{model.ACTIVITY_NAME}'
+                                                   ,'{model.RESOURCE_NAME}'
+                                                   ,'{model.participant.STUDENT_NAME}'
+                                                   ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = '{model.transaction.SLOT}') 
+                                                   ,(select calendar.[end] from  CALENDAR_FORM_1935 calendar where Id = '{model.transaction.SLOT}') )";
+
+
+            var upcomingResult = await sqlFunction.ExecuteSqlCommandQuery(upcomingBookingQuery);
+
             if (formResult2.res == 1)
             {
                 return new AddUpdateDelete() { Message = "Success", Status = true };
@@ -220,7 +273,7 @@ namespace Barrway.Service.Repository
             try
             {
 
-                string query = $@"SELECT distinct calendar.[COMPANY_CODE], calendar.[CALENDAR_CODE], company.COMPANY_NAME_ENGLISH
+                string query = $@"SELECT distinct calendar.[COMPANY_CODE], calendar.[CALENDAR_CODE], company.COMPANY_NAME_ENGLISH, calendar.[start] as 'Date'
                                   FROM [dbo].[CALENDAR_FORM_1935] calendar
                                   join TRANSACTION_MASTER_1942 transaction_m on calendar.CALENDAR_CODE = transaction_m.CALENDAR_CODE
                                   join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
@@ -286,6 +339,7 @@ namespace Barrway.Service.Repository
             }
         }
 
+
         public async Task<AddUpdateDelete> GetAllEnrolledCalendarsData(string CompanyCode, string UserEmail,bool IsCustomInFilter=false)
         {
             try
@@ -305,6 +359,11 @@ namespace Barrway.Service.Repository
                     
                 }
 
+                if (!string.IsNullOrEmpty(filterDate))
+                {
+                    CompanyCondition += "CAST(calendar.[start] AS DATE) = CAST('" + filterDate + "' AS DATE) and ";
+                }
+
                 string query = $@"SELECT distinct calendar.[COMPANY_CODE]
                                       ,calendar.[CALENDAR_CODE]
 	                                  ,calendar.[Id]
@@ -315,7 +374,7 @@ namespace Barrway.Service.Repository
                                       ,[resources]
                                       ,[activities]
                                       ,calendar.[description]
-                                      ,[color]
+                                      ,calendar.[color]
                                       ,calendar.[created_at]
                                       ,calendar.[updated_at]
                                       ,calendar.[created_by]
@@ -329,13 +388,56 @@ namespace Barrway.Service.Repository
 	                                  ,transaction_m.*
 	                                  ,participant.*
 	                                  ,company.COMPANY_NAME_ENGLISH
+                                      ,company.COMPANY_LOGO_PATH
+                                      ,service_m.ACTIVITY_NAME
+                                      ,service_p_m.FIRST_NAME
                                   FROM [dbo].[CALENDAR_FORM_1935] calendar
                                   join TRANSACTION_MASTER_1942 transaction_m on calendar.CALENDAR_CODE = transaction_m.CALENDAR_CODE
                                   join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
                                   join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
-                                  where {CompanyCondition} EMAIL = '{UserEmail}' and calendar.Id = transaction_m.SLOT";
+                                  join SERVICE_MASTER_1933 service_m on service_m.Id = calendar.activities
+                                  join SERVICE_PROVIDER_MASTER_1934 service_p_m on service_p_m.Id = calendar.resources
+                                  where {CompanyCondition} participant.EMAIL = '{UserEmail}' and calendar.Id = transaction_m.SLOT";
 
                 List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
+            }
+        }
+        public async Task<AddUpdateDelete> GetFullCalendarEvents(string StartDate, string EndDate, string UserEmail)
+        {
+            try
+            {
+                string query = $@"DECLARE @retval nvarchar(max);       DECLARE @sQuery nvarchar(max); DECLARE @ParmDefinition nvarchar(max);                        
+                                    DECLARE @customTitleQuery nvarchar(max);           
+
+                                    IF OBJECT_ID(N'tempdb..#temptable') IS NOT NULL  BEGIN DROP TABLE #temptable END 
+                                    ;with cte1 as( select distinct  f.*,f.resources 'resourceId', company.COMPANY_LOGO_PATH, company.COMPANY_NAME_ENGLISH ,  STUFF((SELECT ',' +  PARTICIPANT_MASTER_1940.[STUDENT_NAME]  
+                                    from TRANSACTION_MASTER_1942 inner join PARTICIPANT_MASTER_1940 on TRANSACTION_MASTER_1942.STUDENT = PARTICIPANT_MASTER_1940.Id where TRANSACTION_MASTER_1942.formGroupKey = f.formGroupKey         FOR XML PATH('')), 1, 1, '') customFourthTitle
+                                    , (dbo.[GetSubQueryCalender](f.formGroupKey)) customTitle,   (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceFormId) from form_calenderreferrence f2     
+                                    where f2.formgroupkey = f.formGroupKey  FOR XML PATH('')), 1, 1, '')   ) customForms  , (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceId) 
+                                    from form_calenderreferrence f2    where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) customFormIds,  '' referrences_1,  '' referrences_2,  '' referrences_3   
+                                    from CALENDAR_FORM_1935 f 
+                                    join TRANSACTION_MASTER_1942 transaction_m on transaction_m.CALENDAR_CODE = f.CALENDAR_CODE
+                                    join PARTICIPANT_MASTER_1940 participant_m on participant_m.Id = transaction_m.STUDENT
+                                    join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
+                                    where  (CAST([start] as date) >= CAST('{StartDate}' as date) and  CAST([start] as date) <=CAST('{EndDate}' as date) )    and f.formid=2305   and participant_m.EMAIL = '{UserEmail}' and transaction_m.SLOT = f.Id
+                                    ) ,
+                                    cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
+
+
+                                    select* into #temptable from cte2  where len(customtitle)>0;    declare @counter int= 0, @c int= 1;   
+                                    select @counter = (select count(1) from #temptable)	while @c <= @counter    begin    select @customTitleQuery = customTitle from #temptable where ROWNUMBER=@c;	SET @sQuery= ' select @retvalOUT = (' + @customTitleQuery + ')'  
+                                    SET @ParmDefinition = N'@retvalOUT nvarchar(max) OUTPUT';   
+                                    EXEC sp_executesql @sQuery, @ParmDefinition, @retvalOUT = @retval OUTPUT;    update #temptable set customTitle=@retval where ROWNUMBER=@c;	set @c = @c + 1;  end  select* from #temptable";
+
+                List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+
+                result.Add(new Dictionary<string, object>());
 
                 if (result.Count > 0)
                 {
@@ -345,12 +447,12 @@ namespace Barrway.Service.Repository
                 {
                     return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
                 }
+
             }
             catch (Exception ex)
             {
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
             }
         }
-
     }
 }
