@@ -33939,26 +33939,16 @@ a:hover .text-inherit {
     cursor: pointer;
 }
 
-.tom-select-custom .input-group-sm > .ts-wrapper .ts-control.has-items,
-.tom-select-custom .ts-wrapper.form-control-sm .ts-control.has-items,
-.tom-select-custom .ts-wrapper.form-select-sm .ts-control.has-items {
-    padding: 0.5rem 2.25rem 0.5rem 1rem;
-}
 
-.tom-select-custom .input-group-lg > .ts-wrapper > .ts-control,
-.tom-select-custom .ts-wrapper.form-control-lg .ts-control,
-.tom-select-custom .ts-wrapper.form-select-lg .ts-control {
-    padding: 0.75rem 2.25rem 0.75rem 1rem;
-}
 
 .tom-select-custom .hs-select-single-multiple .item {
     display: none !important;
 }
-
+/*
 .tom-select-custom .ts-wrapper.form-select .ts-control,
 .tom-select-custom .ts-wrapper.multi .ts-control.has-items.hs-select-single-multiple {
     padding: 0.18rem 1rem;
-}
+}*/
 
     .tom-select-custom .ts-wrapper.form-select .ts-control .tom-select-custom-hide,
     .tom-select-custom .ts-wrapper.multi .ts-control.has-items.hs-select-single-multiple .tom-select-custom-hide {

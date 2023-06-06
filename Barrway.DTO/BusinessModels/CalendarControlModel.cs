@@ -12,7 +12,13 @@ namespace Barrway.DTO.BusinessModels
         public string CALENDAR_CODE { get; set; }
         public string USER_ADMIN_GROUP_NAME { get; set; }
         public string CALENDAR_USE_TYPE { get; set; }
+        public string CALENDAR_FORM_CATEGORY { get; set; }
         public string THEME_SELECTION { get; set; }
+        public string CALENDAR_FORM_NAME { get; set; }
+
+        public string REGISTRATION_FORM_NAME { get; set; }
+        public string REGISTRATION_FORM_CATEGORY { get; set; }
+
         public string RESOURCE_FORM_YN { get; set; }
         public string RESOURCE_NAME { get; set; }
         public string RESOURCE_FORM_CATEGORY { get; set; }

@@ -16,6 +16,7 @@ namespace Barrway.DTO.BusinessModels
         public HttpPostedFileBase CALENDAR_PHOTO_PATH { get; set; }
         public string IS_VISIBLE { get; set; }
         public string COMPANY_CODE { get; set; }
+        public string CALENDAR_CODE { get; set; }
 
 
         [Required(ErrorMessage = "Calendar name is required")]
@@ -43,6 +44,9 @@ namespace Barrway.DTO.BusinessModels
         public List<string> TAGS { get; set; }
         
         public string SLOT_DURATION_IN_MINS { get; set; }
+
+        public CalendarControlModel CalendarControlSheet { get; set; }
+
     }
 
     public enum CalendarCategory
@@ -51,8 +55,24 @@ namespace Barrway.DTO.BusinessModels
         Category2 = 2
     }
 
+    public enum PublicPrivateOptions
+    {
+        Public,
+        Private
+    }
+
     public enum DropdownDefault
     {
         Select = -1
+    }
+
+    public enum UserAdminGroupNameOptions
+    {
+
+    }
+
+    public enum CalendarFormatOptions
+    {
+        Simple, Advanced
     }
 }

@@ -11,15 +11,75 @@ $(document).on("change", "#CALENDAR_CATEGORY_ID", function () {
 })
 
 $(document).ready(function () {
+    
+    readyPage();
+   
+});
 
-    var obj = { 'create': true, 'placeholder': 'Add tags...' };
-    $("#TAGS").attr("data-hs-tom-select-options", JSON.stringify(obj) );
-    HSCore.components.HSTomSelect.init('.js-select')
-
+function readyPage() {
+    
     setCalendarCategory();
+
     checkRegistrationStep();
     setCountryData();
-});
+    
+    if ($("#createCalendarCheck").val() == false || $("#createCalendarCheck").val() == "false" ) {
+        $("#content").hide();
+        $("#content-2").show();
+        setCurrentCalendarData();
+
+        $("#btn2").attr("onclick", "renderPage(2)");
+    } else {
+        var obj = { 'create': true, 'placeholder': 'Add tags...' };
+        $("#content").show();
+        $("#content-2").hide();
+        $("#TAGS").attr("data-hs-tom-select-options", JSON.stringify(obj));
+        HSCore.components.HSTomSelect.init('.js-select')
+
+    }
+
+
+}
+
+function setCurrentCalendarData() {
+    
+    var data = getSingleCalendar($("#calendarCodeInput").val());
+
+    console.log(data);
+    if (data.Status == "true" || data.Status == true) {
+
+        $("#COUNTRY_ID").val(data.Data.COUNTRY_ID);
+        bindCityData(data.Data.COUNTRY_ID);
+        $("#CITY_ID").val(data.Data.CITY_ID);
+        bindDistrictData(data.Data.DISTRICT_ID);
+        $("#DISTRICT_ID").val(data.Data.DISTRICT_ID);
+        renderForm(data.Data.CALENDAR_CATEGORY_ID);
+        $("#CALENDAR_SUB_CATEGORY_ID").val(data.Data.CALENDAR_SUB_CATEGORY_ID);
+        
+        if (data.Data.TAGS != null && data.Data.TAGS != "" && data.Data.TAGS != "null") {
+
+            if (data.Data.TAGS.includes(",")) {
+                var tagData = data.Data.TAGS.split(',');
+
+                for (var i = 0; i < tagData.length; i++) {
+                    $("#TAGS").append(`<option selected>${tagData[i]}</option>`);
+                }
+            } else {
+                $("#TAGS").append(`<option selected>${data.Data.TAGS}</option>`);
+            }
+
+            
+
+        }
+        var obj = { 'create': true, 'placeholder': 'Add tags...' };
+
+        $("#TAGS").attr("data-hs-tom-select-options", JSON.stringify(obj));
+        HSCore.components.HSTomSelect.init('.js-select')
+
+
+    }
+
+}
 
 function renderForm(CategoryId) {
     $("#CALENDAR_CATEGORY_ID").val(CategoryId);
@@ -30,6 +90,55 @@ function renderForm(CategoryId) {
     checkSlot();
 }
 
+function renderPage(pageName) {
+
+    pageName = parseInt(pageName);
+
+    if ($("#createCalendarCheck").val() == "true") {
+        pageName = 1;
+    }
+
+    switch (pageName) {
+        case 1:
+            $("#div1").show();
+            $("#div2").hide();
+            $("#div3").hide();
+            $("#div4").hide();
+
+            $("#btn1 .nav-link").addClass('active');
+            $("#btn2 .nav-link").removeClass('active');
+            $("#btn3 .nav-link").removeClass('active');
+            $("#btn4 .nav-link").removeClass('active');
+
+            break;
+        case 2:
+            $("#div1").hide();
+            $("#div2").show();
+            $("#div3").hide();
+            $("#div4").hide();
+
+            $("#btn1 .nav-link").removeClass('active');
+            $("#btn2 .nav-link").addClass('active');
+            $("#btn3 .nav-link").removeClass('active');
+            $("#btn4 .nav-link").removeClass('active');
+
+            break;
+       
+        default:
+            $("#div1").show();
+            $("#div2").hide();
+            $("#div3").hide();
+            $("#div4").hide();
+
+            $("#btn1 .nav-link").addClass('active');
+            $("#btn2 .nav-link").removeClass('active');
+            $("#btn3 .nav-link").removeClass('active');
+            $("#btn4 .nav-link").removeClass('active');
+
+            break;
+    }
+    $("#div" + pageName).show();
+}
 
 function renderCategory() {
     $("#content-2").hide();
@@ -51,8 +160,10 @@ function checkSlot() {
     categoryId = $("#CALENDAR_CATEGORY_ID option:selected").val();
 
     if (categoryId == 1 || categoryId == 2 || categoryId == 5) {
+        $(".advanced-option").show();
         $("#duration-entry-field").show();
     } else {
+        $(".advanced-option").hide();
         $("#duration-entry-field").hide();
     }
 

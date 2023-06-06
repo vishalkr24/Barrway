@@ -382,7 +382,6 @@ namespace Barrway.Service.Repository
                                       ,[tabulator_1683785383381]
                                       ,[SCHEDULAR_FORM_ID]
                                       ,[CREATION_TYPE]
-                                      ,[SLOT_DURATION_IN_MINS]
                                       ,[EVENT_TYPE]
 	                                  ,transaction_m.*
 	                                  ,participant.*
