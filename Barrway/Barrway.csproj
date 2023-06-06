@@ -3008,6 +3008,7 @@
     <Content Include="CalendarConfiguration\TypeB2Configuration.json" />
     <Content Include="CalendarConfiguration\TypeAConfiguration.json" />
     <Content Include="CalendarConfiguration\TypeCConfiguration.json" />
+    <Content Include="CalendarConfiguration\BasicConfiguration.json" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\BusinessScripts\AdminDashboard.js" />
     <Content Include="Scripts\BusinessScripts\AdminLayoutManager.js" />

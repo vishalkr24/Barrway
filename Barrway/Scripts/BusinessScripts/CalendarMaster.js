@@ -12,7 +12,8 @@ function setCalendarMaster() {
         var columns = [
             {
                 title: '', field: 'ACTION', formatter: function (cell, formatter) {
-                    return `<a href='#' onclick="GoToCalendarLayout(${cell.getRow().getData().Id}, '${cell.getRow().getData().CALENDAR_CODE}')" class="btn btn-warning text-light" style="border-radius:300px; background:#E2476C;">Calendar</a>`;
+                    console.log(cell.getRow().getData());
+                    return `<a href='/BusinessAdmin/SetupCompanyCalendar?CompanyId=${cell.getRow().getData().COMPANY_ID}&IsPartial=false&CalendarCode=${cell.getRow().getData().CALENDAR_CODE}' class="btn btn-primary text-light" style="border-radius:300px;">Edit</a> <a href='#' onclick="GoToCalendarLayout(${cell.getRow().getData().Id}, '${cell.getRow().getData().CALENDAR_CODE}')" class="btn btn-warning text-light" style="border-radius:300px; background:#E2476C;">Calendar</a>`;
                 }, headerSort: false
             },
             { title: 'Company Code', field: 'COMPANY_CODE', headerFilter: "input" },

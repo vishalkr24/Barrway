@@ -1,6 +1,8 @@
 ﻿using Barrway.DTO.BusinessModels;
+using Barrway.DTO.Common;
 using Barrway.DTO.MarketplaceModels;
 using Barrway.Service.IRepository;
+using FormGeneratorDTOs.DTOs;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,11 +17,13 @@ namespace Barrway.Controllers
     {
         private readonly IBusinessUserService businessUserService;
         private readonly IGlobalMasterService globalMasterService;
+        private readonly IMasterService masterService;
 
-        public MarketPlaceController(IBusinessUserService businessUserService, IGlobalMasterService globalMasterService)
+        public MarketPlaceController(IBusinessUserService businessUserService, IGlobalMasterService globalMasterService, IMasterService masterService)
         {
             this.businessUserService = businessUserService;
             this.globalMasterService = globalMasterService;
+            this.masterService = masterService;
         }
 
         // GET: MarketPlace
@@ -194,6 +198,31 @@ namespace Barrway.Controllers
         {
             return Json(await businessUserService.GetCalendarDetails(id));
         }
+
+        public async Task<ActionResult> GetAllBlogPosts(GenerateDynamicFormData data)
+        {
+            try
+            {
+                var transactionData = await masterService.GetAllBlogPosts(data);
+                var transactionList = transactionData.Data;
+                double last_page = 0;
+                if (transactionList != null && transactionList.Count > 0)
+                {
+                    var singData = transactionList[0];
+                    var total_records = Convert.ToInt32(singData["total_records"].ToString());
+                    var size = Convert.ToInt32(singData["size"].ToString());
+                    double paging = (double)total_records / size;
+                    last_page = Math.Floor(paging) + 1;
+                }
+
+                return Json(new { data = transactionList, last_page }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
 
 
     }

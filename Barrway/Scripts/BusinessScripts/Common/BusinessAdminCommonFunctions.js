@@ -163,6 +163,25 @@ function getCompanyPhotoAlbum(companyId) {
     return data;
 }
 
+function getSingleCalendar(calendarCode) {
+    var data;
+    $.ajax({
+        url: "/BusinessAdmin/GetSingleCalendar/",
+        type: "GET",
+        data: {
+            CalendarCode: calendarCode
+        },
+        async: false,
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    })
+    return data;
+}
+
 function GetCompanyCalendars(companyId) {
     var data;
 

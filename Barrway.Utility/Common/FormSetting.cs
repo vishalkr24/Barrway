@@ -36,7 +36,9 @@ namespace Barrway.Utility.Common
         TRANSACTION_MASTER = 2312,
         PUBLIC_USER_ACCOUNT = 2313,
         CALENDAR_CONTROL_SHEET = 2314,
-        COMPANY_UPCOMING_BOOKINGS = 2315
+        COMPANY_UPCOMING_BOOKINGS = 2315,
+        NEWS_POST_MASTER = 2316,
+        AUTHOR_MASTER = 2317
     }
 
     public enum FormAction
