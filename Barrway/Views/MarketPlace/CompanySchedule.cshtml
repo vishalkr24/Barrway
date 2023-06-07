@@ -718,7 +718,14 @@
                                                 button: "Okay"
                                             });
                                             //swal({ type: 'error', showCloseButton: true, html: "You are already enrolled in this calendar." });
-                                        } else {
+                                        } else if (data.Message == "LIMIT-ERROR") {
+                                            swal({
+                                                title: "Failed to Enroll!",
+                                                text: "Maximum no. of participants already enrolled in this activity.",
+                                                icon: "error",
+                                                button: "Okay"
+                                            });
+                                        }else {
                                             swal({
                                                 title: "Warning!",
                                                 text: data.Data.Message,

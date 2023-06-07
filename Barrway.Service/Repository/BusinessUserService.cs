@@ -211,6 +211,114 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> GetAllCompaniesMasterByUserId(GenerateDynamicFormData data, string UserId)
+        {
+            Dictionary<string, string> filters = new Dictionary<string, string>() {
+                    { "COMPANY_CODE","company.COMPANY_CODE"},
+                    { "COMPANY_NAME_ENGLISH","company.COMPANY_NAME_ENGLISH"},
+                    { "COMPANY_NAME_CHINESE","company.COMPANY_NAME_CHINESE"},
+                    { "COMPANY_PHONE","company.COMPANY_PHONE"},
+                    { "COMPANY_CATEGORY_NAME","company.COMPANY_CATEGORY_NAME"},
+                    { "COMPANY_SUB_CATEGORY_NAME","company.COMPANY_SUB_CATEGORY_NAME"},
+                    { "created_at","company.created_at"},
+                    { "updated_at","calendar.updated_at"},
+            };
+
+            string column = "", dir = "";
+            if (data.sorters != null && data.sorters.Count() > 0)
+            {
+                column = data.sorters.FirstOrDefault().field;
+                dir = data.sorters.FirstOrDefault().dir;
+            }
+            else
+            {
+                column = "created_at";
+                dir = "desc";
+            }
+
+            List<string> applyFilter = new List<string>();
+            if (data.filters != null && data.filters.Count() > 0)
+            {
+                foreach (var item in data.filters)
+                {
+                    if (filters.Any(x => x.Key == item.field) && !string.IsNullOrEmpty(item.value))
+                    {
+                        if (item.field == "created_at" || item.field == "updated_at")
+                        {
+                            string filter = await sqlFunction.GetDateFilter(item, "company");
+                            applyFilter.Add(filter);
+                        }
+                        else
+                        {
+                            string filter = filters[item.field] + " like N'%" + item.value + "%'";
+                            applyFilter.Add(filter);
+                        }
+
+                    }
+                }
+            }
+
+            string applyFilterQuery = string.Join(" and ", applyFilter);
+            applyFilterQuery = applyFilterQuery.TrimEnd("and ".ToCharArray());
+
+            int PageSize = data.size > 0 ? data.size : 20;
+            int PageNumber = data.page > 0 ? data.page : 1;
+
+            string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+                                    SELECT company.[Id]
+                                          ,company.[created_at]
+                                          ,company.[updated_at]
+                                          ,company.[created_by]
+                                          ,company.[updated_by]
+                                          ,[BUSINESS_ACCOUNT_ID]
+                                          ,[COMPANY_CODE]
+                                          ,[COMPANY_NAME_ENGLISH]
+                                          ,[COMPANY_NAME_CHINESE]
+                                          ,[COMPANY_LOGO_NAME]
+                                          ,[COMPANY_LOGO_PATH]
+                                          ,[COMPANY_BANNER_NAME]
+                                          ,[COMPANY_BANNER_PATH]
+                                          ,[COMPANY_PHONE]
+                                          ,[COMPANY_ADDRESS]
+                                          ,[FACEBOOK_URL]
+                                          ,[INSTAGRAM_URL]
+                                          ,[WECHAT_URL]
+                                          ,[TWITTER_URL]
+                                          ,[PAGE_URL]
+                                          ,[COMPANY_DESCRIPTION]
+                                          ,[COMPANY_SERVICE]
+                                          ,[TAGS]
+                                          ,[IS_SEARCHABLE_IN_MARKETPLACE]
+                                          ,company.[COMPANY_CATEGORY_ID]
+                                          ,company.[COMPANY_SUB_CATEGORY_ID]
+                                          ,[COUNTRY_ID]
+                                          ,[CITY_ID]
+                                          ,[DISTRICT_ID]
+                                          ,[TOTAL_WEBSITE_VISITS]
+                                          ,[IS_DEFAULT]
+                                          ,[COMPANY_EMAIL]
+                                          ,[IS_ACTIVE]
+	                                      ,[COMPANY_CATEGORY_NAME]
+	                                      ,[COMPANY_SUB_CATEGORY_NAME]
+                                      FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company
+                                      join COMPANY_CATEGORY_MASTER_1920 category on category.Id = company.COMPANY_CATEGORY_ID
+                                      join COMPANY_SUB_CATEGORY_MASTER_1921 subCategory on subCategory.Id = company.COMPANY_SUB_CATEGORY_ID
+                                    JOIN BUSINESS_ACCOUNT_WEBSITE_1918 business on business.Id = company.BUSINESS_ACCOUNT_ID
+                                    where company.IS_ACTIVE = 'Y' and business.USER_ID = '{UserId}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+                                    )
+                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+            var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+            if (result.Count > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
         public async Task<AddUpdateDelete> GetSingleCalendarById(string Id)
         {
             string query = "SELECT [Id]      ,[created_at]      ,[updated_at]      ,[created_by]      ,[updated_by]      ,[CALENDAR_NAME]     ,[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,[COUNTRY_ID]      ,[CITY_ID]      ,[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] where Id =  '" + Id + "'";
@@ -644,7 +752,7 @@ namespace Barrway.Service.Repository
 
                         if (ActivateFreePlan)
                         {
-                            AddUpdateDelete freeSubscription = await GetCompanyFreeSubscriptionDetails(CompanyDetails.Data["Id"].ToString());
+                            AddUpdateDelete freeSubscription = await GetCompanyFreeSubscriptionDetails(formResult.Id.ToString());
 
                             if (!freeSubscription.Status)
                             {
@@ -658,7 +766,7 @@ namespace Barrway.Service.Repository
                                     CLIENT_PAYMENT = "N",
                                     CHAT_WITH_CLIENT = "N",
                                     PROMOTION_IN_MARKETPLACE = "N",
-                                    COMPANY_ID = CompanyDetails.Data["Id"].ToString(),
+                                    COMPANY_ID = formResult.Id.ToString(),
                                     IS_FREE_PLAN = "Y",
                                     IS_ACTIVE = "Y",
                                     PURCHASE_DATE = DateTime.Now,

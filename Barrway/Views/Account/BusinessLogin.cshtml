@@ -14,6 +14,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link href="~/assets/css/custom-styles.css" rel="stylesheet" />
+    
     <style>
 * {
   box-sizing: border-box;
@@ -328,6 +329,17 @@ label.container-label input {
 
 <body class="d-flex align-items-center min-h-100">
 
+    <script>
+        $(document).ready(function () {
+            localStorage.removeItem("COMPANY_ID");
+            localStorage.removeItem("COMPANY_CODE");
+            localStorage.removeItem("COMPANY_NAME_ENGLISH");
+            localStorage.removeItem("COMPANY_NAME_CHINESE");
+            localStorage.removeItem("COMPANY_CATEGORY_ID");
+            localStorage.removeItem("COMPANY_SUB_CATEGORY_ID");
+        });
+    </script>
+
     <section class="login">
         <div class="container">
             <div class="row">
@@ -397,7 +409,7 @@ label.container-label input {
             </div>
         </div>
     </section>
-    
+
 </body>
 
 <!-- Mirrored from htmlstream.com/preview/front-dashboard-v2.1.1/authentication-login-cover.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 20 Feb 2023 07:46:28 GMT -->

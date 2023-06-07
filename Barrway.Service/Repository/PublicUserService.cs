@@ -132,8 +132,38 @@ namespace Barrway.Service.Repository
         {
             var user = await authService.GetUser(model.USER_ID, FormRole.PUBLIC_USER);
 
-            // Check if the user already exist in the participant master
+
+            // check if the user limit is crossed or not
+
+            List <IDictionary<string, object>> totalUsersEnrolled = await sqlFunction.ExecuteSqlQuery($@"select COUNT(*) as 'COUNT' from TRANSACTION_MASTER_1942 transaction_m
+                                                                                                        join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
+                                                                                                        where ACTIVITY = '{model.transaction.ACTIVITY.ToString()}'");
+
+            List<IDictionary<string, object>> currentLimit = await sqlFunction.ExecuteSqlQuery($@"select MAXIMUM_NO_OF_PARTICIPANTS from SERVICE_MASTER_1933 where Id = '{model.transaction.ACTIVITY.ToString()}'");
+
+            try
+            {
+                if (!string.IsNullOrEmpty(currentLimit[0]["MAXIMUM_NO_OF_PARTICIPANTS"].ToString()))
+                {
+                    if (Convert.ToInt32(currentLimit[0]["MAXIMUM_NO_OF_PARTICIPANTS"].ToString()) > 0)
+                    {
+                        if (Convert.ToInt32(totalUsersEnrolled[0]["COUNT"].ToString()) >= Convert.ToInt32(currentLimit[0]["MAXIMUM_NO_OF_PARTICIPANTS"].ToString()))
+                        {
+                            return new AddUpdateDelete() { Message = "LIMIT-ERROR", Status = false };
+                        }
+                    }
+                }
+                
+            }
+            catch (Exception ex)
+            {
+
+            }
             
+
+
+            // Check if the user already exist in the participant master
+
             List<IDictionary<string, object>> participantCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from PARTICIPANT_MASTER_1940 where EMAIL = '{user.Data["USER_EMAIL"]}' and COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE}'");
 
             string StudentId = "";
