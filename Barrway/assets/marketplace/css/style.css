@@ -842,7 +842,11 @@ li.rl > ul > li > a {
 button.blogtag_num {
     background-color: transparent;
     color: #3FBFC7;
-    padding: 10px 30px;
+    text-align: center;
+    padding: 8px 0px;
+    overflow-y: hidden;
+    max-height: 38px;
+    width: 100%;
     border: 2px solid #3FBFC7;
     border-radius: 30px;
 }

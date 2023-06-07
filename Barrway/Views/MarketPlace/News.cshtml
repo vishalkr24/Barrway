@@ -4,109 +4,127 @@
     Layout = "~/Views/Shared/_LayoutMarketPlace.cshtml";
 }
 
-<!-- bredcrum -->
-<section class="bredcrum">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="bredcrum-content">
-                    <span><a href="index.html" style="color: #222;">Home </a> </span> / <span><a href="news.html">News</a> </span>
+<div id="list-view" style="display:none;">
+    <!-- bredcrum -->
+    <section class="bredcrum">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="bredcrum-content">
+                        <span><a href="/Marketplace/Index" style="color: #222;">Home </a> </span> / <span><a href="/Marketplace/News">News</a> </span>
 
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="news-banner">
+                        <img src="~/assets/marketplace/image/news.jpg">
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="blog-slide">
+                        <div id="owl-demo-blog" class="owl-carousel owl-theme">
+
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-12">
-                <div class="news-banner">
-                    <img src="~/assets/marketplace/image/news.jpg">
+        </div>
+    </section>
+
+
+    <section class="filser">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="filter fl-r">
+                        <button class="filter-btn"><img src="~/assets/marketplace/image/filter.png" /> Featured </button>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-12">
-                <div class="blog-slide">
-                    <div id="owl-demo-blog" class="owl-carousel owl-theme">
-                        <div class="item">
-                            <div class="item-inner">
-                                <button class="blogtag_num">Blog Tag 1</button>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="inner-content">
+                        <div class="row">
+                            <div class="col-md-6" id="row1">
+
+                            </div>
+                            <div class="col-md-6" id="row2">
+
                             </div>
                         </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <button class="blogtag_num">Blog Tag 2</button>
+                    </div>
+                    <div class="pagination">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</div>
+
+<div id="detail-view" style="display:none;">
+    <section class="bredcrum">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="bredcrum-content">
+                        <span><a href="/Marketplace/Index" style="color: #222;">Home </a> </span> / <span><a href="/Marketplace/News">News</a> </span> / <span><a href="" class="post-title post-title-href">Post title</a> </span>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="filser">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="inner-content">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="single-post">
+                                    <div class="single-post-hed">
+                                        <p class="post-tags"><a href=""> Tag1</a></p>
+                                        <h2><b class="post-title">Post title</b></h2>
+                                        <p><span class="post-author">Author name</span>, <span class="post-date"> YYYY-MM-DD</span></p>
+                                    </div>
+                                    <div class="single-post-img">
+                                        <img onerror="this.src='../assets/img/post_img.jpg'" class="media-object post-image" style="width:100%">
+                                    </div>
+                                    <div class="sp-dis">
+                                        <div class="post-content">
+
+                                        </div>
+                                        
+                                        <p class="post-tags">
+                                            
+                                            <a href="#">Tag2,</a>
+                                            <a href="#">Tag3</a>
+                                        </p>
+                                    </div>
+
+                                </div>
                             </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <button class="blogtag_num">Blog Tag 3</button>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <button class="blogtag_num">Blog Tag 4</button>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <button class="blogtag_num">Blog Tag 5</button>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <button class="blogtag_num">Blog Tag 6</button>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <button class="blogtag_num">Blog Tag 2</button>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <button class="blogtag_num">Blog Tag 3</button>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <button class="blogtag_num">Blog Tag 4</button>
+                            <div class="col-md-5">
+                                <div class="sidebar" id="detail-sidebar">
+                                    
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-
-
-<section class="filser">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="filter fl-r">
-                    <button class="filter-btn"><img src="~/assets/marketplace/image/filter.png" /> Featured </button>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="inner-content">
-                    <div class="row">
-                        <div class="col-md-6" id="row1">
-                            
-                        </div>
-                        <div class="col-md-6" id="row2">
-                           
-                        </div>
-                    </div>
-                </div>
-                <div class="pagination">
-                    
-                </div>
-            </div>
-        </div>
-    </div>
-
-</section>
+    </section>
+</div>
 
 
 @section scripts{
 
     <script src="~/Scripts/MarketplaceScripts/News.js"></script>
+
+
+
 }
