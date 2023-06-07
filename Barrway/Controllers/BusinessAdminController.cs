@@ -81,8 +81,14 @@ namespace Barrway.Controllers
             return View();
         }
 
-        public async Task<ActionResult> SetupCompanyProfile()
+        public async Task<ActionResult> SetupCompanyProfile(bool IsNew = false)
         {
+            ViewBag.IsNew = IsNew;
+            if (IsNew)
+            {
+                return View();
+            }
+
             var company = await businessUserService.GetDefaultCompanyByUserId(User.Identity.Name.ToString());
 
             if (company.Status)
@@ -284,6 +290,11 @@ namespace Barrway.Controllers
             return View();
         }
 
+        public async Task<ActionResult> CompanyMaster()
+        {
+            return View();
+        }
+
         public async Task<ActionResult> SubscriptionPlan()
         {
             return View();
@@ -423,13 +434,40 @@ namespace Barrway.Controllers
 
         }
 
+        public async Task<ActionResult> GetAllCompaniesMaster(GenerateDynamicFormData data)
+        {
+            try
+            {
+                var transactionData = await businessUserService.GetAllCompaniesMasterByUserId(data, User.Identity.Name.ToString());
+                var transactionList = transactionData.Data;
+                double last_page = 0;
+                if (transactionList != null && transactionList.Count > 0)
+                {
+                    var singData = transactionList[0];
+                    var total_records = Convert.ToInt32(singData["total_records"].ToString());
+                    var size = Convert.ToInt32(singData["size"].ToString());
+                    double paging = (double)total_records / size;
+                    last_page = Math.Floor(paging) + 1;
+                }
+
+                return Json(new { data = transactionList, last_page }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+
         [HttpPost]
-        public async Task<ActionResult> SaveCompanyProfileDetails(CompanyProfileViewModel model)
+        public async Task<ActionResult> SaveCompanyProfileDetails(CompanyProfileViewModel model, bool IsNew = false)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
+                    ViewBag.IsNew = IsNew;
                     return View("SetupCompanyProfile");
                 }
 
@@ -448,7 +486,23 @@ namespace Barrway.Controllers
                         COMPANY_SUB_CATEGORY_ID = model.COMPANY_SUB_CATEGORY_ID
                     };
 
-                    var saveDataResult = await businessUserService.AddCompany(businessCompanyModel, User.Identity.Name.ToString(), true);
+                    var defaultStatus = false;
+
+                    if (IsNew)
+                    {
+                        var singleCompany = await businessUserService.GetDefaultCompanyByUserId(User.Identity.Name.ToString());
+
+                        if (singleCompany.Status)
+                        {
+                            defaultStatus = false;
+                        }
+                        else
+                        {
+                            defaultStatus = true;
+                        }
+                    }
+
+                    var saveDataResult = await businessUserService.AddCompany(businessCompanyModel, User.Identity.Name.ToString(), defaultStatus);
 
                     if (saveDataResult.Status)
                     {
@@ -466,11 +520,13 @@ namespace Barrway.Controllers
                     }
                     else
                     {
+                        ViewBag.IsNew = IsNew;
                         return View("SetupCompanyProfile");
                     }
                 }
                 else
                 {
+                    ViewBag.IsNew = IsNew;
                     return View("SetupCompanyProfile");
                 }
 
@@ -479,6 +535,7 @@ namespace Barrway.Controllers
             }
             catch (Exception ex)
             {
+                ViewBag.IsNew = IsNew;
                 return View("SetupCompanyProfile");
             }
         }

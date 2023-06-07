@@ -3012,6 +3012,7 @@
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\BusinessScripts\AdminDashboard.js" />
     <Content Include="Scripts\BusinessScripts\AdminLayoutManager.js" />
+    <Content Include="Scripts\BusinessScripts\CompanyMaster.js" />
     <Content Include="Scripts\BusinessScripts\SubscriptionPlan.js" />
     <Content Include="Scripts\BusinessScripts\PaymentHistory.js" />
     <Content Include="Scripts\BusinessScripts\CalendarMaster.js" />
@@ -3192,6 +3193,7 @@
     <Content Include="Views\Shared\_LayoutMarketPlace.cshtml" />
     <Content Include="Views\BusinessMarketplace\Index.cshtml" />
     <Content Include="Views\BusinessMarketplace\Features.cshtml" />
+    <Content Include="Views\BusinessAdmin\CompanyMaster.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

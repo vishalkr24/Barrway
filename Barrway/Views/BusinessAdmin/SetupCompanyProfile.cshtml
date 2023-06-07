@@ -15,7 +15,7 @@
                     <div class="profile-form">
                         <h1>Let’s set up your company profile</h1>
                         <div class="form-inner">
-                            <form class="js-validate needs-validation" method="post" action="/BusinessAdmin/SaveCompanyProfileDetails" novalidate>
+                            <form class="js-validate needs-validation" method="post" action="/BusinessAdmin/SaveCompanyProfileDetails?IsNew=@ViewBag.IsNew.ToString()" novalidate>
                                 @Html.TextBoxFor(model => model.Id, new { @class = "form-control", @placeholder = "Company name", @style="display:none", @required = "true" })
                                 <div class="form-group">
                                     <label for="companyname">Company Name (English) *</label>

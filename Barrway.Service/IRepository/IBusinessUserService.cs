@@ -31,7 +31,8 @@ namespace Barrway.Service.IRepository
 
         #region Business Company
         Task<AddUpdateDelete> GetSingleCompanyById(string Id);
-        Task<AddUpdateDelete> GetAllCompaniesByUserId(string UserId); 
+        Task<AddUpdateDelete> GetAllCompaniesByUserId(string UserId);
+        Task<AddUpdateDelete> GetAllCompaniesMasterByUserId(GenerateDynamicFormData data, string UserId);
         Task<AddUpdateDelete> AddCompany(BusinessCompanyModel model, string UserId, bool IsDefault = false);
         Task<AddUpdateDelete> UpdateCompanyService(BusinessCompanyModel model);
         Task<AddUpdateDelete> GetSingleCompanyByCompanyCode(string CompanyCode);

@@ -3,13 +3,8 @@
     setTop5Calendars();
 });
 
-function changeCompany() {
+function changeCompany(IsReload = true, returnUrl = null) {
     var companyId = $("#navbar-company-selector option:selected").val();
-
-    if (companyId == "NEWCOMPANY") {
-        window.location.href = '/BusinessAdmin/SetupCompanyProfile';
-        return;
-    }
 
     var data = getSingleCompanyByCompanyId(companyId).Data;
 
@@ -20,7 +15,12 @@ function changeCompany() {
     localStorage.setItem("COMPANY_CATEGORY_ID", data.COMPANY_CATEGORY_ID);
     localStorage.setItem("COMPANY_SUB_CATEGORY_ID", data.COMPANY_SUB_CATEGORY_ID);
 
-    window.location.reload();
+    if (IsReload) {
+        window.location.reload();
+    } else {
+        window.location.href = returnUrl;
+    }
+    
 
 }
 

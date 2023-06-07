@@ -220,17 +220,8 @@ function setupNewCompanyCalendar() {
 
     window.location.href = "/BusinessAdmin/SetupCompanyCalendar?CompanyId=" + companyId + "&IsPartial=true";
 
-    //$.ajax({
-    //    url: "/BusinessAdmin/SetupCompanyCalendar?CompanyId=" + companyId + "&returnPartial=true",
-    //    type: "GET",
-    //    success: function (data) {
-    //        $("#AddNewCalendarModal .modal-body").html(data);
-    //        $("#AddNewCalendarModal").modal("show");
-    //        $(".hide-on-partial").hide();
-    //    },
-    //    error: function () {
+}
 
-    //    }
-    //})
-
+function setupNewCompany() {
+    window.location.href = "/BusinessAdmin/SetupCompanyProfile?&IsNew=true";
 }
