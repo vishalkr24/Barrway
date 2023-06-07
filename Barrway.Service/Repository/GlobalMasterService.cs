@@ -298,7 +298,7 @@ namespace Barrway.Service.Repository
                           FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                           join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
                           join CITY_MASTER_1927 city on city.Id = calendar.CITY_ID
-                          where calendar.Tags like '%{TagName}%'";
+                          where calendar.Tags like '%{TagName.Trim()}%'";
 
             List<IDictionary<string, object>> calendarTagResult = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -339,11 +339,11 @@ namespace Barrway.Service.Repository
                       ,[IS_DEFAULT]
                       ,[COMPANY_EMAIL]
                       ,[IS_ACTIVE]
-                  FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] where TAGS like '%{TagName}%'";
+                  FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] where TAGS like '%{TagName.Trim()}%'";
 
             List<IDictionary<string, object>> companyTagResult = await sqlFunction.ExecuteSqlQuery(query);
 
-            var companyDataEncrypt = JsonConvert.SerializeObject(calendarTagResult);
+            var companyDataEncrypt = JsonConvert.SerializeObject(companyTagResult);
 
             TagData.companies = JsonConvert.DeserializeObject<List<BusinessCompanyModel>>(companyDataEncrypt);
 
