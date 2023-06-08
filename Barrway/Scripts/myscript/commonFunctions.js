@@ -3198,7 +3198,7 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
     var calendarOptions = $.extend({}, defaultOptions, myOptions);
     $('#agenda-view div.calendar').fullCalendar(calendarOptions);
     
-
+    var calendarDetails = angular.copy($scopeVar.calendarMaster);
     if ($scopeVar != undefined)
         if ($scopeVar.ySelection != 0) {
             if ($scopeVar.formDetailsDataInfo != null)
@@ -3209,6 +3209,16 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                             if (exists.minTime != "" && exists.minTime != null && exists.minTime != undefined && exists.maxTime != null && exists.maxTime != undefined && exists.maxTime != "") {
                                 var minTime = exists.minTime.trim().replace(' ', ':');
                                 var maxTime = exists.maxTime.trim().replace(' ', ':');
+
+
+                                if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
+                                    minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
+                                }
+
+                                if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
+                                    maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
+                                }
+
                                 $('#agenda-view div.calendar').fullCalendar('option', 'minTime', minTime + ":00");
                                 $('#agenda-view div.calendar').fullCalendar('option', 'maxTime', maxTime + ":00");
                             }
@@ -4132,7 +4142,7 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
         var dates = { start: start, end: end };
         return dates;
     }
-    var calendarDetails = angular.copy($scopeVar.calendarMaster);
+    
     var myOptions1 = {
         //defaultDate: '2017-12-07',
         scrollTime: '00:00', // undo default 6am scrollTime
@@ -4363,8 +4373,6 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
     
     $('#timeline-resource-view div.calendar').fullCalendar(calendarOptions);
    
-  
-    
     if ($scopeVar != undefined)
         if ($scopeVar.ySelection != 0) {
             if ($scopeVar.formDetailsDataInfo != null)
@@ -4591,6 +4599,16 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
             if (exists.minTime != "" && exists.minTime != null && exists.minTime != undefined && exists.maxTime != null && exists.maxTime != undefined && exists.maxTime != "") {
                 var minTime = exists.minTime.trim().replace(' ', ':');
                 var maxTime = exists.maxTime.trim().replace(' ', ':');
+
+
+                if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
+                    minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
+                }
+
+                if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
+                    maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
+                }
+
                 if (Check_EXIST_FIXED_OPERATING_HOURS(calendarDetails)) {
                     myOptions2.minTime = minTime + ":00";
                     myOptions2.maxTime = maxTime + ":00";
@@ -4598,6 +4616,7 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
             }
         }
     }
+
     countLoader = 0;
     calendarOptions = $.extend({}, defaultOptions, resourceOptions, myOptions2);
     $('#vertical-resource-view div.calendar').fullCalendar(calendarOptions);
@@ -15243,7 +15262,7 @@ function IsJsonString(str) {
 
 function removeColumns(formid,columns) {
     removeActionButtion(formid);
-    var removeColumnsFormid = [2240, 2242, 2267];
+    var removeColumnsFormid = [2240, 2242, 2267, 2311];
     var removeColumnName = ['Edit'];
     var excludeColumAllTable = ['Move Row'];
     columns = columns.filter(x => !excludeColumAllTable.find(y => x.title && x.title.split('|').find(z => z == y)))
@@ -15287,6 +15306,20 @@ function addNewColumns(formid, columns) {
                     return `<a href='#/admin/article/${cell.getRow().getData().Id}' class="btn btn-primary text-light"><i class="bi-info-circle"></i></a>`
                 }, download: false, width: 100, field: "profileView", headerSort: false
             });
+        }
+            break;
+
+        case 2311: {
+            columns.unshift({
+                title: "Edit", formatter: function (cell, formatter) {
+                    var id = cell.getRow().getData().Id;
+                    return `<button onclick="angular.element(this).scope().EditSchedularForm(${id})"  class="btn btn-primary text-light"><i class="bi-gear"></i></button>`
+                }, download: false, width: 100, field: "profileView", headerSort: false
+            });
+
+
+
+
         }
             break;
     }

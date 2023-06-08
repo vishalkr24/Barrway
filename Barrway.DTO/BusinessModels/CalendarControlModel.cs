@@ -15,6 +15,8 @@ namespace Barrway.DTO.BusinessModels
         public string CALENDAR_FORM_CATEGORY { get; set; }
         public string THEME_SELECTION { get; set; }
         public string CALENDAR_FORM_NAME { get; set; }
+        public string DISPLAY_START_TIME { get; set; }
+        public string DISPLAY_END_TIME { get; set; }
 
         public string REGISTRATION_FORM_NAME { get; set; }
         public string REGISTRATION_FORM_CATEGORY { get; set; }

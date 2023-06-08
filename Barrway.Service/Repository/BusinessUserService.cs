@@ -319,6 +319,83 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> GetSingleBusinessUserMaster(GenerateDynamicFormData data, string UserId)
+        {
+            Dictionary<string, string> filters = new Dictionary<string, string>() {
+                    { "USER_ID","user_m.USER_ID"},
+                    { "USER_EMAIL","user_m.USER_EMAIL"},
+                    { "USER_PHONE","user_m.USER_PHONE"},
+                    { "ROLE_NAME","role_m.SUB_ROLE"},
+                    { "created_at","user.created_at"},
+            };
+
+            string column = "", dir = "";
+            if (data.sorters != null && data.sorters.Count() > 0)
+            {
+                column = data.sorters.FirstOrDefault().field;
+                dir = data.sorters.FirstOrDefault().dir;
+            }
+            else
+            {
+                column = "created_at";
+                dir = "desc";
+            }
+
+            List<string> applyFilter = new List<string>();
+            if (data.filters != null && data.filters.Count() > 0)
+            {
+                foreach (var item in data.filters)
+                {
+                    if (filters.Any(x => x.Key == item.field) && !string.IsNullOrEmpty(item.value))
+                    {
+                        if (item.field == "created_at" || item.field == "updated_at")
+                        {
+                            string filter = await sqlFunction.GetDateFilter(item, "user_m");
+                            applyFilter.Add(filter);
+                        }
+                        else
+                        {
+                            string filter = filters[item.field] + " like N'%" + item.value + "%'";
+                            applyFilter.Add(filter);
+                        }
+
+                    }
+                }
+            }
+
+            string applyFilterQuery = string.Join(" and ", applyFilter);
+            applyFilterQuery = applyFilterQuery.TrimEnd("and ".ToCharArray());
+
+            int PageSize = data.size > 0 ? data.size : 20;
+            int PageNumber = data.page > 0 ? data.page : 1;
+
+            string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+                                    SELECT user_m.[Id]
+                                          ,user_m.[USER_ID]
+                                          ,[USER_EMAIL]
+                                          ,[USER_PHONE]
+                                          ,user_m.[SUB_ROLE]
+                                          ,user_m.[created_at]
+                                          ,[IS_ACTIVE]
+                                      FROM [dbo].[USER_MASTER_1915] user_m
+                                      join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID 
+                                      join BUSINESS_ACCOUNT_WEBSITE_1918 business on business.USER_ID = user_m.USER_ID
+                                      where user_m.ROLE_ID = 1 and business.Id = (select Id from BUSINESS_ACCOUNT_WEBSITE_1918 where USER_ID = '{UserId}') {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+                                    )
+                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+
+            var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+            if (result.Count > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
         public async Task<AddUpdateDelete> GetSingleCalendarById(string Id)
         {
             string query = "SELECT [Id]      ,[created_at]      ,[updated_at]      ,[created_by]      ,[updated_by]      ,[CALENDAR_NAME]     ,[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,[COUNTRY_ID]      ,[CITY_ID]      ,[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] where Id =  '" + Id + "'";
@@ -560,6 +637,53 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> GetSchedule(string ScheduleId, string UserId)
+        {
+            string sqlQuery = $@"SELECT schedular.[Id]
+                                      ,schedular.[created_at]
+                                      ,schedular.[updated_at]
+                                      ,schedular.[created_by]
+                                      ,schedular.[updated_by]
+                                      ,[SCH__NAME]
+                                      ,[SCH_LOCATION]
+                                      ,[SCH_ACTIVITY]
+                                      ,[SCH_RESOURCE]
+                                      ,[SCH_MEDIUM]
+                                      ,[SCH_DESCRIPTION]
+                                      ,[SCH_FROM_DATE]
+                                      ,[SCH_TO_DATE]
+                                      ,[SCH_ALTERNATIVE_WEEK]
+                                      ,[hidden_1683715521753]
+                                      ,[hidden_1683715524413]
+                                      ,[SCH_START]
+                                      ,[SCH_END]
+                                      ,[SCH_COLOR]
+                                      ,[SCH_ALL_DAY]
+                                      ,[IF_SLOT_EXIST]
+                                      ,[IF_SLOT_DOES_NOT_EXIST]
+                                      ,[SCH_STUDENT_TABLE]
+                                      ,[SCH_SCHEDULE_TABLE]
+                                      ,schedular.[COMPANY_CODE]
+                                      ,schedular.[CALENDAR_CODE]
+                                      ,calendar.*
+                                  FROM [dbo].[SCHEDULAR_FORM_1941] schedular
+                                  join CALENDAR_FORM_1935 calendar on calendar.SCHEDULAR_FORM_ID = schedular.Id
+								  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = schedular.COMPANY_CODE
+								  join BUSINESS_ACCOUNT_WEBSITE_1918 b_account on b_account.Id = company.BUSINESS_ACCOUNT_ID
+                                  where schedular.Id = '{ScheduleId}' and b_account.USER_ID = '{UserId}'";
+
+            var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+            if (result.Count > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
         public async Task<AddUpdateDelete> GetDefaultCompanyByBusinessId(string BusinessAccountId)
         {
             string query = "SELECT [Id]      ,[created_at]      ,[updated_at]      ,[created_by]      ,[updated_by]     ,[BUSINESS_ACCOUNT_ID]      ,[COMPANY_CODE]      ,[COMPANY_NAME_ENGLISH]      ,[COMPANY_NAME_CHINESE]      ,[COMPANY_LOGO_NAME]      ,[COMPANY_LOGO_PATH]      ,[COMPANY_BANNER_NAME]      ,[COMPANY_BANNER_PATH]      ,[COMPANY_PHONE]      ,[COMPANY_ADDRESS]      ,[FACEBOOK_URL]      ,[INSTAGRAM_URL]      ,[WECHAT_URL]      ,[TWITTER_URL]      ,[PAGE_URL]      ,[COMPANY_DESCRIPTION]      ,[COMPANY_SERVICE]      ,[TAGS]      ,[IS_SEARCHABLE_IN_MARKETPLACE]      ,[COMPANY_CATEGORY_ID]      ,[COMPANY_SUB_CATEGORY_ID],     [COMPANY_EMAIL]      ,[COUNTRY_ID]      ,[CITY_ID]      ,[DISTRICT_ID]      ,[TOTAL_WEBSITE_VISITS]      ,[IS_DEFAULT], [IS_ACTIVE]  FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] where BUSINESS_ACCOUNT_ID = '" + BusinessAccountId + "' and IS_ACTIVE = 'Y' and  and IS_DEFAULT = 'Y'";
@@ -688,6 +812,11 @@ namespace Barrway.Service.Repository
                 else
                 {
                     model.IS_DEFAULT = "N";
+                }
+
+                if (string.IsNullOrEmpty(model.IS_SEARCHABLE_IN_MARKETPLACE))
+                {
+                    model.IS_SEARCHABLE_IN_MARKETPLACE = "Y";
                 }
 
                 model.COUNTRY_ID = "1";
@@ -1011,6 +1140,8 @@ namespace Barrway.Service.Repository
                                  UPDATE [dbo].[CALENDAR_CONTROL_SHEET_1944]
                                    SET 
                                       [updated_at] = getdate()
+                                      ,[DISPLAY_START_TIME] = '{calendarControlModel.DISPLAY_START_TIME}'
+                                      ,[DISPLAY_END_TIME] = '{calendarControlModel.DISPLAY_END_TIME}'
                                       ,[USER_ADMIN_GROUP_NAME] = '{calendarControlModel.USER_ADMIN_GROUP_NAME}'
                                       ,[CALENDAR_GROUP_NAME] = '{calendarControlModel.CALENDAR_GROUP_NAME}'
                                       ,[CALENDAR_USE_TYPE] = '{calendarControlModel.CALENDAR_USE_TYPE}'
@@ -1283,36 +1414,66 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> AddSchedularForm(SchedularFormModel model, string formGroupKey)
         {
-            Form_DataTable data = new Form_DataTable();
-            var a = model.ToDictionary();
-            a.Remove("table");
-            data.action = (int)FormAction.Save;
-            data.formId = (int)FormSetting.SCHEDULAR_FORM;
-            data.userId = (int)FormSetting.CreatedUser;
-            data.created_by = (int)FormSetting.CreatedUser;
-            data.updated_by = (int)FormSetting.CreatedUser;
-            data.created_at = DateTime.Now.ToString();
-            data.updated_at = DateTime.Now.ToString();
-            data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(a);
-            data.formGroupKey = formGroupKey;
-
-            var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
-
-            if (formResult.res == 1)
+            if (!string.IsNullOrEmpty(model.Id))
             {
-                Form_DataTable result = new Form_DataTable()
+                string query = $@"UPDATE [dbo].[SCHEDULAR_FORM_1941] 
+                                  SET 
+                                           [updated_at] = getdate()
+                                          ,[SCH__NAME] = '{model.SCH__NAME}'
+                                          ,[SCH_LOCATION] = '{model.SCH_LOCATION}'
+                                          ,[SCH_ACTIVITY] = '{model.SCH_ACTIVITY}'
+                                          ,[SCH_RESOURCE] = '{model.SCH_RESOURCE}'
+                                          ,[SCH_FROM_DATE] = '{model.SCH_FROM_DATE}'
+                                          ,[SCH_TO_DATE] = '{model.SCH_TO_DATE}'
+                                          ,[SCH_ALTERNATIVE_WEEK] = '{model.SCH_ALTERNATIVE_WEEK}'
+                                          ,[SCH_SCHEDULE_TABLE] = '{model.SCH_SCHEDULE_TABLE}'
+                                  WHERE Id = '{model.Id}'";
+
+                var result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                if (result > 0)
                 {
-                    Id = formResult.Id,
-                    formGroupKey = data.formGroupKey
-                };
-
-
-                return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = result };
+                    return new AddUpdateDelete() { Message = AppMessage.Success, Status = true };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false };
+                }
             }
             else
             {
-                return new AddUpdateDelete() { Message = formResult.Message, Status = false };
+                Form_DataTable data = new Form_DataTable();
+                var a = model.ToDictionary();
+                a.Remove("table");
+                data.action = (int)FormAction.Save;
+                data.formId = (int)FormSetting.SCHEDULAR_FORM;
+                data.userId = (int)FormSetting.CreatedUser;
+                data.created_by = (int)FormSetting.CreatedUser;
+                data.updated_by = (int)FormSetting.CreatedUser;
+                data.created_at = DateTime.Now.ToString();
+                data.updated_at = DateTime.Now.ToString();
+                data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(a);
+                data.formGroupKey = formGroupKey;
+
+                var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+                if (formResult.res == 1)
+                {
+                    Form_DataTable result = new Form_DataTable()
+                    {
+                        Id = formResult.Id,
+                        formGroupKey = data.formGroupKey
+                    };
+
+
+                    return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = result };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Message = formResult.Message, Status = false };
+                }
             }
+            
         }
 
         public async Task<AddUpdateDelete> AddCalendarEventSlot(CalendarFormModel model, string formGroupKey)

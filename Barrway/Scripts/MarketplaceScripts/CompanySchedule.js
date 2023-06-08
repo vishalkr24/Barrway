@@ -1,4 +1,5 @@
 ﻿var CalendarFormId = "2305", ySelection = "", xSelection = "", COMPANY_CODE, CALENDAR_CODE, formDetailsDataInfo, counterLoader, xaxisFormList, formAllDatafields, listTabulator, calendarDetails;
+debugger;
 $(document).ready(async function () {
     $("#nv-company-schedule").addClass("active");
 
@@ -13,7 +14,7 @@ $(document).ready(async function () {
     var formdetail = await getFormDetails();
     formDetailsDataInfo = formdetail[0];
 
-    
+
 
     var formFields = [];
     var formData = JSON.parse(formDetailsDataInfo.fields);
@@ -54,12 +55,12 @@ $(document).ready(async function () {
         $scope.otherFormId = formDetailsDataInfo.otherformid;
 
         if ($scope.otherFormId != 0) {
-            $scope.otherformDetails=   await ManageFormApp($scope.otherFormId);
+            $scope.otherformDetails = await ManageFormApp($scope.otherFormId);
         }
 
 
         var allForm = await GetFormList();
-        
+
         if (!DataService.isEmpty(allForm)) {
             $scope.allFormsList = allForm;
             if ($scope.allFormsList.length > 0) {
@@ -379,7 +380,7 @@ var manageWindowParams = function () {
 function showCalendar(companyCode) {
 
     var calendarId = $("#calendar-selector option:selected").val();
-    
+
     window.location.replace("/Marketplace/CompanySchedule?CompanyCode=" + companyCode + "&CalendarCode=" + calendarId);
 }
 
@@ -403,7 +404,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
 
     var GroupingData = window["colGrouping"];
     var $scope = angular.element($("#calendar")).scope();
-   
+
     var resourceColumn = '';
     var majorGroup = "";
     var minorGroup = "";
@@ -437,21 +438,21 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         resourceColumn = basicDetails.formData.minorGroup;
         window["currResColumn"] = resourceColumn;
     }
-    
+
     if (basicDetails.formData.eventOverlap !== null) {
         if (basicDetails.formData.eventOverlap == 1)
             eventOverlap = true;
         else
             eventOverlap = false;
     }
-    
+
     if (basicDetails.formData.activitiesOverlap !== null) {
         if (basicDetails.formData.activitiesOverlap == 1)
             activitiesOverlap = true;
         else
             activitiesOverlap = false;
     }
-    
+
     if (localStorage.detail != undefined && localStorage.detail != "")
         userid = JSON.parse(localStorage.detail).Id;
     var activitiesCategory = basicDetails.formData.activitiesCategory;
@@ -469,7 +470,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         });
     });
     resColumns = _ColumnResults;
-   
+
 
     var customEventDetailsModelPopUp = angular.element("#customEventDetailsModelPopUp");
     var customEventDetailsServiceModelPopUp = angular.element("#customEventDetailsServiceModelPopUp");
@@ -663,7 +664,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                         if (exists >= 0) {
                             customLocationTitle = _associatedTitlestemp[exists];
                             var tempColor = "";
-                            var colorExists = _.findWhere(xaxisFormList, { resourceActivityForm:ySelection });
+                            var colorExists = _.findWhere(xaxisFormList, { resourceActivityForm: ySelection });
                             var currentId = _associatedCustomFormIdsTemp[exists].toString();
                             if (colorExists != undefined) {
                                 var colorRow = _.findWhere(colorExists.formDataList, { id: currentId });
@@ -862,7 +863,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 customEventDetailsModelPopUp.modal('show');
                 customEventDetailsModelPopUp.css({ "z-index": "9999" });
             }
-            
+
             var $scope = angular.element($("#calendar")).scope();
             $scope.selectEventDetails = calEvent;
             if (calEvent.formID == undefined) {
@@ -882,7 +883,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
             //$scope.selectEventDetails.customFormIdsSplit
             //$scope.selectEventDetails.customFormsSplit
             $scope.selectEventDetails.customTitleSplit = $scope.selectEventDetails.customTitle.split(',');
-            
+
             var listFormDropdown = _.filter($scope.selectEventDetails.customFormsSplit, function (item) { return item != ySelection.toString(); });
             if (listFormDropdown.length > 0) {
                 //var listActivities = _.filter(xaxisFormList, function (item) { return item.activitiesForm != ySelection; });
@@ -1005,7 +1006,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
             });
 
 
-           
+
         },
         eventAfterAllRender: function (event, element, view) {
 
@@ -1187,31 +1188,38 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         selectable: false,
         selectHelper: true,
         select: function (start, end) {
-            
+
         },
         droppable: false, // this allows things to be dropped onto the calendar
     };
     var calendarOptions = $.extend({}, defaultOptions, myOptions);
     $('#agenda-view div.calendar').fullCalendar(calendarOptions);
 
+    if (ySelection != 0) {
+        if (formDetailsDataInfo != null)
+            if (formDetailsDataInfo.calenderSettingsList != null)
+                if (formDetailsDataInfo.calenderSettingsList.length > 0) {
+                    var exists = _.findWhere(formDetailsDataInfo.calenderSettingsList, { resourceForm: ySelection });
+                    if (exists != undefined) {
+                        if (exists.minTime != "" && exists.minTime != null && exists.minTime != undefined && exists.maxTime != null && exists.maxTime != undefined && exists.maxTime != "") {
+                            var minTime = exists.minTime.trim().replace(' ', ':');
+                            var maxTime = exists.maxTime.trim().replace(' ', ':');
 
-    
-        if (ySelection != 0) {
-            if (formDetailsDataInfo != null)
-                if (formDetailsDataInfo.calenderSettingsList != null)
-                    if (formDetailsDataInfo.calenderSettingsList.length > 0) {
-                        var exists = _.findWhere(formDetailsDataInfo.calenderSettingsList, { resourceForm: ySelection });
-                        if (exists != undefined) {
-                            if (exists.minTime != "" && exists.minTime != null && exists.minTime != undefined && exists.maxTime != null && exists.maxTime != undefined && exists.maxTime != "") {
-                                var minTime = exists.minTime.trim().replace(' ', ':');
-                                var maxTime = exists.maxTime.trim().replace(' ', ':');
-                                $('#agenda-view div.calendar').fullCalendar('option', 'minTime', minTime + ":00");
-                                $('#agenda-view div.calendar').fullCalendar('option', 'maxTime', maxTime + ":00");
+                            if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
+                                minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
                             }
+
+                            if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
+                                maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
+                            }
+
+                            $('#agenda-view div.calendar').fullCalendar('option', 'minTime', minTime + ":00");
+                            $('#agenda-view div.calendar').fullCalendar('option', 'maxTime', maxTime + ":00");
                         }
                     }
-        }
-    
+                }
+    }
+
     // tag added callback
     function onAddTag(e) {
         var id = $("#newtag-inputHidden").val();
@@ -1252,7 +1260,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         //console.log("onInvalidTag: ", e.detail);
     }
     // timeLine resource view
-    
+
     var resourceOptions = {
         selectable: false,
         selectHelper: true,
@@ -1425,30 +1433,39 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         select: function (startDate, endDate, jsEvent, view, resource) {
 
 
-            
 
-            
+
+
         }
     };
     countLoader = 0;
     calendarOptions = $.extend({}, defaultOptions, resourceOptions, myOptions1);
     $('#timeline-resource-view div.calendar').fullCalendar(calendarOptions);
-    
-        if (ySelection != 0) {
-            if (formDetailsDataInfo != null)
-                if (formDetailsDataInfo.calenderSettingsList != null)
-                    if (formDetailsDataInfo.calenderSettingsList.length > 0) {
-                        var exists = _.findWhere(formDetailsDataInfo.calenderSettingsList, { resourceForm: ySelection });
-                        if (exists != undefined) {
-                            if (exists.minTime != "" && exists.minTime != null && exists.minTime != undefined && exists.maxTime != null && exists.maxTime != undefined && exists.maxTime != "") {
-                                var minTime = exists.minTime.trim().replace(' ', ':');
-                                var maxTime = exists.maxTime.trim().replace(' ', ':');
-                                $('#timeline-resource-view div.calendar').fullCalendar('option', 'minTime', minTime + ":00");
-                                $('#timeline-resource-view div.calendar').fullCalendar('option', 'maxTime', maxTime + ":00");
+
+    if (ySelection != 0) {
+        if (formDetailsDataInfo != null)
+            if (formDetailsDataInfo.calenderSettingsList != null)
+                if (formDetailsDataInfo.calenderSettingsList.length > 0) {
+                    var exists = _.findWhere(formDetailsDataInfo.calenderSettingsList, { resourceForm: ySelection });
+                    if (exists != undefined) {
+                        if (exists.minTime != "" && exists.minTime != null && exists.minTime != undefined && exists.maxTime != null && exists.maxTime != undefined && exists.maxTime != "") {
+                            var minTime = exists.minTime.trim().replace(' ', ':');
+                            var maxTime = exists.maxTime.trim().replace(' ', ':');
+
+                            if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
+                                minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
                             }
+
+                            if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
+                                maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
+                            }
+
+                            $('#timeline-resource-view div.calendar').fullCalendar('option', 'minTime', minTime + ":00");
+                            $('#timeline-resource-view div.calendar').fullCalendar('option', 'maxTime', maxTime + ":00");
                         }
                     }
-        }
+                }
+    }
     if ($scope != undefined)
         if ($scope.isFilterApply) {
             var uniqEvents = _.uniq(calenderData, "resourceId");
@@ -1549,9 +1566,9 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         select: function (startDate, endDate, jsEvent, view, resource) {
 
 
-           
 
-           
+
+
         }
     };
     if (formDetailsDataInfo.calenderSettingsList?.length > 0) {
@@ -1560,6 +1577,15 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
             if (exists.minTime != "" && exists.minTime != null && exists.minTime != undefined && exists.maxTime != null && exists.maxTime != undefined && exists.maxTime != "") {
                 var minTime = exists.minTime.trim().replace(' ', ':');
                 var maxTime = exists.maxTime.trim().replace(' ', ':');
+
+                if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
+                    minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
+                }
+
+                if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
+                    maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
+                }
+
                 myOptions2.minTime = minTime + ":00";
                 myOptions2.maxTime = maxTime + ":00";
             }
@@ -1599,7 +1625,7 @@ var DataService = {
 };
 
 var getTabulatorListFromEvents = async function (param) {
-    
+
     var userDetail = GetUserDetails();
     var $scope = angular.element($("#calendar")).scope();
     var newParam = {};
@@ -1678,7 +1704,7 @@ var getTabulatorListFromEvents = async function (param) {
     //$rootScope.safeApply();
 
 };
- async function getReferralFormFieldsAndData(param) {
+async function getReferralFormFieldsAndData(param) {
 
     return new Promise(resolve => {
         $.ajax({
@@ -1687,12 +1713,12 @@ var getTabulatorListFromEvents = async function (param) {
             data: JSON.stringify(param),
             contentType: "application/json",
             success: function (response) {
-               
+
                 hideLoader();
                 resolve(response);
             }, error: function (err) {
 
-                
+
             },
         });
 
@@ -1700,7 +1726,7 @@ var getTabulatorListFromEvents = async function (param) {
 }
 
 async function loadEventRecordDetails(paramTemp) {
-    
+
     showLoader();
     $("#tabuListUl").empty();
     var $scope = angular.element($("#calendar")).scope();
@@ -1742,12 +1768,12 @@ async function loadEventRecordDetails(paramTemp) {
 
         var courseExists = _.findWhere(xaxisFormList, { resourceActivityForm: $scope.courseFormId });
         if (!DataService.isEmpty(courseExists)) {
-           
+
             var courseFormEntry = _.findWhere($scope.eventData.currentEventCalenderReferrenceList, { referrenceFormId: $scope.courseFormId });
             if (!DataService.isEmpty(courseFormEntry)) {
                 var courseFormEntryExists = _.findWhere(courseExists.formDataList, { id: courseFormEntry.referrenceId });
                 if (!DataService.isEmpty(courseFormEntryExists)) {
-                    
+
                     $scope.selectEventDetails.DESCRIPTION = courseFormEntryExists.DESCRIPTION;
                     var maxrecordList = 0;
                     var maxrecordWaitingList = 0;
@@ -1818,7 +1844,7 @@ async function loadEventRecordDetails(paramTemp) {
         hideLoader();
 
 
-        
+
     }
 };
 
@@ -1863,7 +1889,7 @@ async function getCalendarDetails(id) {
     return new Promise(resolve => {
         $.ajax({
             type: "POST",
-            url: BASE_URL + "MarketPlace/GetCalendarDetails/"+id,
+            url: BASE_URL + "MarketPlace/GetCalendarDetails/" + id,
             contentType: "application/json",
             success: function (response) {
                 hideLoader();
@@ -1911,7 +1937,7 @@ async function rendarPopupCalendar(assignDate) {
         },
         eventRender: function (event, element) {
 
-            
+
 
             var $scope = angular.element($("#calendar")).scope();
             var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
@@ -1952,7 +1978,7 @@ async function rendarPopupCalendar(assignDate) {
                 var _arrColor = [];
                 var _arrFormIDs = _associatedFormIDs.split(",");
 
-                
+
                 if (!eventData.allDay) {
                     eventData.start = eventData.start != null && eventData.start != undefined && eventData.start != '' ? eventData.start : '';
                     if (eventData.end != "" && eventData.end != null) {
@@ -2217,15 +2243,15 @@ async function rendarPopupCalendar(assignDate) {
 
                 "z-index": 1
             })
-            //    .droppable({
-            //    drop: function (event, ui) {
-            //        console.log(event);
-            //        console.log(ui);
-            //    },
-            //    activate: function (event, ui) {
-            //        console.log(event);
-            //    }
-            //})
+                //    .droppable({
+                //    drop: function (event, ui) {
+                //        console.log(event);
+                //        console.log(ui);
+                //    },
+                //    activate: function (event, ui) {
+                //        console.log(event);
+                //    }
+                //})
                 .empty().append($fcContent.css({
                     borderRadius: 3,
                 }), $resize);
@@ -2287,7 +2313,7 @@ async function rendarPopupCalendar(assignDate) {
 
 
             var postUrl = BASE_URL + "/FormAPI/getReferralFormFields";
-           
+
 
             postAsync(postUrl, param).then(function (response) {
 
@@ -2356,6 +2382,16 @@ async function rendarPopupCalendar(assignDate) {
             if (exists.minTime != "" && exists.minTime != null && exists.minTime != undefined && exists.maxTime != null && exists.maxTime != undefined && exists.maxTime != "") {
                 var minTime = exists.minTime.trim().replace(' ', ':');
                 var maxTime = exists.maxTime.trim().replace(' ', ':');
+
+
+                if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
+                    minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
+                }
+
+                if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
+                    maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
+                }
+
                 myOptions2.minTime = minTime + ":00";
                 myOptions2.maxTime = maxTime + ":00";
             }
@@ -2366,12 +2402,12 @@ async function rendarPopupCalendar(assignDate) {
     setTimeout(function () {
         $('#agenda-view2 div.calendar').fullCalendar(calendarOptions);
     }, 500);
-    
+
     $('#customEventDetailsServiceModelPopUp').on('shown.bs.modal', function () {
         //$("#agenda-view2 div.calendar").fullCalendar('render');
     });
 
-   
+
 
 }
 

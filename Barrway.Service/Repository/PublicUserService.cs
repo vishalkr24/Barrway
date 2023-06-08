@@ -303,7 +303,7 @@ namespace Barrway.Service.Repository
             try
             {
 
-                string query = $@"SELECT distinct calendar.[COMPANY_CODE], calendar.[CALENDAR_CODE], company.COMPANY_NAME_ENGLISH, calendar.[start] as 'Date'
+                string query = $@"SELECT distinct calendar.[COMPANY_CODE], calendar.[CALENDAR_CODE], company.COMPANY_NAME_ENGLISH, calendar.[start] as 'Date', transaction_m.RESOURCE
                                   FROM [dbo].[CALENDAR_FORM_1935] calendar
                                   join TRANSACTION_MASTER_1942 transaction_m on calendar.CALENDAR_CODE = transaction_m.CALENDAR_CODE
                                   join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT

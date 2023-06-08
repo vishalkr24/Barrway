@@ -16436,6 +16436,126 @@
 
     })
 
+    FormGeneratorApp.controller('BusinessUserMasterController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
+
+        $scope.CalendarMasterList = function () {
+            var columns = [
+                { title: 'Username', field: 'USER_ID', headerFilter: "input" },
+                { title: 'Email', field: 'USER_EMAIL', headerFilter: "input" },
+                { title: 'Phone', field: 'USER_PHONE', headerFilter: "input" },
+                { title: 'Role', field: 'SUB_ROLE', headerFilter: "input" },
+                {
+                    title: 'Created at', field: 'created_at', headerFilter: "input", formatter: function (cell, formatter) {
+                        return moment(cell.getData().TO_TIME).format("YYYY-MM-DD HH:mm")
+                    }
+                }
+            ];
+
+            setTimeout(function () {
+                var options = {
+                    placeholder: "No Data.",
+                    tooltips: function (cell) {
+                        return cell.getValue();
+                    },
+                    height: "530px",
+                    layout: "fitColumns",
+                    responsiveLayout: false,
+                    initialSort: [
+                        { column: "created_at", dir: "desc" }
+                    ],
+                    persistenceID: "persisrecords",
+                    persistenceMode: true,
+                    persistentLayout: true,
+                    persistence: {
+                        sort: false, //persist column sorting
+                        filter: false, //persist filter sorting
+                        columns: false, //persist columns
+                    },
+                    persistenceWriterFunc: function (id, type, data) {
+                        localStorage.setItem(id + "-" + type, JSON.stringify(data));
+                    },
+                    persistenceReaderFunc: function (id, type) {
+                        //id - tables persistence id
+                        //type - type of data being persisted ("sort", "filter", "group", "page" or "columns")
+                        var data = localStorage.getItem(id + "-" + type);
+                        var dataParse = JSON.parse(data);
+                        if (!DataService.isEmpty(data) && type == "columns") {
+                            _.each(headers, function (item) {
+                                var exists = _.findWhere(dataParse, {
+                                    field: item.field
+                                });
+                                if (!DataService.isEmpty(exists)) {
+                                    exists.visible = item.visible;
+                                }
+                            })
+                        }
+                        else if (type == "page") {
+                            if (!DataService.isEmpty(data) && $scope.paginationSizeFormRecords != 0)
+                                dataParse.paginationSize = $scope.paginationSizeFormRecords;
+                        }
+                        return data ? dataParse : false;
+                    },
+                    columns: columns,
+                    footerElement: "<div style='text-align:left' id='no-of-forms'></div>",
+                    dataLoaded: function (data) {
+                        //data - all data loaded into the table                        
+                        var count = 0;
+                        if (data.length > 0)
+                            count = data[0].total_records;
+                        $('#form-records .tabulator-footer #no-of-forms').text("Total: " + count + " Entries");
+                    },
+                    /// pagination: "local",              
+                    ajaxFiltering: true,
+                    ajaxSorting: true,
+                    ajaxLoader: true,
+                    ajaxURL: "/BusinessAdmin/GetSingleBusinessUserMaster",
+                    ajaxConfig: "POST", //ajax HTTP request type
+                    ajaxContentType: "json",
+                    ajaxParams: { //ajax parameters
+                        
+                    },
+                    ajaxProgressiveLoad: "scroll",
+                    ajaxProgressiveLoadScrollMargin: 75,
+                    ajaxRequesting: function (url, params) {
+
+                        var called = true;
+                        if (params.sorters.length == 0) {
+                            params.sorters.push({ field: "created_at", dir: "desc" });
+                        }
+                        //if (called)
+                        //$('#form-records').block({ message: '<h4>Getting Form Records...</h4>' });
+                        return called; //abort ajax request
+                    },
+                    ajaxResponse: function (url, params, response) {
+                        //url - the URL of the request
+                        //params - the parameters passed with the request
+                        //response - the JSON object returned in the body of the response.
+                        //$('#form-records').unblock();
+                        //$.unblockUI();
+                        if (response.data) {
+                            return response;
+                        }
+                        else {
+                            return response;
+                        }
+
+                    },
+                    paginationSize: 50,
+
+                };
+                var tabulator = initTabulator('form-records', options);
+                $('.form-builder-loader').hide();
+            }, 150);
+
+        };
+
+        $scope.CalendarMasterList();
+
+
+
+    });
+
+
     FormGeneratorApp.controller('UserAttendanceController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
 
     })

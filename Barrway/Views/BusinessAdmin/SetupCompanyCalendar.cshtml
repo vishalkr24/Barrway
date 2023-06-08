@@ -317,13 +317,35 @@
 
                                     <div class="form-inner">
 
-                                        <div class="form-group">
-                                            <label for="TAGS">Privacy</label>
-                                            <div class="tom-select-custom">
-                                                @Html.DropDownListFor(model => model.CalendarControlSheet.CALENDAR_USE_TYPE, new SelectList(Enum.GetValues(typeof(PublicPrivateOptions))), new { @class = "js-select form-select" })
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="TAGS">Calendar display time</label>
+                                                    <div class="tom-select-custom">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                @Html.TextBoxFor(model => model.CalendarControlSheet.DISPLAY_START_TIME, new { @class = "form-control", @type = "time", @placeholder = "Start Time" })
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                @Html.TextBoxFor(model => model.CalendarControlSheet.DISPLAY_END_TIME, new { @class = "form-control", @type = "time", @placeholder = "End Time" })
+                                                            </div>
+                                                        </div>
+                                                                                                                 
+                                                    </div>
+                                                </div>
                                             </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="TAGS">Privacy</label>
+                                                    <div class="tom-select-custom">
+                                                        @Html.DropDownListFor(model => model.CalendarControlSheet.CALENDAR_USE_TYPE, new SelectList(Enum.GetValues(typeof(PublicPrivateOptions))), new { @class = "js-select form-select" })
+                                                    </div>
 
+                                                </div>
+                                            </div>
                                         </div>
+
+                                        
 
                                         <div class="row" style="border-bottom:1px solid lightgrey; padding-top: 16px;">
                                             <div class="col-md-2" style="padding-top:25px;">

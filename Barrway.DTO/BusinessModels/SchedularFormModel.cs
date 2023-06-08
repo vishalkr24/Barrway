@@ -20,6 +20,7 @@ namespace Barrway.DTO.BusinessModels
 
     public class SchedularFormModel
     {
+        public string Id { get; set; }
         public string COMPANY_CODE { get; set; }
         public string CALENDAR_CODE { get; set; }
         public string SCH__NAME { get; set; }
