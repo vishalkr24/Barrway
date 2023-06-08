@@ -33,6 +33,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetSingleCompanyById(string Id);
         Task<AddUpdateDelete> GetAllCompaniesByUserId(string UserId);
         Task<AddUpdateDelete> GetAllCompaniesMasterByUserId(GenerateDynamicFormData data, string UserId);
+        Task<AddUpdateDelete> GetSingleBusinessUserMaster(GenerateDynamicFormData data, string UserId);
         Task<AddUpdateDelete> AddCompany(BusinessCompanyModel model, string UserId, bool IsDefault = false);
         Task<AddUpdateDelete> UpdateCompanyService(BusinessCompanyModel model);
         Task<AddUpdateDelete> GetSingleCompanyByCompanyCode(string CompanyCode);
@@ -54,6 +55,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetCompanyCalendars(GenerateDynamicFormData data, string CompanyId);
 
         Task<AddUpdateDelete> GetCalendarUpcomingBookings(GenerateDynamicFormData data, string CompanyCode, string CalendarCode);
+        Task<AddUpdateDelete> GetSchedule(string ScheduleId, string UserId);
 
         Task<AddUpdateDelete> AddSchedularForm(SchedularFormModel model, string formGroupKey);
 

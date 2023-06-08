@@ -25,7 +25,7 @@ namespace Barrway.Controllers
         private readonly IPublicUserService publicUserService;
 
         // GET: FormAPI
-        public FormAPIController(IFormAPIRepository formAPIRepository,ICalendarService calendarService, IPublicUserService publicUserService)
+        public FormAPIController(IFormAPIRepository formAPIRepository, ICalendarService calendarService, IPublicUserService publicUserService)
         {
             this.formAPIRepository = formAPIRepository;
             this.calendarService = calendarService;
@@ -33,8 +33,9 @@ namespace Barrway.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> ManageLanguages(Languages data) {
-            return Json( (await formAPIRepository.ManageLanguages(data)).Data);
+        public async Task<ActionResult> ManageLanguages(Languages data)
+        {
+            return Json((await formAPIRepository.ManageLanguages(data)).Data);
         }
 
         [HttpPost]
@@ -43,11 +44,11 @@ namespace Barrway.Controllers
             var result = (await formAPIRepository.ManageForm(data)).Data;
             if (data.formId == (int)FormSetting.CALENDAR_FORM && data.action == (int)FormAction.ManageForm)
             {
-                if(result!=null && result.Count() > 0)
+                if (result != null && result.Count() > 0)
                 {
                     result.ForEach(x =>
                     {
-                        if (x.FormDataToOneListDynamic != null && x.FormDataToOneListDynamic.Count()>0)
+                        if (x.FormDataToOneListDynamic != null && x.FormDataToOneListDynamic.Count() > 0)
                         {
                             x.FormDataToOneListDynamic.ForEach(e =>
                             {
@@ -87,14 +88,14 @@ namespace Barrway.Controllers
         [HttpGet]
         public async Task<ActionResult> getReferralFormFieldsAndDataGET(int actionid, string formID, string formGroupKey)
         {
-            return Json(await formAPIRepository.getReferralFormFieldsAndDataGET(actionid, formID, formGroupKey),JsonRequestBehavior.AllowGet);
+            return Json(await formAPIRepository.getReferralFormFieldsAndDataGET(actionid, formID, formGroupKey), JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
         public async Task<ActionResult> ManageFormRoles(Form_Roles data)
         {
             return Json((await formAPIRepository.ManageFormRoles(data)).Data);
         }
-        
+
         [HttpPost]
         public async Task<ActionResult> getEventDetails(FormCalenderReferrenceTable data)
         {
@@ -103,10 +104,10 @@ namespace Barrway.Controllers
         [HttpPost]
         public async Task<ActionResult> GetFormRecordList(GenerateDynamicFormData data)
         {
-            var result= (await formAPIRepository.GetFormRecordList(data)).Data;
+            var result = (await formAPIRepository.GetFormRecordList(data)).Data;
             if (data.formId == (int)FormSetting.CALENDAR_FORM)
             {
-                if (result.data!=null && result.data.Count()>0)
+                if (result.data != null && result.data.Count() > 0)
                 {
                     result.data.ForEach(e =>
                     {
@@ -135,11 +136,37 @@ namespace Barrway.Controllers
         {
             return Json((await formAPIRepository.manageTabulatorConfig(data)).Data);
         }
-        
+
         [HttpPost]
         public async Task<ActionResult> getCalenderSettingsFormData(calenderSettingsFormDetails data)
         {
-            return Json((await formAPIRepository.getCalenderSettingsFormData(data)));
+            var result = await formAPIRepository.getCalenderSettingsFormData(data);
+            
+            if ((data.CustomFilters[0].Value.ToString()).Contains(","))
+            {
+                // filter the data of resources
+                var resourceData = result.FirstOrDefault(x => x.resourceForm != 0 & x.IsDefault == true).formDataList;
+
+                List<IDictionary<string, object>> tempResults = new List<IDictionary<string, object>>();
+
+                var enrolledData = await publicUserService.GetAllEnrolledCompaniesData(UserIdentity.UserEmail);
+                for (int i = 0; i < resourceData.Count; i++)
+                {
+                    for (int j = 0; j < enrolledData.Data.Count; j++)
+                    {
+                        if (resourceData[i]["id"].ToString() == enrolledData.Data[j]["RESOURCE"].ToString())
+                        {
+                            tempResults.Add(resourceData[i]);
+                        }
+                    }
+
+                }
+
+                result.FirstOrDefault(x => x.resourceForm != 0 & x.IsDefault == true).formDataList = tempResults;
+
+            }
+
+            return Json(result);
         }
 
         [HttpPost]
@@ -151,9 +178,9 @@ namespace Barrway.Controllers
         [HttpPost]
         public async Task<ActionResult> getReferralFormFields(Form_DataTable data)
         {
-            if(!string.IsNullOrEmpty(data?.COMPANY_CODE) || !string.IsNullOrEmpty(data?.CALENDAR_CODE))
+            if (!string.IsNullOrEmpty(data?.COMPANY_CODE) || !string.IsNullOrEmpty(data?.CALENDAR_CODE))
             {
-                
+
                 if (data.filter != null)
                 {
                     if (data.IsPublicUser)
@@ -171,16 +198,16 @@ namespace Barrway.Controllers
                     {
                         data.filter.value = data.filter.value + " and F.COMPANY_CODE=N'" + data.COMPANY_CODE + "' and F.CALENDAR_CODE=N'" + data.CALENDAR_CODE + "'";
                     }
-                    
+
                 }
             }
             ReferalFormDataResponseModel result = await formAPIRepository.getReferralFormFields(data);
 
             ReferalFormDataResponseModel finalResult = new ReferalFormDataResponseModel();
-            
+
             if (data.IsPublicUser)
             {
-                var enrolledData = await publicUserService.GetAllEnrolledCalendarsData(data.COMPANY_CODE, UserIdentity.UserEmail,"",data.IsCustomInFilter);
+                var enrolledData = await publicUserService.GetAllEnrolledCalendarsData(data.COMPANY_CODE, UserIdentity.UserEmail, "", data.IsCustomInFilter);
 
                 if (enrolledData.Status)
                 {
@@ -191,7 +218,7 @@ namespace Barrway.Controllers
 
                     for (int i = 0; i < enrolledData.Data.Count; i++)
                     {
-                        
+
                         // filter activity Details
                         for (int j = 0; j < result.activityDetails.Count; j++)
                         {
@@ -240,11 +267,11 @@ namespace Barrway.Controllers
 
             if (result != null)
             {
-                if(result.events!=null && result.events.Count() > 0)
+                if (result.events != null && result.events.Count() > 0)
                 {
                     result.events.ForEach(e =>
                     {
-                        if (e.ContainsKey("start") && e["start"]!=null)
+                        if (e.ContainsKey("start") && e["start"] != null)
                         {
                             e["start"] = Convert.ToDateTime(e["start"]).ToString("yyyy-MM-ddTHH:mm:ss");
                         }
@@ -252,7 +279,7 @@ namespace Barrway.Controllers
                         {
                             e["end"] = Convert.ToDateTime(e["end"]).ToString("yyyy-MM-ddTHH:mm:ss");
                         }
-                        if(e.ContainsKey("title") && e["title"] != null)
+                        if (e.ContainsKey("title") && e["title"] != null)
                         {
                             e["title"] = "";
                         }
@@ -267,8 +294,8 @@ namespace Barrway.Controllers
         public async Task<ActionResult> ManageCalenderReferrenceNew(FormCalenderReferrenceTable data)
         {
             var result = await formAPIRepository.ManageCalenderReferrenceNew(data);
-            if(result!=null && result.Any(x=>x.res==1))
-            { 
+            if (result != null && result.Any(x => x.res == 1))
+            {
                 await calendarService.UpdateCalendarReference(data);
             }
             return Json(result);
@@ -283,7 +310,7 @@ namespace Barrway.Controllers
         [HttpGet]
         public async Task<ActionResult> getJSONjsTree(int root, string title, string formId, string resourceActivityForm, string previousSelection, string selectedRoot, string query, string id, string companyCode, string calendarCode)
         {
-            return Json((await formAPIRepository.getJSONjsTree(root,title,formId,resourceActivityForm,  previousSelection,  selectedRoot,  query,  id,companyCode,calendarCode)),JsonRequestBehavior.AllowGet);
+            return Json((await formAPIRepository.getJSONjsTree(root, title, formId, resourceActivityForm, previousSelection, selectedRoot, query, id, companyCode, calendarCode)), JsonRequestBehavior.AllowGet);
         }
 
 

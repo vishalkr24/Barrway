@@ -241,6 +241,14 @@ namespace Barrway.Controllers
         }
 
         [HttpPost]
+        public async Task<ActionResult> GetSchedule(string ScheduleId)
+        {
+            var schedularData = await businessUserService.GetSchedule(ScheduleId, User.Identity.Name);
+            
+            return Json(new { data = schedularData.Data });
+        }
+
+        [HttpPost]
         public async Task<ActionResult> AddSchedule(SchedularFormModel data)
         {
             try
@@ -255,173 +263,187 @@ namespace Barrway.Controllers
 
                 data.SCH_SCHEDULE_TABLE = JsonConvert.SerializeObject(b["table"]).ToString();
 
-                var start = Convert.ToDateTime(startObject[2] + "-" + startObject[1] + "-" + startObject[0]);
-
-                var end = Convert.ToDateTime(endObject[2] + "-" + endObject[1] + "-" + endObject[0]);
-
-                DateTime dateTracker = start;
-                int slotCounter = 1;
-
-                string script = "";
-                string formGroupKey = CustomMethods.CreateUUID();
-                var response = await businessUserService.AddSchedularForm(data, formGroupKey);
-                if (response.Status)
+                if (!string.IsNullOrEmpty(data.Id))
                 {
-                    while (dateTracker <= end)
+                    // Edit Existing Schedule
+
+                    string formGroupKey = CustomMethods.CreateUUID();
+                    var response = await businessUserService.AddSchedularForm(data, formGroupKey);
+
+                    return Json("Success", JsonRequestBehavior.AllowGet);
+
+                }
+                else
+                {
+                    // Create a new Schedule
+
+                    var start = Convert.ToDateTime(startObject[2] + "-" + startObject[1] + "-" + startObject[0]);
+
+                    var end = Convert.ToDateTime(endObject[2] + "-" + endObject[1] + "-" + endObject[0]);
+
+                    DateTime dateTracker = start;
+                    int slotCounter = 1;
+
+                    string script = "";
+                    string formGroupKey = CustomMethods.CreateUUID();
+                    var response = await businessUserService.AddSchedularForm(data, formGroupKey);
+                    if (response.Status)
                     {
-                        string SchedularFormId = response.Data.Id.ToString();
-                        DateTime SlotStartTime = DateTime.Now;
-                        DateTime SlotEndTime = DateTime.Now;
-
-                        switch (dateTracker.DayOfWeek.ToString())
+                        while (dateTracker <= end)
                         {
-                            case "Monday":
-                                if (string.IsNullOrEmpty(data.table.Monday.Start) || string.IsNullOrEmpty(data.table.Monday.End))
-                                {
-                                    // if time is not mentioned then skip that day
-                                    dateTracker = dateTracker.AddDays(1);
-                                    continue;
-                                }
-                                else
-                                {
-                                    SlotStartTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Monday.Start.ToString());
-                                    SlotEndTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Monday.End.ToString());
-                                }
+                            string SchedularFormId = response.Data.Id.ToString();
+                            DateTime SlotStartTime = DateTime.Now;
+                            DateTime SlotEndTime = DateTime.Now;
 
-                                break;
-                            case "Tuesday":
-
-                                if (string.IsNullOrEmpty(data.table.Tuesday.Start) || string.IsNullOrEmpty(data.table.Tuesday.End))
-                                {
-                                    // if time is not mentioned then skip that day
-                                    dateTracker = dateTracker.AddDays(1);
-                                    continue;
-                                }
-                                else
-                                {
-                                    SlotStartTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Tuesday.Start.ToString());
-                                    SlotEndTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Tuesday.End.ToString());
-                                }
-
-
-                                break;
-                            case "Wednesday":
-
-                                if (string.IsNullOrEmpty(data.table.Wednesday.Start) || string.IsNullOrEmpty(data.table.Wednesday.End))
-                                {
-                                    // if time is not mentioned then skip that day
-                                    dateTracker = dateTracker.AddDays(1);
-                                    continue;
-                                }
-                                else
-                                {
-                                    SlotStartTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Wednesday.Start.ToString());
-                                    SlotEndTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Wednesday.End.ToString());
-                                }
-
-                                break;
-                            case "Thursday":
-
-                                if (string.IsNullOrEmpty(data.table.Thursday.Start) || string.IsNullOrEmpty(data.table.Thursday.End))
-                                {
-                                    // if time is not mentioned then skip that day
-                                    dateTracker = dateTracker.AddDays(1);
-                                    continue;
-                                }
-                                else
-                                {
-                                    SlotStartTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Thursday.Start.ToString());
-                                    SlotEndTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Thursday.End.ToString());
-                                }
-
-                                break;
-                            case "Friday":
-
-                                if (string.IsNullOrEmpty(data.table.Friday.Start) || string.IsNullOrEmpty(data.table.Friday.End))
-                                {
-                                    // if time is not mentioned then skip that day
-                                    dateTracker = dateTracker.AddDays(1);
-                                    continue;
-                                }
-                                else
-                                {
-                                    SlotStartTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Friday.Start.ToString());
-                                    SlotEndTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Friday.End.ToString());
-                                }
-
-                                break;
-                            case "Saturday":
-
-                                if (string.IsNullOrEmpty(data.table.Saturday.Start) || string.IsNullOrEmpty(data.table.Saturday.End))
-                                {
-                                    // if time is not mentioned then skip that day
-                                    dateTracker = dateTracker.AddDays(1);
-                                    continue;
-                                }
-                                else
-                                {
-                                    SlotStartTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Saturday.Start.ToString());
-                                    SlotEndTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Saturday.End.ToString());
-                                }
-
-                                break;
-                            case "Sunday":
-
-                                if (string.IsNullOrEmpty(data.table.Sunday.Start) || string.IsNullOrEmpty(data.table.Sunday.End))
-                                {
-                                    // if time is not mentioned then skip that day
-                                    dateTracker = dateTracker.AddDays(1);
-                                    continue;
-                                }
-                                else
-                                {
-                                    SlotStartTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Sunday.Start.ToString());
-                                    SlotEndTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Sunday.End.ToString());
-                                }
-
-                                break;
-                        }
-
-                        if (data.SCH_ALTERNATIVE_WEEK == "ALTERNATE-WEEK")
-                        {
-                            var weekNum = ((int)dateTracker.DayOfWeek);
-
-                            if (weekNum % 2 == 0)
+                            switch (dateTracker.DayOfWeek.ToString())
                             {
-                                dateTracker = dateTracker.AddDays(7);
-                                continue;
-                            }
-                        }
-                        else if (data.SCH_ALTERNATIVE_WEEK == "EVERY-3-WEEK")
-                        {
-                            var weekNum = GetWeekNumberOfMonth(start);
-                            if (weekNum > 3)
-                            {
-                                dateTracker = dateTracker.AddDays((7 * 3));
-                                continue;
-                            }
-                        }
-                        else if (data.SCH_ALTERNATIVE_WEEK == "EVERY-4-WEEK")
-                        {
-                            var weekNum = GetWeekNumberOfMonth(start.AddDays(1));
-                            if (weekNum > 4)
-                            {
-                                dateTracker = dateTracker.AddDays((7 * 4));
-                                continue;
-                            }
-                        }
+                                case "Monday":
+                                    if (string.IsNullOrEmpty(data.table.Monday.Start) || string.IsNullOrEmpty(data.table.Monday.End))
+                                    {
+                                        // if time is not mentioned then skip that day
+                                        dateTracker = dateTracker.AddDays(1);
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        SlotStartTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Monday.Start.ToString());
+                                        SlotEndTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Monday.End.ToString());
+                                    }
 
-                        CalendarFormModel eventData = new CalendarFormModel()
-                        {
-                            end = SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss"),
-                            resources = data.SCH_RESOURCE,
-                            activities = data.SCH_ACTIVITY,
-                            start = SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss"),
-                            title = "Slot " + slotCounter++
-                        };
-                        formGroupKey =Guid.NewGuid().ToString();
+                                    break;
+                                case "Tuesday":
 
-                        script += $@"insert into CALENDAR_FORM_1935(
+                                    if (string.IsNullOrEmpty(data.table.Tuesday.Start) || string.IsNullOrEmpty(data.table.Tuesday.End))
+                                    {
+                                        // if time is not mentioned then skip that day
+                                        dateTracker = dateTracker.AddDays(1);
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        SlotStartTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Tuesday.Start.ToString());
+                                        SlotEndTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Tuesday.End.ToString());
+                                    }
+
+
+                                    break;
+                                case "Wednesday":
+
+                                    if (string.IsNullOrEmpty(data.table.Wednesday.Start) || string.IsNullOrEmpty(data.table.Wednesday.End))
+                                    {
+                                        // if time is not mentioned then skip that day
+                                        dateTracker = dateTracker.AddDays(1);
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        SlotStartTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Wednesday.Start.ToString());
+                                        SlotEndTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Wednesday.End.ToString());
+                                    }
+
+                                    break;
+                                case "Thursday":
+
+                                    if (string.IsNullOrEmpty(data.table.Thursday.Start) || string.IsNullOrEmpty(data.table.Thursday.End))
+                                    {
+                                        // if time is not mentioned then skip that day
+                                        dateTracker = dateTracker.AddDays(1);
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        SlotStartTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Thursday.Start.ToString());
+                                        SlotEndTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Thursday.End.ToString());
+                                    }
+
+                                    break;
+                                case "Friday":
+
+                                    if (string.IsNullOrEmpty(data.table.Friday.Start) || string.IsNullOrEmpty(data.table.Friday.End))
+                                    {
+                                        // if time is not mentioned then skip that day
+                                        dateTracker = dateTracker.AddDays(1);
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        SlotStartTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Friday.Start.ToString());
+                                        SlotEndTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Friday.End.ToString());
+                                    }
+
+                                    break;
+                                case "Saturday":
+
+                                    if (string.IsNullOrEmpty(data.table.Saturday.Start) || string.IsNullOrEmpty(data.table.Saturday.End))
+                                    {
+                                        // if time is not mentioned then skip that day
+                                        dateTracker = dateTracker.AddDays(1);
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        SlotStartTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Saturday.Start.ToString());
+                                        SlotEndTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Saturday.End.ToString());
+                                    }
+
+                                    break;
+                                case "Sunday":
+
+                                    if (string.IsNullOrEmpty(data.table.Sunday.Start) || string.IsNullOrEmpty(data.table.Sunday.End))
+                                    {
+                                        // if time is not mentioned then skip that day
+                                        dateTracker = dateTracker.AddDays(1);
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        SlotStartTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Sunday.Start.ToString());
+                                        SlotEndTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Sunday.End.ToString());
+                                    }
+
+                                    break;
+                            }
+
+                            if (data.SCH_ALTERNATIVE_WEEK == "ALTERNATE-WEEK")
+                            {
+                                var weekNum = ((int)dateTracker.DayOfWeek);
+
+                                if (weekNum % 2 == 0)
+                                {
+                                    dateTracker = dateTracker.AddDays(7);
+                                    continue;
+                                }
+                            }
+                            else if (data.SCH_ALTERNATIVE_WEEK == "EVERY-3-WEEK")
+                            {
+                                var weekNum = GetWeekNumberOfMonth(start);
+                                if (weekNum > 3)
+                                {
+                                    dateTracker = dateTracker.AddDays((7 * 3));
+                                    continue;
+                                }
+                            }
+                            else if (data.SCH_ALTERNATIVE_WEEK == "EVERY-4-WEEK")
+                            {
+                                var weekNum = GetWeekNumberOfMonth(start.AddDays(1));
+                                if (weekNum > 4)
+                                {
+                                    dateTracker = dateTracker.AddDays((7 * 4));
+                                    continue;
+                                }
+                            }
+
+                            CalendarFormModel eventData = new CalendarFormModel()
+                            {
+                                end = SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss"),
+                                resources = data.SCH_RESOURCE,
+                                activities = data.SCH_ACTIVITY,
+                                start = SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss"),
+                                title = "Slot " + slotCounter++
+                            };
+                            formGroupKey = Guid.NewGuid().ToString();
+
+                            script += $@"insert into CALENDAR_FORM_1935(
                                        [SCHEDULAR_FORM_ID]
                                       ,[formGroupKey]
                                       ,[formID]
@@ -456,22 +478,24 @@ namespace Barrway.Controllers
 
                                     ";
 
-                        dateTracker = dateTracker.AddDays(1);
+                            dateTracker = dateTracker.AddDays(1);
+
+                        }
 
                     }
+
+                    var count = await sqlFunction.ExecuteSqlCommandQuery(script);
+
+                    if (count > 0)
+                    {
+                        return Json("Success", JsonRequestBehavior.AllowGet);
+                    }
+                }
                 
-                }
-
-                var count = await sqlFunction.ExecuteSqlCommandQuery(script);
-
-                if (count > 0)
-                {
-                    return Json("Success", JsonRequestBehavior.AllowGet);
-                }
             }
             catch (Exception ex)
             {
-
+                return Json("Failed", JsonRequestBehavior.DenyGet);
             }
 
             return Json("Failed", JsonRequestBehavior.DenyGet);

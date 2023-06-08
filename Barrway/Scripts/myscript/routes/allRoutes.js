@@ -1925,6 +1925,20 @@
                     parent: 'home'
                 }
             })
+            .state('business_user_master', {
+                url: '/calendar/business-user-master/:formId',
+                onEnter: function ($window) { $window.document.title = "User master"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/calendar-master/business-user-master.html?token=' + uuid,
+                        controller: 'BusinessUserMasterController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
             // Transaction Master route state
             .state('transaction_master', {
                 url: '/calendar/transaction-master/:formId',

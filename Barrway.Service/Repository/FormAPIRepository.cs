@@ -23,10 +23,11 @@ namespace Barrway.Service.Repository
         
         private readonly RestClient _client;
         private readonly string _url = ConfigurationManager.AppSettings["webapibaseurl"];
-
+        
         public FormAPIRepository()
         {
             _client = new RestClient(_url);
+          
         }
 
         public async Task<AddUpdateDelete<IEnumerable<TabulatorConfigurationsDTO>>> manageTabulatorConfig(TabulatorConfigurationsDTO data)

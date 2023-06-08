@@ -160,6 +160,7 @@ namespace Barrway.Controllers
             }
         }
 
+
         [HttpPost]
         public async Task<ActionResult> GetAllEnrolledCompaniesData()
         {

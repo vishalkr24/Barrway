@@ -2738,9 +2738,6 @@
         $scope.AdminUsersList();
     });
 
-
-
-
     FormGeneratorApp.controller('SchedularFormController', function ($scope, $compile, $rootScope, $http, $location, $window, mainService, adminService, DataService, notifierService, $state, $stateParams, $timeout, $ngBootbox) {
 
         HSCore.components.HSFlatpickr.init('.js-flatpickr');
@@ -2768,7 +2765,67 @@
 
         });
 
-        $scope.saveSchedularForm = function () {
+        
+
+        $scope.EditSchedularForm = function (schedularId) {
+
+            adminService.postAsync('/Calendar/GetSchedule/', { ScheduleId: schedularId }).then(function (res) {
+
+                console.log(res.data)
+
+                $("#SCH_LOCATION option:selected").val(res.data.data[0].SCH_LOCATION)
+                $("#SCH_ACTIVITY option:selected").val(res.data.data[0].SCH_ACTIVITY)
+                $("#SCH_RESOURCE option:selected").val(res.data.data[0].SCH_RESOURCE)
+
+                var tempDate = res.data.data[0].SCH_FROM_DATE.split('-')
+                res.data.data[0].SCH_FROM_DATE = tempDate[2] + "/" + tempDate[1] + "/" + tempDate[0];
+                tempDate = res.data.data[0].SCH_TO_DATE.split('-')
+                res.data.data[0].SCH_TO_DATE = tempDate[2] + "/" + tempDate[1] + "/" + tempDate[0];
+
+                $("#SCH_FROM_DATE").val(res.data.data[0].SCH_FROM_DATE)
+                $("#SCH_TO_DATE").val(res.data.data[0].SCH_TO_DATE)
+
+                $("input[name='alternate-week'][value='" + res.data.data[0].SCH_ALTERNATIVE_WEEK + "']").attr("checked", true)
+
+                var table = JSON.parse(res.data.data[0].SCH_SCHEDULE_TABLE);
+
+                $("#Monday_Start_Time").val(table.Monday.Start)
+                $("#Monday_End_Time").val(table.Monday.End)
+
+                $("#Tuesday_Start_Time").val(table.Tuesday.Start)
+                $("#Tuesday_End_Time").val(table.Tuesday.End)
+
+                $("#Wednesday_Start_Time").val(table.Wednesday.Start)
+                $("#Wednesday_End_Time").val(table.Wednesday.End)
+
+                $("#Thursday_Start_Time").val(table.Thursday.Start)
+                $("#Thursday_End_Time").val(table.Thursday.End)
+
+                $("#Friday_Start_Time").val(table.Friday.Start)
+                $("#Friday_End_Time").val(table.Friday.End)
+
+                $("#Saturday_Start_Time").val(table.Saturday.Start)
+                $("#Saturday_End_Time").val(table.Saturday.End)
+
+                $("#Sunday_Start_Time").val(table.Sunday.Start)
+                $("#Sunday_End_Time").val(table.Sunday.End)
+
+
+            }, function (err) {
+                alert("something went wrong!!");
+            });
+
+            $("#final-submit-button").hide();
+            $("#final-save-button").show();
+            
+            $("#final-save-button").attr("ng-click", `saveSchedularForm(${schedularId})`);
+
+            $scope.showSchedularFormModal(false);
+        }
+
+        
+
+        $scope.saveSchedularForm = function (SchedularId = null) {
             var scheduleTableData = {
                 "Monday": {
                     "Start": $("#Monday_Start_Time").val(),
@@ -2801,6 +2858,7 @@
             };
 
             var data = {
+                Id: SchedularId,
                 COMPANY_CODE: localStorage.getItem("COMPANY_CODE"),
                 CALENDAR_CODE: localStorage.getItem("CALENDAR_CODE"),
                 SCH__NAME: "",
@@ -2837,8 +2895,42 @@
             $("#schedularFormNew").modal("hide");
         }
 
-        $scope.showSchedularFormModal = function () {
+        $scope.showSchedularFormModal = function (IsNew = true) {
+
+            if (IsNew) {
+                $("#SCH_FROM_DATE").val("")
+                $("#SCH_TO_DATE").val("")
+
+                $("input[name='alternate-week'][value='ALTERNATE_WEEK']").attr("checked", true)
+
+                $("#Monday_Start_Time").val("")
+                $("#Monday_End_Time").val("")
+
+                $("#Tuesday_Start_Time").val("")
+                $("#Tuesday_End_Time").val("")
+
+                $("#Wednesday_Start_Time").val("")
+                $("#Wednesday_End_Time").val("")
+
+                $("#Thursday_Start_Time").val("")
+                $("#Thursday_End_Time").val("")
+
+                $("#Friday_Start_Time").val("")
+                $("#Friday_End_Time").val("")
+
+                $("#Saturday_Start_Time").val("")
+                $("#Saturday_End_Time").val("")
+
+                $("#Sunday_Start_Time").val("")
+                $("#Sunday_End_Time").val("")
+
+                $(".edit-element").hide();
+            } else {
+                $(".edit-element").show();
+            }
+
             $("#schedularFormNew").modal("show");
+
         }
 
 
