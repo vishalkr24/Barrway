@@ -1,6 +1,6 @@
 ﻿<div id="userProfileDiv" ng-controller="UserProfileController">
-    <div class="container-fluid">
-        <div class="form-inner" style="max-width:unset;">
+    <div class="container">
+        <div class="form-inner" style="max-width:unset!important; padding:0px;">
             <div class="row">
                 <div class="col-lg-6 col-xl-6">
                     <div class="main-left">
@@ -142,9 +142,9 @@
                                 <div>
                                     <label>Gender</label>
                                 </div>
-                                <input type="radio" style="display:none;" class="form-control" name="gender-selector" checked value="MALE" id="gender-male" /> <label for="gender-male" style="margin-right:16px">Male</label>
-                                <input type="radio" style="display:none;" name="gender-selector" class="form-control" value="FEMALE" id="gender-female" /> <label for="gender-female" style="margin-right:16px">Female</label>
-                                <input type="radio" style="display:none;" class="form-control" name="gender-selector" value="OTHER" id="gender-other" /> <label for="gender-other" style="margin-right:16px">Rather not say</label>
+                                <input type="radio" name="gender-selector" checked value="MALE" id="gender-male" /> <label for="gender-male" style="margin-right:16px">Male</label>
+                                <input type="radio" name="gender-selector"  value="FEMALE" id="gender-female" /> <label for="gender-female" style="margin-right:16px">Female</label>
+                                <input type="radio" name="gender-selector" value="OTHER" id="gender-other" /> <label for="gender-other" style="margin-right:16px">Rather not say</label>
                             </div>
 
                         </div>

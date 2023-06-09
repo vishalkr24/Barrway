@@ -437,7 +437,15 @@
                         </div>
                         <div class="col-md-6">
                             <div class="favr">
-                                <button><img src="~/assets/marketplace/image/star.png"> Mark as favorite</button>
+                                @if (!ViewBag.IsUserFavorite)
+                                {
+                                    <button id="btn-mark" onclick="markAsFavorite('@Model.COMPANY_CODE')"><img src="~/assets/marketplace/image/star.png"> Mark as favorite</button>
+                                }
+                                else
+                                {
+                                    <button id="btn-unmark" onclick="removeAsFavorite('@Model.COMPANY_CODE')"><img src="~/assets/marketplace/image/star.png"> Remove as favorite</button>
+                                }
+
                             </div>
                         </div>
                     </div>
@@ -669,7 +677,7 @@
 
             $scope.enrollPublicUser = function () {
                 console.log($scope.selectEventDetails);
-                
+
                 $.ajax({
                     url: "/Account/CheckPublicUserLogin",
                     type: "POST",
@@ -681,7 +689,7 @@
 
                             // code to call the service
                             var eventData = $scope.selectEventDetails;
-                            
+
                             var obj = {
                                 USER_ID: "",
                                 RESOURCE_NAME: eventData.customTitleSplit[0],
@@ -725,7 +733,7 @@
                                                 icon: "error",
                                                 button: "Okay"
                                             });
-                                        }else {
+                                        } else {
                                             swal({
                                                 title: "Warning!",
                                                 text: data.Data.Message,
@@ -740,7 +748,7 @@
                                             icon: "success",
                                             button: "Okay"
                                         });
-                                        
+
                                         setTimeout(function () {
                                             window.location.reload();
                                         }, 5000);
@@ -765,9 +773,119 @@
             }
 
 
-
-
+            
         });
+
+
+        function markAsFavorite(CompanyCode) {
+
+            var CalendarCode = $("#calendar-selector option:selected").val();
+
+            $.ajax({
+                url: "/Account/CheckPublicUserLogin",
+                type: "POST",
+                success: function (response) {
+
+                    if (!response.Status) {
+                        window.location.href = '/Account/Login?returnUrl=/Marketplace/CompanySchedule?' + window.location.href.split('?')[1].replace('&', '$') + '';
+                    } else {
+
+                        $.ajax({
+
+                            url: "/UserAdmin/AddFavoriteCalendar",
+                            type: "POST",
+                            data: {
+                                CALENDAR_CODE: CalendarCode,
+                                COMPANY_CODE: CompanyCode
+                            },
+                            success: function (response) {
+                                if (response.Status) {
+                                    swal({
+                                        title: "Marked Successfully!",
+                                        text: "Calendar marked as favorite!",
+                                        icon: "success",
+                                        button: "Okay"
+                                    });
+                                    $("#btn-mark").remove();
+                                    setTimeout(function () {
+                                        window.location.reload();
+                                    }, 3000)
+                                } else {
+                                    swal({
+                                        title: "Mark Failed!",
+                                        text: "Failed to mark calendar as favorite!",
+                                        icon: "error",
+                                        button: "Okay"
+                                    });
+                                }
+
+                            }
+
+                        })
+
+                    }
+
+
+                }
+            });
+
+        }
+
+        function removeAsFavorite(CompanyCode) {
+
+            var CalendarCode = $("#calendar-selector option:selected").val();
+
+            $.ajax({
+                url: "/Account/CheckPublicUserLogin",
+                type: "POST",
+                success: function (response) {
+
+                    if (!response.Status) {
+                        window.location.href = '/Account/Login?returnUrl=/Marketplace/CompanySchedule?' + window.location.href.split('?')[1].replace('&', '$') + '';
+                    } else {
+
+                        $.ajax({
+
+                            url: "/UserAdmin/RemoveFavoriteCalendar",
+                            type: "POST",
+                            data: {
+                                CALENDAR_CODE: CalendarCode,
+                                COMPANY_CODE: CompanyCode
+                            },
+                            success: function (response) {
+                                if (response.Status) {
+                                    swal({
+                                        title: "Unmarked Successfully!",
+                                        text: "Calendar removed from favorites!",
+                                        icon: "success",
+                                        button: "Okay"
+                                    });
+                                    $("#btn-unmark").remove();
+                                    setTimeout(function () {
+                                        window.location.reload();
+                                    }, 3000)
+                                } else {
+                                    swal({
+                                        title: "Unmark Failed!",
+                                        text: "Failed to Unmark calendar as favorite!",
+                                        icon: "error",
+                                        button: "Okay"
+                                    });
+                                }
+                                
+                                
+
+                            }
+
+                        })
+
+                    }
+
+
+                }
+            });
+
+        }
     </script>
     @*<script src="~/Scripts/MarketplaceScripts/CompanySchedule.js"></script>*@
 }

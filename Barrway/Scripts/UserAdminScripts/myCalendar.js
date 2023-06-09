@@ -1,5 +1,5 @@
 ﻿var CalendarFormId = "2305", ySelection = "", xSelection = "", COMPANY_CODE, CALENDAR_CODE, formDetailsDataInfo, counterLoader, xaxisFormList, formAllDatafields, listTabulator, calendarDetails, IsCustomFilter, IsCustomInFilter;
-
+$("#user-nav-mycalendar").addClass("active")
 $(document).on("change", "#company-filter-selector", function () {
 
     if ($("#company-filter-selector").val() != "-1") {
@@ -1211,12 +1211,10 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         select: function (start, end) {
 
         },
-        droppable: false, // this allows things to be dropped onto the calendar
+        droppable: false
     };
     var calendarOptions = $.extend({}, defaultOptions, myOptions);
     $('#agenda-view div.calendar').fullCalendar(calendarOptions);
-
-
 
     if (ySelection != 0) {
         if (formDetailsDataInfo != null)
