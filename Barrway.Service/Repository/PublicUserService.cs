@@ -14,6 +14,7 @@ using FormGeneratorDTOs.DTOs;
 using Barrway.Utility.Common;
 using Barrway.DTO.PublicModels;
 using Barrway.DTO.UserAdminModels;
+using Barrway.DTO.MarketplaceModels;
 
 namespace Barrway.Service.Repository
 {
@@ -298,6 +299,59 @@ namespace Barrway.Service.Repository
 
         }
 
+        public async Task<AddUpdateDelete> AddFavoriteCalendar(FavoriteCalendarModel model)
+        {
+            string query = $@"select * from FAVORITE_CALENDAR_MASTER_1949 where USER_ID = '{model.USER_ID}' and CALENDAR_CODE = '{model.CALENDAR_CODE}' and COMPANY_CODE = '{model.COMPANY_CODE}'";
+
+            var result = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (result.Count > 0)
+            {
+                return new AddUpdateDelete() { Message = AppMessage.Success, Status = true };
+            }
+
+            Form_DataTable data = new Form_DataTable();
+            data.action = (int)FormAction.Save;
+            data.formId = (int)FormSetting.FAVORITE_CALENDAR_MASTER;
+
+            data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.ToDictionary());
+            data.formGroupKey = Guid.NewGuid().ToString();
+            var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+            if (formResult.res == 1)
+            {
+                return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Message = formResult.Message, Status = false };
+            }
+        }
+
+        public async Task<AddUpdateDelete> RemoveFavoriteCalendar(FavoriteCalendarModel model)
+        {
+            try
+            {
+
+                string query = $@"delete from FAVORITE_CALENDAR_MASTER_1949 where USER_ID = '{model.USER_ID}' and CALENDAR_CODE = '{model.CALENDAR_CODE}' and COMPANY_CODE = '{model.COMPANY_CODE}'";
+
+                int result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                if (result > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
+            }
+        }
+
         public async Task<AddUpdateDelete> GetAllEnrolledCompaniesData(string userEmail)
         {
             try
@@ -369,6 +423,155 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> CheckSingleMyFavoriteCalendar(string userId, string CalendarCode = null)
+        {
+            try
+            {
+                string query0 = $@"SELECT [Id]
+                                          ,[created_at]
+                                          ,[updated_at]
+                                          ,[created_by]
+                                          ,[updated_by]
+                                          ,[COMPANY_CODE]
+                                          ,[CALENDAR_CODE]
+                                          ,[USER_ID]
+                                          ,[IS_PUBIC_USER]
+                                      FROM [dbo].[FAVORITE_CALENDAR_MASTER_1949] where USER_ID = '{userId}' and IS_PUBLIC_USER = 'Y' and CALENDAR_CODE = '{CalendarCode}' ";
+
+                List<IDictionary<string, object>> result0 = await sqlFunction.ExecuteSqlQuery(query0);
+
+                if (result0.Count > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetMyFavoriteCalendars(GenerateDynamicFormData data, string userId, string CalendarCode = null)
+        {
+            try
+            {
+                string CompanyCode = data.COMPANY_CODE;
+                string CompanyLogic = "";
+
+                if (!string.IsNullOrEmpty(CompanyCode))
+                {
+                    CompanyLogic = " and COMPANY_CODE = '" + CompanyCode + "'";
+                }
+
+                string query0 = $@"SELECT [Id]
+                                          ,[created_at]
+                                          ,[updated_at]
+                                          ,[created_by]
+                                          ,[updated_by]
+                                          ,[COMPANY_CODE]
+                                          ,[CALENDAR_CODE]
+                                          ,[USER_ID]
+                                          ,[IS_PUBIC_USER]
+                                      FROM [dbo].[FAVORITE_CALENDAR_MASTER_1949] where USER_ID = '{userId}' and IS_PUBLIC_USER = 'Y' {CompanyLogic} ";
+
+                List<IDictionary<string, object>> result0 = await sqlFunction.ExecuteSqlQuery(query0);
+
+                string calendarCodes = "";
+
+                if (result0.Count > 0)
+                {
+                    for (int i = 0; i < result0.Count; i++)
+                    {
+                        if (i==result0.Count-1)
+                        {
+                            calendarCodes += "'" + result0[i]["CALENDAR_CODE"].ToString() + "'";
+                        }
+                        else
+                        {
+                            calendarCodes += "'" + result0[i]["CALENDAR_CODE"].ToString() + "'" + ", ";
+                        }
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(CalendarCode))
+                {
+                    calendarCodes = (CalendarCode.Contains("'")) ? CalendarCode : "'" + CalendarCode + "'"; 
+                }
+
+
+                string column = "", dir = "";
+                if (data.sorters != null && data.sorters.Count() > 0)
+                {
+                    column = data.sorters.FirstOrDefault().field;
+                    dir = data.sorters.FirstOrDefault().dir;
+                }
+                else
+                {
+                    column = "created_at";
+                    dir = "desc";
+                }
+
+                int PageSize = data.size > 0 ? data.size : 20;
+                int PageNumber = data.page > 0 ? data.page : 1;
+
+                string query = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+                                              SELECT distinct calendarDetails.[COMPANY_CODE]
+                                                  ,calendarDetails.[CALENDAR_CODE]
+	                                              ,calendarDetails.[Id] 
+                                                  ,calendarDetails.[created_at] 
+                                                  ,company.Id as 'CompanyId'
+                                                  ,calendarDetails.[CALENDAR_NAME]
+                                                  ,calendarDetails.[CALENDAR_PHOTO_NAME]
+                                                  ,calendarDetails.[CALENDAR_PHOTO_PATH]
+                                                  ,calendarDetails.[CALENDAR_CATEGORY_ID]
+                                                  ,calendarDetails.[CALENDAR_SUB_CATEGORY_ID]
+                                                  ,calendarDetails.[TAGS]
+	                                              ,company.COMPANY_NAME_ENGLISH
+                                                  ,company.COMPANY_LOGO_PATH
+                                                  ,subCategory.CALENDAR_SUB_CATEGORY_NAME
+                                              FROM [dbo].BUSINESS_CALENDAR_MASTER_1925 calendarDetails
+                                              join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
+											  join BUSINESS_ACCOUNT_WEBSITE_1918 b_account on b_account.Id = company.BUSINESS_ACCOUNT_ID
+								              join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendarDetails.CALENDAR_SUB_CATEGORY_ID
+                                              where calendarDetails.CALENDAR_CODE in ({calendarCodes}) 
+                                      )
+                                  Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY created_at desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+
+                List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+
+                string query2 = $@"SELECT distinct company.[COMPANY_CODE],company.[Id]
+                                          ,[COMPANY_NAME_ENGLISH]
+                                      FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company
+                                      join FAVORITE_CALENDAR_MASTER_1949 favorite on favorite.COMPANY_CODE = company.COMPANY_CODE
+                                      where favorite.USER_ID = '{userId}'
+                                      ";
+
+                List<IDictionary<string, object>> result2 = await sqlFunction.ExecuteSqlQuery(query2);
+
+
+                List<List<IDictionary<string, object>>> finalResult = new List<List<IDictionary<string, object>>>();
+
+                finalResult.Add(result);
+                finalResult.Add(result2);
+
+                if (finalResult.Count > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = finalResult };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
+            }
+        }
 
         public async Task<AddUpdateDelete> GetAllEnrolledCalendarsData(string CompanyCode, string UserEmail,string filterDate = null, bool IsCustomInFilter=false)
         {

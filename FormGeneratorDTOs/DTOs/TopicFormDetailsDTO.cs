@@ -106,6 +106,7 @@ namespace FormGeneratorDTOs.DTOs
         public string language { get; set; }
         public bool IsCustomFilter { get; set; }
         public bool IsCustomInFilter { get; set; }
+        public string COMPANY_CODE { get; set; }
         public List<CustomFilter> CustomFilters { get; set; }
     }
 

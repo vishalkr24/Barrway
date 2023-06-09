@@ -16212,6 +16212,8 @@
 
     FormGeneratorApp.controller('UserDashboardController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
 
+        $("#user-nav-dashboard").addClass("active")
+
         adminService.postAsync('/UserAdmin/GetRecentlyBookedCalendars/').then(function (res) {
 
             console.log(res.data.data.Data)
@@ -16458,7 +16460,7 @@
                         return cell.getValue();
                     },
                     height: "530px",
-                    layout: "fitColumns",
+                    layout: "fitDataFill",
                     responsiveLayout: false,
                     initialSort: [
                         { column: "created_at", dir: "desc" }
@@ -16557,11 +16559,11 @@
 
 
     FormGeneratorApp.controller('UserAttendanceController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
-
+        $("#user-nav-myattendance").addClass("active")
     })
 
     FormGeneratorApp.controller('UserProfileController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
-
+        $("#user-nav-myprofile").addClass("active")
         adminService.postAsync('/UserAdmin/GetSingleUserByUserId/', { UserId: $("#userIdHidden").val() }).then(function (res) {
 
             if (res.data.data.Status) {
@@ -16634,7 +16636,13 @@
 
                         if (result.Status) {
                             if (result.Message == "Success") {
-                                alert("Details Saved Successfully!!");
+
+                                swal({
+                                    title: "Saved Successfully!",
+                                    text: "Details Saved Successfully!!",
+                                    icon: "success",
+                                    button: "Okay"
+                                });
                             } else if (result.Message == "Error") {
                                 var errors = result.Data;
 
@@ -16705,7 +16713,132 @@
     })
 
     FormGeneratorApp.controller('UserMyFavoriteController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
+        $("#user-nav-myfavorite").addClass("active")
+        $scope.setFavoritesData = function (pageNumber) {
 
+            $("#list-view").show();
+            $("#detail-view").hide();
+
+            var CompanyCode = null;
+
+            if ($("#company-filter-selector option:selected").val() != "-1") {
+                CompanyCode = $("#company-filter-selector option:selected").val();
+            }
+
+            $.ajax({
+                url: "/UserAdmin/GetMyFavoriteCalendars",
+                type: "GET",
+                data: {
+                    page: pageNumber,
+                    size: 8,
+                    page_records: 0,
+                    res: 0,
+                    COMPANY_CODE: CompanyCode
+                },
+                success: function (response) {
+                    
+
+                    var nextPage = 0;
+
+                    if (pageNumber == response.last_page) {
+                        nextPage = response.last_page;
+                    } else {
+                        nextPage = pageNumber + 1;
+                    }
+
+                    var hardBindLimit = (response.last_page < 5) ? response.last_page : 5;
+
+                    $(".pagination").empty();
+                    $(".pagination").append(`<button class="btn" onclick="setFavoritesData(1)"><img src="../assets/marketplace/image/p1.png" /></button>`);
+                    $(".pagination").append(`<button class="btn" id="next-page-nav" onclick="setFavoritesData(${(pageNumber <= 1) ? 1 : (pageNumber - 1)})"><img src="../assets/marketplace/image/p12.png" /></button>`);
+
+                    for (var i = 1; i <= hardBindLimit; i++) {
+                        if (i == pageNumber) {
+                            $(".pagination").append(`<a href="javascript:void(0)" style="line-height:1.3;" onclick="setFavoritesData(${i})" class="page-link page-link--current">${i}</a>`);
+                        } else {
+                            $(".pagination").append(`<a href="javascript:void(0)" style="line-height:1.3;" onclick="setFavoritesData(${i})" class="page-link">${i}</a>`);
+                        }
+
+                    }
+
+                    $(".pagination").append(`<button class="btn" id="next-page-nav" onclick="setFavoritesData(${nextPage})"><img src="../assets/marketplace/image/p11.png" /></button>`);
+                    $(".pagination").append(`<button class="btn" id="last-page-nav" onclick="setFavoritesData(${response.last_page})"><img src="../assets/marketplace/image/p2.png" /></button>`);
+
+                    $("#row1").empty();
+                    $("#row2").empty();
+
+                    $scope.CompanyList = response.data[1];
+
+                    for (var i = 0; i < response.data[0].length; i++) {
+                        response.data[0][i].CALENDAR_PHOTO_PATH = response.data[0][i].CALENDAR_PHOTO_PATH.replace('~', '..')
+                    }
+
+                    for (var i = 0; i < response.data[0].length; i++) {
+
+                        var tagQuery = "";
+                        if (response.data[0][i].TAGS != null) {
+                            if (response.data[0][i].TAGS.includes(",")) {
+                                var tempTagData = response.data[0][i].TAGS.split(',');
+
+                                for (var j = 0; j < tempTagData.length; j++) {
+                                    if (j == tempTagData.length - 1) {
+                                        tagQuery += `<a href="/Marketplace/Tag?tag=${tempTagData[j]}">${tempTagData[j]}</a>`
+                                    } else {
+                                        tagQuery += `<a href="/Marketplace/Tag?tag=${tempTagData[j]}">${tempTagData[j]}, </a>`
+                                    }
+
+                                }
+
+                            } else {
+                                tagQuery += `<a href="/Marketplace/Tag?tag=${response.data[0][i].TAGS}">${response.data[0][i].TAGS}</a>`
+                            }
+                        }
+                        
+
+                        var company = response.data[0][i];
+
+                        if (i < 4) {
+                            $("#row1").append(`<div class="wrap">
+                                                    <div class="wrap-im">
+                                                        <img src="${company.CALENDAR_PHOTO_PATH}" style="max-height:120px;" onerror="this.src = '../assets/marketplace/image/pro.png'">
+                                                    </div>
+
+                                                    <div class="wrap-con">
+                                                        <p><b>${company.COMPANY_NAME_ENGLISH}</b></p>
+                                                        <P class="font-2">${company.CALENDAR_NAME}</P>
+                                                        <p>Service ${company.CALENDAR_SUB_CATEGORY_NAME}</p>
+                                                        <p><button class="book" onclick="location.href='/Marketplace/CompanySchedule?CompanyCode=${company.COMPANY_CODE}&CalendarCode=${company.CALENDAR_CODE}'">Book</button></p>
+                                                    </div>
+                                                </div>`);
+                        } else  {
+                            $("#row2").append(`<div class="wrap">
+                                                    <div class="wrap-im">
+                                                        <img src="${company.CALENDAR_PHOTO_PATH}" style="max-height:120px;" onerror="this.src = '../assets/marketplace/image/pro.png'">
+                                                    </div>
+                                                    <div class="wrap-con">
+                                                        <p><b>${company.COMPANY_NAME_ENGLISH}</b></p>
+                                                        <P class="font-2">${company.CALENDAR_NAME}</P>
+                                                        <p>Service ${company.CALENDAR_SUB_CATEGORY_NAME}</p>
+                                                        <p><button class="book" onclick="location.href='/Marketplace/CompanySchedule?CompanyCode=${company.COMPANY_CODE}&CalendarCode=${company.CALENDAR_CODE}'">Book</button></p>
+                                                    </div>
+                                                </div>`);
+                        } 
+                       
+                    }
+
+                },
+                error: function (errorResponse) {
+                    alert();
+                }
+            })
+
+        }
+
+        $scope.setFavoritesData(1);
     })
 
 }(FormGeneratorApp));
+
+function setFavoritesData(pageId) {
+    angular.element("#company-filter-selector").scope().setFavoritesData(pageId);
+}

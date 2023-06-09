@@ -1,6 +1,7 @@
 ﻿using Barrway.DTO.BusinessModels;
 using Barrway.DTO.Common;
 using Barrway.DTO.MarketplaceModels;
+using Barrway.Security;
 using Barrway.Service.IRepository;
 using FormGeneratorDTOs.DTOs;
 using Newtonsoft.Json;
@@ -18,12 +19,13 @@ namespace Barrway.Controllers
         private readonly IBusinessUserService businessUserService;
         private readonly IGlobalMasterService globalMasterService;
         private readonly IMasterService masterService;
-
-        public MarketPlaceController(IBusinessUserService businessUserService, IGlobalMasterService globalMasterService, IMasterService masterService)
+        private readonly IPublicUserService publicUserService;
+        public MarketPlaceController(IBusinessUserService businessUserService, IGlobalMasterService globalMasterService, IMasterService masterService, IPublicUserService publicUserService)
         {
             this.businessUserService = businessUserService;
             this.globalMasterService = globalMasterService;
             this.masterService = masterService;
+            this.publicUserService = publicUserService;
         }
 
         // GET: MarketPlace
@@ -154,6 +156,22 @@ namespace Barrway.Controllers
                 companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
                 companyModel.calendars = JsonConvert.DeserializeObject<List<BusinessCalendarModel>>(calendarEncrypted);
                 //companyModel.services = JsonConvert.DeserializeObject<List<BusinessCompanyCategoryModel>>(serviceEncrypted);
+
+                ViewBag.IsUserFavorite = false;
+
+                if (User.Identity.IsAuthenticated)
+                {
+                    if(UserIdentity.Role == "PUBLIC_USER")
+                    {
+                        // check if calendar is a favorite
+                        var calendarFavCheck = await publicUserService.CheckSingleMyFavoriteCalendar(User.Identity.Name, CalendarCode);
+                        if (calendarFavCheck.Status)
+                        {
+                            ViewBag.IsUserFavorite = true;
+                        }
+                    }
+
+                }
 
                 ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
 
