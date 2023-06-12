@@ -5,7 +5,7 @@
 
 function changeCompany(IsReload = true, returnUrl = null) {
     var companyId = $("#navbar-company-selector option:selected").val();
-
+    
     var data = getSingleCompanyByCompanyId(companyId).Data;
 
     localStorage.setItem("COMPANY_ID", data.Id);
@@ -14,6 +14,11 @@ function changeCompany(IsReload = true, returnUrl = null) {
     localStorage.setItem("COMPANY_NAME_CHINESE", data.COMPANY_NAME_CHINESE);
     localStorage.setItem("COMPANY_CATEGORY_ID", data.COMPANY_CATEGORY_ID);
     localStorage.setItem("COMPANY_SUB_CATEGORY_ID", data.COMPANY_SUB_CATEGORY_ID);
+
+    if (window.location.href.includes("ManageCompanyWebsite")) {
+        showComapanyWebsiteDetails(1)
+        return;
+    }
 
     if (IsReload) {
         window.location.reload();
@@ -42,7 +47,8 @@ function showNavbarNavigation(divId) {
 function setCompanyDetails() {
     
     var allCompanies = getAllCompanies();
-
+    var user = getSingleUser();
+    console.log(user);
     if (allCompanies.Status) {
         var data = allCompanies.Data;
         $("#navbar-company-selector").empty();
@@ -58,6 +64,22 @@ function setCompanyDetails() {
                     localStorage.setItem("COMPANY_CATEGORY_ID", data[i].COMPANY_CATEGORY_ID);
                     localStorage.setItem("COMPANY_SUB_CATEGORY_ID", data[i].COMPANY_SUB_CATEGORY_ID);
                 }
+                console.log(data[i]);
+                $(".company-name").text(data[i].COMPANY_NAME_ENGLISH);
+                $(".company-image").attr("src", data[i].COMPANY_LOGO_PATH.replace("~", ".."));
+                $(".company-email").text(data[i].COMPANY_EMAIL);
+
+                $(".user-name").text(user.Data.USER_ID);
+                $(".user-email").text(user.Data.USER_EMAIL);
+                $(".company-email").text(user.Data.USER_EMAIL);
+
+                var splitData = data[i].COMPANY_NAME_ENGLISH.split(' ');
+                if (splitData.length >= 2) {
+                    $(".company-prefix").text(splitData[0][0] + splitData[1][0]);
+                } else {
+                    $(".company-prefix").text(data[i].COMPANY_NAME_ENGLISH[0] + data[i].COMPANY_NAME_ENGLISH[data[i].COMPANY_NAME_ENGLISH.length-1]);
+                }
+                
 
                 if (localStorage.getItem("COMPANY_ID") == data[i].Id) {
                     $("#navbar-company-selector").append(`<option selected value="${data[i].Id}">${data[i].COMPANY_NAME_ENGLISH} [${data[i].COMPANY_CODE}]</option>`);

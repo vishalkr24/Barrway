@@ -115,6 +115,7 @@ FormGeneratorApp.controller('DashboardController', function ($scope, $http, $tim
     if (window.location.href.includes("UserAdmin") || window.location.href.includes("Useradmin") || window.location.href.includes("useradmin")) {
         $state.go("user_dashboard");
     } else {
+        $("#nav-calendar-dashboard").addClass("active");
         setCompanyDetails();
         setSelectedCalendar();
         $scope.ManageCalendarMaster();

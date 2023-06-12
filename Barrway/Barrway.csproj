@@ -2940,9 +2940,6 @@
     <Content Include="fg-newAssets\scss\_table.scss" />
     <Content Include="fg-newAssets\scss\_tabs.scss" />
     <Content Include="fg-newAssets\scss\_variable.scss" />
-    <Content Include="BusinessAdmin\UploadCalendar\CalendarImages\CMP00003\Jenny Image" />
-    <Content Include="BusinessAdmin\UploadCalendar\CalendarImages\CMP00004\Jenny Image" />
-    <Content Include="BusinessAdmin\UploadCalendar\CalendarImages\CMP00006\My Pic" />
     <Content Include="Content\angular-messages\angular-messages.min.js.map" />
     <Content Include="Content\angular-resource\angular-resource.min.js.map" />
     <Content Include="Content\angular-ui-router\angular-ui-router.js.map" />

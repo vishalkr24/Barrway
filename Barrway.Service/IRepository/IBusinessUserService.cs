@@ -26,6 +26,8 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetCompanyPhotoAlbumByCompanyId(string CompanyId, bool checkVisibility = false);
         Task<AddUpdateDelete> AddCompanyPhotoAlbum(CompanyPhotoAlbumModel model);
 
+        Task<AddUpdateDelete> GetSingleCompanyPhotoAlbum(string Id);
+        Task<AddUpdateDelete> DeleteSingleCompanyPhotoAlbum(string Id);
         #endregion
 
 

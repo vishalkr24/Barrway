@@ -222,6 +222,10 @@ function setNewsData(pageNumber) {
                 }
             }
 
+            $(".blog-slide").empty();
+
+            $(".blog-slide").append(`<div id="owl-demo-blog" class="owl-carousel owl-theme">`);
+
             for (var i = 0; i < headerTags.length; i++) {
                 $("#owl-demo-blog").append(`<div class="item">
                             <div class="item-inner">
@@ -229,8 +233,6 @@ function setNewsData(pageNumber) {
                             </div>
                         </div>`);
             }
-
-            console.log();
 
             $("#owl-demo-blog").owlCarousel({
                 loop: true,

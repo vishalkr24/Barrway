@@ -253,12 +253,41 @@ function setCompanyPhotoAlbum() {
     if (data.Status) {
         $("#photoAlbumRow").empty();
         for (var i = 0; i < data.Data.length; i++) {
-            $("#photoAlbumRow").append(`<div class="col-md-4 mt-4">
+            $("#photoAlbumRow").append(`<div class="col-md-4 mt-4 image-container">
                                         <img src="${data.Data[i].ALBUM_PHOTO_PATH.replace("~", "..")}" class="photo-album" />
+                                        <span class="delete-icon" onclick="deletePhotoAlbum(${data.Data[i].Id})">&times;</span>
                                     </div>`)
         }
         
     }
+
+}
+
+function deletePhotoAlbum(Id) {
+
+    $.ajax({
+        url: '/BusinessAdmin/DeleteCompanyPhotoAlbum',
+        type: "POST",
+        data: {
+            Id: Id
+        },
+        success: function (result) {
+            if (result == "Success") {
+                setCompanyPhotoAlbum();
+            } else {
+                console.log(result);
+                alert();
+            }
+        },
+        error: function (err) {
+            alert(err.statusText);
+        }
+    });
+}
+
+function bindPageUrl(companyCode) {
+
+    $("#PAGE_URL").val("/Marketplace/CompanyDetails?CompanyCode=" + companyCode);
 
 }
 
@@ -274,14 +303,18 @@ function savePhotoAlbum() {
         return;
     } else {
         $("#ALBUM_PHOTO_ERROR").hide();
-        var fileType = files[0].type.split("/")[1];
-        if (fileType == "jpg" || fileType == "png" || fileType == "jpeg" || fileType == "JPG" || fileType == "PNG" || fileType == "JPEG") {
+        for (var i = 0; i < files.length; i++) {
+            var fileType = files[i].type.split("/")[1];
+            if (fileType == "jpg" || fileType == "png" || fileType == "jpeg" || fileType == "JPG" || fileType == "PNG" || fileType == "JPEG") {
 
-        } else {
-            $("#photoAlbumForm_ALBUM_PHOTO_PATH").val("");
-            $("#ALBUM_PHOTO_ERROR").show();
-            return;
+            } else {
+                $("#photoAlbumForm_ALBUM_PHOTO_PATH").val("");
+                $("#ALBUM_PHOTO_NAME").text("");
+                $("#ALBUM_PHOTO_ERROR").show();
+                return;
+            }
         }
+        
 
     }
 
@@ -302,6 +335,8 @@ function savePhotoAlbum() {
         success: function (result) {
             if (result == "Success") {
                 $("#photoAlbumForm_ALBUM_PHOTO_PATH").val("");
+                $("#ALBUM_PHOTO_NAME").text("");
+                $("#ALBUM_PHOTO_ERROR").hide();
                 $("#uploadPhotoModal").modal("hide");
                 setCompanyPhotoAlbum();
             } else {

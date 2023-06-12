@@ -17,6 +17,22 @@
     return data;
 }
 
+function getSingleUser() {
+    var data;
+    $.ajax({
+        url: "/BusinessAdmin/GetSingleUserByUserId/",
+        async: false,
+        type: "GET",
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    })
+    return data;
+}
+
 function getCompanyDashboardData(companyCode) {
     var data;
     $.ajax({
@@ -206,7 +222,16 @@ function GetCompanyCalendars(companyId) {
 function BindLogoName(inputId, labelId) {
     var value = $("#" + inputId).get(0);
     var files = value.files;
-    $("#" + labelId).text(files[0].name);
+    $("#" + labelId).empty();
+    for (var i = 0; i < files.length; i++) {
+        if (i == files.length - 1) {
+            $("#" + labelId).append(files[i].name);
+        } else {
+            $("#" + labelId).append(files[i].name + ", ");
+        }
+        
+    }
+    
 }
 
 function GoToCalendarLayout(CalendarId, CalendarCode) {
