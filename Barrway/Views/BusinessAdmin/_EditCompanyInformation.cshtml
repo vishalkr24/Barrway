@@ -195,7 +195,7 @@
 
         <div class="col-md-2 mt-5">
             <div style="height:24px"></div>
-            <button type="button" class="btn btn-default">Public Website link</button>
+            <button type="button" class="btn btn-default" onclick="bindPageUrl('@Model.COMPANY_CODE')">Public Website link</button>
         </div>
         @Html.TextBoxFor(model => model.Id, new { @readonly = "true", @style = "visibility:hidden" })
         @Html.TextBoxFor(model => model.BUSINESS_ACCOUNT_ID, new { @readonly = "true", @style = "visibility:hidden" })

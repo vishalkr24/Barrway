@@ -79,7 +79,7 @@
         <div id="div4" style="display:none;">
             @RenderPage("~/Views/BusinessAdmin/_CompanyPhotoAlbum.cshtml", Model)
         </div>
-
+        <br /><br />
 
     </div>
     <div class="modal" id="uploadPhotoModal" role="dialog">
@@ -100,13 +100,13 @@
 
                             <div class="fileUpload btn btn--browse">
                                 <span>Browse</span>
-                                @Html.TextBoxFor(model => model.photoAlbumForm.ALBUM_PHOTO_PATH, new { @class = "upload", Type = "File", @onchange = "BindLogoName('photoAlbumForm_ALBUM_PHOTO_PATH', 'ALBUM_PHOTO_NAME')" })
+                                @Html.TextBoxFor(model => model.photoAlbumForm.ALBUM_PHOTO_PATH, new { @class = "upload", Type = "File", @multiple=true, @onchange = "BindLogoName('photoAlbumForm_ALBUM_PHOTO_PATH', 'ALBUM_PHOTO_NAME')" })
                                 @*<input id="CALENDAR_PHOTO_PATH" type="file" class="upload" />*@
                             </div>
                         </div>
                         
                         <div class="invalid-feedback-2" id="ALBUM_PHOTO_ERROR" style="display:none!important;">
-                            Please choose an image
+                            Please choose image files ONLY
                         </div>
                         
 

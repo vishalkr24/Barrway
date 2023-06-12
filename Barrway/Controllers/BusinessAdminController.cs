@@ -20,11 +20,13 @@ namespace Barrway.Controllers
 
         private readonly IBusinessUserService businessUserService;
         private readonly IGlobalMasterService globalMasterService;
+        private readonly IAuthService authService;
 
-        public BusinessAdminController(IBusinessUserService businessUserService, IGlobalMasterService globalMasterService)
+        public BusinessAdminController(IBusinessUserService businessUserService, IGlobalMasterService globalMasterService, IAuthService authService)
         {
             this.businessUserService = businessUserService;
             this.globalMasterService = globalMasterService;
+            this.authService = authService;
         }
 
         #region View Methods
@@ -241,6 +243,7 @@ namespace Barrway.Controllers
                             foreach (var item in photoAlbumData.Data)
                             {
                                 CompanyPhotoAlbumModel photoAlbum = new CompanyPhotoAlbumModel();
+                                photoAlbum.Id = item["Id"].ToString();
                                 photoAlbum.COMPANY_ID = item["COMPANY_ID"].ToString();
                                 photoAlbum.IS_VISIBLE = item["IS_VISIBLE"].ToString();
                                 photoAlbum.ALBUM_PHOTO_NAME = item["ALBUM_PHOTO_NAME"].ToString();
@@ -329,6 +332,20 @@ namespace Barrway.Controllers
                 return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
             }
 
+        }
+
+        public async Task<ActionResult> GetSingleUserByUserId()
+        {
+            try
+            {
+                var user = await authService.GetUser(User.Identity.Name);
+                
+                return Json(new AddUpdateDelete() { Status = true, Data = user.Data, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
+
+            }catch(Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         public async Task<ActionResult> GetDefaultCompany()
@@ -952,62 +969,65 @@ namespace Barrway.Controllers
                     var business = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
                     
                     HttpFileCollectionBase files = Request.Files;
-                    HttpPostedFileBase file = files[0];
-                    string fname;
                     string CompanyCode = Request.Form["CompanyCode"].ToString();
                     string CompanyId = Request.Form["CompanyId"].ToString();
+                    string fname;
 
-                    // Checking for Internet Explorer  
-                    if (Request.Browser.Browser.ToUpper() == "IE" || Request.Browser.Browser.ToUpper() == "INTERNETEXPLORER")
+                    for (int i = 0; i < files.Count; i++)
                     {
-                        string[] testfiles = file.FileName.Split(new char[] { '\\' });
-                        fname = testfiles[testfiles.Length - 1];
-                    }
-                    else
-                    {
-                        fname = file.FileName;
-                    }
+                        HttpPostedFileBase file = files[i];
 
-                    string folderPath = Server.MapPath("~/UploadCompanyPhotoAlbum/" + business.Data["Id"].ToString() + "/" + CompanyCode);
-
-                    if (!Directory.Exists(folderPath))
-                    {
-                        Directory.CreateDirectory(folderPath);
-                    }
-                    else
-                    {
-                        var fileName = Path.GetFileName(fname);
-                        var fullpath = System.Web.HttpContext.Current.Server.MapPath("~/UploadCompanyPhotoAlbum/" + business.Data["Id"].ToString() + "/" + CompanyCode);
-
-                        //deleting code starts here
-                        string[] checkfiles = System.IO.Directory.GetFiles(fullpath, $"{fname}.*");
-                        foreach (string f in checkfiles)
+                        // Checking for Internet Explorer  
+                        if (Request.Browser.Browser.ToUpper() == "IE" || Request.Browser.Browser.ToUpper() == "INTERNETEXPLORER")
                         {
-                            System.IO.File.Delete(f);
+                            string[] testfiles = file.FileName.Split(new char[] { '\\' });
+                            fname = testfiles[testfiles.Length - 1];
                         }
+                        else
+                        {
+                            fname = file.FileName;
+                        }
+
+                        string folderPath = Server.MapPath("~/UploadCompanyPhotoAlbum/" + business.Data["Id"].ToString() + "/" + CompanyCode);
+
+                        if (!Directory.Exists(folderPath))
+                        {
+                            Directory.CreateDirectory(folderPath);
+                        }
+                        else
+                        {
+                            var fileName = Path.GetFileName(fname);
+                            var fullpath = System.Web.HttpContext.Current.Server.MapPath("~/UploadCompanyPhotoAlbum/" + business.Data["Id"].ToString() + "/" + CompanyCode);
+
+                            //deleting code starts here
+                            string[] checkfiles = System.IO.Directory.GetFiles(fullpath, $"{fname}.*");
+                            foreach (string f in checkfiles)
+                            {
+                                System.IO.File.Delete(f);
+                            }
+                        }
+
+                        string path = "~/UploadCompanyPhotoAlbum/" + business.Data["Id"].ToString() + "/" + CompanyCode + "/" + fname;
+                        CompanyPhotoAlbumModel albumModel = new CompanyPhotoAlbumModel()
+                        {
+                            ALBUM_PHOTO_NAME = fname,
+                            ALBUM_PHOTO_PATH = path,
+                            COMPANY_ID = CompanyId,
+                            IS_VISIBLE = "Y"
+                        };
+
+                        var result = await businessUserService.AddCompanyPhotoAlbum(albumModel);
+
+                        if (result.Status)
+                        {
+                            // Save image in folder
+                            file.SaveAs(Server.MapPath("~/UploadCompanyPhotoAlbum/" + business.Data["Id"].ToString() + "/" + CompanyCode + "/" + fname));
+                        }
+                        
                     }
 
-                    string path = "~/UploadCompanyPhotoAlbum/" + business.Data["Id"].ToString() + "/" + CompanyCode + "/" + fname;
-                    CompanyPhotoAlbumModel albumModel = new CompanyPhotoAlbumModel()
-                    {
-                       ALBUM_PHOTO_NAME = fname,
-                       ALBUM_PHOTO_PATH = path,
-                       COMPANY_ID = CompanyId,
-                       IS_VISIBLE = "Y"
-                    };
+                    return Json("Success", JsonRequestBehavior.AllowGet);
 
-                    var result = await businessUserService.AddCompanyPhotoAlbum(albumModel);
-
-                    if (result.Status)
-                    {
-                        // Save image in folder
-                        file.SaveAs(Server.MapPath("~/UploadCompanyPhotoAlbum/" + business.Data["Id"].ToString() + "/" + CompanyCode + "/" + fname));
-                        return Json("Success", JsonRequestBehavior.AllowGet);
-                    }
-                    else
-                    {
-                        return Json("Failed to add photo", JsonRequestBehavior.AllowGet);
-                    }
 
 
                 }
@@ -1021,6 +1041,61 @@ namespace Barrway.Controllers
                 return Json("No files selected.", JsonRequestBehavior.AllowGet);
             }
             
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteCompanyPhotoAlbum(string Id)
+        {
+            try
+            {
+                if (Convert.ToInt32(Id) > 0)
+                {
+                    // for business id
+                    var companies = await businessUserService.GetAllCompaniesByUserId(User.Identity.Name.ToString());
+                    var photo = await businessUserService.GetSingleCompanyPhotoAlbum(Id);
+
+                    bool ValidCompanyCheck = false;
+
+                    for (int i = 0; i < companies.Data.Count; i++)
+                    {
+                        if (companies.Data[i]["Id"].ToString() == photo.Data["COMPANY_ID"])
+                        {
+                            ValidCompanyCheck = true;
+                            break;
+                        }
+                    }
+
+                    if (ValidCompanyCheck)
+                    {
+                        System.IO.File.Delete(System.Web.HttpContext.Current.Server.MapPath(photo.Data["ALBUM_PHOTO_PATH"]));
+
+                        var result = await businessUserService.DeleteSingleCompanyPhotoAlbum(Id);
+                        if (result.Status)
+                        {
+                            return Json("Success", JsonRequestBehavior.AllowGet);
+                        }
+                        else
+                        {
+                            return Json("Failed", JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                    else
+                    {
+                        return Json("Not Found", JsonRequestBehavior.AllowGet);
+                    }
+                    
+                }
+                else
+                {
+                    return Json("Failed", JsonRequestBehavior.AllowGet);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return Json("Error occurred. Error details: " + ex.Message, JsonRequestBehavior.AllowGet);
+            }
+
         }
 
         public async Task<ActionResult> GetCompanyPhotoAlbum(string CompanyId)

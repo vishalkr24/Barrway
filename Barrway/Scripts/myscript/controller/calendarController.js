@@ -16737,7 +16737,6 @@
                 },
                 success: function (response) {
                     
-
                     var nextPage = 0;
 
                     if (pageNumber == response.last_page) {
