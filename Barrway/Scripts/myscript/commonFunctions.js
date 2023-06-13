@@ -15316,12 +15316,10 @@ function addNewColumns(formid, columns) {
                     return `<button onclick="angular.element(this).scope().EditSchedularForm(${id})"  class="btn btn-primary text-light"><i class="bi-gear"></i></button>`
                 }, download: false, width: 100, field: "profileView", headerSort: false
             });
-
-
-
-
         }
             break;
+        
+
     }
     
 

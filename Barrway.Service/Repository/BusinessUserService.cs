@@ -1552,6 +1552,22 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> UpdateTransactionAttendance(string TransactionId, bool IsPresent = false)
+        {
+            var attendance = (IsPresent) ? "YES" : "NO";
+            string query = $@"update TRANSACTION_MASTER_1942 set ATTENDANCE='{attendance}' where Id='{TransactionId}'";
+
+            int result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+            if (result > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
 
         public async Task<AddUpdateDelete> GetCalendarDetails(string calendarCode)
         {

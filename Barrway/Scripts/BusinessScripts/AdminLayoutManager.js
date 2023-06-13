@@ -52,10 +52,14 @@ function setCompanyDetails() {
     if (allCompanies.Status) {
         var data = allCompanies.Data;
         $("#navbar-company-selector").empty();
-        /*$("#navbar-company-selector").append(`<option selected value="NEWCOMPANY">+ Add New Company</option>`); */
+
+        var defaultId = "";
+
         for (var i = 0; i < data.length; i++) {
 
             if (data[i].IS_DEFAULT == "Y") {
+                defaultId = data[i].Id;
+
                 if (localStorage.getItem("COMPANY_ID") == null || localStorage.getItem("COMPANY_ID") == "null" || localStorage.getItem("COMPANY_ID") == undefined) {
                     localStorage.setItem("COMPANY_ID", data[i].Id);
                     localStorage.setItem("COMPANY_CODE", data[i].COMPANY_CODE);
@@ -65,6 +69,15 @@ function setCompanyDetails() {
                     localStorage.setItem("COMPANY_SUB_CATEGORY_ID", data[i].COMPANY_SUB_CATEGORY_ID);
                 }
                 console.log(data[i]);
+                $("#navbar-company-selector").append(`<option selected value="${data[i].Id}">${data[i].COMPANY_NAME_ENGLISH} [${data[i].COMPANY_CODE}]</option>`);
+                
+                
+            } else {
+                $("#navbar-company-selector").append(`<option value="${data[i].Id}">${data[i].COMPANY_NAME_ENGLISH} [${data[i].COMPANY_CODE}]</option>`);
+            }
+
+            if (localStorage.getItem("COMPANY_ID") == data[i].Id) {
+                $("#navbar-company-selector").val(localStorage.getItem("COMPANY_ID"));
                 $(".company-name").text(data[i].COMPANY_NAME_ENGLISH);
                 $(".company-image").attr("src", data[i].COMPANY_LOGO_PATH.replace("~", ".."));
                 $(".company-email").text(data[i].COMPANY_EMAIL);
@@ -77,19 +90,12 @@ function setCompanyDetails() {
                 if (splitData.length >= 2) {
                     $(".company-prefix").text(splitData[0][0] + splitData[1][0]);
                 } else {
-                    $(".company-prefix").text(data[i].COMPANY_NAME_ENGLISH[0] + data[i].COMPANY_NAME_ENGLISH[data[i].COMPANY_NAME_ENGLISH.length-1]);
+                    $(".company-prefix").text(data[i].COMPANY_NAME_ENGLISH[0] + data[i].COMPANY_NAME_ENGLISH[data[i].COMPANY_NAME_ENGLISH.length - 1]);
                 }
-                
 
-                if (localStorage.getItem("COMPANY_ID") == data[i].Id) {
-                    $("#navbar-company-selector").append(`<option selected value="${data[i].Id}">${data[i].COMPANY_NAME_ENGLISH} [${data[i].COMPANY_CODE}]</option>`);
-                } else {
-                    $("#navbar-company-selector").append(`<option value="${data[i].Id}">${data[i].COMPANY_NAME_ENGLISH} [${data[i].COMPANY_CODE}]</option>`);
-                }
-                
-            } else {
-                $("#navbar-company-selector").append(`<option value="${data[i].Id}">${data[i].COMPANY_NAME_ENGLISH} [${data[i].COMPANY_CODE}]</option>`);
+
             }
+
         }
 
         

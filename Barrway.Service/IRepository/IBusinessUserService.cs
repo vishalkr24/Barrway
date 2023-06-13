@@ -65,6 +65,8 @@ namespace Barrway.Service.IRepository
 
         Task<AddUpdateDelete> AddCalendarReference(CalendarReferenceModel model);
 
+        Task<AddUpdateDelete> UpdateTransactionAttendance(string TransactionId, bool IsPresent = false);
+
         #endregion
 
 

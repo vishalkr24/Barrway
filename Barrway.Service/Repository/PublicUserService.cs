@@ -202,7 +202,6 @@ namespace Barrway.Service.Repository
                 Form_DataTable data = new Form_DataTable();
                 data.action = (int)FormAction.Save;
                 data.formId = (int)FormSetting.PARTICIPANT_MASTER;
-
                 data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.participant.ToDictionary());
                 data.formGroupKey = Guid.NewGuid().ToString();
                 var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
@@ -233,10 +232,10 @@ namespace Barrway.Service.Repository
             data2.formId = (int)FormSetting.TRANSACTION_MASTER;
 
             data2.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.transaction.ToDictionary());
-            data2.formGroupKey = Guid.NewGuid().ToString();
+            data2.formGroupKey = model.FormGroupKey;
             var formResult2 = (await formAPIRepository.GeneratedFormData(data2)).Data;
 
-            // send Entry into Upcoming Bookings
+            // Send Entry into Upcoming Bookings
             
             string upcomingBookingQuery = $@"INSERT INTO [dbo].[COMPANY_UPCOMING_BOOKINGS_1945]
                                                    ([formGroupKey]
@@ -296,7 +295,6 @@ namespace Barrway.Service.Repository
             {
                 return new AddUpdateDelete() { Message = "Failed to enroll on calendar", Status = false };
             }
-
         }
 
         public async Task<AddUpdateDelete> AddFavoriteCalendar(FavoriteCalendarModel model)
@@ -572,6 +570,138 @@ namespace Barrway.Service.Repository
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
             }
         }
+
+        public async Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetMyAttendanceList(GenerateDynamicFormData data, string userEmail)
+        {
+            try
+            {
+                Dictionary<string, string> filters = new Dictionary<string, string>() {
+                    { "CALENDAR_NAME","calendarDets.CALENDAR_NAME"},
+                    { "ACTIVITY_NAME","service_m.ACTIVITY_NAME"},
+                    { "RESOURCE_DATA","service_p_m.FIRST_NAME + '' + service_p_m.LAST_NAME"},
+                    { "LOCATION_CODE","location_m.LOCATION_CODE"},
+                    { "FROM_TIME","calendar.[start]"},
+                    { "TO_TIME","calendar.[end]"},
+                    { "STUDENT_NAME","participant.STUDENT_NAME"},
+                    { "ATTENDANCE","[ATTENDANCE]"},
+                };
+
+                string column = "", dir = "";
+                if (data.sorters != null && data.sorters.Count() > 0)
+                {
+                    column = data.sorters.FirstOrDefault().field;
+                    dir = data.sorters.FirstOrDefault().dir;
+                }
+                else
+                {
+                    column = "created_at";
+                    dir = "desc";
+                }
+
+
+
+                List<string> applyFilter = new List<string>();
+
+                if (data.filter != null)
+                {
+                    if (!string.IsNullOrEmpty(data.filter.value))
+                        if (data.filter.type == "like")
+                        {
+                            applyFilter.Add("f.[" + data.filter.field + "]  " + data.filter.type + " '%" + data.filter.value + "%'");
+                        }
+                        else
+                            applyFilter.Add("f.[" + data.filter.field + "] " + data.filter.type + " '" + data.filter.value + "'");
+                }
+
+
+                if (data.filters != null && data.filters.Count() > 0)
+                {
+                    foreach (var item in data.filters)
+                    {
+                        if (!string.IsNullOrEmpty(item.value))
+                        {
+                            if (item.field == "created_at" || item.field == "updated_at" || item.field == "FROM_TIME" || item.field == "TO_TIME")
+                            {
+                                item.field = (item.field == "FROM_TIME") ? "start" : (item.field == "TO_TIME") ? "end" : item.field;
+                                string filter = await sqlFunction.GetDateFilter(item, "calendar");
+                                applyFilter.Add(filter);
+                            }
+                            else
+                            {
+                                string filter = item.field + " like N'%" + item.value + "%'";
+                                if (item.field == "RESOURCE_DATA")
+                                {
+                                    filter = "(service_p_m.FIRST_NAME like N'%" + item.value + "%' or service_p_m.LAST_NAME like N'%" + item.value + "%')";
+                                }
+
+                                applyFilter.Add(filter);
+                            }
+                        }
+
+                    }
+                }
+
+                string applyFilterQuery = string.Join(" and ", applyFilter);
+                applyFilterQuery = applyFilterQuery.TrimEnd("and ".ToCharArray());
+
+                int PageSize = data.size > 0 ? data.size : 20;
+                int PageNumber = data.page > 0 ? data.page : 1;
+
+                string strSql = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+                                    select f.[Id]
+                                          ,f.[created_at]
+                                          ,f.[updated_at]
+                                          ,f.[created_by]
+                                          ,f.[updated_by]
+                                          ,(select calendar.[start]+ ' to ' + calendar.[end]) as 'SLOT'
+                                          ,calendar.[start] as 'FROM_TIME'
+	                                      ,calendar.[end] as 'TO_TIME'                                          
+                                          ,[RESOURCE]
+                                          ,[ACTIVITY]
+                                          ,[STUDENT]
+                                          ,f.[REMARKS]
+                                          ,[FEES]
+                                          ,[FEES_1]
+                                          ,[FEES_2]
+                                          ,[FEES_LIST]
+                                          ,[ATTENDANCE]
+                                          ,[hidden_1683717028956]
+                                          ,f.[COMPANY_CODE]
+                                          ,f.[CALENDAR_CODE]
+	                                      ,participant.STUDENT_NAME
+	                                      ,calendarDets.CALENDAR_NAME
+	                                      ,service_m.ACTIVITY_NAME
+                                          ,location_m.LOCATION_CODE
+	                                      ,service_p_m.FIRST_NAME + '' + service_p_m.LAST_NAME as 'RESOURCE_DATA'
+										  ,company.COMPANY_NAME_ENGLISH
+	                                      from [dbo].[TRANSACTION_MASTER_1942] f
+                                    join CALENDAR_FORM_1935 calendar on calendar.Id = f.SLOT
+									join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
+                                    join PARTICIPANT_MASTER_1940 participant on participant.Id = f.STUDENT
+                                    join BUSINESS_CALENDAR_MASTER_1925 calendarDets on calendarDets.CALENDAR_CODE = f.CALENDAR_CODE
+                                    join SERVICE_MASTER_1933 service_m on service_m.Id = f.ACTIVITY
+                                    join SERVICE_PROVIDER_MASTER_1934 service_p_m on service_p_m.Id = calendar.[resources]
+                                    join LOCATION_MASTER_1936 location_m on location_m.Id = f.[RESOURCE]
+                                    where participant.EMAIL = '{userEmail}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+                                    )
+                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+
+                var listresult = await sqlFunction.ExecuteSqlQuery(strSql);
+                if (listresult.Count() > 0)
+                {
+                    return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = true, Data = listresult };
+                }
+
+                return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = false };
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = false, Message = ex.Message };
+            }
+        }
+
+
 
         public async Task<AddUpdateDelete> GetAllEnrolledCalendarsData(string CompanyCode, string UserEmail,string filterDate = null, bool IsCustomInFilter=false)
         {

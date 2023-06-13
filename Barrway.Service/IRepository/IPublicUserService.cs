@@ -29,6 +29,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> AddFavoriteCalendar(FavoriteCalendarModel model);
         Task<AddUpdateDelete> RemoveFavoriteCalendar(FavoriteCalendarModel model);
         Task<AddUpdateDelete> GetAllEnrolledCompaniesData(string userEmail);
+        Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetMyAttendanceList(GenerateDynamicFormData data, string userEmail);
         Task<AddUpdateDelete> GetRecentlyBookedCalendars(string userEmail);
         Task<AddUpdateDelete> CheckSingleMyFavoriteCalendar(string userId, string CalendarCode = null);
         Task<AddUpdateDelete> GetMyFavoriteCalendars(GenerateDynamicFormData data, string userId, string CalendarCode = null);

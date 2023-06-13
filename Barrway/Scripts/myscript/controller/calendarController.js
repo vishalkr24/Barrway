@@ -16557,9 +16557,321 @@
 
     });
 
+    FormGeneratorApp.controller('CustomTransactionController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
+
+
+        $scope.CalendarMasterList = function () {
+            var columns = [
+                {
+                    title: "ATTENDANCE", formatter: function (cell, formatter) {
+                        return `<button onclick="angular.element('#transaction-controller-div').scope().MarkAttendance(${cell.getRow().getData().Id})"  class="btn btn-primary text-light"><i class="bi-check2-circle"></i> Mark</button>`
+                    }, download: false, width: 100, field: "profileView", headerSort: false
+                },
+                { title: 'Calendar', field: 'CALENDAR_NAME', headerFilter: "input" },
+                { title: 'Service Name', field: 'ACTIVITY_NAME', headerFilter: "input" },
+                { title: 'Service Provider', field: 'RESOURCE_DATA', headerFilter: "input" },
+                { title: 'Location', field: 'LOCATION_CODE', headerFilter: "input" },
+                
+                {
+                    title: 'From time', field: 'FROM_TIME', headerFilter: "input", formatter: function (cell, formatter) {
+                        return moment(cell.getData().FROM_TIME).format("YYYY-MM-DD hh:mm a")
+                    }
+                },
+                {
+                    title: 'To time', field: 'TO_TIME', headerFilter: "input", formatter: function (cell, formatter) {
+                        return moment(cell.getData().TO_TIME).format("YYYY-MM-DD hh:mm a")
+                    }
+                },
+                { title: 'Client Name', field: 'STUDENT_NAME', headerFilter: "input" },
+                { title: 'Attendance', field: 'ATTENDANCE', headerFilter: "input" },
+            ];
+
+            setTimeout(function () {
+                var options = {
+                    placeholder: "No Data.",
+                    tooltips: function (cell) {
+                        return cell.getValue();
+                    },
+                    height: "530px",
+                    layout: "fitColumns",
+                    responsiveLayout: false,
+                    initialSort: [
+                        { column: "created_at", dir: "desc" }
+                    ],
+                    persistenceID: "persisrecords",
+                    persistenceMode: true,
+                    persistentLayout: true,
+                    persistence: {
+                        sort: false, //persist column sorting
+                        filter: false, //persist filter sorting
+                        columns: false, //persist columns
+                    },
+                    persistenceWriterFunc: function (id, type, data) {
+                        localStorage.setItem(id + "-" + type, JSON.stringify(data));
+                    },
+                    persistenceReaderFunc: function (id, type) {
+                        //id - tables persistence id
+                        //type - type of data being persisted ("sort", "filter", "group", "page" or "columns")
+                        var data = localStorage.getItem(id + "-" + type);
+                        var dataParse = JSON.parse(data);
+                        if (!DataService.isEmpty(data) && type == "columns") {
+                            _.each(headers, function (item) {
+                                var exists = _.findWhere(dataParse, {
+                                    field: item.field
+                                });
+                                if (!DataService.isEmpty(exists)) {
+                                    exists.visible = item.visible;
+                                }
+                            })
+                        }
+                        else if (type == "page") {
+                            if (!DataService.isEmpty(data) && $scope.paginationSizeFormRecords != 0)
+                                dataParse.paginationSize = $scope.paginationSizeFormRecords;
+                        }
+                        return data ? dataParse : false;
+                    },
+                    columns: columns,
+                    footerElement: "<div style='text-align:left' id='no-of-forms'></div>",
+                    dataLoaded: function (data) {
+                        //data - all data loaded into the table                        
+                        var count = 0;
+                        if (data.length > 0)
+                            count = data[0].total_records;
+                        $('#form-records .tabulator-footer #no-of-forms').text("Total: " + count + " Entries");
+                    },
+                    /// pagination: "local",              
+                    ajaxFiltering: true,
+                    ajaxSorting: true,
+                    ajaxLoader: true,
+                    ajaxURL: "/Calendar/GetTransactionMasterList",
+                    ajaxConfig: "POST", //ajax HTTP request type
+                    ajaxContentType: "json",
+                    ajaxParams: { //ajax parameters
+                        companyCode: localStorage.getItem("COMPANY_CODE"),
+                        calendarCode: localStorage.getItem("CALENDAR_CODE")
+                    },
+                    ajaxProgressiveLoad: "scroll",
+                    ajaxProgressiveLoadScrollMargin: 75,
+                    ajaxRequesting: function (url, params) {
+
+                        var called = true;
+                        if (params.sorters.length == 0) {
+                            params.sorters.push({ field: "created_at", dir: "desc" });
+                        }
+                        //if (called)
+                        //$('#form-records').block({ message: '<h4>Getting Form Records...</h4>' });
+                        return called; //abort ajax request
+                    },
+                    ajaxResponse: function (url, params, response) {
+                        //url - the URL of the request
+                        //params - the parameters passed with the request
+                        //response - the JSON object returned in the body of the response.
+                        //$('#form-records').unblock();
+                        //$.unblockUI();
+                        if (response.data) {
+                            return response;
+                        }
+                        else {
+                            return response;
+                        }
+
+                    },
+                    paginationSize: 50,
+
+                };
+                var tabulator = initTabulator('form-records', options);
+                $('.form-builder-loader').hide();
+            }, 150);
+
+        };
+
+        $scope.CalendarMasterList();
+
+
+        $scope.MarkAttendance = function (transactionId) {
+
+            adminService.postAsync('/Calendar/GetSingleTransactionMaster/', { TransactionId: transactionId }).then(function (res) {
+                console.log(res.data.data);
+                
+                var slotSplit = res.data.data[0].SLOT.split('to');
+
+                var slotStartTime = slotSplit[0].split('T')[1].substring(0, 5)
+                var slotEndTime = slotSplit[1].split('T')[1].substring(0, 5)
+
+                res.data.data[0].SLOT = slotStartTime + " to " + slotEndTime;
+
+                $scope.currentTransaction = res.data.data[0];
+
+                $scope.currentTransactionAttendance = (res.data.data[0].ATTENDANCE == "YES") ? "Present" : (res.data.data[0].ATTENDANCE == "NO") ? "Absent" : "Unmarked";
+
+                $scope.currentTransactionDate = slotSplit[0].split('T')[0]
+
+                $("#markAttendanceModel").modal("show");
+
+            }, function (err) {
+
+            });
+
+        }
+
+        $scope.closeAttendanceModel = function () {
+            $scope.currentTransaction = null;
+            $scope.currentTransactionDate = null;
+            $scope.currentTransactionAttendance = null;
+            $("#markAttendanceModel").modal("hide");
+        }
+
+        $scope.markPresent = function () {
+
+            adminService.postAsync('/Calendar/UpdateTransactionAttendance/', { TransactionId: $scope.currentTransaction.Id, IsPresent: true }).then(function (res) {
+
+                window.location.reload();
+                $scope.closeAttendanceModel();
+                
+            }, function (err) {
+
+            });
+        }
+
+        $scope.markAbsent = function () {
+
+            adminService.postAsync('/Calendar/UpdateTransactionAttendance/', { TransactionId: $scope.currentTransaction.Id, IsPresent: false }).then(function (res) {
+
+                window.location.reload();
+                $scope.closeAttendanceModel();
+
+            }, function (err) {
+
+            });
+
+        }
+    });
+
+    
 
     FormGeneratorApp.controller('UserAttendanceController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
         $("#user-nav-myattendance").addClass("active")
+
+
+        $scope.CalendarMasterList = function () {
+            var columns = [
+                { title: 'Company', field: 'COMPANY_NAME_ENGLISH', headerFilter: "input" },
+                { title: 'Calendar', field: 'CALENDAR_NAME', headerFilter: "input" },
+                { title: 'Service Name', field: 'ACTIVITY_NAME', headerFilter: "input" },
+                { title: 'Service Provider', field: 'RESOURCE_DATA', headerFilter: "input" },
+                { title: 'Location', field: 'LOCATION_CODE', headerFilter: "input" },
+
+                {
+                    title: 'From time', field: 'FROM_TIME', headerFilter: "input", formatter: function (cell, formatter) {
+                        return moment(cell.getData().FROM_TIME).format("YYYY-MM-DD hh:mm a")
+                    }
+                },
+                {
+                    title: 'To time', field: 'TO_TIME', headerFilter: "input", formatter: function (cell, formatter) {
+                        return moment(cell.getData().TO_TIME).format("YYYY-MM-DD hh:mm a")
+                    }
+                },
+                { title: 'Attendance', field: 'ATTENDANCE', headerFilter: "input" },
+            ];
+
+            setTimeout(function () {
+                var options = {
+                    placeholder: "No Data.",
+                    tooltips: function (cell) {
+                        return cell.getValue();
+                    },
+                    height: "530px",
+                    layout: "fitColumns",
+                    responsiveLayout: false,
+                    initialSort: [
+                        { column: "created_at", dir: "desc" }
+                    ],
+                    persistenceID: "persisrecords",
+                    persistenceMode: true,
+                    persistentLayout: true,
+                    persistence: {
+                        sort: false, //persist column sorting
+                        filter: false, //persist filter sorting
+                        columns: false, //persist columns
+                    },
+                    persistenceWriterFunc: function (id, type, data) {
+                        localStorage.setItem(id + "-" + type, JSON.stringify(data));
+                    },
+                    persistenceReaderFunc: function (id, type) {
+                        var data = localStorage.getItem(id + "-" + type);
+                        var dataParse = JSON.parse(data);
+                        if (!DataService.isEmpty(data) && type == "columns") {
+                            _.each(headers, function (item) {
+                                var exists = _.findWhere(dataParse, {
+                                    field: item.field
+                                });
+                                if (!DataService.isEmpty(exists)) {
+                                    exists.visible = item.visible;
+                                }
+                            })
+                        }
+                        else if (type == "page") {
+                            if (!DataService.isEmpty(data) && $scope.paginationSizeFormRecords != 0)
+                                dataParse.paginationSize = $scope.paginationSizeFormRecords;
+                        }
+                        return data ? dataParse : false;
+                    },
+                    columns: columns,
+                    footerElement: "<div style='text-align:left' id='no-of-forms'></div>",
+                    dataLoaded: function (data) {
+                        //data - all data loaded into the table                        
+                        var count = 0;
+                        if (data.length > 0)
+                            count = data[0].total_records;
+                        $('#form-records .tabulator-footer #no-of-forms').text("Total: " + count + " Entries");
+                    },
+                    /// pagination: "local",              
+                    ajaxFiltering: true,
+                    ajaxSorting: true,
+                    ajaxLoader: true,
+                    ajaxURL: "/UserAdmin/GetMyAttendanceList",
+                    ajaxConfig: "POST", //ajax HTTP request type
+                    ajaxContentType: "json",
+                    ajaxParams: {
+                       
+                    },
+                    ajaxProgressiveLoad: "scroll",
+                    ajaxProgressiveLoadScrollMargin: 75,
+                    ajaxRequesting: function (url, params) {
+
+                        var called = true;
+                        if (params.sorters.length == 0) {
+                            params.sorters.push({ field: "created_at", dir: "desc" });
+                        }
+                        //if (called)
+                        //$('#form-records').block({ message: '<h4>Getting Form Records...</h4>' });
+                        return called; //abort ajax request
+                    },
+                    ajaxResponse: function (url, params, response) {
+                        //url - the URL of the request
+                        //params - the parameters passed with the request
+                        //response - the JSON object returned in the body of the response.
+                        //$('#form-records').unblock();
+                        //$.unblockUI();
+                        if (response.data) {
+                            return response;
+                        }
+                        else {
+                            return response;
+                        }
+
+                    },
+                    paginationSize: 50,
+
+                };
+                var tabulator = initTabulator('form-records', options);
+                $('.form-builder-loader').hide();
+            }, 150);
+
+        };
+
+        $scope.CalendarMasterList();
+
     })
 
     FormGeneratorApp.controller('UserProfileController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {

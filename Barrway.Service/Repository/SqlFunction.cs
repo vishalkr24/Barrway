@@ -91,7 +91,7 @@ namespace Barrway.Service.Repository
         {
             string customWhere="";
             //if (filtr.field.ToString() == "created_at" || filtr.field.ToString() == "updated_at")
-            if (filtr.field.ToString() == "created_at" || filtr.field.ToString() == "updated_at" || filtr.field.ToString() == "PAYMENT_DATE" || filtr.field.ToString() == "FROM_TIME" || filtr.field.ToString() == "TO_TIME")
+            if (filtr.field.ToString() == "created_at" || filtr.field.ToString() == "updated_at" || filtr.field.ToString() == "PAYMENT_DATE" || filtr.field.ToString() == "FROM_TIME" || filtr.field.ToString() == "TO_TIME" || filtr.field.ToString() == "start" || filtr.field.ToString() == "end")
             {
                 if (filtr.value.Length == 7)
                 {
