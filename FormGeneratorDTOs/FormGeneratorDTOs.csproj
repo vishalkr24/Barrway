@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="iTextSharp" Version="5.5.13.3" />
+    <PackageReference Include="Spire.Office" Version="8.6.0" />
     <PackageReference Include="Spire.XLS" Version="13.4.0" />
   </ItemGroup>
 
@@ -32,8 +33,11 @@
     <Reference Include="Quartz">
       <HintPath>..\..\Moodies-Web\FormGeneratorDTOs\Dto_dlls\Quartz.dll</HintPath>
     </Reference>
+    <Reference Include="Spire.License">
+      <HintPath>Dto_dlls\Spire.License.dll</HintPath>
+    </Reference>
     <Reference Include="Spire.XLS">
-      <HintPath>..\..\Moodies-Web\FormGeneratorDTOs\Dto_dlls\Spire.XLS.dll</HintPath>
+      <HintPath>Dto_dlls\Spire.XLS.dll</HintPath>
     </Reference>
     <Reference Include="Syncfusion.DocIO.Base">
       <HintPath>..\..\Moodies-Web\FormGeneratorDTOs\Dto_dlls\Syncfusion.DocIO.Base.dll</HintPath>
