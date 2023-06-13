@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Barrway.Service.Repository
 {
-    public class MasterService: IMasterService
+    public class MasterService : IMasterService
     {
         private readonly ISqlFunction sqlFunction;
 
@@ -22,7 +22,7 @@ namespace Barrway.Service.Repository
         {
             try
             {
-               
+
                 string column = "", dir = "";
                 if (data.sorters != null && data.sorters.Count() > 0)
                 {
@@ -44,7 +44,7 @@ namespace Barrway.Service.Repository
                     if (!string.IsNullOrEmpty(data.filter.value))
                         if (data.filter.type == "like")
                         {
-                            applyFilter.Add("f.[" +data.filter.field + "]  " + data.filter.type + " '%" + data.filter.value + "%'");
+                            applyFilter.Add("f.[" + data.filter.field + "]  " + data.filter.type + " '%" + data.filter.value + "%'");
                         }
                         else
                             applyFilter.Add("f.[" + data.filter.field + "] " + data.filter.type + " '" + data.filter.value + "'");
@@ -57,9 +57,9 @@ namespace Barrway.Service.Repository
                     {
                         if (!string.IsNullOrEmpty(item.value))
                         {
-                            if(item.field=="created_at" || item.field == "updated_at")
+                            if (item.field == "created_at" || item.field == "updated_at")
                             {
-                                string filter =await sqlFunction.GetDateFilter(item);
+                                string filter = await sqlFunction.GetDateFilter(item);
                                 applyFilter.Add(filter);
                             }
                             else
@@ -68,7 +68,7 @@ namespace Barrway.Service.Repository
                                 applyFilter.Add(filter);
                             }
                         }
-                        
+
                     }
                 }
 
@@ -426,6 +426,16 @@ namespace Barrway.Service.Repository
         {
             try
             {
+                Dictionary<string, string> filters = new Dictionary<string, string>() {
+                    { "CALENDAR_NAME","calendarDets.CALENDAR_NAME"},
+                    { "ACTIVITY_NAME","service_m.ACTIVITY_NAME"},
+                    { "RESOURCE_DATA","service_p_m.FIRST_NAME + '' + service_p_m.LAST_NAME"},
+                    { "LOCATION_CODE","location_m.LOCATION_CODE"},
+                    { "FROM_TIME","calendar.[start]"},
+                    { "TO_TIME","calendar.[end]"},
+                    { "STUDENT_NAME","participant.STUDENT_NAME"},
+                    { "ATTENDANCE","[ATTENDANCE]"},
+                };
 
                 string column = "", dir = "";
                 if (data.sorters != null && data.sorters.Count() > 0)
@@ -461,14 +471,20 @@ namespace Barrway.Service.Repository
                     {
                         if (!string.IsNullOrEmpty(item.value))
                         {
-                            if (item.field == "created_at" || item.field == "updated_at")
+                            if (item.field == "created_at" || item.field == "updated_at" || item.field == "FROM_TIME" || item.field == "TO_TIME")
                             {
-                                string filter = await sqlFunction.GetDateFilter(item);
+                                item.field = (item.field == "FROM_TIME") ? "start" : (item.field == "TO_TIME") ? "end" : item.field;
+                                string filter = await sqlFunction.GetDateFilter(item, "calendar");
                                 applyFilter.Add(filter);
                             }
                             else
                             {
-                                string filter = "f.[" + item.field + "] like N'%" + item.value + "%'";
+                                string filter = item.field + " like N'%" + item.value + "%'";
+                                if (item.field == "RESOURCE_DATA")
+                                {
+                                    filter = "(service_p_m.FIRST_NAME like N'%" + item.value + "%' or service_p_m.LAST_NAME like N'%" + item.value + "%')";
+                                }
+                                
                                 applyFilter.Add(filter);
                             }
                         }
@@ -483,7 +499,38 @@ namespace Barrway.Service.Repository
                 int PageNumber = data.page > 0 ? data.page : 1;
 
                 string strSql = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
-                                     select *from [dbo].[TRANSACTION_MASTER_1942] f
+                                    select f.[Id]
+                                          ,f.[created_at]
+                                          ,f.[updated_at]
+                                          ,f.[created_by]
+                                          ,f.[updated_by]
+                                          ,(select calendar.[start]+ ' to ' + calendar.[end]) as 'SLOT'
+                                          ,calendar.[start] as 'FROM_TIME'
+	                                      ,calendar.[end] as 'TO_TIME'                                          
+                                          ,[RESOURCE]
+                                          ,[ACTIVITY]
+                                          ,[STUDENT]
+                                          ,f.[REMARKS]
+                                          ,[FEES]
+                                          ,[FEES_1]
+                                          ,[FEES_2]
+                                          ,[FEES_LIST]
+                                          ,[ATTENDANCE]
+                                          ,[hidden_1683717028956]
+                                          ,f.[COMPANY_CODE]
+                                          ,f.[CALENDAR_CODE]
+	                                      ,participant.STUDENT_NAME
+	                                      ,calendarDets.CALENDAR_NAME
+	                                      ,service_m.ACTIVITY_NAME
+                                          ,location_m.LOCATION_CODE
+	                                      ,service_p_m.FIRST_NAME + '' + service_p_m.LAST_NAME as 'RESOURCE_DATA'
+	                                      from [dbo].[TRANSACTION_MASTER_1942] f
+                                    join CALENDAR_FORM_1935 calendar on calendar.Id = f.SLOT
+                                    join PARTICIPANT_MASTER_1940 participant on participant.Id = f.STUDENT
+                                    join BUSINESS_CALENDAR_MASTER_1925 calendarDets on calendarDets.CALENDAR_CODE = f.CALENDAR_CODE
+                                    join SERVICE_MASTER_1933 service_m on service_m.Id = f.ACTIVITY
+                                    join SERVICE_PROVIDER_MASTER_1934 service_p_m on service_p_m.Id = calendar.[resources]
+                                    join LOCATION_MASTER_1936 location_m on location_m.Id = f.[RESOURCE]
                                     where f.COMPANY_CODE='{companyCode}' and f.CALENDAR_CODE='{calendarCode}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
                                     )
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
@@ -503,6 +550,40 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetSingleTransactionMaster(string TransactionId)
+        {
+            string strSql = $@"select f.[Id]
+                                      ,f.[created_at]
+                                      ,f.[updated_at]
+                                      ,f.[created_by]
+                                      ,f.[updated_by]
+                                      ,(select calendar.[start]+ ' to ' + calendar.[end]) as 'SLOT'
+                                      ,[RESOURCE]
+                                      ,[ACTIVITY]
+                                      ,[STUDENT]
+                                      ,[REMARKS]
+                                      ,[FEES]
+                                      ,[FEES_1]
+                                      ,[FEES_2]
+                                      ,[FEES_LIST]
+                                      ,[ATTENDANCE]
+                                      ,[hidden_1683717028956]
+                                      ,f.[COMPANY_CODE]
+                                      ,f.[CALENDAR_CODE]
+	                                  ,participant.STUDENT_NAME
+	                                  from [dbo].[TRANSACTION_MASTER_1942] f
+                                join CALENDAR_FORM_1935 calendar on calendar.Id = f.SLOT
+                                join PARTICIPANT_MASTER_1940 participant on participant.Id = f.STUDENT
+                                where f.Id='{TransactionId}'";
+
+            var listresult = await sqlFunction.ExecuteSqlQuery(strSql);
+            if (listresult.Count() > 0)
+            {
+                return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = true, Data = listresult };
+            }
+
+            return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = false };
+        }
         public async Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetAllBlogPosts(GenerateDynamicFormData data)
         {
             try
@@ -738,7 +819,7 @@ namespace Barrway.Service.Repository
                 List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
 
-                
+
                 if (result.Count > 0)
                 {
                     string tagQuery = "(";

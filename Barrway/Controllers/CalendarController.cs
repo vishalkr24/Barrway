@@ -25,14 +25,16 @@ namespace Barrway.Controllers
         private readonly IFormAPIRepository formAPIRepository;
         private readonly ISqlFunction sqlFunction;
         private readonly IBusinessUserService businessUserService;
+        private readonly IAuthService authService;
 
         // GET: Calendar
-        public CalendarController(IMasterService masterService, IFormAPIRepository formAPIRepository, ISqlFunction sqlFunction, IBusinessUserService businessUserService)
+        public CalendarController(IMasterService masterService, IFormAPIRepository formAPIRepository, ISqlFunction sqlFunction, IBusinessUserService businessUserService, IAuthService authService)
         {
             this.masterService = masterService;
             this.formAPIRepository = formAPIRepository;
             this.sqlFunction = sqlFunction;
             this.businessUserService = businessUserService;
+            this.authService = authService;
         }
         public ActionResult Index()
         {
@@ -150,6 +152,50 @@ namespace Barrway.Controllers
             }
 
             return Json(new { data = locationList, last_page });
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GetSingleTransactionMaster(string TransactionId)
+        {
+            var locationListData = await masterService.GetSingleTransactionMaster(TransactionId);
+            var locationList = locationListData.Data;
+            
+            return Json(new { data = locationList });
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateTransactionAttendance(string TransactionId, bool IsPresent = false)
+        {
+            var locationListData = await masterService.GetSingleTransactionMaster(TransactionId);
+            var transactionData = locationListData.Data;
+
+            var companies = await businessUserService.GetAllCompaniesByUserId(User.Identity.Name.ToString());
+
+            var validCompanyCheck = false;
+
+            for (int i = 0; i < companies.Data.Count; i++)
+            {
+                if (companies.Data[i]["COMPANY_CODE"].ToString() == transactionData[0]["COMPANY_CODE"].ToString())
+                {
+                    validCompanyCheck = true;
+                    break;
+                }
+            }
+
+            if (validCompanyCheck)
+            {
+                var result = await businessUserService.UpdateTransactionAttendance(TransactionId, IsPresent);
+
+                return Json(result, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = "Not Found"}, JsonRequestBehavior.AllowGet);
+            }
+
+
+            
         }
 
         [HttpPost]

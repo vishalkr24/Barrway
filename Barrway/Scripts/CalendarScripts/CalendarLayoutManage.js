@@ -172,10 +172,27 @@ function showNavbarNavigation(divId) {
 
 function setCompanyDetails() {
     var data = getSingleCompanyByCompanyId(localStorage.getItem('COMPANY_ID'));
+    var user = getSingleUser();
+    
 
     if (data.Status) {
         var company = data.Data;
-        
+
+        $(".company-name").text(company.COMPANY_NAME_ENGLISH);
+        $(".company-image").attr("src", company.COMPANY_LOGO_PATH.replace("~", ".."));
+        $(".company-email").text(company.COMPANY_EMAIL);
+
+        $(".user-name").text(user.Data.USER_ID);
+        $(".user-email").text(user.Data.USER_EMAIL);
+        $(".company-email").text(user.Data.USER_EMAIL);
+
+        var splitData = company.COMPANY_NAME_ENGLISH.split(' ');
+        if (splitData.length >= 2) {
+            $(".company-prefix").text(splitData[0][0] + splitData[1][0]);
+        } else {
+            $(".company-prefix").text(company.COMPANY_NAME_ENGLISH[0] + company.COMPANY_NAME_ENGLISH[company.COMPANY_NAME_ENGLISH.length - 1]);
+        }
+
         $(".lbl-company-name").text(company.COMPANY_NAME_ENGLISH);
         $(".img-company-logo").attr("src", company.COMPANY_LOGO_PATH.replace("~", ".."));
 
