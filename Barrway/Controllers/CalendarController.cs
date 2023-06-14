@@ -199,6 +199,17 @@ namespace Barrway.Controllers
         }
 
         [HttpPost]
+        public async Task<ActionResult> UpdateBulkTransactionAttendance(string AttendanceJsonString)
+        {
+            List<BulkAttendanceModel> AttendanceData = JsonConvert.DeserializeObject<List<BulkAttendanceModel>>(AttendanceJsonString);
+            
+            var result = await businessUserService.UpdateTransactionAttendance(AttendanceData, User.Identity.Name.ToString());
+            
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpPost]
         public async Task<ActionResult> AddLocationMaster(Form_DataTable data)
         {
             var result = (await formAPIRepository.GeneratedFormData(data)).Data;

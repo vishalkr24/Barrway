@@ -2,7 +2,7 @@
     'use strict';
     /*18022021 saif calender controller */
     FormGeneratorApp.controller('FormEntryCalenderController', function ($scope, $rootScope, CookiesPersistenceService, $http, $state, $location, $window, $ngBootbox, $timeout, mainService, notifierService, $stateParams, DataService) {
-
+        
         function showFooter(type) {
             if (!DataService.isEmpty(type.column_calculation))
                 return type.column_calculation;
@@ -9724,6 +9724,7 @@
     });
 
     FormGeneratorApp.controller('NewDemoCalenderRecordsControllerTemp', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
+        checkLogin();
         var tabulatorChildren = {};
         //var tabulator = '';
         var arrowImage = function (cell, formatterParams) {
@@ -16161,7 +16162,7 @@
     });
 
     FormGeneratorApp.controller('UserAdminCalendarController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
-
+        checkLogin();
         $scope.rootScopeSafe = function () {
             $rootScope.safeApply();
         };
@@ -16211,7 +16212,7 @@
     })
 
     FormGeneratorApp.controller('UserDashboardController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
-
+        
         $("#user-nav-dashboard").addClass("active")
 
         adminService.postAsync('/UserAdmin/GetRecentlyBookedCalendars/').then(function (res) {
@@ -16439,7 +16440,7 @@
     })
 
     FormGeneratorApp.controller('BusinessUserMasterController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
-
+        checkLogin();
         $scope.CalendarMasterList = function () {
             var columns = [
                 { title: 'Username', field: 'USER_ID', headerFilter: "input" },
@@ -16558,13 +16559,30 @@
     });
 
     FormGeneratorApp.controller('CustomTransactionController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
+        checkLogin();
+        $scope.AttendanceRecord = [];
 
-
-        $scope.CalendarMasterList = function () {
+        $scope.CalendarMasterList = function (isBulkMarkable = false) {
             var columns = [
                 {
                     title: "ATTENDANCE", formatter: function (cell, formatter) {
-                        return `<button onclick="angular.element('#transaction-controller-div').scope().MarkAttendance(${cell.getRow().getData().Id})"  class="btn btn-primary text-light"><i class="bi-check2-circle"></i> Mark</button>`
+
+                        if (!isBulkMarkable) {
+                            return `<button onclick="angular.element('#transaction-controller-div').scope().MarkAttendance(${cell.getRow().getData().Id})"  class="btn btn-primary text-light"><i class="bi-check2-circle"></i> Mark</button>`
+                        } else {
+
+                            $scope.AttendanceRecord.push({
+                                Id: cell.getRow().getData().Id,
+                                Attendance: (cell.getRow().getData().ATTENDANCE == "Yes") ? "Present" : (cell.getRow().getData().ATTENDANCE == "No") ? "Absent" : "Unmarked",
+                                IsUpdated: false,
+                                CompanyCode: cell.getRow().getData().COMPANY_CODE
+                            });
+
+                            return `<div><input type="radio" style="display:none;"  name="bulk_radio_${cell.getRow().getData().Id}" ${(cell.getRow().getData().ATTENDANCE == "Yes") ? "checked": ""} id="bulk_radio_${cell.getRow().getData().Id}_p" value="Present" /> <label onclick="angular.element('#transaction-controller-div').scope().updateAttendanceRecord(${cell.getRow().getData().Id}, true)" for="bulk_radio_${cell.getRow().getData().Id}_p">Present</label></div>
+                                    <div><input type="radio" style="display:none;"  name="bulk_radio_${cell.getRow().getData().Id}" ${(cell.getRow().getData().ATTENDANCE == "No") ? "checked" : ""} id="bulk_radio_${cell.getRow().getData().Id}_a" value="Absent" /> <label onclick="angular.element('#transaction-controller-div').scope().updateAttendanceRecord(${cell.getRow().getData().Id}, false)" for="bulk_radio_${cell.getRow().getData().Id}_a">Absent</label></div>`
+                        }
+
+                        
                     }, download: false, width: 100, field: "profileView", headerSort: false
                 },
                 { title: 'Calendar', field: 'CALENDAR_NAME', headerFilter: "input" },
@@ -16638,8 +16656,7 @@
                         if (data.length > 0)
                             count = data[0].total_records;
                         $('#form-records .tabulator-footer #no-of-forms').text("Total: " + count + " Entries");
-                    },
-                    /// pagination: "local",              
+                    },           
                     ajaxFiltering: true,
                     ajaxSorting: true,
                     ajaxLoader: true,
@@ -16668,6 +16685,19 @@
                         //response - the JSON object returned in the body of the response.
                         //$('#form-records').unblock();
                         //$.unblockUI();
+
+                        console.log(response);
+
+                        if (response.data != null) {
+                            if (response.data.length > 0) {
+
+                            } else {
+                                $("#mark-attendance-btn-area").addClass("custom-hide");
+                            }
+                        } else {
+                            $("#mark-attendance-btn-area").addClass("custom-hide");
+                        }
+
                         if (response.data) {
                             return response;
                         }
@@ -16681,12 +16711,65 @@
                 };
                 var tabulator = initTabulator('form-records', options);
                 $('.form-builder-loader').hide();
+
             }, 150);
 
         };
 
         $scope.CalendarMasterList();
+        
+        $scope.updateAttendanceRecord = function (recordId, IsPresent = false) {
+            debugger;
+            for (var i = 0; i < $scope.AttendanceRecord.length; i++) {
+                if ($scope.AttendanceRecord[i].Id == recordId) {
+                    $scope.AttendanceRecord[i].Attendance = (IsPresent) ? "Present" : "Absent";
+                    $scope.AttendanceRecord[i].IsUpdated = true;
+                    break;
+                }
+            }
+        }
 
+        $scope.CreateBulkAttendance = function () {
+
+            $("#mark-attendance-btn-area").addClass("custom-hide");
+            $("#mark-attendance-submit-area").removeClass("custom-hide");
+
+            $scope.CalendarMasterList(true);
+        }
+
+        $scope.CancelBulkAttendance = function () {
+
+            $("#mark-attendance-btn-area").removeClass("custom-hide");
+            $("#mark-attendance-submit-area").addClass("custom-hide");
+
+            $scope.CalendarMasterList(false);
+        }
+
+        $scope.SubmitBulkAttendance = function () {
+
+            debugger;
+            adminService.postAsync('/Calendar/UpdateBulkTransactionAttendance/', { AttendanceJsonString: JSON.stringify($scope.AttendanceRecord) }).then(function (res) {
+
+                if (res.data.Status) {
+
+                    swal({
+                        title: "Success!",
+                        text: res.data.Message,
+                        icon: "success",
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        debugger;
+                        $scope.CancelBulkAttendance();
+                    });
+                    
+                } else {
+                    alert("something went wrong!");
+                }
+
+            }, function (err) {
+
+            });
+        }
 
         $scope.MarkAttendance = function (transactionId) {
 
@@ -16702,7 +16785,7 @@
 
                 $scope.currentTransaction = res.data.data[0];
 
-                $scope.currentTransactionAttendance = (res.data.data[0].ATTENDANCE == "YES") ? "Present" : (res.data.data[0].ATTENDANCE == "NO") ? "Absent" : "Unmarked";
+                $scope.currentTransactionAttendance = (res.data.data[0].ATTENDANCE == "Yes") ? "Present" : (res.data.data[0].ATTENDANCE == "No") ? "Absent" : "Unmarked";
 
                 $scope.currentTransactionDate = slotSplit[0].split('T')[0]
 
@@ -16725,7 +16808,7 @@
 
             adminService.postAsync('/Calendar/UpdateTransactionAttendance/', { TransactionId: $scope.currentTransaction.Id, IsPresent: true }).then(function (res) {
 
-                window.location.reload();
+                $scope.CalendarMasterList(false);
                 $scope.closeAttendanceModel();
                 
             }, function (err) {
@@ -16737,7 +16820,7 @@
 
             adminService.postAsync('/Calendar/UpdateTransactionAttendance/', { TransactionId: $scope.currentTransaction.Id, IsPresent: false }).then(function (res) {
 
-                window.location.reload();
+                $scope.CalendarMasterList(false);
                 $scope.closeAttendanceModel();
 
             }, function (err) {
@@ -16750,6 +16833,7 @@
     
 
     FormGeneratorApp.controller('UserAttendanceController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
+        checkLogin();
         $("#user-nav-myattendance").addClass("active")
 
 
@@ -16875,6 +16959,7 @@
     })
 
     FormGeneratorApp.controller('UserProfileController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
+        checkLogin();
         $("#user-nav-myprofile").addClass("active")
         adminService.postAsync('/UserAdmin/GetSingleUserByUserId/', { UserId: $("#userIdHidden").val() }).then(function (res) {
 
@@ -17025,6 +17110,7 @@
     })
 
     FormGeneratorApp.controller('UserMyFavoriteController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
+        checkLogin();
         $("#user-nav-myfavorite").addClass("active")
         $scope.setFavoritesData = function (pageNumber) {
 

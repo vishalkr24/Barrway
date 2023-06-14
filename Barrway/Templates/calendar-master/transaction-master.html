@@ -18,6 +18,14 @@
         top: -40px;
     }*/
 
+    .custom-hide{
+        display:none;
+    }
+
+    .custom-inline-show {
+        display: inline;
+    }
+
     .w-60p {
         width: 60px;
         min-width: 60px;
@@ -144,7 +152,7 @@
                             <div class="tabulator-section w-100">
                                 <div class="row mb-3">
                                     <div class="col-xl-4 mb-2 mb-lg-0">
-                                        <form class="form-inline" id="search-form">
+                                        <!--<form class="form-inline" id="search-form">
                                             <div class="form-group">
                                                 <label for="filter-field" class="pe-2">
                                                     {{translation.Default_Grouping}}:
@@ -168,15 +176,36 @@
                                                 <span class="action-name">{{translation.Advanced_search}}</span>
                                                 <i class="fa" ng-class="{'fa-chevron-down':!isShowAdvanceSearch,'fa-chevron-up':isShowAdvanceSearch}"></i>
                                             </a>
-                                        </form>
+                                        </form>-->
                                     </div>
                                     <div class="col-xl-8 text-lg-end text-md-start">
+
+                                        <span id="mark-attendance-btn-area">
+                                            <a class="btn btn-primary mb-2 mb-lg-0" ng-click="CreateBulkAttendance()">
+                                                <i class="bi bi-check2-circle"></i>
+                                                <span class="action-name">Bulk Attendance</span>
+                                            </a>
+                                        </span>
+                                        <span id="mark-attendance-submit-area" class="custom-hide">
+                                            <a class="btn btn-success mb-2 mb-lg-0" ng-click="SubmitBulkAttendance()">
+                                                <i class="bi bi-check2"></i>
+                                                <span class="action-name">Submit</span>
+                                            </a>
+                                            <a class="btn btn-success mb-2 mb-lg-0" ng-click="CancelBulkAttendance()">
+                                                <i class="bi bi-x-circle"></i>
+                                                <span class="action-name">Cancel</span>
+                                            </a>
+                                        </span>
+                                        
+
                                         <a class="btn btn-primary mb-2 mb-lg-0"
                                            ng-click="generateInvoiceFunc()"
                                            ng-if="isInvoiceForm">
                                             <i class="fa fa-file-code-o"></i>
                                             <span class="action-name">{{translation.Generate_Invoice}}</span>
                                         </a>
+
+
                                         <a class="btn btn-primary mb-2 mb-lg-0"
                                            ng-click="generatePrintInvoiceFunc(2)"
                                            ng-if="isInvoiceForm">
@@ -238,9 +267,9 @@
                                                         </i> <span class="action-name">{{translation.Download_all_records_XLSX}}</span>
                                                     </a>
                                                     <!--<a ng-click="exportAll(7)" ng-show="formDetailsDataInfo.currentFormType!=1" class="btn btn-primary m-1" id="download-pdf">
-                                                        <i class="fa fa-download">
-                                                        </i> <span class="action-name">{{translation.Download_all_records_XLSX}}</span>
-                                                    </a>-->
+                    <i class="fa fa-download">
+                    </i> <span class="action-name">{{translation.Download_all_records_XLSX}}</span>
+                </a>-->
                                                 </div>
                                             </div>
                                         </script>
@@ -408,7 +437,7 @@
                             <div class="mark-attendance-details">
                                 <h4 style="font-weight:500">Attendance: <b>{{currentTransactionAttendance}}</b></h4>
                                 <div>
-                                    <button class="btn btn-success" ng-click="markPresent()">Present</button> <button class="btn btn-warning" ng-click="markAbsent()">Absent</button> <button type="button" class="btn btn-default" ng-click="closeAttendanceModel()" aria-label="Close">Cancel</button>
+                                    <button class="btn btn-success" ng-click="markPresent()">Present</button> <button class="btn btn-danger" ng-click="markAbsent()">Absent</button> <button type="button" class="btn btn-default" ng-click="closeAttendanceModel()" aria-label="Close">Cancel</button>
                                 </div>
                             </div>
                         </div>

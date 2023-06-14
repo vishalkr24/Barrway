@@ -1219,7 +1219,26 @@
 
         $(document).ready(function () {
             $.fn.bstooltip = $.fn.tooltip.noConflict(true);
+
+            // handle if the user is logged out but not on screen
+
+            checkLogin();
+
         })
+
+        function checkLogin() {
+            $.ajax({
+                url: "/public/GetRole",
+                type: "get",
+                success: function (response) {
+                    if (response != "PUBLIC_USER") {
+                        window.location.href = "/Account/Login"
+                    }
+                }
+            })
+
+        }
+
         $('.nav-link').click(function () {
 
             $('.nav-link').not(this).removeClass('active');
