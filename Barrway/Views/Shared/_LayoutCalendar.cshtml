@@ -2,7 +2,7 @@
     var baseUrl = System.Web.Configuration.WebConfigurationManager.AppSettings["baseURL"].ToString();
     var webapibaseurl = System.Web.Configuration.WebConfigurationManager.AppSettings["webapibaseurl"].ToString();
     string token = DateTime.Now.ToString("ddMMyyyyHHmmssffffff");
-    string calendarUrl = baseUrl+"calendar/index";
+    string calendarUrl = baseUrl + "calendar/index";
 }
 
 <!DOCTYPE html>
@@ -467,7 +467,7 @@
                                 <div class="dropdown-divider"></div>
 
                                 <a class="dropdown-item" href="/Calendar/Index#/calendar/business-user-master/2287">Profile &amp; account</a>
-                               
+
                                 <div class="dropdown-divider"></div>
 
                                 <form id="mySignOutForm" name="mySignOutForm" method="post" action="@Url.Action("Logout","Account")">
@@ -560,7 +560,7 @@
                                     <span class="nav-link-title">User</span>
                                 </a>
                             </div>
-                            
+
                         </div>
                         <!-- End Collapse -->
 
@@ -584,13 +584,13 @@
                         <div class="row">
                             <div class="col-md-7">
                                 <div class="logo-comapany-name">
-                                    <img class="img-company-logo" onerror="this.style= 'display:none;'" style="width:100%; max-width:200px; max-height:70px; height:auto;" alt="Logo" />
+                                    <img class="img-company-logo" onerror="this.src= '../assets/img/alogo2.png'" style="width:100%; max-width:200px; max-height:70px; height:auto;" alt="Logo" />
                                     <span class="lbl-company-name">Company name</span>
                                 </div>
                             </div>
                             <div class="col-md-5">
-                                <p class="btcd">
-                                    <a href="/BusinessAdmin/Dashboard">back to Company dashboard</a>
+                                <p class="btcd" style="display:flex">
+                                    <a href="/BusinessAdmin/Dashboard" style="margin-left:auto;">back to Company dashboard</a>
                                 </p>
                             </div>
                         </div>
@@ -1104,7 +1104,7 @@
             </div>
         </div>
     </div>
-
+    <input style="display:none;" readonly value="@UserIdentity.Role" id="login-checker" />
     <!-- End Welcome Message Modal -->
     <!-- ========== END SECONDARY CONTENTS ========== -->
     <!-- JS Implementing Plugins -->
@@ -1155,7 +1155,7 @@
     <script type="text/javascript" src="fg-assets/formValidation/js/framework/bootstrap.min.js"></script>
     <script src="fg-assets/js/app.js"></script>
     <script src="fg-assets/js/jquery.cookie.min.js"></script>
-
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <!-- JS Plugins Init. -->
     <script>
         (function () {
@@ -1210,7 +1210,28 @@
 
         $(document).ready(function () {
             $.fn.bstooltip = $.fn.tooltip.noConflict(true);
+
+            // handle if the user is logged out but not on screen
+
+            checkLogin();
+
         })
+
+        function checkLogin() {
+
+            $.ajax({
+                url: "/public/GetRole",
+                type: "get",
+                success: function (response) {
+                    if (response != "BUSINESS_USER") {
+                        window.location.href = "/Account/BusinessLogin"
+                    }
+                }
+            })
+
+
+        }
+
         $('.nav-link').click(function () {
 
             $('.nav-link').not(this).removeClass('active');
@@ -1224,6 +1245,8 @@
                 link.setAttribute("aria-current", "page");
             }
         });
+
+
 
     </script>
 

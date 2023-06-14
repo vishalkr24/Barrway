@@ -92,7 +92,7 @@ namespace Barrway.Controllers
                     }
 
                     HttpContext.GetOwinContext().Authentication.SignOut();
-                    return RedirectToAction("Login");
+                    return RedirectToAction("Login", new {returnUrl});
                 }
             }
 

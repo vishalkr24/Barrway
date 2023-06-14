@@ -1554,7 +1554,7 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> UpdateTransactionAttendance(string TransactionId, bool IsPresent = false)
         {
-            var attendance = (IsPresent) ? "YES" : "NO";
+            var attendance = (IsPresent) ? "Yes" : "No";
             string query = $@"update TRANSACTION_MASTER_1942 set ATTENDANCE='{attendance}' where Id='{TransactionId}'";
 
             int result = await sqlFunction.ExecuteSqlCommandQuery(query);
@@ -1567,6 +1567,73 @@ namespace Barrway.Service.Repository
             {
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
             }
+        }
+
+        public async Task<AddUpdateDelete> UpdateTransactionAttendance(List<BulkAttendanceModel> BulkAttendance, string userId)
+        {
+            try
+            {
+                var companies = await GetAllCompaniesByUserId(userId);
+
+                List<BulkAttendanceModel> FinalAttendance = new List<BulkAttendanceModel>();
+
+                // filter attendance data with companies
+
+                for (int i = 0; i < companies.Data.Count; i++)
+                {
+                    for (int j = 0; j < BulkAttendance.Count; j++)
+                    {
+                        if (BulkAttendance[j].IsUpdated)
+                        {
+                            if (companies.Data[i]["COMPANY_CODE"].ToString() == BulkAttendance[j].CompanyCode.ToString())
+                            {
+                                FinalAttendance.Add(BulkAttendance[j]);
+                            }
+                        }
+                        
+                    }
+                }
+
+                // create query for updating in db
+
+                string query = "";
+
+                for (int i = 0; i < FinalAttendance.Count; i++)
+                {
+                    var attendance = (FinalAttendance[i].Attendance== "Present") ? "Yes" : (FinalAttendance[i].Attendance == "Absent") ? "No" : "NOT-MARKED";
+                    query += $@"update TRANSACTION_MASTER_1942 set ATTENDANCE='{attendance}' where Id='{FinalAttendance[i].Id}'";
+                }
+
+                int result = 0;
+
+                if (!string.IsNullOrEmpty(query))
+                {
+                    result = await sqlFunction.ExecuteSqlCommandQuery(query);
+                }
+                
+                if (result > 0)
+                {
+                    if (BulkAttendance.Count == FinalAttendance.Count)
+                    {
+                        return new AddUpdateDelete() { Status = true, Message = "All Records Updated Successfully" };
+                    }
+                    else
+                    {
+                        return new AddUpdateDelete() { Status = true, Message = "Records Updated Paritially" };
+                    }
+                    
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = true, Message = "No Records Updated" };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message=ex.Message };
+            }
+            
         }
 
         public async Task<AddUpdateDelete> GetCalendarDetails(string calendarCode)

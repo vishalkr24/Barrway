@@ -28,6 +28,19 @@ namespace Barrway.Controllers
 
         #region Data Methods
 
+        public async Task<string> GetRole()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return UserIdentity.Role.ToString();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
         public async Task<ActionResult> GetCountryMaster()
         {
             try

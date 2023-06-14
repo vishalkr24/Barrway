@@ -67,6 +67,7 @@ namespace Barrway.Service.IRepository
 
         Task<AddUpdateDelete> UpdateTransactionAttendance(string TransactionId, bool IsPresent = false);
 
+        Task<AddUpdateDelete> UpdateTransactionAttendance(List<BulkAttendanceModel> BulkAttendance, string userId);
         #endregion
 
 
