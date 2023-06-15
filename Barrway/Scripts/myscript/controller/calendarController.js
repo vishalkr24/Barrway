@@ -16565,162 +16565,16 @@
     FormGeneratorApp.controller('CustomTransactionController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
         checkLogin();
         $scope.AttendanceRecord = [];
-
+        $scope.isBulkMarkable = false;
         $scope.CalendarMasterList = function (isBulkMarkable = false) {
-            var columns = [
-                {
-                    title: "ATTENDANCE", formatter: function (cell, formatter) {
 
-                        if (!isBulkMarkable) {
-                            return `<button onclick="angular.element('#transaction-controller-div').scope().MarkAttendance(${cell.getRow().getData().Id})"  class="btn btn-primary text-light"><i class="bi-check2-circle"></i> Mark</button>`
-                        } else {
-
-                            $scope.AttendanceRecord.push({
-                                Id: cell.getRow().getData().Id,
-                                Attendance: (cell.getRow().getData().ATTENDANCE == "Yes") ? "Present" : (cell.getRow().getData().ATTENDANCE == "No") ? "Absent" : "Unmarked",
-                                IsUpdated: false,
-                                CompanyCode: cell.getRow().getData().COMPANY_CODE
-                            });
-
-                            return `<div><input type="radio" style="display:none;"  name="bulk_radio_${cell.getRow().getData().Id}" ${(cell.getRow().getData().ATTENDANCE == "Yes") ? "checked": ""} id="bulk_radio_${cell.getRow().getData().Id}_p" value="Present" /> <label onclick="angular.element('#transaction-controller-div').scope().updateAttendanceRecord(${cell.getRow().getData().Id}, true)" for="bulk_radio_${cell.getRow().getData().Id}_p">Present</label></div>
-                                    <div><input type="radio" style="display:none;"  name="bulk_radio_${cell.getRow().getData().Id}" ${(cell.getRow().getData().ATTENDANCE == "No") ? "checked" : ""} id="bulk_radio_${cell.getRow().getData().Id}_a" value="Absent" /> <label onclick="angular.element('#transaction-controller-div').scope().updateAttendanceRecord(${cell.getRow().getData().Id}, false)" for="bulk_radio_${cell.getRow().getData().Id}_a">Absent</label></div>`
-                        }
-
-                        
-                    }, download: false, width: 100, field: "profileView", headerSort: false
-                },
-                { title: 'Calendar', field: 'CALENDAR_NAME', headerFilter: "input" },
-                { title: 'Service Name', field: 'ACTIVITY_NAME', headerFilter: "input" },
-                { title: 'Service Provider', field: 'RESOURCE_DATA', headerFilter: "input" },
-                { title: 'Location', field: 'LOCATION_CODE', headerFilter: "input" },
-                
-                {
-                    title: 'From time', field: 'FROM_TIME', headerFilter: "input", formatter: function (cell, formatter) {
-                        return moment(cell.getData().FROM_TIME).format("YYYY-MM-DD hh:mm a")
-                    }
-                },
-                {
-                    title: 'To time', field: 'TO_TIME', headerFilter: "input", formatter: function (cell, formatter) {
-                        return moment(cell.getData().TO_TIME).format("YYYY-MM-DD hh:mm a")
-                    }
-                },
-                { title: 'Client Name', field: 'STUDENT_NAME', headerFilter: "input" },
-                { title: 'Attendance', field: 'ATTENDANCE', headerFilter: "input" },
-            ];
-
-            setTimeout(function () {
-                var options = {
-                    placeholder: "No Data.",
-                    tooltips: function (cell) {
-                        return cell.getValue();
-                    },
-                    height: "530px",
-                    layout: "fitColumns",
-                    responsiveLayout: false,
-                    initialSort: [
-                        { column: "created_at", dir: "desc" }
-                    ],
-                    persistenceID: "persisrecords",
-                    persistenceMode: true,
-                    persistentLayout: true,
-                    persistence: {
-                        sort: false, //persist column sorting
-                        filter: false, //persist filter sorting
-                        columns: false, //persist columns
-                    },
-                    persistenceWriterFunc: function (id, type, data) {
-                        localStorage.setItem(id + "-" + type, JSON.stringify(data));
-                    },
-                    persistenceReaderFunc: function (id, type) {
-                        //id - tables persistence id
-                        //type - type of data being persisted ("sort", "filter", "group", "page" or "columns")
-                        var data = localStorage.getItem(id + "-" + type);
-                        var dataParse = JSON.parse(data);
-                        if (!DataService.isEmpty(data) && type == "columns") {
-                            _.each(headers, function (item) {
-                                var exists = _.findWhere(dataParse, {
-                                    field: item.field
-                                });
-                                if (!DataService.isEmpty(exists)) {
-                                    exists.visible = item.visible;
-                                }
-                            })
-                        }
-                        else if (type == "page") {
-                            if (!DataService.isEmpty(data) && $scope.paginationSizeFormRecords != 0)
-                                dataParse.paginationSize = $scope.paginationSizeFormRecords;
-                        }
-                        return data ? dataParse : false;
-                    },
-                    columns: columns,
-                    footerElement: "<div style='text-align:left' id='no-of-forms'></div>",
-                    dataLoaded: function (data) {
-                        //data - all data loaded into the table                        
-                        var count = 0;
-                        if (data.length > 0)
-                            count = data[0].total_records;
-                        $('#form-records .tabulator-footer #no-of-forms').text("Total: " + count + " Entries");
-                    },           
-                    ajaxFiltering: true,
-                    ajaxSorting: true,
-                    ajaxLoader: true,
-                    ajaxURL: "/Calendar/GetTransactionMasterList",
-                    ajaxConfig: "POST", //ajax HTTP request type
-                    ajaxContentType: "json",
-                    ajaxParams: { //ajax parameters
-                        companyCode: localStorage.getItem("COMPANY_CODE"),
-                        calendarCode: localStorage.getItem("CALENDAR_CODE")
-                    },
-                    ajaxProgressiveLoad: "scroll",
-                    ajaxProgressiveLoadScrollMargin: 75,
-                    ajaxRequesting: function (url, params) {
-
-                        var called = true;
-                        if (params.sorters.length == 0) {
-                            params.sorters.push({ field: "created_at", dir: "desc" });
-                        }
-                        //if (called)
-                        //$('#form-records').block({ message: '<h4>Getting Form Records...</h4>' });
-                        return called; //abort ajax request
-                    },
-                    ajaxResponse: function (url, params, response) {
-                        //url - the URL of the request
-                        //params - the parameters passed with the request
-                        //response - the JSON object returned in the body of the response.
-                        //$('#form-records').unblock();
-                        //$.unblockUI();
-
-                        console.log(response);
-
-                        if (response.data != null) {
-                            if (response.data.length > 0) {
-
-                            } else {
-                                $("#mark-attendance-btn-area").addClass("custom-hide");
-                            }
-                        } else {
-                            $("#mark-attendance-btn-area").addClass("custom-hide");
-                        }
-
-                        if (response.data) {
-                            return response;
-                        }
-                        else {
-                            return response;
-                        }
-
-                    },
-                    paginationSize: 50,
-
-                };
-                var tabulator = initTabulator('form-records', options);
-                $('.form-builder-loader').hide();
-
-            }, 150);
+            $scope.AttendanceRecord = [];
+            $scope.isBulkMarkable = isBulkMarkable;
+            $scope.bindtabulatorOnly("columns", "true");
 
         };
 
-        $scope.CalendarMasterList();
+        //$scope.CalendarMasterList();
         
         $scope.updateAttendanceRecord = function (recordId, IsPresent = false) {
             debugger;
@@ -16742,7 +16596,6 @@
         }
 
         $scope.CancelBulkAttendance = function () {
-
             $("#mark-attendance-btn-area").removeClass("custom-hide");
             $("#mark-attendance-submit-area").addClass("custom-hide");
 

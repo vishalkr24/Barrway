@@ -2377,12 +2377,23 @@ async function rendarPopupCalendar(assignDate) {
                     if (!response.Status) {
                         window.location.href = '/Account/Login?returnUrl=/Marketplace/CompanySchedule?' + window.location.href.split('?')[1].replace('&', '$') + '';
                     } else {
-                        if (!confirm('You are going to book this session, are you sure?')) {
-                            return;
-                        }
-                        else {
-                            bookingService(start, end, bgevent);
-                        }
+
+                        swal({
+                            icon: "info",
+                            title: "Book Session",
+                            text: "You are going to book this session, are you sure?",
+                            buttons: {
+                                confirm: "Yes, I'm sure",
+                                cancel: "No, cancel"
+                            }
+                        }).then(function (value) {
+                            if (value) {
+                                bookingService(start, end, bgevent);
+                            } else {
+                                return;
+                            }
+                        })
+
                     }
                 }
             });
@@ -2453,7 +2464,14 @@ function bookingService(star,end,bgevent) {
     showLoader();
     postAsync(BASE_URL +"UserAdmin/BookingService", data).then(function (response) {
         hideLoader();
-        alert(response.Message);
+        swal({
+            icon: (response.Status) ? "success" : "warning",
+            title: response.Message,
+            buttons: {
+                confirm: "Okay!"
+            }
+        })
+        //alert(response.Message);
     })
 }
 
