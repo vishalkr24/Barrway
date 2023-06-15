@@ -5399,6 +5399,6 @@
 
         $scope.init();
 
-
+        $scope.bindtabulatorOnly = bindtabulatorOnly;
     });
 }(FormGeneratorApp));
