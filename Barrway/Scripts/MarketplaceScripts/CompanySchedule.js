@@ -2464,6 +2464,7 @@ function bookingService(star,end,bgevent) {
     showLoader();
     postAsync(BASE_URL +"UserAdmin/BookingService", data).then(function (response) {
         hideLoader();
+
         swal({
             icon: (response.Status) ? "success" : "warning",
             title: response.Message,
@@ -2472,6 +2473,8 @@ function bookingService(star,end,bgevent) {
             }
         })
         //alert(response.Message);
+        $('#agenda-view2 div.calendar').fullCalendar('removeEvents');
+        $('#agenda-view2 div.calendar').fullCalendar('refetchEvents');
     })
 }
 

@@ -1,6 +1,7 @@
 ﻿using Barrway.DTO.FormAPI;
 using Barrway.Security;
 using Barrway.Service.IRepository;
+using Barrway.Service.Repository;
 using Barrway.Utility.Common;
 using FormGeneratorDTOs.DTOs;
 using Newtonsoft.Json;
@@ -23,13 +24,15 @@ namespace Barrway.Controllers
         private readonly IFormAPIRepository formAPIRepository;
         private readonly ICalendarService calendarService;
         private readonly IPublicUserService publicUserService;
+        private readonly IBusinessUserService businessUserService;
 
         // GET: FormAPI
-        public FormAPIController(IFormAPIRepository formAPIRepository, ICalendarService calendarService, IPublicUserService publicUserService)
+        public FormAPIController(IFormAPIRepository formAPIRepository, ICalendarService calendarService, IPublicUserService publicUserService,IBusinessUserService businessUserService)
         {
             this.formAPIRepository = formAPIRepository;
             this.calendarService = calendarService;
             this.publicUserService = publicUserService;
+            this.businessUserService = businessUserService;
         }
 
         [HttpPost]
@@ -302,6 +305,26 @@ namespace Barrway.Controllers
                             e["title"] = "";
                         }
                     });
+                }
+            }
+            if (!data.IsPublicUser) {
+
+               var calendarDetailsResult= await businessUserService.GetCalendarDetails(data.CALENDAR_CODE);
+                if (calendarDetailsResult.Status) {
+                    var calendarDetails = calendarDetailsResult.Data as IDictionary<string, object>;
+                    if (calendarDetails.ContainsKey("category") && calendarDetails["category"]!=null) { 
+                    var calendarCategory = calendarDetails["category"] as IDictionary<string, object>;
+                        if (calendarCategory.ContainsKey("IS_SERVICE_TYPE"))
+                        { 
+                            string is_service_type= calendarCategory["IS_SERVICE_TYPE"]?.ToString()??"";
+                            if (is_service_type != "N") {
+                                if (result != null && result.events != null) {
+                                    result.events = result.events.Where(x => x.ContainsKey("EVENT_TYPE") && x["EVENT_TYPE"]?.ToString() != "BOOKING").ToList();
+                                }
+                            }
+                        }
+                    }
+
                 }
             }
 
