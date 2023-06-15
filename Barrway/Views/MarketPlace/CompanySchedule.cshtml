@@ -682,7 +682,19 @@
                     success: function (response) {
 
                         if (!response.Status) {
-                            window.location.href = '/Account/Login?returnUrl=/Marketplace/CompanySchedule?' + window.location.href.split('?')[1].replace('&', '$') + '';
+                            swal({
+                                title: "Login Required",
+                                text: "Kindly login into your account and then you can enroll yourself into this calendar.",
+                                icon: "info",
+                                buttons: {
+                                    confirm: "Login",
+                                    cancel: "Leave it"
+                                }
+                            }).then(function (value) {
+                                if (value) {
+                                    window.location.href = '/Account/Login?returnUrl=/Marketplace/CompanySchedule?' + window.location.href.split('?')[1].replace('&', '$') + '';
+                                }
+                            });
                         } else {
 
                             // code to call the service
@@ -813,7 +825,21 @@
                 success: function (response) {
 
                     if (!response.Status) {
-                        window.location.href = '/Account/Login?returnUrl=/Marketplace/CompanySchedule?' + window.location.href.split('?')[1].replace('&', '$') + '';
+
+                        swal({
+                            title: "Login Required",
+                            text: "Kindly login into your account and then you can mark calendar as favorite.",
+                            icon: "info",
+                            buttons: {
+                                confirm: "Login",
+                                cancel: "Leave it"
+                            }
+                        }).then(function (value) {
+                            if (value) {
+                                window.location.href = '/Account/Login?returnUrl=/Marketplace/CompanySchedule?' + window.location.href.split('?')[1].replace('&', '$') + '';
+                            }
+                        });
+
                     } else {
 
                         $.ajax({
@@ -867,7 +893,19 @@
                 success: function (response) {
 
                     if (!response.Status) {
-                        window.location.href = '/Account/Login?returnUrl=/Marketplace/CompanySchedule?' + window.location.href.split('?')[1].replace('&', '$') + '';
+                        swal({
+                            title: "Login Required",
+                            text: "Kindly login into your account and then you can Unmark calendar as favorite.",
+                            icon: "info",
+                            buttons: {
+                                confirm: "Login",
+                                cancel: "Leave it"
+                            }
+                        }).then(function (value) {
+                            if (value) {
+                                window.location.href = '/Account/Login?returnUrl=/Marketplace/CompanySchedule?' + window.location.href.split('?')[1].replace('&', '$') + '';
+                            }
+                        });
                     } else {
 
                         $.ajax({

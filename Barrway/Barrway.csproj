@@ -3192,6 +3192,7 @@
     <Content Include="Views\BusinessMarketplace\Index.cshtml" />
     <Content Include="Views\BusinessMarketplace\Features.cshtml" />
     <Content Include="Views\BusinessAdmin\CompanyMaster.cshtml" />
+    <Content Include="Views\BusinessMarketplace\Pricing.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

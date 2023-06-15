@@ -141,30 +141,48 @@ namespace Barrway.Controllers
         public async Task<ActionResult> getCalenderSettingsFormData(calenderSettingsFormDetails data)
         {
             var result = await formAPIRepository.getCalenderSettingsFormData(data);
-            
-            if ((data.CustomFilters[0].Value.ToString()).Contains(","))
+            if (data.IsPublicUser)
             {
                 // filter the data of resources
                 var resourceData = result.FirstOrDefault(x => x.resourceForm != 0 & x.IsDefault == true).formDataList;
 
                 List<IDictionary<string, object>> tempResults = new List<IDictionary<string, object>>();
-
-                var enrolledData = await publicUserService.GetAllEnrolledCompaniesData(UserIdentity.UserEmail);
-                for (int i = 0; i < resourceData.Count; i++)
+                try
                 {
-                    for (int j = 0; j < enrolledData.Data.Count; j++)
+                    var enrolledData = await publicUserService.GetAllEnrolledCompaniesData(UserIdentity.UserEmail, false);
+                    for (int i = 0; i < resourceData.Count; i++)
                     {
-                        if (resourceData[i]["id"].ToString() == enrolledData.Data[j]["RESOURCE"].ToString())
+                        for (int j = 0; j < enrolledData.Data.Count; j++)
                         {
-                            tempResults.Add(resourceData[i]);
+                            if (resourceData[i]["id"].ToString() == enrolledData.Data[j]["RESOURCE"].ToString())
+                            {
+                                bool insertFlag = true;
+
+                                if (tempResults.FirstOrDefault(x => x.Values.Contains(resourceData[i]["id"].ToString())) != null)
+                                {
+                                    insertFlag = false;
+                                }
+
+                                if (insertFlag)
+                                {
+                                    tempResults.Add(resourceData[i]);
+                                }
+
+                            }
                         }
+
                     }
+                }
+                catch (Exception ex)
+                {
 
                 }
 
                 result.FirstOrDefault(x => x.resourceForm != 0 & x.IsDefault == true).formDataList = tempResults;
-
             }
+            
+            
+
 
             return Json(result);
         }
