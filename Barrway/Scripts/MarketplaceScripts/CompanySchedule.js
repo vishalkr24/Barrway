@@ -2454,6 +2454,12 @@ function bookingService(star,end,bgevent) {
     postAsync(BASE_URL +"UserAdmin/BookingService", data).then(function (response) {
         hideLoader();
         alert(response.Message);
+
+        $('#agenda-view2 div.calendar').fullCalendar('removeEvents');
+        $('#agenda-view2 div.calendar').fullCalendar('refetchEvents');
+
+
+
     })
 }
 

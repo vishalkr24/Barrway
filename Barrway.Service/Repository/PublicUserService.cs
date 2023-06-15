@@ -430,7 +430,7 @@ namespace Barrway.Service.Repository
                             transaction_req.formId = (int)FormSetting.TRANSACTION_MASTER;
 
                             transaction_req.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(transaction);
-                            transaction_req.formGroupKey = Guid.NewGuid().ToString();
+                            transaction_req.formGroupKey = formGroupKey;
                             var formResult2 = (await formAPIRepository.GeneratedFormData(transaction_req)).Data;
 
 
