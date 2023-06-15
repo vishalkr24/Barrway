@@ -1946,7 +1946,7 @@
                 views: {
                     'content': {
                         templateUrl: '/Templates/calendar-master/transaction-master.html?token=' + uuid,
-                        controller: 'CustomTransactionController'
+                        controller: 'FormRecordsController'
                     }
                 },
                 ncyBreadcrumb: {

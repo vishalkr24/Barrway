@@ -15316,6 +15316,33 @@ function addNewColumns(formid, columns) {
             });
         }
             break;
+
+        case 2312: {
+
+            var $scope = angular.element($("#transaction-controller-div")).scope();
+            columns.unshift({
+                title: "ATTENDANCE", formatter: function (cell, formatter) {
+
+                    if (!$scope.isBulkMarkable) {
+                        return `<button onclick="angular.element('#transaction-controller-div').scope().MarkAttendance(${cell.getRow().getData().Id})"  class="btn btn-primary text-light"><i class="bi-check2-circle"></i> Mark</button>`
+                    } else {
+
+                        $scope.AttendanceRecord.push({
+                            Id: cell.getRow().getData().Id,
+                            Attendance: (cell.getRow().getData().ATTENDANCE == "Yes") ? "Present" : (cell.getRow().getData().ATTENDANCE == "No") ? "Absent" : "Unmarked",
+                            IsUpdated: false,
+                            CompanyCode: cell.getRow().getData().COMPANY_CODE
+                        });
+
+                        return `<div><input type="radio" style="display:none;"  name="bulk_radio_${cell.getRow().getData().Id}" ${(cell.getRow().getData().ATTENDANCE == "Yes") ? "checked" : ""} id="bulk_radio_${cell.getRow().getData().Id}_p" value="Present" /> <label onclick="angular.element('#transaction-controller-div').scope().updateAttendanceRecord(${cell.getRow().getData().Id}, true)" for="bulk_radio_${cell.getRow().getData().Id}_p">Present</label></div>
+                                    <div><input type="radio" style="display:none;"  name="bulk_radio_${cell.getRow().getData().Id}" ${(cell.getRow().getData().ATTENDANCE == "No") ? "checked" : ""} id="bulk_radio_${cell.getRow().getData().Id}_a" value="Absent" /> <label onclick="angular.element('#transaction-controller-div').scope().updateAttendanceRecord(${cell.getRow().getData().Id}, false)" for="bulk_radio_${cell.getRow().getData().Id}_a">Absent</label></div>`
+                    }
+
+
+                }, download: false, width: 100, field: "profileView", headerSort: false
+            });
+        }
+            break;
         
 
     }
