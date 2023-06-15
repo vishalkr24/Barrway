@@ -35,6 +35,7 @@ namespace Barrway.Service.IRepository
 
         Task<AddUpdateDelete> GetAllEnrolledCalendarsData(string CompanyCode, string UserEmail, string filterDate = null, bool IsCustomInFilter = false);
         Task<AddUpdateDelete> GetFullCalendarEvents(string StartDate, string EndDate, string UserEmail);
+        Task<AddUpdateDelete> BookingServiceEvent(RequestEventViewModel eventModal, string userName);
 
         #endregion
 

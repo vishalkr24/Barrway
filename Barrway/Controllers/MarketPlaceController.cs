@@ -3,11 +3,14 @@ using Barrway.DTO.Common;
 using Barrway.DTO.MarketplaceModels;
 using Barrway.Security;
 using Barrway.Service.IRepository;
+using Barrway.Service.Repository;
+using Barrway.Utility.Common;
 using FormGeneratorDTOs.DTOs;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -20,12 +23,17 @@ namespace Barrway.Controllers
         private readonly IGlobalMasterService globalMasterService;
         private readonly IMasterService masterService;
         private readonly IPublicUserService publicUserService;
-        public MarketPlaceController(IBusinessUserService businessUserService, IGlobalMasterService globalMasterService, IMasterService masterService, IPublicUserService publicUserService)
+        private readonly IAuthService authService;
+        private readonly IFormAPIRepository formAPIRepository;
+
+        public MarketPlaceController(IBusinessUserService businessUserService, IGlobalMasterService globalMasterService, IMasterService masterService, IPublicUserService publicUserService,IAuthService authService,IFormAPIRepository formAPIRepository)
         {
             this.businessUserService = businessUserService;
             this.globalMasterService = globalMasterService;
             this.masterService = masterService;
             this.publicUserService = publicUserService;
+            this.authService = authService;
+            this.formAPIRepository = formAPIRepository;
         }
 
         // GET: MarketPlace
@@ -279,6 +287,9 @@ namespace Barrway.Controllers
                 return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
             }
         }
+
+
+       
 
 
 

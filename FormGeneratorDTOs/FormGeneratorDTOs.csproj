@@ -33,12 +33,6 @@
     <Reference Include="Quartz">
       <HintPath>..\..\Moodies-Web\FormGeneratorDTOs\Dto_dlls\Quartz.dll</HintPath>
     </Reference>
-    <Reference Include="Spire.License">
-      <HintPath>Dto_dlls\Spire.License.dll</HintPath>
-    </Reference>
-    <Reference Include="Spire.XLS">
-      <HintPath>Dto_dlls\Spire.XLS.dll</HintPath>
-    </Reference>
     <Reference Include="Syncfusion.DocIO.Base">
       <HintPath>..\..\Moodies-Web\FormGeneratorDTOs\Dto_dlls\Syncfusion.DocIO.Base.dll</HintPath>
     </Reference>
