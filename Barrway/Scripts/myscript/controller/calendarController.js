@@ -16163,6 +16163,7 @@
 
     FormGeneratorApp.controller('UserAdminCalendarController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
         checkLogin();
+
         $scope.rootScopeSafe = function () {
             $rootScope.safeApply();
         };
@@ -16181,6 +16182,7 @@
         adminService.postAsync('/UserAdmin/GetAllEnrolledCompaniesData/').then(function (res) {
 
             $scope.CompanyList = res.data.data.Data;
+           
             setTimeout(function () {
                 $scope.manageSelectedCompany();
                 usercalendarLoad();
@@ -16206,6 +16208,8 @@
         $scope.manageSelectedCompany = function () {
             if (localStorage.getItem("publicUserSelectedCompany") != null && localStorage.getItem("publicUserSelectedCompany") != undefined && localStorage.getItem("publicUserSelectedCompany") != "null") {
                 $("#company-filter-selector").val(localStorage.getItem("publicUserSelectedCompany"));
+            } else {
+                $("#company-filter-selector").val("-1");
             }
         }
 
@@ -17112,10 +17116,8 @@
     FormGeneratorApp.controller('UserMyFavoriteController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
         checkLogin();
         $("#user-nav-myfavorite").addClass("active")
-        $scope.setFavoritesData = function (pageNumber) {
 
-            $("#list-view").show();
-            $("#detail-view").hide();
+        $scope.setFavoritesData = function (pageNumber, IsInnitial = false) {
 
             var CompanyCode = null;
 
@@ -17134,7 +17136,20 @@
                     COMPANY_CODE: CompanyCode
                 },
                 success: function (response) {
+
+                    if (IsInnitial) {
+                        $scope.CompanyListFilter = response.data[1];
+
+                        $("#company-filter-selector").empty();
+                        $("#company-filter-selector").append(`<option selected value="-1">All Companies</option>`);
+
+                        for (var i = 0; i < $scope.CompanyListFilter.length; i++) {
+                            var company = $scope.CompanyListFilter[i];
+                            $("#company-filter-selector").append(`<option value="${company.COMPANY_CODE}">${company.COMPANY_NAME_ENGLISH}</option>`);
+                        }
+                    }
                     
+
                     var nextPage = 0;
 
                     if (pageNumber == response.last_page) {
@@ -17164,7 +17179,7 @@
                     $("#row1").empty();
                     $("#row2").empty();
 
-                    $scope.CompanyList = response.data[1];
+                    
 
                     for (var i = 0; i < response.data[0].length; i++) {
                         response.data[0][i].CALENDAR_PHOTO_PATH = response.data[0][i].CALENDAR_PHOTO_PATH.replace('~', '..')
@@ -17231,7 +17246,7 @@
 
         }
 
-        $scope.setFavoritesData(1);
+        $scope.setFavoritesData(1, true);
     })
 
 }(FormGeneratorApp));

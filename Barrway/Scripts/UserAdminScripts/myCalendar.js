@@ -57,7 +57,7 @@ async function usercalendarLoad() {
     window["EventBasicDetail"] = manageWindowParams();
 
     var calenderSettings = await getCalenderSettings();
-
+    debugger;
     calendarDetails = (await getCalendarDetails(calenderSettings[0].formDataList[0].CALENDAR_CODE)).Data;
     if (calenderSettings.length > 0) {
 
@@ -350,7 +350,7 @@ async function getCalenderSettings() {
         $.ajax({
             type: "POST",
             url: BASE_URL + "FormAPI/getCalenderSettingsFormData",
-            data: JSON.stringify({ "action": 4, "formId": CalendarFormId, "IsCustomFilter": IsCustomFilter, IsCustomInFilter:IsCustomInFilter, "CustomFilters": [{ "FieldName": "COMPANY_CODE", "Value": COMPANY_CODE }] }),
+            data: JSON.stringify({ "action": 4, "IsPublicUser": true, "formId": CalendarFormId, "IsCustomFilter": IsCustomFilter, IsCustomInFilter:IsCustomInFilter, "CustomFilters": [{ "FieldName": "COMPANY_CODE", "Value": COMPANY_CODE }] }),
             contentType: "application/json",
             success: function (response) {
                 hideLoader();
