@@ -309,6 +309,119 @@ namespace Barrway.Controllers
         }
 
         [HttpPost]
+        public async Task<ActionResult> getReferralFormFieldsService(Form_DataTable data)
+        {
+            if (!string.IsNullOrEmpty(data?.COMPANY_CODE) || !string.IsNullOrEmpty(data?.CALENDAR_CODE))
+            {
+
+                if (data.filter != null)
+                {
+                    data.filter.value = data.filter.value + " and F.COMPANY_CODE=N'" + data.COMPANY_CODE + "' and F.CALENDAR_CODE=N'" + data.CALENDAR_CODE + "'";
+                }
+            }
+            ReferalFormDataResponseModel result = await formAPIRepository.getReferralFormFields(data);
+
+            List<IDictionary<string,object>> eventsData = new List<IDictionary<string,object>>();
+
+            if (result != null && result.events != null && result.events.Count > 0)
+            {   
+                var markSchedule = result.events.Where(x => x["EVENT_TYPE"]?.ToString() == "SCHEDULE").ToList();
+
+                markSchedule.ForEach(x => x.Add("rendering", "background"));
+
+
+                var availableSchedule = new List<IDictionary<string, object>>();
+                var availableSlots = new List<IDictionary<string, DateTime>>();
+                var UnavailableSlots = new List<IDictionary<string, DateTime>>();
+
+                markSchedule.GroupBy(x => new { start = x["start"].ToString(), end = x["end"].ToString() }).ToList().ForEach(x =>
+                {
+                    var slot = new Dictionary<string, DateTime>();
+                    slot.Add("start", Convert.ToDateTime(x.Key.start));
+                    slot.Add("end", Convert.ToDateTime(x.Key.end));
+                    availableSlots.Add(slot);
+                    availableSchedule.AddRange(x.ToList());
+                });
+
+                availableSlots = availableSlots.OrderBy(x => x["start"]).ToList();
+
+                DateTime start = Convert.ToDateTime(data.startDate);
+                DateTime end = Convert.ToDateTime(data.endDate);
+
+                foreach (var item in availableSlots)
+                {
+                    if (item["start"] > start)
+                    {
+                        var slot = new Dictionary<string, DateTime>();
+                        slot.Add("start", start);
+                        slot.Add("end", item["start"]);
+                        UnavailableSlots.Add(slot);
+                        start = item["end"];
+                    }
+                    else
+                    {
+                        start = item["end"];
+                    }
+                }
+
+                var defaultslot = new Dictionary<string, DateTime>();
+                defaultslot.Add("start", start);
+                defaultslot.Add("end", end);
+                UnavailableSlots.Add(defaultslot);
+
+                var UnavailableEvents = UnavailableSlots.Select(x => new { id = 0, start = x["start"], end = x["end"], title = "", rendering = "background", color = "#ddd", customForms = ((int)FormSetting.LOCATION_MASTER).ToString(), customTitle = "Barrway", customFormIds = "1" }.ToDictionary()).ToList();
+                eventsData.AddRange(UnavailableEvents);
+
+                eventsData.AddRange(availableSchedule);
+
+                var otherevents = result.events.Where(x => x.ContainsKey("EVENT_TYPE") && x["EVENT_TYPE"]?.ToString() != "SCHEDULE").ToList();
+                eventsData.AddRange(otherevents);
+                result.events = eventsData;
+            }
+            else
+            {
+                eventsData = new List<IDictionary<string, object>>();
+                var UnavailableSlots = new List<IDictionary<string, DateTime>>();
+                DateTime start = Convert.ToDateTime(data.startDate);
+                DateTime end = Convert.ToDateTime(data.endDate);
+                var defaultslot = new Dictionary<string, DateTime>();
+                defaultslot.Add("start", start);
+                defaultslot.Add("end", end);
+                UnavailableSlots.Add(defaultslot);
+                var UnavailableEvents = UnavailableSlots.Select(x => new { id = 0, start = x["start"], end = x["end"], title = "", rendering = "background", color = "#ddd", customForms = ((int)FormSetting.LOCATION_MASTER).ToString(), customTitle = "Barrway", customFormIds = "1" }.ToDictionary()).ToList();
+                eventsData.AddRange(UnavailableEvents);
+                result.events = eventsData;
+            }
+
+            if (result != null)
+            {
+                if (result.events != null && result.events.Count() > 0)
+                {
+                    result.events.ForEach(e =>
+                    {
+                        if (e.ContainsKey("start") && e["start"] != null)
+                        {
+                            e["start"] = Convert.ToDateTime(e["start"]).ToString("yyyy-MM-ddTHH:mm:ss");
+                        }
+                        if (e.ContainsKey("end") && e["end"] != null)
+                        {
+                            e["end"] = Convert.ToDateTime(e["end"]).ToString("yyyy-MM-ddTHH:mm:ss");
+                        }
+                        if (e.ContainsKey("title") && e["title"] != null)
+                        {
+                            e["title"] = "";
+                        }
+                    });
+                }
+            }
+
+            
+
+
+            return Json(result);
+        }
+
+        [HttpPost]
         public async Task<ActionResult> ManageCalenderReferrenceNew(FormCalenderReferrenceTable data)
         {
             var result = await formAPIRepository.ManageCalenderReferrenceNew(data);

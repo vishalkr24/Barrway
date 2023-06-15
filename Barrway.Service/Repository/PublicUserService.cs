@@ -15,6 +15,7 @@ using Barrway.Utility.Common;
 using Barrway.DTO.PublicModels;
 using Barrway.DTO.UserAdminModels;
 using Barrway.DTO.MarketplaceModels;
+using System.Reflection;
 
 namespace Barrway.Service.Repository
 {
@@ -295,6 +296,227 @@ namespace Barrway.Service.Repository
             {
                 return new AddUpdateDelete() { Message = "Failed to enroll on calendar", Status = false };
             }
+        }
+
+
+        public async Task<AddUpdateDelete> BookingServiceEvent(RequestEventViewModel eventModal,string userName)
+        {
+            if (eventModal != null)
+            {
+                try
+                {
+                    var userResult = await authService.GetUser(userName, FormRole.PUBLIC_USER);
+                    if (userResult.Status)
+                    {
+                        var userData = userResult.Data as IDictionary<string,object>;
+                        string user_email = userData["USER_EMAIL"]?.ToString() ?? "";
+                        List<IDictionary<string, object>> participantCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from PARTICIPANT_MASTER_1940 where EMAIL = '{user_email}' and COMPANY_CODE = '{eventModal.companyCode}' and CALENDAR_CODE = '{eventModal.calendarCode}'");
+
+
+                        string StudentId = "";
+                        if (participantCheckResult.Count > 0) {
+                            StudentId = participantCheckResult.FirstOrDefault()["Id"].ToString();
+                        }
+                        else
+                        {
+                            var publicUser = await GetSinglePublicUserAccount(userName);
+                            var publicUserData=publicUser.Data as IDictionary<string, object>;
+                            IDictionary<string,object> participant=new Dictionary<string, object>();
+                            participant["NICKNAME"] = publicUserData["NICK_NAME"]?.ToString()??"";
+                            participant["EMAIL"] = user_email;
+                            participant["CALENDAR_CODE"] = eventModal.calendarCode;
+                            participant["COMPANY_CODE"] = eventModal.companyCode;
+                            participant["ADDRESS"] = "";
+                            participant["GENDER"] = publicUserData["GENDER"]?.ToString()??"";
+                            participant["IS_ACTIVE"] = "Y";
+                            participant["STUDENT_NAME"] = (publicUserData["FIRST_NAME"]?.ToString()??"" + " " + publicUserData["LAST_NAME"]?.ToString()??"").Trim();
+
+                            Form_DataTable data = new Form_DataTable();
+                            data.action = (int)FormAction.Save;
+                            data.formId = (int)FormSetting.PARTICIPANT_MASTER;
+
+                            data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(participant);
+                            data.formGroupKey = Guid.NewGuid().ToString();
+                            var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+                            if (formResult.res == 1)
+                            {
+                                StudentId = formResult.Id.ToString();
+
+                                string ParticipantCode = "PC" + formResult.Id.ToString().PadLeft(5, '0');
+
+                                string query = $@"UPDATE [dbo].[PARTICIPANT_MASTER_1940]
+                                   SET [PARTICIPANT_CODE] = '{ParticipantCode}'
+                                 WHERE Id = '{formResult.Id.ToString()}'";
+
+                                int saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
+                            }
+                            else
+                            {
+                                return new AddUpdateDelete() { Message = "Failed to add participant", Status = false };
+                            }
+                        }
+
+
+                        Form_DataTable request = new Form_DataTable();
+
+                        request.currentFormType = 1;
+                        request.IsMaxOneRecordPerUser= false;
+                        request.action = (int)FormAction.Save;
+                        request.userId = (int)FormSetting.CreatedUser;
+                        request.formId = (int)FormSetting.CALENDAR_FORM;
+                        request.resourceFormId = eventModal.resourceFormId;
+                        request.ActivityFormId = eventModal.activityFormId;
+                        request.topicId = 1935;
+                        request.created_by = (int)FormSetting.CreatedUser;
+                        request.updated_by = (int)FormSetting.CreatedUser;
+                        string formGroupKey = Guid.NewGuid().ToString();
+                        request.formGroupKey = formGroupKey;
+                        var start = Convert.ToDateTime(eventModal.start);
+                        var end = Convert.ToDateTime(eventModal.start).AddMinutes(60);
+
+                        var eventData = new {start = start, end = end, allDay = false, EVENT_TYPE = "BOOKING", description = "", resources = eventModal.resourceId, activities = eventModal.activityId, formGroupKey = formGroupKey, COMPANY_CODE=eventModal.companyCode, CALENDAR_CODE=eventModal.calendarCode }.ToDictionary();
+                        eventData["resources_" + eventModal.resourceFormId] = eventModal.resourceId;
+                        eventData["activities_" + eventModal.activityFormId] = eventModal.activityId;
+                        eventData["activities_" + eventModal.otherActivityformId] = eventModal.otherActivityId;
+                        eventData["activities_" + (int)FormSetting.PARTICIPANT_MASTER] = Convert.ToInt32(StudentId);
+
+                        request.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(eventData);
+
+                        GenerateDynamicFormData eventResponse = (await formAPIRepository.GeneratedFormData(request)).Data;
+                        if (eventResponse.res == 1)
+                        {
+
+                            List<int> customForms = new List<int>();
+                            List<int> customFormIds = new List<int>();
+                            customForms.Add(eventModal.resourceFormId);
+                            customForms.Add(eventModal.activityFormId);
+                            customForms.Add(eventModal.otherActivityformId);
+                            customForms.Add((int)FormSetting.PARTICIPANT_MASTER);
+
+                            customFormIds.Add(eventModal.resourceId);
+                            customFormIds.Add(eventModal.activityId);
+                            customFormIds.Add(eventModal.otherActivityId);
+                            customFormIds.Add(Convert.ToInt32(StudentId));
+
+                            FormCalenderReferrenceTable request2 = new FormCalenderReferrenceTable()
+                            {
+                               customForms=string.Join(",", customForms),
+                               customFormIds=string.Join(",", customFormIds),
+                               action=11,
+                               formId=(int)FormSetting.CALENDAR_FORM,
+                               formGroupKey=formGroupKey,
+                               created_by=(int)FormSetting.CreatedUser,
+                               updated_by=(int)FormSetting.CreatedUser
+                            };
+                            await formAPIRepository.ManageCalenderReferrenceNew(request2);
+
+                            IDictionary<string, object> transaction = new Dictionary<string, object>();
+
+                            transaction["SLOT"] = eventResponse.Id;
+                            transaction["RESOURCE"] = eventModal.resourceId;
+                            transaction["ACTIVITY"] = eventModal.activityId;
+                            transaction["STUDENT"] = StudentId;
+                            transaction["REMARKS"] = "";
+                            transaction["FEES"] = "";
+                            transaction["ATTENDANCE"] = "YES";
+                            transaction["COMPANY_CODE"] = eventModal.companyCode;
+                            transaction["CALENDAR_CODE"] = eventModal.calendarCode;
+
+
+
+                            Form_DataTable transaction_req = new Form_DataTable();
+                            transaction_req.action = (int)FormAction.Save;
+                            transaction_req.formId = (int)FormSetting.TRANSACTION_MASTER;
+
+                            transaction_req.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(transaction);
+                            transaction_req.formGroupKey = Guid.NewGuid().ToString();
+                            var formResult2 = (await formAPIRepository.GeneratedFormData(transaction_req)).Data;
+
+
+                            IDictionary<string,string> upCommingBooking= new Dictionary<string, string>();
+
+                            upCommingBooking["COMPANY_CODE"]= eventModal.companyCode.ToString();
+                            upCommingBooking["CALENDAR_CODE"] = eventModal.calendarCode.ToString();
+                            upCommingBooking["SLOT"] = eventResponse.Id.ToString();
+
+                            upCommingBooking["ACTIVITY_NAME"] = eventModal.activityTitle;
+                            upCommingBooking["RESOURCE_NAME"] = eventModal.resourceTitle;
+                            upCommingBooking["STUDENT_NAME"] = userData["FIRST_NAME"]?.ToString()??"";
+
+                            var upcommingBookingResult = await UpCommingBookingAdd(upCommingBooking);
+
+
+                            return new AddUpdateDelete() { Status = true, Message = "Success" };
+                        }
+                        else
+                        {
+                            return new AddUpdateDelete() { Status = false, Message = eventResponse.Message };
+                        }
+                    }
+                    else
+                    {
+                        return new AddUpdateDelete() { Status = false, Message = "No Data Found" };
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return new AddUpdateDelete() { Status = false, Message = ex.Message };
+                }
+            }
+            return new AddUpdateDelete() { Status = false, Message = "Invalid response!" };
+        }
+        private async Task<int> UpCommingBookingAdd(IDictionary<string,string> data) {
+
+            string upcomingBookingQuery = $@"INSERT INTO [dbo].[COMPANY_UPCOMING_BOOKINGS_1945]
+                                                   ([formGroupKey]
+                                                   ,[formID]
+                                                   ,[userID]
+                                                   ,[Current_Status]
+                                                   ,[cycle]
+                                                   ,[MasterFormID]
+                                                   ,[MasterFormRow]
+                                                   ,[formRecordOrder]
+                                                   ,[formRecordStatus]
+                                                   ,[ApprovalStatus]
+                                                   ,[created_at]
+                                                   ,[updated_at]
+                                                   ,[created_by]
+                                                   ,[updated_by]
+                                                   ,[COMPANY_CODE]
+                                                   ,[CALENDAR_CODE]
+                                                   ,[BOOKING_DATE]
+                                                   ,[SERVICE_NAME]
+                                                   ,[SERVICE_PROVIDER]
+                                                   ,[CLIENT_NAME]
+                                                   ,[FROM_TIME]
+                                                   ,[TO_TIME])
+                                             VALUES
+                                                   ('{Guid.NewGuid().ToString()}'
+                                                   ,2315
+                                                   ,30314
+                                                   ,0
+                                                   ,0
+                                                   ,0
+                                                   ,0
+                                                   ,0
+                                                   ,(select ISNULL(Max(formRecordOrder), 0) from COMPANY_UPCOMING_BOOKINGS_1945)
+                                                   ,0
+                                                   ,getdate()
+                                                   ,getdate()
+                                                   ,null
+                                                   ,null
+                                                   ,'{data["COMPANY_CODE"]}'
+                                                   ,'{data["CALENDAR_CODE"]}'
+                                                   , (select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = {data["SLOT"]})                                                                                                                                                                                                     
+                                                   , '{data["ACTIVITY_NAME"]}'
+                                                   , '{data["RESOURCE_NAME"]}'
+                                                   , '{data["STUDENT_NAME"]}'
+                                                   , (select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = {data["SLOT"]}) 
+                                                   , (select calendar.[end] from  CALENDAR_FORM_1935 calendar where Id = {data["SLOT"]}) )";
+
+
+           return await sqlFunction.ExecuteSqlCommandQuery(upcomingBookingQuery);
         }
 
         public async Task<AddUpdateDelete> AddFavoriteCalendar(FavoriteCalendarModel model)

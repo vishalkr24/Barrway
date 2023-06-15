@@ -161,6 +161,20 @@ namespace Barrway.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<ActionResult> BookingService(RequestEventViewModel model)
+        {
+            try
+            {
+                var result = await publicUserService.BookingServiceEvent(model,User.Identity.Name);
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = "Failed" }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
 
         [HttpPost]
         public async Task<ActionResult> GetAllEnrolledCompaniesData()

@@ -1370,8 +1370,6 @@ function renderEventHtml(calenderType, calenderData, resourceData, resColumns, a
         $('#' + current_tab + ' div.calendar').fullCalendar('addEventSource', calenderData);
     }
     
-    
-
     return result;
 }
 

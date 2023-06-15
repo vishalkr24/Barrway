@@ -1,5 +1,5 @@
 ﻿var CalendarFormId = "2305", ySelection = "", xSelection = "", COMPANY_CODE, CALENDAR_CODE, formDetailsDataInfo, counterLoader, xaxisFormList, formAllDatafields, listTabulator, calendarDetails;
-debugger;
+
 $(document).ready(async function () {
     $("#nv-company-schedule").addClass("active");
 
@@ -687,7 +687,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 listids = event.customFormIds.split(',');
                 var currentId = 0;
                 tempHtml = "";
-                var agendaTempHtml = '<div class="fc-content" style="padding: 2px 1px;border-radius: 3px;background: #ddd;color: #000;" data-original-title="" title="">';
+                var agendaTempHtml = '<div class="fc-content" style="padding: 2px 1px;border-radius: 3px;background: #ddd;color: #000;" data-bs-original-title="" title="">';
                 var agendaTempHtmlSub = '';
                 var titleCounter = 0;
                 _.each(_arrFormIDs, function (dataRow, position) {
@@ -1901,7 +1901,7 @@ async function getCalendarDetails(id) {
 
 }
 
-
+var othercalendar;
 async function rendarPopupCalendar(assignDate) {
     var customEventDetailsServiceModelPopUp = angular.element("#customEventDetailsServiceModelPopUp");
     var defaultOptions2 = {
@@ -1969,7 +1969,8 @@ async function rendarPopupCalendar(assignDate) {
                 resources: event.resources,
                 activities: event.activities,
                 activityName: event.activityName,
-                formGroupKey: event.formGroupKey
+                formGroupKey: event.formGroupKey,
+                EVENT_TYPE: event.EVENT_TYPE
             };
             eventData.title = _tempTitle;
             eventData.Images = event.files;
@@ -2088,7 +2089,7 @@ async function rendarPopupCalendar(assignDate) {
                 listids = event.customFormIds.split(',');
                 var currentId = 0;
                 tempHtml = "";
-                var agendaTempHtml = '<div class="fc-content" style="padding: 2px 1px;border-radius: 3px;background: #ddd;color: #000;" data-original-title="" title="">';
+                var agendaTempHtml = '<div class="fc-content" style="padding: 2px 1px;border-radius: 3px;background: #ddd;color: #000;" data-bs-original-title="" title="">';
                 var agendaTempHtmlSub = '';
                 var titleCounter = 0;
                 _.each(_arrFormIDs, function (dataRow, position) {
@@ -2176,7 +2177,7 @@ async function rendarPopupCalendar(assignDate) {
 
                 });
                 agendaTempHtml += '</div>';
-
+               
                 if (current_tab != "agenda-view") {
                     _mainTempHtml += tempHtml;
                 }
@@ -2229,7 +2230,18 @@ async function rendarPopupCalendar(assignDate) {
                                     <div id="addTransactionRecord" class="edit-event-student cursor-pointer d-inline-block"><i class="fa fa-plus"></i></div>  </div>  </div>   <ul id="tabuListUl">  </ul></div>`
 
             }
-            element.append(_mainTempHtml)
+            if (eventData.Id == undefined) {
+                console.log(agendaTempHtml);
+            } else {
+                if (eventData.EVENT_TYPE == "SCHEDULE") {
+                    element.addClass("available-fc-bgevent");
+                } else if (eventData.EVENT_TYPE == "BOOKING") {
+                    element.addClass("booking-fc-bgevent");
+                } else {
+                    element.append(_mainTempHtml)
+                }
+            }
+            
             tableTempHtml = "<div class='event-detail div-flex'><div class='div-flex'>" + rowRecord + "</div><div class='btn-box'>" + actionRow + "</div><div class='div-flex div-list-bar'></div>" + tempHtmlTable + "</div>";
             let $fcContent = element.find(".fc-content").detach(),
                 $resize = element.find(".fc-resizer").detach();
@@ -2240,7 +2252,6 @@ async function rendarPopupCalendar(assignDate) {
                 borderColor: "#aaa",
                 padding: 2,
                 borderRadius: 5,
-
                 "z-index": 1
             })
                 //    .droppable({
@@ -2263,6 +2274,7 @@ async function rendarPopupCalendar(assignDate) {
                     return jQuery(element).css(prop, val);
                 };
                 $('.fc-content').bstooltip({ html: true });
+                $('.available-fc-bgevent').bstooltip({ html: true });
                 $('.fc-timeline-event').bstooltip({ html: true });
                 $('.fc-list-item').bstooltip({ html: true });
                 $('.fc-day-grid-event').bstooltip({ html: true });
@@ -2312,7 +2324,7 @@ async function rendarPopupCalendar(assignDate) {
             param.CALENDAR_CODE = CALENDAR_CODE;
 
 
-            var postUrl = BASE_URL + "/FormAPI/getReferralFormFields";
+            var postUrl = BASE_URL + "/FormAPI/getReferralFormFieldsService";
 
 
             postAsync(postUrl, param).then(function (response) {
@@ -2322,12 +2334,7 @@ async function rendarPopupCalendar(assignDate) {
                     if (formDetailsDataInfo.searchByDate != undefined) {
                         $('#vertical-resource-view div.calendar').fullCalendar('removeEvents');
                     }
-                    calenderData.forEach(e => {
-                        if (e.EVENT_TYPE && e.EVENT_TYPE.toUpperCase() == "SCHEDULE") {
-                            e.rendering = "background";
-                        }
-                    });
-
+                    window["eventListTemp2"] = calenderData;
                     callback(calenderData);
                 }
                 else
@@ -2336,37 +2343,54 @@ async function rendarPopupCalendar(assignDate) {
         },
         selectable: true,
         select: function (start, end, cell) {
-            $scope.BookingSession.start = start;
-            $scope.BookingSession.end = end;
+            debugger;
+
+            var $scope = angular.element($("#calendar")).scope();
+            $scope.BookingService = {};
+            $scope.BookingService.start = start;
+            $scope.BookingService.end = end;
 
             var events = window["eventListTemp2"];
 
-            var exist = events.filter(x => moment(start.format()).local() >= moment(x.start).local() && moment(end.format()).local() <= moment(x.end).local() && x.customTitle.split(',').length > 2);
-            var existTeacher = events.filter(x => moment(start.format()).local() >= moment(x.start).local() && moment(end.format()).local() <= moment(x.end).local() && x.customTitle.split(',').length == 2);
+            var exist = events.filter(x => moment(start.format()).local() >= moment(x.start).local() && moment(end.format()).local() <= moment(x.end).local() && x.EVENT_TYPE!="SCHEDULE");
             if (exist.length > 0) {
                 alert('Not available slots!');
                 return;
             }
-            if (existTeacher.length == 0) {
+            var selectedEvent = events.filter(function (event) {
+                return event.rendering === 'background' && // Filter background events
+                    moment(event.start) <= moment(start.format()) &&       // Check if the event starts before the selected timeslot
+                    moment(event.end) >= moment(end.format());             // Check if the event ends after the selected timeslot
+            });
+            if (selectedEvent.length == 0) {
                 alert('Not available slots!');
                 return;
             }
-            if (!$scope.IsScreeningBooking) {
-                var sessionList = $scope.SessionData.filter(x => x.PK_ID == $scope.BookingSession.PACKAGE_ID && x.PKS_STATUS != "Rejected");
-                sessionList = sessionList.sort((a, b) => (a.PKS_SEQ_NUMBER > b.PKS_SEQ_NUMBER) ? 1 : ((b.PKS_SEQ_NUMBER > a.PKS_SEQ_NUMBER) ? -1 : 0));
-                var currentSession = $scope.SessionData.find(x => x.PKS_ID == $scope.BookingSession.SESSION_ID);
-                if (sessionList.find(x => x.PKS_SEQ_NUMBER > currentSession.PKS_SEQ_NUMBER && moment(x.CLR_START).local() <= moment(start.format()).local())) {
 
-                    alert('please check session booking Sequnce');
-                    return;
-                }
+            var bgevent = selectedEvent[0];
 
-                if (sessionList.find(x => x.PKS_SEQ_NUMBER < currentSession.PKS_SEQ_NUMBER && moment(x.CLR_START).local() >= moment(start.format()).local())) {
-                    alert('please check session booking Sequnce');
-                    return;
+            $.ajax({
+                url: "/Account/CheckPublicUserLogin",
+                type: "POST",
+                success: function (response) {
+
+                    if (!response.Status) {
+                        window.location.href = '/Account/Login?returnUrl=/Marketplace/CompanySchedule?' + window.location.href.split('?')[1].replace('&', '$') + '';
+                    } else {
+                        if (!confirm('You are going to book this session, are you sure?')) {
+                            return;
+                        }
+                        else {
+                            bookingService(start, end, bgevent);
+                        }
+                    }
                 }
-            }
-            $('#btnbook').click();
+            });
+
+
+            
+
+
 
         },
         selectAllow: function (select) {
@@ -2400,15 +2424,96 @@ async function rendarPopupCalendar(assignDate) {
     var calendarOptions = $.extend({}, defaultOptions2, myOptions2);
     $('#agenda-view2 div.calendar').fullCalendar('destroy');
     setTimeout(function () {
-        $('#agenda-view2 div.calendar').fullCalendar(calendarOptions);
+       othercalendar= $('#agenda-view2 div.calendar').fullCalendar(calendarOptions);
     }, 500);
 
     $('#customEventDetailsServiceModelPopUp').on('shown.bs.modal', function () {
         //$("#agenda-view2 div.calendar").fullCalendar('render');
     });
 
+}
 
 
+function bookingService(star,end,bgevent) {
+
+    var data = {
+        "start": star,
+        "end": end,
+        "companyCode": COMPANY_CODE,
+        "calendarCode": CALENDAR_CODE,
+        "resourceFormId": ySelection.toString(),
+        "resourceTitle": getTitle(bgevent,"resource"),
+        "resourceId": getresourceId(bgevent),
+        "activityId": getactivityId(bgevent),
+        "activityFormId": xSelection.toString(),
+        "activityTitle": getTitle(bgevent, "activity"),
+        "otherActivityformId": getOtherActivityFormId(bgevent),
+        "otherActivityId": getOtherActivityId(bgevent)
+    };
+    showLoader();
+    postAsync(BASE_URL +"UserAdmin/BookingService", data).then(function (response) {
+        hideLoader();
+        alert(response.Message);
+    })
+}
+
+function getTitle(bgevent,type) {
+
+    if (type == "resource") {
+        let customFormsSplit = bgevent.customForms.split(',');
+        let customTitleSplit = bgevent.customTitle.split(',');
+        let index = customFormsSplit.findIndex(x => x == ySelection);
+        if (index!=-1 && customTitleSplit.length > index) {
+            return customTitleSplit[index];
+        }
+        return "";
+    }
+    if (type == "activity") {
+        let customFormsSplit = bgevent.customForms.split(',');
+        let customTitleSplit = bgevent.customTitle.split(',');
+        let index = customFormsSplit.findIndex(x => x == xSelection);
+        if (index != -1 && customTitleSplit.length > index) {
+            return customTitleSplit[index];
+        }
+        return "";
+    }
+}
+
+function getresourceId(bgevent) {
+    let customFormsSplit = bgevent.customForms.split(',');
+    let customFormIdsSplit = bgevent.customFormIds.split(',');
+    let index = customFormsSplit.findIndex(x => x == ySelection);
+    if (index != -1 && customFormIdsSplit.length > index) {
+        return customFormIdsSplit[index];
+    }
+    return "";
+}
+function getactivityId(bgevent) {
+    let customFormsSplit = bgevent.customForms.split(',');
+    let customFormIdsSplit = bgevent.customFormIds.split(',');
+    let index = customFormsSplit.findIndex(x => x == xSelection);
+    if (index != -1 && customFormIdsSplit.length > index) {
+        return customFormIdsSplit[index];
+    }
+    return "";
+}
+
+function getOtherActivityFormId(bgevent) {
+    let customFormsSplit = bgevent.customForms.split(',');
+    let index = customFormsSplit.findIndex(x => x != ySelection && x != xSelection);
+    if (index!=-1) {
+        return customFormsSplit[index];
+    }
+    return "";
+}
+function getOtherActivityId(bgevent) {
+    let customFormsSplit = bgevent.customForms.split(',');
+    let customFormIdsSplit = bgevent.customFormIds.split(',');
+    let index = customFormsSplit.findIndex(x => x == getOtherActivityFormId(bgevent));
+    if (index != -1 && customFormIdsSplit.length > index) {
+        return customFormIdsSplit[index];
+    }
+    return "";
 }
 
 function postAsync(url, data) {
