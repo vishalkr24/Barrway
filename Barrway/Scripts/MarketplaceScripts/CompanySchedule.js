@@ -2358,7 +2358,7 @@ async function rendarPopupCalendar(assignDate) {
                 return;
             }
             var selectedEvent = events.filter(function (event) {
-                return event.rendering === 'background' && // Filter background events
+                return event.rendering === 'background' &&                 // Filter background events
                     moment(event.start) <= moment(start.format()) &&       // Check if the event starts before the selected timeslot
                     moment(event.end) >= moment(end.format());             // Check if the event ends after the selected timeslot
             });
@@ -2377,22 +2377,35 @@ async function rendarPopupCalendar(assignDate) {
                     if (!response.Status) {
                         window.location.href = '/Account/Login?returnUrl=/Marketplace/CompanySchedule?' + window.location.href.split('?')[1].replace('&', '$') + '';
                     } else {
+                        var customTitleSplit = bgevent.customTitle.split(',');
+
+                        const wrapper = document.createElement('div');
+                        wrapper.innerHTML = `<div>
+                                        ${moment(start.format()).format("DD-MM-YYYY")}
+                                    </div>
+                                    <div>
+                                        ${moment(start.format()).format("hh:mm a")} to ${moment(start.format()).add("minute", 60).format("hh:mm a")}
+                                    </div>
+                                    <div>${customTitleSplit[2]}</div><br />
+                                    <div>${customTitleSplit[1]}</div>
+                                    <div>${customTitleSplit[0]}</div><br />
+                                    <h2>Are you sure?</h2>`;
 
                         swal({
-                            icon: "info",
-                            title: "Book Session",
-                            text: "You are going to book this session, are you sure?",
+                            title: "You are going to book",
+                            content: wrapper,
                             buttons: {
-                                confirm: "Yes, I'm sure",
-                                cancel: "No, cancel"
+                                cancel: "Cancel",
+                                confirm: "Confirm"
                             }
-                        }).then(function (value) {
-                            if (value) {
+                        }).then(function (response)
+                        {
+                            if (response) {
                                 bookingService(start, end, bgevent);
                             } else {
-                                return;
+
                             }
-                        })
+                        });
 
                     }
                 }
@@ -2417,7 +2430,6 @@ async function rendarPopupCalendar(assignDate) {
             if (exists.minTime != "" && exists.minTime != null && exists.minTime != undefined && exists.maxTime != null && exists.maxTime != undefined && exists.maxTime != "") {
                 var minTime = exists.minTime.trim().replace(' ', ':');
                 var maxTime = exists.maxTime.trim().replace(' ', ':');
-
 
                 if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
                     minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
