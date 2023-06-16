@@ -147,41 +147,52 @@ namespace Barrway.Controllers
             if (data.IsPublicUser)
             {
                 // filter the data of resources
-                var resourceData = result.FirstOrDefault(x => x.resourceForm != 0 & x.IsDefault == true).formDataList;
-
-                List<IDictionary<string, object>> tempResults = new List<IDictionary<string, object>>();
-                try
+                bool flag = true;
+                var resourceDataCheck = result.FirstOrDefault(x => x.resourceForm != 0 & x.IsDefault == true);
+                if (resourceDataCheck == null)
                 {
-                    var enrolledData = await publicUserService.GetAllEnrolledCompaniesData(UserIdentity.UserEmail, false);
-                    for (int i = 0; i < resourceData.Count; i++)
+                    flag = false;
+                }
+
+                if (flag)
+                {
+                    var resourceData = resourceDataCheck.formDataList;
+                    List<IDictionary<string, object>> tempResults = new List<IDictionary<string, object>>();
+                    try
                     {
-                        for (int j = 0; j < enrolledData.Data.Count; j++)
+                        var enrolledData = await publicUserService.GetAllEnrolledCompaniesData(UserIdentity.UserEmail, false);
+                        for (int i = 0; i < resourceData.Count; i++)
                         {
-                            if (resourceData[i]["id"].ToString() == enrolledData.Data[j]["RESOURCE"].ToString())
+                            for (int j = 0; j < enrolledData.Data.Count; j++)
                             {
-                                bool insertFlag = true;
-
-                                if (tempResults.FirstOrDefault(x => x.Values.Contains(resourceData[i]["id"].ToString())) != null)
+                                if (resourceData[i]["id"].ToString() == enrolledData.Data[j]["RESOURCE"].ToString())
                                 {
-                                    insertFlag = false;
-                                }
+                                    bool insertFlag = true;
 
-                                if (insertFlag)
-                                {
-                                    tempResults.Add(resourceData[i]);
-                                }
+                                    if (tempResults.FirstOrDefault(x => x.Values.Contains(resourceData[i]["id"].ToString())) != null)
+                                    {
+                                        insertFlag = false;
+                                    }
 
+                                    if (insertFlag)
+                                    {
+                                        tempResults.Add(resourceData[i]);
+                                    }
+
+                                }
                             }
+
                         }
+                    }
+                    catch (Exception ex)
+                    {
 
                     }
-                }
-                catch (Exception ex)
-                {
 
+                    result.FirstOrDefault(x => x.resourceForm != 0 & x.IsDefault == true).formDataList = tempResults;
                 }
 
-                result.FirstOrDefault(x => x.resourceForm != 0 & x.IsDefault == true).formDataList = tempResults;
+                
             }
             
             
@@ -239,30 +250,48 @@ namespace Barrway.Controllers
 
                     for (int i = 0; i < enrolledData.Data.Count; i++)
                     {
-
-                        // filter activity Details
-                        for (int j = 0; j < result.activityDetails.Count; j++)
+                        try
                         {
-                            if (enrolledData.Data[i]["CALENDAR_CODE"] == result.activityDetails[j].title)
+                            // filter activity Details
+                            for (int j = 0; j < result.activityDetails.Count; j++)
                             {
-                                finalResult.activityDetails.Add(result.activityDetails[j]);
+                                if (!string.IsNullOrEmpty(result.activityDetails[j].title))
+                                {
+                                    if ((enrolledData.Data[i]["customForms"]).Contains(result.activityDetails[j].title))
+                                    {
+                                        finalResult.activityDetails.Add(result.activityDetails[j]);
+                                    }
+                                }
+                                
                             }
                         }
+                        catch (Exception ex)
+                        {
+
+                        }
+
 
 
                         // filter events
-                        for (int j = 0; j < result.events.Count; j++)
-                        {
-                            if (enrolledData.Data[i]["SLOT"] == result.events[j]["Id"].ToString())
+                        try {
+                            for (int j = 0; j < result.events.Count; j++)
                             {
-                                finalResult.events.Add(result.events[j]);
+                                if (enrolledData.Data[i]["Id"].ToString() == result.events[j]["Id"].ToString())
+                                {
+                                    finalResult.events.Add(result.events[j]);
+                                }
                             }
                         }
+                        catch(Exception ex)
+                        {
+
+                        }
+                        
 
                         // filter activity events
                         for (int j = 0; j < result.activityEvents.Count; j++)
                         {
-                            if (enrolledData.Data[i]["SLOT"] == result.activityEvents[j]["Id"].ToString())
+                            if (enrolledData.Data[i]["Id"].ToString() == result.activityEvents[j]["Id"].ToString())
                             {
                                 finalResult.activityEvents.Add(result.activityEvents[j]);
                             }
@@ -271,9 +300,12 @@ namespace Barrway.Controllers
                         // filter resource details
                         for (int j = 0; j < result.resourceDetails.Count; j++)
                         {
-                            if (enrolledData.Data[i]["CALENDAR_CODE"] == result.resourceDetails[j].title)
+                            if (!string.IsNullOrEmpty(result.activityDetails[j].title))
                             {
-                                finalResult.resourceDetails.Add(result.resourceDetails[j]);
+                                if ((enrolledData.Data[i]["customForms"]).Contains(result.activityDetails[j].title))
+                                {
+                                    finalResult.resourceDetails.Add(result.resourceDetails[j]);
+                                }
                             }
                         }
 
