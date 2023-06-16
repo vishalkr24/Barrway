@@ -936,11 +936,11 @@ namespace Barrway.Service.Repository
                 {
                     if (!IsCustomInFilter)
                     {
-                        CompanyCondition = " calendar.COMPANY_CODE='" + CompanyCode + "' and ";
+                        CompanyCondition = " f.COMPANY_CODE='" + CompanyCode + "' and ";
                     }
                     else
                     {
-                        CompanyCondition = " calendar.COMPANY_CODE in (" + CompanyCode + ") and ";
+                        CompanyCondition = " f.COMPANY_CODE in (" + CompanyCode + ") and ";
                     }
                 }
 
@@ -949,39 +949,25 @@ namespace Barrway.Service.Repository
                     CompanyCondition += "CAST(calendar.[start] AS DATE) = CAST('" + filterDate + "' AS DATE) and ";
                 }
 
-                string query = $@"SELECT distinct calendar.[COMPANY_CODE]
-                                      ,calendar.[CALENDAR_CODE]
-	                                  ,calendar.[Id]
-                                      ,[title]
-                                      ,[start]
-                                      ,[end]
-                                      ,[allDay]
-                                      ,[resources]
-                                      ,[activities]
-                                      ,calendar.[description]
-                                      ,calendar.[color]
-                                      ,calendar.[created_at]
-                                      ,calendar.[updated_at]
-                                      ,calendar.[created_by]
-                                      ,calendar.[updated_by]
-                                      ,[tabulator_1683726769059]
-                                      ,[tabulator_1683785383381]
-                                      ,[SCHEDULAR_FORM_ID]
-                                      ,[CREATION_TYPE]
-                                      ,[EVENT_TYPE]
-	                                  ,transaction_m.*
-	                                  ,participant.*
-	                                  ,company.COMPANY_NAME_ENGLISH
-                                      ,company.COMPANY_LOGO_PATH
-                                      ,service_m.ACTIVITY_NAME
-                                      ,service_p_m.FIRST_NAME
-                                  FROM [dbo].[CALENDAR_FORM_1935] calendar
-                                  join TRANSACTION_MASTER_1942 transaction_m on calendar.CALENDAR_CODE = transaction_m.CALENDAR_CODE
+                string query = $@"
+                                DECLARE @retval nvarchar(max);       DECLARE @sQuery nvarchar(max); DECLARE @ParmDefinition nvarchar(max);                        
+                                DECLARE @customTitleQuery nvarchar(max);                          
+                                IF OBJECT_ID(N'tempdb..#temptable') IS NOT NULL  BEGIN DROP TABLE #temptable END   ;with cte1 as( select distinct  f.*,f.resources 'resourceId'  ,  STUFF((SELECT ',' +  PARTICIPANT_MASTER_1940.[STUDENT_NAME]  
+                                from TRANSACTION_MASTER_1942 inner join PARTICIPANT_MASTER_1940 on TRANSACTION_MASTER_1942.STUDENT = PARTICIPANT_MASTER_1940.Id where TRANSACTION_MASTER_1942.formGroupKey = f.formGroupKey         FOR XML PATH('')), 1, 1, '') customFourthTitle
+                                , (dbo.[GetSubQueryCalender](f.formGroupKey)) customTitle,   (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceFormId) from form_calenderreferrence f2     
+                                where f2.formgroupkey = f.formGroupKey  FOR XML PATH('')), 1, 1, '')   ) customForms  , (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceId) from form_calenderreferrence f2    
+                                where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) customFormIds,  '' referrences_1,  '' referrences_2,  '' referrences_3   
+                                from CALENDAR_FORM_1935 f  
+                                  join TRANSACTION_MASTER_1942 transaction_m on f.Id = transaction_m.SLOT
                                   join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
-                                  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
-                                  join SERVICE_MASTER_1933 service_m on service_m.Id = calendar.activities
-                                  join SERVICE_PROVIDER_MASTER_1934 service_p_m on service_p_m.Id = calendar.resources
-                                  where {CompanyCondition} participant.EMAIL = '{UserEmail}' and calendar.Id = transaction_m.SLOT";
+                                  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
+                                where   f.formid=2305 and {CompanyCondition}  participant.EMAIL = '{UserEmail}'  ) ,
+                                cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
+                                select* into #temptable from cte2  where len(customtitle)>0;    declare @counter int= 0, @c int= 1;   
+                                select @counter = (select count(1) from #temptable)	while @c <= @counter    begin    select @customTitleQuery = customTitle from #temptable where ROWNUMBER=@c;	SET @sQuery= ' select @retvalOUT = (' + @customTitleQuery + ')'  
+                                SET @ParmDefinition = N'@retvalOUT nvarchar(max) OUTPUT';   
+                                EXEC sp_executesql @sQuery, @ParmDefinition, @retvalOUT = @retval OUTPUT;    update #temptable set customTitle=@retval where ROWNUMBER=@c;	set @c = @c + 1;  end  select* from #temptable
+                                ";
 
                 List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 

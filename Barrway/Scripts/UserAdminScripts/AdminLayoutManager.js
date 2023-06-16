@@ -30,6 +30,17 @@ function setUserDetails() {
 }
 
 function Logout() {
-    
+
+    localStorage.removeItem("USER_ID");
+    localStorage.removeItem("USER_EMAIL");
+    localStorage.removeItem("USER_GENDER");
+    localStorage.removeItem("USER_FIRST_NAME");
+    localStorage.removeItem("USER_NICK_NAME");
+
+    localStorage.removeItem("publicUserSelectedCompany");
+    localStorage.removeItem("CALENDAR_CODE");
+    localStorage.removeItem("COMPANY_CODE");
+
     $('#mySignOutForm').submit()
+
 }

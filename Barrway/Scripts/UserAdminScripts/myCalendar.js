@@ -1,4 +1,4 @@
-﻿var CalendarFormId = "2305", ySelection = "", xSelection = "", COMPANY_CODE, CALENDAR_CODE, formDetailsDataInfo, counterLoader, xaxisFormList, formAllDatafields, listTabulator, calendarDetails, IsCustomFilter, IsCustomInFilter;
+﻿var CalendarFormId = "2305", ySelection = "", xSelection = "", COMPANY_CODE, CALENDAR_CODE, formDetailsDataInfo, counterLoader, xaxisFormList, formAllDatafields, listTabulator, calendarDetails, IsCustomFilter, IsCustomInFilter, totalCompanyCount = 0;
 $("#user-nav-mycalendar").addClass("active")
 $(document).on("change", "#company-filter-selector", function () {
 
@@ -15,7 +15,8 @@ debugger;
 async function usercalendarLoad() {
 
     COMPANY_CODE = $("#company-filter-selector option:selected").val();
-     IsCustomFilter = true;
+    totalCompanyCount = $("#company-filter-selector option").length;
+    IsCustomFilter = true;
     IsCustomInFilter = false;
     
     if (COMPANY_CODE == "-1") {
@@ -27,6 +28,9 @@ async function usercalendarLoad() {
             }
         }).get().join(',');
         COMPANY_CODE = values;
+        if (COMPANY_CODE == null || COMPANY_CODE == "") {
+            COMPANY_CODE = "'-1'";
+        }
         IsCustomFilter = false;
         IsCustomInFilter = true;
     }
@@ -57,8 +61,12 @@ async function usercalendarLoad() {
     window["EventBasicDetail"] = manageWindowParams();
 
     var calenderSettings = await getCalenderSettings();
-    debugger;
-    calendarDetails = (await getCalendarDetails(calenderSettings[0].formDataList[0].CALENDAR_CODE)).Data;
+    if (calenderSettings[0].formDataList.length > 0) {
+        calendarDetails = (await getCalendarDetails(calenderSettings[0].formDataList[0].CALENDAR_CODE)).Data;
+    }
+    
+
+
     if (calenderSettings.length > 0) {
 
         var caledarConfig = calenderSettings;
@@ -346,6 +354,7 @@ async function getFormDetails() {
 
 async function getCalenderSettings() {
     showLoader();
+    
     return new Promise(resolve => {
         $.ajax({
             type: "POST",
@@ -1226,16 +1235,16 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                             var minTime = exists.minTime.trim().replace(' ', ':');
                             var maxTime = exists.maxTime.trim().replace(' ', ':');
 
-                            if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
-                                minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
-                            }
+                            //if (calendarDetails?.controlSheet.DISPLAY_START_TIME != "" && calendarDetails?.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
+                            //    minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
+                            //}
 
-                            if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
-                                maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
-                            }
+                            //if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
+                            //    maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
+                            //}
 
-                            $('#agenda-view div.calendar').fullCalendar('option', 'minTime', minTime + ":00");
-                            $('#agenda-view div.calendar').fullCalendar('option', 'maxTime', maxTime + ":00");
+                            //$('#agenda-view div.calendar').fullCalendar('option', 'minTime', minTime + ":00");
+                            //$('#agenda-view div.calendar').fullCalendar('option', 'maxTime', maxTime + ":00");
                         }
                     }
                 }
@@ -1476,13 +1485,13 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                             var maxTime = exists.maxTime.trim().replace(' ', ':');
 
 
-                            if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
-                                minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
-                            }
+                            //if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
+                            //    minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
+                            //}
 
-                            if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
-                                maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
-                            }
+                            //if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
+                            //    maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
+                            //}
 
                             //$('#timeline-resource-view div.calendar').fullCalendar('option', 'minTime', minTime + ":00");
                             //$('#timeline-resource-view div.calendar').fullCalendar('option', 'maxTime', maxTime + ":00");
@@ -1606,13 +1615,13 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 var maxTime = exists.maxTime.trim().replace(' ', ':');
 
 
-                if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
-                    minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
-                }
+                //if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
+                //    minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
+                //}
 
-                if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
-                    maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
-                }
+                //if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
+                //    maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
+                //}
 
                 //myOptions2.minTime = minTime + ":00";
                // myOptions2.maxTime = maxTime + ":00";
@@ -2413,16 +2422,16 @@ async function rendarPopupCalendar(assignDate) {
                 var maxTime = exists.maxTime.trim().replace(' ', ':');
 
 
-                if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
-                    minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
-                }
+                //if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
+                //    minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
+                //}
 
-                if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
-                    maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
-                }
+                //if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
+                //    maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
+                //}
 
-                myOptions2.minTime = minTime + ":00";
-                myOptions2.maxTime = maxTime + ":00";
+                //myOptions2.minTime = minTime + ":00";
+                //myOptions2.maxTime = maxTime + ":00";
             }
         }
     }

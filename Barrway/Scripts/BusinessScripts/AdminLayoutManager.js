@@ -32,6 +32,8 @@ function changeCompany(IsReload = true, returnUrl = null) {
 function Logout() {
     localStorage.removeItem("COMPANY_ID");
     localStorage.removeItem("COMPANY_CODE");
+    localStorage.removeItem("publicUserSelectedCompany");
+    localStorage.removeItem("CALENDAR_CODE"); 
     localStorage.removeItem("COMPANY_NAME_ENGLISH");
     localStorage.removeItem("COMPANY_NAME_CHINESE");
     localStorage.removeItem("COMPANY_CATEGORY_ID");

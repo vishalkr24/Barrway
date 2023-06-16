@@ -16182,7 +16182,7 @@
         adminService.postAsync('/UserAdmin/GetAllEnrolledCompaniesData/').then(function (res) {
 
             $scope.CompanyList = res.data.data.Data;
-           
+            
             setTimeout(function () {
                 $scope.manageSelectedCompany();
                 usercalendarLoad();
@@ -16192,20 +16192,21 @@
 
         });
 
-        $scope.getCalendarData = function () {
+        //$scope.getCalendarData = function () {
 
-            adminService.postAsync('/UserAdmin/GetAllEnrolledCalendarsData/', { CompanyCode: $("#company-filter-selector option:selected").val() }).then(function (res) {
+        //    adminService.postAsync('/UserAdmin/GetAllEnrolledCalendarsData/', { CompanyCode: $("#company-filter-selector option:selected").val() }).then(function (res) {
 
-                $scope.selectedCalendarData = res.data.data.Data;
-                console.log($scope.selectedCalendarData);
+        //        $scope.selectedCalendarData = res.data.data.Data;
+        //        console.log($scope.selectedCalendarData);
 
-            }, function (err) {
+        //    }, function (err) {
 
-            });
+        //    });
 
-        }
+        //}
 
         $scope.manageSelectedCompany = function () {
+            debugger;
             if (localStorage.getItem("publicUserSelectedCompany") != null && localStorage.getItem("publicUserSelectedCompany") != undefined && localStorage.getItem("publicUserSelectedCompany") != "null") {
                 $("#company-filter-selector").val(localStorage.getItem("publicUserSelectedCompany"));
             } else {
