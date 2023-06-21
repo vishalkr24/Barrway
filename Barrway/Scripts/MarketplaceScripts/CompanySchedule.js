@@ -2354,7 +2354,17 @@ async function rendarPopupCalendar(assignDate) {
 
             var exist = events.filter(x => moment(start.format()).local() >= moment(x.start).local() && moment(end.format()).local() <= moment(x.end).local() && x.EVENT_TYPE!="SCHEDULE");
             if (exist.length > 0) {
-                alert('Not available slots!');
+
+                swal({
+                    title: "Slot Unavailable!",
+                    text: "The slot you have selected is not available, Kindly select another slot.",
+                    icon: "warning",
+                    buttons: {
+                        confirm: "Okay"
+                    }
+                });
+
+                //alert('Not available slots!');
                 return;
             }
             var selectedEvent = events.filter(function (event) {
@@ -2363,7 +2373,17 @@ async function rendarPopupCalendar(assignDate) {
                     moment(event.end) >= moment(end.format());             // Check if the event ends after the selected timeslot
             });
             if (selectedEvent.length == 0) {
-                alert('Not available slots!');
+
+                swal({
+                    title: "Slot Unavailable!",
+                    text: "The slot you have selected is not available, Kindly select another slot.",
+                    icon: "warning",
+                    buttons: {
+                        confirm: "Okay"
+                    }
+                });
+
+                /*alert('Not available slots!');*/
                 return;
             }
 
@@ -2375,7 +2395,22 @@ async function rendarPopupCalendar(assignDate) {
                 success: function (response) {
 
                     if (!response.Status) {
-                        window.location.href = '/Account/Login?returnUrl=/Marketplace/CompanySchedule?' + window.location.href.split('?')[1].replace('&', '$') + '';
+
+                        swal({
+                            title: "Login Required",
+                            text: "Kindly login into your account and then you can enroll yourself into this calendar.",
+                            icon: "info",
+                            buttons: {
+                                confirm: "Login",
+                                cancel: "Leave it"
+                            }
+                        }).then(function (value) {
+                            if (value) {
+                                window.location.href = '/Account/Login?returnUrl=/Marketplace/CompanySchedule?' + window.location.href.split('?')[1].replace('&', '$') + '';
+                            }
+                        });
+
+                        
                     } else {
                         var customTitleSplit = bgevent.customTitle.split(',');
 
@@ -2410,11 +2445,6 @@ async function rendarPopupCalendar(assignDate) {
                     }
                 }
             });
-
-
-            
-
-
 
         },
         selectAllow: function (select) {

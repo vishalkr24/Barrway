@@ -793,11 +793,9 @@
                                                     text: "Enrolled Successfully!",
                                                     icon: "success",
                                                     button: "Okay"
-                                                });
-
-                                                setTimeout(function () {
+                                                }).then(function (boolValue) {
                                                     window.location.reload();
-                                                }, 5000);
+                                                });
 
                                             }
 
@@ -865,16 +863,17 @@
                             },
                             success: function (response) {
                                 if (response.Status) {
+                                    $("#btn-mark").remove();
                                     swal({
                                         title: "Marked Successfully!",
                                         text: "Calendar marked as favorite!",
                                         icon: "success",
                                         button: "Okay"
-                                    });
-                                    $("#btn-mark").remove();
-                                    setTimeout(function () {
+                                    }).then(function (boolValue) {
                                         window.location.reload();
-                                    }, 3000)
+                                    });
+                                    
+                                    
                                 } else {
                                     swal({
                                         title: "Mark Failed!",
@@ -931,16 +930,17 @@
                             },
                             success: function (response) {
                                 if (response.Status) {
+                                    $("#btn-unmark").remove();
                                     swal({
                                         title: "Unmarked Successfully!",
                                         text: "Calendar removed from favorites!",
                                         icon: "success",
                                         button: "Okay"
-                                    });
-                                    $("#btn-unmark").remove();
-                                    setTimeout(function () {
+                                    }).then(function (boolValue) {
                                         window.location.reload();
-                                    }, 3000)
+                                    });
+                                    
+                                    
                                 } else {
                                     swal({
                                         title: "Unmark Failed!",

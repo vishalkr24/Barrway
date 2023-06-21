@@ -191,13 +191,8 @@ namespace Barrway.Controllers
 
                     result.FirstOrDefault(x => x.resourceForm != 0 & x.IsDefault == true).formDataList = tempResults;
                 }
-
-                
             }
             
-            
-
-
             return Json(result);
         }
 
