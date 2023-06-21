@@ -373,7 +373,6 @@ namespace Barrway.Controllers
             if (!userByEmail.Status && !userByID.Status)
             {
                 // Insert Data in User Master
-
                 UserMaserModel userMaserModel = new UserMaserModel(){
                     USER_PHONE = "",
                     IS_ACTIVE = "N",
@@ -391,7 +390,6 @@ namespace Barrway.Controllers
                 AddUpdateDelete result = await signupService.RegisterUser(userMaserModel.ToDictionary());
 
                 // Business Account Creation START
-
                 PublicAccountModel businessModel = new PublicAccountModel()
                 {
                     USER_ID = model.USER_NAME,

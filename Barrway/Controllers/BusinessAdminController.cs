@@ -742,11 +742,6 @@ namespace Barrway.Controllers
                     companyModel.COMPANY_BANNER_PATH = path2;
                 }
                 
-
-                
-                
-
-
                 var saveDataResult = await businessUserService.AddCompany(companyModel, User.Identity.Name.ToString());
 
                 if (saveDataResult.Status)
@@ -842,7 +837,6 @@ namespace Barrway.Controllers
 
                         path = "~/UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString() + "/" + model.CALENDAR_PHOTO_PATH.FileName.ToString();
                     }
-
 
                     BusinessCalendarModel calendarModel = new BusinessCalendarModel()
                     {

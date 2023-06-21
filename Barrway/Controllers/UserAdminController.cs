@@ -102,7 +102,6 @@ namespace Barrway.Controllers
         {
             try
             {
-
                 var userData = await authService.GetUser(User.Identity.Name, FormRole.PUBLIC_USER);
 
                 bool UpdatePassword = false;
@@ -216,7 +215,7 @@ namespace Barrway.Controllers
             try
             {
                 var result = await publicUserService.GetRecentlyBookedCalendars(UserIdentity.UserEmail.ToString());
-
+                
                 return Json(new { data = result });
             }
             catch (Exception ex)
@@ -299,7 +298,7 @@ namespace Barrway.Controllers
             {
                 var result = await publicUserService.GetAllEnrolledCalendarsData(CompanyCode, UserIdentity.UserEmail, Convert.ToDateTime(filterDate).ToString("yyyy-MM-dd"));
 
-                return Json(new { data = result });
+                return Json(new {data = result });
             }
             catch (Exception ex)
             {
