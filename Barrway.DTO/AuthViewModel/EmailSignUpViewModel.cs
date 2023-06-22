@@ -36,7 +36,8 @@ namespace Barrway.DTO.AuthViewModel
         public bool TERMS_ACCEPTED { get; set; }
 
 
-        public bool IS_EXTERNAL_SIGNUP { get; set; }
+        public bool IS_EXTERNAL_SIGNUP { get; set; } = false;
+        public string ReturnUrl { get; set; }
 
     }
 

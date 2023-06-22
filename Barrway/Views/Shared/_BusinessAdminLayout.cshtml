@@ -132,7 +132,7 @@
         }</script>
 </head>
 <body>
-    <input style="display:none" id="userIdHidden" value="@UserIdentity.UserName"/>
+    <input style="display:none" id="userIdHidden" value="@UserIdentity.UserName" />
     <script src="../assets/js/hs.theme-appearance.js"></script>
 
     <!-- ========== HEADER ========== -->
@@ -198,33 +198,32 @@
 
                                         <!-- Dropdown -->
                                         @*<div class="dropdown">
-                                            <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown2" data-bs-toggle="dropdown" aria-expanded="false">Customization</a>
+                                                <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown2" data-bs-toggle="dropdown" aria-expanded="false">Customization</a>
 
-                                            <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown2">
-                                                <a class="dropdown-item" href="#">
-                                                    Invite people
-                                                </a>
-                                                <a class="dropdown-item" href="#">
-                                                    Analytics
-                                                    <i class="bi-box-arrow-in-up-right"></i>
-                                                </a>
-                                                <a class="dropdown-item" href="#">
-                                                    Customize Front
-                                                    <i class="bi-box-arrow-in-up-right"></i>
-                                                </a>
-                                            </div>
-                                        </div>*@
+                                                <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown2">
+                                                    <a class="dropdown-item" href="#">
+                                                        Invite people
+                                                    </a>
+                                                    <a class="dropdown-item" href="#">
+                                                        Analytics
+                                                        <i class="bi-box-arrow-in-up-right"></i>
+                                                    </a>
+                                                    <a class="dropdown-item" href="#">
+                                                        Customize Front
+                                                        <i class="bi-box-arrow-in-up-right"></i>
+                                                    </a>
+                                                </div>
+                                            </div>*@
                                         <!-- End Dropdown -->
-
                                         @*<a class="dropdown-item" href="#">Manage team</a>*@
 
                                         <div class="dropdown-divider"></div>
 
                                         <form id="mySignOutForm" name="mySignOutForm" method="post" action="@Url.Action("Logout","Account")">
-                                            <a class="dropdown-item"  href="#" onclick="Logout()">Sign out</a>
+                                            <a class="dropdown-item" href="#" onclick="Logout()">Sign out</a>
                                         </form>
 
-                                        
+
                                     </div>
                                 </div>
                                 <!-- End Account -->
@@ -307,7 +306,7 @@
                         <li class="nav-item">
                             <a id="companyMasterMegaMenu" class="nav-link" href="/BusinessAdmin/CompanyMaster" role="button"> Company Master</a>
                         </li>
-                        
+
                         <li class="hs-has-sub-menu nav-item">
                             <a id="calendarsMegaMenu" class="hs-mega-menu-invoker nav-link dropdown-toggle " href="/BusinessAdmin/CalendarMaster" role="button">Calendar</a>
 
@@ -315,13 +314,13 @@
 
                             </div>
                         </li>
-                        
+
                         <li class="nav-item">
                             <a class="nav-link" id="manage-website" onclick="showComapanyWebsiteDetails(1)" href="#">
                                 Website
                             </a>
                         </li>
-                        
+
                         <li class="hs-has-sub-menu nav-item">
                             <a id="subscriptionsMegaMenu" class="hs-mega-menu-invoker nav-link dropdown-toggle " href="/BusinessAdmin/SubscriptionPlan" role="button">Subscription</a>
                             <div class="hs-sub-menu dropdown-menu navbar-dropdown-menu-borderless" aria-labelledby="subscription" style="min-width: 14rem;">
@@ -329,7 +328,7 @@
                                 <a class="dropdown-item " href="/BusinessAdmin/PaymentHistory">Payment History</a>
                             </div>
                         </li>
-                        
+
                         <li class="hs-has-sub-menu nav-item">
                             <a id="income" class="hs-mega-menu-invoker nav-link dropdown-toggle " href="#" role="button">Income</a>
 
@@ -340,7 +339,7 @@
                                 <a class="dropdown-item " href="#">File Manager</a>
                             </div>
                         </li>
-                      
+
                         <li class="nav-item">
                             <a class="nav-link " href="#">
                                 Reports
@@ -365,7 +364,7 @@
     <div class="container">
         @RenderBody()
     </div>
-    
+
     <!-- ========== END MAIN CONTENT ========== -->
 
 
@@ -618,8 +617,8 @@
 
     <!-- JS Front -->
     <script src="../assets/js/theme.min.js"></script>
-    
-    
+
+
 
     <!-- JS Plugins Init. -->
     <script>
@@ -678,6 +677,110 @@
     </script>
 
     <!-- End Style Switcher JS -->
+    @* Momentum based scroll behaviour *@
+    <script>
+        $(document).ready(function () {
+            // $fn.scrollSpeed(step, speed, easing);
+            jQuery.scrollSpeed(200, 800);
+        });
 
+        // Custom scrolling speed with jQuery
+        // Source: github.com/ByNathan/jQuery.scrollSpeed
+        // Version: 1.0.2
+
+        (function ($) {
+
+            jQuery.scrollSpeed = function (step, speed, easing) {
+
+                var $document = $(document),
+                    $window = $(window),
+                    $body = $('html, body'),
+                    option = easing || 'default',
+                    root = 0,
+                    scroll = false,
+                    scrollY,
+                    scrollX,
+                    view;
+
+                if (window.navigator.msPointerEnabled)
+
+                    return false;
+
+                $window.on('mousewheel DOMMouseScroll', function (e) {
+
+                    var deltaY = e.originalEvent.wheelDeltaY,
+                        detail = e.originalEvent.detail;
+                    scrollY = $document.height() > $window.height();
+                    scrollX = $document.width() > $window.width();
+                    scroll = true;
+
+                    if (scrollY) {
+
+                        view = $window.height();
+
+                        if (deltaY < 0 || detail > 0)
+
+                            root = (root + view) >= $document.height() ? root : root += step;
+
+                        if (deltaY > 0 || detail < 0)
+
+                            root = root <= 0 ? 0 : root -= step;
+
+                        $body.stop().animate({
+
+                            scrollTop: root
+
+                        }, speed, option, function () {
+
+                            scroll = false;
+
+                        });
+                    }
+
+                    if (scrollX) {
+
+                        view = $window.width();
+
+                        if (deltaY < 0 || detail > 0)
+
+                            root = (root + view) >= $document.width() ? root : root += step;
+
+                        if (deltaY > 0 || detail < 0)
+
+                            root = root <= 0 ? 0 : root -= step;
+
+                        $body.stop().animate({
+
+                            scrollLeft: root
+
+                        }, speed, option, function () {
+
+                            scroll = false;
+
+                        });
+                    }
+
+                    return false;
+
+                }).on('scroll', function () {
+
+                    if (scrollY && !scroll) root = $window.scrollTop();
+                    if (scrollX && !scroll) root = $window.scrollLeft();
+
+                }).on('resize', function () {
+
+                    if (scrollY && !scroll) view = $window.height();
+                    if (scrollX && !scroll) view = $window.width();
+
+                });
+            };
+
+            jQuery.easing.default = function (x, t, b, c, d) {
+
+                return -c * ((t = t / d - 1) * t * t * t - 1) + b;
+            };
+
+        })(jQuery);
+    </script>
 </body>
 </html>

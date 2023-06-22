@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
-using Microsoft.Owin.Cors;
-using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.OAuth;
-using Barrway.Security;
+using Microsoft.Owin.Security.Google;
 using Owin;
+using Barrway.Security;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Cors;
+using Microsoft.Owin.Security.OAuth;
+using Microsoft.Owin.Security.Facebook;
 
 namespace Barrway
 {
@@ -46,6 +47,20 @@ namespace Barrway
             //app.UseTwitterAuthentication(
             //   consumerKey: "",
             //   consumerSecret: "");
+
+
+            app.UseFacebookAuthentication(new FacebookAuthenticationOptions
+            {
+                AppId = "1270861036871222",
+                AppSecret = "7bc3f2fa05a1d175de90bc3979b07b07"
+            });
+
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = "699323414558-k1mf1q0pi17sr526udqfsm2p1s726fin.apps.googleusercontent.com",
+                ClientSecret = "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"
+            });
+
         }
     }
 }

@@ -288,7 +288,7 @@
                 outline: none;
             }
 
-        .login_with a {
+        .login_with .a {
             border: none;
             background-color: #3F71BE;
             color: #fff;
@@ -299,13 +299,14 @@
             float: left;
         }
 
-            .login_with a:last-child {
+            .login_with .a:last-child {
                 float: right;
             }
 
         .login_with {
             width: 100%;
             float: left;
+            margin-bottom:16px;
         }
 
         .register {
@@ -370,7 +371,7 @@
                         <div class='signUp'>
                             <div class='right'>
                                 <div class="logo">
-                                    <img onclick="location.href = '/Marketplace/Index'" src="../assets/img/logo.png"> 
+                                    <img onclick="location.href = '/Marketplace/Index'" src="../assets/img/logo.png">
                                 </div>
                                 <div class="register">
                                     <h3>Login </h3>
@@ -409,15 +410,22 @@
                                         <div class="register-btn">
                                             <button type="submit" class="btn btn-default">Login</button>
                                         </div>
-                                        <div class="login_with">
-                                            <a href="#">Login with Google</a>
-                                            <a href="#">Login with Facebook</a>
-                                        </div>
-                                        <br /><br /><br />
-                                        <div class="register-btn text-center">
-                                            Don't have an account? <a href="/Account/Signup">Register</a>
-                                        </div>
                                     </form>
+                                    <div class="login_with">
+                                        @using (Html.BeginForm("ExternalSignIn", "Account", new { ReturnUrl = ViewBag.ReturnUrl.ToString(), userType = "2" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+
+                                            <button class="a" type="submit" id="Google" name="provider" value="Google">Login with Google</button>
+                                            <button class="a" type="submit" id="Facebook" name="provider" value="Facebook">Login with Facebook</button>
+                                            
+                                        }
+                                    </div>
+                                    <br /><br /><br /><br />
+                                    <div class="register-btn text-center">
+                                        Don't have an account? <a href="/Account/Signup">Register</a>
+                                    </div>
+
 
                                 </div>
                             </div>

@@ -4802,12 +4802,7 @@
                 });
         };
 
-
-
-
         $scope.init();
-
-
 
     });
     FormGeneratorApp.controller('FormEntryCalenderEmbedController', function ($scope, $rootScope, CookiesPersistenceService, $http, $state, $location, $window, $ngBootbox, $timeout, mainService, notifierService, $stateParams, DataService) {
