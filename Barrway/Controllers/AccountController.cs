@@ -66,7 +66,7 @@ namespace Barrway.Controllers
                     return RedirectToAction("BusinessLogin");
                 }
             }
-            return View();
+            return View(new LoginViewModel { ReturnUrl = "" });
         }
 
         [AllowAnonymous]
@@ -97,7 +97,7 @@ namespace Barrway.Controllers
             }
 
             ViewBag.ReturnUrl = (string.IsNullOrEmpty(returnUrl)) ? "" : returnUrl;
-            return View();
+            return View(new LoginViewModel { ReturnUrl = "" });
         }
 
         [AllowAnonymous]
@@ -235,7 +235,7 @@ namespace Barrway.Controllers
 
 
             }
-            return View();
+            return View(new EmailSignUpViewModel() { IS_EXTERNAL_SIGNUP = false});
         }
 
         [AllowAnonymous]
@@ -256,7 +256,7 @@ namespace Barrway.Controllers
 
 
             }
-            return View();
+            return View(new EmailSignUpViewModel() { ReturnUrl = ""});
         }
 
         [AllowAnonymous]
@@ -287,12 +287,12 @@ namespace Barrway.Controllers
                 UserMaserModel userMaserModel = new UserMaserModel()
                 {
                     USER_PHONE = "",
-                    IS_ACTIVE = "N",
-                    IS_EMAIL_VERIFIED = "N",
+                    IS_ACTIVE = (model.IS_EXTERNAL_SIGNUP) ? "Y" : "N",
+                    IS_EMAIL_VERIFIED = (model.IS_EXTERNAL_SIGNUP) ? "Y" : "N",
                     IS_PHONE_VERIFIED = "N",
-                    IS_EXTERNAL_SIGNUP = "N",
+                    IS_EXTERNAL_SIGNUP = (model.IS_EXTERNAL_SIGNUP)? "Y": "N",
                     PROFILE_STATUS = "PENDING",
-                    SIGNUP_TYPE = "EMAIL",
+                    SIGNUP_TYPE = (model.IS_EXTERNAL_SIGNUP) ? "GOOGLE" : "EMAIL",
                     USER_EMAIL = model.USER_EMAIL,
                     USER_PASSWORD = model.USER_PASSWORD,
                     USER_ID = model.USER_NAME,
@@ -308,27 +308,56 @@ namespace Barrway.Controllers
                     USER_ID = model.USER_NAME,
                     COMPANY_PROFILE_STATUS = "N",
                     COMPANY_CALENDAR_STATUS = "N",
-                    CURRENT_STEP = "REGISTRATION"
+                    CURRENT_STEP = (model.IS_EXTERNAL_SIGNUP) ? "COMPANY PROFILE" : "REGISTRATION"
                 };
 
                 AddUpdateDelete businessResult = await businessUserService.CreateBusinessWebsite(businessModel);
 
                 // Send Activation Link
-
-                var linkResult = await authService.sendActivationLink(model.USER_NAME, model.USER_EMAIL, FormRole.BUSINESS_USER);
-
-                if (result.Status && businessResult.Status)
+                if (!model.IS_EXTERNAL_SIGNUP)
                 {
-                    TempData["VERIFICATION"] = "Pending";
-                    TempData["VERIFICATION_EMAIL"] = model.USER_EMAIL;
-                    return RedirectToAction("EmailVerification", "Account");
+                    var linkResult = await authService.sendActivationLink(model.USER_NAME, model.USER_EMAIL, FormRole.BUSINESS_USER);
 
+                    if (result.Status && businessResult.Status)
+                    {
+                        TempData["VERIFICATION"] = "Pending";
+                        TempData["VERIFICATION_EMAIL"] = model.USER_EMAIL;
+                        return RedirectToAction("EmailVerification", "Account");
+
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("USER_NAME", result.Message);
+                        return View(model);
+                    }
                 }
                 else
                 {
-                    ModelState.AddModelError("USER_NAME", result.Message);
-                    return View(model);
+
+                    var result2 = await authService.GetUserByEmail(model.USER_EMAIL, 1);
+                    if (result2.Status)
+                    {
+                        var user = result2.Data;
+                        var claims = new ClaimsIdentity(new[] {
+                                                    new Claim(ClaimTypes.NameIdentifier,user["USER_ID"].ToString()),
+                                                    new Claim(ClaimTypes.Name,user["USER_ID"].ToString()),
+                                                    new Claim(ClaimTypes.Email, user["USER_EMAIL"].ToString()),
+                                                    new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
+                                                    new Claim(ClaimTypes.Sid, user["Id"].ToString()),
+                                                    //new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
+                                                    }, CookieAuthenticationDefaults.AuthenticationType);
+
+                        HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = false }, claims);
+
+                        return RedirectToAction("Dashboard", "BusinessAdmin");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("USER_NAME", "Unable to register this user.");
+                        return View(model);
+                    }
                 }
+                
 
             }
             else
@@ -373,14 +402,16 @@ namespace Barrway.Controllers
             if (!userByEmail.Status && !userByID.Status)
             {
                 // Insert Data in User Master
-                UserMaserModel userMaserModel = new UserMaserModel(){
+                
+                UserMaserModel userMaserModel = new UserMaserModel()
+                {
                     USER_PHONE = "",
-                    IS_ACTIVE = "N",
-                    IS_EMAIL_VERIFIED = "N",
+                    IS_ACTIVE = (model.IS_EXTERNAL_SIGNUP) ? "Y" : "N",
+                    IS_EMAIL_VERIFIED = (model.IS_EXTERNAL_SIGNUP) ? "Y" : "N",
                     IS_PHONE_VERIFIED = "N",
-                    IS_EXTERNAL_SIGNUP = "N",
-                    PROFILE_STATUS = "COMPLETED",
-                    SIGNUP_TYPE = "EMAIL",
+                    IS_EXTERNAL_SIGNUP = (model.IS_EXTERNAL_SIGNUP) ? "Y" : "N",
+                    PROFILE_STATUS = "PENDING",
+                    SIGNUP_TYPE = (model.IS_EXTERNAL_SIGNUP) ? "GOOGLE" : "EMAIL",
                     USER_EMAIL = model.USER_EMAIL,
                     USER_PASSWORD = model.USER_PASSWORD,
                     USER_ID = model.USER_NAME,
@@ -400,20 +431,48 @@ namespace Barrway.Controllers
 
                 // Send Activation Link
 
-                var linkResult = await authService.sendActivationLink(model.USER_NAME, model.USER_EMAIL, FormRole.PUBLIC_USER);
-                
-                if (result.Status && publicResult.Status)
+                if (!model.IS_EXTERNAL_SIGNUP)
                 {
-                    TempData["VERIFICATION"] = "Pending";
-                    TempData["VERIFICATION_EMAIL"] = model.USER_EMAIL;
-                    return RedirectToAction("Login", "Account");
+                    var linkResult = await authService.sendActivationLink(model.USER_NAME, model.USER_EMAIL, FormRole.PUBLIC_USER);
 
+                    if (result.Status && publicResult.Status)
+                    {
+                        TempData["VERIFICATION"] = "Pending";
+                        TempData["VERIFICATION_EMAIL"] = model.USER_EMAIL;
+                        return RedirectToAction("Login", "Account");
+
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("USER_NAME", result.Message);
+                        return View(model);
+                    }
                 }
                 else
                 {
-                    ModelState.AddModelError("USER_NAME", result.Message);
-                    return View(model);
+                    var result2 = await authService.GetUserByEmail(model.USER_EMAIL, 2);
+                    if (result2.Status)
+                    {
+                        var user = result2.Data;
+                        var claims = new ClaimsIdentity(new[] {
+                                                    new Claim(ClaimTypes.NameIdentifier,user["USER_ID"].ToString()),
+                                                    new Claim(ClaimTypes.Name,user["USER_ID"].ToString()),
+                                                    new Claim(ClaimTypes.Email, user["USER_EMAIL"].ToString()),
+                                                    new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
+                                                    new Claim(ClaimTypes.Sid, user["Id"].ToString()),
+                                                    }, CookieAuthenticationDefaults.AuthenticationType);
+
+                        HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = false }, claims);
+
+                        return RedirectToAction("Index", "Useradmin");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("USER_NAME", "Unable to register this user.");
+                        return View(model);
+                    }
                 }
+                
                 
             }
             else
@@ -470,7 +529,7 @@ namespace Barrway.Controllers
             }
 
             HttpContext.GetOwinContext().Authentication.SignOut();
-            return RedirectToAction("BusinessLogin");
+            return RedirectToAction("BusinessLogin", new LoginViewModel { ReturnUrl = "" });
         }
 
         [HttpPost]
@@ -486,7 +545,7 @@ namespace Barrway.Controllers
             }
 
             HttpContext.GetOwinContext().Authentication.SignOut();
-            return RedirectToAction("Login");
+            return RedirectToAction("Login", new LoginViewModel { ReturnUrl = "" });
         }
 
         
@@ -642,5 +701,188 @@ namespace Barrway.Controllers
                 return View();
             }
         }
+
+
+        #region External Login
+        [HttpPost]
+
+        public void ExternalSignIn(string returnUrl = "/", string provider = "", string userType = "")
+        {
+            if (!Request.IsAuthenticated)
+            {
+                if (provider == "Google")
+                {
+                    HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties
+                    { RedirectUri = Url.Action("GoogleLoginCallback", "Account", new { ReturnUrl = returnUrl, UserType = userType }) }, "Google");
+                }
+                if (provider == "Facebook")
+                {
+                    HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties
+                    { RedirectUri = Url.Action("GoogleLoginCallback", "Account", new { ReturnUrl = returnUrl, UserType = userType }) }, "Facebook");
+                }
+            }
+        }
+
+        [AllowAnonymous]
+        public async Task<ActionResult> GoogleLoginCallback(string returnUrl, string userType = "")
+        {
+            var claimsPrincipal = HttpContext.User.Identity as ClaimsIdentity;
+            var loginInfo = GoogleLoginViewModel.GetLoginInfo(claimsPrincipal);
+            if (loginInfo == null)
+            {
+                TempData["TmpMsg"] = new AddUpdateDelete() { Status = false, Message = "External login failed" };
+                return RedirectToAction("Login");
+            }
+
+            var result = await authService.GetUserByEmail(loginInfo.emailaddress, Convert.ToInt32(userType));
+            if (result.Status)
+            {
+                var user = result.Data;
+                var claims = new ClaimsIdentity(new[] {
+                                                    new Claim(ClaimTypes.NameIdentifier,user["USER_ID"].ToString()),
+                                                    new Claim(ClaimTypes.Name,user["USER_ID"].ToString()),
+                                                    new Claim(ClaimTypes.Email, user["USER_EMAIL"].ToString()),
+                                                    new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
+                                                    new Claim(ClaimTypes.Sid, user["Id"].ToString()),
+                                                    }, CookieAuthenticationDefaults.AuthenticationType);
+
+                HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = false }, claims);
+                if (returnUrl == "/")
+                {
+                    if (user["ROLE_NAME"].ToString() == "PUBLIC_USER")
+                    {
+                        return RedirectToAction("Index", "Useradmin");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Dashboard", "BusinessAdmin");
+                    }
+                }
+                else
+                {
+                    if (returnUrl.Contains("$"))
+                    {
+                        return Redirect(returnUrl.Replace("$", "&"));
+                    }
+                    else
+                    {
+                        return Redirect(returnUrl);
+                    }
+                    
+                }
+                
+            }
+            else
+            {
+                // register user
+                if (userType == "1")
+                {
+                    return View("BusinessSignUp", new EmailSignUpViewModel() { IS_EXTERNAL_SIGNUP = true, TERMS_ACCEPTED = false, USER_EMAIL = loginInfo.emailaddress, ReturnUrl = returnUrl });
+                }
+                else
+                {
+                    return View("SignUp", new EmailSignUpViewModel() { IS_EXTERNAL_SIGNUP = true, TERMS_ACCEPTED = false, USER_EMAIL = loginInfo.emailaddress, ReturnUrl = returnUrl });
+                }
+
+                
+            }
+        }
+
+        #endregion
+
+
+        #region Helpers
+        // Used for XSRF protection when adding external logins
+        private const string XsrfKey = "XsrfId";
+
+        private IAuthenticationManager AuthenticationManager
+        {
+            get
+            {
+                return HttpContext.GetOwinContext().Authentication;
+            }
+        }
+
+        private ActionResult RedirectToLocal(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+        internal class ChallengeResult : HttpUnauthorizedResult
+        {
+            public ChallengeResult(string provider, string redirectUri)
+                : this(provider, redirectUri, null)
+            {
+            }
+
+            public ChallengeResult(string provider, string redirectUri, string userId)
+            {
+                LoginProvider = provider;
+                RedirectUri = redirectUri;
+                UserId = userId;
+            }
+
+            public string LoginProvider { get; set; }
+            public string RedirectUri { get; set; }
+            public string UserId { get; set; }
+
+            public override void ExecuteResult(ControllerContext context)
+            {
+                var properties = new AuthenticationProperties { RedirectUri = RedirectUri };
+                if (UserId != null)
+                {
+                    properties.Dictionary[XsrfKey] = UserId;
+                }
+                context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
+            }
+        }
+        #endregion
+
+
+        #region identity
+        private ClaimsIdentity Getidentity(IDictionary<string, object> login, int Id, IDictionary<string, object> applicationUser, string role, string token, string localId, string IsTutor, string IsTherapist, string picture = "")
+        {
+            //var auth = new Firebase.Auth.FirebaseAuthProvider(new FirebaseConfig(ApiKey));
+            //var ab =  auth.SignInWithEmailAndPasswordAsync(model.Email, model.Password.ToString());
+            //string token = ab.FirebaseToken;
+            //var loggedInuser = ab.User;
+
+
+
+
+            return new ClaimsIdentity(new[] {
+                                                    new Claim(ClaimTypes.NameIdentifier, ""),
+                                                    new Claim
+                                                      ("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider",
+                                                                 "ASP.NET Identity",
+                                                                 "http://www.w3.org/2001/XMLSchema#string"),
+                                                    new Claim(ClaimTypes.Name,login["username"]?.ToString()),
+                                                    new Claim(ClaimTypes.Email, login["email"]?.ToString()),
+                                                    new Claim(ClaimTypes.Role, role),
+                                                    new Claim(ClaimTypes.UserData,JsonConvert.SerializeObject(applicationUser)),
+                                                    new Claim(ClaimTypes.Authentication, token),
+                                                    new Claim(ClaimTypes.PrimarySid, localId),
+                                                    new Claim(ClaimTypes.Sid, Id.ToString()),
+                                                    new Claim
+                                                      ("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/istutor",
+                                                                 IsTutor,
+                                                                 "http://www.w3.org/2001/XMLSchema#string"),
+                                                    new Claim
+                                                      ("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/istherapist",
+                                                                 IsTherapist,
+                                                                 "http://www.w3.org/2001/XMLSchema#string"),
+                                                    new Claim
+                                                      ("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/picture",
+                                                                 picture,
+                                                                 "http://www.w3.org/2001/XMLSchema#string")
+                                               }, CookieAuthenticationDefaults.AuthenticationType);
+        }
+        
+        #endregion
+
     }
 }

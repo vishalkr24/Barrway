@@ -19,6 +19,8 @@ namespace Barrway.Models
 
         public string ERROR_MESSAGE { get; set; }
 
+        public string ReturnUrl { get; set; }
+
 
     }
 

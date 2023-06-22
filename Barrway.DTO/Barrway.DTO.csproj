@@ -70,6 +70,7 @@
     <Compile Include="AuthViewModel\EmailSignUpViewModel.cs" />
     <Compile Include="AuthViewModel\BusinessExternalEmailLogiViewModel.cs" />
     <Compile Include="AuthViewModel\BarrwayViewModel.cs" />
+    <Compile Include="AuthViewModel\GoogleLoginViewModel.cs" />
     <Compile Include="AuthViewModel\UserToken.cs" />
     <Compile Include="BusinessModels\BulkAttendanceModel.cs" />
     <Compile Include="BusinessModels\BusinessAccountWebsiteModel.cs" />
