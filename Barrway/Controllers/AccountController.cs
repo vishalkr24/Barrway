@@ -43,7 +43,7 @@ namespace Barrway.Controllers
         [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult> BusinessLogin()
-       {
+        {
             if (User.Identity.IsAuthenticated)
             {
                 var user = await authService.GetUser(User.Identity.Name, FormRole.BUSINESS_USER);
@@ -92,7 +92,7 @@ namespace Barrway.Controllers
                     }
 
                     HttpContext.GetOwinContext().Authentication.SignOut();
-                    return RedirectToAction("Login", new {returnUrl});
+                    return RedirectToAction("Login", new { returnUrl });
                 }
             }
 
@@ -105,7 +105,8 @@ namespace Barrway.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> BusinessLogin(LoginViewModel model)
         {
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 return View();
             }
 
@@ -114,7 +115,7 @@ namespace Barrway.Controllers
             if (loginresult.Status)
             {
                 var user = loginresult.Data;
-                var claims=new ClaimsIdentity(new[] {
+                var claims = new ClaimsIdentity(new[] {
                                                     new Claim(ClaimTypes.NameIdentifier,user["USER_ID"].ToString()),
                                                     new Claim(ClaimTypes.Name,user["USER_ID"].ToString()),
                                                     new Claim(ClaimTypes.Email, user["USER_EMAIL"].ToString()),
@@ -146,7 +147,7 @@ namespace Barrway.Controllers
                 return View();
             }
 
-            var loginresult = await authService.GetUser(model.USER_EMAIL, model.USER_PASSWORD, (int)FormRole.PUBLIC_USER, true );
+            var loginresult = await authService.GetUser(model.USER_EMAIL, model.USER_PASSWORD, (int)FormRole.PUBLIC_USER, true);
 
             if (loginresult.Status)
             {
@@ -177,10 +178,10 @@ namespace Barrway.Controllers
                     {
                         return Redirect(returnUrl);
                     }
-                    
+
                 }
 
-                
+
             }
             else
             {
@@ -235,7 +236,7 @@ namespace Barrway.Controllers
 
 
             }
-            return View(new EmailSignUpViewModel() { IS_EXTERNAL_SIGNUP = false});
+            return View(new EmailSignUpViewModel() { IS_EXTERNAL_SIGNUP = false });
         }
 
         [AllowAnonymous]
@@ -256,7 +257,7 @@ namespace Barrway.Controllers
 
 
             }
-            return View(new EmailSignUpViewModel() { ReturnUrl = ""});
+            return View(new EmailSignUpViewModel() { ReturnUrl = "" });
         }
 
         [AllowAnonymous]
@@ -290,7 +291,7 @@ namespace Barrway.Controllers
                     IS_ACTIVE = (model.IS_EXTERNAL_SIGNUP) ? "Y" : "N",
                     IS_EMAIL_VERIFIED = (model.IS_EXTERNAL_SIGNUP) ? "Y" : "N",
                     IS_PHONE_VERIFIED = "N",
-                    IS_EXTERNAL_SIGNUP = (model.IS_EXTERNAL_SIGNUP)? "Y": "N",
+                    IS_EXTERNAL_SIGNUP = (model.IS_EXTERNAL_SIGNUP) ? "Y" : "N",
                     PROFILE_STATUS = "PENDING",
                     SIGNUP_TYPE = (model.IS_EXTERNAL_SIGNUP) ? "GOOGLE" : "EMAIL",
                     USER_EMAIL = model.USER_EMAIL,
@@ -357,7 +358,7 @@ namespace Barrway.Controllers
                         return View(model);
                     }
                 }
-                
+
 
             }
             else
@@ -402,7 +403,7 @@ namespace Barrway.Controllers
             if (!userByEmail.Status && !userByID.Status)
             {
                 // Insert Data in User Master
-                
+
                 UserMaserModel userMaserModel = new UserMaserModel()
                 {
                     USER_PHONE = "",
@@ -472,22 +473,22 @@ namespace Barrway.Controllers
                         return View(model);
                     }
                 }
-                
-                
+
+
             }
             else
             {
                 if (userByEmail.Status)
                 {
                     ModelState.AddModelError("USER_EMAIL", "Email already registered");
-                    
+
                 }
 
                 if (userByID.Status)
                 {
                     ModelState.AddModelError("USER_NAME", "User name is already taken");
                 }
-                
+
                 return View(model);
             }
 
@@ -548,9 +549,10 @@ namespace Barrway.Controllers
             return RedirectToAction("Login", new LoginViewModel { ReturnUrl = "" });
         }
 
-        
 
-        public ActionResult AcessDenied() {
+
+        public ActionResult AcessDenied()
+        {
 
             return View();
         }
@@ -565,15 +567,16 @@ namespace Barrway.Controllers
                 return View();
             }
 
-            var result = await authService.GetToken(token,userName);
+            var result = await authService.GetToken(token, userName);
             if (result.Status && (result.Data as IDictionary<string, object>)["IS_ACTIVE"]?.ToString() == "Y")
             {
                 var tokeData = result.Data as IDictionary<string, object>;
                 var _createdTime = tokeData["TOKEN_TIME"]?.ToString();
-                
+
                 DateTime createdTime;
 
-                if (DateTime.TryParse(_createdTime, out createdTime)) {
+                if (DateTime.TryParse(_createdTime, out createdTime))
+                {
 
                     if (DateTime.Now.Subtract(createdTime).TotalHours > 24)
                     {
@@ -581,14 +584,16 @@ namespace Barrway.Controllers
                         return View();
                     }
                     var verificationResult = await authService.UserVerification(token, userName);
-                    if (verificationResult.Status) {
+                    if (verificationResult.Status)
+                    {
                         TempData["success"] = "Email verification successfull.";
 
                         if (role == "BUSINESS_USER")
                         {
                             int affectedRows = await sqlFunction.ExecuteSqlCommandQuery("update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'COMPANY PROFILE' where USER_ID = '" + userName + "'");
                             return View();
-                        }else if (role == "PUBLIC_USER")
+                        }
+                        else if (role == "PUBLIC_USER")
                         {
                             int affectedRows = await sqlFunction.ExecuteSqlCommandQuery("update PUBLIC_USER_ACCOUNT_1943 set CURRENT_STEP = 'COMPLETED' where USER_ID = '" + userName + "'");
                             return View();
@@ -602,7 +607,8 @@ namespace Barrway.Controllers
                         return View();
                     }
                 }
-                else{
+                else
+                {
                     TempData["failed"] = "Invalid Token";
                     return View();
                 }
@@ -637,7 +643,7 @@ namespace Barrway.Controllers
                         return View();
                     }
                     TempData["success"] = "reset password link verified please reset your password!";
-                    ResetPasswordViewModel model = new ResetPasswordViewModel() {token=token };
+                    ResetPasswordViewModel model = new ResetPasswordViewModel() { token = token };
                     return View(model);
                 }
                 else
@@ -675,15 +681,16 @@ namespace Barrway.Controllers
                         return View();
                     }
                     model.newpassword = Aes256CbcEncrypter.Encrypt(model.newpassword);
-                    result= await authService.ResetPassword(model.token, tokeData["USER_NAME"].ToString(), model.newpassword);
-                    if (result.Status) {
+                    result = await authService.ResetPassword(model.token, tokeData["USER_NAME"].ToString(), model.newpassword);
+                    if (result.Status)
+                    {
                         ModelState.Clear();
                         TempData["success"] = "password reset successfully. you can login your account on mobile app.";
                     }
                     else
                     {
                         ModelState.Clear();
-                        ModelState.AddModelError("",result.Message);
+                        ModelState.AddModelError("", result.Message);
                     }
                     return View();
                 }
@@ -706,21 +713,22 @@ namespace Barrway.Controllers
         #region External Login
         [HttpPost]
 
-        public void ExternalSignIn(string returnUrl = "/", string provider = "", string userType = "")
+        public dynamic ExternalSignIn(string returnUrl = "/", string provider = "", string userType = "")
         {
-            if (!Request.IsAuthenticated)
+
+            if (provider == "Google")
             {
-                if (provider == "Google")
-                {
-                    HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties
-                    { RedirectUri = Url.Action("GoogleLoginCallback", "Account", new { ReturnUrl = returnUrl, UserType = userType }) }, "Google");
-                }
-                if (provider == "Facebook")
-                {
-                    HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties
-                    { RedirectUri = Url.Action("GoogleLoginCallback", "Account", new { ReturnUrl = returnUrl, UserType = userType }) }, "Facebook");
-                }
+                HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties
+                { RedirectUri = Url.Action("GoogleLoginCallback", "Account", new { ReturnUrl = returnUrl, UserType = userType }) }, "Google");
+
             }
+            if (provider == "Facebook")
+            {
+                HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties
+                { RedirectUri = Url.Action("GoogleLoginCallback", "Account", new { ReturnUrl = returnUrl, UserType = userType }) }, "Facebook");
+            }
+            return null;
+
         }
 
         [AllowAnonymous]
@@ -768,9 +776,9 @@ namespace Barrway.Controllers
                     {
                         return Redirect(returnUrl);
                     }
-                    
+
                 }
-                
+
             }
             else
             {
@@ -783,8 +791,6 @@ namespace Barrway.Controllers
                 {
                     return View("SignUp", new EmailSignUpViewModel() { IS_EXTERNAL_SIGNUP = true, TERMS_ACCEPTED = false, USER_EMAIL = loginInfo.emailaddress, ReturnUrl = returnUrl });
                 }
-
-                
             }
         }
 
@@ -881,7 +887,7 @@ namespace Barrway.Controllers
                                                                  "http://www.w3.org/2001/XMLSchema#string")
                                                }, CookieAuthenticationDefaults.AuthenticationType);
         }
-        
+
         #endregion
 
     }
