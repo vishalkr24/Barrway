@@ -2707,16 +2707,6 @@
     <Content Include="fg-newAssets\fonts\fontAwesome\fa-solid-900.svg" />
     <Content Include="fg-newAssets\fonts\Montserrat\OFL.txt" />
     <Content Include="fg-newAssets\fonts\Roboto\LICENSE.txt" />
-    <Content Include="fg-newAssets\icons\chat.png" />
-    <Content Include="fg-newAssets\icons\Forum.png" />
-    <Content Include="fg-newAssets\icons\LearningCentre.png" />
-    <Content Include="fg-newAssets\icons\Parent.png" />
-    <Content Include="fg-newAssets\icons\Schedule.png" />
-    <Content Include="fg-newAssets\icons\Student.png" />
-    <Content Include="fg-newAssets\icons\Teacher.png" />
-    <Content Include="fg-newAssets\icons\TeachingMaterial.png" />
-    <Content Include="fg-newAssets\icons\Therapist.png" />
-    <Content Include="fg-newAssets\icons\visa.png" />
     <Content Include="fg-newAssets\images\404.png" />
     <Content Include="fg-newAssets\images\broken.png" />
     <Content Include="fg-newAssets\images\carousel\clinic1.jpg" />
@@ -2796,8 +2786,6 @@
     <Content Include="fg-assets\i18n\ch.json" />
     <Content Include="fg-assets\i18n\en.json" />
     <Content Include="fg-assets\jquery-ui-signature\js\jquery.signature.min.map" />
-    <Content Include="fg-assets\lightbox\img\demopage\Thumbs.db" />
-    <Content Include="fg-assets\lightbox\img\Thumbs.db" />
     <Content Include="fg-assets\PivotTablejs\dist\c3_renderers.js.map" />
     <Content Include="fg-assets\PivotTablejs\dist\c3_renderers.min.js.map" />
     <Content Include="fg-assets\PivotTablejs\dist\d3_renderers.js.map" />
@@ -3200,9 +3188,11 @@
     <Content Include="Views\BusinessMarketplace\Features.cshtml" />
     <Content Include="Views\BusinessAdmin\CompanyMaster.cshtml" />
     <Content Include="Views\BusinessMarketplace\Pricing.cshtml" />
+    <Content Include="Views\MarketPlace\PrivacyPolicy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="fg-newAssets\icons\" />
     <Folder Include="Logs\" />
     <Folder Include="UploadCalendar\CalendarImages\" />
     <Folder Include="UploadCompanyPhotoAlbum\" />

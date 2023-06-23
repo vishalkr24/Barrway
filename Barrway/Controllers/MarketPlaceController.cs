@@ -47,6 +47,11 @@ namespace Barrway.Controllers
             return View();
         }
 
+        public async Task<ActionResult> PrivacyPolicy()
+        {
+            return View();
+        }
+
         public async Task<ActionResult> Tag(string tag)
         {
 

@@ -1,5 +1,5 @@
 ﻿@model Barrway.DTO.AuthViewModel.EmailSignUpViewModel
-@{  
+@{
     bool IsExternalSignUp = false;
     if (Model != null)
     {
@@ -19,7 +19,26 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link href="~/assets/css/custom-styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <style>
+
+        .hide-on-small {
+            display: inline-block;
+        }
+
+        .hide-on-large {
+            display: none;
+        }
+
+        @@media screen and (max-width: 560px) {
+            .hide-on-large {
+                display: inline-block;
+            }
+
+            .hide-on-small {
+                display: none;
+            }
+        }
 
         * {
             box-sizing: border-box;
@@ -52,6 +71,7 @@
         .signUp {
             display: flex;
             widtH: 100%;
+            background: mintcream;
             transition: 0.5s ease-in-out;
             border-radius: 5px;
             box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.35);
@@ -77,6 +97,8 @@
             justify-content: center;
             align-items: center;
             z-index: 2;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
             text-align: center;
             background-image: url("../assets/img/logback.png");
             background-repeat: none;
@@ -198,7 +220,7 @@
                 }
 
         .logo img {
-            width: 300px;
+            width: 260px;
         }
 
         .logo {
@@ -336,6 +358,11 @@
             }
 
         @@media screen and (max-width:768px) {
+
+            .logo img {
+                width: 100% !important;
+            }
+
             body {
                 widtH: 100%;
                 min-height: auto;
@@ -360,13 +387,15 @@
                     width: 100%;
                     padding: 80px 60px;
                     float: left;
+                    border-top-right-radius: 0px;
+                    border-bottom-right-radius: 0px;
                     display: block;
                 }
         }
     </style>
 
 </head>
-<body class="d-flex align-items-center min-h-100">
+<body class="d-flex align-items-center min-h-100" style="background: linear-gradient(to right, #e2476c, #3fbfc7);">
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
 
@@ -436,8 +465,8 @@
                                             {
                                                 @Html.AntiForgeryToken()
 
-                                                <button class="a" type="submit" id="Google" name="provider" value="Google">Register with Google</button>
-                                                <button class="a" type="submit" id="Facebook" name="provider" value="Facebook">Register with Facebook</button>
+                                                <button class="a" type="submit" id="Google" name="provider" value="Google"><span class="hide-on-large"><i class="bi bi-google" aria-hidden="true"></i></span> <span class="hide-on-small">Register with Google</span> </button>
+                                                <button class="a" type="submit" id="Facebook" name="provider" value="Facebook"> <span class="hide-on-large"><i class="bi bi-facebook" aria-hidden="true"></i></span> <span class="hide-on-small">Register with Facebook</span></button>
                                             }
 
                                         </div>
@@ -450,6 +479,13 @@
                                     else
                                     {
                                         <h3>Complete your registration</h3>
+
+                                        <div style="padding-bottom: 6px;">
+                                            <label style="">Your email</label>
+                                        </div>
+                                        <div style="color:green;">@Model.USER_EMAIL</div>
+                                        <br>
+
                                         <form class="js-validate needs-validation" method="post" action="/Account/SignUp" novalidate>
 
                                             @Html.AntiForgeryToken()
@@ -464,10 +500,11 @@
                                             <div class="form-group" style="display:none;">
                                                 <label for="email">Email</label>
                                                 @*<input type="email" class="form-control" id="USER_EMAIL" name="USER_EMAIL" required placeholder="Email">*@
-                                                @Html.TextBoxFor(model => model.USER_EMAIL, new { @class = "form-control", @readonly=true, @placeholder = "Email", @required = "true" })
+                                                @Html.TextBoxFor(model => model.USER_EMAIL, new { @class = "form-control", @readonly = true, @placeholder = "Email", @required = "true" })
                                                 @Html.ValidationMessageFor(model => model.USER_EMAIL, "", new { @class = "invalid-feedback-2" })
 
                                             </div>
+
                                             <div class="form-group">
                                                 <label for="pwd">Password</label>
                                                 @*<input type="password" class="form-control" id="USER_PASSWORD" name="USER_PASSWORD" required placeholder="********">*@
@@ -496,6 +533,7 @@
                                             </div>
                                             <div style="display:none;">
                                                 @Html.EditorFor(model => model.IS_EXTERNAL_SIGNUP, new { @class = "form-control", @readonly = true, @style = "visibility:hidden;", @placeholder = "Email", @required = "true" })
+                                                @Html.TextBoxFor(model => model.USER_EMAIL, new { @class = "form-control", @readonly = true, @placeholder = "Email", @required = "true" })
                                             </div>
 
 
@@ -514,7 +552,28 @@
             </div>
         </div>
     </section>
+    <style>
+        .swal-footer{
+            text-align:center;
+        }
+    </style>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
 
+        $(document).ready(function () {
+            if ("@IsExternalSignUp" == "True") {
+                swal({
+                    title: "Congratulations!",
+                    text: "You have successfully authenticated, Finish the last step of your registration.",
+                    icon: "success",
+                    buttons: {
+                        confirm: "Okay"
+                    }
+                });
+            }
+        })
+
+    </script>
 
 
 </body>

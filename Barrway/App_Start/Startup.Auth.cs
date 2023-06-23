@@ -49,11 +49,10 @@ namespace Barrway
             //   consumerSecret: "");
 
 
-            app.UseFacebookAuthentication(new FacebookAuthenticationOptions
-            {
-                AppId = "1270861036871222",
-                AppSecret = "7bc3f2fa05a1d175de90bc3979b07b07"
-            });
+            app.UseFacebookAuthentication(
+                appId: "1042227183429562",
+                appSecret: "045a749a278f0f3b3f4d17221d37beb4"
+            );
 
             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             {
