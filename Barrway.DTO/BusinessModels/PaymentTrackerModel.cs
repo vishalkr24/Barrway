@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Barrway.DTO.BusinessModels
+{
+    public class PaymentTrackerModel
+    {
+        public string ORDER_NO { get; set; }
+        public string PAYMENT_REQUEST_JSON { get; set; }
+        public DateTime REQUEST_TIME { get; set; }
+        public string PAYMENT_RESPONSE_JSON { get; set; }
+        public DateTime RESPONSE_TIME { get; set; }
+    }
+}

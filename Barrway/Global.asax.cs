@@ -10,6 +10,8 @@ using System.Web.Http.Results;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using System.Web.Configuration;
+using Stripe;
 
 namespace Barrway
 {
@@ -23,6 +25,8 @@ namespace Barrway
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
+            var secretKey = WebConfigurationManager.AppSettings["StripeSecretKey"];
+            StripeConfiguration.SetApiKey(secretKey);
         }
 
     }

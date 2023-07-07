@@ -1,5 +1,7 @@
-﻿using Barrway.DTO.Common;
+﻿using Barrway.DTO.BusinessModels;
+using Barrway.DTO.Common;
 using Barrway.Service.IRepository;
+using Barrway.Utility.Common;
 using FormGeneratorDTOs.DTOs;
 using System;
 using System.Collections.Generic;
@@ -12,10 +14,12 @@ namespace Barrway.Service.Repository
     public class MasterService : IMasterService
     {
         private readonly ISqlFunction sqlFunction;
+        private readonly IFormAPIRepository formAPIRepository;
 
-        public MasterService(ISqlFunction sqlFunction)
+        public MasterService(ISqlFunction sqlFunction, IFormAPIRepository formAPIRepository)
         {
             this.sqlFunction = sqlFunction;
+            this.formAPIRepository = formAPIRepository;
         }
 
         public async Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetLocationMasterList(GenerateDynamicFormData data, string companyCode, string calendarCode)
@@ -892,5 +896,177 @@ namespace Barrway.Service.Repository
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
             }
         }
+
+        public async Task<AddUpdateDelete> GetCompanyCalendarPackages(string CompanyCode, string CalendarCode)
+        {
+            try
+            {
+
+                    var query = $@"
+                                DECLARE @retval nvarchar(max);
+                                DECLARE @sQuery nvarchar(max); 
+                                DECLARE @ParmDefinition nvarchar(max);                        
+                                DECLARE @customTitleQuery nvarchar(max);                          
+                                IF OBJECT_ID(N'tempdb..#temptable') IS NOT NULL  BEGIN DROP TABLE #temptable END;
+                                with cte1 as( 
+	                                select distinct  f.*,
+	                                f.resources 'resourceId', 
+	                                STUFF((SELECT ',' +  PARTICIPANT_MASTER_1940.[STUDENT_NAME]  
+                                                                from TRANSACTION_MASTER_1942 inner join PARTICIPANT_MASTER_1940 on TRANSACTION_MASTER_1942.STUDENT = PARTICIPANT_MASTER_1940.Id where TRANSACTION_MASTER_1942.formGroupKey = f.formGroupKey         FOR XML PATH('')), 1, 1, '') customFourthTitle,
+	                                (dbo.[GetSubQueryCalender](f.formGroupKey)) customTitle,
+	                                (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceFormId) from form_calenderreferrence f2     
+                                                                where f2.formgroupkey = f.formGroupKey  FOR XML PATH('')), 1, 1, '')   ) 
+	                                customForms, 
+	                                (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceId) from form_calenderreferrence f2    
+                                                                where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) 
+	                                customFormIds,
+	                                '' referrences_1,
+	                                '' referrences_2,
+	                                '' referrences_3,
+	                                bcm.CALENDAR_NAME,
+	                                subCategory.CALENDAR_SUB_CATEGORY_NAME
+	                                from CALENDAR_FORM_1935 f  
+	                                join BUSINESS_CALENDAR_MASTER_1925 bcm on bcm.CALENDAR_CODE = f.CALENDAR_CODE
+	                                join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = bcm.CALENDAR_SUB_CATEGORY_ID
+	                                where   f.formid=2305  and bcm.CALENDAR_CODE = '{CalendarCode}' and bcm.COMPANY_CODE = '{CompanyCode}'
+                                ),
+                                cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
+                                select* into #temptable from cte2  where len(customtitle)>0;    declare @counter int= 0, @c int= 1;   
+                                select @counter = (select count(1) from #temptable)	while @c <= @counter    begin    select @customTitleQuery = customTitle from #temptable where ROWNUMBER=@c;	SET @sQuery= ' select @retvalOUT = (' + @customTitleQuery + ')'  
+                                SET @ParmDefinition = N'@retvalOUT nvarchar(max) OUTPUT';   
+                                EXEC sp_executesql @sQuery, @ParmDefinition, @retvalOUT = @retval OUTPUT;    update #temptable set customTitle=@retval where ROWNUMBER=@c;	set @c = @c + 1;  end  select* from #temptable
+
+                                ";
+                var result = await sqlFunction.ExecuteSqlQuery(query);
+
+                query = $@"select * from CALENDAR_PACKAGE_MASTER_1952 
+                            where CALENDAR_CODE = '{CalendarCode}' and COMPANY_CODE = '{CompanyCode}' and IS_ACTIVE = 'Y'
+                            order by PACKAGE_SEQUENCE, created_at";
+                var result2 = await sqlFunction.ExecuteSqlQuery(query);
+
+                List<List<IDictionary<string, object>>> finalResult = new List<List<IDictionary<string, object>>>();
+                finalResult.Add(result);
+                finalResult.Add(result2);
+
+                return new AddUpdateDelete() { Status = true, Message = "Success", Data = finalResult };
+
+            }catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message.ToString() };
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetSingleCalendarPackage(string PackageId)
+        {
+            try
+            {
+                
+                var query = $@"SELECT [Id]
+                                  ,[CALENDAR_CODE]
+                                  ,[COMPANY_CODE]
+                                  ,[PACKAGE_NAME]
+                                  ,[PACKAGE_PRICE]
+                                  ,[PRICE_PER_SLOT]
+                                  ,[PACKAGE_COIN]
+                                  ,[PACKAGE_SEQUENCE]
+                                  ,[PACKAGE_DESCRIPTION]
+                                  ,[IS_ACTIVE]
+                              FROM [dbo].[CALENDAR_PACKAGE_MASTER_1952] where Id = '{PackageId}'";
+                var result = await sqlFunction.ExecuteSqlQuery(query);
+
+                return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message.ToString() };
+            }
+        }
+
+        public async Task<AddUpdateDelete> CreateOrder(OrderModel model)
+        {
+            try
+            {
+                Form_DataTable data = new Form_DataTable();
+                data.action = (int)FormAction.Save;
+                data.formId = (int)FormSetting.ORDER_MASTER;
+                data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.ToDictionary());
+                data.formGroupKey = Guid.NewGuid().ToString();
+                var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+                if (formResult.res == 1)
+                {
+                    string OrderNo = "ORD" + formResult.Id.ToString().PadLeft(5, '0');
+                    var query = $@"update ORDER_MASTER_1953 set ORDER_NO = '{OrderNo}' where Id = '{formResult.Id.ToString()}'";
+                    var result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                    return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = OrderNo };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Message = formResult.Message, Status = false };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message.ToString() };
+            }
+        }
+
+        public async Task<AddUpdateDelete> CreatePaymentTracker(PaymentTrackerModel model)
+        {
+            try
+            {
+                Form_DataTable data = new Form_DataTable();
+                data.action = (int)FormAction.Save;
+                data.formId = (int)FormSetting.PAYMENT_TRACKER;
+                data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.ToDictionary());
+                data.formGroupKey = Guid.NewGuid().ToString();
+                var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+                if (formResult.res == 1)
+                {
+                    return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Message = formResult.Message, Status = false };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message.ToString() };
+            }
+        }
+
+        public async Task<AddUpdateDelete> CreateLedgerEntry(LedgerModel model)
+        {
+            try
+            {
+                Form_DataTable data = new Form_DataTable();
+                data.action = (int)FormAction.Save;
+                data.formId = (int)FormSetting.LEDGER_MASTER;
+                data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.ToDictionary());
+                data.formGroupKey = Guid.NewGuid().ToString();
+                var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+                if (formResult.res == 1)
+                {
+                    return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Message = formResult.Message, Status = false };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message.ToString() };
+            }
+        }
+
     }
 }

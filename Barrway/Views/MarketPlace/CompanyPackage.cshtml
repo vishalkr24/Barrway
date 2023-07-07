@@ -5,7 +5,8 @@
     ViewBag.COMPANY_ID = Model.COMPANY_CODE.ToString();
     ViewBag.CALENDAR_ID = Model.DEFAULT_CALENDAR_ID;
 }
-
+<input id="txtCurrentCompanyCode" value="@ViewBag.COMPANY_ID" readonly style="display:none;"/>
+<input id="txtCurrentCalendarCode" value="@ViewBag.CALENDAR_ID" readonly style="display:none;" />
 
 <!-- heading -->
 <section class="heading company-detail-hed">
@@ -31,33 +32,18 @@
                                 <img src="~/assets/marketplace/image/pro.png" class="media-object" style="width:195px">
                             </div>
                             <div class="media-body">
-                                <h4 class="media-heading">Yoga and health class (calendar name)</h4>
-                                <p><span class="location">Location</span></p>
+                                <h4 class="media-heading" id="lblCalendarName"></h4>
+                                <p><span class="location" id="lblCalendarLocation"></span></p>
                                 <p>
-                                    <span> Subcategory1, </span>
-                                    <span>  Subcategory1, </span>
+                                    <span id="lblSubCategory"> </span>
                                     </br>
-                                    <span> Service name1, </span>
-                                    <span> Service name2, </span>
+                                    <span id="lblServiceName"></span>
                                 </p>
                             </div>
                         </div>
                     </div>
-                    <div class="card-bottom">
-                        <div class="bpgd">
-                            <h4>Basic plan</h4>
-                            <h4>HK$1000 = B$1000</h4>
-                            <p>Description:</p>
-                            <p>Regular course is B$ 100 per class</p>
-                            <p class="mt-10"><button>BUY</button></p>
-                        </div>
-                        <div class="bpgd">
-                            <h4>Great deal</h4>
-                            <h4>HK$5000 = B$5800</h4>
-                            <p>Description:</p>
-                            <p>Regular course is B$ 100 per class</p>
-                            <p class="mt-10"><button>BUY</button></p>
-                        </div>
+                    <div class="card-bottom" id="packages-area">
+                        
                     </div>
                 </div>
             </div>

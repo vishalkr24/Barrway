@@ -2038,6 +2038,20 @@
                     parent: 'home'
                 }
             })
+            .state('calendar_package', {
+                url: '/calendar/calendar-package/:formId',
+                onEnter: function ($window) { $window.document.title = "My Profile"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/calendar-master/calendar-package-master.html?token=' + uuid,
+                        controller: 'FormRecordsController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
     }]);
 }(FormGeneratorApp));
 

@@ -16,6 +16,27 @@
     return data;
 }
 
+function getCompanyCalendarPackages(companyCode, calendarCode) {
+    var data;
+    $.ajax({
+        url: "/Marketplace/GetCompanyCalendarPackages/",
+        type: "GET",
+        data: {
+            CompanyCode: companyCode,
+            CalendarCode: calendarCode
+        },
+        async: false,
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+
+            data = null;
+        }
+    })
+    return data;
+}
+
 function getCompanySubCategory(categoryId) {
     var data;
     $.ajax({
