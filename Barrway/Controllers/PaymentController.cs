@@ -1,0 +1,202 @@
+﻿using Barrway.DTO.BusinessModels;
+using Barrway.Security;
+using Barrway.Service.IRepository;
+using Barrway.Utility.Common;
+using Newtonsoft.Json;
+using Stripe;
+using Stripe.Checkout;
+using Stripe.Infrastructure;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
+
+namespace Barrway.Controllers
+{
+    [PublicAuthorize(Roles = "PUBLIC_USER")]
+    public class PaymentController : Controller
+    {
+        private readonly IMasterService masterService;
+        private readonly ISqlFunction sqlFunction;
+
+        public PaymentController(IMasterService masterService, ISqlFunction sqlFunction)
+        {
+            this.masterService = masterService;
+            this.sqlFunction = sqlFunction;
+        }
+
+        // GET: Payment
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateCheckoutSession(string PackageId)
+        {
+            string UserId = User.Identity.Name;
+            string OrderNo = "";
+
+            var PackageData = await masterService.GetSingleCalendarPackage(PackageId);
+
+            OrderModel order = new OrderModel()
+            {
+                ORDER_COIN = Convert.ToDouble(PackageData.Data["PACKAGE_COIN"]),
+                CALENDAR_CODE = PackageData.Data["CALENDAR_CODE"].ToString(),
+                PAYMENT_TYPE = "STRIPE",
+                PACKAGE_ID = PackageId,
+                ORDER_PRICE = Convert.ToDouble(PackageData.Data["PACKAGE_PRICE"]),
+                ORDER_QTY = 1,
+                ORDER_TYPE = "PACKAGE",
+                USER_ID = User.Identity.Name,
+                PAYMENT_ID = "",
+                PAYMENT_STATUS = ""
+            };
+
+            var result = await masterService.CreateOrder(order);
+            
+            if (result.Status)
+            {
+                OrderNo = result.Data;
+            }
+
+            PackageData.Data.Add("OrderNo", OrderNo);
+            try
+            {
+                var temp = JsonConvert.SerializeObject(PackageData.Data);
+
+                Dictionary<string, string> metaData = new Dictionary<string, string>();
+
+                metaData.Add("Data", temp.ToString());
+
+                var options = new SessionCreateOptions
+                {
+                    LineItems = new List<SessionLineItemOptions>
+                    {
+                      new SessionLineItemOptions
+                      {
+                            PriceData = new SessionLineItemPriceDataOptions
+                            {
+                               UnitAmount = Convert.ToInt32(PackageData.Data["PACKAGE_PRICE"])*100,
+                               Currency = "inr",
+                               ProductData = new SessionLineItemPriceDataProductDataOptions
+                               {
+                                   Name = PackageData.Data["PACKAGE_NAME"]?.ToString(),
+                                   Description = PackageData.Data["PACKAGE_DESCRIPTION"]?.ToString()
+                               }
+
+                            },
+                            Quantity = 1
+                      }
+                    },
+                    Mode = "payment",
+                    Metadata = metaData,
+                    SuccessUrl = ConfigurationManager.AppSettings["baseurl"] + "Payment/success?SessionId={CHECKOUT_SESSION_ID}",
+                    CancelUrl = ConfigurationManager.AppSettings["baseurl"] + "Payment/cancel?SessionId={CHECKOUT_SESSION_ID}"
+                };
+
+                var service = new SessionService();
+                Session session = service.Create(options);
+
+
+
+                PaymentTrackerModel tracker = new PaymentTrackerModel()
+                {
+                    ORDER_NO = OrderNo,
+                    PAYMENT_REQUEST_JSON = JsonConvert.SerializeObject(options),
+                    REQUEST_TIME = DateTime.Now,
+                    PAYMENT_RESPONSE_JSON = ""
+                };
+
+                await masterService.CreatePaymentTracker(tracker);
+
+
+                Response.Headers.Add("Location", session.Url);
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+            
+            return new HttpStatusCodeResult(303);
+        }
+
+        public async Task<ActionResult> success(string SessionId)
+        {
+            if (SessionId != null)
+            {
+                var service = new SessionService();
+                var session = service.Get(SessionId);
+                var PackageData = JsonConvert.DeserializeObject<IDictionary<string, object>>(session.Metadata["Data"]);
+
+                string query = $@"update ORDER_MASTER_1953 set PAYMENT_STATUS = '{session.Status}',PAYMENT_ID = '{session.PaymentIntentId}' where ORDER_NO = '{PackageData["OrderNo"].ToString()}' ";
+                var updateResult = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                PaymentTrackerModel tracker = new PaymentTrackerModel()
+                {
+                    ORDER_NO = PackageData["OrderNo"].ToString(),
+                    PAYMENT_REQUEST_JSON = "",
+                    RESPONSE_TIME = DateTime.Now,
+                    PAYMENT_RESPONSE_JSON = session.StripeResponse.Content
+                };
+
+                var result = await masterService.CreatePaymentTracker(tracker);
+
+                LedgerModel ledgerModel = new LedgerModel()
+                {
+                    CALENDAR_CODE = PackageData["CALENDAR_CODE"].ToString(),
+                    COMPANY_CODE = PackageData["COMPANY_CODE"].ToString(),
+                    CREDIT_COIN = Convert.ToDouble(PackageData["PACKAGE_COIN"]),
+                    DEBIT_COIN = 0,
+                    ORDER_NO = tracker.ORDER_NO,
+                    USER_ID = User.Identity.Name
+                };
+
+                var resultLedger = masterService.CreateLedgerEntry(ledgerModel);
+
+                ViewBag.PaymentId = session.PaymentIntentId;
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Marketplace");
+            }
+
+            
+        }
+
+        public async Task<ActionResult> cancel(string SessionId)
+        {
+            if (SessionId != null)
+            {
+                var service = new SessionService();
+                var session = service.Get(SessionId);
+                var PackageData = JsonConvert.DeserializeObject<IDictionary<string, object>>(session.Metadata["Data"]);
+
+                string query = $@"update ORDER_MASTER_1953 set PAYMENT_STATUS = '{session.Status}',PAYMENT_ID = '{session.PaymentIntentId}' where ORDER_NO = '{PackageData["OrderNo"].ToString()}' ";
+                var updateResult = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                PaymentTrackerModel tracker = new PaymentTrackerModel()
+                {
+                    ORDER_NO = PackageData["OrderNo"].ToString(),
+                    PAYMENT_REQUEST_JSON = "",
+                    RESPONSE_TIME = DateTime.Now,
+                    PAYMENT_RESPONSE_JSON = session.StripeResponse.Content
+                };
+
+                var data = masterService.CreatePaymentTracker(tracker);
+                
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Marketplace");
+            }
+        }
+    }
+}

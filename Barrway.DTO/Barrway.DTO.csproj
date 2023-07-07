@@ -81,6 +81,9 @@
     <Compile Include="BusinessModels\BusinessCompanyModel.cs" />
     <Compile Include="BusinessModels\CalendarControlModel.cs" />
     <Compile Include="BusinessModels\CalendarFormModel.cs" />
+    <Compile Include="BusinessModels\LedgerModel.cs" />
+    <Compile Include="BusinessModels\OrderModel.cs" />
+    <Compile Include="BusinessModels\CalendarPackageModel.cs" />
     <Compile Include="BusinessModels\CalendarReferenceModel.cs" />
     <Compile Include="BusinessModels\CompanyPaymentHistoryModel.cs" />
     <Compile Include="BusinessModels\CompanyPhotoAlbumViewModel.cs" />
@@ -88,6 +91,7 @@
     <Compile Include="BusinessModels\CompanyProfileViewModel.cs" />
     <Compile Include="BusinessModels\CompanySubscriptionDetailsModel.cs" />
     <Compile Include="BusinessModels\CompanyUpcomingBookingsModel.cs" />
+    <Compile Include="BusinessModels\PaymentTrackerModel.cs" />
     <Compile Include="BusinessModels\SchedularFormModel.cs" />
     <Compile Include="BusinessModels\UserMaserModel.cs" />
     <Compile Include="Common\AddUpdateDelete.cs" />

@@ -143,7 +143,7 @@ namespace Barrway.Controllers
                 companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
 
                 ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
-
+                
                 return View(companyModel);
             }
             catch (Exception ex)
@@ -293,8 +293,22 @@ namespace Barrway.Controllers
             }
         }
 
+        public async Task<ActionResult> GetCompanyCalendarPackages(string CompanyCode, string CalendarCode)
+        {
+            try
+            {
+                var packageData = await masterService.GetCompanyCalendarPackages(CompanyCode, CalendarCode);
+                
+                return Json(new { packageData }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
 
-       
+        
+
 
 
 

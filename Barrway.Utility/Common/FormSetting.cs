@@ -39,7 +39,11 @@ namespace Barrway.Utility.Common
         COMPANY_UPCOMING_BOOKINGS = 2315,
         NEWS_POST_MASTER = 2316,
         AUTHOR_MASTER = 2317,
-        FAVORITE_CALENDAR_MASTER = 2319
+        FAVORITE_CALENDAR_MASTER = 2319,
+        CALENDAR_PACKAGE_MASTER = 2322,
+        ORDER_MASTER = 2323,
+        PAYMENT_TRACKER = 2324,
+        LEDGER_MASTER = 2325
     }
 
     public enum FormAction
