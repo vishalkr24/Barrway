@@ -16811,6 +16811,7 @@
 
     })
 
+
     FormGeneratorApp.controller('UserProfileController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
         checkLogin();
         $("#user-nav-myprofile").addClass("active")

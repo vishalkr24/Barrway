@@ -27,6 +27,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> CreateOrder(OrderModel model);
         Task<AddUpdateDelete> CreatePaymentTracker(PaymentTrackerModel model);
         Task<AddUpdateDelete> CreateLedgerEntry(LedgerModel model);
+        Task<AddUpdateDelete> CreatePaymentHistory(PaymentHistoryModel model);
 
     }
 }

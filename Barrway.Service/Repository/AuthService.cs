@@ -644,7 +644,6 @@ namespace Barrway.Service.Repository
             }
         }
 
-
         private async Task<AddUpdateDelete> GetUserByRole(string userID, string role)
         {
             if (role == "BUSINESS_USER")

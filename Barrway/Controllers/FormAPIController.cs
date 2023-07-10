@@ -107,6 +107,14 @@ namespace Barrway.Controllers
         [HttpPost]
         public async Task<ActionResult> GetFormRecordList(GenerateDynamicFormData data)
         {
+            var role = UserIdentity.Role;
+
+            if (role == "PUBLIC_USER" && (data.formId == 2326 || data.formId == 2327))
+            {
+                data.CustomFilters.Clear();
+                data.CustomFilters.Add(new CustomFilter() { FieldName = "USER_ID", Value = User.Identity.Name });
+            }
+
             var result = (await formAPIRepository.GetFormRecordList(data)).Data;
             if (data.formId == (int)FormSetting.CALENDAR_FORM)
             {

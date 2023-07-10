@@ -2388,7 +2388,7 @@ async function rendarPopupCalendar(assignDate) {
             }
 
             var bgevent = selectedEvent[0];
-
+            
             $.ajax({
                 url: "/Account/CheckPublicUserLogin",
                 type: "POST",

@@ -15260,7 +15260,7 @@ function IsJsonString(str) {
 
 function removeColumns(formid,columns) {
     removeActionButtion(formid);
-    var removeColumnsFormid = [2240, 2242, 2267, 2311];
+    var removeColumnsFormid = [2240, 2242, 2267, 2311, 2326];
     var removeColumnName = ['Edit'];
     var excludeColumAllTable = ['Move Row'];
     columns = columns.filter(x => !excludeColumAllTable.find(y => x.title && x.title.split('|').find(z => z == y)))

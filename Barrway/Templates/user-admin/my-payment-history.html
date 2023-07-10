@@ -1,0 +1,587 @@
+﻿<link href="fg-assets/lightbox/css/lightbox.css" rel="stylesheet" />
+<script src="fg-assets/lightbox/js/lightbox-2.6.min.js"></script>
+
+<script src="fg-assets/fullcalendar/dist/fullcalendar.min.js"></script>
+<link href="fg-assets/fullcalendar/dist/fullcalendar.min.css" rel="stylesheet" />
+<link href="fg-assets/fullcalendar-scheduler/dist/scheduler.min.css"
+      rel="stylesheet" />
+<script src="fg-assets/js/jquery-ui.js"></script>
+
+<link href="fg-assets/css/jquery-ui.css" rel="stylesheet" />
+<link href="fg-assets/css/jquery.jgrowl.min.css" rel="stylesheet" />
+<script src="fg-assets/js/jquery.jgrowl.min.js"></script>
+<script src="fg-assets/js/moment.js"></script>
+
+<style>
+    /*    nav[aria-label="breadcrumb"] {
+        position: absolute;
+        top: -40px;
+    }*/
+
+    .w-60p {
+        width: 60px;
+        min-width: 60px;
+    }
+
+    .lightbox {
+        display: none;
+    }
+
+    .upload-file-btn {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .upload-file-btn input {
+            cursor: pointer;
+            position: absolute;
+            top: 0;
+            left: 0;
+            max-width: 100%;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+        }
+
+    .chatboot__form {
+        background: #fff;
+        border: 1px solid #ddd;
+        padding: 5px 0 0 0;
+    }
+
+    .custom_row_margin {
+        margin-left: -15px;
+        margin-right: -15px;
+    }
+
+    .btnalign > div {
+        display: inline-block;
+    }
+
+    .btn-group > .btn-group:not(:first-child) > .btn,
+    .btn-group > .btn:not(:first-child) {
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+        margin-right: 0px;
+    }
+
+    .btn-group > .btn-group:not(:last-child) > .btn,
+    .btn-group > .btn:not(:last-child):not(.dropdown-toggle) {
+        border-top-right-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .btn.btn-outline-success {
+        color: #3e246b;
+        border: 1px solid #3e246b;
+        background-color: transparent;
+    }
+
+        .btn.btn-outline-success:hover {
+            background-color: #3e246b !important;
+            color: #fff;
+        }
+
+    .custom-chat-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgb(62 36 107);
+        /* color: #fff !important; */
+        position: fixed;
+        right: 50px;
+        bottom: 11px;
+        z-index: 1;
+        box-shadow: 0px 0px 15px rgba(62, 36, 107, 0.35) !important;
+        background-color: #bcb3cc;
+        color: #3e246b !important;
+        cursor: pointer;
+    }
+
+    body .mCSB_inside > .mCSB_container {
+        margin-right: 0px;
+    }
+
+    body .chatPopup .card .chatListContainer {
+        white-space: normal;
+        word-break: break-word;
+    }
+
+    .custom-br {
+        font-size: 14px;
+        font-style: italic;
+        font-family: Roboto;
+        font-weight: 500;
+        letter-spacing: 0.2px;
+    }
+</style>
+
+
+<div id="transaction-controller-div">
+    <div class="page-header">
+        <div class="row align-items-end">
+            <div class="col-sm mb-2 mb-sm-0">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb breadcrumb-no-gutter">
+                        <li class="breadcrumb-item"><a class="breadcrumb-link" ui-sref="Home()">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">My Payment History</li>
+                    </ol>
+                </nav>
+                <h1 class="page-header-title ms-2">My Payment History</h1>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-default">
+                <div class="card-body pt-0 mp-0 p-1">
+                    <div id="pageActions">
+                        <div class="table-controls-legend form-inline pageActions action-btns">
+                            <div class="tabulator-section w-100">
+                                <div class="row mb-3">
+                                    <div class="col-xl-4 mb-2 mb-lg-0">
+                                        
+                                    </div>
+                                    <div class="col-xl-8 text-lg-end text-md-start">
+                                        <a class="btn btn-primary mb-2 mb-lg-0"
+                                           ng-click="generateInvoiceFunc()"
+                                           ng-if="isInvoiceForm">
+                                            <i class="fa fa-file-code-o"></i>
+                                            <span class="action-name">{{translation.Generate_Invoice}}</span>
+                                        </a>
+                                        <a class="btn btn-primary mb-2 mb-lg-0"
+                                           ng-click="generatePrintInvoiceFunc(2)"
+                                           ng-if="isInvoiceForm">
+                                            <i class="fa fa-file"></i>
+                                            <span class="action-name">{{translation.Print_Invoice}}</span>
+                                        </a>
+                                        <a class="btn btn-primary mb-2 mb-lg-0"
+                                           ng-click="generatePrintReciptFunc(3)"
+                                           ng-if="isInvoiceForm">
+                                            <i class="fa fa-file-text-o"></i>
+                                            <span class="action-name">{{translation.Print_Recipt}}</span>
+                                        </a>
+                                        <!--<a class="btn btn-primary mb-2 mb-lg-0" ng-click="executeButton()" ng-show="isSchedulerForm">
+                                            <i class="fa fa-plus"></i>
+                                            <span class="action-name">{{translation.Execute}}</span>
+                                        </a>-->
+                                        <!--<a data-action="entry" class="btn btn-primary mb-2 mb-lg-0"
+                                           ui-sref="saveFormEntryData({formId: currentFormId})"
+                                           ng-show="allowAddDelete==true && formDetailsDataInfo.currentFormType!=1 && !isInvoiceForm"
+                                           ng-if="!isTransactionForm">
+                                            <i class="fa fa-plus"></i>
+                                            <span class="action-name">{{translation.Entry}}</span>
+                                        </a>-->
+
+                                        <!--<a data-action="entry" class="btn btn-primary mb-2 mb-lg-0"
+                                           ng-click="saveFormEntryData()"
+                                           ng-show="formDetailsDataInfo.currentFormType==1">
+                                            <i class="fa fa-plus"> </i>
+                                            <span class="action-name">{{translation.Entry}}</span>
+                                        </a>-->
+                                        <a class="btn btn-primary mb-2 mb-lg-0" ng-click="uploaddownloadPopup()">
+                                            <i class="fa fa-download"></i><span class="action-name">
+                                                {{translation.Upload_Download}}
+                                            </span>
+                                        </a>
+                                        <script id="uploaddownload.html"
+                                                type="text/ng-template">
+                                            <div class="wrap" ng-controller="CommonCustomDialogController">
+                                                <div class="col-md-12">
+                                                    <a ng-click="exportAll(1)" class="btn btn-primary m-1">
+                                                        <i class="fa fa-download">
+                                                        </i> <span class="action-name">{{translation.JSON}}</span>
+                                                    </a>
+                                                    <a ng-click="exportAll(2)" class="btn btn-primary m-1">
+                                                        <i class="fa fa-download">
+                                                        </i> <span class="action-name">{{translation.XLSX}}</span>
+                                                    </a>
+
+                                                    <a ng-click="exportAll(3)" class="btn btn-primary m-1">
+                                                        <i class="fa fa-download">
+                                                        </i> <span class="action-name">{{translation.CSV}}</span>
+                                                    </a>
+                                                    <a ng-click="exportAll(4)" class="btn btn-primary m-1">
+                                                        <i class="fa fa-download">
+                                                        </i> <span class="action-name">{{translation.PDF}}</span>
+                                                    </a>
+                                                    <a ng-click="exportAll(6)" ng-show="formDetailsDataInfo.currentFormType!=1" class="btn btn-primary m-1">
+                                                        <i class="fa fa-download">
+                                                        </i> <span class="action-name">{{translation.Download_all_records_XLSX}}</span>
+                                                    </a>
+                                                    <!--<a ng-click="exportAll(7)" ng-show="formDetailsDataInfo.currentFormType!=1" class="btn btn-primary m-1" id="download-pdf">
+                                                        <i class="fa fa-download">
+                                                        </i> <span class="action-name">{{translation.Download_all_records_XLSX}}</span>
+                                                    </a>-->
+                                                </div>
+                                            </div>
+                                        </script>
+                                        <a ng-click="saveTabulatorLayout('form-records'+formDetailsDataInfo,true)"
+                                           class="btn btn-primary mb-2 mb-lg-0"
+                                           data-toggle="tooltip"
+                                           title="Save Layout">
+                                            <i class="fa fa-bookmark"></i>
+                                            <span class="action-name">{{translation.Save_Layout}}</span>
+                                        </a>
+
+                                        <!--<a data-action="delete" ng-click="deleteRecords()"
+                                           class="btn btn-danger text-white mb-2 mb-lg-0"
+                                           id="delete-json">
+                                            <i class="fa fa-trash"> </i>
+                                            <span class="action-name">{{translation.Delete_Record}}</span>
+                                        </a>-->
+
+                                        <a class="flat-buttons pageActionsToggleer waves-effect waves-button"
+                                           onclick="pageActionsToggleer()">
+                                            <i class="fa fa-chevron-left"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="tabulator-section">
+                            <div id="page-tabs"
+                                 class="ui-tabs ui-corner-all ui-widget ui-widget-content"
+                                 ng-if="tabList.length>0">
+                                <ul class="ui-tabs-nav ui-corner-all ui-helper-reset ui-helper-clearfix ui-widget-header">
+                                    <li tabindex="-1"
+                                        class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
+                                        id="tab-{{$index}}"
+                                        ng-repeat="l in tabList track by $index"
+                                        ng-click="selectedTabFilter(l,$index)">
+                                        <a data-target="#{{l.value}}"
+                                           tabindex="-1"
+                                           class="ui-tabs-anchor">{{l.label}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="form-builder-loader text-center">
+                                <div class="loader">
+                                    <i class="fa fa-spinner fa-pulse fa-fw"> </i>
+                                    <div>
+                                        {{translation.Loading_Form_Tabulator}}...
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="form-records"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="markAttendanceModel"
+         class="modal fade"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="jss3726" ng-include="'bg-svg.html'"></div>
+                <div class="modal-header">
+                    <h3 class="modal-title">Mark Attendance</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mark-attendance-details">
+                                <h4 style="font-weight:500">{{currentTransaction.STUDENT_NAME}}</h4>
+                                <div>Slot: {{currentTransaction.SLOT}}</div>
+                                <div>Date: {{currentTransactionDate}}</div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mark-attendance-details">
+                                <h4 style="font-weight:500">Attendance: <b>{{currentTransactionAttendance}}</b></h4>
+                                <div>
+                                    <button class="btn btn-success" ng-click="markPresent()">Present</button> <button class="btn btn-warning" ng-click="markAbsent()">Absent</button> <button type="button" class="btn btn-default" ng-click="closeAttendanceModel()" aria-label="Close">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <!--<button type="button"
+                            class="btn btn-primary"
+                            data-dismiss="modal">
+                        {{translation.Submit}}
+                    </button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="searchModal"
+         class="modal fade"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="jss3726" ng-include="'bg-svg.html'"></div>
+                <div class="modal-header">
+                    <h4 class="modal-title"></h4>
+                    <button type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="search-results" class="list-group"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-primary"
+                            data-dismiss="modal">
+                        {{translation.Close}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="galleryModal"
+         class="modal fade"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="jss3726" ng-include="'bg-svg.html'"></div>
+                <div class="modal-header">
+                    <h4 class="modal-title"></h4>
+                    <button type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body"></div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-primary"
+                            data-dismiss="modal">
+                        {{translation.Close}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="tabulatorConfigModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="jss3726" ng-include="'bg-svg.html'"></div>
+                <div class="modal-header">
+                    <h4 class="modal-title"> {{translation.Tabulator_Configurations}}</h4>
+                    <button type="button" class="close" data-dismiss="modal">
+                        &times;
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="alert-area"></div>
+                    <a class="btn btn-sm btn-success" href=""><i class="fa fa-plus"></i> {{translation.Create_New}}</a>
+                    <a href="javascript:;"
+                       class="btn btn-sm btn-primary"
+                       id="toggle_responsive"></a>
+                    <a class="btn btn-primary btn-sm pull-right"
+                       href="javascript:;"
+                       id="delete_per_cookie">
+                        {{translation.Default_Configuration}}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/ng-template" id="importFormData.html">
+
+    <div class="jss3726" ng-include="'bg-svg.html'"></div>
+
+    <form id="import-csv-form" class="form-horizontal">
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="col-sm-4" for="fileType">{{translation.File_Type}}:</label>
+                <div class="col-sm-8">
+                    <label class="me-10"><input type="radio" ng-model="importDataFileParam.fileType" name="fileType" value="csv" checked="checked"> *.csv</label>
+                    <!--<label><input type="radio" name="fileType" ng-model="importDataFileParam.fileType" value="xlsx"> *.xlsx /*.xls</label>-->
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4" for="fileType">{{translation.Action}}:</label>
+                <div class="col-sm-8">
+
+                    <label class="me-10"><input type="radio" name="typeOfAction" ng-model="importDataFileParam.typeOfAction" value="Append" checked="checked"> Append</label>
+                    <label class="me-10"><input type="radio" name="typeOfAction" ng-model="importDataFileParam.typeOfAction" value="Overwrite" checked="checked"> Overwrite</label>
+                    <!--<label><input type="radio" ng-model="importDataFileParam.typeOfAction" name="typeOfAction" value="Overwrite"> Overwrite</label>-->
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-4" for="formName">{{translation.Select_CSV_file_to_import}}:</label>
+                <div class="col-sm-8">
+                    <input type="file" class="form-control" ng-model="importDataFileParam.fileData" name="csvFile" id="csvFile">
+
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="javascript:void(0)" class="btn btn-primary" ng-click="importDataFile()">{{translation.Upload}}</a>
+            <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+        </div>
+    </form>
+
+
+
+</script>
+
+
+
+
+
+
+<script type="text/ng-template" id="formImportModal.html">
+    <div class="jss3726" ng-include="'bg-svg.html'"></div>
+    <form id="import-form-fields" class="form-horizontal" autocomplete="off">
+        <div class="modal-body">
+            <!--                            <div class="form-group">
+                                            <label class="col-sm-4" for="fileType">File Type:</label>
+                                            <div class="col-sm-8">
+                                                <label class="me-10"><input type="radio" name="fileType" value="csv" checked="checked"> *.csv</label>
+                                                <label><input type="radio" name="fileType" value="xlsx"> *.xlsx /*.xls</label>
+                                            </div>
+                                        </div>-->
+            <div class="form-group">
+                <label class="control-label col-sm-4" for="sourceformName">{{translation.Enter_form_name_to_import}}:</label>
+                <div class="col-sm-8">
+                    <div class="easy-autocomplete eac-description" style="width: 100px;">
+                        <input type="text" class="form-control" name="sourceformName" id="sourceformName" autocomplete="off">
+
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" class="form-control" name="sourceformID" id="sourceformID">
+        </div>
+        <div class="modal-footer">
+            <input type="hidden" name="formID" value="1914">
+            <button type="submit" class="btn btn-primary" ng-click="importDataFromFormSave()">{{translation.Enter_form_name_to_import}}</button>
+            <button type="button" class="btn btn-warning" data-dismiss="modal">{{translation.Cancel}}</button>
+        </div>
+        <input type="hidden" name="_token" value="4Rfj3s4hRruEjsEU3EnEKgS0lRddPPqiwQQ2eemR">
+    </form>
+</script>
+
+
+
+
+<script type="text/ng-template" id="customModal.html">
+    <div class="row">
+        <div class="col-sm-12">
+            <form class="form-horizontal">
+                <div class="form-group mb-0 text-center">
+                    <div class="col col-sm-12">
+                        <button class="btn btn-danger" data-dismiss="modal" ng-click="deleteMessageClick(1)">Delete For Me</button> &nbsp;
+                        <button class="btn btn-danger" data-dismiss="modal" ng-click="deleteMessageClick(2)">Delete For Everyone</button> &nbsp;
+                        <button class="btn btn-warning" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="privateAlert.html">
+    <div class="prompt" style="top: 195.299px; left: 44.3001px;">
+        <div class="prompt-header form-group row">
+            <div class="col-auto">
+                Invite
+            </div>
+            <div class="col">
+                <input type="text" ng-model="invitedPerson.name" class="form-control" />
+            </div>
+            <div class="col">
+                to Private Chat ?
+            </div>
+        </div>
+        <!-- <div class="prompt-body clearfix">
+            <div class="aligncenter clearfix">
+                <p class="clearfix">
+                </p>
+            </div>
+        </div> -->
+        <div class="modal-footer pb-0">
+            <button type="button" id="btnInvite" data-dismiss="modal" class="btn btn-primary" ng-click="inviteToChat(invitedPerson)">Invite</button>
+            <button data-toggle="decline" type="button" class="btn btn-danger">Cancel</button>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="EditcustomModal.html">
+    <div class="row">
+        <div class="col-sm-12">
+            <form class="form-horizontal">
+                <div class="form-group text-center">
+                    <div class="col col-sm-12 mb-2">
+                        <textarea class="form-control" ng-model="editMessageData.message"> </textarea>
+                    </div>
+                    <div class="col-md-12">
+                        <button class="btn btn-primary me-0" data-dismiss="modal" ng-click="editMessageSave()">Update</button> &nbsp;
+                        <button class="btn btn-warning" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="AlertStatus.html">
+    <div class="prompt" style="top: 195.299px; left: 44.3001px;">
+        <div class="prompt-header">
+            <div ng-if="roomInvitationDetails.isInvitationA_R==1">Accepted</div>
+            <div ng-if="roomInvitationDetails.isInvitationA_R==2">Declined</div>
+        </div>
+        <div class="prompt-header">
+            <input type="text" ng-model="roomInvitationDetails.receiver" />
+            <div ng-if="roomInvitationDetails.isInvitationA_R==1">Accepted</div>
+            <div ng-if="roomInvitationDetails.isInvitationA_R==2">Declined</div>
+            your Invitation.
+        </div>
+        <div class="prompt-footer"></div>
+    </div>
+</script>
+<script type="text/ng-template" id="AccessDenied.html">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="swal2-icon swal2-error swal2-animate-error-icon" style="display: block;">
+                <span class="swal2-x-mark swal2-animate-x-mark">
+                    <span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span>
+                </span>
+            </div>
+            <div class="swal2-contentwrapper">
+                <h5 class="swal2-title" id="swal2-title">Form Entry</h5>
+                <div id="swal2-content" class="swal2-content" style="display: block;">
+                    You are not allowed to do this operation. Form Based Roles
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript"
+        src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.0.5/jspdf.plugin.autotable.js"></script>
+<script src="fg-assets/lightbox/js/lightbox-2.6.min.js"></script>

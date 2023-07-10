@@ -2024,6 +2024,34 @@
                     parent: 'home'
                 }
             })
+            .state('user_payment_history', {
+                url: '/user_payment_history/:formId',
+                onEnter: function ($window) { $window.document.title = "My Payment History"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/user-admin/my-payment-history.html?token=' + uuid,
+                        controller: 'FormRecordsController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
+            .state('user_b_coin_balance', {
+                url: '/b_coin_balance/:formId',
+                onEnter: function ($window) { $window.document.title = "B Coin Balance"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/user-admin/my-b-coin-balance.html?token=' + uuid,
+                        controller: 'FormRecordsController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
             .state('my_profile', {
                 url: '/myprofile',
                 onEnter: function ($window) { $window.document.title = "My Profile"; },

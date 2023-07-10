@@ -3135,6 +3135,8 @@
     <Content Include="Templates\formgenerator\summary.html" />
     <Content Include="Templates\Index.html" />
     <Content Include="Templates\user-admin\dashboard.html" />
+    <Content Include="Templates\user-admin\my-b-coin-balance.html" />
+    <Content Include="Templates\user-admin\my-payment-history.html" />
     <Content Include="Templates\user-admin\my-calendar.html" />
     <Content Include="Templates\user-admin\my-attendance.html" />
     <Content Include="Templates\user-admin\my-favorite.html" />
@@ -3202,6 +3204,7 @@
     <Content Include="Views\MarketPlace\PrivacyPolicy.cshtml" />
     <Content Include="Views\Payment\Index.cshtml" />
     <Content Include="Views\Payment\OrederStatus.cshtml" />
+    <Content Include="Views\Payment\success.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

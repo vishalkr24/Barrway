@@ -4,7 +4,9 @@
 
 function setUserDetails() {
     var user = getSingleUserDetailsByUserId().data;
-    console.log(user);
+    var coinBalance = getUserCoinBalance();
+    $(".user-total-coin-balance").text(coinBalance.Data);
+    
     if (user.Status) {
 
         var data = user.Data;

@@ -43,7 +43,8 @@ namespace Barrway.Utility.Common
         CALENDAR_PACKAGE_MASTER = 2322,
         ORDER_MASTER = 2323,
         PAYMENT_TRACKER = 2324,
-        LEDGER_MASTER = 2325
+        LEDGER_MASTER = 2327,
+        PAYMENT_HISTORY_MASTER = 2326
     }
 
     public enum FormAction

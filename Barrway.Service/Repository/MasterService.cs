@@ -3,6 +3,7 @@ using Barrway.DTO.Common;
 using Barrway.Service.IRepository;
 using Barrway.Utility.Common;
 using FormGeneratorDTOs.DTOs;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -1048,6 +1049,33 @@ namespace Barrway.Service.Repository
                 Form_DataTable data = new Form_DataTable();
                 data.action = (int)FormAction.Save;
                 data.formId = (int)FormSetting.LEDGER_MASTER;
+                data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.ToDictionary());
+                data.formGroupKey = Guid.NewGuid().ToString();
+                var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+                if (formResult.res == 1)
+                {
+                    return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Message = formResult.Message, Status = false };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message.ToString() };
+            }
+        }
+
+        public async Task<AddUpdateDelete> CreatePaymentHistory(PaymentHistoryModel model)
+        {
+            try
+            {
+                Form_DataTable data = new Form_DataTable();
+                data.action = (int)FormAction.Save;
+                data.formId = (int)FormSetting.PAYMENT_HISTORY_MASTER;
                 data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.ToDictionary());
                 data.formGroupKey = Guid.NewGuid().ToString();
                 var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;

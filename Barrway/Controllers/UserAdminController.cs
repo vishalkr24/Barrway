@@ -160,6 +160,51 @@ namespace Barrway.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult> GetUserCoinBalance()
+        {
+            try
+            {
+                var result = await publicUserService.GetUserCoinBalance(User.Identity.Name);
+
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = "Failed" }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetUserCoinBalanceByCalendar(string CompanyCode, string CalendarCode)
+        {
+            try
+            {
+                var result = await publicUserService.GetUserCoinBalance(User.Identity.Name, CompanyCode, CalendarCode);
+
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = "Failed" }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetCurrentPackageDetails(string CompanyCode, string CalendarCode, string ServiceId)
+        {
+            try
+            {
+                var result = await publicUserService.GetCurrentPackageDetails(User.Identity.Name, CompanyCode, CalendarCode, ServiceId);
+
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = "Failed" }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         [HttpPost]
         public async Task<ActionResult> BookingService(RequestEventViewModel model)
         {
