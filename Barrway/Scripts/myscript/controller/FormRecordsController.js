@@ -4203,6 +4203,7 @@
 
             $scope.filterFieldsList = [];
             var headers = [];
+            debugger;
             //headers = bindTColumnHeaderCustom($scope.formDatafields, true, true);
             /*Bind Header from tabulator settings*/
             if (localStorage.getItem("records_" + $stateParams.formId)) {
@@ -4248,15 +4249,15 @@
                 })
                 temp.push($scope.formDatafieldsTemp);
                 headers = bindTColumnHeaderCustom(temp, true, true);
-
+                
             }
             else {
                 headers = bindTColumnHeader($scope.formDatafields, true, true);
             }
-
+            
             headers = removeColumns($scope.currentFormId, headers);
             headers = addNewColumns($scope.currentFormId, headers);
-
+            
             $timeout(function () {
                 if (!DataService.isEmpty(data))
 

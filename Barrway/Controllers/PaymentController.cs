@@ -36,19 +36,19 @@ namespace Barrway.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateCheckoutSession(string PackageId)
+        public async Task<ActionResult> CreateCheckoutSession(string Id)
         {
             string UserId = User.Identity.Name;
             string OrderNo = "";
 
-            var PackageData = await masterService.GetSingleCalendarPackage(PackageId);
+            var PackageData = await masterService.GetSingleCalendarPackage(Id);
 
             OrderModel order = new OrderModel()
             {
                 ORDER_COIN = Convert.ToDouble(PackageData.Data["PACKAGE_COIN"]),
                 CALENDAR_CODE = PackageData.Data["CALENDAR_CODE"].ToString(),
                 PAYMENT_TYPE = "STRIPE",
-                PACKAGE_ID = PackageId,
+                PACKAGE_ID = Id,
                 ORDER_PRICE = Convert.ToDouble(PackageData.Data["PACKAGE_PRICE"]),
                 ORDER_QTY = 1,
                 ORDER_TYPE = "PACKAGE",
@@ -102,8 +102,6 @@ namespace Barrway.Controllers
                 var service = new SessionService();
                 Session session = service.Create(options);
 
-
-
                 PaymentTrackerModel tracker = new PaymentTrackerModel()
                 {
                     ORDER_NO = OrderNo,
@@ -112,8 +110,7 @@ namespace Barrway.Controllers
                     PAYMENT_RESPONSE_JSON = ""
                 };
 
-                await masterService.CreatePaymentTracker(tracker);
-
+                var resultTracker = await masterService.CreatePaymentTracker(tracker);
 
                 Response.Headers.Add("Location", session.Url);
 
@@ -154,12 +151,29 @@ namespace Barrway.Controllers
                     CREDIT_COIN = Convert.ToDouble(PackageData["PACKAGE_COIN"]),
                     DEBIT_COIN = 0,
                     ORDER_NO = tracker.ORDER_NO,
+                    USER_ID = User.Identity.Name,
+                    TRANSACTION_TYPE = "Purchase"
+                };
+
+                var resultLedger = await masterService.CreateLedgerEntry(ledgerModel);
+
+                PaymentHistoryModel paymentHistoryModel = new PaymentHistoryModel()
+                {
+                    B_COIN_PURCHASE = Convert.ToDouble(PackageData["PACKAGE_COIN"]),
+                    CALENDAR_CODE = PackageData["CALENDAR_CODE"].ToString(),
+                    COMPANY_CODE = PackageData["COMPANY_CODE"].ToString(),
+                    CLIENT_PAID_HKD = Convert.ToDouble(PackageData["PACKAGE_PRICE"]),
+                    PAID_DATE = DateTime.Now,
+                    METHOD = "Card",
+                    PAYMENT_ID = PackageData["OrderNo"].ToString(),
+                    PLAN_ID = (PackageData["Id"]).ToString(),
+                    STATUS = session.Status,
                     USER_ID = User.Identity.Name
                 };
 
-                var resultLedger = masterService.CreateLedgerEntry(ledgerModel);
+                var resultPaymentHistory = await masterService.CreatePaymentHistory(paymentHistoryModel);
 
-                ViewBag.PaymentId = session.PaymentIntentId;
+                ViewBag.PaymentId = PackageData["OrderNo"].ToString();
                 return View();
             }
             else
@@ -189,8 +203,23 @@ namespace Barrway.Controllers
                     PAYMENT_RESPONSE_JSON = session.StripeResponse.Content
                 };
 
-                var data = masterService.CreatePaymentTracker(tracker);
-                
+                var data = await masterService.CreatePaymentTracker(tracker);
+
+                PaymentHistoryModel paymentHistoryModel = new PaymentHistoryModel()
+                {
+                    B_COIN_PURCHASE = Convert.ToDouble(PackageData["PACKAGE_COIN"]),
+                    CALENDAR_CODE = PackageData["CALENDAR_CODE"].ToString(),
+                    COMPANY_CODE = PackageData["COMPANY_CODE"].ToString(),
+                    CLIENT_PAID_HKD = Convert.ToDouble(PackageData["PACKAGE_PRICE"]),
+                    PAID_DATE = DateTime.Now,
+                    METHOD = "Card",
+                    PAYMENT_ID = session.PaymentIntentId,
+                    PLAN_ID = (PackageData["Id"]).ToString(),
+                    STATUS = session.Status
+                };
+
+                var resultPaymentHistory = await masterService.CreatePaymentHistory(paymentHistoryModel);
+
                 return View();
             }
             else

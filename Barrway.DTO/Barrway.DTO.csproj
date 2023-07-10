@@ -91,6 +91,7 @@
     <Compile Include="BusinessModels\CompanyProfileViewModel.cs" />
     <Compile Include="BusinessModels\CompanySubscriptionDetailsModel.cs" />
     <Compile Include="BusinessModels\CompanyUpcomingBookingsModel.cs" />
+    <Compile Include="BusinessModels\PaymentHistoryModel.cs" />
     <Compile Include="BusinessModels\PaymentTrackerModel.cs" />
     <Compile Include="BusinessModels\SchedularFormModel.cs" />
     <Compile Include="BusinessModels\UserMaserModel.cs" />

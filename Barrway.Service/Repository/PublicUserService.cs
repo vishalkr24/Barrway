@@ -25,13 +25,15 @@ namespace Barrway.Service.Repository
         private readonly ISqlFunction sqlFunction;
         private readonly IFormAPIRepository formAPIRepository;
         private readonly IAuthService authService;
+        private readonly IMasterService masterService;
 
-        public PublicUserService(IFormAPIRepository formAPIRepository, ISqlFunction sqlFunction, IAuthService authService)
+        public PublicUserService(IFormAPIRepository formAPIRepository, ISqlFunction sqlFunction, IAuthService authService, IMasterService masterService)
         {
             this.connectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
             this.formAPIRepository = formAPIRepository;
             this.sqlFunction = sqlFunction;
             this.authService = authService;
+            this.masterService = masterService;
         }
 
         public async Task<AddUpdateDelete> CreatePublicUserAccount(PublicAccountModel model)
@@ -134,10 +136,59 @@ namespace Barrway.Service.Repository
         {
             var user = await authService.GetUser(model.USER_ID, FormRole.PUBLIC_USER);
 
+            // check for sufficient B$ Balance
+            var balance = await GetUserCoinBalance(model.USER_ID, model.participant.COMPANY_CODE, model.participant.CALENDAR_CODE);
+            var service = await sqlFunction.ExecuteSqlQuery("select fees_1 from SERVICE_MASTER_1933 where Id = " + model.transaction.ACTIVITY);
+
+            bool IsServicePaid = false;
+            int ServiceFees = 0;
+
+            if (!string.IsNullOrEmpty(service[0]["fees_1"]?.ToString()))
+            {
+                if (Convert.ToInt32(service[0]["fees_1"]) > 0)
+                {
+                    IsServicePaid = true;
+                    ServiceFees = Convert.ToInt32(service[0]["fees_1"]);
+                }
+                else
+                {
+                    IsServicePaid = false;
+                    ServiceFees = 0;
+                }
+            }
+            else
+            {
+                IsServicePaid = false;
+                ServiceFees = 0;
+            }
+
+            if (IsServicePaid)
+            {
+                if (balance.Data > 0)
+                {
+                    if (Convert.ToInt32(balance.Data) < Convert.ToInt32(service[0]["fees_1"]))
+                    {
+                        return new AddUpdateDelete() { Status = false, Message = "You don't have enough B$ Coin of this calendar to book this slot." };
+                    }
+                    else
+                    {
+                        model.transaction.transaction_fees = ServiceFees.ToString();
+                    }
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "You don't have enough B$ Coin of this calendar to book this slot." };
+                }
+            }
+            else
+            {
+                model.transaction.transaction_fees = ServiceFees.ToString();
+            }
+
 
             // check if the user limit is crossed or not
 
-            List <IDictionary<string, object>> totalUsersEnrolled = await sqlFunction.ExecuteSqlQuery($@"select COUNT(*) as 'COUNT' from TRANSACTION_MASTER_1942 transaction_m
+            List<IDictionary<string, object>> totalUsersEnrolled = await sqlFunction.ExecuteSqlQuery($@"select COUNT(*) as 'COUNT' from TRANSACTION_MASTER_1942 transaction_m
                                                                                                         join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
                                                                                                         where ACTIVITY = '{model.transaction.ACTIVITY.ToString()}'");
 
@@ -155,13 +206,13 @@ namespace Barrway.Service.Repository
                         }
                     }
                 }
-                
+
             }
             catch (Exception ex)
             {
 
             }
-            
+
 
 
             // Check if the user already exist in the participant master
@@ -172,7 +223,7 @@ namespace Barrway.Service.Repository
             if (participantCheckResult.Count > 0)
             {
                 // Participant already exist so no need to check if it is enrolled with the selected activity and resource
-                
+
                 List<IDictionary<string, object>> transactionCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from TRANSACTION_MASTER_1942 where COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE}' and RESOURCE = '{model.transaction.RESOURCE}' and ACTIVITY = '{model.transaction.ACTIVITY}'");
 
                 if (transactionCheckResult.Count > 0)
@@ -194,12 +245,12 @@ namespace Barrway.Service.Repository
 
                 model.participant.NICKNAME = publicUser.Data["NICK_NAME"].ToString();
                 model.participant.EMAIL = user.Data["USER_EMAIL"].ToString();
-                                
+
                 model.participant.ADDRESS = "";
                 model.participant.GENDER = publicUser.Data["GENDER"].ToString();
                 model.participant.IS_ACTIVE = "Y";
                 model.participant.STUDENT_NAME = publicUser.Data["FIRST_NAME"].ToString() + " " + publicUser.Data["LAST_NAME"].ToString();
-                
+
                 Form_DataTable data = new Form_DataTable();
                 data.action = (int)FormAction.Save;
                 data.formId = (int)FormSetting.PARTICIPANT_MASTER;
@@ -237,7 +288,7 @@ namespace Barrway.Service.Repository
             var formResult2 = (await formAPIRepository.GeneratedFormData(data2)).Data;
 
             // Send Entry into Upcoming Bookings
-            
+
             string upcomingBookingQuery = $@"INSERT INTO [dbo].[COMPANY_UPCOMING_BOOKINGS_1945]
                                                    ([formGroupKey]
                                                    ,[formID]
@@ -288,6 +339,25 @@ namespace Barrway.Service.Repository
 
             var upcomingResult = await sqlFunction.ExecuteSqlCommandQuery(upcomingBookingQuery);
 
+            string orderNoQuery = $@"select PAYMENT_ID from PAYMENT_HISTORY_MASTER_1956 where COMPANY_CODE = '{model.transaction.COMPANY_CODE}' and CALENDAR_CODE = '{model.transaction.CALENDAR_CODE}' and STATUS = 'complete'
+                                order by created_at desc";
+
+            var orderNoResult = await sqlFunction.ExecuteSqlQuery(orderNoQuery);
+
+            // add entry in ledger
+            LedgerModel ledger = new LedgerModel()
+            {
+                CALENDAR_CODE = model.transaction.CALENDAR_CODE,
+                COMPANY_CODE = model.transaction.COMPANY_CODE,
+                DEBIT_COIN = Convert.ToDouble(model.transaction.transaction_fees),
+                USER_ID = model.USER_ID,
+                CREDIT_COIN = 0,
+                ORDER_NO = orderNoResult[0]["PAYMENT_ID"].ToString(),
+                TRANSACTION_TYPE = "Booking"
+            };
+
+            var ledgerResult = await masterService.CreateLedgerEntry(ledger);
+
             if (formResult2.res == 1)
             {
                 return new AddUpdateDelete() { Message = "Success", Status = true };
@@ -299,7 +369,7 @@ namespace Barrway.Service.Repository
         }
 
 
-        public async Task<AddUpdateDelete> BookingServiceEvent(RequestEventViewModel eventModal,string userName)
+        public async Task<AddUpdateDelete> BookingServiceEvent(RequestEventViewModel eventModal, string userName)
         {
             if (eventModal != null)
             {
@@ -308,28 +378,29 @@ namespace Barrway.Service.Repository
                     var userResult = await authService.GetUser(userName, FormRole.PUBLIC_USER);
                     if (userResult.Status)
                     {
-                        var userData = userResult.Data as IDictionary<string,object>;
+                        var userData = userResult.Data as IDictionary<string, object>;
                         string user_email = userData["USER_EMAIL"]?.ToString() ?? "";
                         List<IDictionary<string, object>> participantCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from PARTICIPANT_MASTER_1940 where EMAIL = '{user_email}' and COMPANY_CODE = '{eventModal.companyCode}' and CALENDAR_CODE = '{eventModal.calendarCode}'");
 
 
                         string StudentId = "";
-                        if (participantCheckResult.Count > 0) {
+                        if (participantCheckResult.Count > 0)
+                        {
                             StudentId = participantCheckResult.FirstOrDefault()["Id"].ToString();
                         }
                         else
                         {
                             var publicUser = await GetSinglePublicUserAccount(userName);
-                            var publicUserData=publicUser.Data as IDictionary<string, object>;
-                            IDictionary<string,object> participant=new Dictionary<string, object>();
-                            participant["NICKNAME"] = publicUserData["NICK_NAME"]?.ToString()??"";
+                            var publicUserData = publicUser.Data as IDictionary<string, object>;
+                            IDictionary<string, object> participant = new Dictionary<string, object>();
+                            participant["NICKNAME"] = publicUserData["NICK_NAME"]?.ToString() ?? "";
                             participant["EMAIL"] = user_email;
                             participant["CALENDAR_CODE"] = eventModal.calendarCode;
                             participant["COMPANY_CODE"] = eventModal.companyCode;
                             participant["ADDRESS"] = "";
-                            participant["GENDER"] = publicUserData["GENDER"]?.ToString()??"";
+                            participant["GENDER"] = publicUserData["GENDER"]?.ToString() ?? "";
                             participant["IS_ACTIVE"] = "Y";
-                            participant["STUDENT_NAME"] = (publicUserData["FIRST_NAME"]?.ToString()??"" + " " + publicUserData["LAST_NAME"]?.ToString()??"").Trim();
+                            participant["STUDENT_NAME"] = (publicUserData["FIRST_NAME"]?.ToString() ?? "" + " " + publicUserData["LAST_NAME"]?.ToString() ?? "").Trim();
 
                             Form_DataTable data = new Form_DataTable();
                             data.action = (int)FormAction.Save;
@@ -361,7 +432,7 @@ namespace Barrway.Service.Repository
                         Form_DataTable request = new Form_DataTable();
 
                         request.currentFormType = 1;
-                        request.IsMaxOneRecordPerUser= false;
+                        request.IsMaxOneRecordPerUser = false;
                         request.action = (int)FormAction.Save;
                         request.userId = (int)FormSetting.CreatedUser;
                         request.formId = (int)FormSetting.CALENDAR_FORM;
@@ -375,7 +446,7 @@ namespace Barrway.Service.Repository
                         var start = Convert.ToDateTime(eventModal.start);
                         var end = Convert.ToDateTime(eventModal.start).AddMinutes(60);
 
-                        var eventData = new {start = start, end = end, allDay = false, EVENT_TYPE = "BOOKING", description = "", resources = eventModal.resourceId, activities = eventModal.activityId, formGroupKey = formGroupKey, COMPANY_CODE=eventModal.companyCode, CALENDAR_CODE=eventModal.calendarCode }.ToDictionary();
+                        var eventData = new { start = start, end = end, allDay = false, EVENT_TYPE = "BOOKING", description = "", resources = eventModal.resourceId, activities = eventModal.activityId, formGroupKey = formGroupKey, COMPANY_CODE = eventModal.companyCode, CALENDAR_CODE = eventModal.calendarCode }.ToDictionary();
                         eventData["resources_" + eventModal.resourceFormId] = eventModal.resourceId;
                         eventData["activities_" + eventModal.activityFormId] = eventModal.activityId;
                         eventData["activities_" + eventModal.otherActivityformId] = eventModal.otherActivityId;
@@ -401,13 +472,13 @@ namespace Barrway.Service.Repository
 
                             FormCalenderReferrenceTable request2 = new FormCalenderReferrenceTable()
                             {
-                               customForms=string.Join(",", customForms),
-                               customFormIds=string.Join(",", customFormIds),
-                               action=11,
-                               formId=(int)FormSetting.CALENDAR_FORM,
-                               formGroupKey=formGroupKey,
-                               created_by=(int)FormSetting.CreatedUser,
-                               updated_by=(int)FormSetting.CreatedUser
+                                customForms = string.Join(",", customForms),
+                                customFormIds = string.Join(",", customFormIds),
+                                action = 11,
+                                formId = (int)FormSetting.CALENDAR_FORM,
+                                formGroupKey = formGroupKey,
+                                created_by = (int)FormSetting.CreatedUser,
+                                updated_by = (int)FormSetting.CreatedUser
                             };
                             await formAPIRepository.ManageCalenderReferrenceNew(request2);
 
@@ -434,15 +505,15 @@ namespace Barrway.Service.Repository
                             var formResult2 = (await formAPIRepository.GeneratedFormData(transaction_req)).Data;
 
 
-                            IDictionary<string,string> upCommingBooking= new Dictionary<string, string>();
+                            IDictionary<string, string> upCommingBooking = new Dictionary<string, string>();
 
-                            upCommingBooking["COMPANY_CODE"]= eventModal.companyCode.ToString();
+                            upCommingBooking["COMPANY_CODE"] = eventModal.companyCode.ToString();
                             upCommingBooking["CALENDAR_CODE"] = eventModal.calendarCode.ToString();
                             upCommingBooking["SLOT"] = eventResponse.Id.ToString();
 
                             upCommingBooking["ACTIVITY_NAME"] = eventModal.activityTitle;
                             upCommingBooking["RESOURCE_NAME"] = eventModal.resourceTitle;
-                            upCommingBooking["STUDENT_NAME"] = userData["FIRST_NAME"]?.ToString()??"";
+                            upCommingBooking["STUDENT_NAME"] = userData["FIRST_NAME"]?.ToString() ?? "";
 
                             var upcommingBookingResult = await UpCommingBookingAdd(upCommingBooking);
 
@@ -466,7 +537,8 @@ namespace Barrway.Service.Repository
             }
             return new AddUpdateDelete() { Status = false, Message = "Invalid response!" };
         }
-        private async Task<int> UpCommingBookingAdd(IDictionary<string,string> data) {
+        private async Task<int> UpCommingBookingAdd(IDictionary<string, string> data)
+        {
 
             string upcomingBookingQuery = $@"INSERT INTO [dbo].[COMPANY_UPCOMING_BOOKINGS_1945]
                                                    ([formGroupKey]
@@ -516,7 +588,7 @@ namespace Barrway.Service.Repository
                                                    , (select calendar.[end] from  CALENDAR_FORM_1935 calendar where Id = {data["SLOT"]}) )";
 
 
-           return await sqlFunction.ExecuteSqlCommandQuery(upcomingBookingQuery);
+            return await sqlFunction.ExecuteSqlCommandQuery(upcomingBookingQuery);
         }
 
         public async Task<AddUpdateDelete> AddFavoriteCalendar(FavoriteCalendarModel model)
@@ -707,7 +779,7 @@ namespace Barrway.Service.Repository
                 {
                     for (int i = 0; i < result0.Count; i++)
                     {
-                        if (i==result0.Count-1)
+                        if (i == result0.Count - 1)
                         {
                             calendarCodes += "'" + result0[i]["CALENDAR_CODE"].ToString() + "'";
                         }
@@ -720,7 +792,7 @@ namespace Barrway.Service.Repository
 
                 if (!string.IsNullOrEmpty(CalendarCode))
                 {
-                    calendarCodes = (CalendarCode.Contains("'")) ? CalendarCode : "'" + CalendarCode + "'"; 
+                    calendarCodes = (CalendarCode.Contains("'")) ? CalendarCode : "'" + CalendarCode + "'";
                 }
 
 
@@ -787,6 +859,124 @@ namespace Barrway.Service.Repository
                 {
                     return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
                 }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetUserCoinBalance(string UserId)
+        {
+            try
+            {
+                string query = $@"SELECT ( case when (SUM(ledger.CREDIT_COIN) - SUM(ledger.DEBIT_COIN)) = null then 0 else (SUM(ledger.CREDIT_COIN) - SUM(ledger.DEBIT_COIN)) end) as 'COIN_BALANCE' FROM LEDGER_MASTER_1957 ledger where USER_ID = '{UserId}'";
+
+                List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+
+                if (result.Count > 0)
+                {
+                    if (string.IsNullOrEmpty(result[0]["COIN_BALANCE"].ToString()))
+                    {
+                        return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = 0 };
+                    }
+                    else
+                    {
+                        return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result[0]["COIN_BALANCE"] };
+                    }
+
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = 0 };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = 0 };
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetUserCoinBalance(string UserId, string CompanyCode, string CalendarCode)
+        {
+            try
+            {
+                string query = $@"SELECT ( case when (SUM(ledger.CREDIT_COIN) - SUM(ledger.DEBIT_COIN)) = null then 0 else (SUM(ledger.CREDIT_COIN) - SUM(ledger.DEBIT_COIN)) end) as 'COIN_BALANCE' FROM LEDGER_MASTER_1957 ledger where USER_ID = '{UserId}' and COMPANY_CODE = '{CompanyCode}' and CALENDAR_CODE = '{CalendarCode}'";
+
+                List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+
+                if (result.Count > 0)
+                {
+                    if (string.IsNullOrEmpty(result[0]["COIN_BALANCE"]?.ToString()))
+                    {
+                        return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = 0 };
+                    }
+                    else
+                    {
+                        return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result[0]["COIN_BALANCE"] };
+                    }
+
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetCurrentPackageDetails(string UserId, string CompanyCode, string CalendarCode, string ServiceId)
+        {
+            try
+            {
+                var balance = await GetUserCoinBalance(UserId, CompanyCode, CalendarCode);
+                var service = await sqlFunction.ExecuteSqlQuery("select fees_1 from SERVICE_MASTER_1933 where Id = " + ServiceId);
+                var company = await sqlFunction.ExecuteSqlQuery($@"select COMPANY_NAME_ENGLISH from BUSINESS_COMPANY_MASTER_1924 where COMPANY_CODE = '{CompanyCode}'");
+
+                bool IsServicePaid = false;
+                int ServiceFees = 0;
+
+                if (!string.IsNullOrEmpty(service[0]["fees_1"]?.ToString()))
+                {
+                    if (Convert.ToInt32(service[0]["fees_1"]) > 0)
+                    {
+                        IsServicePaid = true;
+                        ServiceFees = Convert.ToInt32(service[0]["fees_1"]);
+                    }
+                    else
+                    {
+                        IsServicePaid = false;
+                        ServiceFees = 0;
+                    }
+                }
+                else
+                {
+                    IsServicePaid = false;
+                    ServiceFees = 0;
+                }
+
+                if (IsServicePaid)
+                {
+                    if (balance.Data > 0)
+                    {
+                        if (Convert.ToInt32(balance.Data) < ServiceFees)
+                        {
+                            return new AddUpdateDelete() { Status = false, Message = "You don't have enough B$ Coin of this calendar to book this slot." };
+                        }
+                    }
+                    else
+                    {
+                        return new AddUpdateDelete() { Status = false, Message = "You don't have enough B$ Coin of this calendar to book this slot." };
+                    }
+                }
+
+
+                return new AddUpdateDelete() { Status = true, Message = "B$" + ServiceFees.ToString() + " will be deducted from your " + company[0]["COMPANY_NAME_ENGLISH"].ToString() + " package.<br />(Balance after purchase B$" + (Convert.ToInt32(balance.Data) - ServiceFees).ToString() + ")" };
+
+
             }
             catch (Exception ex)
             {
@@ -926,12 +1116,12 @@ namespace Barrway.Service.Repository
 
 
 
-        public async Task<AddUpdateDelete> GetAllEnrolledCalendarsData(string CompanyCode, string UserEmail,string filterDate = null, bool IsCustomInFilter=false)
+        public async Task<AddUpdateDelete> GetAllEnrolledCalendarsData(string CompanyCode, string UserEmail, string filterDate = null, bool IsCustomInFilter = false)
         {
             try
             {
                 string CompanyCondition = "";
-                
+
                 if (!string.IsNullOrEmpty(CompanyCode) && CompanyCode != "0")
                 {
                     if (!IsCustomInFilter)
