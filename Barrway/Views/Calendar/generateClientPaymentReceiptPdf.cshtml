@@ -1,0 +1,152 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Barrway | Receipt</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <!-- font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- Owl Stylesheets -->
+    <link rel="stylesheet" href="~/assets/marketplace/owl/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/assets/marketplace/owl/owl.theme.default.min.css">
+
+    <script src="~/assets/marketplace/owl/jquery.min.js"></script>
+    <script src="~/assets/marketplace/owl/owl.carousel.js"></script>
+    <script src="~/Scripts/PublicCommonFunction.js"></script>
+    
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/style.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/media.css">
+    <link href="~/assets/css/custom-styles.css" rel="stylesheet" />
+
+</head>
+<body style="">
+    <style>
+        .sheet {
+            background: white;
+            border-radius: 3px;
+            min-height: 800px;
+            width: 100%;
+            max-width: 900px;
+            box-shadow: 0px 6px 21px -6px #00000052;
+            margin: auto;
+            padding: 40px;
+        }
+
+        td {
+            padding: 12px;
+            border: 1px solid lightgrey;
+        }
+
+        .pdf-table thead tr td {
+            background: #00699752;
+            padding: 12px;
+            border-bottom: 2px solid lightgrey;
+            border:1px solid lightgrey;
+        }
+
+        .pdf-table tbody tr td {
+            background: white;
+            padding: 12px;
+            border-bottom: 2px solid lightgrey;
+            border: 1px solid lightgrey;
+            vertical-align:top;
+        }
+
+        
+    </style>
+    <div class="" style="padding:20px;">
+        <div class="sheet">
+            <h1>Barrway</h1>
+            <h4 style="padding-left:2px;">#ORD000013</h4>
+            <div>
+                <table width="100%" style="font-size:13px">
+                    <tr>
+                        <td width="50%">
+                            Rohan
+                        </td>
+                        <td class="text-right">
+                           
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="50%">
+                            Morning Yoga
+                        </td>
+                        <td class="text-right">
+                            Payment Date - 11/07/2023
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="50%">
+                            Deepak Agrahari
+                        </td>
+                        <td class="text-right">
+                            Payment Status - Success
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            
+            
+            <table width="100%" class="pdf-table">
+                <thead>
+                    <tr>
+                        <td>
+                            Particulars
+                        </td>
+                        <td>
+                            Quantity
+                        </td>
+                        <td class="text-right">
+                            Amount
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td width="50%">
+                            Calendar Package<br />
+                            <span style="font-size:smaller;">Starter Package</span>
+                        </td>
+                        <td>
+                            1.00
+                        </td>
+                        <td class="text-right">
+                            HK$100.00
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="50%">
+                            
+                        </td>
+                        <td>
+                            <p>Sub Total</p>
+                            <p><b style="color:green; font-size: 16px;">Grand Total</b></p>
+                        </td>
+                        <td class="text-right">
+                            <p>HK$100</p>
+                            <p><b style="color: green; font-size: 16px;">HK$100</b></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="text-center">
+                -- x --
+            </div>
+        </div>
+    </div>
+</body>
+</html>

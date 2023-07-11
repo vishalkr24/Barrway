@@ -33,6 +33,8 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetRecentlyBookedCalendars(string userEmail);
         Task<AddUpdateDelete> CheckSingleMyFavoriteCalendar(string userId, string CalendarCode = null);
         Task<AddUpdateDelete> GetMyFavoriteCalendars(GenerateDynamicFormData data, string userId, string CalendarCode = null);
+        Task<AddUpdateDelete> GetUserBCoinMaster(GenerateDynamicFormData data, string userId);
+        
         Task<AddUpdateDelete> GetUserCoinBalance(string UserId);
         Task<AddUpdateDelete> GetUserCoinBalance(string UserId, string CompanyCode, string CalendarCode);
         Task<AddUpdateDelete> GetCurrentPackageDetails(string UserId, string CompanyCode, string CalendarCode, string ServiceId);

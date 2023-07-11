@@ -109,7 +109,7 @@ namespace Barrway.Controllers
         {
             var role = UserIdentity.Role;
 
-            if (role == "PUBLIC_USER" && (data.formId == 2326 || data.formId == 2327))
+            if (role == "PUBLIC_USER" && (data.formId == (int)FormSetting.PAYMENT_HISTORY_MASTER || data.formId == (int)FormSetting.LEDGER_MASTER))
             {
                 data.CustomFilters.Clear();
                 data.CustomFilters.Add(new CustomFilter() { FieldName = "USER_ID", Value = User.Identity.Name });

@@ -15535,3 +15535,4 @@ function Check_EXIST_PRE_DEFINED_ACTIVITIES(calendarDetails) {
 function Check_IS_SERVICE_TYPE(calendarDetails) {
     return calendarDetails && calendarDetails.category && calendarDetails.category.IS_SERVICE_TYPE != 'N';
 }
+

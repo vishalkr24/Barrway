@@ -554,6 +554,151 @@ namespace Barrway.Service.Repository
                 return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = false, Message = ex.Message };
             }
         }
+        public async Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetClientPaymentHistory(GenerateDynamicFormData data, string companyCode, string calendarCode)
+        {
+            try
+            {
+                Dictionary<string, string> filters = new Dictionary<string, string>() {
+                    { "CALENDAR_NAME","calendarDets.CALENDAR_NAME"},
+                    { "ACTIVITY_NAME","service_m.ACTIVITY_NAME"},
+                    { "RESOURCE_DATA","service_p_m.FIRST_NAME + '' + service_p_m.LAST_NAME"},
+                    { "LOCATION_CODE","location_m.LOCATION_CODE"},
+                    { "FROM_TIME","calendar.[start]"},
+                    { "TO_TIME","calendar.[end]"},
+                    { "STUDENT_NAME","participant.STUDENT_NAME"},
+                    { "ATTENDANCE","[ATTENDANCE]"},
+                };
+
+                string column = "", dir = "";
+                if (data.sorters != null && data.sorters.Count() > 0)
+                {
+                    column = data.sorters.FirstOrDefault().field;
+                    dir = data.sorters.FirstOrDefault().dir;
+                }
+                else
+                {
+                    column = "created_at";
+                    dir = "desc";
+                }
+
+
+
+                List<string> applyFilter = new List<string>();
+
+                if (data.filter != null)
+                {
+                    if (!string.IsNullOrEmpty(data.filter.value))
+                        if (data.filter.type == "like")
+                        {
+                            applyFilter.Add("f.[" + data.filter.field + "]  " + data.filter.type + " '%" + data.filter.value + "%'");
+                        }
+                        else
+                            applyFilter.Add("f.[" + data.filter.field + "] " + data.filter.type + " '" + data.filter.value + "'");
+                }
+
+
+                if (data.filters != null && data.filters.Count() > 0)
+                {
+                    foreach (var item in data.filters)
+                    {
+                        if (!string.IsNullOrEmpty(item.value))
+                        {
+                            if (item.field == "created_at" || item.field == "updated_at")
+                            {
+                                
+                                string filter = await sqlFunction.GetDateFilter(item, "calendar");
+                                applyFilter.Add(filter);
+                            }
+                            else
+                            {
+                                string filter = item.field + " like N'%" + item.value + "%'";
+                               
+                                applyFilter.Add(filter);
+                            }
+                        }
+
+                    }
+                }
+
+                string applyFilterQuery = string.Join(" and ", applyFilter);
+                applyFilterQuery = applyFilterQuery.TrimEnd("and ".ToCharArray());
+
+                int PageSize = data.size > 0 ? data.size : 20;
+                int PageNumber = data.page > 0 ? data.page : 1;
+
+                string strSql = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+                                    SELECT f.[Id]
+	                                      ,u.FIRST_NAME
+                                          ,[ORDER_NO]
+                                          ,case when [DEBIT_COIN] > 0 then [DEBIT_COIN] else [CREDIT_COIN] end as 'AMOUNT'
+                                          ,cal.CALENDAR_NAME
+                                          ,[TRANSACTION_TYPE]
+	                                      ,history.CLIENT_PAID_HKD
+	                                      ,pack.PACKAGE_NAME
+	                                      ,history.STATUS
+	                                      ,history.METHOD
+	                                      ,f.created_at
+                                      FROM [dbo].[LEDGER_MASTER_1957] f
+                                      join PUBLIC_USER_ACCOUNT_1943 u on u.USER_ID = f.USER_ID
+                                      join BUSINESS_CALENDAR_MASTER_1925 cal on cal.CALENDAR_CODE = f.CALENDAR_CODE
+                                      join PAYMENT_HISTORY_MASTER_1956 history on history.PAYMENT_ID = f.ORDER_NO
+                                      join CALENDAR_PACKAGE_MASTER_1952 pack on pack.Id = history.PLAN_ID
+                                      where f.COMPANY_CODE = '{companyCode}' and f.CALENDAR_CODE = '{calendarCode}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+                                    )
+                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+
+                var listresult = await sqlFunction.ExecuteSqlQuery(strSql);
+                if (listresult.Count() > 0)
+                {
+                    return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = true, Data = listresult };
+                }
+
+                return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = false };
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = false, Message = ex.Message };
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetSingleClientPaymentHistory(string LedgerId)
+
+        {
+            try
+            {
+                string strSql = $@"SELECT f.[Id]
+	                                      ,u.FIRST_NAME
+                                          ,[ORDER_NO]
+                                          ,case when [DEBIT_COIN] > 0 then [DEBIT_COIN] else [CREDIT_COIN] end as 'AMOUNT'
+                                          ,cal.CALENDAR_NAME
+                                          ,[TRANSACTION_TYPE]
+	                                      ,history.CLIENT_PAID_HKD
+	                                      ,pack.PACKAGE_NAME
+	                                      ,history.STATUS
+	                                      ,history.METHOD
+	                                      ,f.created_at
+                                      FROM [dbo].[LEDGER_MASTER_1957] f
+                                      join PUBLIC_USER_ACCOUNT_1943 u on u.USER_ID = f.USER_ID
+                                      join BUSINESS_CALENDAR_MASTER_1925 cal on cal.CALENDAR_CODE = f.CALENDAR_CODE
+                                      join PAYMENT_HISTORY_MASTER_1956 history on history.PAYMENT_ID = f.ORDER_NO
+                                      join CALENDAR_PACKAGE_MASTER_1952 pack on pack.Id = history.PLAN_ID
+                                      where f.Id = '{LedgerId}'";
+
+                var listresult = await sqlFunction.ExecuteSqlQuery(strSql);
+                if (listresult.Count() > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Data = listresult };
+                }
+
+                return new AddUpdateDelete() { Status = false };
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
 
         public async Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetSingleTransactionMaster(string TransactionId)
         {

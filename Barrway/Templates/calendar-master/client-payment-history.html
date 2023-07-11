@@ -126,11 +126,12 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-no-gutter">
                     <li class="breadcrumb-item"><a class="breadcrumb-link" ui-sref="Home()">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">{{formDetailsDataInfo.title}}</li>
+                    <li class="breadcrumb-item" aria-current="page">Payment</li>
+                    <li class="breadcrumb-item active" aria-current="page">Client payment record</li>
                 </ol>
             </nav>
 
-            <h1 class="page-header-title ms-2">{{formDetailsDataInfo.title}}</h1>
+            <h1 class="page-header-title ms-2">Client Payment History</h1>
 
 
         </div>
@@ -143,22 +144,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card card-default">
-            <!--<div class="row">
-                <div class="content">
-                    <div class="breadcrumbUi d-flex flex-wrap">
-                        <span class="hidden" id="menuDescription"></span>-->
-            <!--<div class="card-body">-->
-            <!--<div class="col-lg-3 col-md-12 text-md-center text-xl-start mb-2 mb-lg-0">
-                            <a ui-sref="Home()"
-                               class="text-muted custom-br">{{formDetailsDataInfo.applicationTitle}}></a>
-                            <span class="custom-br">{{formDetailsDataInfo.title}}</span>
-                        </div>
-
-                    </div>
-                </div>
-            </div>-->
-
-
+          
             <div class="card-body pt-0 mp-0 p-1">
                 <div id="pageActions">
 
@@ -166,33 +152,7 @@
                         <div class="tabulator-section w-100">
                             <div class="row mb-3">
                                 <div class="col-xl-4 mb-2 mb-lg-0">
-                                    <form class="form-inline" id="search-form">
-                                        <div class="form-group">
-                                            <label for="filter-field" class="pe-2">
-                                                {{translation.Default_Grouping}}:
-                                            </label>
-                                            <select id="grouping-field"
-                                                    style="max-width: 150px;"
-                                                    class="form-control"
-                                                    ng-model="filterBy.groupByRecord"
-                                                    ng-change="onGroupByChange(filterBy)">
-                                                <option></option>
-                                                <option value="{{f.field}}"
-                                                        ng-repeat="f in filterFieldsList">
-                                                    {{f.title}}
-                                                </option>
-                                            </select>
-                                        </div>
-
-                                        <a ng-click="showAdvancedSearch()"
-                                           class="btn btn-primary mt-3 mt-lg-0 ml-2"
-                                           data-toggle="tooltip"
-                                           title="Advanced search">
-                                            <span class="action-name">{{translation.Advanced_search}}</span>
-                                            <i class="fa"
-                                               ng-class="{'fa-chevron-down':!isShowAdvanceSearch,'fa-chevron-up':isShowAdvanceSearch}"></i>
-                                        </a>
-                                    </form>
+                                    
                                 </div>
                                 <div class="col-xl-8 text-lg-end text-md-start">
                                     <a class="btn btn-primary mb-2 mb-lg-0"
@@ -277,12 +237,12 @@
                                         <span class="action-name">{{translation.Save_Layout}}</span>
                                     </a>
 
-                                    <a data-action="delete" ng-click="deleteRecords()"
+                                    <!--<a data-action="delete" ng-click="deleteRecords()"
                                        class="btn btn-danger text-white mb-2 mb-lg-0"
                                        id="delete-json">
                                         <i class="fa fa-trash"> </i>
                                         <span class="action-name">{{translation.Delete_Record}}</span>
-                                    </a>
+                                    </a>-->
 
                                     <a class="flat-buttons pageActionsToggleer waves-effect waves-button"
                                        onclick="pageActionsToggleer()">
@@ -675,7 +635,7 @@
 
 <script>
 
-    $("#nav-package-master").addClass("active");
+    $("#nav-client-payment-history").addClass("active");
     $("#nav-payment-master").addClass("active");
 
 </script>

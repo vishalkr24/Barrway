@@ -210,7 +210,7 @@ namespace Barrway.Controllers
         {
             try
             {
-                var result = await publicUserService.BookingServiceEvent(model,User.Identity.Name);
+                var result = await publicUserService.BookingServiceEvent(model, User.Identity.Name);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -260,7 +260,7 @@ namespace Barrway.Controllers
             try
             {
                 var result = await publicUserService.GetRecentlyBookedCalendars(UserIdentity.UserEmail.ToString());
-                
+
                 return Json(new { data = result });
             }
             catch (Exception ex)
@@ -268,10 +268,42 @@ namespace Barrway.Controllers
                 return Json(new AddUpdateDelete() { Message = "Failed", Status = false }, JsonRequestBehavior.AllowGet);
             }
         }
-        
+
+        [HttpPost]
+        public async Task<ActionResult> GetUserBCoinMaster(GenerateDynamicFormData data)
+        {
+            try
+            {
+                var transactionData = await publicUserService.GetUserBCoinMaster(data, User.Identity.Name);
+                var transactionList = transactionData.Data;
+                double last_page = 0;
+                if (transactionList != null && transactionList.Count > 0)
+                {
+                    var singData = transactionList[0];
+                    var total_records = Convert.ToInt32(singData["total_records"].ToString());
+                    var size = Convert.ToInt32(singData["size"].ToString());
+                    double paging = (double)total_records / size;
+
+                    if (total_records == size)
+                    {
+                        last_page = Math.Floor(paging);
+                    }
+                    else
+                    {
+                        last_page = Math.Floor(paging) + 1;
+                    }
+                }
+
+                return Json(new { data = transactionData.Data, last_page }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Message = "Failed", Status = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
 
         public async Task<ActionResult> GetMyFavoriteCalendars(GenerateDynamicFormData data)
-            {
+        {
             try
             {
                 var transactionData = await publicUserService.GetMyFavoriteCalendars(data, User.Identity.Name);
@@ -343,7 +375,7 @@ namespace Barrway.Controllers
             {
                 var result = await publicUserService.GetAllEnrolledCalendarsData(CompanyCode, UserIdentity.UserEmail, Convert.ToDateTime(filterDate).ToString("yyyy-MM-dd"));
 
-                return Json(new {data = result });
+                return Json(new { data = result });
             }
             catch (Exception ex)
             {
@@ -356,7 +388,7 @@ namespace Barrway.Controllers
         {
             try
             {
-                var result = await publicUserService.GetFullCalendarEvents(StartDate, EndDate,UserIdentity.UserEmail);
+                var result = await publicUserService.GetFullCalendarEvents(StartDate, EndDate, UserIdentity.UserEmail);
                 List<IDictionary<string, object>> finalResult = new List<IDictionary<string, object>>();
 
                 for (int i = 0; i < result.Data.Count; i++)
@@ -368,7 +400,7 @@ namespace Barrway.Controllers
                         result.Data[i].Add("customTitleSplit", splitData);
                         finalResult.Add(result.Data[i]);
                     }
-                    
+
                 }
 
                 return Json(finalResult, JsonRequestBehavior.AllowGet);
