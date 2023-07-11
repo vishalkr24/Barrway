@@ -866,6 +866,116 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> GetUserBCoinMaster(GenerateDynamicFormData data, string userId)
+        {
+            try {
+                Dictionary<string, string> filters = new Dictionary<string, string>() {
+                    { "ORDER_NO","f.ORDER_NO"},
+                    { "COIN","f.CREDIT_COIN"},
+                    { "COMPANY_NAME_ENGLISH","cmp.COMPANY_NAME_ENGLISH"},
+                    { "CALENDAR_NAME","cal.CALENDAR_NAME"},
+                    { "TRANSACTION_TYPE","f.TRANSACTION_TYPE"},
+                };
+
+                string column = "", dir = "";
+                if (data.sorters != null && data.sorters.Count() > 0)
+                {
+                    column = data.sorters.FirstOrDefault().field;
+                    dir = data.sorters.FirstOrDefault().dir;
+                }
+                else
+                {
+                    column = "created_at";
+                    dir = "desc";
+                }
+
+
+
+                List<string> applyFilter = new List<string>();
+
+                if (data.filter != null)
+                {
+                    if (!string.IsNullOrEmpty(data.filter.value))
+                        if (data.filter.type == "like")
+                        {
+                            applyFilter.Add("f.[" + data.filter.field + "]  " + data.filter.type + " '%" + data.filter.value + "%'");
+                        }
+                        else
+                            applyFilter.Add("f.[" + data.filter.field + "] " + data.filter.type + " '" + data.filter.value + "'");
+                }
+
+
+                if (data.filters != null && data.filters.Count() > 0)
+                {
+                    foreach (var item in data.filters)
+                    {
+                        if (!string.IsNullOrEmpty(item.value))
+                        {
+                            if (item.field == "created_at" || item.field == "updated_at")
+                            {
+                                string filter = await sqlFunction.GetDateFilter(item);
+                                applyFilter.Add(filter);
+                            }
+                            else
+                            {
+                                string filter = "";
+                                if (item.field == "COIN")
+                                {
+                                    filter += "(CREDIT_COIN like N'%" + item.value + "%' or DEBIT_COIN like N'%" + item.value + "%' )";
+                                }
+                                else
+                                {
+                                    filter = item.field + " like N'%" + item.value + "%'";
+                                }
+                                
+                                applyFilter.Add(filter);
+                            }
+                        }
+
+                    }
+                }
+
+                string applyFilterQuery = string.Join(" and ", applyFilter);
+                applyFilterQuery = applyFilterQuery.TrimEnd("and ".ToCharArray());
+
+                int PageSize = data.size > 0 ? data.size : 20;
+                int PageNumber = data.page > 0 ? data.page : 1;
+
+                string strSql = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+                                    SELECT f.[Id]
+                                          ,f.[created_at]
+                                          ,f.[updated_at]
+                                          ,f.[created_by]
+                                          ,f.[updated_by]
+                                          ,[ORDER_NO]
+                                          ,[CREDIT_COIN]
+                                          ,[DEBIT_COIN]
+                                          ,[USER_ID]
+                                          ,[TRANSACTION_TYPE]
+	                                      ,cmp.COMPANY_NAME_ENGLISH
+	                                      ,cal.CALENDAR_NAME
+                                      FROM [dbo].[LEDGER_MASTER_1957] f
+                                      join BUSINESS_COMPANY_MASTER_1924 cmp on cmp.COMPANY_CODE = f.COMPANY_CODE
+                                      join BUSINESS_CALENDAR_MASTER_1925 cal on cal.CALENDAR_CODE = f.CALENDAR_CODE
+                                      where f.USER_ID = '{userId}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+                                    )
+                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+
+                var listresult = await sqlFunction.ExecuteSqlQuery(strSql);
+                if (listresult.Count() > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Data = listresult };
+                }
+
+                return new AddUpdateDelete() { Status = false };
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
         public async Task<AddUpdateDelete> GetUserCoinBalance(string UserId)
         {
             try

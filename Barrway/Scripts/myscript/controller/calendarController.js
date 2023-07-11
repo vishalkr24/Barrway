@@ -2,7 +2,7 @@
     'use strict';
     /*18022021 saif calender controller */
     FormGeneratorApp.controller('FormEntryCalenderController', function ($scope, $rootScope, CookiesPersistenceService, $http, $state, $location, $window, $ngBootbox, $timeout, mainService, notifierService, $stateParams, DataService) {
-        
+
         function showFooter(type) {
             if (!DataService.isEmpty(type.column_calculation))
                 return type.column_calculation;
@@ -14003,6 +14003,7 @@
 
         }
         $scope.getFormDetails = function () {
+            
             var param = {};
             param.action = 4;
             param.formId = $scope.id;
@@ -14084,6 +14085,7 @@
                             }
                             $scope.isAllowOwnUser = false;
                             $scope.isAllowOtherUser = false;
+                            
                             if (!DataService.isEmpty($scope.formDetailsDataInfo.recordAccessSecurity)) {
                                 if (!Array.isArray($scope.formDetailsDataInfo.recordAccessSecurity) && DataService.isEmpty($scope.formDetailsDataInfo.recordAccessSecurity.max_one_record_per_user))
                                     $scope.formDetailsDataInfo.recordAccessSecurity = JSON.parse($scope.formDetailsDataInfo.recordAccessSecurity);
@@ -14125,25 +14127,26 @@
 
                                 }
                                 var paramTemp = {};
-                                //   if ($scope.formDetailsDataInfo.IsFilterCriteria) {
-                                //   paramTemp.action = 9;
-                                //    var query = "";
-                                //if (!DataService.isEmpty($scope.formDetailsDataInfo.recordFilters)) {
-                                //    var columListFilterCriteria = JSON.parse($scope.formDetailsDataInfo.recordFilters);
-                                //    angular.forEach(columListFilterCriteria, function (item) {
-                                //        var exists = _.findWhere($scope.filterFieldsList, { field: item.field });
-                                //        if (!DataService.isEmpty(exists))
-                                //            query += item.query + " And";
-                                //    });
-                                //    query = query.substring(0, query.length - 3);
-                                //    if (!DataService.isEmpty(query))
-                                //        paramTemp.formTableColumnData = query;
-                                //    else
-                                //        paramTemp.action = 2;
-                                //}
-                                //}
-                                //else
-                                paramTemp.action = 2;
+                                
+                                if ($scope.formDetailsDataInfo.IsFilterCriteria) {
+                                    paramTemp.action = 9;
+                                    var query = "";
+                                    if (!DataService.isEmpty($scope.formDetailsDataInfo.recordFilters)) {
+                                        var columListFilterCriteria = JSON.parse($scope.formDetailsDataInfo.recordFilters);
+                                        angular.forEach(columListFilterCriteria, function (item) {
+                                            var exists = _.findWhere($scope.filterFieldsList, { field: item.field });
+                                            if (!DataService.isEmpty(exists))
+                                                query += item.query + " And";
+                                        });
+                                        query = query.substring(0, query.length - 3);
+                                        if (!DataService.isEmpty(query))
+                                            paramTemp.formTableColumnData = query;
+                                        else
+                                            paramTemp.action = 2;
+                                    }
+                                }
+                                else
+                                    paramTemp.action = 2;
                                 if ($scope.isAllowOwnUser == true && $scope.isAllowOtherUser == false) {
                                     paramTemp.action = 10;
                                     paramTemp.UserId = $scope.userDetail.Id;
@@ -16177,7 +16180,7 @@
         adminService.postAsync('/UserAdmin/GetAllEnrolledCompaniesData/').then(function (res) {
 
             $scope.CompanyList = res.data.data.Data;
-            
+
             setTimeout(function () {
                 $scope.manageSelectedCompany();
                 usercalendarLoad();
@@ -16212,7 +16215,7 @@
     })
 
     FormGeneratorApp.controller('UserDashboardController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
-        
+
         $("#user-nav-dashboard").addClass("active")
 
         adminService.postAsync('/UserAdmin/GetRecentlyBookedCalendars/').then(function (res) {
@@ -16232,7 +16235,7 @@
 
         $scope.GoToCalendar = function (companyId, listId = 1) {//list id 2 is for the company event list data on right hand side of the screen, and list id 1 is for left/ recently booked calendars company data... used for mapping companyId with companyCode
             var companyCode = "";
-            
+
             if (listId == 1) {
                 for (var i = 0; i < $scope.CalendarCompanyList.length; i++) {
                     if ($scope.CalendarCompanyList[i].CompanyId == companyId) {
@@ -16247,7 +16250,7 @@
                     }
                 }
             }
-            
+
 
             localStorage.setItem("publicUserSelectedCompany", companyCode);
             $state.go("my_calendar", { "formId": 2305 });
@@ -16515,7 +16518,7 @@
                     ajaxConfig: "POST", //ajax HTTP request type
                     ajaxContentType: "json",
                     ajaxParams: { //ajax parameters
-                        
+
                     },
                     ajaxProgressiveLoad: "scroll",
                     ajaxProgressiveLoadScrollMargin: 75,
@@ -16558,6 +16561,153 @@
 
     });
 
+    FormGeneratorApp.controller('ClientPaymentHistoryController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
+        checkLogin();
+        $scope.CalendarMasterList = function () {
+            var columns = [
+                {
+                    title: 'Action', field: '', formatter: function (cell, formatter) {
+                        return `<button class="btn btn-primary" onclick="generateClientPaymentReceiptPdf(${cell.getData().Id})">Receipt</button>`;
+                    }
+                },
+                { title: 'Client name', field: 'FIRST_NAME', headerFilter: "input" },
+                { title: 'Payment Id', field: 'ORDER_NO', headerFilter: "input" },
+                { title: 'Calendar', field: 'CALENDAR_NAME', headerFilter: "input" },
+                
+                {
+                    title: 'Type', field: 'TRANSACTION_TYPE', headerFilter: "input", formatter: function (cell, formatter) {
+                        return (cell.getData().TRANSACTION_TYPE == "Purchase") ? "Package" : "Session"
+                    }
+                },
+                {
+                    title: 'Plan name', field: 'PACKAGE_NAME', headerFilter: "input", formatter: function (cell, formatter) {
+                        return (cell.getData().TRANSACTION_TYPE == "Purchase") ? cell.getData().PACKAGE_NAME : "--"
+                    }
+                },
+                {
+                    title: 'Paid Date', field: 'created_at', headerFilter: "input", formatter: function (cell, formatter) {
+                        return moment(cell.getData().TO_TIME).format("YYYY-MM-DD HH:mm")
+                    }
+                },
+                { title: 'Method', field: 'METHOD', headerFilter: "input" },
+                {
+                    title: 'Client Paid', field: 'AMOUNT', headerFilter: "input", formatter: function (cell, formatter) {
+                        debugger;
+                        if (cell.getData().TRANSACTION_TYPE == "Purchase") {
+                            var amount = cell.getData().AMOUNT;
+                            return "HK$" + amount;
+                        } else if (cell.getData().TRANSACTION_TYPE == "Booking") {
+                            return "B$" + parseInt(cell.getData().AMOUNT)
+                        } else {
+                            return "--"
+                        }
+                    }
+                },
+                { title: 'Status', field: 'STATUS', headerFilter: "input" },
+            ];
+
+            setTimeout(function () {
+                var options = {
+                    placeholder: "No Data.",
+                    tooltips: function (cell) {
+                        return cell.getValue();
+                    },
+                    height: "530px",
+                    layout: "fitDataFill",
+                    responsiveLayout: false,
+                    initialSort: [
+                        { column: "created_at", dir: "desc" }
+                    ],
+                    persistenceID: "persisrecords",
+                    persistenceMode: true,
+                    persistentLayout: true,
+                    persistence: {
+                        sort: false, //persist column sorting
+                        filter: false, //persist filter sorting
+                        columns: false, //persist columns
+                    },
+                    persistenceWriterFunc: function (id, type, data) {
+                        localStorage.setItem(id + "-" + type, JSON.stringify(data));
+                    },
+                    persistenceReaderFunc: function (id, type) {
+                        //id - tables persistence id
+                        //type - type of data being persisted ("sort", "filter", "group", "page" or "columns")
+                        var data = localStorage.getItem(id + "-" + type);
+                        var dataParse = JSON.parse(data);
+                        if (!DataService.isEmpty(data) && type == "columns") {
+                            _.each(headers, function (item) {
+                                var exists = _.findWhere(dataParse, {
+                                    field: item.field
+                                });
+                                if (!DataService.isEmpty(exists)) {
+                                    exists.visible = item.visible;
+                                }
+                            })
+                        }
+                        else if (type == "page") {
+                            if (!DataService.isEmpty(data) && $scope.paginationSizeFormRecords != 0)
+                                dataParse.paginationSize = $scope.paginationSizeFormRecords;
+                        }
+                        return data ? dataParse : false;
+                    },
+                    columns: columns,
+                    footerElement: "<div style='text-align:left' id='no-of-forms'></div>",
+                    dataLoaded: function (data) {
+                        //data - all data loaded into the table                        
+                        var count = 0;
+                        if (data.length > 0)
+                            count = data[0].total_records;
+                        $('#form-records .tabulator-footer #no-of-forms').text("Total: " + count + " Entries");
+                    },
+                    /// pagination: "local",              
+                    ajaxFiltering: true,
+                    ajaxSorting: true,
+                    ajaxLoader: true,
+                    ajaxURL: "/Calendar/GetClientPaymentHistory",
+                    ajaxConfig: "POST", //ajax HTTP request type
+                    ajaxContentType: "json",
+                    ajaxParams: { //ajax parameters
+                        companyCode: localStorage.getItem("COMPANY_CODE"),
+                        calendarCode: localStorage.getItem("CALENDAR_CODE")
+                    },
+                    ajaxProgressiveLoad: "scroll",
+                    ajaxProgressiveLoadScrollMargin: 75,
+                    ajaxRequesting: function (url, params) {
+
+                        var called = true;
+                        if (params.sorters.length == 0) {
+                            params.sorters.push({ field: "created_at", dir: "desc" });
+                        }
+                        //if (called)
+                        //$('#form-records').block({ message: '<h4>Getting Form Records...</h4>' });
+                        return called; //abort ajax request
+                    },
+                    ajaxResponse: function (url, params, response) {
+                        //url - the URL of the request
+                        //params - the parameters passed with the request
+                        //response - the JSON object returned in the body of the response.
+                        //$('#form-records').unblock();
+                        //$.unblockUI();
+                        if (response.data) {
+                            return response;
+                        }
+                        else {
+                            return response;
+                        }
+
+                    },
+                    paginationSize: 50,
+
+                };
+                var tabulator = initTabulator('form-records', options);
+                $('.form-builder-loader').hide();
+            }, 150);
+
+        };
+
+        $scope.CalendarMasterList();
+    });
+
     FormGeneratorApp.controller('CustomTransactionController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
         checkLogin();
         $scope.AttendanceRecord = [];
@@ -16571,7 +16721,7 @@
         };
 
         //$scope.CalendarMasterList();
-        
+
         $scope.updateAttendanceRecord = function (recordId, IsPresent = false) {
             debugger;
             for (var i = 0; i < $scope.AttendanceRecord.length; i++) {
@@ -16614,7 +16764,7 @@
                         debugger;
                         $scope.CancelBulkAttendance();
                     });
-                    
+
                 } else {
                     alert("something went wrong!");
                 }
@@ -16628,7 +16778,7 @@
 
             adminService.postAsync('/Calendar/GetSingleTransactionMaster/', { TransactionId: transactionId }).then(function (res) {
                 console.log(res.data.data);
-                
+
                 var slotSplit = res.data.data[0].SLOT.split('to');
 
                 var slotStartTime = slotSplit[0].split('T')[1].substring(0, 5)
@@ -16663,7 +16813,7 @@
 
                 $scope.CalendarMasterList(false);
                 $scope.closeAttendanceModel();
-                
+
             }, function (err) {
 
             });
@@ -16683,7 +16833,7 @@
         }
     });
 
-    
+
 
     FormGeneratorApp.controller('UserAttendanceController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
         checkLogin();
@@ -16770,7 +16920,7 @@
                     ajaxConfig: "POST", //ajax HTTP request type
                     ajaxContentType: "json",
                     ajaxParams: {
-                       
+
                     },
                     ajaxProgressiveLoad: "scroll",
                     ajaxProgressiveLoadScrollMargin: 75,
@@ -16797,6 +16947,124 @@
                             return response;
                         }
 
+                    },
+                    paginationSize: 50,
+
+                };
+                var tabulator = initTabulator('form-records', options);
+                $('.form-builder-loader').hide();
+            }, 150);
+
+        };
+
+        $scope.CalendarMasterList();
+
+    })
+
+    FormGeneratorApp.controller('UserBCoinController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
+        checkLogin();
+
+        $scope.CalendarMasterList = function () {
+            var columns = [
+                {
+                    title: 'Date', field: 'created_at', headerFilter: "input", formatter: function (cell, formatter) {
+                        return moment(cell.getData().created_at).format("YYYY-MM-DD")
+                    }
+                },
+                { title: 'Company Name', field: 'COMPANY_NAME_ENGLISH', headerFilter: "input" },
+                { title: 'Calendar', field: 'CALENDAR_NAME', headerFilter: "input" },
+                {
+                    title: 'Coin', field: 'COIN', headerFilter: "input", formatter: function (cell, formatter) {
+
+                        if (cell.getData().CREDIT_COIN == 0 || cell.getData().CREDIT_COIN == "0" || cell.getData().CREDIT_COIN == "") {
+                            return "(" + cell.getData().DEBIT_COIN + ")"
+                        } else {
+                            return cell.getData().CREDIT_COIN
+                        }
+
+                    }
+                },
+                { title: 'Type', field: 'TRANSACTION_TYPE', headerFilter: "input" }
+            ];
+
+            setTimeout(function () {
+                var options = {
+                    placeholder: "No Data.",
+                    tooltips: function (cell) {
+                        return cell.getValue();
+                    },
+                    height: "530px",
+                    layout: "fitDataFill",
+                    responsiveLayout: false,
+                    initialSort: [
+                        { column: "created_at", dir: "desc" }
+                    ],
+                    persistenceID: "persisrecords",
+                    persistenceMode: true,
+                    persistentLayout: true,
+                    persistence: {
+                        sort: false, //persist column sorting
+                        filter: false, //persist filter sorting
+                        columns: false, //persist columns
+                    },
+                    persistenceWriterFunc: function (id, type, data) {
+                        localStorage.setItem(id + "-" + type, JSON.stringify(data));
+                    },
+                    persistenceReaderFunc: function (id, type) {
+                        var data = localStorage.getItem(id + "-" + type);
+                        var dataParse = JSON.parse(data);
+                        if (!DataService.isEmpty(data) && type == "columns") {
+                            _.each(headers, function (item) {
+                                var exists = _.findWhere(dataParse, {
+                                    field: item.field
+                                });
+                                if (!DataService.isEmpty(exists)) {
+                                    exists.visible = item.visible;
+                                }
+                            })
+                        }
+                        else if (type == "page") {
+                            if (!DataService.isEmpty(data) && $scope.paginationSizeFormRecords != 0)
+                                dataParse.paginationSize = $scope.paginationSizeFormRecords;
+                        }
+                        return data ? dataParse : false;
+                    },
+                    columns: columns,
+                    footerElement: "<div style='text-align:left' id='no-of-forms'></div>",
+                    dataLoaded: function (data) {
+                        //data - all data loaded into the table                        
+                        var count = 0;
+                        if (data.length > 0)
+                            count = data[0].total_records;
+                        $('#form-records .tabulator-footer #no-of-forms').text("Total: " + count + " Entries");
+                    },
+                    /// pagination: "local",              
+                    ajaxFiltering: true,
+                    ajaxSorting: true,
+                    ajaxLoader: true,
+                    ajaxURL: "/UserAdmin/GetUserBCoinMaster",
+                    ajaxConfig: "POST", //ajax HTTP request type
+                    ajaxContentType: "json",
+                    ajaxParams: {},
+                    ajaxProgressiveLoad: "scroll",
+                    ajaxProgressiveLoadScrollMargin: 75,
+                    ajaxRequesting: function (url, params) {
+
+                        var called = true;
+                        if (params.sorters.length == 0) {
+                            params.sorters.push({ field: "created_at", dir: "desc" });
+                        }
+                        //if (called)
+                        //$('#form-records').block({ message: '<h4>Getting Form Records...</h4>' });
+                        return called; //abort ajax request
+                    },
+                    ajaxResponse: function (url, params, response) {
+                        if (response.data) {
+                            return response;
+                        }
+                        else {
+                            return response;
+                        }
                     },
                     paginationSize: 50,
 
@@ -16998,7 +17266,7 @@
                             $("#company-filter-selector").append(`<option value="${company.COMPANY_CODE}">${company.COMPANY_NAME_ENGLISH}</option>`);
                         }
                     }
-                    
+
 
                     var nextPage = 0;
 
@@ -17029,7 +17297,7 @@
                     $("#row1").empty();
                     $("#row2").empty();
 
-                    
+
 
                     for (var i = 0; i < response.data[0].length; i++) {
                         response.data[0][i].CALENDAR_PHOTO_PATH = response.data[0][i].CALENDAR_PHOTO_PATH.replace('~', '..')
@@ -17055,7 +17323,7 @@
                                 tagQuery += `<a href="/Marketplace/Tag?tag=${response.data[0][i].TAGS}">${response.data[0][i].TAGS}</a>`
                             }
                         }
-                        
+
 
                         var company = response.data[0][i];
 
@@ -17072,7 +17340,7 @@
                                                         <p><button class="book" onclick="location.href='/Marketplace/CompanySchedule?CompanyCode=${company.COMPANY_CODE}&CalendarCode=${company.CALENDAR_CODE}'">Book</button></p>
                                                     </div>
                                                 </div>`);
-                        } else  {
+                        } else {
                             $("#row2").append(`<div class="wrap">
                                                     <div class="wrap-im">
                                                         <img src="${company.CALENDAR_PHOTO_PATH}" style="max-height:120px;" onerror="this.src = '../assets/marketplace/image/pro.png'">
@@ -17084,8 +17352,8 @@
                                                         <p><button class="book" onclick="location.href='/Marketplace/CompanySchedule?CompanyCode=${company.COMPANY_CODE}&CalendarCode=${company.CALENDAR_CODE}'">Book</button></p>
                                                     </div>
                                                 </div>`);
-                        } 
-                       
+                        }
+
                     }
 
                 },

@@ -1,4 +1,9 @@
-﻿function getCompanyWebsite() {
+﻿function generateClientPaymentReceiptPdf(LedgerId) {
+    window.location.href = "/Calendar/generateClientPaymentReceiptPdf?Id=" + LedgerId;
+}
+
+
+function getCompanyWebsite() {
     var data;
     $.ajax({
         url: "/BusinessAdmin/GetBusinessAccountWebsite/",

@@ -2044,7 +2044,7 @@
                 views: {
                     'content': {
                         templateUrl: '/Templates/user-admin/my-b-coin-balance.html?token=' + uuid,
-                        controller: 'FormRecordsController'
+                        controller: 'UserBCoinController'
                     }
                 },
                 ncyBreadcrumb: {
@@ -2068,11 +2068,25 @@
             })
             .state('calendar_package', {
                 url: '/calendar/calendar-package/:formId',
-                onEnter: function ($window) { $window.document.title = "My Profile"; },
+                onEnter: function ($window) { $window.document.title = "Service Package Master"; },
                 views: {
                     'content': {
                         templateUrl: '/Templates/calendar-master/calendar-package-master.html?token=' + uuid,
                         controller: 'FormRecordsController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
+            .state('client_payment_history', {
+                url: '/calendar/client-payment-history/',
+                onEnter: function ($window) { $window.document.title = "Client payment history"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/calendar-master/client-payment-history.html?token=' + uuid,
+                        controller: 'ClientPaymentHistoryController'
                     }
                 },
                 ncyBreadcrumb: {

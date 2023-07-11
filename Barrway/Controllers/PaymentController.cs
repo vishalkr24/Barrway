@@ -144,19 +144,7 @@ namespace Barrway.Controllers
 
                 var result = await masterService.CreatePaymentTracker(tracker);
 
-                LedgerModel ledgerModel = new LedgerModel()
-                {
-                    CALENDAR_CODE = PackageData["CALENDAR_CODE"].ToString(),
-                    COMPANY_CODE = PackageData["COMPANY_CODE"].ToString(),
-                    CREDIT_COIN = Convert.ToDouble(PackageData["PACKAGE_COIN"]),
-                    DEBIT_COIN = 0,
-                    ORDER_NO = tracker.ORDER_NO,
-                    USER_ID = User.Identity.Name,
-                    TRANSACTION_TYPE = "Purchase"
-                };
-
-                var resultLedger = await masterService.CreateLedgerEntry(ledgerModel);
-
+               
                 PaymentHistoryModel paymentHistoryModel = new PaymentHistoryModel()
                 {
                     B_COIN_PURCHASE = Convert.ToDouble(PackageData["PACKAGE_COIN"]),
@@ -172,6 +160,20 @@ namespace Barrway.Controllers
                 };
 
                 var resultPaymentHistory = await masterService.CreatePaymentHistory(paymentHistoryModel);
+
+                LedgerModel ledgerModel = new LedgerModel()
+                {
+                    CALENDAR_CODE = PackageData["CALENDAR_CODE"].ToString(),
+                    COMPANY_CODE = PackageData["COMPANY_CODE"].ToString(),
+                    CREDIT_COIN = Convert.ToDouble(PackageData["PACKAGE_COIN"]),
+                    DEBIT_COIN = 0,
+                    ORDER_NO = tracker.ORDER_NO,
+                    USER_ID = User.Identity.Name,
+                    TRANSACTION_TYPE = "Purchase"
+                };
+
+                var resultLedger = await masterService.CreateLedgerEntry(ledgerModel);
+
 
                 ViewBag.PaymentId = PackageData["OrderNo"].ToString();
                 return View();
