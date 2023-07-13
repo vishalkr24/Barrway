@@ -16567,7 +16567,7 @@
             var columns = [
                 {
                     title: 'Action', field: '', formatter: function (cell, formatter) {
-                        return `<button class="btn btn-primary" onclick="generateClientPaymentReceiptPdf(${cell.getData().Id})">Receipt</button>`;
+                        return `<a target="_blank" href="/Calendar/PaymentReceipt?Id=${cell.getData().Id}"><button class="btn btn-primary">Receipt</button></a>`;
                     }
                 },
                 { title: 'Client name', field: 'FIRST_NAME', headerFilter: "input" },

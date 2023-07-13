@@ -1,4 +1,4 @@
-﻿
+﻿@model Barrway.DTO.BusinessModels.PaymentReceiptViewModel
 @{
     Layout = null;
 }
@@ -34,12 +34,16 @@
 </head>
 <body style="">
     <style>
+        *{
+            font-size: 18px;
+        }
+
         .sheet {
             background: white;
             border-radius: 3px;
             min-height: 800px;
             width: 100%;
-            max-width: 900px;
+            /*max-width: 900px;*/
             box-shadow: 0px 6px 21px -6px #00000052;
             margin: auto;
             padding: 40px;
@@ -75,26 +79,34 @@
                 <table width="100%" style="font-size:13px">
                     <tr>
                         <td width="50%">
-                            Rohan
+                            @Model.ClientName
                         </td>
                         <td class="text-right">
-                           
+                            @Model.TransactionType
                         </td>
                     </tr>
                     <tr>
                         <td width="50%">
-                            Morning Yoga
+                            @Model.ActivityName
                         </td>
                         <td class="text-right">
-                            Payment Date - 11/07/2023
+                            Payment Date - @Model.PaymentDate.ToString("dd/MM/yyyy")
                         </td>
                     </tr>
                     <tr>
                         <td width="50%">
-                            Deepak Agrahari
+                            @Model.ServiceProviderName
                         </td>
                         <td class="text-right">
-                            Payment Status - Success
+                            Payment Status - @Model.PaymentStatus
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="50%">
+                            Coins Added: <span style="color:green; font-weight:500">B$@Model.CoinsAdded.ToString("F2")</span>
+                        </td>
+                        <td class="text-right">
+                            Coins Added: <span style="color: #ed4c78; font-weight: 500">B$@Model.CoinsDeducted.ToString("F2")</span>
                         </td>
                     </tr>
                 </table>
@@ -103,7 +115,7 @@
             
             <table width="100%" class="pdf-table">
                 <thead>
-                    <tr>
+                    <tr style="background:#ebebeb; font-weight: 500">
                         <td>
                             Particulars
                         </td>
@@ -119,13 +131,13 @@
                     <tr>
                         <td width="50%">
                             Calendar Package<br />
-                            <span style="font-size:smaller;">Starter Package</span>
+                            <span style="font-size:smaller;">@Model.PackageName Package</span>
                         </td>
                         <td>
-                            1.00
+                            @Model.Quantity.ToString("F2")
                         </td>
                         <td class="text-right">
-                            HK$100.00
+                            HK$@Model.Amount.ToString("F2")
                         </td>
                     </tr>
                     <tr>
@@ -137,8 +149,8 @@
                             <p><b style="color:green; font-size: 16px;">Grand Total</b></p>
                         </td>
                         <td class="text-right">
-                            <p>HK$100</p>
-                            <p><b style="color: green; font-size: 16px;">HK$100</b></p>
+                            <p>HK$@Model.Amount.ToString("F2")</p>
+                            <p><b style="color: green; font-size: 16px;">HK$@Model.Amount.ToString("F2")</b></p>
                         </td>
                     </tr>
                 </tbody>

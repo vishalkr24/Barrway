@@ -13,6 +13,7 @@ using Barrway.DTO.Common;
 using Barrway.Utility.Common;
 using Barrway.DTO.UserAdminModels;
 using Barrway.DTO.MarketplaceModels;
+using System.Net.Http;
 
 namespace Barrway.Controllers
 {
@@ -22,12 +23,14 @@ namespace Barrway.Controllers
         private readonly ISqlFunction sqlFunction;
         private readonly IPublicUserService publicUserService;
         private readonly IAuthService authService;
+        private readonly IMasterService masterService;
 
-        public UserAdminController(ISqlFunction sqlFunction, IPublicUserService publicUserService, IAuthService authService)
+        public UserAdminController(ISqlFunction sqlFunction, IPublicUserService publicUserService, IAuthService authService, IMasterService masterService)
         {
             this.sqlFunction = sqlFunction;
             this.publicUserService = publicUserService;
             this.authService = authService;
+            this.masterService = masterService;
         }
 
         // GET: UserAdmin
@@ -150,6 +153,12 @@ namespace Barrway.Controllers
                 model.USER_ID = User.Identity.Name;
 
                 var result = await publicUserService.EnrollPublicUserForCalendar(model);
+                var resultEmail = await masterService.SendCalendarFile(UserIdentity.UserEmail);
+                if (result.Status)
+                {
+                    // send email to user
+                    //var resultEmail = await masterService.SendCalendarFile(UserIdentity.UserEmail);
+                }
 
                 return Json(result, JsonRequestBehavior.AllowGet);
 
@@ -159,6 +168,7 @@ namespace Barrway.Controllers
                 return Json(new AddUpdateDelete() { Status = false, Message = "Failed" }, JsonRequestBehavior.AllowGet);
             }
         }
+
 
         [HttpGet]
         public async Task<ActionResult> GetUserCoinBalance()

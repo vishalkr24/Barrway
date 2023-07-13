@@ -178,6 +178,9 @@
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
+    <Reference Include="RestSharp, Version=110.2.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.110.2.0\lib\net471\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Rotativa, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Rotativa.1.7.3\lib\net461\Rotativa.dll</HintPath>
     </Reference>
@@ -3214,7 +3217,10 @@
     <Content Include="Views\Payment\Index.cshtml" />
     <Content Include="Views\Payment\OrederStatus.cshtml" />
     <Content Include="Views\Payment\success.cshtml" />
-    <Content Include="Views\Calendar\generateClientPaymentReceiptPdf.cshtml" />
+    <Content Include="Views\Calendar\PaymentReceipt.cshtml" />
+    <Content Include="Views\Payment\OrderFailed.cshtml" />
+    <Content Include="Views\Payment\OrderDetails.cshtml" />
+    <Content Include="Views\Payment\cancel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

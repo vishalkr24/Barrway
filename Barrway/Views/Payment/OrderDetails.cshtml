@@ -1,0 +1,249 @@
+﻿@model Barrway.DTO.BusinessModels.OrderDetailsViewModel
+@{
+    ViewBag.Title = "OrderDetails";
+    Layout = "~/Views/Shared/_LayoutMarketPlaceCompany.cshtml";
+}
+
+<style>
+
+
+
+    /* Hide the browser's default radio button */
+    .container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    /* Create a custom radio button */
+    .checkmark {
+        position: absolute;
+        left: 37px;
+        height: 20px;
+        width: 20px;
+        background-color: #eee;
+        border-radius: 50%;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .container:hover input ~ .checkmark {
+        background-color: #ccc;
+    }
+
+    /* When the radio button is checked, add a blue background */
+    .container input:checked ~ .checkmark {
+        background-color: #2196F3;
+    }
+
+    /* Create the indicator (the dot/circle - hidden when not checked) */
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* Show the indicator (dot/circle) when checked */
+    .container input:checked ~ .checkmark:after {
+        display: block;
+    }
+
+    /* Style the indicator (dot/circle) */
+    .container .checkmark:after {
+        top: 6px;
+        left: 6px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: white;
+    }
+
+    .order-heading {
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .order-details-card {
+        border: 1px solid lightgrey;
+        border-radius: 8px;
+        margin-top: 132px;
+        min-height: 350px;
+        font-size: 16px;
+    }
+
+        .order-details-card .col-md-4.custom-col {
+            border-left: 1px solid #ebebeb;
+            border-top: none;
+            min-height: 350px;
+        }
+
+        .order-details-card .payment-details-table td {
+            font-size: 14px;
+            vertical-align: top;
+        }
+
+        .order-details-card .total-table td {
+            padding: 8px 0px;
+        }
+
+        .order-details-card .primary-order-details-table thead td {
+            padding: 8px;
+            background: #ebebeb;
+            border-bottom: 1px solid lightgrey;
+            font-size: 16px;
+        }
+
+        .order-details-card .primary-order-details-table tbody td {
+            padding: 8px;
+            background: white;
+            border-bottom: 1px solid lightgrey;
+            font-size: 16px;
+        }
+
+    @@media (max-width: 900px) {
+        .order-details-card {
+            margin-top: 182px;
+        }
+
+            .order-details-card .col-md-4.custom-col {
+                border-top: 1px solid #ebebeb;
+                border-left: none;
+                min-height: unset;
+            }
+
+        .order-details-card .primary-order-details-table tbody td {
+            font-size: 13px;
+        }
+
+            .order-details-card .primary-order-details-table thead td {
+                font-size: 13px;
+            }
+    }
+</style>
+
+<div style="min-height: 100vh;">
+    <br /><br />
+    <div class="container">
+        <div class="order-details-card">
+            <div class="row">
+
+                <div class="col-md-8">
+                    <div style="padding:20px;">
+                        <div class="order-heading">
+                            Order #@Model.Order.ORDER_NO
+                        </div>
+                        <div style="padding-top: 8px">
+                            <p>
+                                @DateTime.Now.ToString("dd-MM-yyyy") @*<span style="padding-left: 8px;">Order #@Model.Order.ORDER_NO</span>*@
+                            </p>
+
+                            <p style="padding-top: 0px;">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table width="100%" class="primary-order-details-table">
+                                            <thead>
+                                                <tr>
+                                                    <td width="50%">
+                                                        <span style="font-weight: 500">Package Details</span>
+                                                    </td>
+                                                    <td>
+                                                        <span style="font-weight: 500">Coin</span>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span style="font-weight: 500">Price</span>
+                                                    </td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td width="50%">
+                                                        <span>@Model.CalendarPackageModel.PACKAGE_NAME</span><br />
+                                                        <span style="color:grey;">@Model.CalendarPackageModel.PACKAGE_DESCRIPTION</span>
+                                                    </td>
+                                                    <td>
+                                                        <span>B$@Model.CalendarPackageModel.PACKAGE_COIN.ToString("n2")</span>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span><b>$@Model.CalendarPackageModel.PACKAGE_PRICE.ToString("n2") HKD</b></span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+
+                            </p>
+                            
+                            <p style="padding-top: 8px;">
+                                <div class="order-heading" style="margin-bottom: 12px;">
+                                    Payment method
+                                </div>
+                                <input type="radio" checked readonly /> <span class="checkmark"></span><span style="padding-left: 40px; font-weight: 500;">Stripe</span>
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="col-md-4 custom-col">
+                    <div style="padding:20px;">
+                        <div class="order-heading">Payment Details</div>
+                        <div style="padding-top: 16px;">
+                            <table width="100%" class="payment-details-table">
+                                <tr style="border-bottom:1px solid lightgrey;">
+                                    <td width="50%" style="height:100px">
+                                        Package Details<br />
+                                        <span style="font-size:smaller">1 x @Model.CalendarPackageModel.PACKAGE_NAME</span>
+                                    </td>
+                                    <td class="text-right">
+                                        $@Model.CalendarPackageModel.PACKAGE_PRICE.ToString("n2") HKD
+                                    </td>
+                                </tr>
+                            </table>
+                            <table class="total-table" width="100%">
+                                <tr>
+                                    <td>
+                                        Sub Total:
+                                    </td>
+                                    <td class="text-right">
+                                        $@Model.CalendarPackageModel.PACKAGE_PRICE.ToString("n2") HKD
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <b>Grand Total:</b>
+                                    </td>
+                                    <td class="text-right">
+                                        <b>$@Model.CalendarPackageModel.PACKAGE_PRICE.ToString("n2") HKD</b>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br />
+                            <form action="/Payment/CreateCheckoutSession" method="post">
+                                <input name="PACKAGE_ID" style="display:none;" readonly value="@Model.Order.PACKAGE_ID" />
+                                <input name="ORDER_NO" style="display:none;" readonly value="@Model.Order.ORDER_NO" />
+                                <button type="submit" class="btn btn-primary" style="width: 100%;">Proceed to pay <i class="bi bi-lock-fill"></i></button>
+                            </form>
+                            
+                        </div>
+
+                        @*<div style="padding-top: 1px; padding-left:30px;">
+                                <p>
+                                    <input type="radio" checked readonly /> <span class="checkmark"></span><span style="padding-left: 8px; font-weight: 500">Stripe</span>
+                                </p>
+                            </div>*@
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<script>
+    $("#nav-company-package").addClass("active")
+</script>
+

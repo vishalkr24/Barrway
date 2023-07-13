@@ -6,6 +6,7 @@ using Barrway.Service.Repository;
 using Barrway.Utility.Common;
 using FormGeneratorDTOs.DTOs;
 using Newtonsoft.Json;
+using Rotativa;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -154,10 +155,23 @@ namespace Barrway.Controllers
             return Json(new { data = locationList, last_page });
         }
 
-        public async Task<ActionResult> generateClientPaymentReceiptPdf(string Id)
+        public async Task<ActionResult> PaymentReceipt(string Id)
         {
-            var data = await masterService.GetSingleClientPaymentHistory(Id);
-            return View();
+            if (!string.IsNullOrEmpty(Id))
+            {
+                var paymentReceiptData = await masterService.GetPaymentReceiptData(Id.ToString());
+
+                PaymentReceiptViewModel data = new PaymentReceiptViewModel();
+
+                data = paymentReceiptData.Data;
+
+                return new ViewAsPdf("PaymentReceipt", data);
+            }
+            else
+            {
+                return RedirectToAction("Dashboard", "BusinessAdmin");
+            }
+           
         }
 
         [HttpPost]
@@ -183,7 +197,7 @@ namespace Barrway.Controllers
         {
             var locationListData = await masterService.GetSingleTransactionMaster(TransactionId);
             var locationList = locationListData.Data;
-            
+
             return Json(new { data = locationList });
         }
 
@@ -215,20 +229,20 @@ namespace Barrway.Controllers
             }
             else
             {
-                return Json(new AddUpdateDelete() { Status = false, Message = "Not Found"}, JsonRequestBehavior.AllowGet);
+                return Json(new AddUpdateDelete() { Status = false, Message = "Not Found" }, JsonRequestBehavior.AllowGet);
             }
 
 
-            
+
         }
 
         [HttpPost]
         public async Task<ActionResult> UpdateBulkTransactionAttendance(string AttendanceJsonString)
         {
             List<BulkAttendanceModel> AttendanceData = JsonConvert.DeserializeObject<List<BulkAttendanceModel>>(AttendanceJsonString);
-            
+
             var result = await businessUserService.UpdateTransactionAttendance(AttendanceData, User.Identity.Name.ToString());
-            
+
             return Json(result, JsonRequestBehavior.AllowGet);
 
         }
@@ -325,7 +339,7 @@ namespace Barrway.Controllers
         public async Task<ActionResult> GetSchedule(string ScheduleId)
         {
             var schedularData = await businessUserService.GetSchedule(ScheduleId, User.Identity.Name);
-            
+
             return Json(new { data = schedularData.Data });
         }
 
@@ -572,7 +586,7 @@ namespace Barrway.Controllers
                         return Json("Success", JsonRequestBehavior.AllowGet);
                     }
                 }
-                
+
             }
             catch (Exception ex)
             {

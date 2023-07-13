@@ -1,0 +1,39 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Payment Failed</title>
+    <link rel="stylesheet" href="/assets/css/vendor.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/style.css">
+    <link rel="stylesheet" href="~/assets/marketplace/owl/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/assets/marketplace/owl/owl.theme.default.min.css">
+
+    <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/media.css">
+    <script src="~/assets/marketplace/owl/jquery.min.js"></script>
+</head>
+<body>
+    <input value="@ViewBag.PaymentId" readonly style="display:none;" id="read-payment-id" />
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            swal({
+                icon: "error",
+                title: "Payment Failed!",
+                text: "Your payment was Failed!",
+                buttons: {
+                    confirm: "Okay"
+                }
+            }).then(function () {
+                window.location.href = "/Marketplace/Index";
+            })
+        });
+    </script>
+</body>
+</html>
