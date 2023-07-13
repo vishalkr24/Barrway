@@ -29,7 +29,7 @@ namespace Barrway.Utility.Common
                 string toemail = emailmodel["ToEmail"].ToString();
                 MailMessage message = new MailMessage();
 
-                // Settings.  
+                // Settings.
                 message.To.Add(new MailAddress(toemail));
                 message.From = new MailAddress(ConfigurationManager.AppSettings["SenderMail"].ToString().Trim()); /*support @d-law.com*/
                 message.Subject = !string.IsNullOrEmpty(emailmodel["Subject"].ToString()) ? emailmodel["Subject"].ToString() : "";

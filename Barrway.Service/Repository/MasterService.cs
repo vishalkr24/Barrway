@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net.Mail;
+using System.IO;
+using System.Configuration;
 
 namespace Barrway.Service.Repository
 {
@@ -662,6 +665,92 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> GetPaymentReceiptData(string Id)
+        {
+            string strSql = $@"
+								SELECT f.[Id]
+	                                      ,u.FIRST_NAME
+                                          ,u.LAST_NAME
+                                          ,[ORDER_NO]
+                                          ,[DEBIT_COIN]
+										  ,[CREDIT_COIN]
+                                          ,cal.CALENDAR_NAME
+                                          ,[TRANSACTION_TYPE]
+	                                      ,history.CLIENT_PAID_HKD
+	                                      ,pack.PACKAGE_NAME
+	                                      ,history.STATUS
+	                                      ,history.METHOD
+                                          ,history.CALENDAR_CODE
+										  ,history.COMPANY_CODE
+                                          ,history.PAID_DATE
+	                                      ,f.created_at
+                                      FROM [dbo].[LEDGER_MASTER_1957] f
+                                      join PUBLIC_USER_ACCOUNT_1943 u on u.USER_ID = f.USER_ID
+                                      join BUSINESS_CALENDAR_MASTER_1925 cal on cal.CALENDAR_CODE = f.CALENDAR_CODE
+                                      join PAYMENT_HISTORY_MASTER_1956 history on history.PAYMENT_ID = f.ORDER_NO
+                                      join CALENDAR_PACKAGE_MASTER_1952 pack on pack.Id = history.PLAN_ID
+                                      where f.Id = '{Id}'";
+
+            var paymentHistory = await sqlFunction.ExecuteSqlQuery(strSql);
+
+            strSql = $@"DECLARE @retval nvarchar(max);
+                                DECLARE @sQuery nvarchar(max); 
+                                DECLARE @ParmDefinition nvarchar(max);                        
+                                DECLARE @customTitleQuery nvarchar(max);                          
+                                IF OBJECT_ID(N'tempdb..#temptable') IS NOT NULL  BEGIN DROP TABLE #temptable END;
+                                with cte1 as( 
+	                                select distinct  f.*,
+	                                f.resources 'resourceId', 
+	                                STUFF((SELECT ',' +  PARTICIPANT_MASTER_1940.[STUDENT_NAME]  
+                                                                from TRANSACTION_MASTER_1942 inner join PARTICIPANT_MASTER_1940 on TRANSACTION_MASTER_1942.STUDENT = PARTICIPANT_MASTER_1940.Id where TRANSACTION_MASTER_1942.formGroupKey = f.formGroupKey         FOR XML PATH('')), 1, 1, '') customFourthTitle,
+	                                (dbo.[GetSubQueryCalender](f.formGroupKey)) customTitle,
+	                                (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceFormId) from form_calenderreferrence f2     
+                                                                where f2.formgroupkey = f.formGroupKey  FOR XML PATH('')), 1, 1, '')   ) 
+	                                customForms, 
+	                                (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceId) from form_calenderreferrence f2    
+                                                                where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) 
+	                                customFormIds,
+	                                '' referrences_1,
+	                                '' referrences_2,
+	                                '' referrences_3,
+	                                bcm.CALENDAR_NAME,
+	                                subCategory.CALENDAR_SUB_CATEGORY_NAME
+	                                from CALENDAR_FORM_1935 f  
+	                                join BUSINESS_CALENDAR_MASTER_1925 bcm on bcm.CALENDAR_CODE = f.CALENDAR_CODE
+	                                join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = bcm.CALENDAR_SUB_CATEGORY_ID
+	                                where   f.formid=2305  and bcm.CALENDAR_CODE = '{paymentHistory[0]["CALENDAR_CODE"].ToString()}' and bcm.COMPANY_CODE = '{paymentHistory[0]["COMPANY_CODE"].ToString()}'
+                                ),
+                                cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
+                                select* into #temptable from cte2  where len(customtitle)>0;    declare @counter int= 0, @c int= 1;   
+                                select @counter = (select count(1) from #temptable)	while @c <= @counter    begin    select @customTitleQuery = customTitle from #temptable where ROWNUMBER=@c;	SET @sQuery= ' select @retvalOUT = (' + @customTitleQuery + ')'  
+                                SET @ParmDefinition = N'@retvalOUT nvarchar(max) OUTPUT';   
+                                EXEC sp_executesql @sQuery, @ParmDefinition, @retvalOUT = @retval OUTPUT;    update #temptable set customTitle=@retval where ROWNUMBER=@c;	set @c = @c + 1;  end  select* from #temptable
+                        ";
+
+            var calendarData = await sqlFunction.ExecuteSqlQuery(strSql);
+
+
+
+            PaymentReceiptViewModel paymentReceiptViewModel = new PaymentReceiptViewModel()
+            {
+                ActivityName = calendarData[0]["customTitle"]?.ToString().Split(',')[1]?.ToString(),
+                Amount = Convert.ToDouble(paymentHistory[0]["CLIENT_PAID_HKD"]?.ToString()),
+                OrderNo = paymentHistory[0]["ORDER_NO"]?.ToString(),
+                PackageName = paymentHistory[0]["PACKAGE_NAME"]?.ToString(),
+                PaymentDate = Convert.ToDateTime(paymentHistory[0]["PAID_DATE"]?.ToString()),
+                Quantity = 1,
+                PaymentStatus = (paymentHistory[0]["STATUS"]?.ToString() == "complete") ? "Success" : "Failed",
+                ServiceProviderName = calendarData[0]["customTitle"]?.ToString().Split(',')[0]?.ToString(),
+                ClientName = paymentHistory[0]["FIRST_NAME"]?.ToString() + paymentHistory[0]["LAST_NAME"]?.ToString(),
+                TransactionType = paymentHistory[0]["TRANSACTION_TYPE"]?.ToString(),
+                CoinsAdded = Convert.ToDouble(paymentHistory[0]["CREDIT_COIN"]?.ToString()),
+                CoinsDeducted = Convert.ToDouble(paymentHistory[0]["DEBIT_COIN"]?.ToString())
+            };
+
+            return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = paymentReceiptViewModel};
+
+        }
+
         public async Task<AddUpdateDelete> GetSingleClientPaymentHistory(string LedgerId)
 
         {
@@ -698,6 +787,65 @@ namespace Barrway.Service.Repository
             {
                 return new AddUpdateDelete() { Status = false, Message = ex.Message };
             }
+        }
+
+        public async Task<AddUpdateDelete> SendCalendarFile(string email)
+        {
+            System.Net.Mail.MailMessage msg = new MailMessage("info@augursinnovation.com", email);
+
+            StringBuilder str = new StringBuilder();
+            str.AppendLine("BEGIN:VCALENDAR");
+            str.AppendLine("PRODID:-//Schedule a Meeting");
+            str.AppendLine("VERSION:2.0");
+            str.AppendLine("METHOD:REQUEST");
+            str.AppendLine("BEGIN:VEVENT");
+            str.AppendLine(string.Format("DTSTART:{0:yyyyMMddTHHmmssZ}", DateTime.Now.AddMinutes(+330)));
+            str.AppendLine(string.Format("DTSTAMP:{0:yyyyMMddTHHmmssZ}", DateTime.UtcNow));
+            str.AppendLine(string.Format("DTEND:{0:yyyyMMddTHHmmssZ}", DateTime.Now.AddMinutes(+660)));
+            str.AppendLine("LOCATION: " + "abcd");
+            str.AppendLine(string.Format("UID:{0}", Guid.NewGuid()));
+            str.AppendLine(string.Format("DESCRIPTION:{0}", msg.Body));
+            str.AppendLine(string.Format("X-ALT-DESC;FMTTYPE=text/html:{0}", msg.Body));
+            str.AppendLine(string.Format("SUMMARY:{0}", msg.Subject));
+            str.AppendLine(string.Format("ORGANIZER:MAILTO:{0}", msg.From.Address));
+
+            str.AppendLine(string.Format("ATTENDEE;CN=\"{0}\";RSVP=TRUE:mailto:{1}", msg.To[0].DisplayName, msg.To[0].Address));
+
+            str.AppendLine("BEGIN:VALARM");
+            str.AppendLine("TRIGGER:-PT15M");
+            str.AppendLine("ACTION:DISPLAY");
+            str.AppendLine("DESCRIPTION:Reminder");
+            str.AppendLine("END:VALARM");
+            str.AppendLine("END:VEVENT");
+            str.AppendLine("END:VCALENDAR");
+
+            byte[] byteArray = Encoding.ASCII.GetBytes(str.ToString());
+            MemoryStream stream = new MemoryStream(byteArray);
+
+            Attachment attach = new Attachment(stream, "test.ics");
+
+            msg.Attachments.Add(attach);
+
+            System.Net.Mime.ContentType contype = new System.Net.Mime.ContentType("text/calendar");
+            contype.Parameters.Add("method", "REQUEST");
+            //  contype.Parameters.Add("name", "Meeting.ics");
+            AlternateView avCal = AlternateView.CreateAlternateViewFromString(str.ToString(), contype);
+            msg.AlternateViews.Add(avCal);
+
+            //Now sending a mail with attachment ICS file.
+            
+
+            System.Net.Mail.SmtpClient smtpclient = new System.Net.Mail.SmtpClient();
+            smtpclient.Host = "mail.augursinnovation.com"; //-------this has to given the Mailserver IP
+            smtpclient.EnableSsl = false;
+            smtpclient.Credentials = new System.Net.NetworkCredential("info@augursinnovation.com", "Egoxx123");
+            smtpclient.Send(msg);
+
+            return new AddUpdateDelete()
+            {
+                Status = true,
+                Message = AppMessage.Success
+            };
         }
 
         public async Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetSingleTransactionMaster(string TransactionId)

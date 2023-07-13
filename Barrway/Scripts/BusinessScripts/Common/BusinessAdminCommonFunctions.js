@@ -1,5 +1,5 @@
 ﻿function generateClientPaymentReceiptPdf(LedgerId) {
-    window.location.href = "/Calendar/generateClientPaymentReceiptPdf?Id=" + LedgerId;
+    window.location.href = "/Calendar/PaymentReceipt?Id=" + LedgerId;
 }
 
 

@@ -36,11 +36,8 @@ namespace Barrway.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateCheckoutSession(string Id)
+        public async Task<ActionResult> OrderDetails(string Id)
         {
-            string UserId = User.Identity.Name;
-            string OrderNo = "";
-
             var PackageData = await masterService.GetSingleCalendarPackage(Id);
 
             OrderModel order = new OrderModel()
@@ -58,11 +55,44 @@ namespace Barrway.Controllers
             };
 
             var result = await masterService.CreateOrder(order);
-            
+
+            order.ORDER_NO = result.Data;
+
+            OrderDetailsViewModel orderDetailsViewModel = new OrderDetailsViewModel()
+            {
+                Order = order,
+                CalendarPackageModel = new CalendarPackageModel()
+                {
+                    CALENDAR_CODE = order.CALENDAR_CODE,
+                    COMPANY_CODE = PackageData.Data["COMPANY_CODE"].ToString(),
+                    PACKAGE_COIN = Convert.ToDouble(PackageData.Data["PACKAGE_COIN"]),
+                    PACKAGE_DESCRIPTION = PackageData.Data["PACKAGE_DESCRIPTION"]?.ToString(),
+                    PACKAGE_NAME = PackageData.Data["PACKAGE_NAME"]?.ToString(),
+                    PACKAGE_PRICE = Convert.ToDouble(PackageData.Data["PACKAGE_PRICE"]),
+                    PACKAGE_SEQUENCE = Convert.ToDouble(PackageData.Data["PACKAGE_SEQUENCE"])
+                }
+            };
+
             if (result.Status)
             {
-                OrderNo = result.Data;
+                return View(orderDetailsViewModel);
+                //OrderNo = result.Data;
             }
+            else
+            {
+                return RedirectToAction("OrderFailed");
+            }
+
+            
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateCheckoutSession(OrderModel model)
+        {
+            string UserId = User.Identity.Name;
+            string OrderNo = model.ORDER_NO;
+
+            var PackageData = await masterService.GetSingleCalendarPackage(model.PACKAGE_ID);
 
             PackageData.Data.Add("OrderNo", OrderNo);
             try
@@ -119,7 +149,7 @@ namespace Barrway.Controllers
             {
 
             }
-            
+
             return new HttpStatusCodeResult(303);
         }
 
@@ -186,6 +216,11 @@ namespace Barrway.Controllers
             
         }
 
+        public async Task<ActionResult> OrderFailed()
+        {
+            return View();
+        }
+
         public async Task<ActionResult> cancel(string SessionId)
         {
             if (SessionId != null)
@@ -221,7 +256,7 @@ namespace Barrway.Controllers
                 };
 
                 var resultPaymentHistory = await masterService.CreatePaymentHistory(paymentHistoryModel);
-
+                ViewBag.PaymentId = PackageData["OrderNo"].ToString();
                 return View();
             }
             else
