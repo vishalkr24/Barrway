@@ -1970,7 +1970,8 @@ async function rendarPopupCalendar(assignDate) {
                 activities: event.activities,
                 activityName: event.activityName,
                 formGroupKey: event.formGroupKey,
-                EVENT_TYPE: event.EVENT_TYPE
+                EVENT_TYPE: event.EVENT_TYPE,
+                IS_PUBLIC_USER_EVENT: event.IS_PUBLIC_USER_EVENT
             };
             eventData.title = _tempTitle;
             eventData.Images = event.files;
@@ -2094,7 +2095,8 @@ async function rendarPopupCalendar(assignDate) {
                 var titleCounter = 0;
                 _.each(_arrFormIDs, function (dataRow, position) {
                     if (dataRow !== _ySelected.toString()) {
-
+                       
+                           
                         var lblColor = "";
                         _lablesToShow.push(dataRow.toString());
                         var _arrRowData = _arrTitles[position];
@@ -2123,8 +2125,16 @@ async function rendarPopupCalendar(assignDate) {
                                     rowTooltipTitleDisplay += slipTitle + "  <br/> ";
                             }
                             if (current_tab != "agenda-view") {
-                                if (colorExists.isVisible)
-                                    tempHtml += "<div class='fc-content' id='" + event.Id + "_" + position + "_" + currentId + "' style='background:" + (lblColor == undefined || lblColor == "" ? "#7d606c" : lblColor) + ";borderRadius: 3;'><span class='fc-title'>" + slipTitle + "</span></div>"
+                                if (colorExists.isVisible) {
+                                    if (eventData.IS_PUBLIC_USER_EVENT) {
+                                        if (dataRow == 2312) {
+                                            tempHtml += "<div class='fc-content' id='" + event.Id + "_" + position + "_" + currentId + "' style='background:" + (lblColor == undefined || lblColor == "" ? "#7d606c" : lblColor) + ";borderRadius: 3;'><span class='fc-title'>" + slipTitle + "</span></div>"
+                                        }
+                                        
+                                    } else {
+                                        tempHtml += "<div class='fc-content' id='" + event.Id + "_" + position + "_" + currentId + "' style='background:" + (lblColor == undefined || lblColor == "" ? "#7d606c" : lblColor) + ";borderRadius: 3;'><span class='fc-title'>" + slipTitle + "</span></div>"
+                                    }
+                                }
                                 else
                                     if (!colorExists.isVisible && listids.length == 2)
                                         tempHtml += "<div class='fc-content' id='" + event.Id + "_" + position + "_" + currentId + "' style='background:" + (lblColor == undefined || lblColor == "" ? "#7d606c" : lblColor) + ";borderRadius: 3;'><span class='fc-title'>" + slipTitle + "</span></div>"
@@ -2233,20 +2243,25 @@ async function rendarPopupCalendar(assignDate) {
             if (eventData.Id == undefined) {
                 console.log(agendaTempHtml);
             } else {
-                if (eventData.EVENT_TYPE == "SCHEDULE") {
+                if (eventData.EVENT_TYPE == "SCHEDULE" && !eventData.IS_PUBLIC_USER_EVENT) {
                     element.addClass("available-fc-bgevent");
-                } else if (eventData.EVENT_TYPE == "BOOKING") {
+                } else if (eventData.EVENT_TYPE == "BOOKING" && !eventData.IS_PUBLIC_USER_EVENT) {
                     element.addClass("booking-fc-bgevent");
                 } else {
-                    element.append(_mainTempHtml)
+                    element.append(_mainTempHtml);
+                    element.attr('title', rowTooltipTitleDisplay + "  " + rowTooltipDisplay);
+                    element.attr('data-html', 'true');
                 }
             }
             
             tableTempHtml = "<div class='event-detail div-flex'><div class='div-flex'>" + rowRecord + "</div><div class='btn-box'>" + actionRow + "</div><div class='div-flex div-list-bar'></div>" + tempHtmlTable + "</div>";
             let $fcContent = element.find(".fc-content").detach(),
                 $resize = element.find(".fc-resizer").detach();
-            element.attr('title', rowTooltipTitleDisplay + "  " + rowTooltipDisplay);
-            element.attr('data-html', 'true');
+
+
+           
+
+
             element.css({
                 background: "rgb(255, 255, 255)",
                 borderColor: "#aaa",
