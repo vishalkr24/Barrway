@@ -473,9 +473,30 @@ namespace Barrway.Controllers
                 }
             }
 
+            if (result.events != null && result.events.Count() > 0) {
+
+                var ids = string.Join(",", result.events.Where(x => x.ContainsKey("Id") && x["Id"] != null && x["Id"].ToString() != "0").Select(x => x["Id"].ToString()).ToList());
+                if (!string.IsNullOrEmpty(ids)) {
+                    var getallTransactionUser = await calendarService.GetPublicUserTransactionEvent(ids);
+                    if (getallTransactionUser.Data != null && getallTransactionUser.Data.Count() > 0) {
+                        result.events.ForEach(e =>
+                        {
+                            var usertrnsactionData = getallTransactionUser.Data;
+                            if (e.ContainsKey("Id") && e["Id"] != null && e["Id"].ToString() != "0")
+                            {
+                                if (usertrnsactionData.Any(x => Convert.ToInt32(x["EventId"]) == Convert.ToInt32(e["Id"]) && x["EMAIL"] != null && x["EMAIL"].ToString() == UserIdentity.UserEmail))
+                                {
+                                    e["IS_PUBLIC_USER_EVENT"] = true;
+                                }
+                        }
+                        });
+                    }
+                }
+                
+
+
             
-
-
+            }
             return Json(result);
         }
 

@@ -11,5 +11,6 @@ namespace Barrway.Service.IRepository
     public interface ICalendarService
     {
         Task<AddUpdateDelete> UpdateCalendarReference(FormCalenderReferrenceTable data);
+        Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetPublicUserTransactionEvent(string eventIds);
     }
 }
