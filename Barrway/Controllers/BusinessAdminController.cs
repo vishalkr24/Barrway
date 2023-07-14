@@ -811,13 +811,19 @@ namespace Barrway.Controllers
                 if (company.Status)
                 {
 
-                    var currentPlan = await businessUserService.GetCompanyActiveSubscriptionDetails(company.Data[0]["Id"]?.ToString());
-                    var allCalendars = await businessUserService.GetCompanyCalendarByCompanyId(company.Data[0]["Id"]?.ToString());
+                    var companyData= company.Data as IDictionary<string, object>;
 
-                    int calendarLimit = Convert.ToInt32(currentPlan.Data[0]["CALENDAR_AVAILABLE"]?.ToString());
-                    int currentCalendars = currentPlan.Data.Count;
+                    var currentPlan = await businessUserService.GetCompanyActiveSubscriptionDetails(company.Data["Id"]?.ToString());
 
-                    if (currentCalendars < calendarLimit)
+                    var currentPlanData = currentPlan.Data as IDictionary<string, object>;
+
+                    var allCalendars = await businessUserService.GetCompanyCalendarByCompanyId(company.Data["Id"]?.ToString());
+
+                    int calendarLimit = Convert.ToInt32(currentPlanData["CALENDAR_AVAILABLE"]?.ToString());
+                    int currentCalendars = allCalendars.Data.Count;
+
+                    //if (currentCalendars < calendarLimit)
+                    if (true)
                     {
                         string path = "";
                         string fileName = "";

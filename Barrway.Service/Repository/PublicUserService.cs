@@ -16,6 +16,7 @@ using Barrway.DTO.PublicModels;
 using Barrway.DTO.UserAdminModels;
 using Barrway.DTO.MarketplaceModels;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace Barrway.Service.Repository
 {
@@ -224,7 +225,7 @@ namespace Barrway.Service.Repository
             {
                 // Participant already exist so no need to check if it is enrolled with the selected activity and resource
 
-                List<IDictionary<string, object>> transactionCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from TRANSACTION_MASTER_1942 where COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE}' and RESOURCE = '{model.transaction.RESOURCE}' and ACTIVITY = '{model.transaction.ACTIVITY}'");
+                List<IDictionary<string, object>> transactionCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from TRANSACTION_MASTER_1942 where COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE}' and RESOURCE = '{model.transaction.RESOURCE}' and ACTIVITY = '{model.transaction.ACTIVITY}' and SLOT='{model.transaction.SLOT}'");
 
                 if (transactionCheckResult.Count > 0)
                 {
