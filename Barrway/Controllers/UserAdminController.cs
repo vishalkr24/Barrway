@@ -153,11 +153,11 @@ namespace Barrway.Controllers
                 model.USER_ID = User.Identity.Name;
 
                 var result = await publicUserService.EnrollPublicUserForCalendar(model);
-                var resultEmail = await masterService.SendCalendarFile(UserIdentity.UserEmail);
+                
                 if (result.Status)
                 {
                     // send email to user
-                    //var resultEmail = await masterService.SendCalendarFile(UserIdentity.UserEmail);
+                    var resultEmail = await masterService.SendCalendarFile(UserIdentity.UserEmail, result.Data?.ToString());
                 }
 
                 return Json(result, JsonRequestBehavior.AllowGet);

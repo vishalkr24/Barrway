@@ -360,7 +360,7 @@ namespace Barrway.Service.Repository
 
             if (formResult2.res == 1)
             {
-                return new AddUpdateDelete() { Message = "Success", Status = true };
+                return new AddUpdateDelete() { Message = "Success", Status = true, Data = formResult2.Id };
             }
             else
             {

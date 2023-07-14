@@ -20,8 +20,8 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetClientPaymentHistory(GenerateDynamicFormData data, string companyCode, string calendarCode);
         Task<AddUpdateDelete> GetPaymentReceiptData(string Id);
         Task<AddUpdateDelete> GetSingleClientPaymentHistory(string LedgerId);
-
-        Task<AddUpdateDelete> SendCalendarFile(string email);
+        Task<AddUpdateDelete> GetSingleSlotDetailsByTransactionId(string TransactionId);
+        Task<AddUpdateDelete> SendCalendarFile(string email, string TransactionId);
 
         Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetSingleTransactionMaster(string TransactionId);
         
