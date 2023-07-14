@@ -2427,10 +2427,24 @@ async function rendarPopupCalendar(assignDate) {
 
                         
                     } else {
-                        var customTitleSplit = bgevent.customTitle.split(',');
 
-                        const wrapper = document.createElement('div');
-                        wrapper.innerHTML = `<div>
+                        var eventData = $scope.selectEventDetails;
+                        $.ajax({
+                            url: "/Useradmin/GetCurrentPackageDetails",
+                            type: "GET",
+                            data: {
+                                CompanyCode: eventData.COMPANY_CODE,
+                                CalendarCode: eventData.CALENDAR_CODE,
+                                ServiceId: eventData.activities
+                            },
+                            async: false,
+                            success: function (response) {
+
+                                if (response.Status) {
+                                    var customTitleSplit = bgevent.customTitle.split(',');
+
+                                    const wrapper = document.createElement('div');
+                                    wrapper.innerHTML = `<div>
                                         ${moment(start.format()).format("DD-MM-YYYY")}
                                     </div>
                                     <div>
@@ -2439,23 +2453,39 @@ async function rendarPopupCalendar(assignDate) {
                                     <div>${customTitleSplit[2]}</div><br />
                                     <div>${customTitleSplit[1]}</div>
                                     <div>${customTitleSplit[0]}</div><br />
-                                    <h2>Are you sure?</h2>`;
+                                    <h4 style="color:red">${response.Message}</h4>`;
 
-                        swal({
-                            title: "You are going to book",
-                            content: wrapper,
-                            buttons: {
-                                cancel: "Cancel",
-                                confirm: "Confirm"
-                            }
-                        }).then(function (response)
-                        {
-                            if (response) {
-                                bookingService(start, end, bgevent);
-                            } else {
+                                    swal({
+                                        title: "You are going to book",
+                                        content: wrapper,
+                                        buttons: {
+                                            cancel: "Cancel",
+                                            confirm: "Confirm"
+                                        }
+                                    }).then(function (response) {
+                                        if (response) {
+                                            bookingService(start, end, bgevent);
+                                        } else {
 
+                                        }
+                                    });
+                                } else {
+                                    swal({
+                                        icon: "error",
+                                        title: "Warning!",
+                                        text: response.Message,
+                                        buttons: {
+                                            confirm: "Okay"
+                                        }
+
+                                    })
+                                }
+
+                                
                             }
                         });
+
+                        
 
                     }
                 }
