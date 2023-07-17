@@ -293,11 +293,11 @@ namespace Barrway.Controllers
             }
         }
 
-        public async Task<ActionResult> GetCompanyCalendarPackages(string CompanyCode, string CalendarCode)
+        public async Task<ActionResult> GetCompanyCalendarPackages(string CompanyCode)
         {
             try
             {
-                var packageData = await masterService.GetCompanyCalendarPackages(CompanyCode, CalendarCode);
+                var packageData = await masterService.GetCompanyCalendarPackages(CompanyCode);
                 
                 return Json(new { packageData }, JsonRequestBehavior.AllowGet);
             }

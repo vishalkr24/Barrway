@@ -5,27 +5,50 @@
 
 function setCompanyPackageDetails() {
     let CompanyCode = $("#txtCurrentCompanyCode").val();
-    let CalendarCode = $("#txtCurrentCalendarCode").val();
-    var data = getCompanyCalendarPackages(CompanyCode, CalendarCode);
+    
+    var data = getCompanyCalendarPackages(CompanyCode);
     console.log(data);
 
-    var calendarDetails = data.packageData.Data[0][0];
+    var calendarDetails = data.packageData.Data[0];
     var packageDetails = data.packageData.Data[1];
 
-    $("#lblCalendarName").text(calendarDetails.CALENDAR_NAME);
-    $("#lblCalendarLocation").text(calendarDetails.customTitle.split(',')[0])
-    $("#lblSubCategory").text(calendarDetails.CALENDAR_SUB_CATEGORY_NAME);
-    $("#lblServiceName").text(calendarDetails.customTitle.split(',')[1]);
-    $("#packages-area").empty();
-    for (var i = 0; i < packageDetails.length; i++) {
-        $("#packages-area").append(`<div class="bpgd">
-                                        <h4>${packageDetails[i].PACKAGE_NAME}</h4>
-                                        <h4>HK$${packageDetails[i].PACKAGE_PRICE} = B$${packageDetails[i].PACKAGE_COIN}</h4>
+    for (var i = 0; i < calendarDetails.length; i++) {
+        $("#calendars-area").append(`<div class="card-pakage">
+                    <div class="card-top-detail">
+                        <div class="media">
+                            <div class="media-left">
+                                <img src="${calendarDetails[i].CALENDAR_PHOTO_PATH.replace("~", "..")}" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:195px; max-height: 120px">
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading" id="lblCalendarName">${calendarDetails[i].CALENDAR_NAME}</h4>
+                                <p><span class="location" id="lblCalendarLocation"></span></p>
+                                <p>
+                                    <span id="lblSubCategory">${calendarDetails[i].CALENDAR_SUB_CATEGORY_NAME} </span>
+                                    </br>
+                                    <span id="lblServiceName">${calendarDetails[i].ActivityName}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-bottom" id="packages-area-${calendarDetails[i].CALENDAR_CODE}">
+
+                    </div>
+                </div>`);
+
+        for (var j = 0; j < packageDetails.length; j++) {
+            if (calendarDetails[i].CALENDAR_CODE == packageDetails[j].CALENDAR_CODE) {
+                $(`#packages-area-${calendarDetails[i].CALENDAR_CODE}`).append(`<div class="bpgd">
+                                        <h4>${packageDetails[j].PACKAGE_NAME}</h4>
+                                        <h4>HK$${packageDetails[j].PACKAGE_PRICE} = B$${packageDetails[j].PACKAGE_COIN}</h4>
                                         <p>Description:</p>
-                                        <p>${packageDetails[i].PACKAGE_DESCRIPTION}</p>
-                                        <p class="mt-10"><button onclick="buyPackage(${packageDetails[i].Id})">BUY</button></p>
+                                        <p style="min-height: 40px; max-height: 120px">${packageDetails[j].PACKAGE_DESCRIPTION}</p>
+                                        <p class="mt-10"><button onclick="buyPackage(${packageDetails[j].Id})">BUY</button></p>
                                     </div>`);
+            }
+            
+        }
     }
+        
 }
 
 function buyPackage(PackageId) {
