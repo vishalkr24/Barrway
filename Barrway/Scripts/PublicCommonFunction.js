@@ -16,14 +16,13 @@
     return data;
 }
 
-function getCompanyCalendarPackages(companyCode, calendarCode) {
+function getCompanyCalendarPackages(companyCode) {
     var data;
     $.ajax({
         url: "/Marketplace/GetCompanyCalendarPackages/",
         type: "GET",
         data: {
-            CompanyCode: companyCode,
-            CalendarCode: calendarCode
+            CompanyCode: companyCode
         },
         async: false,
         success: function (response) {
