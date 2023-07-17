@@ -7,14 +7,14 @@ $(document).ready(async function () {
 
     COMPANY_CODE = getQueryParamValue("CompanyCode");
     CALENDAR_CODE = getQueryParamValue("CalendarCode");
-
+    debugger;
 
     $('#calendar-selector').val(CALENDAR_CODE);
 
     var formdetail = await getFormDetails();
     formDetailsDataInfo = formdetail[0];
 
-
+    
 
     var formFields = [];
     var formData = JSON.parse(formDetailsDataInfo.fields);
