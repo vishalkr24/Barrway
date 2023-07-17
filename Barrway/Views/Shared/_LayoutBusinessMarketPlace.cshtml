@@ -39,7 +39,7 @@
     <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/media.css">
     <link href="~/assets/css/custom-styles.css" rel="stylesheet" />
     <link href="~/assets/css/media.css" rel="stylesheet" />
-        <link href="~/assets/css/style.css" rel="stylesheet" />
+    <link href="~/assets/css/style.css" rel="stylesheet" />
 </head>
 <body>
 
@@ -79,16 +79,48 @@
                                         <li id="nav-features"><a href="/BusinessMarketplace/Features">Features</a></li>
                                         <li id="nav-pricing"><a href="/BusinessMarketplace/Pricing">Pricing</a></li>
                                     </ul>
-                                    <ul class="nav navbar-nav navbar-right">
-                                        <li class="rl">
-                                            <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Register / Login</a>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="/Account/BusinessSignup">Register</a></li>
-                                                <li><a href="/Account/BusinessLogin">Login</a></li>
-                                            </ul>
-                                        </li>
 
-                                    </ul>
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        if (UserIdentity.Role == "BUSINESS_USER")
+                                        {
+                                            <ul class="nav navbar-nav navbar-right">
+                                                <li class="rl">
+                                                    <a href="/BusinessAdmin/Dashboard">Account</a>
+                                                </li>
+
+                                            </ul>
+                                        }
+                                        else
+                                        {
+                                            <ul class="nav navbar-nav navbar-right">
+                                                <li class="rl">
+                                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Register / Login</a>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a href="/Account/BusinessSignup">Register</a></li>
+                                                        <li><a href="/Account/BusinessLogin">Login</a></li>
+                                                    </ul>
+                                                </li>
+
+                                            </ul>
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        <ul class="nav navbar-nav navbar-right">
+                                            <li class="rl">
+                                                <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Register / Login</a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/Account/BusinessSignup">Register</a></li>
+                                                    <li><a href="/Account/BusinessLogin">Login</a></li>
+                                                </ul>
+                                            </li>
+
+                                        </ul>
+                                    }
+
+
                                 </div>
                             </div>
                         </nav>
