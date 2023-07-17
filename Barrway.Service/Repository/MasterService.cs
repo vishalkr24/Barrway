@@ -1316,7 +1316,7 @@ DECLARE @retval nvarchar(max);
 	                                from CALENDAR_FORM_1935 f  
 	                                join BUSINESS_CALENDAR_MASTER_1925 bcm on bcm.CALENDAR_CODE = f.CALENDAR_CODE
 	                                join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = bcm.CALENDAR_SUB_CATEGORY_ID
-	                                where   f.formid=2305 and f.CALENDAR_CODE in ({calendarCodesResult[0]["CalendarCodes"].ToString()})
+	                                where   f.formid=2305 and f.CALENDAR_CODE {(!string.IsNullOrEmpty(calendarCodesResult[0]["CalendarCodes"].ToString()) ? " in (" + calendarCodesResult[0]["CalendarCodes"].ToString() + ")" : "= ''")}
                                 ),
                                 cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
                                 select* into #temptable from cte2  where len(customtitle)>0;    declare @counter int= 0, @c int= 1;   
