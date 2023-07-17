@@ -1329,7 +1329,7 @@ DECLARE @retval nvarchar(max);
 								cf.CALENDAR_NAME,
 								cf.CALENDAR_CODE, 
 								cf.CALENDAR_PHOTO_PATH,
-								STUFF((SELECT ',' + R.ACTIVITY_NAME FROM SERVICE_MASTER_1933 AS R WHERE Id in (SELECT CAST(Item AS INTEGER) as Ids
+								STUFF((SELECT ', ' + R.ACTIVITY_NAME FROM SERVICE_MASTER_1933 AS R WHERE Id in (SELECT CAST(Item AS INTEGER) as Ids
                                         FROM dbo.SplitString(
 										
 										(STUFF((SELECT distinct ','+ f.activities from CALENDAR_FORM_1935 f
