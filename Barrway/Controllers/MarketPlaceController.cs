@@ -307,10 +307,5 @@ namespace Barrway.Controllers
             }
         }
 
-        
-
-
-
-
     }
 }
