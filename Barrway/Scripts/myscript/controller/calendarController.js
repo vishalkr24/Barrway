@@ -17047,7 +17047,7 @@
                             debitValue += parseInt(data[i].DEBIT_COIN)
                         }
 
-                        return value + `<span style='margin-left:10px;'>(${count} items)</span>` + "<span style='float:right; margin-right:10px;'>Balance B$" + (creditValue - debitValue).toFixed(2) + "</span>";
+                        return value + `<span style='margin-left:10px;'>(${count} transactions)</span>` + "<span style='margin-left:24px;'>Balance B$" + (creditValue - debitValue).toFixed(2) + "</span>";
                     },
                     footerElement: "<div style='text-align:left' id='no-of-forms'></div>",
                     dataLoaded: function (data) {
