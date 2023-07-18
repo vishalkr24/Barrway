@@ -17079,22 +17079,6 @@
                     },
                     ajaxResponse: function (url, params, response) {
                         if (response.data) {
-
-                            var tempArr = [];
-
-                            tempArr.push({
-                                field: "CALENDAR_NAME",
-                                title: "Calendar Name",
-                                selected: (groupBy == "CALENDAR_NAME") ? true : false
-                            })
-
-                            tempArr.push({
-                                field: "COMPANY_NAME_ENGLISH",
-                                title: "Company Name",
-                                selected: (groupBy == "COMPANY_NAME_ENGLISH") ? true : false
-                            })
-
-                            $scope.filterFieldsList = tempArr;
                             return response;
                         }
                         else {
@@ -17111,6 +17095,22 @@
         };
 
         $scope.CalendarMasterList('COMPANY_NAME_ENGLISH');
+
+        var tempArr = [];
+
+        tempArr.push({
+            field: "CALENDAR_NAME",
+            title: "Calendar Name",
+            selected: false
+        })
+
+        tempArr.push({
+            field: "COMPANY_NAME_ENGLISH",
+            title: "Company Name",
+            selected: true 
+        })
+
+        $scope.filterFieldsList = tempArr;
 
         $(document).on("change", "#grouping-field", function () {
             $scope.CalendarMasterList($(this).val());
