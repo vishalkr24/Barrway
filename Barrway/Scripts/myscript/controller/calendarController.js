@@ -14003,7 +14003,7 @@
 
         }
         $scope.getFormDetails = function () {
-            
+
             var param = {};
             param.action = 4;
             param.formId = $scope.id;
@@ -14085,7 +14085,7 @@
                             }
                             $scope.isAllowOwnUser = false;
                             $scope.isAllowOtherUser = false;
-                            
+
                             if (!DataService.isEmpty($scope.formDetailsDataInfo.recordAccessSecurity)) {
                                 if (!Array.isArray($scope.formDetailsDataInfo.recordAccessSecurity) && DataService.isEmpty($scope.formDetailsDataInfo.recordAccessSecurity.max_one_record_per_user))
                                     $scope.formDetailsDataInfo.recordAccessSecurity = JSON.parse($scope.formDetailsDataInfo.recordAccessSecurity);
@@ -14127,7 +14127,7 @@
 
                                 }
                                 var paramTemp = {};
-                                
+
                                 if ($scope.formDetailsDataInfo.IsFilterCriteria) {
                                     paramTemp.action = 9;
                                     var query = "";
@@ -16223,6 +16223,7 @@
             console.log(res.data.data.Data)
 
             for (var i = 0; i < res.data.data.Data.length; i++) {
+                res.data.data.Data[i].SlotCreated = moment(res.data.data.Data[i].SlotCreated).format("YYYY-MM-DD HH:mm");
                 res.data.data.Data[i].COMPANY_LOGO_PATH = res.data.data.Data[i].COMPANY_LOGO_PATH.replace('~', '..')
             }
 
@@ -16573,7 +16574,7 @@
                 { title: 'Client name', field: 'FIRST_NAME', headerFilter: "input" },
                 { title: 'Payment Id', field: 'ORDER_NO', headerFilter: "input" },
                 { title: 'Calendar', field: 'CALENDAR_NAME', headerFilter: "input" },
-                
+
                 {
                     title: 'Type', field: 'TRANSACTION_TYPE', headerFilter: "input", formatter: function (cell, formatter) {
                         return (cell.getData().TRANSACTION_TYPE == "Purchase") ? "Package" : "Session"
@@ -16964,7 +16965,8 @@
     FormGeneratorApp.controller('UserBCoinController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
         checkLogin();
 
-        $scope.CalendarMasterList = function () {
+        $scope.CalendarMasterList = function (groupBy) {
+
             var columns = [
                 {
                     title: 'Date', field: 'created_at', headerFilter: "input", formatter: function (cell, formatter) {
@@ -16977,9 +16979,9 @@
                     title: 'Coin', field: 'COIN', headerFilter: "input", formatter: function (cell, formatter) {
 
                         if (cell.getData().CREDIT_COIN == 0 || cell.getData().CREDIT_COIN == "0" || cell.getData().CREDIT_COIN == "") {
-                            return "(" + cell.getData().DEBIT_COIN + ")"
+                            return `<span style="color:#e2476c;">-${cell.getData().DEBIT_COIN}</span>`;
                         } else {
-                            return cell.getData().CREDIT_COIN
+                            return `<span style="color:green;">+${cell.getData().CREDIT_COIN}</span>`;
                         }
 
                     }
@@ -16994,7 +16996,7 @@
                         return cell.getValue();
                     },
                     height: "530px",
-                    layout: "fitDataFill",
+                    layout: "fitColumns",
                     responsiveLayout: false,
                     initialSort: [
                         { column: "created_at", dir: "desc" }
@@ -17007,6 +17009,7 @@
                         filter: false, //persist filter sorting
                         columns: false, //persist columns
                     },
+
                     persistenceWriterFunc: function (id, type, data) {
                         localStorage.setItem(id + "-" + type, JSON.stringify(data));
                     },
@@ -17030,6 +17033,22 @@
                         return data ? dataParse : false;
                     },
                     columns: columns,
+                    groupBy: groupBy,
+                    groupHeader: function (value, count, data, group) {
+                        //value - the value all members of this group share
+                        //count - the number of rows in this group
+                        //data - an array of all the row data objects in this group
+                        //group - the group component for the group
+                        debugger;
+                        var creditValue = 0;
+                        var debitValue = 0;
+                        for (var i = 0; i < data.length; i++) {
+                            creditValue += parseInt(data[i].CREDIT_COIN);
+                            debitValue += parseInt(data[i].DEBIT_COIN)
+                        }
+
+                        return value + `<span style='margin-left:10px;'>(${count} items)</span>` + "<span style='float:right; margin-right:10px;'>Balance B$" + (creditValue - debitValue).toFixed(2) + "</span>";
+                    },
                     footerElement: "<div style='text-align:left' id='no-of-forms'></div>",
                     dataLoaded: function (data) {
                         //data - all data loaded into the table                        
@@ -17060,22 +17079,42 @@
                     },
                     ajaxResponse: function (url, params, response) {
                         if (response.data) {
+
+                            var tempArr = [];
+
+                            tempArr.push({
+                                field: "CALENDAR_NAME",
+                                title: "Calendar Name",
+                                selected: (groupBy == "CALENDAR_NAME") ? true : false
+                            })
+
+                            tempArr.push({
+                                field: "COMPANY_NAME_ENGLISH",
+                                title: "Company Name",
+                                selected: (groupBy == "COMPANY_NAME_ENGLISH") ? true : false
+                            })
+
+                            $scope.filterFieldsList = tempArr;
                             return response;
                         }
                         else {
                             return response;
                         }
                     },
-                    paginationSize: 50,
+                    paginationSize: 500000,
 
                 };
                 var tabulator = initTabulator('form-records', options);
                 $('.form-builder-loader').hide();
-            }, 150);
+            }, 50);
 
         };
 
-        $scope.CalendarMasterList();
+        $scope.CalendarMasterList('COMPANY_NAME_ENGLISH');
+
+        $(document).on("change", "#grouping-field", function () {
+            $scope.CalendarMasterList($(this).val());
+        })
 
     })
 

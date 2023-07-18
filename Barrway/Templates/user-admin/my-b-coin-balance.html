@@ -151,25 +151,23 @@
                                                 </label>
                                                 <select id="grouping-field"
                                                         style="max-width: 150px;"
-                                                        class="form-control"
-                                                        ng-model="filterBy.groupByRecord"
-                                                        ng-change="onGroupByChange(filterBy)">
-                                                    <option></option>
-                                                    <option value="{{f.field}}"
+                                                        class="form-control">
+                                                    <option value="">No Grouping</option>
+                                                    <option selected={{f.selected}} value="{{f.field}}"
                                                             ng-repeat="f in filterFieldsList">
                                                         {{f.title}}
                                                     </option>
                                                 </select>
                                             </div>
 
-                                            <a ng-click="showAdvancedSearch()"
+                                            <!--<a ng-click="showAdvancedSearch()"
                                                class="btn btn-primary mt-3 mt-lg-0 ml-2"
                                                data-toggle="tooltip"
                                                title="Advanced search">
                                                 <span class="action-name">{{translation.Advanced_search}}</span>
                                                 <i class="fa"
                                                    ng-class="{'fa-chevron-down':!isShowAdvanceSearch,'fa-chevron-up':isShowAdvanceSearch}"></i>
-                                            </a>
+                                            </a>-->
                                         </form>
                                     </div>
                                     <div class="col-xl-8 text-lg-end text-md-start">

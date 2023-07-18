@@ -377,6 +377,50 @@ namespace Barrway.Service.Repository
                 try
                 {
                     var userResult = await authService.GetUser(userName, FormRole.PUBLIC_USER);
+
+                    // check for sufficient B$ Balance
+                    var balance = await GetUserCoinBalance(userName, eventModal.companyCode, eventModal.calendarCode);
+                    var service = await sqlFunction.ExecuteSqlQuery("select fees_1 from SERVICE_MASTER_1933 where Id = " + eventModal.activityId);
+
+                    bool IsServicePaid = false;
+                    int ServiceFees = 0;
+
+                    if (!string.IsNullOrEmpty(service[0]["fees_1"]?.ToString()))
+                    {
+                        if (Convert.ToInt32(service[0]["fees_1"]) > 0)
+                        {
+                            IsServicePaid = true;
+                            ServiceFees = Convert.ToInt32(service[0]["fees_1"]);
+                        }
+                        else
+                        {
+                            IsServicePaid = false;
+                            ServiceFees = 0;
+                        }
+                    }
+                    else
+                    {
+                        IsServicePaid = false;
+                        ServiceFees = 0;
+                    }
+
+                    if (IsServicePaid)
+                    {
+                        if (balance.Data > 0)
+                        {
+                            if (Convert.ToInt32(balance.Data) < Convert.ToInt32(service[0]["fees_1"]))
+                            {
+                                return new AddUpdateDelete() { Status = false, Message = "You don't have enough B$ Coin of this calendar to book this slot." };
+                            }
+                            
+                        }
+                        else
+                        {
+                            return new AddUpdateDelete() { Status = false, Message = "You don't have enough B$ Coin of this calendar to book this slot." };
+                        }
+                    }
+                    
+
                     if (userResult.Status)
                     {
                         var userData = userResult.Data as IDictionary<string, object>;
@@ -490,7 +534,7 @@ namespace Barrway.Service.Repository
                             transaction["ACTIVITY"] = eventModal.activityId;
                             transaction["STUDENT"] = StudentId;
                             transaction["REMARKS"] = "";
-                            transaction["FEES"] = "";
+                            transaction["transaction_fees"] = ServiceFees.ToString();
                             transaction["ATTENDANCE"] = "YES";
                             transaction["COMPANY_CODE"] = eventModal.companyCode;
                             transaction["CALENDAR_CODE"] = eventModal.calendarCode;
@@ -519,7 +563,27 @@ namespace Barrway.Service.Repository
                             var upcommingBookingResult = await UpCommingBookingAdd(upCommingBooking);
 
 
-                            return new AddUpdateDelete() { Status = true, Message = "Success" };
+                            string orderNoQuery = $@"select PAYMENT_ID from PAYMENT_HISTORY_MASTER_1956 where COMPANY_CODE = '{eventModal.companyCode.ToString()}' and CALENDAR_CODE = '{eventModal.calendarCode.ToString()}' and STATUS = 'complete'
+                                order by created_at desc";
+
+                            var orderNoResult = await sqlFunction.ExecuteSqlQuery(orderNoQuery);
+
+
+                            // add entry in ledger
+                            LedgerModel ledger = new LedgerModel()
+                            {
+                                CALENDAR_CODE = eventModal.calendarCode.ToString(),
+                                COMPANY_CODE = eventModal.companyCode.ToString(),
+                                DEBIT_COIN = Convert.ToDouble(ServiceFees),
+                                USER_ID = userName,
+                                CREDIT_COIN = 0,
+                                ORDER_NO = orderNoResult[0]["PAYMENT_ID"].ToString(),
+                                TRANSACTION_TYPE = "Booking"
+                            };
+
+                            var ledgerResult = await masterService.CreateLedgerEntry(ledger);
+
+                            return new AddUpdateDelete() { Status = true, Message = "Success", Data = formResult2.Id };
                         }
                         else
                         {
@@ -682,7 +746,7 @@ namespace Barrway.Service.Repository
                 string query = $@"SELECT distinct calendar.[COMPANY_CODE]
                                       ,calendar.[CALENDAR_CODE]
 	                                  ,calendar.[Id]
-                                      ,calendar.[created_at]
+                                      ,calendar.[created_at] 'SlotCreated'
                                       ,company.Id as 'CompanyId'
                                       ,calendarDetails.*
 	                                  ,company.COMPANY_NAME_ENGLISH
@@ -1045,7 +1109,7 @@ namespace Barrway.Service.Repository
             {
                 var balance = await GetUserCoinBalance(UserId, CompanyCode, CalendarCode);
                 var service = await sqlFunction.ExecuteSqlQuery("select fees_1 from SERVICE_MASTER_1933 where Id = " + ServiceId);
-                var company = await sqlFunction.ExecuteSqlQuery($@"select COMPANY_NAME_ENGLISH from BUSINESS_COMPANY_MASTER_1924 where COMPANY_CODE = '{CompanyCode}'");
+                var calendar = await sqlFunction.ExecuteSqlQuery($@"select CALENDAR_NAME from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE = '{CalendarCode}'");
 
                 bool IsServicePaid = false;
                 int ServiceFees = 0;
@@ -1085,7 +1149,7 @@ namespace Barrway.Service.Repository
                 }
 
 
-                return new AddUpdateDelete() { Status = true, Message = "B$" + ServiceFees.ToString() + " will be deducted from your " + company[0]["COMPANY_NAME_ENGLISH"].ToString() + " package.<br />(Balance after purchase B$" + (Convert.ToInt32(balance.Data) - ServiceFees).ToString() + ")" };
+                return new AddUpdateDelete() { Status = true, Message = "B$" + ServiceFees.ToString() + " will be deducted from your " + calendar[0]["CALENDAR_NAME"].ToString() + " Calendar package.<br />(Balance after purchase B$" + (Convert.ToInt32(balance.Data) - ServiceFees).ToString() + ")" };
 
 
             }

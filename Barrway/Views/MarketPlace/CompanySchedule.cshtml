@@ -690,13 +690,14 @@
 
             $scope.enrollPublicUser = function () {
                 console.log($scope.selectEventDetails);
-                
+                showLoader();
                 $.ajax({
                     url: "/Account/CheckPublicUserLogin",
                     type: "POST",
                     success: function (response) {
-
+                        hideLoader();
                         if (!response.Status) {
+                            
                             swal({
                                 title: "Login Required",
                                 text: "Kindly login into your account and then you can enroll yourself into this calendar.",
@@ -748,6 +749,7 @@
 
                                         }).then(function (response) {
                                             if (response) {
+                                                showLoader();
                                                 var obj = {
                                                     USER_ID: "",
                                                     RESOURCE_NAME: eventData.customTitleSplit[0],
@@ -776,6 +778,7 @@
                                                     type: "POST",
                                                     data: obj,
                                                     success: function (data) {
+                                                        hideLoader();
                                                         if (!data.Status) {
                                                             if (data.Message == "ALREADY-ENROLLED") {
                                                                 swal({

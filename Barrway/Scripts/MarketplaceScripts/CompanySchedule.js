@@ -2532,8 +2532,8 @@ async function rendarPopupCalendar(assignDate) {
 }
 
 
-function bookingService(star,end,bgevent) {
-
+function bookingService(star, end, bgevent) {
+    
     var data = {
         "start": star,
         "end": end,
@@ -2551,7 +2551,7 @@ function bookingService(star,end,bgevent) {
     showLoader();
     postAsync(BASE_URL +"UserAdmin/BookingService", data).then(function (response) {
         hideLoader();
-
+        angular.element("#customEventDetailsModelPopUp").modal('hide');
         swal({
             icon: (response.Status) ? "success" : "warning",
             title: response.Message,
