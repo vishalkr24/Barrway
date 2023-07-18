@@ -221,6 +221,14 @@ namespace Barrway.Controllers
             try
             {
                 var result = await publicUserService.BookingServiceEvent(model, User.Identity.Name);
+
+                if (result.Status)
+                {
+                    // send email to user
+                    var resultEmail = await masterService.SendCalendarFile(UserIdentity.UserEmail, result.Data?.ToString());
+                }
+
+
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
