@@ -51,14 +51,14 @@
                     <div class="top-bar">
                         <span class="lang"><img src="~/assets/img/glo.png" /> English</span>
                         <span class="location"><img src="~/assets/img/lo.png" /> Hong Cong</span>
-                        <span class="pyb" style="cursor:pointer;" onclick="window.location.href = '@Url.Action("Index", "MarketPlace")'">Market Place</span>
+                        <span class="pyb" style="cursor:pointer;" onclick="window.location.href = '@Url.Action("Index", "MarketPlace")'">@Resource.Market_Place</span>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="logo-serch">
                         <div class="logo"><a href="/BusinessMarketplace/Index"><img src="~/assets/img/logo.png" style="height:42px; width:230px;" /></a></div>
                         <div class="search-bar">
-                            <span>| Business</span>
+                            <span>| @Resource.Business</span>
                         </div>
                     </div>
                 </div>
@@ -75,9 +75,9 @@
                                 </div>
                                 <div class="collapse navbar-collapse" id="myNavbar">
                                     <ul class="nav navbar-nav">
-                                        <li id="nav-home"><a href="/BusinessMarketplace/Index">Home</a></li>
-                                        <li id="nav-features"><a href="/BusinessMarketplace/Features">Features</a></li>
-                                        <li id="nav-pricing"><a href="/BusinessMarketplace/Pricing">Pricing</a></li>
+                                        <li id="nav-home"><a href="/BusinessMarketplace/Index">@Resource.Home</a></li>
+                                        <li id="nav-features"><a href="/BusinessMarketplace/Features">@Resource.Features</a></li>
+                                        <li id="nav-pricing"><a href="/BusinessMarketplace/Pricing">@Resource.Pricing</a></li>
                                     </ul>
 
                                     @if (User.Identity.IsAuthenticated)
@@ -86,7 +86,7 @@
                                         {
                                             <ul class="nav navbar-nav navbar-right">
                                                 <li class="rl">
-                                                    <a href="/BusinessAdmin/Dashboard">Account</a>
+                                                    <a href="/BusinessAdmin/Dashboard">@Resource.Account</a>
                                                 </li>
 
                                             </ul>
@@ -95,10 +95,10 @@
                                         {
                                             <ul class="nav navbar-nav navbar-right">
                                                 <li class="rl">
-                                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Register / Login</a>
+                                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"> @Resource.Register / @Resource.Login</a>
                                                     <ul class="dropdown-menu">
-                                                        <li><a href="/Account/BusinessSignup">Register</a></li>
-                                                        <li><a href="/Account/BusinessLogin">Login</a></li>
+                                                        <li><a href="/Account/BusinessSignup">@Resource.Register</a></li>
+                                                        <li><a href="/Account/BusinessLogin">@Resource.Login</a></li>
                                                     </ul>
                                                 </li>
 
@@ -110,10 +110,10 @@
                                     {
                                         <ul class="nav navbar-nav navbar-right">
                                             <li class="rl">
-                                                <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Register / Login</a>
+                                                <a class="dropdown-toggle" data-toggle="dropdown" href="#"> @Resource.Register / @Resource.Login</a>
                                                 <ul class="dropdown-menu">
-                                                    <li><a href="/Account/BusinessSignup">Register</a></li>
-                                                    <li><a href="/Account/BusinessLogin">Login</a></li>
+                                                    <li><a href="/Account/BusinessSignup">@Resource.Register</a></li>
+                                                    <li><a href="/Account/BusinessLogin">@Resource.Login</a></li>
                                                 </ul>
                                             </li>
 
@@ -138,14 +138,14 @@
             <div class="row">
                 <div class="col-md-9">
                     <div class="fooetr-link">
-                        <a href="#">Terms & condition</a>
-                        <a href="#">Privacy policy</a>
-                        <a href="#">Contact us</a>
+                        <a href="#">@Resource.Terms___condition</a>
+                        <a href="#">@Resource.Privacy_policy</a>
+                        <a href="#">@Resource.Contact_us</a>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="social-links">
-                        <a href="#">social media links</a>
+                        <a href="#">@Resource.social_media_links</a>
                     </div>
                 </div>
             </div>

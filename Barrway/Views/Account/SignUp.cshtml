@@ -11,7 +11,7 @@
 
 <html>
 <head>
-    <title>Barrway Register</title>
+    <title>Barrway @Resource.Register</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -413,41 +413,41 @@
                                 <div class="register">
                                     @if (!IsExternalSignUp)
                                     {
-                                        <h3>Register </h3>
+                                        <h3>@Resource.Register </h3>
 
                                         <form class="js-validate needs-validation" method="post" action="/Account/SignUp" novalidate>
 
                                             @Html.AntiForgeryToken()
 
                                             <div class="form-group">
-                                                <label for="username">User name</label>
+                                                <label for="username">@Resource.User_name</label>
                                                 @*<input type="text" class="form-control" id="USER_NAME" name="USER_NAME" required placeholder="Username">*@
-                                                @Html.TextBoxFor(model => model.USER_NAME, new { @class = "form-control", @placeholder = "Username", @required = "true" })
+                                                @Html.TextBoxFor(model => model.USER_NAME, new { @class = "form-control", @placeholder = Resource.User_name, @required = "true" })
                                                 @Html.ValidationMessageFor(model => model.USER_NAME, "", new { @class = "invalid-feedback-2" })
 
                                             </div>
                                             <div class="form-group">
-                                                <label for="email">Email</label>
+                                                <label for="email">@Resource.Email</label>
                                                 @*<input type="email" class="form-control" id="USER_EMAIL" name="USER_EMAIL" required placeholder="Email">*@
                                                 @Html.TextBoxFor(model => model.USER_EMAIL, new { @class = "form-control", @placeholder = "Email", @required = "true" })
                                                 @Html.ValidationMessageFor(model => model.USER_EMAIL, "", new { @class = "invalid-feedback-2" })
 
                                             </div>
                                             <div class="form-group">
-                                                <label for="pwd">Password</label>
+                                                <label for="pwd">@Resource.Password</label>
                                                 @*<input type="password" class="form-control" id="USER_PASSWORD" name="USER_PASSWORD" required placeholder="********">*@
                                                 @Html.PasswordFor(model => model.USER_PASSWORD, new { @class = "form-control", @placeholder = "********", @required = "true" })
                                                 @Html.ValidationMessageFor(model => model.USER_PASSWORD, "", new { @class = "invalid-feedback-2" })
                                             </div>
                                             <div class="form-group">
-                                                <label for="repwd">Retype Password</label>
+                                                <label for="repwd">@Resource.Retype_Password</label>
                                                 @*<input type="password" class="form-control" id="USER_CONFIRM_PASSWORD" name="USER_CONFIRM_PASSWORD" required placeholder="********">*@
                                                 @Html.PasswordFor(model => model.USER_CONFIRM_PASSWORD, new { @class = "form-control", @placeholder = "********", @required = "true" })
                                                 @Html.ValidationMessageFor(model => model.USER_CONFIRM_PASSWORD, "", new { @class = "invalid-feedback-2" })
                                             </div>
                                             <div class="checkbox">
                                                 <label class="container-label">
-                                                    Check here to accept the <a href="#">temrs & conditions.</a>
+                                                    @Resource.Check_here_to_accept_the <a href="#">@Resource.Terms___condition</a>
                                                     @Html.CheckBoxFor(model => model.TERMS_ACCEPTED)
                                                     @*<input type="checkbox" name="TERMS_ACCEPTED" id="TERMS_ACCEPTED">*@
                                                     <span class="checkmark"></span>
@@ -457,7 +457,7 @@
                                             </div>
 
                                             <div class="register-btn">
-                                                <button type="submit" class="btn btn-default">Register</button>
+                                                <button type="submit" class="btn btn-default">@Resource.Register</button>
                                             </div>
                                         </form>
                                         <div class="login_with">
@@ -472,13 +472,13 @@
                                         </div>
                                         <br /><br /><br />
                                         <div class="register-btn text-center">
-                                            Already have an account? <a href="/Account/Login">Login</a>
+                                            @Resource.Already_have_an_account? <a href="/Account/Login">@Resource.Login</a>
                                         </div>
 
                                     }
                                     else
                                     {
-                                        <h3>Complete your registration</h3>
+                                        <h3>@Resource.Complete_your_registration</h3>
 
                                         <div style="padding-bottom: 6px;">
                                             <label style="">Your email</label>
@@ -491,14 +491,14 @@
                                             @Html.AntiForgeryToken()
 
                                             <div class="form-group">
-                                                <label for="username">User name</label>
+                                                <label for="username">@Resource.User_name</label>
                                                 @*<input type="text" class="form-control" id="USER_NAME" name="USER_NAME" required placeholder="Username">*@
                                                 @Html.TextBoxFor(model => model.USER_NAME, new { @class = "form-control", @placeholder = "Username", @required = "true" })
                                                 @Html.ValidationMessageFor(model => model.USER_NAME, "", new { @class = "invalid-feedback-2" })
 
                                             </div>
                                             <div class="form-group" style="display:none;">
-                                                <label for="email">Email</label>
+                                                <label for="email">@Resource.Email</label>
                                                 @*<input type="email" class="form-control" id="USER_EMAIL" name="USER_EMAIL" required placeholder="Email">*@
                                                 @Html.TextBoxFor(model => model.USER_EMAIL, new { @class = "form-control", @readonly = true, @placeholder = "Email", @required = "true" })
                                                 @Html.ValidationMessageFor(model => model.USER_EMAIL, "", new { @class = "invalid-feedback-2" })
@@ -506,20 +506,20 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="pwd">Password</label>
+                                                <label for="pwd">@Resource.Password</label>
                                                 @*<input type="password" class="form-control" id="USER_PASSWORD" name="USER_PASSWORD" required placeholder="********">*@
                                                 @Html.PasswordFor(model => model.USER_PASSWORD, new { @class = "form-control", @placeholder = "********", @required = "true" })
                                                 @Html.ValidationMessageFor(model => model.USER_PASSWORD, "", new { @class = "invalid-feedback-2" })
                                             </div>
                                             <div class="form-group">
-                                                <label for="repwd">Retype Password</label>
+                                                <label for="repwd">@Resource.Retype_Password</label>
                                                 @*<input type="password" class="form-control" id="USER_CONFIRM_PASSWORD" name="USER_CONFIRM_PASSWORD" required placeholder="********">*@
                                                 @Html.PasswordFor(model => model.USER_CONFIRM_PASSWORD, new { @class = "form-control", @placeholder = "********", @required = "true" })
                                                 @Html.ValidationMessageFor(model => model.USER_CONFIRM_PASSWORD, "", new { @class = "invalid-feedback-2" })
                                             </div>
                                             <div class="checkbox">
                                                 <label class="container-label">
-                                                    Check here to accept the <a href="#">temrs & conditions.</a>
+                                                    @Resource.Check_here_to_accept_the <a href="#">@Resource.Terms___condition</a>
                                                     @Html.CheckBoxFor(model => model.TERMS_ACCEPTED)
                                                     @*<input type="checkbox" name="TERMS_ACCEPTED" id="TERMS_ACCEPTED">*@
                                                     <span class="checkmark"></span>
@@ -529,7 +529,7 @@
                                             </div>
 
                                             <div class="register-btn">
-                                                <button type="submit" class="btn btn-default">Submit</button>
+                                                <button type="submit" class="btn btn-default">@Resource.Submit</button>
                                             </div>
                                             <div style="display:none;">
                                                 @Html.EditorFor(model => model.IS_EXTERNAL_SIGNUP, new { @class = "form-control", @readonly = true, @style = "visibility:hidden;", @placeholder = "Email", @required = "true" })
@@ -543,7 +543,7 @@
                                 </div>
                             </div>
                             <div class='left'>
-                                <div class='back'><h1>Find your service/ activity & book it in one stop</h1></div>
+                                <div class='back'><h1>@Resource.Find_your_service__activity___book_it_in_one_stop</h1></div>
                             </div>
 
                         </div>
@@ -563,11 +563,11 @@
         $(document).ready(function () {
             if ("@IsExternalSignUp" == "True") {
                 swal({
-                    title: "Congratulations!",
-                    text: "You have successfully authenticated, Finish the last step of your registration.",
+                    title: "@Resource.Congratulations!",
+                    text: "@Resource.You_have_successfully_authenticated__Finish_the_last_step_of_your_registration.",
                     icon: "success",
                     buttons: {
-                        confirm: "Okay"
+                        confirm: "@Resource.Okay"
                     }
                 });
             }

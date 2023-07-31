@@ -19,6 +19,7 @@ using FormGeneratorDTOs.DTOs;
 using Barrway.DTO.BusinessModels;
 using System.Web.Security;
 using Barrway.DTO.PublicModels;
+using Barrway.Security;
 
 namespace Barrway.Controllers
 {
@@ -68,6 +69,70 @@ namespace Barrway.Controllers
             }
             return View(new LoginViewModel { ReturnUrl = "" });
         }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<ActionResult> SuperAdminLogin()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (UserIdentity.Role == "SUPERADMIN_USER")
+                {
+                    return RedirectToAction("Index","SuperAdmin");
+                }
+                else
+                {
+                    Session.Clear();
+                    Session.RemoveAll();
+                    Session.Abandon();
+                    TempData.Clear();
+                    if (HttpContext != null)
+                    {
+                        HttpContext.Request.Cookies.Clear();
+                    }
+
+                    HttpContext.GetOwinContext().Authentication.SignOut();
+                }
+                
+            }
+            return View(new LoginViewModel { ReturnUrl = "" });
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SuperAdminLogin(LoginViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var loginresult = await authService.GetUser(model.USER_EMAIL, model.USER_PASSWORD, (int)FormRole.SUPERADMIN_USER, true);
+
+            if (loginresult.Status)
+            {
+                var user = loginresult.Data;
+                var claims = new ClaimsIdentity(new[] {
+                                                    new Claim(ClaimTypes.NameIdentifier,user["USER_ID"].ToString()),
+                                                    new Claim(ClaimTypes.Name,user["USER_ID"].ToString()),
+                                                    new Claim(ClaimTypes.Email, user["USER_EMAIL"].ToString()),
+                                                    new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
+                                                    new Claim(ClaimTypes.Sid, user["Id"].ToString())
+                                                    }, CookieAuthenticationDefaults.AuthenticationType);
+
+
+                HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = model.REMEMBER_ME }, claims);
+                return RedirectToAction("Index", "SuperAdmin");
+            }
+            else
+            {
+                ModelState.AddModelError("ERROR_MESSAGE", loginresult.Message);
+            }
+
+            return View(model);
+        }
+
 
         [AllowAnonymous]
         [HttpGet]
@@ -514,6 +579,22 @@ namespace Barrway.Controllers
 
             return View();
 
+        }
+
+        [HttpPost]
+        public ActionResult LogoutSuperAdmin()
+        {
+            Session.Clear();
+            Session.RemoveAll();
+            Session.Abandon();
+            TempData.Clear();
+            if (HttpContext != null)
+            {
+                HttpContext.Request.Cookies.Clear();
+            }
+
+            HttpContext.GetOwinContext().Authentication.SignOut();
+            return RedirectToAction("SuperAdminLogin", new LoginViewModel { ReturnUrl = "" });
         }
 
 

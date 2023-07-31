@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Payment History";
+    ViewBag.Title = Resource.Company_Payment_History;
     Layout = "~/Views/Shared/_BusinessAdminLayout.cshtml";
 }
 <link href="~/fg-assets/tabulator/css/tabulator_site.min.css" rel="stylesheet" />
@@ -13,14 +13,14 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="bredcrump">
-                    <span><a href="#" class="lbl-company-name">Company name</a></span> <span>/ <a href="#">Subscription</span></a> <span><a href="#">/ Company Payment History</a> </span>
+                    <span><a href="#" class="lbl-company-name">Company name</a></span> <span>/ <a href="#">@Resource.Subscription</span></a> <span><a href="#">/ @Resource.Company_Payment_History</a> </span>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="heading">
-                    <h2>Company Payment History</h2>
+                    <h2>@Resource.Company_Payment_History</h2>
                 </div>
             </div>
         </div>

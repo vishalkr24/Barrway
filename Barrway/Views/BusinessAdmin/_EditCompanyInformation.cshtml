@@ -5,20 +5,20 @@
 {
     <div style="text-align:right; width:100%;">
 
-        <button type="button" onclick="" class="btn back">Cancel</button>
-        <button type="submit" class="btn btn-default">Save</button>
+        <button type="button" onclick="" class="btn back">@Resource.Cancel</button>
+        <button type="submit" class="btn btn-default">@Resource.Save</button>
 
     </div>
     <br />
     <div class="row form-group">
         <div class="col-md-4 mt-5">
-            <label>Company Code</label>
+            <label>@Resource.Company_Code</label>
             @Html.TextBoxFor(model => model.COMPANY_CODE, new { @class = "form-control", @placeholder = "Company Code", @readonly = "true", @required = "true" })
             @Html.ValidationMessageFor(model => model.COMPANY_CODE, "", new { @class = "invalid-feedback-2" })
             @*<input class="form-control" type="text" />*@
         </div>
         <div class="col-md-4 mt-5">
-            <label>Company logo</label>
+            <label>@Resource.Company_Logo</label>
             <div class="custome-uploade">
                 
                 @*@Html.TextBoxFor(model => model.COMPANY_LOGO_NAME, new { @class = "f-input", @required = "true", @style = "width: 75%; border:none!important;" })*@
@@ -35,7 +35,7 @@
             
         </div>
         <div class="col-md-4 mt-5">
-            <label>Website banner</label>
+            <label>@Resource.Website_banner</label>
 
             <div class="custome-uploade">
                
@@ -57,13 +57,13 @@
 
     <div class="row form-group">
         <div class="col-md-6 mt-5">
-            <label>Company Name (English)</label>
+            <label>@Resource.Company_Name (English)</label>
             @Html.TextBoxFor(model => model.COMPANY_NAME_ENGLISH, new { @class = "form-control", @placeholder = "Company Name English", @required = "true" })
             @Html.ValidationMessageFor(model => model.COMPANY_NAME_ENGLISH, "", new { @class = "invalid-feedback-2" })
             
         </div>
         <div class="col-md-6 mt-5">
-            <label>Company Name (Chinese)</label>
+            <label>@Resource.Company_Name (Chinese)</label>
             @Html.TextBoxFor(model => model.COMPANY_NAME_CHINESE, new { @class = "form-control", @placeholder = "Company Name Chinese", @required = "true" })
             @Html.ValidationMessageFor(model => model.COMPANY_NAME_CHINESE, "", new { @class = "invalid-feedback-2" })
         </div>
@@ -71,13 +71,13 @@
 
     <div class="row form-group">
         <div class="col-md-6 mt-5">
-            <label>Company Category</label>
+            <label>@Resource.Company_category</label>
             @Html.DropDownListFor(model => model.COMPANY_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(CompanyCategory))), "Select Company Category", new { @class = "form-control", @required = "true" })
             @Html.ValidationMessageFor(model => model.COMPANY_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
             
         </div>
         <div class="col-md-6 mt-5">
-            <label>Company Sub-Category</label>
+            <label>@Resource.Company_sub_category</label>
             @Html.DropDownListFor(model => model.COMPANY_SUB_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(CompanyCategory))), "Select Company Sub Category", new { @class = "form-control", @required = "true" })
             @Html.ValidationMessageFor(model => model.COMPANY_SUB_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
             
@@ -86,7 +86,7 @@
 
     <div class="row form-group">
         <div class="col-md-12 mt-5">
-            <label>Address</label>
+            <label>@Resource.Address</label>
             @Html.TextBoxFor(model => model.COMPANY_ADDRESS, new { @class = "form-control", @placeholder = "Company Address" })
             @Html.ValidationMessageFor(model => model.COMPANY_ADDRESS, "", new { @class = "invalid-feedback-2" })
             
@@ -95,19 +95,19 @@
 
     <div class="row form-group">
         <div class="col-md-4 mt-5">
-            <label>Country</label>
+            <label>@Resource.Country</label>
             @Html.DropDownListFor(model => model.COUNTRY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select Country", @required = "true" })
             @Html.ValidationMessageFor(model => model.COUNTRY_ID, "", new { @class = "invalid-feedback-2" })
             
         </div>
         <div class="col-md-4 mt-5">
-            <label>City</label>
+            <label>@Resource.City</label>
             @Html.DropDownListFor(model => model.CITY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select City", @required = "true" })
             @Html.ValidationMessageFor(model => model.CITY_ID, "", new { @class = "invalid-feedback-2" })
             
         </div>
         <div class="col-md-4 mt-5">
-            <label>District</label>
+            <label>@Resource.District</label>
             @Html.DropDownListFor(model => model.DISTRICT_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select District", @required = "true" })
             @Html.ValidationMessageFor(model => model.DISTRICT_ID, "", new { @class = "invalid-feedback-2" })
             
@@ -116,13 +116,13 @@
 
     <div class="row form-group">
         <div class="col-md-6 mt-5">
-            <label>Phone</label>
+            <label>@Resource.Phone</label>
             @Html.TextBoxFor(model => model.COMPANY_PHONE, new { @class = "form-control", @placeholder = "Company Phone" })
             @Html.ValidationMessageFor(model => model.COMPANY_PHONE, "", new { @class = "invalid-feedback-2" })
             
         </div>
         <div class="col-md-6 mt-5">
-            <label>Email</label>
+            <label>@Resource.Email</label>
             @Html.TextBoxFor(model => model.COMPANY_EMAIL, new { @class = "form-control", @placeholder = "Company Email" })
             @Html.ValidationMessageFor(model => model.COMPANY_EMAIL, "", new { @class = "invalid-feedback-2" })
             
@@ -158,7 +158,7 @@
 
     <div class="row form-group">
         <div class="col-md-12 mt-5">
-            <label>Company Description (200 words)</label>
+            <label>@Resource.Company_description (200 @Resource.words)</label>
             @Html.TextAreaFor(model => model.COMPANY_DESCRIPTION, new { @class = "form-control", @placeholder = "write your company description in 200 words", @style = "resize:vertical; height:120px;" })
             @Html.ValidationMessageFor(model => model.COMPANY_DESCRIPTION, "", new { @class = "invalid-feedback-2" })
             
@@ -168,7 +168,7 @@
 
     <div class="row form-group">
         <div class="col-md-12 mt-5">
-            <label>Tag</label>
+            <label>@Resource.Tags</label>
             @Html.TextBoxFor(model => model.TAGS, new { @class = "form-control", @placeholder = "" })
             @Html.ValidationMessageFor(model => model.TAGS, "", new { @class = "invalid-feedback-2" })
             
@@ -179,10 +179,10 @@
     <div class="row form-group">
 
         <div class="col-md-5 mt-5">
-            <label>Searchable in Market Place? (This profile page will be visible by public if you choose “yes”)</label>
+            <label>@Resource.Searchable_in_Market_Place? (@Resource.This_profile_page_will_be_visible_by_public_if_you_choose_yes)</label>
             <div>
-                @Html.RadioButtonFor(model => model.IS_SEARCHABLE_IN_MARKETPLACE, "Y", new { @selected = true }) yes
-                @Html.RadioButtonFor(model => model.IS_SEARCHABLE_IN_MARKETPLACE, "N") No
+                @Html.RadioButtonFor(model => model.IS_SEARCHABLE_IN_MARKETPLACE, "Y", new { @selected = true }) @Resource.Yes
+                @Html.RadioButtonFor(model => model.IS_SEARCHABLE_IN_MARKETPLACE, "N") @Resource.No
             </div>
 
         </div>
@@ -195,7 +195,7 @@
 
         <div class="col-md-2 mt-5">
             <div style="height:24px"></div>
-            <button type="button" class="btn btn-default" onclick="bindPageUrl('@Model.COMPANY_CODE')">Public Website link</button>
+            <button type="button" class="btn btn-default" onclick="bindPageUrl('@Model.COMPANY_CODE')">@Resource.Public_website_link</button>
         </div>
         @Html.TextBoxFor(model => model.Id, new { @readonly = "true", @style = "visibility:hidden" })
         @Html.TextBoxFor(model => model.BUSINESS_ACCOUNT_ID, new { @readonly = "true", @style = "visibility:hidden" })

@@ -32,7 +32,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="error-div">
-                                Kindly complete the Step 1 - Setup your company profile <a href="/BusinessAdmin/SetupCompanyProfile" style="padding-left: 8px;">Click here to setup now</a>
+                                @Resource.Kindly_complete_the_Step_1___Setup_your_company_profile <a href="/BusinessAdmin/SetupCompanyProfile" style="padding-left: 8px;">@Resource.Click_here_to_setup_now</a>
                             </div>
                         </div>
                     </div>
@@ -55,8 +55,7 @@
             @if (ViewBag.IsPartial)
             {
                 <div class="col-md-12">
-                    <h1>Choose category for new calendar</h1>
-
+                    <h1>@Resource.Choose_category_for_new_calendar</h1>
                 </div>
                 <div class="col-md-12">
                     <br />
@@ -72,8 +71,8 @@
                                 <img src="../assets/img/one1.png">
                             </div>
                             <div class="rac-text">
-                                <h2>Class and workshop</h2>
-                                <p>eg. Yoga class, Piano class, Baking workshop</p>
+                                <h2>@Resource.Class_and_workshop</h2>
+                                <p>@Resource.eg__Yoga_class__Piano_class__Baking_workshop</p>
                             </div>
                         </div>
                     </div>
@@ -83,8 +82,8 @@
                                 <img src="../assets/img/two.png">
                             </div>
                             <div class="rac-text">
-                                <h2>Service appointment</h2>
-                                <p>eg. doctor, massage, hair cut, nail treatment</p>
+                                <h2>@Resource.Service_appointment</h2>
+                                <p>@Resource.eg__doctor__massage__hair_cut__nail_treatment</p>
                             </div>
                         </div>
                     </div>
@@ -94,8 +93,8 @@
                                 <img src="../assets/img/three.png">
                             </div>
                             <div class="rac-text">
-                                <h2>Room rental</h2>
-                                <p>eg. Party room, co-working space, dance studio</p>
+                                <h2>@Resource.Room_rental</h2>
+                                <p>@Resource.eg__Party_room__co_working_space__dance_studio</p>
                             </div>
                         </div>
                     </div>
@@ -105,7 +104,7 @@
                                 <img src="../assets/img/four.png">
                             </div>
                             <div class="rac-text">
-                                <h2>Private office room booking</h2>
+                                <h2>@Resource.Private_office_room_booking</h2>
                             </div>
                         </div>
                     </div>
@@ -115,8 +114,8 @@
                                 <img src="../assets/img/five.png">
                             </div>
                             <div class="rac-text">
-                                <h2>Event registration</h2>
-                                <p>eg. Volunteering event, Dinner event</p>
+                                <h2>@Resource.Event_registration</h2>
+                                <p>@Resource.eg__Volunteering_event__Dinner_event</p>
                             </div>
                         </div>
                     </div>
@@ -173,10 +172,10 @@
 
                     <ul class="nav nav-tabs align-items-center">
                         <li id="btn1" class="nav-item" onclick="renderPage('1')">
-                            <a class="nav-link active" href="#">Calendar Information</a>
+                            <a class="nav-link active" href="#">@Resource.Calendar_Information</a>
                         </li>
                         <li id="btn2" class="nav-item">
-                            <a class="nav-link" href="#">Calendar Settings</a>
+                            <a class="nav-link" href="#">@Resource.Calendar_Settings</a>
                         </li>
 
                     </ul>
@@ -201,7 +200,7 @@
                                         @Html.TextBoxFor(model => model.COMPANY_CODE, new { @style = "display:none" })
                                         @Html.TextBoxFor(model => model.CALENDAR_CODE, new { @style = "display:none" })
                                         <div class="form-group">
-                                            <label for="calendarname">Calendar name *</label>
+                                            <label for="calendarname">@Resource.Calendar_Name *</label>
 
                                             @Html.TextBoxFor(model => model.CALENDAR_NAME, new { @class = "form-control", @placeholder = "Calendar name", @required = "true" })
                                             @Html.ValidationMessageFor(model => model.CALENDAR_NAME, "", new { @class = "invalid-feedback-2" })
@@ -211,7 +210,7 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label for="country">Country *</label>
+                                                    <label for="country">@Resource.Country *</label>
 
                                                     @Html.DropDownListFor(model => model.COUNTRY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select Country", @required = "true" })
                                                     @Html.ValidationMessageFor(model => model.COUNTRY_ID, "", new { @class = "invalid-feedback-2" })
@@ -221,7 +220,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label for="city">City *</label>
+                                                    <label for="city">@Resource.City *</label>
 
                                                     @Html.DropDownListFor(model => model.CITY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select City", @required = "true" })
                                                     @Html.ValidationMessageFor(model => model.CITY_ID, "", new { @class = "invalid-feedback-2" })
@@ -231,7 +230,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="district">District *</label>
+                                            <label for="district">@Resource.District *</label>
 
                                             @Html.DropDownListFor(model => model.DISTRICT_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select District", @required = "true" })
                                             @Html.ValidationMessageFor(model => model.DISTRICT_ID, "", new { @class = "invalid-feedback-2" })
@@ -248,7 +247,7 @@
 
                                         </div>
                                         <div class="form-group">
-                                            <label for="sub">Calendar Sub-category *</label>
+                                            <label for="sub">@Resource.Calendar @Resource.Subcategory *</label>
 
                                             @Html.DropDownListFor(model => model.CALENDAR_SUB_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select Calendar Sub Category", @required = "true" })
                                             @Html.ValidationMessageFor(model => model.CALENDAR_SUB_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
@@ -256,7 +255,7 @@
 
                                         </div>
                                         <div class="form-group" id="duration-entry-field">
-                                            <label for="calendarname">Slot Duration in Mins*</label>
+                                            <label for="calendarname">@Resource.Slot_Duration_in_Mins*</label>
 
                                             @Html.TextBoxFor(model => model.SLOT_DURATION_IN_MINS, new { @type = "number", @class = "form-control", @placeholder = "eg.: 15" })
                                             @Html.ValidationMessageFor(model => model.SLOT_DURATION_IN_MINS, "", new { @class = "invalid-feedback-2" })
@@ -264,7 +263,7 @@
                                             @*<input type="text" class="form-control" id="calendarname" placeholder="" name="calendarname">*@
                                         </div>
                                         <div class="form-group">
-                                            <label for="TAGS">Tags</label>
+                                            <label for="TAGS">@Resource.Tags</label>
                                             <div class="tom-select-custom">
                                                 @Html.DropDownListFor(model => model.TAGS, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "js-select form-select", @multiple = "true", @autocomplete = "off" })
                                             </div>
@@ -273,7 +272,7 @@
 
                                         </div>
                                         <div class="form-group">
-                                            <p style="margin-bottom: 0px;"><label for="file">Calendar  photo</label></p>
+                                            <p style="margin-bottom: 0px;"><label for="file">@Resource.Calendar_photo</label></p>
                                             <div class="custome-uploade">
 
                                                 <label for="CALENDAR_PHOTO_PATH" id="CALENDAR_PHOTO_NAME" style="width:80%; max-width:300px; padding-left:16px;">This photo will be seen in market place</label>
@@ -288,16 +287,14 @@
                                             @Html.ValidationMessageFor(model => model.CALENDAR_PHOTO_NAME, "", new { @class = "invalid-feedback-2" })
 
                                         </div>
-                                        <button type="button" onclick="renderCategory()" class="back">Back</button>
+                                        <button type="button" onclick="renderCategory()" class="back">@Resource.Back</button>
                                         @if (ViewBag.IsPartial)
                                         {
-
-
-                                            <button type="submit" class="btn btn-default">Save</button>
+                                            <button type="submit" class="btn btn-default">@Resource.Save</button>
                                         }
                                         else
                                         {
-                                            <button type="button" class="btn btn-default" onclick="renderPage(2)">Next</button>
+                                            <button type="button" class="btn btn-default" onclick="renderPage(2)">@Resource.Next</button>
                                         }
 
 
@@ -320,7 +317,7 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label for="TAGS">Calendar display time</label>
+                                                    <label for="TAGS">@Resource.Calendar_display_time</label>
                                                     <div class="tom-select-custom">
                                                         <div class="row">
                                                             <div class="col-lg-6">
@@ -330,13 +327,13 @@
                                                                 @Html.TextBoxFor(model => model.CalendarControlSheet.DISPLAY_END_TIME, new { @class = "form-control", @type = "time", @placeholder = "End Time" })
                                                             </div>
                                                         </div>
-                                                                                                                 
+
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label for="TAGS">Privacy</label>
+                                                    <label for="TAGS">@Resource.Privacy</label>
                                                     <div class="tom-select-custom">
                                                         @Html.DropDownListFor(model => model.CalendarControlSheet.CALENDAR_USE_TYPE, new SelectList(Enum.GetValues(typeof(PublicPrivateOptions))), new { @class = "js-select form-select" })
                                                     </div>
@@ -345,15 +342,15 @@
                                             </div>
                                         </div>
 
-                                        
+
 
                                         <div class="row" style="border-bottom:1px solid lightgrey; padding-top: 16px;">
                                             <div class="col-md-2" style="padding-top:25px;">
-                                                <h3>Calendar </h3>
+                                                <h3>@Resource.Calendar </h3>
                                             </div>
                                             <div class="col-md-5">
                                                 <div class="form-group">
-                                                    <label for="TAGS">Form description</label>
+                                                    <label for="TAGS">@Resource.Form_description</label>
                                                     <div class="tom-select-custom">
                                                         @Html.TextBoxFor(model => model.CalendarControlSheet.CALENDAR_FORM_NAME, new { @class = "form-control", @placeholder = "calendar" })
                                                     </div>
@@ -361,7 +358,7 @@
                                             </div>
                                             <div class="col-md-5">
                                                 <div class="form-group">
-                                                    <label for="TAGS">Format</label>
+                                                    <label for="TAGS">@Resource.Format</label>
                                                     <div class="tom-select-custom">
                                                         @Html.DropDownListFor(model => model.CalendarControlSheet.CALENDAR_FORM_CATEGORY, new SelectList(Enum.GetValues(typeof(CalendarFormatOptions))), new { @class = "js-select form-select" })
                                                     </div>
@@ -373,11 +370,11 @@
                                         <div class="advanced-option">
                                             <div class="row" style="border-bottom:1px solid lightgrey; padding-top: 16px;">
                                                 <div class="col-md-2" style="padding-top:25px;">
-                                                    <h3>Resources </h3>
+                                                    <h3>@Resource.Resources </h3>
                                                 </div>
                                                 <div class="col-md-5">
                                                     <div class="form-group">
-                                                        <label for="TAGS">Form name</label>
+                                                        <label for="TAGS">@Resource.Form_name</label>
                                                         <div class="tom-select-custom">
                                                             @Html.TextBoxFor(model => model.CalendarControlSheet.RESOURCE_FORM_NAME, new { @class = "form-control", @placeholder = "calendar" })
                                                         </div>
@@ -385,7 +382,7 @@
                                                 </div>
                                                 <div class="col-md-5">
                                                     <div class="form-group">
-                                                        <label for="TAGS">Format</label>
+                                                        <label for="TAGS">@Resource.Format</label>
                                                         <div class="tom-select-custom">
                                                             @Html.DropDownListFor(model => model.CalendarControlSheet.RESOURCE_FORM_CATEGORY, new SelectList(Enum.GetValues(typeof(CalendarFormatOptions))), new { @class = "js-select form-select" })
                                                         </div>
@@ -396,11 +393,11 @@
 
                                             <div class="row" style="border-bottom:1px solid lightgrey; padding-top: 16px;">
                                                 <div class="col-md-2" style="padding-top:25px;">
-                                                    <h3>Activities </h3>
+                                                    <h3>@Resource.Activities </h3>
                                                 </div>
                                                 <div class="col-md-5">
                                                     <div class="form-group">
-                                                        <label for="TAGS">Form name</label>
+                                                        <label for="TAGS">@Resource.Form_name</label>
                                                         <div class="tom-select-custom">
                                                             @Html.TextBoxFor(model => model.CalendarControlSheet.ACTIVITY_FORM_NAME, new { @class = "form-control", @placeholder = "calendar" })
                                                         </div>
@@ -408,7 +405,7 @@
                                                 </div>
                                                 <div class="col-md-5">
                                                     <div class="form-group">
-                                                        <label for="TAGS">Format</label>
+                                                        <label for="TAGS">@Resource.Format</label>
                                                         <div class="tom-select-custom">
                                                             @Html.DropDownListFor(model => model.CalendarControlSheet.ACTIVITY_FORM_CATEGORY, new SelectList(Enum.GetValues(typeof(CalendarFormatOptions))), new { @class = "js-select form-select" })
                                                         </div>
@@ -421,11 +418,11 @@
 
                                         <div class="row" style="border-bottom:1px solid lightgrey; padding-top: 16px;">
                                             <div class="col-md-2" style="padding-top:25px;">
-                                                <h3>Location </h3>
+                                                <h3>@Resource.Location </h3>
                                             </div>
                                             <div class="col-md-5">
                                                 <div class="form-group">
-                                                    <label for="TAGS">Form name</label>
+                                                    <label for="TAGS">@Resource.Form_name</label>
                                                     <div class="tom-select-custom">
                                                         @Html.TextBoxFor(model => model.CalendarControlSheet.LOCATION_FORM_NAME, new { @class = "form-control", @placeholder = "calendar" })
                                                     </div>
@@ -433,7 +430,7 @@
                                             </div>
                                             <div class="col-md-5">
                                                 <div class="form-group">
-                                                    <label for="TAGS">Format</label>
+                                                    <label for="TAGS">@Resource.Format</label>
                                                     <div class="tom-select-custom">
                                                         @Html.DropDownListFor(model => model.CalendarControlSheet.LOCATION_FORM_CATEGORY, new SelectList(Enum.GetValues(typeof(CalendarFormatOptions))), new { @class = "js-select form-select" })
                                                     </div>
@@ -444,11 +441,11 @@
 
                                         <div class="row" style="border-bottom:1px solid lightgrey; padding-top: 16px;">
                                             <div class="col-md-2" style="padding-top:25px;">
-                                                <h3>Registration </h3>
+                                                <h3>@Resource.Registration </h3>
                                             </div>
                                             <div class="col-md-5">
                                                 <div class="form-group">
-                                                    <label for="TAGS">Form name</label>
+                                                    <label for="TAGS">@Resource.Form_name</label>
                                                     <div class="tom-select-custom">
                                                         @Html.TextBoxFor(model => model.CalendarControlSheet.REGISTRATION_FORM_NAME, new { @class = "form-control", @placeholder = "calendar" })
                                                     </div>
@@ -456,7 +453,7 @@
                                             </div>
                                             <div class="col-md-5">
                                                 <div class="form-group">
-                                                    <label for="TAGS">Format</label>
+                                                    <label for="TAGS">@Resource.Format</label>
                                                     <div class="tom-select-custom">
                                                         @Html.DropDownListFor(model => model.CalendarControlSheet.REGISTRATION_FORM_CATEGORY, new SelectList(Enum.GetValues(typeof(CalendarFormatOptions))), new { @class = "js-select form-select" })
                                                     </div>
@@ -467,11 +464,11 @@
 
                                         <div class="row" style="border-bottom:1px solid lightgrey; padding-top: 16px;">
                                             <div class="col-md-2" style="padding-top:25px;">
-                                                <h3>Participant </h3>
+                                                <h3>@Resource.Participant </h3>
                                             </div>
                                             <div class="col-md-5">
                                                 <div class="form-group">
-                                                    <label for="TAGS">Form name</label>
+                                                    <label for="TAGS">@Resource.Form_name</label>
                                                     <div class="tom-select-custom">
                                                         @Html.TextBoxFor(model => model.CalendarControlSheet.PARTICIPANT_FORM_NAME, new { @class = "form-control", @placeholder = "calendar" })
                                                     </div>
@@ -479,7 +476,7 @@
                                             </div>
                                             <div class="col-md-5">
                                                 <div class="form-group">
-                                                    <label for="TAGS">Format</label>
+                                                    <label for="TAGS">@Resource.Format</label>
                                                     <div class="tom-select-custom">
                                                         @Html.DropDownListFor(model => model.CalendarControlSheet.PARTICIPANT_FORM_CATEGORY, new SelectList(Enum.GetValues(typeof(CalendarFormatOptions))), new { @class = "js-select form-select" })
                                                     </div>
@@ -490,11 +487,11 @@
 
                                         <div class="row" style=" padding-top: 16px;">
                                             <div class="col-md-2" style="padding-top:25px;">
-                                                <h3>Evaluation </h3>
+                                                <h3>@Resource.Evaluation </h3>
                                             </div>
                                             <div class="col-md-5">
                                                 <div class="form-group">
-                                                    <label for="TAGS">Form description</label>
+                                                    <label for="TAGS">@Resource.Form_description</label>
                                                     <div class="tom-select-custom">
                                                         @Html.TextBoxFor(model => model.CalendarControlSheet.EVALUATION_FORM_NAME, new { @class = "form-control", @placeholder = "calendar" })
                                                     </div>
@@ -502,7 +499,7 @@
                                             </div>
                                             <div class="col-md-5">
                                                 <div class="form-group">
-                                                    <label for="TAGS">Format</label>
+                                                    <label for="TAGS">@Resource.Format</label>
                                                     <div class="tom-select-custom">
                                                         @Html.DropDownListFor(model => model.CalendarControlSheet.EVALUATION_FORM_CATEGORY, new SelectList(Enum.GetValues(typeof(CalendarFormatOptions))), new { @class = "js-select form-select" })
                                                     </div>
@@ -511,14 +508,14 @@
                                             </div>
                                         </div>
 
-                                        <button type="button" onclick="renderPage(1)" class="back">Back</button>
+                                        <button type="button" onclick="renderPage(1)" class="back">@Resource.Back</button>
                                         @if (ViewBag.IsPartial)
                                         {
 
                                         }
                                         else
                                         {
-                                            <button type="submit" class="btn btn-default">Save &amp; Exit</button>
+                                            <button type="submit" class="btn btn-default">@Resource.Save &amp; @Resource.Exit</button>
                                         }
 
                                     </div>

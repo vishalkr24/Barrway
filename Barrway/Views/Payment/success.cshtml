@@ -8,7 +8,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Payment Successfull</title>
+    <title>@Resource.Payment_Successfull</title>
     <link rel="stylesheet" href="/assets/css/vendor.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/style.css">
@@ -25,10 +25,10 @@
         $(document).ready(function () {
             swal({
                 icon: "success",
-                title: "Payment Successfull !",
-                text: "Your payment was successfull! This is your Payment Id :- " + $("#read-payment-id").val() + "",
+                title: "@Resource.Payment_Successfull !",
+                text: "@Resource.Your_payment_was_successfull__This_is_your_Payment_Id :- " + $("#read-payment-id").val() + "",
                 buttons: {
-                    confirm: "Go to dashboard"
+                    confirm: "@Resource.Go_to_dashboard"
                 }
             }).then(function () {
                 window.location.href = "/UserAdmin#/userdashboard";

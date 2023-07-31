@@ -1,7 +1,7 @@
 ﻿@using Barrway.DTO.BusinessModels
 @model Barrway.DTO.BusinessModels.CompanyProfileViewModel
 @{
-    ViewBag.Title = "Setup your busines profile";
+    ViewBag.Title = Resource.Lets_set_up_your_company_profile;
     Layout = "~/Views/Shared/_BusinessAdminLayout.cshtml";
 }
 
@@ -13,33 +13,33 @@
                 <!-- Title -->
                 <div class="text-center">
                     <div class="profile-form">
-                        <h1>Let’s set up your company profile</h1>
+                        <h1>@Resource.Lets_set_up_your_company_profile</h1>
                         <div class="form-inner">
                             <form class="js-validate needs-validation" method="post" action="/BusinessAdmin/SaveCompanyProfileDetails?IsNew=@ViewBag.IsNew.ToString()" novalidate>
                                 @Html.TextBoxFor(model => model.Id, new { @class = "form-control", @placeholder = "Company name", @style="display:none", @required = "true" })
                                 <div class="form-group">
-                                    <label for="companyname">Company Name (English) *</label>
+                                    <label for="companyname">@Resource.Company_Name (English) *</label>
 
                                     @Html.TextBoxFor(model => model.COMPANY_NAME_ENGLISH, new { @class = "form-control", @placeholder = "Company name", @required = "true" })
                                     @Html.ValidationMessageFor(model => model.COMPANY_NAME_ENGLISH, "", new { @class = "invalid-feedback-2" })
 
                                 </div>
                                 <div class="form-group">
-                                    <label for="companynamechinese">Company Name (Chinese)</label>
+                                    <label for="companynamechinese">@Resource.Company_Name (Chinese)</label>
 
                                     @Html.TextBoxFor(model => model.COMPANY_NAME_CHINESE, new { @class = "form-control", @placeholder = "Company name Chinese", @required = "true" })
                                     @Html.ValidationMessageFor(model => model.COMPANY_NAME_CHINESE, "", new { @class = "invalid-feedback-2" })
 
                                 </div>
                                 <div class="form-group">
-                                    <label for="pwd">Company category *</label>
+                                    <label for="pwd">@Resource.Company_category *</label>
 
                                     @Html.DropDownListFor(model => model.COMPANY_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(CompanyCategory))), "Select Company Category", new { @class = "form-control", @required = "true" })
                                     @Html.ValidationMessageFor(model => model.COMPANY_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
 
                                 </div>
                                 <div class="form-group">
-                                    <label for="pwd">Company Sub-category *</label>
+                                    <label for="pwd">@Resource.Company @Resource.Subcategory *</label>
                                     @Html.DropDownListFor(model => model.COMPANY_SUB_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(CompanyCategory))), "Select Company Sub Category", new { @class = "form-control", @required = "true" })
                                     @Html.ValidationMessageFor(model => model.COMPANY_SUB_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
                                 </div>

@@ -1,0 +1,3411 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Accept" xml:space="preserve">
+    <value>繼續 |好</value>
+  </data>
+  <data name="Accident" xml:space="preserve">
+    <value>事故</value>
+  </data>
+  <data name="Account" xml:space="preserve">
+    <value>用戶</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>行動</value>
+  </data>
+  <data name="ActionAlreadyDone" xml:space="preserve">
+    <value>動作已完成！</value>
+  </data>
+  <data name="ActionForPDForum" xml:space="preserve">
+    <value>總監論壇</value>
+  </data>
+  <data name="ActionSent" xml:space="preserve">
+    <value>行動已發送</value>
+  </data>
+  <data name="ActiveTaskList" xml:space="preserve">
+    <value>活動任務列表</value>
+  </data>
+  <data name="ActualDate" xml:space="preserve">
+    <value>實際日期</value>
+  </data>
+  <data name="AddBQ" xml:space="preserve">
+    <value>新增工程量清單</value>
+  </data>
+  <data name="AddBusinessScope" xml:space="preserve">
+    <value>添加業務範圍</value>
+  </data>
+  <data name="AddErecommend" xml:space="preserve">
+    <value>新增推薦名單</value>
+  </data>
+  <data name="AddInformation" xml:space="preserve">
+    <value>添加信息</value>
+  </data>
+  <data name="AdditionalComments" xml:space="preserve">
+    <value>附加評論</value>
+  </data>
+  <data name="AdditionalCommentsadded" xml:space="preserve">
+    <value>附加資料已加</value>
+  </data>
+  <data name="AddMessage" xml:space="preserve">
+    <value>添加留言</value>
+  </data>
+  <data name="AddNewRow" xml:space="preserve">
+    <value>增加一行</value>
+  </data>
+  <data name="AddNewTenderer" xml:space="preserve">
+    <value>新增投標者</value>
+  </data>
+  <data name="AddPackages" xml:space="preserve">
+    <value>新增業務範圍</value>
+  </data>
+  <data name="AddProjectInfo" xml:space="preserve">
+    <value>添加項目資料</value>
+  </data>
+  <data name="Addtemplate" xml:space="preserve">
+    <value>儲存範本</value>
+  </data>
+  <data name="AddTenderer" xml:space="preserve">
+    <value>新增投標者</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="AfterContent" xml:space="preserve">
+    <value>變更後內容</value>
+  </data>
+  <data name="Age Range" xml:space="preserve">
+    <value>年齡範圍</value>
+  </data>
+  <data name="AleradyExistInFile" xml:space="preserve">
+    <value>此資料已存在於檔案紀錄中</value>
+  </data>
+  <data name="AlertLanguageText" xml:space="preserve">
+    <value>這將重新加載表單，所有未保存的更改將丟失!</value>
+  </data>
+  <data name="AlphanumaricOnly" xml:space="preserve">
+    <value>請輸入字母及數字值</value>
+  </data>
+  <data name="AlreadyApprovedRejected" xml:space="preserve">
+    <value>已經通過/拒絕</value>
+  </data>
+  <data name="AlreadyExistError" xml:space="preserve">
+    <value>此資料已存在於檔案紀錄中</value>
+  </data>
+  <data name="AlreadyExists" xml:space="preserve">
+    <value>紀錄已存在</value>
+  </data>
+  <data name="AlreadyIssued" xml:space="preserve">
+    <value>已經發布</value>
+  </data>
+  <data name="Altitude" xml:space="preserve">
+    <value>職員態度</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>金額</value>
+  </data>
+  <data name="Amountnotmatched" xml:space="preserve">
+    <value>金額不一致</value>
+  </data>
+  <data name="and" xml:space="preserve">
+    <value>和</value>
+  </data>
+  <data name="Application Messages" xml:space="preserve">
+    <value>申請信息</value>
+  </data>
+  <data name="Application Notifications" xml:space="preserve">
+    <value>申請通知</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>套用</value>
+  </data>
+  <data name="ApprovedApproval" xml:space="preserve">
+    <value>核準名冊審理</value>
+  </data>
+  <data name="approvedapprovalcompleted0" xml:space="preserve">
+    <value>核準審批未開始</value>
+  </data>
+  <data name="approvedapprovalcompleted1" xml:space="preserve">
+    <value>核凖審批完成</value>
+  </data>
+  <data name="approvedapprovalcompleted2" xml:space="preserve">
+    <value>核凖審批進行中</value>
+  </data>
+  <data name="APPROVEDLIST" xml:space="preserve">
+    <value>核準名冊</value>
+  </data>
+  <data name="ApprovedSuccesfully" xml:space="preserve">
+    <value>成功審理</value>
+  </data>
+  <data name="ApprovedTempListNeedApproval" xml:space="preserve">
+    <value>你有一份建議臨時名單需要審批</value>
+  </data>
+  <data name="Areyouconfirmtosubmit" xml:space="preserve">
+    <value>是否確定提交?</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>是否確認?</value>
+  </data>
+  <data name="Areyousuretodeletetheselectedrecords" xml:space="preserve">
+    <value>你是否決定要刪除此記錄?</value>
+  </data>
+  <data name="Areyousuretoissuetender" xml:space="preserve">
+    <value>你確定要發出招標嗎？</value>
+  </data>
+  <data name="AreYouSureToMakeRowUpdates" xml:space="preserve">
+    <value>是否確認?</value>
+  </data>
+  <data name="AreYouSureToSend" xml:space="preserve">
+    <value>是否確認要送出?</value>
+  </data>
+  <data name="AreYouSureYouWantToSubmitThisList" xml:space="preserve">
+    <value>您確定要提交此列表嗎？</value>
+  </data>
+  <data name="ArrangeEappraise" xml:space="preserve">
+    <value>安排項目評分</value>
+  </data>
+  <data name="ArrangeInspection" xml:space="preserve">
+    <value>安排考察</value>
+  </data>
+  <data name="ArrangeVisit" xml:space="preserve">
+    <value>考察報告</value>
+  </data>
+  <data name="Attachment" xml:space="preserve">
+    <value>附件</value>
+  </data>
+  <data name="Attemptsecond" xml:space="preserve">
+    <value>第二次嘗試</value>
+  </data>
+  <data name="Available" xml:space="preserve">
+    <value>有空</value>
+  </data>
+  <data name="Average" xml:space="preserve">
+    <value>平均</value>
+  </data>
+  <data name="AwardTenderer" xml:space="preserve">
+    <value>中標單位</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>返回</value>
+  </data>
+  <data name="Back to Login" xml:space="preserve">
+    <value>回到登入</value>
+  </data>
+  <data name="BackgroundColor" xml:space="preserve">
+    <value>背景顏色</value>
+  </data>
+  <data name="Backtobackcontractiscreatedsuccessfully" xml:space="preserve">
+    <value>Back to back contract is created successfully</value>
+  </data>
+  <data name="BackToMessages" xml:space="preserve">
+    <value>回到消息</value>
+  </data>
+  <data name="BackToPrevious" xml:space="preserve">
+    <value>返回上一頁</value>
+  </data>
+  <data name="Back_to_Home" xml:space="preserve">
+    <value>Back to Home</value>
+  </data>
+  <data name="Bad" xml:space="preserve">
+    <value>壞</value>
+  </data>
+  <data name="BasicInfomation" xml:space="preserve">
+    <value>基本資料</value>
+  </data>
+  <data name="BasicInformation" xml:space="preserve">
+    <value>基本信息</value>
+  </data>
+  <data name="BeforeContent" xml:space="preserve">
+    <value>變更前內容</value>
+  </data>
+  <data name="BestOffer" xml:space="preserve">
+    <value>最優惠價</value>
+  </data>
+  <data name="BestOfferApprovedVendor" xml:space="preserve">
+    <value>招投標最優惠價</value>
+  </data>
+  <data name="BestOfferIssueTender" xml:space="preserve">
+    <value>最優惠價出標</value>
+  </data>
+  <data name="BestOfferOpenTender" xml:space="preserve">
+    <value>最優惠價開標</value>
+  </data>
+  <data name="Bestofferrevised" xml:space="preserve">
+    <value>Best Offer revised</value>
+  </data>
+  <data name="BestOfferType" xml:space="preserve">
+    <value>最佳報價類型</value>
+  </data>
+  <data name="BestOfferValue" xml:space="preserve">
+    <value>最佳報價</value>
+  </data>
+  <data name="BLACKLIST" xml:space="preserve">
+    <value>黑名單</value>
+  </data>
+  <data name="BQ" xml:space="preserve">
+    <value>工程量清單</value>
+  </data>
+  <data name="BQAlreadyReturned" xml:space="preserve">
+    <value>BQ已經回標，不能更改</value>
+  </data>
+  <data name="BQbreakdown" xml:space="preserve">
+    <value>BQ breakdown</value>
+  </data>
+  <data name="BQDescription" xml:space="preserve">
+    <value>工程量清單描述</value>
+  </data>
+  <data name="BQDetailsSavedSuccesfullly" xml:space="preserve">
+    <value>工程量清單資料成功儲存</value>
+  </data>
+  <data name="BQDetailsSavedSuccesfully" xml:space="preserve">
+    <value>工程量清單資料已成功儲存</value>
+  </data>
+  <data name="BQFOTSummary" xml:space="preserve">
+    <value>BQ-FOT摘要</value>
+  </data>
+  <data name="BQHasBeenReleased" xml:space="preserve">
+    <value>BQ已經發布，你無法改變它</value>
+  </data>
+  <data name="BQhasbeenreleasedyoucannotDelete" xml:space="preserve">
+    <value>BQ已發布，您不能刪除</value>
+  </data>
+  <data name="Bqname" xml:space="preserve">
+    <value>工程量清單名稱</value>
+  </data>
+  <data name="BQNumber" xml:space="preserve">
+    <value>工程量清單編號</value>
+  </data>
+  <data name="BQRef" xml:space="preserve">
+    <value>工程量清單編號</value>
+  </data>
+  <data name="BQSent" xml:space="preserve">
+    <value>发送的BQ</value>
+  </data>
+  <data name="BQUpdatedSuccesfully" xml:space="preserve">
+    <value>工程量清單已成功更新</value>
+  </data>
+  <data name="BufferingCompleted" xml:space="preserve">
+    <value>緩衝已完成</value>
+  </data>
+  <data name="BusinessRegistrationNumber" xml:space="preserve">
+    <value>統一信用代碼或商業登記碼</value>
+  </data>
+  <data name="Calculate" xml:space="preserve">
+    <value>計算</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="cancelled" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>類別</value>
+  </data>
+  <data name="CEApprovedVendorCompletedVisitReportNeedsSubmitToTempList" xml:space="preserve">
+    <value>您有一份承包商名單需要提交臨時名單審批</value>
+  </data>
+  <data name="CEApprovedVendorNeedsSubmitToTempList" xml:space="preserve">
+    <value>您有一份承包商名單需要提交臨時名單審批</value>
+  </data>
+  <data name="CEObservationVendorNeedsSubmitToTempList" xml:space="preserve">
+    <value>您有一份承包商名單需要提交臨時名單審批</value>
+  </data>
+  <data name="CEObservedVendorCompletedVisitReportNeedsSubmitToTempList" xml:space="preserve">
+    <value>您有一份承包商名單需要提交臨時名單審批</value>
+  </data>
+  <data name="CERejectedVendorCompletedVisitReportNeedsSubmitToTempList" xml:space="preserve">
+    <value>您有一份承包商名單需要提交臨時名單審批</value>
+  </data>
+  <data name="CertType" xml:space="preserve">
+    <value>證書類別</value>
+  </data>
+  <data name="Change Password" xml:space="preserve">
+    <value>更改密碼</value>
+  </data>
+  <data name="Changeintotalamount" xml:space="preserve">
+    <value>(Change in total amount)</value>
+  </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>更改密碼</value>
+  </data>
+  <data name="Chinese_Name" xml:space="preserve">
+    <value>Chinese Name</value>
+  </data>
+  <data name="ChkAvg" xml:space="preserve">
+    <value>一般</value>
+  </data>
+  <data name="ChkBad" xml:space="preserve">
+    <value>欠佳</value>
+  </data>
+  <data name="ChkGood" xml:space="preserve">
+    <value>良好</value>
+  </data>
+  <data name="ChkNull" xml:space="preserve">
+    <value>空白</value>
+  </data>
+  <data name="ChoopedDocument" xml:space="preserve">
+    <value>蓋章的文件</value>
+  </data>
+  <data name="ChooseFiletoUpload" xml:space="preserve">
+    <value>選擇要上傳的文件</value>
+  </data>
+  <data name="ChooseTenderer" xml:space="preserve">
+    <value>選擇投標單位</value>
+  </data>
+  <data name="ClickToConfigure" xml:space="preserve">
+    <value>點擊設定</value>
+  </data>
+  <data name="ClickToView" xml:space="preserve">
+    <value>點擊閱覽</value>
+  </data>
+  <data name="Code" xml:space="preserve">
+    <value>代碼</value>
+  </data>
+  <data name="ColumnPixel" xml:space="preserve">
+    <value>列像素</value>
+  </data>
+  <data name="Columns" xml:space="preserve">
+    <value>欄</value>
+  </data>
+  <data name="Commentby" xml:space="preserve">
+    <value>評論者</value>
+  </data>
+  <data name="CommentByCEPTC" xml:space="preserve">
+    <value>評論 （只限特定人事）</value>
+  </data>
+  <data name="CommentedBy" xml:space="preserve">
+    <value>評論人</value>
+  </data>
+  <data name="Comments" xml:space="preserve">
+    <value>評語</value>
+  </data>
+  <data name="CommentSubject" xml:space="preserve">
+    <value>評論主題</value>
+  </data>
+  <data name="CompanyChop" xml:space="preserve">
+    <value>Company Chop</value>
+  </data>
+  <data name="Compare" xml:space="preserve">
+    <value>比較</value>
+  </data>
+  <data name="CompareSchedule" xml:space="preserve">
+    <value>比較規劃</value>
+  </data>
+  <data name="Complete" xml:space="preserve">
+    <value>完成</value>
+  </data>
+  <data name="CompleteTask" xml:space="preserve">
+    <value>待處理</value>
+  </data>
+  <data name="Compose" xml:space="preserve">
+    <value>撰寫</value>
+  </data>
+  <data name="ConfidentialBQ" xml:space="preserve">
+    <value>机密BQ！</value>
+  </data>
+  <data name="ConfidentialDocument" xml:space="preserve">
+    <value>机密文件！</value>
+  </data>
+  <data name="ConfigName" xml:space="preserve">
+    <value>配置名稱</value>
+  </data>
+  <data name="ConfigurationAppliedSuccessfully" xml:space="preserve">
+    <value>版面設定已應用</value>
+  </data>
+  <data name="ConfigurationDeletedsuccessfully" xml:space="preserve">
+    <value>版面設定已刪除</value>
+  </data>
+  <data name="ConfigurationFailedToApply" xml:space="preserve">
+    <value>版面設定未能儲存</value>
+  </data>
+  <data name="ConfigurationSavedSuccessfully" xml:space="preserve">
+    <value>版面設定已成功儲存</value>
+  </data>
+  <data name="ConfigurationUpdatedSuccessfully" xml:space="preserve">
+    <value>版面設定已成功更新</value>
+  </data>
+  <data name="Configurator" xml:space="preserve">
+    <value>版面設定</value>
+  </data>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>確認密碼</value>
+  </data>
+  <data name="ConfirmFillSheetRecords" xml:space="preserve">
+    <value>是否填入現有的記錄？</value>
+  </data>
+  <data name="ConfirmIssueTenderMsg" xml:space="preserve">
+    <value>Issue tender confirm.</value>
+  </data>
+  <data name="ConfirmNewPassword" xml:space="preserve">
+    <value>確認新密碼</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>確認密碼</value>
+  </data>
+  <data name="ConfirmwanttogetinfofromQixin" xml:space="preserve">
+    <value>確認拿取啟信寶資料？</value>
+  </data>
+  <data name="ConstructionLicenceCode" xml:space="preserve">
+    <value>建築牌照編號</value>
+  </data>
+  <data name="Contact Us" xml:space="preserve">
+    <value>聯繫我們</value>
+  </data>
+  <data name="ContractArchive" xml:space="preserve">
+    <value>Contract Archive</value>
+  </data>
+  <data name="ContractBond" xml:space="preserve">
+    <value>Contract Bond</value>
+  </data>
+  <data name="ContractBook" xml:space="preserve">
+    <value>Contract Book</value>
+  </data>
+  <data name="ContractBQ" xml:space="preserve">
+    <value>Contract BQ</value>
+  </data>
+  <data name="ContractFluctuation" xml:space="preserve">
+    <value>Contract Fluctuation</value>
+  </data>
+  <data name="ContractInformation" xml:space="preserve">
+    <value>Contract Information</value>
+  </data>
+  <data name="ContractInsurance" xml:space="preserve">
+    <value>Contract Insurance</value>
+  </data>
+  <data name="ContractMaster" xml:space="preserve">
+    <value>合同大師</value>
+  </data>
+  <data name="ContractMaterial" xml:space="preserve">
+    <value>Contract Material</value>
+  </data>
+  <data name="ContractName" xml:space="preserve">
+    <value>定標組合名稱</value>
+  </data>
+  <data name="ContractNumber" xml:space="preserve">
+    <value>Contract Number</value>
+  </data>
+  <data name="ContractParty" xml:space="preserve">
+    <value>Contract Party</value>
+  </data>
+  <data name="ContractPaymentTerm" xml:space="preserve">
+    <value>Contract Payment Term</value>
+  </data>
+  <data name="ContractPreparation" xml:space="preserve">
+    <value>Contract Preparation</value>
+  </data>
+  <data name="Copied" xml:space="preserve">
+    <value>已复制</value>
+  </data>
+  <data name="CopyFormula" xml:space="preserve">
+    <value>複製公式</value>
+  </data>
+  <data name="CopyToTenderer" xml:space="preserve">
+    <value>複製至投標單位</value>
+  </data>
+  <data name="count" xml:space="preserve">
+    <value>總數</value>
+  </data>
+  <data name="Create an Account" xml:space="preserve">
+    <value>創建一個帳戶</value>
+  </data>
+  <data name="CreateNewAccount" xml:space="preserve">
+    <value>建立新帳戶</value>
+  </data>
+  <data name="CreateNewPassword" xml:space="preserve">
+    <value>Create New Password</value>
+  </data>
+  <data name="CREATETEMPCELISTAFTERVR_APPROVED" xml:space="preserve">
+    <value>建議核準名冊</value>
+  </data>
+  <data name="CREATETEMPCELISTAFTERVR_OBSERVE" xml:space="preserve">
+    <value>建議觀察名單</value>
+  </data>
+  <data name="CREATETEMPCELISTAFTERVR_REJECT" xml:space="preserve">
+    <value>建議拒絕臨時名單</value>
+  </data>
+  <data name="CREATETEMPCELISTEREGISTERED_APPROVED" xml:space="preserve">
+    <value>建議核準名冊</value>
+  </data>
+  <data name="CREATETEMPCELISTEREGISTERED_OBSERVE" xml:space="preserve">
+    <value>建議觀察名單</value>
+  </data>
+  <data name="CREATETEMPCELISTEREGISTERED_REJECT" xml:space="preserve">
+    <value>建議拒絕臨時名單</value>
+  </data>
+  <data name="CREATETEMPCELIST_APPROVED" xml:space="preserve">
+    <value>建議臨時名單</value>
+  </data>
+  <data name="CREATETEMPCELIST_REJECT" xml:space="preserve">
+    <value>建議拒絕臨時名單</value>
+  </data>
+  <data name="CREATETEMPPTCLISTAFTERVR_APPROVED" xml:space="preserve">
+    <value>您有一份CE認可的供應商列表，其完成的訪問報告需要提交給認可列表</value>
+  </data>
+  <data name="CREATETEMPPTCLISTAFTERVR_OBSERVE" xml:space="preserve">
+    <value>您有一份觀察供應商的CE清單，其訪問報告已完成，需要提交給批准清單</value>
+  </data>
+  <data name="CREATETEMPPTCLISTAFTERVR_REJECT" xml:space="preserve">
+    <value>您有一份CE拒絕供應商列表，其訪問報告已完成，需要提交給批准列表</value>
+  </data>
+  <data name="CREATETEMPPTCLISTEREGISTERED_APPROVED" xml:space="preserve">
+    <value>您有一份已註冊的CE認可供應商列表，需要提交臨時列表</value>
+  </data>
+  <data name="CREATETEMPPTCLISTEREGISTERED_OBSERVE" xml:space="preserve">
+    <value>您有一個觀察供應商的註冊CE列表，需要提交臨時列表</value>
+  </data>
+  <data name="CREATETEMPPTCLISTEREGISTERED_REJECT" xml:space="preserve">
+    <value>您有一份已註冊的CE拒絕供應商列表，需要提交臨時列表</value>
+  </data>
+  <data name="CREATETEMPVMLIST" xml:space="preserve">
+    <value>您有一個需要審視的建議臨時名單</value>
+  </data>
+  <data name="CREATETEMPVMLISTAFTERVR" xml:space="preserve">
+    <value>您有一個已完成訪問報告的供應商列表，需要提交批准列表</value>
+  </data>
+  <data name="CREATETEMPVMLISTEREGISTERED" xml:space="preserve">
+    <value>您有一份需要提交臨時列表的已註冊供應商列表</value>
+  </data>
+  <data name="CreditCheck" xml:space="preserve">
+    <value>信用查核</value>
+  </data>
+  <data name="Creditcheckapproved" xml:space="preserve">
+    <value>信用查核已更新</value>
+  </data>
+  <data name="Creditchecknotapproved" xml:space="preserve">
+    <value>信用檢查未獲批准</value>
+  </data>
+  <data name="creditcheckstatus0" xml:space="preserve">
+    <value>信用查核未開始</value>
+  </data>
+  <data name="creditcheckstatus1" xml:space="preserve">
+    <value>信用查核完成</value>
+  </data>
+  <data name="creditcheckstatus2" xml:space="preserve">
+    <value>信用查核進行中</value>
+  </data>
+  <data name="CreditinvestigationWithinthreeyears" xml:space="preserve">
+    <value>信用調查：三年內，</value>
+  </data>
+  <data name="CropInfo" xml:space="preserve">
+    <value>在上載已蓋章文件後，才可提交e登記</value>
+  </data>
+  <data name="CRRejectedVendorNeedsSubmitToTempList" xml:space="preserve">
+    <value>建議拒絕臨時名單</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>貨幣</value>
+  </data>
+  <data name="CurrentProject" xml:space="preserve">
+    <value>現有項目</value>
+  </data>
+  <data name="CurrentSetting" xml:space="preserve">
+    <value>當前設置</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>儀表板</value>
+  </data>
+  <data name="Dashboard1" xml:space="preserve">
+    <value>儀表板</value>
+  </data>
+  <data name="Dashboard2" xml:space="preserve">
+    <value>儀表板</value>
+  </data>
+  <data name="DashboardRV" xml:space="preserve">
+    <value>儀表板[推薦承包商]</value>
+  </data>
+  <data name="datacleaningstatus0" xml:space="preserve">
+    <value>資料清理完成</value>
+  </data>
+  <data name="datacleaningstatus1" xml:space="preserve">
+    <value>資料清理進行中</value>
+  </data>
+  <data name="datacleaningstatus2" xml:space="preserve">
+    <value>資料清理進行中</value>
+  </data>
+  <data name="DataCleansing" xml:space="preserve">
+    <value>資料清理</value>
+  </data>
+  <data name="Datacleansingalreadycompleted" xml:space="preserve">
+    <value>資料清理已完成</value>
+  </data>
+  <data name="Datacleansingcompleted" xml:space="preserve">
+    <value>資料清理已完成</value>
+  </data>
+  <data name="DatanotsavedTryAgain" xml:space="preserve">
+    <value>資料仍未儲存，請再重試</value>
+  </data>
+  <data name="Datasavedsucessfully" xml:space="preserve">
+    <value>資料成功儲存</value>
+  </data>
+  <data name="DataUnavailable" xml:space="preserve">
+    <value>沒有資料</value>
+  </data>
+  <data name="DataUnchanged" xml:space="preserve">
+    <value>資料沒有改變</value>
+  </data>
+  <data name="DateDetails" xml:space="preserve">
+    <value>日期詳情</value>
+  </data>
+  <data name="Datepicker" xml:space="preserve">
+    <value>日期選擇</value>
+  </data>
+  <data name="DeadlineOver" xml:space="preserve">
+    <value>截止日期結束</value>
+  </data>
+  <data name="DefaultGrouping" xml:space="preserve">
+    <value>默認分組</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="DeleteallBQdrafts" xml:space="preserve">
+    <value>刪除所有投標人草稿</value>
+  </data>
+  <data name="Deletecontent" xml:space="preserve">
+    <value>刪除內容</value>
+  </data>
+  <data name="Deleted" xml:space="preserve">
+    <value>已刪除</value>
+  </data>
+  <data name="DeleteFailed" xml:space="preserve">
+    <value>未能刪除</value>
+  </data>
+  <data name="DeleteLastRow" xml:space="preserve">
+    <value>删除最後一行</value>
+  </data>
+  <data name="DeleteRecord" xml:space="preserve">
+    <value>刪除記錄</value>
+  </data>
+  <data name="DeleteSelected" xml:space="preserve">
+    <value>移除選定</value>
+  </data>
+  <data name="Deletethisversion" xml:space="preserve">
+    <value>刪除這個版本</value>
+  </data>
+  <data name="Difference" xml:space="preserve">
+    <value>資料差異</value>
+  </data>
+  <data name="DigitsOnly" xml:space="preserve">
+    <value>請輸入數字</value>
+  </data>
+  <data name="DisclaimerPrivacyPolicy" xml:space="preserve">
+    <value>免責聲明|隱私政策</value>
+  </data>
+  <data name="Discountableamount" xml:space="preserve">
+    <value>Discountable Amount</value>
+  </data>
+  <data name="Discountamount" xml:space="preserve">
+    <value>Discount Amount</value>
+  </data>
+  <data name="DisplayColumn" xml:space="preserve">
+    <value>顯示列</value>
+  </data>
+  <data name="District" xml:space="preserve">
+    <value>District</value>
+  </data>
+  <data name="DocumentName" xml:space="preserve">
+    <value>Document Name</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>下載</value>
+  </data>
+  <data name="DownloadChrome" xml:space="preserve">
+    <value>下載Chrome</value>
+  </data>
+  <data name="DownloadContent" xml:space="preserve">
+    <value>下載內容</value>
+  </data>
+  <data name="DownloadContentError" xml:space="preserve">
+    <value>沒有附件</value>
+  </data>
+  <data name="DownloadDocument" xml:space="preserve">
+    <value>下載文件</value>
+  </data>
+  <data name="DownloadLetterofAwardTemplate" xml:space="preserve">
+    <value>下載中標通知書範本</value>
+  </data>
+  <data name="DownloadNotificationofAwardtoSiteTemplate" xml:space="preserve">
+    <value>下載定標通知書予工地</value>
+  </data>
+  <data name="Downloads" xml:space="preserve">
+    <value>下載</value>
+  </data>
+  <data name="DownloadTemplate" xml:space="preserve">
+    <value>下載文檔</value>
+  </data>
+  <data name="DownloadThankYouLetterTemplate" xml:space="preserve">
+    <value>下載感謝信範本</value>
+  </data>
+  <data name="DoYouWantNewTenderAddendum" xml:space="preserve">
+    <value>是否要新增投標疑問澄清？</value>
+  </data>
+  <data name="DoYouWantToDelete" xml:space="preserve">
+    <value>是否確定刪除資料</value>
+  </data>
+  <data name="Doyouwanttoexit" xml:space="preserve">
+    <value>你是否想離開？</value>
+  </data>
+  <data name="DoYouWantToRefresh" xml:space="preserve">
+    <value>需要刷新頁面嗎?</value>
+  </data>
+  <data name="DoYouWantToSeeOpenTender" xml:space="preserve">
+    <value>是否進入開標頁面？</value>
+  </data>
+  <data name="DoYouWantToSendNotificationEmail" xml:space="preserve">
+    <value>您是否要發送通知郵件？</value>
+  </data>
+  <data name="doyouwanttoupdatecreditstatus" xml:space="preserve">
+    <value>你是否需要更新信用查核資料?</value>
+  </data>
+  <data name="Draft" xml:space="preserve">
+    <value>草稿</value>
+  </data>
+  <data name="DropdownValues" xml:space="preserve">
+    <value>下拉值</value>
+  </data>
+  <data name="DuplicateEntryFound" xml:space="preserve">
+    <value>找到重覆的紀錄</value>
+  </data>
+  <data name="DuplicateEntryFoundForTenderNoandProjectName" xml:space="preserve">
+    <value>找到重覆的標書編號及項目名稱</value>
+  </data>
+  <data name="DuplicateVendorInContractor" xml:space="preserve">
+    <value>此承包供應商已進行e登記!</value>
+  </data>
+  <data name="DuplicateVendorInErecommend" xml:space="preserve">
+    <value>此承包商已登記!</value>
+  </data>
+  <data name="duplicatevendorrecordineRecommend" xml:space="preserve">
+    <value>推薦單位的公司註冊地點及名稱不能重覆</value>
+  </data>
+  <data name="Eachmsg" xml:space="preserve">
+    <value>請填寫上述文件</value>
+  </data>
+  <data name="eAppraisalstaskcreatedsucessfully" xml:space="preserve">
+    <value>項目評分任務已成功設定</value>
+  </data>
+  <data name="EAppraisalTask" xml:space="preserve">
+    <value>承包商評分</value>
+  </data>
+  <data name="EappraisalTaskForSecretary" xml:space="preserve">
+    <value>承包商評分</value>
+  </data>
+  <data name="eAppraise" xml:space="preserve">
+    <value>承包商評分</value>
+  </data>
+  <data name="eApproval" xml:space="preserve">
+    <value>承包商名冊審批</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>編輯</value>
+  </data>
+  <data name="EditBq" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="EditView" xml:space="preserve">
+    <value>編輯或查看</value>
+  </data>
+  <data name="Element" xml:space="preserve">
+    <value>主项目</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>電子郵件</value>
+  </data>
+  <data name="Email Address" xml:space="preserve">
+    <value>電子郵件地址</value>
+  </data>
+  <data name="Email1" xml:space="preserve">
+    <value>電子郵件</value>
+  </data>
+  <data name="EmailBlank" xml:space="preserve">
+    <value>電子郵件字段不能為空</value>
+  </data>
+  <data name="EmailBlankError" xml:space="preserve">
+    <value>電子郵件字段不能為空</value>
+  </data>
+  <data name="EmailMessageTemplate" xml:space="preserve">
+    <value>電子郵件模板</value>
+  </data>
+  <data name="EmptyTabulatorTitle" xml:space="preserve">
+    <value>空白表格標題</value>
+  </data>
+  <data name="EmptyTenderReturn" xml:space="preserve">
+    <value>仍未回標</value>
+  </data>
+  <data name="English_Name" xml:space="preserve">
+    <value>English Name</value>
+  </data>
+  <data name="Enter Password" xml:space="preserve">
+    <value>輸入密碼</value>
+  </data>
+  <data name="EnterBidPrice" xml:space="preserve">
+    <value>輸入投標金額</value>
+  </data>
+  <data name="EnterBusinessLicenceCode" xml:space="preserve">
+    <value>輸入商業牌照編號</value>
+  </data>
+  <data name="EnterConfigName" xml:space="preserve">
+    <value>設定版面名稱</value>
+  </data>
+  <data name="EnterLegalauthorizedrepresentativeName" xml:space="preserve">
+    <value>輸入法人代表名稱</value>
+  </data>
+  <data name="EnterNewPassword" xml:space="preserve">
+    <value>Enter New Password</value>
+  </data>
+  <data name="EnterOldPassword" xml:space="preserve">
+    <value>Enter Old Password</value>
+  </data>
+  <data name="EnterPageSize" xml:space="preserve">
+    <value>輸入頁面長度</value>
+  </data>
+  <data name="EnterPassword" xml:space="preserve">
+    <value>輸入密碼</value>
+  </data>
+  <data name="EnterPositionName" xml:space="preserve">
+    <value>輸入職位名稱</value>
+  </data>
+  <data name="EnterSecurityfee" xml:space="preserve">
+    <value>輸入施工安全費</value>
+  </data>
+  <data name="EnterWarrantyPeriod" xml:space="preserve">
+    <value>輸入質量保證期</value>
+  </data>
+  <data name="EnterYourMessage" xml:space="preserve">
+    <value>輸入您的訊息</value>
+  </data>
+  <data name="EnteryourregisteredemailIDtoresetthepassword" xml:space="preserve">
+    <value>Enter your registered email ID to reset the password</value>
+  </data>
+  <data name="EntriesForFewVendorAlreadyThere" xml:space="preserve">
+    <value>找到重覆的投標者</value>
+  </data>
+  <data name="EOI" xml:space="preserve">
+    <value>投標單位意向</value>
+  </data>
+  <data name="EOILetter" xml:space="preserve">
+    <value>投標意向書</value>
+  </data>
+  <data name="EOINotSentyet" xml:space="preserve">
+    <value>未發出</value>
+  </data>
+  <data name="EOIrequestmailsentsucessfully" xml:space="preserve">
+    <value>電郵已發出</value>
+  </data>
+  <data name="EOIRequestSent" xml:space="preserve">
+    <value>招標邀請已發出</value>
+  </data>
+  <data name="EOISentAccepted" xml:space="preserve">
+    <value>已接受邀請</value>
+  </data>
+  <data name="EOISentButNotAcceptedYet" xml:space="preserve">
+    <value>已發出</value>
+  </data>
+  <data name="EOISentRejected" xml:space="preserve">
+    <value>EOI Sent &amp; Rejected</value>
+  </data>
+  <data name="equityList" xml:space="preserve">
+    <value>股权出质列表</value>
+  </data>
+  <data name="Eregister" xml:space="preserve">
+    <value>e登記</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>錯誤</value>
+  </data>
+  <data name="ErrorInRow" xml:space="preserve">
+    <value>行中出錯</value>
+  </data>
+  <data name="Erroroccuredrecordsrolledback" xml:space="preserve">
+    <value>出現錯誤</value>
+  </data>
+  <data name="Escaped" xml:space="preserve">
+    <value>離開</value>
+  </data>
+  <data name="Escapedduetoduplicacy" xml:space="preserve">
+    <value>未成功，資料重覆</value>
+  </data>
+  <data name="Estimateamt" xml:space="preserve">
+    <value>成本預算金額:</value>
+  </data>
+  <data name="EstimateBudget" xml:space="preserve">
+    <value>成本預算金額:</value>
+  </data>
+  <data name="Estimatorname" xml:space="preserve">
+    <value>估算人</value>
+  </data>
+  <data name="eUpdateFromDate" xml:space="preserve">
+    <value>e更新開始日期</value>
+  </data>
+  <data name="eUpdateToDate" xml:space="preserve">
+    <value>e更新完結日期</value>
+  </data>
+  <data name="EUR" xml:space="preserve">
+    <value>歐元</value>
+  </data>
+  <data name="ExcelFile" xml:space="preserve">
+    <value>電子檔案名稱</value>
+  </data>
+  <data name="ExcelFileName" xml:space="preserve">
+    <value>電子檔案名稱</value>
+  </data>
+  <data name="executesPersonAmount" xml:space="preserve">
+    <value>被执行人列表</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>離開</value>
+  </data>
+  <data name="EXPERIENCE IN TUTORING,TEACHING OR THERAPY (non-SEN students)" xml:space="preserve">
+    <value>輔導、教學或治療經驗（非特殊教育需要學生）</value>
+  </data>
+  <data name="EXPERIENCE IN TUTORING,TEACHING OR THERAPY (SEN students)" xml:space="preserve">
+    <value>有輔導、教學或治療經驗（SEN 學生）</value>
+  </data>
+  <data name="EXPLANATION OF THE QUALIFICATION" xml:space="preserve">
+    <value>資格說明</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>導出</value>
+  </data>
+  <data name="ExportToExcel" xml:space="preserve">
+    <value>導出到電子檔案</value>
+  </data>
+  <data name="Fail" xml:space="preserve">
+    <value>不合格</value>
+  </data>
+  <data name="Failed" xml:space="preserve">
+    <value>失敗</value>
+  </data>
+  <data name="FailedRecords" xml:space="preserve">
+    <value>記錄失敗</value>
+  </data>
+  <data name="False" xml:space="preserve">
+    <value>不是</value>
+  </data>
+  <data name="FAQs" xml:space="preserve">
+    <value>常見問題</value>
+  </data>
+  <data name="Female" xml:space="preserve">
+    <value>女性</value>
+  </data>
+  <data name="FieldName" xml:space="preserve">
+    <value>字段名稱</value>
+  </data>
+  <data name="Fields" xml:space="preserve">
+    <value>領域</value>
+  </data>
+  <data name="FileBrows" xml:space="preserve">
+    <value>選擇文件</value>
+  </data>
+  <data name="FileNotChoosen" xml:space="preserve">
+    <value>沒有選擇檔案</value>
+  </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>找不到有效文件</value>
+  </data>
+  <data name="FileProcessSuccess" xml:space="preserve">
+    <value>文件處理成功</value>
+  </data>
+  <data name="FileSizeLimitExceeded" xml:space="preserve">
+    <value>超出了文件大小的限制</value>
+  </data>
+  <data name="FileSizeTooLongErrorMsg" xml:space="preserve">
+    <value>上傳的文件大小超出限制</value>
+  </data>
+  <data name="FillDataForPackages" xml:space="preserve">
+    <value>請填寫業務範圍</value>
+  </data>
+  <data name="Filltitle" xml:space="preserve">
+    <value>輸入標題</value>
+  </data>
+  <data name="FilterColumn" xml:space="preserve">
+    <value>篩選資料</value>
+  </data>
+  <data name="Filters" xml:space="preserve">
+    <value>篩選</value>
+  </data>
+  <data name="FinishDataCleansing" xml:space="preserve">
+    <value>完成資料清理</value>
+  </data>
+  <data name="FinishedeAppraiseTab" xml:space="preserve">
+    <value>過去的項目評分</value>
+  </data>
+  <data name="First" xml:space="preserve">
+    <value>首</value>
+  </data>
+  <data name="First Name" xml:space="preserve">
+    <value>名</value>
+  </data>
+  <data name="foratleastonequestion" xml:space="preserve">
+    <value>foratleastonequestion</value>
+  </data>
+  <data name="ForegroundColor" xml:space="preserve">
+    <value>前景色</value>
+  </data>
+  <data name="Forgot Password" xml:space="preserve">
+    <value>忘記密碼</value>
+  </data>
+  <data name="ForgotPassword" xml:space="preserve">
+    <value>忘記密碼</value>
+  </data>
+  <data name="FormDataisnotsupported" xml:space="preserve">
+    <value>不支援表格資料</value>
+  </data>
+  <data name="Formoftender" xml:space="preserve">
+    <value>投標表格</value>
+  </data>
+  <data name="FormofTenderSetup" xml:space="preserve">
+    <value>投標表格設置</value>
+  </data>
+  <data name="Forum" xml:space="preserve">
+    <value>論壇</value>
+  </data>
+  <data name="FotDesc" xml:space="preserve">
+    <value>投標表格描述</value>
+  </data>
+  <data name="FotMsg" xml:space="preserve">
+    <value>請選擇工程量清單</value>
+  </data>
+  <data name="FotNo" xml:space="preserve">
+    <value>投標表格編號</value>
+  </data>
+  <data name="Fotnotfound" xml:space="preserve">
+    <value>找不到投標表格 !</value>
+  </data>
+  <data name="FotTenderName" xml:space="preserve">
+    <value>招投標包名稱</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="FrozenColumns" xml:space="preserve">
+    <value>冷凍柱</value>
+  </data>
+  <data name="GBP" xml:space="preserve">
+    <value>英磅</value>
+  </data>
+  <data name="Gender" xml:space="preserve">
+    <value>性別</value>
+  </data>
+  <data name="GenerateBQRefNumberandLeveldetailsSrNo" xml:space="preserve">
+    <value>生成數量清單編號及層級明細</value>
+  </data>
+  <data name="GenerateNewPassword" xml:space="preserve">
+    <value>Generate New Password </value>
+  </data>
+  <data name="GetTemp" xml:space="preserve">
+    <value>下載模板</value>
+  </data>
+  <data name="Go" xml:space="preserve">
+    <value>前往</value>
+  </data>
+  <data name="Good" xml:space="preserve">
+    <value>優異</value>
+  </data>
+  <data name="GotoNewCreatedContract" xml:space="preserve">
+    <value>Go to New Created Contract</value>
+  </data>
+  <data name="GotoOriginalContract" xml:space="preserve">
+    <value>Go to Original Contract</value>
+  </data>
+  <data name="Graduation" xml:space="preserve">
+    <value>畢業</value>
+  </data>
+  <data name="GroupBy" xml:space="preserve">
+    <value>群組</value>
+  </data>
+  <data name="GroupColumn" xml:space="preserve">
+    <value>組列</value>
+  </data>
+  <data name="Heading" xml:space="preserve">
+    <value>標題 / 內容</value>
+  </data>
+  <data name="HeadingHeight" xml:space="preserve">
+    <value>標題高度</value>
+  </data>
+  <data name="HeadingProjects" xml:space="preserve">
+    <value>項目</value>
+  </data>
+  <data name="HeadingTenders" xml:space="preserve">
+    <value>招標</value>
+  </data>
+  <data name="HeadingTooltip" xml:space="preserve">
+    <value>標題工具提示</value>
+  </data>
+  <data name="Hi" xml:space="preserve">
+    <value>你好</value>
+  </data>
+  <data name="High" xml:space="preserve">
+    <value>高</value>
+  </data>
+  <data name="HIGHEST QUALIFICATION" xml:space="preserve">
+    <value>最高資質</value>
+  </data>
+  <data name="HKD" xml:space="preserve">
+    <value>港幣</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>首頁</value>
+  </data>
+  <data name="I read and agree to Terms &amp; Conditions" xml:space="preserve">
+    <value>我已閱讀並同意條款和條件</value>
+  </data>
+  <data name="I would like to apply for (multi select)" xml:space="preserve">
+    <value>我要申請（多選）</value>
+  </data>
+  <data name="IfYesPleaseExplain" xml:space="preserve">
+    <value>如果選是，請說明：</value>
+  </data>
+  <data name="IhavereadandacceptedLOGINSCMsystemdisclaimerandprivacy" xml:space="preserve">
+    <value>我已細閱並完全同意樂建供應鏈管理系統供應鏈管理系統協議及隱私政策</value>
+  </data>
+  <data name="Imagenotfoundforprint" xml:space="preserve">
+    <value>沒有圖像供打印</value>
+  </data>
+  <data name="ImagesSavedSucessfully" xml:space="preserve">
+    <value>圖片已成功儲存</value>
+  </data>
+  <data name="Inbox" xml:space="preserve">
+    <value>收件箱</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>信息</value>
+  </data>
+  <data name="InitializeTA" xml:space="preserve">
+    <value>新增招標檔修正版</value>
+  </data>
+  <data name="InitializeTQ" xml:space="preserve">
+    <value>新增議標問卷</value>
+  </data>
+  <data name="InsertedRecord" xml:space="preserve">
+    <value>記錄插入成功</value>
+  </data>
+  <data name="InsertedSucessfully" xml:space="preserve">
+    <value>新增記錄成功</value>
+  </data>
+  <data name="InsertNew" xml:space="preserve">
+    <value>插入新記錄</value>
+  </data>
+  <data name="InsertNewRecord" xml:space="preserve">
+    <value>插入新記錄</value>
+  </data>
+  <data name="Inspectorsassignedsuccessfully" xml:space="preserve">
+    <value>考察已安排</value>
+  </data>
+  <data name="InstallationAfterTax" xml:space="preserve">
+    <value>稅後安裝</value>
+  </data>
+  <data name="InstallationBeforeTax" xml:space="preserve">
+    <value>稅前安裝</value>
+  </data>
+  <data name="InstallUnitPriceExcludingTax" xml:space="preserve">
+    <value>安裝(不含稅)單價</value>
+  </data>
+  <data name="InstallUnitPriceIncludingTax" xml:space="preserve">
+    <value>安裝(含稅)單價</value>
+  </data>
+  <data name="Insufficienttendorcontent" xml:space="preserve">
+    <value>肌腱含量不足！</value>
+  </data>
+  <data name="InternalError" xml:space="preserve">
+    <value>系統出現錯誤</value>
+  </data>
+  <data name="InvalidAccessToken" xml:space="preserve">
+    <value>無效的訪問令牌</value>
+  </data>
+  <data name="InvalidBQ" xml:space="preserve">
+    <value>無效的工程量清單</value>
+  </data>
+  <data name="InvalidBQOrVendor" xml:space="preserve">
+    <value>無效的工程量清單或投標者</value>
+  </data>
+  <data name="InvalidDataEsurvey" xml:space="preserve">
+    <value>導入的數據不正確，或沒有供應商名稱。</value>
+  </data>
+  <data name="InvalidDataUserMaster" xml:space="preserve">
+    <value>提供的数据不正确或缺少用户名</value>
+  </data>
+  <data name="InvalidEntityName" xml:space="preserve">
+    <value>無效的公司名稱</value>
+  </data>
+  <data name="invalidextension" xml:space="preserve">
+    <value>文件類型無效 - 禁止上傳可執行文件</value>
+  </data>
+  <data name="InvalidFOT" xml:space="preserve">
+    <value>無效的投標表格</value>
+  </data>
+  <data name="InvalidImagePosition" xml:space="preserve">
+    <value>無效的圖片位置</value>
+  </data>
+  <data name="InvalidLeveling" xml:space="preserve">
+    <value>無效的層級</value>
+  </data>
+  <data name="InvalidOpenTender" xml:space="preserve">
+    <value>無效的開標</value>
+  </data>
+  <data name="InvalidParameter" xml:space="preserve">
+    <value>無效的參數</value>
+  </data>
+  <data name="InvalidPasswordMustbeatleat6character" xml:space="preserve">
+    <value>密碼必須至少包含8個字母數字，包括特殊字符</value>
+  </data>
+  <data name="InvalidPasswordRepeatedcharactersfound" xml:space="preserve">
+    <value>因重複的字符！密碼無效！</value>
+  </data>
+  <data name="InvalidPasswordRule" xml:space="preserve">
+    <value>密碼必須至少為八位數，包括至少一個英文字母，一個數字和一個符號</value>
+  </data>
+  <data name="InvalidPhoneNo" xml:space="preserve">
+    <value>請輸入電話號碼</value>
+  </data>
+  <data name="InvalidRequest" xml:space="preserve">
+    <value>請求無效</value>
+  </data>
+  <data name="InvalidSelection" xml:space="preserve">
+    <value>提交無效的紀錄數目</value>
+  </data>
+  <data name="InvalidSerialNumber" xml:space="preserve">
+    <value>序列號無效</value>
+  </data>
+  <data name="InvalidSheetData" xml:space="preserve">
+    <value>無效的頁面資料</value>
+  </data>
+  <data name="InvalidTender" xml:space="preserve">
+    <value>無效的投標</value>
+  </data>
+  <data name="InvalidUsernameorPassword" xml:space="preserve">
+    <value>用戶名或密碼無效</value>
+  </data>
+  <data name="InvalidVendor" xml:space="preserve">
+    <value>無效的供應商</value>
+  </data>
+  <data name="IreadandagreetoTerms_Conditions" xml:space="preserve">
+    <value>I read and agree to Terms &amp; Conditions</value>
+  </data>
+  <data name="IsItFinalSubmission" xml:space="preserve">
+    <value>它是最終提交的嗎</value>
+  </data>
+  <data name="Issued" xml:space="preserve">
+    <value>已發出</value>
+  </data>
+  <data name="Issueinprogress" xml:space="preserve">
+    <value>進行中的問題...</value>
+  </data>
+  <data name="IssueTender" xml:space="preserve">
+    <value>出標</value>
+  </data>
+  <data name="IssueTenderAddendum" xml:space="preserve">
+    <value>發出招標檔修正版</value>
+  </data>
+  <data name="ITA" xml:space="preserve">
+    <value>出標審批</value>
+  </data>
+  <data name="ITD" xml:space="preserve">
+    <value>出標決定</value>
+  </data>
+  <data name="Item" xml:space="preserve">
+    <value>項目</value>
+  </data>
+  <data name="ItemNumber" xml:space="preserve">
+    <value>數量清單編號</value>
+  </data>
+  <data name="Items" xml:space="preserve">
+    <value>項目</value>
+  </data>
+  <data name="ItemsOnTheList" xml:space="preserve">
+    <value>清單上的項目</value>
+  </data>
+  <data name="ItemsSavedSuccessfully" xml:space="preserve">
+    <value>資料成功儲存</value>
+  </data>
+  <data name="ItSeemsRecordsForVendorFoundDoYouWantCleanAndInsert" xml:space="preserve">
+    <value>相關的投標者已有紀錄，確認要重新載入?</value>
+  </data>
+  <data name="Iwanttoregisteras" xml:space="preserve">
+    <value>I want to register as..</value>
+  </data>
+  <data name="Iwouldliketoapplyfor_multiselect" xml:space="preserve">
+    <value>I would like to apply for (multi select)</value>
+  </data>
+  <data name="Last" xml:space="preserve">
+    <value>尾</value>
+  </data>
+  <data name="Last Name" xml:space="preserve">
+    <value>姓</value>
+  </data>
+  <data name="Lastupdatedby" xml:space="preserve">
+    <value>最後修改人</value>
+  </data>
+  <data name="Lastupdateddate" xml:space="preserve">
+    <value>最後修改日期</value>
+  </data>
+  <data name="Latestfotamount" xml:space="preserve">
+    <value>Latest FOT amount</value>
+  </data>
+  <data name="Learning Center" xml:space="preserve">
+    <value>學習中心</value>
+  </data>
+  <data name="Learning Centre" xml:space="preserve">
+    <value>學習中心</value>
+  </data>
+  <data name="Learning Centre1" xml:space="preserve">
+    <value>學習中心</value>
+  </data>
+  <data name="LetterOfAwaard" xml:space="preserve">
+    <value>中標通知</value>
+  </data>
+  <data name="LetterofAward" xml:space="preserve">
+    <value>定標通知書</value>
+  </data>
+  <data name="Level" xml:space="preserve">
+    <value>層級</value>
+  </data>
+  <data name="Level1" xml:space="preserve">
+    <value>級別1</value>
+  </data>
+  <data name="Level2" xml:space="preserve">
+    <value>級別2</value>
+  </data>
+  <data name="Level3" xml:space="preserve">
+    <value>級別3</value>
+  </data>
+  <data name="Level4" xml:space="preserve">
+    <value>級別4</value>
+  </data>
+  <data name="Level5" xml:space="preserve">
+    <value>級別5</value>
+  </data>
+  <data name="LinePerPage" xml:space="preserve">
+    <value>每頁行數</value>
+  </data>
+  <data name="ListView" xml:space="preserve">
+    <value>直表顯示</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>裝載</value>
+  </data>
+  <data name="LoadingCompleated" xml:space="preserve">
+    <value>載入完成</value>
+  </data>
+  <data name="LoadingHeader" xml:space="preserve">
+    <value>正在加載標題...</value>
+  </data>
+  <data name="LoadingRows" xml:space="preserve">
+    <value>正在載入列...</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>位置</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>登錄</value>
+  </data>
+  <data name="LOGIN1" xml:space="preserve">
+    <value>LOGIN</value>
+  </data>
+  <data name="Logincouldnotbecreatedforfollowingvendorsbecausetheiremailidsalreadyexistinthesystem" xml:space="preserve">
+    <value>因承包商已在現存資料中，故未能成功登記</value>
+  </data>
+  <data name="LogOff" xml:space="preserve">
+    <value>登出</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>登出</value>
+  </data>
+  <data name="Low" xml:space="preserve">
+    <value>低</value>
+  </data>
+  <data name="MailSentto" xml:space="preserve">
+    <value>電郵發送</value>
+  </data>
+  <data name="Male" xml:space="preserve">
+    <value>男性</value>
+  </data>
+  <data name="ManualInput" xml:space="preserve">
+    <value>手動輸入</value>
+  </data>
+  <data name="MatchingKey" xml:space="preserve">
+    <value>Matching Key</value>
+  </data>
+  <data name="MaterialQuality" xml:space="preserve">
+    <value>質量</value>
+  </data>
+  <data name="max" xml:space="preserve">
+    <value>最大</value>
+  </data>
+  <data name="Medium" xml:space="preserve">
+    <value>中</value>
+  </data>
+  <data name="MenuCreated" xml:space="preserve">
+    <value>菜單已設定</value>
+  </data>
+  <data name="MenuItemsNotFound" xml:space="preserve">
+    <value>沒有此項目</value>
+  </data>
+  <data name="Message" xml:space="preserve">
+    <value>訊息</value>
+  </data>
+  <data name="MessageBody" xml:space="preserve">
+    <value>信息内容</value>
+  </data>
+  <data name="MessageBox" xml:space="preserve">
+    <value>訊息箱</value>
+  </data>
+  <data name="Messages" xml:space="preserve">
+    <value>訊息</value>
+  </data>
+  <data name="MessageSent" xml:space="preserve">
+    <value>消息已發送</value>
+  </data>
+  <data name="MessageTime" xml:space="preserve">
+    <value>信息時間</value>
+  </data>
+  <data name="MessageToAll" xml:space="preserve">
+    <value>發送訊息</value>
+  </data>
+  <data name="min" xml:space="preserve">
+    <value>最小</value>
+  </data>
+  <data name="Minestimateamt" xml:space="preserve">
+    <value>最低成本預算金額:</value>
+  </data>
+  <data name="MissingFormofTender" xml:space="preserve">
+    <value>欠投標表格設置</value>
+  </data>
+  <data name="MissingFOT" xml:space="preserve">
+    <value>欠投標表格設置</value>
+  </data>
+  <data name="Mobile" xml:space="preserve">
+    <value>移動的</value>
+  </data>
+  <data name="Modify" xml:space="preserve">
+    <value>修改</value>
+  </data>
+  <data name="ModifySave" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="mortgagesList" xml:space="preserve">
+    <value>动产抵押列表</value>
+  </data>
+  <data name="Movefieldshere" xml:space="preserve">
+    <value>將領域移到這裏</value>
+  </data>
+  <data name="MsgBody" xml:space="preserve">
+    <value>Message body</value>
+  </data>
+  <data name="MsgBoxMessage" xml:space="preserve">
+    <value>訊息</value>
+  </data>
+  <data name="Multiselect" xml:space="preserve">
+    <value>多項選擇</value>
+  </data>
+  <data name="My Account" xml:space="preserve">
+    <value>我的帳戶</value>
+  </data>
+  <data name="My child" xml:space="preserve">
+    <value>我的孩子</value>
+  </data>
+  <data name="NameBlankError" xml:space="preserve">
+    <value>承包商名稱不能為空</value>
+  </data>
+  <data name="Nature" xml:space="preserve">
+    <value>性質</value>
+  </data>
+  <data name="Negative" xml:space="preserve">
+    <value>負面</value>
+  </data>
+  <data name="NegativeAmountinvolved" xml:space="preserve">
+    <value>負面涉案金額</value>
+  </data>
+  <data name="NegativeFreezeAmountinvolved" xml:space="preserve">
+    <value>負面凍結金額</value>
+  </data>
+  <data name="negativeFreezeLawsuit" xml:space="preserve">
+    <value>负面冻结列表</value>
+  </data>
+  <data name="negativeLawsuit" xml:space="preserve">
+    <value>负面诉讼列表</value>
+  </data>
+  <data name="Net" xml:space="preserve">
+    <value>淨</value>
+  </data>
+  <data name="NetQty" xml:space="preserve">
+    <value>净数量</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>新</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>新密碼</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>下一個</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>沒有</value>
+  </data>
+  <data name="NoAvailableTendererIsMappedToThePackageName" xml:space="preserve">
+    <value>沒有找到符合業務範圍的投標單位</value>
+  </data>
+  <data name="NoDataAvailable" xml:space="preserve">
+    <value>沒有可用數據</value>
+  </data>
+  <data name="Nodatafound" xml:space="preserve">
+    <value>沒有找到數據</value>
+  </data>
+  <data name="Nofilesfound" xml:space="preserve">
+    <value>找碼到文件</value>
+  </data>
+  <data name="Nofilesselected" xml:space="preserve">
+    <value>沒有已選的文件</value>
+  </data>
+  <data name="NoFilter" xml:space="preserve">
+    <value>沒有過濾器</value>
+  </data>
+  <data name="NoGrouping" xml:space="preserve">
+    <value>沒有群組</value>
+  </data>
+  <data name="Noofpages" xml:space="preserve">
+    <value>頁數</value>
+  </data>
+  <data name="NoQualificationPackage" xml:space="preserve">
+    <value>這個業務範圍不需要任何資質。</value>
+  </data>
+  <data name="NoRecipients" xml:space="preserve">
+    <value>沒有收件人可以發送消息</value>
+  </data>
+  <data name="NoRecordsAvailable" xml:space="preserve">
+    <value>沒有可用的記錄</value>
+  </data>
+  <data name="NoRecorsFound" xml:space="preserve">
+    <value>沒有找到紀錄</value>
+  </data>
+  <data name="NoRelatedQualification" xml:space="preserve">
+    <value>這個業務範圍不需要任何資質</value>
+  </data>
+  <data name="NoReply" xml:space="preserve">
+    <value>沒有回標</value>
+  </data>
+  <data name="NoTabulaterForGivenTitle" xml:space="preserve">
+    <value>該標題並沒有表格</value>
+  </data>
+  <data name="NOTAPPLICABLE" xml:space="preserve">
+    <value>不適用</value>
+  </data>
+  <data name="NotAwarded" xml:space="preserve">
+    <value>未中標單位</value>
+  </data>
+  <data name="NoTCAndTQFound" xml:space="preserve">
+    <value>沒有議標問卷或招投標訊息</value>
+  </data>
+  <data name="NotFinishedeAppraiseTab" xml:space="preserve">
+    <value>尚未完成的項目評分</value>
+  </data>
+  <data name="Notification" xml:space="preserve">
+    <value>Notification</value>
+  </data>
+  <data name="Notification Master" xml:space="preserve">
+    <value>信息列表</value>
+  </data>
+  <data name="NotInsertedRecord" xml:space="preserve">
+    <value>記錄沒有成功插入</value>
+  </data>
+  <data name="NotReturned" xml:space="preserve">
+    <value>未回標</value>
+  </data>
+  <data name="NoUserGroup" xml:space="preserve">
+    <value>用戶沒有關聯到任何組別, 請聯絡管理員</value>
+  </data>
+  <data name="Novendorselected" xml:space="preserve">
+    <value>未有選擇承包商</value>
+  </data>
+  <data name="numberofrequiredtenderer" xml:space="preserve">
+    <value>如招標銀碼超過250萬，則需要至少5個投標者，反之只需要3個</value>
+  </data>
+  <data name="NumberOfUsersWillBeReceivingTheResetPasswordLinksAreYouSure" xml:space="preserve">
+    <value>用戶將收到重置密碼鏈接。你確定嗎 ？</value>
+  </data>
+  <data name="NumberOfVendors" xml:space="preserve">
+    <value>單位數目</value>
+  </data>
+  <data name="NumberOfVendorsAsOfToday" xml:space="preserve">
+    <value>現時承包商名冊數目明細</value>
+  </data>
+  <data name="NumberOfVendorsInPast12Months" xml:space="preserve">
+    <value>過去12個月承包商名冊數目明細</value>
+  </data>
+  <data name="NumberOnly" xml:space="preserve">
+    <value>請輸入整數</value>
+  </data>
+  <data name="OBSERVATION" xml:space="preserve">
+    <value>觀察名單</value>
+  </data>
+  <data name="observation1" xml:space="preserve">
+    <value>觀察名單</value>
+  </data>
+  <data name="of" xml:space="preserve">
+    <value>的</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>好的</value>
+  </data>
+  <data name="OldPassword" xml:space="preserve">
+    <value>Old Password</value>
+  </data>
+  <data name="Opacityshouldbebetween0to1" xml:space="preserve">
+    <value>Opacity should be between 0 to 1</value>
+  </data>
+  <data name="OpenBQTabulator" xml:space="preserve">
+    <value>在表格中開啟</value>
+  </data>
+  <data name="Opend" xml:space="preserve">
+    <value>已開標</value>
+  </data>
+  <data name="Opendetail" xml:space="preserve">
+    <value>檢閱詳情</value>
+  </data>
+  <data name="OpenDetails" xml:space="preserve">
+    <value>檢閱詳情</value>
+  </data>
+  <data name="Openinwebix" xml:space="preserve">
+    <value>在Webix中打開</value>
+  </data>
+  <data name="OpenTender" xml:space="preserve">
+    <value>開標</value>
+  </data>
+  <data name="OpenTenderAnalysis" xml:space="preserve">
+    <value>公開招標分析</value>
+  </data>
+  <data name="Opentenderdate" xml:space="preserve">
+    <value>開標日期:</value>
+  </data>
+  <data name="OpenTenderer" xml:space="preserve">
+    <value>開標人</value>
+  </data>
+  <data name="Opentenderisnotcompleted" xml:space="preserve">
+    <value>開標未完成</value>
+  </data>
+  <data name="OpenTenderPerson" xml:space="preserve">
+    <value>開標人</value>
+  </data>
+  <data name="OpenTenderPersonApproved" xml:space="preserve">
+    <value>已批准開標人</value>
+  </data>
+  <data name="OpenTenderPersonDecision" xml:space="preserve">
+    <value>開標人決定</value>
+  </data>
+  <data name="OpenTenderPersonRejected" xml:space="preserve">
+    <value>已拒絕開標人</value>
+  </data>
+  <data name="OpenTenderSubmission" xml:space="preserve">
+    <value>送出開標</value>
+  </data>
+  <data name="Opentendervenue" xml:space="preserve">
+    <value>開標地點:</value>
+  </data>
+  <data name="OperationSuccessfull" xml:space="preserve">
+    <value>操作成功</value>
+  </data>
+  <data name="OperationSuccessfullFor" xml:space="preserve">
+    <value>操作成功</value>
+  </data>
+  <data name="OppsNothingtodo" xml:space="preserve">
+    <value>請選擇紀錄</value>
+  </data>
+  <data name="OR SIGN IN WITH EMAIL" xml:space="preserve">
+    <value>或 使用電子郵件登錄</value>
+  </data>
+  <data name="Oreconeoffno" xml:space="preserve">
+    <value>否</value>
+  </data>
+  <data name="Oreconeoffyes" xml:space="preserve">
+    <value>是</value>
+  </data>
+  <data name="OriginalSequenceNumberinTender" xml:space="preserve">
+    <value>Original Sequence Number in Tender</value>
+  </data>
+  <data name="OtFile" xml:space="preserve">
+    <value>Please upload files.</value>
+  </data>
+  <data name="OthersAmountinvolved" xml:space="preserve">
+    <value>其他涉案金额</value>
+  </data>
+  <data name="OthersFreezeAmountinvolved" xml:space="preserve">
+    <value>其他凍結金额</value>
+  </data>
+  <data name="OtRemarks" xml:space="preserve">
+    <value>Please fill remarks.</value>
+  </data>
+  <data name="Overallbodiscountamount" xml:space="preserve">
+    <value>Overall BO discount amount</value>
+  </data>
+  <data name="Overallcommentcondition" xml:space="preserve">
+    <value>任何一項的評語必須跟整體評語相同或更好，否則不能繼續。</value>
+  </data>
+  <data name="Package" xml:space="preserve">
+    <value>業務範圍</value>
+  </data>
+  <data name="PackagealreadyExistsfortheselectedvendor" xml:space="preserve">
+    <value>此承包商已登記此業務範圍</value>
+  </data>
+  <data name="PackagealreadyselectedinasignatureprojectCannotbedeleted" xml:space="preserve">
+    <value>代表性項目不能刪除，因為已有相關的業務範圍</value>
+  </data>
+  <data name="PackageName" xml:space="preserve">
+    <value>業務範圍</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>頁</value>
+  </data>
+  <data name="PageSize" xml:space="preserve">
+    <value>頁面大小</value>
+  </data>
+  <data name="Parents" xml:space="preserve">
+    <value>家長</value>
+  </data>
+  <data name="PartA" xml:space="preserve">
+    <value>甲部</value>
+  </data>
+  <data name="Pass" xml:space="preserve">
+    <value>合格</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>密碼</value>
+  </data>
+  <data name="Password1" xml:space="preserve">
+    <value>密碼</value>
+  </data>
+  <data name="PasswordandLoginIdCannotSame" xml:space="preserve">
+    <value>密碼和LoginId不能相同</value>
+  </data>
+  <data name="PasswordChangedSuccessfully" xml:space="preserve">
+    <value>密碼已成功更改</value>
+  </data>
+  <data name="PasswordDoesNotMatched" xml:space="preserve">
+    <value>密碼不符</value>
+  </data>
+  <data name="Passwordmustbeatleast4characterlong" xml:space="preserve">
+    <value>密碼必須至少包含8個字母數字，包括特殊字符</value>
+  </data>
+  <data name="Passwordmustmatch" xml:space="preserve">
+    <value>密碼不符</value>
+  </data>
+  <data name="Passwordresetlinkhasbeensenttoyourregisteredemail" xml:space="preserve">
+    <value>密碼重置連結已發送到您註冊的電子郵件</value>
+  </data>
+  <data name="PCMSDataImport" xml:space="preserve">
+    <value>PCMS資料導入</value>
+  </data>
+  <data name="PDForumAction" xml:space="preserve">
+    <value>總監論壇</value>
+  </data>
+  <data name="PDForumInvitation" xml:space="preserve">
+    <value>總監論壇邀請</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>有待</value>
+  </data>
+  <data name="PercentageOnly" xml:space="preserve">
+    <value>請輸入0到100之間的值</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>電話</value>
+  </data>
+  <data name="Phone Number" xml:space="preserve">
+    <value>電話號碼</value>
+  </data>
+  <data name="PivotConfiguration" xml:space="preserve">
+    <value>支點設定</value>
+  </data>
+  <data name="PlannedDate" xml:space="preserve">
+    <value>計劃日期</value>
+  </data>
+  <data name="Pleaseaddinspectorsfirst" xml:space="preserve">
+    <value>請加入考察員</value>
+  </data>
+  <data name="Pleasecheckendorse" xml:space="preserve">
+    <value>請填寫已閱列</value>
+  </data>
+  <data name="Pleasechooseadeadline" xml:space="preserve">
+    <value>請選擇最後提交日期</value>
+  </data>
+  <data name="Pleasechooseainspector" xml:space="preserve">
+    <value>請選擇考察員</value>
+  </data>
+  <data name="PleasechoosecorrectdateYouhavechoosenthepastdate" xml:space="preserve">
+    <value>請重新選擇日期</value>
+  </data>
+  <data name="PleasechooseExcelfile" xml:space="preserve">
+    <value>請選擇電子檔案</value>
+  </data>
+  <data name="PleasechoosetheFilldate" xml:space="preserve">
+    <value>請選擇填寫人期</value>
+  </data>
+  <data name="Pleaseenteramessage" xml:space="preserve">
+    <value>請輸入資料</value>
+  </data>
+  <data name="PleaseenteravalidUrl" xml:space="preserve">
+    <value>請輸入有效的網址</value>
+  </data>
+  <data name="PleaseEnterOpenTenderAmount" xml:space="preserve">
+    <value>請輸入公開招標金額</value>
+  </data>
+  <data name="PleaseEnterReturntotalamount" xml:space="preserve">
+    <value>請輸入貨幣退貨總金額</value>
+  </data>
+  <data name="PleaseEnterSubmitionDate" xml:space="preserve">
+    <value>請輸入提交日期</value>
+  </data>
+  <data name="PleaseFillComments" xml:space="preserve">
+    <value>請填寫評論</value>
+  </data>
+  <data name="Pleasefilloutthisfield" xml:space="preserve">
+    <value>請填寫此字段</value>
+  </data>
+  <data name="PleaseFillRelatedComments" xml:space="preserve">
+    <value>請填寫相關評論</value>
+  </data>
+  <data name="Pleasefillrequiredfields" xml:space="preserve">
+    <value>標有*的為必填字段，必須填寫</value>
+  </data>
+  <data name="Pleasefilltheformdetails" xml:space="preserve">
+    <value>請需入表格資料</value>
+  </data>
+  <data name="PleasefillthereasonforselectingyesinPartASummary" xml:space="preserve">
+    <value>請填寫甲部</value>
+  </data>
+  <data name="PleaseFillthevalues" xml:space="preserve">
+    <value>請輸入資料</value>
+  </data>
+  <data name="PleaseLoginAgain" xml:space="preserve">
+    <value>請再次登錄.</value>
+  </data>
+  <data name="Pleaserefesh" xml:space="preserve">
+    <value>請刷新</value>
+  </data>
+  <data name="Pleaseselect" xml:space="preserve">
+    <value>最少需要選擇一項</value>
+  </data>
+  <data name="PleaseSelectBQ" xml:space="preserve">
+    <value>請選擇BQ</value>
+  </data>
+  <data name="PleaseSelectcurrency" xml:space="preserve">
+    <value>請選擇貨幣</value>
+  </data>
+  <data name="PleaseselectPDNameFirst" xml:space="preserve">
+    <value>請選項目總監</value>
+  </data>
+  <data name="PleaseSelectRow" xml:space="preserve">
+    <value>請選一行</value>
+  </data>
+  <data name="PleaseselectrowstoarrangeeAppraise" xml:space="preserve">
+    <value>請選一行才能安排項目評價</value>
+  </data>
+  <data name="Pleaseselectupto" xml:space="preserve">
+    <value>請選擇最後提交日期</value>
+  </data>
+  <data name="Pleaseselectvisitdate" xml:space="preserve">
+    <value>請選擇日期</value>
+  </data>
+  <data name="Pleasesubmittheformsuccessfullyfirst" xml:space="preserve">
+    <value>請重新提交</value>
+  </data>
+  <data name="Pleasetryagain" xml:space="preserve">
+    <value>請重試</value>
+  </data>
+  <data name="pleaseUploadSignedFOT" xml:space="preserve">
+    <value>請上傳簽名的FOT</value>
+  </data>
+  <data name="Positive" xml:space="preserve">
+    <value>正面</value>
+  </data>
+  <data name="Post" xml:space="preserve">
+    <value>發布</value>
+  </data>
+  <data name="Post Graduation" xml:space="preserve">
+    <value>畢業後</value>
+  </data>
+  <data name="PostDate" xml:space="preserve">
+    <value>發布日期</value>
+  </data>
+  <data name="PrepareContract" xml:space="preserve">
+    <value>Prepare Contract</value>
+  </data>
+  <data name="PrepareTenderBook" xml:space="preserve">
+    <value>準備招標書</value>
+  </data>
+  <data name="PretenderEstimate" xml:space="preserve">
+    <value>標前估算</value>
+  </data>
+  <data name="PreTenderEstimatePrice" xml:space="preserve">
+    <value>標底估算金額:</value>
+  </data>
+  <data name="Prev" xml:space="preserve">
+    <value>上一頁</value>
+  </data>
+  <data name="Preview" xml:space="preserve">
+    <value>預覽投標商畫面</value>
+  </data>
+  <data name="PreviewPrint" xml:space="preserve">
+    <value>預覽和列印</value>
+  </data>
+  <data name="Previousfotamount" xml:space="preserve">
+    <value>Previous FOT amount</value>
+  </data>
+  <data name="PriceAfterTax" xml:space="preserve">
+    <value>Price After Tax</value>
+  </data>
+  <data name="PriceBeforeTax" xml:space="preserve">
+    <value>Price Before Tax</value>
+  </data>
+  <data name="PrintModuleSummary" xml:space="preserve">
+    <value>列印模塊摘要</value>
+  </data>
+  <data name="PrintUserSummary" xml:space="preserve">
+    <value>列印用戶摘要</value>
+  </data>
+  <data name="Priority" xml:space="preserve">
+    <value>優先次序</value>
+  </data>
+  <data name="Privacy Policy" xml:space="preserve">
+    <value>隱私政策</value>
+  </data>
+  <data name="ProceedAnyway" xml:space="preserve">
+    <value>仍要繼續</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>個人資料</value>
+  </data>
+  <data name="ProjectAddress" xml:space="preserve">
+    <value>項目地址</value>
+  </data>
+  <data name="ProjectCode" xml:space="preserve">
+    <value>項目編碼</value>
+  </data>
+  <data name="Projectdescription" xml:space="preserve">
+    <value>項目介紹</value>
+  </data>
+  <data name="ProjectName" xml:space="preserve">
+    <value>房產項目名稱</value>
+  </data>
+  <data name="Projectno" xml:space="preserve">
+    <value>房產項目編號:</value>
+  </data>
+  <data name="ProjectNumber" xml:space="preserve">
+    <value>房產項目編號</value>
+  </data>
+  <data name="ProjectStatus" xml:space="preserve">
+    <value>項目狀態</value>
+  </data>
+  <data name="ProjectTabulator" xml:space="preserve">
+    <value>項目匯總</value>
+  </data>
+  <data name="ProjectTender" xml:space="preserve">
+    <value>項目投標</value>
+  </data>
+  <data name="ProjectUnderTender" xml:space="preserve">
+    <value>正在招投標項目</value>
+  </data>
+  <data name="ProvisionalApproval" xml:space="preserve">
+    <value>暫準名冊審理</value>
+  </data>
+  <data name="PROVISIONALLIST" xml:space="preserve">
+    <value>暫時名冊</value>
+  </data>
+  <data name="ProvisionalRegisteredVendors" xml:space="preserve">
+    <value>暫準名冊承包/供應商</value>
+  </data>
+  <data name="ProvisionalVendor" xml:space="preserve">
+    <value>暫準名冊承包/供應商</value>
+  </data>
+  <data name="PTCApprovalHistory" xml:space="preserve">
+    <value>PTC審批歷史</value>
+  </data>
+  <data name="PTCApprovalProcessCompleted" xml:space="preserve">
+    <value>完成PTC批核</value>
+  </data>
+  <data name="QixinData" xml:space="preserve">
+    <value>啟信寶數據</value>
+  </data>
+  <data name="Qty" xml:space="preserve">
+    <value>数量</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>數量</value>
+  </data>
+  <data name="Question" xml:space="preserve">
+    <value>問題</value>
+  </data>
+  <data name="Reason" xml:space="preserve">
+    <value>原因</value>
+  </data>
+  <data name="ReceivedMessages" xml:space="preserve">
+    <value>Received Messages</value>
+  </data>
+  <data name="ReceiverName" xml:space="preserve">
+    <value>收件者姓名</value>
+  </data>
+  <data name="RecordAlreadySaved" xml:space="preserve">
+    <value>紀錄已儲存</value>
+  </data>
+  <data name="RecordDeleted" xml:space="preserve">
+    <value>記錄刪除</value>
+  </data>
+  <data name="RecordDeltedDoYouWantToRefresh" xml:space="preserve">
+    <value>紀錄已刪除，要刷新頁面嗎?</value>
+  </data>
+  <data name="RecordNotInserted" xml:space="preserve">
+    <value>記錄沒有成功插入</value>
+  </data>
+  <data name="Recordnotupdate" xml:space="preserve">
+    <value>密碼不符</value>
+  </data>
+  <data name="recordnotupdated" xml:space="preserve">
+    <value>記錄未更新</value>
+  </data>
+  <data name="RecordSaved" xml:space="preserve">
+    <value>紀錄已儲存</value>
+  </data>
+  <data name="Recordscouldnotbedeleted" xml:space="preserve">
+    <value>不能刪除記錄</value>
+  </data>
+  <data name="Recordsdeletedsuccessfully" xml:space="preserve">
+    <value>記錄已刪除</value>
+  </data>
+  <data name="RecordsFetched" xml:space="preserve">
+    <value>取得的記錄</value>
+  </data>
+  <data name="RecordsFound" xml:space="preserve">
+    <value>找到的記錄</value>
+  </data>
+  <data name="RecordsNotFound" xml:space="preserve">
+    <value>沒有找到紀錄</value>
+  </data>
+  <data name="RecordsWillBeDeletedTreeWillResetDoYouContinue" xml:space="preserve">
+    <value>刪除後相關紀錄也會重置，確認要繼續?</value>
+  </data>
+  <data name="Recordupdatedsuccessfully" xml:space="preserve">
+    <value>記錄已更新</value>
+  </data>
+  <data name="RecorsFound" xml:space="preserve">
+    <value>找到紀錄</value>
+  </data>
+  <data name="ReferLetter" xml:space="preserve">
+    <value>推薦信</value>
+  </data>
+  <data name="Register as Therapist or Tutor" xml:space="preserve">
+    <value>註冊為治療師或導師</value>
+  </data>
+  <data name="Register with Email or Mobile" xml:space="preserve">
+    <value>使用電子郵件或手機註冊</value>
+  </data>
+  <data name="RegisteredVendorNeedsSubmitToTempList" xml:space="preserve">
+    <value>您有一批承包商需要提交臨時名單審批</value>
+  </data>
+  <data name="registerreply0" xml:space="preserve">
+    <value>e登記未開始</value>
+  </data>
+  <data name="registerreply1" xml:space="preserve">
+    <value>e登記完成</value>
+  </data>
+  <data name="registerreply2" xml:space="preserve">
+    <value>e登記進行中</value>
+  </data>
+  <data name="Reject" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="RejectedSuccesfully" xml:space="preserve">
+    <value>已成功拒絕</value>
+  </data>
+  <data name="RejectListNeedsApproval" xml:space="preserve">
+    <value>您有一個需要審批的建議拒絕臨時名單</value>
+  </data>
+  <data name="RejectTempListNeedApproval" xml:space="preserve">
+    <value>您有一個需要審批的建議拒絕臨時名單</value>
+  </data>
+  <data name="RelatedContract" xml:space="preserve">
+    <value>Related Contract</value>
+  </data>
+  <data name="RelatedPackageName" xml:space="preserve">
+    <value>相關業務範圍</value>
+  </data>
+  <data name="RelatedTender" xml:space="preserve">
+    <value>Related Tender</value>
+  </data>
+  <data name="Remember Me" xml:space="preserve">
+    <value>記得我</value>
+  </data>
+  <data name="RememberMe" xml:space="preserve">
+    <value>記住賬號</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>移除</value>
+  </data>
+  <data name="Reply" xml:space="preserve">
+    <value>回覆</value>
+  </data>
+  <data name="ReplyDeadline" xml:space="preserve">
+    <value>Reply Deadline</value>
+  </data>
+  <data name="RequestApproval" xml:space="preserve">
+    <value>請求審批</value>
+  </data>
+  <data name="RequestApproved" xml:space="preserve">
+    <value>請求已批准</value>
+  </data>
+  <data name="RequestforEndorsementsent" xml:space="preserve">
+    <value>Request For Endorsement Sent</value>
+  </data>
+  <data name="RequestForeUpdate" xml:space="preserve">
+    <value>請求更新</value>
+  </data>
+  <data name="RequestForPTCApprovalSent" xml:space="preserve">
+    <value>已發出PTC批核請求</value>
+  </data>
+  <data name="RequestRejected" xml:space="preserve">
+    <value>請求已拒絕</value>
+  </data>
+  <data name="Requestsent" xml:space="preserve">
+    <value>已發出請求</value>
+  </data>
+  <data name="RequestToRewrite" xml:space="preserve">
+    <value>請求重寫</value>
+  </data>
+  <data name="RequestUpdated" xml:space="preserve">
+    <value>請求已更新</value>
+  </data>
+  <data name="RequiredField" xml:space="preserve">
+    <value>請填寫相應的字段</value>
+  </data>
+  <data name="RequiredTendererMessage" xml:space="preserve">
+    <value>如招標銀碼超過250萬，則需要至少5個投標者，反之只需要3個</value>
+  </data>
+  <data name="Required_Field" xml:space="preserve">
+    <value>必填項</value>
+  </data>
+  <data name="Respective" xml:space="preserve">
+    <value>請填寫相應的字段</value>
+  </data>
+  <data name="Returnamount" xml:space="preserve">
+    <value>回標總額</value>
+  </data>
+  <data name="ReturnDetailsSaved" xml:space="preserve">
+    <value>回覆資料已儲存</value>
+  </data>
+  <data name="Returned" xml:space="preserve">
+    <value>已回標</value>
+  </data>
+  <data name="ReturnTotalAmount" xml:space="preserve">
+    <value>請輸入退貨總金額</value>
+  </data>
+  <data name="RevisedDate" xml:space="preserve">
+    <value>更改日期</value>
+  </data>
+  <data name="Rewrite" xml:space="preserve">
+    <value>改寫記事</value>
+  </data>
+  <data name="RMB" xml:space="preserve">
+    <value>人民幣</value>
+  </data>
+  <data name="RoleSummary" xml:space="preserve">
+    <value>角色摘要</value>
+  </data>
+  <data name="Rowid" xml:space="preserve">
+    <value>RowId</value>
+  </data>
+  <data name="RowLocationUpdatedSuccessfully" xml:space="preserve">
+    <value>資料重新編排成功</value>
+  </data>
+  <data name="rows" xml:space="preserve">
+    <value>行</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>儲存  </value>
+  </data>
+  <data name="SaveAs" xml:space="preserve">
+    <value>另存為</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>已儲存</value>
+  </data>
+  <data name="SaveLayout" xml:space="preserve">
+    <value>保存佈局</value>
+  </data>
+  <data name="SaveMessage" xml:space="preserve">
+    <value>Message save successfully.</value>
+  </data>
+  <data name="Saving" xml:space="preserve">
+    <value>保存....</value>
+  </data>
+  <data name="Savingrows" xml:space="preserve">
+    <value>正在保存行....</value>
+  </data>
+  <data name="Schedule" xml:space="preserve">
+    <value>日程</value>
+  </data>
+  <data name="SChinese" xml:space="preserve">
+    <value>简体中文</value>
+  </data>
+  <data name="Score" xml:space="preserve">
+    <value>評分</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="SeeCalendar" xml:space="preserve">
+    <value>項目計劃</value>
+  </data>
+  <data name="SeeDetails" xml:space="preserve">
+    <value>詳情</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>選擇</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>選擇/取消全選</value>
+  </data>
+  <data name="selectapackagefirst" xml:space="preserve">
+    <value>請選擇業務範圍</value>
+  </data>
+  <data name="Selectatleastonepackage" xml:space="preserve">
+    <value>請選擇最少一個業務範圍</value>
+  </data>
+  <data name="SelectAtLeastTwoPersons" xml:space="preserve">
+    <value>選擇最少兩個開標人</value>
+  </data>
+  <data name="SelectBQ" xml:space="preserve">
+    <value>選擇工程量清單</value>
+  </data>
+  <data name="SelectContractor" xml:space="preserve">
+    <value>承包商名稱</value>
+  </data>
+  <data name="SelectCurrency" xml:space="preserve">
+    <value>選擇貨幣</value>
+  </data>
+  <data name="SelecteBQ" xml:space="preserve">
+    <value>請選擇工程量清單</value>
+  </data>
+  <data name="SelectedFile" xml:space="preserve">
+    <value>選定的文件</value>
+  </data>
+  <data name="SelectedMessagesAddedSuccessfullyToLetterBody" xml:space="preserve">
+    <value>Selected Messages Added Successfully To Letter Body</value>
+  </data>
+  <data name="SelectedVender" xml:space="preserve">
+    <value>請選擇投標單位</value>
+  </data>
+  <data name="SelectedVendorApproval" xml:space="preserve">
+    <value>投標單位審批</value>
+  </data>
+  <data name="SelectedVendorPackages" xml:space="preserve">
+    <value>Selected Vendor Packages :</value>
+  </data>
+  <data name="SelecteMessage" xml:space="preserve">
+    <value>Please select Message.</value>
+  </data>
+  <data name="SelectInspector" xml:space="preserve">
+    <value>選擇考察員</value>
+  </data>
+  <data name="SelectMessage" xml:space="preserve">
+    <value>Please select message.</value>
+  </data>
+  <data name="SelectOne" xml:space="preserve">
+    <value>請選擇最少一個收件人</value>
+  </data>
+  <data name="SelectOneRecord" xml:space="preserve">
+    <value>選擇一條記錄</value>
+  </data>
+  <data name="SelectOnlyDocFile" xml:space="preserve">
+    <value>只可選擇DOC檔</value>
+  </data>
+  <data name="SelectOnlyOneRow" xml:space="preserve">
+    <value>只可選擇一行</value>
+  </data>
+  <data name="SelectOnlyPdfAndImageFile" xml:space="preserve">
+    <value>只可選擇PDF及圖像檔</value>
+  </data>
+  <data name="SelectOpenTenderPerson" xml:space="preserve">
+    <value>選擇開標人士</value>
+  </data>
+  <data name="SelectProjectType" xml:space="preserve">
+    <value>請選擇項目類別</value>
+  </data>
+  <data name="SelectVender" xml:space="preserve">
+    <value>Please select vender</value>
+  </data>
+  <data name="SelectVendor" xml:space="preserve">
+    <value>選擇投標者</value>
+  </data>
+  <data name="SelectVisitorCoordinator" xml:space="preserve">
+    <value>請選擇考察聯絡員</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>發送</value>
+  </data>
+  <data name="SendEOI" xml:space="preserve">
+    <value>詢問投標意向</value>
+  </data>
+  <data name="SenderName" xml:space="preserve">
+    <value>發件者姓名</value>
+  </data>
+  <data name="SendLetterofAward" xml:space="preserve">
+    <value>發出中標通知書</value>
+  </data>
+  <data name="SendMessage" xml:space="preserve">
+    <value>發信息</value>
+  </data>
+  <data name="SendNotificationofAwardtoSite" xml:space="preserve">
+    <value>發出定標通知書予工地</value>
+  </data>
+  <data name="SendResetPasswordLink" xml:space="preserve">
+    <value>發送重置密碼鏈接</value>
+  </data>
+  <data name="SendThankYouLetter" xml:space="preserve">
+    <value>發出感謝信</value>
+  </data>
+  <data name="SendTime" xml:space="preserve">
+    <value>發送時間</value>
+  </data>
+  <data name="SendTo" xml:space="preserve">
+    <value>收件人</value>
+  </data>
+  <data name="Sent" xml:space="preserve">
+    <value>已發送</value>
+  </data>
+  <data name="SentAwardLetterSuccessfully" xml:space="preserve">
+    <value>中標通知書已成功發出</value>
+  </data>
+  <data name="SentMessages" xml:space="preserve">
+    <value>Sent Messages</value>
+  </data>
+  <data name="SENtoR Publick Site" xml:space="preserve">
+    <value>SENtoR 公共網站</value>
+  </data>
+  <data name="SentThankYouLetterSuccessfully" xml:space="preserve">
+    <value>感謝信已成功發出</value>
+  </data>
+  <data name="SeqNo" xml:space="preserve">
+    <value>序號</value>
+  </data>
+  <data name="Serial" xml:space="preserve">
+    <value>序列號</value>
+  </data>
+  <data name="SerialNumberInvalid" xml:space="preserve">
+    <value>序列號字段無效</value>
+  </data>
+  <data name="SessionExpired" xml:space="preserve">
+    <value>請重新登入已過期</value>
+  </data>
+  <data name="SessionExpiredOrInvalidRequest" xml:space="preserve">
+    <value>請重新登入已過期/不明要求</value>
+  </data>
+  <data name="SessionExpiredOrUserNotFound" xml:space="preserve">
+    <value>請重新登入已過期/找不到用戶</value>
+  </data>
+  <data name="SettingFormulasAndStyle" xml:space="preserve">
+    <value>設置公式和样式...</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>設置</value>
+  </data>
+  <data name="SettingsAppliedSuccessfully" xml:space="preserve">
+    <value>設置已成功應用</value>
+  </data>
+  <data name="Sharephotowithteam" xml:space="preserve">
+    <value>與團隊共享照片(上傳)</value>
+  </data>
+  <data name="Showreturntendertotalamount" xml:space="preserve">
+    <value>顯示回標金額</value>
+  </data>
+  <data name="Sign in" xml:space="preserve">
+    <value>登入</value>
+  </data>
+  <data name="Sign up" xml:space="preserve">
+    <value>註冊</value>
+  </data>
+  <data name="Sign up here" xml:space="preserve">
+    <value>在此註冊</value>
+  </data>
+  <data name="Sign up with Phone" xml:space="preserve">
+    <value>用手機註冊</value>
+  </data>
+  <data name="SignatureProjectNoPackage" xml:space="preserve">
+    <value>代表性項目未完成更新！</value>
+  </data>
+  <data name="SigninwithFacebook" xml:space="preserve">
+    <value>Sign in with Facebook</value>
+  </data>
+  <data name="SigninWithGoogle" xml:space="preserve">
+    <value>Sign in with Google</value>
+  </data>
+  <data name="SigninwithGoogle1" xml:space="preserve">
+    <value>Sign in with Google</value>
+  </data>
+  <data name="SignUp" xml:space="preserve">
+    <value>建立新帳戶</value>
+  </data>
+  <data name="SignupwithFacebook" xml:space="preserve">
+    <value>Sign up with Facebook</value>
+  </data>
+  <data name="SignupwithGoogle" xml:space="preserve">
+    <value>Sign up with Google</value>
+  </data>
+  <data name="Someerroroccurd" xml:space="preserve">
+    <value>錯誤</value>
+  </data>
+  <data name="somethingwentwrong" xml:space="preserve">
+    <value>出問題了</value>
+  </data>
+  <data name="Stage" xml:space="preserve">
+    <value>階段</value>
+  </data>
+  <data name="StageTA" xml:space="preserve">
+    <value>最後版本</value>
+  </data>
+  <data name="stats" xml:space="preserve">
+    <value>狀態:</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>狀態</value>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value>已复制</value>
+  </data>
+  <data name="Students" xml:space="preserve">
+    <value>學生</value>
+  </data>
+  <data name="Subject" xml:space="preserve">
+    <value>評論主題</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>提交</value>
+  </data>
+  <data name="Submit Code" xml:space="preserve">
+    <value>提交代碼</value>
+  </data>
+  <data name="SubmitApproval" xml:space="preserve">
+    <value>申請批核</value>
+  </data>
+  <data name="SubmitForTempList" xml:space="preserve">
+    <value>提交建議臨時名單</value>
+  </data>
+  <data name="Submitted" xml:space="preserve">
+    <value>已提交</value>
+  </data>
+  <data name="SubmitTemporaryList" xml:space="preserve">
+    <value>您有一個需要審視的建議臨時名單</value>
+  </data>
+  <data name="SubmitToPicEndorsement" xml:space="preserve">
+    <value>Submit To PIC Endorsement</value>
+  </data>
+  <data name="Subtrade" xml:space="preserve">
+    <value>T4成本编码</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>成功 </value>
+  </data>
+  <data name="SucessRecord" xml:space="preserve">
+    <value>成功記錄</value>
+  </data>
+  <data name="SuggestedAction" xml:space="preserve">
+    <value>建議行動</value>
+  </data>
+  <data name="SuggestedAction1" xml:space="preserve">
+    <value>轉為黑名單- 不建議投標/簽約</value>
+  </data>
+  <data name="SuggestedAction2" xml:space="preserve">
+    <value>轉為暫緩名單-暫緩投標/簽約</value>
+  </data>
+  <data name="SuggestedAction3" xml:space="preserve">
+    <value>轉為觀察名單-在建項目-審慎支付</value>
+  </data>
+  <data name="SuggestedAction4" xml:space="preserve">
+    <value>轉為觀察名單-簽訂合約-增加保証金</value>
+  </data>
+  <data name="SuggestedAction5" xml:space="preserve">
+    <value>轉為觀察名單-改為黃燈-保持監控</value>
+  </data>
+  <data name="SuggestedActionUpdated" xml:space="preserve">
+    <value>總監論壇</value>
+  </data>
+  <data name="sum" xml:space="preserve">
+    <value>和</value>
+  </data>
+  <data name="SupplyAfterTax" xml:space="preserve">
+    <value>稅後供應</value>
+  </data>
+  <data name="SupplyBeforeTax" xml:space="preserve">
+    <value>稅前供應</value>
+  </data>
+  <data name="SupplyInstallationAfterTax" xml:space="preserve">
+    <value>供應+稅後安裝</value>
+  </data>
+  <data name="SupplyInstallationBeforeTax" xml:space="preserve">
+    <value>供應+稅前安裝</value>
+  </data>
+  <data name="SupplyInstallUnitPriceExcludingTax" xml:space="preserve">
+    <value>供應及安裝(不含稅)單價</value>
+  </data>
+  <data name="SupplyInstallUnitPriceIncludingTax" xml:space="preserve">
+    <value>供應及安裝(含稅)單價</value>
+  </data>
+  <data name="SupplyUnitPriceExcludingTax" xml:space="preserve">
+    <value>供應(不含稅)單價</value>
+  </data>
+  <data name="SupplyUnitPriceIncludingTax" xml:space="preserve">
+    <value>供應(含稅)單價</value>
+  </data>
+  <data name="Suspended" xml:space="preserve">
+    <value>暫緩名單</value>
+  </data>
+  <data name="SVA" xml:space="preserve">
+    <value>推薦單位審批</value>
+  </data>
+  <data name="Sync" xml:space="preserve">
+    <value>同步</value>
+  </data>
+  <data name="SyncAll" xml:space="preserve">
+    <value>同步所有</value>
+  </data>
+  <data name="SynchronizationSuccessful" xml:space="preserve">
+    <value>已更新</value>
+  </data>
+  <data name="Systemcalculated" xml:space="preserve">
+    <value>System Calculated</value>
+  </data>
+  <data name="TAActualSum" xml:space="preserve">
+    <value>實際回標總額 (B)</value>
+  </data>
+  <data name="TAAverageSum" xml:space="preserve">
+    <value>採用平均單價項目總額 (A)</value>
+  </data>
+  <data name="TADes" xml:space="preserve">
+    <value>內容</value>
+  </data>
+  <data name="Task" xml:space="preserve">
+    <value>任務</value>
+  </data>
+  <data name="TaskCompleted" xml:space="preserve">
+    <value>已完成</value>
+  </data>
+  <data name="Tasklist" xml:space="preserve">
+    <value>任務</value>
+  </data>
+  <data name="TaskListFailed" xml:space="preserve">
+    <value>無法產生任務</value>
+  </data>
+  <data name="TAtbqv_total_price" xml:space="preserve">
+    <value>供應及安裝稅後金額</value>
+  </data>
+  <data name="TATotal" xml:space="preserve">
+    <value>估算總額 (A+B)</value>
+  </data>
+  <data name="tbdv_install_total_price_excl_tax" xml:space="preserve">
+    <value>安裝(不含稅)金額</value>
+  </data>
+  <data name="tbdv_install_total_price_incl_tax" xml:space="preserve">
+    <value>安裝(含稅)金額</value>
+  </data>
+  <data name="tbdv_install_unit_price_excl_tax" xml:space="preserve">
+    <value>安裝輸入(不含稅)單價</value>
+  </data>
+  <data name="tbdv_install_unit_price_excl_tax2" xml:space="preserve">
+    <value>安裝輸入(不含稅)單價</value>
+  </data>
+  <data name="tbdv_install_unit_price_incl_tax" xml:space="preserve">
+    <value>安装(含税)单价</value>
+  </data>
+  <data name="tbdv_install_unit_price_incl_tax2" xml:space="preserve">
+    <value>安裝輸入(含稅)單價</value>
+  </data>
+  <data name="tbdv_install_vat_total_price" xml:space="preserve">
+    <value>安装工程增值税金额</value>
+  </data>
+  <data name="tbdv_remark" xml:space="preserve">
+    <value>備註</value>
+  </data>
+  <data name="tbdv_supply_total_price_excl_tax" xml:space="preserve">
+    <value>供應(不含稅)金額</value>
+  </data>
+  <data name="tbdv_supply_total_price_incl_tax" xml:space="preserve">
+    <value>供應(含稅)金額</value>
+  </data>
+  <data name="tbdv_supply_unit_price_excl_tax" xml:space="preserve">
+    <value>供應輸入(不含稅)單價</value>
+  </data>
+  <data name="tbdv_supply_unit_price_incl_tax" xml:space="preserve">
+    <value>供应(含税)单价</value>
+  </data>
+  <data name="tbdv_supply_unit_price_incl_tax2" xml:space="preserve">
+    <value>Supply(含稅)單價</value>
+  </data>
+  <data name="tbdv_supply_vat_total_price" xml:space="preserve">
+    <value>供应/销售增值税金额</value>
+  </data>
+  <data name="tbdv_sup_ins_total_price_excl_tax" xml:space="preserve">
+    <value>供應及安裝(不含稅)金額</value>
+  </data>
+  <data name="tbdv_sup_ins_total_price_incl_tax" xml:space="preserve">
+    <value>供應及安裝(含稅)金額</value>
+  </data>
+  <data name="tbdv_sup_ins_unit_price_excl_tax" xml:space="preserve">
+    <value>供應加安裝(不含稅)單價</value>
+  </data>
+  <data name="tbdv_sup_ins_unit_price_excl_tax2" xml:space="preserve">
+    <value>输入供应及安装(不含税)单价</value>
+  </data>
+  <data name="tbdv_sup_ins_unit_price_incl_tax" xml:space="preserve">
+    <value>供应及安装(含税)单价</value>
+  </data>
+  <data name="tbdv_sup_ins_unit_price_incl_tax2" xml:space="preserve">
+    <value>供應及安裝輸入(含稅)單價</value>
+  </data>
+  <data name="tbdv_sup_ins_vat_total_price" xml:space="preserve">
+    <value>供应及安装工程增值税金额</value>
+  </data>
+  <data name="tbdv_sup_total_price_excl_tax" xml:space="preserve">
+    <value>供應(不含稅)金額</value>
+  </data>
+  <data name="tbdv_sup_total_price_incl_tax" xml:space="preserve">
+    <value>供應(含稅)金額</value>
+  </data>
+  <data name="tbdv_sup_unit_price_excl_tax" xml:space="preserve">
+    <value>输入供应及安装(不含税)单价</value>
+  </data>
+  <data name="tbdv_sup_unit_price_incl_tax2" xml:space="preserve">
+    <value>输入供应及安装</value>
+  </data>
+  <data name="tbqd_account_code" xml:space="preserve">
+    <value>会计科目编码</value>
+  </data>
+  <data name="tbqd_cost_center_id" xml:space="preserve">
+    <value>供应及安装工程增值税税率(%)</value>
+  </data>
+  <data name="tbqd_current_quantity" xml:space="preserve">
+    <value>工程量清單數量</value>
+  </data>
+  <data name="tbqd_element_id" xml:space="preserve">
+    <value>主项目</value>
+  </data>
+  <data name="tbqd_extra_data1" xml:space="preserve">
+    <value>内容</value>
+  </data>
+  <data name="tbqd_extra_data10" xml:space="preserve">
+    <value>其他內容10（文字）</value>
+  </data>
+  <data name="tbqd_extra_data2" xml:space="preserve">
+    <value>其他内容 2 (文字)</value>
+  </data>
+  <data name="tbqd_extra_data3" xml:space="preserve">
+    <value>其他内容 3 (文字)</value>
+  </data>
+  <data name="tbqd_extra_data4" xml:space="preserve">
+    <value>其他内容 4 (文字)</value>
+  </data>
+  <data name="tbqd_extra_data5" xml:space="preserve">
+    <value>其他内容 5 (文字)</value>
+  </data>
+  <data name="tbqd_extra_data6" xml:space="preserve">
+    <value>其他内容 6 (文字)</value>
+  </data>
+  <data name="tbqd_extra_data7" xml:space="preserve">
+    <value>其他内容 7 (文字)</value>
+  </data>
+  <data name="tbqd_extra_data8" xml:space="preserve">
+    <value>其他内容 9 (文字)</value>
+  </data>
+  <data name="tbqd_extra_data9" xml:space="preserve">
+    <value>其他内容 10 (文字)</value>
+  </data>
+  <data name="tbqd_has_fluctuation" xml:space="preserve">
+    <value>有人工材差(是/否)</value>
+  </data>
+  <data name="tbqd_item_type_id" xml:space="preserve">
+    <value>清单类别</value>
+  </data>
+  <data name="tbqd_net_quantity" xml:space="preserve">
+    <value>净数量</value>
+  </data>
+  <data name="tbqd_prev_quantity" xml:space="preserve">
+    <value>过去数量</value>
+  </data>
+  <data name="tbqd_quantity_editable" xml:space="preserve">
+    <value>投標人數量</value>
+  </data>
+  <data name="tbqd_sub_trade_id" xml:space="preserve">
+    <value>成本编码 - 子行业</value>
+  </data>
+  <data name="tbqd_trade_id" xml:space="preserve">
+    <value>成本编码 - 行业</value>
+  </data>
+  <data name="tbqd_type_id" xml:space="preserve">
+    <value>人材机类别</value>
+  </data>
+  <data name="tbqd_unit_measure" xml:space="preserve">
+    <value>單位</value>
+  </data>
+  <data name="tbqd_unit_measure1" xml:space="preserve">
+    <value>tbqd_unit_measure</value>
+  </data>
+  <data name="TChinese" xml:space="preserve">
+    <value>繁體中文</value>
+  </data>
+  <data name="TdTenderPersonStatus" xml:space="preserve">
+    <value>狀態已更新</value>
+  </data>
+  <data name="Teachers" xml:space="preserve">
+    <value>導師</value>
+  </data>
+  <data name="Teaching Material" xml:space="preserve">
+    <value>教材</value>
+  </data>
+  <data name="Teaching Materials" xml:space="preserve">
+    <value>教材</value>
+  </data>
+  <data name="TechnicalEvaluation" xml:space="preserve">
+    <value>技術評審</value>
+  </data>
+  <data name="Telephone" xml:space="preserve">
+    <value>Telephone</value>
+  </data>
+  <data name="tempapprovalcompleted0" xml:space="preserve">
+    <value>暫準審批未開始</value>
+  </data>
+  <data name="tempapprovalcompleted1" xml:space="preserve">
+    <value>暫準審批完成</value>
+  </data>
+  <data name="tempapprovalcompleted2" xml:space="preserve">
+    <value>暫準審批進行中</value>
+  </data>
+  <data name="TEMPLIST" xml:space="preserve">
+    <value>臨時名單</value>
+  </data>
+  <data name="Temporary" xml:space="preserve">
+    <value>臨時名單</value>
+  </data>
+  <data name="Temporarylistapproval" xml:space="preserve">
+    <value>承包商名冊審批</value>
+  </data>
+  <data name="TenderAddendem" xml:space="preserve">
+    <value>招標文件修正</value>
+  </data>
+  <data name="TenderAddendum" xml:space="preserve">
+    <value>招標文件修正</value>
+  </data>
+  <data name="TenderAnalysis" xml:space="preserve">
+    <value>標書分析</value>
+  </data>
+  <data name="TenderAward" xml:space="preserve">
+    <value>定標</value>
+  </data>
+  <data name="Tenderbook" xml:space="preserve">
+    <value>標書</value>
+  </data>
+  <data name="TenderBudgetAmountLeast3Tenderers" xml:space="preserve">
+    <value>招標預算金額&lt;=人民幣250萬，建議最少3家投標單位；</value>
+  </data>
+  <data name="TenderBudgetAmountLeast5orAboveTenderers" xml:space="preserve">
+    <value>招標預算金額 &gt;人民幣250萬，建議最少５家或以上投標單位。</value>
+  </data>
+  <data name="TenderClarificationTenderQueries" xml:space="preserve">
+    <value>議標問卷</value>
+  </data>
+  <data name="TenderCode" xml:space="preserve">
+    <value>標書編號</value>
+  </data>
+  <data name="TenderConversation" xml:space="preserve">
+    <value>招投標訊息</value>
+  </data>
+  <data name="TenderDatesSpec" xml:space="preserve">
+    <value>Tender Dates Spec</value>
+  </data>
+  <data name="Tenderdescription" xml:space="preserve">
+    <value>招標範圍</value>
+  </data>
+  <data name="Tenderdetilas" xml:space="preserve">
+    <value>招標詳情</value>
+  </data>
+  <data name="TenderDocument" xml:space="preserve">
+    <value>招標文件</value>
+  </data>
+  <data name="Tenderer" xml:space="preserve">
+    <value>投標者</value>
+  </data>
+  <data name="TendererList" xml:space="preserve">
+    <value>投標單位</value>
+  </data>
+  <data name="TendererName" xml:space="preserve">
+    <value>投標單位</value>
+  </data>
+  <data name="TendererQty" xml:space="preserve">
+    <value>投标人数量</value>
+  </data>
+  <data name="Tendererselection" xml:space="preserve">
+    <value>投標單位推薦</value>
+  </data>
+  <data name="TendererV" xml:space="preserve">
+    <value>投標單位</value>
+  </data>
+  <data name="TenderGreenInfo" xml:space="preserve">
+    <value>綠色=任務已完成且在計劃時間內</value>
+  </data>
+  <data name="TenderGreyInfo" xml:space="preserve">
+    <value>灰色=未完成</value>
+  </data>
+  <data name="Tenderinvitation" xml:space="preserve">
+    <value>招標邀請</value>
+  </data>
+  <data name="TenderIssued" xml:space="preserve">
+    <value>已出標</value>
+  </data>
+  <data name="Tenderissuepersonnel" xml:space="preserve">
+    <value>出標人:</value>
+  </data>
+  <data name="TenderList" xml:space="preserve">
+    <value>招標列表</value>
+  </data>
+  <data name="TenderMaster" xml:space="preserve">
+    <value>招投標匯總</value>
+  </data>
+  <data name="TenderModule" xml:space="preserve">
+    <value>Tender Module</value>
+  </data>
+  <data name="TenderName" xml:space="preserve">
+    <value>招投標包名稱</value>
+  </data>
+  <data name="Tenderno" xml:space="preserve">
+    <value>招投標編號:</value>
+  </data>
+  <data name="TenderNumber" xml:space="preserve">
+    <value>標書編號</value>
+  </data>
+  <data name="Tenderprepare" xml:space="preserve">
+    <value>招標文件準備</value>
+  </data>
+  <data name="TenderQueries" xml:space="preserve">
+    <value>議標問卷</value>
+  </data>
+  <data name="TenderQuery" xml:space="preserve">
+    <value>議標問卷</value>
+  </data>
+  <data name="TenderRedInfo" xml:space="preserve">
+    <value>紅色=任務未完成，落後於計劃的時間表</value>
+  </data>
+  <data name="TenderReport" xml:space="preserve">
+    <value>評標報告</value>
+  </data>
+  <data name="TenderReturnAmount" xml:space="preserve">
+    <value>Tender Return Amount</value>
+  </data>
+  <data name="TenderReturnSubmission" xml:space="preserve">
+    <value>回標表格</value>
+  </data>
+  <data name="TenderReturnSummary" xml:space="preserve">
+    <value>回標滙總</value>
+  </data>
+  <data name="Tenderstats" xml:space="preserve">
+    <value>招投標狀態:</value>
+  </data>
+  <data name="TenderStatus" xml:space="preserve">
+    <value>招標狀態</value>
+  </data>
+  <data name="TenderTabulator" xml:space="preserve">
+    <value>投標製表</value>
+  </data>
+  <data name="TenderYellowInfo" xml:space="preserve">
+    <value>黃色=正在進行中</value>
+  </data>
+  <data name="tend_plan_date_1" xml:space="preserve">
+    <value>編制投標單位名單 / 招標文件</value>
+  </data>
+  <data name="tend_plan_date_32" xml:space="preserve">
+    <value>批准招投標單位名單建議</value>
+  </data>
+  <data name="Terms &amp; Conditions" xml:space="preserve">
+    <value>用戶條款</value>
+  </data>
+  <data name="Text" xml:space="preserve">
+    <value>純文字</value>
+  </data>
+  <data name="ThanksForVerifingYourEmailAddress" xml:space="preserve">
+    <value>Thanks For verifing your email address</value>
+  </data>
+  <data name="Therapist" xml:space="preserve">
+    <value>專職人員</value>
+  </data>
+  <data name="Thisinspectorisalreadyadded" xml:space="preserve">
+    <value>此考察員已在列表中</value>
+  </data>
+  <data name="ThisQualificationWasMissing" xml:space="preserve">
+    <value>這個業務範圍未填寫任何資質。</value>
+  </data>
+  <data name="Thistenderisinissuemode" xml:space="preserve">
+    <value>現正在出標階段</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>標題</value>
+  </data>
+  <data name="TLevel1Text" xml:space="preserve">
+    <value>第一层</value>
+  </data>
+  <data name="TLevel2" xml:space="preserve">
+    <value>第二层</value>
+  </data>
+  <data name="TLevel3" xml:space="preserve">
+    <value>第三层</value>
+  </data>
+  <data name="TLevel4" xml:space="preserve">
+    <value>第四层</value>
+  </data>
+  <data name="TLevel5" xml:space="preserve">
+    <value>第五层</value>
+  </data>
+  <data name="TLevel6" xml:space="preserve">
+    <value>第六层</value>
+  </data>
+  <data name="TLevel7" xml:space="preserve">
+    <value>第七层</value>
+  </data>
+  <data name="To" xml:space="preserve">
+    <value>To</value>
+  </data>
+  <data name="Toggle" xml:space="preserve">
+    <value>切換</value>
+  </data>
+  <data name="ToggleCtrlA" xml:space="preserve">
+    <value>切換模式 (Ctrl-A)</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>總計</value>
+  </data>
+  <data name="Totalamount" xml:space="preserve">
+    <value>Total Amount</value>
+  </data>
+  <data name="TotalAmountinvolved" xml:space="preserve">
+    <value>涉案金額</value>
+  </data>
+  <data name="TotalFreezeAmountinvolved" xml:space="preserve">
+    <value>凍結金額</value>
+  </data>
+  <data name="TotalRecords" xml:space="preserve">
+    <value>總記錄</value>
+  </data>
+  <data name="TotalTQ" xml:space="preserve">
+    <value>Total TQ</value>
+  </data>
+  <data name="TPS0" xml:space="preserve">
+    <value>臨時批准未完成</value>
+  </data>
+  <data name="TPS1" xml:space="preserve">
+    <value>臨時批准完成</value>
+  </data>
+  <data name="TPS2" xml:space="preserve">
+    <value>臨時批准正在進行中</value>
+  </data>
+  <data name="TRA" xml:space="preserve">
+    <value>評標報告審批</value>
+  </data>
+  <data name="Trade" xml:space="preserve">
+    <value>T2成本编码</value>
+  </data>
+  <data name="TreeView" xml:space="preserve">
+    <value>樹視圖</value>
+  </data>
+  <data name="True" xml:space="preserve">
+    <value>是</value>
+  </data>
+  <data name="Turndownreasonnotselectedfor" xml:space="preserve">
+    <value>未選拒絕原因</value>
+  </data>
+  <data name="Tutor" xml:space="preserve">
+    <value>導師</value>
+  </data>
+  <data name="Tutor/Therapist" xml:space="preserve">
+    <value>導師</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>类别</value>
+  </data>
+  <data name="UnauthorizedAccess" xml:space="preserve">
+    <value>拒絕存取</value>
+  </data>
+  <data name="Unit" xml:space="preserve">
+    <value>单位</value>
+  </data>
+  <data name="UpdateBrand" xml:space="preserve">
+    <value>更新品牌</value>
+  </data>
+  <data name="Update_Profile" xml:space="preserve">
+    <value>Update Profile</value>
+  </data>
+  <data name="UploadChoppedDocument" xml:space="preserve">
+    <value>上傳已蓋章的文件</value>
+  </data>
+  <data name="UploadDocument" xml:space="preserve">
+    <value>Upload Document</value>
+  </data>
+  <data name="UploadedLetterofAward" xml:space="preserve">
+    <value>中標通知書已成功上傳</value>
+  </data>
+  <data name="UploadedNotificationLetterofAward" xml:space="preserve">
+    <value>Uploaded Notification Letter of Award Successfully</value>
+  </data>
+  <data name="UploadedThankYouLetter" xml:space="preserve">
+    <value>感謝信已成功上傳</value>
+  </data>
+  <data name="uploadingmeetingnotesmandatory" xml:space="preserve">
+    <value>線下提交必須上載會議記錄</value>
+  </data>
+  <data name="UploadLetterofAwardTemplate" xml:space="preserve">
+    <value>上傳中標通知書範本</value>
+  </data>
+  <data name="UploadNotificationofAwardtoSiteTemplate" xml:space="preserve">
+    <value>上傳定標通知書予工地</value>
+  </data>
+  <data name="UploadSuccess" xml:space="preserve">
+    <value>成功上載</value>
+  </data>
+  <data name="UploadThankYouLetterTemplate" xml:space="preserve">
+    <value>上傳感謝信範本</value>
+  </data>
+  <data name="URLOnly" xml:space="preserve">
+    <value>請輸入有效的網址</value>
+  </data>
+  <data name="USD" xml:space="preserve">
+    <value>美元</value>
+  </data>
+  <data name="User name" xml:space="preserve">
+    <value>用戶名</value>
+  </data>
+  <data name="UserAleradyExistInFile" xml:space="preserve">
+    <value>該用戶ID已經存在</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>用戶名</value>
+  </data>
+  <data name="UserNameBlankError" xml:space="preserve">
+    <value>用戶名不能為空</value>
+  </data>
+  <data name="UserNotFound" xml:space="preserve">
+    <value>沒有找到用戶</value>
+  </data>
+  <data name="users" xml:space="preserve">
+    <value>用戶</value>
+  </data>
+  <data name="ValidEmail" xml:space="preserve">
+    <value>請輸入有效電郵地址</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>值</value>
+  </data>
+  <data name="Values" xml:space="preserve">
+    <value>将领域移到这裏</value>
+  </data>
+  <data name="Vendor" xml:space="preserve">
+    <value>供應商</value>
+  </data>
+  <data name="VendorExist" xml:space="preserve">
+    <value>投標單位已經存在</value>
+  </data>
+  <data name="VendorInputdiscountforBO" xml:space="preserve">
+    <value>Vendor Input discount for BO</value>
+  </data>
+  <data name="Vendorlistapproval" xml:space="preserve">
+    <value>承包商名冊審批</value>
+  </data>
+  <data name="VendorName" xml:space="preserve">
+    <value>供應商名稱</value>
+  </data>
+  <data name="VendorNameBlank" xml:space="preserve">
+    <value>承包/供應商名稱不能留空</value>
+  </data>
+  <data name="VendorNameExist" xml:space="preserve">
+    <value>此承包/供應商名稱已存在於此文件中</value>
+  </data>
+  <data name="VendorNameExistInVendorList" xml:space="preserve">
+    <value>此承包/供應商名稱已存在於系統內承包/供應商列表中</value>
+  </data>
+  <data name="VendorNumber" xml:space="preserve">
+    <value>單位編碼</value>
+  </data>
+  <data name="VendorProfileApplication" xml:space="preserve">
+    <value>承包/供应商名册查询及应用</value>
+  </data>
+  <data name="VendorSelection" xml:space="preserve">
+    <value>供應商選擇</value>
+  </data>
+  <data name="Verifypassword" xml:space="preserve">
+    <value>認證已完成</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>版本</value>
+  </data>
+  <data name="VforumProjectName" xml:space="preserve">
+    <value>項目名稱</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>查看</value>
+  </data>
+  <data name="ViewPDForumMessageInvitation" xml:space="preserve">
+    <value>查看PD論壇消息邀請</value>
+  </data>
+  <data name="ViewTimeLine" xml:space="preserve">
+    <value>查看時間規劃</value>
+  </data>
+  <data name="VisitReport" xml:space="preserve">
+    <value>考察報告</value>
+  </data>
+  <data name="VisitReportArrangementTab" xml:space="preserve">
+    <value>考察安排</value>
+  </data>
+  <data name="Visitreportdatasavedsuccessfully" xml:space="preserve">
+    <value>考察報告已儲存</value>
+  </data>
+  <data name="VisitReportScoreTab" xml:space="preserve">
+    <value>考察結果</value>
+  </data>
+  <data name="visitreportstatus0" xml:space="preserve">
+    <value>考察未開始</value>
+  </data>
+  <data name="visitreportstatus1" xml:space="preserve">
+    <value>考察完成</value>
+  </data>
+  <data name="visitreportstatus2" xml:space="preserve">
+    <value>考察進行中</value>
+  </data>
+  <data name="VisitReportUpdateMsg" xml:space="preserve">
+    <value>考察報告數據更新成功!!</value>
+  </data>
+  <data name="VMApprovedVendorCompletedVisitReportNeedsSubmitToTempList" xml:space="preserve">
+    <value>您有一份VM批准的供應商列表，其考察報告已完成，需要提交臨時列表</value>
+  </data>
+  <data name="VMApprovedVendorNeedsSubmitToTempList" xml:space="preserve">
+    <value>您有一個需要審視的建議臨時名單</value>
+  </data>
+  <data name="VMObservationVendorNeedsSubmitToTempList" xml:space="preserve">
+    <value>您有一個在觀察供應商下註冊的VM列表，需要提交臨時列表</value>
+  </data>
+  <data name="VMObservedVendorCompletedVisitReportNeedsSubmitToTempList" xml:space="preserve">
+    <value>您有一個觀察供應商下的VM列表，其訪問報告已完成，需要提交臨時列表</value>
+  </data>
+  <data name="VMRejectedVendorCompletedVisitReportNeedsSubmitToTempList" xml:space="preserve">
+    <value>您有一個VM拒絕供應商列表，其訪問報告已完成，需要提交臨時列表</value>
+  </data>
+  <data name="VMRejectedVendorNeedsSubmitToTempList" xml:space="preserve">
+    <value>您有一個需要審視的建議拒絕臨時名單</value>
+  </data>
+  <data name="VRCompletedVendorNeedsSubmitToTempList" xml:space="preserve">
+    <value>您有一個已完成訪問報告的供應商列表，需要提交臨時列表</value>
+  </data>
+  <data name="WaiveInspection" xml:space="preserve">
+    <value>填寫不需要考察表格</value>
+  </data>
+  <data name="WantToIssueThisTAd" xml:space="preserve">
+    <value>是否要發出投標疑問澄清?</value>
+  </data>
+  <data name="WatchList" xml:space="preserve">
+    <value>關注名單直</value>
+  </data>
+  <data name="WatchListApproval" xml:space="preserve">
+    <value>關注名單審批</value>
+  </data>
+  <data name="WatchListCorrection" xml:space="preserve">
+    <value>關注名單更新</value>
+  </data>
+  <data name="WatchListCreatedSuccesfully" xml:space="preserve">
+    <value>觀察報告已提交</value>
+  </data>
+  <data name="WatchListUntilDate" xml:space="preserve">
+    <value>關注名單直到日期</value>
+  </data>
+  <data name="WatchListUntilDateAddedSuccesfully" xml:space="preserve">
+    <value>關注名單直到日期已設定</value>
+  </data>
+  <data name="WatermarkNotFound" xml:space="preserve">
+    <value>找碼到文件</value>
+  </data>
+  <data name="WatermarkSuccess" xml:space="preserve">
+    <value>成功</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>你好</value>
+  </data>
+  <data name="Welcome Back" xml:space="preserve">
+    <value>歡迎回來</value>
+  </data>
+  <data name="Wereceivedyouresetpasswordrequest_Pleaseenteryournewpassword" xml:space="preserve">
+    <value>We received your reset password request. Please enter your new password!</value>
+  </data>
+  <data name="Windowalreadyclosed" xml:space="preserve">
+    <value>視窗已關閉</value>
+  </data>
+  <data name="WriteComments" xml:space="preserve">
+    <value>寫評論</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>年</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>是</value>
+  </data>
+  <data name="Youarenotabletoaddpackages" xml:space="preserve">
+    <value>沒有權限增加業務範圍</value>
+  </data>
+  <data name="Youcannotusepreviouspasswordbefore180days" xml:space="preserve">
+    <value>你不能於180天內重複使用以往的密碼</value>
+  </data>
+  <data name="youdidnotselecedanyrow" xml:space="preserve">
+    <value>請先選擇一行</value>
+  </data>
+  <data name="YouHaveDeselected" xml:space="preserve">
+    <value>您已取消選擇</value>
+  </data>
+  <data name="youhavesameBQDetailItemForThisBQ" xml:space="preserve">
+    <value>已有一個相同的工程量清單資料</value>
+  </data>
+  <data name="youhaveSameBQForThisProject" xml:space="preserve">
+    <value>已有一個相同的工程量清單</value>
+  </data>
+  <data name="YouHaveSelected" xml:space="preserve">
+    <value>您已選擇</value>
+  </data>
+  <data name="YouhaveselectedthevendorhavingPendingorDraftstatus" xml:space="preserve">
+    <value>正在待定稿</value>
+  </data>
+  <data name="YouMayEditMsgDownloadEditReuploadAgainToSystem" xml:space="preserve">
+    <value>你可以下載文檔並修改信息，然後再上載到系統</value>
+  </data>
+  <data name="Youneedtowritesomething" xml:space="preserve">
+    <value>你需要寫點東西！</value>
+  </data>
+  <data name="Youremailisnotregisteredwithus" xml:space="preserve">
+    <value>您的電子郵件未在我們這裡註冊</value>
+  </data>
+  <data name="YourIdisnotregisteredwithus" xml:space="preserve">
+    <value>您的用戶編號未在我們這裡註冊</value>
+  </data>
+  <data name="Yourrecordissaved" xml:space="preserve">
+    <value>您的記錄已保存</value>
+  </data>
+  <data name="Yourreplyhasbeensuccessfullysent" xml:space="preserve">
+    <value>你的回覆已交</value>
+  </data>
+  <data name="Youwontbeabletorevertthis" xml:space="preserve">
+    <value>你不能還原資料</value>
+  </data>
+</root>

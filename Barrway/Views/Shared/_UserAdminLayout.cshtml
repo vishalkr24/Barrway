@@ -16,7 +16,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Title -->
-    <title>Barrway Admin</title>
+    <title>Barrway @Resource.Admin</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="../favicon.ico">
@@ -482,7 +482,7 @@
                                     </div>*@
                                 <!-- End Dropdown -->
 
-                                <a class="dropdown-item" href="#" ui-sref="my_profile()">Profile &amp; account</a>
+                                <a class="dropdown-item" href="#" ui-sref="my_profile()">@Resource.Profile &amp; @Resource.Account</a>
                                 @*<a class="dropdown-item" href="#">Settings</a>*@
 
                                 <div class="dropdown-divider"></div>
@@ -509,7 +509,7 @@
                                 @*<a class="dropdown-item" href="#">Manage team</a>*@
 
                                 <form id="mySignOutForm" name="mySignOutForm" method="post" action="@Url.Action("LogoutPublicUser","Account")">
-                                    <a class="dropdown-item" href="javascript:void(0)" onclick="Logout()">Sign out</a>
+                                    <a class="dropdown-item" href="javascript:void(0)" onclick="Logout()">@Resource.Sign_out</a>
                                 </form>
                             </div>
                         </div>
@@ -538,20 +538,20 @@
                             <div class="nav-item">
                                 <a class="nav-link" id="user-nav-dashboard" ui-sref="user_dashboard()" role="button" data-bs-target="#navbarVerticalMenuDashboards" aria-expanded="false" aria-controls="navbarVerticalMenuDashboards">
                                     <i class="bi-house-door nav-icon"></i>
-                                    <span class="nav-link-title">Dashboard</span>
+                                    <span class="nav-link-title">@Resource.Dashboard</span>
                                 </a>
                             </div>
                             <div class="nav-item">
                                 <a class="nav-link" id="user-nav-mycalendar" href="#navbarVerticalMenuDashboards" ui-sref="my_calendar({formId:2305})" role="button" data-bs-target="#navbarVerticalMenuDashboards" aria-expanded="false" aria-controls="navbarVerticalMenuDashboards">
                                     <i class="bi-calendar nav-icon"></i>
-                                    <span class="nav-link-title">My Calendar</span>
+                                    <span class="nav-link-title">@Resource.My_Calendar</span>
                                 </a>
                             </div>
 
                             <div class="nav-item">
                                 <a class="nav-link" id="user-nav-myfavorite" href="javascript:void(0)" role="button" ui-sref="my_favorite({formId:2305})" data-bs-target="#navbarVerticalMenuPagesUsersMenu" aria-expanded="false" aria-controls="navbarVerticalMenuPagesUsersMenu">
                                     <i class="bi-heart nav-icon"></i>
-                                    <span class="nav-link-title">My Favorite</span>
+                                    <span class="nav-link-title">@Resource.My_Favorite</span>
                                 </a>
 
                             </div>
@@ -560,7 +560,7 @@
                             <div class="nav-item ">
                                 <a class="nav-link " id="user-nav-myattendance" href="#" ui-sref="my_attendance({formId:2312})" role="button" data-bs-target="#navbarVerticalMenuPagesProjectsMenu" aria-expanded="false" aria-controls="navbarVerticalMenuPagesProjectsMenu">
                                     <i class="bi-stickies nav-icon"></i>
-                                    <span class="nav-link-title">My Attendance</span>
+                                    <span class="nav-link-title">@Resource.My_Attendance</span>
                                 </a>
 
                             </div>
@@ -569,19 +569,19 @@
                             <div class="nav-item ">
                                 <a class="nav-link " href="javascript:void(0)" role="button" data-bs-target="#navbarVerticalMenuPagesProjectMenu" aria-expanded="false" aria-controls="navbarVerticalMenuPagesProjectMenu">
                                     <i class="bi-currency-dollar nav-icon"></i>
-                                    <span class="nav-link-title">My Payment <i class="bi bi-chevron-right" style=" float: right; padding-top: 6px; margin-right: 0px;"></i></span>
+                                    <span class="nav-link-title">@Resource.My_Payment <i class="bi bi-chevron-right" style=" float: right; padding-top: 6px; margin-right: 0px;"></i></span>
                                 </a>
 
                                 <div id="navbarVerticalMenuPagesProjectMenu" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
-                                    <a class="nav-link " href="javascript:void(0)" ui-sref="user_payment_history({formId:2326})">My payment history</a>
-                                    <a class="nav-link " href="javascript:void(0)" ui-sref="user_b_coin_balance({formId:2327})">B coin balance</a>
+                                    <a class="nav-link " href="javascript:void(0)" ui-sref="user_payment_history({formId:2326})">@Resource.My_payment_history</a>
+                                    <a class="nav-link " href="javascript:void(0)" ui-sref="user_b_coin_balance({formId:2327})">@Resource.B_coin_balance</a>
                                 </div>
                             </div>
 
                             <div class="nav-item">
                                 <a class="nav-link " id="user-nav-myprofile" href="" ui-sref="my_profile()" data-placement="left">
                                     <i class="bi-person nav-icon"></i>
-                                    <span class="nav-link-title">My Profile</span>
+                                    <span class="nav-link-title">@Resource.My_Profile</span>
                                 </a>
                             </div>
 

@@ -59,6 +59,7 @@ namespace Barrway.Utility.Common
     public enum FormRole
     {
         BUSINESS_USER = 1,
-        PUBLIC_USER = 2
+        PUBLIC_USER = 2,
+        SUPERADMIN_USER = 3
     }
 }

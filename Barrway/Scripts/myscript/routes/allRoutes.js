@@ -2094,6 +2094,90 @@
                     parent: 'home'
                 }
             })
+            .state('superadmin_dashboard', {
+                url: '/Superadmin/dashboard/',
+                onEnter: function ($window) { $window.document.title = "Dashboard"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/superadmin/dashboard.html?token=' + uuid,
+                        controller: 'SuperAdminDashboardController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
+            .state('SuperadminBusinessUsers', {
+                url: '/Superadmin/BusinessUsers/',
+                onEnter: function ($window) { $window.document.title = "Business Users"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/superadmin/BusinessUserList.html?token=' + uuid,
+                        controller: 'SuperAdminBusinessUsersController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
+            .state('SuperadminPublicUsers', {
+                url: '/Superadmin/PublicUsers/',
+                onEnter: function ($window) { $window.document.title = "Public Users"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/superadmin/PublicUserList.html?token=' + uuid,
+                        controller: 'SuperAdminPublicUsersController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
+            .state('SuperAdminUserMaster', {
+                url: '/Superadmin/SuperUsers/:formId',
+                onEnter: function ($window) { $window.document.title = "Superadmin Users"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/formgenerator/formRecords.html?token=' + uuid,
+                        controller: 'FormRecordsController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
+            .state('SuperAdminBusinessCompanyMaster', {
+                url: '/Superadmin/BusinessCompanyMaster/:UserId',
+                onEnter: function ($window) { $window.document.title = "Business Company"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/Superadmin/BusinessCompanyMaster.html?token=' + uuid,
+                        controller: 'SuperAdminBusinessCompanyMasterController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
+            .state('SuperAdminCompanyMaster', {
+                url: '/Superadmin/CompanyMaster/:formId',
+                onEnter: function ($window) { $window.document.title = "Company Master"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/formgenerator/formRecords.html?token=' + uuid,
+                        controller: 'FormRecordsController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
     }]);
 }(FormGeneratorApp));
 

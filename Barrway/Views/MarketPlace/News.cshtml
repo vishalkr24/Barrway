@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "News";
+    ViewBag.Title = @Resource.News;
     Layout = "~/Views/Shared/_LayoutMarketPlace.cshtml";
 }
 
@@ -11,7 +11,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="bredcrum-content">
-                        <span><a href="/Marketplace/Index" style="color: #222;">Home </a> </span> / <span><a href="/Marketplace/News">News</a> </span>
+                        <span><a href="/Marketplace/Index" style="color: #222;">@Resource.Home </a> </span> / <span><a href="/Marketplace/News">@Resource.News</a> </span>
 
                     </div>
                 </div>
@@ -37,7 +37,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="filter fl-r">
-                        <button class="filter-btn"><img src="~/assets/marketplace/image/filter.png" /> Featured </button>
+                        <button class="filter-btn"><img src="~/assets/marketplace/image/filter.png" /> @Resource.Featured </button>
                     </div>
                 </div>
             </div>
@@ -69,7 +69,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="bredcrum-content">
-                        <span><a href="/Marketplace/Index" style="color: #222;">Home </a> </span> / <span><a href="/Marketplace/News">News</a> </span> / <span><a href="" class="post-title post-title-href">Post title</a> </span>
+                        <span><a href="/Marketplace/Index" style="color: #222;">@Resource.Home </a> </span> / <span><a href="/Marketplace/News">@Resource.News</a> </span> / <span><a href="" class="post-title post-title-href">@Resource.Post_title</a> </span>
 
                     </div>
                 </div>

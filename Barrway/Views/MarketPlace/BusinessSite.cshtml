@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Business Site";
+    ViewBag.Title = Resource.Business_Site;
     Layout = "~/Views/Shared/_LayoutMarketPlace.cshtml";
 }
 
@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="head">
-                    <h2>Business</h2>
+                    <h2>@Resource.Business</h2>
                 </div>
             </div>
         </div>
@@ -22,13 +22,13 @@
         <div class="row">
             <div class="col-md-2">
                 <div class="filter">
-                    <p>Sort</p>
-                    <button class="filter-btn"><img src="~/assets/marketplace/image/filter.png" /> Filter</button>
+                    <p>@Resource.Sort</p>
+                    <button class="filter-btn"><img src="~/assets/marketplace/image/filter.png" /> @Resource.Filter</button>
                 </div>
             </div>
             <div class="col-md-10">
                 <div class="Search">
-                    <p>Filter</p>
+                    <p>@Resource.Filter</p>
                     <div class="filter-tags">
                         <input type="text" name="filter">
                     </div>

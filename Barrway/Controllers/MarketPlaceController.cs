@@ -9,8 +9,10 @@ using FormGeneratorDTOs.DTOs;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -26,7 +28,7 @@ namespace Barrway.Controllers
         private readonly IAuthService authService;
         private readonly IFormAPIRepository formAPIRepository;
 
-        public MarketPlaceController(IBusinessUserService businessUserService, IGlobalMasterService globalMasterService, IMasterService masterService, IPublicUserService publicUserService,IAuthService authService,IFormAPIRepository formAPIRepository)
+        public MarketPlaceController(IBusinessUserService businessUserService, IGlobalMasterService globalMasterService, IMasterService masterService, IPublicUserService publicUserService, IAuthService authService, IFormAPIRepository formAPIRepository)
         {
             this.businessUserService = businessUserService;
             this.globalMasterService = globalMasterService;
@@ -69,7 +71,8 @@ namespace Barrway.Controllers
                     return RedirectToAction("Index", "Marketplace");
                 }
 
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return RedirectToAction("Index", "Marketplace");
             }
@@ -105,8 +108,8 @@ namespace Barrway.Controllers
             {
                 return RedirectToAction("Index", "Marketplace");
             }
-            
-            
+
+
         }
 
         public async Task<ActionResult> CompanyService(string CompanyCode, string CalendarCode = null)
@@ -128,7 +131,7 @@ namespace Barrway.Controllers
             {
                 return RedirectToAction("Index", "Marketplace");
             }
-            
+
         }
 
         public async Task<ActionResult> CompanyPackage(string CompanyCode, string CalendarCode = null)
@@ -143,7 +146,7 @@ namespace Barrway.Controllers
                 companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
 
                 ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
-                
+
                 return View(companyModel);
             }
             catch (Exception ex)
@@ -174,7 +177,7 @@ namespace Barrway.Controllers
 
                 if (User.Identity.IsAuthenticated)
                 {
-                    if(UserIdentity.Role == "PUBLIC_USER")
+                    if (UserIdentity.Role == "PUBLIC_USER")
                     {
                         // check if calendar is a favorite
                         var calendarFavCheck = await publicUserService.CheckSingleMyFavoriteCalendar(User.Identity.Name, CalendarCode);
@@ -222,7 +225,7 @@ namespace Barrway.Controllers
             {
                 return RedirectToAction("Index", "Marketplace");
             }
-            
+
         }
         [HttpPost]
         public async Task<ActionResult> GetCalendarDetails(string id)
@@ -298,7 +301,7 @@ namespace Barrway.Controllers
             try
             {
                 var packageData = await masterService.GetCompanyCalendarPackages(CompanyCode);
-                
+
                 return Json(new { packageData }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -307,5 +310,49 @@ namespace Barrway.Controllers
             }
         }
 
+        [AllowAnonymous]
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangeLanguage(int langId)
+        {
+            switch (langId)
+            {
+                case 1:
+                    ChangeCulture("en");
+                    break;
+                case 2:
+                    ChangeCulture("zh-Hant");
+                    break;
+                default:
+                    ChangeCulture("en");
+                    break;
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        private void ChangeCulture(string lang)
+        {
+            try
+            {
+                Response.Cookies.Remove("Language");
+
+                HttpCookie languageCookie = System.Web.HttpContext.Current.Request.Cookies["Language"];
+
+                if (languageCookie == null) languageCookie = new HttpCookie("Language");
+
+                languageCookie.Value = lang;
+
+                languageCookie.Expires = DateTime.Now.AddDays(10);
+
+                Response.SetCookie(languageCookie);
+
+                Response.Redirect(Request.UrlReferrer.ToString());
+            }
+            catch (Exception) 
+            {
+
+            }
+        }
     }
 }
