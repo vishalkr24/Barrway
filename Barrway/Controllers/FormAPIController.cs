@@ -115,6 +115,19 @@ namespace Barrway.Controllers
                 data.CustomFilters.Add(new CustomFilter() { FieldName = "USER_ID", Value = User.Identity.Name });
             }
 
+            if (role == "SUPERADMIN_USER")
+            {
+                data.IsCustomFilter = false;
+                data.CustomFilters.Clear();
+                
+                if (data.formId == (int)FormSetting.USER_MASTER)
+                {
+                    data.IsCustomFilter = true;
+                    data.CustomFilters.Add(new CustomFilter() { FieldName = "ROLE_ID", Value = "3" });
+                }
+                
+            }
+
             var result = (await formAPIRepository.GetFormRecordList(data)).Data;
             if (data.formId == (int)FormSetting.CALENDAR_FORM)
             {

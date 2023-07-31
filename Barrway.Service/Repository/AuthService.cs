@@ -187,6 +187,31 @@ namespace Barrway.Service.Repository
 
         }
 
+        //public async Task<AddUpdateDelete<IDictionary<string, object>>> ValidateSuperAdminUser(string email, string password, bool isToken = false)
+        //{
+        //    try
+        //    {
+        //        string SupUsername = "Superadmin@augursinnovation.com";
+        //        string SupPassword = "Admin@1234";
+
+        //        if (email == SupUsername && password == SupPassword)
+        //        {
+        //            return new AddUpdateDelete<IDictionary<string, object>> { Status = true, Message = "Success" };
+        //        }
+        //        else
+        //        {
+        //            return new AddUpdateDelete<IDictionary<string, object>> { Status = false, Message = "Invalid email or password." };
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = ex.Message };
+        //    }
+
+        //}
+
         public async Task<AddUpdateDelete> userEmaillogin(string email, string password)
         {
             try

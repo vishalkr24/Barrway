@@ -144,7 +144,7 @@
 
                     <a class="navbar-brand" href="/BusinessAdmin/Dashboard" aria-label="Front">
                         <img class="navbar-brand-logo" src="../assets/svg/logos/logo.png" alt="Logo" data-hs-theme-appearance="default">
-                        <span class="bui">Business</span>
+                        <span class="bui">@Resource.Business</span>
                     </a>
 
                     <!-- End Logo -->
@@ -177,8 +177,8 @@
 
                                         <div class="dropdown-divider"></div>
 
-                                        <a class="dropdown-item" href="/Calendar/Index#/calendar/business-user-master/2287">Profile &amp; account</a>
-                                        <a class="dropdown-item" href="javascript:void(0)" onclick="showComapanyWebsiteDetails(1)">Settings</a>
+                                        <a class="dropdown-item" href="/Calendar/Index#/calendar/business-user-master/2287">@Resource.Profile &amp; @Resource.Account</a>
+                                        <a class="dropdown-item" href="javascript:void(0)" onclick="showComapanyWebsiteDetails(1)">@Resource.Settings</a>
 
                                         <div class="dropdown-divider"></div>
 
@@ -220,7 +220,7 @@
                                         <div class="dropdown-divider"></div>
 
                                         <form id="mySignOutForm" name="mySignOutForm" method="post" action="@Url.Action("Logout","Account")">
-                                            <a class="dropdown-item" href="#" onclick="Logout()">Sign out</a>
+                                            <a class="dropdown-item" href="#" onclick="Logout()">@Resource.Sign_out</a>
                                         </form>
 
 
@@ -247,29 +247,29 @@
                         <ul class="navbar-nav custome-nav">
                             <!-- Dashboards -->
                             <li class="hs-has-sub-menu nav-item">
-                                <a id="" class="hs-mega-menu-invoker nav-link active" href="/BusinessAdmin/Dashboard" role="button"> Home</a>
+                                <a id="" class="hs-mega-menu-invoker nav-link active" href="/BusinessAdmin/Dashboard" role="button"> @Resource.Home</a>
                             </li>
                             <!-- End Dashboards -->
                             <!-- Pages -->
                             <li class="hs-has-sub-menu nav-item">
-                                <a id="" class="hs-mega-menu-invoker nav-link " href="/BusinessAdmin/Dashboard" role="button">My Business </a>
+                                <a id="" class="hs-mega-menu-invoker nav-link " href="/BusinessAdmin/Dashboard" role="button">@Resource.My_Business </a>
                             </li>
                             <!-- End Pages -->
                             <!-- Apps -->
                             <li class="hs-has-sub-menu nav-item">
-                                <a id="" class="hs-mega-menu-invoker nav-link" href="/Marketplace/Index" role="button">Market Place</a>
+                                <a id="" class="hs-mega-menu-invoker nav-link" href="/Marketplace/Index" role="button">@Resource.Market_Place</a>
                             </li>
                             <!-- End Apps -->
 
                             <li class="nav-item">
                                 <a class="nav-link " href="#">
-                                    Contact
+                                    @Resource.Contact
                                 </a>
                             </li>
 
                             <li class="nav-item">
                                 <a class="nav-link " href="/BusinessMarketplace/Pricing" data-placement="left">
-                                    Pricing
+                                    @Resource.Pricing
                                 </a>
                             </li>
                         </ul>
@@ -301,14 +301,14 @@
                     <ul class="navbar-nav custome-nav">
                         <!-- Dashboards -->
                         <li class="nav-item">
-                            <a id="dashboardsMegaMenu" class="nav-link" href="/BusinessAdmin/Dashboard" role="button"> Dashboard</a>
+                            <a id="dashboardsMegaMenu" class="nav-link" href="/BusinessAdmin/Dashboard" role="button"> @Resource.Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a id="companyMasterMegaMenu" class="nav-link" href="/BusinessAdmin/CompanyMaster" role="button"> Company Master</a>
+                            <a id="companyMasterMegaMenu" class="nav-link" href="/BusinessAdmin/CompanyMaster" role="button"> @Resource.Company_Master</a>
                         </li>
 
                         <li class="hs-has-sub-menu nav-item">
-                            <a id="calendarsMegaMenu" class="hs-mega-menu-invoker nav-link dropdown-toggle " href="/BusinessAdmin/CalendarMaster" role="button">Calendar</a>
+                            <a id="calendarsMegaMenu" class="hs-mega-menu-invoker nav-link dropdown-toggle " href="/BusinessAdmin/CalendarMaster" role="button">@Resource.Calendar</a>
 
                             <div class="hs-sub-menu dropdown-menu navbar-dropdown-menu-borderless" id="calendarsSubMenu" aria-labelledby="pagesMegaMenu" style="min-width: 14rem;">
 
@@ -317,20 +317,20 @@
 
                         <li class="nav-item">
                             <a class="nav-link" id="manage-website" onclick="showComapanyWebsiteDetails(1)" href="#">
-                                Website
+                                @Resource.Website
                             </a>
                         </li>
 
                         <li class="hs-has-sub-menu nav-item">
-                            <a id="subscriptionsMegaMenu" class="hs-mega-menu-invoker nav-link dropdown-toggle " href="/BusinessAdmin/SubscriptionPlan" role="button">Subscription</a>
+                            <a id="subscriptionsMegaMenu" class="hs-mega-menu-invoker nav-link dropdown-toggle " href="/BusinessAdmin/SubscriptionPlan" role="button">@Resource.Subscription</a>
                             <div class="hs-sub-menu dropdown-menu navbar-dropdown-menu-borderless" aria-labelledby="subscription" style="min-width: 14rem;">
-                                <a class="dropdown-item " href="/BusinessAdmin/SubscriptionPlan">Subscription Plans</a>
-                                <a class="dropdown-item " href="/BusinessAdmin/PaymentHistory">Payment History</a>
+                                <a class="dropdown-item " href="/BusinessAdmin/SubscriptionPlan">@Resource.Subscription_Plans</a>
+                                <a class="dropdown-item " href="/BusinessAdmin/PaymentHistory">@Resource.Payment_History</a>
                             </div>
                         </li>
 
                         <li class="hs-has-sub-menu nav-item">
-                            <a id="income" class="hs-mega-menu-invoker nav-link dropdown-toggle " href="#" role="button">Income</a>
+                            <a id="income" class="hs-mega-menu-invoker nav-link dropdown-toggle " href="#" role="button">@Resource.Income</a>
 
                             <div class="hs-sub-menu dropdown-menu navbar-dropdown-menu-borderless" aria-labelledby="income" style="min-width: 14rem;">
                                 <a class="dropdown-item " href="#">Kanban</a>
@@ -342,13 +342,13 @@
 
                         <li class="nav-item">
                             <a class="nav-link " href="#">
-                                Reports
+                                @Resource.Reports
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a class="nav-link " href="#" data-placement="left">
-                                Notifications
+                                @Resource.Notifications
                             </a>
                         </li>
                     </ul>

@@ -416,12 +416,7 @@
 
     <script>
         $(document).ready(function () {
-            localStorage.removeItem("COMPANY_ID");
-            localStorage.removeItem("COMPANY_CODE");
-            localStorage.removeItem("COMPANY_NAME_ENGLISH");
-            localStorage.removeItem("COMPANY_NAME_CHINESE");
-            localStorage.removeItem("COMPANY_CATEGORY_ID");
-            localStorage.removeItem("COMPANY_SUB_CATEGORY_ID");
+            localStorage.clear();
         });
     </script>
 
@@ -429,16 +424,16 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <div class='center'>
+                    <div class='center' style="max-width:550px;">
                         <div class='signUp'>
-                            <div class='right'>
+                            <div class='right' style="width: 100%;">
                                 <div class="logo">
-                                    <img style="width: 260px;" onclick="location.href = '/BusinessMarketplace/Index'" src="../assets/img/logo.png"> <span class="business-label">@Resource.Business</span>
+                                    <img style="width: 180px;" onclick="location.href = '/BusinessMarketplace/Index'" src="../assets/img/logo.png"> <span class="business-label">Super admin</span>
                                 </div>
                                 <div class="register">
                                     <h3>@Resource.Login </h3>
 
-                                    <form class="js-validate needs-validation" method="post" action="/Account/BusinessLogin" novalidate>
+                                    <form class="js-validate needs-validation" method="post" action="/Account/SuperAdminLogin" novalidate>
 
                                         @Html.AntiForgeryToken()
 
@@ -473,27 +468,14 @@
                                             <button type="submit" class="btn btn-default">@Resource.Login</button>
                                         </div>
                                     </form>
-                                    <div class="login_with">
-                                        @using (Html.BeginForm("ExternalSignIn", "Account", new { ReturnUrl = Model.ReturnUrl, userType = "1" }))
-                                        {
-                                            @Html.AntiForgeryToken()
-
-                                            <button class="a" type="submit" id="Google" name="provider" value="Google"><span class="hide-on-large"><i class="bi bi-google" aria-hidden="true"></i></span> <span class="hide-on-small">Register with Google</span> </button>
-                                            <button class="a" type="submit" id="Facebook" name="provider" value="Facebook"> <span class="hide-on-large"><i class="bi bi-facebook" aria-hidden="true"></i></span> <span class="hide-on-small">Register with Facebook</span></button>
-                                        }
-
-                                    </div>
+                                    
                                     <br /><br /><br />
-                                    <div class="register-btn text-center">
-                                        @Resource.Don_t_have_an_account? <a href="/Account/BusinessSignup">@Resource.Register</a>
-                                    </div>
-
-
+                                    
                                 </div>
                             </div>
-                            <div class='left'>
-                                <div class='back'><h1>@Resource.Find_your_service__activity___book_it_in_one_stop</h1></div>
-                            </div>
+                            @*<div class='left'>
+                                <div class='back'><h1></h1></div>
+                            </div>*@
 
                         </div>
                     </div>

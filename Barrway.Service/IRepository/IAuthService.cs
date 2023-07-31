@@ -13,6 +13,7 @@ namespace Barrway.Service.IRepository
     {
         Task<AddUpdateDelete<IDictionary<string, object>>> GetUser(string email, string password, bool isToken=false);
         Task<AddUpdateDelete<IDictionary<string, object>>> GetUser(string email, string password, int RoleId, bool isToken = false);
+        //Task<AddUpdateDelete<IDictionary<string, object>>> ValidateSuperAdminUser(string email, string password, bool isToken = false);
         Task<AddUpdateDelete> userEmaillogin(string email, string password);
         Task<AddUpdateDelete> userPhonelogin(string phone, string password);
         Task<AddUpdateDelete> LoginWithExternalEmail(string email);

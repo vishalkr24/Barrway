@@ -8,7 +8,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Payment Failed</title>
+    <title>@Resource.Payment @Resource.Failed</title>
     <link rel="stylesheet" href="/assets/css/vendor.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/style.css">
@@ -25,10 +25,10 @@
         $(document).ready(function () {
             swal({
                 icon: "error",
-                title: "Payment Failed!",
-                text: "Your payment was Failed!",
+                title: "@Resource.Payment @Resource.Failed!",
+                text: "@Resource.Your_payment_was_Failed!",
                 buttons: {
-                    confirm: "Okay"
+                    confirm: "@Resource.Okay"
                 }
             }).then(function () {
                 window.location.href = "/Marketplace/Index";

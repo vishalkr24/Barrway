@@ -1,6 +1,6 @@
 ﻿@model Barrway.DTO.BusinessModels.OrderDetailsViewModel
 @{
-    ViewBag.Title = "OrderDetails";
+    ViewBag.Title = Resource.Order_Details;
     Layout = "~/Views/Shared/_LayoutMarketPlaceCompany.cshtml";
 }
 
@@ -131,7 +131,7 @@
                 <div class="col-md-8">
                     <div style="padding:20px;">
                         <div class="order-heading">
-                            Order #@Model.Order.ORDER_NO
+                            @Resource.Order #@Model.Order.ORDER_NO
                         </div>
                         <div style="padding-top: 8px">
                             <p>
@@ -145,13 +145,13 @@
                                             <thead>
                                                 <tr>
                                                     <td width="50%">
-                                                        <span style="font-weight: 500">Package Details</span>
+                                                        <span style="font-weight: 500">@Resource.Package_Details</span>
                                                     </td>
                                                     <td>
-                                                        <span style="font-weight: 500">Coin</span>
+                                                        <span style="font-weight: 500">@Resource.Coin</span>
                                                     </td>
                                                     <td class="text-right">
-                                                        <span style="font-weight: 500">Price</span>
+                                                        <span style="font-weight: 500">@Resource.Price</span>
                                                     </td>
                                                 </tr>
                                             </thead>
@@ -178,7 +178,7 @@
                             
                             <p style="padding-top: 8px;">
                                 <div class="order-heading" style="margin-bottom: 12px;">
-                                    Payment method
+                                    @Resource.Payment_method
                                 </div>
                                 <input type="radio" checked readonly /> <span class="checkmark"></span><span style="padding-left: 40px; font-weight: 500;">Stripe</span>
                             </p>
@@ -189,12 +189,12 @@
                 </div>
                 <div class="col-md-4 custom-col">
                     <div style="padding:20px;">
-                        <div class="order-heading">Payment Details</div>
+                        <div class="order-heading">@Resource.Payment_Details</div>
                         <div style="padding-top: 16px;">
                             <table width="100%" class="payment-details-table">
                                 <tr style="border-bottom:1px solid lightgrey;">
                                     <td width="50%" style="height:100px">
-                                        Package Details<br />
+                                       @Resource.Package_Details<br />
                                         <span style="font-size:smaller">1 x @Model.CalendarPackageModel.PACKAGE_NAME</span>
                                     </td>
                                     <td class="text-right">
@@ -205,7 +205,7 @@
                             <table class="total-table" width="100%">
                                 <tr>
                                     <td>
-                                        Sub Total:
+                                        @Resource.Sub_Total:
                                     </td>
                                     <td class="text-right">
                                         $@Model.CalendarPackageModel.PACKAGE_PRICE.ToString("n2") HKD
@@ -213,7 +213,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <b>Grand Total:</b>
+                                        <b>@Resource.Grand_Total:</b>
                                     </td>
                                     <td class="text-right">
                                         <b>$@Model.CalendarPackageModel.PACKAGE_PRICE.ToString("n2") HKD</b>

@@ -313,6 +313,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_GlobalResources\Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\Resource.zh-Hant.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.zh-Hant.resx</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -329,6 +339,7 @@
     <Compile Include="Controllers\FormAPIController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MarketPlaceController.cs" />
+    <Compile Include="Controllers\SuperAdminController.cs" />
     <Compile Include="Controllers\UserAdminController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -341,6 +352,7 @@
     <Compile Include="Models\ResetPasswordViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\ApplicationAuthProvider.cs" />
+    <Compile Include="Security\SuperAdminAuthorizeAttribute.cs" />
     <Compile Include="Security\PublicAuthorizeAttribute.cs" />
     <Compile Include="Security\BusinessAuthorizeAttribute.cs" />
     <Compile Include="Security\TokenManager.cs" />
@@ -3078,6 +3090,7 @@
     <Content Include="Scripts\myscript\controller\formPreviewModule.js" />
     <Content Include="Scripts\myscript\controller\FormRecordsController.js" />
     <Content Include="Scripts\myscript\controller\GoogleMapController.js" />
+    <Content Include="Scripts\myscript\controller\SuperAdminController.js" />
     <Content Include="Scripts\myscript\controller\IndexController.js" />
     <Content Include="Scripts\myscript\controller\mainModule.js" />
     <Content Include="Scripts\myscript\controller\pivotTableDataSummaryController.js" />
@@ -3146,6 +3159,10 @@
     <Content Include="Templates\formgenerator\ssssssssssss.html" />
     <Content Include="Templates\formgenerator\summary.html" />
     <Content Include="Templates\Index.html" />
+    <Content Include="Templates\superadmin\BusinessCompanyMaster.html" />
+    <Content Include="Templates\superadmin\PublicUserList.html" />
+    <Content Include="Templates\superadmin\dashboard.html" />
+    <Content Include="Templates\superadmin\BusinessUserList.html" />
     <Content Include="Templates\user-admin\dashboard.html" />
     <Content Include="Templates\user-admin\my-b-coin-balance.html" />
     <Content Include="Templates\user-admin\my-payment-history.html" />
@@ -3214,13 +3231,13 @@
     <Content Include="Views\BusinessAdmin\CompanyMaster.cshtml" />
     <Content Include="Views\BusinessMarketplace\Pricing.cshtml" />
     <Content Include="Views\MarketPlace\PrivacyPolicy.cshtml" />
-    <Content Include="Views\Payment\Index.cshtml" />
-    <Content Include="Views\Payment\OrederStatus.cshtml" />
     <Content Include="Views\Payment\success.cshtml" />
     <Content Include="Views\Calendar\PaymentReceipt.cshtml" />
-    <Content Include="Views\Payment\OrderFailed.cshtml" />
     <Content Include="Views\Payment\OrderDetails.cshtml" />
     <Content Include="Views\Payment\cancel.cshtml" />
+    <Content Include="Views\Account\SuperAdminLogin.cshtml" />
+    <Content Include="Views\Shared\_LayoutSuperAdmin.cshtml" />
+    <Content Include="Views\SuperAdmin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3270,6 +3287,18 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\Resource.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\Resource.zh-Hant.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>Resource.zh-Hant.designer.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

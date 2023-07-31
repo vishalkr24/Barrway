@@ -7,7 +7,7 @@
 
 <html>
 <head>
-    <title>Barrway | Receipt</title>
+    <title>Barrway | @Resource.Receipt</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -90,7 +90,7 @@
                             @Model.ActivityName
                         </td>
                         <td class="text-right">
-                            Payment Date - @Model.PaymentDate.ToString("dd/MM/yyyy")
+                            @Resource.Payment @Resource.Date - @Model.PaymentDate.ToString("dd/MM/yyyy")
                         </td>
                     </tr>
                     <tr>
@@ -98,15 +98,15 @@
                             @Model.ServiceProviderName
                         </td>
                         <td class="text-right">
-                            Payment Status - @Model.PaymentStatus
+                            @Resource.Payment @Resource.Status - @Model.PaymentStatus
                         </td>
                     </tr>
                     <tr>
                         <td width="50%">
-                            Coins Added: <span style="color:green; font-weight:500">B$@Model.CoinsAdded.ToString("F2")</span>
+                            @Resource.Coins_Added: <span style="color:green; font-weight:500">B$@Model.CoinsAdded.ToString("F2")</span>
                         </td>
                         <td class="text-right">
-                            Coins Deducted: <span style="color: #ed4c78; font-weight: 500">B$@Model.CoinsDeducted.ToString("F2")</span>
+                            @Resource.Coins_Deducted: <span style="color: #ed4c78; font-weight: 500">B$@Model.CoinsDeducted.ToString("F2")</span>
                         </td>
                     </tr>
                 </table>
@@ -117,21 +117,21 @@
                 <thead>
                     <tr style="background:#ebebeb; font-weight: 500">
                         <td>
-                            Particulars
+                            @Resource.Particulars
                         </td>
                         <td>
-                            Quantity
+                            @Resource.Quantity
                         </td>
                         <td class="text-right">
-                            Amount
+                            @Resource.Amount
                         </td>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td width="50%">
-                            Calendar Package<br />
-                            <span style="font-size:smaller;">@Model.PackageName Package</span>
+                            @Resource.Calendar_Package<br />
+                            <span style="font-size:smaller;">@Model.PackageName @Resource.Package</span>
                         </td>
                         <td>
                             @Model.Quantity.ToString("F2")
@@ -145,8 +145,8 @@
                             
                         </td>
                         <td>
-                            <p>Sub Total</p>
-                            <p><b style="color:green; font-size: 16px;">Grand Total</b></p>
+                            <p>@Resource.Sub_Total</p>
+                            <p><b style="color:green; font-size: 16px;">@Resource.Grand_Total</b></p>
                         </td>
                         <td class="text-right">
                             <p>HK$@Model.Amount.ToString("F2")</p>
