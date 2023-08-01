@@ -19,7 +19,7 @@ using System.Web.Mvc;
 
 namespace Barrway.Controllers
 {
-    public class MarketPlaceController : Controller
+    public class MarketPlaceController : BaseController
     {
         private readonly IBusinessUserService businessUserService;
         private readonly IGlobalMasterService globalMasterService;
@@ -313,25 +313,25 @@ namespace Barrway.Controllers
         [AllowAnonymous]
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public async Task<ActionResult> ChangeLanguage(int langId)
+        public async Task<ActionResult> ChangeLanguage(int langId, string ReturnUrl)
         {
             switch (langId)
             {
                 case 1:
-                    ChangeCulture("en");
+                    ChangeCulture("en", ReturnUrl);
                     break;
                 case 2:
-                    ChangeCulture("zh-Hant");
+                    ChangeCulture("zh-Hant", ReturnUrl);
                     break;
                 default:
-                    ChangeCulture("en");
+                    ChangeCulture("en", ReturnUrl);
                     break;
             }
 
             return RedirectToAction("Index");
         }
 
-        private void ChangeCulture(string lang)
+        private void ChangeCulture(string lang, string ReturnUrl)
         {
             try
             {
@@ -347,7 +347,7 @@ namespace Barrway.Controllers
 
                 Response.SetCookie(languageCookie);
 
-                Response.Redirect(Request.UrlReferrer.ToString());
+                Response.Redirect(ReturnUrl);
             }
             catch (Exception) 
             {

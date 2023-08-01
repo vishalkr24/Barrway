@@ -15,7 +15,7 @@ using FormGeneratorDTOs.DTOs;
 namespace Barrway.Controllers
 {
     [BusinessAuthorize(Roles = "BUSINESS_USER")]
-    public class BusinessAdminController : Controller
+    public class BusinessAdminController : BaseController
     {
 
         private readonly IBusinessUserService businessUserService;

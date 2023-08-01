@@ -14,7 +14,7 @@ using FormGeneratorDTOs.DTOs;
 
 namespace Barrway.Controllers
 {
-    public class PublicController : Controller
+    public class PublicController : BaseController
     {
 
         private readonly IBusinessUserService businessUserService;

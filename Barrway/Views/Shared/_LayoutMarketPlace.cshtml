@@ -1,6 +1,17 @@
 ﻿@{
     var baseUrl = System.Web.Configuration.WebConfigurationManager.AppSettings["baseURL"].ToString();
     string token = DateTime.Now.ToString("ddMMyyyyHHmmssffffff");
+
+    HttpCookie languageCookie = System.Web.HttpContext.Current.Request.Cookies["Language"];
+    string language = "";
+    if (languageCookie != null)
+    {
+        language = languageCookie.Value;
+    }
+    else
+    {
+        language ="en";
+    }
 }
 <!DOCTYPE html>
 
@@ -51,12 +62,29 @@
             top: 0;
         }
     </style>
+    <script>
+        function changeLanguage() {
+            localStorage.setItem("globalLang", $("select[name=langId] option:selected").val())
+            localStorage.setItem("globalLangForm", $("select[name=langId] option:selected").val())
+
+            $("#langForm").attr("action", "/Marketplace/ChangeLanguage?ReturnUrl=" + window.location.href)
+
+            document.getElementById('langForm').submit()
+        }
+    </script>
     <section class="main-header">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
                     <div class="top-bar">
-                        <span class="lang"><img src="~/assets/marketplace/image/glo.png" /> <form action="/Marketplace/ChangeLanguage" method="post" id="langForm" style="display:inline;"><select style="border:none; outline:none;" onchange="document.getElementById('langForm').submit()" name="langId"><option value="1">English</option><option value="2">Chinese</option></select></form></span>
+                        <span class="lang"><img src="~/assets/marketplace/image/glo.png" /> 
+                            <form action="/Marketplace/ChangeLanguage" method="post" id="langForm" style="display:inline;">
+                                <select style="border:none; outline:none;" onchange="changeLanguage()" name="langId">
+                                    <option value="1" @(language=="en"?"selected":"")>English</option>
+                                    <option value="2" @(language=="zh-Hant"?"selected":"")>Chinese</option>
+                                </select>
+                            </form>
+                        </span>
                         <span class="location"><img src="~/assets/marketplace/image/lo.png" /> Hong Cong</span>
                         <span class="pyb" onclick="window.location.href='@Url.Action("Index", "BusinessMarketplace")'" style="cursor:pointer;">@Resource.Post_your_business</span>
                     </div>

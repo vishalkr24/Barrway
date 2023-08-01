@@ -3,6 +3,17 @@
     var webapibaseurl = System.Web.Configuration.WebConfigurationManager.AppSettings["webapibaseurl"].ToString();
     string token = DateTime.Now.ToString("ddMMyyyyHHmmssffffff");
     string calendarUrl = baseUrl + "calendar/index";
+
+    HttpCookie languageCookie = System.Web.HttpContext.Current.Request.Cookies["Language"];
+    string language = "";
+    if (languageCookie != null)
+    {
+        language = languageCookie.Value;
+    }
+    else
+    {
+        language = "en";
+    }
 }
 
 <!DOCTYPE html>
@@ -301,7 +312,16 @@
 </head>
 
 <body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl navbar-vertical-aside-compact-mini-mode navbar-vertical-aside-compact-mode" ng-app="FormGeneratorApp" ng-controller="IndexController">
+    <script>
+        function changeLanguage() {
+            localStorage.setItem("globalLang", $("select[name=langId] option:selected").val())
+            localStorage.setItem("globalLangForm", $("select[name=langId] option:selected").val())
+            
+            $("#langForm").attr("action", "/Marketplace/ChangeLanguage?ReturnUrl=" + window.location.href)
 
+            document.getElementById('langForm').submit()
+        }
+    </script>
     <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-bottom-right'}"></toaster-container>
     <div class="favicon-loader-overlay active" ng-show="IND_loading">
         <div class="favicon-loader">
@@ -415,6 +435,17 @@
                 <!-- Navbar -->
                 <ul class="navbar-nav custome-nav no-underline">
                     <!-- Dashboards -->
+                    <li class="hs-has-sub-menu nav-item">
+                        <span class="lang">
+                            <img src="~/assets/marketplace/image/glo.png" />
+                            <form action="/Marketplace/ChangeLanguage" method="post" id="langForm" style="display:inline;">
+                                <select style="border:none; outline:none;" onchange="changeLanguage()" name="langId">
+                                    <option value="1" @(language == "en" ? "selected" : "")>English</option>
+                                    <option value="2" @(language == "zh-Hant" ? "selected" : "")>Chinese</option>
+                                </select>
+                            </form>
+                        </span>
+                    </li>
                     <li class="hs-has-sub-menu nav-item">
                         <a id="" class="hs-mega-menu-invoker nav-link active" href="/Calendar/Index#/home" role="button"> @Resource.Home</a>
                     </li>
@@ -541,7 +572,7 @@
                             <!-- End Collapse -->
                             <!-- Collapse -->
                             <div class="nav-item ">
-                                <a class="nav-link"  id="nav-payment-master" href="#navbarVerticalMenuPagesProjectMenu" role="button" data-bs-target="#navbarVerticalMenuPagesProjectMenu" aria-expanded="false" aria-controls="navbarVerticalMenuPagesProjectMenu">
+                                <a class="nav-link" id="nav-payment-master" href="#navbarVerticalMenuPagesProjectMenu" role="button" data-bs-target="#navbarVerticalMenuPagesProjectMenu" aria-expanded="false" aria-controls="navbarVerticalMenuPagesProjectMenu">
                                     <i class="bi-currency-dollar nav-icon"></i>
                                     <span class="nav-link-title">@Resource.Payment  <i class="bi bi-chevron-right" style=" float: right; padding-top: 6px; margin-right: 0px;"></i></span>
                                 </a>

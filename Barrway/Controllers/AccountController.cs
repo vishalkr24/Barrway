@@ -23,7 +23,7 @@ using Barrway.Security;
 
 namespace Barrway.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private readonly IAuthService authService;
         private readonly ISqlFunction sqlFunction;

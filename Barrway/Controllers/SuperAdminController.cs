@@ -13,7 +13,7 @@ using Barrway.Utility.Common;
 namespace Barrway.Controllers
 {
     [SuperAdminAuthorize(Roles = "SUPERADMIN_USER")]
-    public class SuperAdminController : Controller
+    public class SuperAdminController : BaseController
     {
         private readonly ISuperAdminUserService superAdminUserService;
         public SuperAdminController(ISuperAdminUserService superAdminUserService)

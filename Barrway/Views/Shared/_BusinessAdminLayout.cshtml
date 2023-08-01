@@ -1,4 +1,19 @@
-﻿<!DOCTYPE html>
+﻿@{ 
+
+    HttpCookie languageCookie = System.Web.HttpContext.Current.Request.Cookies["Language"];
+    string language = "";
+    if (languageCookie != null)
+    {
+        language = languageCookie.Value;
+    }
+    else
+    {
+        language = "en";
+    }
+}
+
+
+<!DOCTYPE html>
 <html>
 <head>
     <!-- Required Meta Tags Always Come First -->
@@ -132,6 +147,16 @@
         }</script>
 </head>
 <body>
+    <script>
+        function changeLanguage() {
+            localStorage.setItem("globalLang", $("select[name=langId] option:selected").val())
+            localStorage.setItem("globalLangForm", $("select[name=langId] option:selected").val())
+
+            $("#langForm").attr("action", "/Marketplace/ChangeLanguage?ReturnUrl=" + window.location.href)
+
+            document.getElementById('langForm').submit()
+        }
+    </script>
     <input style="display:none" id="userIdHidden" value="@UserIdentity.UserName" />
     <script src="../assets/js/hs.theme-appearance.js"></script>
 
@@ -246,6 +271,17 @@
                     <div class="collapse navbar-collapse" id="navbarContainerNavDropdown">
                         <ul class="navbar-nav custome-nav">
                             <!-- Dashboards -->
+                            <li class="hs-has-sub-menu nav-item">
+                                <span class="lang">
+                                    <img src="~/assets/marketplace/image/glo.png" />
+                                    <form action="/Marketplace/ChangeLanguage" method="post" id="langForm" style="display:inline;">
+                                        <select style="border:none; outline:none;" onchange="changeLanguage()" name="langId">
+                                            <option value="1" @(language == "en" ? "selected" : "")>English</option>
+                                            <option value="2" @(language == "zh-Hant" ? "selected" : "")>Chinese</option>
+                                        </select>
+                                    </form>
+                                </span>
+                            </li>
                             <li class="hs-has-sub-menu nav-item">
                                 <a id="" class="hs-mega-menu-invoker nav-link active" href="/BusinessAdmin/Dashboard" role="button"> @Resource.Home</a>
                             </li>

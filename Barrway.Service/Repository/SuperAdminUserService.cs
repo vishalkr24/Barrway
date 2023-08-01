@@ -254,7 +254,11 @@ namespace Barrway.Service.Repository
 
                 string strSql = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
                                           select 
+                                          f.Id,
+                                          f.formGroupKey,
                                           [CALENDAR_NAME]
+                                          ,cal.Id as 'CalendarId'
+                                          ,cal.formGroupKey as 'CalendarFormGroupKey'
                                           ,cal.created_at
                                           ,cal.updated_at
                                               ,[CALENDAR_PHOTO_NAME]

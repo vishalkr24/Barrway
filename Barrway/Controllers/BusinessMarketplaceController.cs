@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace Barrway.Controllers
 {
-    public class BusinessMarketplaceController : Controller
+    public class BusinessMarketplaceController : BaseController
     {
         // GET: BusinessMarketplace
         public ActionResult Index()

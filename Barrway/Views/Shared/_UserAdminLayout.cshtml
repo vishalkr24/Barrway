@@ -3,6 +3,17 @@
     var webapibaseurl = System.Web.Configuration.WebConfigurationManager.AppSettings["webapibaseurl"].ToString();
     string token = DateTime.Now.ToString("ddMMyyyyHHmmssffffff");
     string calendarUrl = baseUrl + "my_calendar/index";
+
+    HttpCookie languageCookie = System.Web.HttpContext.Current.Request.Cookies["Language"];
+    string language = "";
+    if (languageCookie != null)
+    {
+        language = languageCookie.Value;
+    }
+    else
+    {
+        language = "en";
+    }
 }
 
 <!DOCTYPE html>
@@ -307,7 +318,16 @@
 
 <body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl navbar-vertical-aside-compact-mini-mode navbar-vertical-aside-compact-mode" ng-app="FormGeneratorApp" ng-controller="PublicIndexController">
 
+    <script>
+        function changeLanguage() {
+            localStorage.setItem("globalLang", $("select[name=langId] option:selected").val())
+            localStorage.setItem("globalLangForm", $("select[name=langId] option:selected").val())
 
+            $("#langForm").attr("action", "/Marketplace/ChangeLanguage?ReturnUrl=" + window.location.href)
+
+            document.getElementById('langForm').submit()
+        }
+    </script>
 
     <!--Formgenerator Common component-->
     <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-bottom-right'}"></toaster-container>
@@ -424,7 +444,17 @@
                 <!-- Navbar -->
                 <ul class="navbar-nav custome-nav no-underline">
                     <!-- Dashboards -->
-
+                    <li class="hs-has-sub-menu nav-item">
+                        <span class="lang">
+                            <img src="~/assets/marketplace/image/glo.png" />
+                            <form action="/Marketplace/ChangeLanguage" method="post" id="langForm" style="display:inline;">
+                                <select style="border:none; outline:none;" onchange="changeLanguage()" name="langId">
+                                    <option value="1" @(language == "en" ? "selected" : "")>English</option>
+                                    <option value="2" @(language == "zh-Hant" ? "selected" : "")>Chinese</option>
+                                </select>
+                            </form>
+                        </span>
+                    </li>
                     <li class="nav-item">
                         <div class="">
                             <button onclick="location.href = '@Url.Action("Index","Marketplace")'" style="box-sizing: border-box; color: #3FBFC7; padding:6px 18px; background: #FFFFFF; border: 1px solid #3FBFC7; border-radius: 30px; "> Back to Marketplace</button>
@@ -462,24 +492,24 @@
 
                                 <!-- Dropdown -->
                                 @*<div class="dropdown">
-                                        <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown1" data-bs-toggle="dropdown" aria-expanded="false">Set status</a>
+                        <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown1" data-bs-toggle="dropdown" aria-expanded="false">Set status</a>
 
-                                        <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown1">
-                                            <a class="dropdown-item" href="#">
-                                                <span class="legend-indicator bg-success me-1"></span> Available
-                                            </a>
-                                            <a class="dropdown-item" href="#">
-                                                <span class="legend-indicator bg-danger me-1"></span> Busy
-                                            </a>
-                                            <a class="dropdown-item" href="#">
-                                                <span class="legend-indicator bg-warning me-1"></span> Away
-                                            </a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">
-                                                Reset status
-                                            </a>
-                                        </div>
-                                    </div>*@
+                        <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown1">
+                            <a class="dropdown-item" href="#">
+                                <span class="legend-indicator bg-success me-1"></span> Available
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <span class="legend-indicator bg-danger me-1"></span> Busy
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <span class="legend-indicator bg-warning me-1"></span> Away
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">
+                                Reset status
+                            </a>
+                        </div>
+                    </div>*@
                                 <!-- End Dropdown -->
 
                                 <a class="dropdown-item" href="#" ui-sref="my_profile()">@Resource.Profile &amp; @Resource.Account</a>
@@ -489,22 +519,22 @@
 
                                 <!-- Dropdown -->
                                 @*<div class="dropdown">
-                                        <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown2" data-bs-toggle="dropdown" aria-expanded="false">Customization</a>
+                        <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown2" data-bs-toggle="dropdown" aria-expanded="false">Customization</a>
 
-                                        <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown2">
-                                            <a class="dropdown-item" href="#">
-                                                Invite people
-                                            </a>
-                                            <a class="dropdown-item" href="#">
-                                                Analytics
-                                                <i class="bi-box-arrow-in-up-right"></i>
-                                            </a>
-                                            <a class="dropdown-item" href="#">
-                                                Customize Front
-                                                <i class="bi-box-arrow-in-up-right"></i>
-                                            </a>
-                                        </div>
-                                    </div>*@
+                        <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown2">
+                            <a class="dropdown-item" href="#">
+                                Invite people
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                Analytics
+                                <i class="bi-box-arrow-in-up-right"></i>
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                Customize Front
+                                <i class="bi-box-arrow-in-up-right"></i>
+                            </a>
+                        </div>
+                    </div>*@
                                 <!-- End Dropdown -->
                                 @*<a class="dropdown-item" href="#">Manage team</a>*@
 

@@ -3,6 +3,17 @@
     var webapibaseurl = System.Web.Configuration.WebConfigurationManager.AppSettings["webapibaseurl"].ToString();
     string token = DateTime.Now.ToString("ddMMyyyyHHmmssffffff");
     string calendarUrl = baseUrl + "calendar/index";
+
+    HttpCookie languageCookie = System.Web.HttpContext.Current.Request.Cookies["Language"];
+    string language = "";
+    if (languageCookie != null)
+    {
+        language = languageCookie.Value;
+    }
+    else
+    {
+        language = "en";
+    }
 }
 
 <!DOCTYPE html>
@@ -301,7 +312,16 @@
 </head>
 
 <body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl navbar-vertical-aside-compact-mini-mode navbar-vertical-aside-compact-mode" ng-app="FormGeneratorApp" ng-controller="SuperAdminController">
+    <script>
+        function changeLanguage() {
+            localStorage.setItem("globalLang", $("select[name=langId] option:selected").val())
+            localStorage.setItem("globalLangForm", $("select[name=langId] option:selected").val())
 
+            $("#langForm").attr("action", "/Marketplace/ChangeLanguage?ReturnUrl=" + window.location.href)
+
+            document.getElementById('langForm').submit()
+        }
+    </script>
     <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-bottom-right'}"></toaster-container>
     <div class="favicon-loader-overlay active" ng-show="IND_loading">
         <div class="favicon-loader">
@@ -318,8 +338,7 @@
 
     <script type="text/ng-template" id="bg-svg.html">
         <svg fill="#cccccc">
-            @*
-                <use xlink:href="./assets/images/svg/deco-med-bg.svg#main">
+            @*<use xlink:href="./assets/images/svg/deco-med-bg.svg#main">
                 </use>*@
             <g id="main">
                 <path id="Rectangle" d="M1280,925c-133.8-192.4-264-288.5-390.5-288.5c-189.8,0-387.2,389.8-606.5,268   C136.8,823.2,42.5,750.6,0,686.5V81c114.5,99.3,229.7,148.9,345.8,148.9c174.1,0,228.2-332.1,454.9-198   C951.8,121.3,1118.6,137.7,1301,81L1280,925z"></path>
@@ -407,7 +426,7 @@
             <!-- Logo -->
             <a class="navbar-brand" href="/" aria-label="Front">
                 <img class="navbar-brand-logo" src="assets/svg/logos/logo.png" alt="Logo" data-hs-theme-appearance="default">
-                <img class="navbar-brand-logo" src="assets/svg/logos-light/logo.svg" alt="Logo" data-hs-theme-appearance="dark">
+                <img class="navbar-brand-logo" src="assets/svg/logos-light/logo.svg" alt="Logo" data-hs-theme-appearance="dark"> <span style="padding-left:4px; font-size:14px;">| Super Admin</span>
             </a>
             <!-- End Logo -->
 
@@ -416,7 +435,18 @@
                 <ul class="navbar-nav custome-nav no-underline">
                     <!-- Dashboards -->
                     <li class="hs-has-sub-menu nav-item">
-                        <a id="" class="hs-mega-menu-invoker nav-link active" href="/Calendar/Index#/home" role="button"> @Resource.Home</a>
+                        <span class="lang">
+                            <img src="~/assets/marketplace/image/glo.png" />
+                            <form action="/Marketplace/ChangeLanguage" method="post" id="langForm" style="display:inline;">
+                                <select style="border:none; outline:none;" onchange="changeLanguage()" name="langId">
+                                    <option value="1" @(language == "en" ? "selected" : "")>English</option>
+                                    <option value="2" @(language == "zh-Hant" ? "selected" : "")>Chinese</option>
+                                </select>
+                            </form>
+                        </span>
+                    </li>
+                    <li class="hs-has-sub-menu nav-item">
+                        <a id="" class="hs-mega-menu-invoker nav-link active" href="/SuperAdmin#/Superadmin/dashboard/" role="button"> @Resource.Home</a>
                     </li>
 
                     <li class="hs-has-sub-menu nav-item">
@@ -428,7 +458,7 @@
                         <div class="dropdown">
                             <a class="navbar-dropdown-account-wrapper" href="javascript:;" id="accountNavbarDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" data-bs-dropdown-animation>
                                 <div class="avatar avatar-sm avatar-circle">
-                                    <img class="avatar-img company-image" style="min-width: 2.40625rem; max-width: 2.40625rem" onerror="this.src='../assets/img/160x160/img6.jpg'" alt="Img">
+                                    <img src="~/assets/img/160x160/img6.jpg" class="avatar-img company-image" style="min-width: 2.40625rem; max-width: 2.40625rem" onerror="this.src='../assets/img/160x160/img6.jpg'" alt="Img">
                                     <span class="avatar-status avatar-sm-status avatar-status-success"></span>
                                 </div>
                             </a>
@@ -463,10 +493,12 @@
                             <!-- Collapse -->
                             <div class="nav-item">
                                 <a class="nav-link" id="nav-super-dashboard" ui-sref="Home()" role="button" data-bs-target="#navbarVerticalMenuDashboards" aria-expanded="false" aria-controls="navbarVerticalMenuDashboards">
-                                    <i class="bi-house-door nav-icon"></i>
-                                    <span class="nav-link-title">@Resource.Dashboard</span>
+                                    <i class="bi-bar-chart nav-icon"></i>
+                                    <span class="nav-link-title">Analytics</span>
                                 </a>
                             </div>
+                            <hr style="margin:0.75rem 0rem; background:black;" />
+
                             <div class="nav-item">
                                 <a class="nav-link" id="nav-super-business-users" href="#navbarVerticalMenuDashboards" ui-sref="SuperadminBusinessUsers()" role="button" data-bs-target="#navbarVerticalMenuDashboards" aria-expanded="false" aria-controls="navbarVerticalMenuDashboards">
                                     <i class="bi-people nav-icon"></i>
@@ -483,20 +515,31 @@
                             <div class="nav-item">
                                 <a class="nav-link" id="nav-super-users" href="#" ui-sref="SuperAdminUserMaster({formId:2287})" data-placement="left">
                                     <i class="bi-people nav-icon"></i>
-                                    <span class="nav-link-title">Super @Resource.User</span>
+                                    <span class="nav-link-title">Super Users</span>
+                                </a>
+                            </div>
+
+                            <div class="nav-item">
+                                <a class="nav-link" id="nav-super-public-users" href="#navbarVerticalMenuDashboards" ui-sref="SuperAdminCompanyMaster({formId:2295})" role="button" data-bs-target="#navbarVerticalMenuDashboards" aria-expanded="false" aria-controls="navbarVerticalMenuDashboards">
+                                    <i class="bi-calendar nav-icon"></i>
+                                    <span class="nav-link-title">Company Master</span>
+                                </a>
+                            </div>
+                            <div class="nav-item">
+                                <a class="nav-link" id="nav-super-public-users" href="#navbarVerticalMenuDashboards" ui-sref="SuperAdminCompanyMaster({formId:2296})" role="button" data-bs-target="#navbarVerticalMenuDashboards" aria-expanded="false" aria-controls="navbarVerticalMenuDashboards">
+                                    <i class="bi-calendar nav-icon"></i>
+                                    <span class="nav-link-title">Calendar Master</span>
                                 </a>
                             </div>
                             <div class="nav-item">
                                 <a class="nav-link" id="nav-manage-master" href="javascript:void(0)" role="button" data-bs-target="#navbarVerticalMenuPagesUsersMenu" aria-expanded="false" aria-controls="navbarVerticalMenuPagesUsersMenu">
                                     <i class="bi-list nav-icon"></i>
-                                    <span class="nav-link-title">Management <i class="bi bi-chevron-right" style=" float: right; padding-top: 6px; margin-right: 0px;"></i></span>
+                                    <span class="nav-link-title">Approvals <i class="bi bi-chevron-right" style=" float: right; padding-top: 6px; margin-right: 0px;"></i></span>
                                 </a>
 
                                 <div id="navbarVerticalMenuPagesUsersMenu" class="nav-collapse collapse " data-bs-parent="#navbarVerticalMenuPagesMenu">
-                                    <a class="nav-link " id="nav-location-master" ui-sref="SuperAdminCompanyMaster({formId:2295})">Company Master</a>
-                                    <a class="nav-link " id="nav-location-master" ui-sref="">Company Approval</a>
-                                    <a class="nav-link " id="nav-location-master" ui-sref="SuperAdminCompanyMaster({formId:2296})">Calendar Master</a>
-                                    <a class="nav-link " id="nav-location-master" ui-sref="calendar_location({formId:2306})">Calendar Approval</a>
+                                    <a class="nav-link " id="nav-location-master" ui-sref="">Pending Company Approval</a>
+                                    <a class="nav-link " id="nav-location-master" ui-sref="calendar_location({formId:2306})">Pending Calendar Approval</a>
                                 </div>
                             </div>
 
@@ -516,24 +559,24 @@
 
     <main id="content" role="main" class="main">
         <!-- Content -->
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="main-log-com-name">
-                        <div class="row">
-                            <div class="col-md-7">
-                                <div class="logo-comapany-name" style="padding: 16px 0px;">
-                                    <h2>Barrway Super admin</h2>
+        @*<div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="main-log-com-name">
+                            <div class="row">
+                                <div class="col-md-7" style="padding:0px;">
+                                    <div class="logo-comapany-name" style="padding: 16px 0px;">
+                                        <h2>Barrway Super admin</h2>
+                                    </div>
                                 </div>
+
                             </div>
 
                         </div>
-
                     </div>
-                </div>
 
-            </div>
-        </div>
+                </div>
+            </div>*@
         <div class="content container-fluid" ui-view="content">
             @RenderBody()
         </div>
@@ -1186,7 +1229,7 @@
 
 
     @* Momentum based scroll behaviour *@
-    
+
 
     <!-- End Style Switcher JS -->
 </body>
