@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace Barrway.Controllers
 {
-    public class BusinessCalendarController : Controller
+    public class BusinessCalendarController : BaseController
     {
         // GET: BusinessCalendar
         public ActionResult Index()

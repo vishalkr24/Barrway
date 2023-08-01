@@ -330,6 +330,7 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BusinessMarketplaceController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\PublicController.cs" />
@@ -3248,6 +3249,7 @@
     <Folder Include="UploadCompany\CompanyBanners\" />
     <Folder Include="UploadCompany\CompanyLogos\" />
     <Folder Include="UploadPublicUser\ProfilePhoto\" />
+    <Folder Include="Views\Base\" />
     <Folder Include="Views\BusinessCalendar\" />
   </ItemGroup>
   <ItemGroup>

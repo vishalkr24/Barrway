@@ -4254,7 +4254,7 @@
             else {
                 headers = bindTColumnHeader($scope.formDatafields, true, true);
             }
-            
+            debugger;
             headers = removeColumns($scope.currentFormId, headers);
             headers = addNewColumns($scope.currentFormId, headers);
             
@@ -4283,7 +4283,7 @@
                         persistence: {
                             sort: true, //persist column sorting
                             filter: true, //persist filter sorting
-                            columns: true, //persist columns
+                            columns: false, //persist columns
                         },
                         persistenceWriterFunc: function (id, type, data) {
                             localStorage.setItem(id + "-" + type, JSON.stringify(data));

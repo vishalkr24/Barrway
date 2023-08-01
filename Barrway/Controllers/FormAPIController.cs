@@ -19,7 +19,7 @@ using System.Web.Security;
 namespace Barrway.Controllers
 {
     //[Authorize]
-    public class FormAPIController : Controller
+    public class FormAPIController : BaseController
     {
         private readonly IFormAPIRepository formAPIRepository;
         private readonly ICalendarService calendarService;

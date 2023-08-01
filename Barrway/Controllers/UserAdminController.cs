@@ -18,7 +18,7 @@ using System.Net.Http;
 namespace Barrway.Controllers
 {
     [PublicAuthorize(Roles = "PUBLIC_USER")]
-    public class UserAdminController : Controller
+    public class UserAdminController : BaseController
     {
         private readonly ISqlFunction sqlFunction;
         private readonly IPublicUserService publicUserService;

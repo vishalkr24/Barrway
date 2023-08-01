@@ -18,7 +18,7 @@ using System.Web.Mvc;
 namespace Barrway.Controllers
 {
     [PublicAuthorize(Roles = "PUBLIC_USER")]
-    public class PaymentController : Controller
+    public class PaymentController : BaseController
     {
         private readonly IMasterService masterService;
         private readonly ISqlFunction sqlFunction;

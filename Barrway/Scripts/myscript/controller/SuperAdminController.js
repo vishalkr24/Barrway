@@ -481,7 +481,7 @@ FormGeneratorApp.controller('SuperAdminBusinessCompanyMasterController', functio
             {
                 title: 'View Details', field: 'ACTION', formatter: function (cell, formatter) {
 
-                    return `<button onclick="" class="btn btn-primary text-light" style="border-radius:300px;">Company</button>  ${(cell.getData().CALENDAR_CODE != null) ? `<button onclick=""  class='btn btn-warning text-light' style='border-radius:300px; background:#E2476C;'>Calendar</button>`: `` }`;
+                    return `<a href="/SuperAdmin#/form/editEntry/2295/${cell.getData().formGroupKey}/${cell.getData().Id}?popup=1" class="btn btn-primary text-light" style="border-radius:300px;">Company</a>  ${(cell.getData().CALENDAR_CODE != null) ? `<a href="/SuperAdmin#/form/editEntry/2296/${cell.getData().CalendarFormGroupKey}/${cell.getData().CalendarId}?popup=1"  class='btn btn-warning text-light' style='border-radius:300px; background:#E2476C;'>Calendar</a>`: `` }`;
                 }, headerSort: false
             },
             { title: 'Company', field: 'COMPANY_NAME_ENGLISH', headerFilter: "input" },
