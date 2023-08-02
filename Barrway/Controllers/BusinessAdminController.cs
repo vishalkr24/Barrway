@@ -11,6 +11,9 @@ using Barrway.DTO.Common;
 using System.IO;
 using Barrway.Security;
 using FormGeneratorDTOs.DTOs;
+using System.Text;
+using System.Net.Http.Headers;
+using System.Net.Http;
 
 namespace Barrway.Controllers
 {
@@ -1241,5 +1244,93 @@ namespace Barrway.Controllers
 
 
         #endregion
+
+        private const string ZoomApiKey = "YOUR_ZOOM_API_KEY";
+        private const string ZoomApiSecret = "YOUR_ZOOM_API_SECRET";
+
+        public async Task<ActionResult> CreateMeeting()
+        {
+            string meetingTopic = "My ASP.NET MVC Zoom Meeting";
+            string meetingStartTime = DateTime.UtcNow.AddMinutes(10).ToString("yyyy-MM-ddTHH:mm:ssZ");
+            int meetingDuration = 60; // Meeting duration in minutes
+
+            HttpClient httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            // Generate JWT Token
+            var jwtToken = GenerateJWTToken(ZoomApiKey, ZoomApiSecret);
+
+            // Create Zoom Meeting
+            string apiUrl = "https://api.zoom.us/v2/users/me/meetings";
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+
+            var requestBody = new
+            {
+                topic = meetingTopic,
+                type = 2, // Scheduled Meeting
+                start_time = meetingStartTime,
+                duration = meetingDuration,
+                timezone = "UTC",
+                settings = new
+                {
+                    host_video = true,
+                    participant_video = true
+                }
+            };
+
+            var requestContent = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            var response = await httpClient.PostAsync(apiUrl, requestContent);
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode)
+            {
+
+                ViewBag.Message = "Zoom meeting created successfully.";
+                ViewBag.Response = responseContent;
+            }
+            else
+            {
+
+                ViewBag.Message = "Failed to create Zoom meeting.";
+                ViewBag.Response = responseContent;
+            }
+
+            return View("Index");
+        }
+
+        private static string GenerateJWTToken(string apiKey, string apiSecret)
+        {
+            var payload = new
+            {
+                iss = apiKey,
+                exp = DateTimeOffset.UtcNow.AddMinutes(10).ToUnixTimeSeconds()
+            };
+
+            var header = new { alg = "HS256", typ = "JWT" };
+            string base64UrlEncodedHeader = Base64UrlEncode(Newtonsoft.Json.JsonConvert.SerializeObject(header));
+            string base64UrlEncodedPayload = Base64UrlEncode(Newtonsoft.Json.JsonConvert.SerializeObject(payload));
+
+            string signature = ComputeHMACSHA256($"{base64UrlEncodedHeader}.{base64UrlEncodedPayload}", apiSecret);
+
+            return $"{base64UrlEncodedHeader}.{base64UrlEncodedPayload}.{signature}";
+        }
+
+        private static string Base64UrlEncode(string input)
+        {
+            byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+            string base64String = Convert.ToBase64String(inputBytes);
+            return base64String.TrimEnd('=').Replace('+', '-').Replace('/', '_');
+        }
+
+        private static string ComputeHMACSHA256(string input, string key)
+        {
+            byte[] keyBytes = Encoding.UTF8.GetBytes(key);
+            using (var hmac = new System.Security.Cryptography.HMACSHA256(keyBytes))
+            {
+                byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+                byte[] hashBytes = hmac.ComputeHash(inputBytes);
+                return Convert.ToBase64String(hashBytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+            }
+        }
     }
 }
