@@ -329,7 +329,7 @@ FormGeneratorApp.controller('SuperAdminBusinessUsersController', function ($scop
             {
                 title: 'Actions', field: 'ACTION', formatter: function (cell, formatter) {
 
-                    return `<a href="/SuperAdmin#/Superadmin/BusinessCompanyMaster/${cell.getRow().getData().USER_ID}" class="btn btn-primary text-light" style="border-radius:300px;">View</a> ${(cell.getRow().getData().IS_ACTIVE == "Y") ? `<button onclick="activeInactiveUser(${cell.getRow().getData().Id}, 'N')"  class='btn btn-warning text-light' style='border-radius:300px; background:#E2476C;'>Inactive</button>` : `<button onclick="activeInactiveUser(${cell.getRow().getData().Id}, 'Y')" class="btn btn-success text-light" style="border-radius:300px;">Activate</button>`} `;
+                    return `<a href="/SuperAdmin#/Superadmin/BusinessCompanyMaster/${cell.getRow().getData().USER_ID}" class="btn btn-primary text-light" style="border-radius:300px;">${$scope.translation.View}</a> ${(cell.getRow().getData().IS_ACTIVE == "Y") ? `<button onclick="activeInactiveUser(${cell.getRow().getData().Id}, 'N')"  class='btn btn-warning text-light' style='border-radius:300px; background:#E2476C;'>${$scope.translation.Inactive}</button>` : `<button onclick="activeInactiveUser(${cell.getRow().getData().Id}, 'Y')" class="btn btn-success text-light" style="border-radius:300px;">${$scope.translation.Activate}</button>`} `;
                 }, headerSort: false
             },
             {
@@ -351,9 +351,9 @@ FormGeneratorApp.controller('SuperAdminBusinessUsersController', function ($scop
                 title: 'Status', field: 'IS_ACTIVE', headerFilter: "input", formatter: function (cell, formatter) {
 
                     if (cell.getData().IS_ACTIVE != "Y") {
-                        return `<span style="color:#e2476c;">Inactive</span>`;
+                        return `<span style="color:#e2476c;">${$scope.translation.Inactive}</span>`;
                     } else {
-                        return `<span style="color:green;">Active</span>`;
+                        return `<span style="color:green;">${$scope.translation.Active}</span>`;
                     }
 
                 }
@@ -480,8 +480,7 @@ FormGeneratorApp.controller('SuperAdminBusinessCompanyMasterController', functio
         var columns = [
             {
                 title: 'View Details', field: 'ACTION', formatter: function (cell, formatter) {
-
-                    return `<a href="/SuperAdmin#/form/editEntry/2295/${cell.getData().formGroupKey}/${cell.getData().Id}?popup=1" class="btn btn-primary text-light" style="border-radius:300px;">Company</a>  ${(cell.getData().CALENDAR_CODE != null) ? `<a href="/SuperAdmin#/form/editEntry/2296/${cell.getData().CalendarFormGroupKey}/${cell.getData().CalendarId}?popup=1"  class='btn btn-warning text-light' style='border-radius:300px; background:#E2476C;'>Calendar</a>`: `` }`;
+                    return `<a href="/SuperAdmin#/form/editEntry/2295/${cell.getData().formGroupKey}/${cell.getData().Id}?popup=1" class="btn btn-primary text-light" style="border-radius:300px;">${$scope.translation.Company}</a>  ${(cell.getData().CALENDAR_CODE != null) ? `<a href="/SuperAdmin#/form/editEntry/2296/${cell.getData().CalendarFormGroupKey}/${cell.getData().CalendarId}?popup=1"  class='btn btn-warning text-light' style='border-radius:300px; background:#E2476C;'>${$scope.translation.Calendar}</a>`: `` }`;
                 }, headerSort: false
             },
             { title: 'Company', field: 'COMPANY_NAME_ENGLISH', headerFilter: "input" },
@@ -549,7 +548,7 @@ FormGeneratorApp.controller('SuperAdminBusinessCompanyMasterController', functio
                         data = [];
                         count = 0;
                     }
-                    return value + `<span style='margin-left:10px;'>(${count} Calendars)</span>`;
+                    return value + `<span style='margin-left:10px;'>(${count} ${$scope.translation.Calendar}s)</span>`;
                 },
                 footerElement: "<div style='text-align:left' id='no-of-forms'></div>",
                 dataLoaded: function (data) {
@@ -612,7 +611,7 @@ FormGeneratorApp.controller('SuperAdminPublicUsersController', function ($scope,
             {
                 title: 'Actions', field: 'ACTION', formatter: function (cell, formatter) {
 
-                    return `${(cell.getRow().getData().IS_ACTIVE == "Y") ? `<button onclick="activeInactiveUser(${cell.getRow().getData().Id}, 'N')"  class='btn btn-warning text-light' style='border-radius:300px; background:#E2476C;'>Inactive</button>` : `<button onclick="activeInactiveUser(${cell.getRow().getData().Id}, 'Y')" class="btn btn-success text-light" style="border-radius:300px;">Activate</button>`} `;
+                    return `${(cell.getRow().getData().IS_ACTIVE == "Y") ? `<button onclick="activeInactiveUser(${cell.getRow().getData().Id}, 'N')"  class='btn btn-warning text-light' style='border-radius:300px; background:#E2476C;'>${$scope.translation.Inactive}</button>` : `<button onclick="activeInactiveUser(${cell.getRow().getData().Id}, 'Y')" class="btn btn-success text-light" style="border-radius:300px;">${$scope.translation.Activate}</button>`} `;
                 }, headerSort: false
             },
             {
@@ -634,9 +633,9 @@ FormGeneratorApp.controller('SuperAdminPublicUsersController', function ($scope,
                 title: 'Status', field: 'IS_ACTIVE', headerFilter: "input", formatter: function (cell, formatter) {
 
                     if (cell.getData().IS_ACTIVE != "Y") {
-                        return `<span style="color:#e2476c;">Inactive</span>`;
+                        return `<span style="color:#e2476c;">${$scope.translation.Inactive}</span>`;
                     } else {
-                        return `<span style="color:green;">Active</span>`;
+                        return `<span style="color:green;">${$scope.translation.Active}</span>`;
                     }
 
                 }

@@ -142,6 +142,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///    Looks up a localized string similar to Analytics.
+        /// </summary>
+        internal static string Analytics {
+            get {
+                return ResourceManager.GetString("Analytics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Approvals.
+        /// </summary>
+        internal static string Approvals {
+            get {
+                return ResourceManager.GetString("Approvals", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///    Looks up a localized string similar to Back.
         /// </summary>
         internal static string Back {
@@ -210,6 +228,15 @@ namespace Resources {
         internal static string Business_Site {
             get {
                 return ResourceManager.GetString("Business Site", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Business Users.
+        /// </summary>
+        internal static string Business_Users {
+            get {
+                return ResourceManager.GetString("Business Users", resourceCulture);
             }
         }
         
@@ -1204,6 +1231,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///    Looks up a localized string similar to Pending Calendar Approval.
+        /// </summary>
+        internal static string Pending_Calendar_Approval {
+            get {
+                return ResourceManager.GetString("Pending Calendar Approval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Pending Company Approval.
+        /// </summary>
+        internal static string Pending_Company_Approval {
+            get {
+                return ResourceManager.GetString("Pending Company Approval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///    Looks up a localized string similar to Phone.
         /// </summary>
         internal static string Phone {
@@ -1308,6 +1353,15 @@ namespace Resources {
         internal static string Profile {
             get {
                 return ResourceManager.GetString("Profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Public Users.
+        /// </summary>
+        internal static string Public_Users {
+            get {
+                return ResourceManager.GetString("Public Users", resourceCulture);
             }
         }
         
@@ -1722,6 +1776,24 @@ namespace Resources {
         internal static string Sub_Total {
             get {
                 return ResourceManager.GetString("Sub Total", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Super admin.
+        /// </summary>
+        internal static string Super_admin {
+            get {
+                return ResourceManager.GetString("Super admin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Super Users.
+        /// </summary>
+        internal static string Super_Users {
+            get {
+                return ResourceManager.GetString("Super Users", resourceCulture);
             }
         }
         

@@ -144,6 +144,12 @@
   <data name="Amount" xml:space="preserve">
     <value>Amount</value>
   </data>
+  <data name="Analytics" xml:space="preserve">
+    <value>Analytics</value>
+  </data>
+  <data name="Approvals" xml:space="preserve">
+    <value>Approvals</value>
+  </data>
   <data name="B coin balance" xml:space="preserve">
     <value>B coin balance</value>
   </data>
@@ -170,6 +176,9 @@
   </data>
   <data name="Business Site" xml:space="preserve">
     <value>Business Site</value>
+  </data>
+  <data name="Business Users" xml:space="preserve">
+    <value>Business Users</value>
   </data>
   <data name="Calendar" xml:space="preserve">
     <value>Calendar</value>
@@ -498,6 +507,12 @@
   <data name="Payment Successfull" xml:space="preserve">
     <value>Payment Successfull</value>
   </data>
+  <data name="Pending Calendar Approval" xml:space="preserve">
+    <value>Pending Calendar Approval</value>
+  </data>
+  <data name="Pending Company Approval" xml:space="preserve">
+    <value>Pending Company Approval</value>
+  </data>
   <data name="Phone" xml:space="preserve">
     <value>Phone</value>
   </data>
@@ -533,6 +548,9 @@
   </data>
   <data name="Profile" xml:space="preserve">
     <value>Profile</value>
+  </data>
+  <data name="Public Users" xml:space="preserve">
+    <value>Public Users</value>
   </data>
   <data name="Public website link" xml:space="preserve">
     <value>Public website link</value>
@@ -671,6 +689,12 @@
   </data>
   <data name="Subscription Plans" xml:space="preserve">
     <value>Subscription Plans</value>
+  </data>
+  <data name="Super admin" xml:space="preserve">
+    <value>Super admin</value>
+  </data>
+  <data name="Super Users" xml:space="preserve">
+    <value>Super Users</value>
   </data>
   <data name="Tags" xml:space="preserve">
     <value>Tags</value>
