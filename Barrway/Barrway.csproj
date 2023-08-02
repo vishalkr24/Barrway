@@ -3300,6 +3300,7 @@
     <Content Include="App_GlobalResources\Resource.zh-Hant.resx">
       <Generator>GlobalResourceProxyGenerator</Generator>
       <LastGenOutput>Resource.zh-Hant.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <PropertyGroup>

@@ -136,11 +136,11 @@
                 <div class="col-sm mb-2 mb-sm-0">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb breadcrumb-no-gutter">
-                            <li class="breadcrumb-item"><a class="breadcrumb-link" ui-sref="Home()">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Attendance</li>
+                            <li class="breadcrumb-item"><a class="breadcrumb-link" ui-sref="Home()">{{translation.Home}}</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">{{translation.Attendance}}</li>
                         </ol>
                     </nav>
-                    <h1 class="page-header-title ms-2">Attendance</h1>
+                    <h1 class="page-header-title ms-2">{{translation.Attendance}}</h1>
                 </div>
             </div>
         </div>
@@ -156,17 +156,17 @@
                                             <span id="mark-attendance-btn-area">
                                                 <a class="btn btn-primary mb-2 mb-lg-0" ng-click="CreateBulkAttendance()">
                                                     <i class="bi bi-check2-circle"></i>
-                                                    <span >Bulk Attendance</span>
+                                                    <span>{{translation.Bulk_Attendance}}</span>
                                                 </a>
                                             </span>
                                             <span id="mark-attendance-submit-area" class="custom-hide">
                                                 <a class="btn btn-success mb-2 mb-lg-0" ng-click="SubmitBulkAttendance()">
                                                     <i class="bi bi-check2"></i>
-                                                    <span class="">Submit</span>
+                                                    <span class="">{{translation.Submit}}</span>
                                                 </a>
                                                 <a class="btn btn-danger mb-2 mb-lg-0" ng-click="CancelBulkAttendance()">
                                                     <i class="bi bi-x-circle"></i>
-                                                    <span class="">Cancel</span>
+                                                    <span class="">{{translation.Cancel}}</span>
                                                 </a>
                                             </span>
                                            

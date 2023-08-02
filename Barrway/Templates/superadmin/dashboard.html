@@ -51,7 +51,7 @@
     <div class="">
         <div class="">
             <span class="dash-tab active" id="dashboard-tab">{{translation.Dashboard}}</span>
-            <span class="dash-tab" id="reports-tab">Reports</span>
+            <span class="dash-tab" id="reports-tab">{{translation.Reports}}</span>
             <hr style="background:grey; margin:1rem 0rem;" />
         </div>
         <div id="dashboard-area">
@@ -61,7 +61,7 @@
                         <div class="col-md-3">
                             <div class="wraping">
                                 <div class="top-head purple">
-                                    <h3>Business Users</h3>
+                                    <h3>{{translation.Business_Users}}</h3>
                                     <img src="/assets/img/ques.png">
                                 </div>
                                 <div class="wrap-body">
@@ -78,7 +78,7 @@
                                             <p><span>2023-02-21</span> <span></span> <span></span></p>
                                         </div>
                                         <div class="w-r w-20">
-                                            <p><a ui-sref="SuperadminBusinessUsers()">View ></a></p>
+                                            <p><a ui-sref="SuperadminBusinessUsers()">{{translation.View}} ></a></p>
                                         </div>
                                     </div>
 
@@ -88,7 +88,7 @@
                         <div class="col-md-3">
                             <div class="wraping">
                                 <div class="top-head light-purple">
-                                    <h3>Public Users</h3>
+                                    <h3>{{translation.Public_Users}}</h3>
                                     <img src="/assets/img/ques.png">
                                 </div>
                                 <div class="wrap-body">
@@ -105,7 +105,7 @@
                                             <p><span>2023-02-21</span> <span></span> <span></span></p>
                                         </div>
                                         <div class="w-r w-20">
-                                            <p><a ui-sref="SuperadminPublicUsers()"> View ></a></p>
+                                            <p><a ui-sref="SuperadminPublicUsers()"> {{translation.View}} ></a></p>
                                         </div>
                                     </div>
 
@@ -115,7 +115,7 @@
                         <div class="col-md-3">
                             <div class="wraping">
                                 <div class="top-head purple">
-                                    <h3>Super Admin Users</h3>
+                                    <h3>{{translation.Super_Admin_Users}}</h3>
                                     <img src="/assets/img/ques.png">
                                 </div>
                                 <div class="wrap-body">
@@ -132,7 +132,7 @@
                                             <p><span>2023-02-21</span> <span></span> <span></span></p>
                                         </div>
                                         <div class="w-r w-20">
-                                            <p><a ui-sref="SuperAdminUserMaster()"> View ></a></p>
+                                            <p><a ui-sref="SuperAdminUserMaster()"> {{translation.View}} ></a></p>
                                         </div>
                                     </div>
 
@@ -142,7 +142,7 @@
                         <div class="col-md-3">
                             <div class="wraping">
                                 <div class="top-head barrway-red">
-                                    <h3>Total Companies</h3>
+                                    <h3>{{translation.Total_Companies}}</h3>
                                     <img src="/assets/img/ques.png">
                                 </div>
                                 <div class="wrap-body">
@@ -159,7 +159,7 @@
                                             <p><span>2023-02-21</span> <span></span> <span></span></p>
                                         </div>
                                         <div class="w-r w-20">
-                                            <p><a ui-sref="SuperAdminCompanyMaster({formId:2295})"> View ></a></p>
+                                            <p><a ui-sref="SuperAdminCompanyMaster({formId:2295})"> {{translation.View}} ></a></p>
                                         </div>
                                     </div>
 
@@ -169,7 +169,7 @@
                         <div class="col-md-3">
                             <div class="wraping">
                                 <div class="top-head barrway-red">
-                                    <h3>Total Calendars</h3>
+                                    <h3>{{translation.Total_Calendars}}</h3>
                                     <img src="/assets/img/ques.png">
                                 </div>
                                 <div class="wrap-body">
@@ -186,7 +186,7 @@
                                             <p><span>2023-02-21</span> <span></span> <span></span></p>
                                         </div>
                                         <div class="w-r w-20">
-                                            <p><a ui-sref="SuperAdminCompanyMaster({formId:2296})"> View ></a></p>
+                                            <p><a ui-sref="SuperAdminCompanyMaster({formId:2296})"> {{translation.View}} ></a></p>
                                         </div>
                                     </div>
                                 </div>
@@ -195,7 +195,7 @@
                         <div class="col-md-3">
                             <div class="wraping">
                                 <div class="top-head salmon">
-                                    <h3>Calendar Approval Pending</h3>
+                                    <h3>{{translation.Calendar_Approval_Pending}}</h3>
                                     <img src="/assets/img/ques.png">
                                 </div>
                                 <div class="wrap-body">
@@ -212,7 +212,7 @@
                                             <p><span>2023-02-21</span> <span></span> <span></span></p>
                                         </div>
                                         <div class="w-r w-20">
-                                            <p><a ui-sref="SuperAdminCompanyMaster({formId:2296})">View ></a></p>
+                                            <p><a ui-sref="SuperAdminCompanyMaster({formId:2296})">{{translation.View}} ></a></p>
                                         </div>
                                     </div>
                                 </div>
@@ -221,7 +221,7 @@
                         <div class="col-md-3">
                             <div class="wraping">
                                 <div class="top-head salmon">
-                                    <h3>Company Approval Pending</h3>
+                                    <h3>{{translation.Company_Approval_Pending}}</h3>
                                     <img src="/assets/img/ques.png">
                                 </div>
                                 <div class="wrap-body">
@@ -238,7 +238,7 @@
                                             <p><span>2023-02-21</span> <span></span> <span></span></p>
                                         </div>
                                         <div class="w-r w-20">
-                                            <p><a ui-sref="SuperAdminCompanyMaster({formId:2296})">View ></a></p>
+                                            <p><a ui-sref="SuperAdminCompanyMaster({formId:2296})">{{translation.View}} ></a></p>
                                         </div>
                                     </div>
                                 </div>
@@ -256,19 +256,19 @@
                         <div class="col-md-3">
                             <div class="wraping">
                                 <div class="top-head purple">
-                                    <h3>Company Reports</h3>
+                                    <h3>{{translation.Company_Reports}}</h3>
 
                                 </div>
                                 <div class="wrap-body">
                                     <div class="wb-top">
                                         <div style="padding:16px; border-bottom:1px solid lightgrey;">
-                                            Report 1
+                                            {{translation.Report}} 1
                                         </div>
                                         <div style="padding:16px; border-bottom:1px solid lightgrey;">
-                                            Report 2
+                                            {{translation.Report}} 2
                                         </div>
                                         <div style="padding:16px; border-bottom:0px solid lightgrey;">
-                                            Report 3
+                                            {{translation.Report}} 3
                                         </div>
                                     </div>
                                     <div class="wb-bottom">
@@ -281,19 +281,19 @@
                         <div class="col-md-3">
                             <div class="wraping">
                                 <div class="top-head purple">
-                                    <h3>Calendar Reports</h3>
+                                    <h3>{{translation.Calendar_Reports}}</h3>
 
                                 </div>
                                 <div class="wrap-body">
                                     <div class="wb-top">
                                         <div style="padding:16px; border-bottom:1px solid lightgrey;">
-                                            Report 1
+                                            {{translation.Report}} 1
                                         </div>
                                         <div style="padding:16px; border-bottom:1px solid lightgrey;">
-                                            Report 2
+                                            {{translation.Report}} 2
                                         </div>
                                         <div style="padding:16px; border-bottom:0px solid lightgrey;">
-                                            Report 3
+                                            {{translation.Report}} 3
                                         </div>
                                     </div>
                                     <div class="wb-bottom">

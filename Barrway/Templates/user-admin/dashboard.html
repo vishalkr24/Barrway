@@ -24,10 +24,10 @@
             <div class="col-lg-5 col-xl-5">
                 <div class="main-left">
                     <div class="bred-nav">
-                        <span><a href="#" ui-sref="home()">User</a> / <span> <a href="#" ui-sref="home()">Dashboard</a> </span></span>
+                        <span><a href="#" ui-sref="home()">{{translation.User}}</a> / <span> <a href="#" ui-sref="home()">{{translation.Dashboard}}</a> </span></span>
                     </div>
                     <div class="ml-content">
-                        <h2>Your recently booked calendar</h2>
+                        <h2>{{translation.Your_recently_booked_calendar}}</h2>
 
                         <div class="wrap" ng-repeat="company in CalendarCompanyList">
                             <div class="wrap-im">
@@ -39,7 +39,7 @@
                                 <P class="font-2">{{company.ACTIVITY_NAME}}</P>
                                 <p>Service {{company.CALENDAR_SUB_CATEGORY_NAME}}</p>
                                 <p>Booking time: {{company.SlotCreated}}</p>
-                                <p><button class="book" ng-click="GoToCalendar(company.CompanyId)">Book</button></p>
+                                <p><button class="book" ng-click="GoToCalendar(company.CompanyId)">{{translation.Book}}</button></p>
                             </div>
                         </div>
 
@@ -49,8 +49,8 @@
             <div class="col-lg-6 col-xl-7">
                 <div class="main-right" style="min-height: 85vh;">
                     <div class="top">
-                        <span style="position: relative;top: 2px;">Your booking reminder</span>
-                        <span><button ng-click="">go to Calendar</button></span>
+                        <span style="position: relative;top: 2px;">{{translation.Your_booking_reminder}}</span>
+                        <span><button ng-click="">{{translation.Go_to_Calendar}}</button></span>
                     </div>
                     <br /><br /><br />
                     <div class="row">

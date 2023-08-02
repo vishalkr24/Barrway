@@ -127,9 +127,9 @@
             <div class="col-sm mb-2 mb-sm-0">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb breadcrumb-no-gutter">
-                        <li class="breadcrumb-item"><a class="breadcrumb-link" ui-sref="Home()">Home</a></li>
-                        <li class="breadcrumb-item"><a class="breadcrumb-link" ui-sref="SuperadminBusinessUsers()">Business Users</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Company Master</li>
+                        <li class="breadcrumb-item"><a class="breadcrumb-link" ui-sref="Home()">{{translation.Home}}</a></li>
+                        <li class="breadcrumb-item"><a class="breadcrumb-link" ui-sref="SuperadminBusinessUsers()">{{translation.Business_Users}}</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{translation.Company_Master}}</li>
                     </ol>
                 </nav>
                 
@@ -311,7 +311,7 @@
             <div class="modal-content">
                 <div class="jss3726" ng-include="'bg-svg.html'"></div>
                 <div class="modal-header">
-                    <h3 class="modal-title">Mark Attendance</h3>
+                    <h3 class="modal-title">{{translation.Mark_Attendance}}</h3>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -324,7 +324,7 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="mark-attendance-details">
-                                <h4 style="font-weight:500">Attendance: <b>{{currentTransactionAttendance}}</b></h4>
+                                <h4 style="font-weight:500">{{translation.Attendance}}: <b>{{currentTransactionAttendance}}</b></h4>
                                 <div>
                                     <button class="btn btn-success" ng-click="markPresent()">Present</button> <button class="btn btn-warning" ng-click="markAbsent()">Absent</button> <button type="button" class="btn btn-default" ng-click="closeAttendanceModel()" aria-label="Close">Cancel</button>
                                 </div>

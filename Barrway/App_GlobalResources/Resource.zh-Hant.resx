@@ -2208,6 +2208,9 @@
   <data name="ReferLetter" xml:space="preserve">
     <value>推薦信</value>
   </data>
+  <data name="Register" xml:space="preserve">
+    <value>登記</value>
+  </data>
   <data name="Register as Therapist or Tutor" xml:space="preserve">
     <value>註冊為治療師或導師</value>
   </data>
