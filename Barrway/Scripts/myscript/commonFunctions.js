@@ -15267,6 +15267,21 @@ function removeColumns(formid,columns) {
     if (removeColumnsFormid.find(x => x == formid)) {
         return columns.filter(x => !removeColumnName.find(y => x.title && x.title.split('|').find(z => z == y)));
     }
+
+    var removeColumnsFormid = [2295];
+    var removeColumnName = ['BUSINESS ACCOUNT ID'];
+    debugger;
+    if (formid == 2295) {
+        columns = columns.filter(x => !excludeColumAllTable.find(y => x.title && x.title.split('|').find(z => z == y)))
+        if (removeColumnsFormid.find(x => x == formid)) {
+            return columns.filter(x => !removeColumnName.find(y => x.title && x.title.split('|').find(z => z == y)));
+        }
+    }
+
+    var removeColumnsFormid = [2296];
+    var removeColumnName = ['BUSINESS ACCOUNT ID'];
+    columns.find(x => x.title == "COMPANY CODE").title = "COMPANY NAME";
+
     return columns;
 
 }
