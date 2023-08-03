@@ -51,10 +51,14 @@ namespace Barrway.Service.IRepository
         #region Business Calendar
 
         Task<AddUpdateDelete> AddCalendar(BusinessCalendarModel model, string UserId, CalendarControlModel calendarControlModel);
+
+        Task<AddUpdateDelete> GetAllCalendarTemplatesByCategory(string CalendarCategoryId);
+
         Task<AddUpdateDelete> GetSingleCalendarById(string Id);
         Task<AddUpdateDelete> GetCompanyCalendarByCompanyId(string CompanyId);
         Task<AddUpdateDelete> GetMarcketPlaceCompanyCalendarByCompanyId(string CompanyId);
         Task<AddUpdateDelete> GetCompanyCalendars(GenerateDynamicFormData data, string CompanyId);
+        Task<AddUpdateDelete> GetCompanyCalendarTemplates(GenerateDynamicFormData data, string CompanyCode);
 
         Task<AddUpdateDelete> GetCalendarUpcomingBookings(GenerateDynamicFormData data, string CompanyCode, string CalendarCode);
         Task<AddUpdateDelete> GetSchedule(string ScheduleId, string UserId);

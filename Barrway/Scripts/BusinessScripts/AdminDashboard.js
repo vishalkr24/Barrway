@@ -1,5 +1,11 @@
 ﻿$(document).ready(function () {
-    setPageStatus();
+    if (getUserRole() == "BUSINESS_USER") {
+        setPageStatus();
+    } else {
+        $("#content-2").show();
+        $("#content").hide();
+    }
+    
     showNavbarNavigation('dashboardsMegaMenu');
     setDashboardData();
 });

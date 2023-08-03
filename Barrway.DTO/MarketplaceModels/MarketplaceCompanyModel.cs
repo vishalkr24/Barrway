@@ -40,6 +40,7 @@ namespace Barrway.DTO.MarketplaceModels
         public string CITY_ID { get; set; } = String.Empty;
         public string DISTRICT_ID { get; set; } = String.Empty;
         public string IS_ACTIVE { get; set; } = String.Empty;
+        public string IS_TEMPLATE { get; set; } = String.Empty;
         public string COMPANY_CATEGORY_NAME { get; set; } = String.Empty;
         public string COMPANY_SUB_CATEGORY_NAME { get; set; } = String.Empty;
         public string COMPANY_CITY_NAME { get; set; } = String.Empty;

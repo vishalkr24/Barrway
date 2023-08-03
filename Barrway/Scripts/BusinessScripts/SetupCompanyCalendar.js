@@ -1,4 +1,6 @@
-﻿$(document).on("change", "#COUNTRY_ID", function () {
+﻿var templateList = [];
+
+$(document).on("change", "#COUNTRY_ID", function () {
     bindCityData($("#COUNTRY_ID option:selected").val());
 })
 
@@ -7,6 +9,7 @@ $(document).on("change", "#CITY_ID", function () {
 })
 
 $(document).on("change", "#CALENDAR_CATEGORY_ID", function () {
+    renderTemplates($("#CALENDAR_CATEGORY_ID option:selected").val())
     bindCalendarSubCategoryData($("#CALENDAR_CATEGORY_ID option:selected").val());
 })
 
@@ -22,7 +25,8 @@ function readyPage() {
 
     checkRegistrationStep();
     setCountryData();
-    
+    renderTemplates($("#CALENDAR_CATEGORY_ID option:selected").val())
+
     if ($("#createCalendarCheck").val() == false || $("#createCalendarCheck").val() == "false" ) {
         $("#content").hide();
         $("#content-2").show();
@@ -87,7 +91,60 @@ function renderForm(CategoryId) {
     bindCalendarSubCategoryData($("#CALENDAR_CATEGORY_ID option:selected").val());
     $("#content").hide();
     $("#content-2").show();
+
+    renderTemplates(CategoryId);
+
     checkSlot();
+}
+
+$(document).on("click", "#templates-row .col-md-4", function () {
+    let CalendarTemplateId = 0;
+
+    $("#templates-row .col-sm-4").removeClass("active");
+    if (this.classList.contains('active')) {
+        $(this).removeClass("active");
+        CalendarTemplateId = 0;
+    } else {
+        $(this).addClass("active");
+        CalendarTemplateId = $(this).attr("data-value");
+    }
+
+    $("#CALENDAR_TEMPLATE_ID").val(CalendarTemplateId);
+
+    var template = templateList.find(x => x.Id == CalendarTemplateId)
+
+    $("#CALENDAR_NAME").val(template.CALENDAR_NAME);
+    $("#COUNTRY_ID").val(template.COUNTRY_ID);
+
+    bindCityData(template.COUNTRY_ID);
+    $("#CITY_ID").val(template.CITY_ID);
+
+    bindDistrictData(template.CITY_ID);
+    $("#DISTRICT_ID").val(template.DISTRICT_ID);
+
+    $("#CALENDAR_CATEGORY_ID").val(template.CALENDAR_CATEGORY_ID);
+    $("#CALENDAR_SUB_CATEGORY_ID").val(template.CALENDAR_SUB_CATEGORY_ID);
+    $("#SLOT_DURATION_IN_MINS").val(template.SLOT_DURATION_IN_MINS);
+
+});
+
+function renderTemplates(CategoryId) {
+    var data = getTemplatesList(CategoryId);
+    debugger;
+    $("#templates-row").empty();
+    templateList = [];
+    if (data.Status) {
+        
+        for (var i = 0; i < data.Data.length; i++) {
+            templateList.push(data.Data[i]);
+            $("#templates-row").append(`<div class="col-md-4 col-sm-6 text-center" data-value="${data.Data[i].Id}">
+
+                            <img class="template-image" src="${data.Data[i].CALENDAR_PHOTO_PATH.replace('~','..')}" onerror="this.src='../assets/img/160x160/img5.jpg'" />
+                            <div style="padding-top:12px;">${data.Data[i].CALENDAR_NAME}</div>
+
+                        </div>`);
+        }
+    }
 }
 
 function renderPage(pageName) {

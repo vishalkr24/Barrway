@@ -3037,7 +3037,9 @@
     <Content Include="App_Browsers\qt.browser" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\BusinessScripts\AdminDashboard.js" />
+    <Content Include="Scripts\BusinessScripts\SuperAdminLayoutManager.js" />
     <Content Include="Scripts\BusinessScripts\AdminLayoutManager.js" />
+    <Content Include="Scripts\BusinessScripts\CalendarTemplateMaster.js" />
     <Content Include="Scripts\BusinessScripts\CompanyMaster.js" />
     <Content Include="Scripts\BusinessScripts\SubscriptionPlan.js" />
     <Content Include="Scripts\BusinessScripts\PaymentHistory.js" />
@@ -3239,6 +3241,7 @@
     <Content Include="Views\Account\SuperAdminLogin.cshtml" />
     <Content Include="Views\Shared\_LayoutSuperAdmin.cshtml" />
     <Content Include="Views\SuperAdmin\Index.cshtml" />
+    <Content Include="Views\BusinessAdmin\CalendarTemplateMaster.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -22,6 +22,25 @@ function getCompanyWebsite() {
     return data;
 }
 
+function getTemplatesList(categoryId) {
+    var data;
+    $.ajax({
+        url: "/BusinessAdmin/GetAllCalendarTemplatesByCategory/",
+        data: {
+            CalendarCategoryId: categoryId
+        },
+        async: false,
+        type: "GET",
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    })
+    return data;
+}
+
 function getSingleUser() {
     var data;
     $.ajax({

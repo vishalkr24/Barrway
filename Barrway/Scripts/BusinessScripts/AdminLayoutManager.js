@@ -47,7 +47,7 @@ function showNavbarNavigation(divId) {
 }
 
 function setCompanyDetails() {
-    
+    debugger;
     var allCompanies = getAllCompanies();
     var user = getSingleUser();
     console.log(user);
@@ -72,8 +72,8 @@ function setCompanyDetails() {
                 }
                 console.log(data[i]);
                 $("#navbar-company-selector").append(`<option selected value="${data[i].Id}">${data[i].COMPANY_NAME_ENGLISH} [${data[i].COMPANY_CODE}]</option>`);
-                
-                
+
+
             } else {
                 $("#navbar-company-selector").append(`<option value="${data[i].Id}">${data[i].COMPANY_NAME_ENGLISH} [${data[i].COMPANY_CODE}]</option>`);
             }
@@ -100,11 +100,14 @@ function setCompanyDetails() {
 
         }
 
-        
-        
         $("#navbar-company-selector").val(localStorage.getItem("COMPANY_ID"));
         $(".lbl-company-name").text(localStorage.getItem("COMPANY_NAME_ENGLISH"));
 
+    } else {
+        if (!window.location.href.includes("SetupCompanyProfile") && getUserRole() == "SUPERADMIN_USER") {
+            window.location.href = "/BusinessAdmin/SetupCompanyProfile?&IsNew=true";
+        }
+        
     }
 }
 

@@ -102,13 +102,18 @@ namespace Barrway.Controllers
 
                 ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
 
+                if (!string.IsNullOrEmpty(companyModel.IS_TEMPLATE))
+                {
+                    if (companyModel.IS_TEMPLATE == "Y")
+                        return RedirectToAction("Index", "Marketplace");
+                }
+
                 return View(companyModel);
             }
             catch (Exception ex)
             {
                 return RedirectToAction("Index", "Marketplace");
             }
-
 
         }
 
@@ -124,6 +129,12 @@ namespace Barrway.Controllers
                 companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
 
                 ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
+
+                if (!string.IsNullOrEmpty(companyModel.IS_TEMPLATE))
+                {
+                    if (companyModel.IS_TEMPLATE == "Y")
+                        return RedirectToAction("Index", "Marketplace");
+                }
 
                 return View(companyModel);
             }
@@ -146,6 +157,12 @@ namespace Barrway.Controllers
                 companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
 
                 ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
+
+                if (!string.IsNullOrEmpty(companyModel.IS_TEMPLATE))
+                {
+                    if (companyModel.IS_TEMPLATE == "Y")
+                        return RedirectToAction("Index", "Marketplace");
+                }
 
                 return View(companyModel);
             }
@@ -191,6 +208,12 @@ namespace Barrway.Controllers
 
                 ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
 
+                if (!string.IsNullOrEmpty(companyModel.IS_TEMPLATE))
+                {
+                    if (companyModel.IS_TEMPLATE == "Y")
+                        return RedirectToAction("Index", "Marketplace");
+                }
+
                 return View(companyModel);
             }
             catch (Exception ex)
@@ -218,6 +241,12 @@ namespace Barrway.Controllers
                 albumModel.DEFAULT_CALENDAR_ID = CalendarCode;
 
                 ViewBag.Title = companyData.Data["COMPANY_NAME_ENGLISH"].ToString();
+
+                if (!string.IsNullOrEmpty(companyData.Data["IS_TEMPLATE"]?.ToString()))
+                {
+                    if (companyData.Data["IS_TEMPLATE"]?.ToString() == "Y")
+                        return RedirectToAction("Index", "Marketplace");
+                }
 
                 return View(albumModel);
             }
