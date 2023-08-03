@@ -31,6 +31,7 @@ namespace Barrway.DTO.BusinessModels
         public string SCH_DESCRIPTION { get; set; }
         public string SCH_FROM_DATE { get; set; }
         public string SCH_TO_DATE { get; set; }
+        public string SCH_DAYS { get; set; }
         public string IF_SLOT_EXIST { get; set; }
         public string IF_SLOT_DOES_NOT_EXIST { get; set; }
         public string SCH_ALTERNATIVE_WEEK { get; set; }

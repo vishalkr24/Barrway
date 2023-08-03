@@ -1,13 +1,12 @@
 ﻿$(document).ready(function () {
     showNavbarNavigation('calendarsMegaMenu');
-    setCalendarMaster();
+    setCalendarTemplateMaster();
     
 })
 
-function setCalendarMaster() {
-    //var data = GetCompanyCalendars(localStorage.getItem("COMPANY_ID"), "", "");
-    //console.log(data);
-    var companyId = localStorage.getItem("COMPANY_ID")
+function setCalendarTemplateMaster() {
+    
+    var companyId = localStorage.getItem("COMPANY_CODE")
     var CalendarMasterList = function () {
         var columns = [
             {
@@ -93,7 +92,7 @@ function setCalendarMaster() {
                 ajaxConfig: "POST", //ajax HTTP request type
                 ajaxContentType: "json",
                 ajaxParams: { //ajax parameters
-                    CompanyId: companyId
+                    CompanyCode: companyId
                 }, 
                 ajaxProgressiveLoad: "scroll",
                 ajaxProgressiveLoadScrollMargin: 75,
@@ -113,7 +112,6 @@ function setCalendarMaster() {
                     //response - the JSON object returned in the body of the response.
                     //$('#form-records').unblock();
                     //$.unblockUI();
-                    
                     if (response.data) {
                         return response;
                     }

@@ -348,11 +348,15 @@ namespace Barrway.Controllers
         {
             try
             {
-                var startObject = data.SCH_FROM_DATE.Split('/');
-                var endObject = data.SCH_TO_DATE.Split('/');
+                if (UserIdentity.Role != "SUPERADMIN_USER")
+                {
+                    var startObject = data.SCH_FROM_DATE.Split('/');
+                    var endObject = data.SCH_TO_DATE.Split('/');
 
-                data.SCH_FROM_DATE = Convert.ToDateTime(startObject[2] + "-" + startObject[1] + "-" + startObject[0]).ToString("yyyy-MM-dd");
-                data.SCH_TO_DATE = Convert.ToDateTime(endObject[2] + "-" + endObject[1] + "-" + endObject[0]).ToString("yyyy-MM-dd");
+                    data.SCH_FROM_DATE = Convert.ToDateTime(startObject[2] + "-" + startObject[1] + "-" + startObject[0]).ToString("yyyy-MM-dd");
+                    data.SCH_TO_DATE = Convert.ToDateTime(endObject[2] + "-" + endObject[1] + "-" + endObject[0]).ToString("yyyy-MM-dd");    
+                }
+                
 
                 var b = data.ToDictionary();
 
@@ -372,18 +376,27 @@ namespace Barrway.Controllers
                 {
                     // Create a new Schedule
 
-                    var start = Convert.ToDateTime(startObject[2] + "-" + startObject[1] + "-" + startObject[0]);
-
-                    var end = Convert.ToDateTime(endObject[2] + "-" + endObject[1] + "-" + endObject[0]);
-
-                    DateTime dateTracker = start;
-                    int slotCounter = 1;
-
                     string script = "";
                     string formGroupKey = CustomMethods.CreateUUID();
                     var response = await businessUserService.AddSchedularForm(data, formGroupKey);
                     if (response.Status)
                     {
+                        if (UserIdentity.Role == "SUPERADMIN_USER")
+                        {
+                            return Json("Success", JsonRequestBehavior.AllowGet);
+                        }
+
+                        var startObject = data.SCH_FROM_DATE.Split('/');
+                        var endObject = data.SCH_TO_DATE.Split('/');
+
+                        var start = Convert.ToDateTime(startObject[2] + "-" + startObject[1] + "-" + startObject[0]);
+
+                        var end = Convert.ToDateTime(endObject[2] + "-" + endObject[1] + "-" + endObject[0]);
+
+                        DateTime dateTracker = start;
+                        int slotCounter = 1;
+
+
                         while (dateTracker <= end)
                         {
                             string SchedularFormId = response.Data.Id.ToString();

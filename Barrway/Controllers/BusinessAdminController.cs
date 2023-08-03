@@ -17,7 +17,7 @@ using System.Net.Http;
 
 namespace Barrway.Controllers
 {
-    [BusinessAuthorize(Roles = "BUSINESS_USER")]
+    [BusinessAuthorize(Roles = "BUSINESS_USER,SUPERADMIN_USER")]
     public class BusinessAdminController : BaseController
     {
 
@@ -63,6 +63,12 @@ namespace Barrway.Controllers
                 else
                 {
                     // Business Website Entry not found
+
+                    if (UserIdentity.Role == "SUPERADMIN_USER")
+                    {
+                        return View();
+                    }
+
                     Session.Clear();
                     Session.RemoveAll();
                     Session.Abandon();
@@ -275,6 +281,12 @@ namespace Barrway.Controllers
             else
             {
                 // Business Website Entry not found
+
+                if (UserIdentity.Role == "SUPERADMIN_USER")
+                {
+                    return RedirectToAction("CompanyMaster");
+                }
+
                 Session.Clear();
                 Session.RemoveAll();
                 Session.Abandon();
@@ -297,6 +309,11 @@ namespace Barrway.Controllers
         }
 
         public async Task<ActionResult> CompanyMaster()
+        {
+            return View();
+        }
+
+        public async Task<ActionResult> CalendarTemplateMaster()
         {
             return View();
         }
@@ -454,6 +471,29 @@ namespace Barrway.Controllers
 
         }
 
+        public async Task<ActionResult> GetAllCalendarTemplatesByCategory(string CalendarCategoryId)
+        {
+            try
+            {
+                var templates = (await businessUserService.GetAllCalendarTemplatesByCategory(CalendarCategoryId));
+
+                if (templates.Status)
+                {
+                    var data = templates.Data as List<IDictionary<string, object>>;
+                    return Json(new AddUpdateDelete() { Status = true, Data = data, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new AddUpdateDelete() { Status = false, Message = "Templates Not Found" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
         public async Task<ActionResult> GetAllCompaniesMaster(GenerateDynamicFormData data)
         {
             try
@@ -517,6 +557,24 @@ namespace Barrway.Controllers
 
                 var website = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
 
+                if (!website.Status)
+                {
+                    // Create Business Account (Business account is missing)
+
+                    BusinessAccountWebsiteModel businessModel = new BusinessAccountWebsiteModel()
+                    {
+                        USER_ID = User.Identity.Name,
+                        COMPANY_PROFILE_STATUS = "N",
+                        COMPANY_CALENDAR_STATUS = "N",
+                        CURRENT_STEP = (UserIdentity.Role == "SUPERADMIN_USER") ? "COMPLETED" : "COMPANY PROFILE"
+                    };
+
+                    AddUpdateDelete businessResult = await businessUserService.CreateBusinessWebsite(businessModel);
+
+                    website = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
+                }
+
+
                 if (website.Status)
                 {
                     BusinessCompanyModel businessCompanyModel = new BusinessCompanyModel()
@@ -527,7 +585,8 @@ namespace Barrway.Controllers
                         Id = model.Id,
                         IS_ACTIVE = "Y",
                         COMPANY_CATEGORY_ID = model.COMPANY_CATEGORY_ID,
-                        COMPANY_SUB_CATEGORY_ID = model.COMPANY_SUB_CATEGORY_ID
+                        COMPANY_SUB_CATEGORY_ID = model.COMPANY_SUB_CATEGORY_ID,
+                        IS_TEMPLATE = (UserIdentity.Role == "SUPERADMIN_USER")? "Y": "N"
                     };
 
                     var defaultStatus = false;
@@ -550,6 +609,11 @@ namespace Barrway.Controllers
 
                     if (saveDataResult.Status)
                     {
+                        if (UserIdentity.Role == "SUPERADMIN_USER")
+                        {
+                            return RedirectToAction("CompanyMaster");
+                        }
+
                         website = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
 
                         if (website.Data["COMPANY_PROFILE_STATUS"].ToString() == "Y")
@@ -813,17 +877,17 @@ namespace Barrway.Controllers
 
                 if (company.Status)
                 {
-
+                    // commented code of calendar count check because of superadmin integration in business functionality if in future it needs to be activated we check the role of if role is superadmin we will allow to create a calendar
                     var companyData= company.Data as IDictionary<string, object>;
 
                     var currentPlan = await businessUserService.GetCompanyActiveSubscriptionDetails(company.Data["Id"]?.ToString());
 
-                    var currentPlanData = currentPlan.Data as IDictionary<string, object>;
+                    //var currentPlanData = currentPlan.Data as IDictionary<string, object>;
 
                     var allCalendars = await businessUserService.GetCompanyCalendarByCompanyId(company.Data["Id"]?.ToString());
 
-                    int calendarLimit = Convert.ToInt32(currentPlanData["CALENDAR_AVAILABLE"]?.ToString());
-                    int currentCalendars = allCalendars.Data.Count;
+                    //int calendarLimit = Convert.ToInt32(currentPlanData["CALENDAR_AVAILABLE"]?.ToString());
+                    //int currentCalendars = allCalendars.Data.Count;
 
                     //if (currentCalendars < calendarLimit)
                     if (true)
@@ -1169,6 +1233,30 @@ namespace Barrway.Controllers
             try
             {
                 var transactionData = await businessUserService.GetCompanyCalendars(data, CompanyId);
+                var transactionList = transactionData.Data;
+                double last_page = 0;
+                if (transactionList != null && transactionList.Count > 0)
+                {
+                    var singData = transactionList[0];
+                    var total_records = Convert.ToInt32(singData["total_records"].ToString());
+                    var size = Convert.ToInt32(singData["size"].ToString());
+                    double paging = (double)total_records / size;
+                    last_page = Math.Floor(paging) + 1;
+                }
+
+                return Json(new { data = transactionList, last_page }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public async Task<ActionResult> GetCompanyCalendarTemplates(GenerateDynamicFormData data, string CompanyCode)
+        {
+            try
+            {
+                var transactionData = await businessUserService.GetCompanyCalendarTemplates(data, CompanyCode);
                 var transactionList = transactionData.Data;
                 double last_page = 0;
                 if (transactionList != null && transactionList.Count > 0)

@@ -2739,8 +2739,11 @@
     });
 
     FormGeneratorApp.controller('SchedularFormController', function ($scope, $compile, $rootScope, $http, $location, $window, mainService, adminService, DataService, notifierService, $state, $stateParams, $timeout, $ngBootbox) {
-
+        $(".hide-for-superadmin").hide();
+        $(".show-for-superadmin").show();
         HSCore.components.HSFlatpickr.init('.js-flatpickr');
+
+        $scope.SchedularId = null;
 
         adminService.postAsync('/Calendar/GetLocationMasterList/', { companyCode: localStorage.getItem("COMPANY_CODE"), calendarCode: localStorage.getItem("CALENDAR_CODE") }).then(function (res) {
 
@@ -2777,14 +2780,18 @@
                 $("#SCH_ACTIVITY option:selected").val(res.data.data[0].SCH_ACTIVITY)
                 $("#SCH_RESOURCE option:selected").val(res.data.data[0].SCH_RESOURCE)
 
-                var tempDate = res.data.data[0].SCH_FROM_DATE.split('-')
-                res.data.data[0].SCH_FROM_DATE = tempDate[2] + "/" + tempDate[1] + "/" + tempDate[0];
-                tempDate = res.data.data[0].SCH_TO_DATE.split('-')
-                res.data.data[0].SCH_TO_DATE = tempDate[2] + "/" + tempDate[1] + "/" + tempDate[0];
+                if (getUserRole() != "SUPERADMIN_USER") {
+                    var tempDate = res.data.data[0].SCH_FROM_DATE.split('-')
+                    res.data.data[0].SCH_FROM_DATE = tempDate[2] + "/" + tempDate[1] + "/" + tempDate[0];
+                    tempDate = res.data.data[0].SCH_TO_DATE.split('-')
+                    res.data.data[0].SCH_TO_DATE = tempDate[2] + "/" + tempDate[1] + "/" + tempDate[0];
 
-                $("#SCH_FROM_DATE").val(res.data.data[0].SCH_FROM_DATE)
-                $("#SCH_TO_DATE").val(res.data.data[0].SCH_TO_DATE)
-
+                    $("#SCH_FROM_DATE").val(res.data.data[0].SCH_FROM_DATE)
+                    $("#SCH_TO_DATE").val(res.data.data[0].SCH_TO_DATE)
+                } else {
+                    $("#SCH_DAYS").val(res.data.data[0].SCH_DAYS)
+                }
+                
                 $("input[name='alternate-week'][value='" + res.data.data[0].SCH_ALTERNATIVE_WEEK + "']").attr("checked", true)
 
                 var table = JSON.parse(res.data.data[0].SCH_SCHEDULE_TABLE);
@@ -2817,15 +2824,16 @@
 
             $("#final-submit-button").hide();
             $("#final-save-button").show();
-            
-            $("#final-save-button").attr("ng-click", `saveSchedularForm(${schedularId})`);
+
+            $scope.SchedularId = schedularId;
 
             $scope.showSchedularFormModal(false);
         }
 
         
 
-        $scope.saveSchedularForm = function (SchedularId = null) {
+        $scope.saveSchedularForm = function () {
+            
             var scheduleTableData = {
                 "Monday": {
                     "Start": $("#Monday_Start_Time").val(),
@@ -2858,7 +2866,7 @@
             };
 
             var data = {
-                Id: SchedularId,
+                Id: $scope.SchedularId,
                 COMPANY_CODE: localStorage.getItem("COMPANY_CODE"),
                 CALENDAR_CODE: localStorage.getItem("CALENDAR_CODE"),
                 SCH__NAME: "",
@@ -2869,6 +2877,7 @@
                 SCH_DESCRIPTION: "",
                 SCH_FROM_DATE: $("#SCH_FROM_DATE").val(),
                 SCH_TO_DATE: $("#SCH_TO_DATE").val(),
+                SCH_DAYS: $("#SCH_DAYS").val(),
                 SCH_ALTERNATIVE_WEEK: $("input[name='alternate-week']:checked").val(),
                 IF_SLOT_EXIST: "SKIP",
                 IF_SLOT_DOES_NOT_EXIST: "INSERT",
@@ -2880,6 +2889,7 @@
                 //data = JSON.stringify(data);
 
                 adminService.postAsync('/Calendar/AddSchedule/', { data: data }).then(function (res) {
+                    $scope.SchedularId = 0;
                     window.location.reload();
                 }, function (err) {
                     alert("something went wrong!!");
@@ -2891,6 +2901,7 @@
         }
 
         $scope.hideSchedularFormModal = function () {
+            $scope.SchedularId = 0;
             $(".schedular-form input").val("")
             $("#schedularFormNew").modal("hide");
         }
@@ -2898,8 +2909,11 @@
         $scope.showSchedularFormModal = function (IsNew = true) {
 
             if (IsNew) {
+                $scope.SchedularId = 0;
                 $("#SCH_FROM_DATE").val("")
                 $("#SCH_TO_DATE").val("")
+
+                $("#SCH_DAYS").val("")
 
                 $("input[name='alternate-week'][value='ALTERNATE_WEEK']").attr("checked", true)
 
@@ -2941,7 +2955,7 @@
 function validateSchedularFormData(data) {
 
     var finalCheck = true;
-
+    debugger;
     if (data.SCH_LOCATION == "" || data.SCH_LOCATION == null) {
         finalCheck = false;
         $("#SCH_LOCATION_ERROR").show();
@@ -2956,31 +2970,45 @@ function validateSchedularFormData(data) {
         $("#SCH_ACTIVITY_ERROR").hide();
     }
 
-    if (data.SCH_RESOURCE == "" || data.SCH_RESOURCE == null) {
-        finalCheck = false;
-        $("#SCH_RESOURCE_ERROR").show();
+
+    if (getUserRole() != "SUPERADMIN_USER") {
+
+        if (data.SCH_RESOURCE == "" || data.SCH_RESOURCE == null) {
+            finalCheck = false;
+            $("#SCH_RESOURCE_ERROR").show();
+        } else {
+            $("#SCH_RESOURCE_ERROR").hide();
+        }
+
+        if (data.SCH_FROM_DATE == "" || data.SCH_FROM_DATE == null) {
+            finalCheck = false;
+            $("#SCH_FROM_DATE_ERROR").show();
+        } else {
+            $("#SCH_FROM_DATE_ERROR").hide();
+        }
+
+        if (data.SCH_TO_DATE == "" || data.SCH_TO_DATE == null) {
+            finalCheck = false;
+            $("#SCH_TO_DATE_ERROR").show();
+        } else {
+            $("#SCH_TO_DATE_ERROR").hide();
+        }
+
+        if (data.SCH_FROM_DATE > data.SCH_TO_DATE) {
+            alert("From date should be earlier than To date.");
+            finalCheck = false;
+        }
     } else {
-        $("#SCH_RESOURCE_ERROR").hide();
+        if (data.SCH_DAYS == "" || data.SCH_DAYS == null) {
+            finalCheck = false;
+            $("#SCH_DAYS_ERROR").show();
+        } else {
+            $("#SCH_DAYS_ERROR").hide();
+        }
+
     }
 
-    if (data.SCH_FROM_DATE == "" || data.SCH_FROM_DATE == null) {
-        finalCheck = false;
-        $("#SCH_FROM_DATE_ERROR").show();
-    } else {
-        $("#SCH_FROM_DATE_ERROR").hide();
-    }
-
-    if (data.SCH_TO_DATE == "" || data.SCH_TO_DATE == null) {
-        finalCheck = false;
-        $("#SCH_TO_DATE_ERROR").show();
-    } else {
-        $("#SCH_TO_DATE_ERROR").hide();
-    }
-
-    if (data.SCH_FROM_DATE > data.SCH_TO_DATE) {
-        alert("From date should be earlier than To date.");
-        finalCheck = false;
-    }
+    
 
 
     return finalCheck;

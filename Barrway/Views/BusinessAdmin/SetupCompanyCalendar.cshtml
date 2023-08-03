@@ -150,12 +150,78 @@
 
 <input type="text" value="@ViewBag.IsPartial.ToString().ToLower()" id="createCalendarCheck" style="display:none;" readonly />
 <input type="text" value="@Model.CALENDAR_CODE" id="calendarCodeInput" style="display:none;" readonly />
+<style>
+    .template-selection-area {
+        min-height: 300px;
+        max-height: 700px;
+        overflow: hidden;
+        overflow-y: scroll;
+        box-shadow:none;
+        transition: all 0.2s ease-in-out;
+        
+    }
+        .template-selection-area .col-md-4 {
+            padding: 16px;
+            border-radius: 25px;
+            border: 1px solid #18366d5c;
+            cursor:pointer;
+        }
 
+            .template-selection-area .col-md-4.active {
+                padding: 16px;
+                border-radius: 25px;
+                border: 1px solid #01aa005c;
+                box-shadow: inset 0px 0px 16px #01aa005c;
+                cursor: pointer;
+            }
+
+            .template-selection-area .col-md-4.active:hover {
+                padding: 16px;
+                border-radius: 25px;
+                border: 1px solid #01aa005c;
+                box-shadow: inset 0px 0px 16px #01aa005c;
+                cursor: pointer;
+            }
+
+            .template-selection-area .col-md-4:hover {
+                box-shadow: inset 0px 0px 16px #18366d5c;
+                border: 1px solid white;
+                transition: all 0.2s ease-in-out;
+            }
+
+    .template-image {
+        height: 160px;
+        max-width: 260px;
+        width:100%;
+        border-radius: 25px;
+        border: none;
+        /*box-shadow: 0px 4px 20px 0px #18366d5c;*/
+    }
+
+    @@media (max-width: 800px) {
+        .template-selection-area {
+            max-height: 300px;
+        }
+    }
+</style>
 <main id="content-2" role="main" class="main" style="display:none;">
     <!-- Content -->
     <div class="container">
-        <div class="row justify-content-lg-center pt-lg-5">
-            <div class="col-lg-12">
+        <div class="row pt-lg-5" style="flex-direction:row-reverse">
+
+            <div class="col-md-6 template-selection-area" style="">
+                <div class="form-inner" style="max-width:100%; padding:24px 16px;">
+                    <h1>Choose from templates</h1>
+                    <br />
+                    <div class="row" id="templates-row">
+                        
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
 
                 <div class="js-nav-scroller hs-nav-scroller-horizontal mb-5 form-navigation" style="position:sticky; top:0px; background:white;">
                     <span class="hs-nav-scroller-arrow-prev" style="display: none;">
@@ -181,7 +247,7 @@
                     </ul>
                 </div>
 
-                <div class="form-inner" style="max-width:unset;">
+                <div class="form-inner" style="max-width:100%;">
 
                     <form action="/BusinessAdmin/AddCalendar?IsPartial=@ViewBag.IsPartial.ToString().ToLower()" method="post" enctype="multipart/form-data">
 
@@ -195,10 +261,12 @@
                                         }
                                     </style>
 
-                                    <div class="form-inner">
+                                    <div class="form-inner" style="max-width:100%;">
                                         @Html.TextBoxFor(model => model.Id, new { @style = "display:none" })
                                         @Html.TextBoxFor(model => model.COMPANY_CODE, new { @style = "display:none" })
                                         @Html.TextBoxFor(model => model.CALENDAR_CODE, new { @style = "display:none" })
+                                        @Html.TextBoxFor(model => model.CALENDAR_TEMPLATE_ID, new { @style = "display:none" })
+
                                         <div class="form-group">
                                             <label for="calendarname">@Resource.Calendar_Name *</label>
 
@@ -275,7 +343,7 @@
                                             <p style="margin-bottom: 0px;"><label for="file">@Resource.Calendar_photo</label></p>
                                             <div class="custome-uploade">
 
-                                                <label for="CALENDAR_PHOTO_PATH" id="CALENDAR_PHOTO_NAME" style="width:80%; max-width:300px; padding-left:16px;">This photo will be seen in market place</label>
+                                                <label for="CALENDAR_PHOTO_PATH" id="CALENDAR_PHOTO_NAME" class="hide-for-superadmin" style="width:80%; max-width:300px; padding-left:16px;">This photo will be seen in market place</label>
 
                                                 <div class="fileUpload btn btn--browse">
                                                     <span>Browse</span>
@@ -532,8 +600,10 @@
                 <!-- Title -->
                 <!-- End Title -->
             </div>
+
         </div>
         <!-- End Row -->
+        <br /><br />
     </div>
     <!-- End Content -->
 </main>
