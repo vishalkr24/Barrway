@@ -19,7 +19,7 @@ using System.Web.Mvc;
 
 namespace Barrway.Controllers
 {
-    [BusinessAuthorize(Roles = "BUSINESS_USER")]
+    [BusinessAuthorize(Roles = "BUSINESS_USER,SUPERADMIN_USER")]
     public class CalendarController : BaseController
     {
         private readonly IMasterService masterService;

@@ -528,7 +528,7 @@ namespace Barrway.Controllers
                 double last_page = 0;
                 if (transactionList != null && transactionList.Count > 0)
                 {
-                    var singData = transactionList[0];
+                    var singData = transactionList[0];  
                     var total_records = Convert.ToInt32(singData["total_records"].ToString());
                     var size = Convert.ToInt32(singData["size"].ToString());
                     double paging = (double)total_records / size;
@@ -930,8 +930,10 @@ namespace Barrway.Controllers
                             CALENDAR_PHOTO_NAME = fileName,
                             CALENDAR_PHOTO_PATH = path,
                             SLOT_DURATION_IN_MINS = model.SLOT_DURATION_IN_MINS,
+                            CALENDAR_TEMPLATE_ID = (UserIdentity.Role != "SUPERADMIN_USER")? model.CALENDAR_TEMPLATE_ID.ToString(): "0",
                             IS_VISIBLE = "Y",
                             Id = model.Id,
+                            SCHEDULAR_ID = model.SCHEDULAR_ID,
                             DISTRICT_ID = model.DISTRICT_ID.ToString(),
                             CITY_ID = model.CITY_ID.ToString(),
                             COMPANY_CODE = model.COMPANY_CODE.ToString(),

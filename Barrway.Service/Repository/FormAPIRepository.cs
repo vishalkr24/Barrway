@@ -125,6 +125,36 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete<GenerateDynamicFormData>> BulkGeneratedFormData(Form_DataTable data)
+        {
+            try
+            {
+                var request = new RestRequest("api/FormAPI/BulkGeneratedFormData", Method.Post) { RequestFormat = DataFormat.Json };
+                request.AddBody(data);
+                request.AddHeader("content-type", "application/json");
+                var response = await _client.ExecuteAsync(request);
+                if (response.Content != null)
+                {
+                    var result = JsonConvert.DeserializeObject<GenerateDynamicFormData>(response.Content);
+                    if (result != null)
+                    {
+                        return new AddUpdateDelete<GenerateDynamicFormData>() { Status = true, Message = AppMessage.Success, Data = result };
+                    }
+                    else
+                    {
+                        return new AddUpdateDelete<GenerateDynamicFormData>() { Status = false, Message = AppMessage.NotFound };
+                    }
+                }
+                else
+                {
+                    return new AddUpdateDelete<GenerateDynamicFormData>() { Status = false, Message = response.ErrorMessage };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete<GenerateDynamicFormData>() { Status = false, Message = ex.Message };
+            }
+        }
         public async Task<AddUpdateDelete<GenerateDynamicFormData>> EditEventData(Form_DataTable data)
         {
             try

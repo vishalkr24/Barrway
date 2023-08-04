@@ -40,6 +40,8 @@ namespace Barrway.DTO.BusinessModels
         public string COMPANY_NAME_ENGLISH { get; set; }
         public string CITY_NAME { get; set; }
         public string SLOT_DURATION_IN_MINS { get; set; }
+        public string CALENDAR_TEMPLATE_ID { get; set; }
+        public string SCHEDULAR_ID { get; set; }
     }
 
 }

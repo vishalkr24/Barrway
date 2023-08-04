@@ -16,7 +16,12 @@ $(document).on("change", "#CALENDAR_CATEGORY_ID", function () {
 $(document).ready(function () {
     
     readyPage();
-   
+    if (getUserRole() != "SUPERADMIN_USER") {
+        if ($("#createCalendarCheck").val() == true || $("#createCalendarCheck").val() == "true" ) {
+            $(".row-reverse").attr("style", "flex-direction:row-reverse");
+        }
+        
+    }
 });
 
 function readyPage() {
@@ -97,19 +102,29 @@ function renderForm(CategoryId) {
     checkSlot();
 }
 
-$(document).on("click", "#templates-row .col-md-4", function () {
-    let CalendarTemplateId = 0;
+function closeSchedularModal() {
+    $('#SchedularModal').modal('hide')
+}
 
-    $("#templates-row .col-sm-4").removeClass("active");
+$(document).on("click", "#templates-row .template-choose-btn", function () {
+    let CalendarTemplateId = 0;
+    debugger;
+    $("#SCHEDULAR_ID").val("");
+    $("#SCHEDULAR_ID").attr("value", "");
+
+    $("#templates-row .template-choose-btn").removeClass("active");
+    $("#templates-row .template-choose-btn").text("Select template");
     if (this.classList.contains('active')) {
         $(this).removeClass("active");
         CalendarTemplateId = 0;
     } else {
         $(this).addClass("active");
+        $(this).text("Selected");
         CalendarTemplateId = $(this).attr("data-value");
     }
 
     $("#CALENDAR_TEMPLATE_ID").val(CalendarTemplateId);
+    $("#CALENDAR_TEMPLATE_ID").attr("value", CalendarTemplateId);
 
     var template = templateList.find(x => x.Id == CalendarTemplateId)
 
@@ -126,7 +141,42 @@ $(document).on("click", "#templates-row .col-md-4", function () {
     $("#CALENDAR_SUB_CATEGORY_ID").val(template.CALENDAR_SUB_CATEGORY_ID);
     $("#SLOT_DURATION_IN_MINS").val(template.SLOT_DURATION_IN_MINS);
 
+
+    // bind schedules
+    $.ajax({
+        url: "/Calendar/GetSchedularFormList",
+        type: "POST",
+        data: {
+            data: {},
+            companyCode: template.COMPANY_CODE,
+            calendarCode: template.CALENDAR_CODE
+        },
+        success: function (response) {
+            if (response.data != null) {
+                if (response.data.length > 0) {
+                    console.log(response);
+                    $("#schedular-selector").empty();
+                    $("#schedular-selector").append("<option selected value='-1'>Select one</option>")
+                    for (var i = 0; i < response.data.length; i++) {
+                        $("#schedular-selector").append(`<option value="${response.data[i].Id}">${response.data[i].SCH_DAYS} Days | ${response.data[i].ACTIVITY_NAME} | ${response.data[i].FIRST_NAME} | ${response.data[i].LOCATION_BUILDING_NAME}</option>`);
+                    }
+                    $("#SchedularModal").modal("show");
+                }
+            }
+            
+        },
+        error: function (error) {
+
+        }
+    })
+
 });
+
+function bindSchedularId() {
+    
+    $("#SCHEDULAR_ID").val($("#schedular-selector option:selected").val());
+    $("#SCHEDULAR_ID").attr("value", $("#schedular-selector option:selected").val());
+}
 
 function renderTemplates(CategoryId) {
     var data = getTemplatesList(CategoryId);
@@ -137,12 +187,34 @@ function renderTemplates(CategoryId) {
         
         for (var i = 0; i < data.Data.length; i++) {
             templateList.push(data.Data[i]);
-            $("#templates-row").append(`<div class="col-md-4 col-sm-6 text-center" data-value="${data.Data[i].Id}">
+            $("#templates-row").append(`<div class="col-sm-6"><div class="card">
+                                          <img src="${data.Data[i].CALENDAR_PHOTO_PATH.replace('~', '..')}" onerror="this.src='../assets/img/160x160/img5.jpg'">
 
-                            <img class="template-image" src="${data.Data[i].CALENDAR_PHOTO_PATH.replace('~','..')}" onerror="this.src='../assets/img/160x160/img5.jpg'" />
-                            <div style="padding-top:12px;">${data.Data[i].CALENDAR_NAME}</div>
+                                          <!-- A div with card__details class to hold the details in the card  -->
+                                          <div class="card__details">
 
-                        </div>`);
+                                            <span class="tag">${data.Data[i].CALENDAR_SUB_CATEGORY_NAME}</span>
+
+                                            <!-- A div with name class for the name of the card -->
+                                            <div class="name">${data.Data[i].CALENDAR_NAME}</div>
+                                            <p>
+                                            <span class="tag">${data.Data[i].TOTAL_SERVICES} Service</span>
+                                            <span class="tag">${data.Data[i].TOTAL_LOCATIONS} Location</span>
+                                            <span class="tag">${data.Data[i].TOTAL_SERVICE_PROVIDERS} Providers</span>
+                                            </p>
+
+                                            <button class="template-choose-btn" data-value="${data.Data[i].Id}">Select template</button>
+                                          </div>
+
+
+                                        </div></div>`);
+
+            //$("#templates-row").append(`<div class="col-md-4 col-sm-6 text-center" >
+
+            //                <img class="template-image" src="${data.Data[i].CALENDAR_PHOTO_PATH.replace('~','..')}" onerror="this.src='../assets/img/160x160/img5.jpg'" />
+            //                <div style="padding-top:12px;"></div>
+
+            //            </div>`);
         }
     }
 }

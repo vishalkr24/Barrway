@@ -147,12 +147,90 @@
         box-shadow: none;
     }
 </style>
+<style>
+    #templates-row .card {
+        /* Change background color */
+        background-color: white;
+        /* Add border */
+        border: 1px solid #bacdd8;
+        /* Add space between the border and the content */
+        padding: 8px;
+        border-radius: 12px;
+    }
 
+    #templates-row .card img{
+        max-height:200px;
+    }
+
+    /* Style div elements that have class equal to tag */
+    #templates-row .tag {
+        padding: 4px 8px;
+        border: 1px solid #e5eaed;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #788697;
+    }
+
+    /* Style div elements that have class equal to name */
+    #templates-row .name {
+        font-size: 24px;
+        font-weight: 600;
+        margin-top: 16px;
+    }
+
+    /* Style p element */
+    #templates-row p {
+        font-size: 14px;
+        color: #7f8c9b;
+        line-height: 150%;
+        padding-top: 4px;
+    }
+
+    /* Style button element */
+    #templates-row button {
+        border: none;
+        padding: 12px 24px;
+        border-radius: 50px;
+        font-weight: 600;
+        color: #0077ff;
+        background-color: #e0efff;
+        /* Button is inline-block element by default, it need to have block display for margin: 0 auto; to work */
+        margin: 0 auto;
+        display: block;
+        /* Button is a clickable element, therefore it should have a pointer cursor */
+        cursor: pointer;
+    }
+
+        #templates-row button.active {
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            color: white;
+            background-color: #0077ff;
+            /* Button is inline-block element by default, it need to have block display for margin: 0 auto; to work */
+            margin: 0 auto;
+            display: block;
+            /* Button is a clickable element, therefore it should have a pointer cursor */
+            cursor: pointer;
+        }
+
+    #templates-row .card__details {
+        /* Add space around the details */
+        padding: 16px 8px 8px 8px;
+    }
+
+    #templates-row button:focus, button:hover {
+        background-color: #0077ff;
+        color: #e0efff;
+    }
+</style>
 <input type="text" value="@ViewBag.IsPartial.ToString().ToLower()" id="createCalendarCheck" style="display:none;" readonly />
 <input type="text" value="@Model.CALENDAR_CODE" id="calendarCodeInput" style="display:none;" readonly />
 <style>
-    .template-selection-area {
-        min-height: 300px;
+    .template-selection-area #templates-row{
+        min-height: 700px;
         max-height: 700px;
         overflow: hidden;
         overflow-y: scroll;
@@ -163,29 +241,29 @@
         .template-selection-area .col-md-4 {
             padding: 16px;
             border-radius: 25px;
-            border: 1px solid #18366d5c;
+            border: 3px solid white;
             cursor:pointer;
         }
 
             .template-selection-area .col-md-4.active {
                 padding: 16px;
                 border-radius: 25px;
-                border: 1px solid #01aa005c;
-                box-shadow: inset 0px 0px 16px #01aa005c;
+                border: 3px solid #01aa005c;
+                /*box-shadow: inset 0px 0px 16px #01aa005c;*/
                 cursor: pointer;
             }
 
             .template-selection-area .col-md-4.active:hover {
                 padding: 16px;
                 border-radius: 25px;
-                border: 1px solid #01aa005c;
-                box-shadow: inset 0px 0px 16px #01aa005c;
+                border: 3px solid #01aa005c;
+                /*box-shadow: inset 0px 0px 16px #01aa005c;*/
                 cursor: pointer;
             }
 
             .template-selection-area .col-md-4:hover {
-                box-shadow: inset 0px 0px 16px #18366d5c;
-                border: 1px solid white;
+                /*box-shadow: inset 0px 0px 16px #18366d5c;*/
+                border: 3px solid #18366d5c;
                 transition: all 0.2s ease-in-out;
             }
 
@@ -199,27 +277,51 @@
     }
 
     @@media (max-width: 800px) {
-        .template-selection-area {
+        .template-selection-area #templates-row {
+            min-height:300px;
             max-height: 300px;
         }
     }
 </style>
+
+<div class="modal" id="SchedularModal" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Available Schedular</h4>
+                <button type="button" onclick="closeSchedularModal()" class="btn btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                
+                <div class="form-group">
+                    <label>Select a Schedular</label>
+                    <select id="schedular-selector" class="form-control" onchange="bindSchedularId()"></select>
+                </div>
+                
+
+            </div>
+        </div>
+    </div>
+</div>
+
 <main id="content-2" role="main" class="main" style="display:none;">
     <!-- Content -->
     <div class="container">
-        <div class="row pt-lg-5" style="flex-direction:row-reverse">
+        <div class="row pt-lg-5 row-reverse">
+            @if (ViewBag.IsPartial)
+            {
+                <div class="col-md-6 template-selection-area hide-for-superadmin" style="">
+                    <div class="form-inner" style="max-width:100%; padding:24px 16px;">
+                        <h2>Choose from templates</h2>
+                        <br />
+                        <div class="row" id="templates-row">
 
-            <div class="col-md-6 template-selection-area" style="">
-                <div class="form-inner" style="max-width:100%; padding:24px 16px;">
-                    <h1>Choose from templates</h1>
-                    <br />
-                    <div class="row" id="templates-row">
-                        
+                        </div>
+
                     </div>
 
                 </div>
-
-            </div>
+            }
 
             <div class="col-md-6">
 
@@ -251,7 +353,6 @@
 
                     <form action="/BusinessAdmin/AddCalendar?IsPartial=@ViewBag.IsPartial.ToString().ToLower()" method="post" enctype="multipart/form-data">
 
-
                         <div id="div1">
                             <div class="text-center">
                                 <div class="profile-form">
@@ -266,6 +367,7 @@
                                         @Html.TextBoxFor(model => model.COMPANY_CODE, new { @style = "display:none" })
                                         @Html.TextBoxFor(model => model.CALENDAR_CODE, new { @style = "display:none" })
                                         @Html.TextBoxFor(model => model.CALENDAR_TEMPLATE_ID, new { @style = "display:none" })
+                                        @Html.TextBoxFor(model => model.SCHEDULAR_ID, new { @style = "display:none" })
 
                                         <div class="form-group">
                                             <label for="calendarname">@Resource.Calendar_Name *</label>
@@ -380,7 +482,7 @@
                                         }
                                     </style>
 
-                                    <div class="form-inner">
+                                    <div class="form-inner" style="max-width:100%;">
 
                                         <div class="row">
                                             <div class="col-md-6">

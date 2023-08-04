@@ -6,21 +6,9 @@
         // business user
         $(".show-for-superadmin").remove();
         $("#header").show();
+        $("#header2").show();
     }
 });
-
-function getUserRole() {
-    var role = "";
-    $.ajax({
-        url: "/public/GetRole",
-        type: "get",
-        async: false,
-        success: function (response) {
-            role = response;
-        }
-    })
-    return role;
-}
 
 function updatePortalForSuperAdmin() {
     $(".bui").text("Super Admin")
