@@ -1,6 +1,8 @@
 ﻿$(document).ready(function () {
     setCompanyDetails();
     setTop5Calendars();
+    
+    
 });
 
 function changeCompany(IsReload = true, returnUrl = null) {

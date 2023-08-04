@@ -2739,8 +2739,12 @@
     });
 
     FormGeneratorApp.controller('SchedularFormController', function ($scope, $compile, $rootScope, $http, $location, $window, mainService, adminService, DataService, notifierService, $state, $stateParams, $timeout, $ngBootbox) {
-        $(".hide-for-superadmin").hide();
-        $(".show-for-superadmin").show();
+
+        if (getUserRole() == "SUPERADMIN_USER") {
+            $(".hide-for-superadmin").hide();
+            $(".show-for-superadmin").show();
+        }
+        
         HSCore.components.HSFlatpickr.init('.js-flatpickr');
 
         $scope.SchedularId = null;

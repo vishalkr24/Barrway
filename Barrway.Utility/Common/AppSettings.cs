@@ -16,6 +16,7 @@ namespace Barrway.Utility.Common
         public static string datetimeformat = "yyyy-MM-dd HH:mm:ss";
         public static int token_expire_time = 24 * 60;
         public static string app_name = "Barrway";
+        public static string[] exclude_columns = new string[] { "Id", "formGroupKey", "formID", "userID", "Current_Status", "cycle", "MasterFormID", "MasterFormRow", "formRecordOrder", "formRecordStatus", "ApprovalStatus", "created_at", "updated_at", "created_by", "updated_by" };
     }
 
 

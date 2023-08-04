@@ -20,6 +20,7 @@ namespace Barrway.DTO.BusinessModels
         public string UNIVERSAL_ERROR { get; set; }
 
         public string CALENDAR_TEMPLATE_ID { get; set; }
+        public string SCHEDULAR_ID { get; set; }
 
         [Required(ErrorMessage = "Calendar name is required")]
         public string CALENDAR_NAME { get; set; }

@@ -16,6 +16,19 @@
     return data;
 }
 
+function getUserRole() {
+    var role = "";
+    $.ajax({
+        url: "/public/GetRole",
+        type: "get",
+        async: false,
+        success: function (response) {
+            role = response;
+        }
+    })
+    return role;
+}
+
 function getCompanyCalendarPackages(companyCode) {
     var data;
     $.ajax({
