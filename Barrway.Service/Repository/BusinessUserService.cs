@@ -431,7 +431,7 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetAllCalendarTemplatesByCategory(string CalendarCategoryId)
         {
-            string query = $@"select calendar.*, (select count(*) from LOCATION_MASTER_1936 where CALENDAR_CODE = calendar.CALENDAR_CODE) 'TOTAL_LOCATIONS', (select count(*) from SERVICE_MASTER_1933 where CALENDAR_CODE = calendar.CALENDAR_CODE) 'TOTAL_SERVICES', (select count(*) from SERVICE_PROVIDER_MASTER_1934 where CALENDAR_CODE = calendar.CALENDAR_CODE) 'TOTAL_SERVICE_PROVIDERS', subCategory.CALENDAR_SUB_CATEGORY_NAME from BUSINESS_CALENDAR_MASTER_1925 calendar 
+            string query = $@"select calendar.*, (select count(*) from LOCATION_MASTER_1936 where CALENDAR_CODE = calendar.CALENDAR_CODE) 'TOTAL_LOCATIONS', (select count(*) from SERVICE_MASTER_1933 where CALENDAR_CODE = calendar.CALENDAR_CODE) 'TOTAL_SERVICES', (select count(*) from SERVICE_PROVIDER_MASTER_1934 where CALENDAR_CODE = calendar.CALENDAR_CODE) 'TOTAL_SERVICE_PROVIDERS', (select count(*) from SCHEDULAR_FORM_1941 where CALENDAR_CODE = calendar.CALENDAR_CODE) 'TOTAL_SCHEDULARS', subCategory.CALENDAR_SUB_CATEGORY_NAME from BUSINESS_CALENDAR_MASTER_1925 calendar 
                                 join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
                                 join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendar.CALENDAR_SUB_CATEGORY_ID
                                 where company.IS_TEMPLATE = 'Y' and calendar.CALENDAR_CATEGORY_ID = {CalendarCategoryId}";
@@ -1218,7 +1218,43 @@ namespace Barrway.Service.Repository
                             // calendar is created using a template
                             // adding service master, serivce provider master and location master of template to the calendar
 
+                            var ResourceId = "";
+                            var CurrentResourceId = "";
+                            var ActivityId = "";
+                            var CurrentActivityId = "";
+                            var LocationId = "";
+                            var CurrentLocationId = "";
+
                             var currentTemplate = (await getSingleTemplate(model.CALENDAR_TEMPLATE_ID)).Data as List<IDictionary<string, object>>;
+
+                            if (!string.IsNullOrEmpty(model.SCHEDULAR_ID))
+                            {
+                                if (Convert.ToInt32(model.SCHEDULAR_ID) > 0)
+                                {
+                                    GenerateDynamicFormData SchedularRequest = new GenerateDynamicFormData()
+                                    {
+                                        action = 32,
+                                        formId = (int)FormSetting.SCHEDULAR_FORM
+                                    };
+                                    var SchedularData = (await formAPIRepository.GetFormRecordList(SchedularRequest)).Data;
+
+                                    var template = new Dictionary<string, object>();
+
+                                    foreach (var item in SchedularData.data)
+                                    {
+                                        if (item["Id"].ToString() == model.SCHEDULAR_ID)
+                                        {
+                                            template = item as Dictionary<string, object>;
+                                            break;
+                                        }
+                                    }
+
+                                    CurrentLocationId = template["SCH_LOCATION_Id"]?.ToString();
+                                    CurrentActivityId = template["SCH_ACTIVITY_Id"]?.ToString();
+                                    CurrentResourceId = template["SCH_RESOURCE_Id"]?.ToString();
+                                }
+                            }
+                            
 
                             // adding location items
                             GenerateDynamicFormData LocationRequest = new GenerateDynamicFormData()
@@ -1232,7 +1268,7 @@ namespace Barrway.Service.Repository
 
                             foreach (var template in LocationData.data)
                             {
-                                var excludeColumns = AppSettings.exclude_columns;
+                                var excludeColumns = AppSettings.exclude_columns_but_id;
                                 IDictionary<string, object> temp = new Dictionary<string, object>();
                                 foreach (var key in template.Keys)
                                 {
@@ -1258,6 +1294,11 @@ namespace Barrway.Service.Repository
 
                                 if (locationResult.res == 1)
                                 {
+                                    if (temp["Id"]?.ToString() == CurrentLocationId)
+                                    {
+                                        LocationId = locationResult.Id.ToString();
+                                    }
+
                                     string tempCode = "LC" + locationResult.Id.ToString().PadLeft(5, '0');
                                     query = $@"UPDATE [dbo].[LOCATION_MASTER_1936]
                                                SET [LOCATION_CODE] = '{tempCode}'
@@ -1281,7 +1322,7 @@ namespace Barrway.Service.Repository
 
                             foreach (var template in serviceData.data)
                             {
-                                var excludeColumns = AppSettings.exclude_columns;
+                                var excludeColumns = AppSettings.exclude_columns_but_id;
                                 IDictionary<string, object> temp = new Dictionary<string, object>();
                                 foreach (var key in template.Keys)
                                 {
@@ -1307,6 +1348,11 @@ namespace Barrway.Service.Repository
 
                                 if (ActivityResult.res == 1)
                                 {
+                                    if (temp["Id"]?.ToString() == CurrentActivityId)
+                                    {
+                                        ActivityId = ActivityResult.Id.ToString();
+                                    }
+
                                     string tempCode = "AC" + ActivityResult.Id.ToString().PadLeft(5, '0');
                                     query = $@"UPDATE [dbo].[SERVICE_MASTER_1933]
                                                SET [ACTIVITY_CODE] = '{tempCode}'
@@ -1330,7 +1376,7 @@ namespace Barrway.Service.Repository
 
                             foreach (var template in serviceProviderData.data)
                             {
-                                var excludeColumns = AppSettings.exclude_columns;
+                                var excludeColumns = AppSettings.exclude_columns_but_id;
                                 IDictionary<string, object> temp = new Dictionary<string, object>();
                                 foreach (var key in template.Keys)
                                 {
@@ -1356,6 +1402,11 @@ namespace Barrway.Service.Repository
 
                                 if (ResourceResult.res == 1)
                                 {
+                                    if (temp["Id"]?.ToString() == CurrentResourceId)
+                                    {
+                                        ResourceId = ResourceResult.Id.ToString();
+                                    }
+
                                     string tempCode = "RC" + ResourceResult.Id.ToString().PadLeft(5, '0');
                                     query = $@"UPDATE [dbo].[SERVICE_PROVIDER_MASTER_1934]
                                                SET [RESOURCE_CODE] = '{tempCode}'
@@ -1447,9 +1498,9 @@ namespace Barrway.Service.Repository
 
                                     var dataTable = JsonConvert.DeserializeObject<SchedularFormModel>(JsonConvert.SerializeObject(template));
                                     dataTable.table = JsonConvert.DeserializeObject<SCHSCHEDULETABLE>(dataTable.SCH_SCHEDULE_TABLE);
-                                    dataTable.SCH_LOCATION = template["SCH_LOCATION_Id"].ToString();
-                                    dataTable.SCH_ACTIVITY = template["SCH_ACTIVITY_Id"].ToString();
-                                    dataTable.SCH_RESOURCE = template["SCH_RESOURCE_Id"].ToString();
+                                    dataTable.SCH_LOCATION = LocationId;
+                                    dataTable.SCH_ACTIVITY = ActivityId;
+                                    dataTable.SCH_RESOURCE = ResourceId;
                                     dataTable.SCH_TO_DATE = DateTime.Now.AddDays(Convert.ToInt32(template["SCH_DAYS"]?.ToString())).ToString("yyyy-MM-dd");
                                     dataTable.SCH_FROM_DATE = DateTime.Now.ToString("yyyy-MM-dd");
                                     dataTable.Id = null;
@@ -1470,8 +1521,6 @@ namespace Barrway.Service.Repository
 
                                             DateTime dateTracker = start;
                                             int slotCounter = 1;
-
-
 
                                             while (dateTracker <= end)
                                             {
@@ -1628,39 +1677,39 @@ namespace Barrway.Service.Repository
                                                 formGroupKey = Guid.NewGuid().ToString();
 
                                                 script += $@"insert into CALENDAR_FORM_1935(
-                                       [SCHEDULAR_FORM_ID]
-                                      ,[formGroupKey]
-                                      ,[formID]
-                                      ,[userID]
-                                      ,[Current_Status]
-                                      ,[cycle]
-                                      ,[MasterFormID]
-                                      ,[MasterFormRow]
-                                      ,[formRecordOrder]
-                                      ,[formRecordStatus]
-                                      ,[COMPANY_CODE]
-                                      ,[CALENDAR_CODE]
-                                      ,[title]
-                                      ,[start]
-                                      ,[end]
-                                      ,[allDay]
-                                      ,[resources]
-                                      ,[activities]
+                                                               [SCHEDULAR_FORM_ID]
+                                                              ,[formGroupKey]
+                                                              ,[formID]
+                                                              ,[userID]
+                                                              ,[Current_Status]
+                                                              ,[cycle]
+                                                              ,[MasterFormID]
+                                                              ,[MasterFormRow]
+                                                              ,[formRecordOrder]
+                                                              ,[formRecordStatus]
+                                                              ,[COMPANY_CODE]
+                                                              ,[CALENDAR_CODE]
+                                                              ,[title]
+                                                              ,[start]
+                                                              ,[end]
+                                                              ,[allDay]
+                                                              ,[resources]
+                                                              ,[activities]
 
-                                      ,[description]
-                                      ,[created_at], [updated_at],[EVENT_TYPE])
-	                                  values('{SchedularFormId}', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{dataTable.COMPANY_CODE}', '{dataTable.CALENDAR_CODE}', 'Slot {slotCounter}', '{SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{dataTable.SCH_RESOURCE}', '{dataTable.SCH_ACTIVITY}', '{dataTable.SCH_DESCRIPTION}', getDate(), getDate(),'SCHEDULE');
+                                                              ,[description]
+                                                              ,[created_at], [updated_at],[EVENT_TYPE])
+	                                                          values('{SchedularFormId}', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{dataTable.COMPANY_CODE}', '{dataTable.CALENDAR_CODE}', 'Slot {slotCounter}', '{SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{dataTable.SCH_RESOURCE}', '{dataTable.SCH_ACTIVITY}', '{dataTable.SCH_DESCRIPTION}', getDate(), getDate(),'SCHEDULE');
                                 
-                                    insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
-                                    values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_PROVIDER_MASTER}, '{dataTable.SCH_RESOURCE}', 'SERVICE_PROVIDER_MASTER_1934', 'FIRST_NAME', {(int)FormSetting.CALENDAR_FORM}, '{dataTable.SCH_RESOURCE}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                                                            insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_PROVIDER_MASTER}, '{dataTable.SCH_RESOURCE}', 'SERVICE_PROVIDER_MASTER_1934', 'FIRST_NAME', {(int)FormSetting.CALENDAR_FORM}, '{dataTable.SCH_RESOURCE}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
 
-                                    insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
-                                    values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_MASTER}, '{dataTable.SCH_ACTIVITY}', 'SERVICE_MASTER_1933', 'ACTIVITY_NAME', {(int)FormSetting.CALENDAR_FORM}, '{dataTable.SCH_ACTIVITY}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                                                            insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_MASTER}, '{dataTable.SCH_ACTIVITY}', 'SERVICE_MASTER_1933', 'ACTIVITY_NAME', {(int)FormSetting.CALENDAR_FORM}, '{dataTable.SCH_ACTIVITY}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
                         
-                                    insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
-                                    values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{dataTable.SCH_LOCATION}', 'LOCATION_MASTER_1936', 'LOCATION_CODE', {(int)FormSetting.CALENDAR_FORM}, '{dataTable.SCH_LOCATION}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                                                            insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{dataTable.SCH_LOCATION}', 'LOCATION_MASTER_1936', 'LOCATION_CODE', {(int)FormSetting.CALENDAR_FORM}, '{dataTable.SCH_LOCATION}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
 
-                                    ";
+                                                ";
 
                                                 dateTracker = dateTracker.AddDays(1);
 
@@ -2025,34 +2074,25 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> AddSchedularForm(SchedularFormModel model, string formGroupKey)
         {
+            bool createNewSchedule = false;
             if (!string.IsNullOrEmpty(model.Id))
             {
-                string query = $@"UPDATE [dbo].[SCHEDULAR_FORM_1941] 
-                                  SET 
-                                           [updated_at] = getdate()
-                                          ,[SCH__NAME] = '{model.SCH__NAME}'
-                                          ,[SCH_LOCATION] = '{model.SCH_LOCATION}'
-                                          ,[SCH_ACTIVITY] = '{model.SCH_ACTIVITY}'
-                                          ,[SCH_RESOURCE] = '{model.SCH_RESOURCE}'
-                                          ,[SCH_FROM_DATE] = '{model.SCH_FROM_DATE}'
-                                          ,[SCH_TO_DATE] = '{model.SCH_TO_DATE}'
-                                          ,[SCH_DAYS] = '{model.SCH_DAYS}'
-                                          ,[SCH_ALTERNATIVE_WEEK] = '{model.SCH_ALTERNATIVE_WEEK}'
-                                          ,[SCH_SCHEDULE_TABLE] = '{model.SCH_SCHEDULE_TABLE}'
-                                  WHERE Id = '{model.Id}'";
-
-                var result = await sqlFunction.ExecuteSqlCommandQuery(query);
-
-                if (result > 0)
+                if (Convert.ToInt32(model.Id) > 0)
                 {
-                    return new AddUpdateDelete() { Message = AppMessage.Success, Status = true };
+                    createNewSchedule = false;
                 }
                 else
                 {
-                    return new AddUpdateDelete() { Status = false };
+                    createNewSchedule = true;
                 }
+                
             }
             else
+            {
+                createNewSchedule = true;
+            }
+
+            if (createNewSchedule)
             {
                 Form_DataTable data = new Form_DataTable();
                 var a = model.ToDictionary();
@@ -2083,6 +2123,33 @@ namespace Barrway.Service.Repository
                 else
                 {
                     return new AddUpdateDelete() { Message = formResult.Message, Status = false };
+                }
+            }
+            else
+            {
+                string query = $@"UPDATE [dbo].[SCHEDULAR_FORM_1941] 
+                                  SET 
+                                           [updated_at] = getdate()
+                                          ,[SCH__NAME] = '{model.SCH__NAME}'
+                                          ,[SCH_LOCATION] = '{model.SCH_LOCATION}'
+                                          ,[SCH_ACTIVITY] = '{model.SCH_ACTIVITY}'
+                                          ,[SCH_RESOURCE] = '{model.SCH_RESOURCE}'
+                                          ,[SCH_FROM_DATE] = '{model.SCH_FROM_DATE}'
+                                          ,[SCH_TO_DATE] = '{model.SCH_TO_DATE}'
+                                          ,[SCH_DAYS] = '{model.SCH_DAYS}'
+                                          ,[SCH_ALTERNATIVE_WEEK] = '{model.SCH_ALTERNATIVE_WEEK}'
+                                          ,[SCH_SCHEDULE_TABLE] = '{model.SCH_SCHEDULE_TABLE}'
+                                  WHERE Id = '{model.Id}'";
+
+                var result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                if (result > 0)
+                {
+                    return new AddUpdateDelete() { Message = AppMessage.Success, Status = true };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false };
                 }
             }
 

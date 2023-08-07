@@ -495,7 +495,7 @@ namespace Barrway.Service.Repository
                                 {
                                     filter = "(service_p_m.FIRST_NAME like N'%" + item.value + "%' or service_p_m.LAST_NAME like N'%" + item.value + "%')";
                                 }
-                                
+
                                 applyFilter.Add(filter);
                             }
                         }
@@ -611,14 +611,14 @@ namespace Barrway.Service.Repository
                         {
                             if (item.field == "created_at" || item.field == "updated_at")
                             {
-                                
+
                                 string filter = await sqlFunction.GetDateFilter(item, "calendar");
                                 applyFilter.Add(filter);
                             }
                             else
                             {
                                 string filter = item.field + " like N'%" + item.value + "%'";
-                               
+
                                 applyFilter.Add(filter);
                             }
                         }
@@ -750,7 +750,7 @@ namespace Barrway.Service.Repository
                 CoinsDeducted = Convert.ToDouble(paymentHistory[0]["DEBIT_COIN"]?.ToString())
             };
 
-            return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = paymentReceiptViewModel};
+            return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = paymentReceiptViewModel };
 
         }
 
@@ -838,7 +838,7 @@ namespace Barrway.Service.Repository
 
                 if (calendarData.Count > 0)
                 {
-                    return new AddUpdateDelete { Status = true,Message = AppMessage.Success, Data = calendarData };
+                    return new AddUpdateDelete { Status = true, Message = AppMessage.Success, Data = calendarData };
                 }
                 else
                 {
@@ -925,7 +925,7 @@ namespace Barrway.Service.Repository
 
             }
 
-            
+
 
             return new AddUpdateDelete()
             {
@@ -1061,6 +1061,40 @@ namespace Barrway.Service.Repository
             catch (Exception ex)
             {
                 return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = false, Message = ex.Message };
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetMasterSearchResult(string keyword)
+        {
+            try
+            {
+                List<List<IDictionary<string, object>>> finalResult = new List<List<IDictionary<string, object>>>();
+
+                string sqlQuery = $@"select f.*,cmp.COMPANY_NAME_ENGLISH from BUSINESS_CALENDAR_MASTER_1925 f join BUSINESS_COMPANY_MASTER_1924 cmp on cmp.COMPANY_CODE = f.COMPANY_CODE where cmp.IS_TEMPLATE = 'N' and f.CALENDAR_NAME like '%{keyword}%'";
+                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+                finalResult.Add(result);
+
+                sqlQuery = $@"select * from BUSINESS_COMPANY_MASTER_1924 f where f.IS_TEMPLATE = 'N' and f.COMPANY_NAME_ENGLISH like '%{keyword}%' or f.COMPANY_NAME_ENGLISH like '%{keyword}%'";
+                result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+                finalResult.Add(result);
+
+                sqlQuery = $@"select f.*, cmp.COMPANY_NAME_ENGLISH, cal.CALENDAR_NAME, cal.CALENDAR_PHOTO_PATH from SERVICE_MASTER_1933 f 
+                                join BUSINESS_COMPANY_MASTER_1924 cmp on cmp.COMPANY_CODE = f.COMPANY_CODE
+                                join BUSINESS_CALENDAR_MASTER_1925 cal on cal.CALENDAR_CODE = f.CALENDAR_CODE
+                                where f.ACTIVITY_NAME like '%{keyword}%' and cmp.IS_TEMPLATE = 'N'";
+                result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+                finalResult.Add(result);
+
+                sqlQuery = $@"select * from CALENDAR_SUB_CATEGORY_MASTER_1930 f where f.CALENDAR_SUB_CATEGORY_NAME like '%{keyword}%'";
+                result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+                finalResult.Add(result);
+
+                return new AddUpdateDelete() { Status = true, Data = finalResult };
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
             }
         }
 
@@ -1345,16 +1379,17 @@ DECLARE @retval nvarchar(max);
                                 ";
                 var result = await sqlFunction.ExecuteSqlQuery(query);
 
-                
+
 
                 List<List<IDictionary<string, object>>> finalResult = new List<List<IDictionary<string, object>>>();
-                
+
                 finalResult.Add(result);
                 finalResult.Add(packageResult);
 
                 return new AddUpdateDelete() { Status = true, Message = "Success", Data = finalResult };
 
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return new AddUpdateDelete() { Status = false, Message = ex.Message.ToString() };
             }
@@ -1364,7 +1399,7 @@ DECLARE @retval nvarchar(max);
         {
             try
             {
-                
+
                 var query = $@"SELECT [Id]
                                   ,[CALENDAR_CODE]
                                   ,[COMPANY_CODE]

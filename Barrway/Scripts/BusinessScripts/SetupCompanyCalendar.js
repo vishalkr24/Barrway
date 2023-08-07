@@ -194,9 +194,10 @@ function renderTemplates(CategoryId) {
                                           <div class="card__details">
 
                                             <span class="tag">${data.Data[i].CALENDAR_SUB_CATEGORY_NAME}</span>
-
+                                            <span class="tag">${data.Data[i].TOTAL_SCHEDULARS} Schedulars</span>
                                             <!-- A div with name class for the name of the card -->
                                             <div class="name">${data.Data[i].CALENDAR_NAME}</div>
+                                            
                                             <p>
                                             <span class="tag">${data.Data[i].TOTAL_SERVICES} Service</span>
                                             <span class="tag">${data.Data[i].TOTAL_LOCATIONS} Location</span>

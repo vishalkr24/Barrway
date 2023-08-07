@@ -361,21 +361,32 @@ namespace Barrway.Controllers
                 var b = data.ToDictionary();
 
                 data.SCH_SCHEDULE_TABLE = JsonConvert.SerializeObject(b["table"]).ToString();
+                bool createNewSchedule = false;
 
                 if (!string.IsNullOrEmpty(data.Id))
                 {
                     // Edit Existing Schedule
+                    if (Convert.ToInt32(data.Id) > 0)
+                    {
+                        string formGroupKey = CustomMethods.CreateUUID();
+                        var response = await businessUserService.AddSchedularForm(data, formGroupKey);
 
-                    string formGroupKey = CustomMethods.CreateUUID();
-                    var response = await businessUserService.AddSchedularForm(data, formGroupKey);
-
-                    return Json("Success", JsonRequestBehavior.AllowGet);
-
+                        return Json("Success", JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        createNewSchedule = true;
+                    }
+                    
                 }
                 else
                 {
                     // Create a new Schedule
+                    createNewSchedule = true;
+                }
 
+                if (createNewSchedule)
+                {
                     string script = "";
                     string formGroupKey = CustomMethods.CreateUUID();
                     var response = await businessUserService.AddSchedularForm(data, formGroupKey);
@@ -386,12 +397,9 @@ namespace Barrway.Controllers
                             return Json("Success", JsonRequestBehavior.AllowGet);
                         }
 
-                        var startObject = data.SCH_FROM_DATE.Split('/');
-                        var endObject = data.SCH_TO_DATE.Split('/');
+                        var start = Convert.ToDateTime(data.SCH_FROM_DATE);
 
-                        var start = Convert.ToDateTime(startObject[2] + "-" + startObject[1] + "-" + startObject[0]);
-
-                        var end = Convert.ToDateTime(endObject[2] + "-" + endObject[1] + "-" + endObject[0]);
+                        var end = Convert.ToDateTime(data.SCH_TO_DATE);
 
                         DateTime dateTracker = start;
                         int slotCounter = 1;
