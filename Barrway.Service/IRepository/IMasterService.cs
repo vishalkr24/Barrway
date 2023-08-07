@@ -26,6 +26,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetSingleTransactionMaster(string TransactionId);
         
         Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetAllBlogPosts(GenerateDynamicFormData data);
+        Task<AddUpdateDelete> GetMasterSearchResult(string keyword);
         Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetAllFeaturedCompany(GenerateDynamicFormData data);
         Task<AddUpdateDelete> GetSingleBlogPost(string NewsId);
         Task<AddUpdateDelete> GetCompanyCalendarPackages(string CompanyCode);

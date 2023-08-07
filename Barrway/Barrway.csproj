@@ -3242,6 +3242,7 @@
     <Content Include="Views\Shared\_LayoutSuperAdmin.cshtml" />
     <Content Include="Views\SuperAdmin\Index.cshtml" />
     <Content Include="Views\BusinessAdmin\CalendarTemplateMaster.cshtml" />
+    <Content Include="Views\MarketPlace\Search.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -9786,6 +9786,7 @@
             window["formGroupKeyList"] = null;
 
             bootbox.hideAll();
+            debugger;
             var formId = $stateParams.formId;
             $scope.id = $stateParams.formId;
             $scope.currentFormId = $stateParams.formId;
@@ -13030,7 +13031,7 @@
             return queryText;
         };
         function reBindCalender() {
-
+            debugger;
             $scope.basicViewCalenderDataTemp.newFilteredEventList = [];
             var whereClouse = " ";
             var joinClouse = "";
@@ -13415,6 +13416,7 @@
         };
         $scope.ySelectionChange = function (formId) {
             try {
+                debugger;
                 // alert(formId);
                 showLoader();
                 if ($scope.xSelection == formId) {

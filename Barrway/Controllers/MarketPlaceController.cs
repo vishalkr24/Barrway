@@ -49,6 +49,105 @@ namespace Barrway.Controllers
             return View();
         }
 
+        public async Task<ActionResult> Search(string keyword)
+        {
+            List<SearchResultModel> finalResult = new List<SearchResultModel>();
+
+            var dataRaw = await masterService.GetMasterSearchResult(keyword);
+
+            if (dataRaw.Status)
+            {
+                var data = dataRaw.Data as List<List<IDictionary<string, object>>>;
+
+                if (data.Count > 0)
+                {
+                    SearchResultModel temp = new SearchResultModel();
+
+                    // for calendar
+                    var calendarData = data[0];
+                    for (int i = 0; i < calendarData.Count; i++)
+                    {
+                        temp = new SearchResultModel();
+                        temp.Id = calendarData[i]["Id"]?.ToString();
+                        temp.Title = calendarData[i]["CALENDAR_NAME"]?.ToString();
+                        temp.Description = calendarData[i]["COMPANY_NAME_ENGLISH"]?.ToString();
+                        temp.ImagePath = calendarData[i]["CALENDAR_PHOTO_PATH"]?.ToString();
+                        temp.ResultType = 1;
+                        temp.OtherIds = new List<IDictionary<string, string>>()
+                        {
+                            new Dictionary<string, string>()
+                            {
+                                {"CalendarCode", calendarData[i]["CALENDAR_CODE"]?.ToString() },
+                                {"CompanyCode", calendarData[i]["COMPANY_CODE"]?.ToString() }
+                            }
+                        };
+                        finalResult.Add(temp);
+                    }
+
+                    // for company
+                    var companyData = data[1];
+                    for (int i = 0; i < companyData.Count; i++)
+                    {
+                        temp = new SearchResultModel();
+                        temp.Id = companyData[i]["Id"]?.ToString();
+                        temp.Title = companyData[i]["COMPANY_NAME_ENGLISH"]?.ToString();
+                        temp.Description = companyData[i]["COMPANY_DESCRIPTION"]?.ToString();
+                        temp.ImagePath = companyData[i]["COMPANY_LOGO_PATH"]?.ToString();
+                        temp.ResultType = 2;
+                        temp.OtherIds = new List<IDictionary<string, string>>()
+                        {
+                            new Dictionary<string, string>()
+                            {
+                                {"CompanyCode", companyData[i]["COMPANY_CODE"]?.ToString() }
+                            }
+                        };
+                        finalResult.Add(temp);
+                    }
+
+                    // for service
+                    var serviceData = data[2];
+                    for (int i = 0; i < serviceData.Count; i++)
+                    {
+                        temp = new SearchResultModel();
+                        temp.Id = serviceData[i]["Id"]?.ToString();
+                        temp.Title = serviceData[i]["ACTIVITY_NAME"]?.ToString();
+                        temp.Description = "";
+                        temp.ImagePath = serviceData[i]["CALENDAR_PHOTO_PATH"]?.ToString();
+                        temp.ResultType = 3;
+                        temp.OtherIds = new List<IDictionary<string, string>>()
+                        {
+                            new Dictionary<string, string>()
+                            {
+                                {"CompanyCode", serviceData[i]["COMPANY_CODE"]?.ToString() },
+                                {"CalendarCode", serviceData[i]["CALENDAR_CODE"]?.ToString() },
+                                {"CompanyName", serviceData[i]["COMPANY_NAME_ENGLISH"]?.ToString() },
+                                {"CalendarName", serviceData[i]["CALENDAR_NAME"]?.ToString() }
+
+                            }
+                        };
+                        finalResult.Add(temp);
+                    }
+
+                    // for category
+                    var categoryData = data[3];
+                    for (int i = 0; i < categoryData.Count; i++)
+                    {
+                        temp = new SearchResultModel();
+                        temp.Id = categoryData[i]["Id"]?.ToString();
+                        temp.Title = categoryData[i]["CALENDAR_SUB_CATEGORY_NAME"]?.ToString();
+                        temp.Description = "";
+                        temp.ImagePath = "";
+                        temp.ResultType = 4;
+                        temp.OtherIds = new List<IDictionary<string, string>>();
+                        finalResult.Add(temp);
+                    }
+
+                }
+            }
+
+            return View(new SearchResultViewModel() { results = finalResult, keyword = keyword });
+        }
+
         public async Task<ActionResult> PrivacyPolicy()
         {
             return View();

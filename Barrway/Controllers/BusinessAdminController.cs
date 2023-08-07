@@ -848,8 +848,6 @@ namespace Barrway.Controllers
             }
             else
             {
-                
-
                 if (model.CALENDAR_CATEGORY_ID == "1" || model.CALENDAR_CATEGORY_ID == "2" || model.CALENDAR_CATEGORY_ID == "5")
                 {
                     if (string.IsNullOrEmpty(model.SLOT_DURATION_IN_MINS))

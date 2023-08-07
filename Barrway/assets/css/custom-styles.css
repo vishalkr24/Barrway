@@ -15,10 +15,15 @@
     min-height: 60vh!important;
 }
 
-.pro-im{
-    min-height:140px;
-    display:flex;
-    align-content:center;
-    align-items:center;
+.pro-im {
+    min-height: 140px;
+    max-height: 140px;
+    display: flex;
+    align-content: center;
+    align-items: center;
+}
 
+.pro-im img{
+    min-height: 140px;
+    max-height: 140px;
 }
