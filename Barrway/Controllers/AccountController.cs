@@ -43,6 +43,7 @@ namespace Barrway.Controllers
         // GET: Account
         [AllowAnonymous]
         [HttpGet]
+        [OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.None)]
         public async Task<ActionResult> BusinessLogin()
         {
             if (User.Identity.IsAuthenticated)
@@ -72,6 +73,7 @@ namespace Barrway.Controllers
 
         [AllowAnonymous]
         [HttpGet]
+        [OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.None)]
         public async Task<ActionResult> SuperAdminLogin()
         {
             if (User.Identity.IsAuthenticated)
@@ -136,6 +138,7 @@ namespace Barrway.Controllers
 
         [AllowAnonymous]
         [HttpGet]
+        [OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.None)]
         public async Task<ActionResult> Login(string returnUrl = null)
         {
             if (User.Identity.IsAuthenticated)
