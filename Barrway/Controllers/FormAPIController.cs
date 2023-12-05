@@ -376,7 +376,7 @@ namespace Barrway.Controllers
                 }
             }
 
-            return Json(result);
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

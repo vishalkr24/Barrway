@@ -895,7 +895,7 @@ namespace Barrway.Service.Repository
                                               join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
 											  join BUSINESS_ACCOUNT_WEBSITE_1918 b_account on b_account.Id = company.BUSINESS_ACCOUNT_ID
 								              join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendarDetails.CALENDAR_SUB_CATEGORY_ID
-                                              where calendarDetails.CALENDAR_CODE in ({calendarCodes}) 
+                                              where {((string.IsNullOrEmpty(calendarCodes)) ? "calendarDetails.CALENDAR_CODE = ''": $"calendarDetails.CALENDAR_CODE in ({calendarCodes})")} 
                                       )
                                   Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY created_at desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
 
@@ -996,7 +996,6 @@ namespace Barrway.Service.Repository
                                 applyFilter.Add(filter);
                             }
                         }
-
                     }
                 }
 
@@ -1045,7 +1044,7 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string query = $@"SELECT ( case when (SUM(ledger.CREDIT_COIN) - SUM(ledger.DEBIT_COIN)) = null then 0 else (SUM(ledger.CREDIT_COIN) - SUM(ledger.DEBIT_COIN)) end) as 'COIN_BALANCE' FROM LEDGER_MASTER_1957 ledger where USER_ID = '{UserId}'";
+                string query = $@"SELECT ( case when (SUM(ledger.CREDIT_COIN) - SUM(ledger.DEBIT_COIN)) is null then 0 else (SUM(ledger.CREDIT_COIN) - SUM(ledger.DEBIT_COIN)) end) as 'COIN_BALANCE' FROM LEDGER_MASTER_1957 ledger where USER_ID = '{UserId}'";
 
                 List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 

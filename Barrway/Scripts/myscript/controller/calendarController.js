@@ -17277,7 +17277,7 @@
         $("#user-nav-myfavorite").addClass("active")
 
         $scope.setFavoritesData = function (pageNumber, IsInnitial = false) {
-
+            debugger;
             var CompanyCode = null;
 
             if ($("#company-filter-selector option:selected").val() != "-1") {
