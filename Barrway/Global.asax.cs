@@ -24,9 +24,10 @@ namespace Barrway
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
+            //AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
             var secretKey = WebConfigurationManager.AppSettings["StripeSecretKey"];
             StripeConfiguration.SetApiKey(secretKey);
+            AntiForgeryConfig.SuppressIdentityHeuristicChecks = true;
         }
 
     }
