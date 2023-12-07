@@ -17,6 +17,7 @@ namespace Barrway.Service.IRepository
 
         #region Business Webiste
         Task<AddUpdateDelete> CreateBusinessWebsite(BusinessAccountWebsiteModel model);
+        Task<AddUpdateDelete> AddBusinessAssignedUser(BusinessAssignedUsersModel model);
         Task<AddUpdateDelete> GetSingleBusinessWebsite(string UserId);
         #endregion
         

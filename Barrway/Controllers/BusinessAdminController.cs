@@ -47,7 +47,7 @@ namespace Barrway.Controllers
 
                 if (userWebsite.Status)
                 {
-                    string currentStep = userWebsite.Data["CURRENT_STEP"].ToString();
+                    string currentStep = userWebsite.Data["CURRENT_STEP"]?.ToString();
 
                     if (currentStep == "REGISTRATION")
                     {
