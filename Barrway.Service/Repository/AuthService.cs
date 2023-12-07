@@ -47,6 +47,7 @@ namespace Barrway.Service.Repository
 
                 string sqlQuery = $@"select user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
                                 [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD]
+                                , (select ROLE_TYPE from BUSINESS_ASSIGNED_USERS_1964 where BUSINESS_ACCOUNT_ID = (select top 1 BUSINESS_ACCOUNT_ID from BUSINESS_ASSIGNED_USERS_1964 assigned2 where assigned2.ASSIGNED_USER = user_m.USER_ID and assigned2.ROLE_TYPE = 'SUPERUSER')) as 'ROLE_TYPE'
                                 from USER_MASTER_1915 user_m 
                                 left join [dbo].[ROLE_MASTER_1917] user_role on user_role.Id=user_m.[ROLE_ID]
                                 where [USER_EMAIL]='{email}'";
@@ -110,7 +111,9 @@ namespace Barrway.Service.Repository
 
                 string sqlQuery = $@"select user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
                                 [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD]
+                                , (select ROLE_TYPE from BUSINESS_ASSIGNED_USERS_1964 where BUSINESS_ACCOUNT_ID = (select top 1 BUSINESS_ACCOUNT_ID from BUSINESS_ASSIGNED_USERS_1964 assigned2 where assigned2.ASSIGNED_USER = user_m.USER_ID and assigned2.ROLE_TYPE = 'SUPERUSER')) as 'ROLE_TYPE'
                                 from USER_MASTER_1915 user_m 
+                                
                                 left join [dbo].[ROLE_MASTER_1917] user_role on user_role.Id=user_m.[ROLE_ID]
                                 where [USER_EMAIL]='{email}' and user_m.ROLE_ID = '{RoleId.ToString()}'";
 
@@ -374,6 +377,7 @@ namespace Barrway.Service.Repository
             {
                 string sqlQuery = $@"select user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
                                 [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD]
+                                , (select ROLE_TYPE from BUSINESS_ASSIGNED_USERS_1964 where BUSINESS_ACCOUNT_ID = (select top 1 BUSINESS_ACCOUNT_ID from BUSINESS_ASSIGNED_USERS_1964 assigned2 where assigned2.ASSIGNED_USER = user_m.USER_ID and assigned2.ROLE_TYPE = 'SUPERUSER')) as 'ROLE_TYPE'
                                 from USER_MASTER_1915 user_m 
                                 left join [dbo].[ROLE_MASTER_1917] user_role on user_role.Id=user_m.[ROLE_ID]
                                 where [USER_ID]='{userID}'";
@@ -408,6 +412,7 @@ namespace Barrway.Service.Repository
             {
                 string sqlQuery = $@"select user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
                                 [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD]
+                                , (select ROLE_TYPE from BUSINESS_ASSIGNED_USERS_1964 where BUSINESS_ACCOUNT_ID = (select top 1 BUSINESS_ACCOUNT_ID from BUSINESS_ASSIGNED_USERS_1964 assigned2 where assigned2.ASSIGNED_USER = user_m.USER_ID and assigned2.ROLE_TYPE = 'SUPERUSER')) as 'ROLE_TYPE'
                                 from USER_MASTER_1915 user_m 
                                 left join [dbo].[ROLE_MASTER_1917] user_role on user_role.Id=user_m.[ROLE_ID]
                                 where [USER_ID]='{userID}' and user_m.[ROLE_ID]='{(int)formRole}'";
@@ -443,6 +448,7 @@ namespace Barrway.Service.Repository
             {
                 string sqlQuery = $@"select user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
                                 [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD]
+                                , (select ROLE_TYPE from BUSINESS_ASSIGNED_USERS_1964 where BUSINESS_ACCOUNT_ID = (select top 1 BUSINESS_ACCOUNT_ID from BUSINESS_ASSIGNED_USERS_1964 assigned2 where assigned2.ASSIGNED_USER = user_m.USER_ID and assigned2.ROLE_TYPE = 'SUPERUSER')) as 'ROLE_TYPE'
                                 from USER_MASTER_1915 user_m 
                                 left join [dbo].[ROLE_MASTER_1917] user_role on user_role.Id=user_m.[ROLE_ID]
                                 where [USER_EMAIL]='{email}'";
@@ -480,6 +486,7 @@ namespace Barrway.Service.Repository
             {
                 string sqlQuery = $@"select user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
                                 [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD]
+                                , (select ROLE_TYPE from BUSINESS_ASSIGNED_USERS_1964 where BUSINESS_ACCOUNT_ID = (select top 1 BUSINESS_ACCOUNT_ID from BUSINESS_ASSIGNED_USERS_1964 assigned2 where assigned2.ASSIGNED_USER = user_m.USER_ID and assigned2.ROLE_TYPE = 'SUPERUSER')) as 'ROLE_TYPE'
                                 from USER_MASTER_1915 user_m 
                                 left join [dbo].[ROLE_MASTER_1917] user_role on user_role.Id=user_m.[ROLE_ID]
                                 where [USER_EMAIL]='{email}' and user_m.ROLE_ID = '{Role_Id.ToString()}'";
@@ -517,6 +524,7 @@ namespace Barrway.Service.Repository
             {
                 string sqlQuery = $@"select user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_NAME],                [USER_EMAIL],[USER_PHONE],[USER_UID],[USER_SOURCE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
                                 [IS_PHONE_VERIFIED],[USER_ROLE],user_role.[ROLE_NAME],[PROFILE_STATUS]
+                                , (select ROLE_TYPE from BUSINESS_ASSIGNED_USERS_1964 where BUSINESS_ACCOUNT_ID = (select top 1 BUSINESS_ACCOUNT_ID from BUSINESS_ASSIGNED_USERS_1964 assigned2 where assigned2.ASSIGNED_USER = user_m.USER_ID and assigned2.ROLE_TYPE = 'SUPERUSER')) as 'ROLE_TYPE'
                                 from USER_MASTER_1921 user_m 
                                 left join [dbo].[USER_ROLE_1924] user_role on user_role.Id=user_m.[USER_ROLE]
                                 where [USER_PHONE]=N'{phone}'";
@@ -673,7 +681,12 @@ namespace Barrway.Service.Repository
         {
             if (role == "BUSINESS_USER")
             {
-                string sqlQuery = "SELECT business_user.*,user_m.[USER_ID],user_m.[USER_EMAIL],user_m.[USER_PHONE],user_m.[SIGNUP_TYPE],user_m.[IS_ACTIVE],user_m.[IS_EMAIL_VERIFIED], user_m.[IS_PHONE_VERIFIED],user_m.[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS]                             FROM[dbo].[BUSINESS_ACCOUNT_WEBSITE_1918] business_user join USER_MASTER_1915 user_m  on user_m.[USER_ID]= business_user.[USER_ID]                              join[dbo].[ROLE_MASTER_1917] user_role on user_role.Id = user_m.[ROLE_ID]                             where business_user.[USER_ID]= '" + userID + "' and user_m.ROLE_ID = '1'";
+                string sqlQuery = $@"SELECT business_user.*,user_m.[USER_ID],user_m.[USER_EMAIL],user_m.[USER_PHONE],user_m.[SIGNUP_TYPE],user_m.[IS_ACTIVE],user_m.[IS_EMAIL_VERIFIED], user_m.[IS_PHONE_VERIFIED],user_m.[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS]
+                                    , (select ROLE_TYPE from BUSINESS_ASSIGNED_USERS_1964 where BUSINESS_ACCOUNT_ID = (select top 1 BUSINESS_ACCOUNT_ID from BUSINESS_ASSIGNED_USERS_1964 assigned2 where assigned2.ASSIGNED_USER = user_m.USER_ID and assigned2.ROLE_TYPE = 'SUPERUSER')) as 'ROLE_TYPE'
+                                    FROM[dbo].[BUSINESS_ACCOUNT_WEBSITE_1918] business_user
+                                    join USER_MASTER_1915 user_m  on user_m.[USER_ID]= business_user.[USER_ID]
+                                    join[dbo].[ROLE_MASTER_1917] user_role on user_role.Id = user_m.[ROLE_ID]
+                                    where business_user.[USER_ID]= '" + userID + "' and user_m.ROLE_ID = '1'";
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
                 if (result.Count() > 0)
@@ -703,7 +716,7 @@ namespace Barrway.Service.Repository
 
             if (role == "PUBLIC_USER")
             {
-                string sqlQuery = $@"SELECT public_user.*,user_m.[USER_ID],user_m.[USER_EMAIL],user_m.[USER_PASSWORD],user_m.[USER_PHONE],user_m.[SIGNUP_TYPE],user_m.[IS_ACTIVE],user_m.[IS_EMAIL_VERIFIED], user_m.[IS_PHONE_VERIFIED],user_m.[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS]                             FROM[dbo].[PUBLIC_USER_ACCOUNT_1943] public_user join USER_MASTER_1915 user_m  on user_m.[USER_ID]= public_user.[USER_ID]                              join[dbo].[ROLE_MASTER_1917] user_role on user_role.Id = user_m.[ROLE_ID]                             where public_user.[USER_ID]= '" + userID + "' and user_m.ROLE_ID = '2'";
+                string sqlQuery = $@"SELECT public_user.*,user_m.[USER_ID],user_m.[USER_EMAIL],user_m.[USER_PASSWORD],user_m.[USER_PHONE],user_m.[SIGNUP_TYPE],user_m.[IS_ACTIVE],user_m.[IS_EMAIL_VERIFIED], user_m.[IS_PHONE_VERIFIED],user_m.[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS]                                   , (select ASSIGNED_USER, BUSINESS_ACCOUNT_ID from BUSINESS_ASSIGNED_USERS_1964 where BUSINESS_ACCOUNT_ID = (select top 1 BUSINESS_ACCOUNT_ID from BUSINESS_ASSIGNED_USERS_1964 assigned2 where assigned2.ASSIGNED_USER = user_m.USER_ID and assigned2.ROLE_TYPE = 'SUPERUSER') for JSON auto) as 'AssignedData'                          FROM[dbo].[PUBLIC_USER_ACCOUNT_1943] public_user join USER_MASTER_1915 user_m  on user_m.[USER_ID]= public_user.[USER_ID]                              join[dbo].[ROLE_MASTER_1917] user_role on user_role.Id = user_m.[ROLE_ID]                             where public_user.[USER_ID]= '" + userID + "' and user_m.ROLE_ID = '2'";
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
                 if (result.Count() > 0)

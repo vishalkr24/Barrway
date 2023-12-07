@@ -31,10 +31,29 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> CreateBusinessWebsite(BusinessAccountWebsiteModel model)
         {
-
             Form_DataTable data = new Form_DataTable();
             data.action = (int)FormAction.Save;
             data.formId = (int)FormSetting.BUSINESS_ACCOUNT_WEBSITE;
+
+            data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.ToDictionary());
+            data.formGroupKey = Guid.NewGuid().ToString();
+            var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+            if (formResult.res == 1)
+            {
+                return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Message = formResult.Message, Status = false };
+            }
+        }
+
+        public async Task<AddUpdateDelete> AddBusinessAssignedUser(BusinessAssignedUsersModel model)
+        {
+            Form_DataTable data = new Form_DataTable();
+            data.action = (int)FormAction.Save;
+            data.formId = (int)FormSetting.BUSINESS_ASSIGNED_USERS;
 
             data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.ToDictionary());
             data.formGroupKey = Guid.NewGuid().ToString();
@@ -842,7 +861,25 @@ namespace Barrway.Service.Repository
         public async Task<AddUpdateDelete> GetDefaultCompanyByUserId(string UserId)
         {
 
-            string query = "SELECT company.[Id]      ,company.[created_at]      ,company.[updated_at]      ,company.[created_by]      ,company.[updated_by]     ,[BUSINESS_ACCOUNT_ID]      ,[COMPANY_CODE]      ,[COMPANY_NAME_ENGLISH]      ,[COMPANY_NAME_CHINESE]      ,[COMPANY_LOGO_NAME]      ,[COMPANY_LOGO_PATH]      ,[COMPANY_BANNER_NAME]      ,[COMPANY_BANNER_PATH]      ,[COMPANY_PHONE]      ,[COMPANY_ADDRESS]      ,[FACEBOOK_URL]      ,[INSTAGRAM_URL]      ,[WECHAT_URL]      ,[TWITTER_URL]      ,[PAGE_URL]      ,[COMPANY_DESCRIPTION]      ,[COMPANY_SERVICE]      ,[TAGS]      ,[IS_SEARCHABLE_IN_MARKETPLACE]      ,[COMPANY_CATEGORY_ID] ,     [COMPANY_EMAIL]     ,[COMPANY_SUB_CATEGORY_ID]      ,[COUNTRY_ID]      ,[CITY_ID]      ,[DISTRICT_ID]      ,[TOTAL_WEBSITE_VISITS]      ,[IS_DEFAULT], company.[IS_ACTIVE]  FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company join BUSINESS_ACCOUNT_WEBSITE_1918 business on company.BUSINESS_ACCOUNT_ID = business.Id where business.USER_ID = '" + UserId + "' and company.IS_ACTIVE = 'Y' and  IS_DEFAULT = 'Y'";
+            string query = $@"SELECT company.[Id]      
+,company.[created_at]      ,company.[updated_at]      
+,company.[created_by]      ,company.[updated_by]     
+,[BUSINESS_ACCOUNT_ID]      ,[COMPANY_CODE]      
+,[COMPANY_NAME_ENGLISH]      ,[COMPANY_NAME_CHINESE]      
+,[COMPANY_LOGO_NAME]      ,[COMPANY_LOGO_PATH]      
+,[COMPANY_BANNER_NAME]      ,[COMPANY_BANNER_PATH]      
+,[COMPANY_PHONE]      ,[COMPANY_ADDRESS]      
+,[FACEBOOK_URL]      ,[INSTAGRAM_URL]      ,[WECHAT_URL]      
+,[TWITTER_URL]      ,[PAGE_URL]      ,[COMPANY_DESCRIPTION]      
+,[COMPANY_SERVICE]      ,[TAGS]      ,[IS_SEARCHABLE_IN_MARKETPLACE]      
+,[COMPANY_CATEGORY_ID] ,     [COMPANY_EMAIL]     
+,[COMPANY_SUB_CATEGORY_ID]      ,[COUNTRY_ID]      
+,[CITY_ID]      ,[DISTRICT_ID]      
+,[TOTAL_WEBSITE_VISITS]      
+,[IS_DEFAULT], company.[IS_ACTIVE]  
+FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company 
+join BUSINESS_ACCOUNT_WEBSITE_1918 business on company.BUSINESS_ACCOUNT_ID = business.Id 
+where business.USER_ID = '" + UserId + "' and company.IS_ACTIVE = 'Y' and  IS_DEFAULT = 'Y'";
 
 
             List<IDictionary<string, object>> BusinessCompanyResult = await sqlFunction.ExecuteSqlQuery(query);

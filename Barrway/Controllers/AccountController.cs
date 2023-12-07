@@ -175,7 +175,7 @@ namespace Barrway.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View();
+                return View(model);
             }
 
             var loginresult = await authService.GetUser(model.USER_EMAIL, model.USER_PASSWORD, (int)FormRole.BUSINESS_USER, true);
@@ -183,6 +183,9 @@ namespace Barrway.Controllers
             if (loginresult.Status)
             {
                 var user = loginresult.Data;
+
+                var assignedData = JsonConvert.DeserializeObject<Dictionary<string, object>>(loginresult.Data["AssignedData"].ToString());
+
                 var claims = new ClaimsIdentity(new[] {
                                                     new Claim(ClaimTypes.NameIdentifier,user["USER_ID"].ToString()),
                                                     new Claim(ClaimTypes.Name,user["USER_ID"].ToString()),
@@ -212,7 +215,7 @@ namespace Barrway.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.ReturnUrl = returnUrl;
-                return View();
+                return View(model);
             }
 
             var loginresult = await authService.GetUser(model.USER_EMAIL, model.USER_PASSWORD, (int)FormRole.PUBLIC_USER, true);
@@ -322,8 +325,6 @@ namespace Barrway.Controllers
                 {
                     LogoutPublicUser();
                 }
-
-
             }
             return View(new EmailSignUpViewModel() { ReturnUrl = "" });
         }
@@ -381,6 +382,17 @@ namespace Barrway.Controllers
                 };
 
                 AddUpdateDelete businessResult = await businessUserService.CreateBusinessWebsite(businessModel);
+
+                // Business Account User Referrence
+                BusinessAssignedUsersModel assignedUser = new BusinessAssignedUsersModel()
+                {
+                    ASSIGNED_USER = model.USER_NAME,
+                    BUSINESS_ACCOUNT_ID = businessResult.Data,
+                    ROLE_TYPE = "SUPERUSER"
+                };
+
+                AddUpdateDelete businessAssignResult = await businessUserService.AddBusinessAssignedUser(assignedUser);
+
 
                 // Send Activation Link
                 if (!model.IS_EXTERNAL_SIGNUP)
@@ -508,7 +520,7 @@ namespace Barrway.Controllers
                     {
                         TempData["VERIFICATION"] = "Pending";
                         TempData["VERIFICATION_EMAIL"] = model.USER_EMAIL;
-                        return RedirectToAction("Login", "Account");
+                        return RedirectToAction("EmailVerification", "Account", new { RoleId = 2 });
 
                     }
                     else
@@ -562,14 +574,18 @@ namespace Barrway.Controllers
 
         }
 
-        public async Task<ActionResult> EmailVerification()
+        public async Task<ActionResult> EmailVerification(int RoleId = 1)
         {
             try
             {
-                var data = await authService.GetUserByEmail(TempData.Peek("VERIFICATION_EMAIL").ToString());
+                var data = await authService.GetUserByEmail(TempData.Peek("VERIFICATION_EMAIL").ToString(), RoleId);
 
                 if (data.Data["IS_EMAIL_VERIFIED"].ToString() == "Y")
                 {
+                    if (RoleId == 2)
+                    {
+                        return RedirectToAction("Login");
+                    }
                     return RedirectToAction("BusinessLogin");
                 }
 
