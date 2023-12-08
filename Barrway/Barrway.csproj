@@ -353,6 +353,7 @@
     <Compile Include="Models\ResetPasswordViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\ApplicationAuthProvider.cs" />
+    <Compile Include="Security\SuperBusinessUserAuthorizeAttribute.cs" />
     <Compile Include="Security\SuperAdminAuthorizeAttribute.cs" />
     <Compile Include="Security\PublicAuthorizeAttribute.cs" />
     <Compile Include="Security\BusinessAuthorizeAttribute.cs" />
@@ -3035,6 +3036,7 @@
     <Content Include="App_Browsers\qt.browser" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\BusinessScripts\AdminDashboard.js" />
+    <Content Include="Scripts\BusinessScripts\AdminMaster.js" />
     <Content Include="Scripts\BusinessScripts\SuperAdminLayoutManager.js" />
     <Content Include="Scripts\BusinessScripts\AdminLayoutManager.js" />
     <Content Include="Scripts\BusinessScripts\CalendarTemplateMaster.js" />
@@ -3241,6 +3243,7 @@
     <Content Include="Views\SuperAdmin\Index.cshtml" />
     <Content Include="Views\BusinessAdmin\CalendarTemplateMaster.cshtml" />
     <Content Include="Views\MarketPlace\Search.cshtml" />
+    <Content Include="Views\BusinessAdmin\AdminMaster.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

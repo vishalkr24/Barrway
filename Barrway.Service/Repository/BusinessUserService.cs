@@ -41,6 +41,12 @@ namespace Barrway.Service.Repository
 
             if (formResult.res == 1)
             {
+                string BusinessCode = "BIZ" + formResult.Id.ToString().PadLeft(5, '0'); ;
+
+                string sqlQuery = $@"update BUSINESS_ACCOUNT_WEBSITE_1918 set BUSINESS_CODE = '{BusinessCode}' where Id = {formResult.Id}";
+
+                var result = await sqlFunction.ExecuteSqlCommandQuery(sqlQuery);
+
                 return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() };
             }
             else
@@ -110,7 +116,7 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> getCompanyDashboardData(string CompanyCode)
+        public async Task<AddUpdateDelete> getCompanyDashboardData(string CompanyCode, string BusinessAccountId, string UserId)
         {
             string query = $@"select COUNT(calendars.Id) as 'Calendars' from BUSINESS_CALENDAR_MASTER_1925 calendars where calendars.COMPANY_CODE = '{CompanyCode}'";
 
@@ -124,13 +130,18 @@ namespace Barrway.Service.Repository
 
             string query5 = $@"select COUNT(serviceProvider_m.Id) as 'ServiceProviders' from SERVICE_PROVIDER_MASTER_1934 serviceProvider_m where COMPANY_CODE = '{CompanyCode}'";
 
-
+            string query6 = $@"select case when bau.ROLE_TYPE = 'SUPERUSER' then (select COUNT(assigned_m.Id) from BUSINESS_ASSIGNED_USERS_1964 assigned_m where BUSINESS_ACCOUNT_ID = '{BusinessAccountId}') else 0 end as 'Admins'  from USER_MASTER_1915 user_m
+                                    join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.USER_ID = user_m.USER_ID
+                                    join BUSINESS_ASSIGNED_USERS_1964 bau on bau.BUSINESS_ACCOUNT_ID = baw.Id
+                                    join ROLE_MASTER_1917 user_role on user_role.Id = user_m.ROLE_ID
+                                    where user_m.Id = '{UserId}' and user_m.ROLE_ID = '1' and bau.ASSIGNED_USER = user_m.Id";
 
             List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
             List<IDictionary<string, object>> result2 = await sqlFunction.ExecuteSqlQuery(query2);
             List<IDictionary<string, object>> result3 = await sqlFunction.ExecuteSqlQuery(query3);
             List<IDictionary<string, object>> result4 = await sqlFunction.ExecuteSqlQuery(query4);
             List<IDictionary<string, object>> result5 = await sqlFunction.ExecuteSqlQuery(query5);
+            List<IDictionary<string, object>> result6 = await sqlFunction.ExecuteSqlQuery(query6);
 
             List<IDictionary<string, object>> finalList = new List<IDictionary<string, object>>();
 
@@ -139,6 +150,7 @@ namespace Barrway.Service.Repository
             finalList.Add(result3[0]);
             finalList.Add(result4[0]);
             finalList.Add(result5[0]);
+            finalList.Add(result6[0]);
 
             return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = finalList };
         }
@@ -359,6 +371,79 @@ namespace Barrway.Service.Repository
                                     where company.IS_ACTIVE = 'Y' and business.USER_ID = '{UserId}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
                                     )
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+            var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+            if (result.Count > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetAllBusinessAssignedUsers(GenerateDynamicFormData data, string UserId)
+        {
+            Dictionary<string, string> filters = new Dictionary<string, string>() {
+                    { "BUSINESS_CODE","account.BUSINESS_CODE"},
+                    { "USER_ID","user_m.USER_ID"},
+                    { "USER_EMAIL","user_m.USER_EMAIL"},
+                    { "ROLE_TYPE","f.ROLE_TYPE"},
+                    { "created_at","f.created_at"},
+            };
+
+            string column = "", dir = "";
+            if (data.sorters != null && data.sorters.Count() > 0)
+            {
+                column = data.sorters.FirstOrDefault().field;
+                dir = data.sorters.FirstOrDefault().dir;
+            }
+            else
+            {
+                column = "ROLE_TYPE";
+                dir = "desc";
+            }
+
+            List<string> applyFilter = new List<string>();
+            if (data.filters != null && data.filters.Count() > 0)
+            {
+                foreach (var item in data.filters)
+                {
+                    if (filters.Any(x => x.Key == item.field) && !string.IsNullOrEmpty(item.value))
+                    {
+                        if (item.field == "created_at" || item.field == "updated_at")
+                        {
+                            string filter = await sqlFunction.GetDateFilter(item, "f");
+                            applyFilter.Add(filter);
+                        }
+                        else
+                        {
+                            string filter = filters[item.field] + " like N'%" + item.value + "%'";
+                            applyFilter.Add(filter);
+                        }
+
+                    }
+                }
+            }
+
+            string applyFilterQuery = string.Join(" and ", applyFilter);
+            applyFilterQuery = applyFilterQuery.TrimEnd("and ".ToCharArray());
+
+            int PageSize = data.size > 0 ? data.size : 20;
+            int PageNumber = data.page > 0 ? data.page : 1;
+
+            string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; 
+                                declare @Ids varchar(max)
+                                set @Ids = (select stuff((select ',' + BUSINESS_ACCOUNT_ID from BUSINESS_ASSIGNED_USERS_1964 where ASSIGNED_USER = (select Id from USER_MASTER_1915 where USER_ID = '{UserId}') and ROLE_TYPE = 'SUPERUSER' for xml path('')), 1, 1, ''));
+                                with formdata as (
+                                    select account.BUSINESS_CODE, user_m.USER_EMAIL, user_m.USER_ID, f.* 
+                                    from BUSINESS_ASSIGNED_USERS_1964 f
+                                    join USER_MASTER_1915 user_m on user_m.Id = f.ASSIGNED_USER
+                                    Join BUSINESS_ACCOUNT_WEBSITE_1918 account on account.Id = f.BUSINESS_ACCOUNT_ID
+                                    where f.BUSINESS_ACCOUNT_ID in (select cast(item as integer) from dbo.SplitString(@Ids,',')) {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+                                )
+                                Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
             var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
             if (result.Count > 0)
