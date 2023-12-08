@@ -22,6 +22,7 @@ function setDashboardData() {
         $("#lblNumberOfServiceProvider").text(data[4].ServiceProviders)
         $("#lblNumberOfCalendar").text(data[0].Calendars)
         $("#lblNumberOfServices").text(data[1].Services)
+        $(".lblNumberOfAdmin").text(data[5].Admins)
     }
 
 }

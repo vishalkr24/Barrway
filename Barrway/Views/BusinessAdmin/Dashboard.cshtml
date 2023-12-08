@@ -326,33 +326,38 @@
             </div>
             <div class="col-lg-5 hide-for-superadmin">
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="wraping">
-                            <div class="top-head salmon">
-                                <h3>Business Admins</h3>
-                                <img src="/assets/img/ques.png">
-                            </div>
-                            <div class="wrap-body">
-                                <div class="wb-top">
-                                    <div class="w-l w-80">
-                                        <h1>0</h1>
-                                    </div>
-                                    <div class="w-r w-20">
-                                        <h3><img src="/assets/img/angle-red.png" /> 2%</h3>
-                                    </div>
+                    @if (UserIdentity.UserRoleType == "SUPERUSER")
+                    {
+                        <div class="col-md-12">
+                            <div class="wraping">
+                                <div class="top-head salmon">
+                                    <h3>Business Admins</h3>
+                                    <img src="/assets/img/ques.png">
                                 </div>
-                                <div class="wb-bottom">
-                                    <!--<div class="w-l w-80">-->
+                                <div class="wrap-body">
+                                    <div class="wb-top">
+                                        <div class="w-l w-80">
+                                            <h1 class="lblNumberOfAdmin">0</h1>
+                                        </div>
+                                        <div class="w-r w-20">
+                                            <h3><img src="/assets/img/angle-red.png" /> 2%</h3>
+                                        </div>
+                                    </div>
+                                    <div class="wb-bottom">
+                                        <!--<div class="w-l w-80">-->
                                         @*<p><span>2023-02-20</span> <span>-</span> <span> 2023 02 -26</span></p>*@
-                                    <!--</div>-->
-                                    <div class="w-r w-20">
-                                        <p><a href="#"> @Resource.View ></a></p>
+                                        <!--</div>-->
+                                        <div class="w-r w-20">
+                                            <p><a href="/BusinessAdmin/AdminMaster"> @Resource.View ></a></p>
+                                        </div>
                                     </div>
-                                </div>
 
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
+
+
                     <div class="col-md-12">
                         <div class="wraping">
                             <div class="top-head barrway-red">

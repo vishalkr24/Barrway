@@ -1,0 +1,119 @@
+﻿
+@{
+    ViewBag.Title = "Admin Master";
+    Layout = "~/Views/Shared/_BusinessAdminLayout.cshtml";
+}
+
+<link href="~/fg-assets/tabulator/css/tabulator_site.min.css" rel="stylesheet" />
+<link href="~/fg-newAssets/css/style.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<main id="content" role="main" class="main">
+    <div class="content container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="bredcrump">
+                    <span><a class="" href="#">@Resource.Barrway_business</a> / <a href="#">@Resource.Manage @Resource.Admin</a> </span>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .input-holder{
+                border: 1px solid lightgrey;
+                border-radius: 3px;
+                width: calc(100% - 40px);
+                float:left;
+            }
+
+            .input-holder input{
+                outline: none;
+                border: none;
+                width:calc(100% - 135px);
+                display:inline;
+            }
+
+                .input-holder button {
+                    outline: none;
+                    border: none;
+                    width: 130px;
+                    border-radius: 4px;
+                    height:41px;
+                    max-width: 130px!important;
+                }
+
+                @@media screen and (max-width: 800px){
+
+                    .input-holder input {
+                        outline: none;
+                        border: none;
+                        width: calc(100% - 105px);
+                        display: inline;
+                    }
+
+                    .input-holder button {
+                        outline: none;
+                        border: none;
+                        width: 100px;
+                        border-radius: 4px;
+                        height: 41px;
+                        max-width: 100px !important;
+                    }
+                }
+
+            .invitation-btn {
+                left: 4px !important;
+                border-radius: 4px !important;
+                width: 40px !important;
+                position: relative !important;
+                top: 1px !important;
+                padding: 7px !important;
+                background: white !important;
+                color: black !important;
+                border: 2px solid #88579a !important;
+                font-size: 15px;
+            }
+        </style>
+
+        <div class="row mb-2">
+            <div class="col-md-12 form-inner" style="max-width:100%;">
+                <h2><b>@Resource.Manage @Resource.Admin</b>s</h2>
+            </div>
+            <div class="col-md-12 form-inner" style="max-width:100%;">
+                <div style="">
+                    <div class="input-holder">
+                        <input type="text" class="form-control" placeholder="registered email address..." />
+                        <button class="btn btn-primary">Invite</button>
+                    </div>
+                    <button title="View Invitations" class="btn btn-primary invitation-btn"><i class="fa fa-list" aria-hidden="true"></i></button>
+                </div>
+                
+                
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="tabulator-section">
+                    <div class="form-builder-loader text-center">
+                        <div class="loader">
+                            <i class="fa fa-spinner fa-pulse fa-fw"> </i>
+                            <div>
+                                Loading Form Tabulator...
+                            </div>
+                        </div>
+                    </div>
+                    <div id="form-records"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</main>
+
+@section scripts{
+    <script src="~/Scripts/jquery.blockUI/jquery.blockUI.min.js"></script>
+    <script src="/fg-assets/tabulator/js/tabulator.js"></script>
+    <script src="/Scripts/BusinessScripts/AdminMaster.js"></script>
+}
+

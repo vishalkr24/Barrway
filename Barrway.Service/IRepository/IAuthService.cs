@@ -11,6 +11,7 @@ namespace Barrway.Service.IRepository
 {
     public interface IAuthService
     {
+        Task<AddUpdateDelete> CheckRoleTypeClaim(string email);
         Task<AddUpdateDelete<IDictionary<string, object>>> GetUser(string email, string password, bool isToken=false);
         Task<AddUpdateDelete<IDictionary<string, object>>> GetUser(string email, string password, int RoleId, bool isToken = false);
         //Task<AddUpdateDelete<IDictionary<string, object>>> ValidateSuperAdminUser(string email, string password, bool isToken = false);

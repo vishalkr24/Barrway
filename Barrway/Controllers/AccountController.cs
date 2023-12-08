@@ -184,13 +184,18 @@ namespace Barrway.Controllers
             {
                 var user = loginresult.Data;
 
-                var assignedData = JsonConvert.DeserializeObject<Dictionary<string, object>>(loginresult.Data["AssignedData"].ToString());
+                //var assignedData = JsonConvert.DeserializeObject<Dictionary<string, object>>(loginresult.Data["AssignedData"].ToString());
+
+                string roleType = user["ROLE_TYPE"]?.ToString();
+                string businessId = user["BUSINESS_ACCOUNT_ID"]?.ToString();
 
                 var claims = new ClaimsIdentity(new[] {
                                                     new Claim(ClaimTypes.NameIdentifier,user["USER_ID"].ToString()),
                                                     new Claim(ClaimTypes.Name,user["USER_ID"].ToString()),
                                                     new Claim(ClaimTypes.Email, user["USER_EMAIL"].ToString()),
                                                     new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
+                                                    new Claim("UserRoleType", roleType),
+                                                    new Claim("BusinessAccountId", businessId),
                                                     new Claim(ClaimTypes.Sid, user["Id"].ToString()),
                                                     //new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
                                                     }, CookieAuthenticationDefaults.AuthenticationType);
@@ -386,7 +391,7 @@ namespace Barrway.Controllers
                 // Business Account User Referrence
                 BusinessAssignedUsersModel assignedUser = new BusinessAssignedUsersModel()
                 {
-                    ASSIGNED_USER = model.USER_NAME,
+                    ASSIGNED_USER = result.Data,
                     BUSINESS_ACCOUNT_ID = businessResult.Data,
                     ROLE_TYPE = "SUPERUSER"
                 };
