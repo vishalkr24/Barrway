@@ -1,8 +1,129 @@
-﻿$(document).ready(function () {
+﻿var tabulator = [];
+
+$(document).ready(function () {
     /*showNavbarNavigation('companyMasterMegaMenu');*/
     setCalendarMaster();
     
 })
+
+function AssignSuperUser(Id) {
+    var data = tabulator.getData().filter(x=> x.Id == Id)[0];
+    if (confirm("Are you sure to Assign " + data.USER_ID + " as Super User of " + data.BUSINESS_CODE + " Business? \n\n You will become Admin of " + data.BUSINESS_CODE + " and won't be able to update admins anymore!")) {
+        let newSuperUserId = data.ASSIGNED_USER;
+        let oldSuperUserId = tabulator.getData().filter(x => x.BUSINESS_CODE == data.BUSINESS_CODE && x.ROLE_TYPE == 'SUPERUSER')[0].ASSIGNED_USER;
+        let businessId = data.BUSINESS_ACCOUNT_ID;
+        $.ajax({
+            url: "/BusinessAdmin/UpdateAdmin",
+            type: "POST",
+            data: {
+                NewSuperUserId: newSuperUserId,
+                OldSuperUserId: oldSuperUserId,
+                BusinessId: businessId
+            },
+            success: function (response) {
+                if (response.Status) {
+                    if (confirm("User assigned as super user successfully!")) {
+                        Logout();
+                    } else {
+                        Logout();
+                    }
+                } else {
+                    alert("User not assigned as super user.");
+                }
+                
+            },
+            error: function (err) {
+
+            }
+        })
+    } else {
+        // Bach gye
+    }
+}
+
+function ShowAssignModal(Id) {
+
+    $.ajax({
+        url: "/BusinessAdmin/getAllAssignedCompanies",
+        type: "GET",
+        data: {
+            AssignedId: Id,
+            UserId: tabulator.getData().filter(x => x.Id == Id)[0].ASSIGNED_USER
+        },
+        success: function (response) {
+            if (response.Status) {
+                var data = response.Data;
+                var elements = `<select id="company-selector" autocomplete="off" multiple><option value="">Select Companies...</option>`;
+                $("#tom-select-container").empty();
+                data.forEach(x => {
+                    if (x.IS_ASSIGNED == 'Y') {
+                        elements += `<option selected value="${x.Id}">${x.COMPANY_CODE} - ${x.COMPANY_NAME_ENGLISH}</option>`;
+                    } else {
+                        elements += `<option value="${x.Id}">${x.COMPANY_CODE} - ${x.COMPANY_NAME_ENGLISH}</option>`;
+                    }
+                });
+                $("#tom-select-container").append(elements + "</select>");
+                new TomSelect("#company-selector", {});
+            }
+        },
+        error: function (err) {
+
+        }
+    })
+
+    $("#AssignDetailsModal").modal("show");
+}
+
+$(document).on("click", "input[name=assign-module-radio]", function () {
+    let selectedModule = $(this).attr("id").split('-')[1];
+    if (selectedModule == "company") {
+        $("#company-selector-section").show();
+    } else {
+        $("#company-selector-section").hide();
+    }
+});
+
+function UpdatePermissions() {
+    if (confirm("Are you sure you want to update the permissions?")) {
+        if ($("input[name=assign-module-radio]:checked").attr('id').split('-')[1] == 'company') {
+            alert("company");
+        } else {
+            alert("business");
+        }
+    }
+    
+}
+
+function DeleteAdmin(Id) {
+    var data = tabulator.getData().filter(x => x.Id == Id)[0];
+    if (confirm("Are you sure to Delete " + data.USER_ID + " as Admin from " + data.BUSINESS_CODE + " Business?")) {
+        
+        $.ajax({
+            url: "/BusinessAdmin/DeleteAdmin",
+            type: "POST",
+            data: {
+                Id: Id
+            },
+            success: function (response) {
+                if (response.Status) {
+                    if (confirm("User removed as admin successfully!")) {
+                        setCalendarMaster();
+                    } else {
+                        setCalendarMaster();
+                    }
+                } else {
+                    alert("User not removed as admin.\n\n" + response.Message);
+                }
+
+            },
+            error: function (err) {
+
+            }
+        })
+    } else {
+        // Bach gye
+    }
+}
 
 function setCalendarMaster() {
     //var data = GetCompanyCalendars(localStorage.getItem("COMPANY_ID"), "", "");
@@ -10,6 +131,17 @@ function setCalendarMaster() {
 
     var CalendarMasterList = function () {
         var columns = [
+            {
+                title: '', field: 'ACTION', formatter: function (cell, formatter) {
+                    if (cell.getData().ROLE_TYPE == "ADMIN") {
+                        return `<button onclick="ShowAssignModal(${cell.getData().Id})" class="btn btn-primary text-light">Permissions</button>
+                                <button onclick="DeleteAdmin(${cell.getData().Id})" class="btn btn-danger text-light"><i class="fa fa-trash-o" style="font-size: larger;" aria-hidden="true"></i></button>`;
+                    } else {
+                        return ``;
+                    }
+                    
+                }, headerSort: false
+            },
             { title: 'Business Code', field: 'BUSINESS_CODE', headerFilter: "input" },
             { title: 'User Id', field: 'USER_ID', headerFilter: "input" },
             { title: 'Email Id', field: 'USER_EMAIL', headerFilter: "input" },
@@ -131,7 +263,7 @@ function setCalendarMaster() {
                 paginationSize: 50,
 
             };
-            var tabulator = initTabulator('form-records', options);
+            tabulator = initTabulator('form-records', options);
             $('.form-builder-loader').hide();
         }, 150);
 

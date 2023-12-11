@@ -18,6 +18,8 @@ namespace Barrway.Service.IRepository
         #region Business Webiste
         Task<AddUpdateDelete> CreateBusinessWebsite(BusinessAccountWebsiteModel model);
         Task<AddUpdateDelete> AddBusinessAssignedUser(BusinessAssignedUsersModel model);
+        Task<AddUpdateDelete> UpdateAdmin(string NewSuperUserId, string oldSuperUserId, string BusinessAccountId);
+        Task<AddUpdateDelete> DeleteAdmin(string Id);
         Task<AddUpdateDelete> GetSingleBusinessWebsite(string UserId);
         #endregion
         
@@ -45,7 +47,8 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetDefaultCompanyByUserId(string UserId);
         Task<AddUpdateDelete> UpdateBusinessCompanyProfileStatusByUserId(string userId, bool isActive);
         Task<AddUpdateDelete> UpdateBusinessCompanyProfileStatusByBusinessId(string businessId, bool isActive);
-        Task<AddUpdateDelete> getCompanyDashboardData(string CompanyCode, string BusinessAccountId, string UserId);
+        Task<AddUpdateDelete> getCompanyDashboardData(string CompanyCode, string UserId);
+        Task<AddUpdateDelete> getAllAssignedCompanies(string AssignedId, string UserId);
         Task<AddUpdateDelete> getCompanyCalendarDashboardData(string CompanyCode, string CalendarCode);
         #endregion
 

@@ -32,17 +32,6 @@ namespace Barrway.Security
             }
         }
 
-        public static string BusinessAccountId
-        {
-            get
-            {
-                var identity = (System.Security.Claims.ClaimsIdentity)HttpContext.Current.User.Identity;
-                IEnumerable<System.Security.Claims.Claim> claims = identity.Claims;
-                string UID = claims.Where(x => x.Type == "BusinessAccountId").FirstOrDefault().Value;
-                return UID;
-            }
-        }
-
         public static string UserEmail
         {
             get

@@ -187,15 +187,13 @@ namespace Barrway.Controllers
                 //var assignedData = JsonConvert.DeserializeObject<Dictionary<string, object>>(loginresult.Data["AssignedData"].ToString());
 
                 string roleType = user["ROLE_TYPE"]?.ToString();
-                string businessId = user["BUSINESS_ACCOUNT_ID"]?.ToString();
-
+                
                 var claims = new ClaimsIdentity(new[] {
                                                     new Claim(ClaimTypes.NameIdentifier,user["USER_ID"].ToString()),
                                                     new Claim(ClaimTypes.Name,user["USER_ID"].ToString()),
                                                     new Claim(ClaimTypes.Email, user["USER_EMAIL"].ToString()),
                                                     new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
                                                     new Claim("UserRoleType", roleType),
-                                                    new Claim("BusinessAccountId", businessId),
                                                     new Claim(ClaimTypes.Sid, user["Id"].ToString()),
                                                     //new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
                                                     }, CookieAuthenticationDefaults.AuthenticationType);

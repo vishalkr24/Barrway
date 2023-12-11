@@ -717,9 +717,53 @@ namespace Barrway.Controllers
         {
             try
             {
-                var Data = await businessUserService.getCompanyDashboardData(CompanyCode, UserIdentity.BusinessAccountId, UserIdentity.UserID);
+                var Data = await businessUserService.getCompanyDashboardData(CompanyCode, UserIdentity.UserID);
 
                 return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = Data.Data }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public async Task<ActionResult> getAllAssignedCompanies(string AssignedId, string UserId)
+        {
+            try
+            {
+                var Data = await businessUserService.getAllAssignedCompanies(AssignedId, UserIdentity.UserID);
+
+                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = Data.Data }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateAdmin(string NewSuperUserId, string OldSuperUserId, string BusinessId)
+        {
+            try
+            {
+                var Data = await businessUserService.UpdateAdmin(NewSuperUserId, OldSuperUserId, BusinessId);
+
+                return Json(Data, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteAdmin(string Id)
+        {
+            try
+            {
+                var Data = await businessUserService.DeleteAdmin(Id);
+
+                return Json(Data, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
