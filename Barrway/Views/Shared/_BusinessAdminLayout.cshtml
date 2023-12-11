@@ -61,7 +61,8 @@
     @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.2.2/css/tom-select.bootstrap5.min.css" integrity="sha512-mNN7o87hQqtNCCGWxFVdlVdaKF6d4S1wVMi3+ftJYnW572YIo0KPjK1Cns5SPlyCtKGp1Nu+z26MJUNXmpbjKA==" crossorigin="anonymous" referrerpolicy="no-referrer" />*@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.2.2/esm/tom-select.complete.min.js" integrity="sha512-Mq5sbsECkh++vpFvzKegopkWOHTuj2D3503BOVdaH8tTczPn74LEOkMK1Sd0BHbjwGEgVYDKM6CYSYeXJ5FaLA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-
+    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
 
     @RenderSection("scripts", required: false)
     <script>
@@ -161,14 +162,13 @@
     <input style="display:none" id="userIdHidden" value="@UserIdentity.UserName" />
     <script src="../assets/js/hs.theme-appearance.js"></script>
     <style>
-        #header{
-            display:none;
+        #header {
+            display: none;
         }
 
         .show-for-superadmin {
             display: none;
         }
-
     </style>
     <!-- ========== HEADER ========== -->
     <header id="header" class="navbar navbar-expand-lg navbar-bordered navbar-spacer-y-0 flex-lg-column">
@@ -663,7 +663,6 @@
 
     <!-- JS Front -->
     <script src="../assets/js/theme.min.js"></script>
-
 
 
     <!-- JS Plugins Init. -->

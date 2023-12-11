@@ -8,6 +8,71 @@
 <link href="~/fg-newAssets/css/style.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 <main id="content" role="main" class="main">
+
+    <div class="modal modal-lg" id="AssignDetailsModal" role="dialog">
+
+        <style>
+            .btn-assign {
+                outline: none;
+                border: none;
+                width: 130px;
+                border-radius: 4px;
+                height: 41px;
+                max-width: 130px !important;
+                background:white;
+                border: 2px solid #377dff;
+                color:black;
+            }
+
+            .selector-container {
+                padding: 16px 0px;
+            }
+
+            .assign-module-radio:checked + .btn-assign {
+                background: #377dff;
+                color:white;
+            }
+        </style>
+
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 style="font-size: calc(1.25625rem + 0.075vw)" class="modal-title"><b>Assign to User</b></h2>
+                </div>
+
+                <div class="modal-body pt-0">
+
+                    <div class="selector-container">
+
+                        <input type="radio" name="assign-module-radio" class="assign-module-radio" checked value="Company" style="display:none;" id="assign-company-module" />
+                        <label for="assign-company-module" class="">Company</label>
+
+                        <input type="radio" name="assign-module-radio" class="assign-module-radio" value="Business" style="display:none;" id="assign-business-module" />
+                        <label for="assign-business-module" class="pl-2">Business</label>
+
+                    </div>
+
+                    <div id="company-selector-section">
+                        Select Companies to Assign
+                        <div id="tom-select-container">
+                            <select id="company-selector" autocomplete="off" multiple>
+                                <option value="">Select Companies...</option>
+                                <option selected value="4"></option>
+                            </select>
+                        </div>
+                        
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="$('#AssignDetailsModal').modal('hide')" class="btn back">@Resource.Cancel</button>
+                    <button type="button" onclick="UpdatePermissions()" class="btn btn-default">Update Permissions</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     <div class="content container-fluid">
         <div class="row">
             <div class="col-md-12">
@@ -18,47 +83,47 @@
         </div>
 
         <style>
-            .input-holder{
+            .input-holder {
                 border: 1px solid lightgrey;
                 border-radius: 3px;
                 width: calc(100% - 40px);
-                float:left;
+                float: left;
             }
 
-            .input-holder input{
-                outline: none;
-                border: none;
-                width:calc(100% - 135px);
-                display:inline;
-            }
+                .input-holder input {
+                    outline: none;
+                    border: none;
+                    width: calc(100% - 135px);
+                    display: inline;
+                }
 
                 .input-holder button {
                     outline: none;
                     border: none;
                     width: 130px;
                     border-radius: 4px;
-                    height:41px;
-                    max-width: 130px!important;
+                    height: 41px;
+                    max-width: 130px !important;
                 }
 
-                @@media screen and (max-width: 800px){
+            @@media screen and (max-width: 800px) {
 
-                    .input-holder input {
-                        outline: none;
-                        border: none;
-                        width: calc(100% - 105px);
-                        display: inline;
-                    }
-
-                    .input-holder button {
-                        outline: none;
-                        border: none;
-                        width: 100px;
-                        border-radius: 4px;
-                        height: 41px;
-                        max-width: 100px !important;
-                    }
+                .input-holder input {
+                    outline: none;
+                    border: none;
+                    width: calc(100% - 105px);
+                    display: inline;
                 }
+
+                .input-holder button {
+                    outline: none;
+                    border: none;
+                    width: 100px;
+                    border-radius: 4px;
+                    height: 41px;
+                    max-width: 100px !important;
+                }
+            }
 
             .invitation-btn {
                 left: 4px !important;
@@ -86,8 +151,8 @@
                     </div>
                     <button title="View Invitations" class="btn btn-primary invitation-btn"><i class="fa fa-list" aria-hidden="true"></i></button>
                 </div>
-                
-                
+
+
             </div>
         </div>
 

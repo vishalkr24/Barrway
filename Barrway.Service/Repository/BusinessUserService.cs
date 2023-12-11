@@ -75,6 +75,72 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> UpdateAdmin(string NewSuperUserId, string oldSuperUserId, string BusinessAccountId)
+        {
+            try
+            {
+                string sqlQuery = $@"update BUSINESS_ASSIGNED_USERS_1964 set ROLE_TYPE = 'SUPERUSER' where BUSINESS_ACCOUNT_ID = '{BusinessAccountId}' and ASSIGNED_USER = '{NewSuperUserId}'
+                                     update BUSINESS_ASSIGNED_USERS_1964 set ROLE_TYPE = 'ADMIN' where BUSINESS_ACCOUNT_ID = '{BusinessAccountId}' and ASSIGNED_USER = '{oldSuperUserId}'";
+
+                var result = await sqlFunction.ExecuteSqlCommandQuery(sqlQuery);
+
+                if (result > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Data = result, Message = AppMessage.Success };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Data = result, Message = AppMessage.SomeInternalError };
+                }
+                
+
+            }catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+        public async Task<AddUpdateDelete> DeleteAdmin(string Id)
+        {
+            try
+            {
+                string sqlQuery = $@"select user_m.Id as 'ACCOUNT_CREATOR', bau.ASSIGNED_USER  from 
+                                        BUSINESS_ASSIGNED_USERS_1964 bau
+                                        join BUSINESS_ACCOUNT_WEBSITE_1918 account on account.Id = bau.BUSINESS_ACCOUNT_ID
+                                        join USER_MASTER_1915 user_m on user_m.USER_ID = account.USER_ID
+                                        where bau.Id = '{Id}'";
+
+                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+                if (result.Count > 0)
+                {
+                    if (result[0]["ACCOUNT_CREATOR"]?.ToString() == result[0]["ASSIGNED_USER"]?.ToString())
+                    {
+                        return new AddUpdateDelete() { Status = false, Message = "Cannot remove the creator of the business." };
+                    }
+                }
+
+                sqlQuery = $@"delete from BUSINESS_ASSIGNED_USERS_1964 where Id = '{Id}'";
+
+                var result2 = await sqlFunction.ExecuteSqlCommandQuery(sqlQuery);
+
+                if (result2 > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Data = result, Message = AppMessage.Success };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Data = result, Message = AppMessage.SomeInternalError };
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
         public async Task<AddUpdateDelete> GetSingleBusinessWebsite(string UserId)
         {
             string query = "SELECT [Id]          ,[created_at]      ,[updated_at]      ,[created_by]      ,[updated_by]      ,[CURRENT_STEP]      ,[SUBSCRIPTION_PLAN_ID]      ,[USER_ID]      ,[COMPANY_CALENDAR_STATUS]      ,[COMPANY_PROFILE_STATUS]  FROM [dbo].[BUSINESS_ACCOUNT_WEBSITE_1918] where USER_ID = '" + UserId + "'";
@@ -116,7 +182,7 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> getCompanyDashboardData(string CompanyCode, string BusinessAccountId, string UserId)
+        public async Task<AddUpdateDelete> getCompanyDashboardData(string CompanyCode, string UserId)
         {
             string query = $@"select COUNT(calendars.Id) as 'Calendars' from BUSINESS_CALENDAR_MASTER_1925 calendars where calendars.COMPANY_CODE = '{CompanyCode}'";
 
@@ -130,7 +196,7 @@ namespace Barrway.Service.Repository
 
             string query5 = $@"select COUNT(serviceProvider_m.Id) as 'ServiceProviders' from SERVICE_PROVIDER_MASTER_1934 serviceProvider_m where COMPANY_CODE = '{CompanyCode}'";
 
-            string query6 = $@"select case when bau.ROLE_TYPE = 'SUPERUSER' then (select COUNT(assigned_m.Id) from BUSINESS_ASSIGNED_USERS_1964 assigned_m where BUSINESS_ACCOUNT_ID = '{BusinessAccountId}') else 0 end as 'Admins'  from USER_MASTER_1915 user_m
+            string query6 = $@"select case when bau.ROLE_TYPE = 'SUPERUSER' then (select COUNT(assigned_m.Id) from BUSINESS_ASSIGNED_USERS_1964 assigned_m where BUSINESS_ACCOUNT_ID = '') else 0 end as 'Admins'  from USER_MASTER_1915 user_m
                                     join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.USER_ID = user_m.USER_ID
                                     join BUSINESS_ASSIGNED_USERS_1964 bau on bau.BUSINESS_ACCOUNT_ID = baw.Id
                                     join ROLE_MASTER_1917 user_role on user_role.Id = user_m.ROLE_ID
@@ -153,6 +219,21 @@ namespace Barrway.Service.Repository
             finalList.Add(result6[0]);
 
             return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = finalList };
+        }
+
+        public async Task<AddUpdateDelete> getAllAssignedCompanies(string AssignedId, string UserId)
+        {
+            string query = $@"declare @bstAccount varchar(max)
+                                set @bstAccount = stuff((select ',' + BUSINESS_ACCOUNT_ID from BUSINESS_ASSIGNED_USERS_1964 f where f.ASSIGNED_USER = '{UserId}' and ROLE_TYPE = 'SUPERUSER' for xml path('')), 1, 1, '')
+
+                                select case when (uac.COMPANY_ID is null) then 'N' else 'Y' end as 'IS_ASSIGNED', company.* from 
+                                BUSINESS_COMPANY_MASTER_1924 company
+                                left join (select * from USER_ASSIGNED_COMPANIES_1967 where ASSIGN_ID = '{AssignedId}') uac on uac.COMPANY_ID = company.Id
+                                where company.BUSINESS_ACCOUNT_ID in (select cast(item as integer) from dbo.SplitString(@bstAccount, ','))
+                                ";
+            List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+
+            return new AddUpdateDelete() { Status = true, Data = result, Message = AppMessage.Success };
         }
 
         public async Task<AddUpdateDelete> getCompanyCalendarDashboardData(string CompanyCode, string CalendarCode)
