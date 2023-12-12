@@ -737,26 +737,17 @@ namespace Barrway.Service.Repository
         public async Task<AddUpdateDelete> GetAllSubscriptionPlansForBusiness()
         {
             string query = $@"SELECT [Id]
-                                  ,[SUBSCRIPTION_PLAN_NAME]
-                                  ,[SUBSCRIPTION_PLAN_PRICE]
-                                  ,[SUBSCRIPTION_PLAN_VALIDITY]
-                                  ,[VALIDITY_IN_MONTHS]
-                                  ,[BOOKING_TRANSACTIONS]
-                                  ,[SUBSCRIPTION_PLAN_HAS_VALIDITY]
-                                  ,[IS_VISIBLE]
-                                  ,[CALENDAR_AVAILABLE]
-                                  ,[CLIENT_PACKAGE_AVAILABLE]
-                                  ,[NO_OF_ADMIN]
-                                  ,[PROMOTION_IN_MARKETPLACE]
-                                  ,[CHAT_WITH_CLIENT]
-                                  ,[CLIENT_PAYMENT]
-                                  ,[PHOTO_ALBUM]
-                                  ,[SUBSCRIPTION_PLAN_TYPE]
-                                  ,[created_at]
-                                  ,[updated_at]
-                                  ,[created_by]
-                                  ,[updated_by]
-                              FROM [dbo].[SUBSCRIPTION_PLAN_MASTER_1919] where SUBSCRIPTION_PLAN_TYPE = 'BUSINESS' and IS_VISIBLE = 'Y'";
+                                ,[formGroupKey]
+                                ,[PLAN_NAME]
+                                ,[PLAN_DESC]
+                                ,[PLAN_PRICE]
+                                ,[NUM_OF_AVAIL_CLR]
+                                ,[VALID_SESSIONS]
+                                ,[PAYMENT_TRAN_FEE]
+                                ,[PLAN_STATUS]
+                                ,[created_at]
+                                ,[VALID_BOOKING_SESSION]
+                              FROM [dbo].[BUSINESS_PLAN_MASTER_1966] where PLAN_STATUS = 'Y'";
 
             List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -2292,7 +2283,7 @@ namespace Barrway.Service.Repository
                                           ,[ORDER_ID]
                                           ,[PAYMENT_ID]
                                           ,[PLAN_ID]
-	                                      ,subscriptionPlan.SUBSCRIPTION_PLAN_NAME
+	                                      ,subscriptionPlan.PLAN_NAME
                                           ,[PAYMENT_DESCRIPTION]
                                           ,[PAYMENT_METHOD]
                                           ,[HKD]
@@ -2301,7 +2292,7 @@ namespace Barrway.Service.Repository
                                           ,[COMPANY_ID]
                                       FROM [dbo].[COMPANY_PAYMENT_HISTORY_MASTER_1937] history
                                       join BUSINESS_COMPANY_MASTER_1924 company on company.Id = history.COMPANY_ID
-                                      join SUBSCRIPTION_PLAN_MASTER_1919 subscriptionPlan on subscriptionPlan.Id = history.PLAN_ID
+                                      join BUSINESS_PLAN_MASTER_1966 subscriptionPlan on subscriptionPlan.Id = history.PLAN_ID
                                       where company.IS_ACTIVE = 'Y' and company.Id = '{CompanyId}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
                                     )
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
