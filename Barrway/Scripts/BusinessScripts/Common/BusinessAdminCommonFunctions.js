@@ -2,6 +2,21 @@
     window.location.href = "/Calendar/PaymentReceipt?Id=" + LedgerId;
 }
 
+function getBusiness() {
+    var data;
+    $.ajax({
+        url: "/BusinessAdmin/GetAllAssignedBusinessList/",
+        async: false,
+        type: "GET",
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    });
+    return data;
+}
 
 function getCompanyWebsite() {
     var data;

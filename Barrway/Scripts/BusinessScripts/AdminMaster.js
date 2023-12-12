@@ -64,6 +64,7 @@ function ShowAssignModal(Id) {
                 });
                 $("#tom-select-container").append(elements + "</select>");
                 new TomSelect("#company-selector", {});
+                $("#update-permit-btn").attr("onclick", `UpdatePermissions(${Id})`);
             }
         },
         error: function (err) {
@@ -83,12 +84,56 @@ $(document).on("click", "input[name=assign-module-radio]", function () {
     }
 });
 
-function UpdatePermissions() {
+function UpdatePermissions(Id) {
     if (confirm("Are you sure you want to update the permissions?")) {
         if ($("input[name=assign-module-radio]:checked").attr('id').split('-')[1] == 'company') {
-            alert("company");
+            var selectedData = $("#company-selector").val()
+            if (selectedData != null) {
+                if (selectedData.length > 0) {
+
+                    var finalData = [];
+
+                    selectedData.forEach(x => {
+                        finalData.push({
+                            ASSIGN_ID: Id,
+                            COMPANY_ID: x
+                        });
+                    });
+
+                    if (finalData.length > 0) {
+
+                        $.ajax({
+                            url: "/BusinessAdmin/UpdateAssignedCompany",
+                            type: "POST",
+                            data: {
+                                data: finalData
+                            },
+                            success: function (success) {
+                                
+                                swal({
+                                    icon: "success",
+                                    title: "Success",
+                                    text: "Permissions Updated Successfully!"
+                                }).then(function (check) {
+                                    ShowAssignModal(Id);
+                                });
+                            },
+                            error: function (err) {
+
+                            }
+                        })
+
+                    }
+
+
+                } else {
+                    alert("Please select a company");
+                }
+            } else {
+                alert("Please select a company");
+            }
         } else {
-            alert("business");
+            AssignSuperUser(Id);
         }
     }
     

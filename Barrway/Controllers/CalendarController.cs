@@ -207,7 +207,7 @@ namespace Barrway.Controllers
             var locationListData = await masterService.GetSingleTransactionMaster(TransactionId);
             var transactionData = locationListData.Data;
 
-            var companies = await businessUserService.GetAllCompaniesByUserId(User.Identity.Name.ToString());
+            var companies = await businessUserService.GetAllCompaniesByUserId(UserIdentity.UserID.ToString());
 
             var validCompanyCheck = false;
 
@@ -241,7 +241,7 @@ namespace Barrway.Controllers
         {
             List<BulkAttendanceModel> AttendanceData = JsonConvert.DeserializeObject<List<BulkAttendanceModel>>(AttendanceJsonString);
 
-            var result = await businessUserService.UpdateTransactionAttendance(AttendanceData, User.Identity.Name.ToString());
+            var result = await businessUserService.UpdateTransactionAttendance(AttendanceData, UserIdentity.UserID.ToString());
 
             return Json(result, JsonRequestBehavior.AllowGet);
 

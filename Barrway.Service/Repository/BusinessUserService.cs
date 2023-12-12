@@ -100,6 +100,47 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> UpdateAssignedCompany(List<UserAssignedCompanyModel> modelList)
+        {
+            try
+            {
+
+                string sqlQuery = $@"delete from USER_ASSIGNED_COMPANIES_1967 where ASSIGN_ID = '{modelList.FirstOrDefault().ASSIGN_ID}'";
+                var result = await sqlFunction.ExecuteSqlCommandQuery(sqlQuery);
+
+                List<string> requestList = new List<string>();
+                List<string> formGroupKeyListTemp = new List<string>();
+
+                modelList.ForEach(assign =>
+                {
+                    requestList.Add(CustomMethods.ConvertDicToNameValuePair(assign.ToDictionary()));
+                    formGroupKeyListTemp.Add(Guid.NewGuid().ToString());
+                });
+
+                Form_DataTable request = new Form_DataTable();
+                request.action = (int)FormAction.Save;
+                request.formId = (int)FormSetting.USER_ASSIGNED_COMPANIES;
+                request.IsMaxOneRecordPerUser = false;
+                request.formfieldDataListTempList = requestList.ToArray();
+                request.formGroupKeyListTemp = formGroupKeyListTemp.ToArray();
+                var formResult = (await formAPIRepository.BulkGeneratedFormData(request)).Data;
+
+                if (formResult.res == 1)
+                {
+                    return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Message = formResult.Message, Status = false };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message.ToString() };
+            }
+        }
+
         public async Task<AddUpdateDelete> DeleteAdmin(string Id)
         {
             try
@@ -151,6 +192,25 @@ namespace Barrway.Service.Repository
             {
                 var businessWebsite = businessWebsiteResult.FirstOrDefault();
                 return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = businessWebsite };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetAllAssignedBusinessList(string UserId)
+        {
+            string query = $@"select * from BUSINESS_ACCOUNT_WEBSITE_1918 f
+                                join BUSINESS_ASSIGNED_USERS_1964 bau on bau.BUSINESS_ACCOUNT_ID = f.Id
+                                where bau.ASSIGNED_USER = '{UserId}'";
+
+            List<IDictionary<string, object>> BusinessResult = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (BusinessResult.Count > 0)
+            {
+                var businessCompany = BusinessResult.ToList();
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = businessCompany };
             }
             else
             {
@@ -340,9 +400,11 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetAllCompaniesByUserId(string UserId)
         {
-            string query = $@"SELECT company.[Id]      ,company.[created_at]      ,company.[updated_at]      ,company.[created_by]      ,company.[updated_by]     ,[BUSINESS_ACCOUNT_ID]      ,[COMPANY_CODE]      ,[COMPANY_NAME_ENGLISH]      ,[COMPANY_NAME_CHINESE]      ,[COMPANY_LOGO_NAME]      ,[COMPANY_LOGO_PATH]      ,[COMPANY_BANNER_NAME]      ,[COMPANY_BANNER_PATH]      ,[COMPANY_PHONE]      ,[COMPANY_ADDRESS]      ,[FACEBOOK_URL]      ,[INSTAGRAM_URL]      ,[WECHAT_URL]      ,[TWITTER_URL]      ,[PAGE_URL]      ,[COMPANY_DESCRIPTION]      ,[COMPANY_SERVICE]      ,[TAGS]      ,[IS_SEARCHABLE_IN_MARKETPLACE]      ,[COMPANY_CATEGORY_ID]      ,[COMPANY_SUB_CATEGORY_ID]      ,[COUNTRY_ID]      ,[CITY_ID]      ,[DISTRICT_ID]      ,[TOTAL_WEBSITE_VISITS]      ,[IS_DEFAULT], company.[IS_ACTIVE]  FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company
-                                JOIN BUSINESS_ACCOUNT_WEBSITE_1918 business on business.Id = company.BUSINESS_ACCOUNT_ID
-                                where company.IS_ACTIVE = 'Y' and business.USER_ID = '{UserId}'";
+            string query = $@"select f.* 
+                            from BUSINESS_COMPANY_MASTER_1924 f
+                            join USER_ASSIGNED_COMPANIES_1967 uac on uac.COMPANY_ID = f.Id
+                            join BUSINESS_ASSIGNED_USERS_1964 bau on bau.Id = uac.ASSIGN_ID
+                            where bau.ASSIGNED_USER = '{UserId}'";
 
             List<IDictionary<string, object>> BusinessCompanyResult = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -410,46 +472,13 @@ namespace Barrway.Service.Repository
             int PageNumber = data.page > 0 ? data.page : 1;
 
             string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
-                                    SELECT company.[Id]
-                                          ,company.[created_at]
-                                          ,company.[updated_at]
-                                          ,company.[created_by]
-                                          ,company.[updated_by]
-                                          ,[BUSINESS_ACCOUNT_ID]
-                                          ,[COMPANY_CODE]
-                                          ,[COMPANY_NAME_ENGLISH]
-                                          ,[COMPANY_NAME_CHINESE]
-                                          ,[COMPANY_LOGO_NAME]
-                                          ,[COMPANY_LOGO_PATH]
-                                          ,[COMPANY_BANNER_NAME]
-                                          ,[COMPANY_BANNER_PATH]
-                                          ,[COMPANY_PHONE]
-                                          ,[COMPANY_ADDRESS]
-                                          ,[FACEBOOK_URL]
-                                          ,[INSTAGRAM_URL]
-                                          ,[WECHAT_URL]
-                                          ,[TWITTER_URL]
-                                          ,[PAGE_URL]
-                                          ,[COMPANY_DESCRIPTION]
-                                          ,[COMPANY_SERVICE]
-                                          ,[TAGS]
-                                          ,[IS_SEARCHABLE_IN_MARKETPLACE]
-                                          ,company.[COMPANY_CATEGORY_ID]
-                                          ,company.[COMPANY_SUB_CATEGORY_ID]
-                                          ,[COUNTRY_ID]
-                                          ,[CITY_ID]
-                                          ,[DISTRICT_ID]
-                                          ,[TOTAL_WEBSITE_VISITS]
-                                          ,[IS_DEFAULT]
-                                          ,[COMPANY_EMAIL]
-                                          ,[IS_ACTIVE]
-	                                      ,[COMPANY_CATEGORY_NAME]
-	                                      ,[COMPANY_SUB_CATEGORY_NAME]
-                                      FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company
-                                      join COMPANY_CATEGORY_MASTER_1920 category on category.Id = company.COMPANY_CATEGORY_ID
-                                      join COMPANY_SUB_CATEGORY_MASTER_1921 subCategory on subCategory.Id = company.COMPANY_SUB_CATEGORY_ID
-                                    JOIN BUSINESS_ACCOUNT_WEBSITE_1918 business on business.Id = company.BUSINESS_ACCOUNT_ID
-                                    where company.IS_ACTIVE = 'Y' and business.USER_ID = '{UserId}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+                                    select (case when (bau.ROLE_TYPE='SUPERUSER') then 'Y' else 'N' end) as 'IS_EDITABLE'
+                                    ,baw.BUSINESS_CODE, company.* 
+                                    from BUSINESS_COMPANY_MASTER_1924 company
+                                    join USER_ASSIGNED_COMPANIES_1967 uac on uac.COMPANY_ID = company.Id
+                                    join BUSINESS_ASSIGNED_USERS_1964 bau on bau.Id = uac.ASSIGN_ID
+									join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.Id = bau.BUSINESS_ACCOUNT_ID
+                                    where bau.ASSIGNED_USER = '{UserId}' and company.IS_ACTIVE = 'Y' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")} 
                                     )
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
             var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
@@ -1007,9 +1036,13 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> GetDefaultCompanyByBusinessId(string BusinessAccountId)
+        public async Task<AddUpdateDelete> GetDefaultCompanyByBusinessId(string BusinessAccountId, string UserId)
         {
-            string query = "SELECT [Id]      ,[created_at]      ,[updated_at]      ,[created_by]      ,[updated_by]     ,[BUSINESS_ACCOUNT_ID]      ,[COMPANY_CODE]      ,[COMPANY_NAME_ENGLISH]      ,[COMPANY_NAME_CHINESE]      ,[COMPANY_LOGO_NAME]      ,[COMPANY_LOGO_PATH]      ,[COMPANY_BANNER_NAME]      ,[COMPANY_BANNER_PATH]      ,[COMPANY_PHONE]      ,[COMPANY_ADDRESS]      ,[FACEBOOK_URL]      ,[INSTAGRAM_URL]      ,[WECHAT_URL]      ,[TWITTER_URL]      ,[PAGE_URL]      ,[COMPANY_DESCRIPTION]      ,[COMPANY_SERVICE]      ,[TAGS]      ,[IS_SEARCHABLE_IN_MARKETPLACE]      ,[COMPANY_CATEGORY_ID]      ,[COMPANY_SUB_CATEGORY_ID],     [COMPANY_EMAIL]      ,[COUNTRY_ID]      ,[CITY_ID]      ,[DISTRICT_ID]      ,[TOTAL_WEBSITE_VISITS]      ,[IS_DEFAULT], [IS_ACTIVE]  FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] where BUSINESS_ACCOUNT_ID = '" + BusinessAccountId + "' and IS_ACTIVE = 'Y' and  and IS_DEFAULT = 'Y'";
+            string query = $@"select f.* 
+                                from BUSINESS_COMPANY_MASTER_1924 f
+                                join USER_ASSIGNED_COMPANIES_1967 uac on uac.COMPANY_ID = f.Id
+                                join BUSINESS_ASSIGNED_USERS_1964 bau on bau.Id = uac.ASSIGN_ID
+                                where bau.BUSINESS_ACCOUNT_ID = '{BusinessAccountId}' and bau.ASSIGNED_USER = '{UserId}' and f.IS_DEFAULT = 'Y'";
 
             List<IDictionary<string, object>> BusinessCompanyResult = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -1027,25 +1060,13 @@ namespace Barrway.Service.Repository
         public async Task<AddUpdateDelete> GetDefaultCompanyByUserId(string UserId)
         {
 
-            string query = $@"SELECT company.[Id]      
-,company.[created_at]      ,company.[updated_at]      
-,company.[created_by]      ,company.[updated_by]     
-,[BUSINESS_ACCOUNT_ID]      ,[COMPANY_CODE]      
-,[COMPANY_NAME_ENGLISH]      ,[COMPANY_NAME_CHINESE]      
-,[COMPANY_LOGO_NAME]      ,[COMPANY_LOGO_PATH]      
-,[COMPANY_BANNER_NAME]      ,[COMPANY_BANNER_PATH]      
-,[COMPANY_PHONE]      ,[COMPANY_ADDRESS]      
-,[FACEBOOK_URL]      ,[INSTAGRAM_URL]      ,[WECHAT_URL]      
-,[TWITTER_URL]      ,[PAGE_URL]      ,[COMPANY_DESCRIPTION]      
-,[COMPANY_SERVICE]      ,[TAGS]      ,[IS_SEARCHABLE_IN_MARKETPLACE]      
-,[COMPANY_CATEGORY_ID] ,     [COMPANY_EMAIL]     
-,[COMPANY_SUB_CATEGORY_ID]      ,[COUNTRY_ID]      
-,[CITY_ID]      ,[DISTRICT_ID]      
-,[TOTAL_WEBSITE_VISITS]      
-,[IS_DEFAULT], company.[IS_ACTIVE]  
-FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company 
-join BUSINESS_ACCOUNT_WEBSITE_1918 business on company.BUSINESS_ACCOUNT_ID = business.Id 
-where business.USER_ID = '" + UserId + "' and company.IS_ACTIVE = 'Y' and  IS_DEFAULT = 'Y'";
+            string query = $@"select f.* 
+                                from BUSINESS_COMPANY_MASTER_1924 f
+                                join USER_ASSIGNED_COMPANIES_1967 uac on uac.COMPANY_ID = f.Id
+                                join BUSINESS_ASSIGNED_USERS_1964 bau on bau.Id = uac.ASSIGN_ID
+                                join USER_MASTER_1915 um on um.Id = bau.ASSIGNED_USER
+                                join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.USER_ID = um.USER_ID
+                                where um.Id = '{UserId}'and f.IS_DEFAULT = 'Y' and baw.Id = bau.BUSINESS_ACCOUNT_ID and f.IS_ACTIVE = 'Y'";
 
 
             List<IDictionary<string, object>> BusinessCompanyResult = await sqlFunction.ExecuteSqlQuery(query);
@@ -1131,7 +1152,7 @@ where business.USER_ID = '" + UserId + "' and company.IS_ACTIVE = 'Y' and  IS_DE
             }
         }
 
-        public async Task<AddUpdateDelete> AddCompany(BusinessCompanyModel model, string UserId, bool IsDefault = false)
+        public async Task<AddUpdateDelete> AddCompany(BusinessCompanyModel model, string UserName, string UserId, bool IsDefault = false)
         {
             AddUpdateDelete CompanyDetails = new AddUpdateDelete()
             {
@@ -1182,7 +1203,7 @@ where business.USER_ID = '" + UserId + "' and company.IS_ACTIVE = 'Y' and  IS_DE
                               WHERE Id = {formResult.Id}";
                     int saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
 
-                    var website = await GetSingleBusinessWebsite(UserId);
+                    var website = await GetSingleBusinessWebsite(UserName);
 
                     if (website.Status)
                     {
@@ -1190,7 +1211,7 @@ where business.USER_ID = '" + UserId + "' and company.IS_ACTIVE = 'Y' and  IS_DE
 
                         if (website.Data["COMPANY_PROFILE_STATUS"].ToString() == "N")
                         {
-                            query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set COMPANY_PROFILE_STATUS = 'Y', updated_at = '" + DateTime.Now.ToString() + "' where USER_ID = '" + UserId + "'";
+                            query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set COMPANY_PROFILE_STATUS = 'Y', updated_at = '" + DateTime.Now.ToString() + "' where USER_ID = '" + UserName + "'";
                             saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                         }
 
@@ -1198,12 +1219,12 @@ where business.USER_ID = '" + UserId + "' and company.IS_ACTIVE = 'Y' and  IS_DE
                         {
                             if (website.Data["CURRENT_STEP"].ToString() == "COMPANY PROFILE")
                             {
-                                query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'CALENDAR', updated_at = '" + DateTime.Now.ToString() + "'  where USER_ID = '" + UserId + "'";
+                                query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'CALENDAR', updated_at = '" + DateTime.Now.ToString() + "'  where USER_ID = '" + UserName + "'";
                                 saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                             }
                             else if (website.Data["CURRENT_STEP"].ToString() == "COMPANY WEBSITE")
                             {
-                                query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'COMPLETED', updated_at = '" + DateTime.Now.ToString() + "'  where USER_ID = '" + UserId + "'";
+                                query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'COMPLETED', updated_at = '" + DateTime.Now.ToString() + "'  where USER_ID = '" + UserName + "'";
                                 saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
 
                                 // registration and 3 steps are completed here and now activate free plan of user
@@ -1244,6 +1265,27 @@ where business.USER_ID = '" + UserId + "' and company.IS_ACTIVE = 'Y' and  IS_DE
                                 var subscriptionSaveResult = await AddCompanySubscriptionDetails(companySubscriptionDetailsModel);
                             }
                         }
+
+                        string sqlQuery = $@"select * from BUSINESS_ASSIGNED_USERS_1964 where ASSIGN_ID = '{UserId}' and BUSINESS_ACCOUNT_ID = '{model.BUSINESS_ACCOUNT_ID}'";
+                        var assignResult = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+                        if (assignResult.Count > 0)
+                        {
+                            UserAssignedCompanyModel userAssignedCompanyModel = new UserAssignedCompanyModel()
+                            {
+                                ASSIGN_ID = assignResult.FirstOrDefault()["Id"]?.ToString(),
+                                COMPANY_ID = formResult.Id.ToString(),
+                                STATUS = "ACTIVE"
+                            };
+
+                            var addAssignedCompanyResult = await UpdateAssignedCompany(new List<UserAssignedCompanyModel>()
+                            {
+                                userAssignedCompanyModel
+                            });
+
+                        }
+                        
+
                     }
 
                     return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() };
@@ -1304,13 +1346,13 @@ where business.USER_ID = '" + UserId + "' and company.IS_ACTIVE = 'Y' and  IS_DE
 
                 if (saveResult > 0)
                 {
-                    var website = await GetSingleBusinessWebsite(UserId);
+                    var website = await GetSingleBusinessWebsite(UserName);
 
                     if (website.Status)
                     {
                         if (website.Data["COMPANY_PROFILE_STATUS"].ToString() == "N")
                         {
-                            query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set COMPANY_PROFILE_STATUS = 'Y', updated_at = getdate() where USER_ID = '" + UserId + "'";
+                            query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set COMPANY_PROFILE_STATUS = 'Y', updated_at = getdate() where USER_ID = '" + UserName + "'";
                             saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                         }
 
@@ -1319,12 +1361,12 @@ where business.USER_ID = '" + UserId + "' and company.IS_ACTIVE = 'Y' and  IS_DE
                         {
                             if (website.Data["CURRENT_STEP"].ToString() == "COMPANY PROFILE")
                             {
-                                query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'CALENDAR', updated_at = getdate()  where USER_ID = '" + UserId + "'";
+                                query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'CALENDAR', updated_at = getdate()  where USER_ID = '" + UserName + "'";
                                 saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                             }
                             else if (website.Data["CURRENT_STEP"].ToString() == "COMPANY WEBSITE")
                             {
-                                query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'COMPLETED', updated_at = getdate()  where USER_ID = '" + UserId + "'";
+                                query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'COMPLETED', updated_at = getdate()  where USER_ID = '" + UserName + "'";
                                 saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
 
                             }
