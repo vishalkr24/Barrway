@@ -45,7 +45,8 @@ namespace Barrway.Utility.Common
         PAYMENT_TRACKER = 2324,
         LEDGER_MASTER = 2327,
         PAYMENT_HISTORY_MASTER = 2326,
-        BUSINESS_ASSIGNED_USERS = 2334
+        BUSINESS_ASSIGNED_USERS = 2334,
+        USER_ASSIGNED_COMPANIES = 2336
     }
 
     public enum FormAction

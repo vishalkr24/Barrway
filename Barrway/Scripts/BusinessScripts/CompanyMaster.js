@@ -21,8 +21,8 @@ function setCalendarMaster() {
         var columns = [
             {
                 title: '', field: 'ACTION', formatter: function (cell, formatter) {
-                    console.log(cell.getRow().getData());
-                    return `<a href='#' onclick="editCompanyMaster(${cell.getRow().getData().Id})" class="btn btn-primary text-light" style="border-radius:300px;">Edit</a> ${(cell.getRow().getData().Id == localStorage.getItem("COMPANY_ID")) ? " <a href='#' class='btn btn-success text-light' disabled style='border-radius:300px;'>Current</a>" : `<a href='#' onclick="changeCompanyMaster(${cell.getRow().getData().Id})" class="btn btn-warning text-light" style="border-radius:300px; background:#E2476C;">Change</a>` } `;
+                    return `${(cell.getRow().getData().Id == localStorage.getItem("COMPANY_ID")) ? " <a href='#' class='btn btn-success text-light' disabled style='border-radius:300px;'>Current</a>" : `<a href='#' onclick="changeCompanyMaster(${cell.getRow().getData().Id})" class="btn btn-warning text-light" style="border-radius:300px; background:#E2476C;">Change</a>`} 
+                            <a href='#' onclick="editCompanyMaster(${cell.getRow().getData().Id})" class="btn btn-primary text-light" style="border-radius:300px;">Edit</a> `;
                 }, headerSort: false
             },
             { title: 'Company Code', field: 'COMPANY_CODE', headerFilter: "input" },
@@ -44,12 +44,22 @@ function setCalendarMaster() {
                 tooltips: function (cell) {
                     return cell.getValue();
                 },
+                groupBy: "BUSINESS_CODE",
+                groupStartOpen: true,
                 height: "530px",
                 layout: "fitDataFill",
                 responsiveLayout: false,
                 initialSort: [
                     { column: "created_at", dir: "desc" }
                 ],
+                rowClick: function (e, row) {
+                    //e - the click event object
+                    //row - row component
+                    if (row.getData().IS_EDITABLE == 'Y') {
+                        row.toggleSelect();
+                    }
+                    //toggle row selected state on row click
+                },
                 persistenceID: "persisrecords",
                 persistenceMode: true,
                 persistentLayout: true,

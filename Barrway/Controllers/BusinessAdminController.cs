@@ -119,7 +119,7 @@ namespace Barrway.Controllers
                 return View();
             }
 
-            var company = await businessUserService.GetDefaultCompanyByUserId(User.Identity.Name.ToString());
+            var company = await businessUserService.GetDefaultCompanyByUserId(UserIdentity.UserID.ToString());
 
             if (company.Status)
             {
@@ -152,7 +152,7 @@ namespace Barrway.Controllers
                     if (string.IsNullOrEmpty(CompanyId))
                     {
                         // If Company Id is not passed
-                        var company = await businessUserService.GetDefaultCompanyByUserId(User.Identity.Name.ToString());
+                        var company = await businessUserService.GetDefaultCompanyByUserId(UserIdentity.UserID.ToString());
 
                         if (company.Status)
                         {
@@ -182,7 +182,7 @@ namespace Barrway.Controllers
                         calendarModel.CalendarControlSheet = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
                     }
 
-                   
+
                 }
                 else
                 {
@@ -205,7 +205,7 @@ namespace Barrway.Controllers
                     calendarModel.CalendarControlSheet = JsonConvert.DeserializeObject<CalendarControlModel>(JsonConvert.SerializeObject(data.Data["controlSheet"]));
                 }
 
-                
+
 
                 return View(calendarModel);
 
@@ -385,10 +385,11 @@ namespace Barrway.Controllers
             try
             {
                 var user = await authService.GetUser(User.Identity.Name);
-                
+
                 return Json(new AddUpdateDelete() { Status = true, Data = user.Data, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
 
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
             }
@@ -402,7 +403,7 @@ namespace Barrway.Controllers
 
                 if (website.Data["COMPANY_PROFILE_STATUS"].ToString() == "Y")
                 {
-                    var company = await businessUserService.GetDefaultCompanyByBusinessId(((int)website.Data["Id"]).ToString());
+                    var company = await businessUserService.GetDefaultCompanyByBusinessId(((int)website.Data["Id"]).ToString(), UserIdentity.UserID.ToString());
 
                     if (company.Status)
                     {
@@ -472,14 +473,14 @@ namespace Barrway.Controllers
                 return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
             }
 
-            
+
         }
 
         public async Task<ActionResult> GetAllCompanies()
         {
             try
             {
-                var company = await businessUserService.GetAllCompaniesByUserId(User.Identity.Name.ToString());
+                var company = await businessUserService.GetAllCompaniesByUserId(UserIdentity.UserID.ToString());
 
                 if (company.Status)
                 {
@@ -495,6 +496,27 @@ namespace Barrway.Controllers
                 return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
             }
 
+        }
+
+        public async Task<ActionResult> GetAllAssignedBusinessList()
+        {
+            try
+            {
+                var company = await businessUserService.GetAllAssignedBusinessList(UserIdentity.UserID.ToString());
+
+                if (company.Status)
+                {
+                    return Json(new AddUpdateDelete() { Status = true, Data = company.Data, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new AddUpdateDelete() { Status = false, Message = "Company Not Found" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         public async Task<ActionResult> GetAllCalendarTemplatesByCategory(string CalendarCategoryId)
@@ -524,7 +546,7 @@ namespace Barrway.Controllers
         {
             try
             {
-                var transactionData = await businessUserService.GetAllCompaniesMasterByUserId(data, User.Identity.Name.ToString());
+                var transactionData = await businessUserService.GetAllCompaniesMasterByUserId(data, UserIdentity.UserID.ToString());
                 var transactionList = transactionData.Data;
                 double last_page = 0;
                 if (transactionList != null && transactionList.Count > 0)
@@ -578,7 +600,7 @@ namespace Barrway.Controllers
                 double last_page = 0;
                 if (transactionList != null && transactionList.Count > 0)
                 {
-                    var singData = transactionList[0];  
+                    var singData = transactionList[0];
                     var total_records = Convert.ToInt32(singData["total_records"].ToString());
                     var size = Convert.ToInt32(singData["size"].ToString());
                     double paging = (double)total_records / size;
@@ -605,90 +627,84 @@ namespace Barrway.Controllers
                     return View("SetupCompanyProfile");
                 }
 
-                var website = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
+                //var website = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
 
-                if (!website.Status)
+                //if (!website.Status)
+                //{
+                //    // Create Business Account (Business account is missing)
+
+                //    BusinessAccountWebsiteModel businessModel = new BusinessAccountWebsiteModel()
+                //    {
+                //        USER_ID = User.Identity.Name,
+                //        COMPANY_PROFILE_STATUS = "N",
+                //        COMPANY_CALENDAR_STATUS = "N",
+                //        CURRENT_STEP = (UserIdentity.Role == "SUPERADMIN_USER") ? "COMPLETED" : "COMPANY PROFILE"
+                //    };
+
+                //    AddUpdateDelete businessResult = await businessUserService.CreateBusinessWebsite(businessModel);
+
+                //    website = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
+                //}
+
+
+
+
+                BusinessCompanyModel businessCompanyModel = new BusinessCompanyModel()
                 {
-                    // Create Business Account (Business account is missing)
+                    BUSINESS_ACCOUNT_ID = model.BUSINESS_ACCOUNT_ID,
+                    COMPANY_NAME_ENGLISH = model.COMPANY_NAME_ENGLISH,
+                    COMPANY_NAME_CHINESE = model.COMPANY_NAME_CHINESE,
+                    Id = model.Id,
+                    IS_ACTIVE = "Y",
+                    COMPANY_CATEGORY_ID = model.COMPANY_CATEGORY_ID,
+                    COMPANY_SUB_CATEGORY_ID = model.COMPANY_SUB_CATEGORY_ID,
+                    IS_TEMPLATE = (UserIdentity.Role == "SUPERADMIN_USER") ? "Y" : "N"
+                };
 
-                    BusinessAccountWebsiteModel businessModel = new BusinessAccountWebsiteModel()
-                    {
-                        USER_ID = User.Identity.Name,
-                        COMPANY_PROFILE_STATUS = "N",
-                        COMPANY_CALENDAR_STATUS = "N",
-                        CURRENT_STEP = (UserIdentity.Role == "SUPERADMIN_USER") ? "COMPLETED" : "COMPANY PROFILE"
-                    };
+                var defaultStatus = false;
 
-                    AddUpdateDelete businessResult = await businessUserService.CreateBusinessWebsite(businessModel);
-
-                    website = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
-                }
-
-
-                if (website.Status)
+                if (IsNew)
                 {
-                    BusinessCompanyModel businessCompanyModel = new BusinessCompanyModel()
+                    var singleCompany = await businessUserService.GetDefaultCompanyByUserId(UserIdentity.UserID.ToString());
+
+                    if (singleCompany.Status)
                     {
-                        BUSINESS_ACCOUNT_ID = ((int)website.Data["Id"]).ToString(),
-                        COMPANY_NAME_ENGLISH = model.COMPANY_NAME_ENGLISH,
-                        COMPANY_NAME_CHINESE = model.COMPANY_NAME_CHINESE,
-                        Id = model.Id,
-                        IS_ACTIVE = "Y",
-                        COMPANY_CATEGORY_ID = model.COMPANY_CATEGORY_ID,
-                        COMPANY_SUB_CATEGORY_ID = model.COMPANY_SUB_CATEGORY_ID,
-                        IS_TEMPLATE = (UserIdentity.Role == "SUPERADMIN_USER")? "Y": "N"
-                    };
-
-                    var defaultStatus = false;
-
-                    if (IsNew)
-                    {
-                        var singleCompany = await businessUserService.GetDefaultCompanyByUserId(User.Identity.Name.ToString());
-
-                        if (singleCompany.Status)
-                        {
-                            defaultStatus = false;
-                        }
-                        else
-                        {
-                            defaultStatus = true;
-                        }
-                    }
-
-                    var saveDataResult = await businessUserService.AddCompany(businessCompanyModel, User.Identity.Name.ToString(), defaultStatus);
-
-                    if (saveDataResult.Status)
-                    {
-                        if (UserIdentity.Role == "SUPERADMIN_USER")
-                        {
-                            return RedirectToAction("CompanyMaster");
-                        }
-
-                        website = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
-
-                        if (website.Data["COMPANY_PROFILE_STATUS"].ToString() == "Y")
-                        {
-                            return RedirectToAction("Dashboard");
-                        }
-                        else
-                        {
-                            return RedirectToAction("SetupCompanyCalendar", saveDataResult);
-                        }
-
+                        defaultStatus = false;
                     }
                     else
                     {
-                        ViewBag.IsNew = IsNew;
-                        return View("SetupCompanyProfile");
+                        defaultStatus = true;
                     }
+                }
+
+                var saveDataResult = await businessUserService.AddCompany(businessCompanyModel, User.Identity.Name.ToString(), UserIdentity.UserID, defaultStatus);
+
+                if (saveDataResult.Status)
+                {
+
+
+                    if (UserIdentity.Role == "SUPERADMIN_USER")
+                    {
+                        return RedirectToAction("CompanyMaster");
+                    }
+
+                    var website = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
+
+                    if (website.Data["COMPANY_PROFILE_STATUS"].ToString() == "Y")
+                    {
+                        return RedirectToAction("Dashboard");
+                    }
+                    else
+                    {
+                        return RedirectToAction("SetupCompanyCalendar", saveDataResult);
+                    }
+
                 }
                 else
                 {
                     ViewBag.IsNew = IsNew;
                     return View("SetupCompanyProfile");
                 }
-
-
 
             }
             catch (Exception ex)
@@ -697,7 +713,7 @@ namespace Barrway.Controllers
                 return View("SetupCompanyProfile");
             }
         }
-        
+
         public async Task<ActionResult> GetCompanyActiveSubscriptionPlan(string CompanyId)
         {
             try
@@ -727,6 +743,12 @@ namespace Barrway.Controllers
             }
         }
 
+        /// <summary>
+        /// get list of all companies with assigned status used while assigning permissions to user
+        /// </summary>
+        /// <param name="AssignedId"></param>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
         public async Task<ActionResult> getAllAssignedCompanies(string AssignedId, string UserId)
         {
             try
@@ -747,6 +769,21 @@ namespace Barrway.Controllers
             try
             {
                 var Data = await businessUserService.UpdateAdmin(NewSuperUserId, OldSuperUserId, BusinessId);
+
+                return Json(Data, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateAssignedCompany(List<UserAssignedCompanyModel> data)
+        {
+            try
+            {
+                var Data = await businessUserService.UpdateAssignedCompany(data);
 
                 return Json(Data, JsonRequestBehavior.AllowGet);
             }
@@ -902,8 +939,8 @@ namespace Barrway.Controllers
                     companyModel.COMPANY_BANNER_NAME = model.COMPANY_BANNER_PATH.FileName.ToString();
                     companyModel.COMPANY_BANNER_PATH = path2;
                 }
-                
-                var saveDataResult = await businessUserService.AddCompany(companyModel, User.Identity.Name.ToString());
+
+                var saveDataResult = await businessUserService.AddCompany(companyModel, User.Identity.Name.ToString(), UserIdentity.UserID);
 
                 if (saveDataResult.Status)
                 {
@@ -970,7 +1007,7 @@ namespace Barrway.Controllers
                 if (company.Status)
                 {
                     // commented code of calendar count check because of superadmin integration in business functionality if in future it needs to be activated we check the role of if role is superadmin we will allow to create a calendar
-                    var companyData= company.Data as IDictionary<string, object>;
+                    var companyData = company.Data as IDictionary<string, object>;
 
                     var currentPlan = await businessUserService.GetCompanyActiveSubscriptionDetails(company.Data["Id"]?.ToString());
 
@@ -1022,7 +1059,7 @@ namespace Barrway.Controllers
                             CALENDAR_PHOTO_NAME = fileName,
                             CALENDAR_PHOTO_PATH = path,
                             SLOT_DURATION_IN_MINS = model.SLOT_DURATION_IN_MINS,
-                            CALENDAR_TEMPLATE_ID = (UserIdentity.Role != "SUPERADMIN_USER")? ((string.IsNullOrEmpty(model.CALENDAR_TEMPLATE_ID?.ToString())) ? "" : model.CALENDAR_TEMPLATE_ID?.ToString()) : "0",
+                            CALENDAR_TEMPLATE_ID = (UserIdentity.Role != "SUPERADMIN_USER") ? ((string.IsNullOrEmpty(model.CALENDAR_TEMPLATE_ID?.ToString())) ? "" : model.CALENDAR_TEMPLATE_ID?.ToString()) : "0",
                             IS_VISIBLE = "Y",
                             Id = model.Id,
                             SCHEDULAR_ID = (string.IsNullOrEmpty(model.SCHEDULAR_ID)) ? "" : model.SCHEDULAR_ID,
@@ -1129,7 +1166,7 @@ namespace Barrway.Controllers
                         return View("SetupCompanyCalendar", model);
                     }
 
-                    
+
                 }
                 else
                 {
@@ -1148,7 +1185,7 @@ namespace Barrway.Controllers
                 {
                     // for business id
                     var business = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
-                    
+
                     HttpFileCollectionBase files = Request.Files;
                     string CompanyCode = Request.Form["CompanyCode"].ToString();
                     string CompanyId = Request.Form["CompanyId"].ToString();
@@ -1204,7 +1241,7 @@ namespace Barrway.Controllers
                             // Save image in folder
                             file.SaveAs(Server.MapPath("~/UploadCompanyPhotoAlbum/" + business.Data["Id"].ToString() + "/" + CompanyCode + "/" + fname));
                         }
-                        
+
                     }
 
                     return Json("Success", JsonRequestBehavior.AllowGet);
@@ -1221,7 +1258,7 @@ namespace Barrway.Controllers
             {
                 return Json("No files selected.", JsonRequestBehavior.AllowGet);
             }
-            
+
         }
 
         [HttpPost]
@@ -1232,7 +1269,7 @@ namespace Barrway.Controllers
                 if (Convert.ToInt32(Id) > 0)
                 {
                     // for business id
-                    var companies = await businessUserService.GetAllCompaniesByUserId(User.Identity.Name.ToString());
+                    var companies = await businessUserService.GetAllCompaniesByUserId(UserIdentity.UserID.ToString());
                     var photo = await businessUserService.GetSingleCompanyPhotoAlbum(Id);
 
                     bool ValidCompanyCheck = false;
@@ -1264,7 +1301,7 @@ namespace Barrway.Controllers
                     {
                         return Json("Not Found", JsonRequestBehavior.AllowGet);
                     }
-                    
+
                 }
                 else
                 {
@@ -1375,9 +1412,8 @@ namespace Barrway.Controllers
             try
             {
                 var calendarData = await businessUserService.GetCompanyCalendarByCompanyId(CompanyId);
-                
-                return Json(calendarData.Data, JsonRequestBehavior.AllowGet);
 
+                return Json(calendarData.Data, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

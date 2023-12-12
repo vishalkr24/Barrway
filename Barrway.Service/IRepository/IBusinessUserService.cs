@@ -19,10 +19,12 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> CreateBusinessWebsite(BusinessAccountWebsiteModel model);
         Task<AddUpdateDelete> AddBusinessAssignedUser(BusinessAssignedUsersModel model);
         Task<AddUpdateDelete> UpdateAdmin(string NewSuperUserId, string oldSuperUserId, string BusinessAccountId);
+        Task<AddUpdateDelete> UpdateAssignedCompany(List<UserAssignedCompanyModel> data);
         Task<AddUpdateDelete> DeleteAdmin(string Id);
         Task<AddUpdateDelete> GetSingleBusinessWebsite(string UserId);
+        Task<AddUpdateDelete> GetAllAssignedBusinessList(string UserId);
         #endregion
-        
+
 
         #region Photo Album
 
@@ -40,10 +42,10 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetAllCompaniesMasterByUserId(GenerateDynamicFormData data, string UserId);
         Task<AddUpdateDelete> GetAllBusinessAssignedUsers(GenerateDynamicFormData data, string UserId);
         Task<AddUpdateDelete> GetSingleBusinessUserMaster(GenerateDynamicFormData data, string UserId);
-        Task<AddUpdateDelete> AddCompany(BusinessCompanyModel model, string UserId, bool IsDefault = false);
+        Task<AddUpdateDelete> AddCompany(BusinessCompanyModel model, string UserName, string UserId, bool IsDefault = false);
         Task<AddUpdateDelete> UpdateCompanyService(BusinessCompanyModel model);
         Task<AddUpdateDelete> GetSingleCompanyByCompanyCode(string CompanyCode);
-        Task<AddUpdateDelete> GetDefaultCompanyByBusinessId(string BusinessAccountId);
+        Task<AddUpdateDelete> GetDefaultCompanyByBusinessId(string BusinessAccountId, string UserId);
         Task<AddUpdateDelete> GetDefaultCompanyByUserId(string UserId);
         Task<AddUpdateDelete> UpdateBusinessCompanyProfileStatusByUserId(string userId, bool isActive);
         Task<AddUpdateDelete> UpdateBusinessCompanyProfileStatusByBusinessId(string businessId, bool isActive);
