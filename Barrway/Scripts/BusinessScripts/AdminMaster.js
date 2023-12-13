@@ -1,13 +1,29 @@
 ﻿var tabulator = [];
+var tabulator2 = [];
 
 $(document).ready(function () {
     /*showNavbarNavigation('companyMasterMegaMenu');*/
     setCalendarMaster();
-    
+    bindBusinesses();
 })
 
+function bindBusinesses() {
+    debugger;
+    var businessData = getSuperBusiness();
+
+    var options = "";
+
+    $("#invite-business-selector").empty();
+
+    businessData.Data.forEach(x => {
+        options += `<option value="${x.BUSINESS_ACCOUNT_ID}">${x.BUSINESS_CODE} - ${x.USER_ID}</option>`;
+    });
+
+    $("#invite-business-selector").append(options);
+}
+
 function AssignSuperUser(Id) {
-    var data = tabulator.getData().filter(x=> x.Id == Id)[0];
+    var data = tabulator.getData().filter(x => x.Id == Id)[0];
     if (confirm("Are you sure to Assign " + data.USER_ID + " as Super User of " + data.BUSINESS_CODE + " Business? \n\n You will become Admin of " + data.BUSINESS_CODE + " and won't be able to update admins anymore!")) {
         let newSuperUserId = data.ASSIGNED_USER;
         let oldSuperUserId = tabulator.getData().filter(x => x.BUSINESS_CODE == data.BUSINESS_CODE && x.ROLE_TYPE == 'SUPERUSER')[0].ASSIGNED_USER;
@@ -30,7 +46,7 @@ function AssignSuperUser(Id) {
                 } else {
                     alert("User not assigned as super user.");
                 }
-                
+
             },
             error: function (err) {
 
@@ -84,6 +100,67 @@ $(document).on("click", "input[name=assign-module-radio]", function () {
     }
 });
 
+function sendInvitation() {
+    var email = $("#invite-input").val();
+    var businessId = $("#invite-business-selector option:selected").val();
+
+    if (!validateEmail(email)) {
+        swal({
+            icon: "warning",
+            title: "Invalid Email",
+            text: "Please enter a valid registered email address ONLY."
+        });
+    } else {
+        $.ajax({
+            url: "/BusinessAdmin/SendEmailInvite",
+            type: "POST",
+            data: {
+                Email: email,
+                BusinessId: businessId
+            },
+            success: function (response) {
+                if (response.Status) {
+                    swal({
+                        icon: "success",
+                        title: "Invite Sent",
+                        text: "Invitation for admin is sent successfully to " + email
+                    }).then(function (check) {
+                        $("#invite-input").val("");
+                        $("#EmailError").hide();
+                    })
+                } else {
+                    swal({
+                        icon: "error",
+                        title: "Invite Not Send",
+                        text: response.Message
+                    });
+                }
+            },
+            error: function (err) {
+
+            }
+        })
+    }
+
+}
+
+$(document).on("keyup", "#invite-input", function () {
+    if (!validateEmail($(this).val())) {
+        $("#EmailError").show()
+    } else {
+        $("#EmailError").hide()
+    }
+})
+
+
+const validateEmail = (email) => {
+    return String(email)
+        .toLowerCase()
+        .match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+};
+
 function UpdatePermissions(Id) {
     if (confirm("Are you sure you want to update the permissions?")) {
         if ($("input[name=assign-module-radio]:checked").attr('id').split('-')[1] == 'company') {
@@ -109,7 +186,7 @@ function UpdatePermissions(Id) {
                                 data: finalData
                             },
                             success: function (success) {
-                                
+
                                 swal({
                                     icon: "success",
                                     title: "Success",
@@ -136,13 +213,13 @@ function UpdatePermissions(Id) {
             AssignSuperUser(Id);
         }
     }
-    
+
 }
 
 function DeleteAdmin(Id) {
     var data = tabulator.getData().filter(x => x.Id == Id)[0];
     if (confirm("Are you sure to Delete " + data.USER_ID + " as Admin from " + data.BUSINESS_CODE + " Business?")) {
-        
+
         $.ajax({
             url: "/BusinessAdmin/DeleteAdmin",
             type: "POST",
@@ -184,7 +261,7 @@ function setCalendarMaster() {
                     } else {
                         return ``;
                     }
-                    
+
                 }, headerSort: false
             },
             { title: 'Business Code', field: 'BUSINESS_CODE', headerFilter: "input" },
@@ -277,8 +354,8 @@ function setCalendarMaster() {
                 ajaxConfig: "POST", //ajax HTTP request type
                 ajaxContentType: "json",
                 ajaxParams: { //ajax parameters
-                    
-                }, 
+
+                },
                 ajaxProgressiveLoad: "scroll",
                 ajaxProgressiveLoadScrollMargin: 75,
                 ajaxRequesting: function (url, params) {
@@ -287,8 +364,8 @@ function setCalendarMaster() {
                     if (params.sorters.length == 0) {
                         params.sorters.push({ field: "created_at", dir: "desc" });
                     }
-                        //if (called)
-                        //$('#form-records').block({ message: '<h4>Getting Form Records...</h4>' });
+                    //if (called)
+                    //$('#form-records').block({ message: '<h4>Getting Form Records...</h4>' });
                     return called; //abort ajax request
                 },
                 ajaxResponse: function (url, params, response) {
@@ -318,7 +395,130 @@ function setCalendarMaster() {
 
 }
 
+function setInvitationHistoryMaster() {
+    //var data = GetCompanyCalendars(localStorage.getItem("COMPANY_ID"), "", "");
+    //console.log(data);
+    $("#InvitationHistoryModal").modal("show");
+    var InvitationHistoryMasterList = function () {
+        var columns = [
+            {
+                title: 'Date', field: 'created_at', formatter: function (cell, formatter) {
+                    return moment(cell.getData().created_at).format("DD-MM-YYYY")
+                }
+            },
+            {
+                title: 'Status', field: 'STATUS', formatter: function (cell, formatter) {
+                    var status = cell.getData().STATUS.toUpperCase();
+                    return `<span style="background:${(status == "ACCEPT") ? "Green" : (status == "REJECT") ? "crimson" : "grey"}; color:white; text-transform: capitalize; border-radius: 3px; padding: 4px 8px; font-size: smaller;">${status.toLowerCase()}</span>`;
+                }
+            },
+            { title: 'Sent To', field: 'INVITED_EMAIL' },
 
+            { title: 'Sent By', field: 'USER_EMAIL' },
+            { title: 'Business Code', field: 'BUSINESS_CODE' }
+        ];
+
+        setTimeout(function () {
+            var options = {
+                placeholder: "No Data.",
+                tooltips: function (cell) {
+                    return cell.getValue();
+                },
+                height: "530px",
+                layout: "fitDataFill",
+                responsiveLayout: false,
+                initialSort: [
+                    { column: "created_at", dir: "desc" }
+                ],
+                persistenceID: "persisrecords",
+                persistenceMode: true,
+                persistentLayout: true,
+                persistence: {
+                    sort: false, //persist column sorting
+                    filter: false, //persist filter sorting
+                    columns: false, //persist columns
+                },
+                persistenceWriterFunc: function (id, type, data) {
+                    localStorage.setItem(id + "-" + type, JSON.stringify(data));
+                },
+                persistenceReaderFunc: function (id, type) {
+                    //id - tables persistence id
+                    //type - type of data being persisted ("sort", "filter", "group", "page" or "columns")
+                    var data = localStorage.getItem(id + "-" + type);
+                    var dataParse = JSON.parse(data);
+                    if (!DataService.isEmpty(data) && type == "columns") {
+                        _.each(headers, function (item) {
+                            var exists = _.findWhere(dataParse, {
+                                field: item.field
+                            });
+                            if (!DataService.isEmpty(exists)) {
+                                exists.visible = item.visible;
+                            }
+                        })
+                    }
+                    else if (type == "page") {
+                        if (!DataService.isEmpty(data) && $scope.paginationSizeFormRecords != 0)
+                            dataParse.paginationSize = $scope.paginationSizeFormRecords;
+                    }
+                    return data ? dataParse : false;
+                },
+                columns: columns,
+                footerElement: "<div style='text-align:left' id='no-of-forms'></div>",
+                dataLoaded: function (data) {
+                    //data - all data loaded into the table                        
+                    var count = 0;
+                    if (data.length > 0)
+                        count = data[0].total_records;
+                    $('#form-records-2 .tabulator-footer #no-of-forms').text("Total: " + count + " Entries");
+                },
+                /// pagination: "local",              
+                ajaxFiltering: true,
+                ajaxSorting: true,
+                ajaxLoader: true,
+                ajaxURL: "/BusinessAdmin/GetAllRecentInvites/",
+                ajaxConfig: "POST", //ajax HTTP request type
+                ajaxContentType: "json",
+                ajaxParams: { //ajax parameters
+
+                },
+                ajaxProgressiveLoad: "scroll",
+                ajaxProgressiveLoadScrollMargin: 75,
+                ajaxRequesting: function (url, params) {
+
+                    var called = true;
+                    if (params.sorters.length == 0) {
+                        params.sorters.push({ field: "created_at", dir: "desc" });
+                    }
+                    //if (called)
+                    //$('#form-records').block({ message: '<h4>Getting Form Records...</h4>' });
+                    return called; //abort ajax request
+                },
+                ajaxResponse: function (url, params, response) {
+                    //url - the URL of the request
+                    //params - the parameters passed with the request
+                    //response - the JSON object returned in the body of the response.
+                    //$('#form-records').unblock();
+                    //$.unblockUI();
+                    if (response.data) {
+                        return response;
+                    }
+                    else {
+                        return response;
+                    }
+
+                },
+                paginationSize: 50,
+
+            };
+            tabulator2 = initTabulator('form-records-2', options);
+            $('.form-builder-loader-2').hide();
+        }, 150);
+
+    };
+
+    InvitationHistoryMasterList();
+
+}
 
 function initTabulator(elementID, options) {
     if (!elementID) {

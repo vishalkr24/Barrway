@@ -23,6 +23,12 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> DeleteAdmin(string Id);
         Task<AddUpdateDelete> GetSingleBusinessWebsite(string UserId);
         Task<AddUpdateDelete> GetAllAssignedBusinessList(string UserId);
+        Task<AddUpdateDelete> GetSuperAssignedBusinessList(string UserId);
+        Task<AddUpdateDelete> SendEmailInvite(BusinessUserInvitationModel inviteModel);
+        Task<AddUpdateDelete> ValidateInvitationTokenAndUser(string Token, string UserId);
+        Task<AddUpdateDelete> UpdateInvitationStatus(string Token, string status);
+        Task<AddUpdateDelete> GetAllRecentInvites(GenerateDynamicFormData data, string UserId);
+        
         #endregion
 
 

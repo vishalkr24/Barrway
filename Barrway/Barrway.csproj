@@ -3244,6 +3244,7 @@
     <Content Include="Views\BusinessAdmin\CalendarTemplateMaster.cshtml" />
     <Content Include="Views\MarketPlace\Search.cshtml" />
     <Content Include="Views\BusinessAdmin\AdminMaster.cshtml" />
+    <Content Include="Views\BusinessAdmin\ViewInvitation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
