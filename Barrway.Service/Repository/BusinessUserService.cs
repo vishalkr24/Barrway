@@ -92,9 +92,10 @@ namespace Barrway.Service.Repository
                 {
                     return new AddUpdateDelete() { Status = false, Data = result, Message = AppMessage.SomeInternalError };
                 }
-                
 
-            }catch (Exception ex)
+
+            }
+            catch (Exception ex)
             {
                 return new AddUpdateDelete() { Status = false, Message = ex.Message };
             }
@@ -218,6 +219,178 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> GetSuperAssignedBusinessList(string UserId)
+        {
+            string query = $@"select * from BUSINESS_ACCOUNT_WEBSITE_1918 f
+                                join BUSINESS_ASSIGNED_USERS_1964 bau on bau.BUSINESS_ACCOUNT_ID = f.Id
+                                where bau.ASSIGNED_USER = '{UserId}' and bau.ROLE_TYPE = 'SUPERUSER'";
+
+            List<IDictionary<string, object>> BusinessResult = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (BusinessResult.Count > 0)
+            {
+                var businessCompany = BusinessResult.ToList();
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = businessCompany };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
+        public async Task<AddUpdateDelete> SendEmailInvite(BusinessUserInvitationModel inviteModel)
+        {
+            try
+            {                
+                Form_DataTable data = new Form_DataTable();
+                data.action = (int)FormAction.Save;
+                data.formId = (int)FormSetting.BUSINESS_USER_INVITATION_MANAGER;
+
+                data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(inviteModel.ToDictionary());
+                data.formGroupKey = Guid.NewGuid().ToString();
+                var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+
+                StringBuilder strBody = new StringBuilder();
+                strBody.Append($@"<body>
+                                    <div class='container'>
+                                        <div class='themes' style='background-color: #ffffff; width: 50%; margin:20px auto;'>
+                                            <div style='height: 70px;line-height: 70px;background-color: #ffffff;padding:0 20px; border-radius: 8px 8px 0 0'>
+                                                <h2 style='color: #3e6b6b;line-height: 70px;'>Barrway Business</h2>
+                                            </div>
+                                            <div class='content_body' style='padding:20px; text-align: left;'>
+                                                <p>Dear User,</p>
+                                                <p>Please click on the following link to view the invitation:</p>
+                                                <p style='text-align: center;'><a target='_blank' href='{ConfigurationManager.AppSettings["baseurl"]?.ToString() + "/BusinessAdmin/ViewInvitation?Token=" + inviteModel.REQUEST_TOKEN}' target='_blank' style='height: 35px;line-height:35px; background-color:#3e6b6b;color:#ece9e0;padding:8px 10px;cursor:pointer; border:0px;font-size:15px;text-decoration: none;'>View Invitation</a></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </body>");
+
+                var result = EmailNotification.SendEmailAsync(inviteModel.INVITED_EMAIL, strBody.ToString(), "Barrway Business Invite");
+                if (result)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = "Invite sent successfully" };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "Email not sent." };
+                }
+                
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message.ToString() };
+            }
+        }
+
+        public async Task<AddUpdateDelete> ValidateInvitationTokenAndUser(string Token, string UserId)
+        {
+            string sqlQuery = $@"select um.*, baw.BUSINESS_CODE, baw.Id as 'BUSINESS_ID'
+                                    from BUSINESS_USER_INVITATION_MANAGER_1965 f
+                                    join (select * from USER_MASTER_1915 where ROLE_ID = '1') um on um.USER_EMAIL = f.INVITED_EMAIL
+                                    join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.Id = f.BUSINESS_ACCOUNT_ID
+                                    where f.REQUEST_TOKEN = '{Token}' and um.Id = '{UserId}' and f.STATUS in ('PENDING','OPENED')";
+            var validationResult = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+            if (validationResult.Count > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = "Invitation Found", Data = validationResult.FirstOrDefault() };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = "Invitation Not Found" };
+            }
+        }
+
+        public async Task<AddUpdateDelete> UpdateInvitationStatus(string Token, string Status)
+        {
+            string sqlQuery = $@"update BUSINESS_USER_INVITATION_MANAGER_1965 set STATUS = '{Status}'
+                                 where REQUEST_TOKEN = '{Token}'";
+            var validationResult = await sqlFunction.ExecuteSqlCommandQuery(sqlQuery);
+            if (validationResult > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = "Invitation Updated" };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = "Invitation Not Upadated" };
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetAllRecentInvites(GenerateDynamicFormData data, string UserId)
+        {
+            Dictionary<string, string> filters = new Dictionary<string, string>() {
+                    { "COMPANY_CODE","company.COMPANY_CODE"},
+                    { "COMPANY_NAME_ENGLISH","company.COMPANY_NAME_ENGLISH"},
+                    { "COMPANY_NAME_CHINESE","company.COMPANY_NAME_CHINESE"},
+                    { "COMPANY_PHONE","company.COMPANY_PHONE"},
+                    { "COMPANY_CATEGORY_NAME","company.COMPANY_CATEGORY_NAME"},
+                    { "COMPANY_SUB_CATEGORY_NAME","company.COMPANY_SUB_CATEGORY_NAME"},
+                    { "created_at","company.created_at"},
+                    { "updated_at","calendar.updated_at"},
+            };
+
+            string column = "", dir = "";
+            if (data.sorters != null && data.sorters.Count() > 0)
+            {
+                column = data.sorters.FirstOrDefault().field;
+                dir = data.sorters.FirstOrDefault().dir;
+            }
+            else
+            {
+                column = "created_at";
+                dir = "desc";
+            }
+
+            List<string> applyFilter = new List<string>();
+            if (data.filters != null && data.filters.Count() > 0)
+            {
+                foreach (var item in data.filters)
+                {
+                    if (filters.Any(x => x.Key == item.field) && !string.IsNullOrEmpty(item.value))
+                    {
+                        if (item.field == "created_at" || item.field == "updated_at")
+                        {
+                            string filter = await sqlFunction.GetDateFilter(item, "company");
+                            applyFilter.Add(filter);
+                        }
+                        else
+                        {
+                            string filter = filters[item.field] + " like N'%" + item.value + "%'";
+                            applyFilter.Add(filter);
+                        }
+
+                    }
+                }
+            }
+
+            string applyFilterQuery = string.Join(" and ", applyFilter);
+            applyFilterQuery = applyFilterQuery.TrimEnd("and ".ToCharArray());
+
+            int PageSize = data.size > 0 ? data.size : 20;
+            int PageNumber = data.page > 0 ? data.page : 1;
+
+            string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+                                    select baw.BUSINESS_CODE, um.USER_EMAIL, f.* 
+                                    from BUSINESS_USER_INVITATION_MANAGER_1965 f
+                                    join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.Id = f.BUSINESS_ACCOUNT_ID
+                                    join USER_MASTER_1915 um on um.Id = f.SENT_BY
+                                    where f.SENT_BY = '{UserId}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")} 
+                                    )
+                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+            var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+            if (result.Count > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
         public async Task<AddUpdateDelete> GetSingleCompanyById(string Id)
         {
             string query = $@"SELECT company.[Id], city.CITY_NAME as 'COMPANY_CITY_NAME', district.DISTRICT_NAME as 'COMPANY_DISTRICT_NAME', country.COUNTRY_NAME as 'COMPANY_COUNTRY_NAME', category.COMPANY_CATEGORY_NAME, subCategory.COMPANY_SUB_CATEGORY_NAME      ,company.[created_at]      ,company.[updated_at]      ,company.[created_by]      ,company.[updated_by]     ,[BUSINESS_ACCOUNT_ID]      ,[COMPANY_CODE],     [COMPANY_EMAIL]      ,[COMPANY_NAME_ENGLISH]      ,[COMPANY_NAME_CHINESE]      ,[COMPANY_LOGO_NAME]      ,[COMPANY_LOGO_PATH]      ,[COMPANY_BANNER_NAME]      ,[COMPANY_BANNER_PATH]      ,[COMPANY_PHONE]      ,[COMPANY_ADDRESS]      ,[FACEBOOK_URL]      ,[INSTAGRAM_URL]      ,[WECHAT_URL]      ,[TWITTER_URL]      ,[PAGE_URL]      ,[COMPANY_DESCRIPTION]      ,[COMPANY_SERVICE]      ,[TAGS]      ,[IS_SEARCHABLE_IN_MARKETPLACE],     [COMPANY_EMAIL]      ,company.[COMPANY_CATEGORY_ID]      ,[COMPANY_SUB_CATEGORY_ID]      ,company.[COUNTRY_ID]      ,company.[CITY_ID]      ,[DISTRICT_ID]      ,[TOTAL_WEBSITE_VISITS]      ,[IS_DEFAULT],[IS_ACTIVE]  
@@ -256,7 +429,7 @@ namespace Barrway.Service.Repository
 
             string query5 = $@"select COUNT(serviceProvider_m.Id) as 'ServiceProviders' from SERVICE_PROVIDER_MASTER_1934 serviceProvider_m where COMPANY_CODE = '{CompanyCode}'";
 
-            string query6 = $@"select case when bau.ROLE_TYPE = 'SUPERUSER' then (select COUNT(assigned_m.Id) from BUSINESS_ASSIGNED_USERS_1964 assigned_m where BUSINESS_ACCOUNT_ID = '') else 0 end as 'Admins'  from USER_MASTER_1915 user_m
+            string query6 = $@"select case when bau.ROLE_TYPE = 'SUPERUSER' then (select COUNT(assigned_m.Id) from BUSINESS_ASSIGNED_USERS_1964 assigned_m where BUSINESS_ACCOUNT_ID = bau.BUSINESS_ACCOUNT_ID) else 0 end as 'Admins'  from USER_MASTER_1915 user_m
                                     join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.USER_ID = user_m.USER_ID
                                     join BUSINESS_ASSIGNED_USERS_1964 bau on bau.BUSINESS_ACCOUNT_ID = baw.Id
                                     join ROLE_MASTER_1917 user_role on user_role.Id = user_m.ROLE_ID
@@ -1284,7 +1457,7 @@ namespace Barrway.Service.Repository
                             });
 
                         }
-                        
+
 
                     }
 
@@ -1499,7 +1672,7 @@ namespace Barrway.Service.Repository
                                     CurrentResourceId = template["SCH_RESOURCE_Id"]?.ToString();
                                 }
                             }
-                            
+
 
                             // adding location items
                             GenerateDynamicFormData LocationRequest = new GenerateDynamicFormData()
@@ -1730,7 +1903,7 @@ namespace Barrway.Service.Repository
                                         }
                                     }
 
-                                    
+
                                     var excludeColumns = AppSettings.exclude_columns;
                                     IDictionary<string, object> temp = new Dictionary<string, object>();
                                     foreach (var key in template.Keys)
@@ -1964,7 +2137,7 @@ namespace Barrway.Service.Repository
                                         {
 
                                         }
-                                        
+
 
                                     }
 
@@ -2330,7 +2503,7 @@ namespace Barrway.Service.Repository
                 {
                     createNewSchedule = true;
                 }
-                
+
             }
             else
             {

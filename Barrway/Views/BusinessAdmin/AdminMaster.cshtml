@@ -19,9 +19,9 @@
                 border-radius: 4px;
                 height: 41px;
                 max-width: 130px !important;
-                background:white;
+                background: white;
                 border: 2px solid #377dff;
-                color:black;
+                color: black;
             }
 
             .selector-container {
@@ -30,7 +30,7 @@
 
             .assign-module-radio:checked + .btn-assign {
                 background: #377dff;
-                color:white;
+                color: white;
             }
         </style>
 
@@ -60,13 +60,71 @@
                                 <option selected value="4"></option>
                             </select>
                         </div>
-                        
+
                     </div>
 
                 </div>
                 <div class="modal-footer">
                     <button type="button" onclick="$('#AssignDetailsModal').modal('hide')" class="btn back">@Resource.Cancel</button>
                     <button type="button" id="update-permit-btn" class="btn btn-default">Update Permissions</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal modal-lg" id="InvitationHistoryModal" role="dialog">
+
+        <style>
+            .btn-assign {
+                outline: none;
+                border: none;
+                width: 130px;
+                border-radius: 4px;
+                height: 41px;
+                max-width: 130px !important;
+                background: white;
+                border: 2px solid #377dff;
+                color: black;
+            }
+
+            .selector-container {
+                padding: 16px 0px;
+            }
+
+            .assign-module-radio:checked + .btn-assign {
+                background: #377dff;
+                color: white;
+            }
+        </style>
+
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 style="font-size: calc(1.25625rem + 0.075vw)" class="modal-title"><b>Invitations Sent</b></h2>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="tabulator-section">
+                                <div class="form-builder-loader-2 text-center">
+                                    <div class="loader">
+                                        <i class="fa fa-spinner fa-pulse fa-fw"> </i>
+                                        <div>
+                                            Loading Form Tabulator...
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="form-records-2"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="$('#InvitationHistoryModal').modal('hide')" class="btn back">Close</button>
                 </div>
 
             </div>
@@ -93,8 +151,18 @@
                 .input-holder input {
                     outline: none;
                     border: none;
-                    width: calc(100% - 135px);
+                    width: calc(100% - 135px - 250px);
                     display: inline;
+                }
+
+                .input-holder select {
+                    width: 250px;
+                    float: left;
+                    border: none;
+                    border-bottom: 0px solid #e4daff;
+                    /*border-right: 1px solid #8171B0;*/
+                    border-radius: 0px;
+                    border-bottom-right-radius: 0px;
                 }
 
                 .input-holder button {
@@ -102,8 +170,10 @@
                     border: none;
                     width: 130px;
                     border-radius: 4px;
-                    height: 41px;
+                    height: 42px;
                     max-width: 130px !important;
+                    border-top-left-radius: 0px;
+                    border-bottom-left-radius: 0px;
                 }
 
             @@media screen and (max-width: 800px) {
@@ -113,6 +183,16 @@
                     border: none;
                     width: calc(100% - 105px);
                     display: inline;
+                }
+
+                .input-holder select {
+                    width: 100%;
+                    float: left;
+                    border: none;
+                    border-bottom: 1px solid #e4daff;
+                    /*border-right: 1px solid #8171B0;*/
+                    border-radius: 0px;
+                    border-bottom-right-radius: 0px;
                 }
 
                 .input-holder button {
@@ -141,15 +221,26 @@
 
         <div class="row mb-2">
             <div class="col-md-12 form-inner" style="max-width:100%;">
-                <h2><b>@Resource.Manage @Resource.Admin</b>s</h2>
+                <h2><b>@Resource.Manage @Resource.Admin</b></h2>
             </div>
             <div class="col-md-12 form-inner" style="max-width:100%;">
                 <div style="">
                     <div class="input-holder">
-                        <input type="text" class="form-control" placeholder="registered email address..." />
-                        <button class="btn btn-primary">Invite</button>
+                        <select class="form-control" id="invite-business-selector">
+                            <option>Loading Business...</option>
+                        </select>
+                        <input type="text" class="form-control" placeholder="registered email address..." id="invite-input" />
+
+                        <button class="btn btn-primary" onclick="sendInvitation()">Invite</button>
                     </div>
-                    <button title="View Invitations" class="btn btn-primary invitation-btn"><i class="fa fa-list" aria-hidden="true"></i></button>
+
+                    <button title="View Invitations" class="btn btn-primary invitation-btn" onclick="setInvitationHistoryMaster()"><i class="fa fa-list" aria-hidden="true"></i></button>
+                    <div style="height:20px;">
+                        <div id="EmailError" style="font-size:smaller; display:none; color:crimson; padding: 4px; width: 100%;">
+                            Invalid Email Address!
+                        </div>
+                    </div>
+
                 </div>
 
 

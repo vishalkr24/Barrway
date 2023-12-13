@@ -14,6 +14,7 @@ using FormGeneratorDTOs.DTOs;
 using System.Text;
 using System.Net.Http.Headers;
 using System.Net.Http;
+using Barrway.Utility.Common;
 
 namespace Barrway.Controllers
 {
@@ -110,6 +111,8 @@ namespace Barrway.Controllers
 
             return View();
         }
+
+        
 
         public async Task<ActionResult> SetupCompanyProfile(bool IsNew = false)
         {
@@ -519,6 +522,27 @@ namespace Barrway.Controllers
             }
         }
 
+        public async Task<ActionResult> GetSuperAssignedBusinessList()
+        {
+            try
+            {
+                var company = await businessUserService.GetSuperAssignedBusinessList(UserIdentity.UserID.ToString());
+
+                if (company.Status)
+                {
+                    return Json(new AddUpdateDelete() { Status = true, Data = company.Data, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new AddUpdateDelete() { Status = false, Message = "Company Not Found" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         public async Task<ActionResult> GetAllCalendarTemplatesByCategory(string CalendarCategoryId)
         {
             try
@@ -572,6 +596,30 @@ namespace Barrway.Controllers
             try
             {
                 var transactionData = await businessUserService.GetAllBusinessAssignedUsers(data, User.Identity.Name.ToString());
+                var transactionList = transactionData.Data;
+                double last_page = 0;
+                if (transactionList != null && transactionList.Count > 0)
+                {
+                    var singData = transactionList[0];
+                    var total_records = Convert.ToInt32(singData["total_records"].ToString());
+                    var size = Convert.ToInt32(singData["size"].ToString());
+                    double paging = (double)total_records / size;
+                    last_page = Math.Floor(paging) + 1;
+                }
+
+                return Json(new { data = transactionList, last_page }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public async Task<ActionResult> GetAllRecentInvites(GenerateDynamicFormData data)
+        {
+            try
+            {
+                var transactionData = await businessUserService.GetAllRecentInvites(data, UserIdentity.UserID.ToString());
                 var transactionList = transactionData.Data;
                 double last_page = 0;
                 if (transactionList != null && transactionList.Count > 0)
@@ -727,6 +775,101 @@ namespace Barrway.Controllers
                 return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
             }
 
+        }
+
+        public async Task<ActionResult> ViewInvitation(string Token)
+        {
+            var validationResult = await businessUserService.ValidateInvitationTokenAndUser(Token, UserIdentity.UserID);
+
+            BusinessUserInvitationModel model = new BusinessUserInvitationModel();
+
+            if (validationResult.Status)
+            {
+                model = new BusinessUserInvitationModel()
+                {
+                    BUSINESS_ACCOUNT_ID = validationResult.Data["BUSINESS_CODE"]?.ToString(),
+                    SENT_BY = validationResult.Data["USER_EMAIL"]?.ToString(),
+                    REQUEST_TOKEN = Token,
+                    Id = validationResult.Data["BUSINESS_ID"]?.ToString(),
+                };
+                var updateResult = await businessUserService.UpdateInvitationStatus(Token, "OPENED");
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ApproveRejectInvite(BusinessUserInvitationModel model)
+        {
+            try
+            {
+                var result = await businessUserService.UpdateInvitationStatus(model.REQUEST_TOKEN, model.STATUS);
+                if (result.Status)
+                {
+                    if (model.STATUS.ToUpper() == "ACCEPT")
+                    {
+                        var result2 = await businessUserService.AddBusinessAssignedUser(new BusinessAssignedUsersModel()
+                        {
+                            ASSIGNED_USER = UserIdentity.UserID,
+                            BUSINESS_ACCOUNT_ID = model.Id,
+                            ROLE_TYPE = "ADMIN"
+                        });
+
+                        if (result2.Status)
+                        {
+                            var result3 = await businessUserService.UpdateAssignedCompany(new List<UserAssignedCompanyModel>()
+                            {
+                                new UserAssignedCompanyModel()
+                                {
+                                    ASSIGN_ID = result2.Data,
+                                    COMPANY_ID = "",
+                                    STATUS = "ACTIVE"
+                                }
+                            });
+                        }
+
+                    }
+                }
+                else
+                {
+                    return View(model);
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            
+            return RedirectToAction("Dashboard");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> SendEmailInvite(string Email, string BusinessId)
+        {
+            try
+            {
+                if (Email == UserIdentity.UserEmail)
+                {
+                    return Json(new AddUpdateDelete() { Status = false, Message = "You can't invite your business."}, JsonRequestBehavior.AllowGet);
+                }
+
+                BusinessUserInvitationModel inviteModel = new BusinessUserInvitationModel()
+                {
+                    BUSINESS_ACCOUNT_ID = BusinessId,
+                    INVITED_EMAIL = Email,
+                    REQUEST_TOKEN = Guid.NewGuid().ToString(),
+                    SENT_BY = UserIdentity.UserID,
+                    STATUS = "Pending"
+                };
+
+                var result = await businessUserService.SendEmailInvite(inviteModel);
+                
+                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         public async Task<ActionResult> getCompanyDashboardData(string CompanyCode)
