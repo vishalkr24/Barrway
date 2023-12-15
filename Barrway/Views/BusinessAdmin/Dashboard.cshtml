@@ -326,7 +326,7 @@
             </div>
             <div class="col-lg-5 hide-for-superadmin">
                 <div class="row">
-                    @if (UserIdentity.UserRoleType == "SUPERUSER")
+                    @if (UserIdentity.UserRoleType.ToString() == "SUPERUSER")
                     {
                         <div class="col-md-12">
                             <div class="wraping">
