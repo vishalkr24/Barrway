@@ -429,11 +429,14 @@ namespace Barrway.Service.Repository
 
             string query5 = $@"select COUNT(serviceProvider_m.Id) as 'ServiceProviders' from SERVICE_PROVIDER_MASTER_1934 serviceProvider_m where COMPANY_CODE = '{CompanyCode}'";
 
-            string query6 = $@"select case when bau.ROLE_TYPE = 'SUPERUSER' then (select COUNT(assigned_m.Id) from BUSINESS_ASSIGNED_USERS_1964 assigned_m where BUSINESS_ACCOUNT_ID = bau.BUSINESS_ACCOUNT_ID) else 0 end as 'Admins'  from USER_MASTER_1915 user_m
-                                    join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.USER_ID = user_m.USER_ID
-                                    join BUSINESS_ASSIGNED_USERS_1964 bau on bau.BUSINESS_ACCOUNT_ID = baw.Id
-                                    join ROLE_MASTER_1917 user_role on user_role.Id = user_m.ROLE_ID
-                                    where user_m.Id = '{UserId}' and user_m.ROLE_ID = '1' and bau.ASSIGNED_USER = user_m.Id";
+            string query6 = $@"declare @assignedBusiness varchar(max)
+                                set @assignedBusiness = stuff((select ',' + bau.BUSINESS_ACCOUNT_ID from BUSINESS_ASSIGNED_USERS_1964 bau where ASSIGNED_USER = '{UserId}' and ROLE_TYPE = 'SUPERUSER' for xml path('')), 1, 1, '')
+
+                                select count(*) as 'Admins' from BUSINESS_COMPANY_MASTER_1924 company
+                                join USER_ASSIGNED_COMPANIES_1967 uac on uac.COMPANY_ID = company.Id
+                                Join BUSINESS_ASSIGNED_USERS_1964 bau on bau.Id = uac.ASSIGN_ID
+                                join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.Id = bau.BUSINESS_ACCOUNT_ID
+                                where baw.Id in (select cast(item as integer) from dbo.SplitString(@assignedBusiness, ',')) and bau.ROLE_TYPE = 'SUPERUSER'";
 
             List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
             List<IDictionary<string, object>> result2 = await sqlFunction.ExecuteSqlQuery(query2);
