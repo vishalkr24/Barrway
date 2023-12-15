@@ -241,7 +241,40 @@ namespace Barrway.Service.Repository
         public async Task<AddUpdateDelete> SendEmailInvite(BusinessUserInvitationModel inviteModel)
         {
             try
-            {                
+            {
+                string sqlQuery = $@"with cte as (select Count(f.Id) as present 
+                                        from BUSINESS_USER_INVITATION_MANAGER_1965 f
+                                        where f.BUSINESS_ACCOUNT_ID = '{inviteModel.BUSINESS_ACCOUNT_ID}' and f.INVITED_EMAIL = '{inviteModel.INVITED_EMAIL}' and f.STATUS in ('OPENED', 'PENDING')
+                                        Union
+                                        select Count(f.Id) as present from BUSINESS_ASSIGNED_USERS_1964 f
+                                        join USER_MASTER_1915 um on um.Id = f.ASSIGNED_USER
+                                        where f.BUSINESS_ACCOUNT_ID = '{inviteModel.BUSINESS_ACCOUNT_ID}' and um.USER_EMAIL = '{inviteModel.INVITED_EMAIL}'
+                                        )
+                                        select * from cte";
+
+                var checkResult = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+                if (checkResult.Count == 0)
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "Invite not sent. Check Failed!" };
+                }
+                else
+                {
+                    if (Convert.ToInt32(checkResult[0]["present"]?.ToString()) > 0)
+                    {
+                        return new AddUpdateDelete() { Status = false, Message = "Invite is already sent to this email. Check the status in Invitation History" };
+                    }
+
+                    if (checkResult.Count > 1)
+                    {
+                        if (Convert.ToInt32(checkResult[1]["present"]?.ToString()) > 0)
+                        {
+                            return new AddUpdateDelete() { Status = false, Message = "User with this email is already assigned to the business." };
+                        }
+                    }
+                    
+                }
+
                 Form_DataTable data = new Form_DataTable();
                 data.action = (int)FormAction.Save;
                 data.formId = (int)FormSetting.BUSINESS_USER_INVITATION_MANAGER;
@@ -429,14 +462,14 @@ namespace Barrway.Service.Repository
 
             string query5 = $@"select COUNT(serviceProvider_m.Id) as 'ServiceProviders' from SERVICE_PROVIDER_MASTER_1934 serviceProvider_m where COMPANY_CODE = '{CompanyCode}'";
 
-            string query6 = $@"declare @assignedBusiness varchar(max)
-                                set @assignedBusiness = stuff((select ',' + bau.BUSINESS_ACCOUNT_ID from BUSINESS_ASSIGNED_USERS_1964 bau where ASSIGNED_USER = '{UserId}' and ROLE_TYPE = 'SUPERUSER' for xml path('')), 1, 1, '')
-
-                                select count(*) as 'Admins' from BUSINESS_COMPANY_MASTER_1924 company
-                                join USER_ASSIGNED_COMPANIES_1967 uac on uac.COMPANY_ID = company.Id
-                                Join BUSINESS_ASSIGNED_USERS_1964 bau on bau.Id = uac.ASSIGN_ID
-                                join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.Id = bau.BUSINESS_ACCOUNT_ID
-                                where baw.Id in (select cast(item as integer) from dbo.SplitString(@assignedBusiness, ',')) and bau.ROLE_TYPE = 'SUPERUSER'";
+            string query6 = $@" declare @Ids varchar(max)
+                                set @Ids = (select stuff((select ',' + BUSINESS_ACCOUNT_ID from BUSINESS_ASSIGNED_USERS_1964 where ASSIGNED_USER = '{UserId}' and ROLE_TYPE = 'SUPERUSER' for xml path('')), 1, 1, ''));
+                                
+                                    select Count(account.BUSINESS_CODE) as 'Admins'
+                                    from BUSINESS_ASSIGNED_USERS_1964 f
+                                    join USER_MASTER_1915 user_m on user_m.Id = f.ASSIGNED_USER
+                                    Join BUSINESS_ACCOUNT_WEBSITE_1918 account on account.Id = f.BUSINESS_ACCOUNT_ID
+                                    where f.BUSINESS_ACCOUNT_ID in (select cast(item as integer) from dbo.SplitString(@Ids,','))";
 
             List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
             List<IDictionary<string, object>> result2 = await sqlFunction.ExecuteSqlQuery(query2);

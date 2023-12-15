@@ -864,7 +864,7 @@ namespace Barrway.Controllers
 
                 var result = await businessUserService.SendEmailInvite(inviteModel);
                 
-                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
+                return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

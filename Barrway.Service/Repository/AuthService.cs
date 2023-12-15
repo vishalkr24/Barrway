@@ -44,7 +44,8 @@ namespace Barrway.Service.Repository
             try
             {
 
-                string sqlQuery = $@"select bau.ROLE_TYPE
+                string sqlQuery = $@"select
+									(select case when (count(abc.Id) = 0) then 'ADMIN' else 'SUPERUSER' end from BUSINESS_ASSIGNED_USERS_1964 abc where abc.ASSIGNED_USER = user_m.Id and abc.ROLE_TYPE = 'SUPERUSER') as 'ROLE_TYPE'
                                     from USER_MASTER_1915 user_m
                                     join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.USER_ID = user_m.USER_ID
                                     join BUSINESS_ASSIGNED_USERS_1964 bau on bau.BUSINESS_ACCOUNT_ID = baw.Id
@@ -74,7 +75,9 @@ namespace Barrway.Service.Repository
             try
             {
 
-                string sqlQuery = $@"select bau.ROLE_TYPE, baw.Id as 'BUSINESS_ACCOUNT_ID',user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],user_m.[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
+                string sqlQuery = $@"select
+									(select case when (count(abc.Id) = 0) then 'ADMIN' else 'SUPERUSER' end from BUSINESS_ASSIGNED_USERS_1964 abc where abc.ASSIGNED_USER = user_m.Id and abc.ROLE_TYPE = 'SUPERUSER') as 'ROLE_TYPE'
+									, baw.Id as 'BUSINESS_ACCOUNT_ID',user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],user_m.[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
                                     [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD] 
                                     from USER_MASTER_1915 user_m
                                     join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.USER_ID = user_m.USER_ID
@@ -142,7 +145,9 @@ namespace Barrway.Service.Repository
 
                 if (RoleId == 1)
                 {
-                    sqlQuery = $@"select bau.ROLE_TYPE, baw.Id as 'BUSINESS_ACCOUNT_ID',user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],user_m.[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
+                    sqlQuery = $@"select
+									(select case when (count(abc.Id) = 0) then 'ADMIN' else 'SUPERUSER' end from BUSINESS_ASSIGNED_USERS_1964 abc where abc.ASSIGNED_USER = user_m.Id and abc.ROLE_TYPE = 'SUPERUSER') as 'ROLE_TYPE'
+									, baw.Id as 'BUSINESS_ACCOUNT_ID',user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],user_m.[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
                                     [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD] 
                                     from USER_MASTER_1915 user_m
                                     join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.USER_ID = user_m.USER_ID
@@ -418,7 +423,9 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string sqlQuery = $@"select bau.ROLE_TYPE, baw.Id as 'BUSINESS_ACCOUNT_ID',user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],user_m.[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
+                string sqlQuery = $@"select
+									(select case when (count(abc.Id) = 0) then 'ADMIN' else 'SUPERUSER' end from BUSINESS_ASSIGNED_USERS_1964 abc where abc.ASSIGNED_USER = user_m.Id and abc.ROLE_TYPE = 'SUPERUSER') as 'ROLE_TYPE'
+									, baw.Id as 'BUSINESS_ACCOUNT_ID',user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],user_m.[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
                                     [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD] 
                                     from USER_MASTER_1915 user_m
                                     join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.USER_ID = user_m.USER_ID
@@ -458,7 +465,9 @@ namespace Barrway.Service.Repository
 
                 if ((int)formRole == 1)
                 {
-                    sqlQuery = $@"select bau.ROLE_TYPE, baw.Id as 'BUSINESS_ACCOUNT_ID',user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],user_m.[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
+                    sqlQuery = $@"select
+									(select case when (count(abc.Id) = 0) then 'ADMIN' else 'SUPERUSER' end from BUSINESS_ASSIGNED_USERS_1964 abc where abc.ASSIGNED_USER = user_m.Id and abc.ROLE_TYPE = 'SUPERUSER') as 'ROLE_TYPE'
+									, baw.Id as 'BUSINESS_ACCOUNT_ID',user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],user_m.[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
                                     [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD] 
                                     from USER_MASTER_1915 user_m
                                     join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.USER_ID = user_m.USER_ID
@@ -505,7 +514,9 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string sqlQuery = $@"select bau.ROLE_TYPE, baw.Id as 'BUSINESS_ACCOUNT_ID',user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],user_m.[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
+                string sqlQuery = $@"select
+									(select case when (count(abc.Id) = 0) then 'ADMIN' else 'SUPERUSER' end from BUSINESS_ASSIGNED_USERS_1964 abc where abc.ASSIGNED_USER = user_m.Id and abc.ROLE_TYPE = 'SUPERUSER') as 'ROLE_TYPE'
+									, baw.Id as 'BUSINESS_ACCOUNT_ID',user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],user_m.[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
                                     [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD] 
                                     from USER_MASTER_1915 user_m
                                     join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.USER_ID = user_m.USER_ID
@@ -548,7 +559,9 @@ namespace Barrway.Service.Repository
 
                 if (Role_Id == 1)
                 {
-                    sqlQuery = $@"select bau.ROLE_TYPE, baw.Id as 'BUSINESS_ACCOUNT_ID',user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],user_m.[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
+                    sqlQuery = $@"select
+									(select case when (count(abc.Id) = 0) then 'ADMIN' else 'SUPERUSER' end from BUSINESS_ASSIGNED_USERS_1964 abc where abc.ASSIGNED_USER = user_m.Id and abc.ROLE_TYPE = 'SUPERUSER') as 'ROLE_TYPE'
+									, baw.Id as 'BUSINESS_ACCOUNT_ID',user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],user_m.[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
                                     [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD] 
                                     from USER_MASTER_1915 user_m
                                     join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.USER_ID = user_m.USER_ID
@@ -596,7 +609,9 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string sqlQuery = $@"select bau.ROLE_TYPE, baw.Id as 'BUSINESS_ACCOUNT_ID',user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],user_m.[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
+                string sqlQuery = $@"select
+									(select case when (count(abc.Id) = 0) then 'ADMIN' else 'SUPERUSER' end from BUSINESS_ASSIGNED_USERS_1964 abc where abc.ASSIGNED_USER = user_m.Id and abc.ROLE_TYPE = 'SUPERUSER') as 'ROLE_TYPE'
+									, baw.Id as 'BUSINESS_ACCOUNT_ID',user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],user_m.[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
                                     [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD] 
                                     from USER_MASTER_1915 user_m
                                     join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.USER_ID = user_m.USER_ID
