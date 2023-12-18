@@ -40,43 +40,27 @@ function setSubscriptionPlans() {
                             <div class="heder-price ${colorTheme[colorCounter]}"></div>
                             <div class="pricing-body">
                                 <h3>${(plans[i].Id == currentPlan.PLAN_ID) ? "Your Current Plan" : ""}</h3>
-                                <h2>${plans[i].SUBSCRIPTION_PLAN_NAME}</h2>
-                                <p><span class="extra-larg purple-color">$${plans[i].SUBSCRIPTION_PLAN_PRICE}</span> <span class="sm">/ month (paid yearly)</span></p>
-                                <p>HK$ ${(parseFloat(plans[i].SUBSCRIPTION_PLAN_PRICE) / parseFloat(plans[i].VALIDITY_IN_MONTHS))}/ month</p>
+                                <h2>${plans[i].PLAN_NAME}</h2>
+                                <p><span class="extra-larg purple-color">$${plans[i].YEARA_PRICE}</span> <span class="sm"> paid yearly</span></p>
+                                <p>HK$ ${parseFloat(plans[i].PLAN_PRICE)}/ month</p>
                                 <table>
                                     <tbody>
                                         ${validityDiv}
                                         <tr>
-                                            <td> Booking transaction (per month)</td>
-                                            <td>${(plans[i].Id == currentPlan.PLAN_ID) ? plans[i].BOOKING_TRANSACTIONS + "/" : ""} ${plans[i].BOOKING_TRANSACTIONS} </td>
+                                            <td> Plan Description</td>
+                                            <td>${plans[i].PLAN_DESC} </td>
                                         </tr>
                                         <tr>
-                                            <td>Calendar available</td>
-                                            <td>${(plans[i].Id == currentPlan.PLAN_ID) ? plans[i].CALENDAR_AVAILABLE + "/" : ""} ${plans[i].CALENDAR_AVAILABLE}</td>
+                                            <td> Number of available calendar</td>
+                                            <td>${(plans[i].Id == currentPlan.PLAN_ID) ? plans[i].NUM_OF_AVAIL_CLR + "/" : ""} ${plans[i].NUM_OF_AVAIL_CLR} </td>
                                         </tr>
                                         <tr>
-                                            <td>Client package available</td>
-                                            <td>${(plans[i].Id == currentPlan.PLAN_ID) ? plans[i].CLIENT_PACKAGE_AVAILABLE + "/" : ""} ${plans[i].CLIENT_PACKAGE_AVAILABLE}</td>
+                                            <td>Sessions/ month/ company</td>
+                                            <td>${(plans[i].Id == currentPlan.PLAN_ID) ? plans[i].VALID_SESSIONS + "/" : ""} ${plans[i].VALID_SESSIONS}</td>
                                         </tr>
                                         <tr>
-                                            <td>Number of admin</td>
-                                            <td>${(plans[i].Id == currentPlan.PLAN_ID) ? plans[i].NO_OF_ADMIN + "/" : ""} ${plans[i].NO_OF_ADMIN}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Photo album in company profile</td>
-                                            <td>${(plans[i].PHOTO_ALBUM == "Y") ? "Yes" : "No"}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Client payment</td>
-                                            <td>${(plans[i].CLIENT_PAYMENT == "Y") ? "Yes" : "No"}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Promotion in market place</td>
-                                            <td>${(plans[i].PROMOTION_IN_MARKETPLACE == "Y") ? "Yes" : "No"}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Chat with client</td>
-                                            <td>${(plans[i].CHAT_WITH_CLIENT == "Y") ? "Yes" : "No"}</td>
+                                            <td>Bookings/ session/ company</td>
+                                            <td>${(plans[i].Id == currentPlan.PLAN_ID) ? plans[i].VALID_BOOKING_SESSION + "/" : ""} ${plans[i].VALID_BOOKING_SESSION}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -90,54 +74,54 @@ function setSubscriptionPlans() {
                 $("#divSubscriptionPlans").append(div);
             }
 
-            $("#divSubscriptionPlans").append(`<div class="pricing-custome free-plan">
-                    <div class="pricing-custome-inner">
-                        <div class="heder-price"></div>
-                        <div class="pricing-body">
-                            <h3>${(currentPlan.IS_FREE_PLAN == "Y") ? "Your Current Plan" : ""}</h3>
-                            <h2>Free plan</h2>
-                            <p><span class="extra-larg">$0</span> <span class="sm"></span></p>
-                            <p>HK$ 0/ month</p>
-                            <table>
-                                <tbody>
+            //$("#divSubscriptionPlans").append(`<div class="pricing-custome free-plan">
+            //        <div class="pricing-custome-inner">
+            //            <div class="heder-price"></div>
+            //            <div class="pricing-body">
+            //                <h3>${(currentPlan.IS_FREE_PLAN == "Y") ? "Your Current Plan" : ""}</h3>
+            //                <h2>Free plan</h2>
+            //                <p><span class="extra-larg">$0</span> <span class="sm"></span></p>
+            //                <p>HK$ 0/ month</p>
+            //                <table>
+            //                    <tbody>
                                     
-                                    <tr>
-                                        <td> Booking transaction (per month)</td>
-                                        <td>${currentPlan.BOOKING_TRANSACTIONS + "/"} 500</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Calendar available</td>
-                                        <td>${currentPlan.CALENDAR_AVAILABLE + "/"} 1</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Client package available</td>
-                                        <td>${currentPlan.CLIENT_PACKAGE_AVAILABLE + "/"} 1</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Number of admin</td>
-                                        <td>No</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Photo album in company profile</td>
-                                        <td>No</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Client payment</td>
-                                        <td>No</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Promotion in market place</td>
-                                        <td>No</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Chat with client</td>
-                                        <td>No</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>`);
+            //                        <tr>
+            //                            <td> Booking transaction (per month)</td>
+            //                            <td>${currentPlan.BOOKING_TRANSACTIONS + "/"} 500</td>
+            //                        </tr>
+            //                        <tr>
+            //                            <td>Calendar available</td>
+            //                            <td>${currentPlan.CALENDAR_AVAILABLE + "/"} 1</td>
+            //                        </tr>
+            //                        <tr>
+            //                            <td>Client package available</td>
+            //                            <td>${currentPlan.CLIENT_PACKAGE_AVAILABLE + "/"} 1</td>
+            //                        </tr>
+            //                        <tr>
+            //                            <td>Number of admin</td>
+            //                            <td>No</td>
+            //                        </tr>
+            //                        <tr>
+            //                            <td>Photo album in company profile</td>
+            //                            <td>No</td>
+            //                        </tr>
+            //                        <tr>
+            //                            <td>Client payment</td>
+            //                            <td>No</td>
+            //                        </tr>
+            //                        <tr>
+            //                            <td>Promotion in market place</td>
+            //                            <td>No</td>
+            //                        </tr>
+            //                        <tr>
+            //                            <td>Chat with client</td>
+            //                            <td>No</td>
+            //                        </tr>
+            //                    </tbody>
+            //                </table>
+            //            </div>
+            //        </div>
+            //    </div>`);
 
         } else {
             var colorCounter = 0;

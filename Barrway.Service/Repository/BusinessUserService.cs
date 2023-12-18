@@ -736,18 +736,20 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetAllSubscriptionPlansForBusiness()
         {
+            var disc = Convert.ToDecimal(ConfigurationManager.AppSettings["BUS_YEAR_DISC"]);
             string query = $@"SELECT [Id]
                                 ,[formGroupKey]
                                 ,[PLAN_NAME]
                                 ,[PLAN_DESC]
                                 ,[PLAN_PRICE]
-                                ,[NUM_OF_AVAIL_CLR]
-                                ,[VALID_SESSIONS]
+                                ,[PLAN_PRICE]*12- ((PLAN_PRICE*12*{disc})/100) [YEARA_PRICE]
+                                ,(case when NUM_OF_AVAIL_CLR=-1 then 'Unlimited' else cast(NUM_OF_AVAIL_CLR as varchar(50)) end) NUM_OF_AVAIL_CLR
+								,(case when VALID_SESSIONS=-1 then 'Unlimited' else cast(VALID_SESSIONS as varchar(50)) end) VALID_SESSIONS
                                 ,[PAYMENT_TRAN_FEE]
                                 ,[PLAN_STATUS]
                                 ,[created_at]
-                                ,[VALID_BOOKING_SESSION]
-                              FROM [dbo].[BUSINESS_PLAN_MASTER_1966] where PLAN_STATUS = 'Y'";
+								,(case when VALID_BOOKING_SESSION=-1 then 'Unlimited' else cast(VALID_BOOKING_SESSION as varchar(50)) end) VALID_BOOKING_SESSION
+                              FROM [dbo].[BUSINESS_PLAN_MASTER_1966] where PLAN_STATUS = 'YES'";
 
             List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
