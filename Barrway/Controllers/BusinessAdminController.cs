@@ -675,28 +675,6 @@ namespace Barrway.Controllers
                     return View("SetupCompanyProfile");
                 }
 
-                //var website = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
-
-                //if (!website.Status)
-                //{
-                //    // Create Business Account (Business account is missing)
-
-                //    BusinessAccountWebsiteModel businessModel = new BusinessAccountWebsiteModel()
-                //    {
-                //        USER_ID = User.Identity.Name,
-                //        COMPANY_PROFILE_STATUS = "N",
-                //        COMPANY_CALENDAR_STATUS = "N",
-                //        CURRENT_STEP = (UserIdentity.Role == "SUPERADMIN_USER") ? "COMPLETED" : "COMPANY PROFILE"
-                //    };
-
-                //    AddUpdateDelete businessResult = await businessUserService.CreateBusinessWebsite(businessModel);
-
-                //    website = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name.ToString());
-                //}
-
-
-
-
                 BusinessCompanyModel businessCompanyModel = new BusinessCompanyModel()
                 {
                     BUSINESS_ACCOUNT_ID = model.BUSINESS_ACCOUNT_ID,
@@ -729,8 +707,6 @@ namespace Barrway.Controllers
 
                 if (saveDataResult.Status)
                 {
-
-
                     if (UserIdentity.Role == "SUPERADMIN_USER")
                     {
                         return RedirectToAction("CompanyMaster");
@@ -1149,165 +1125,178 @@ namespace Barrway.Controllers
 
                 if (company.Status)
                 {
-                    // commented code of calendar count check because of superadmin integration in business functionality if in future it needs to be activated we check the role of if role is superadmin we will allow to create a calendar
-                    var companyData = company.Data as IDictionary<string, object>;
-
                     var currentPlan = await businessUserService.GetCompanyActiveSubscriptionDetails(company.Data["Id"]?.ToString());
 
-                    //var currentPlanData = currentPlan.Data as IDictionary<string, object>;
-
-                    var allCalendars = await businessUserService.GetCompanyCalendarByCompanyId(company.Data["Id"]?.ToString());
-
-                    //int calendarLimit = Convert.ToInt32(currentPlanData["CALENDAR_AVAILABLE"]?.ToString());
-                    //int currentCalendars = allCalendars.Data.Count;
-
-                    //if (currentCalendars < calendarLimit)
-                    if (true)
+                    if (currentPlan.Status)
                     {
-                        string path = "";
-                        string fileName = "";
+                        var currentPlanData = currentPlan.Data as IDictionary<string, object>;
 
-                        if (model.CALENDAR_PHOTO_PATH == null)
+                        AddUpdateDelete allCalendars = await businessUserService.GetCompanyCalendarByCompanyId(company.Data["Id"]?.ToString());
+
+                        int calendarLimit = Convert.ToInt32(currentPlanData["CALENDAR_AVAILABLE"]?.ToString());
+
+                        int currentCalendars = 0;
+                        if (allCalendars.Status)
                         {
-                            if (IsPartial)
+                            if (allCalendars.Data != null)
                             {
-                                ModelState.AddModelError("CALENDAR_PHOTO_NAME", "Please select a calendar photo");
-                                ViewBag.IsPartial = IsPartial;
-                                return View("SetupCompanyCalendar", model);
+                                currentCalendars = allCalendars.Data.Count;
                             }
-
                         }
-                        else
+
+                        if (currentCalendars < calendarLimit)
                         {
-                            string folderPath = Server.MapPath("~/UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString());
-                            fileName = model.CALENDAR_PHOTO_PATH.FileName.ToString();
-                            if (!Directory.Exists(folderPath))
+                            string path = "";
+                            string fileName = "";
+
+                            if (model.CALENDAR_PHOTO_PATH == null)
                             {
-                                Directory.CreateDirectory(folderPath);
+                                if (IsPartial)
+                                {
+                                    ModelState.AddModelError("CALENDAR_PHOTO_NAME", "Please select a calendar photo");
+                                    ViewBag.IsPartial = IsPartial;
+                                    return View("SetupCompanyCalendar", model);
+                                }
                             }
                             else
                             {
-                                Directory.Delete(folderPath, true);
-                                Directory.CreateDirectory(folderPath);
+                                string folderPath = Server.MapPath("~/UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString());
+                                fileName = model.CALENDAR_PHOTO_PATH.FileName.ToString();
+                                if (!Directory.Exists(folderPath))
+                                {
+                                    Directory.CreateDirectory(folderPath);
+                                }
+                                else
+                                {
+                                    Directory.Delete(folderPath, true);
+                                    Directory.CreateDirectory(folderPath);
+                                }
+
+                                path = "~/UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString() + "/" + model.CALENDAR_PHOTO_PATH.FileName.ToString();
                             }
 
-                            path = "~/UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString() + "/" + model.CALENDAR_PHOTO_PATH.FileName.ToString();
-                        }
-
-                        BusinessCalendarModel calendarModel = new BusinessCalendarModel()
-                        {
-                            CALENDAR_CATEGORY_ID = model.CALENDAR_CATEGORY_ID.ToString(),
-                            CALENDAR_NAME = model.CALENDAR_NAME.ToString(),
-                            CALENDAR_SUB_CATEGORY_ID = model.CALENDAR_SUB_CATEGORY_ID.ToString(),
-                            CALENDAR_PHOTO_NAME = fileName,
-                            CALENDAR_PHOTO_PATH = path,
-                            SLOT_DURATION_IN_MINS = model.SLOT_DURATION_IN_MINS,
-                            CALENDAR_TEMPLATE_ID = (UserIdentity.Role != "SUPERADMIN_USER") ? ((string.IsNullOrEmpty(model.CALENDAR_TEMPLATE_ID?.ToString())) ? "" : model.CALENDAR_TEMPLATE_ID?.ToString()) : "0",
-                            IS_VISIBLE = "Y",
-                            Id = model.Id,
-                            SCHEDULAR_ID = (string.IsNullOrEmpty(model.SCHEDULAR_ID)) ? "" : model.SCHEDULAR_ID,
-                            DISTRICT_ID = model.DISTRICT_ID.ToString(),
-                            CITY_ID = model.CITY_ID.ToString(),
-                            COMPANY_CODE = model.COMPANY_CODE.ToString(),
-                            COUNTRY_ID = model.COUNTRY_ID.ToString(),
-                            TAGS = ((model.TAGS != null) ? string.Join(", ", model.TAGS) : "")
-                        };
-
-                        CalendarControlModel calendarControlModel = new CalendarControlModel();
-
-                        if (calendarModel.CALENDAR_CATEGORY_ID == "1")
-                        {
-                            calendarModel.SLOT_DURATION_IN_MINS = model.SLOT_DURATION_IN_MINS;
-                            using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarConfiguration/TypeB1Configuration.json")))
+                            BusinessCalendarModel calendarModel = new BusinessCalendarModel()
                             {
-                                calendarControlModel = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
-                            }
-                        }
-                        else if (calendarModel.CALENDAR_CATEGORY_ID == "2")
-                        {
-                            calendarModel.SLOT_DURATION_IN_MINS = model.SLOT_DURATION_IN_MINS;
-                            using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarConfiguration/TypeCConfiguration.json")))
+                                CALENDAR_CATEGORY_ID = model.CALENDAR_CATEGORY_ID.ToString(),
+                                CALENDAR_NAME = model.CALENDAR_NAME.ToString(),
+                                CALENDAR_SUB_CATEGORY_ID = model.CALENDAR_SUB_CATEGORY_ID.ToString(),
+                                CALENDAR_PHOTO_NAME = fileName,
+                                CALENDAR_PHOTO_PATH = path,
+                                SLOT_DURATION_IN_MINS = model.SLOT_DURATION_IN_MINS,
+                                CALENDAR_TEMPLATE_ID = (UserIdentity.Role != "SUPERADMIN_USER") ? ((string.IsNullOrEmpty(model.CALENDAR_TEMPLATE_ID?.ToString())) ? "" : model.CALENDAR_TEMPLATE_ID?.ToString()) : "0",
+                                IS_VISIBLE = "Y",
+                                Id = model.Id,
+                                SCHEDULAR_ID = (string.IsNullOrEmpty(model.SCHEDULAR_ID)) ? "" : model.SCHEDULAR_ID,
+                                DISTRICT_ID = model.DISTRICT_ID.ToString(),
+                                CITY_ID = model.CITY_ID.ToString(),
+                                COMPANY_CODE = model.COMPANY_CODE.ToString(),
+                                COUNTRY_ID = model.COUNTRY_ID.ToString(),
+                                TAGS = ((model.TAGS != null) ? string.Join(", ", model.TAGS) : "")
+                            };
+
+                            CalendarControlModel calendarControlModel = new CalendarControlModel();
+
+                            if (calendarModel.CALENDAR_CATEGORY_ID == "1")
                             {
-                                calendarControlModel = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
+                                calendarModel.SLOT_DURATION_IN_MINS = model.SLOT_DURATION_IN_MINS;
+                                using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarConfiguration/TypeB1Configuration.json")))
+                                {
+                                    calendarControlModel = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
+                                }
                             }
-                        }
-                        else if (calendarModel.CALENDAR_CATEGORY_ID == "3")
-                        {
-                            calendarModel.SLOT_DURATION_IN_MINS = "0";
-
-                            using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarConfiguration/TypeAConfiguration.json")))
+                            else if (calendarModel.CALENDAR_CATEGORY_ID == "2")
                             {
-                                calendarControlModel = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
+                                calendarModel.SLOT_DURATION_IN_MINS = model.SLOT_DURATION_IN_MINS;
+                                using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarConfiguration/TypeCConfiguration.json")))
+                                {
+                                    calendarControlModel = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
+                                }
                             }
-                        }
-                        else if (calendarModel.CALENDAR_CATEGORY_ID == "4")
-                        {
-                            calendarModel.SLOT_DURATION_IN_MINS = "0";
-
-                            using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarConfiguration/TypeAConfiguration.json")))
+                            else if (calendarModel.CALENDAR_CATEGORY_ID == "3")
                             {
-                                calendarControlModel = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
+                                calendarModel.SLOT_DURATION_IN_MINS = "0";
+
+                                using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarConfiguration/TypeAConfiguration.json")))
+                                {
+                                    calendarControlModel = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
+                                }
                             }
-                        }
-                        else if (calendarModel.CALENDAR_CATEGORY_ID == "5")
-                        {
-                            calendarModel.SLOT_DURATION_IN_MINS = model.SLOT_DURATION_IN_MINS;
-                            using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarConfiguration/TypeB2Configuration.json")))
+                            else if (calendarModel.CALENDAR_CATEGORY_ID == "4")
                             {
-                                calendarControlModel = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
+                                calendarModel.SLOT_DURATION_IN_MINS = "0";
+
+                                using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarConfiguration/TypeAConfiguration.json")))
+                                {
+                                    calendarControlModel = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
+                                }
                             }
-                        }
-
-                        if (!IsPartial)
-                        {
-                            calendarControlModel.CALENDAR_FORM_NAME = model.CalendarControlSheet.CALENDAR_FORM_NAME;
-                            calendarControlModel.CALENDAR_FORM_CATEGORY = model.CalendarControlSheet.CALENDAR_FORM_CATEGORY;
-                            calendarControlModel.CALENDAR_USE_TYPE = model.CalendarControlSheet.CALENDAR_USE_TYPE;
-                            calendarControlModel.RESOURCE_FORM_NAME = model.CalendarControlSheet.RESOURCE_FORM_NAME;
-                            calendarControlModel.RESOURCE_FORM_CATEGORY = model.CalendarControlSheet.RESOURCE_FORM_CATEGORY;
-                            calendarControlModel.ACTIVITY_FORM_NAME = model.CalendarControlSheet.ACTIVITY_FORM_NAME;
-                            calendarControlModel.ACTIVITY_FORM_CATEGORY = model.CalendarControlSheet.ACTIVITY_FORM_CATEGORY;
-                            calendarControlModel.LOCATION_FORM_NAME = model.CalendarControlSheet.LOCATION_FORM_NAME;
-                            calendarControlModel.LOCATION_FORM_CATEGORY = model.CalendarControlSheet.LOCATION_FORM_CATEGORY;
-                            calendarControlModel.REGISTRATION_FORM_NAME = model.CalendarControlSheet.REGISTRATION_FORM_NAME;
-                            calendarControlModel.REGISTRATION_FORM_CATEGORY = model.CalendarControlSheet.REGISTRATION_FORM_CATEGORY;
-                            calendarControlModel.PARTICIPANT_FORM_NAME = model.CalendarControlSheet.PARTICIPANT_FORM_NAME;
-                            calendarControlModel.PARTICIPANT_FORM_CATEGORY = model.CalendarControlSheet.PARTICIPANT_FORM_CATEGORY;
-                            calendarControlModel.EVALUATION_FORM_NAME = model.CalendarControlSheet.EVALUATION_FORM_NAME;
-                            calendarControlModel.EVALUATION_FORM_CATEGORY = model.CalendarControlSheet.EVALUATION_FORM_CATEGORY;
-                            calendarControlModel.DISPLAY_START_TIME = (!string.IsNullOrEmpty(model.CalendarControlSheet.DISPLAY_START_TIME)) ? Convert.ToDateTime(model.CalendarControlSheet.DISPLAY_START_TIME).ToString("HH:mm") : "";
-                            calendarControlModel.DISPLAY_END_TIME = (!string.IsNullOrEmpty(model.CalendarControlSheet.DISPLAY_END_TIME)) ? Convert.ToDateTime(model.CalendarControlSheet.DISPLAY_END_TIME).ToString("HH:mm") : "";
-                            calendarControlModel.CALENDAR_CODE = model.CALENDAR_CODE;
-                            calendarControlModel.COMPANY_CODE = model.COMPANY_CODE;
-                            calendarControlModel.USER_ADMIN_GROUP_NAME = model.COMPANY_CODE.ToString() + model.CALENDAR_CODE.ToString();
-                            calendarControlModel.CALENDAR_GROUP_NAME = model.CALENDAR_CODE.ToString() + model.COMPANY_CODE.ToString();
-                        }
-
-
-                        var result = await businessUserService.AddCalendar(calendarModel, User.Identity.Name.ToString(), calendarControlModel);
-
-                        if (result.Status)
-                        {
-                            if (model.CALENDAR_PHOTO_PATH != null)
+                            else if (calendarModel.CALENDAR_CATEGORY_ID == "5")
                             {
-                                model.CALENDAR_PHOTO_PATH.SaveAs(Server.MapPath("~/UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString()) + "/" + model.CALENDAR_PHOTO_PATH.FileName.ToString());
+                                calendarModel.SLOT_DURATION_IN_MINS = model.SLOT_DURATION_IN_MINS;
+                                using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarConfiguration/TypeB2Configuration.json")))
+                                {
+                                    calendarControlModel = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
+                                }
                             }
 
-                            return RedirectToAction("CalendarMaster");
+                            if (!IsPartial)
+                            {
+                                calendarControlModel.CALENDAR_FORM_NAME = model.CalendarControlSheet.CALENDAR_FORM_NAME;
+                                calendarControlModel.CALENDAR_FORM_CATEGORY = model.CalendarControlSheet.CALENDAR_FORM_CATEGORY;
+                                calendarControlModel.CALENDAR_USE_TYPE = model.CalendarControlSheet.CALENDAR_USE_TYPE;
+                                calendarControlModel.RESOURCE_FORM_NAME = model.CalendarControlSheet.RESOURCE_FORM_NAME;
+                                calendarControlModel.RESOURCE_FORM_CATEGORY = model.CalendarControlSheet.RESOURCE_FORM_CATEGORY;
+                                calendarControlModel.ACTIVITY_FORM_NAME = model.CalendarControlSheet.ACTIVITY_FORM_NAME;
+                                calendarControlModel.ACTIVITY_FORM_CATEGORY = model.CalendarControlSheet.ACTIVITY_FORM_CATEGORY;
+                                calendarControlModel.LOCATION_FORM_NAME = model.CalendarControlSheet.LOCATION_FORM_NAME;
+                                calendarControlModel.LOCATION_FORM_CATEGORY = model.CalendarControlSheet.LOCATION_FORM_CATEGORY;
+                                calendarControlModel.REGISTRATION_FORM_NAME = model.CalendarControlSheet.REGISTRATION_FORM_NAME;
+                                calendarControlModel.REGISTRATION_FORM_CATEGORY = model.CalendarControlSheet.REGISTRATION_FORM_CATEGORY;
+                                calendarControlModel.PARTICIPANT_FORM_NAME = model.CalendarControlSheet.PARTICIPANT_FORM_NAME;
+                                calendarControlModel.PARTICIPANT_FORM_CATEGORY = model.CalendarControlSheet.PARTICIPANT_FORM_CATEGORY;
+                                calendarControlModel.EVALUATION_FORM_NAME = model.CalendarControlSheet.EVALUATION_FORM_NAME;
+                                calendarControlModel.EVALUATION_FORM_CATEGORY = model.CalendarControlSheet.EVALUATION_FORM_CATEGORY;
+                                calendarControlModel.DISPLAY_START_TIME = (!string.IsNullOrEmpty(model.CalendarControlSheet.DISPLAY_START_TIME)) ? Convert.ToDateTime(model.CalendarControlSheet.DISPLAY_START_TIME).ToString("HH:mm") : "";
+                                calendarControlModel.DISPLAY_END_TIME = (!string.IsNullOrEmpty(model.CalendarControlSheet.DISPLAY_END_TIME)) ? Convert.ToDateTime(model.CalendarControlSheet.DISPLAY_END_TIME).ToString("HH:mm") : "";
+                                calendarControlModel.CALENDAR_CODE = model.CALENDAR_CODE;
+                                calendarControlModel.COMPANY_CODE = model.COMPANY_CODE;
+                                calendarControlModel.USER_ADMIN_GROUP_NAME = model.COMPANY_CODE.ToString() + model.CALENDAR_CODE.ToString();
+                                calendarControlModel.CALENDAR_GROUP_NAME = model.CALENDAR_CODE.ToString() + model.COMPANY_CODE.ToString();
+                            }
 
+
+                            var result = await businessUserService.AddCalendar(calendarModel, User.Identity.Name.ToString(), calendarControlModel);
+
+                            if (result.Status)
+                            {
+                                if (model.CALENDAR_PHOTO_PATH != null)
+                                {
+                                    model.CALENDAR_PHOTO_PATH.SaveAs(Server.MapPath("~/UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString()) + "/" + model.CALENDAR_PHOTO_PATH.FileName.ToString());
+                                }
+
+                                return RedirectToAction("CalendarMaster");
+
+                            }
+                            else
+                            {
+                                ViewBag.IsPartial = IsPartial;
+                                return View("SetupCompanyCalendar", model);
+                            }
                         }
                         else
                         {
+                            ModelState.AddModelError("UNIVERSAL_ERROR", "You have already created maximum no. of calendars in your current package. Please upgrade you package to create more calendars.");
                             ViewBag.IsPartial = IsPartial;
                             return View("SetupCompanyCalendar", model);
                         }
                     }
                     else
                     {
-                        ModelState.AddModelError("UNIVERSAL_ERROR", "You have already created maximum no. of calendars in your current package. Please upgrade you package to create more calendars.");
+                        ModelState.AddModelError("UNIVERSAL_ERROR", "No active package found for this company. Kindly subscribe to a package and try again!");
                         ViewBag.IsPartial = IsPartial;
                         return View("SetupCompanyCalendar", model);
                     }
+                    
 
 
                 }

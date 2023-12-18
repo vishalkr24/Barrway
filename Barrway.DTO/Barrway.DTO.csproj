@@ -73,6 +73,9 @@
     <Compile Include="AuthViewModel\GoogleLoginViewModel.cs" />
     <Compile Include="AuthViewModel\UserToken.cs" />
     <Compile Include="BusinessModels\BusinessUserInvitationModel.cs" />
+    <Compile Include="BusinessModels\CompanyPackageModel.cs" />
+    <Compile Include="BusinessModels\BusinessOrderDetailsViewModel.cs" />
+    <Compile Include="BusinessModels\BusinessOrderModel.cs" />
     <Compile Include="BusinessModels\UserAssignedCompanyModel.cs" />
     <Compile Include="BusinessModels\BulkAttendanceModel.cs" />
     <Compile Include="BusinessModels\BusinessAssignedUsersModel.cs" />

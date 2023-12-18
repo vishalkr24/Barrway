@@ -87,6 +87,57 @@ namespace Barrway.Controllers
         }
 
         [HttpPost]
+        public async Task<ActionResult> BusinessOrderDetails(string Id, bool isMonthly)
+        {
+            var PackageData = await masterService.GetSingleCompanyPackage(Id);
+
+            OrderModel order = new OrderModel()
+            {
+                ORDER_COIN = Convert.ToDouble(PackageData.Data["PACKAGE_COIN"]),
+                CALENDAR_CODE = PackageData.Data["CALENDAR_CODE"].ToString(),
+                PAYMENT_TYPE = "STRIPE",
+                PACKAGE_ID = Id,
+                ORDER_PRICE = Convert.ToDouble(PackageData.Data["PACKAGE_PRICE"]),
+                ORDER_QTY = 1,
+                ORDER_TYPE = "PACKAGE",
+                USER_ID = User.Identity.Name,
+                PAYMENT_ID = "",
+                PAYMENT_STATUS = ""
+            };
+
+            var result = await masterService.CreateOrder(order);
+
+            order.ORDER_NO = result.Data;
+
+            OrderDetailsViewModel orderDetailsViewModel = new OrderDetailsViewModel()
+            {
+                Order = order,
+                CalendarPackageModel = new CalendarPackageModel()
+                {
+                    CALENDAR_CODE = order.CALENDAR_CODE,
+                    COMPANY_CODE = PackageData.Data["COMPANY_CODE"].ToString(),
+                    PACKAGE_COIN = Convert.ToDouble(PackageData.Data["PACKAGE_COIN"]),
+                    PACKAGE_DESCRIPTION = PackageData.Data["PACKAGE_DESCRIPTION"]?.ToString(),
+                    PACKAGE_NAME = PackageData.Data["PACKAGE_NAME"]?.ToString(),
+                    PACKAGE_PRICE = Convert.ToDouble(PackageData.Data["PACKAGE_PRICE"]),
+                    PACKAGE_SEQUENCE = Convert.ToDouble(PackageData.Data["PACKAGE_SEQUENCE"])
+                }
+            };
+
+            if (result.Status)
+            {
+                return View(orderDetailsViewModel);
+                //OrderNo = result.Data;
+            }
+            else
+            {
+                return RedirectToAction("OrderFailed");
+            }
+
+
+        }
+
+        [HttpPost]
         public async Task<ActionResult> CreateCheckoutSession(OrderModel model)
         {
             string UserId = User.Identity.Name;
