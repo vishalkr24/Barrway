@@ -31,7 +31,9 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetSingleBlogPost(string NewsId);
         Task<AddUpdateDelete> GetCompanyCalendarPackages(string CompanyCode);
         Task<AddUpdateDelete> GetSingleCalendarPackage(string PackageId);
+        Task<AddUpdateDelete> GetSingleCompanyPackage(string PackageId);
         Task<AddUpdateDelete> CreateOrder(OrderModel model);
+        Task<AddUpdateDelete> CreateBusinessOrder(BusinessOrderModel model);
         Task<AddUpdateDelete> CreatePaymentTracker(PaymentTrackerModel model);
         Task<AddUpdateDelete> CreateLedgerEntry(LedgerModel model);
         Task<AddUpdateDelete> CreatePaymentHistory(PaymentHistoryModel model);

@@ -3245,6 +3245,7 @@
     <Content Include="Views\MarketPlace\Search.cshtml" />
     <Content Include="Views\BusinessAdmin\AdminMaster.cshtml" />
     <Content Include="Views\BusinessAdmin\ViewInvitation.cshtml" />
+    <Content Include="Views\Payment\BusinessOrderDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

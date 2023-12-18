@@ -12,7 +12,7 @@ function setSubscriptionPlans() {
     $("#divSubscriptionPlans").empty();
 
     if (data.Status) {
-        var plans = data.Data;
+        var plans = data.Data.filter(x=> x.IS_FREE_PLAN == 'N');
 
         var currentPlanData = GetCompanyActiveSubscriptionPlan(localStorage.getItem("COMPANY_ID"));
 
@@ -66,62 +66,13 @@ function setSubscriptionPlans() {
                                 </table>
                             </div>
                             <div class="mt-4">
-                                ${(plans[i].Id == currentPlan.PLAN_ID) ? "" : "<div class='price-btn'><button class='upgrade'>Upgrade</button></div>"}
+                                ${(plans[i].Id == currentPlan.PLAN_ID) ? "" : "<div class='price-btn'><button class='upgrade' onclick='buyPackage(" + plans[i].Id + ", false)'>Buy Yearly</button><button class='upgrade' onclick='buyPackage(" + plans[i].Id + ", true)'>Buy Monthly</button></div>"}
                             </div>
                         </div>
                     </div>`;
 
                 $("#divSubscriptionPlans").append(div);
             }
-
-            //$("#divSubscriptionPlans").append(`<div class="pricing-custome free-plan">
-            //        <div class="pricing-custome-inner">
-            //            <div class="heder-price"></div>
-            //            <div class="pricing-body">
-            //                <h3>${(currentPlan.IS_FREE_PLAN == "Y") ? "Your Current Plan" : ""}</h3>
-            //                <h2>Free plan</h2>
-            //                <p><span class="extra-larg">$0</span> <span class="sm"></span></p>
-            //                <p>HK$ 0/ month</p>
-            //                <table>
-            //                    <tbody>
-                                    
-            //                        <tr>
-            //                            <td> Booking transaction (per month)</td>
-            //                            <td>${currentPlan.BOOKING_TRANSACTIONS + "/"} 500</td>
-            //                        </tr>
-            //                        <tr>
-            //                            <td>Calendar available</td>
-            //                            <td>${currentPlan.CALENDAR_AVAILABLE + "/"} 1</td>
-            //                        </tr>
-            //                        <tr>
-            //                            <td>Client package available</td>
-            //                            <td>${currentPlan.CLIENT_PACKAGE_AVAILABLE + "/"} 1</td>
-            //                        </tr>
-            //                        <tr>
-            //                            <td>Number of admin</td>
-            //                            <td>No</td>
-            //                        </tr>
-            //                        <tr>
-            //                            <td>Photo album in company profile</td>
-            //                            <td>No</td>
-            //                        </tr>
-            //                        <tr>
-            //                            <td>Client payment</td>
-            //                            <td>No</td>
-            //                        </tr>
-            //                        <tr>
-            //                            <td>Promotion in market place</td>
-            //                            <td>No</td>
-            //                        </tr>
-            //                        <tr>
-            //                            <td>Chat with client</td>
-            //                            <td>No</td>
-            //                        </tr>
-            //                    </tbody>
-            //                </table>
-            //            </div>
-            //        </div>
-            //    </div>`);
 
         } else {
             var colorCounter = 0;
@@ -243,5 +194,32 @@ function setSubscriptionPlans() {
         
 
     }
+
+}
+
+function buyPackage(PackageId, isMonthly) {
+
+    $.ajax({
+        url: "/Account/CheckPublicUserLogin",
+        type: "POST",
+        success: function (response) {
+            swal({
+                icon: "info",
+                title: "Confirm Package!",
+                text: "Are you sure you want to buy this package?",
+                buttons: {
+                    confirm: "Yes",
+                    cancel: "No"
+                }
+            }).then(function (confirm) {
+                if (confirm) {
+                    $("#txtPackageName").val(PackageId);
+                    $("#txtIsMonthly").val(isMonthly);
+                    $("#paymentForm").submit();
+                }
+            })
+        }
+    });
+
 
 }

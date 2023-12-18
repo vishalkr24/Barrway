@@ -95,6 +95,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetCompanyPaymentHistory(GenerateDynamicFormData data, string CompanyId);
 
         Task<AddUpdateDelete> GetCompanyFreeSubscriptionDetails(string CompanyId);
+        Task<AddUpdateDelete> GetFreeCompanyPackage();
 
         Task<AddUpdateDelete> GetCompanyActiveSubscriptionDetails(string CompanyId);
 

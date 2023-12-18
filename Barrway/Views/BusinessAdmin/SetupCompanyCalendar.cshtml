@@ -43,6 +43,25 @@
     </div>
 }
 
+@if (!string.IsNullOrEmpty(Model.UNIVERSAL_ERROR))
+{
+    <div class="main" id="error-div">
+        <div class="content container">
+            <div class="row pt-lg-5">
+                <div class="col-md-10" style="margin:auto;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="error-div">
+                                @Model.UNIVERSAL_ERROR<br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 <div class="tom-select-custom" style="display:none;">
     <select class="js-select form-select" multiple autocomplete="off"></select>
 </div>
@@ -158,9 +177,9 @@
         border-radius: 12px;
     }
 
-    #templates-row .card img{
-        max-height:200px;
-    }
+        #templates-row .card img {
+            max-height: 200px;
+        }
 
     /* Style div elements that have class equal to tag */
     #templates-row .tag {
@@ -229,29 +248,29 @@
 <input type="text" value="@ViewBag.IsPartial.ToString().ToLower()" id="createCalendarCheck" style="display:none;" readonly />
 <input type="text" value="@Model.CALENDAR_CODE" id="calendarCodeInput" style="display:none;" readonly />
 <style>
-    .template-selection-area #templates-row{
+    .template-selection-area #templates-row {
         min-height: 700px;
         max-height: 700px;
         overflow: hidden;
         overflow-y: scroll;
-        box-shadow:none;
+        box-shadow: none;
         transition: all 0.2s ease-in-out;
-        
     }
-        .template-selection-area .col-md-4 {
+
+    .template-selection-area .col-md-4 {
+        padding: 16px;
+        border-radius: 25px;
+        border: 3px solid white;
+        cursor: pointer;
+    }
+
+        .template-selection-area .col-md-4.active {
             padding: 16px;
             border-radius: 25px;
-            border: 3px solid white;
-            cursor:pointer;
+            border: 3px solid #01aa005c;
+            /*box-shadow: inset 0px 0px 16px #01aa005c;*/
+            cursor: pointer;
         }
-
-            .template-selection-area .col-md-4.active {
-                padding: 16px;
-                border-radius: 25px;
-                border: 3px solid #01aa005c;
-                /*box-shadow: inset 0px 0px 16px #01aa005c;*/
-                cursor: pointer;
-            }
 
             .template-selection-area .col-md-4.active:hover {
                 padding: 16px;
@@ -261,16 +280,16 @@
                 cursor: pointer;
             }
 
-            .template-selection-area .col-md-4:hover {
-                /*box-shadow: inset 0px 0px 16px #18366d5c;*/
-                border: 3px solid #18366d5c;
-                transition: all 0.2s ease-in-out;
-            }
+        .template-selection-area .col-md-4:hover {
+            /*box-shadow: inset 0px 0px 16px #18366d5c;*/
+            border: 3px solid #18366d5c;
+            transition: all 0.2s ease-in-out;
+        }
 
     .template-image {
         height: 160px;
         max-width: 260px;
-        width:100%;
+        width: 100%;
         border-radius: 25px;
         border: none;
         /*box-shadow: 0px 4px 20px 0px #18366d5c;*/
@@ -278,7 +297,7 @@
 
     @@media (max-width: 800px) {
         .template-selection-area #templates-row {
-            min-height:300px;
+            min-height: 300px;
             max-height: 300px;
         }
     }
@@ -292,12 +311,12 @@
                 <button type="button" onclick="closeSchedularModal()" class="btn btn-close" data-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                
+
                 <div class="form-group">
                     <label>Select a Schedular</label>
                     <select id="schedular-selector" class="form-control" onchange="bindSchedularId()"></select>
                 </div>
-                
+
 
             </div>
         </div>
