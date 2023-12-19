@@ -274,7 +274,7 @@ namespace Barrway.Service.Repository
                             return new AddUpdateDelete() { Status = false, Message = "User with this email is already assigned to the business." };
                         }
                     }
-                    
+
                 }
 
                 Form_DataTable data = new Form_DataTable();
@@ -311,7 +311,7 @@ namespace Barrway.Service.Repository
                 {
                     return new AddUpdateDelete() { Status = false, Message = "Email not sent." };
                 }
-                
+
 
             }
             catch (Exception ex)
@@ -1484,6 +1484,9 @@ namespace Barrway.Service.Repository
                                     {
                                         CompanySubscriptionDetailsModel companySubscriptionDetailsModel = new CompanySubscriptionDetailsModel()
                                         {
+                                            ASSIGNED_BOOKINGS = Convert.ToDouble(businessOrderModel.BOOKING_SESSION_COMPANY),
+                                            ASSIGNED_CALENDARS = Convert.ToDouble(businessOrderModel.CALENDAR_AVAILABLE),
+                                            ASSIGNED_SESSIONS = Convert.ToDouble(businessOrderModel.SESSION_MONTH_COMPANY),
                                             ORDER_ID = orderResult.Data,
                                             PLAN_ID = freeSubscription.Data["Id"]?.ToString(),
                                             COMPANY_ID = formResult.Id.ToString(),
@@ -1493,7 +1496,7 @@ namespace Barrway.Service.Repository
 
                                         var subscriptionSaveResult = await AddCompanySubscriptionDetails(companySubscriptionDetailsModel);
                                     }
-                                    
+
                                 }
                             }
                         }
@@ -1635,6 +1638,9 @@ namespace Barrway.Service.Repository
                                 {
                                     CompanySubscriptionDetailsModel companySubscriptionDetailsModel = new CompanySubscriptionDetailsModel()
                                     {
+                                        ASSIGNED_BOOKINGS = Convert.ToDouble(businessOrderModel.BOOKING_SESSION_COMPANY),
+                                        ASSIGNED_CALENDARS = Convert.ToDouble(businessOrderModel.CALENDAR_AVAILABLE),
+                                        ASSIGNED_SESSIONS = Convert.ToDouble(businessOrderModel.SESSION_MONTH_COMPANY),
                                         ORDER_ID = orderResult.Data,
                                         PLAN_ID = freeSubscription.Data["Id"]?.ToString(),
                                         COMPANY_ID = CompanyDetails.Data["Id"].ToString(),
@@ -2383,8 +2389,22 @@ namespace Barrway.Service.Repository
                 CompanyDetails = await GetSingleCompanyById(model.COMPANY_ID);
             }
 
+            string query = $@"select top 1
+                                f.ASSIGNED_CALENDARS as 'TOTAL_CAL',
+                                f.ASSIGNED_SESSIONS as 'TOTAL_SESSIONS'
+                                from COMPANY_SUBSCRIPTION_DETAILS_1939 f where COMPANY_ID = '{model.COMPANY_ID}' and (f.ASSIGNED_SESSIONS != -1 and f.ASSIGNED_CALENDARS != -1) order by created_at desc";
+            var checkData = await sqlFunction.ExecuteSqlQuery(query);
+
             if (CompanyDetails.Status)
             {
+                if (checkData.Count > 0)
+                {
+                    if (model.ASSIGNED_SESSIONS != -1)
+                        model.ASSIGNED_SESSIONS += Convert.ToDouble(checkData[0]["TOTAL_SESSIONS"]?.ToString());
+                    if (model.ASSIGNED_CALENDARS != -1)
+                        model.ASSIGNED_CALENDARS += Convert.ToDouble(checkData[0]["TOTAL_CAL"]?.ToString());
+                }
+
                 Form_DataTable data = new Form_DataTable();
                 data.action = (int)FormAction.Save;
                 data.formId = (int)FormSetting.COMPANY_SUBSCRIPTION_DETAILS;
@@ -2392,6 +2412,9 @@ namespace Barrway.Service.Repository
                 data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.ToDictionary());
                 data.formGroupKey = Guid.NewGuid().ToString();
                 var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+                string sqlQuery = $@"update COMPANY_SUBSCRIPTION_DETAILS_1939 set IS_ACTIVE = 'N' where COMPANY_ID = '{model.COMPANY_ID}' and Id != '{formResult.Id.ToString()}'";
+                var result = await sqlFunction.ExecuteSqlCommandQuery(sqlQuery);
 
                 if (formResult.res == 1)
                 {
@@ -2407,6 +2430,10 @@ namespace Barrway.Service.Repository
             {
                 return new AddUpdateDelete() { Message = AppMessage.NotFound, Status = false };
             }
+
+
+
+
         }
 
         public async Task<AddUpdateDelete> GetCompanyFreeSubscriptionDetails(string CompanyId)
@@ -2447,28 +2474,7 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetCompanyActiveSubscriptionDetails(string CompanyId)
         {
-            string query = $@"SELECT [Id]
-                              ,[created_at]
-                              ,[updated_at]
-                              ,[created_by]
-                              ,[updated_by]
-                              ,[CALENDAR_AVAILABLE]
-                              ,[BOOKING_TRANSACTIONS]
-                              ,[CLIENT_PACKAGE_AVAILABLE]
-                              ,[NO_OF_ADMIN]
-                              ,[PHOTO_ALBUM]
-                              ,[CLIENT_PAYMENT]
-                              ,[PROMOTION_IN_MARKETPLACE]
-                              ,[CHAT_WITH_CLIENT]
-                              ,[PURCHASE_DATE]
-                              ,[PAYMENT_ID]
-                              ,[ORDER_ID]
-                              ,[PAYMENT_METHOD]
-                              ,[PAYMENT_STATUS]
-                              ,[IS_ACTIVE]
-                              ,[IS_FREE_PLAN]
-                              ,[PLAN_ID]
-                              ,[COMPANY_ID]
+            string query = $@"SELECT *
                           FROM [dbo].[COMPANY_SUBSCRIPTION_DETAILS_1939] WHERE COMPANY_ID = '{CompanyId}' and IS_ACTIVE = 'Y' order by created_at desc";
 
             List<IDictionary<string, object>> Result = await sqlFunction.ExecuteSqlQuery(query);
@@ -2488,7 +2494,7 @@ namespace Barrway.Service.Repository
         {
             Dictionary<string, string> filters = new Dictionary<string, string>() {
                     { "ORDER_ID","history.ORDER_ID"},
-                    { "SUBSCRIPTION_PLAN_NAME","subscriptionPlan.SUBSCRIPTION_PLAN_NAME"},
+                    { "SUBSCRIPTION_PLAN_NAME","subscriptionPlan.PLAN_NAME"},
                     { "PAYMENT_DESCRIPTION","history.PAYMENT_DESCRIPTION"},
                     { "PAYMENT_METHOD","history.PAYMENT_METHOD"},
                     { "HKD","history.HKD"},

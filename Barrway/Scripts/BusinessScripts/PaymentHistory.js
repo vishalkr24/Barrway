@@ -17,7 +17,7 @@ function setSubscriptionHistoryMaster() {
                 }, headerSort: false
             },
             { title: 'Order Id', field: 'ORDER_ID', headerFilter: "input" },
-            { title: 'Plan Name', field: 'SUBSCRIPTION_PLAN_NAME', headerFilter: "input" },
+            { title: 'Plan Name', field: 'PLAN_NAME', headerFilter: "input" },
             { title: 'Description', field: 'PAYMENT_DESCRIPTION', headerFilter: "input" },
             { title: 'Method', field: 'PAYMENT_METHOD', headerFilter: "input" },
             { title: 'HKD', field: 'HKD', headerFilter: "input" },
