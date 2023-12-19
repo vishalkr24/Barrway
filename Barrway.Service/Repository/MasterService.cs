@@ -1433,13 +1433,13 @@ DECLARE @retval nvarchar(max);
                                 ,[PLAN_DESC]
                                 ,[PLAN_PRICE]
                                 ,[PLAN_PRICE]*12- ((PLAN_PRICE*12*{disc})/100) [YEARA_PRICE]
-                                ,(case when NUM_OF_AVAIL_CLR=-1 then 'Unlimited' else cast(NUM_OF_AVAIL_CLR as varchar(50)) end) NUM_OF_AVAIL_CLR
-								,(case when VALID_SESSIONS=-1 then 'Unlimited' else cast(VALID_SESSIONS as varchar(50)) end) VALID_SESSIONS
+                                ,NUM_OF_AVAIL_CLR
+								,VALID_SESSIONS
                                 ,[PAYMENT_TRAN_FEE]
                                 ,[PLAN_STATUS]
                                 ,[created_at]
                                 ,[IS_FREE_PLAN]
-								,(case when VALID_BOOKING_SESSION=-1 then 'Unlimited' else cast(VALID_BOOKING_SESSION as varchar(50)) end) VALID_BOOKING_SESSION
+								,VALID_BOOKING_SESSION
                               FROM [dbo].[BUSINESS_PLAN_MASTER_1966] where PLAN_STATUS = 'ACTIVE' and Id = '{PackageId}'";
                 var result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -1500,7 +1500,7 @@ DECLARE @retval nvarchar(max);
                     var query = $@"update BUSINESS_ORDER_MASTER_1970 set ORDER_NO = '{OrderNo}' where Id = '{formResult.Id.ToString()}'";
                     var result = await sqlFunction.ExecuteSqlCommandQuery(query);
 
-                    return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() };
+                    return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = OrderNo };
                 }
                 else
                 {
@@ -1595,5 +1595,31 @@ DECLARE @retval nvarchar(max);
             }
         }
 
+        public async Task<AddUpdateDelete> CreateCompanyPaymentHistory(CompanyPaymentHistoryModel model)
+        {
+            try
+            {
+                Form_DataTable data = new Form_DataTable();
+                data.action = (int)FormAction.Save;
+                data.formId = (int)FormSetting.COMPANY_PAYMENT_HISTORY_MASTER;
+                data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.ToDictionary());
+                data.formGroupKey = Guid.NewGuid().ToString();
+                var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+                if (formResult.res == 1)
+                {
+                    return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Message = formResult.Message, Status = false };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message.ToString() };
+            }
+        }
     }
 }

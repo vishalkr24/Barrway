@@ -20,7 +20,6 @@
     /* Create a custom radio button */
     .checkmark {
         position: absolute;
-        left: 37px;
         height: 20px;
         width: 20px;
         background-color: #eee;
@@ -67,7 +66,7 @@
     .order-details-card {
         border: 1px solid lightgrey;
         border-radius: 8px;
-        margin-top: 132px;
+        margin-top: 40px;
         min-height: 350px;
         font-size: 16px;
     }
@@ -101,29 +100,28 @@
             font-size: 16px;
         }
 
-    @@media (max-width: 900px) {
-        .order-details-card {
-            margin-top: 182px;
-        }
+    .text-right {
+        text-align: right;
+    }
 
-            .order-details-card .col-md-4.custom-col {
-                border-top: 1px solid #ebebeb;
-                border-left: none;
-                min-height: unset;
-            }
+    @@media (max-width: 900px) {
+        .order-details-card .col-md-4.custom-col {
+            border-top: 1px solid #ebebeb;
+            border-left: none;
+            min-height: unset;
+        }
 
         .order-details-card .primary-order-details-table tbody td {
             font-size: 13px;
         }
 
-            .order-details-card .primary-order-details-table thead td {
-                font-size: 13px;
-            }
+        .order-details-card .primary-order-details-table thead td {
+            font-size: 13px;
+        }
     }
 </style>
 
 <div style="min-height: 100vh;">
-    <br /><br />
     <div class="container">
         <div class="order-details-card">
             <div class="row">
@@ -144,12 +142,11 @@
                                         <table width="100%" class="primary-order-details-table">
                                             <thead>
                                                 <tr>
-                                                    <td width="50%">
-                                                        <span style="font-weight: 500">@Resource.Package_Details</span>
+                                                    <td width="80%">
+                                                        <span style="font-weight: 500">@Resource.Package_Details</span><br />
+                                                        <span style="color:crimson; font-size:smaller;">*Package will be activated ONLY on the current Company</span>
                                                     </td>
-                                                    <td>
-                                                        <span style="font-weight: 500">@Resource.Coin</span>
-                                                    </td>
+
                                                     <td class="text-right">
                                                         <span style="font-weight: 500">@Resource.Price</span>
                                                     </td>
@@ -157,15 +154,17 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td width="50%">
-                                                        <span>@Model.CalendarPackageModel.PACKAGE_NAME</span><br />
-                                                        <span style="color:grey;">@Model.CalendarPackageModel.PACKAGE_DESCRIPTION</span>
+                                                    <td width="80%">
+                                                        <span>@Model.Order.PLAN_NAME</span><br />
+                                                        <span style="color:grey; font-size: smaller;">
+                                                            @Model.Order.PLAN_DESCRIPTION<br />
+                                                            @((Model.Order.CALENDAR_AVAILABLE == "-1")? "Unilimited": Model.Order.CALENDAR_AVAILABLE) x Calendars<br />
+                                                            @((Model.Order.SESSION_MONTH_COMPANY == "-1")? "Unilimited": Model.Order.SESSION_MONTH_COMPANY) x Sessions per Month<br />
+                                                            @((Model.Order.BOOKING_SESSION_COMPANY == "-1")? "Unilimited": Model.Order.BOOKING_SESSION_COMPANY) x Bookings per Session
+                                                        </span>
                                                     </td>
-                                                    <td>
-                                                        <span>B$@Model.CalendarPackageModel.PACKAGE_COIN.ToString("n2")</span>
-                                                    </td>
-                                                    <td class="text-right">
-                                                        <span><b>$@Model.CalendarPackageModel.PACKAGE_PRICE.ToString("n2") HKD</b></span>
+                                                    <td class="text-right" style="vertical-align:top;">
+                                                        <span><b>$@Model.Order.ORDER_PRICE.ToString("n2") HKD</b></span>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -175,7 +174,7 @@
                                 </div>
 
                             </p>
-                            
+
                             <p style="padding-top: 8px;">
                                 <div class="order-heading" style="margin-bottom: 12px;">
                                     @Resource.Payment_method
@@ -193,40 +192,55 @@
                         <div style="padding-top: 16px;">
                             <table width="100%" class="payment-details-table">
                                 <tr style="border-bottom:1px solid lightgrey;">
-                                    <td width="50%" style="height:100px">
-                                       @Resource.Package_Details<br />
-                                        <span style="font-size:smaller">1 x @Model.CalendarPackageModel.PACKAGE_NAME</span>
+                                    <td width="60%" style="height:116px">
+                                        @Resource.Package_Details<br />
+                                        <span style="font-size:smaller">
+                                            @Model.Order.PLAN_NAME<br />
+                                            @((Model.Order.CALENDAR_AVAILABLE == "-1")? "Unilimited": Model.Order.CALENDAR_AVAILABLE) x Calendars<br />
+                                            @((Model.Order.SESSION_MONTH_COMPANY == "-1")? "Unilimited": Model.Order.SESSION_MONTH_COMPANY) x Sessions per Month<br />
+                                            @((Model.Order.BOOKING_SESSION_COMPANY == "-1")? "Unilimited": Model.Order.BOOKING_SESSION_COMPANY) x Bookings per Session
+                                        </span>
                                     </td>
                                     <td class="text-right">
-                                        $@Model.CalendarPackageModel.PACKAGE_PRICE.ToString("n2") HKD
+                                        $@Model.Order.ORDER_PRICE.ToString("n2") HKD
                                     </td>
                                 </tr>
                             </table>
                             <table class="total-table" width="100%">
                                 <tr>
-                                    <td>
+                                    <td width="60%">
                                         @Resource.Sub_Total:
                                     </td>
                                     <td class="text-right">
-                                        $@Model.CalendarPackageModel.PACKAGE_PRICE.ToString("n2") HKD
+                                        $@Model.Order.ORDER_PRICE.ToString("n2") HKD
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>
+                                    <td width="60%" class="pt-0">
+                                        Transaction Fee (@Model.Order.TRANSACTION_FEE%):
+                                    </td>
+                                    <td class="text-right pt-0">
+                                        $@(Convert.ToDouble((Model.Order.ORDER_PRICE * Model.Order.TRANSACTION_FEE)/100).ToString("n2")) HKD
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="60%">
                                         <b>@Resource.Grand_Total:</b>
                                     </td>
                                     <td class="text-right">
-                                        <b>$@Model.CalendarPackageModel.PACKAGE_PRICE.ToString("n2") HKD</b>
+                                        <b>$@((Model.Order.ORDER_PRICE+ Convert.ToDouble((Model.Order.ORDER_PRICE * Model.Order.TRANSACTION_FEE) / 100)).ToString("n2")) HKD</b>
                                     </td>
                                 </tr>
                             </table>
                             <br />
-                            <form action="/Payment/CreateCheckoutSession" method="post">
+                            <form action="/Payment/CreateBusinessCheckoutSession" method="post">
                                 <input name="PACKAGE_ID" style="display:none;" readonly value="@Model.Order.PACKAGE_ID" />
                                 <input name="ORDER_NO" style="display:none;" readonly value="@Model.Order.ORDER_NO" />
+                                <input name="COMPANY_ID" style="display:none;" readonly value="@Model.Order.COMPANY_ID" />
+                                <input name="IS_MONTHLY" style="display:none;" readonly value="@Model.Order.IS_MONTHLY" />
                                 <button type="submit" class="btn btn-primary" style="width: 100%;">Proceed to pay <i class="bi bi-lock-fill"></i></button>
                             </form>
-                            
+
                         </div>
 
                     </div>

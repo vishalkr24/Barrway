@@ -14,5 +14,8 @@ namespace Barrway.DTO.BusinessModels
         public string IS_FREE_PLAN { get; set; }
         public string PLAN_ID { get; set; }
         public string COMPANY_ID { get; set; }
+        public double ASSIGNED_CALENDARS { get; set; }
+        public double ASSIGNED_SESSIONS { get; set; }
+        public double ASSIGNED_BOOKINGS { get; set; }
     }
 }
