@@ -48,6 +48,7 @@
         body {
             opacity: 0;
         }
+        
     </style>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -178,7 +179,7 @@
                     <!-- Logo -->
 
                     <a class="navbar-brand" href="/BusinessAdmin/Dashboard" aria-label="Front">
-                        <img class="navbar-brand-logo" src="../assets/svg/logos/logo.png" alt="Logo" data-hs-theme-appearance="default">
+                        <img class="business-logo" src="../assets/svg/logos/favicon.png" alt="Logo" data-hs-theme-appearance="default">
                         <span class="bui">@Resource.Business</span>
                     </a>
 
@@ -279,7 +280,7 @@
                     <!-- End Toggler -->
                     <!-- Collapse -->
                     <div class="collapse navbar-collapse" id="navbarContainerNavDropdown">
-                        <ul class="navbar-nav custome-nav">
+                        <ul class="navbar-nav">
                             <!-- Dashboards -->
                             <li class="hs-has-sub-menu nav-item">
                                 <span class="lang">
@@ -293,29 +294,87 @@
                                 </span>
                             </li>
                             <li class="hs-has-sub-menu nav-item">
-                                <a id="" class="hs-mega-menu-invoker nav-link active" href="/BusinessAdmin/Dashboard" role="button"> @Resource.Home</a>
+                                <a id="" class="hs-mega-menu-invoker nav-link active" href="/BusinessAdmin/Dashboard" role="button">
+
+                                    <div class="button-body-wrap">
+                                        <div class="button-body">
+                                            <button class="cus-button">
+                                                <img src="/assets/marketplace/image/web.png" alt="" class="button_img" />
+                                                <span class="button_title"> @Resource.Home </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </a>
                             </li>
                             <!-- End Dashboards -->
                             <!-- Pages -->
                             <li class="hs-has-sub-menu nav-item hide-for-superadmin">
-                                <a id="" class="hs-mega-menu-invoker nav-link " href="/BusinessAdmin/Dashboard" role="button">@Resource.My_Business </a>
+                                <a id="" class="hs-mega-menu-invoker nav-link " href="/BusinessAdmin/Dashboard" role="button">
+                                    <div class="button-body-wrap">
+                                        <div class="button-body">
+                                            <button class="cus-button">
+                                                <img src="/assets/marketplace/image/subs.png" alt="" class="button_img" />
+                                                <span class="button_title">@Resource.My_Business </span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </a>
                             </li>
                             <!-- End Pages -->
                             <!-- Apps -->
                             <li class="hs-has-sub-menu nav-item">
-                                <a id="" class="hs-mega-menu-invoker nav-link" href="/Marketplace/Index" role="button">@Resource.Market_Place</a>
+                                <a id="" class="hs-mega-menu-invoker nav-link" href="/Marketplace/Index" role="button">
+                                    <div class="button-body-wrap">
+                                        <div class="button-body">
+                                            <button class="cus-button">
+                                                <img src="/assets/marketplace/image/user.png" alt="" class="button_img" />
+                                                <span class="button_title"> @Resource.Market_Place </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </a>
                             </li>
                             <!-- End Apps -->
 
                             <li class="nav-item hide-for-superadmin">
                                 <a class="nav-link " href="#">
-                                    @Resource.Contact
+                                    <div class="button-body-wrap">
+                                        <div class="button-body">
+                                            <button class="cus-button">
+                                                <img src="/assets/marketplace/image/spwr.png" alt="" class="button_img" />
+                                                <span class="button_title">@Resource.Contact </span>
+                                            </button>
+                                        </div>
+                                    </div>
+
                                 </a>
                             </li>
 
                             <li class="nav-item hide-for-superadmin">
                                 <a class="nav-link " href="/BusinessMarketplace/Pricing" data-placement="left">
-                                    @Resource.Pricing
+                                    <div class="button-body-wrap">
+                                        <div class="button-body">
+                                            <button class="cus-button">
+                                                <img src="/assets/marketplace/image/cph.png" alt="" class="button_img" />
+                                                <span class="button_title"> @Resource.Pricing </span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </a>
+                            </li>
+                            <li class="nav-item hide-for-superadmin">
+                                <a class="nav-link " href="/BusinessMarketplace/Pricing" data-placement="left">
+                                    <div class="button-body-wrap">
+                                        <div class="button-body">
+                                            <button class="cus-button">
+                                                <img src="/assets/marketplace/image/sp.png" alt="" class="button_img" />
+                                                <span class="button_title"> @Resource.Pricing </span>
+                                            </button>
+                                        </div>
+                                    </div>
+
                                 </a>
                             </li>
                         </ul>
