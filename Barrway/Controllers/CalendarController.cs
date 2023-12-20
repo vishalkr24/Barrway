@@ -387,9 +387,35 @@ namespace Barrway.Controllers
 
                 if (createNewSchedule)
                 {
+                    var calendarCountCheckData = await businessUserService.GetSessionsForThisMonth(data.COMPANY_CODE);
+
+                    if (!calendarCountCheckData.Status)
+                    {
+                        return Json(calendarCountCheckData);
+                    }
+                    else
+                    {
+                        DateTime PackageValidity = Convert.ToDateTime(calendarCountCheckData.Data["VALID_TILL"]?.ToString());
+
+                        if (PackageValidity < Convert.ToDateTime(data.SCH_TO_DATE))
+                        {
+                            data.SCH_TO_DATE = PackageValidity.ToString("yyyy-MM-dd");
+                        }
+
+                        if (Convert.ToInt32(calendarCountCheckData.Data["AVAILABLE_SESSIONS"]?.ToString()) == 0)
+                        {
+                            return Json(new AddUpdateDelete() { Status = false, Message = "You have reached maximum limit of creating sessions for this month. Upgrade you plan to create more sessions." });
+                        }
+                    }
+
                     string script = "";
                     string formGroupKey = CustomMethods.CreateUUID();
+                    
                     var response = await businessUserService.AddSchedularForm(data, formGroupKey);
+                    
+                    int eventCounter = 0;
+                    bool caseBreak = false;
+
                     if (response.Status)
                     {
                         if (UserIdentity.Role == "SUPERADMIN_USER")
@@ -403,10 +429,16 @@ namespace Barrway.Controllers
 
                         DateTime dateTracker = start;
                         int slotCounter = 1;
-
-
+                        
                         while (dateTracker <= end)
                         {
+                            eventCounter++;
+                            if (Convert.ToInt32(calendarCountCheckData.Data["AVAILABLE_SESSIONS"]?.ToString()) < eventCounter)
+                            {
+                                caseBreak = true;
+                                break;
+                            }
+
                             string SchedularFormId = response.Data.Id.ToString();
                             DateTime SlotStartTime = DateTime.Now;
                             DateTime SlotEndTime = DateTime.Now;
@@ -595,16 +627,28 @@ namespace Barrway.Controllers
                                     ";
 
                             dateTracker = dateTracker.AddDays(1);
-
                         }
-
                     }
 
                     var count = await sqlFunction.ExecuteSqlCommandQuery(script);
 
                     if (count > 0)
                     {
-                        return Json("Success", JsonRequestBehavior.AllowGet);
+                        if (caseBreak)
+                        {
+                            if (eventCounter == 0)
+                            {
+                                return Json(new AddUpdateDelete() { Status = false, Message = "No Sessions Created. Session limit reached as per your plan. Upgrade your plan to create more sessions." }, JsonRequestBehavior.AllowGet);
+                            }
+                            else
+                            {
+                                return Json(new AddUpdateDelete() { Status = false, Message = "Only " + eventCounter + " Sessions Created. Session limit reached as per your plan. Upgrade your plan to create more sessions." }, JsonRequestBehavior.AllowGet);
+                            }
+                        }
+                        else
+                        {
+                            return Json("Success", JsonRequestBehavior.AllowGet);
+                        }
                     }
                 }
 

@@ -2893,8 +2893,17 @@
                 //data = JSON.stringify(data);
 
                 adminService.postAsync('/Calendar/AddSchedule/', { data: data }).then(function (res) {
-                    $scope.SchedularId = 0;
-                    window.location.reload();
+                    if (res.data != "Success") {
+                        swal({
+                            icon: "Error",
+                            title: "Upgrade you Plan",
+                            text: res.data.Message
+                        });
+                    } else {
+                        $scope.SchedularId = 0;
+                        window.location.reload();
+                    }
+                    
                 }, function (err) {
                     alert("something went wrong!!");
                 });

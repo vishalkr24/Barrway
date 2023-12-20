@@ -27,14 +27,16 @@ namespace Barrway.Service.Repository
         private readonly IFormAPIRepository formAPIRepository;
         private readonly IAuthService authService;
         private readonly IMasterService masterService;
+        private readonly IBusinessUserService businessUserService;
 
-        public PublicUserService(IFormAPIRepository formAPIRepository, ISqlFunction sqlFunction, IAuthService authService, IMasterService masterService)
+        public PublicUserService(IFormAPIRepository formAPIRepository, ISqlFunction sqlFunction, IAuthService authService, IMasterService masterService, IBusinessUserService businessUserService)
         {
             this.connectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
             this.formAPIRepository = formAPIRepository;
             this.sqlFunction = sqlFunction;
             this.authService = authService;
             this.masterService = masterService;
+            this.businessUserService = businessUserService;
         }
 
         public async Task<AddUpdateDelete> CreatePublicUserAccount(PublicAccountModel model)
@@ -241,6 +243,19 @@ namespace Barrway.Service.Repository
             }
             else
             {
+                var bookingsCheckData = await businessUserService.GetBookingsForThisMonth(model.participant.COMPANY_CODE, model.transaction.SLOT);
+                if (bookingsCheckData.Status)
+                {
+                    if (Convert.ToInt32(bookingsCheckData.Data["AVAILABLE_BOOKINGS"]?.ToString()) == 0)
+                    {
+                        return new AddUpdateDelete() { Status = false, Message = "Unable to book this event" };
+                    }
+                }
+                else
+                {
+                    return bookingsCheckData;
+                }
+
                 // add entry in participant master table
                 var publicUser = await GetSinglePublicUserAccount(model.USER_ID);
 

@@ -1,4 +1,5 @@
-﻿using Barrway.DTO.FormAPI;
+﻿using Barrway.DTO.Common;
+using Barrway.DTO.FormAPI;
 using Barrway.Security;
 using Barrway.Service.IRepository;
 using Barrway.Service.Repository;
@@ -152,6 +153,44 @@ namespace Barrway.Controllers
         [HttpPost]
         public async Task<ActionResult> GeneratedFormData(Form_DataTable data)
         {
+            // validation check for Session count
+            if (data.formId == (int)FormSetting.CALENDAR_FORM)
+            {
+                try
+                {
+                    var deserData = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(data.formfieldDataListTemp);
+                    if (deserData.Any(x => x["name"]?.ToString() == "COMPANY_CODE"))
+                    {
+                        string companyCode = deserData.FirstOrDefault(x => x["name"]?.ToString() == "COMPANY_CODE")["value"]?.ToString();
+
+                        var checkResult = await businessUserService.GetSessionsForThisMonth(companyCode);
+
+                        if (checkResult.Status)
+                        {
+                            if (Convert.ToInt32(checkResult.Data["ASSIGNED_SESSIONS"]?.ToString()) == 0)
+                            {
+                                return Json(new AddUpdateDelete() { Status = false, Message = "You have reached the maximum limit of creating Session for this month. Upgrade your Plan to create Sessions." });
+                            }
+                        }
+                        else
+                        {
+                            return Json(checkResult);
+                        }
+                    }
+                    else
+                    {
+                        return Json(new AddUpdateDelete() { Status = false, Message = "Event not created." });
+                    }
+                    
+
+                }
+                catch (Exception ex)
+                {
+                    return Json(new AddUpdateDelete() { Status = false, Message = "Event not created." });
+                }
+            }
+
+
             return Json((await formAPIRepository.GeneratedFormData(data)).Data);
         }
 

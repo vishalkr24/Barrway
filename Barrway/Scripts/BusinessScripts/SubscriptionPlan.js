@@ -39,7 +39,7 @@ function setSubscriptionPlans() {
                         <div class="pricing-custome-inner">
                             <div class="heder-price ${colorTheme[colorCounter]}"></div>
                             <div class="pricing-body">
-                                <h3 style="color:crimson;">${(plans[i].Id == currentPlan.PLAN_ID) ? "Your Current Plan" : ""}</h3>
+                                <h3 style="color:crimson;">${(plans[i].Id == currentPlan.PACKAGE_ID) ? "Your Current Plan" : ""}</h3>
                                 <h2>${plans[i].PLAN_NAME}</h2>
                                 <p><span class="extra-larg purple-color">$${plans[i].YEARA_PRICE}</span> <span class="sm"> paid yearly</span></p>
                                 <p>HK$ ${parseFloat(plans[i].PLAN_PRICE)}/ month</p>
@@ -52,11 +52,11 @@ function setSubscriptionPlans() {
                                         </tr>
                                         <tr>
                                             <td> Number of available calendar</td>
-                                            <td>${(plans[i].Id == currentPlan.PLAN_ID) ? ((currentPlan.ASSIGNED_CALENDARS == -1) ? "Unlimited" : currentPlan.ASSIGNED_CALENDARS) :  plans[i].NUM_OF_AVAIL_CLR }  </td>
+                                            <td>${(plans[i].Id == currentPlan.PACKAGE_ID) ? ((currentPlan.ASSIGNED_CALENDARS == -1) ? "Unlimited" : currentPlan.ASSIGNED_CALENDARS) :  plans[i].NUM_OF_AVAIL_CLR }  </td>
                                         </tr>
                                         <tr>
                                             <td>Sessions per Month</td>
-                                            <td>${(plans[i].Id == currentPlan.PLAN_ID) ? ((currentPlan.ASSIGNED_CALENDARS == -1) ? "Unlimited" : currentPlan.ASSIGNED_SESSIONS) : plans[i].VALID_SESSIONS}</td>
+                                            <td>${(plans[i].Id == currentPlan.PACKAGE_ID) ? ((currentPlan.ASSIGNED_CALENDARS == -1) ? "Unlimited" : currentPlan.ASSIGNED_SESSIONS) : plans[i].VALID_SESSIONS}</td>
                                         </tr>
                                         <tr>
                                             <td>Bookings per Session</td>
@@ -66,7 +66,7 @@ function setSubscriptionPlans() {
                                 </table>
                             </div>
                             <div class="mt-4">
-                                ${(plans[i].Id == currentPlan.PLAN_ID || plans[i].IS_FREE_PLAN == 'Y') ? "" : "<div class='price-btn'><button class='upgrade' onclick='buyPackage(" + plans[i].Id + ", false)'>Buy Yearly</button><button class='upgrade' onclick='buyPackage(" + plans[i].Id + ", true)'>Buy Monthly</button></div>"}
+                                ${(plans[i].Id == currentPlan.PACKAGE_ID || plans[i].IS_FREE_PLAN == 'Y') ? "" : "<div class='price-btn'><button class='upgrade' onclick='buyPackage(" + plans[i].Id + ", false)'>Buy Yearly</button><button class='upgrade' onclick='buyPackage(" + plans[i].Id + ", true)'>Buy Monthly</button></div>"}
                             </div>
                         </div>
                     </div>`;
