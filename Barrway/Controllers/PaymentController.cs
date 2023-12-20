@@ -290,7 +290,7 @@ namespace Barrway.Controllers
                     PLAN_NAME = PackageData.Data["PLAN_NAME"]?.ToString(),
                     SESSION_MONTH_COMPANY = PackageData.Data["VALID_SESSIONS"]?.ToString(),
                     VALIDITY_DAYS = (isMonthly) ? 30 : 365,
-                    VALID_TILL = (isMonthly) ? DateTime.Now.AddMonths(1) : DateTime.Now.AddYears(1),
+                    VALID_TILL = (isMonthly) ? DateTime.Now.AddMonths(1).ToString("yyyy-MM-dd HH:mm") : DateTime.Now.AddYears(1).ToString("yyyy-MM-dd HH:mm"),
                     ORDER_PRICE = (isMonthly) ? Convert.ToDouble(PackageData.Data["PLAN_PRICE"]?.ToString()) : Convert.ToDouble(PackageData.Data["YEARA_PRICE"]?.ToString()),
                     ORDER_QTY = 1,
                     USER_ID = User.Identity.Name,

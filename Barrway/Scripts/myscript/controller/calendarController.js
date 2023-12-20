@@ -10061,7 +10061,12 @@
                                 }
                             }
                             else {
-                                notifierService.notifyMessage('error', 'FormEntry', exists.Message);
+                                swal({
+                                    icon: "Error",
+                                    title: "Error",
+                                    text: exists.Message
+                                });
+                                //notifierService.notifyMessage('error', 'FormEntry', exists.Message);
 
                             }
                         }

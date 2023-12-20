@@ -18,7 +18,7 @@ namespace Barrway.DTO.BusinessModels
         public string BOOKING_SESSION_COMPANY { get; set; }
         public double TRANSACTION_FEE { get; set; }
         public string COMPANY_ID { get; set; }
-        public DateTime VALID_TILL { get; set; }
+        public string VALID_TILL { get; set; }
         public int VALIDITY_DAYS { get; set; }
         public string IS_MONTHLY { get; set; }
         public double ORDER_PRICE { get; set; }
