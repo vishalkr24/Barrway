@@ -48,7 +48,8 @@
         body {
             opacity: 0;
         }
-        
+        /*custome css*/
+
     </style>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -180,7 +181,7 @@
 
                     <a class="navbar-brand" href="/BusinessAdmin/Dashboard" aria-label="Front">
                         <img class="business-logo" src="../assets/svg/logos/favicon.png" alt="Logo" data-hs-theme-appearance="default">
-                        <span class="bui">@Resource.Business</span>
+                        @*<span class="bui">@Resource.Business</span>*@
                     </a>
 
                     <!-- End Logo -->
@@ -282,6 +283,21 @@
                     <div class="collapse navbar-collapse" id="navbarContainerNavDropdown">
                         <ul class="navbar-nav">
                             <!-- Dashboards -->
+                            <li class="nav-item overflow_v">
+                                <div class="dropdown-me" onclick="toggleDropdown()">
+                                    <div class="dropdown-toggle">
+                                        <span id="selectedItem">Select an item</span>
+                                    </div>
+                                    <div class="dropdown-men" id="dropdownItems">
+                                        <a href="#" onclick="selectItem(this)">Item 1</a>
+                                        <a href="#" onclick="selectItem(this)">Item 2</a>
+                                        <a href="#" onclick="selectItem(this)">Item 3</a>
+                                        <div class="add-company">
+                                            <button>Add company</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
                             <li class="hs-has-sub-menu nav-item">
                                 <span class="lang">
                                     <img src="~/assets/marketplace/image/glo.png" />
@@ -884,7 +900,33 @@
                 return -c * ((t = t / d - 1) * t * t * t - 1) + b;
             };
 
-        })(jQuery);
+        })(jQuery);  
+    </script>
+    <script>
+        /*custome js*/
+        function toggleDropdown() {
+            var dropdown = document.querySelector('.dropdown-me');
+            dropdown.classList.toggle('open');
+        }
+
+        function selectItem(item) {
+            var selectedItem = item.textContent;
+            document.getElementById("selectedItem").textContent = selectedItem;
+            toggleDropdown();
+        }
+
+        // Close the dropdown if the user clicks outside of it
+        window.onclick = function (event) {
+            if (!event.target.closest('.dropdown-me')) {
+                var dropdowns = document.getElementsByClassName("dropdown-me");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('open')) {
+                        openDropdown.classList.remove('open');
+                    }
+                }
+            }
+        }
     </script>
 </body>
 </html>
