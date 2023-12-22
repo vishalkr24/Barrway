@@ -27,3 +27,230 @@
     min-height: 140px;
     max-height: 140px;
 }
+
+/*=============================*/
+.button-body-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-body {
+    position: relative;
+    width: auto;
+}
+
+.cus-button {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    left: 0;
+    border-radius: 100px;
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: padding 0.4s, width 0.3s;
+    background-color: transparent;
+    border: none;
+}
+
+.button_img {
+    display: block;
+    width: auto;
+}
+
+.button_title {
+    color: #fff;
+    text-transform: uppercase;
+    width: 0px;
+    opacity: 0;
+    margin: 0;
+    visibility: hidden;
+    transition: opacity 0.4s, visibility 0.4s, width 0.3s, margin 0.3s;
+}
+
+.cus-button:hover {
+    padding: 0px 11px;
+    width: auto;
+    background-color: #72328a;
+}
+
+    .cus-button:hover .button_title {
+        opacity: 1;
+        margin-left: 15px;
+        width: auto;
+        visibility: visible;
+    }
+.business-logo {
+    width: 100%;
+    min-width: 3rem;
+    max-width: 3rem;
+}
+
+/*new drop*/
+.dropdown-me {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.dropdown-me .dropdown-toggle {
+    padding: 8px 20px 8px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 200px;
+    position: relative;
+}
+
+/*.dropdown-me .dropdown-toggle:after {
+    content: '\25BC';
+    font-size: 12px;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+}*/
+
+    .dropdown-me .dropdown-men {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 999;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 200px;
+    }
+
+.dropdown-me .dropdown-men a {
+    color: black;
+    padding: 8px 12px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-me .dropdown-men a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown-me.open .dropdown-men {
+    display: block;
+}
+.overflow_v {
+ overflow:visible;
+}
+
+.add-company {
+    width: 100%;
+    float: left;
+    padding: 4px 3px;
+    text-align: center;
+    border-top: 1px solid rgb(114 50 138 / 45%);
+}
+
+    .add-company button {
+        width: 100%;
+        border: none;
+        background: transparent;
+        color: #72328a;
+    }
+
+div#navbarContainerNavDropdown .nav-link.active {
+    background-color: #72328a;
+    width: 100%;
+}
+
+    div#navbarContainerNavDropdown .nav-link.active button.cus-button img.hns, button.cus-button:hover img.hns {
+        display: none;
+    }
+
+    button.cus-button:hover img.hs, div#navbarContainerNavDropdown .nav-link.active button.cus-button img.hs {
+        display: block;
+    }
+
+button.cus-button img.hs {
+    display: none;
+}
+button.cus-button img {
+    width: 20px;
+}
+.grey-back {
+    background-color: rgba(235, 235, 235, 1);
+}
+.white-back {
+    background-color: #fff;
+}
+
+.notification {
+    position: relative;
+}
+
+span.notification-num {
+    position: absolute;
+    top: -10px;
+    left: 11px;
+    background-color: rgba(63, 191, 199, 1);
+    width: 28px;
+    height: 28px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50px;
+    font-size: 11px;
+    color: #fff;
+}
+div#navbarDoubleLineContainerNavDropdown button.cus-button:hover {
+    background-color: #f38592;
+}
+div#navbarContainerNavDropdown ul li .nav-link, div#navbarDoubleLineContainerNavDropdown ul li a {
+    padding-right: 0px;
+}
+/*div#navbarDoubleLineContainerNavDropdown ul.navbar-nav li.nav-item a.active {
+    background-color: #f38592;
+}*/
+
+
+@media screen and (max-width:768px) {
+    .cus-button {
+        padding: 0px 11px;
+        width: auto;
+        background-color: transparent;
+    }
+        
+    .button_title {
+        color: #000;
+        width: 100%;
+        opacity: 1;
+        visibility: visible;
+    }
+    .button_title {
+        color: #000;
+        width: 100%;
+        opacity: 1;
+        visibility: visible;
+        margin-left: 10px;
+    }
+    .dropdown-me .dropdown-toggle {
+    width:100%;
+    margin-bottom:15px;
+    }
+    .dropdown-me{
+        width:100%;
+    }
+    div#navbarContainerNavDropdown .nav-link.active .button_title {
+        color: #fff;
+    }
+    .mje {
+        justify-content: end;
+        padding: 5px 0px 0px;
+    }
+    .button-body-wrap {
+        display: block;
+    }
+}
