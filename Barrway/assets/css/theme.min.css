@@ -34778,7 +34778,9 @@ select.select-company {
 
 @media screen and (max-width:767px) {
     select.select-company {
-        padding: 2px;
+        padding: 2px 19px 0px 0px;
+        background-position: calc(100% - 8px) calc(1em + -5px), calc(100% - 3px) calc(1em + -5px), 100% 0;
+        margin-right:0px;
     }
 
     .cp-10 {
