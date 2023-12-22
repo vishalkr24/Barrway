@@ -153,7 +153,7 @@ namespace Barrway.Controllers
         [HttpPost]
         public async Task<ActionResult> GeneratedFormData(Form_DataTable data)
         {
-            // validation check for Session count
+            // Validation Check for Session Count
             if (data.formId == (int)FormSetting.CALENDAR_FORM)
             {
                 try
@@ -164,13 +164,30 @@ namespace Barrway.Controllers
                         string companyCode = deserData.FirstOrDefault(x => x["name"]?.ToString() == "COMPANY_CODE")["value"]?.ToString();
 
                         var checkResult = await businessUserService.GetSessionsForThisMonth(companyCode);
-
+                        
                         if (checkResult.Status)
                         {
+                            DateTime PackageValidity = Convert.ToDateTime(checkResult.Data["VALID_TILL"]?.ToString());
+
+                            if (PackageValidity < Convert.ToDateTime(deserData.FirstOrDefault(x=> x["name"]?.ToString() == "start")["value"]?.ToString()))
+                            {
+                                return Json(new AddUpdateDelete() { Status = false, Message = "Can not create event after the package expiry date." });
+                            }
+
                             if (Convert.ToInt32(checkResult.Data["ASSIGNED_SESSIONS"]?.ToString()) == 0)
                             {
                                 return Json(new AddUpdateDelete() { Status = false, Message = "You have reached the maximum limit of creating Session for this month. Upgrade your Plan to create Sessions." });
                             }
+
+                            var package = await businessUserService.GetCompanyActiveSubscriptionDetails(companyCode, true);
+
+                            var companyIdDic = new Dictionary<string, object>();
+
+                            companyIdDic.Add("name", "COMPANY_SUBSCRIPTION_ID");
+                            companyIdDic.Add("value", package.Data["SUBS_ID"]?.ToString());
+
+                            deserData.Add(companyIdDic);
+                            data.formfieldDataListTemp = JsonConvert.SerializeObject(deserData);
                         }
                         else
                         {
@@ -189,7 +206,6 @@ namespace Barrway.Controllers
                     return Json(new AddUpdateDelete() { Status = false, Message = "Event not created." });
                 }
             }
-
 
             return Json((await formAPIRepository.GeneratedFormData(data)).Data);
         }
