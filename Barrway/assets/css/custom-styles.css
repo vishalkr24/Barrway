@@ -144,3 +144,73 @@
 .overflow_v {
  overflow:visible;
 }
+
+.add-company {
+    width: 100%;
+    float: left;
+    padding: 4px 3px;
+    text-align: center;
+    border-top: 1px solid rgb(114 50 138 / 45%);
+}
+
+    .add-company button {
+        width: 100%;
+        border: none;
+        background: transparent;
+        color: #72328a;
+    }
+
+div#navbarContainerNavDropdown .nav-link.active {
+    background-color: #72328a;
+    width: 100%;
+}
+
+    div#navbarContainerNavDropdown .nav-link.active button.cus-button img.hns, button.cus-button:hover img.hns {
+        display: none;
+    }
+
+    button.cus-button:hover img.hs, div#navbarContainerNavDropdown .nav-link.active button.cus-button img.hs {
+        display: block;
+    }
+
+button.cus-button img.hs {
+    display: none;
+}
+button.cus-button img {
+    width: 20px;
+}
+.grey-back {
+    background-color: rgba(235, 235, 235, 1);
+}
+.white-back {
+    background-color: #fff;
+}
+
+.notification {
+    position: relative;
+}
+
+span.notification-num {
+    position: absolute;
+    top: -13px;
+    left: 11px;
+    background-color: rgba(63, 191, 199, 1);
+    width: 28px;
+    height: 28px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50px;
+    font-size: 11px;
+    color: #fff;
+}
+div#navbarDoubleLineContainerNavDropdown button.cus-button:hover {
+    background-color: #f38592;
+}
+div#navbarContainerNavDropdown ul li .nav-link, div#navbarDoubleLineContainerNavDropdown ul li a {
+    padding-right: 0px;
+}
+/*div#navbarDoubleLineContainerNavDropdown ul.navbar-nav li.nav-item a.active {
+    background-color: #f38592;
+}*/

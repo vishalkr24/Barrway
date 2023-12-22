@@ -173,8 +173,8 @@
         }
     </style>
     <!-- ========== HEADER ========== -->
-    <header id="header" class="navbar navbar-expand-lg navbar-bordered navbar-spacer-y-0 flex-lg-column">
-        <div class="navbar-dark custtome-navbar-dark w-100 py-2">
+    <header id="header" class="navbar navbar-expand-lg navbar-bordered navbar-spacer-y-0 flex-lg-column grey-back">
+        <div class="navbar-dark custtome-navbar-dark white-back w-100">
             <div class="container">
                 <nav class="navbar-nav-wrap">
                     <!-- Logo -->
@@ -189,6 +189,33 @@
                     <div class="navbar-nav-wrap-secondary-content">
                         <!-- Navbar -->
                         <ul class="navbar-nav">
+                            <li class="hs-has-sub-menu nav-item">
+                                <span class="lang">
+                                    <img src="~/assets/marketplace/image/glo.png" />
+                                    <form action="/Marketplace/ChangeLanguage" method="post" id="langForm" style="display:inline;">
+                                        <select style="border:none; outline:none;" onchange="changeLanguage()" name="langId">
+                                            <option value="1" @(language == "en" ? "selected" : "")>English</option>
+                                            <option value="2" @(language == "zh-Hant" ? "selected" : "")>Chinese</option>
+                                        </select>
+                                    </form>
+                                </span>
+                            </li>
+                            <li class="nav-item">
+                                <!-- Account -->
+                                <div class="dropdown">
+                                    <a class="navbar-dropdown-account-wrapper" href="javascript:;" id="accountNavbarDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" data-bs-dropdown-animation>
+                                        <div class="notification">
+                                            <img class="" src="/assets/marketplace/image/bell.png" alt="notification">
+                                            <span class="notification-num">99+</span>
+                                            @*<span class="avatar-status avatar-sm-status avatar-status-success"></span>*@
+                                        </div>
+                                    </a>
+
+                                    <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-account" aria-labelledby="accountNavbarDropdown" style="width: 16rem;">
+                                    </div>
+                                </div>
+                                <!-- End Account -->
+                            </li>
                             <li class="nav-item">
                                 <!-- Account -->
                                 <div class="dropdown">
@@ -235,22 +262,22 @@
 
                                         <!-- Dropdown -->
                                         @*<div class="dropdown">
-                                                <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown2" data-bs-toggle="dropdown" aria-expanded="false">Customization</a>
+                        <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown2" data-bs-toggle="dropdown" aria-expanded="false">Customization</a>
 
-                                                <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown2">
-                                                    <a class="dropdown-item" href="#">
-                                                        Invite people
-                                                    </a>
-                                                    <a class="dropdown-item" href="#">
-                                                        Analytics
-                                                        <i class="bi-box-arrow-in-up-right"></i>
-                                                    </a>
-                                                    <a class="dropdown-item" href="#">
-                                                        Customize Front
-                                                        <i class="bi-box-arrow-in-up-right"></i>
-                                                    </a>
-                                                </div>
-                                            </div>*@
+                        <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown2">
+                            <a class="dropdown-item" href="#">
+                                Invite people
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                Analytics
+                                <i class="bi-box-arrow-in-up-right"></i>
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                Customize Front
+                                <i class="bi-box-arrow-in-up-right"></i>
+                            </a>
+                        </div>
+                    </div>*@
                                         <!-- End Dropdown -->
                                         @*<a class="dropdown-item" href="#">Manage team</a>*@
 
@@ -286,36 +313,24 @@
                             <li class="nav-item overflow_v">
                                 <div class="dropdown-me" onclick="toggleDropdown()">
                                     <div class="dropdown-toggle">
-                                        <span id="selectedItem">Select an item</span>
+                                        <span id="selectedItem">Company name</span>
                                     </div>
                                     <div class="dropdown-men" id="dropdownItems">
-                                        <a href="#" onclick="selectItem(this)">Item 1</a>
-                                        <a href="#" onclick="selectItem(this)">Item 2</a>
-                                        <a href="#" onclick="selectItem(this)">Item 3</a>
+                                        <a href="#" onclick="selectItem(this)">Company B name</a>
                                         <div class="add-company">
-                                            <button>Add company</button>
+                                            <button>+ Add new company</button>
                                         </div>
                                     </div>
                                 </div>
-                            </li>
-                            <li class="hs-has-sub-menu nav-item">
-                                <span class="lang">
-                                    <img src="~/assets/marketplace/image/glo.png" />
-                                    <form action="/Marketplace/ChangeLanguage" method="post" id="langForm" style="display:inline;">
-                                        <select style="border:none; outline:none;" onchange="changeLanguage()" name="langId">
-                                            <option value="1" @(language == "en" ? "selected" : "")>English</option>
-                                            <option value="2" @(language == "zh-Hant" ? "selected" : "")>Chinese</option>
-                                        </select>
-                                    </form>
-                                </span>
-                            </li>
+                            </li>                            
                             <li class="hs-has-sub-menu nav-item">
                                 <a id="" class="hs-mega-menu-invoker nav-link active" href="/BusinessAdmin/Dashboard" role="button">
 
                                     <div class="button-body-wrap">
                                         <div class="button-body">
                                             <button class="cus-button">
-                                                <img src="/assets/marketplace/image/web.png" alt="" class="button_img" />
+                                                <img src="/assets/marketplace/image/web.png" alt="" class="hns" />
+                                                <img src="/assets/marketplace/image/web1.png" alt="" class="hs" />
                                                 <span class="button_title"> @Resource.Home </span>
                                             </button>
                                         </div>
@@ -329,12 +344,12 @@
                                     <div class="button-body-wrap">
                                         <div class="button-body">
                                             <button class="cus-button">
-                                                <img src="/assets/marketplace/image/subs.png" alt="" class="button_img" />
+                                                <img src="/assets/marketplace/image/subs.png" alt="" class="hns" />
+                                                <img src="/assets/marketplace/image/subs1.png" alt="" class="hs" />
                                                 <span class="button_title">@Resource.My_Business </span>
                                             </button>
                                         </div>
                                     </div>
-
                                 </a>
                             </li>
                             <!-- End Pages -->
@@ -344,7 +359,8 @@
                                     <div class="button-body-wrap">
                                         <div class="button-body">
                                             <button class="cus-button">
-                                                <img src="/assets/marketplace/image/user.png" alt="" class="button_img" />
+                                                <img src="/assets/marketplace/image/user.png" alt="" class="hns" />
+                                                <img src="/assets/marketplace/image/user1.png" alt="" class="hs" />
                                                 <span class="button_title"> @Resource.Market_Place </span>
                                             </button>
                                         </div>
@@ -358,7 +374,8 @@
                                     <div class="button-body-wrap">
                                         <div class="button-body">
                                             <button class="cus-button">
-                                                <img src="/assets/marketplace/image/spwr.png" alt="" class="button_img" />
+                                                <img src="/assets/marketplace/image/spwr.png" alt="" class="hns" />
+                                                <img src="/assets/marketplace/image/spwr1.png" alt="" class="hs" />
                                                 <span class="button_title">@Resource.Contact </span>
                                             </button>
                                         </div>
@@ -372,7 +389,8 @@
                                     <div class="button-body-wrap">
                                         <div class="button-body">
                                             <button class="cus-button">
-                                                <img src="/assets/marketplace/image/cph.png" alt="" class="button_img" />
+                                                <img src="/assets/marketplace/image/cph.png" alt="" class="hns" />
+                                                <img src="/assets/marketplace/image/cph1.png" alt="" class="hs" />
                                                 <span class="button_title"> @Resource.Pricing </span>
                                             </button>
                                         </div>
@@ -385,7 +403,8 @@
                                     <div class="button-body-wrap">
                                         <div class="button-body">
                                             <button class="cus-button">
-                                                <img src="/assets/marketplace/image/sp.png" alt="" class="button_img" />
+                                                <img src="/assets/marketplace/image/sp.png" alt="" class="hns" />
+                                                <img src="/assets/marketplace/image/sp1.png" alt="" class="hs" />
                                                 <span class="button_title"> @Resource.Pricing </span>
                                             </button>
                                         </div>
@@ -419,17 +438,48 @@
                 <!-- End Toggler -->
                 <!-- Collapse -->
                 <div class="collapse navbar-collapse" id="navbarDoubleLineContainerNavDropdown">
-                    <ul class="navbar-nav custome-nav">
+                    <ul class="navbar-nav">
                         <!-- Dashboards -->
                         <li class="nav-item">
-                            <a id="dashboardsMegaMenu" class="nav-link" href="/BusinessAdmin/Dashboard" role="button"> @Resource.Dashboard</a>
+                            <a id="dashboardsMegaMenu" class="nav-link" href="/BusinessAdmin/Dashboard" role="button">
+                                <div class="button-body-wrap">
+                                    <div class="button-body">
+                                        <button class="cus-button">
+                                            <img src="/assets/marketplace/image/cal.png" alt="" class="hns" />
+                                            <img src="/assets/marketplace/image/cal1.png" alt="" class="hs" />
+                                            <span class="button_title">@Resource.Dashboard</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a id="companyMasterMegaMenu" class="nav-link" href="/BusinessAdmin/CompanyMaster" role="button"> @Resource.Company_Master</a>
+                            <a id="companyMasterMegaMenu" class="nav-link" href="/BusinessAdmin/CompanyMaster" role="button">
+                                <div class="button-body-wrap">
+                                    <div class="button-body">
+                                        <button class="cus-button">
+                                            <img src="/assets/marketplace/image/oncal.png" alt="" class="hns" />
+                                            <img src="/assets/marketplace/image/oncal1.png" alt="" class="hs" />
+                                            <span class="button_title">@Resource.Company_Master</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </a>
                         </li>
 
                         <li class="hs-has-sub-menu nav-item">
-                            <a id="calendarsMegaMenu" class="hs-mega-menu-invoker nav-link dropdown-toggle " href="/BusinessAdmin/CalendarMaster" role="button">@Resource.Calendar</a>
+                            <a id="calendarsMegaMenu" class="hs-mega-menu-invoker nav-link dropdown-toggle " href="/BusinessAdmin/CalendarMaster" role="button">
+
+                                <div class="button-body-wrap">
+                                    <div class="button-body">
+                                        <button class="cus-button">
+                                            <img src="/assets/marketplace/image/calse.png" alt="" class="hns" />
+                                            <img src="/assets/marketplace/image/calse1.png" alt="" class="hs" />
+                                            <span class="button_title"> @Resource.Calendar</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </a>
 
                             <div class="hs-sub-menu dropdown-menu navbar-dropdown-menu-borderless" id="calendarsSubMenu" aria-labelledby="pagesMegaMenu" style="min-width: 14rem;">
 
@@ -438,12 +488,28 @@
 
                         <li class="nav-item">
                             <a class="nav-link" id="manage-website" onclick="showComapanyWebsiteDetails(1)" href="#">
-                                @Resource.Website
+
+                                <div class="button-body">
+                                    <button class="cus-button">
+                                        <img src="/assets/marketplace/image/location.png" alt="" class="hns" />
+                                        <img src="/assets/marketplace/image/location1.png" alt="" class="hs" />
+                                        <span class="button_title">@Resource.Website</span>
+                                    </button>
+                                </div>
                             </a>
                         </li>
 
                         <li class="hs-has-sub-menu nav-item hide-for-superadmin">
-                            <a id="subscriptionsMegaMenu" class="hs-mega-menu-invoker nav-link dropdown-toggle " href="/BusinessAdmin/SubscriptionPlan" role="button">@Resource.Subscription</a>
+                            <a id="subscriptionsMegaMenu" class="hs-mega-menu-invoker nav-link dropdown-toggle " href="/BusinessAdmin/SubscriptionPlan" role="button">
+
+                                <div class="button-body">
+                                    <button class="cus-button">
+                                        <img src="/assets/marketplace/image/serv.png" alt="" class="hns" />
+                                        <img src="/assets/marketplace/image/serv1.png" alt="" class="hs" />
+                                        <span class="button_title">@Resource.Subscription</span>
+                                    </button>
+                                </div>
+                            </a>
                             <div class="hs-sub-menu dropdown-menu navbar-dropdown-menu-borderless" aria-labelledby="subscription" style="min-width: 14rem;">
                                 <a class="dropdown-item " href="/BusinessAdmin/SubscriptionPlan">@Resource.Subscription_Plans</a>
                                 <a class="dropdown-item " href="/BusinessAdmin/PaymentHistory">@Resource.Payment_History</a>
@@ -451,7 +517,16 @@
                         </li>
 
                         <li class="hs-has-sub-menu nav-item hide-for-superadmin">
-                            <a id="income" class="hs-mega-menu-invoker nav-link dropdown-toggle " href="#" role="button">@Resource.Income</a>
+                            <a id="income" class="hs-mega-menu-invoker nav-link dropdown-toggle " href="#" role="button">
+
+                                <div class="button-body">
+                                    <button class="cus-button">
+                                        <img src="/assets/marketplace/image/servpro.png" alt="" class="hns" />
+                                        <img src="/assets/marketplace/image/servpro1.png" alt="" class="hs" />
+                                        <span class="button_title">@Resource.Income</span>
+                                    </button>
+                                </div>
+                            </a>
 
                             <div class="hs-sub-menu dropdown-menu navbar-dropdown-menu-borderless" aria-labelledby="income" style="min-width: 14rem;">
                                 <a class="dropdown-item " href="#">Kanban</a>
@@ -463,15 +538,46 @@
 
                         <li class="nav-item hide-for-superadmin">
                             <a class="nav-link " href="#">
-                                @Resource.Reports
+                                <div class="button-body">
+                                    <button class="cus-button">
+                                        <img src="/assets/marketplace/image/party.png" alt="" class="hns" />
+                                        <img src="/assets/marketplace/image/party1.png" alt="" class="hs" />
+                                        <span class="button_title">@Resource.Reports</span>
+                                    </button>
+                                </div>
+
+                            </a>
+                        </li>
+                        <li class="nav-item hide-for-superadmin">
+                            <a class="nav-link " href="#">
+                                <div class="button-body">
+                                    <button class="cus-button">
+                                        <img src="/assets/marketplace/image/sch.png" alt="" class="hns" />
+                                        <img src="/assets/marketplace/image/sch1.png" alt="" class="hs" />
+                                        <span class="button_title">@Resource.Reports</span>
+                                    </button>
+                                </div>
+
+                            </a>
+                        </li>
+                        <li class="nav-item hide-for-superadmin">
+                            <a class="nav-link " href="#">
+                                <div class="button-body">
+                                    <button class="cus-button">
+                                        <img src="/assets/marketplace/image/trans.png" alt="" class="hns" />
+                                        <img src="/assets/marketplace/image/trans1.png" alt="" class="hs" />
+                                        <span class="button_title">@Resource.Reports</span>
+                                    </button>
+                                </div>
+
                             </a>
                         </li>
 
-                        <li class="nav-item hide-for-superadmin">
+                        @*<li class="nav-item hide-for-superadmin">
                             <a class="nav-link " href="#" data-placement="left">
                                 @Resource.Notifications
                             </a>
-                        </li>
+                        </li>*@
                     </ul>
 
                 </div>
