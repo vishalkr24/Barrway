@@ -473,6 +473,8 @@ namespace Barrway.Service.Repository
                                     Join BUSINESS_ACCOUNT_WEBSITE_1918 account on account.Id = f.BUSINESS_ACCOUNT_ID
                                     where f.BUSINESS_ACCOUNT_ID in (select cast(item as integer) from dbo.SplitString(@Ids,','))";
 
+            var SubscriptionData = await GetCompanyActiveSubscriptionDetails(CompanyCode, true);
+
             List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
             List<IDictionary<string, object>> result2 = await sqlFunction.ExecuteSqlQuery(query2);
             List<IDictionary<string, object>> result3 = await sqlFunction.ExecuteSqlQuery(query3);
@@ -488,6 +490,7 @@ namespace Barrway.Service.Repository
             finalList.Add(result4[0]);
             finalList.Add(result5[0]);
             finalList.Add(result6[0]);
+            finalList.Add(SubscriptionData.Data);
 
             return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = finalList };
         }
@@ -1693,14 +1696,14 @@ namespace Barrway.Service.Repository
             {
                 query = $@"select subsdet.Id as 'SUBS_ID', subsdet.ASSIGNED_CALENDARS, subsdet.ASSIGNED_BOOKINGS, subsdet.ASSIGNED_SESSIONS, bom.* from COMPANY_SUBSCRIPTION_DETAILS_1939 subsdet
                             join BUSINESS_COMPANY_MASTER_1924 company on company.Id = subsdet.COMPANY_ID
-                            join BUSINESS_ORDER_MASTER_1970 bom on bom.COMPANY_ID = subsdet.COMPANY_ID
+                            join BUSINESS_ORDER_MASTER_1970 bom on bom.ORDER_NO = subsdet.ORDER_ID
                             where company.COMPANY_CODE = '{Id}' and subsdet.IS_ACTIVE = 'Y'";
             }
             else
             {
                 query = $@"select subsdet.Id as 'SUBS_ID', subsdet.ASSIGNED_CALENDARS, subsdet.ASSIGNED_BOOKINGS, subsdet.ASSIGNED_SESSIONS, bom.* from COMPANY_SUBSCRIPTION_DETAILS_1939 subsdet
                             join BUSINESS_COMPANY_MASTER_1924 company on company.Id = subsdet.COMPANY_ID
-                            join BUSINESS_ORDER_MASTER_1970 bom on bom.COMPANY_ID = subsdet.COMPANY_ID
+                            join BUSINESS_ORDER_MASTER_1970 bom on bom.ORDER_NO = subsdet.ORDER_ID
                             where company.Id = '{Id}' and subsdet.IS_ACTIVE = 'Y'";
             }
             
@@ -1797,6 +1800,72 @@ namespace Barrway.Service.Repository
 
         }
 
+        public async Task<AddUpdateDelete> CheckCreditLimit(string CompanyCode)
+        {
+            string query = $@"declare @CompanyCode varchar(100) = '{CompanyCode}';
+                                declare @SubscriptionDate varchar(200);
+                                declare @SubscriptionEndDate varchar(200);
+                                set @SubscriptionDate = (select top 1 f.created_at from COMPANY_SUBSCRIPTION_DETAILS_1939 f join BUSINESS_COMPANY_MASTER_1924 company on company.Id = f.COMPANY_ID join BUSINESS_ORDER_MASTER_1970 bom on bom.ORDER_NO = f.ORDER_ID where company.COMPANY_CODE = @CompanyCode and f.IS_ACTIVE = 'Y' order by f.created_at desc)
+                                set @SubscriptionEndDate = (select top 1 bom.VALID_TILL from COMPANY_SUBSCRIPTION_DETAILS_1939 f join BUSINESS_COMPANY_MASTER_1924 company on company.Id = f.COMPANY_ID join BUSINESS_ORDER_MASTER_1970 bom on bom.ORDER_NO = f.ORDER_ID where company.COMPANY_CODE = @CompanyCode and f.IS_ACTIVE = 'Y' order by f.created_at desc)
+
+                                if(@SubscriptionDate is not null and @SubscriptionEndDate is not null)
+                                begin
+	                                declare @StartDate datetime;
+	                                declare @EndDate datetime;
+	                                declare @Validity varchar(2) = 'N';
+
+	                                set @StartDate = cast(@SubscriptionDate as datetime);
+	                                set @EndDate = cast(DATEADD(MONTH, 1, @StartDate) as datetime);
+	
+	                                while (cast(@EndDate as datetime) <= cast(@SubscriptionEndDate as datetime)) 
+	                                begin
+		                                if(@StartDate <= cast(getDate() as datetime) and cast(getDate() as datetime) <= @EndDate)
+		                                begin
+			                                set @Validity = 'Y'
+			                                break;
+		                                end
+		                                else
+		                                begin
+			                                set @StartDate = @EndDate
+			                                set @EndDate = cast(DATEADD(MONTH, 1, @EndDate) as datetime)
+		                                end
+		
+	                                end
+	
+	                                if(@Validity = 'Y')
+		                                with cte as (
+		                                    select count(*) as 'CREATED_EVENTS',
+		                                    ((select top 1 f.ASSIGNED_SESSIONS from COMPANY_SUBSCRIPTION_DETAILS_1939 f join BUSINESS_COMPANY_MASTER_1924 company on company.Id = f.COMPANY_ID where company.COMPANY_CODE = @CompanyCode and f.IS_ACTIVE = 'Y' order by f.created_at desc)) as 'ASSIGNED_SESSIONS',
+                                            ((select top 1 bom.VALID_TILL from COMPANY_SUBSCRIPTION_DETAILS_1939 f join BUSINESS_COMPANY_MASTER_1924 company on company.Id = f.COMPANY_ID join BUSINESS_ORDER_MASTER_1970 bom on bom.ORDER_NO = f.ORDER_ID  where company.COMPANY_CODE = @CompanyCode and f.IS_ACTIVE = 'Y' order by f.created_at desc)) as 'VALID_TILL'		                                    
+                                            from CALENDAR_FORM_1935 f
+		                                    where f.COMPANY_CODE = @CompanyCode and created_at >= @StartDate and created_at <= @EndDate)
+		                                    select *, (ASSIGNED_SESSIONS - CREATED_EVENTS) as 'AVAILABLE_SESSIONS' from cte
+	                                else 
+		                                select null as 'result'
+                                end
+                                else
+	                                select null as 'result'";
+
+            var result = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (result.Count > 0)
+            {
+                if (result.Any(x => x.ContainsKey("result")))
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "You Don't have any active subscription plan" };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result.FirstOrDefault() };
+                }
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = "You Don't have any active subscription plan" };
+            }
+
+        }
+
         public async Task<AddUpdateDelete> GetBookingsForThisMonth(string CompanyCode, string SlotId)
         {
             string query = $@"declare @CompanyCode varchar(100) = '{CompanyCode}';
@@ -1878,7 +1947,6 @@ namespace Barrway.Service.Repository
 
             if (!CalendarDetails.Status)
             {
-
                 string sqlQuery = $@"select * from BUSINESS_CALENDAR_MASTER_1925 f
                                         join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
                                         where f.COMPANY_CODE = '{model.COMPANY_CODE}'";
@@ -1909,7 +1977,10 @@ namespace Barrway.Service.Repository
 
                             string query = $@"UPDATE [dbo].[BUSINESS_CALENDAR_MASTER_1925]
                                    SET [CALENDAR_CODE] = '{model.CALENDAR_CODE}'
-                                 WHERE Id = '{formResult.Id.ToString()}'";
+                                 WHERE Id = '{formResult.Id.ToString()}';
+                                
+                                 update COMPANY_SUBSCRIPTION_DETAILS_1939 set ASSIGNED_CALENDARS = ASSIGNED_CALENDARS - 1 where COMPANY_ID = (select Id from BUSINESS_COMPANY_MASTER_1924 where COMPANY_CODE = '{model.COMPANY_CODE}') and IS_ACTIVE = 'Y'
+                            ";
 
                             int saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
 

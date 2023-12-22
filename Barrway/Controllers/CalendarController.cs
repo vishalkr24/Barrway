@@ -388,6 +388,7 @@ namespace Barrway.Controllers
                 if (createNewSchedule)
                 {
                     var calendarCountCheckData = await businessUserService.GetSessionsForThisMonth(data.COMPANY_CODE);
+                    var package = await businessUserService.GetCompanyActiveSubscriptionDetails(data.COMPANY_CODE);
 
                     if (!calendarCountCheckData.Status)
                     {
@@ -610,10 +611,10 @@ namespace Barrway.Controllers
                                       ,[allDay]
                                       ,[resources]
                                       ,[activities]
-
+                                      ,[COMPANY_SUBSCRIPTION_ID]
                                       ,[description]
                                       ,[created_at], [updated_at],[EVENT_TYPE])
-	                                  values('{SchedularFormId}', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter}', '{SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{data.SCH_RESOURCE}', '{data.SCH_ACTIVITY}', '{data.SCH_DESCRIPTION}', getDate(), getDate(),'SCHEDULE');
+	                                  values('{SchedularFormId}', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter}', '{SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{data.SCH_RESOURCE}', '{data.SCH_ACTIVITY}', '{package.Data["SUBS_ID"]?.ToString()}', '{data.SCH_DESCRIPTION}', getDate(), getDate(),'SCHEDULE');
                                 
                                     insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
                                     values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_PROVIDER_MASTER}, '{data.SCH_RESOURCE}', 'SERVICE_PROVIDER_MASTER_1934', 'FIRST_NAME', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_RESOURCE}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())

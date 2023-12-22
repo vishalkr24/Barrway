@@ -23,8 +23,22 @@ function setDashboardData() {
         $("#lblNumberOfCalendar").text(data[0].Calendars)
         $("#lblNumberOfServices").text(data[1].Services)
         $(".lblNumberOfAdmin").text(data[5].Admins)
+        if (data.length > 6) {
+            var priceBeforeFee = parseFloat(data[6].ORDER_PRICE);
+            
+            $(".valid-till").text(moment(data[6].VALID_TILL).format("YYYY-MM-DD"));
+            $(".valid-till").append(`<span style="margin-left: 4px; font-size:smaller;">${((data[6].IS_MONTHLY == "Y") ? "(1 Month)" : "(1 Year)")}</span>`);
+            $(".plan-name-and-price").text(capitalizeFirstLetter(data[6].PLAN_NAME) + " HK$" + ((data[6].IS_MONTHLY == "Y") ? parseFloat(priceBeforeFee).toFixed(2) : (parseFloat(priceBeforeFee) / parseInt((parseInt(data[6].VALIDITY_DAYS) / 30))).toFixed(2)) + "/month");
+            $(".booking-available").text(data[6].ASSIGNED_BOOKINGS + " per Session");
+        }
+        
     }
 
+}
+
+function capitalizeFirstLetter(string) {
+    string = string.toLowerCase();
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 function setPageStatus() {
