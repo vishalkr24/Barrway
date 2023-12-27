@@ -1,9 +1,211 @@
 ﻿$(document).ready(function () {
     setCompanyDetails();
     setTop5Calendars();
-    
-    
 });
+
+function setSelectedCalendar() {
+    $("#ddlMasterCalendar").val(localStorage.getItem('CALENDAR_CODE'));
+}
+
+function setCalendarDashboardData() {
+    var response = getCompanyCalendarDashboardData(localStorage.getItem('COMPANY_CODE'), localStorage.getItem('CALENDAR_CODE'))
+
+    console.log(response);
+
+    if (response.Status) {
+        var data = response.Data;
+        $("#lblBookingToday").text(data[0].BookingsToday)
+        $("#lblBookingThisWeek").text(data[1].BookingsThisWeek)
+    }
+
+
+    // set upcoming bookings tabulator
+
+    var companyCode = localStorage.getItem("COMPANY_CODE")
+    var calendarCode = localStorage.getItem("CALENDAR_CODE");
+
+    var CalendarMasterList = function () {
+        var columns = [
+            //{
+            //    title: '', field: 'ACTION', formatter: function (cell, formatter) {
+            //        return `<a href='#' onclick="GoToCalendarLayout(${cell.getRow().getData().Id}, '${cell.getRow().getData().CALENDAR_CODE}')" class="btn btn-warning text-light" style="border-radius:300px; background:#E2476C;">Calendar</a>`;
+            //    }, headerSort: false
+            //},
+            {
+                title: 'Date', field: 'BOOKING_DATE', headerFilter: "input", formatter: function (cell, formatter) {
+                    return moment(cell.getData().BOOKING_DATE).format("DD-MM-YYYY")
+                }
+            },
+            { title: 'Service Name', field: 'SERVICE_NAME', headerFilter: "input" },
+            { title: 'Service Provider', field: 'SERVICE_PROVIDER', headerFilter: "input" },
+            { title: 'Client Name', field: 'CLIENT_NAME', headerFilter: "input" },
+            {
+                title: 'From Time', field: 'FROM_TIME', headerFilter: "input", formatter: function (cell, formatter) {
+                    return moment(cell.getData().FROM_TIME).format("HH:mm A")
+                }
+            },
+            {
+                title: 'To Time', field: 'TO_TIME', headerFilter: "input", formatter: function (cell, formatter) {
+                    return moment(cell.getData().TO_TIME).format("HH:mm A")
+                }
+            }
+        ];
+
+        setTimeout(function () {
+            var options = {
+                placeholder: "No Data.",
+                tooltips: function (cell) {
+                    return cell.getValue();
+                },
+                height: "530px",
+                layout: "fitColumns",
+                responsiveLayout: false,
+                initialSort: [
+                    { column: "created_at", dir: "desc" }
+                ],
+                persistenceID: "persisrecords",
+                persistenceMode: true,
+                persistentLayout: true,
+                persistence: {
+                    sort: false, //persist column sorting
+                    filter: false, //persist filter sorting
+                    columns: false, //persist columns
+                },
+                persistenceWriterFunc: function (id, type, data) {
+                    localStorage.setItem(id + "-" + type, JSON.stringify(data));
+                },
+                persistenceReaderFunc: function (id, type) {
+                    //id - tables persistence id
+                    //type - type of data being persisted ("sort", "filter", "group", "page" or "columns")
+                    var data = localStorage.getItem(id + "-" + type);
+                    var dataParse = JSON.parse(data);
+                    if (!DataService.isEmpty(data) && type == "columns") {
+                        _.each(headers, function (item) {
+                            var exists = _.findWhere(dataParse, {
+                                field: item.field
+                            });
+                            if (!DataService.isEmpty(exists)) {
+                                exists.visible = item.visible;
+                            }
+                        })
+                    }
+                    else if (type == "page") {
+                        if (!DataService.isEmpty(data) && $scope.paginationSizeFormRecords != 0)
+                            dataParse.paginationSize = $scope.paginationSizeFormRecords;
+                    }
+                    return data ? dataParse : false;
+                },
+                columns: columns,
+                footerElement: "<div style='text-align:left' id='no-of-forms'></div>",
+                dataLoaded: function (data) {
+                    //data - all data loaded into the table                        
+                    var count = 0;
+                    if (data.length > 0)
+                        count = data[0].total_records;
+                    $('#form-records .tabulator-footer #no-of-forms').text("Total: " + count + " Entries");
+                },
+                /// pagination: "local",              
+                ajaxFiltering: true,
+                ajaxSorting: true,
+                ajaxLoader: true,
+                ajaxURL: "/Calendar/GetCalendarUpcomingBookingsData",
+                ajaxConfig: "POST", //ajax HTTP request type
+                ajaxContentType: "json",
+                ajaxParams: { //ajax parameters
+                    CompanyCode: companyCode,
+                    CalendarCode: calendarCode
+                },
+                ajaxProgressiveLoad: "scroll",
+                ajaxProgressiveLoadScrollMargin: 75,
+                ajaxRequesting: function (url, params) {
+
+                    var called = true;
+                    if (params.sorters.length == 0) {
+                        params.sorters.push({ field: "created_at", dir: "desc" });
+                    }
+                    //if (called)
+                    //$('#form-records').block({ message: '<h4>Getting Form Records...</h4>' });
+                    return called; //abort ajax request
+                },
+                ajaxResponse: function (url, params, response) {
+                    //url - the URL of the request
+                    //params - the parameters passed with the request
+                    //response - the JSON object returned in the body of the response.
+                    //$('#form-records').unblock();
+                    //$.unblockUI();
+                    if (response.data) {
+                        return response;
+                    }
+                    else {
+                        return response;
+                    }
+
+                },
+                paginationSize: 50,
+
+            };
+            var tabulator = initTabulator('form-records', options);
+            $('.form-builder-loader').hide();
+        }, 150);
+
+    };
+
+    CalendarMasterList();
+
+
+}
+
+function toggleDropdown() {
+    var dropdown = document.querySelector('.dropdown-me');
+    dropdown.classList.toggle('open');
+}
+
+function toggleDropdown2() {
+    var dropdown = document.querySelector('.dropdown-me-2');
+    dropdown.classList.toggle('open');
+}
+
+function selectItem(item) {
+    debugger;
+    var CompanyId = item.attributes["data-id"].nodeValue.split("_")[2];
+    if (parseInt(CompanyId) > 0) {
+        $("#navbar-company-selector").val(CompanyId);
+        changeCompany();
+    }
+    
+}
+
+function selectItem2(item) {
+    debugger;
+    var CalendarId = item.attributes["data-id"].nodeValue.split("_")[2];
+    
+    if (CalendarId != null && !CalendarId.includes("undefined")) {
+        
+        $("#ddlMasterCalendar").val(CalendarId);
+        localStorage.setItem("CALENDAR_CODE", CalendarId)
+        $(".selectable-calendar-item").removeClass("selected");
+        setTimeout(function () {
+            $(".selectable-calendar-item[data-id=CLR_SEL_" + localStorage.getItem("CALENDAR_CODE") + "]").addClass("selected");
+            $(".lbl-calendar-name").text($("#ddlMasterCalendar option:selected").text());
+        }, 500);
+    } else {
+        $(".lbl-calendar-name").text("Select Calendar");
+    }
+
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function (event) {
+    if (!event.target.closest('.dropdown-me')) {
+        var dropdowns = document.getElementsByClassName("dropdown-me");
+        for (var i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('open')) {
+                openDropdown.classList.remove('open');
+            }
+        }
+    }
+}
 
 function changeCompany(IsReload = true, returnUrl = null) {
     var companyId = $("#navbar-company-selector option:selected").val();
@@ -11,6 +213,7 @@ function changeCompany(IsReload = true, returnUrl = null) {
     var data = getSingleCompanyByCompanyId(companyId).Data;
 
     localStorage.setItem("COMPANY_ID", data.Id);
+    localStorage.setItem("CALENDAR_CODE", null);
     localStorage.setItem("COMPANY_CODE", data.COMPANY_CODE);
     localStorage.setItem("COMPANY_NAME_ENGLISH", data.COMPANY_NAME_ENGLISH);
     localStorage.setItem("COMPANY_NAME_CHINESE", data.COMPANY_NAME_CHINESE);
@@ -44,7 +247,7 @@ function Logout() {
 }
 
 function showNavbarNavigation(divId) {
-    $("#navbarDoubleLineContainerNavDropdown li a").removeClass("active");
+    $("#navbarContainerNavDropdown ul li a").removeClass("active");
     $("#" + divId).addClass("active");
 }
 
@@ -56,7 +259,7 @@ function setCompanyDetails() {
     if (allCompanies.Status) {
         var data = allCompanies.Data;
         $("#navbar-company-selector").empty();
-
+        $("#disp-navbar-company-selector").empty();
         var defaultId = "";
 
         for (var i = 0; i < data.length; i++) {
@@ -74,10 +277,11 @@ function setCompanyDetails() {
                 }
                 console.log(data[i]);
                 $("#navbar-company-selector").append(`<option selected value="${data[i].Id}">${data[i].COMPANY_NAME_ENGLISH} [${data[i].COMPANY_CODE}]</option>`);
-
+                $("#disp-navbar-company-selector").append(`<a href="javascript:void(0)" data-id="CMP_SEL_${data[i].Id}" class="selectable-company-item" onclick="selectItem(this)">${data[i].COMPANY_NAME_ENGLISH} [${data[i].COMPANY_CODE}]</a>`);
 
             } else {
                 $("#navbar-company-selector").append(`<option value="${data[i].Id}">${data[i].COMPANY_NAME_ENGLISH} [${data[i].COMPANY_CODE}]</option>`);
+                $("#disp-navbar-company-selector").append(`<a href="javascript:void(0)" data-id="CMP_SEL_${data[i].Id}" class="selectable-company-item" onclick="selectItem(this)">${data[i].COMPANY_NAME_ENGLISH} [${data[i].COMPANY_CODE}]</a>`);
             }
 
             if (localStorage.getItem("COMPANY_ID") == data[i].Id) {
@@ -97,13 +301,22 @@ function setCompanyDetails() {
                     $(".company-prefix").text(data[i].COMPANY_NAME_ENGLISH[0] + data[i].COMPANY_NAME_ENGLISH[data[i].COMPANY_NAME_ENGLISH.length - 1]);
                 }
 
+                $("#navbar-company-selector").val(localStorage.getItem("COMPANY_ID"));
+                $(".lbl-company-name").text(localStorage.getItem("COMPANY_NAME_ENGLISH"));
+
+                $(".selectable-company-item").removeClass("selected");
+                setTimeout(function () {
+                    $(".selectable-company-item[data-id=CMP_SEL_" + localStorage.getItem("COMPANY_ID") + "]").addClass("selected");
+                }, 500);
+                
 
             }
 
         }
 
-        $("#navbar-company-selector").val(localStorage.getItem("COMPANY_ID"));
-        $(".lbl-company-name").text(localStorage.getItem("COMPANY_NAME_ENGLISH"));
+        $("#disp-navbar-company-selector").append(`<div class="add-company">
+                                            <a href="/BusinessAdmin/CompanyMaster"><button>+ Add new company</button></a>
+                                        </div>`);
 
     } else {
         if (!window.location.href.includes("SetupCompanyProfile") && getUserRole() == "SUPERADMIN_USER") {
@@ -125,18 +338,41 @@ function setTop5Calendars() {
 
         $("#calendarsSubMenu").empty();
 
-        var len = 0;
+        //var len = 0;
 
-        if (calendars.length < 5) {
-            len = calendars.length;
-        } else {
-            len = 5;
-        }
+        //if (calendars.length < 5) {
+        //    len = calendars.length;
+        //} else {
+        //    len = 5;
+        //}
         
-        for (var i = 0; i < len; i++) {
+        for (var i = 0; i < calendars.length; i++) {
             $("#calendarsSubMenu").append(`<a class="dropdown-item" onclick="GoToCalendarLayout(${calendars[i].Id}, '${calendars[i].CALENDAR_CODE}')" href="#" data-placement="left">${calendars[i].CALENDAR_NAME}</a>`);
         }
 
     }
 
+}
+
+function openCalendarSetting() {
+    let company = localStorage.getItem("COMPANY_ID");
+    let calendar = localStorage.getItem("CALENDAR_CODE");
+
+    if (company != null && company != undefined) {
+        if (calendar != null && calendar != undefined && !calendar.includes("undefined")) {
+            window.location.replace(`/BusinessAdmin/SetupCompanyCalendar?CompanyId=${company}&IsPartial=false&CalendarCode=${calendar}#CalendarSetting`)
+        } else {
+            swal({
+                icon: "Error",
+                title: "Select a Calendar",
+                text: "Please select a Calendar."
+            });
+        }
+    } else {
+        swal({
+            icon: "Error",
+            title: "Setup or select a company",
+            text: "Setup or select a company and then create a calendar to view this information."
+        });
+    }
 }

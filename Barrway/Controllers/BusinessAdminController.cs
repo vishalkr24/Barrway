@@ -119,7 +119,7 @@ namespace Barrway.Controllers
             ViewBag.IsNew = IsNew;
             if (IsNew)
             {
-                return View();
+                return View(new CompanyProfileViewModel());
             }
 
             var company = await businessUserService.GetDefaultCompanyByUserId(UserIdentity.UserID.ToString());

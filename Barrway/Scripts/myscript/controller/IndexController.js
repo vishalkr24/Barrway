@@ -88,6 +88,8 @@
         $scope.specialAccess = {};
         $scope.setSpecialAccess(mainService.loginDetails());
         loadText(mainService.loginDetails());
+        
+        var a = $scope.userDetail
         $scope.getLanguage();
         $scope.bindCalendarDropdown();
 
@@ -292,34 +294,66 @@
     }
 
     $scope.bindCalendarDropdown = function () {
-        adminService.postAsync('/BusinessAdmin/GetAllCompanyCalendars/', { companyId: localStorage.getItem("COMPANY_ID") }).then(function (res) {
+        if (localStorage.getItem("COMPANY_ID") != null && localStorage.getItem("COMPANY_ID") != undefined) {
+            adminService.postAsync('/BusinessAdmin/GetAllCompanyCalendars/', { companyId: localStorage.getItem("COMPANY_ID") }).then(function (res) {
 
-            $scope.calendarList = res.data;
-            $timeout(function () {
-                $scope.ManageCalendarMaster();
-            }, 500);
+                $scope.calendarList = res.data;
 
-        }, function (err) {
+                $timeout(function () {
+                    $scope.ManageCalendarMaster();
+                }, 500);
 
-        });
+            }, function (err) {
+
+            });
+        }
+        
     }
 
     $scope.ManageCalendarMaster = function () {
 
-        if (localStorage.getItem("CALENDAR_CODE") == undefined || localStorage.getItem("CALENDAR_CODE") == null) {
-            localStorage.setItem("CALENDAR_CODE", $("#ddlMasterCalendar option:selected").val());
-        } else {
-            $("#ddlMasterCalendar").val(localStorage.getItem("CALENDAR_CODE"));
-        }
+        if ($scope.calendarList != null) {
+            if ($scope.calendarList.length > 0) {
+                if (localStorage.getItem("CALENDAR_CODE") == undefined || localStorage.getItem("CALENDAR_CODE") == null) {
+                    localStorage.setItem("CALENDAR_CODE", $("#ddlMasterCalendar option:selected").val());
+                } else {
+                    $("#ddlMasterCalendar").val(localStorage.getItem("CALENDAR_CODE"));
+                }
 
-        $(".lbl-company-name").text(localStorage.getItem("COMPANY_NAME_ENGLISH"));
-        $(".lbl-calendar-name").text($("#ddlMasterCalendar option:selected").text());
-        $scope.CALENDAR_CODE = localStorage.getItem("CALENDAR_CODE");
-        $scope.getCalendarDetails($scope.CALENDAR_CODE);
+                $(".selectable-calendar-item").removeClass("selected");
+                setTimeout(function () {
+                    $(".selectable-calendar-item[data-id=CLR_SEL_" + localStorage.getItem("CALENDAR_CODE") + "]").addClass("selected");
+                }, 500);
+
+                $(".lbl-company-name").text(localStorage.getItem("COMPANY_NAME_ENGLISH"));
+                $(".lbl-calendar-name").text($("#ddlMasterCalendar option:selected").text());
+                
+                if ($scope.CALENDAR_CODE == undefined || $scope.CALENDAR_CODE == null || $scope.CALENDAR_CODE.includes("undefined")) {
+                    swal({
+                        icon: "warning",
+                        title: "Calendar Required",
+                        text: "Please select a calendar first"
+                    });
+                    return;
+                }
+                $scope.getCalendarDetails($scope.CALENDAR_CODE);
+            } else {
+                if (window.location.href.includes("/calendar/index")) {
+                    swal({
+                        icon: "warning",
+                        title: "No Calendar",
+                        text: "Calendars not found. Please create a calendar first."
+                    }).then(function (response) {
+                        window.location.replace("/BusinessAdmin/CalendarMaster");
+                    });
+                }
+                
+            }
+        }
+        
     }
 
     $scope.ChangeCalendarDropDown = function () {
-
         localStorage.setItem("CALENDAR_CODE", $scope.selectedCalendarCode);
 
         window.location.reload();

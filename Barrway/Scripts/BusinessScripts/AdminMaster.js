@@ -2,7 +2,7 @@
 var tabulator2 = [];
 
 $(document).ready(function () {
-    /*showNavbarNavigation('companyMasterMegaMenu');*/
+    showNavbarNavigation('companyUsersMegaMenu');
     setCalendarMaster();
     bindBusinesses();
 })
