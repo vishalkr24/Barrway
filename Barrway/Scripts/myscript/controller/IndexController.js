@@ -306,6 +306,17 @@
             }, function (err) {
 
             });
+        } else {
+            if (window.location.href.includes("/calendar/index")) {
+                swal({
+                    icon: "warning",
+                    title: "Company Required",
+                    text: "Kindly Setup/Select a company."
+                }).then(function () {
+                    window.location.replace("/BusinessAdmin/Dashboard");
+                })
+            }
+            
         }
         
     }
@@ -314,20 +325,18 @@
 
         if ($scope.calendarList != null) {
             if ($scope.calendarList.length > 0) {
+                
                 if (localStorage.getItem("CALENDAR_CODE") == undefined || localStorage.getItem("CALENDAR_CODE") == null) {
                     localStorage.setItem("CALENDAR_CODE", $("#ddlMasterCalendar option:selected").val());
                 } else {
                     $("#ddlMasterCalendar").val(localStorage.getItem("CALENDAR_CODE"));
                 }
 
-                $(".selectable-calendar-item").removeClass("selected");
-                setTimeout(function () {
-                    $(".selectable-calendar-item[data-id=CLR_SEL_" + localStorage.getItem("CALENDAR_CODE") + "]").addClass("selected");
-                }, 500);
-
                 $(".lbl-company-name").text(localStorage.getItem("COMPANY_NAME_ENGLISH"));
                 $(".lbl-calendar-name").text($("#ddlMasterCalendar option:selected").text());
-                
+
+                $scope.CALENDAR_CODE = localStorage.getItem("CALENDAR_CODE");
+
                 if ($scope.CALENDAR_CODE == undefined || $scope.CALENDAR_CODE == null || $scope.CALENDAR_CODE.includes("undefined")) {
                     swal({
                         icon: "warning",
@@ -335,6 +344,11 @@
                         text: "Please select a calendar first"
                     });
                     return;
+                } else {
+                    $(".selectable-calendar-item").removeClass("selected");
+                    setTimeout(function () {
+                        $(".selectable-calendar-item[data-id=CLR_SEL_" + localStorage.getItem("CALENDAR_CODE") + "]").addClass("selected");
+                    }, 500);
                 }
                 $scope.getCalendarDetails($scope.CALENDAR_CODE);
             } else {

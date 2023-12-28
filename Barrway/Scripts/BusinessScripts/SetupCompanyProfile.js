@@ -35,7 +35,7 @@ function setBusiness() {
     $("#BUSINESS_ACCOUNT_ID").empty();
 
     for (var i = 0; i < response.Data.length; i++) {
-        $("#BUSINESS_ACCOUNT_ID").append(`<option value="${response.Data[i].Id}">${response.Data[i].BUSINESS_CODE} - ${response.Data[i].USER_ID}</option>`);
+        $("#BUSINESS_ACCOUNT_ID").append(`<option value="${response.Data[i].BUSINESS_ACCOUNT_ID}">${response.Data[i].BUSINESS_CODE} - ${response.Data[i].USER_ID}</option>`);
     }
 }
 

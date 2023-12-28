@@ -152,9 +152,14 @@ namespace Barrway.Controllers
 
                 if (string.IsNullOrEmpty(CalendarCode))
                 {
-                    if (string.IsNullOrEmpty(CompanyId))
+                    if (string.IsNullOrEmpty(CompanyId) || CompanyId == "null")
                     {
                         // If Company Id is not passed
+                        if (CompanyId == "null")
+                        {
+                            return RedirectToAction("Dashboard");
+                        }
+
                         var company = await businessUserService.GetDefaultCompanyByUserId(UserIdentity.UserID.ToString());
 
                         if (company.Status)
@@ -175,7 +180,7 @@ namespace Barrway.Controllers
                         else
                         {
                             // Company Id is passed but company is not found
-
+                            return RedirectToAction("Dashboard");
                             // BLUNDER
                         }
                     }
@@ -1091,6 +1096,8 @@ namespace Barrway.Controllers
         [HttpPost]
         public async Task<ActionResult> AddCalendar(BusinessCalendarViewModel model, bool IsPartial)
         {
+            model.UNIVERSAL_ERROR = null;
+
             if (!ModelState.IsValid)
             {
                 ViewBag.IsPartial = IsPartial;
@@ -1287,6 +1294,7 @@ namespace Barrway.Controllers
                         {
                             ModelState.AddModelError("UNIVERSAL_ERROR", "You have already created maximum no. of calendars in your current package. Please upgrade you package to create more calendars.");
                             ViewBag.IsPartial = IsPartial;
+                            model.UNIVERSAL_ERROR = "You have already created maximum no. of calendars in your current package. Please upgrade you package to create more calendars.";
                             return View("SetupCompanyCalendar", model);
                         }
                     }
@@ -1294,6 +1302,7 @@ namespace Barrway.Controllers
                     {
                         ModelState.AddModelError("UNIVERSAL_ERROR", "No active package found for this company. Kindly subscribe to a package and try again!");
                         ViewBag.IsPartial = IsPartial;
+                        model.UNIVERSAL_ERROR = "No active package found for this company. Kindly subscribe to a package and try again!";
                         return View("SetupCompanyCalendar", model);
                     }
                     
@@ -1303,7 +1312,7 @@ namespace Barrway.Controllers
                 else
                 {
                     ViewBag.IsPartial = IsPartial;
-                    return RedirectToAction("SetupCompanyCalendar", model);
+                    return RedirectToAction("SetupCompanyProfile", model);
                 }
             }
         }
