@@ -255,7 +255,7 @@ function setCompanyDetails() {
     debugger;
     var allCompanies = getAllCompanies();
     var user = getSingleUser();
-    console.log(user);
+    
     if (allCompanies.Status) {
         var data = allCompanies.Data;
         $("#navbar-company-selector").empty();
@@ -314,16 +314,21 @@ function setCompanyDetails() {
 
         }
 
-        $("#disp-navbar-company-selector").append(`<div class="add-company">
-                                            <a href="/BusinessAdmin/CompanyMaster"><button>+ Add new company</button></a>
-                                        </div>`);
 
     } else {
+
+
+
         if (!window.location.href.includes("SetupCompanyProfile") && getUserRole() == "SUPERADMIN_USER") {
             window.location.href = "/BusinessAdmin/SetupCompanyProfile?&IsNew=true";
         }
         
     }
+
+
+    $("#disp-navbar-company-selector").append(`<div class="add-company">
+                                            <a href="/BusinessAdmin/CompanyMaster"><button>+ Add new company</button></a>
+                                        </div>`);
 }
 
 function showComapanyWebsiteDetails(pageId = 1) {

@@ -1,5 +1,11 @@
 ﻿$(document).ready(function () {
     showNavbarNavigation('manage-website');
+    
+    var companyId = localStorage.getItem("COMPANY_ID");
+    
+    setCountryData();
+    setCompanyCategory();
+
     tinymce.init({
         selector: 'textarea#COMPANY_SERVICE',
         plugins: 'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons',
@@ -7,7 +13,7 @@
         menubar: 'file edit view insert format tools table help',
         toolbar: 'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
         toolbar_sticky: true,
-        
+
         autosave_ask_before_unload: true,
         autosave_interval: '30s',
         autosave_prefix: '{path}{query}-{id}-',
@@ -56,14 +62,12 @@
         noneditable_class: 'mceNonEditable',
         toolbar_mode: 'sliding',
         contextmenu: 'link image table',
-       
+
     });
-    var companyId = localStorage.getItem("COMPANY_ID");
-    
-    setCountryData();
-    setCompanyCategory();
+
     SetCompanyDetails(companyId);
     renderPage($("#pageCheckId").val());
+
 });
 
 $(document).on("change", "#COUNTRY_ID", function () {
@@ -80,7 +84,7 @@ $(document).on("change", "#COMPANY_CATEGORY_ID", function () {
 
 function setCompanyCategory() {
     var response = getCompanyCategory();
-
+    debugger;
     $("#COMPANY_CATEGORY_ID").empty();
 
     $("#COMPANY_CATEGORY_ID").append(`<option selected disabled value="-1">Select Company Category</option>`);

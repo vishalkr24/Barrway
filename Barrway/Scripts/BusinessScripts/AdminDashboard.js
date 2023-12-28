@@ -23,7 +23,7 @@ function setDashboardData() {
         $("#lblNumberOfCalendar").text(data[0].Calendars)
         $("#lblNumberOfServices").text(data[1].Services)
         $(".lblNumberOfAdmin").text(data[5].Admins)
-        if (data.length > 6) {
+        if (data.length > 6 && data[6] != null) {
             var priceBeforeFee = parseFloat(data[6].ORDER_PRICE);
             
             $(".valid-till").text(moment(data[6].VALID_TILL).format("YYYY-MM-DD"));
