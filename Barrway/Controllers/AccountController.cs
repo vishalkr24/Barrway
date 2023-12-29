@@ -294,6 +294,7 @@ namespace Barrway.Controllers
 
         [AllowAnonymous]
         [HttpGet]
+        [OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.None)]
         public async Task<ActionResult> BusinessSignUp()
         {
             if (User.Identity.IsAuthenticated)
