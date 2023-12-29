@@ -1,4 +1,8 @@
-﻿@{ 
+﻿@{
+    var baseUrl = System.Web.Configuration.WebConfigurationManager.AppSettings["baseURL"].ToString();
+    var webapibaseurl = System.Web.Configuration.WebConfigurationManager.AppSettings["webapibaseurl"].ToString();
+    string token = DateTime.Now.ToString("ddMMyyyyHHmmssffffff");
+    string calendarUrl = baseUrl + "calendar/index";
 
     HttpCookie languageCookie = System.Web.HttpContext.Current.Request.Cookies["Language"];
     string language = "";
@@ -12,11 +16,11 @@
     }
 }
 
-
 <!DOCTYPE html>
 <html>
 <head>
-    <!-- Required Meta Tags Always Come First -->
+
+    <base href="@baseUrl" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -51,14 +55,16 @@
         /*custome css*/
 
     </style>
-
+    <script>
+        var ASSET_URL = "@baseUrl", BASE_URL = "@baseUrl";
+        var API_URL = "@webapibaseurl";
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script src="~/Scripts/BusinessScripts/Common/BusinessAdminCommonFunctions.js"></script>
     <script src="~/Scripts/PublicCommonFunction.js"></script>
     <script src="~/Scripts/BusinessScripts/AdminLayoutManager.js"></script>
     <script src="~/Scripts/BusinessScripts/SuperAdminLayoutManager.js"></script>
-
 
     @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.2.2/css/tom-select.bootstrap5.min.css" integrity="sha512-mNN7o87hQqtNCCGWxFVdlVdaKF6d4S1wVMi3+ftJYnW572YIo0KPjK1Cns5SPlyCtKGp1Nu+z26MJUNXmpbjKA==" crossorigin="anonymous" referrerpolicy="no-referrer" />*@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.2.2/esm/tom-select.complete.min.js" integrity="sha512-Mq5sbsECkh++vpFvzKegopkWOHTuj2D3503BOVdaH8tTczPn74LEOkMK1Sd0BHbjwGEgVYDKM6CYSYeXJ5FaLA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -149,8 +155,29 @@
             }
             return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16)
         }</script>
+    <!--Formgenerator setup-->
+    <link href="fg-assets/css/waves.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/3.0.0/toaster.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="fg-newAssets/css/style.css" rel="stylesheet" />
+    <link href="fg-assets/css/app.css" rel="stylesheet" />
+    <link href="fg-assets/tabulator/css/tabulator_site.min.css" rel="stylesheet" />
+    <link href="Content/myStyle.css" rel="stylesheet" />
+    <link id="tabulator-css" rel="stylesheet" href="fg-assets/formValidation/css/formValidation.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/themes/default/style.min.css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" id="jquery-ui-change">
+    <link href="Content/tagify.css" rel="stylesheet" />
+    <link href="Content/sidebar/css/sidebar.css?token=@token" rel="stylesheet" />
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        localStorage.setItem("detail", '{"Id":30314,"firebase_uid":null,"chatId":"jXZMF2dU3Uyz2okULv6shQuu","uid":"kk53yimj","fullName":"AG Ashutosh Shukla","name":"augursuser","email":"formgeneratorclient@gmail.com","emailVerified":"0","emailCheck":"0","isEmailCheck":false,"isQuickSignUp":false,"password":"","newPassword":null,"password_confirmation":null,"confirmPassword":null,"isUpdatePassword":0,"remember_token":null,"userIcon":"user-avatar-with-check-mark.png","phoneNumber":null,"phoneVerified":"No","isPhoneVerified":null,"phoneCheck":"No","isPhoneCheck":false,"role":1,"status":"Active","planID":9,"planSequence":"1,2,5,13","tooltipSequence":null,"FB_id":null,"GPlus_id":null,"created_ip":"","groupId":0,"checkType":null,"title":null,"verificationCode":null,"isVerificationReq":false,"ayCheck":0,"specialAccess":"1","reset_token":null,"reset_valid_till":null,"isUsable":0,"action":0,"created_by":0,"updated_by":0,"created_at":"Jan 20 2021  3:32PM","newcreated_at":null,"updated_at":"Jan 20 2021  3:32PM","newupdated_at":null,"res":1,"Message":"Login Success|登錄成功|登录成功","IsActive":false,"IsDeleted":false,"IsUnique":false,"page":0,"size":0,"total_records":0,"last_page":0,"page_records":0,"filters":null,"sorters":null,"query":null}');
+    </script>
 </head>
-<body>
+<body ng-app="FormGeneratorApp" ng-controller="IndexController">
     <script>
         function changeLanguage() {
             localStorage.setItem("globalLang", $("select[name=langId] option:selected").val())
@@ -171,11 +198,19 @@
         .show-for-superadmin {
             display: none;
         }
+
+        .pl-3 {
+            padding-left: 1.5rem;
+        }
+
+        .pr-3 {
+            padding-right: 1.5rem;
+        }
     </style>
     <!-- ========== HEADER ========== -->
     <header id="header" class="navbar navbar-expand-lg navbar-bordered navbar-spacer-y-0 flex-lg-column grey-back">
         <div class="navbar-dark custtome-navbar-dark white-back w-100">
-            <div class="container">
+            <div class="pl-3 pr-3">
                 <nav class="navbar-nav-wrap mje">
                     <!-- Logo -->
 
@@ -246,7 +281,7 @@
 
                                         <div class="dropdown-divider hide-for-superadmin"></div>
 
-                                        <a class="dropdown-item hide-for-superadmin" href="#">
+                                        <a class="dropdown-item hide-for-superadmin" href="javascript:void(0)">
                                             <div class="d-flex align-items-center">
                                                 <div class="flex-shrink-0">
                                                     <div class="avatar avatar-sm avatar-dark avatar-circle">
@@ -262,29 +297,29 @@
 
                                         <!-- Dropdown -->
                                         @*<div class="dropdown">
-                        <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown2" data-bs-toggle="dropdown" aria-expanded="false">Customization</a>
+                                                <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown2" data-bs-toggle="dropdown" aria-expanded="false">Customization</a>
 
-                        <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown2">
-                            <a class="dropdown-item" href="#">
-                                Invite people
-                            </a>
-                            <a class="dropdown-item" href="#">
-                                Analytics
-                                <i class="bi-box-arrow-in-up-right"></i>
-                            </a>
-                            <a class="dropdown-item" href="#">
-                                Customize Front
-                                <i class="bi-box-arrow-in-up-right"></i>
-                            </a>
-                        </div>
-                    </div>*@
+                                                <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown2">
+                                                    <a class="dropdown-item" href="javascript:void(0)">
+                                                        Invite people
+                                                    </a>
+                                                    <a class="dropdown-item" href="javascript:void(0)">
+                                                        Analytics
+                                                        <i class="bi-box-arrow-in-up-right"></i>
+                                                    </a>
+                                                    <a class="dropdown-item" href="javascript:void(0)">
+                                                        Customize Front
+                                                        <i class="bi-box-arrow-in-up-right"></i>
+                                                    </a>
+                                                </div>
+                                            </div>*@
                                         <!-- End Dropdown -->
-                                        @*<a class="dropdown-item" href="#">Manage team</a>*@
+                                        @*<a class="dropdown-item" href="javascript:void(0)">Manage team</a>*@
 
                                         <div class="dropdown-divider hide-for-superadmin"></div>
 
                                         <form id="mySignOutForm" name="mySignOutForm" method="post" action="@Url.Action("Logout","Account")">
-                                            <a class="dropdown-item" href="#" onclick="Logout()">@Resource.Sign_out</a>
+                                            <a class="dropdown-item" href="javascript:void(0)" onclick="Logout()">@Resource.Sign_out</a>
                                         </form>
 
 
@@ -307,31 +342,59 @@
                     </button>
                     <!-- End Toggler -->
                     <!-- Collapse -->
+
+                    <style>
+                        .selectable-company-item {
+                            color: black;
+                        }
+
+                            .selectable-company-item.selected {
+                                color: crimson !important;
+                            }
+
+                        .selectable-calendar-item {
+                            color: black;
+                        }
+
+                            .selectable-calendar-item.selected {
+                                color: crimson !important;
+                            }
+                    </style>
                     <div class="collapse navbar-collapse" id="navbarContainerNavDropdown">
                         <ul class="navbar-nav">
                             <!-- Dashboards -->
+                            <select id="navbar-company-selector" onchange="changeCompany()" style="display:none;" class="select-company"></select>
                             <li class="nav-item overflow_v">
                                 <div class="dropdown-me" onclick="toggleDropdown()">
                                     <div class="dropdown-toggle">
-                                        <span id="selectedItem">Company name</span>
+                                        <span class="lbl-company-name">Company name</span>
                                     </div>
-                                    <div class="dropdown-men" id="dropdownItems">
-                                        <a href="#" onclick="selectItem(this)">Company B name</a>
-                                        <div class="add-company">
-                                            <button>+ Add new company</button>
+                                    <div class="dropdown-men" id="disp-navbar-company-selector"></div>
+                                </div>
+                            </li>
+                            <li class="hs-has-sub-menu nav-item">
+                                <a id="dashboardMegaMenu" class="hs-mega-menu-invoker nav-link" href="/BusinessAdmin/Dashboard" role="button">
+
+                                    <div class="button-body-wrap">
+                                        <div class="button-body">
+                                            <button class="cus-button">
+                                                <img src="/assets/marketplace/image/graph.png" alt="" class="hns" />
+                                                <img src="/assets/marketplace/image/graph1.png" alt="" class="hs" />
+                                                <span class="button_title"> @Resource.Dashboard </span>
+                                            </button>
                                         </div>
                                     </div>
-                                </div>
-                            </li>                            
+                                </a>
+                            </li>
                             <li class="hs-has-sub-menu nav-item">
-                                <a id="" class="hs-mega-menu-invoker nav-link active" href="/BusinessAdmin/Dashboard" role="button">
+                                <a id="manage-website" class="hs-mega-menu-invoker nav-link active" onclick="showComapanyWebsiteDetails(1)" href="javascript:void(0)" role="button">
 
                                     <div class="button-body-wrap">
                                         <div class="button-body">
                                             <button class="cus-button">
                                                 <img src="/assets/marketplace/image/web.png" alt="" class="hns" />
                                                 <img src="/assets/marketplace/image/web1.png" alt="" class="hs" />
-                                                <span class="button_title"> @Resource.Home </span>
+                                                <span class="button_title"> @Resource.Website </span>
                                             </button>
                                         </div>
                                     </div>
@@ -340,13 +403,13 @@
                             <!-- End Dashboards -->
                             <!-- Pages -->
                             <li class="hs-has-sub-menu nav-item hide-for-superadmin">
-                                <a id="" class="hs-mega-menu-invoker nav-link " href="/BusinessAdmin/Dashboard" role="button">
+                                <a id="subscriptionsMegaMenu" class="hs-mega-menu-invoker nav-link " href="/BusinessAdmin/SubscriptionPlan" role="button">
                                     <div class="button-body-wrap">
                                         <div class="button-body">
                                             <button class="cus-button">
                                                 <img src="/assets/marketplace/image/subs.png" alt="" class="hns" />
                                                 <img src="/assets/marketplace/image/subs1.png" alt="" class="hs" />
-                                                <span class="button_title">@Resource.My_Business </span>
+                                                <span class="button_title">@Resource.Subscription </span>
                                             </button>
                                         </div>
                                     </div>
@@ -354,29 +417,32 @@
                             </li>
                             <!-- End Pages -->
                             <!-- Apps -->
-                            <li class="hs-has-sub-menu nav-item">
-                                <a id="" class="hs-mega-menu-invoker nav-link" href="/Marketplace/Index" role="button">
-                                    <div class="button-body-wrap">
-                                        <div class="button-body">
-                                            <button class="cus-button">
-                                                <img src="/assets/marketplace/image/user.png" alt="" class="hns" />
-                                                <img src="/assets/marketplace/image/user1.png" alt="" class="hs" />
-                                                <span class="button_title"> @Resource.Market_Place </span>
-                                            </button>
+                            @if (UserIdentity.UserRoleType.ToString() == "SUPERUSER")
+                            {
+                                <li class="hs-has-sub-menu nav-item">
+                                    <a id="companyUsersMegaMenu" class="hs-mega-menu-invoker nav-link" href="/BusinessAdmin/AdminMaster" role="button">
+                                        <div class="button-body-wrap">
+                                            <div class="button-body">
+                                                <button class="cus-button">
+                                                    <img src="/assets/marketplace/image/user.png" alt="" class="hns" />
+                                                    <img src="/assets/marketplace/image/user1.png" alt="" class="hs" />
+                                                    <span class="button_title"> @Resource.User </span>
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                </a>
-                            </li>
+                                    </a>
+                                </li>
+                            }
                             <!-- End Apps -->
 
                             <li class="nav-item hide-for-superadmin">
-                                <a class="nav-link " href="#">
+                                <a class="nav-link " href="javascript:void(0)">
                                     <div class="button-body-wrap">
                                         <div class="button-body">
                                             <button class="cus-button">
                                                 <img src="/assets/marketplace/image/spwr.png" alt="" class="hns" />
                                                 <img src="/assets/marketplace/image/spwr1.png" alt="" class="hs" />
-                                                <span class="button_title">@Resource.Contact </span>
+                                                <span class="button_title">@Resource.Service_provider_work_record </span>
                                             </button>
                                         </div>
                                     </div>
@@ -385,13 +451,13 @@
                             </li>
 
                             <li class="nav-item hide-for-superadmin">
-                                <a class="nav-link " href="/BusinessMarketplace/Pricing" data-placement="left">
+                                <a class="nav-link " id="nav-client-payment-history" href="/calendar/index#/calendar/client-payment-history/" data-placement="left">
                                     <div class="button-body-wrap">
                                         <div class="button-body">
                                             <button class="cus-button">
                                                 <img src="/assets/marketplace/image/cph.png" alt="" class="hns" />
                                                 <img src="/assets/marketplace/image/cph1.png" alt="" class="hs" />
-                                                <span class="button_title"> @Resource.Pricing </span>
+                                                <span class="button_title"> @Resource.Client_payment_history </span>
                                             </button>
                                         </div>
                                     </div>
@@ -399,13 +465,13 @@
                                 </a>
                             </li>
                             <li class="nav-item hide-for-superadmin">
-                                <a class="nav-link " href="/BusinessMarketplace/Pricing" data-placement="left">
+                                <a class="nav-link " id="nav-package-master" href="calendar/index#/calendar/calendar-package/2322" data-placement="left">
                                     <div class="button-body-wrap">
                                         <div class="button-body">
                                             <button class="cus-button">
                                                 <img src="/assets/marketplace/image/sp.png" alt="" class="hns" />
                                                 <img src="/assets/marketplace/image/sp1.png" alt="" class="hs" />
-                                                <span class="button_title"> @Resource.Pricing </span>
+                                                <span class="button_title"> @Resource.Service_package_master </span>
                                             </button>
                                         </div>
                                     </div>
@@ -421,10 +487,10 @@
         </div>
 
 
-        <div class="container cp-10">
+        <div class="pl-3 pr-3 cp-10">
             <nav class="js-mega-menu navbar-nav-wrap flex-grow-1">
 
-                <select id="navbar-company-selector" onchange="changeCompany()" class="select-company"></select>
+
 
                 <!-- Toggler -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarDoubleLineContainerNavDropdown" aria-controls="navbarDoubleLineContainerNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -440,133 +506,140 @@
                 <div class="collapse navbar-collapse" id="navbarDoubleLineContainerNavDropdown">
                     <ul class="navbar-nav">
                         <!-- Dashboards -->
+
+                        <li class="nav-item overflow_v dropdown-me">
+                            <select class="calendar-name dropdown-toggle" style="text-overflow:ellipsis; display:none;" ng-model="selectedCalendarCode" ng-change="ChangeCalendarDropDown()" id="ddlMasterCalendar">
+                                <option value="{{calendar.CALENDAR_CODE}}" ng-repeat="calendar in calendarList">{{calendar.CALENDAR_NAME}} [{{calendar.CALENDAR_CODE}}]</option>
+                            </select>
+                            <div class="dropdown-me dropdown-me-2" onclick="toggleDropdown2()">
+                                <div class="dropdown-toggle">
+                                    <i class="fa fa-calendar" aria-hidden="true" style="padding-right:8px; font-size: 16px;"></i> <span class="lbl-calendar-name">Select Calendar</span>
+                                </div>
+                                <div class="dropdown-men" id="disp-navbar-calendar-selector">
+                                    <a ng-repeat="calendar in calendarList" href="javascript:void(0)" data-id="CLR_SEL_{{calendar.CALENDAR_CODE}}" class="selectable-calendar-item" onclick="selectItem2(this)">{{calendar.CALENDAR_NAME}} [{{calendar.CALENDAR_CODE}}]</a>
+                                    <div class="add-company">
+                                        <a href="/BusinessAdmin/CalendarMaster">
+                                            <button>+ Add new calendar</button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
                         <li class="nav-item">
-                            <a id="dashboardsMegaMenu" class="nav-link" href="/BusinessAdmin/Dashboard" role="button">
+                            <a id="nav-calendar-dashboard" href="/calendar/index#/home" class="nav-link" role="button">
                                 <div class="button-body-wrap">
                                     <div class="button-body">
                                         <button class="cus-button">
                                             <img src="/assets/marketplace/image/cal.png" alt="" class="hns" />
                                             <img src="/assets/marketplace/image/cal1.png" alt="" class="hs" />
-                                            <span class="button_title">@Resource.Dashboard</span>
+                                            <span class="button_title">Calendar Summary</span>
                                         </button>
                                     </div>
                                 </div>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a id="companyMasterMegaMenu" class="nav-link" href="/BusinessAdmin/CompanyMaster" role="button">
+                            <a id="nav-calendar-master" href="/calendar/index#/calender/2305" class="nav-link" role="button">
                                 <div class="button-body-wrap">
                                     <div class="button-body">
                                         <button class="cus-button">
                                             <img src="/assets/marketplace/image/oncal.png" alt="" class="hns" />
                                             <img src="/assets/marketplace/image/oncal1.png" alt="" class="hs" />
-                                            <span class="button_title">@Resource.Company_Master</span>
+                                            <span class="button_title">@Resource.Calendar</span>
                                         </button>
                                     </div>
                                 </div>
                             </a>
                         </li>
 
-                        <li class="hs-has-sub-menu nav-item">
-                            <a id="calendarsMegaMenu" class="hs-mega-menu-invoker nav-link dropdown-toggle " href="/BusinessAdmin/CalendarMaster" role="button">
+                        <li class="nav-item">
+                            <a id="calendarsMegaMenu" class="nav-link" href="javascript:void(0)" onclick="openCalendarSetting()" role="button">
 
                                 <div class="button-body-wrap">
                                     <div class="button-body">
                                         <button class="cus-button">
                                             <img src="/assets/marketplace/image/calse.png" alt="" class="hns" />
                                             <img src="/assets/marketplace/image/calse1.png" alt="" class="hs" />
-                                            <span class="button_title"> @Resource.Calendar</span>
+                                            <span class="button_title">Calendar Setting</span>
                                         </button>
                                     </div>
                                 </div>
                             </a>
 
-                            <div class="hs-sub-menu dropdown-menu navbar-dropdown-menu-borderless" id="calendarsSubMenu" aria-labelledby="pagesMegaMenu" style="min-width: 14rem;">
-
-                            </div>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" id="manage-website" onclick="showComapanyWebsiteDetails(1)" href="#">
+                            <a class="nav-link" id="nav-location-master" href="/calendar/index#/calendar/location-master/2306">
 
                                 <div class="button-body">
                                     <button class="cus-button">
                                         <img src="/assets/marketplace/image/location.png" alt="" class="hns" />
                                         <img src="/assets/marketplace/image/location1.png" alt="" class="hs" />
-                                        <span class="button_title">@Resource.Website</span>
+                                        <span class="button_title">@Resource.Location_Master</span>
                                     </button>
                                 </div>
                             </a>
                         </li>
 
-                        <li class="hs-has-sub-menu nav-item hide-for-superadmin">
-                            <a id="subscriptionsMegaMenu" class="hs-mega-menu-invoker nav-link dropdown-toggle " href="/BusinessAdmin/SubscriptionPlan" role="button">
+                        <li class="nav-item hide-for-superadmin">
+                            <a id="nav-service-master" href="/calendar/index#/calendar/service-master/2303" class="nav-link" role="button">
 
                                 <div class="button-body">
                                     <button class="cus-button">
                                         <img src="/assets/marketplace/image/serv.png" alt="" class="hns" />
                                         <img src="/assets/marketplace/image/serv1.png" alt="" class="hs" />
-                                        <span class="button_title">@Resource.Subscription</span>
+                                        <span class="button_title">@Resource.Service_Master</span>
                                     </button>
                                 </div>
                             </a>
-                            <div class="hs-sub-menu dropdown-menu navbar-dropdown-menu-borderless" aria-labelledby="subscription" style="min-width: 14rem;">
-                                <a class="dropdown-item " href="/BusinessAdmin/SubscriptionPlan">@Resource.Subscription_Plans</a>
-                                <a class="dropdown-item " href="/BusinessAdmin/PaymentHistory">@Resource.Payment_History</a>
-                            </div>
+
                         </li>
 
-                        <li class="hs-has-sub-menu nav-item hide-for-superadmin">
-                            <a id="income" class="hs-mega-menu-invoker nav-link dropdown-toggle " href="#" role="button">
+                        <li class="nav-item hide-for-superadmin">
+                            <a id="nav-service-provider-master" href="/calendar/index#/calendar/service-provider-master/2304" class="nav-link" href="javascript:void(0)" role="button">
 
                                 <div class="button-body">
                                     <button class="cus-button">
                                         <img src="/assets/marketplace/image/servpro.png" alt="" class="hns" />
                                         <img src="/assets/marketplace/image/servpro1.png" alt="" class="hs" />
-                                        <span class="button_title">@Resource.Income</span>
+                                        <span class="button_title">@Resource.Service_Provider_Master</span>
                                     </button>
                                 </div>
                             </a>
 
-                            <div class="hs-sub-menu dropdown-menu navbar-dropdown-menu-borderless" aria-labelledby="income" style="min-width: 14rem;">
-                                <a class="dropdown-item " href="#">Kanban</a>
-                                <a class="dropdown-item " href="#">Calendar</a>
-                                <a class="dropdown-item " href="#">Invoice Generator</a>
-                                <a class="dropdown-item " href="#">File Manager</a>
-                            </div>
                         </li>
 
                         <li class="nav-item hide-for-superadmin">
-                            <a class="nav-link " href="#">
+                            <a class="nav-link " id="nav-participant-master" href="/calendar/index#/calendar/participant-master/2310">
                                 <div class="button-body">
                                     <button class="cus-button">
                                         <img src="/assets/marketplace/image/party.png" alt="" class="hns" />
                                         <img src="/assets/marketplace/image/party1.png" alt="" class="hs" />
-                                        <span class="button_title">@Resource.Reports</span>
+                                        <span class="button_title">@Resource.Participant</span>
                                     </button>
                                 </div>
 
                             </a>
                         </li>
                         <li class="nav-item hide-for-superadmin">
-                            <a class="nav-link " href="#">
+                            <a class="nav-link " id="nav-schedular-form" href="/calendar/index#/calendar/schedular-form/2311">
                                 <div class="button-body">
                                     <button class="cus-button">
                                         <img src="/assets/marketplace/image/sch.png" alt="" class="hns" />
                                         <img src="/assets/marketplace/image/sch1.png" alt="" class="hs" />
-                                        <span class="button_title">@Resource.Reports</span>
+                                        <span class="button_title">@Resource.Schedule</span>
                                     </button>
                                 </div>
 
                             </a>
                         </li>
                         <li class="nav-item hide-for-superadmin">
-                            <a class="nav-link " href="#">
+                            <a class="nav-link " id="nav-transaction-master" href="/calendar/index#/calendar/transaction-master/2312">
                                 <div class="button-body">
                                     <button class="cus-button">
                                         <img src="/assets/marketplace/image/trans.png" alt="" class="hns" />
                                         <img src="/assets/marketplace/image/trans1.png" alt="" class="hs" />
-                                        <span class="button_title">@Resource.Reports</span>
+                                        <span class="button_title">@Resource.Transactions</span>
                                     </button>
                                 </div>
 
@@ -574,10 +647,10 @@
                         </li>
 
                         @*<li class="nav-item hide-for-superadmin">
-                            <a class="nav-link " href="#" data-placement="left">
-                                @Resource.Notifications
-                            </a>
-                        </li>*@
+                                <a class="nav-link " href="javascript:void(0)" data-placement="left">
+                                    @Resource.Notifications
+                                </a>
+                            </li>*@
                     </ul>
 
                 </div>
@@ -588,7 +661,7 @@
 
     <!-- ========== END HEADER ========== -->
     <!-- ========== MAIN CONTENT ========== -->
-    <div class="container">
+    <div class="container-fluid pt-2" ui-view="content">
         @RenderBody()
     </div>
 
@@ -613,7 +686,7 @@
                         <div class="step-content">
                             <h5 class="mb-1">Iana Robinson</h5>
 
-                            <p class="fs-5 mb-1">Added 2 files to task <a class="text-uppercase" href="#"><i class="bi-journal-bookmark-fill"></i> Fd-7</a></p>
+                            <p class="fs-5 mb-1">Added 2 files to task <a class="text-uppercase" href="javascript:void(0)"><i class="bi-journal-bookmark-fill"></i> Fd-7</a></p>
 
                             <ul class="list-group list-group-sm">
                                 <!-- List Item -->
@@ -667,7 +740,7 @@
                         <div class="step-content">
                             <h5 class="mb-1">Bob Dean</h5>
 
-                            <p class="fs-5 mb-1">Marked <a class="text-uppercase" href="#"><i class="bi-journal-bookmark-fill"></i> Fr-6</a> as <span class="badge bg-soft-success text-success rounded-pill"><span class="legend-indicator bg-success"></span>"Completed"</span></p>
+                            <p class="fs-5 mb-1">Marked <a class="text-uppercase" href="javascript:void(0)"><i class="bi-journal-bookmark-fill"></i> Fr-6</a> as <span class="badge bg-soft-success text-success rounded-pill"><span class="legend-indicator bg-success"></span>"Completed"</span></p>
 
                             <span class="small text-muted text-uppercase">Today</span>
                         </div>
@@ -684,7 +757,7 @@
                         <div class="step-content">
                             <h5 class="h5 mb-1">Crane</h5>
 
-                            <p class="fs-5 mb-1">Added 5 card to <a href="#">Payments</a></p>
+                            <p class="fs-5 mb-1">Added 5 card to <a href="javascript:void(0)">Payments</a></p>
 
                             <ul class="list-group list-group-sm">
                                 <li class="list-group-item list-group-item-light">
@@ -700,7 +773,7 @@
                                         </div>
                                         <div class="col-auto align-self-center">
                                             <div class="text-center">
-                                                <a href="#">+2</a>
+                                                <a href="javascript:void(0)">+2</a>
                                             </div>
                                         </div>
                                     </div>
@@ -737,7 +810,7 @@
                         <div class="step-content">
                             <h5 class="mb-1">Rachel King</h5>
 
-                            <p class="fs-5 mb-1">Marked <a class="text-uppercase" href="#"><i class="bi-journal-bookmark-fill"></i> Fr-3</a> as <span class="badge bg-soft-success text-success rounded-pill"><span class="legend-indicator bg-success"></span>"Completed"</span></p>
+                            <p class="fs-5 mb-1">Marked <a class="text-uppercase" href="javascript:void(0)"><i class="bi-journal-bookmark-fill"></i> Fr-3</a> as <span class="badge bg-soft-success text-success rounded-pill"><span class="legend-indicator bg-success"></span>"Completed"</span></p>
 
                             <span class="small text-muted text-uppercase">Apr 29</span>
                         </div>
@@ -771,7 +844,7 @@
                         <div class="step-content">
                             <h5 class="mb-1">Project status updated</h5>
 
-                            <p class="fs-5 mb-1">Marked <a class="text-uppercase" href="#"><i class="bi-journal-bookmark-fill"></i> Fr-3</a> as <span class="badge bg-soft-primary text-primary rounded-pill"><span class="legend-indicator bg-primary"></span>"In progress"</span></p>
+                            <p class="fs-5 mb-1">Marked <a class="text-uppercase" href="javascript:void(0)"><i class="bi-journal-bookmark-fill"></i> Fr-3</a> as <span class="badge bg-soft-primary text-primary rounded-pill"><span class="legend-indicator bg-primary"></span>"In progress"</span></p>
 
                             <span class="small text-muted text-uppercase">Feb 10</span>
                         </div>
@@ -845,6 +918,46 @@
     <!-- JS Front -->
     <script src="../assets/js/theme.min.js"></script>
 
+    <script src="fg-assets/js/jquery-ui.js"></script>
+
+    <script src="Scripts/CalendarScripts/CalendarLayoutManage.js"></script>
+    <script src="Scripts/tagify.min.js"></script>
+    <script src="Scripts/tagify.polyfills.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/jstree.min.js"></script>
+
+    <script src="fg-assets/tabulator/js/tabulator.js"></script>
+    <script src="fg-assets/js/waves.js"></script>
+    <script src="Content/underscore.js/underscore.min.js"></script>
+    <script src="Content/bootbox/bootbox.min.js"></script>
+    <script src="Scripts/jquery.blockUI/jquery.blockUI.min.js"></script>
+    <script src="Scripts/myscript/globalScript.js"></script>
+    <script src="Scripts/myscript/commonFunctions.js?token=@token"></script>
+    <script src="Scripts/scripts.js"></script>
+    <script type="text/javascript" src="Content/angular.js/angular.min.js"></script>
+    <script src="Content/angular-messages/angular-messages.min.js"></script>
+    <script src="Content/angular-resource/angular-resource.min.js"></script>
+    <script src="Content/angular-filter/angular-filter.min.js"></script>
+    <script src="Scripts/ngBootbox.min.js"></script>
+    <script src="Content/angular-ui-router/angular-ui-router.min.js"></script>
+    <script src="Scripts/ui-bootstrap-tpls.min.js"></script>
+    <script src="Content/angular-breadcrumb/angular-breadcrumb.min.js"></script>
+    <script src="Content/angular-cookies/angular-cookies.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/3.0.0/toaster.min.js"></script>
+    <script src="Scripts/myscript/controller/mainModule.js?token=@token"></script>
+    <script src="~/Scripts/myscript/controller/IndexController.js?token=@token"></script>
+    <script src="Scripts/myscript/controller/allController.js?token=@token"></script>
+    <script src="Scripts/myscript/controller/adminController.js?token=@token"></script>
+    <script src="Scripts/myscript/controller/FormRecordsController.js?token=@token"></script>
+    <script src="Scripts/myscript/controller/FormEntryController.js?token=@token"></script>
+    <script src="Scripts/myscript/controller/calendarController.js?token=@token"></script>
+    <script src="Scripts/myscript/routes/allRoutes.js?token=@token"></script>
+    <script src="Scripts/myscript/services/services.js?token=@token"></script>
+    <script src="Scripts/myscript/directives/directives.js?token=@token"></script>
+    <script type="text/javascript" src="fg-assets/formValidation/js/formValidation.min.js"></script>
+    <script type="text/javascript" src="fg-assets/formValidation/js/framework/bootstrap.min.js"></script>
+    <script src="fg-assets/js/app.js"></script>
+    <script src="fg-assets/js/jquery.cookie.min.js"></script>
+
 
     <!-- JS Plugins Init. -->
     <script>
@@ -862,6 +975,29 @@
                 }
             })
         })()
+    </script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            checkLogin();
+
+        })
+
+        function checkLogin() {
+
+            $.ajax({
+                url: "/public/GetRole",
+                type: "get",
+                success: function (response) {
+                    if (response != "BUSINESS_USER" && response != "SUPERADMIN_USER") {
+                        window.location.href = "/Account/BusinessLogin"
+                    }
+                }
+            })
+
+        }
     </script>
 
     <!-- Style Switcher JS -->
@@ -902,138 +1038,6 @@
         })()
     </script>
 
-    <!-- End Style Switcher JS -->
-    @* Momentum based scroll behaviour *@
-    @*<script>
-        $(document).ready(function () {
-            // $fn.scrollspeed(step, speed, easing);
-            jquery.scrollspeed(200, 800);
-        });
-
-        // custom scrolling speed with jquery
-        // source: github.com/bynathan/jquery.scrollspeed
-        // version: 1.0.2
-
-        (function ($) {
-
-            jquery.scrollspeed = function (step, speed, easing) {
-
-                var $document = $(document),
-                    $window = $(window),
-                    $body = $('html, body'),
-                    option = easing || 'default',
-                    root = 0,
-                    scroll = false,
-                    scrolly,
-                    scrollx,
-                    view;
-
-                if (window.navigator.mspointerenabled)
-
-                    return false;
-
-                $window.on('mousewheel dommousescroll', function (e) {
-
-                    var deltay = e.originalevent.wheeldeltay,
-                        detail = e.originalevent.detail;
-                    scrolly = $document.height() > $window.height();
-                    scrollx = $document.width() > $window.width();
-                    scroll = true;
-
-                    if (scrolly) {
-
-                        view = $window.height();
-
-                        if (deltay < 0 || detail > 0)
-
-                            root = (root + view) >= $document.height() ? root : root += step;
-
-                        if (deltay > 0 || detail < 0)
-
-                            root = root <= 0 ? 0 : root -= step;
-
-                        $body.stop().animate({
-
-                            scrolltop: root
-
-                        }, speed, option, function () {
-
-                            scroll = false;
-
-                        });
-                    }
-
-                    if (scrollx) {
-
-                        view = $window.width();
-
-                        if (deltay < 0 || detail > 0)
-
-                            root = (root + view) >= $document.width() ? root : root += step;
-
-                        if (deltay > 0 || detail < 0)
-
-                            root = root <= 0 ? 0 : root -= step;
-
-                        $body.stop().animate({
-
-                            scrollleft: root
-
-                        }, speed, option, function () {
-
-                            scroll = false;
-
-                        });
-                    }
-
-                    return false;
-
-                }).on('scroll', function () {
-
-                    if (scrolly && !scroll) root = $window.scrolltop();
-                    if (scrollx && !scroll) root = $window.scrollleft();
-
-                }).on('resize', function () {
-
-                    if (scrolly && !scroll) view = $window.height();
-                    if (scrollx && !scroll) view = $window.width();
-
-                });
-            };
-
-            jquery.easing.default = function (x, t, b, c, d) {
-
-                return -c * ((t = t / d - 1) * t * t * t - 1) + b;
-            };
-
-        })(jQuery);  
-    </script>*@
-    <script>
-        /*custome js*/
-        function toggleDropdown() {
-            var dropdown = document.querySelector('.dropdown-me');
-            dropdown.classList.toggle('open');
-        }
-
-        function selectItem(item) {
-            var selectedItem = item.textContent;
-            document.getElementById("selectedItem").textContent = selectedItem;
-            toggleDropdown();
-        }
-
-        // Close the dropdown if the user clicks outside of it
-        window.onclick = function (event) {
-            if (!event.target.closest('.dropdown-me')) {
-                var dropdowns = document.getElementsByClassName("dropdown-me");
-                for (var i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('open')) {
-                        openDropdown.classList.remove('open');
-                    }
-                }
-            }
-        }
-    </script>
 
 </body>
 </html>

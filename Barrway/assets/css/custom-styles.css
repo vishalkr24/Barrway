@@ -94,6 +94,7 @@
     position: relative;
     display: inline-block;
     cursor: pointer;
+    background:white;
 }
 
 .dropdown-me .dropdown-toggle {

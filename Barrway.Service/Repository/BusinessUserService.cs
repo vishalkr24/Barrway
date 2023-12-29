@@ -1420,11 +1420,12 @@ namespace Barrway.Service.Repository
 
                     if (website.Status)
                     {
-                        bool ActivateFreePlan = false;
+                        //bool ActivateFreePlan = false;
+                        bool ActivateFreePlan = true;
 
                         if (website.Data["COMPANY_PROFILE_STATUS"].ToString() == "N")
                         {
-                            query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set COMPANY_PROFILE_STATUS = 'Y', updated_at = '" + DateTime.Now.ToString() + "' where USER_ID = '" + UserName + "'";
+                            query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set COMPANY_PROFILE_STATUS = 'Y', updated_at = '" + DateTime.Now.ToString("yyyy-MM-dd") + "' where USER_ID = '" + UserName + "'";
                             saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                         }
 
@@ -1432,26 +1433,26 @@ namespace Barrway.Service.Repository
                         {
                             if (website.Data["CURRENT_STEP"].ToString() == "COMPANY PROFILE")
                             {
-                                query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'CALENDAR', updated_at = '" + DateTime.Now.ToString() + "'  where USER_ID = '" + UserName + "'";
+                                query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'CALENDAR', updated_at = '" + DateTime.Now.ToString("yyyy-MM-dd") + "'  where USER_ID = '" + UserName + "'";
                                 saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                             }
                             else if (website.Data["CURRENT_STEP"].ToString() == "COMPANY WEBSITE")
                             {
-                                query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'COMPLETED', updated_at = '" + DateTime.Now.ToString() + "'  where USER_ID = '" + UserName + "'";
+                                query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'COMPLETED', updated_at = '" + DateTime.Now.ToString("yyyy-MM-dd") + "'  where USER_ID = '" + UserName + "'";
                                 saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
 
                                 // registration and 3 steps are completed here and now activate free plan of user
 
-                                if (saveResult > 0)
-                                {
-                                    ActivateFreePlan = true;
-                                }
+                                //if (saveResult > 0)
+                                //{
+                                //    ActivateFreePlan = true;
+                                //}
 
                             }
                         }
                         else
                         {
-                            ActivateFreePlan = true;
+                            //ActivateFreePlan = true;
                         }
 
                         if (ActivateFreePlan)
@@ -1464,47 +1465,55 @@ namespace Barrway.Service.Repository
 
                                 if (freeSubscriptionPackage.Status)
                                 {
-                                    BusinessOrderModel businessOrderModel = new BusinessOrderModel()
+                                    try
                                     {
-                                        BOOKING_SESSION_COMPANY = freeSubscription.Data["BOOKING_SESSION_COMPANY"]?.ToString(),
-                                        CALENDAR_AVAILABLE = freeSubscription.Data["CALENDAR_AVAILABLE"]?.ToString(),
-                                        PACKAGE_ID = freeSubscription.Data["Id"]?.ToString(),
-                                        PLAN_DESCRIPTION = freeSubscription.Data["PLAN_DESCRIPTION"]?.ToString(),
-                                        PLAN_NAME = freeSubscription.Data["PLAN_NAME"]?.ToString(),
-                                        SESSION_MONTH_COMPANY = freeSubscription.Data["SESSION_MONTH_COMPANY"]?.ToString(),
-                                        VALIDITY_DAYS = 30,
-                                        VALID_TILL = DateTime.Now.AddMonths(1).ToString("yyyy-MM-dd HH:mm"),
-                                        ORDER_PRICE = 0,
-                                        USER_ID = UserId,
-                                        ORDER_QTY = 1,
-                                        IS_MONTHLY = "Y",
-                                        COMPANY_ID = formResult.Id.ToString()
-                                    };
-
-                                    var orderResult = await masterService.CreateBusinessOrder(businessOrderModel);
-
-                                    if (orderResult.Status)
-                                    {
-                                        CompanySubscriptionDetailsModel companySubscriptionDetailsModel = new CompanySubscriptionDetailsModel()
+                                        BusinessOrderModel businessOrderModel = new BusinessOrderModel()
                                         {
-                                            ASSIGNED_BOOKINGS = Convert.ToDouble(businessOrderModel.BOOKING_SESSION_COMPANY),
-                                            ASSIGNED_CALENDARS = Convert.ToDouble(businessOrderModel.CALENDAR_AVAILABLE),
-                                            ASSIGNED_SESSIONS = Convert.ToDouble(businessOrderModel.SESSION_MONTH_COMPANY),
-                                            ORDER_ID = orderResult.Data,
-                                            PLAN_ID = freeSubscription.Data["Id"]?.ToString(),
-                                            COMPANY_ID = formResult.Id.ToString(),
-                                            IS_FREE_PLAN = "Y",
-                                            IS_ACTIVE = "Y",
+                                            BOOKING_SESSION_COMPANY = freeSubscriptionPackage.Data["VALID_BOOKING_SESSION"]?.ToString(),
+                                            CALENDAR_AVAILABLE = freeSubscriptionPackage.Data["NUM_OF_AVAIL_CLR"]?.ToString(),
+                                            PACKAGE_ID = freeSubscriptionPackage.Data["Id"]?.ToString(),
+                                            PLAN_DESCRIPTION = freeSubscriptionPackage.Data["PLAN_DESC"]?.ToString(),
+                                            PLAN_NAME = freeSubscriptionPackage.Data["PLAN_NAME"]?.ToString(),
+                                            SESSION_MONTH_COMPANY = freeSubscriptionPackage.Data["VALID_SESSIONS"]?.ToString(),
+                                            VALIDITY_DAYS = 30,
+                                            VALID_TILL = DateTime.Now.AddMonths(1).ToString("yyyy-MM-dd HH:mm"),
+                                            ORDER_PRICE = 0,
+                                            USER_ID = UserId,
+                                            ORDER_QTY = 1,
+                                            IS_MONTHLY = "Y",
+                                            COMPANY_ID = formResult.Id.ToString()
                                         };
 
-                                        var subscriptionSaveResult = await AddCompanySubscriptionDetails(companySubscriptionDetailsModel);
+                                        var orderResult = await masterService.CreateBusinessOrder(businessOrderModel);
+
+                                        if (orderResult.Status)
+                                        {
+                                            CompanySubscriptionDetailsModel companySubscriptionDetailsModel = new CompanySubscriptionDetailsModel()
+                                            {
+                                                ASSIGNED_BOOKINGS = Convert.ToDouble(businessOrderModel.BOOKING_SESSION_COMPANY),
+                                                ASSIGNED_CALENDARS = Convert.ToDouble(businessOrderModel.CALENDAR_AVAILABLE),
+                                                ASSIGNED_SESSIONS = Convert.ToDouble(businessOrderModel.SESSION_MONTH_COMPANY),
+                                                ORDER_ID = orderResult.Data,
+                                                PLAN_ID = freeSubscriptionPackage.Data["Id"]?.ToString(),
+                                                COMPANY_ID = formResult.Id.ToString(),
+                                                IS_FREE_PLAN = "Y",
+                                                IS_ACTIVE = "Y",
+                                            };
+
+                                            var subscriptionSaveResult = await AddCompanySubscriptionDetails(companySubscriptionDetailsModel);
+                                        }
                                     }
+                                    catch (Exception ex)
+                                    {
+
+                                    }
+                                   
 
                                 }
                             }
                         }
 
-                        string sqlQuery = $@"select * from BUSINESS_ASSIGNED_USERS_1964 where ASSIGN_ID = '{UserId}' and BUSINESS_ACCOUNT_ID = '{model.BUSINESS_ACCOUNT_ID}'";
+                        string sqlQuery = $@"select * from BUSINESS_ASSIGNED_USERS_1964 where ASSIGNED_USER = '{UserId}' and BUSINESS_ACCOUNT_ID = '{model.BUSINESS_ACCOUNT_ID}'";
                         var assignResult = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
                         if (assignResult.Count > 0)
@@ -2735,7 +2744,7 @@ namespace Barrway.Service.Repository
         public async Task<AddUpdateDelete> GetFreeCompanyPackage()
         {
             string query = $@"SELECT *
-                          FROM [dbo].[BUSINESS_PLAN_MASTER_1966] WHERE IS_FREE_PLAN = 'Y' and IS_ACTIVE = 'Y' and PRICE = 0 order by created_at desc";
+                          FROM [dbo].[BUSINESS_PLAN_MASTER_1966] WHERE IS_FREE_PLAN = 'Y' and PLAN_STATUS = 'ACTIVE' and PLAN_PRICE = 0 order by created_at desc";
 
             List<IDictionary<string, object>> Result = await sqlFunction.ExecuteSqlQuery(query);
 

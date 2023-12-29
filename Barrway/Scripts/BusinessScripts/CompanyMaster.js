@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    showNavbarNavigation('companyMasterMegaMenu');
+    //showNavbarNavigation('companyMasterMegaMenu');
     setCalendarMaster();
     
 })
@@ -21,8 +21,8 @@ function setCalendarMaster() {
         var columns = [
             {
                 title: '', field: 'ACTION', formatter: function (cell, formatter) {
-                    return `${(cell.getRow().getData().Id == localStorage.getItem("COMPANY_ID")) ? " <a href='#' class='btn btn-success text-light' disabled style='border-radius:300px;'>Current</a>" : `<a href='#' onclick="changeCompanyMaster(${cell.getRow().getData().Id})" class="btn btn-warning text-light" style="border-radius:300px; background:#E2476C;">Change</a>`} 
-                            <a href='#' onclick="editCompanyMaster(${cell.getRow().getData().Id})" class="btn btn-primary text-light" style="border-radius:300px;">Edit</a> `;
+                    return `${(cell.getRow().getData().Id == localStorage.getItem("COMPANY_ID")) ? " <a href='javascript:void(0)' class='btn btn-success text-light' disabled style='border-radius:300px;'>Current</a>" : `<a href='javascript:void(0)' onclick="changeCompanyMaster(${cell.getRow().getData().Id})" class="btn btn-warning text-light" style="border-radius:300px; background:#E2476C;">Change</a>`} 
+                            <a href='javascript:void(0)' onclick="editCompanyMaster(${cell.getRow().getData().Id})" class="btn btn-primary text-light" style="border-radius:300px;">Edit</a> `;
                 }, headerSort: false
             },
             { title: 'Company Code', field: 'COMPANY_CODE', headerFilter: "input" },

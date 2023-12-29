@@ -16,6 +16,10 @@ $(document).on("change", "#CALENDAR_CATEGORY_ID", function () {
 $(document).ready(function () {
     
     readyPage();
+    if (window.location.href.includes("#/CalendarSetting") || window.location.href.includes("#CalendarSetting")) {
+        renderPage(2);
+    }
+
     if (getUserRole() != "SUPERADMIN_USER") {
         if ($("#createCalendarCheck").val() == true || $("#createCalendarCheck").val() == "true" ) {
             $(".row-reverse").attr("style", "flex-direction:row-reverse");

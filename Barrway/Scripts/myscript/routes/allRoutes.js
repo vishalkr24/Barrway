@@ -19,7 +19,7 @@
         $locationProvider.hashPrefix('');
         // use the HTML5 History API 
         var uuid = uuidv4();
-        $urlRouterProvider.otherwise('/home');
+        //$urlRouterProvider.otherwise('/home');
         $stateProvider.state('login', {
             url: '/login',
             onEnter: function ($window) { $window.document.title = "Form Builder-Login"; },
