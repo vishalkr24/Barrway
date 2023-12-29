@@ -295,7 +295,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Calendar_Package.
+        ///    Looks up a localized string similar to Calendar Package.
         /// </summary>
         internal static string Calendar_Package {
             get {

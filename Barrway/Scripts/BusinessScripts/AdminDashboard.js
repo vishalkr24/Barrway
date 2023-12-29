@@ -49,13 +49,17 @@ function setPageStatus() {
         $("#content").hide();
     } else {
         if (response.Data.COMPANY_PROFILE_STATUS == "Y") {
-            $("#CompanyProfileSetupBtn a").text("Done");
+            $("#CompanyProfileSetupBtn").text("View >");
+            $("#CompanyProfileSetupBtn").attr("onclick", "window.location.href = '/BusinessAdmin/CompanyMaster'");
+            $("#CompanyProfileSetupBtn").attr("style", `font-size: 15px; float:right; padding-top: 8px; padding-right: 8px; cursor: pointer;`);
             /*$("#CompanyProfileSetupBtn").attr("onclick", "");*/
         }
 
         if (response.Data.COMPANY_CALENDAR_STATUS == "Y") {
-            $("#CalendarSetupBtn a").text("Done");
-            /*$("#CalendarSetupBtn").attr("onclick", "");*/
+            /*$("#CalendarSetupBtn a").text("Done");*/
+            $("#CalendarSetupBtn").text("View >");
+            $("#CalendarSetupBtn").attr("onclick", "window.location.href = '/BusinessAdmin/CalendarMaster'");
+            $("#CalendarSetupBtn").attr("style", `font-size: 15px; float:right; padding-top: 8px; padding-right: 8px; cursor: pointer;`);
         }
 
         $("#content-2").hide();

@@ -3,6 +3,11 @@
     setTop5Calendars();
 });
 
+$(document).on("click", "#navbarDoubleLineContainerNavDropdown .nav-item .nav-link", function () {
+    $("#navbarDoubleLineContainerNavDropdown .nav-item .nav-link").removeClass("active");
+    $(this).addClass("active");
+});
+
 function setSelectedCalendar() {
     $("#ddlMasterCalendar").val(localStorage.getItem('CALENDAR_CODE'));
 }

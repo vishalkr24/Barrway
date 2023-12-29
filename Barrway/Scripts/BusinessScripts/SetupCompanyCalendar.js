@@ -16,6 +16,11 @@ $(document).on("change", "#CALENDAR_CATEGORY_ID", function () {
 $(document).ready(function () {
     
     readyPage();
+    setTimeout(function () {
+        $("#calendarsMegaMenu").addClass("active");
+    }, 500);
+    
+
     if (window.location.href.includes("#/CalendarSetting") || window.location.href.includes("#CalendarSetting")) {
         renderPage(2);
     }
@@ -42,16 +47,17 @@ function readyPage() {
         setCurrentCalendarData();
 
         $("#btn2").attr("onclick", "renderPage(2)");
+
+        var obj = { 'create': true, 'placeholder': 'Add tags...' };
+        $("#TAGS").attr("data-hs-tom-select-options", JSON.stringify(obj));
+        HSCore.components.HSTomSelect.init('.js-select')
     } else {
         var obj = { 'create': true, 'placeholder': 'Add tags...' };
         $("#content").show();
         $("#content-2").hide();
         $("#TAGS").attr("data-hs-tom-select-options", JSON.stringify(obj));
         HSCore.components.HSTomSelect.init('.js-select')
-
     }
-
-
 }
 
 function setCurrentCalendarData() {
@@ -62,13 +68,17 @@ function setCurrentCalendarData() {
     if (data.Status == "true" || data.Status == true) {
 
         $("#COUNTRY_ID").val(data.Data.COUNTRY_ID);
+        $("#COUNTRY_ID option[value=" + data.Data.COUNTRY_ID + "]").attr("selected", true);
         bindCityData(data.Data.COUNTRY_ID);
         $("#CITY_ID").val(data.Data.CITY_ID);
+        $("#CITY_ID option[value=" + data.Data.CITY_ID + "]").attr("selected", true);
         bindDistrictData(data.Data.DISTRICT_ID);
         $("#DISTRICT_ID").val(data.Data.DISTRICT_ID);
+        $("#DISTRICT_ID option[value=" + data.Data.DISTRICT_ID + "]").attr("selected", true);
         renderForm(data.Data.CALENDAR_CATEGORY_ID);
         $("#CALENDAR_SUB_CATEGORY_ID").val(data.Data.CALENDAR_SUB_CATEGORY_ID);
-        
+        $("#CALENDAR_SUB_CATEGORY_ID option[value=" + data.Data.CALENDAR_SUB_CATEGORY_ID + "]").attr("selected", true);
+
         if (data.Data.TAGS != null && data.Data.TAGS != "" && data.Data.TAGS != "null") {
 
             if (data.Data.TAGS.includes(",")) {
@@ -96,6 +106,7 @@ function setCurrentCalendarData() {
 
 function renderForm(CategoryId) {
     $("#CALENDAR_CATEGORY_ID").val(CategoryId);
+    $("#CALENDAR_CATEGORY_ID option[value=" + CategoryId + "]").attr("selected", true);
     /*$("#CALENDAR_CATEGORY_ID").attr("disabled", true);*/
     bindCalendarSubCategoryData($("#CALENDAR_CATEGORY_ID option:selected").val());
     $("#content").hide();
