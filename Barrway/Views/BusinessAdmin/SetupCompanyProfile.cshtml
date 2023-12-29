@@ -50,7 +50,7 @@
                                     @Html.DropDownListFor(model => model.COMPANY_SUB_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(CompanyCategory))), "Select Company Sub Category", new { @class = "form-control", @required = "true" })
                                     @Html.ValidationMessageFor(model => model.COMPANY_SUB_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
                                 </div>
-                                <button type="submit" class="btn btn-default">Save</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
                                 <button type="button" id="companyProfileSkipButton" class="skip hide-for-superadmin" onclick="location.href = '@Url.Action("SetupCompanyCalendar", "BusinessAdmin")'">Skip for now</button>
                             </form>
                         </div>

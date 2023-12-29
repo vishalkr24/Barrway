@@ -1682,7 +1682,7 @@ namespace Barrway.Service.Repository
         public async Task<AddUpdateDelete> UpdateCompanyService(BusinessCompanyModel model)
         {
 
-            string query = $@"UPDATE BUSINESS_COMPANY_MASTER_1924 SET COMPANY_SERVICE = '{model.COMPANY_SERVICE}' WHERE Id = '{model.Id}'";
+            string query = $@"UPDATE BUSINESS_COMPANY_MASTER_1924 SET COMPANY_SERVICE = '{model.COMPANY_SERVICE.Replace("'", "''")}' WHERE Id = '{model.Id}'";
 
             int result = await sqlFunction.ExecuteSqlCommandQuery(query);
 

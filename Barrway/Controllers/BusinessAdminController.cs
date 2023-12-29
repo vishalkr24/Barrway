@@ -291,6 +291,16 @@ namespace Barrway.Controllers
                         }
 
                         ViewBag.PageId = PId;
+                        if (TempData.Any(x=> x.Key == "SuccessMessage"))
+                        {
+                            ViewBag.SuccessMessage = TempData["SuccessMessage"]?.ToString();
+                        }
+
+                        if (TempData.Any(x => x.Key == "ErrorMessage"))
+                        {
+                            ViewBag.ErrorMessage = TempData["ErrorMessage"]?.ToString();
+                        }
+
                         return View(businessCompanyModel);
                     }
                     else
@@ -326,7 +336,6 @@ namespace Barrway.Controllers
                 HttpContext.GetOwinContext().Authentication.SignOut();
                 return RedirectToAction("BusinessLogin", "Account");
             }
-            return View();
         }
 
 
@@ -721,10 +730,12 @@ namespace Barrway.Controllers
 
                     if (website.Data["COMPANY_PROFILE_STATUS"].ToString() == "Y")
                     {
+                        ViewBag.SuccessMessage = "Company Created Successfully";
                         return RedirectToAction("Dashboard");
                     }
                     else
                     {
+                        ViewBag.SuccessMessage = "Company Created Successfully. Now setup the Calendar.";
                         return RedirectToAction("SetupCompanyCalendar", saveDataResult);
                     }
 
@@ -732,6 +743,7 @@ namespace Barrway.Controllers
                 else
                 {
                     ViewBag.IsNew = IsNew;
+                    ViewBag.ErrorMessage = "Some error occured!";
                     return View("SetupCompanyProfile");
                 }
 
@@ -739,6 +751,7 @@ namespace Barrway.Controllers
             catch (Exception ex)
             {
                 ViewBag.IsNew = IsNew;
+                ViewBag.ErrorMessage = "Some error occured!";
                 return View("SetupCompanyProfile");
             }
         }
@@ -807,18 +820,21 @@ namespace Barrway.Controllers
                                     STATUS = "ACTIVE"
                                 }
                             });
+
+                            ViewBag.SuccessMessage = "You are assigned a new Company!";
                         }
 
                     }
                 }
                 else
                 {
+                    ViewBag.ErrorMessage = "Some error occured!";
                     return View(model);
                 }
             }
             catch (Exception ex)
             {
-
+                ViewBag.ErrorMessage = "Some error occured!";
             }
             
             return RedirectToAction("Dashboard");
@@ -950,7 +966,6 @@ namespace Barrway.Controllers
         {
             try
             {
-
                 BusinessCompanyModel companyModel = new BusinessCompanyModel()
                 {
                     BUSINESS_ACCOUNT_ID = model.BUSINESS_ACCOUNT_ID,
@@ -963,19 +978,21 @@ namespace Barrway.Controllers
                 if (saveDataResult.Status)
                 {
                     ViewBag.PageId = 2;
-                    return View("ManageCompanyWebsite", model);
+                    TempData["SuccessMessage"] = "Service Updated Successfully!";
+                    return RedirectToAction("ManageCompanyWebsite", new {CompanyId = companyModel.Id, PId = 2});
                 }
                 else
                 {
                     ViewBag.PageId = 2;
-                    return View("ManageCompanyWebsite", model);
+                    TempData["ErrorMessage"] = "Service Not Updated!";
+                    return RedirectToAction("ManageCompanyWebsite", new { CompanyId = companyModel.Id, PId = 2 });
                 }
             }
             catch (Exception ex)
             {
                 ViewBag.PageId = 2;
-                ViewBag.ServiceError = "Remove single quote from the content and Try again!";
-                return View("ManageCompanyWebsite", model);
+                TempData["ErrorMessage"] = "Remove single quote from the content and Try again!";
+                return RedirectToAction("ManageCompanyWebsite", new { CompanyId = model.Id, PId = 2 });
             }
         }
 
@@ -1078,17 +1095,19 @@ namespace Barrway.Controllers
                         model.COMPANY_BANNER_PATH.SaveAs(Server.MapPath("~/UploadCompany/CompanyBanners/" + model.COMPANY_CODE.ToString()) + "/" + model.COMPANY_BANNER_PATH.FileName.ToString());
                     }
 
-
+                    ViewBag.SuccessMessage = "Website Details Saved Successfully!";
                     return RedirectToAction("Dashboard");
 
                 }
                 else
                 {
+                    ViewBag.ErrorMessage = "Details not saved.";
                     return View("ManageCompanyWebsite", model);
                 }
             }
             catch (Exception ex)
             {
+                ViewBag.ErrorMessage = "Details not saved.";
                 return View("ManageCompanyWebsite", model);
             }
         }
@@ -1134,7 +1153,7 @@ namespace Barrway.Controllers
                 {
                     var currentPlan = await businessUserService.GetCompanyActiveSubscriptionDetails(company.Data["Id"]?.ToString());
 
-                    if (currentPlan.Status)
+                    if (currentPlan.Status || !IsPartial)
                     {
                         var currentPlanData = currentPlan.Data as IDictionary<string, object>;
 
@@ -1151,7 +1170,7 @@ namespace Barrway.Controllers
                             }
                         }
 
-                        if (currentCalendars < calendarLimit)
+                        if (currentCalendars < calendarLimit || !IsPartial)
                         {
                             string path = "";
                             string fileName = "";
@@ -1280,13 +1299,14 @@ namespace Barrway.Controllers
                                 {
                                     model.CALENDAR_PHOTO_PATH.SaveAs(Server.MapPath("~/UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString()) + "/" + model.CALENDAR_PHOTO_PATH.FileName.ToString());
                                 }
-
+                                ViewBag.SuccessMessage = "Calendar Created Successfully!";
                                 return RedirectToAction("CalendarMaster");
 
                             }
                             else
                             {
                                 ViewBag.IsPartial = IsPartial;
+                                ViewBag.ErrorMessage = "Some error occured while creating Calendar! Please refresh and try again.";
                                 return View("SetupCompanyCalendar", model);
                             }
                         }
@@ -1294,7 +1314,8 @@ namespace Barrway.Controllers
                         {
                             ModelState.AddModelError("UNIVERSAL_ERROR", "You have already created maximum no. of calendars in your current package. Please upgrade you package to create more calendars.");
                             ViewBag.IsPartial = IsPartial;
-                            model.UNIVERSAL_ERROR = "You have already created maximum no. of calendars in your current package. Please upgrade you package to create more calendars.";
+                            ViewBag.ErrorMessage = "You have already created maximum no. of calendars in your current package. Please upgrade you package to create more calendars.";
+                            
                             return View("SetupCompanyCalendar", model);
                         }
                     }
@@ -1302,7 +1323,8 @@ namespace Barrway.Controllers
                     {
                         ModelState.AddModelError("UNIVERSAL_ERROR", "No active package found for this company. Kindly subscribe to a package and try again!");
                         ViewBag.IsPartial = IsPartial;
-                        model.UNIVERSAL_ERROR = "No active package found for this company. Kindly subscribe to a package and try again!";
+                        ViewBag.ErrorMessage = "No active package found for this company. Kindly subscribe to a package and try again!";
+                        
                         return View("SetupCompanyCalendar", model);
                     }
                     
@@ -1312,6 +1334,7 @@ namespace Barrway.Controllers
                 else
                 {
                     ViewBag.IsPartial = IsPartial;
+                    ViewBag.ErrorMessage = "Company not found. Please select or create a company.";
                     return RedirectToAction("SetupCompanyProfile", model);
                 }
             }
