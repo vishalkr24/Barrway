@@ -103,6 +103,8 @@ namespace Barrway.Service.IRepository
 
         Task<AddUpdateDelete> GetSessionsForThisMonth(string CompanyCode);
 
+        Task<AddUpdateDelete> CheckCreditLimit(string CompanyCode);
+
         Task<AddUpdateDelete> GetBookingsForThisMonth(string CompanyCode, string SlotId);
 
 
