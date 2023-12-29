@@ -191,9 +191,9 @@
     <input style="display:none" id="userIdHidden" value="@UserIdentity.UserName" />
     <script src="../assets/js/hs.theme-appearance.js"></script>
     <style>
-        #header {
+        /*#header {
             display: none;
-        }
+        }*/
 
         .show-for-superadmin {
             display: none;
@@ -387,7 +387,7 @@
                                 </a>
                             </li>
                             <li class="hs-has-sub-menu nav-item">
-                                <a id="manage-website" class="hs-mega-menu-invoker nav-link active" onclick="showComapanyWebsiteDetails(1)" href="javascript:void(0)" role="button">
+                                <a id="manage-website" class="hs-mega-menu-invoker nav-link" onclick="showComapanyWebsiteDetails(1)" href="javascript:void(0)" role="button">
 
                                     <div class="button-body-wrap">
                                         <div class="button-body">
@@ -419,19 +419,19 @@
                             <!-- Apps -->
                             @if (UserIdentity.UserRoleType.ToString() == "SUPERUSER")
                             {
-                                <li class="hs-has-sub-menu nav-item">
-                                    <a id="companyUsersMegaMenu" class="hs-mega-menu-invoker nav-link" href="/BusinessAdmin/AdminMaster" role="button">
-                                        <div class="button-body-wrap">
-                                            <div class="button-body">
-                                                <button class="cus-button">
-                                                    <img src="/assets/marketplace/image/user.png" alt="" class="hns" />
-                                                    <img src="/assets/marketplace/image/user1.png" alt="" class="hs" />
-                                                    <span class="button_title"> @Resource.User </span>
-                                                </button>
-                                            </div>
+                            <li class="hs-has-sub-menu nav-item">
+                                <a id="companyUsersMegaMenu" class="hs-mega-menu-invoker nav-link" href="/BusinessAdmin/AdminMaster" role="button">
+                                    <div class="button-body-wrap">
+                                        <div class="button-body">
+                                            <button class="cus-button">
+                                                <img src="/assets/marketplace/image/user.png" alt="" class="hns" />
+                                                <img src="/assets/marketplace/image/user1.png" alt="" class="hs" />
+                                                <span class="button_title"> @Resource.User </span>
+                                            </button>
                                         </div>
-                                    </a>
-                                </li>
+                                    </div>
+                                </a>
+                            </li>
                             }
                             <!-- End Apps -->
 
@@ -487,7 +487,7 @@
         </div>
 
 
-        <div class="pl-3 pr-3 cp-10">
+        <div class="pl-3 pr-3 cp-10" style="margin-right:auto;">
             <nav class="js-mega-menu navbar-nav-wrap flex-grow-1">
 
 
