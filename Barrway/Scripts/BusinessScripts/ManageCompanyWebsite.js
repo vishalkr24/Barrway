@@ -2,10 +2,6 @@
     showNavbarNavigation('manage-website');
     
     var companyId = localStorage.getItem("COMPANY_ID");
-    
-    setCountryData();
-    setCompanyCategory();
-
     tinymce.init({
         selector: 'textarea#COMPANY_SERVICE',
         plugins: 'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons',
@@ -64,10 +60,11 @@
         contextmenu: 'link image table',
 
     });
+    setCountryData();
+    setCompanyCategory();
 
     SetCompanyDetails(companyId);
     renderPage($("#pageCheckId").val());
-
 });
 
 $(document).on("change", "#COUNTRY_ID", function () {
@@ -84,10 +81,10 @@ $(document).on("change", "#COMPANY_CATEGORY_ID", function () {
 
 function setCompanyCategory() {
     var response = getCompanyCategory();
-    debugger;
+    
     $("#COMPANY_CATEGORY_ID").empty();
 
-    $("#COMPANY_CATEGORY_ID").append(`<option selected disabled value="-1">Select Company Category</option>`);
+    $("#COMPANY_CATEGORY_ID").append(`<option disabled value="-1">Select Company Category</option>`);
 
     for (var i = 0; i < response.Data.length; i++) {
         $("#COMPANY_CATEGORY_ID").append(`<option value="${response.Data[i].Id}">${response.Data[i].COMPANY_CATEGORY_NAME}</option>`);
@@ -100,7 +97,7 @@ function setCountryData() {
     console.log(data);
 
     $("#COUNTRY_ID").empty();
-    $("#COUNTRY_ID").append(`<option value="-1" selected disabled>Select a Country</option>`);
+    $("#COUNTRY_ID").append(`<option value="-1" disabled>Select a Country</option>`);
 
     if (data.Status == "true" || data.Status == true) {
         for (var i = 0; i < data.Data.length; i++) {
@@ -116,7 +113,7 @@ function bindCityData(countryId) {
     console.log(data);
 
     $("#CITY_ID").empty();
-    $("#CITY_ID").append(`<option value="-1" selected disabled>Select a City</option>`);
+    $("#CITY_ID").append(`<option value="-1" disabled>Select a City</option>`);
 
     if (data.Status == "true" || data.Status == true) {
         for (var i = 0; i < data.Data.length; i++) {
@@ -131,7 +128,7 @@ function bindDistrictData(cityId) {
     console.log(data);
 
     $("#DISTRICT_ID").empty();
-    $("#DISTRICT_ID").append(`<option value="-1" selected disabled>Select a District</option>`);
+    $("#DISTRICT_ID").append(`<option value="-1" disabled>Select a District</option>`);
 
     if (data.Status == "true" || data.Status == true) {
         for (var i = 0; i < data.Data.length; i++) {
@@ -147,7 +144,7 @@ function BindCompanySubCategory(categoryId) {
 
     $("#COMPANY_SUB_CATEGORY_ID").empty();
 
-    $("#COMPANY_SUB_CATEGORY_ID").append(`<option selected disabled value="-1">Select Company Sub Category</option>`);
+    $("#COMPANY_SUB_CATEGORY_ID").append(`<option disabled value="-1">Select Company Sub Category</option>`);
 
     for (var i = 0; i < response.Data.length; i++) {
         $("#COMPANY_SUB_CATEGORY_ID").append(`<option value="${response.Data[i].Id}">${response.Data[i].COMPANY_SUB_CATEGORY_NAME}</option>`);
@@ -230,6 +227,7 @@ function SetCompanyDetails(companyId) {
 
     $("#COMPANY_NAME_ENGLISH").val(data.Data.COMPANY_NAME_ENGLISH);
     $("#COMPANY_NAME_CHINESE").val(data.Data.COMPANY_NAME_CHINESE);
+    
     $("#COMPANY_CATEGORY_ID").val(data.Data.COMPANY_CATEGORY_ID);
     BindCompanySubCategory(data.Data.COMPANY_CATEGORY_ID);
     $("#COMPANY_SUB_CATEGORY_ID").val(data.Data.COMPANY_SUB_CATEGORY_ID);
