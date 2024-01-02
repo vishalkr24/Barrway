@@ -72,6 +72,7 @@
     <Compile Include="AuthViewModel\BarrwayViewModel.cs" />
     <Compile Include="AuthViewModel\GoogleLoginViewModel.cs" />
     <Compile Include="AuthViewModel\UserToken.cs" />
+    <Compile Include="BusinessModels\CalendarServiceMasterModel.cs" />
     <Compile Include="BusinessModels\BusinessUserInvitationModel.cs" />
     <Compile Include="BusinessModels\CompanyPackageModel.cs" />
     <Compile Include="BusinessModels\BusinessOrderDetailsViewModel.cs" />

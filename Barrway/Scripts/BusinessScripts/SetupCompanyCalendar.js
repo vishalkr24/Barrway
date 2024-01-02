@@ -20,11 +20,6 @@ $(document).ready(function () {
         $("#calendarsMegaMenu").addClass("active");
     }, 500);
     
-
-    if (window.location.href.includes("#/CalendarSetting") || window.location.href.includes("#CalendarSetting")) {
-        renderPage(2);
-    }
-
     if (getUserRole() != "SUPERADMIN_USER") {
         if ($("#createCalendarCheck").val() == true || $("#createCalendarCheck").val() == "true" ) {
             $(".row-reverse").attr("style", "flex-direction:row-reverse");

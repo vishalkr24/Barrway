@@ -370,7 +370,7 @@ function openCalendarSetting() {
 
     if (company != null && company != undefined) {
         if (calendar != null && calendar != undefined && !calendar.includes("undefined")) {
-            window.location.replace(`/BusinessAdmin/SetupCompanyCalendar?CompanyId=${company}&IsPartial=false&CalendarCode=${calendar}#CalendarSetting`)
+            window.location.replace(`/BusinessAdmin/SetupCompanyCalendar?CompanyId=${company}&IsPartial=false&CalendarCode=${calendar}`)
         } else {
             swal({
                 icon: "Error",
