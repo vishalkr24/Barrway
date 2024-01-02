@@ -225,6 +225,58 @@ namespace Barrway.Controllers
             }
 
         }
+
+        public async Task<ActionResult> SetupCalendarEvent(string CompanyId = null, string CalendarCode = null)
+        {
+            try
+            {
+                ViewBag.IsPartial = false;
+                if (string.IsNullOrEmpty(CompanyId) && string.IsNullOrEmpty(CalendarCode))
+                {
+                    return View(new BusinessCalendarViewModel()
+                    {
+                        CALENDAR_CODE = ""
+                    });
+                    return RedirectToAction("Dashboard");
+                }
+
+                BusinessCalendarViewModel calendarModel = new BusinessCalendarViewModel();
+                
+                if (string.IsNullOrEmpty(CalendarCode))
+                {
+                    return RedirectToAction("Dashboard");
+                }
+                else
+                {
+                    var data = await businessUserService.GetCalendarDetails(CalendarCode);
+                    BusinessCalendarModel calendarModel2 = new BusinessCalendarModel();
+                    calendarModel2 = JsonConvert.DeserializeObject<BusinessCalendarModel>(JsonConvert.SerializeObject(data.Data));
+                    calendarModel.CALENDAR_CATEGORY_ID = calendarModel2.CALENDAR_CATEGORY_ID;
+                    calendarModel.CALENDAR_NAME = calendarModel2.CALENDAR_NAME;
+                    calendarModel.CALENDAR_PHOTO_NAME = calendarModel2.CALENDAR_PHOTO_NAME;
+                    calendarModel.CALENDAR_SUB_CATEGORY_ID = calendarModel2.CALENDAR_SUB_CATEGORY_ID;
+                    calendarModel.CITY_ID = calendarModel2.CITY_ID;
+                    calendarModel.COMPANY_CODE = calendarModel2.COMPANY_CODE;
+                    calendarModel.CALENDAR_CODE = calendarModel2.CALENDAR_CODE;
+                    calendarModel.COUNTRY_ID = calendarModel2.COUNTRY_ID;
+                    calendarModel.DISTRICT_ID = calendarModel2.DISTRICT_ID;
+                    calendarModel.Id = calendarModel2.Id;
+                    calendarModel.IS_VISIBLE = calendarModel2.IS_VISIBLE;
+                    calendarModel.SLOT_DURATION_IN_MINS = calendarModel2.SLOT_DURATION_IN_MINS;
+                    calendarModel.TAGS = calendarModel2.TAGS.Split(',').ToList();
+                    calendarModel.CalendarControlSheet = JsonConvert.DeserializeObject<CalendarControlModel>(JsonConvert.SerializeObject(data.Data["controlSheet"]));
+                }
+
+                return View(calendarModel);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "Some Error Occured";
+                return View();
+            }
+
+        }
+
         public async Task<ActionResult> ManageCompanyWebsite(string CompanyId, int PId = 1) // PID is page id 1 for company details, 2 for service, 3 for calendar package, 4 for photo album
         {
             AddUpdateDelete userWebsite = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name);

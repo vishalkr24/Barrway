@@ -3250,6 +3250,7 @@
     <Content Include="Views\Payment\BusinessOrderFailed.cshtml" />
     <Content Include="Views\Payment\BzSuccess.cshtml" />
     <Content Include="Views\Payment\BzCancel.cshtml" />
+    <Content Include="Views\BusinessAdmin\SetupCalendarEvent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

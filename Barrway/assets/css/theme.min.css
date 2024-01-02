@@ -30222,8 +30222,9 @@ div#navbarVerticalMenu .nav-item:hover > .nav-link {
 
 .page-header {
     border-bottom: 0.0625rem solid rgba(231, 234, 243, 0.7);
+    padding-top: 2rem;
     padding-bottom: 2rem;
-    margin-bottom: 2.25rem;
+   /* margin-bottom: 2.25rem;*/
 }
 
     .page-header .breadcrumb {
