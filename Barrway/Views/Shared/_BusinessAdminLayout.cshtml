@@ -42,8 +42,6 @@
     <link rel="preload" href="../assets/css/theme.min.css" data-hs-appearance="default" as="style">
     <link rel="preload" href="../assets/css/theme-dark.min.css" data-hs-appearance="dark" as="style">
 
-    <link href="~/assets/css/custom-styles.css" rel="stylesheet" />
-
     <style data-hs-appearance-onload-styles>
         * {
             transition: unset !important;
@@ -52,9 +50,10 @@
         body {
             opacity: 0;
         }
-        /*custome css*/
-
     </style>
+
+    <link href="~/assets/css/custom-styles.css" rel="stylesheet" />
+
     <script>
         var ASSET_URL = "@baseUrl", BASE_URL = "@baseUrl";
         var API_URL = "@webapibaseurl";
@@ -66,13 +65,156 @@
     <script src="~/Scripts/BusinessScripts/AdminLayoutManager.js"></script>
     <script src="~/Scripts/BusinessScripts/SuperAdminLayoutManager.js"></script>
 
+    <style>
+        .invalid-feedback-2 {
+            color: red !important;
+            margin-bottom: 11px;
+            display: none;
+        }
+
+        .form-inline {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-flow: row wrap;
+            flex-flow: row wrap;
+            -ms-flex-align: center;
+            align-items: center;
+        }
+
+            .form-inline .form-group {
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex: 0 0 auto;
+                flex: 0 0 auto;
+                -ms-flex-flow: row wrap;
+                flex-flow: row wrap;
+                -ms-flex-align: center;
+                align-items: center;
+                margin-bottom: 0
+            }
+
+        .form-group {
+            padding: 0px 20px !important;
+        }
+
+        .form-inline label {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-align: center;
+            align-items: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            margin-bottom: 0;
+        }
+
+        .form-inline .form-control {
+            display: inline-block;
+            width: auto;
+            vertical-align: middle;
+        }
+
+        .form-group {
+            margin-bottom: 1rem
+        }
+
+        .form-inline {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-flow: row wrap;
+            flex-flow: row wrap;
+            -ms-flex-align: center;
+            align-items: center
+        }
+
+            .form-inline .form-check {
+                width: 100%
+            }
+
+        @@media (min-width: 576px) {
+            .form-inline label {
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex-align: center;
+                align-items: center;
+                -ms-flex-pack: center;
+                justify-content: center;
+                margin-bottom: 0
+            }
+
+            .form-inline .form-group {
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex: 0 0 auto;
+                flex: 0 0 auto;
+                -ms-flex-flow: row wrap;
+                flex-flow: row wrap;
+                -ms-flex-align: center;
+                align-items: center;
+                margin-bottom: 0
+            }
+
+            .form-inline .form-control {
+                display: inline-block;
+                width: auto;
+                vertical-align: middle
+            }
+
+            .form-inline .form-control-plaintext {
+                display: inline-block
+            }
+
+            .form-inline .custom-select, .form-inline .input-group {
+                width: auto
+            }
+
+            .form-inline .form-check {
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex-align: center;
+                align-items: center;
+                -ms-flex-pack: center;
+                justify-content: center;
+                width: auto;
+                padding-left: 0
+            }
+
+            .form-inline .form-check-input {
+                position: relative;
+                -ms-flex-negative: 0;
+                flex-shrink: 0;
+                margin-top: 0;
+                margin-right: .25rem;
+                margin-left: 0
+            }
+
+            .form-inline .custom-control {
+                -ms-flex-align: center;
+                align-items: center;
+                -ms-flex-pack: center;
+                justify-content: center
+            }
+
+            .form-inline .custom-control-label {
+                margin-bottom: 0
+            }
+        }
+
+        .chosen-container {
+            width: 100% !important;
+        }
+
+        .tagify {
+            padding: 0px !important
+        }
+    </style>
+
     @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.2.2/css/tom-select.bootstrap5.min.css" integrity="sha512-mNN7o87hQqtNCCGWxFVdlVdaKF6d4S1wVMi3+ftJYnW572YIo0KPjK1Cns5SPlyCtKGp1Nu+z26MJUNXmpbjKA==" crossorigin="anonymous" referrerpolicy="no-referrer" />*@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.2.2/esm/tom-select.complete.min.js" integrity="sha512-Mq5sbsECkh++vpFvzKegopkWOHTuj2D3503BOVdaH8tTczPn74LEOkMK1Sd0BHbjwGEgVYDKM6CYSYeXJ5FaLA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
-    
+
     <script>
         window.hs_config = { "autopath": "@@autopath", "deleteLine": "hs-builder:delete", "deleteLine:build": "hs-builder:build-delete", "deleteLine:dist": "hs-builder:dist-delete", "previewMode": false, "startPath": "/index.html", "vars": { "themeFont": "https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap", "version": "?v=1.0" }, "layoutBuilder": { "extend": { "switcherSupport": true }, "header": { "layoutMode": "default", "containerMode": "container-fluid" }, "sidebarLayout": "default" }, "themeAppearance": { "layoutSkin": "default", "sidebarSkin": "default", "styles": { "colors": { "primary": "#377dff", "transparent": "transparent", "white": "#fff", "dark": "132144", "gray": { "100": "#f9fafc", "900": "#1e2022" } }, "font": "Inter" } }, "languageDirection": { "lang": "en" }, "skipFilesFromBundle": { "dist": ["assets/js/hs.theme-appearance.js", "assets/js/hs.theme-appearance-charts.html", "assets/js/demo.js"], "build": ["assets/css/theme.css", "assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.html", "assets/js/demo.html", "assets/css/theme-dark.html", "assets/css/docs.html", "assets/vendor/icon-set/style.html", "assets/js/hs.theme-appearance.html", "assets/js/hs.theme-appearance-charts.html", "node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.html", "assets/js/demo.js"] }, "minifyCSSFiles": ["assets/css/theme.css", "assets/css/theme-dark.css"], "copyDependencies": { "dist": { "*assets/js/theme-custom.js": "" }, "build": { "*assets/js/theme-custom.js": "", "node_modules/bootstrap-icons/font/*fonts/**": "assets/css" } }, "buildFolder": "", "replacePathsToCDN": {}, "directoryNames": { "src": "./src", "dist": "./dist", "build": "./build" }, "fileNames": { "dist": { "js": "theme.min.js", "css": "theme.min.css" }, "build": { "css": "theme.min.css", "js": "theme.min.js", "vendorCSS": "vendor.min.css", "vendorJS": "vendor.min.js" } }, "fileTypes": "jpg|png|svg|mp4|webm|ogv|json" }
         window.hs_config.gulpRGBA = (p1) => {
@@ -176,6 +318,7 @@
     <script>
         localStorage.setItem("detail", '{"Id":30314,"firebase_uid":null,"chatId":"jXZMF2dU3Uyz2okULv6shQuu","uid":"kk53yimj","fullName":"AG Ashutosh Shukla","name":"augursuser","email":"formgeneratorclient@gmail.com","emailVerified":"0","emailCheck":"0","isEmailCheck":false,"isQuickSignUp":false,"password":"","newPassword":null,"password_confirmation":null,"confirmPassword":null,"isUpdatePassword":0,"remember_token":null,"userIcon":"user-avatar-with-check-mark.png","phoneNumber":null,"phoneVerified":"No","isPhoneVerified":null,"phoneCheck":"No","isPhoneCheck":false,"role":1,"status":"Active","planID":9,"planSequence":"1,2,5,13","tooltipSequence":null,"FB_id":null,"GPlus_id":null,"created_ip":"","groupId":0,"checkType":null,"title":null,"verificationCode":null,"isVerificationReq":false,"ayCheck":0,"specialAccess":"1","reset_token":null,"reset_valid_till":null,"isUsable":0,"action":0,"created_by":0,"updated_by":0,"created_at":"Jan 20 2021  3:32PM","newcreated_at":null,"updated_at":"Jan 20 2021  3:32PM","newupdated_at":null,"res":1,"Message":"Login Success|登錄成功|登录成功","IsActive":false,"IsDeleted":false,"IsUnique":false,"page":0,"size":0,"total_records":0,"last_page":0,"page_records":0,"filters":null,"sorters":null,"query":null}');
     </script>
+
 </head>
 <body ng-app="FormGeneratorApp" ng-controller="IndexController">
     <script>
@@ -188,6 +331,16 @@
             document.getElementById('langForm').submit()
         }
     </script>
+
+    <div class="favicon-loader-overlay active" ng-show="IND_loading">
+        <div class="favicon-loader">
+            <div class="loader-circle"></div>
+            <div class="loader-line-mask">
+                <div class="loader-line"></div>
+            </div>
+        </div>
+    </div>
+
     <input style="display:none" id="userIdHidden" value="@UserIdentity.UserName" />
     <script src="../assets/js/hs.theme-appearance.js"></script>
     <style>
@@ -954,7 +1107,7 @@
     <script src="fg-assets/js/app.js"></script>
     <script src="fg-assets/js/jquery.cookie.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.2/tinymce.min.js"></script>
-    @RenderSection("scripts", required: false)
+
     <!-- JS Plugins Init. -->
     <script>
         (function () {
@@ -976,7 +1129,9 @@
         $(document).ready(function () {
 
             checkLogin();
-
+            $(document).ready(function () {
+                $.fn.bstooltip = $.fn.tooltip.noConflict(true);
+            })
         })
 
         function checkLogin() {
@@ -1056,5 +1211,7 @@
             }
         });
     </script>
+
+    @RenderSection("scripts", required: false)
 </body>
 </html>

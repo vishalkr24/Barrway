@@ -21,7 +21,6 @@
 
 <script src="fg-assets/js/code/theme-chooser.js"></script>
 
-
 <script src="fg-assets/js/jquery.jgrowl.min.js"></script>
 <script src="fg-assets/js/moment.js"></script>
 <link rel="stylesheet" href="fg-assets/css/bootstrap-colorpicker.min.css">
@@ -364,10 +363,7 @@
     </span>
 </button>-->
 
-
-
-
-<div class="row">
+<div class="row" style="margin-left:-1.5rem;">
     <div class="col-md-2" ng-show="IS_EXIST_PRE_DEFINED_ACTIVITIES" style="background-color: #bcb3cc; padding:0px;">
         <section class="sidebar" style="border-right:none!important;">
             <div class="sedebar__tInner" style="text-align:center">
@@ -477,18 +473,18 @@
 
             <div class="col-lg-6 col-md-12 text-xl-left mb-2 mb-lg-0">
                 <!--<a onclick="HideSiseMenu()" class="btn btn-primary mb-0 ml-1" title="Hide menu">
-                <i id="Hide_menu_Icon" class="fa fa-arrow-left" aria-hidden="true"></i>
-            </a>-->
+                    <i id="Hide_menu_Icon" class="fa fa-arrow-left" aria-hidden="true"></i>
+                </a>-->
 
                 <a ui-sref="Home()"
                    class="text-muted custom-br">{{formDetailsDataInfo.applicationTitle}}></a>
                 <span class="custom-br">{{formDetailsDataInfo.title}}</span>
                 <!--<a onclick="showQR()"
-               id="qrCodeNew"
-               class="btn btn-primary mb-0 ml-1"
-               title="{{translation.QR_Code}}">
-                <i class="fa fa-qrcode"></i>
-            </a>-->
+                   id="qrCodeNew"
+                   class="btn btn-primary mb-0 ml-1"
+                   title="{{translation.QR_Code}}">
+                    <i class="fa fa-qrcode"></i>
+                </a>-->
                 <a href="javascript:;"
                    class="pull-left hide-page-actions ml-10"
                    title="Hide Page Actions">
@@ -541,9 +537,9 @@
             <input type="hidden" value="0" id="FormTypeStatus" />
             <!--{{formDetailsDataInfo.title}}-->
             <!-- <small>
-            ({{(formDetailsDataInfo.applicationTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.applicationTitle}},
-            {{(formDetailsDataInfo.topicTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.topicTitle}})
-        </small> -->
+                ({{(formDetailsDataInfo.applicationTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.applicationTitle}},
+                {{(formDetailsDataInfo.topicTitle==formDetailsDataInfo.title)?'*':formDetailsDataInfo.topicTitle}})
+            </small> -->
             <input type="hidden" name="tabulator" value="records" />
             <span id="menuName" class="hidden">
                 {{translation.Records_Untitled_name_newform_newform}}
@@ -558,9 +554,9 @@
                     <div class="row">
                         <form id="pageActions" class="form-inline w-100">
                             <!--<a class="btn btn-md btn-default"
-                        ng-if="currentUserFormRole==3"
-                        href
-                        ui-sref="summary({formId: currentFormId})"><i class="fa fa-th-list mr-2"></i>{{translation.Summary}}</a>-->
+                            ng-if="currentUserFormRole==3"
+                            href
+                            ui-sref="summary({formId: currentFormId})"><i class="fa fa-th-list mr-2"></i>{{translation.Summary}}</a>-->
 
                             <a class="btn btn-primary cursor-pointer">
                                 <i class="fa fa-cog mr-2"
@@ -676,32 +672,32 @@
                             <div class="col-sm-12 mb-10">
                                 <div class="col-sm-12 external-events-list" ng-show="isShowAdvance">
                                     <!--<div class="form-group row mt-2"
-                                     ng-if="otherformDetails.title">
-                                    <label class="col-md-2 control-label">
-                                        {{otherformDetails.title}}
-                                    </label>
-                                    <div class="col-md-6">
-                                        <div class="input-group">
-                                            <input type="text"
-                                                   id="keyword"
-                                                   name="keywordSearch"
-                                                   class="form-control ng-pristine ng-untouched ng-valid ng-empty"
-                                                   ng-model="otherformDetails.searchTextData"
-                                                   placeholder="{{ otherformDetails.title}} " />
-                                            <span class="input-group-append">
-                                                <button class="btn btn-primary"
-                                                        ng-click="searchTabulatorDataInEvent(otherformDetails)"
-                                                        type="button">
-                                                    <i class="fa fa-search"
-                                                       aria-hidden="true">
-                                                    </i>
-                                                    Search
-                                                </button>
-                                            </span>
-                                        </div>
+                                         ng-if="otherformDetails.title">
+                                        <label class="col-md-2 control-label">
+                                            {{otherformDetails.title}}
+                                        </label>
+                                        <div class="col-md-6">
+                                            <div class="input-group">
+                                                <input type="text"
+                                                       id="keyword"
+                                                       name="keywordSearch"
+                                                       class="form-control ng-pristine ng-untouched ng-valid ng-empty"
+                                                       ng-model="otherformDetails.searchTextData"
+                                                       placeholder="{{ otherformDetails.title}} " />
+                                                <span class="input-group-append">
+                                                    <button class="btn btn-primary"
+                                                            ng-click="searchTabulatorDataInEvent(otherformDetails)"
+                                                            type="button">
+                                                        <i class="fa fa-search"
+                                                           aria-hidden="true">
+                                                        </i>
+                                                        Search
+                                                    </button>
+                                                </span>
+                                            </div>
 
-                                    </div>
-                                </div>-->
+                                        </div>
+                                    </div>-->
                                     <div class="form-group row">
                                         <label class="col-sm-2 control-label mb-4">
                                             {{ selectedAxis.selectedFormName}}
@@ -709,25 +705,25 @@
                                         </label>
                                         <div class="col-md-3 ">
                                             <!--/*
-                                        Donot remove this function and HTML , filtering for event on the basis of selected activity
-                                        */
-                                        <div class="input-group ">
-                                            <input type="text"
-                                                   id="resourcekeywordSearch"
-                                                   name="resourcekeywordSearch"
-                                                   ng-model="selectedAxis.resourceSearchTextData"
-                                                   class="form-control ng-pristine ng-untouched ng-valid ng-empty"
-                                                   placeholder="{{ selectedAxis.selectedFormName}} " />
-                                            <span class="input-group-append">
-                                                <button class="btn btn-primary"
-                                                        type="button" ng-click="searchTabulatorDataInEventByResources(selectedAxis)">
-                                                    <i class="fa fa-search"
-                                                       aria-hidden="true">
-                                                    </i>
-                                                    Search
-                                                </button>
-                                            </span>
-                                        </div>-->
+                                            Donot remove this function and HTML , filtering for event on the basis of selected activity
+                                            */
+                                            <div class="input-group ">
+                                                <input type="text"
+                                                       id="resourcekeywordSearch"
+                                                       name="resourcekeywordSearch"
+                                                       ng-model="selectedAxis.resourceSearchTextData"
+                                                       class="form-control ng-pristine ng-untouched ng-valid ng-empty"
+                                                       placeholder="{{ selectedAxis.selectedFormName}} " />
+                                                <span class="input-group-append">
+                                                    <button class="btn btn-primary"
+                                                            type="button" ng-click="searchTabulatorDataInEventByResources(selectedAxis)">
+                                                        <i class="fa fa-search"
+                                                           aria-hidden="true">
+                                                        </i>
+                                                        Search
+                                                    </button>
+                                                </span>
+                                            </div>-->
                                             <div class="input-group ">
                                                 <input type="text"
                                                        id="activitykeywordSearch"
@@ -759,33 +755,33 @@
                                             </label>
                                         </div>
                                         <!--<div class="col form-group row ">
-                                        <label class="col-md-5 control-label text-left">
-                                            Filter By Selected Date
-                                        </label>
-                                        <div class="col-md-7">
-                                            <div class="input-group">
-                                                <input type="text"
-                                                       id="datecontrol"
-                                                       class="form-control"
-                                                       ng-model="formDetailsDataInfo.searchByDate"
-                                                       data-date=""
-                                                       data-date-format="dd-mm-yyyy"
-                                                       placeholder="yyyy-mm-dd"
-                                                       value="" />
-                                                <span class="input-group-append">
-                                                    <button class="btn btn-primary"
-                                                            ng-click="filterBySelectedDate(formDetailsDataInfo)"
-                                                            type="button">
-                                                        <i class="fa fa-search"
-                                                           aria-hidden="true">
-                                                        </i>
-                                                        Search
-                                                    </button>
-                                                </span>
-                                            </div>
+                                            <label class="col-md-5 control-label text-left">
+                                                Filter By Selected Date
+                                            </label>
+                                            <div class="col-md-7">
+                                                <div class="input-group">
+                                                    <input type="text"
+                                                           id="datecontrol"
+                                                           class="form-control"
+                                                           ng-model="formDetailsDataInfo.searchByDate"
+                                                           data-date=""
+                                                           data-date-format="dd-mm-yyyy"
+                                                           placeholder="yyyy-mm-dd"
+                                                           value="" />
+                                                    <span class="input-group-append">
+                                                        <button class="btn btn-primary"
+                                                                ng-click="filterBySelectedDate(formDetailsDataInfo)"
+                                                                type="button">
+                                                            <i class="fa fa-search"
+                                                               aria-hidden="true">
+                                                            </i>
+                                                            Search
+                                                        </button>
+                                                    </span>
+                                                </div>
 
-                                        </div>
-                                    </div>-->
+                                            </div>
+                                        </div>-->
 
                                         <div class="row w-100 align-items-center toggle-course-master" style="display: none;">
                                             <div ng-repeat="item in Xdraggables.draggableSlips"
@@ -1301,24 +1297,23 @@
         });
     });
 
-    function HideSiseMenu() {
+    //function HideSiseMenu() {
 
-        if ($('.sidebar').is(":hidden")) {
-            $(".sidebar").show();
-            $("#sidebarStrip_menu").show();
-            $('.showSection').removeClass('Hideleftmenu').addClass('contentsection');
-            $('#Hide_menu_Icon').removeClass('fa-arrow-right').addClass('fa-arrow-left');
-        }
-        else {
-            $(".sidebar").hide();
-            $("#sidebarStrip_menu").hide();
-            $('.showSection').removeClass('contentsection').addClass('Hideleftmenu');
-            $('#Hide_menu_Icon').removeClass('fa-arrow-left').addClass('fa-arrow-right');
-
-        }
-    }
+    //    if ($('.sidebar').is(":hidden")) {
+    //        $(".sidebar").show();
+    //        $("#sidebarStrip_menu").show();
+    //        $('.showSection').removeClass('Hideleftmenu').addClass('contentsection');
+    //        $('#Hide_menu_Icon').removeClass('fa-arrow-right').addClass('fa-arrow-left');
+    //    }
+    //    else {
+    //        $(".sidebar").hide();
+    //        $("#sidebarStrip_menu").hide();
+    //        $('.showSection').removeClass('contentsection').addClass('Hideleftmenu');
+    //        $('#Hide_menu_Icon').removeClass('fa-arrow-left').addClass('fa-arrow-right');
+    //    }
+    //}
 </script>
-<script src="Content/sidebar/js/sidebar-script.js"></script>
+
 <script>
 
     $("#nav-calendar-master").addClass("active");

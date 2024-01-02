@@ -343,31 +343,35 @@
             }
 
             <div class="col-md-6">
+                @if (!ViewBag.IsPartial)
+                {
+                    <div class="js-nav-scroller hs-nav-scroller-horizontal mb-5 form-navigation" style="position:sticky; top:0px; background:white;">
+                        <span class="hs-nav-scroller-arrow-prev" style="display: none;">
+                            <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                                <i class="bi-chevron-left"></i>
+                            </a>
+                        </span>
 
-                <div class="js-nav-scroller hs-nav-scroller-horizontal mb-5 form-navigation" style="position:sticky; top:0px; background:white;">
-                    <span class="hs-nav-scroller-arrow-prev" style="display: none;">
-                        <a class="hs-nav-scroller-arrow-link" href="javascript:;">
-                            <i class="bi-chevron-left"></i>
-                        </a>
-                    </span>
+                        <span class="hs-nav-scroller-arrow-next" style="display: none;">
+                            <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                                <i class="bi-chevron-right"></i>
+                            </a>
+                        </span>
 
-                    <span class="hs-nav-scroller-arrow-next" style="display: none;">
-                        <a class="hs-nav-scroller-arrow-link" href="javascript:;">
-                            <i class="bi-chevron-right"></i>
-                        </a>
-                    </span>
+                        <ul class="nav nav-tabs align-items-center">
+                            <li id="btn1" class="nav-item" onclick="renderPage('1')">
+                                <a class="nav-link active" href="javascript:void(0)">@Resource.Calendar_Information</a>
+                            </li>
 
-                    <ul class="nav nav-tabs align-items-center">
-                        <li id="btn1" class="nav-item" onclick="renderPage('1')">
-                            <a class="nav-link active" href="javascript:void(0)">@Resource.Calendar_Information</a>
-                        </li>
-                        <li id="btn2" class="nav-item">
-                            <a class="nav-link" href="javascript:void(0)">@Resource.Calendar_Settings</a>
-                        </li>
+                            <li id="btn2" class="nav-item">
+                                <a class="nav-link" href="javascript:void(0)">@Resource.Calendar_Settings</a>
+                            </li>
 
-                    </ul>
-                </div>
 
+
+                        </ul>
+                    </div>
+                }
                 <div class="form-inner" style="max-width:100%;">
 
                     <form action="/BusinessAdmin/AddCalendar?IsPartial=@ViewBag.IsPartial.ToString().ToLower()" method="post" enctype="multipart/form-data">
