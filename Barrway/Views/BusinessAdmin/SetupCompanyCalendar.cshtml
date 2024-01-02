@@ -79,7 +79,6 @@
                 <div class="col-md-12">
                     <br />
                 </div>
-
             }
 
             <div class="col-md-12">
@@ -326,7 +325,22 @@
 <main id="content-2" role="main" class="main" style="display:none;">
     <!-- Content -->
     <div class="container">
-        <div class="row pt-lg-5 row-reverse">
+        <div class="row pt-lg-5">
+            <div class="col-md-6">
+                <div class="bredcrump" style="margin-left:20px;">
+                    @if (!ViewBag.IsPartial)
+                    {
+                        <span><a class="lbl-company-name" href="javascript:void(0)">Company name</a> / <a href="javascript:void(0)">New Calendar</a> </span>
+                    }
+                    else
+                    {
+                        <span><a class="lbl-company-name" href="javascript:void(0)">Company name</a> / <a onclick="window.location.href = '/calendar/index#/home'" class="lbl-calendar-name"></a> / <a href="javascript:void(0)">Calendar Settings</a> </span>
+                    }
+
+                </div>
+            </div>
+        </div>
+        <div class="row row-reverse">
             @if (ViewBag.IsPartial)
             {
                 <div class="col-md-6 template-selection-area hide-for-superadmin" style="">
@@ -343,7 +357,7 @@
             }
 
             <div class="col-md-6">
-                @if (!ViewBag.IsPartial)
+                @*@if (!ViewBag.IsPartial)
                 {
                     <div class="js-nav-scroller hs-nav-scroller-horizontal mb-5 form-navigation" style="position:sticky; top:0px; background:white;">
                         <span class="hs-nav-scroller-arrow-prev" style="display: none;">
@@ -371,11 +385,10 @@
 
                         </ul>
                     </div>
-                }
+                }*@
                 <div class="form-inner" style="max-width:100%;">
 
                     <form action="/BusinessAdmin/AddCalendar?IsPartial=@ViewBag.IsPartial.ToString().ToLower()" method="post" enctype="multipart/form-data">
-
                         <div id="div1">
                             <div class="text-center">
                                 <div class="profile-form">
@@ -455,57 +468,6 @@
 
                                             @*<input type="text" class="form-control" id="calendarname" placeholder="" name="calendarname">*@
                                         </div>
-                                        <div class="form-group">
-                                            <label for="TAGS">@Resource.Tags</label>
-                                            <div class="tom-select-custom">
-                                                @Html.DropDownListFor(model => model.TAGS, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "js-select form-select", @multiple = "true", @autocomplete = "off" })
-                                            </div>
-
-                                            @Html.ValidationMessageFor(model => model.TAGS, "", new { @class = "invalid-feedback-2" })
-
-                                        </div>
-                                        <div class="form-group">
-                                            <p style="margin-bottom: 0px;"><label for="file">@Resource.Calendar_photo</label></p>
-                                            <div class="custome-uploade">
-
-                                                <label for="CALENDAR_PHOTO_PATH" id="CALENDAR_PHOTO_NAME" class="hide-for-superadmin" style="width:80%; max-width:300px; padding-left:16px;">This photo will be seen in market place</label>
-
-                                                <div class="fileUpload btn btn--browse">
-                                                    <span>Browse</span>
-                                                    @Html.TextBoxFor(model => model.CALENDAR_PHOTO_PATH, new { @class = "upload", Type = "File", @onchange = "BindLogoName('CALENDAR_PHOTO_PATH', 'CALENDAR_PHOTO_NAME')" })
-
-                                                </div>
-                                            </div>
-
-                                            @Html.ValidationMessageFor(model => model.CALENDAR_PHOTO_NAME, "", new { @class = "invalid-feedback-2" })
-
-                                        </div>
-                                        <button type="button" onclick="renderCategory()" class="back">@Resource.Back</button>
-                                        @if (ViewBag.IsPartial)
-                                        {
-                                            <button type="submit" class="btn btn-primary">@Resource.Save</button>
-                                        }
-                                        else
-                                        {
-                                            <button type="button" class="btn btn-primary" onclick="renderPage(2)">@Resource.Next</button>
-                                        }
-
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="div2" style="display:none;">
-                            <div class="text-center">
-                                <div class="profile-form">
-                                    <style>
-                                        .form-inner {
-                                            margin-left: 0px !important;
-                                        }
-                                    </style>
-
-                                    <div class="form-inner" style="max-width:100%;">
 
                                         <div class="row">
                                             <div class="col-md-6">
@@ -535,6 +497,88 @@
                                             </div>
                                         </div>
 
+                                        <div class="form-group">
+                                            <label for="TAGS">@Resource.Tags</label>
+                                            <div class="tom-select-custom">
+                                                @Html.DropDownListFor(model => model.TAGS, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "js-select form-select", @multiple = "true", @autocomplete = "off" })
+                                            </div>
+
+                                            @Html.ValidationMessageFor(model => model.TAGS, "", new { @class = "invalid-feedback-2" })
+
+                                        </div>
+                                        <div class="form-group">
+                                            <p style="margin-bottom: 0px;"><label for="file">@Resource.Calendar_photo</label></p>
+                                            <div class="custome-uploade">
+
+                                                <label for="CALENDAR_PHOTO_PATH" id="CALENDAR_PHOTO_NAME" class="hide-for-superadmin" style="width:80%; max-width:300px; padding-left:16px;">This photo will be seen in market place</label>
+
+                                                <div class="fileUpload btn btn--browse">
+                                                    <span>Browse</span>
+                                                    @Html.TextBoxFor(model => model.CALENDAR_PHOTO_PATH, new { @class = "upload", Type = "File", @onchange = "BindLogoName('CALENDAR_PHOTO_PATH', 'CALENDAR_PHOTO_NAME')" })
+
+                                                </div>
+                                            </div>
+
+                                            @Html.ValidationMessageFor(model => model.CALENDAR_PHOTO_NAME, "", new { @class = "invalid-feedback-2" })
+
+                                        </div>
+
+                                        <button type="button" onclick="renderCategory()" class="back">@Resource.Back</button>
+                                        @*@if (ViewBag.IsPartial)
+        {
+            <button type="submit" class="btn btn-primary">@Resource.Save</button>
+        }
+        else
+        {
+            <button type="button" class="btn btn-primary" onclick="renderPage(2)">@Resource.Next</button>
+        }*@
+
+                                        <button type="submit" class="btn btn-primary">@Resource.Save</button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @*<div id="div2" style="display: none;">
+                            <div class="text-center">
+                                <div class="profile-form">
+                                    <style>
+                                        .form-inner {
+                                            margin-left: 0px !important;
+                                        }
+                                    </style>
+
+                                    <div class="form-inner" style="max-width:100%;">
+
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="TAGS">@Resource.Calendar_display_time</label>
+                                                    <div class="tom-select-custom">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                @Html.TextBoxFor(model => model.CalendarControlSheet.DISPLAY_START_TIME, new { @class = "form-control", @type = "time", @placeholder = "Start Time" })
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                @Html.TextBoxFor(model => model.CalendarControlSheet.DISPLAY_END_TIME, new { @class = "form-control", @type = "time", @placeholder = "End Time" })
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="TAGS">@Resource.Privacy</label>
+                                                    <div class="tom-select-custom">
+                                                        @Html.DropDownListFor(model => model.CalendarControlSheet.CALENDAR_USE_TYPE, new SelectList(Enum.GetValues(typeof(PublicPrivateOptions))), new { @class = "js-select form-select" })
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
 
 
                                         <div class="row" style="border-bottom:1px solid lightgrey; padding-top: 16px;">
@@ -716,7 +760,7 @@
 
                                 </div>
                             </div>
-                        </div>
+                        </div>*@
 
                     </form>
 
