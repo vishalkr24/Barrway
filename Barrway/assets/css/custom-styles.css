@@ -254,4 +254,64 @@ div#navbarContainerNavDropdown ul li .nav-link, div#navbarDoubleLineContainerNav
     .button-body-wrap {
         display: block;
     }
+    .pricing-custome {
+        width: 100% !important;
+        float: left;
+    }
+}
+
+
+.empty-space {
+    width: 100%;
+    float: left;
+    height: 16px;
+}
+.basic .pricing-body h2, .basic .pricing-body .extra-larg {
+    color: rgba(119, 119, 119, 1);
+}
+.basic .pricing-custome-inner {
+    background-color: rgb(235 235 235);
+}
+button.payment {
+    background: rgba(226, 71, 108, 1);
+    border: 1px solid rgba(226, 71, 108, 1);
+    border-radius: 30px;
+    color: #ffffff;
+    width: 100%;
+    margin: 0;
+}
+.basic .price-btn button.payment {
+    background: #72328a;
+    border: 1px solid #72328a;
+    border-radius: 30px;
+    color: #ffffff;
+    width: 100%;
+    margin: 0;
+}
+.price-list-detail {
+    width: 100%;
+    float: left;
+    margin-top: 20px;
+}
+
+    .price-list-detail ul {
+        padding-left: 0px;
+    }
+
+        .price-list-detail ul li {
+            list-style-type: none;
+            color: rgba(34, 34, 34, 1);
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+            .price-list-detail ul li b {
+                font-size: 24px;
+            }
+
+            .price-list-detail ul li:nth-child(even) {
+                margin-bottom: 15px;
+            }
+.black {
+    background-color: #000;
 }
