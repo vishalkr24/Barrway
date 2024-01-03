@@ -226,7 +226,7 @@ namespace Barrway.Controllers
 
         }
 
-        public async Task<ActionResult> SetupCalendarEvent(string CompanyId = null, string CalendarCode = null)
+        public async Task<ActionResult> SetupCalendarEvent(string CompanyId = null, string CalendarCode = null, int Step = 3)
         {
             try
             {

@@ -122,8 +122,8 @@
         color: #e0efff;
     }
 </style>
-<input type="text" value="@ViewBag.IsPartial.ToString().ToLower()" id="createCalendarCheck" style="display:none;" readonly />
 <input type="text" value="@Model.CALENDAR_CODE" id="calendarCodeInput" style="display:none;" readonly />
+<input type="text" value="@Model.COMPANY_CODE" id="companyCodeInput" style="display:none;" readonly />
 <style>
     .template-selection-area #templates-row {
         min-height: 700px;
@@ -178,14 +178,17 @@
             max-height: 300px;
         }
     }
+
     .set-cal .form-group {
-        padding:0px 0px !important;
+        padding: 0px 0px !important;
     }
+
     div#step-3 p, div#step-4 p, div#step-5 p {
         font-weight: 700;
         font-size: 24px;
         color: rgba(226, 71, 108, 1);
     }
+
     div#step-3 .ycaml p, div#step-4 .ycaml p {
         font-size: 15px;
         font-weight: 400;
@@ -218,9 +221,11 @@
         font-weight: 400 !important;
         text-align: left;
     }
+
     .hed-til p {
         color: rgba(34, 34, 34, 1) !important;
     }
+
     .choose {
         width: 100%;
         float: left;
@@ -233,7 +238,7 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             display: flex;
-            margin-bottom:15px;
+            margin-bottom: 15px;
         }
 
             .choose .chose-inner .one {
@@ -241,9 +246,10 @@
                 float: left;
                 text-align: center;
             }
-            .choose .chose-inner .one img {
-                width:100%;
-            }
+
+                .choose .chose-inner .one img {
+                    width: 100%;
+                }
 
             .choose .chose-inner .two {
                 width: 80%;
@@ -265,6 +271,7 @@
                 height: 100%;
                 padding-left: 12px;
             }
+
             .choose .chose-inner .three p {
                 display: flex;
                 vertical-align: baseline;
@@ -333,6 +340,7 @@
                 -webkit-transform: scale(1);
                 transform: scale(1);
             }
+
     button.bg-t-b {
         border: 1px solid rgba(129, 113, 176, 1);
         color: rgba(129, 113, 176, 1);
@@ -344,18 +352,18 @@
 </style>
 
 <main id="content" role="main" class="main">
-    
-    <div class="container">
-        <div class="row pt-lg-6">
 
-            <div id="step-3" class="col-md-6 m-auto">
+    <div class="container">
+        <div id="step-3" style="display:none;" class="row pt-lg-6">
+
+            <div class="col-md-5 m-auto">
 
                 <div class="form-inner" style="max-width:100%;">
                     <p>Step 3 of 5</p>
                     <div class="hed-til">
                         <p>Give a name for your event location</p>
                     </div>
-                    <form action="/BusinessAdmin/AddCalendar?IsPartial=@ViewBag.IsPartial.ToString().ToLower()" method="post" enctype="multipart/form-data">
+                    <div>
 
                         <div id="div1">
                             <div class="text-center">
@@ -365,37 +373,19 @@
                                             margin-left: 0px !important;
                                         }
                                     </style>
-
+                                    <div style="text-align:right; color:crimson;">* mandatory</div>
                                     <div class="form-inner set-cal" style="max-width:100%;">
-                                        @Html.TextBoxFor(model => model.Id, new { @style = "display:none" })
-                                        @Html.TextBoxFor(model => model.COMPANY_CODE, new { @style = "display:none" })
-                                        @Html.TextBoxFor(model => model.CALENDAR_CODE, new { @style = "display:none" })
-                                        @Html.TextBoxFor(model => model.CALENDAR_TEMPLATE_ID, new { @style = "display:none" })
-                                        @Html.TextBoxFor(model => model.SCHEDULAR_ID, new { @style = "display:none" })
+                                       <div id="locations-div">
 
-                                        <div class="form-group">
-                                            <label for="calendarname">@Resource.Calendar_Name *</label>
-
-                                            @Html.TextBoxFor(model => model.CALENDAR_NAME, new { @class = "form-control", @placeholder = "Calendar name", @required = "true" })
-                                            @Html.ValidationMessageFor(model => model.CALENDAR_NAME, "", new { @class = "invalid-feedback-2" })
-
-                                            @*<input type="text" class="form-control" id="calendarname" placeholder="" name="calendarname">*@
-                                        </div>
+                                       </div>
 
                                         <div class="ycaml">
                                             <p>You can add more location if your event takes place in more than one location.</p>
-                                            <button class="bg-t-b">+Add more</button>
+                                            <button class="bg-t-b" onclick="addMoreLocation()">+Add more</button>
                                         </div>
 
-                                        <button type="button" onclick="renderCategory()" class="back">@Resource.Back</button>
-                                        @if (ViewBag.IsPartial)
-                                        {
-                                            <button type="submit" class="btn btn-primary">@Resource.Save</button>
-                                        }
-                                        else
-                                        {
-                                            <button type="button" class="btn btn-primary" onclick="renderPage(2)">@Resource.Next</button>
-                                        }
+                                        <button type="button" onclick="moveToStep(2)" class="back">@Resource.Back</button>
+                                        <button type="button" class="btn btn-primary" onclick="moveToStep(4)">@Resource.Next</button>
 
 
                                     </div>
@@ -403,7 +393,7 @@
                             </div>
                         </div>
 
-                    </form>
+                    </div>
 
                 </div>
 
@@ -412,16 +402,16 @@
             </div>
 
         </div>
-        <div class="row pt-lg-6">
+        <div id="step-4" style="display:none;" class="row pt-lg-6">
 
-            <div id="step-4" class="col-md-6 m-auto">
+            <div class="col-md-5 m-auto">
 
                 <div class="form-inner" style="max-width:100%;">
                     <p> Step 4 of 5</p>
                     <div class="hed-til">
                         <p>Service provider details</p>
                     </div>
-                    <form action="/BusinessAdmin/AddCalendar?IsPartial=@ViewBag.IsPartial.ToString().ToLower()" method="post" enctype="multipart/form-data">
+                    <div>
 
                         <div id="div1">
                             <div class="text-center">
@@ -431,59 +421,26 @@
                                             margin-left: 0px !important;
                                         }
                                     </style>
-                                    <p class="sp">Service provider 1</p>
+                                    
                                     <div class="form-inner set-cal" style="max-width:100%;">
-                                        @Html.TextBoxFor(model => model.Id, new { @style = "display:none" })
-                                        @Html.TextBoxFor(model => model.COMPANY_CODE, new { @style = "display:none" })
-                                        @Html.TextBoxFor(model => model.CALENDAR_CODE, new { @style = "display:none" })
-                                        @Html.TextBoxFor(model => model.CALENDAR_TEMPLATE_ID, new { @style = "display:none" })
-                                        @Html.TextBoxFor(model => model.SCHEDULAR_ID, new { @style = "display:none" })
+                                        <div id="providers-div">
 
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="calendarname">@Resource.Calendar_Name *</label>
-
-                                                    @Html.TextBoxFor(model => model.CALENDAR_NAME, new { @class = "form-control", @placeholder = "Calendar name", @required = "true" })
-                                                    @Html.ValidationMessageFor(model => model.CALENDAR_NAME, "", new { @class = "invalid-feedback-2" })
-
-                                                    @*<input type="text" class="form-control" id="calendarname" placeholder="" name="calendarname">*@
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="calendarname">@Resource.Calendar_Name *</label>
-
-                                                    @Html.TextBoxFor(model => model.CALENDAR_NAME, new { @class = "form-control", @placeholder = "Calendar name", @required = "true" })
-                                                    @Html.ValidationMessageFor(model => model.CALENDAR_NAME, "", new { @class = "invalid-feedback-2" })
-
-                                                    @*<input type="text" class="form-control" id="calendarname" placeholder="" name="calendarname">*@
-                                                </div>
-                                            </div>
                                         </div>
-
 
                                         <div class="ycaml">
-                                            <p>You can add more location if your event takes place in more than one location.</p>
-                                            <button class="bg-t-b">+Add more</button>
+                                            <p>You can add more service providers if your event has more than one service providers.</p>
+                                            <button class="bg-t-b" onclick="addMoreProvider()">+Add more</button>
                                         </div>
-                                        <button type="button" onclick="renderCategory()" class="back">@Resource.Back</button>
-                                        @if (ViewBag.IsPartial)
-                                        {
-                                            <button type="submit" class="btn btn-primary">@Resource.Save</button>
-                                        }
-                                        else
-                                        {
-                                            <button type="button" class="btn btn-primary" onclick="renderPage(2)">@Resource.Next</button>
-                                        }
-
+                                        <button type="button" onclick="moveToStep(3)" class="back">@Resource.Back</button>
+                                        <button type="button" class="btn btn-primary" onclick="moveToStep(5)">@Resource.Next</button>
+                                        
 
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                    </form>
+                    </div>
 
                 </div>
 
@@ -492,16 +449,16 @@
             </div>
 
         </div>
-        <div class="row pt-lg-6">
+        <div id="step-5" style="display:none;" class="row pt-lg-6">
 
-            <div id="step-5" class="col-md-6 m-auto">
+            <div class="col-md-5 m-auto">
 
                 <div class="form-inner" style="max-width:100%;">
                     <p>Step 5 of 5</p>
                     <div class="hed-til">
                         <p>Which one describe your course the best?</p>
                     </div>
-                    <form action="/BusinessAdmin/AddCalendar?IsPartial=@ViewBag.IsPartial.ToString().ToLower()" method="post" enctype="multipart/form-data">
+                    <div>
 
                         <div id="div1">
                             <div class="text-center">
@@ -544,7 +501,7 @@
                             </div>
                         </div>
 
-                    </form>
+                    </div>
                     <div class="f_of_f-wrap-o">
                         <div class="choose">
                             <div class="chose-inner">
@@ -616,7 +573,7 @@
 
                                 @*<input type="text" class="form-control" id="calendarname" placeholder="" name="calendarname">*@
                             </div>
-                            <div class="" style="text-align: right;">                                
+                            <div class="" style="text-align: right;">
                                 <button class="bg-t-b">+Add more</button>
                             </div>
 
@@ -637,14 +594,14 @@
 
                 </div>
 
-                    <!-- Title -->
-                    <!-- End Title -->
-                </div>
+                <!-- Title -->
+                <!-- End Title -->
+            </div>
 
         </div>
-        
+
     </div>
-    
+
 </main>
 
 @section scripts{

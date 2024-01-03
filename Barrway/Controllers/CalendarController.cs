@@ -171,7 +171,7 @@ namespace Barrway.Controllers
             {
                 return RedirectToAction("Dashboard", "BusinessAdmin");
             }
-           
+
         }
 
         [HttpPost]
@@ -266,6 +266,126 @@ namespace Barrway.Controllers
         }
 
         [HttpPost]
+        public async Task<ActionResult> AddMasterData(List<IDictionary<string, string>> data, string ModelId = null)
+        {
+            if (!string.IsNullOrEmpty(ModelId))
+            {
+                if (Convert.ToInt32(ModelId) == 1)
+                {
+                    // location master entry and update
+                    try
+                    {
+                        var dataSerialized = JsonConvert.SerializeObject(data.Where(x => x["Is_New"]?.ToString() == "true"));
+
+                        List<CalendarLocationMasterModel> locMasMod = JsonConvert.DeserializeObject<List<CalendarLocationMasterModel>>(dataSerialized);
+                        if (locMasMod.Count > 0)
+                        {
+                            List<string> requestList = new List<string>();
+                            List<string> formGroupKeyListTemp = new List<string>();
+
+                            locMasMod.ForEach(assign =>
+                            {
+                                requestList.Add(CustomMethods.ConvertDicToNameValuePair(assign.ToDictionary()));
+                                formGroupKeyListTemp.Add(Guid.NewGuid().ToString());
+                            });
+
+                            Form_DataTable request = new Form_DataTable();
+                            request.action = (int)FormAction.Save;
+                            request.formId = (int)FormSetting.LOCATION_MASTER;
+                            request.IsMaxOneRecordPerUser = false;
+                            request.formfieldDataListTempList = requestList.ToArray();
+                            request.formGroupKeyListTemp = formGroupKeyListTemp.ToArray();
+                            var formResult = (await formAPIRepository.BulkGeneratedFormData(request)).Data;
+                        }
+
+                        if (data.Where(x => x["Is_New"]?.ToString() == "false").Count() > 0)
+                        {
+                            string query = "";
+
+                            dataSerialized = JsonConvert.SerializeObject(data.Where(x => x["Is_New"]?.ToString() == "false"));
+
+                            locMasMod = JsonConvert.DeserializeObject<List<CalendarLocationMasterModel>>(dataSerialized);
+
+                            locMasMod.ForEach(x =>
+                            {
+                                query += $@"update LOCATION_MASTER_1936 set LOCATION_ADDRESS = '{x.LOCATION_ADDRESS.Replace("'", "''")}' where Id = '{x.Id}';
+                                            ";
+                            });
+
+                            var result = await sqlFunction.ExecuteSqlCommandQuery(query);
+                        }
+                        return Json(new AddUpdateDelete() { Status = true, Message = "Success" }, JsonRequestBehavior.AllowGet);
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                    return Json(new AddUpdateDelete() { Status = false, Message = "Something went wrong" }, JsonRequestBehavior.AllowGet);
+                }
+                else if (Convert.ToInt32(ModelId) == 2)
+                {
+                    try
+                    {
+                        var dataSerialized = JsonConvert.SerializeObject(data.Where(x => x["Is_New"]?.ToString() == "true"));
+
+                        List<CalendarServiceProviderMasterModel> locMasMod = JsonConvert.DeserializeObject<List<CalendarServiceProviderMasterModel>>(dataSerialized);
+                        if (locMasMod.Count > 0)
+                        {
+                            List<string> requestList = new List<string>();
+                            List<string> formGroupKeyListTemp = new List<string>();
+
+                            locMasMod.ForEach(assign =>
+                            {
+                                requestList.Add(CustomMethods.ConvertDicToNameValuePair(assign.ToDictionary()));
+                                formGroupKeyListTemp.Add(Guid.NewGuid().ToString());
+                            });
+
+                            Form_DataTable request = new Form_DataTable();
+                            request.action = (int)FormAction.Save;
+                            request.formId = (int)FormSetting.SERVICE_PROVIDER_MASTER;
+                            request.IsMaxOneRecordPerUser = false;
+                            request.formfieldDataListTempList = requestList.ToArray();
+                            request.formGroupKeyListTemp = formGroupKeyListTemp.ToArray();
+                            var formResult = (await formAPIRepository.BulkGeneratedFormData(request)).Data;
+                        }
+
+                        if (data.Where(x => x["Is_New"]?.ToString() == "false").Count() > 0)
+                        {
+                            string query = "";
+
+                            dataSerialized = JsonConvert.SerializeObject(data.Where(x => x["Is_New"]?.ToString() == "false"));
+
+                            locMasMod = JsonConvert.DeserializeObject<List<CalendarServiceProviderMasterModel>>(dataSerialized);
+
+                            locMasMod.ForEach(x =>
+                            {
+                                query += $@"update SERVICE_PROVIDER_MASTER_1934 set FIRST_NAME = '{x.FIRST_NAME.Replace("'", "''")}', LAST_NAME = '{x.LAST_NAME.Replace("'", "''")}' where Id = '{x.Id}';
+                                            ";
+                            });
+
+                            var result = await sqlFunction.ExecuteSqlCommandQuery(query);
+                        }
+                        return Json(new AddUpdateDelete() { Status = true, Message = "Success" }, JsonRequestBehavior.AllowGet);
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                    return Json(new AddUpdateDelete() { Status = false, Message = "Something went wrong" }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new AddUpdateDelete() { Status = false, Message = "Something went wrong" }, JsonRequestBehavior.AllowGet);
+                }
+                
+            }
+            else
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = "Model Id not Found." }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
         public async Task<ActionResult> AddServiceMaster(Form_DataTable data)
         {
             var result = (await formAPIRepository.GeneratedFormData(data)).Data;
@@ -354,9 +474,9 @@ namespace Barrway.Controllers
                     var endObject = data.SCH_TO_DATE.Split('/');
 
                     data.SCH_FROM_DATE = Convert.ToDateTime(startObject[2] + "-" + startObject[1] + "-" + startObject[0]).ToString("yyyy-MM-dd");
-                    data.SCH_TO_DATE = Convert.ToDateTime(endObject[2] + "-" + endObject[1] + "-" + endObject[0]).ToString("yyyy-MM-dd");    
+                    data.SCH_TO_DATE = Convert.ToDateTime(endObject[2] + "-" + endObject[1] + "-" + endObject[0]).ToString("yyyy-MM-dd");
                 }
-                
+
 
                 var b = data.ToDictionary();
 
@@ -377,7 +497,7 @@ namespace Barrway.Controllers
                     {
                         createNewSchedule = true;
                     }
-                    
+
                 }
                 else
                 {
@@ -411,9 +531,9 @@ namespace Barrway.Controllers
 
                     string script = "";
                     string formGroupKey = CustomMethods.CreateUUID();
-                    
+
                     var response = await businessUserService.AddSchedularForm(data, formGroupKey);
-                    
+
                     int eventCounter = 0;
                     bool caseBreak = false;
 
@@ -430,7 +550,7 @@ namespace Barrway.Controllers
 
                         DateTime dateTracker = start;
                         int slotCounter = 1;
-                        
+
                         while (dateTracker <= end)
                         {
                             eventCounter++;
