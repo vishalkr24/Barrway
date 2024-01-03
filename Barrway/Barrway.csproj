@@ -3037,6 +3037,7 @@
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\BusinessScripts\AdminDashboard.js" />
     <Content Include="Scripts\BusinessScripts\AdminMaster.js" />
+    <Content Include="Scripts\BusinessScripts\SetupCalendarEvent.js" />
     <Content Include="Scripts\BusinessScripts\SuperAdminLayoutManager.js" />
     <Content Include="Scripts\BusinessScripts\AdminLayoutManager.js" />
     <Content Include="Scripts\BusinessScripts\CalendarTemplateMaster.js" />
