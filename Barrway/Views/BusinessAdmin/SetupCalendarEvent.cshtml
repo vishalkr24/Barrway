@@ -183,7 +183,7 @@
         padding: 0px 0px !important;
     }
 
-    div#step-3 p, div#step-4 p, div#step-5 p {
+    div#step-3 p, div#step-4 p, div#step-5 p, div#step-6 p {
         font-weight: 700;
         font-size: 24px;
         color: rgba(226, 71, 108, 1);
@@ -375,9 +375,9 @@
                                     </style>
                                     <div style="text-align:right; color:crimson;">* mandatory</div>
                                     <div class="form-inner set-cal" style="max-width:100%;">
-                                       <div id="locations-div">
+                                        <div id="locations-div">
 
-                                       </div>
+                                        </div>
 
                                         <div class="ycaml">
                                             <p>You can add more location if your event takes place in more than one location.</p>
@@ -421,7 +421,7 @@
                                             margin-left: 0px !important;
                                         }
                                     </style>
-                                    
+
                                     <div class="form-inner set-cal" style="max-width:100%;">
                                         <div id="providers-div">
 
@@ -433,7 +433,7 @@
                                         </div>
                                         <button type="button" onclick="moveToStep(3)" class="back">@Resource.Back</button>
                                         <button type="button" class="btn btn-primary" onclick="moveToStep(5)">@Resource.Next</button>
-                                        
+
 
                                     </div>
                                 </div>
@@ -458,53 +458,10 @@
                     <div class="hed-til">
                         <p>Which one describe your course the best?</p>
                     </div>
-                    <div>
 
-                        <div id="div1">
-                            <div class="text-center">
-                                <div class="profile-form">
-                                    <style>
-                                        .form-inner {
-                                            margin-left: 0px !important;
-                                        }
-                                    </style>
-
-                                    <div class="form-inner set-cal" style="max-width:100%;">
-                                        @Html.TextBoxFor(model => model.Id, new { @style = "display:none" })
-                                        @Html.TextBoxFor(model => model.COMPANY_CODE, new { @style = "display:none" })
-                                        @Html.TextBoxFor(model => model.CALENDAR_CODE, new { @style = "display:none" })
-                                        @Html.TextBoxFor(model => model.CALENDAR_TEMPLATE_ID, new { @style = "display:none" })
-                                        @Html.TextBoxFor(model => model.SCHEDULAR_ID, new { @style = "display:none" })
-
-                                        <div class="form-group">
-                                            <label for="calendarname">@Resource.Calendar_Name *</label>
-
-                                            @Html.TextBoxFor(model => model.CALENDAR_NAME, new { @class = "form-control", @placeholder = "Calendar name", @required = "true" })
-                                            @Html.ValidationMessageFor(model => model.CALENDAR_NAME, "", new { @class = "invalid-feedback-2" })
-
-                                            @*<input type="text" class="form-control" id="calendarname" placeholder="" name="calendarname">*@
-                                        </div>
-
-                                        <button type="button" onclick="renderCategory()" class="back">@Resource.Back</button>
-                                        @if (ViewBag.IsPartial)
-                                        {
-                                            <button type="submit" class="btn btn-primary">@Resource.Save</button>
-                                        }
-                                        else
-                                        {
-                                            <button type="button" class="btn btn-primary" onclick="renderPage(2)">@Resource.Next</button>
-                                        }
-
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
                     <div class="f_of_f-wrap-o">
                         <div class="choose">
-                            <div class="chose-inner">
+                            <div class="chose-inner" onclick="moveToStep(6)">
                                 <div class="one">
                                     <img src="../assets/svg/logos/favicon.png" />
                                 </div>
@@ -515,7 +472,7 @@
                                     <p><img src="../assets/img/purple.png" /></p>
                                 </div>
                             </div>
-                            <div class="chose-inner">
+                            <div class="chose-inner" onclick="moveToStep(6)">
                                 <div class="one">
                                     <img src="../assets/svg/logos/favicon.png" />
                                 </div>
@@ -527,8 +484,21 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="button" onclick="renderCategory()" class="back">@Resource.Back</button>
+                        <button type="button" onclick="backToStep(4)" class="back">@Resource.Back</button>
                     </div>
+                    
+                </div>
+
+            </div>
+
+        </div>
+        <div id="step-6" style="display:none;" class="row pt-lg-6">
+
+            <div class="col-md-5 m-auto">
+
+                <div class="form-inner" style="max-width:100%;">
+                    <p>Step 5 of 5</p>
+                    
                     <div class="f_of_f-wrap-t">
                         <div class="form-inner set-cal" style="max-width:100%;">
                             <div class="hed-til">
@@ -577,15 +547,8 @@
                                 <button class="bg-t-b">+Add more</button>
                             </div>
 
-                            <button type="button" onclick="renderCategory()" class="back">@Resource.Back</button>
-                            @if (ViewBag.IsPartial)
-                            {
-                                <button type="submit" class="btn btn-primary">@Resource.Save</button>
-                            }
-                            else
-                            {
-                                <button type="button" class="btn btn-primary" onclick="renderPage(2)">@Resource.Next</button>
-                            }
+                            <button type="button" onclick="backToStep(5)" class="back">@Resource.Back</button>
+                            <button type="button" class="btn btn-primary" onclick="SubmitCalendar()">@Resource.Save</button>
 
 
                         </div>
@@ -599,7 +562,6 @@
             </div>
 
         </div>
-
     </div>
 
 </main>

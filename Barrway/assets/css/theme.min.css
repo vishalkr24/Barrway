@@ -35033,7 +35033,7 @@ p.btcd {
 .price-btn button {
     border-radius: 30px;
     border: none;
-    padding: 10px 70px;
+    padding: 10px 0px;
     margin: 15px 0px;
 }
 
@@ -35112,11 +35112,13 @@ p.btcd {
         min-height: 80vh;
     }
 }
-
-@media screen and (min-width:769px) and (max-width:1024px) {
+@media screen and (min-width:900px) and (max-width:1024px) {
     .Pricing-wrapper .pricing-custome {
-        width: 50%;
+        width: 33%;
     }
+
+}
+@media screen and (min-width:769px) and (max-width:1024px) {
 
     .pricing-custome-inner {
         min-height: 85vh;

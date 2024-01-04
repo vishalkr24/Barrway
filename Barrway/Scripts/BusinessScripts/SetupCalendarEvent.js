@@ -4,22 +4,6 @@ var serviceProviderList = [];
 const createdCalendarCode = $("#calendarCodeInput").val();
 const createdCompanyCode = $("#companyCodeInput").val();
 
-var locationModel = {
-    Id: 0,
-    CALENDAR_CODE: "",
-    COMPANY_CODE: "",
-    LOCATION_ADDRESS: ""
-}
-
-var serviceProviderModel = {
-    Id: 0,
-    CALENDAR_CODE: "",
-    COMPANY_CODE: "",
-    FIRST_NAME: "",
-    LAST_NAME: "",
-    MIDDLE_NAME: ""
-}
-
 $(document).ready(function () {
 
     readyPage();
@@ -32,7 +16,7 @@ $(document).ready(function () {
 function readyPage() {
     checkRegistrationStep();
 
-    let step = window.location.href.split('?')[1].split('&&')[2].split('=')[1];
+    let step = window.location.href.split('?')[1].split('&')[2].split('=')[1];
     backToStep(parseInt(step));
 
     var obj = { 'create': true, 'placeholder': 'Add tags...' };
@@ -67,6 +51,8 @@ function moveToStep(stepId) {
         case 5:
             createServiceProviderMaster();
             break;
+        case 6:
+            BindStep6();
         default:
             break;
     };
@@ -74,6 +60,9 @@ function moveToStep(stepId) {
 
 function backToStep(stepId) {
     switch (stepId) {
+        case 2:
+            goToStep2();
+            break;
         case 3:
             bindCalendarLocationMaster();
             break;
@@ -81,7 +70,7 @@ function backToStep(stepId) {
             bindCalendarServiceProviderMaster();
             break;
         case 5:
-            createServiceProviderMaster();
+            BindEventData();
             break;
         default:
             break;
@@ -98,6 +87,34 @@ function goToStep2() {
             window.location.replace(`/BusinessAdmin/SetupCompanyCalendar?CompanyId=${localStorage.getItem("COMPANY_ID")}&IsPartial=false&CalendarCode=${createdCalendarCode}`)
         }
     })
+}
+
+function BindEventData() {
+    $("#step-3").hide();
+    $("#step-4").hide();
+    $("#step-6").fadeOut();
+    setTimeout(function () {
+        $("#step-5").fadeIn();
+    }, 500)   
+}
+
+function submitCalendar() {
+    swal({
+        icon: "success",
+        title: "Success",
+        text: "Calendar created successfully!"
+    }).then(function (check) {
+        window.location.replace("/BusinessAdmin/CalendarMaster");
+    });
+}
+
+function BindStep6() {
+    $("#step-4").hide();
+    $("#step-5").fadeOut();
+    setTimeout(function () {
+        $("#step-6").fadeIn();
+    }, 500)
+    
 }
 
 function validateStep(stepId) {
@@ -164,9 +181,13 @@ function validateStep(stepId) {
 
 
 function bindCalendarLocationMaster() {
-    $("#step-3").show();
-    $("#step-4").hide();
-    $("#step-5").hide();
+    
+    $("#step-4").fadeOut();
+    $("#step-5").fadeOut();
+    $("#step-6").fadeOut();
+    setTimeout(function () {
+        $("#step-3").fadeIn();
+    }, 500);
 
     $.ajax({
         url: "/Calendar/GetLocationMasterList",
@@ -179,10 +200,10 @@ function bindCalendarLocationMaster() {
         success: function (response) {
 
             var data = response.data;
+            var divString = "";
 
             if (data != null) {
-                var divString = "";
-
+                
                 locationList = [];
 
                 data.forEach(x => {
@@ -192,7 +213,7 @@ function bindCalendarLocationMaster() {
                         CALENDAR_CODE: createdCalendarCode,
                         COMPANY_CODE: createdCompanyCode,
                         LOCATION_ADDRESS: x.LOCATION_ADDRESS,
-                        Is_New: false
+                        Is_New: false                        
                     });
 
                     divString += `<div class="form-group">
@@ -202,9 +223,24 @@ function bindCalendarLocationMaster() {
                                         </div>`;
                 })
 
-                $("#locations-div").append(divString);
+                
+            } else {
+                locationList.push({
+                    Id: 1,
+                    CALENDAR_CODE: createdCalendarCode,
+                    COMPANY_CODE: createdCompanyCode,
+                    LOCATION_ADDRESS: "",
+                    Is_New: true
+                });
+
+                divString += `<div class="form-group">
+                                            <label for="calendarname">Location*</label>
+
+                                            <input type="text" class="form-control location-input" placeholder="" value="" data-input-id="1">
+                                        </div>`;
             }
 
+            $("#locations-div").append(divString);
         },
         error: function (er) {
 
@@ -214,9 +250,13 @@ function bindCalendarLocationMaster() {
 }
 
 function bindCalendarServiceProviderMaster() {
-    $("#step-3").hide();
-    $("#step-4").show();
-    $("#step-5").hide();
+    
+    $("#step-5").fadeOut();
+    $("#step-3").fadeOut();
+    $("#step-6").fadeOut();
+    setTimeout(function () {
+        $("#step-4").fadeIn();
+    }, 500);
 
     $.ajax({
         url: "/Calendar/GetServiceProviderMasterList",
@@ -229,11 +269,43 @@ function bindCalendarServiceProviderMaster() {
         success: function (response) {
 
             var data = response.data;
+            var divString = "";
 
             if (data != null) {
-                var divString = "";
-
+            
                 serviceProviderList = [];
+
+                if (data.length > 0) {
+
+                } else {
+                    serviceProviderList.push({
+                        Id: 1,
+                        CALENDAR_CODE: createdCalendarCode,
+                        COMPANY_CODE: createdCompanyCode,
+                        FIRST_NAME: "",
+                        LAST_NAME: "",
+                        Is_New: false
+                    });
+
+                    divString += `      <div class="row">
+                                            <p class="sp">Service provider</p>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="calendarname">First Name *</label>
+
+                                                    <input type="text" class="form-control provider-first-input" placeholder="" value="" data-input-id="1">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="calendarname">Last Name *</label>
+
+                                                    <input type="text" class="form-control provider-last-input" placeholder="" value="" data-input-id="1">
+                                                </div>
+                                            </div>
+                                        </div>
+                                       `;
+                }
 
                 data.forEach(x => {
 
@@ -266,9 +338,37 @@ function bindCalendarServiceProviderMaster() {
                                        `;
                 })
 
-                $("#providers-div").append(divString);
+            } else {
+                serviceProviderList.push({
+                    Id: 1,
+                    CALENDAR_CODE: createdCalendarCode,
+                    COMPANY_CODE: createdCompanyCode,
+                    FIRST_NAME: "",
+                    LAST_NAME: "",
+                    Is_New: true
+                });
+
+                divString += `      <div class="row">
+                                            <p class="sp">Service provider</p>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="calendarname">First Name *</label>
+
+                                                    <input type="text" class="form-control provider-first-input" placeholder="" value="" data-input-id="1">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="calendarname">Last Name *</label>
+
+                                                    <input type="text" class="form-control provider-last-input" placeholder="" value="" data-input-id="1">
+                                                </div>
+                                            </div>
+                                        </div>
+                                       `;
             }
 
+            $("#providers-div").append(divString);
         },
         error: function (er) {
 
@@ -277,12 +377,18 @@ function bindCalendarServiceProviderMaster() {
 }
 
 function getMaxId(arr) {
-    let max = arr[0].Id;
-    arr.forEach(x => {
-        if(x.Id > max) {
-            max = x.Id;
+    let max = 1;
+    if (arr != null) {
+        if (arr.length > 0) {
+            max = arr[0].Id;
+            arr.forEach(x => {
+                if (x.Id > max) {
+                    max = x.Id;
+                }
+            })
         }
-    })
+    }
+    
     return max;
 }
 
@@ -343,6 +449,16 @@ $(document).on("keyup change paste", ".location-input", function () {
     locationList.find(x => x.Id == inputId).LOCATION_ADDRESS = this.value;
 })
 
+$(document).on("keyup change paste", ".provider-first-input", function () {
+    let inputId = $(this).attr("data-input-id");
+    serviceProviderList.find(x => x.Id == inputId).FIRST_NAME = this.value;
+})
+
+$(document).on("keyup change paste", ".provider-last-input", function () {
+    let inputId = $(this).attr("data-input-id");
+    serviceProviderList.find(x => x.Id == inputId).LAST_NAME = this.value;
+})
+
 function removeLocation(Id) {
     if (locationList.filter(x => x.Id == Id).length > 0) {
         if (locationList.find(x => x.Id == Id).Is_New) {
@@ -370,7 +486,7 @@ function createLocationMaster() {
                         title: "Location Added",
                         text: "Location added successfully!"
                     }).then(function (check) {
-                        window.location.href = '/BusinessAdmin/SetupCalendarEvent?CompanyId=' + localStorage.getItem("COMPANY_ID") + "&&CalendarCode=" + createdCalendarCode + "&&Step=4";
+                        window.location.href = '/BusinessAdmin/SetupCalendarEvent?CompanyId=' + localStorage.getItem("COMPANY_ID") + "&CalendarCode=" + createdCalendarCode + "&Step=4";
                     });
 
                 } else {
@@ -408,7 +524,7 @@ function createServiceProviderMaster() {
                         text: "Service Provider added successfully!"
                     }).then(function (check) {
                         // after success response
-                        window.location.href = '/BusinessAdmin/SetupCalendarEvent?CompanyId=' + localStorage.getItem("COMPANY_ID") + "&&CalendarCode=" + createdCalendarCode + "&&Step=5";
+                        window.location.href = '/BusinessAdmin/SetupCalendarEvent?CompanyId=' + localStorage.getItem("COMPANY_ID") + "&CalendarCode=" + createdCalendarCode + "&Step=5";
                     });
 
                 } else {

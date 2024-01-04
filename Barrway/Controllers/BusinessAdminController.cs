@@ -1288,6 +1288,8 @@ namespace Barrway.Controllers
                                 using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarConfiguration/TypeCConfiguration.json")))
                                 {
                                     calendarControlModel = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
+                                    calendarControlModel.DISPLAY_START_TIME = model.CalendarControlSheet.DISPLAY_START_TIME.ToString();
+                                    calendarControlModel.DISPLAY_END_TIME = model.CalendarControlSheet.DISPLAY_END_TIME.ToString();
                                 }
                             }
                             else if (calendarModel.CALENDAR_CATEGORY_ID == "3")
@@ -1352,7 +1354,11 @@ namespace Barrway.Controllers
                                     model.CALENDAR_PHOTO_PATH.SaveAs(Server.MapPath("~/UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString()) + "/" + model.CALENDAR_PHOTO_PATH.FileName.ToString());
                                 }
                                 ViewBag.SuccessMessage = "Calendar Created Successfully!";
-                                return RedirectToAction("CalendarMaster");
+
+
+
+                                return RedirectToAction("SetupCalendarEvent", new { CompanyId = company.Data["Id"]?.ToString(), CalendarCode = calendarModel.CALENDAR_CODE, Step = 3 });
+                                //return RedirectToAction("CalendarMaster");
 
                             }
                             else
