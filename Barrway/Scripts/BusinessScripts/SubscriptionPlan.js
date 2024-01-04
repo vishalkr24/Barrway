@@ -35,41 +35,73 @@ function setSubscriptionPlans() {
                                         </tr>`;
                 }
 
-                var div = `<div class="pricing-custome">
-                        <div class="pricing-custome-inner">
-                            <div class="heder-price ${colorTheme[colorCounter]}"></div>
-                            <div class="pricing-body">
-                                <h3 style="color:crimson;">${(plans[i].Id == currentPlan.PACKAGE_ID) ? "Your Current Plan" : ""}</h3>
-                                <h2>${plans[i].PLAN_NAME}</h2>
-                                <p><span class="extra-larg purple-color">$${plans[i].YEARA_PRICE}</span> <span class="sm"> paid yearly</span></p>
-                                <p>HK$ ${parseFloat(plans[i].PLAN_PRICE)}/ month</p>
-                                <table>
-                                    <tbody>
-                                        ${validityDiv}
-                                        <tr>
-                                            <td> Plan Description</td>
-                                            <td>${plans[i].PLAN_DESC} </td>
-                                        </tr>
-                                        <tr>
-                                            <td> Number of available calendar</td>
-                                            <td>${(plans[i].Id == currentPlan.PACKAGE_ID) ? ((currentPlan.ASSIGNED_CALENDARS == -1) ? "Unlimited" : currentPlan.ASSIGNED_CALENDARS) :  plans[i].NUM_OF_AVAIL_CLR }  </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Sessions per Month</td>
-                                            <td>${(plans[i].Id == currentPlan.PACKAGE_ID) ? ((currentPlan.ASSIGNED_CALENDARS == -1) ? "Unlimited" : currentPlan.ASSIGNED_SESSIONS) : plans[i].VALID_SESSIONS}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Bookings per Session</td>
-                                            <td>${plans[i].VALID_BOOKING_SESSION}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="mt-4">
-                                ${(plans[i].Id == currentPlan.PACKAGE_ID || plans[i].IS_FREE_PLAN == 'Y') ? "" : "<div class='price-btn'><button class='upgrade' onclick='buyPackage(" + plans[i].Id + ", false)'>Buy Yearly</button><button class='upgrade' onclick='buyPackage(" + plans[i].Id + ", true)'>Buy Monthly</button></div>"}
-                            </div>
+                var div = "";
+
+                if (plans[i].Id == currentPlan.PACKAGE_ID) {
+                    div = `<div class="pricing-custome basic">
+                                <div class="pricing-custome-inner">
+                                    <div class="pricing-body">
+                                        <h3>Your current plan</h3>
+                                        <h2>${plans[i].PLAN_NAME}</h2>
+                                        <p><span class="extra-larg salmon-color">$${plans[i].YEARA_PRICE}</span> <span class="sm">paid yearly</span></p>
+                                        <p>HK$ ${parseFloat(plans[i].PLAN_PRICE)}/ month</p>
+                                        <div class="price-btn"><button class="payment" onclick="window.location.href = '/BusinessAdmin/PaymentHistory'">Payment history</button></div>
+                                        <div class="price-list-detail">
+                                            <ul>
+                                                <li><b>${plans[i].NUM_OF_AVAIL_CLR}</b></li>
+                                                <li>Calendar</li>
+                                                <li><b>${plans[i].VALID_SESSIONS}</b></li>
+                                                <li>Sessions/month/calendar</li>
+                                                <li><b>${plans[i].VALID_BOOKING_SESSION}</b></li>
+                                                <li>Bookings/session/calendar</li>
+                                                <li><b>Unlimited</b></li>
+                                                <li>Company admin</li>
+                                                <li><b>1</b></li>
+                                                <li>Company website</li>
+                                                <li><b>Stripe</b></li>
+                                                <li>Payment gateway</li>
+                                                <li><b>${plans[i].PAYMENT_TRAN_FEE}%</b></li>
+                                                <li>Payment transaction fee</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                } else {
+                    div = `
+            <div class="pricing-custome">
+                <div class="pricing-custome-inner">
+                    <div class="heder-price ${colorTheme[colorCounter]}"></div>
+                    <div class="pricing-body">
+                        <div class="empty-space"></div>
+                        <h2>${plans[i].PLAN_NAME}</h2>
+                        <p><span class="extra-larg turquois-color">$${plans[i].YEARA_PRICE}</span> <span class="sm">paid yearly</span></p>
+                        <p>HK$ ${parseFloat(plans[i].PLAN_PRICE)}/ month</p>
+                        <div class="price-btn"><button class="payment" onclick='buyPackage(${plans[i].Id}, false)'>Upgrade</button></div>
+                        <div class="price-list-detail">
+                            <ul>
+                                <li><b>${plans[i].NUM_OF_AVAIL_CLR}</b></li>
+                                <li>Calendar</li>
+                                <li><b>${plans[i].VALID_SESSIONS}</b></li>
+                                <li>Sessions/month/calendar</li>
+                                <li><b>${plans[i].VALID_BOOKING_SESSION}</b></li>
+                                <li>Bookings/session/calendar</li>
+                                <li><b>Unlimited</b></li>
+                                <li>Company admin</li>
+                                <li><b>1</b></li>
+                                <li>Company website</li>
+                                <li><b>Stripe</b></li>
+                                <li>Payment gateway</li>
+                                <li><b>${plans[i].PAYMENT_TRAN_FEE}%</b></li>
+                                <li>Payment transaction fee</li>
+                            </ul>
                         </div>
-                    </div>`;
+                    </div>
+                </div>
+            </div>`;
+                }
+
+                
 
                 $("#divSubscriptionPlans").append(div);
             }

@@ -69,79 +69,84 @@
 <main id="content" role="main" class="main" style="display:none;">
     <!-- Content -->
     <div class="content container">
-        <div class="row pt-lg-1 d-flex justify-content-center">
-
-            @if (ViewBag.IsPartial)
-            {
-                <div class="col-md-12">
-                    <h1>@Resource.Choose_category_for_new_calendar</h1>
-                </div>
-                <div class="col-md-12">
-                    <br />
-                </div>
-            }
-
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="rectangle" onclick="renderForm(1)">
-                            <div class="rac-img">
-                                <img src="../assets/img/one1.png">
-                            </div>
-                            <div class="rac-text">
-                                <h2>@Resource.Class_and_workshop</h2>
-                                <p>@Resource.eg__Yoga_class__Piano_class__Baking_workshop</p>
-                            </div>
-                        </div>
+        <div class="m-width">
+            <div class="steps">
+                <p>Step 1 of 5</p>
+                @if (ViewBag.IsPartial)
+                {
+                    <div style="font-size: 30px; padding-bottom:4px; font-weight:bold; color:black;">
+                        Let’s set up a calendar for your business
                     </div>
-                    <div class="col-md-4">
-                        <div class="rectangle" onclick="renderForm(2)">
-                            <div class="rac-img">
-                                <img src="../assets/img/two.png">
-                            </div>
-                            <div class="rac-text">
-                                <h2>@Resource.Service_appointment</h2>
-                                <p>@Resource.eg__doctor__massage__hair_cut__nail_treatment</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="rectangle" onclick="renderForm(3)">
-                            <div class="rac-img">
-                                <img src="../assets/img/three.png">
-                            </div>
-                            <div class="rac-text">
-                                <h2>@Resource.Room_rental</h2>
-                                <p>@Resource.eg__Party_room__co_working_space__dance_studio</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="rectangle" onclick="renderForm(4)">
-                            <div class="rac-img">
-                                <img src="../assets/img/four.png">
-                            </div>
-                            <div class="rac-text">
-                                <h2>@Resource.Private_office_room_booking</h2>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="rectangle" onclick="renderForm(5)">
-                            <div class="rac-img">
-                                <img src="../assets/img/five.png">
-                            </div>
-                            <div class="rac-text">
-                                <h2>@Resource.Event_registration</h2>
-                                <p>@Resource.eg__Volunteering_event__Dinner_event</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                }
+                <p class="step-title">
+                    What is the purpose of your calendar?
+                </p>
             </div>
+            <div class="row pt-lg-1 d-flex justify-content-center">
 
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="rectangle" onclick="renderForm(1)">
+                                <div class="rac-img">
+                                    <img src="../assets/img/one1.png">
+                                </div>
+                                <div class="rac-text">
+                                    <h2>@Resource.Class_and_workshop</h2>
+                                    <p>@Resource.eg__Yoga_class__Piano_class__Baking_workshop</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="rectangle" onclick="renderForm(2)">
+                                <div class="rac-img">
+                                    <img src="../assets/img/two.png">
+                                </div>
+                                <div class="rac-text">
+                                    <h2>@Resource.Service_appointment</h2>
+                                    <p>@Resource.eg__doctor__massage__hair_cut__nail_treatment</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="rectangle" onclick="renderForm(3)">
+                                <div class="rac-img">
+                                    <img src="../assets/img/three.png">
+                                </div>
+                                <div class="rac-text">
+                                    <h2>@Resource.Room_rental</h2>
+                                    <p>@Resource.eg__Party_room__co_working_space__dance_studio</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="rectangle" onclick="renderForm(4)">
+                                <div class="rac-img">
+                                    <img src="../assets/img/four.png">
+                                </div>
+                                <div class="rac-text">
+                                    <h2>@Resource.Private_office_room_booking</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="rectangle" onclick="renderForm(5)">
+                                <div class="rac-img">
+                                    <img src="../assets/img/five.png">
+                                </div>
+                                <div class="rac-text">
+                                    <h2>@Resource.Event_registration</h2>
+                                    <p>@Resource.eg__Volunteering_event__Dinner_event</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- End Row -->
         </div>
-        <!-- End Row -->
+        <!--end upper div-->
     </div>
     <!-- End Content -->
 </main>
@@ -325,454 +330,433 @@
 <main id="content-2" role="main" class="main" style="display:none;">
     <!-- Content -->
     <div class="container">
-        <div class="row pt-lg-5">
-            <div class="col-md-6">
-                <div class="bredcrump" style="margin-left:20px;">
-                    @if (!ViewBag.IsPartial)
-                    {
-                        <span><a class="lbl-company-name" href="javascript:void(0)">Company name</a> / <a href="javascript:void(0)">New Calendar</a> </span>
-                    }
-                    else
-                    {
-                        <span><a class="lbl-company-name" href="javascript:void(0)">Company name</a> / <a onclick="window.location.href = '/calendar/index#/home'" class="lbl-calendar-name"></a> / <a href="javascript:void(0)">Calendar Settings</a> </span>
-                    }
+        <div class="m-width">
+            <div class="row pt-lg-4">
+                <div class="col-md-6">
+                    <div class="bredcrump" style="margin-left:20px;">
+                        @if (ViewBag.IsPartial)
+                        {
+                            <span><a class="lbl-company-name" href="javascript:void(0)">Company name</a> / <a href="javascript:void(0)">New Calendar</a> </span>
+                        }
+                        else
+                        {
+                            <span><a class="lbl-company-name" href="javascript:void(0)">Company name</a> / <a onclick="window.location.href = '/calendar/index#/home'" class="lbl-calendar-name"></a> / <a href="javascript:void(0)">Calendar Settings</a> </span>
+                        }
 
+                    </div>
                 </div>
+
             </div>
-        </div>
-        <div class="row row-reverse">
-            @if (ViewBag.IsPartial)
-            {
-                <div class="col-md-6 template-selection-area hide-for-superadmin" style="">
-                    <div class="form-inner" style="max-width:100%; padding:24px 16px;">
-                        <h2>Choose from templates</h2>
-                        <br />
-                        <div class="row" id="templates-row">
+            <div class="row">
+                @*@if (ViewBag.IsPartial)
+                    {
+                        <div class="col-md-6 template-selection-area hide-for-superadmin" style="">
+                            <div class="form-inner" style="max-width:100%; padding:24px 16px;">
+                                <h2>Choose from templates</h2>
+                                <br />
+                                <div class="row" id="templates-row">
+
+                                </div>
+
+                            </div>
 
                         </div>
+                    }*@
 
-                    </div>
+                <div class="col-md-5 m-auto">
+                    <div class="form-inner" style="max-width:100%;">
+                        <div class="steps">
+                            <p>Step 2 of 5</p>
+                            <p class="step-title">
+                                Fill in some details for your calendar
+                            </p>
+                        </div>
+                        <form action="/BusinessAdmin/AddCalendar?IsPartial=@ViewBag.IsPartial.ToString().ToLower()" method="post" enctype="multipart/form-data">
+                            <div id="div1">
+                                <div class="text-center">
+                                    <div class="profile-form">
+                                        <style>
+                                            .form-inner {
+                                                margin-left: 0px !important;
+                                            }
+                                        </style>
 
-                </div>
-            }
+                                        <div class="form-inner no-padding-form" style="max-width:100%;">
+                                            @Html.TextBoxFor(model => model.Id, new { @style = "display:none" })
+                                            @Html.TextBoxFor(model => model.COMPANY_CODE, new { @style = "display:none" })
+                                            @Html.TextBoxFor(model => model.CALENDAR_CODE, new { @style = "display:none" })
+                                            @Html.TextBoxFor(model => model.CALENDAR_TEMPLATE_ID, new { @style = "display:none" })
+                                            @Html.TextBoxFor(model => model.SCHEDULAR_ID, new { @style = "display:none" })
 
-            <div class="col-md-6">
-                @*@if (!ViewBag.IsPartial)
-                {
-                    <div class="js-nav-scroller hs-nav-scroller-horizontal mb-5 form-navigation" style="position:sticky; top:0px; background:white;">
-                        <span class="hs-nav-scroller-arrow-prev" style="display: none;">
-                            <a class="hs-nav-scroller-arrow-link" href="javascript:;">
-                                <i class="bi-chevron-left"></i>
-                            </a>
-                        </span>
+                                            <div class="form-group">
+                                                <label for="calendarname">@Resource.Calendar_Name *</label>
 
-                        <span class="hs-nav-scroller-arrow-next" style="display: none;">
-                            <a class="hs-nav-scroller-arrow-link" href="javascript:;">
-                                <i class="bi-chevron-right"></i>
-                            </a>
-                        </span>
+                                                @Html.TextBoxFor(model => model.CALENDAR_NAME, new { @class = "form-control", @placeholder = "Calendar name", @required = "true" })
+                                                @Html.ValidationMessageFor(model => model.CALENDAR_NAME, "", new { @class = "invalid-feedback-2" })
 
-                        <ul class="nav nav-tabs align-items-center">
-                            <li id="btn1" class="nav-item" onclick="renderPage('1')">
-                                <a class="nav-link active" href="javascript:void(0)">@Resource.Calendar_Information</a>
-                            </li>
+                                                @*<input type="text" class="form-control" id="calendarname" placeholder="" name="calendarname">*@
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="country">@Resource.Country *</label>
 
-                            <li id="btn2" class="nav-item">
-                                <a class="nav-link" href="javascript:void(0)">@Resource.Calendar_Settings</a>
-                            </li>
-
-
-
-                        </ul>
-                    </div>
-                }*@
-                <div class="form-inner" style="max-width:100%;">
-
-                    <form action="/BusinessAdmin/AddCalendar?IsPartial=@ViewBag.IsPartial.ToString().ToLower()" method="post" enctype="multipart/form-data">
-                        <div id="div1">
-                            <div class="text-center">
-                                <div class="profile-form">
-                                    <style>
-                                        .form-inner {
-                                            margin-left: 0px !important;
-                                        }
-                                    </style>
-
-                                    <div class="form-inner" style="max-width:100%;">
-                                        @Html.TextBoxFor(model => model.Id, new { @style = "display:none" })
-                                        @Html.TextBoxFor(model => model.COMPANY_CODE, new { @style = "display:none" })
-                                        @Html.TextBoxFor(model => model.CALENDAR_CODE, new { @style = "display:none" })
-                                        @Html.TextBoxFor(model => model.CALENDAR_TEMPLATE_ID, new { @style = "display:none" })
-                                        @Html.TextBoxFor(model => model.SCHEDULAR_ID, new { @style = "display:none" })
-
-                                        <div class="form-group">
-                                            <label for="calendarname">@Resource.Calendar_Name *</label>
-
-                                            @Html.TextBoxFor(model => model.CALENDAR_NAME, new { @class = "form-control", @placeholder = "Calendar name", @required = "true" })
-                                            @Html.ValidationMessageFor(model => model.CALENDAR_NAME, "", new { @class = "invalid-feedback-2" })
-
-                                            @*<input type="text" class="form-control" id="calendarname" placeholder="" name="calendarname">*@
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="country">@Resource.Country *</label>
-
-                                                    @Html.DropDownListFor(model => model.COUNTRY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select Country", @required = "true" })
-                                                    @Html.ValidationMessageFor(model => model.COUNTRY_ID, "", new { @class = "invalid-feedback-2" })
+                                                        @Html.DropDownListFor(model => model.COUNTRY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select Country", @required = "true" })
+                                                        @Html.ValidationMessageFor(model => model.COUNTRY_ID, "", new { @class = "invalid-feedback-2" })
 
 
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="city">@Resource.City *</label>
+
+                                                        @Html.DropDownListFor(model => model.CITY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select City", @required = "true" })
+                                                        @Html.ValidationMessageFor(model => model.CITY_ID, "", new { @class = "invalid-feedback-2" })
+
+
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="city">@Resource.City *</label>
+                                            <div class="form-group">
+                                                <label for="district">@Resource.District *</label>
 
-                                                    @Html.DropDownListFor(model => model.CITY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select City", @required = "true" })
-                                                    @Html.ValidationMessageFor(model => model.CITY_ID, "", new { @class = "invalid-feedback-2" })
+                                                @Html.DropDownListFor(model => model.DISTRICT_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select District", @required = "true" })
+                                                @Html.ValidationMessageFor(model => model.DISTRICT_ID, "", new { @class = "invalid-feedback-2" })
 
 
-                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="district">@Resource.District *</label>
 
-                                            @Html.DropDownListFor(model => model.DISTRICT_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select District", @required = "true" })
-                                            @Html.ValidationMessageFor(model => model.DISTRICT_ID, "", new { @class = "invalid-feedback-2" })
+                                            <div class="form-group">
+                                                <label for="cala">Calendar category *</label>
 
-
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="cala">Calendar category *</label>
-
-                                            @Html.DropDownListFor(model => model.CALENDAR_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @onchange = "checkSlot()", @placeholder = "Select Calendar Category", @required = "true" })
-                                            @Html.ValidationMessageFor(model => model.CALENDAR_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
+                                                @Html.DropDownListFor(model => model.CALENDAR_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @onchange = "checkSlot()", @placeholder = "Select Calendar Category", @required = "true" })
+                                                @Html.ValidationMessageFor(model => model.CALENDAR_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
 
 
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="sub">@Resource.Calendar @Resource.Subcategory *</label>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="sub">@Resource.Calendar @Resource.Subcategory *</label>
 
-                                            @Html.DropDownListFor(model => model.CALENDAR_SUB_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select Calendar Sub Category", @required = "true" })
-                                            @Html.ValidationMessageFor(model => model.CALENDAR_SUB_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
+                                                @Html.DropDownListFor(model => model.CALENDAR_SUB_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select Calendar Sub Category", @required = "true" })
+                                                @Html.ValidationMessageFor(model => model.CALENDAR_SUB_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
 
 
-                                        </div>
-                                        <div class="form-group" id="duration-entry-field">
-                                            <label for="calendarname">@Resource.Slot_Duration_in_Mins*</label>
+                                            </div>
+                                            <div class="form-group" id="duration-entry-field">
+                                                <label for="calendarname">@Resource.Slot_Duration_in_Mins*</label>
 
-                                            @Html.TextBoxFor(model => model.SLOT_DURATION_IN_MINS, new { @type = "number", @class = "form-control", @placeholder = "eg.: 15" })
-                                            @Html.ValidationMessageFor(model => model.SLOT_DURATION_IN_MINS, "", new { @class = "invalid-feedback-2" })
+                                                @Html.TextBoxFor(model => model.SLOT_DURATION_IN_MINS, new { @type = "number", @class = "form-control", @placeholder = "eg.: 15" })
+                                                @Html.ValidationMessageFor(model => model.SLOT_DURATION_IN_MINS, "", new { @class = "invalid-feedback-2" })
 
-                                            @*<input type="text" class="form-control" id="calendarname" placeholder="" name="calendarname">*@
-                                        </div>
+                                                @*<input type="text" class="form-control" id="calendarname" placeholder="" name="calendarname">*@
+                                            </div>
 
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="TAGS">@Resource.Calendar_display_time</label>
-                                                    <div class="tom-select-custom">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                @Html.TextBoxFor(model => model.CalendarControlSheet.DISPLAY_START_TIME, new { @class = "form-control", @type = "time", @placeholder = "Start Time" })
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="TAGS">@Resource.Calendar_display_time</label>
+                                                        <div class="tom-select-custom">
+                                                            <div class="row">
+                                                                <div class="col-lg-6">
+                                                                    @Html.TextBoxFor(model => model.CalendarControlSheet.DISPLAY_START_TIME, new { @class = "form-control", @type = "time", @placeholder = "Start Time" })
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    @Html.TextBoxFor(model => model.CalendarControlSheet.DISPLAY_END_TIME, new { @class = "form-control", @type = "time", @placeholder = "End Time" })
+                                                                </div>
                                                             </div>
-                                                            <div class="col-lg-6">
-                                                                @Html.TextBoxFor(model => model.CalendarControlSheet.DISPLAY_END_TIME, new { @class = "form-control", @type = "time", @placeholder = "End Time" })
-                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="TAGS">@Resource.Privacy</label>
+                                                        <div class="tom-select-custom">
+                                                            @Html.DropDownListFor(model => model.CalendarControlSheet.CALENDAR_USE_TYPE, new SelectList(Enum.GetValues(typeof(PublicPrivateOptions))), new { @class = "js-select form-select" })
                                                         </div>
 
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="TAGS">@Resource.Privacy</label>
-                                                    <div class="tom-select-custom">
-                                                        @Html.DropDownListFor(model => model.CalendarControlSheet.CALENDAR_USE_TYPE, new SelectList(Enum.GetValues(typeof(PublicPrivateOptions))), new { @class = "js-select form-select" })
+
+                                            <div class="form-group">
+                                                <label for="TAGS">@Resource.Tags</label>
+                                                <div class="tom-select-custom">
+                                                    @Html.DropDownListFor(model => model.TAGS, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "js-select form-select", @multiple = "true", @autocomplete = "off" })
+                                                </div>
+
+                                                @Html.ValidationMessageFor(model => model.TAGS, "", new { @class = "invalid-feedback-2" })
+
+                                            </div>
+                                            <div class="form-group">
+                                                <p style="margin-bottom: 0px;"><label for="file">@Resource.Calendar_photo</label></p>
+                                                <div class="custome-uploade">
+
+                                                    <label for="CALENDAR_PHOTO_PATH" id="CALENDAR_PHOTO_NAME" class="hide-for-superadmin" style="width:80%; max-width:300px; padding-left:16px;">This photo will be seen in market place</label>
+
+                                                    <div class="fileUpload btn btn--browse">
+                                                        <span>Browse</span>
+                                                        @Html.TextBoxFor(model => model.CALENDAR_PHOTO_PATH, new { @class = "upload", Type = "File", @onchange = "BindLogoName('CALENDAR_PHOTO_PATH', 'CALENDAR_PHOTO_NAME')" })
+
                                                     </div>
-
                                                 </div>
-                                            </div>
-                                        </div>
 
-                                        <div class="form-group">
-                                            <label for="TAGS">@Resource.Tags</label>
-                                            <div class="tom-select-custom">
-                                                @Html.DropDownListFor(model => model.TAGS, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "js-select form-select", @multiple = "true", @autocomplete = "off" })
+                                                @Html.ValidationMessageFor(model => model.CALENDAR_PHOTO_NAME, "", new { @class = "invalid-feedback-2" })
+
                                             </div>
 
-                                            @Html.ValidationMessageFor(model => model.TAGS, "", new { @class = "invalid-feedback-2" })
+                                            <button type="button" onclick="renderCategory()" class="back">@Resource.Back</button>
+                                            @*@if (ViewBag.IsPartial)
+                                                {
+                                                    <button type="submit" class="btn btn-primary">@Resource.Save</button>
+                                                }
+                                                else
+                                                {
+                                                    <button type="button" class="btn btn-primary" onclick="renderPage(2)">@Resource.Next</button>
+                                                }*@
+
+                                            <button type="submit" class="btn btn-primary">@Resource.Save</button>
 
                                         </div>
-                                        <div class="form-group">
-                                            <p style="margin-bottom: 0px;"><label for="file">@Resource.Calendar_photo</label></p>
-                                            <div class="custome-uploade">
-
-                                                <label for="CALENDAR_PHOTO_PATH" id="CALENDAR_PHOTO_NAME" class="hide-for-superadmin" style="width:80%; max-width:300px; padding-left:16px;">This photo will be seen in market place</label>
-
-                                                <div class="fileUpload btn btn--browse">
-                                                    <span>Browse</span>
-                                                    @Html.TextBoxFor(model => model.CALENDAR_PHOTO_PATH, new { @class = "upload", Type = "File", @onchange = "BindLogoName('CALENDAR_PHOTO_PATH', 'CALENDAR_PHOTO_NAME')" })
-
-                                                </div>
-                                            </div>
-
-                                            @Html.ValidationMessageFor(model => model.CALENDAR_PHOTO_NAME, "", new { @class = "invalid-feedback-2" })
-
-                                        </div>
-
-                                        <button type="button" onclick="renderCategory()" class="back">@Resource.Back</button>
-                                        @*@if (ViewBag.IsPartial)
-        {
-            <button type="submit" class="btn btn-primary">@Resource.Save</button>
-        }
-        else
-        {
-            <button type="button" class="btn btn-primary" onclick="renderPage(2)">@Resource.Next</button>
-        }*@
-
-                                        <button type="submit" class="btn btn-primary">@Resource.Save</button>
-
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        @*<div id="div2" style="display: none;">
-                            <div class="text-center">
-                                <div class="profile-form">
-                                    <style>
-                                        .form-inner {
-                                            margin-left: 0px !important;
-                                        }
-                                    </style>
+                            @*<div id="div2" style="display: none;">
+                                    <div class="text-center">
+                                        <div class="profile-form">
+                                            <style>
+                                                .form-inner {
+                                                    margin-left: 0px !important;
+                                                }
+                                            </style>
 
-                                    <div class="form-inner" style="max-width:100%;">
+                                            <div class="form-inner" style="max-width:100%;">
 
 
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="TAGS">@Resource.Calendar_display_time</label>
-                                                    <div class="tom-select-custom">
-                                                        <div class="row">
-                                                            <div class="col-lg-6">
-                                                                @Html.TextBoxFor(model => model.CalendarControlSheet.DISPLAY_START_TIME, new { @class = "form-control", @type = "time", @placeholder = "Start Time" })
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="TAGS">@Resource.Calendar_display_time</label>
+                                                            <div class="tom-select-custom">
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        @Html.TextBoxFor(model => model.CalendarControlSheet.DISPLAY_START_TIME, new { @class = "form-control", @type = "time", @placeholder = "Start Time" })
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        @Html.TextBoxFor(model => model.CalendarControlSheet.DISPLAY_END_TIME, new { @class = "form-control", @type = "time", @placeholder = "End Time" })
+                                                                    </div>
+                                                                </div>
+
                                                             </div>
-                                                            <div class="col-lg-6">
-                                                                @Html.TextBoxFor(model => model.CalendarControlSheet.DISPLAY_END_TIME, new { @class = "form-control", @type = "time", @placeholder = "End Time" })
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="TAGS">@Resource.Privacy</label>
+                                                            <div class="tom-select-custom">
+                                                                @Html.DropDownListFor(model => model.CalendarControlSheet.CALENDAR_USE_TYPE, new SelectList(Enum.GetValues(typeof(PublicPrivateOptions))), new { @class = "js-select form-select" })
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="row" style="border-bottom:1px solid lightgrey; padding-top: 16px;">
+                                                    <div class="col-md-2" style="padding-top:25px;">
+                                                        <h3>@Resource.Calendar </h3>
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <div class="form-group">
+                                                            <label for="TAGS">@Resource.Form_description</label>
+                                                            <div class="tom-select-custom">
+                                                                @Html.TextBoxFor(model => model.CalendarControlSheet.CALENDAR_FORM_NAME, new { @class = "form-control", @placeholder = "calendar" })
                                                             </div>
                                                         </div>
-
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="TAGS">@Resource.Privacy</label>
-                                                    <div class="tom-select-custom">
-                                                        @Html.DropDownListFor(model => model.CalendarControlSheet.CALENDAR_USE_TYPE, new SelectList(Enum.GetValues(typeof(PublicPrivateOptions))), new { @class = "js-select form-select" })
-                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <div class="form-group">
+                                                            <label for="TAGS">@Resource.Format</label>
+                                                            <div class="tom-select-custom">
+                                                                @Html.DropDownListFor(model => model.CalendarControlSheet.CALENDAR_FORM_CATEGORY, new SelectList(Enum.GetValues(typeof(CalendarFormatOptions))), new { @class = "js-select form-select" })
+                                                            </div>
 
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="row" style="border-bottom:1px solid lightgrey; padding-top: 16px;">
-                                            <div class="col-md-2" style="padding-top:25px;">
-                                                <h3>@Resource.Calendar </h3>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="form-group">
-                                                    <label for="TAGS">@Resource.Form_description</label>
-                                                    <div class="tom-select-custom">
-                                                        @Html.TextBoxFor(model => model.CalendarControlSheet.CALENDAR_FORM_NAME, new { @class = "form-control", @placeholder = "calendar" })
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="form-group">
-                                                    <label for="TAGS">@Resource.Format</label>
-                                                    <div class="tom-select-custom">
-                                                        @Html.DropDownListFor(model => model.CalendarControlSheet.CALENDAR_FORM_CATEGORY, new SelectList(Enum.GetValues(typeof(CalendarFormatOptions))), new { @class = "js-select form-select" })
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="advanced-option">
-                                            <div class="row" style="border-bottom:1px solid lightgrey; padding-top: 16px;">
-                                                <div class="col-md-2" style="padding-top:25px;">
-                                                    <h3>@Resource.Resources </h3>
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <div class="form-group">
-                                                        <label for="TAGS">@Resource.Form_name</label>
-                                                        <div class="tom-select-custom">
-                                                            @Html.TextBoxFor(model => model.CalendarControlSheet.RESOURCE_FORM_NAME, new { @class = "form-control", @placeholder = "calendar" })
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-5">
-                                                    <div class="form-group">
-                                                        <label for="TAGS">@Resource.Format</label>
-                                                        <div class="tom-select-custom">
-                                                            @Html.DropDownListFor(model => model.CalendarControlSheet.RESOURCE_FORM_CATEGORY, new SelectList(Enum.GetValues(typeof(CalendarFormatOptions))), new { @class = "js-select form-select" })
+
+                                                <div class="advanced-option">
+                                                    <div class="row" style="border-bottom:1px solid lightgrey; padding-top: 16px;">
+                                                        <div class="col-md-2" style="padding-top:25px;">
+                                                            <h3>@Resource.Resources </h3>
                                                         </div>
+                                                        <div class="col-md-5">
+                                                            <div class="form-group">
+                                                                <label for="TAGS">@Resource.Form_name</label>
+                                                                <div class="tom-select-custom">
+                                                                    @Html.TextBoxFor(model => model.CalendarControlSheet.RESOURCE_FORM_NAME, new { @class = "form-control", @placeholder = "calendar" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <div class="form-group">
+                                                                <label for="TAGS">@Resource.Format</label>
+                                                                <div class="tom-select-custom">
+                                                                    @Html.DropDownListFor(model => model.CalendarControlSheet.RESOURCE_FORM_CATEGORY, new SelectList(Enum.GetValues(typeof(CalendarFormatOptions))), new { @class = "js-select form-select" })
+                                                                </div>
 
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
 
-                                            <div class="row" style="border-bottom:1px solid lightgrey; padding-top: 16px;">
-                                                <div class="col-md-2" style="padding-top:25px;">
-                                                    <h3>@Resource.Activities </h3>
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <div class="form-group">
-                                                        <label for="TAGS">@Resource.Form_name</label>
-                                                        <div class="tom-select-custom">
-                                                            @Html.TextBoxFor(model => model.CalendarControlSheet.ACTIVITY_FORM_NAME, new { @class = "form-control", @placeholder = "calendar" })
+                                                    <div class="row" style="border-bottom:1px solid lightgrey; padding-top: 16px;">
+                                                        <div class="col-md-2" style="padding-top:25px;">
+                                                            <h3>@Resource.Activities </h3>
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <div class="form-group">
+                                                                <label for="TAGS">@Resource.Form_name</label>
+                                                                <div class="tom-select-custom">
+                                                                    @Html.TextBoxFor(model => model.CalendarControlSheet.ACTIVITY_FORM_NAME, new { @class = "form-control", @placeholder = "calendar" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <div class="form-group">
+                                                                <label for="TAGS">@Resource.Format</label>
+                                                                <div class="tom-select-custom">
+                                                                    @Html.DropDownListFor(model => model.CalendarControlSheet.ACTIVITY_FORM_CATEGORY, new SelectList(Enum.GetValues(typeof(CalendarFormatOptions))), new { @class = "js-select form-select" })
+                                                                </div>
+
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-5">
-                                                    <div class="form-group">
-                                                        <label for="TAGS">@Resource.Format</label>
-                                                        <div class="tom-select-custom">
-                                                            @Html.DropDownListFor(model => model.CalendarControlSheet.ACTIVITY_FORM_CATEGORY, new SelectList(Enum.GetValues(typeof(CalendarFormatOptions))), new { @class = "js-select form-select" })
+
+
+                                                <div class="row" style="border-bottom:1px solid lightgrey; padding-top: 16px;">
+                                                    <div class="col-md-2" style="padding-top:25px;">
+                                                        <h3>@Resource.Location </h3>
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <div class="form-group">
+                                                            <label for="TAGS">@Resource.Form_name</label>
+                                                            <div class="tom-select-custom">
+                                                                @Html.TextBoxFor(model => model.CalendarControlSheet.LOCATION_FORM_NAME, new { @class = "form-control", @placeholder = "calendar" })
+                                                            </div>
                                                         </div>
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <div class="form-group">
+                                                            <label for="TAGS">@Resource.Format</label>
+                                                            <div class="tom-select-custom">
+                                                                @Html.DropDownListFor(model => model.CalendarControlSheet.LOCATION_FORM_CATEGORY, new SelectList(Enum.GetValues(typeof(CalendarFormatOptions))), new { @class = "js-select form-select" })
+                                                            </div>
 
+                                                        </div>
                                                     </div>
                                                 </div>
+
+                                                <div class="row" style="border-bottom:1px solid lightgrey; padding-top: 16px;">
+                                                    <div class="col-md-2" style="padding-top:25px;">
+                                                        <h3>@Resource.Registration </h3>
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <div class="form-group">
+                                                            <label for="TAGS">@Resource.Form_name</label>
+                                                            <div class="tom-select-custom">
+                                                                @Html.TextBoxFor(model => model.CalendarControlSheet.REGISTRATION_FORM_NAME, new { @class = "form-control", @placeholder = "calendar" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <div class="form-group">
+                                                            <label for="TAGS">@Resource.Format</label>
+                                                            <div class="tom-select-custom">
+                                                                @Html.DropDownListFor(model => model.CalendarControlSheet.REGISTRATION_FORM_CATEGORY, new SelectList(Enum.GetValues(typeof(CalendarFormatOptions))), new { @class = "js-select form-select" })
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row" style="border-bottom:1px solid lightgrey; padding-top: 16px;">
+                                                    <div class="col-md-2" style="padding-top:25px;">
+                                                        <h3>@Resource.Participant </h3>
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <div class="form-group">
+                                                            <label for="TAGS">@Resource.Form_name</label>
+                                                            <div class="tom-select-custom">
+                                                                @Html.TextBoxFor(model => model.CalendarControlSheet.PARTICIPANT_FORM_NAME, new { @class = "form-control", @placeholder = "calendar" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <div class="form-group">
+                                                            <label for="TAGS">@Resource.Format</label>
+                                                            <div class="tom-select-custom">
+                                                                @Html.DropDownListFor(model => model.CalendarControlSheet.PARTICIPANT_FORM_CATEGORY, new SelectList(Enum.GetValues(typeof(CalendarFormatOptions))), new { @class = "js-select form-select" })
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row" style=" padding-top: 16px;">
+                                                    <div class="col-md-2" style="padding-top:25px;">
+                                                        <h3>@Resource.Evaluation </h3>
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <div class="form-group">
+                                                            <label for="TAGS">@Resource.Form_description</label>
+                                                            <div class="tom-select-custom">
+                                                                @Html.TextBoxFor(model => model.CalendarControlSheet.EVALUATION_FORM_NAME, new { @class = "form-control", @placeholder = "calendar" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <div class="form-group">
+                                                            <label for="TAGS">@Resource.Format</label>
+                                                            <div class="tom-select-custom">
+                                                                @Html.DropDownListFor(model => model.CalendarControlSheet.EVALUATION_FORM_CATEGORY, new SelectList(Enum.GetValues(typeof(CalendarFormatOptions))), new { @class = "js-select form-select" })
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <button type="button" onclick="renderPage(1)" class="back">@Resource.Back</button>
+                                                @if (ViewBag.IsPartial)
+                                                {
+
+                                                }
+                                                else
+                                                {
+                                                    <button type="submit" class="btn btn-primary">@Resource.Save &amp; @Resource.Exit</button>
+                                                }
+
                                             </div>
+
+
                                         </div>
-
-
-                                        <div class="row" style="border-bottom:1px solid lightgrey; padding-top: 16px;">
-                                            <div class="col-md-2" style="padding-top:25px;">
-                                                <h3>@Resource.Location </h3>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="form-group">
-                                                    <label for="TAGS">@Resource.Form_name</label>
-                                                    <div class="tom-select-custom">
-                                                        @Html.TextBoxFor(model => model.CalendarControlSheet.LOCATION_FORM_NAME, new { @class = "form-control", @placeholder = "calendar" })
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="form-group">
-                                                    <label for="TAGS">@Resource.Format</label>
-                                                    <div class="tom-select-custom">
-                                                        @Html.DropDownListFor(model => model.CalendarControlSheet.LOCATION_FORM_CATEGORY, new SelectList(Enum.GetValues(typeof(CalendarFormatOptions))), new { @class = "js-select form-select" })
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row" style="border-bottom:1px solid lightgrey; padding-top: 16px;">
-                                            <div class="col-md-2" style="padding-top:25px;">
-                                                <h3>@Resource.Registration </h3>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="form-group">
-                                                    <label for="TAGS">@Resource.Form_name</label>
-                                                    <div class="tom-select-custom">
-                                                        @Html.TextBoxFor(model => model.CalendarControlSheet.REGISTRATION_FORM_NAME, new { @class = "form-control", @placeholder = "calendar" })
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="form-group">
-                                                    <label for="TAGS">@Resource.Format</label>
-                                                    <div class="tom-select-custom">
-                                                        @Html.DropDownListFor(model => model.CalendarControlSheet.REGISTRATION_FORM_CATEGORY, new SelectList(Enum.GetValues(typeof(CalendarFormatOptions))), new { @class = "js-select form-select" })
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row" style="border-bottom:1px solid lightgrey; padding-top: 16px;">
-                                            <div class="col-md-2" style="padding-top:25px;">
-                                                <h3>@Resource.Participant </h3>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="form-group">
-                                                    <label for="TAGS">@Resource.Form_name</label>
-                                                    <div class="tom-select-custom">
-                                                        @Html.TextBoxFor(model => model.CalendarControlSheet.PARTICIPANT_FORM_NAME, new { @class = "form-control", @placeholder = "calendar" })
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="form-group">
-                                                    <label for="TAGS">@Resource.Format</label>
-                                                    <div class="tom-select-custom">
-                                                        @Html.DropDownListFor(model => model.CalendarControlSheet.PARTICIPANT_FORM_CATEGORY, new SelectList(Enum.GetValues(typeof(CalendarFormatOptions))), new { @class = "js-select form-select" })
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row" style=" padding-top: 16px;">
-                                            <div class="col-md-2" style="padding-top:25px;">
-                                                <h3>@Resource.Evaluation </h3>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="form-group">
-                                                    <label for="TAGS">@Resource.Form_description</label>
-                                                    <div class="tom-select-custom">
-                                                        @Html.TextBoxFor(model => model.CalendarControlSheet.EVALUATION_FORM_NAME, new { @class = "form-control", @placeholder = "calendar" })
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="form-group">
-                                                    <label for="TAGS">@Resource.Format</label>
-                                                    <div class="tom-select-custom">
-                                                        @Html.DropDownListFor(model => model.CalendarControlSheet.EVALUATION_FORM_CATEGORY, new SelectList(Enum.GetValues(typeof(CalendarFormatOptions))), new { @class = "js-select form-select" })
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <button type="button" onclick="renderPage(1)" class="back">@Resource.Back</button>
-                                        @if (ViewBag.IsPartial)
-                                        {
-
-                                        }
-                                        else
-                                        {
-                                            <button type="submit" class="btn btn-primary">@Resource.Save &amp; @Resource.Exit</button>
-                                        }
-
                                     </div>
+                                </div>*@
 
+                        </form>
 
-                                </div>
-                            </div>
-                        </div>*@
+                    </div>
 
-                    </form>
-
+                    <!-- Title -->
+                    <!-- End Title -->
                 </div>
 
-                <!-- Title -->
-                <!-- End Title -->
             </div>
-
+            <!-- End Row -->
+            <br /><br />
         </div>
-        <!-- End Row -->
-        <br /><br />
     </div>
     <!-- End Content -->
 </main>
