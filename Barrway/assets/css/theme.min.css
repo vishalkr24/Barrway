@@ -34713,11 +34713,12 @@ span.bui {
 
 a.see-plan {
     position: absolute;
-    bottom: 25px;
+    top: 66px;
     right: 12px;
     color: #fff !important;
     padding: 10px 15px;
     border-radius: 40px;
+    text-align: center;
 }
 
 /*select.select-company {
