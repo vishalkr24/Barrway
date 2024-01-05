@@ -468,6 +468,15 @@ function removeLocation(Id) {
     }
 }
 
+function removeProvider(Id) {
+    if (serviceProviderList.filter(x => x.Id == Id).length > 0) {
+        if (serviceProviderList.find(x => x.Id == Id).Is_New) {
+            serviceProviderList = serviceProviderList.filter(x => x.Id != Id);
+            $("#provider-elem-" + Id).remove();
+        }
+    }
+}
+
 function createLocationMaster() {
     if (validateStep(3)) {
 

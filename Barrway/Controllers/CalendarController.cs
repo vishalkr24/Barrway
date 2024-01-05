@@ -285,6 +285,7 @@ namespace Barrway.Controllers
 
                             locMasMod.ForEach(assign =>
                             {
+                                assign.LOCATION_BUILDING_NAME = assign.LOCATION_ADDRESS;
                                 requestList.Add(CustomMethods.ConvertDicToNameValuePair(assign.ToDictionary()));
                                 formGroupKeyListTemp.Add(Guid.NewGuid().ToString());
                             });
@@ -296,6 +297,9 @@ namespace Barrway.Controllers
                             request.formfieldDataListTempList = requestList.ToArray();
                             request.formGroupKeyListTemp = formGroupKeyListTemp.ToArray();
                             var formResult = (await formAPIRepository.BulkGeneratedFormData(request)).Data;
+
+                            string query = $@"update LOCATION_MASTER_1936 set LOCATION_CODE = (SELECT FORMAT(CONVERT(INT,Id), 'LC00000')) where LOCATION_CODE is null";
+                            var sqlResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                         }
 
                         if (data.Where(x => x["Is_New"]?.ToString() == "false").Count() > 0)
@@ -347,6 +351,9 @@ namespace Barrway.Controllers
                             request.formfieldDataListTempList = requestList.ToArray();
                             request.formGroupKeyListTemp = formGroupKeyListTemp.ToArray();
                             var formResult = (await formAPIRepository.BulkGeneratedFormData(request)).Data;
+
+                            string query = $@"update SERVICE_PROVIDER_MASTER_1934 set RESOURCE_CODE = (SELECT FORMAT(CONVERT(INT,Id), 'RC00000')) where RESOURCE_CODE is null";
+                            var sqlResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                         }
 
                         if (data.Where(x => x["Is_New"]?.ToString() == "false").Count() > 0)

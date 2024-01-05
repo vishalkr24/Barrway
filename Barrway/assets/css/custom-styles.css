@@ -276,14 +276,21 @@ button.payment {
     max-width: 80%;
     margin: 0 auto;
 }
+.m-width_50 {
+    width: 100%;
+    max-width: 41%;
+    margin: 0 auto;
+}
 .steps p {
     font-weight: 700;
     font-size: 24px;
     color: rgba(226, 71, 108, 1);
 }
+    
     .steps p.step-title {
         color: #000;
     }
+
 .no-padding-form .form-group {
     padding-left: 0px !important;
 }
@@ -356,7 +363,7 @@ padding-right:2rem;
     }
 
 
-    .m-width {
+    .m-width{
         width: 100%;
         max-width: 100%;
         margin: 0 auto;
@@ -366,6 +373,11 @@ padding-right:2rem;
     }
 }
 @media screen and (max-width:767px) {
+    .m-width_50 {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+    }
     .pricing-custome {
         width: 100% !important;
         float: left;
@@ -380,7 +392,26 @@ padding-right:2rem;
         padding-left: 0rem;
         padding-right: 0rem;
     }
+   
 }
+.ycaml {
+    width: 100%;
+    position: relative;
+    display: inline-flex;
+    vertical-align: middle;
+    justify-content: center;
+    align-items: center;
+}
+
+@media screen and (max-width:768px) {
+    .ycaml button {
+        margin-bottom: 15px;
+    }
+
+    .ycaml {
+        display: block;
+    }
+} 
 @media screen and (max-width:390px) {
     a.see-plan {
         bottom: 9px !important;
