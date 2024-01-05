@@ -474,6 +474,7 @@ namespace Barrway.Service.Repository
                                     where f.BUSINESS_ACCOUNT_ID in (select cast(item as integer) from dbo.SplitString(@Ids,','))";
 
             var SubscriptionData = await GetCompanyActiveSubscriptionDetails(CompanyCode, true);
+            var SubsData2 = await GetSessionsForThisMonthCalendarWise(CompanyCode);
 
             List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
             List<IDictionary<string, object>> result2 = await sqlFunction.ExecuteSqlQuery(query2);
@@ -483,6 +484,7 @@ namespace Barrway.Service.Repository
             List<IDictionary<string, object>> result6 = await sqlFunction.ExecuteSqlQuery(query6);
 
             List<IDictionary<string, object>> finalList = new List<IDictionary<string, object>>();
+            List<List<IDictionary<string, object>>> finalList2 = new List<List<IDictionary<string, object>>>();
 
             finalList.Add(result[0]);
             finalList.Add(result2[0]);
@@ -491,8 +493,11 @@ namespace Barrway.Service.Repository
             finalList.Add(result5[0]);
             finalList.Add(result6[0]);
             finalList.Add(SubscriptionData.Data);
+            
+            finalList2.Add(finalList);
+            finalList2.Add(SubsData2.Data);
 
-            return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = finalList };
+            return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = finalList2 };
         }
 
         public async Task<AddUpdateDelete> getAllAssignedCompanies(string AssignedId, string UserId)
@@ -1806,6 +1811,86 @@ namespace Barrway.Service.Repository
             {
                 return new AddUpdateDelete() { Status = false, Message = "You Don't have any active subscription plan" };
             }
+
+        }
+
+        public async Task<AddUpdateDelete> GetSessionsForThisMonthCalendarWise(string CompanyCode)
+        {
+            try
+            {
+                string query = $@"declare @CompanyCode varchar(100) = '{CompanyCode}';
+                                declare @SubscriptionDate varchar(200);
+                                declare @SubscriptionEndDate varchar(200);
+                                set @SubscriptionDate = (select top 1 f.created_at from COMPANY_SUBSCRIPTION_DETAILS_1939 f join BUSINESS_COMPANY_MASTER_1924 company on company.Id = f.COMPANY_ID join BUSINESS_ORDER_MASTER_1970 bom on bom.ORDER_NO = f.ORDER_ID where company.COMPANY_CODE = @CompanyCode and f.IS_ACTIVE = 'Y' order by f.created_at desc)
+                                set @SubscriptionEndDate = (select top 1 bom.VALID_TILL from COMPANY_SUBSCRIPTION_DETAILS_1939 f join BUSINESS_COMPANY_MASTER_1924 company on company.Id = f.COMPANY_ID join BUSINESS_ORDER_MASTER_1970 bom on bom.ORDER_NO = f.ORDER_ID where company.COMPANY_CODE = @CompanyCode and f.IS_ACTIVE = 'Y' order by f.created_at desc)
+
+                                if(@SubscriptionDate is not null and @SubscriptionEndDate is not null)
+                                begin
+	                                declare @StartDate datetime;
+	                                declare @EndDate datetime;
+	                                declare @Validity varchar(2) = 'N';
+
+	                                set @StartDate = cast(@SubscriptionDate as datetime);
+	                                set @EndDate = cast(DATEADD(MONTH, 1, @StartDate) as datetime);
+	
+	                                while (cast(@EndDate as datetime) <= cast(@SubscriptionEndDate as datetime)) 
+	                                begin
+		                                if(@StartDate <= cast(getDate() as datetime) and cast(getDate() as datetime) <= @EndDate)
+		                                begin
+			                                set @Validity = 'Y'
+			                                break;
+		                                end
+		                                else
+		                                begin
+			                                set @StartDate = @EndDate
+			                                set @EndDate = cast(DATEADD(MONTH, 1, @EndDate) as datetime)
+		                                end
+		
+	                                end
+	
+	                                if(@Validity = 'Y')
+		                                with cte as (
+											select 
+                                            f.created_at,
+											f.CALENDAR_NAME, 
+											csd.ASSIGNED_SESSIONS,
+											(select count(*) from CALENDAR_FORM_1935 where CALENDAR_CODE = f.CALENDAR_CODE and f.created_at >= @StartDate and f.created_at <= @EndDate) as 'SESSIONS_CREATED'
+											from BUSINESS_CALENDAR_MASTER_1925 f
+											JOIN BUSINESS_COMPANY_MASTER_1924 CMP ON CMP.COMPANY_CODE = F.COMPANY_CODE
+											left Join (select * from COMPANY_SUBSCRIPTION_DETAILS_1939 where IS_ACTIVE = 'Y') csd on csd.COMPANY_ID = CMP.Id
+		                                    where f.COMPANY_CODE = @CompanyCode and f.IS_VISIBLE = 'Y'
+											
+										)
+		                                select * from cte ORDER BY created_at DESC
+	                                else 
+		                                select null as 'result'
+                                end
+                                else
+	                                select null as 'result'";
+
+                var result = await sqlFunction.ExecuteSqlQuery(query);
+
+                if (result.Count > 0)
+                {
+                    if (result.Any(x => x.ContainsKey("result")))
+                    {
+                        return new AddUpdateDelete() { Status = false, Message = "You Don't have any active subscription plan" };
+                    }
+                    else
+                    {
+                        return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result.ToList() };
+                    }
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "You Don't have any active subscription plan" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = "You Don't have any active subscription plan" };
+            }
+           
 
         }
 
