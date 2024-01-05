@@ -192,6 +192,7 @@ function selectItem2(item) {
         setTimeout(function () {
             $(".selectable-calendar-item[data-id=CLR_SEL_" + localStorage.getItem("CALENDAR_CODE") + "]").addClass("selected");
             $(".lbl-calendar-name").text($("#ddlMasterCalendar option:selected").text());
+            window.location.reload();
         }, 500);
     } else {
         $(".lbl-calendar-name").text("Select Calendar");
