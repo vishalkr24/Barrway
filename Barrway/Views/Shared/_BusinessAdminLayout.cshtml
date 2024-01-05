@@ -658,6 +658,7 @@
 
                         <li class="nav-item overflow_v dropdown-me">
                             <select class="calendar-name dropdown-toggle" style="text-overflow:ellipsis; display:none;" ng-model="selectedCalendarCode" ng-change="ChangeCalendarDropDown()" id="ddlMasterCalendar">
+                                <option value=""></option>
                                 <option value="{{calendar.CALENDAR_CODE}}" ng-repeat="calendar in calendarList">{{calendar.CALENDAR_NAME}} [{{calendar.CALENDAR_CODE}}]</option>
                             </select>
                             <div class="dropdown-me dropdown-me-2" onclick="toggleDropdown2()">

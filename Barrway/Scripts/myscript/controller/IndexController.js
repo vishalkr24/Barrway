@@ -1,5 +1,7 @@
 ﻿FormGeneratorApp.controller('IndexController', function ($scope, $http, $timeout, $state, DataService, $ngBootbox, $location, $window, $rootScope, mainService, adminService, CookiesPersistenceService, notifierService, translationService) {
     var breadCrumb;
+    $scope.calendarList = [];
+    $scope.selectedCalendarCode = '';
     if (localStorage.getItem("globalLang") == null || localStorage.getItem("globalLang") == "") {
         localStorage.setItem('globalLang', '1');
     }
@@ -288,6 +290,7 @@
         $scope.alert_error = true;
         $scope.alert = { title: title, message: message }
     }
+
     $scope.showAlertSuccess = function (title, message) {
         $scope.alert_success = true;
         $scope.alert = { title: title, message: message }
@@ -298,6 +301,12 @@
             adminService.postAsync('/BusinessAdmin/GetAllCompanyCalendars/', { companyId: localStorage.getItem("COMPANY_ID") }).then(function (res) {
 
                 $scope.calendarList = res.data;
+
+                if (isEmptyLocalStorageValue("CALENDAR_CODE")) {
+                    if (res.data.length > 0) {
+                        $scope.selectedCalendarCode = res.data[0].CALENDAR_CODE;
+                    }
+                }
 
                 $timeout(function () {
                     $scope.ManageCalendarMaster();
@@ -325,8 +334,9 @@
 
         if ($scope.calendarList != null) {
             if ($scope.calendarList.length > 0) {
-                
-                if (localStorage.getItem("CALENDAR_CODE") == undefined || localStorage.getItem("CALENDAR_CODE") == null) {
+                debugger;
+                if (isEmptyLocalStorageValue("CALENDAR_CODE")) {
+                    //$("#ddlMasterCalendar option[value='']").remove();
                     localStorage.setItem("CALENDAR_CODE", $("#ddlMasterCalendar option:selected").val());
                 } else {
                     $("#ddlMasterCalendar").val(localStorage.getItem("CALENDAR_CODE"));
@@ -337,12 +347,13 @@
 
                 $scope.CALENDAR_CODE = localStorage.getItem("CALENDAR_CODE");
 
-                if ($scope.CALENDAR_CODE == undefined || $scope.CALENDAR_CODE == null || $scope.CALENDAR_CODE.includes("undefined")) {
+                if ($scope.CALENDAR_CODE == undefined || $scope.CALENDAR_CODE == null || $scope.CALENDAR_CODE.includes("undefined") || $scope.CALENDAR_CODE == "null") {
                     swal({
                         icon: "warning",
-                        title: "Calendar Required",
-                        text: "Please select a calendar first"
+                        title: "Select Calendar",
+                        text: "Please select a calendar"
                     });
+                    $(".lbl-calendar-name").text("Select Calendar");
                     return;
                 } else {
                     $(".selectable-calendar-item").removeClass("selected");
@@ -378,7 +389,7 @@
             if (res.data.Status) {
                 $scope.calendarMaster = res.data.Data;
             } else {
-                alert('caledar details not found');
+                alert('Please choose/create a calendar');
             }
             
 
@@ -389,3 +400,10 @@
     $scope.init();
 
 });
+
+function isEmptyLocalStorageValue(key) {
+    if (localStorage.getItem(key) == undefined || localStorage.getItem(key) == null || localStorage.getItem(key) == "null" || localStorage.getItem(key) == "") {
+        return true;
+    }
+    return false;
+}

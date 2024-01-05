@@ -13842,7 +13842,7 @@
                                 }
                                 loadCalendarWithEventFunction("", _allEvents, resResults, resColumns, activityResults, activityColumns, _allEvents);
                             } else {
-                                alert('caledar details not found');
+                                alert('Please choose/create a calendar');
                             }
                         }, function (err) {
 

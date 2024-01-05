@@ -29,12 +29,44 @@ function setDashboardData() {
             $(".valid-till").text(moment(data[6].VALID_TILL).format("YYYY-MM-DD"));
             $(".valid-till").append(`<span style="margin-left: 4px; font-size:smaller;">${((data[6].IS_MONTHLY == "Y") ? "(1 Month)" : "(1 Year)")}</span>`);
             $(".plan-name-and-price").text(capitalizeFirstLetter(data[6].PLAN_NAME) + " HK$" + ((data[6].IS_MONTHLY == "Y") ? parseFloat(priceBeforeFee).toFixed(2) : (parseFloat(priceBeforeFee) / parseInt((parseInt(data[6].VALIDITY_DAYS) / 30))).toFixed(2)) + "/month");
-            $(".booking-available").text(data[6].ASSIGNED_BOOKINGS + " per Session");
+            $(".booking-available").text(data[6].ASSIGNED_CALENDARS);
         }
 
         if (response.Data[1] != null) {
-            var sessionData = response.Data[0];
-            console.log(sessionData)
+            var sessionData = response.Data[1];
+
+            let tr = "";
+
+            if (sessionData.length > 0) {
+                let len = (sessionData.length > 10) ? 10 : sessionData.length;
+
+                for (var i = 0; i < len; i++) {
+                    if (((parseInt(sessionData[i].ASSIGNED_SESSIONS) * 20) / 100) <= sessionData[i].SESSIONS_CREATED) {
+                        tr += `<tr>
+                                                    <td>${sessionData[i].CALENDAR_NAME}</td>
+                                                    <td class=""><span class="warning">${sessionData[i].SESSIONS_CREATED}/${sessionData[i].ASSIGNED_SESSIONS}</span></td>
+                                                </tr>`;
+                    } else {
+                        tr += `<tr>
+                                                    <td>${sessionData[i].CALENDAR_NAME}</td>
+                                                    <td class=""><span class="">${sessionData[i].SESSIONS_CREATED}/${sessionData[i].ASSIGNED_SESSIONS}</span></td>
+                                                </tr>`;
+                    }
+
+                }
+
+            } else {
+                tr = `<tr rowspan="2">
+                                                    <td>No Calendars Created Yet</td>
+                                                </tr>`;
+            }
+
+            $("#subs-det-table tbody").append(tr);
+        } else {
+            let tr = `<tr rowspan="2">
+                                                    <td>No Calendars Created Yet</td>
+                                                </tr>`;
+            $("#subs-det-table tbody").append(tr);
         }
         
     }
