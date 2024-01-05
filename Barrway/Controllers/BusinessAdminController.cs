@@ -1211,7 +1211,7 @@ namespace Barrway.Controllers
 
                         AddUpdateDelete allCalendars = await businessUserService.GetCompanyCalendarByCompanyId(company.Data["Id"]?.ToString());
 
-                        int calendarLimit = Convert.ToInt32(currentPlanData["CALENDAR_AVAILABLE"]?.ToString());
+                        int calendarLimit = Convert.ToInt32(currentPlanData["ASSIGNED_CALENDARS"]?.ToString());
 
                         int currentCalendars = 0;
                         if (allCalendars.Status)

@@ -89,13 +89,86 @@ function goToStep2() {
     })
 }
 
+$(document).on("click", "input[name=servicePaid]", function () {
+    if ($(this).val() == "1") {
+        $("#feesPerSession").attr("disabled", false);
+        $("#feesPerSessionDiv").fadeIn();
+        $("label[for=feesPerSession]").text("Fees per Session *")
+    } else {
+        $("#feesPerSession").val("0");
+        $("#feesPerSession").attr("disabled", true);
+        $("#feesPerSessionDiv").fadeOut();
+        $("label[for=feesPerSession]").text("Fees per Session")
+    }
+})
+
 function BindEventData() {
     $("#step-3").hide();
     $("#step-4").hide();
     $("#step-6").fadeOut();
     setTimeout(function () {
         $("#step-5").fadeIn();
-    }, 500)   
+    }, 500)
+
+    $.ajax({
+        url: "/Calendar/GetLocationMasterList",
+        method: "POST",
+        data: {
+            data: {},
+            companyCode: createdCompanyCode,
+            calendarCode: createdCalendarCode
+        },
+        success: function (response) {
+
+            var data = response.data;
+            var divString = "";
+
+            if (data != null) {
+
+                data.forEach(x => {
+                    divString += `<option value="${x.Id}">${x.LOCATION_ADDRESS}</option>`;
+                })
+
+            } else {
+
+            }
+
+            $("#sessionLocationMaster").append(divString);
+        },
+        error: function (er) {
+
+        }
+    })
+
+    $.ajax({
+        url: "/Calendar/GetServiceProviderMasterList",
+        method: "POST",
+        data: {
+            data: {},
+            companyCode: createdCompanyCode,
+            calendarCode: createdCalendarCode
+        },
+        success: function (response) {
+
+            var data = response.data;
+            var divString = "";
+
+            if (data != null) {
+
+                data.forEach(x => {
+                    divString += `<option value="${x.Id}">${x.FIRST_NAME} ${x.LAST_NAME}</option>`;
+                })
+
+            } else {
+
+            }
+
+            $("#sessionServiceProviderMaster").append(divString);
+        },
+        error: function (er) {
+
+        }
+    })
 }
 
 function submitCalendar() {
@@ -114,7 +187,7 @@ function BindStep6() {
     setTimeout(function () {
         $("#step-6").fadeIn();
     }, 500)
-    
+
 }
 
 function validateStep(stepId) {
@@ -139,7 +212,7 @@ function validateStep(stepId) {
         let inputList = document.getElementsByClassName("provider-first-input");
         inputList.forEach(x => {
             if (x.value == "" || x.value == null) {
-                
+
                 tempFlag1 = false;
             }
         });
@@ -147,7 +220,7 @@ function validateStep(stepId) {
         let inputList2 = document.getElementsByClassName("provider-last-input");
         inputList2.forEach(x => {
             if (x.value == "" || x.value == null) {
-                
+
                 tempFlag2 = false;
             }
         });
@@ -181,7 +254,7 @@ function validateStep(stepId) {
 
 
 function bindCalendarLocationMaster() {
-    
+
     $("#step-4").fadeOut();
     $("#step-5").fadeOut();
     $("#step-6").fadeOut();
@@ -203,7 +276,7 @@ function bindCalendarLocationMaster() {
             var divString = "";
 
             if (data != null) {
-                
+
                 locationList = [];
 
                 data.forEach(x => {
@@ -213,7 +286,7 @@ function bindCalendarLocationMaster() {
                         CALENDAR_CODE: createdCalendarCode,
                         COMPANY_CODE: createdCompanyCode,
                         LOCATION_ADDRESS: x.LOCATION_ADDRESS,
-                        Is_New: false                        
+                        Is_New: false
                     });
 
                     divString += `<div class="form-group">
@@ -223,7 +296,7 @@ function bindCalendarLocationMaster() {
                                         </div>`;
                 })
 
-                
+
             } else {
                 locationList.push({
                     Id: 1,
@@ -250,7 +323,7 @@ function bindCalendarLocationMaster() {
 }
 
 function bindCalendarServiceProviderMaster() {
-    
+
     $("#step-5").fadeOut();
     $("#step-3").fadeOut();
     $("#step-6").fadeOut();
@@ -272,7 +345,7 @@ function bindCalendarServiceProviderMaster() {
             var divString = "";
 
             if (data != null) {
-            
+
                 serviceProviderList = [];
 
                 if (data.length > 0) {
@@ -388,12 +461,12 @@ function getMaxId(arr) {
             })
         }
     }
-    
+
     return max;
 }
 
 function addMoreProvider() {
-    
+
     let dataModel = {
         Id: parseInt(getMaxId(serviceProviderList)) + 1,
         CALENDAR_CODE: createdCalendarCode,
@@ -423,6 +496,32 @@ function addMoreProvider() {
                                                 </div>
                                             </div>
                                         </div>`);
+}
+
+function setSameTime() {
+    $("#Tuesday_Start_Time").val($("#Monday_Start_Time").val());
+    $("#Tuesday_End_Time").val($("#Monday_End_Time").val());
+
+    $("#Wednesday_Start_Time").val($("#Monday_Start_Time").val());
+    $("#Wednesday_End_Time").val($("#Monday_End_Time").val());
+
+    $("#Thursday_Start_Time").val($("#Monday_Start_Time").val());
+    $("#Thursday_End_Time").val($("#Monday_End_Time").val());
+
+    $("#Friday_Start_Time").val($("#Monday_Start_Time").val());
+    $("#Friday_End_Time").val($("#Monday_End_Time").val());
+
+    $("#Saturday_Start_Time").val($("#Monday_Start_Time").val());
+    $("#Saturday_End_Time").val($("#Monday_End_Time").val());
+
+    $("#Sunday_Start_Time").val($("#Monday_Start_Time").val());
+    $("#Sunday_End_Time").val($("#Monday_End_Time").val());
+}
+
+function setSameDateValue() {
+    if ($("input[name=TimeSameAsMonday]:checked").val() == "on") {
+        setSameTime();
+    }
 }
 
 function addMoreLocation() {
@@ -462,7 +561,7 @@ $(document).on("keyup change paste", ".provider-last-input", function () {
 function removeLocation(Id) {
     if (locationList.filter(x => x.Id == Id).length > 0) {
         if (locationList.find(x => x.Id == Id).Is_New) {
-            locationList = locationList.filter(x=> x.Id != Id);
+            locationList = locationList.filter(x => x.Id != Id);
             $("#location-elem-" + Id).remove();
         }
     }
@@ -505,13 +604,13 @@ function createLocationMaster() {
                         text: response.Message
                     });
                 }
-                
+
             },
             error: function (er) {
-                
+
             }
         })
-        
+
     }
 }
 
@@ -525,7 +624,7 @@ function createServiceProviderMaster() {
                 ModelId: 2
             },
             success: function (response) {
-                
+
                 if (response.Status) {
                     swal({
                         icon: "success",
@@ -546,10 +645,10 @@ function createServiceProviderMaster() {
 
             },
             error: function (er) {
-                
+
             }
         })
-        
-        
+
+
     }
 }
