@@ -16,7 +16,7 @@ function setDashboardData() {
     console.log(response);
 
     if (response.Status) {
-        data = response.Data;
+        data = response.Data[0];
         $("#lblBookingToday").text(data[2].BookingsToday)
         $("#lblBookingThisWeek").text(data[3].BookingsThisWeek)
         $("#lblNumberOfServiceProvider").text(data[4].ServiceProviders)
@@ -30,6 +30,11 @@ function setDashboardData() {
             $(".valid-till").append(`<span style="margin-left: 4px; font-size:smaller;">${((data[6].IS_MONTHLY == "Y") ? "(1 Month)" : "(1 Year)")}</span>`);
             $(".plan-name-and-price").text(capitalizeFirstLetter(data[6].PLAN_NAME) + " HK$" + ((data[6].IS_MONTHLY == "Y") ? parseFloat(priceBeforeFee).toFixed(2) : (parseFloat(priceBeforeFee) / parseInt((parseInt(data[6].VALIDITY_DAYS) / 30))).toFixed(2)) + "/month");
             $(".booking-available").text(data[6].ASSIGNED_BOOKINGS + " per Session");
+        }
+
+        if (response.Data[1] != null) {
+            var sessionData = response.Data[0];
+            console.log(sessionData)
         }
         
     }
