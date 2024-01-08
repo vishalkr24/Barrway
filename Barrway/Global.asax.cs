@@ -12,6 +12,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.Configuration;
 using Stripe;
+using System.Globalization;
 
 namespace Barrway
 {
@@ -29,6 +30,73 @@ namespace Barrway
             StripeConfiguration.SetApiKey(secretKey);
             AntiForgeryConfig.SuppressIdentityHeuristicChecks = true;
         }
+
+
+        protected void Application_BeginRequest(object sender, EventArgs e)
+
+        {
+            string culture = CultureInfo.CurrentCulture.Name;
+            HttpCookie languageCookie = System.Web.HttpContext.Current.Request.Cookies["Language"];
+            if (languageCookie!=null)
+            {
+                culture = languageCookie.Value;
+                CultureInfo cultureInfo = new CultureInfo(culture);
+                //var dtfInfo = new DateTimeFormatInfo
+                //{
+                //    ShortDatePattern = "MM-dd-yyyy",
+                //    ShortTimePattern = "HH:mm:ss"
+                //};
+                //cultureInfo.DateTimeFormat = dtfInfo;
+                System.Threading.Thread.CurrentThread.CurrentCulture = cultureInfo;
+                System.Threading.Thread.CurrentThread.CurrentUICulture = cultureInfo;
+            }
+            else
+            {
+                culture = Convert.ToString("en");
+                CultureInfo cultureInfo = new CultureInfo(culture);
+                //var dtfInfo = new DateTimeFormatInfo
+                //{
+                //    ShortDatePattern = "MM-dd-yyyy",
+                //    ShortTimePattern = "HH:mm:ss"
+                //};
+                //cultureInfo.DateTimeFormat = dtfInfo;
+                System.Threading.Thread.CurrentThread.CurrentCulture = cultureInfo;
+                System.Threading.Thread.CurrentThread.CurrentUICulture = cultureInfo;
+            }
+        }
+
+        protected void Application_AcquireRequestState()
+        {
+            string culture = CultureInfo.CurrentCulture.Name;
+            HttpCookie languageCookie = System.Web.HttpContext.Current.Request.Cookies["Language"];
+            if (languageCookie!=null)
+            {
+                culture = languageCookie.Value;
+                CultureInfo cultureInfo = new CultureInfo(culture);
+                //var dtfInfo = new DateTimeFormatInfo
+                //{
+                //    ShortDatePattern = "MM-dd-yyyy",
+                //    ShortTimePattern = "HH:mm:ss"
+                //};
+                //cultureInfo.DateTimeFormat = dtfInfo;
+                System.Threading.Thread.CurrentThread.CurrentCulture = cultureInfo;
+                System.Threading.Thread.CurrentThread.CurrentUICulture = cultureInfo;
+            }
+            else
+            {
+                culture = Convert.ToString("en");
+                CultureInfo cultureInfo = new CultureInfo(culture);
+                //var dtfInfo = new DateTimeFormatInfo
+                //{
+                //    ShortDatePattern = "MM-dd-yyyy",
+                //    ShortTimePattern = "HH:mm:ss"
+                //};
+                //cultureInfo.DateTimeFormat = dtfInfo;
+                System.Threading.Thread.CurrentThread.CurrentCulture = cultureInfo;
+                System.Threading.Thread.CurrentThread.CurrentUICulture = cultureInfo;
+            }
+        }
+
 
     }
 }

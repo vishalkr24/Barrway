@@ -1,0 +1,747 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Account" xml:space="preserve">
+    <value>帳戶</value>
+  </data>
+  <data name="Activities" xml:space="preserve">
+    <value>活動</value>
+  </data>
+  <data name="Add New Calendar" xml:space="preserve">
+    <value>添加新日曆</value>
+  </data>
+  <data name="Add New Company" xml:space="preserve">
+    <value>添加新公司</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>地址</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>行政人員</value>
+  </data>
+  <data name="Agenda View" xml:space="preserve">
+    <value>議程視圖</value>
+  </data>
+  <data name="Already have an account" xml:space="preserve">
+    <value>已有賬戶</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>數量</value>
+  </data>
+  <data name="B coin balance" xml:space="preserve">
+    <value>霸幣餘額</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>返回</value>
+  </data>
+  <data name="Back to Company dashboard" xml:space="preserve">
+    <value>返回公司儀表板</value>
+  </data>
+  <data name="Barrway business" xml:space="preserve">
+    <value>霸位商業</value>
+  </data>
+  <data name="Basic Information" xml:space="preserve">
+    <value>基本信息</value>
+  </data>
+  <data name="Booking this week" xml:space="preserve">
+    <value>本週預訂</value>
+  </data>
+  <data name="Booking todays" xml:space="preserve">
+    <value>今天預訂</value>
+  </data>
+  <data name="Business" xml:space="preserve">
+    <value>商業</value>
+  </data>
+  <data name="Business Site" xml:space="preserve">
+    <value>企業網站</value>
+  </data>
+  <data name="Calendar" xml:space="preserve">
+    <value>日曆</value>
+  </data>
+  <data name="Calendar display time" xml:space="preserve">
+    <value>日曆顯示時間</value>
+  </data>
+  <data name="Calendar Information" xml:space="preserve">
+    <value>日曆信息</value>
+  </data>
+  <data name="Calendar Master" xml:space="preserve">
+    <value>日曆列表</value>
+  </data>
+  <data name="Calendar Name" xml:space="preserve">
+    <value>日曆名稱</value>
+  </data>
+  <data name="Calendar Package" xml:space="preserve">
+    <value>日曆套餐</value>
+  </data>
+  <data name="Calendar photo" xml:space="preserve">
+    <value>日曆照片</value>
+  </data>
+  <data name="Calendar Settings" xml:space="preserve">
+    <value>日曆設置</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Check here to accept the" xml:space="preserve">
+    <value>勾選此處以接受</value>
+  </data>
+  <data name="Choose category for new calendar" xml:space="preserve">
+    <value>選擇新日曆的類別</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>城市</value>
+  </data>
+  <data name="Class and workshop" xml:space="preserve">
+    <value>課程和工作坊</value>
+  </data>
+  <data name="Click here to setup now" xml:space="preserve">
+    <value>單擊此處立即設置</value>
+  </data>
+  <data name="Client payment history" xml:space="preserve">
+    <value>客戶付款記錄</value>
+  </data>
+  <data name="Coin" xml:space="preserve">
+    <value>霸幣</value>
+  </data>
+  <data name="Coins Added" xml:space="preserve">
+    <value>添加霸幣</value>
+  </data>
+  <data name="Coins Deducted" xml:space="preserve">
+    <value>扣除霸幣</value>
+  </data>
+  <data name="Company" xml:space="preserve">
+    <value>公司</value>
+  </data>
+  <data name="Company category" xml:space="preserve">
+    <value>公司類別</value>
+  </data>
+  <data name="Company Code" xml:space="preserve">
+    <value>公司代碼</value>
+  </data>
+  <data name="Company contains" xml:space="preserve">
+    <value>公司包含</value>
+  </data>
+  <data name="Company description" xml:space="preserve">
+    <value>公司介紹</value>
+  </data>
+  <data name="Company Logo" xml:space="preserve">
+    <value>公司標誌</value>
+  </data>
+  <data name="Company Master" xml:space="preserve">
+    <value>公司列表</value>
+  </data>
+  <data name="Company Name" xml:space="preserve">
+    <value>公司名稱</value>
+  </data>
+  <data name="Company Package" xml:space="preserve">
+    <value>公司套餐</value>
+  </data>
+  <data name="Company Payment History" xml:space="preserve">
+    <value>公司付款記錄</value>
+  </data>
+  <data name="Company Photo Album" xml:space="preserve">
+    <value>公司相冊</value>
+  </data>
+  <data name="Company Schedule" xml:space="preserve">
+    <value>公司日程</value>
+  </data>
+  <data name="Company Service" xml:space="preserve">
+    <value>公司服務</value>
+  </data>
+  <data name="Company sub category" xml:space="preserve">
+    <value>公司子類別</value>
+  </data>
+  <data name="Complete your registration" xml:space="preserve">
+    <value>完成您的註冊</value>
+  </data>
+  <data name="Congratulations" xml:space="preserve">
+    <value>恭喜您</value>
+  </data>
+  <data name="Contact" xml:space="preserve">
+    <value>聯繫</value>
+  </data>
+  <data name="Contact us" xml:space="preserve">
+    <value>聯繫我們</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>國家</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>儀表板</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>日期</value>
+  </data>
+  <data name="District" xml:space="preserve">
+    <value>區</value>
+  </data>
+  <data name="Don't have an account" xml:space="preserve">
+    <value>沒有賬戶</value>
+  </data>
+  <data name="Easiest way to organize your events and participants in one stop" xml:space="preserve">
+    <value>一站式管理活動和參與者平台</value>
+  </data>
+  <data name="eg. doctor, massage, hair cut, nail treatment" xml:space="preserve">
+    <value>例如醫生診症、按摩、理髮、美甲治療</value>
+  </data>
+  <data name="eg. Party room, co-working space, dance studio" xml:space="preserve">
+    <value>例如派對場地、共享辦公空間、舞蹈室</value>
+  </data>
+  <data name="eg. Volunteering event, Dinner event" xml:space="preserve">
+    <value>例如志願者活動、晚宴活動</value>
+  </data>
+  <data name="eg. Yoga class, Piano class, Baking workshop" xml:space="preserve">
+    <value>例如瑜伽班、鋼琴班、烘焙工作坊</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>電子郵件</value>
+  </data>
+  <data name="Evaluation" xml:space="preserve">
+    <value>評估</value>
+  </data>
+  <data name="Event Details" xml:space="preserve">
+    <value>活動詳情</value>
+  </data>
+  <data name="Event registration" xml:space="preserve">
+    <value>活動報名</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>離開</value>
+  </data>
+  <data name="Failed" xml:space="preserve">
+    <value>失敗</value>
+  </data>
+  <data name="Featured" xml:space="preserve">
+    <value>精選</value>
+  </data>
+  <data name="Features" xml:space="preserve">
+    <value>特徵</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>篩選</value>
+  </data>
+  <data name="Find a service / activity in your area" xml:space="preserve">
+    <value>查找您所在地區的服務/活動</value>
+  </data>
+  <data name="Find your service/ activity &amp; book it in one stop" xml:space="preserve">
+    <value>找到您的服務/活動並一站式預訂</value>
+  </data>
+  <data name="Form description" xml:space="preserve">
+    <value>表格說明</value>
+  </data>
+  <data name="Form name" xml:space="preserve">
+    <value>表格名稱</value>
+  </data>
+  <data name="Format" xml:space="preserve">
+    <value>格式</value>
+  </data>
+  <data name="Go" xml:space="preserve">
+    <value>去</value>
+  </data>
+  <data name="Go to dashboard" xml:space="preserve">
+    <value>轉到儀表板</value>
+  </data>
+  <data name="Grand Total" xml:space="preserve">
+    <value>累計</value>
+  </data>
+  <data name="Have your free marketing website" xml:space="preserve">
+    <value>擁有您的免費營銷網站</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>家</value>
+  </data>
+  <data name="How does it work" xml:space="preserve">
+    <value>它是如何工作的</value>
+  </data>
+  <data name="Income" xml:space="preserve">
+    <value>收入</value>
+  </data>
+  <data name="Income this week" xml:space="preserve">
+    <value>本週收入</value>
+  </data>
+  <data name="Kindly complete the Step 1 - Setup your company profile" xml:space="preserve">
+    <value>請完成第 1 步 - 設置您的公司資料</value>
+  </data>
+  <data name="Lets set up your company profile" xml:space="preserve">
+    <value>讓我們設置您的公司資料</value>
+  </data>
+  <data name="Lets set up your website" xml:space="preserve">
+    <value>讓我們設置您的網站</value>
+  </data>
+  <data name="List View" xml:space="preserve">
+    <value>列表顯示</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>地點</value>
+  </data>
+  <data name="Location Master" xml:space="preserve">
+    <value>地點大師</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>登錄</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>登出</value>
+  </data>
+  <data name="Manage" xml:space="preserve">
+    <value>管理</value>
+  </data>
+  <data name="Mark as favorite" xml:space="preserve">
+    <value>標記為最愛</value>
+  </data>
+  <data name="Market Place" xml:space="preserve">
+    <value>市場</value>
+  </data>
+  <data name="My Attendance" xml:space="preserve">
+    <value>我的出席</value>
+  </data>
+  <data name="My Business" xml:space="preserve">
+    <value>我的事</value>
+  </data>
+  <data name="My Calendar" xml:space="preserve">
+    <value>我的日曆</value>
+  </data>
+  <data name="My Favorite" xml:space="preserve">
+    <value>我最喜歡的</value>
+  </data>
+  <data name="My Payment" xml:space="preserve">
+    <value>我的付款</value>
+  </data>
+  <data name="My payment history" xml:space="preserve">
+    <value>我的付款歷史</value>
+  </data>
+  <data name="My Profile" xml:space="preserve">
+    <value>我的簡歷</value>
+  </data>
+  <data name="News" xml:space="preserve">
+    <value>消息</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>下一個</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>不</value>
+  </data>
+  <data name="Notifications" xml:space="preserve">
+    <value>通知</value>
+  </data>
+  <data name="Number of calendars" xml:space="preserve">
+    <value>日曆數量</value>
+  </data>
+  <data name="Number of Clients" xml:space="preserve">
+    <value>客戶數量</value>
+  </data>
+  <data name="Number of Service Provders" xml:space="preserve">
+    <value>服務提供商數量</value>
+  </data>
+  <data name="Number of Services" xml:space="preserve">
+    <value>服務數量</value>
+  </data>
+  <data name="Okay" xml:space="preserve">
+    <value>好的</value>
+  </data>
+  <data name="One-stop event sharing booking platform" xml:space="preserve">
+    <value>一站式活動共享預訂平台</value>
+  </data>
+  <data name="Order" xml:space="preserve">
+    <value>命令</value>
+  </data>
+  <data name="Order Details" xml:space="preserve">
+    <value>訂單詳細信息</value>
+  </data>
+  <data name="Package" xml:space="preserve">
+    <value>包裹</value>
+  </data>
+  <data name="Package Details" xml:space="preserve">
+    <value>套餐詳情</value>
+  </data>
+  <data name="Participant" xml:space="preserve">
+    <value>參加者</value>
+  </data>
+  <data name="Participant Master" xml:space="preserve">
+    <value>參賽大師</value>
+  </data>
+  <data name="Particulars" xml:space="preserve">
+    <value>細節</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>密碼</value>
+  </data>
+  <data name="Payment" xml:space="preserve">
+    <value>支付</value>
+  </data>
+  <data name="Payment Details" xml:space="preserve">
+    <value>付款詳情</value>
+  </data>
+  <data name="Payment History" xml:space="preserve">
+    <value>支付歷史</value>
+  </data>
+  <data name="Payment method" xml:space="preserve">
+    <value>付款方式</value>
+  </data>
+  <data name="Payment Successfull" xml:space="preserve">
+    <value>付款成功</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>電話</value>
+  </data>
+  <data name="Photo album" xml:space="preserve">
+    <value>相片集</value>
+  </data>
+  <data name="Please choose image files ONLY" xml:space="preserve">
+    <value>請僅選擇圖像文件</value>
+  </data>
+  <data name="Please follow the link inside to continue" xml:space="preserve">
+    <value>請點擊裡面的鏈接繼續</value>
+  </data>
+  <data name="Post title" xml:space="preserve">
+    <value>帖子標題</value>
+  </data>
+  <data name="Post your business" xml:space="preserve">
+    <value>發佈您的業務</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>價格</value>
+  </data>
+  <data name="Pricing" xml:space="preserve">
+    <value>價錢</value>
+  </data>
+  <data name="Privacy" xml:space="preserve">
+    <value>隱私</value>
+  </data>
+  <data name="Privacy policy" xml:space="preserve">
+    <value>隱私政策</value>
+  </data>
+  <data name="Private office room booking" xml:space="preserve">
+    <value>私人辦公室房間預訂</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>個人資料</value>
+  </data>
+  <data name="Public website link" xml:space="preserve">
+    <value>公共網站鏈接</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>數量</value>
+  </data>
+  <data name="Receipt" xml:space="preserve">
+    <value>收據</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>註冊</value>
+  </data>
+  <data name="Registration" xml:space="preserve">
+    <value>註冊</value>
+  </data>
+  <data name="Remember me" xml:space="preserve">
+    <value>記住賬號</value>
+  </data>
+  <data name="Remove as favorite" xml:space="preserve">
+    <value>刪除為最愛</value>
+  </data>
+  <data name="Reports" xml:space="preserve">
+    <value>報告</value>
+  </data>
+  <data name="Resources" xml:space="preserve">
+    <value>資源</value>
+  </data>
+  <data name="Retype Password" xml:space="preserve">
+    <value>重新輸入密碼</value>
+  </data>
+  <data name="Room rental" xml:space="preserve">
+    <value>房間出租</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="Schedular Form" xml:space="preserve">
+    <value>時間表表格</value>
+  </data>
+  <data name="Schedule" xml:space="preserve">
+    <value>時間表</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="Search for business, service" xml:space="preserve">
+    <value>搜索業務、服務</value>
+  </data>
+  <data name="Searchable in Market Place" xml:space="preserve">
+    <value>可在市場中搜索</value>
+  </data>
+  <data name="See our features" xml:space="preserve">
+    <value>查看我們的特色</value>
+  </data>
+  <data name="select a calendar" xml:space="preserve">
+    <value>選擇日曆</value>
+  </data>
+  <data name="Select a sub-category" xml:space="preserve">
+    <value>選擇一個子分類</value>
+  </data>
+  <data name="Select your district" xml:space="preserve">
+    <value>選擇您所在的地區</value>
+  </data>
+  <data name="Service" xml:space="preserve">
+    <value>服務</value>
+  </data>
+  <data name="Service appointment" xml:space="preserve">
+    <value>服務預約</value>
+  </data>
+  <data name="Service contains" xml:space="preserve">
+    <value>服務包含</value>
+  </data>
+  <data name="Service Master" xml:space="preserve">
+    <value>服務列表</value>
+  </data>
+  <data name="Service package master" xml:space="preserve">
+    <value>服務套餐列表</value>
+  </data>
+  <data name="Service Provider Master" xml:space="preserve">
+    <value>服務提供者列表</value>
+  </data>
+  <data name="Service provider work record" xml:space="preserve">
+    <value>服務提供者工作記錄</value>
+  </data>
+  <data name="Set up calendar" xml:space="preserve">
+    <value>設置日曆</value>
+  </data>
+  <data name="Set up company profile" xml:space="preserve">
+    <value>建立公司簡介</value>
+  </data>
+  <data name="Set up company webiste" xml:space="preserve">
+    <value>建立公司網站</value>
+  </data>
+  <data name="Set up now" xml:space="preserve">
+    <value>立即設置</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>設置</value>
+  </data>
+  <data name="Setup your business calendar" xml:space="preserve">
+    <value>設置您的商務日曆</value>
+  </data>
+  <data name="Showing results for" xml:space="preserve">
+    <value>顯示結果為</value>
+  </data>
+  <data name="Sign out" xml:space="preserve">
+    <value>登出</value>
+  </data>
+  <data name="Slot Duration in Mins" xml:space="preserve">
+    <value>時段持續時間（分鐘）</value>
+  </data>
+  <data name="social media links" xml:space="preserve">
+    <value>社交媒體鏈接</value>
+  </data>
+  <data name="Sort" xml:space="preserve">
+    <value>排序</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>狀態</value>
+  </data>
+  <data name="Step" xml:space="preserve">
+    <value>步</value>
+  </data>
+  <data name="Sub Total" xml:space="preserve">
+    <value>小計</value>
+  </data>
+  <data name="Subcategory" xml:space="preserve">
+    <value>子類別</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>提交</value>
+  </data>
+  <data name="Subscription" xml:space="preserve">
+    <value>訂閱</value>
+  </data>
+  <data name="Subscription Plans" xml:space="preserve">
+    <value>訂閱計劃</value>
+  </data>
+  <data name="Tags" xml:space="preserve">
+    <value>標籤</value>
+  </data>
+  <data name="Terms &amp; condition" xml:space="preserve">
+    <value>條款與細則</value>
+  </data>
+  <data name="This profile page will be visible by public if you choose yes" xml:space="preserve">
+    <value>如果您選擇“是”，此個人資料頁面將是公眾可見</value>
+  </data>
+  <data name="Timeline Resource View" xml:space="preserve">
+    <value>時間線資源視圖</value>
+  </data>
+  <data name="Transactions" xml:space="preserve">
+    <value>交易</value>
+  </data>
+  <data name="Trusted and enjoy by these companies" xml:space="preserve">
+    <value>受到這些公司的信任</value>
+  </data>
+  <data name="Upload Photo" xml:space="preserve">
+    <value>上傳圖片</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>用戶</value>
+  </data>
+  <data name="User name" xml:space="preserve">
+    <value>用戶名</value>
+  </data>
+  <data name="Verify your email" xml:space="preserve">
+    <value>驗證您的電子郵件</value>
+  </data>
+  <data name="Vertical Resource View" xml:space="preserve">
+    <value>垂直資源視圖</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>看法</value>
+  </data>
+  <data name="Way of use" xml:space="preserve">
+    <value>使用方式</value>
+  </data>
+  <data name="We've sent a link to your email address" xml:space="preserve">
+    <value>我們已將鏈接發送到您的電子郵件地址</value>
+  </data>
+  <data name="Website" xml:space="preserve">
+    <value>網站</value>
+  </data>
+  <data name="Website banner" xml:space="preserve">
+    <value>網站橫幅</value>
+  </data>
+  <data name="Website visits" xml:space="preserve">
+    <value>網站訪問量</value>
+  </data>
+  <data name="words" xml:space="preserve">
+    <value>字</value>
+  </data>
+  <data name="Workload this week" xml:space="preserve">
+    <value>本週工作量</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>是的</value>
+  </data>
+  <data name="You have successfully authenticated, Finish the last step of your registration" xml:space="preserve">
+    <value>您已成功驗證，完成註冊的最後一步</value>
+  </data>
+  <data name="Your payment was Failed" xml:space="preserve">
+    <value>您的付款失敗</value>
+  </data>
+  <data name="Your payment was successfull! This is your Payment Id" xml:space="preserve">
+    <value>您付款成功！ 這是您的付款 ID</value>
+  </data>
+  <data name="Your plans &amp; subscription" xml:space="preserve">
+    <value>您的計劃和訂閱</value>
+  </data>
+</root>
