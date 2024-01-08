@@ -124,6 +124,8 @@
 </style>
 <input type="text" value="@Model.CALENDAR_CODE" id="calendarCodeInput" style="display:none;" readonly />
 <input type="text" value="@Model.COMPANY_CODE" id="companyCodeInput" style="display:none;" readonly />
+<input type="text" value="@Model.CALENDAR_CATEGORY_ID" id="calendarCategoryInput" style="display:none;" readonly />
+
 <style>
     .template-selection-area #templates-row {
         min-height: 700px;
@@ -479,23 +481,30 @@
 
                     <div class="f_of_f-wrap-o">
                         <div class="choose">
-                            <div class="chose-inner" onclick="moveToStep(6)">
+                            @if (Model.CALENDAR_CATEGORY_ID == "1" || Model.CALENDAR_CATEGORY_ID == "5")
+                            {
+                                <input type="radio" name="calendarTypeRadio" style="display:none;" value="PACKAGE" id="calendarTypePackage" />
+                                <div class="chose-inner" onclick="moveToStep(6, 'Package')">
+                                    <div class="one">
+                                        <img src="../assets/svg/logos/favicon.png" />
+                                    </div>
+                                    <div class="two">
+                                        <p>Fixed number of sessions within the course</p>
+                                    </div>
+                                    <div class="three">
+                                        <p><img src="../assets/img/purple.png" /></p>
+                                    </div>
+                                </div>
+                            }
+
+
+                            <input type="radio" name="calendarTypeRadio" style="display:none;" value="MANUAL" id="calendarTypeManual" />
+                            <div class="chose-inner" onclick="moveToStep(6, 'Manual')">
                                 <div class="one">
                                     <img src="../assets/svg/logos/favicon.png" />
                                 </div>
                                 <div class="two">
-                                    <p>Fixed number of classes within the course</p>
-                                </div>
-                                <div class="three">
-                                    <p><img src="../assets/img/purple.png" /></p>
-                                </div>
-                            </div>
-                            <div class="chose-inner" onclick="moveToStep(6)">
-                                <div class="one">
-                                    <img src="../assets/svg/logos/favicon.png" />
-                                </div>
-                                <div class="two">
-                                    <p>Customer can buy credits and freely book any class within a period of time</p>
+                                    <p>Customer can buy credits and freely book any session within a period of time</p>
                                 </div>
                                 <div class="three">
                                     <p><img src="../assets/img/purple.png" /></p>
@@ -530,50 +539,21 @@
                                         <label for="calendarname">Service Name *</label>
 
                                         <input type="text" class="form-control" id="serviceName" placeholder="" name="serviceName">
+                                        <div class="invalid-feedback-2" id="SCH_ACTIVITY_ERROR">
+                                            Please mention name of service
+                                        </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label for="calendarname">Max. Participants *</label>
+                                    @if (Model.CALENDAR_CATEGORY_ID == "1" || Model.CALENDAR_CATEGORY_ID == "5")
+                                    {
+                                        <div class="col-md-6">
+                                            <label for="calendarname">Max. Participants *</label>
 
-                                        <input type="number" class="form-control" id="maxParticipants" placeholder="" name="serviceName">
-                                    </div>
+                                            <input type="number" class="form-control" id="maxParticipants" placeholder="" name="serviceName">
+                                        </div>
+                                    }
                                 </div>
-
                             </div>
-                            <style>
-                                .slider-bar {
-                                    height: 38px;
-                                    width: 100px;
-                                    padding: 3px;
-                                    background: white;
-                                    border-radius: 18px;
-                                    border: 1px solid lightgrey;
-                                    transition: all 0.6s ease-in-out;
-                                }
 
-                                .slider-thumb {
-                                    height: 30px;
-                                    width: 30px;
-                                    background: crimson;
-                                    border-radius: 30px;
-                                    transition: all 0.6s ease-in-out;
-                                }
-
-                                .slider-bar.active {
-                                    transition: all 0.6s ease-in-out;
-                                    background: cadetblue;
-                                }
-
-                                .slider-bar.active .slider-thumb {
-                                    transition: all 0.6s ease-in-out;
-                                    transform: translate(60px, 0px);
-                                }
-                            </style>
-                            <script>
-                                $(document).on("click", ".slider-bar", function () {
-                                    $(this).addClass("active");
-                                })
-                            </script>
-                            <div class="slider-bar"><div class="slider-thumb"></div></div>
                             <div class="form-group ">
                                 <div class="row">
                                     <div class="col-md-6 cus-radio">
@@ -581,11 +561,11 @@
                                             <label>Is Service Paid?</label>
                                         </div>
 
-                                        <input type="radio" id="test1" name="servicePaid" value="1" checked>
+                                        <input type="radio" id="test1" name="servicePaid" value="Y" checked>
                                         <label for="test1">Yes</label>
 
 
-                                        <input type="radio" id="test2" name="servicePaid" value="0">
+                                        <input type="radio" id="test2" name="servicePaid" value="N">
                                         <label for="test2">No</label>
                                     </div>
                                     <div class="col-md-6" id="feesPerSessionDiv">
@@ -603,10 +583,16 @@
                                     <div class="col-md-6">
                                         <label for="sessionLocationMaster">Location</label>
                                         <select class="form-control" id="sessionLocationMaster" placeholder="" name="sessionLocationMaster"></select>
+                                        <div class="invalid-feedback-2" id="SCH_LOCATION_ERROR">
+                                            Please select Location
+                                        </div>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="sessionServiceProviderMaster">Service Provider</label>
                                         <select class="form-control" id="sessionServiceProviderMaster" placeholder="" name="sessionServiceProviderMaster"></select>
+                                        <div class="invalid-feedback-2" id="SCH_RESOURCE_ERROR">
+                                            Please select Service Provider
+                                        </div>
                                     </div>
                                 </div>
 
@@ -617,12 +603,18 @@
 
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label for="startDate">Start Date *</label>
-                                        <input type="date" class="form-control" id="startDate" placeholder="" name="startDate">
+                                        <label for="SCH_FROM_DATE">Start Date *</label>
+                                        <input type="date" class="form-control" id="SCH_FROM_DATE" placeholder="" name="SCH_FROM_DATE">
+                                        <div class="invalid-feedback-2" id="SCH_FROM_DATE_ERROR">
+                                            Please select from date
+                                        </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="endDate">End Date *</label>
-                                        <input type="date" class="form-control" id="endDate" placeholder="" name="endDate">
+                                        <label for="SCH_TO_DATE">End Date *</label>
+                                        <input type="date" class="form-control" id="SCH_TO_DATE" placeholder="" name="SCH_TO_DATE">
+                                        <div class="invalid-feedback-2" id="SCH_TO_DATE_ERROR">
+                                            Please select to date
+                                        </div>
                                     </div>
                                 </div>
 

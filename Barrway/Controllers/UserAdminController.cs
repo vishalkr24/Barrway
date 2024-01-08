@@ -224,10 +224,9 @@ namespace Barrway.Controllers
 
                 if (result.Status)
                 {
-                    // send email to user
+                    // Send email to user
                     var resultEmail = await masterService.SendCalendarFile(UserIdentity.UserEmail, result.Data?.ToString());
                 }
-
 
                 return Json(result, JsonRequestBehavior.AllowGet);
             }

@@ -2548,8 +2548,9 @@ function bookingService(star, end, bgevent) {
         "otherActivityformId": getOtherActivityFormId(bgevent),
         "otherActivityId": getOtherActivityId(bgevent)
     };
+    debugger;
     showLoader();
-    postAsync(BASE_URL +"UserAdmin/BookingService", data).then(function (response) {
+    postAsync(BASE_URL + "UserAdmin/BookingService", data).then(function (response) {
         hideLoader();
         angular.element("#customEventDetailsModelPopUp").modal('hide');
         swal({

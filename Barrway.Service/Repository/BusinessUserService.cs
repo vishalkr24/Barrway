@@ -3158,25 +3158,49 @@ namespace Barrway.Service.Repository
 
         }
 
-        public async Task<AddUpdateDelete> GetCalendarDetails(string calendarCode)
+        public async Task<AddUpdateDelete> GetCalendarDetails(string calendarCode, string UserId = null)
         {
-            string sqlString = $@"select *from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE='{calendarCode}'";
-            var result = (await sqlFunction.ExecuteSqlQuery(sqlString)).FirstOrDefault();
-            if (result != null)
+            try
             {
-                string categoryId = result["CALENDAR_CATEGORY_ID"]?.ToString() ?? "";
-                sqlString = $@"select *from CALENDAR_CONTROL_SHEET_1944 where CALENDAR_CODE='{calendarCode}'";
-                var controlSheet = (await sqlFunction.ExecuteSqlQuery(sqlString)).FirstOrDefault();
+                string sqlString = "";
 
-                result.Add("controlSheet", controlSheet);
-                sqlString = $@"select *from CALENDAR_CATEGORY_MASTER_1929 where Id={categoryId}";
+                if (string.IsNullOrEmpty(UserId))
+                {
+                    sqlString = $@"select *from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE='{calendarCode}'";
+                }
+                else
+                {
+                    sqlString = $@"select calendar.* from BUSINESS_ASSIGNED_USERS_1964 f
+                                join USER_MASTER_1915 um on um.Id = f.ASSIGNED_USER
+                                join USER_ASSIGNED_COMPANIES_1967 uac on uac.ASSIGN_ID = f.Id
+                                join BUSINESS_COMPANY_MASTER_1924 company on company.Id = uac.COMPANY_ID
+                                Join BUSINESS_CALENDAR_MASTER_1925 calendar on calendar.COMPANY_CODE = company.COMPANY_CODE
+                                where um.Id = {UserId} and calendar.CALENDAR_CODE = '{calendarCode}'";
+                }
 
-                var category = (await sqlFunction.ExecuteSqlQuery(sqlString)).FirstOrDefault();
-                result.Add("category", category);
-                return new AddUpdateDelete() { Data = result, Message = AppMessage.Success, Status = true };
+                var result = (await sqlFunction.ExecuteSqlQuery(sqlString)).FirstOrDefault();
+                if (result != null)
+                {
+                    string categoryId = result["CALENDAR_CATEGORY_ID"]?.ToString() ?? "";
+                    sqlString = $@"select *from CALENDAR_CONTROL_SHEET_1944 where CALENDAR_CODE='{calendarCode}'";
+                    var controlSheet = (await sqlFunction.ExecuteSqlQuery(sqlString)).FirstOrDefault();
 
+                    result.Add("controlSheet", controlSheet);
+                    sqlString = $@"select *from CALENDAR_CATEGORY_MASTER_1929 where Id={categoryId}";
+
+                    var category = (await sqlFunction.ExecuteSqlQuery(sqlString)).FirstOrDefault();
+                    result.Add("category", category);
+                    return new AddUpdateDelete() { Data = result, Message = AppMessage.Success, Status = true };
+
+                }
+
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
             }
-            return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+            
         }
 
     }

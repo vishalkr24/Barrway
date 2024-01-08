@@ -361,27 +361,33 @@ namespace Barrway.Service.Repository
             var orderNoResult = await sqlFunction.ExecuteSqlQuery(orderNoQuery);
 
             // add entry in ledger
-            LedgerModel ledger = new LedgerModel()
+            try
             {
-                CALENDAR_CODE = model.transaction.CALENDAR_CODE,
-                COMPANY_CODE = model.transaction.COMPANY_CODE,
-                DEBIT_COIN = Convert.ToDouble(model.transaction.transaction_fees),
-                USER_ID = model.USER_ID,
-                CREDIT_COIN = 0,
-                ORDER_NO = orderNoResult[0]["PAYMENT_ID"].ToString(),
-                TRANSACTION_TYPE = "Booking"
-            };
+                LedgerModel ledger = new LedgerModel()
+                {
+                    CALENDAR_CODE = model.transaction.CALENDAR_CODE,
+                    COMPANY_CODE = model.transaction.COMPANY_CODE,
+                    DEBIT_COIN = Convert.ToDouble(model.transaction.transaction_fees),
+                    USER_ID = model.USER_ID,
+                    CREDIT_COIN = 0,
+                    ORDER_NO = (model.transaction.transaction_fees == "0") ? "" : orderNoResult[0]["PAYMENT_ID"].ToString(),
+                    TRANSACTION_TYPE = "Booking"
+                };
+                var ledgerResult = await masterService.CreateLedgerEntry(ledger);
 
-            var ledgerResult = await masterService.CreateLedgerEntry(ledger);
-
-            if (formResult2.res == 1)
-            {
-                return new AddUpdateDelete() { Message = "Success", Status = true, Data = formResult2.Id };
+                if (formResult2.res == 1)
+                {
+                    return new AddUpdateDelete() { Message = "Success", Status = true, Data = formResult2.Id };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Message = "Failed to enroll on calendar", Status = false };
+                }
             }
-            else
+            catch (Exception ex)
             {
                 return new AddUpdateDelete() { Message = "Failed to enroll on calendar", Status = false };
-            }
+            }           
         }
 
 

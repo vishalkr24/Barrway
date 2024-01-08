@@ -352,34 +352,34 @@ namespace Barrway.Controllers
                                     finalResult.events.Add(result.events[j]);
                                 }
                             }
+
+                            // filter activity events
+                            for (int j = 0; j < result.activityEvents.Count; j++)
+                            {
+                                if (enrolledData.Data[i]["Id"].ToString() == result.activityEvents[j]["Id"].ToString())
+                                {
+                                    finalResult.activityEvents.Add(result.activityEvents[j]);
+                                }
+                            }
+
+                            // filter resource details
+                            for (int j = 0; j < result.resourceDetails.Count; j++)
+                            {
+                                if (!string.IsNullOrEmpty(result.resourceDetails[j].title))
+                                {
+                                    if ((enrolledData.Data[i]["customForms"]).Contains(result.resourceDetails[j].title))
+                                    {
+                                        finalResult.resourceDetails.Add(result.resourceDetails[j]);
+                                    }
+                                }
+                            }
+
                         }
                         catch(Exception ex)
                         {
 
                         }
                         
-
-                        // filter activity events
-                        for (int j = 0; j < result.activityEvents.Count; j++)
-                        {
-                            if (enrolledData.Data[i]["Id"].ToString() == result.activityEvents[j]["Id"].ToString())
-                            {
-                                finalResult.activityEvents.Add(result.activityEvents[j]);
-                            }
-                        }
-
-                        // filter resource details
-                        for (int j = 0; j < result.resourceDetails.Count; j++)
-                        {
-                            if (!string.IsNullOrEmpty(result.activityDetails[j].title))
-                            {
-                                if ((enrolledData.Data[i]["customForms"]).Contains(result.activityDetails[j].title))
-                                {
-                                    finalResult.resourceDetails.Add(result.resourceDetails[j]);
-                                }
-                            }
-                        }
-
                     }
 
                     result = finalResult;
@@ -429,8 +429,8 @@ namespace Barrway.Controllers
                     }
                 }
             }
-
-            return Json(result, JsonRequestBehavior.AllowGet);
+            
+            return Json(result.ToDictionary(), JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
