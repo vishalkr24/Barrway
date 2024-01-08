@@ -146,7 +146,8 @@ namespace Barrway.Controllers
                 var user = await authService.GetUser(User.Identity.Name, FormRole.PUBLIC_USER);
                 if (user.Status)
                 {
-                    return RedirectToAction("Index", "UserAdmin");
+                    return Redirect("/UserAdmin#/userdashboard");
+                    //return RedirectToAction("Index", "UserAdmin");
                 }
                 else
                 {
@@ -240,7 +241,8 @@ namespace Barrway.Controllers
 
                 if (string.IsNullOrEmpty(returnUrl))
                 {
-                    return RedirectToAction("Index", "UserAdmin");
+                    return Redirect("/UserAdmin#/userdashboard");
+                    //return RedirectToAction("Index", "UserAdmin");
                 }
                 else
                 {

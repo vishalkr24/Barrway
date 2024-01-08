@@ -3,6 +3,8 @@ var locationList = [];
 var serviceProviderList = [];
 const createdCalendarCode = $("#calendarCodeInput").val();
 const createdCompanyCode = $("#companyCodeInput").val();
+const createdCalendarType = $("#calendarCategoryInput").val();
+var createdServiceType = "";
 
 $(document).ready(function () {
 
@@ -16,7 +18,7 @@ $(document).ready(function () {
 function readyPage() {
     checkRegistrationStep();
 
-    let step = window.location.href.split('?')[1].split('&')[2].split('=')[1];
+    let step = window.location.href.split('?')[1].replaceAll('&&', '&').split('&')[2].split('=')[1];
     backToStep(parseInt(step));
 
     var obj = { 'create': true, 'placeholder': 'Add tags...' };
@@ -37,7 +39,7 @@ function checkRegistrationStep() {
 
 }
 
-function moveToStep(stepId) {
+function moveToStep(stepId, helper = '') {
     switch (stepId) {
         case 2:
             goToStep2();
@@ -52,7 +54,7 @@ function moveToStep(stepId) {
             createServiceProviderMaster();
             break;
         case 6:
-            BindStep6();
+            BindStep6(helper);
         default:
             break;
     };
@@ -90,7 +92,7 @@ function goToStep2() {
 }
 
 $(document).on("click", "input[name=servicePaid]", function () {
-    if ($(this).val() == "1") {
+    if ($(this).val() == "Y") {
         $("#feesPerSession").attr("disabled", false);
         $("#feesPerSessionDiv").fadeIn();
         $("label[for=feesPerSession]").text("Fees per Session *")
@@ -124,13 +126,18 @@ function BindEventData() {
             var divString = "";
 
             if (data != null) {
+                if (data.length <= 0) {
+                    window.location.replace(`/BusinessAdmin/SetupCalendarEvent?CompanyId=${localStorage.getItem("COMPANY_ID")}&CalendarCode=${createdCalendarCode}&Step=3`);
+                    return;
+                }
 
                 data.forEach(x => {
                     divString += `<option value="${x.Id}">${x.LOCATION_ADDRESS}</option>`;
                 })
 
             } else {
-
+                window.location.replace(`/BusinessAdmin/SetupCalendarEvent?CompanyId=${localStorage.getItem("COMPANY_ID")}&CalendarCode=${createdCalendarCode}&Step=3`)
+                return;
             }
 
             $("#sessionLocationMaster").append(divString);
@@ -154,13 +161,18 @@ function BindEventData() {
             var divString = "";
 
             if (data != null) {
+                if (data.length <= 0) {
+                    window.location.replace(`/BusinessAdmin/SetupCalendarEvent?CompanyId=${localStorage.getItem("COMPANY_ID")}&CalendarCode=${createdCalendarCode}&Step=4`);
+                    return;
+                }
 
                 data.forEach(x => {
                     divString += `<option value="${x.Id}">${x.FIRST_NAME} ${x.LAST_NAME}</option>`;
                 })
 
             } else {
-
+                window.location.replace(`/BusinessAdmin/SetupCalendarEvent?CompanyId=${localStorage.getItem("COMPANY_ID")}&CalendarCode=${createdCalendarCode}&Step=4`);
+                return;
             }
 
             $("#sessionServiceProviderMaster").append(divString);
@@ -172,6 +184,137 @@ function BindEventData() {
 }
 
 function submitCalendar() {
+
+
+    var scheduleTableData = {
+        "Monday": {
+            "Start": $("#Monday_Start_Time").val(),
+            "End": $("#Monday_End_Time").val()
+        },
+        "Tuesday": {
+            "Start": $("#Tuesday_Start_Time").val(),
+            "End": $("#Tuesday_End_Time").val(),
+        },
+        "Wednesday": {
+            "Start": $("#Wednesday_Start_Time").val(),
+            "End": $("#Wednesday_End_Time").val(),
+        },
+        "Thursday": {
+            "Start": $("#Thursday_Start_Time").val(),
+            "End": $("#Thursday_End_Time").val(),
+        },
+        "Friday": {
+            "Start": $("#Friday_Start_Time").val(),
+            "End": $("#Friday_End_Time").val()
+        },
+        "Saturday": {
+            "Start": $("#Saturday_Start_Time").val(),
+            "End": $("#Saturday_End_Time").val()
+        },
+        "Sunday": {
+            "Start": $("#Sunday_Start_Time").val(),
+            "End": $("#Saturday_End_Time").val()
+        }
+    };
+
+    var data = {
+        Id: 0,
+        COMPANY_CODE: localStorage.getItem("COMPANY_CODE"),
+        CALENDAR_CODE: localStorage.getItem("CALENDAR_CODE"),
+        SCH__NAME: "",
+        SCH_LOCATION: $("#sessionLocationMaster option:selected").val(),
+        SCH_ACTIVITY: 0,
+        SCH_RESOURCE: $("#sessionServiceProviderMaster option:selected").val(),
+        SCH_MEDIUM: "ZOOM",
+        SCH_DESCRIPTION: "",
+        SCH_FROM_DATE: $("#SCH_FROM_DATE").val(),
+        SCH_TO_DATE: $("#SCH_TO_DATE").val(),
+        SCH_DAYS: 0,
+        SCH_ALTERNATIVE_WEEK: "EVERY-WEEK",
+        IF_SLOT_EXIST: "SKIP",
+        IF_SLOT_DOES_NOT_EXIST: "INSERT",
+        table: scheduleTableData,
+        CREATION_TYPE: "MANUAL"
+    }
+
+    if (validateSchedularFormData(data)) {
+        //data = JSON.stringify(data);
+
+        var dataModel = {
+            COMPANY_CODE: createdCompanyCode,
+            CALENDAR_CODE: createdCalendarCode,
+            ACTIVITY_NAME: $("#serviceName").val(),
+            fees_1: $("#feesPerSession").val(),
+            IS_SERVICE_PAID: $("input[name=servicePaid]:checked").val(),
+            SERVICE_TYPE: createdServiceType
+        }
+
+        $.ajax({
+            url: "/Calendar/AddMasterData",
+            method: "POST",
+            async: false,
+            data: {
+                data: [dataModel],
+                ModelId: 3
+            },
+            success: function (response) {
+                // after success response
+                if (response.Status) {
+
+                    data.SCH_ACTIVITY = response.Data;
+
+                    $.ajax({
+                        url: "/Calendar/AddSchedule",
+                        method: "POST",
+                        async: false,
+                        data: { data: data },
+                        dataType: "json",
+                        success: function (response) {
+                            // after success response
+                            if (response == "Success") {
+
+                                swal({
+                                    icon: "success",
+                                    title: "Session Created",
+                                    text: "Sessions created successfully!"
+                                }).then(function (check) {
+                                    window.location.href = '/BusinessAdmin/CalendarMaster';
+                                });
+
+                            } else {
+                                swal({
+                                    icon: "error",
+                                    title: "Error",
+                                    text: response.Message
+                                });
+                            }
+
+                        },
+                        error: function (er) {
+
+                        }
+                    })
+
+                } else {
+                    swal({
+                        icon: "error",
+                        title: "Error",
+                        text: response.Message
+                    });
+                }
+
+            },
+            error: function (er) {
+
+            }
+        })
+
+    } else {
+        alert("Please solve errors");
+    }
+
+
+    return;
     swal({
         icon: "success",
         title: "Success",
@@ -181,13 +324,57 @@ function submitCalendar() {
     });
 }
 
-function BindStep6() {
+function validateSchedularFormData(data) {
+    debugger;
+    var finalCheck = true;
+    
+    if (data.SCH_LOCATION == "" || data.SCH_LOCATION == null) {
+        finalCheck = false;
+        $("#SCH_LOCATION_ERROR").show();
+    } else {
+        $("#SCH_LOCATION_ERROR").hide();
+    }
+
+    if (data.SCH_RESOURCE == "" || data.SCH_RESOURCE == null) {
+        finalCheck = false;
+        $("#SCH_RESOURCE_ERROR").show();
+    } else {
+        $("#SCH_RESOURCE_ERROR").hide();
+    }
+
+    if (data.SCH_FROM_DATE == "" || data.SCH_FROM_DATE == null) {
+        finalCheck = false;
+        $("#SCH_FROM_DATE_ERROR").show();
+    } else {
+        $("#SCH_FROM_DATE_ERROR").hide();
+    }
+
+    if (data.SCH_TO_DATE == "" || data.SCH_TO_DATE == null) {
+        finalCheck = false;
+        $("#SCH_TO_DATE_ERROR").show();
+    } else {
+        $("#SCH_TO_DATE_ERROR").hide();
+    }
+
+    if (data.SCH_FROM_DATE > data.SCH_TO_DATE) {
+        alert("From date should be earlier than To date.");
+        finalCheck = false;
+    }
+
+
+    return finalCheck;
+}
+
+function BindStep6(type) {
     $("#step-4").hide();
     $("#step-5").fadeOut();
     setTimeout(function () {
         $("#step-6").fadeIn();
     }, 500)
 
+    $("#calendarType" + type).prop("checked", true);
+
+    createdServiceType = type;
 }
 
 function validateStep(stepId) {

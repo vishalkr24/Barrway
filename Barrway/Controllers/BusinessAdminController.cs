@@ -194,23 +194,31 @@ namespace Barrway.Controllers
                 }
                 else
                 {
-                    var data = await businessUserService.GetCalendarDetails(CalendarCode);
-                    BusinessCalendarModel calendarModel2 = new BusinessCalendarModel();
-                    calendarModel2 = JsonConvert.DeserializeObject<BusinessCalendarModel>(JsonConvert.SerializeObject(data.Data));
-                    calendarModel.CALENDAR_CATEGORY_ID = calendarModel2.CALENDAR_CATEGORY_ID;
-                    calendarModel.CALENDAR_NAME = calendarModel2.CALENDAR_NAME;
-                    calendarModel.CALENDAR_PHOTO_NAME = calendarModel2.CALENDAR_PHOTO_NAME;
-                    calendarModel.CALENDAR_SUB_CATEGORY_ID = calendarModel2.CALENDAR_SUB_CATEGORY_ID;
-                    calendarModel.CITY_ID = calendarModel2.CITY_ID;
-                    calendarModel.COMPANY_CODE = calendarModel2.COMPANY_CODE;
-                    calendarModel.CALENDAR_CODE = calendarModel2.CALENDAR_CODE;
-                    calendarModel.COUNTRY_ID = calendarModel2.COUNTRY_ID;
-                    calendarModel.DISTRICT_ID = calendarModel2.DISTRICT_ID;
-                    calendarModel.Id = calendarModel2.Id;
-                    calendarModel.IS_VISIBLE = calendarModel2.IS_VISIBLE;
-                    calendarModel.SLOT_DURATION_IN_MINS = calendarModel2.SLOT_DURATION_IN_MINS;
-                    calendarModel.TAGS = calendarModel2.TAGS.Split(',').ToList();
-                    calendarModel.CalendarControlSheet = JsonConvert.DeserializeObject<CalendarControlModel>(JsonConvert.SerializeObject(data.Data["controlSheet"]));
+                    var data = await businessUserService.GetCalendarDetails(CalendarCode, UserIdentity.UserID);
+                    if (data.Status)
+                    {
+                        BusinessCalendarModel calendarModel2 = new BusinessCalendarModel();
+                        calendarModel2 = JsonConvert.DeserializeObject<BusinessCalendarModel>(JsonConvert.SerializeObject(data.Data));
+                        calendarModel.CALENDAR_CATEGORY_ID = calendarModel2.CALENDAR_CATEGORY_ID;
+                        calendarModel.CALENDAR_NAME = calendarModel2.CALENDAR_NAME;
+                        calendarModel.CALENDAR_PHOTO_NAME = calendarModel2.CALENDAR_PHOTO_NAME;
+                        calendarModel.CALENDAR_SUB_CATEGORY_ID = calendarModel2.CALENDAR_SUB_CATEGORY_ID;
+                        calendarModel.CITY_ID = calendarModel2.CITY_ID;
+                        calendarModel.COMPANY_CODE = calendarModel2.COMPANY_CODE;
+                        calendarModel.CALENDAR_CODE = calendarModel2.CALENDAR_CODE;
+                        calendarModel.COUNTRY_ID = calendarModel2.COUNTRY_ID;
+                        calendarModel.DISTRICT_ID = calendarModel2.DISTRICT_ID;
+                        calendarModel.Id = calendarModel2.Id;
+                        calendarModel.IS_VISIBLE = calendarModel2.IS_VISIBLE;
+                        calendarModel.SLOT_DURATION_IN_MINS = calendarModel2.SLOT_DURATION_IN_MINS;
+                        calendarModel.TAGS = calendarModel2.TAGS.Split(',').ToList();
+                        calendarModel.CalendarControlSheet = JsonConvert.DeserializeObject<CalendarControlModel>(JsonConvert.SerializeObject(data.Data["controlSheet"]));
+                    }
+                    else
+                    {
+                        return RedirectToAction("CalendarMaster");
+                    }
+                   
                 }
 
 
@@ -248,23 +256,31 @@ namespace Barrway.Controllers
                 }
                 else
                 {
-                    var data = await businessUserService.GetCalendarDetails(CalendarCode);
-                    BusinessCalendarModel calendarModel2 = new BusinessCalendarModel();
-                    calendarModel2 = JsonConvert.DeserializeObject<BusinessCalendarModel>(JsonConvert.SerializeObject(data.Data));
-                    calendarModel.CALENDAR_CATEGORY_ID = calendarModel2.CALENDAR_CATEGORY_ID;
-                    calendarModel.CALENDAR_NAME = calendarModel2.CALENDAR_NAME;
-                    calendarModel.CALENDAR_PHOTO_NAME = calendarModel2.CALENDAR_PHOTO_NAME;
-                    calendarModel.CALENDAR_SUB_CATEGORY_ID = calendarModel2.CALENDAR_SUB_CATEGORY_ID;
-                    calendarModel.CITY_ID = calendarModel2.CITY_ID;
-                    calendarModel.COMPANY_CODE = calendarModel2.COMPANY_CODE;
-                    calendarModel.CALENDAR_CODE = calendarModel2.CALENDAR_CODE;
-                    calendarModel.COUNTRY_ID = calendarModel2.COUNTRY_ID;
-                    calendarModel.DISTRICT_ID = calendarModel2.DISTRICT_ID;
-                    calendarModel.Id = calendarModel2.Id;
-                    calendarModel.IS_VISIBLE = calendarModel2.IS_VISIBLE;
-                    calendarModel.SLOT_DURATION_IN_MINS = calendarModel2.SLOT_DURATION_IN_MINS;
-                    calendarModel.TAGS = calendarModel2.TAGS.Split(',').ToList();
-                    calendarModel.CalendarControlSheet = JsonConvert.DeserializeObject<CalendarControlModel>(JsonConvert.SerializeObject(data.Data["controlSheet"]));
+                    var data = await businessUserService.GetCalendarDetails(CalendarCode, UserIdentity.UserID);
+                    if (data.Status)
+                    {
+                        BusinessCalendarModel calendarModel2 = new BusinessCalendarModel();
+                        calendarModel2 = JsonConvert.DeserializeObject<BusinessCalendarModel>(JsonConvert.SerializeObject(data.Data));
+                        calendarModel.CALENDAR_CATEGORY_ID = calendarModel2.CALENDAR_CATEGORY_ID;
+                        calendarModel.CALENDAR_NAME = calendarModel2.CALENDAR_NAME;
+                        calendarModel.CALENDAR_PHOTO_NAME = calendarModel2.CALENDAR_PHOTO_NAME;
+                        calendarModel.CALENDAR_SUB_CATEGORY_ID = calendarModel2.CALENDAR_SUB_CATEGORY_ID;
+                        calendarModel.CITY_ID = calendarModel2.CITY_ID;
+                        calendarModel.COMPANY_CODE = calendarModel2.COMPANY_CODE;
+                        calendarModel.CALENDAR_CODE = calendarModel2.CALENDAR_CODE;
+                        calendarModel.COUNTRY_ID = calendarModel2.COUNTRY_ID;
+                        calendarModel.DISTRICT_ID = calendarModel2.DISTRICT_ID;
+                        calendarModel.Id = calendarModel2.Id;
+                        calendarModel.IS_VISIBLE = calendarModel2.IS_VISIBLE;
+                        calendarModel.SLOT_DURATION_IN_MINS = calendarModel2.SLOT_DURATION_IN_MINS;
+                        calendarModel.TAGS = calendarModel2.TAGS.Split(',').ToList();
+                        calendarModel.CalendarControlSheet = JsonConvert.DeserializeObject<CalendarControlModel>(JsonConvert.SerializeObject(data.Data["controlSheet"]));
+                    }
+                    else
+                    {
+                        return RedirectToAction("CalendarMaster");
+                    }
+                    
                 }
 
                 return View(calendarModel);
@@ -526,7 +542,7 @@ namespace Barrway.Controllers
         {
             try
             {
-                var data = await businessUserService.GetCalendarDetails(CalendarCode);
+                var data = await businessUserService.GetCalendarDetails(CalendarCode, UserIdentity.UserID);
 
                 if (data.Status)
                 {

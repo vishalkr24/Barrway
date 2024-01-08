@@ -380,6 +380,46 @@ namespace Barrway.Controllers
                     }
                     return Json(new AddUpdateDelete() { Status = false, Message = "Something went wrong" }, JsonRequestBehavior.AllowGet);
                 }
+                else if (Convert.ToInt32(ModelId) == 3)
+                {
+                    try
+                    {
+                        var dataSerialized = JsonConvert.SerializeObject(data.FirstOrDefault());
+
+                        CalendarServiceMasterModel serviceMasterModel = JsonConvert.DeserializeObject<CalendarServiceMasterModel>(dataSerialized);
+                        
+                        Form_DataTable dataForm = new Form_DataTable();
+                        dataForm.action = (int)FormAction.Save;
+                        dataForm.formId = (int)FormSetting.SERVICE_MASTER;
+
+                        dataForm.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(serviceMasterModel.ToDictionary());
+                        dataForm.formGroupKey = Guid.NewGuid().ToString();
+                        var formResult = (await formAPIRepository.GeneratedFormData(dataForm)).Data;
+
+                        if (formResult.res == 1)
+                        {
+                            string ActivityCode = "AC" + formResult.Id.ToString().PadLeft(5, '0');
+
+                            string query = $@"UPDATE [dbo].[SERVICE_MASTER_1933]
+                                               SET [ACTIVITY_CODE] = '{ActivityCode}'
+                                             WHERE Id = '{formResult.Id.ToString()}'";
+
+                            int saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                            return Json(new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() }, JsonRequestBehavior.AllowGet);
+                        }
+                        else
+                        {
+                            return Json(new AddUpdateDelete() { Message = formResult.Message, Status = false }, JsonRequestBehavior.AllowGet);
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                    return Json(new AddUpdateDelete() { Status = false, Message = "Something went wrong" }, JsonRequestBehavior.AllowGet);
+                }
                 else
                 {
                     return Json(new AddUpdateDelete() { Status = false, Message = "Something went wrong" }, JsonRequestBehavior.AllowGet);
@@ -477,11 +517,19 @@ namespace Barrway.Controllers
             {
                 if (UserIdentity.Role != "SUPERADMIN_USER")
                 {
-                    var startObject = data.SCH_FROM_DATE.Split('/');
-                    var endObject = data.SCH_TO_DATE.Split('/');
+                    if (data.SCH_FROM_DATE.Contains("/"))
+                    {
+                        var startObject = data.SCH_FROM_DATE.ToString().Split('/');
+                        data.SCH_FROM_DATE = Convert.ToDateTime(startObject[2] + "-" + startObject[1] + "-" + startObject[0]).ToString("yyyy-MM-dd");
+                    }
 
-                    data.SCH_FROM_DATE = Convert.ToDateTime(startObject[2] + "-" + startObject[1] + "-" + startObject[0]).ToString("yyyy-MM-dd");
-                    data.SCH_TO_DATE = Convert.ToDateTime(endObject[2] + "-" + endObject[1] + "-" + endObject[0]).ToString("yyyy-MM-dd");
+                    if (data.SCH_TO_DATE.Contains("/"))
+                    {
+                        var endObject = data.SCH_TO_DATE.ToString().Split('/');
+                        data.SCH_TO_DATE = Convert.ToDateTime(endObject[2] + "-" + endObject[1] + "-" + endObject[0]).ToString("yyyy-MM-dd");
+                    }
+
+                    
                 }
 
 
@@ -515,7 +563,7 @@ namespace Barrway.Controllers
                 if (createNewSchedule)
                 {
                     var calendarCountCheckData = await businessUserService.GetSessionsForThisMonth(data.COMPANY_CODE);
-                    var package = await businessUserService.GetCompanyActiveSubscriptionDetails(data.COMPANY_CODE);
+                    var package = await businessUserService.GetCompanyActiveSubscriptionDetails(data.COMPANY_CODE, true);
 
                     if (!calendarCountCheckData.Status)
                     {
