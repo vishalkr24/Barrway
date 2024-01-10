@@ -273,47 +273,52 @@ namespace Barrway.Controllers
 
         public async Task<ActionResult> CompanySchedule(string CompanyCode, string CalendarCode = null)
         {
-
             try
             {
                 var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
-                var calendarData = await businessUserService.GetMarcketPlaceCompanyCalendarByCompanyId(companyData.Data["Id"].ToString());
+                AddUpdateDelete calendarData = await businessUserService.GetMarcketPlaceCompanyCalendarByCompanyId(companyData.Data["Id"].ToString());
                 //var serviceData = await globalMasterService.GetCompanyCategoryMaster();
-
-                var data = JsonConvert.SerializeObject(companyData.Data);
-                var calendarEncrypted = JsonConvert.SerializeObject(calendarData.Data);
-                //var serviceEncrypted = JsonConvert.SerializeObject(serviceData.Data);
-
-                MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
-                companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
-                companyModel.calendars = JsonConvert.DeserializeObject<List<BusinessCalendarModel>>(calendarEncrypted);
-                //companyModel.services = JsonConvert.DeserializeObject<List<BusinessCompanyCategoryModel>>(serviceEncrypted);
-
-                ViewBag.IsUserFavorite = false;
-
-                if (User.Identity.IsAuthenticated)
+                if (calendarData.Status)
                 {
-                    if (UserIdentity.Role == "PUBLIC_USER")
+                    var data = JsonConvert.SerializeObject(companyData.Data);
+                    var calendarEncrypted = JsonConvert.SerializeObject(calendarData.Data);
+                    //var serviceEncrypted = JsonConvert.SerializeObject(serviceData.Data);
+
+                    MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
+                    companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
+                    companyModel.calendars = JsonConvert.DeserializeObject<List<BusinessCalendarModel>>(calendarEncrypted);
+                    //companyModel.services = JsonConvert.DeserializeObject<List<BusinessCompanyCategoryModel>>(serviceEncrypted);
+
+                    ViewBag.IsUserFavorite = false;
+
+                    if (User.Identity.IsAuthenticated)
                     {
-                        // check if calendar is a favorite
-                        var calendarFavCheck = await publicUserService.CheckSingleMyFavoriteCalendar(User.Identity.Name, CalendarCode);
-                        if (calendarFavCheck.Status)
+                        if (UserIdentity.Role == "PUBLIC_USER")
                         {
-                            ViewBag.IsUserFavorite = true;
+                            // check if calendar is a favorite
+                            var calendarFavCheck = await publicUserService.CheckSingleMyFavoriteCalendar(User.Identity.Name, CalendarCode);
+                            if (calendarFavCheck.Status)
+                            {
+                                ViewBag.IsUserFavorite = true;
+                            }
                         }
                     }
 
+                    ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
+
+                    if (!string.IsNullOrEmpty(companyModel.IS_TEMPLATE))
+                    {
+                        if (companyModel.IS_TEMPLATE == "Y")
+                            return RedirectToAction("Index", "Marketplace");
+                    }
+
+                    return View(companyModel);
                 }
-
-                ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
-
-                if (!string.IsNullOrEmpty(companyModel.IS_TEMPLATE))
+                else
                 {
-                    if (companyModel.IS_TEMPLATE == "Y")
-                        return RedirectToAction("Index", "Marketplace");
+                    return RedirectToAction("Index", "Marketplace");
                 }
-
-                return View(companyModel);
+                
             }
             catch (Exception ex)
             {

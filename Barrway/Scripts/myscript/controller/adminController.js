@@ -2892,7 +2892,7 @@
             if (validateSchedularFormData(data)) {
                 //data = JSON.stringify(data);
 
-                adminService.postAsync('/Calendar/AddSchedule/', { data: data }).then(function (res) {
+                adminService.postAsync('/Calendar/AddSchedule/', { dataList: [data] }).then(function (res) {
                     if (res.data != "Success") {
                         swal({
                             icon: "Error",

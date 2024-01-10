@@ -13,7 +13,7 @@ namespace Barrway.DTO.CustomValidations
         {
             try
             {
-                string checkValue = value.ToString();
+                string checkValue = value?.ToString();
                 if (string.IsNullOrEmpty(checkValue))
                 {
                     return false;

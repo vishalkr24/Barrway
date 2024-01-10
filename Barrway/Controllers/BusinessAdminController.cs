@@ -239,6 +239,11 @@ namespace Barrway.Controllers
             try
             {
                 ViewBag.IsPartial = false;
+                if (TempData.ContainsKey("SuccessMessage"))
+                {
+                    ViewBag.SuccessMessage = TempData["SuccessMessage"];
+                }
+
                 if (string.IsNullOrEmpty(CompanyId) && string.IsNullOrEmpty(CalendarCode))
                 {
                     return View(new BusinessCalendarViewModel()
@@ -409,6 +414,10 @@ namespace Barrway.Controllers
 
         public async Task<ActionResult> CalendarMaster()
         {
+            if (TempData.ContainsKey("SuccessMessage"))
+            {
+                ViewBag.SuccessMessage = TempData["SuccessMessage"]?.ToString();
+            }
             return View();
         }
 
@@ -1370,10 +1379,19 @@ namespace Barrway.Controllers
                                 {
                                     model.CALENDAR_PHOTO_PATH.SaveAs(Server.MapPath("~/UploadCalendar/CalendarImages/" + model.COMPANY_CODE.ToString()) + "/" + model.CALENDAR_PHOTO_PATH.FileName.ToString());
                                 }
-                                ViewBag.SuccessMessage = "Calendar Created Successfully!";
 
-                                return RedirectToAction("SetupCalendarEvent", new { CompanyId = company.Data["Id"]?.ToString(), CalendarCode = calendarModel.CALENDAR_CODE, Step = 3 });
-                                //return RedirectToAction("CalendarMaster");
+                                if (string.IsNullOrEmpty(model.Id))
+                                {
+                                    TempData["SuccessMessage"] = "Calendar Created Successfully!\nLet's setup calendar location.";
+
+                                    return RedirectToAction("SetupCalendarEvent", new { CompanyId = company.Data["Id"]?.ToString(), CalendarCode = calendarModel.CALENDAR_CODE, Step = 3 });
+                                }
+                                else
+                                {
+                                    TempData["SuccessMessage"] = "Calendar Settings Updated Successfully!";
+
+                                    return RedirectToAction("CalendarMaster");
+                                }
 
                             }
                             else
