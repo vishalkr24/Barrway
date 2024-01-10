@@ -369,6 +369,12 @@
         .schedular-table tbody tr td input[type=time] {
             width: 100% !important;
         }
+
+    .invalid-feedback-3 {
+        display: none;
+        color: red !important;
+        margin-bottom: 11px;
+    }
 </style>
 
 <main id="content" role="main" class="main">
@@ -539,7 +545,7 @@
                                         <label for="calendarname">Service Name *</label>
 
                                         <input type="text" class="form-control" id="serviceName" placeholder="" name="serviceName">
-                                        <div class="invalid-feedback-2" id="SCH_ACTIVITY_ERROR">
+                                        <div class="invalid-feedback-3" id="SCH_ACTIVITY_ERROR">
                                             Please mention name of service
                                         </div>
                                     </div>
@@ -547,8 +553,10 @@
                                     {
                                         <div class="col-md-6">
                                             <label for="calendarname">Max. Participants *</label>
-
-                                            <input type="number" class="form-control" id="maxParticipants" placeholder="" name="serviceName">
+                                            <input type="number" class="form-control" id="maxParticipants" value="50" placeholder="" name="serviceName">
+                                            <div class="invalid-feedback-3" id="SCH_PARTI_ERROR">
+                                                Please enter maximum participants
+                                            </div>
                                         </div>
                                     }
                                 </div>
@@ -571,7 +579,10 @@
                                     <div class="col-md-6" id="feesPerSessionDiv">
                                         <label for="feesPerSession">Fees per Session *</label>
 
-                                        <input type="number" class="form-control" id="feesPerSession" placeholder="" name="feesPerSession">
+                                        <input type="number" class="form-control" id="feesPerSession" value="0" placeholder="" name="feesPerSession">
+                                        <div class="invalid-feedback-3" id="SCH_FEES_ERROR">
+                                            Please enter a Fees
+                                        </div>
                                     </div>
                                 </div>
 
@@ -583,14 +594,14 @@
                                     <div class="col-md-6">
                                         <label for="sessionLocationMaster">Location</label>
                                         <select class="form-control" id="sessionLocationMaster" placeholder="" name="sessionLocationMaster"></select>
-                                        <div class="invalid-feedback-2" id="SCH_LOCATION_ERROR">
+                                        <div class="invalid-feedback-3" id="SCH_LOCATION_ERROR">
                                             Please select Location
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="sessionServiceProviderMaster">Service Provider</label>
                                         <select class="form-control" id="sessionServiceProviderMaster" placeholder="" name="sessionServiceProviderMaster"></select>
-                                        <div class="invalid-feedback-2" id="SCH_RESOURCE_ERROR">
+                                        <div class="invalid-feedback-3" id="SCH_RESOURCE_ERROR">
                                             Please select Service Provider
                                         </div>
                                     </div>
@@ -605,14 +616,14 @@
                                     <div class="col-md-6">
                                         <label for="SCH_FROM_DATE">Start Date *</label>
                                         <input type="date" class="form-control" id="SCH_FROM_DATE" placeholder="" name="SCH_FROM_DATE">
-                                        <div class="invalid-feedback-2" id="SCH_FROM_DATE_ERROR">
+                                        <div class="invalid-feedback-3" id="SCH_FROM_DATE_ERROR">
                                             Please select from date
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="SCH_TO_DATE">End Date *</label>
                                         <input type="date" class="form-control" id="SCH_TO_DATE" placeholder="" name="SCH_TO_DATE">
-                                        <div class="invalid-feedback-2" id="SCH_TO_DATE_ERROR">
+                                        <div class="invalid-feedback-3" id="SCH_TO_DATE_ERROR">
                                             Please select to date
                                         </div>
                                     </div>
@@ -625,7 +636,9 @@
                                 <div class="col-md-12">
                                     <input type="checkbox" name="TimeSameAsMonday" onclick="setSameTime()" /> {{translation.Time_same_as_monday}}
                                 </div>
-
+                                <div class="invalid-feedback-3" id="SCH_TIME_ERROR">
+                                    Please mention the slot timings
+                                </div>
                                 <div class="col-md-12">
                                     <table class="schedular-table" width="100%">
                                         <thead>

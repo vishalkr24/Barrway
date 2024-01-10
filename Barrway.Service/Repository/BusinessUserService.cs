@@ -936,10 +936,11 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetMarcketPlaceCompanyCalendarByCompanyId(string CompanyId)
         {
-            string query = $@"SELECT calendar.[Id]      ,calendar.[created_at], company.IS_ACTIVE      ,calendar.[updated_at]      ,calendar.[created_by]      ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
+            string query = $@"SELECT calendar.[Id]      ,calendar.[created_at], company.IS_ACTIVE      ,calendar.[updated_at]      ,calendar.[created_by]      ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,calendar.[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                                 join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE 
+								join CALENDAR_CONTROL_SHEET_1944 ccs on ccs.CALENDAR_CODE = calendar.CALENDAR_CODE
                                 join CALENDAR_CATEGORY_MASTER_1929 category on category.Id = calendar.CALENDAR_CATEGORY_ID
-                                where company.IS_ACTIVE = 'Y' and company.Id = '{CompanyId}' and category.[CALENDAR_FORM_TYPE]='PUBLIC'";
+                                where company.IS_ACTIVE = 'Y' and company.Id = '{CompanyId}' and category.[CALENDAR_FORM_TYPE]='PUBLIC' and ccs.CALENDAR_USE_TYPE = 'PUBLIC'";
 
             List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 

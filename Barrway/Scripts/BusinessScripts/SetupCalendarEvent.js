@@ -252,7 +252,12 @@ function submitCalendar() {
         $.ajax({
             url: "/Calendar/AddMasterData",
             method: "POST",
-            async: false,
+            beforeSend: function () {
+                $(".favicon-loader-overlay").removeClass("ng-hide");
+            },
+            complete: function () {
+                $(".favicon-loader-overlay").removeClass("ng-hide");
+            },
             data: {
                 data: [dataModel],
                 ModelId: 3
@@ -266,8 +271,13 @@ function submitCalendar() {
                     $.ajax({
                         url: "/Calendar/AddSchedule",
                         method: "POST",
-                        async: false,
-                        data: { data: data },
+                        beforeSend: function () {
+                            $(".favicon-loader-overlay").removeClass("ng-hide");
+                        },
+                        complete: function () {
+                            $(".favicon-loader-overlay").addClass("ng-hide");
+                        },
+                        data: { dataList: [data] },
                         dataType: "json",
                         success: function (response) {
                             // after success response
@@ -310,7 +320,7 @@ function submitCalendar() {
         })
 
     } else {
-        alert("Please solve errors");
+         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
 
@@ -328,6 +338,31 @@ function validateSchedularFormData(data) {
     debugger;
     var finalCheck = true;
     
+    if ($("#serviceName").val() == "" || $("#serviceName").val() == null) {
+        finalCheck = false;
+        $("#SCH_ACTIVITY_ERROR").show();
+    } else {
+        $("#SCH_ACTIVITY_ERROR").hide();
+    }
+
+    if (createdServiceType == "Package") {
+        if ($("#maxParticipants").val() == "" || $("#maxParticipants").val() == null) {
+            finalCheck = false;
+            $("#SCH_PARTI_ERROR").show();
+        } else {
+            $("#SCH_PARTI_ERROR").hide();
+        }
+    }
+
+    if ($("input[name=servicePaid]:checked").val() == "Y") {
+        if ($("#feesPerSession").val() == "" || $("#feesPerSession").val() == null) {
+            finalCheck = false;
+            $("#SCH_FEES_ERROR").show();
+        } else {
+            $("#SCH_FEES_ERROR").hide();
+        }
+    }
+
     if (data.SCH_LOCATION == "" || data.SCH_LOCATION == null) {
         finalCheck = false;
         $("#SCH_LOCATION_ERROR").show();
@@ -361,6 +396,21 @@ function validateSchedularFormData(data) {
         finalCheck = false;
     }
 
+    var temp = false;
+    for (let key in data.table) {
+        if (data.table.hasOwnProperty(key)) {
+            if (data.table[key].Start != "" && data.table[key].End != "") {
+                temp = true;
+            }
+        }
+    }
+
+    if (!temp) {
+        finalCheck = false;
+        $("#SCH_TIME_ERROR").show();
+    } else {
+        $("#SCH_TIME_ERROR").hide();
+    }
 
     return finalCheck;
 }

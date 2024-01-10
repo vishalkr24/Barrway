@@ -60,8 +60,8 @@ namespace Barrway.DTO.BusinessModels
 
     public enum PublicPrivateOptions
     {
-        Public,
-        Private
+        PUBLIC,
+        PRIVATE
     }
 
     public enum DropdownDefault

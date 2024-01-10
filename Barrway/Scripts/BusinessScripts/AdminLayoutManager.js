@@ -1,7 +1,23 @@
 ﻿$(document).ready(function () {
     setCompanyDetails();
     setTop5Calendars();
+    
+    $(document).ajaxStart(function () {
+        ajaxStart();
+    });
+
+    $(document).ajaxStop(function () {
+        ajaxStop();
+    });
 });
+
+function ajaxStart() {
+    $(".favicon-loader-overlay").removeClass("ng-hide");
+}
+
+function ajaxStop() {
+    $(".favicon-loader-overlay").addClass("ng-hide");
+}
 
 $(document).on("click", "#navbarDoubleLineContainerNavDropdown .nav-item .nav-link", function () {
     $("#navbarDoubleLineContainerNavDropdown .nav-item .nav-link").removeClass("active");

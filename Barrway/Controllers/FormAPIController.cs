@@ -28,7 +28,7 @@ namespace Barrway.Controllers
         private readonly IBusinessUserService businessUserService;
 
         // GET: FormAPI
-        public FormAPIController(IFormAPIRepository formAPIRepository, ICalendarService calendarService, IPublicUserService publicUserService,IBusinessUserService businessUserService)
+        public FormAPIController(IFormAPIRepository formAPIRepository, ICalendarService calendarService, IPublicUserService publicUserService, IBusinessUserService businessUserService)
         {
             this.formAPIRepository = formAPIRepository;
             this.calendarService = calendarService;
@@ -120,13 +120,13 @@ namespace Barrway.Controllers
             {
                 data.IsCustomFilter = false;
                 data.CustomFilters.Clear();
-                
+
                 if (data.formId == (int)FormSetting.USER_MASTER)
                 {
                     data.IsCustomFilter = true;
                     data.CustomFilters.Add(new CustomFilter() { FieldName = "ROLE_ID", Value = "3" });
                 }
-                
+
             }
 
             var result = (await formAPIRepository.GetFormRecordList(data)).Data;
@@ -164,12 +164,12 @@ namespace Barrway.Controllers
                         string companyCode = deserData.FirstOrDefault(x => x["name"]?.ToString() == "COMPANY_CODE")["value"]?.ToString();
 
                         var checkResult = await businessUserService.GetSessionsForThisMonth(companyCode);
-                        
+
                         if (checkResult.Status)
                         {
                             DateTime PackageValidity = Convert.ToDateTime(checkResult.Data["VALID_TILL"]?.ToString());
 
-                            if (PackageValidity < Convert.ToDateTime(deserData.FirstOrDefault(x=> x["name"]?.ToString() == "start")["value"]?.ToString()))
+                            if (PackageValidity < Convert.ToDateTime(deserData.FirstOrDefault(x => x["name"]?.ToString() == "start")["value"]?.ToString()))
                             {
                                 return Json(new AddUpdateDelete() { Status = false, Message = "Can not create event after the package expiry date." });
                             }
@@ -198,7 +198,7 @@ namespace Barrway.Controllers
                     {
                         return Json(new AddUpdateDelete() { Status = false, Message = "Event not created." });
                     }
-                    
+
 
                 }
                 catch (Exception ex)
@@ -268,7 +268,7 @@ namespace Barrway.Controllers
                     result.FirstOrDefault(x => x.resourceForm != 0 & x.IsDefault == true).formDataList = tempResults;
                 }
             }
-            
+
             return Json(result);
         }
 
@@ -333,7 +333,7 @@ namespace Barrway.Controllers
                                         finalResult.activityDetails.Add(result.activityDetails[j]);
                                     }
                                 }
-                                
+
                             }
                         }
                         catch (Exception ex)
@@ -344,7 +344,8 @@ namespace Barrway.Controllers
 
 
                         // filter events
-                        try {
+                        try
+                        {
                             for (int j = 0; j < result.events.Count; j++)
                             {
                                 if (enrolledData.Data[i]["Id"].ToString() == result.events[j]["Id"].ToString())
@@ -375,11 +376,11 @@ namespace Barrway.Controllers
                             }
 
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
 
                         }
-                        
+
                     }
 
                     result = finalResult;
@@ -410,18 +411,22 @@ namespace Barrway.Controllers
                     });
                 }
             }
-            if (!data.IsPublicUser) {
-
-               var calendarDetailsResult= await businessUserService.GetCalendarDetails(data.CALENDAR_CODE);
-                if (calendarDetailsResult.Status) {
+            if (!data.IsPublicUser)
+            {
+                var calendarDetailsResult = await businessUserService.GetCalendarDetails(data.CALENDAR_CODE);
+                if (calendarDetailsResult.Status)
+                {
                     var calendarDetails = calendarDetailsResult.Data as IDictionary<string, object>;
-                    if (calendarDetails.ContainsKey("category") && calendarDetails["category"]!=null) { 
-                    var calendarCategory = calendarDetails["category"] as IDictionary<string, object>;
+                    if (calendarDetails.ContainsKey("category") && calendarDetails["category"] != null)
+                    {
+                        var calendarCategory = calendarDetails["category"] as IDictionary<string, object>;
                         if (calendarCategory.ContainsKey("IS_SERVICE_TYPE"))
-                        { 
-                            string is_service_type= calendarCategory["IS_SERVICE_TYPE"]?.ToString()??"";
-                            if (is_service_type != "N") {
-                                if (result != null && result.events != null) {
+                        {
+                            string is_service_type = calendarCategory["IS_SERVICE_TYPE"]?.ToString() ?? "";
+                            if (is_service_type != "N")
+                            {
+                                if (result != null && result.events != null)
+                                {
                                     result.events = result.events.Where(x => x.ContainsKey("EVENT_TYPE") && x["EVENT_TYPE"]?.ToString() != "BOOKING").ToList();
                                 }
                             }
@@ -429,7 +434,7 @@ namespace Barrway.Controllers
                     }
                 }
             }
-            
+
             return Json(result.ToDictionary(), JsonRequestBehavior.AllowGet);
         }
 
@@ -446,10 +451,10 @@ namespace Barrway.Controllers
             }
             ReferalFormDataResponseModel result = await formAPIRepository.getReferralFormFields(data);
 
-            List<IDictionary<string,object>> eventsData = new List<IDictionary<string,object>>();
+            List<IDictionary<string, object>> eventsData = new List<IDictionary<string, object>>();
 
             if (result != null && result.events != null && result.events.Count > 0)
-            {   
+            {
                 var markSchedule = result.events.Where(x => x["EVENT_TYPE"]?.ToString() == "SCHEDULE").ToList();
 
                 markSchedule.ForEach(x => x.Add("rendering", "background"));
@@ -540,12 +545,15 @@ namespace Barrway.Controllers
                 }
             }
 
-            if (result.events != null && result.events.Count() > 0) {
+            if (result.events != null && result.events.Count() > 0)
+            {
 
                 var ids = string.Join(",", result.events.Where(x => x.ContainsKey("Id") && x["Id"] != null && x["Id"].ToString() != "0").Select(x => x["Id"].ToString()).ToList());
-                if (!string.IsNullOrEmpty(ids)) {
+                if (!string.IsNullOrEmpty(ids))
+                {
                     var getallTransactionUser = await calendarService.GetPublicUserTransactionEvent(ids);
-                    if (getallTransactionUser.Data != null && getallTransactionUser.Data.Count() > 0) {
+                    if (getallTransactionUser.Data != null && getallTransactionUser.Data.Count() > 0)
+                    {
                         result.events.ForEach(e =>
                         {
                             var usertrnsactionData = getallTransactionUser.Data;
@@ -555,14 +563,14 @@ namespace Barrway.Controllers
                                 {
                                     e["IS_PUBLIC_USER_EVENT"] = true;
                                 }
-                        }
+                            }
                         });
                     }
                 }
-                
 
 
-            
+
+
             }
             return Json(result);
         }
