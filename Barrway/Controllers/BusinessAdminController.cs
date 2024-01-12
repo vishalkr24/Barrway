@@ -197,6 +197,11 @@ namespace Barrway.Controllers
                     var data = await businessUserService.GetCalendarDetails(CalendarCode, UserIdentity.UserID);
                     if (data.Status)
                     {
+                        if (TempData.ContainsKey("IsStep2"))
+                        {
+                            ViewBag.IsStep2 = TempData["IsStep2"];
+                        }
+
                         BusinessCalendarModel calendarModel2 = new BusinessCalendarModel();
                         calendarModel2 = JsonConvert.DeserializeObject<BusinessCalendarModel>(JsonConvert.SerializeObject(data.Data));
                         calendarModel.CALENDAR_CATEGORY_ID = calendarModel2.CALENDAR_CATEGORY_ID;
@@ -1193,10 +1198,12 @@ namespace Barrway.Controllers
         public async Task<ActionResult> AddCalendar(BusinessCalendarViewModel model, bool IsPartial)
         {
             model.UNIVERSAL_ERROR = null;
+            ViewBag.IsStep2 = 'N';
 
             if (!ModelState.IsValid)
             {
                 ViewBag.IsPartial = IsPartial;
+                ViewBag.IsStep2 = 'Y';
                 return View("SetupCompanyCalendar", model);
             }
             else
@@ -1207,6 +1214,7 @@ namespace Barrway.Controllers
                     {
                         ModelState.AddModelError("SLOT_DURATION_IN_MINS", "Slot duration is required");
                         ViewBag.IsPartial = IsPartial;
+                        ViewBag.IsStep2 = 'Y';
                         return View("SetupCompanyCalendar", model);
                     }
                     else
@@ -1219,6 +1227,7 @@ namespace Barrway.Controllers
                         {
                             ModelState.AddModelError("SLOT_DURATION_IN_MINS", "Enter slot duration in minutes (number)");
                             ViewBag.IsPartial = IsPartial;
+                            ViewBag.IsStep2 = 'Y';
                             return View("SetupCompanyCalendar", model);
                         }
                     }
@@ -1247,7 +1256,7 @@ namespace Barrway.Controllers
                             }
                         }
 
-                        if (currentCalendars < calendarLimit || !IsPartial)
+                        if (calendarLimit > 0 || !IsPartial)
                         {
                             string path = "";
                             string fileName = "";
@@ -1258,6 +1267,7 @@ namespace Barrway.Controllers
                                 {
                                     ModelState.AddModelError("CALENDAR_PHOTO_NAME", "Please select a calendar photo");
                                     ViewBag.IsPartial = IsPartial;
+                                    ViewBag.IsStep2 = 'Y';
                                     return View("SetupCompanyCalendar", model);
                                 }
                             }
@@ -1398,6 +1408,7 @@ namespace Barrway.Controllers
                             {
                                 ViewBag.IsPartial = IsPartial;
                                 ViewBag.ErrorMessage = "Some error occured while creating Calendar! Please refresh and try again.";
+                                ViewBag.IsStep2 = 'Y';
                                 return View("SetupCompanyCalendar", model);
                             }
                         }
@@ -1405,6 +1416,7 @@ namespace Barrway.Controllers
                         {
                             ModelState.AddModelError("UNIVERSAL_ERROR", "You have already created maximum no. of calendars in your current package. Please upgrade you package to create more calendars.");
                             ViewBag.IsPartial = IsPartial;
+                            ViewBag.IsStep2 = 'Y';
                             ViewBag.ErrorMessage = "You have already created maximum no. of calendars in your current package. Please upgrade you package to create more calendars.";
                             
                             return View("SetupCompanyCalendar", model);
@@ -1415,7 +1427,7 @@ namespace Barrway.Controllers
                         ModelState.AddModelError("UNIVERSAL_ERROR", "No active package found for this company. Kindly subscribe to a package and try again!");
                         ViewBag.IsPartial = IsPartial;
                         ViewBag.ErrorMessage = "No active package found for this company. Kindly subscribe to a package and try again!";
-                        
+                        ViewBag.IsStep2 = 'Y';
                         return View("SetupCompanyCalendar", model);
                     }
                     
@@ -1426,6 +1438,7 @@ namespace Barrway.Controllers
                 {
                     ViewBag.IsPartial = IsPartial;
                     ViewBag.ErrorMessage = "Company not found. Please select or create a company.";
+                    ViewBag.IsStep2 = 'Y';
                     return RedirectToAction("SetupCompanyProfile", model);
                 }
             }

@@ -112,6 +112,14 @@ function BindEventData() {
         $("#step-5").fadeIn();
     }, 500)
 
+    $("#ddlMasterCalendar").val(createdCalendarCode);
+    localStorage.setItem("CALENDAR_CODE", createdCalendarCode)
+    $(".selectable-calendar-item").removeClass("selected");
+    setTimeout(function () {
+        $(".selectable-calendar-item[data-id=CLR_SEL_" + localStorage.getItem("CALENDAR_CODE") + "]").addClass("selected");
+        $(".lbl-calendar-name").text($("#ddlMasterCalendar option:selected").text());
+    }, 500);
+
     $.ajax({
         url: "/Calendar/GetLocationMasterList",
         method: "POST",
@@ -134,7 +142,7 @@ function BindEventData() {
                 data.forEach(x => {
                     divString += `<option value="${x.Id}">${x.LOCATION_ADDRESS}</option>`;
                 })
-
+                $("#sessionLocationMaster").empty();
             } else {
                 window.location.replace(`/BusinessAdmin/SetupCalendarEvent?CompanyId=${localStorage.getItem("COMPANY_ID")}&CalendarCode=${createdCalendarCode}&Step=3`)
                 return;
@@ -168,8 +176,9 @@ function BindEventData() {
 
                 data.forEach(x => {
                     divString += `<option value="${x.Id}">${x.FIRST_NAME} ${x.LAST_NAME}</option>`;
-                })
+                });
 
+                $("#sessionServiceProviderMaster").empty();
             } else {
                 window.location.replace(`/BusinessAdmin/SetupCalendarEvent?CompanyId=${localStorage.getItem("COMPANY_ID")}&CalendarCode=${createdCalendarCode}&Step=4`);
                 return;
@@ -219,8 +228,8 @@ function submitCalendar() {
 
     var data = {
         Id: 0,
-        COMPANY_CODE: localStorage.getItem("COMPANY_CODE"),
-        CALENDAR_CODE: localStorage.getItem("CALENDAR_CODE"),
+        COMPANY_CODE: createdCompanyCode,
+        CALENDAR_CODE: createdCalendarCode,
         SCH__NAME: "",
         SCH_LOCATION: $("#sessionLocationMaster option:selected").val(),
         SCH_ACTIVITY: 0,
@@ -246,7 +255,8 @@ function submitCalendar() {
             ACTIVITY_NAME: $("#serviceName").val(),
             fees_1: $("#feesPerSession").val(),
             IS_SERVICE_PAID: $("input[name=servicePaid]:checked").val(),
-            SERVICE_TYPE: createdServiceType
+            SERVICE_TYPE: createdServiceType,
+            MAXIMUM_NO_OF_PARTICIPANTS: (createdCalendarType == '1' || createdCalendarType == '5') ? $("#maxParticipants").val() : 0
         }
 
         $.ajax({
@@ -288,7 +298,7 @@ function submitCalendar() {
                                     title: "Session Created",
                                     text: "Sessions created successfully!"
                                 }).then(function (check) {
-                                    window.location.href = '/BusinessAdmin/CalendarMaster';
+                                    window.location.href = '/calendar/index#/calender/2305';
                                 });
 
                             } else {
@@ -499,6 +509,14 @@ function bindCalendarLocationMaster() {
         $("#step-3").fadeIn();
     }, 500);
 
+    $("#ddlMasterCalendar").val(createdCalendarCode);
+    localStorage.setItem("CALENDAR_CODE", createdCalendarCode)
+    $(".selectable-calendar-item").removeClass("selected");
+    setTimeout(function () {
+        $(".selectable-calendar-item[data-id=CLR_SEL_" + localStorage.getItem("CALENDAR_CODE") + "]").addClass("selected");
+        $(".lbl-calendar-name").text($("#ddlMasterCalendar option:selected").text());
+    }, 500);
+
     $.ajax({
         url: "/Calendar/GetLocationMasterList",
         method: "POST",
@@ -566,6 +584,14 @@ function bindCalendarServiceProviderMaster() {
     $("#step-6").fadeOut();
     setTimeout(function () {
         $("#step-4").fadeIn();
+    }, 500);
+
+    $("#ddlMasterCalendar").val(createdCalendarCode);
+    localStorage.setItem("CALENDAR_CODE", createdCalendarCode)
+    $(".selectable-calendar-item").removeClass("selected");
+    setTimeout(function () {
+        $(".selectable-calendar-item[data-id=CLR_SEL_" + localStorage.getItem("CALENDAR_CODE") + "]").addClass("selected");
+        $(".lbl-calendar-name").text($("#ddlMasterCalendar option:selected").text());
     }, 500);
 
     $.ajax({
