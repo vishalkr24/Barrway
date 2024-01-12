@@ -280,7 +280,7 @@ namespace Barrway.Controllers
 
         [HttpPost]
         public async Task<ActionResult> getReferralFormFields(Form_DataTable data)
-        {
+            {
             if (!string.IsNullOrEmpty(data?.COMPANY_CODE) || !string.IsNullOrEmpty(data?.CALENDAR_CODE))
             {
 

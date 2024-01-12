@@ -37,6 +37,7 @@ function readyPage() {
     renderTemplates($("#CALENDAR_CATEGORY_ID option:selected").val())
 
     if ($("#createCalendarCheck").val() == false || $("#createCalendarCheck").val() == "false" ) {
+        
         $("#content").hide();
         $("#content-2").show();
         setCurrentCalendarData();
@@ -48,8 +49,15 @@ function readyPage() {
         HSCore.components.HSTomSelect.init('.js-select')
     } else {
         var obj = { 'create': true, 'placeholder': 'Add tags...' };
-        $("#content").show();
-        $("#content-2").hide();
+
+        if ($("#stepIndicatorInput").val() == "Y") {
+            $("#content").hide();
+            $("#content-2").show();
+        } else {
+            $("#content").show();
+            $("#content-2").hide();
+        }
+        
         $("#TAGS").attr("data-hs-tom-select-options", JSON.stringify(obj));
         HSCore.components.HSTomSelect.init('.js-select')
     }
