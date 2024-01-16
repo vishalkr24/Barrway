@@ -251,10 +251,6 @@ namespace Barrway.Controllers
 
                 if (string.IsNullOrEmpty(CompanyId) && string.IsNullOrEmpty(CalendarCode))
                 {
-                    return View(new BusinessCalendarViewModel()
-                    {
-                        CALENDAR_CODE = ""
-                    });
                     return RedirectToAction("Dashboard");
                 }
 
