@@ -1,5 +1,7 @@
 ﻿var templateList = [];
 var locationList = [];
+var locationModelList = [];
+var providerModelList = [];
 var serviceProviderList = [];
 const createdCalendarCode = $("#calendarCodeInput").val();
 const createdCompanyCode = $("#companyCodeInput").val();
@@ -501,7 +503,7 @@ function validateStep(stepId) {
 
 
 function bindCalendarLocationMaster() {
-
+    
     $("#step-4").fadeOut();
     $("#step-5").fadeOut();
     $("#step-6").fadeOut();
@@ -517,6 +519,57 @@ function bindCalendarLocationMaster() {
         $(".lbl-calendar-name").text($("#ddlMasterCalendar option:selected").text());
     }, 500);
 
+    // Define Location Model
+    $.ajax({
+        url: "/FormAPI/ManageForm",
+        method: "POST",
+        async: false,
+        data: {
+            data: {
+                action: 7,
+                formId: "2306"
+            }
+        },
+        success: function (response) {
+            
+            if (response.length > 0) {
+
+                var data = JSON.parse(response[0].fields);
+
+                if (data["Page 1"] != null && data["Page 1"] != undefined) {
+                    var data2 = JSON.parse(data["Page 1"]);
+
+                    let containerClass = "";
+
+                    if (data2 != null && data2 != undefined) {
+                        data2 = data2.filter(x => x["required"] != undefined && x["required"] == true);
+                    }
+
+                    containerClass = (data2.length == 1) ? "col-md-12" : "col-md-6";
+
+                    data2.forEach(x => {
+                        locationModelList.push({
+                            label: x["label"],
+                            containerClass: containerClass,
+                            name: x["name"],
+                            type: x["type"],
+                            values: (x["type"] == "radio-group" || x["type"] == "select" || x["type"] == "checkbox-group")? x["values"]: null
+                        });
+
+                    });
+
+                }
+                
+            }
+            
+
+        },
+        error: function (error) {
+
+        }
+    })
+
+    // Bind Location Master
     $.ajax({
         url: "/Calendar/GetLocationMasterList",
         method: "POST",
@@ -528,47 +581,23 @@ function bindCalendarLocationMaster() {
         success: function (response) {
 
             var data = response.data;
-            var divString = "";
-
+            
             if (data != null) {
 
                 locationList = [];
 
                 data.forEach(x => {
-
-                    locationList.push({
-                        Id: x.Id,
-                        CALENDAR_CODE: createdCalendarCode,
-                        COMPANY_CODE: createdCompanyCode,
-                        LOCATION_ADDRESS: x.LOCATION_ADDRESS,
-                        Is_New: false
-                    });
-
-                    divString += `<div class="form-group">
-                                            <label for="calendarname">Location*</label>
-
-                                            <input type="text" class="form-control location-input" placeholder="" value="${x.LOCATION_ADDRESS}" data-input-id="${x.Id}">
-                                        </div>`;
-                })
-
-
-            } else {
-                locationList.push({
-                    Id: 1,
-                    CALENDAR_CODE: createdCalendarCode,
-                    COMPANY_CODE: createdCompanyCode,
-                    LOCATION_ADDRESS: "",
-                    Is_New: true
+                    addMoreLocation(x, false, false);
                 });
 
-                divString += `<div class="form-group">
-                                            <label for="calendarname">Location*</label>
+                if (data.length == 0) {
+                    addMoreLocation(null, false, true);
+                }
 
-                                            <input type="text" class="form-control location-input" placeholder="" value="" data-input-id="1">
-                                        </div>`;
+            } else {
+                addMoreLocation(null, false, true);
             }
 
-            $("#locations-div").append(divString);
         },
         error: function (er) {
 
@@ -594,6 +623,57 @@ function bindCalendarServiceProviderMaster() {
         $(".lbl-calendar-name").text($("#ddlMasterCalendar option:selected").text());
     }, 500);
 
+    // Define Provider Model
+    $.ajax({
+        url: "/FormAPI/ManageForm",
+        method: "POST",
+        async: false,
+        data: {
+            data: {
+                action: 7,
+                formId: "2304"
+            }
+        },
+        success: function (response) {
+
+            if (response.length > 0) {
+
+                var data = JSON.parse(response[0].fields);
+
+                if (data["Page 1"] != null && data["Page 1"] != undefined) {
+                    var data2 = JSON.parse(data["Page 1"]);
+
+                    let containerClass = "";
+
+                    if (data2 != null && data2 != undefined) {
+                        data2 = data2.filter(x => x["required"] != undefined && x["required"] == true);
+                    }
+
+                    containerClass = (data2.length == 1) ? "col-md-12" : "col-md-6";
+
+                    data2.forEach(x => {
+                        providerModelList.push({
+                            label: x["label"],
+                            containerClass: containerClass,
+                            name: x["name"],
+                            type: x["type"],
+                            values: (x["type"] == "radio-group" || x["type"] == "select" || x["type"] == "checkbox-group") ? x["values"] : null
+                        });
+
+                    });
+
+                }
+
+            }
+
+
+        },
+        error: function (error) {
+
+        }
+    })
+
+    // BInd Provider Data
     $.ajax({
         url: "/Calendar/GetServiceProviderMasterList",
         method: "POST",
@@ -605,106 +685,22 @@ function bindCalendarServiceProviderMaster() {
         success: function (response) {
 
             var data = response.data;
-            var divString = "";
-
+            
             if (data != null) {
 
                 serviceProviderList = [];
 
-                if (data.length > 0) {
-
-                } else {
-                    serviceProviderList.push({
-                        Id: 1,
-                        CALENDAR_CODE: createdCalendarCode,
-                        COMPANY_CODE: createdCompanyCode,
-                        FIRST_NAME: "",
-                        LAST_NAME: "",
-                        Is_New: false
-                    });
-
-                    divString += `      <div class="row">
-                                            <p class="sp">Service provider</p>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="calendarname">First Name *</label>
-
-                                                    <input type="text" class="form-control provider-first-input" placeholder="" value="" data-input-id="1">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="calendarname">Last Name *</label>
-
-                                                    <input type="text" class="form-control provider-last-input" placeholder="" value="" data-input-id="1">
-                                                </div>
-                                            </div>
-                                        </div>
-                                       `;
-                }
-
                 data.forEach(x => {
-
-                    serviceProviderList.push({
-                        Id: x.Id,
-                        CALENDAR_CODE: createdCalendarCode,
-                        COMPANY_CODE: createdCompanyCode,
-                        FIRST_NAME: x.FIRST_NAME,
-                        LAST_NAME: x.LAST_NAME,
-                        Is_New: false
-                    });
-
-                    divString += `      <div class="row">
-                                            <p class="sp">Service provider</p>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="calendarname">First Name *</label>
-
-                                                    <input type="text" class="form-control provider-first-input" placeholder="" value="${x.FIRST_NAME}" data-input-id="${x.Id}">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="calendarname">Last Name *</label>
-
-                                                    <input type="text" class="form-control provider-last-input" placeholder="" value="${x.LAST_NAME}" data-input-id="${x.Id}">
-                                                </div>
-                                            </div>
-                                        </div>
-                                       `;
+                    addMoreProvider(x, false, false)
                 })
 
+                if (data.length == 0) {
+                    addMoreProvider(null, false, true)
+                }
+
             } else {
-                serviceProviderList.push({
-                    Id: 1,
-                    CALENDAR_CODE: createdCalendarCode,
-                    COMPANY_CODE: createdCompanyCode,
-                    FIRST_NAME: "",
-                    LAST_NAME: "",
-                    Is_New: true
-                });
-
-                divString += `      <div class="row">
-                                            <p class="sp">Service provider</p>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="calendarname">First Name *</label>
-
-                                                    <input type="text" class="form-control provider-first-input" placeholder="" value="" data-input-id="1">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="calendarname">Last Name *</label>
-
-                                                    <input type="text" class="form-control provider-last-input" placeholder="" value="" data-input-id="1">
-                                                </div>
-                                            </div>
-                                        </div>
-                                       `;
+                addMoreProvider(null, false, true)
             }
-
-            $("#providers-div").append(divString);
         },
         error: function (er) {
 
@@ -712,104 +708,140 @@ function bindCalendarServiceProviderMaster() {
     })
 }
 
-function getMaxId(arr) {
-    let max = 1;
-    if (arr != null) {
-        if (arr.length > 0) {
-            max = arr[0].Id;
-            arr.forEach(x => {
-                if (x.Id > max) {
-                    max = x.Id;
-                }
-            })
-        }
-    }
-
-    return max;
-}
-
-function addMoreProvider() {
+function addMoreProvider(dataItem, isRemovable, isNew) {
 
     let dataModel = {
-        Id: parseInt(getMaxId(serviceProviderList)) + 1,
+        Id: (dataItem == null) ? parseInt(getMaxId(serviceProviderList)) + 1 : dataItem.Id,
         CALENDAR_CODE: createdCalendarCode,
         COMPANY_CODE: createdCompanyCode,
-        FIRST_NAME: "",
-        LAST_NAME: "",
-        Is_New: true
+        Is_New: isNew
     };
+
+    $("#providers-div").append(`<div class="form" id="provider-elem-${dataModel.Id}"> ${(isRemovable) ? `<div class="element-remover" onclick="removeProvider(${dataModel.Id})"><i class="fa fa-times" aria-hidden="true"></i></div>` : ""} <div class="row"></div></div>`)
+
+    providerModelList.forEach(x => {
+
+        dataModel[x.name] = (dataItem == null) ? "" : dataItem[x.name];
+
+        $("#providers-div #provider-elem-" + dataModel.Id + " .row").append(`<div class="${x.containerClass}">
+                                            <div class="form-group">
+                                                ${generateInputBox(x, dataModel.Id, "provider-input")}
+                                            </div>
+                                        </div>`);
+
+        $(`input[name=${x.name}${dataModel.Id}]`).val(dataModel[x.name]);
+    });
 
     serviceProviderList.push(dataModel);
-
-    $("#providers-div").append(`
-                                        <div class="row" id="provider-elem-${dataModel.Id}">
-                                            <p class="sp">Service provider <span><i class="fa fa-times" onclick="removeProvider(${dataModel.Id})" aria-hidden="true"></i></span></p>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="calendarname">First Name *</label>
-
-                                                    <input type="text" class="form-control provider-first-input" placeholder="" value="${dataModel.FIRST_NAME}" data-input-id="${dataModel.Id}">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="calendarname">Last Name *</label>
-
-                                                    <input type="text" class="form-control provider-last-input" placeholder="" value="${dataModel.LAST_NAME}" data-input-id="${dataModel.Id}">
-                                                </div>
-                                            </div>
-                                        </div>`);
+    setTimeout(function () {
+        providerModelList.forEach(x => {
+            $(`input[name^=${x.name}]`).bind("keyup change paste", function () {
+                let inputId = $(this).attr("data-input-id");
+                serviceProviderList.find(y => y.Id == inputId)[x.name] = this.value;
+            });
+        });
+    }, 500);
+    
 }
 
-function setSameTime() {
-    $("#Tuesday_Start_Time").val($("#Monday_Start_Time").val());
-    $("#Tuesday_End_Time").val($("#Monday_End_Time").val());
-
-    $("#Wednesday_Start_Time").val($("#Monday_Start_Time").val());
-    $("#Wednesday_End_Time").val($("#Monday_End_Time").val());
-
-    $("#Thursday_Start_Time").val($("#Monday_Start_Time").val());
-    $("#Thursday_End_Time").val($("#Monday_End_Time").val());
-
-    $("#Friday_Start_Time").val($("#Monday_Start_Time").val());
-    $("#Friday_End_Time").val($("#Monday_End_Time").val());
-
-    $("#Saturday_Start_Time").val($("#Monday_Start_Time").val());
-    $("#Saturday_End_Time").val($("#Monday_End_Time").val());
-
-    $("#Sunday_Start_Time").val($("#Monday_Start_Time").val());
-    $("#Sunday_End_Time").val($("#Monday_End_Time").val());
-}
-
-function setSameDateValue() {
-    if ($("input[name=TimeSameAsMonday]:checked").val() == "on") {
-        setSameTime();
-    }
-}
-
-function addMoreLocation() {
-
+function addMoreLocation(dataItem, isRemovable, isNew) {
+    debugger;
     let dataModel = {
-        Id: parseInt(getMaxId(locationList)) + 1,
+        Id: (dataItem == null) ? parseInt(getMaxId(locationList)) + 1 : dataItem.Id,
         CALENDAR_CODE: createdCalendarCode,
         COMPANY_CODE: createdCompanyCode,
-        LOCATION_ADDRESS: "",
-        Is_New: true
+        Is_New: isNew
     };
 
-    locationList.push(dataModel);
+    $("#locations-div").append(`<div class="form" id="location-elem-${dataModel.Id}"> ${(isRemovable) ? `<div class="element-remover" onclick="removeLocation(${dataModel.Id})"><i class="fa fa-times" aria-hidden="true"></i></div>` : ""} <div class="row"></div></div>`)
+    
+    locationModelList.forEach(x => {
 
-    $("#locations-div").append(`<div class="form-group" id="location-elem-${dataModel.Id}">
-                                            <label for="calendarname">Location*</label> <span><i class="fa fa-times" onclick="removeLocation(${dataModel.Id})" aria-hidden="true"></i></span>
-
-                                            <input type="text" class="form-control location-input" placeholder="" value="" data-input-id="${dataModel.Id}">
+        dataModel[x.name] = (dataItem == null) ? "" : dataItem[x.name];
+        
+        $("#locations-div #location-elem-" + dataModel.Id + " .row").append(`<div class="${x.containerClass}">
+                                            <div class="form-group">
+                                                ${generateInputBox(x, dataModel.Id, "location-input")}
+                                            </div>
                                         </div>`);
+        
+        $(`input[name=${x.name}${dataModel.Id}]`).val(dataModel[x.name]);
+    });
+
+    locationList.push(dataModel);
+    setTimeout(function () {
+        locationModelList.forEach(x => {
+            $(`input[name^=${x.name}]`).bind("keyup change paste", function () {
+                let inputId = $(this).attr("data-input-id");
+                locationList.find(y => y.Id == inputId)[x.name] = this.value;
+            })
+        });
+    }, 500);
 }
 
-$(document).on("keyup change paste", ".location-input", function () {
-    let inputId = $(this).attr("data-input-id");
-    locationList.find(x => x.Id == inputId).LOCATION_ADDRESS = this.value;
-})
+function generateInputBox(modelItem, id, additionalClass) {
+
+    let value = "";
+
+    switch (modelItem.type) {
+        case "text":
+            value = `
+                    <label for="${modelItem.name}${id}">${modelItem.label}*</label>
+                    <input class="form-control ${additionalClass}" type="text" name="${modelItem.name}${id}" data-input-id="${id}"/>`;
+            break;
+        case "number":
+            value = `
+                    <label for="${modelItem.name}${id}">${modelItem.label}*</label>
+                    <input class="form-control ${additionalClass}" type="number" name="${modelItem.name}${id}" data-input-id="${id}"/>`;
+            break;
+        case "date":
+            value = `
+                    <label for="${modelItem.name}${id}">${modelItem.label}*</label>
+                    <input class="form-control ${additionalClass}" type="date" name="${modelItem.name}${id}" data-input-id="${id}"/>`;
+            break;
+        case "radio-group":
+            if (modelItem.values != null) {
+                value += `<label for="${modelItem.name}${id}">${modelItem.label} *</label> <br />`;
+                modelItem.values.forEach(x => {
+                    value += `
+                            <div style="float:left;">
+                                <input type="radio" class="" id="${modelItem.name}${x.value}" name="${modelItem.name}${id}" value="${x.value}" data-input-id="${id}">
+                                <label class="form-check-label" for="${modelItem.name}${x.value}">${x.label}</label>
+                            </div>
+                            `
+                });
+            }
+            break;
+        case "checkbox-group":
+            if (modelItem.values != null) {
+                value += `<label for="${modelItem.name}${id}">${modelItem.label} *</label> <br />`;
+                modelItem.values.forEach(x => {
+                    value += `
+                            <div style="float:left;">
+                                <input type="checkbox" class="" id="${modelItem.name}${x.value}" name="${modelItem.name}${id}" value="${x.value}" data-input-id="${id}">
+                                <label class="form-check-label" for="${modelItem.name}${x.value}">${x.label}</label>
+                            </div>
+                            `
+                });
+            }
+            break;
+        case "select":
+            if (modelItem.values != null) {
+                value += `<label for="${modelItem.name}${id}">${modelItem.label} *</label> <br /><select class="form-control" name="${modelItem.name}${id}" data-input-id="${id}">`;
+                modelItem.values.forEach(x => {
+                    value += `
+                            <option value="${x.value}">${x.label}</option>
+                            `
+                });
+                value += "</select>";
+            }
+            break;
+        default:
+            break;
+    }
+
+    return value;
+}
 
 $(document).on("keyup change paste", ".provider-first-input", function () {
     let inputId = $(this).attr("data-input-id");
@@ -913,5 +945,50 @@ function createServiceProviderMaster() {
         })
 
 
+    }
+}
+
+
+
+// Helper functions
+function getMaxId(arr) {
+    let max = 1;
+    if (arr != null) {
+        if (arr.length > 0) {
+            max = arr[0].Id;
+            arr.forEach(x => {
+                if (x.Id > max) {
+                    max = x.Id;
+                }
+            })
+        }
+    }
+
+    return max;
+}
+
+function setSameTime() {
+    $("#Tuesday_Start_Time").val($("#Monday_Start_Time").val());
+    $("#Tuesday_End_Time").val($("#Monday_End_Time").val());
+
+    $("#Wednesday_Start_Time").val($("#Monday_Start_Time").val());
+    $("#Wednesday_End_Time").val($("#Monday_End_Time").val());
+
+    $("#Thursday_Start_Time").val($("#Monday_Start_Time").val());
+    $("#Thursday_End_Time").val($("#Monday_End_Time").val());
+
+    $("#Friday_Start_Time").val($("#Monday_Start_Time").val());
+    $("#Friday_End_Time").val($("#Monday_End_Time").val());
+
+    $("#Saturday_Start_Time").val($("#Monday_Start_Time").val());
+    $("#Saturday_End_Time").val($("#Monday_End_Time").val());
+
+    $("#Sunday_Start_Time").val($("#Monday_Start_Time").val());
+    $("#Sunday_End_Time").val($("#Monday_End_Time").val());
+}
+
+function setSameDateValue() {
+    if ($("input[name=TimeSameAsMonday]:checked").val() == "on") {
+        setSameTime();
     }
 }

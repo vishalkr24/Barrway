@@ -275,18 +275,27 @@ namespace Barrway.Controllers
                     // location master entry and update
                     try
                     {
-                        var dataSerialized = JsonConvert.SerializeObject(data.Where(x => x["Is_New"]?.ToString() == "true"));
+                        var dataSerialized = data.Where(x => x["Is_New"]?.ToString() == "true").ToList();
 
-                        List<CalendarLocationMasterModel> locMasMod = JsonConvert.DeserializeObject<List<CalendarLocationMasterModel>>(dataSerialized);
-                        if (locMasMod.Count > 0)
+                        //List<CalendarLocationMasterModel> locMasMod = JsonConvert.DeserializeObject<List<CalendarLocationMasterModel>>(dataSerialized);
+                        if (dataSerialized.Count > 0)
                         {
                             List<string> requestList = new List<string>();
                             List<string> formGroupKeyListTemp = new List<string>();
 
-                            locMasMod.ForEach(assign =>
+                            dataSerialized.ForEach(assign =>
                             {
-                                assign.LOCATION_BUILDING_NAME = assign.LOCATION_ADDRESS;
-                                requestList.Add(CustomMethods.ConvertDicToNameValuePair(assign.ToDictionary()));
+                                Dictionary<string, object> sd = new Dictionary<string, object>();
+                                foreach (KeyValuePair<string, string> keyValuePair in assign)
+                                {
+                                    if (keyValuePair.Key != "Is_New" && keyValuePair.Key != "Id")
+                                    {
+                                        sd.Add(keyValuePair.Key, keyValuePair.Value.ToString());
+                                    }
+
+                                }
+
+                                requestList.Add(CustomMethods.ConvertDicToNameValuePair(sd));
                                 formGroupKeyListTemp.Add(Guid.NewGuid().ToString());
                             });
 
@@ -306,13 +315,23 @@ namespace Barrway.Controllers
                         {
                             string query = "";
 
-                            dataSerialized = JsonConvert.SerializeObject(data.Where(x => x["Is_New"]?.ToString() == "false"));
+                            dataSerialized = data.Where(x => x["Is_New"]?.ToString() == "false").ToList();
 
-                            locMasMod = JsonConvert.DeserializeObject<List<CalendarLocationMasterModel>>(dataSerialized);
+                            //locMasMod = JsonConvert.DeserializeObject<List<CalendarLocationMasterModel>>(dataSerialized);
 
-                            locMasMod.ForEach(x =>
+                            dataSerialized.ForEach(x =>
                             {
-                                query += $@"update LOCATION_MASTER_1936 set LOCATION_ADDRESS = '{x.LOCATION_ADDRESS.Replace("'", "''")}' where Id = '{x.Id}';
+
+                                List<string> columns = new List<string>();
+
+                                foreach(var key in x.Keys.Where(y=> y != "Is_New" && y != "Id" && y != "COMPANY_CODE" && y != "CALENDAR_CODE"))
+                                {
+                                    columns.Add($@"{key?.ToString()} = '{x[key]}'");
+                                }
+
+                                string combine = string.Join(",", columns);
+
+                                query += $@"update LOCATION_MASTER_1936 set {combine} where Id = '{x["Id"]}';
                                             ";
                             });
 
@@ -330,17 +349,27 @@ namespace Barrway.Controllers
                 {
                     try
                     {
-                        var dataSerialized = JsonConvert.SerializeObject(data.Where(x => x["Is_New"]?.ToString() == "true"));
+                        var dataSerialized = data.Where(x => x["Is_New"]?.ToString() == "true").ToList();
 
-                        List<CalendarServiceProviderMasterModel> locMasMod = JsonConvert.DeserializeObject<List<CalendarServiceProviderMasterModel>>(dataSerialized);
-                        if (locMasMod.Count > 0)
+                        //List<CalendarServiceProviderMasterModel> locMasMod = JsonConvert.DeserializeObject<List<CalendarServiceProviderMasterModel>>(dataSerialized);
+                        if (dataSerialized.Count > 0)
                         {
                             List<string> requestList = new List<string>();
                             List<string> formGroupKeyListTemp = new List<string>();
 
-                            locMasMod.ForEach(assign =>
+                            dataSerialized.ForEach(assign =>
                             {
-                                requestList.Add(CustomMethods.ConvertDicToNameValuePair(assign.ToDictionary()));
+                                Dictionary<string, object> sd = new Dictionary<string, object>();
+                                foreach (KeyValuePair<string, string> keyValuePair in assign)
+                                {
+                                    if (keyValuePair.Key != "Is_New" && keyValuePair.Key != "Id")
+                                    {
+                                        sd.Add(keyValuePair.Key, keyValuePair.Value.ToString());
+                                    }
+
+                                }
+
+                                requestList.Add(CustomMethods.ConvertDicToNameValuePair(sd));
                                 formGroupKeyListTemp.Add(Guid.NewGuid().ToString());
                             });
 
@@ -360,15 +389,31 @@ namespace Barrway.Controllers
                         {
                             string query = "";
 
-                            dataSerialized = JsonConvert.SerializeObject(data.Where(x => x["Is_New"]?.ToString() == "false"));
+                            dataSerialized = data.Where(x => x["Is_New"]?.ToString() == "false").ToList();
 
-                            locMasMod = JsonConvert.DeserializeObject<List<CalendarServiceProviderMasterModel>>(dataSerialized);
+                            //locMasMod = JsonConvert.DeserializeObject<List<CalendarServiceProviderMasterModel>>(dataSerialized);
 
-                            locMasMod.ForEach(x =>
+                            dataSerialized.ForEach(x =>
                             {
-                                query += $@"update SERVICE_PROVIDER_MASTER_1934 set FIRST_NAME = '{x.FIRST_NAME.Replace("'", "''")}', LAST_NAME = '{x.LAST_NAME.Replace("'", "''")}' where Id = '{x.Id}';
+
+                                List<string> columns = new List<string>();
+
+                                foreach (var key in x.Keys.Where(y => y != "Is_New" && y != "Id" && y != "COMPANY_CODE" && y != "CALENDAR_CODE"))
+                                {
+                                    columns.Add($@"{key?.ToString()} = '{x[key]}'");
+                                }
+
+                                string combine = string.Join(",", columns);
+
+                                query += $@"update SERVICE_PROVIDER_MASTER_1934 set {combine} where Id = '{x["Id"]}';
                                             ";
                             });
+
+                            //locMasMod.ForEach(x =>
+                            //{
+                            //    query += $@"update SERVICE_PROVIDER_MASTER_1934 set FIRST_NAME = '{x.FIRST_NAME.Replace("'", "''")}', LAST_NAME = '{x.LAST_NAME.Replace("'", "''")}' where Id = '{x.Id}';
+                            //                ";
+                            //});
 
                             var result = await sqlFunction.ExecuteSqlCommandQuery(query);
                         }

@@ -398,6 +398,35 @@
                                             .form-inner {
                                                 margin-left: 0px !important;
                                             }
+
+                                            .element-remover {
+                                                text-align: center;
+                                                border: 1px solid #6f6f6f;
+                                                cursor: pointer;
+                                                height: 30px;
+                                                padding: 4px;
+                                                width: 30px;
+                                                border-radius: 20px;
+                                                position: absolute;
+                                                margin-left: -50px;
+                                                margin-top: 7px;
+                                            }
+
+                                            @@media screen and (max-width: 800px) {
+                                                .element-remover {
+                                                    text-align: center;
+                                                    border: 1px solid #6f6f6f;
+                                                    cursor: pointer;
+                                                    height: 30px;
+                                                    padding: 4px;
+                                                    width: 30px;
+                                                    border-radius: 20px;
+                                                    position: relative;
+                                                    margin-left: 0px;
+                                                    margin-top: 10px;
+                                                    margin-bottom: 8px;
+                                                }
+                                            }
                                         </style>
                                         <div style="text-align:right; color:crimson;">* mandatory</div>
                                         <div class="form-inner set-cal" style="max-width:100%;">
@@ -407,7 +436,7 @@
 
                                             <div class="ycaml">
                                                 <p>You can add more location if your event takes place in more than one location.</p>
-                                                <button class="bg-t-b" onclick="addMoreLocation()">+Add more</button>
+                                                <button class="bg-t-b" onclick="addMoreLocation(null, true, true)">+Add more</button>
                                             </div>
 
                                             <button type="button" onclick="moveToStep(2)" class="back">@Resource.Back</button>
@@ -455,7 +484,7 @@
 
                                         <div class="ycaml">
                                             <p>You can add more service providers if your event has more than one service providers.</p>
-                                            <button class="bg-t-b" onclick="addMoreProvider()">+Add more</button>
+                                            <button class="bg-t-b" onclick="addMoreProvider(null, true, true)">+Add more</button>
                                         </div>
                                         <button type="button" onclick="moveToStep(3)" class="back">@Resource.Back</button>
                                         <button type="button" class="btn btn-primary" onclick="moveToStep(5)">@Resource.Next</button>
@@ -691,8 +720,8 @@
                             </div>
 
                             @*<div class="" style="text-align: right;">
-                                <button class="bg-t-b" style="width: 150px;">+Add more Session</button>
-                            </div>*@
+                                    <button class="bg-t-b" style="width: 150px;">+Add more Session</button>
+                                </div>*@
 
                             <button type="button" onclick="backToStep(5)" class="back">@Resource.Back</button>
                             <button type="button" class="btn btn-primary" onclick="submitCalendar()">@Resource.Save</button>

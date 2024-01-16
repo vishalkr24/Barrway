@@ -498,7 +498,7 @@
 
                                                     <div class="fileUpload btn btn--browse">
                                                         <span>Browse</span>
-                                                        @Html.TextBoxFor(model => model.CALENDAR_PHOTO_PATH, new { @class = "upload", Type = "File", @onchange = "BindLogoName('CALENDAR_PHOTO_PATH', 'CALENDAR_PHOTO_NAME')" })
+                                                        @Html.TextBoxFor(model => model.CALENDAR_PHOTO_PATH, new { @class = "upload", Type = "File", @accept = "image/*", @onchange = "BindLogoName('CALENDAR_PHOTO_PATH', 'CALENDAR_PHOTO_NAME')" })
 
                                                     </div>
                                                 </div>
