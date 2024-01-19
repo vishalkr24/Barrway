@@ -34834,10 +34834,11 @@ select.select-company {
 }
 
     .startbusiness .setup {
-        padding: 15px 10px;
+        padding: 16px;
         background: #FFFFFF;
         box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
         border-radius: 10px;
+        min-height: 130px;
         margin-bottom: 15px;
     }
 
@@ -34850,11 +34851,11 @@ select.select-company {
                 color: #E2476C;
             }
 
-            .startbusiness .setup span:nth-child(2) {
+            /*.startbusiness .setup span:nth-child(2) {
                 color: #222222;
             }
-
-            .startbusiness .setup span:nth-child(3) a {
+*/
+            .startbusiness .setup a {
                 border-radius: 30px;
                 font-size: 16px;
                 color: #FFFFFF;
@@ -34863,6 +34864,16 @@ select.select-company {
                 text-align: center;
                 padding: 5px 25px;
             }
+
+        .startbusiness .setup a.activated {
+            border-radius: 30px;
+            font-size: 15px;
+            color: black;
+            font-weight: 400;
+            line-height: 40px;
+            text-align: center;
+            padding: 5px 0px;
+        }
 
 /*custome css*/
 .navbar-brand.cal-name {

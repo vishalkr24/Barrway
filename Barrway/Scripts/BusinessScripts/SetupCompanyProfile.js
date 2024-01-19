@@ -6,15 +6,13 @@ $(document).on("change", "#COMPANY_CATEGORY_ID", function () {
 $(document).ready(function () {
     $("#COMPANY_SUB_CATEGORY_ID").attr("disabled", true);
     setCompanyCategory();
-    setBusiness();
-    setCompanyWebsite();
     
-
+    setCompanyWebsite();
 })
 
 function setCompanyWebsite() {
     var response = getCompanyWebsite();
-
+    debugger
     if (response.Data.COMPANY_PROFILE_STATUS == "Y") {
         $("#companyProfileSkipButton").hide();
     }
@@ -27,16 +25,6 @@ function setCompanyWebsite() {
     //BindCompanySubCategory(data.Data.COMPANY_CATEGORY_ID);
     //$("#COMPANY_SUB_CATEGORY_ID").val(data.Data.COMPANY_SUB_CATEGORY_ID);
 
-}
-
-function setBusiness() {
-    var response = getBusiness();
-
-    $("#BUSINESS_ACCOUNT_ID").empty();
-
-    for (var i = 0; i < response.Data.length; i++) {
-        $("#BUSINESS_ACCOUNT_ID").append(`<option value="${response.Data[i].BUSINESS_ACCOUNT_ID}">${response.Data[i].BUSINESS_CODE} - ${response.Data[i].USER_ID}</option>`);
-    }
 }
 
 function setCompanyCategory() {

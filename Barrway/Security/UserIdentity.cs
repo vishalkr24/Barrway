@@ -43,16 +43,6 @@ namespace Barrway.Security
             }
         }
 
-        public static string UserRoleType
-        {
-            get
-            {
-                var identity = (System.Security.Claims.ClaimsIdentity)HttpContext.Current.User.Identity;
-                IEnumerable<System.Security.Claims.Claim> claims = identity.Claims;
-                string UID = claims.Where(x => x.Type == "UserRoleType").FirstOrDefault()?.Value;
-                return UID;
-            }
-        }
 
         public static string UpdateClaim(string ClaimType, string newValue)
         {

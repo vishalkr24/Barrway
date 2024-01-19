@@ -28,6 +28,28 @@ function setSelectedCalendar() {
     $("#ddlMasterCalendar").val(localStorage.getItem('CALENDAR_CODE'));
 }
 
+function goToCompanyAdminMaster() {
+    if (localStorage.getItem("COMPANY_ID") != null && localStorage.getItem("COMPANY_ID") != "" && localStorage.getItem("COMPANY_ID") != undefined && localStorage.getItem("COMPANY_ID") != "null") {
+        if (localStorage.getItem("COMPANY_ROLE") == "SUPERUSER") {
+            window.location.href = "/BusinessAdmin/AdminMaster?CompanyId=" + localStorage.getItem("COMPANY_ID");
+        } else {
+            swal({
+                icon: "error",
+                title: "Access Denied",
+                text: "You are not authorized for this request."
+            });
+        }
+    } else {
+        swal({
+            icon: "error",
+            title: "Error",
+            text: "Please select a Company."
+        });
+        return;
+    }
+    
+}
+
 function setCalendarDashboardData() {
     var response = getCompanyCalendarDashboardData(localStorage.getItem('COMPANY_CODE'), localStorage.getItem('CALENDAR_CODE'))
 
@@ -292,12 +314,13 @@ function setCompanyDetails() {
                 if (localStorage.getItem("COMPANY_ID") == null || localStorage.getItem("COMPANY_ID") == "null" || localStorage.getItem("COMPANY_ID") == undefined) {
                     localStorage.setItem("COMPANY_ID", data[i].Id);
                     localStorage.setItem("COMPANY_CODE", data[i].COMPANY_CODE);
+                    
                     localStorage.setItem("COMPANY_NAME_ENGLISH", data[i].COMPANY_NAME_ENGLISH);
                     localStorage.setItem("COMPANY_NAME_CHINESE", data[i].COMPANY_NAME_CHINESE);
                     localStorage.setItem("COMPANY_CATEGORY_ID", data[i].COMPANY_CATEGORY_ID);
                     localStorage.setItem("COMPANY_SUB_CATEGORY_ID", data[i].COMPANY_SUB_CATEGORY_ID);
                 }
-                console.log(data[i]);
+
                 $("#navbar-company-selector").append(`<option selected value="${data[i].Id}">${data[i].COMPANY_NAME_ENGLISH} [${data[i].COMPANY_CODE}]</option>`);
                 $("#disp-navbar-company-selector").append(`<a href="javascript:void(0)" data-id="CMP_SEL_${data[i].Id}" class="selectable-company-item" onclick="selectItem(this)">${data[i].COMPANY_NAME_ENGLISH} [${data[i].COMPANY_CODE}]</a>`);
 
@@ -307,7 +330,10 @@ function setCompanyDetails() {
             }
 
             if (localStorage.getItem("COMPANY_ID") == data[i].Id) {
+                
                 $("#navbar-company-selector").val(localStorage.getItem("COMPANY_ID"));
+                localStorage.setItem("COMPANY_ROLE", data[i].ROLE_TYPE);
+
                 $(".company-name").text(data[i].COMPANY_NAME_ENGLISH);
                 $(".company-image").attr("src", data[i].COMPANY_LOGO_PATH.replace("~", ".."));
                 $(".company-email").text(data[i].COMPANY_EMAIL);
@@ -339,14 +365,17 @@ function setCompanyDetails() {
 
     } else {
 
-
-
         if (!window.location.href.includes("SetupCompanyProfile") && getUserRole() == "SUPERADMIN_USER") {
             window.location.href = "/BusinessAdmin/SetupCompanyProfile?&IsNew=true";
         }
         
     }
 
+    if (localStorage.getItem("COMPANY_ROLE") == "SUPERUSER") {
+        $("#admin-master-nav").show();
+    } else {
+        $("#admin-master-nav").hide();
+    }
 
     $("#disp-navbar-company-selector").append(`<div class="add-company">
                                             <a href="/BusinessAdmin/CompanyMaster"><button>+ Add new company</button></a>

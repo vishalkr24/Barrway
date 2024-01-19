@@ -40,29 +40,29 @@ namespace Barrway.Controllers
             return View();
         }
 
-        private async Task<bool> CheckRoleTypeClaim()
-        {
-            var result = await authService.CheckRoleTypeClaim(UserIdentity.UserEmail);
-            if (result.Status)
-            {
-                var refine = result.Data as List<IDictionary<string, object>>;
-                if (refine.Count > 0)
-                {
-                    if (refine[0]["ROLE_TYPE"]?.ToString() != UserIdentity.UserRoleType)
-                    {
-                        var finalResult = UserIdentity.UpdateClaim("UserRoleType", refine[0]["ROLE_TYPE"]?.ToString());
-                    }
-                }
-            }
+        //private async Task<bool> CheckRoleTypeClaim()
+        //{
+        //    var result = await authService.CheckRoleTypeClaim(UserIdentity.UserEmail);
+        //    if (result.Status)
+        //    {
+        //        var refine = result.Data as List<IDictionary<string, object>>;
+        //        if (refine.Count > 0)
+        //        {
+        //            if (refine[0]["ROLE_TYPE"]?.ToString() != UserIdentity.UserRoleType)
+        //            {
+        //                var finalResult = UserIdentity.UpdateClaim("UserRoleType", refine[0]["ROLE_TYPE"]?.ToString());
+        //            }
+        //        }
+        //    }
 
-            return true;
-        }
+        //    return true;
+        //}
 
         public async Task<ActionResult> Dashboard()
         {
             try
             {
-                var claimResult = await CheckRoleTypeClaim();
+                //var claimResult = await CheckRoleTypeClaim();
                 AddUpdateDelete userWebsite = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name);
 
                 if (userWebsite.Status)
@@ -315,7 +315,6 @@ namespace Barrway.Controllers
                     {
                         BusinessCompanyViewModel businessCompanyModel = new BusinessCompanyViewModel()
                         {
-                            BUSINESS_ACCOUNT_ID = company.Data["BUSINESS_ACCOUNT_ID"].ToString(),
                             COMPANY_ADDRESS = company.Data["COMPANY_ADDRESS"].ToString(),
                             COMPANY_BANNER_NAME = company.Data["COMPANY_BANNER_NAME"].ToString(),
 
@@ -427,10 +426,50 @@ namespace Barrway.Controllers
             return View();
         }
 
-        [SuperBusinessUserAuthorize]
-        public async Task<ActionResult> AdminMaster()
+        public async Task<ActionResult> AdminMaster(string CompanyId = null)
         {
-            return View();
+            if(string.IsNullOrEmpty(CompanyId)){
+                return RedirectToAction("Dashboard");
+            }
+
+            var result = await businessUserService.GetAllCompaniesByUserId(UserIdentity.UserID);
+
+            if (result.Status)
+            {
+                if (result.Data != null)
+                {
+                    List<IDictionary<string, object>> data = result.Data;
+
+                    if (data.Count > 0)
+                    {
+                        if (data.Any(x => x["ROLE_TYPE"]?.ToString() == "SUPERUSER" && x["Id"]?.ToString() == CompanyId))
+                        {
+                            return View();
+                        }
+                        else
+                        {
+                            TempData["ErrorMessage"] = "Access Denied!";
+                            return RedirectToAction("Dashboard");
+                        }
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "Access Denied!";
+                        return RedirectToAction("Dashboard");
+                    }
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Access Denied!";
+                    return RedirectToAction("Dashboard");
+                }
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Access Denied!";
+                return RedirectToAction("Dashboard");
+            }
+
         }
 
 
@@ -498,7 +537,7 @@ namespace Barrway.Controllers
 
                 if (website.Data["COMPANY_PROFILE_STATUS"].ToString() == "Y")
                 {
-                    var company = await businessUserService.GetDefaultCompanyByBusinessId(((int)website.Data["Id"]).ToString(), UserIdentity.UserID.ToString());
+                    var company = await businessUserService.GetDefaultCompanyByUserId(UserIdentity.UserID.ToString());
 
                     if (company.Status)
                     {
@@ -683,11 +722,11 @@ namespace Barrway.Controllers
 
         }
 
-        public async Task<ActionResult> GetAllBusinessAssignedUsers(GenerateDynamicFormData data)
+        public async Task<ActionResult> GetAllBusinessAssignedUsers(GenerateDynamicFormData data, string CompanyId = null)
         {
             try
             {
-                var transactionData = await businessUserService.GetAllBusinessAssignedUsers(data, User.Identity.Name.ToString());
+                var transactionData = await businessUserService.GetAllBusinessAssignedUsers(data, CompanyId);
                 var transactionList = transactionData.Data;
                 double last_page = 0;
                 if (transactionList != null && transactionList.Count > 0)
@@ -769,7 +808,7 @@ namespace Barrway.Controllers
 
                 BusinessCompanyModel businessCompanyModel = new BusinessCompanyModel()
                 {
-                    BUSINESS_ACCOUNT_ID = model.BUSINESS_ACCOUNT_ID,
+                    CREATED_USER_ID = UserIdentity.UserID,
                     COMPANY_NAME_ENGLISH = model.COMPANY_NAME_ENGLISH,
                     COMPANY_NAME_CHINESE = model.COMPANY_NAME_CHINESE,
                     Id = model.Id,
@@ -859,10 +898,10 @@ namespace Barrway.Controllers
             {
                 model = new BusinessUserInvitationModel()
                 {
-                    BUSINESS_ACCOUNT_ID = validationResult.Data["BUSINESS_CODE"]?.ToString(),
+                    COMPANY_ID = validationResult.Data["COMPANY_NAME_ENGLISH"]?.ToString(),
                     SENT_BY = validationResult.Data["USER_EMAIL"]?.ToString(),
                     REQUEST_TOKEN = Token,
-                    Id = validationResult.Data["BUSINESS_ID"]?.ToString(),
+                    Id = validationResult.Data["COMPANY_ID"]?.ToString(),
                 };
                 var updateResult = await businessUserService.UpdateInvitationStatus(Token, "OPENED");
             }
@@ -883,22 +922,12 @@ namespace Barrway.Controllers
                         var result2 = await businessUserService.AddBusinessAssignedUser(new BusinessAssignedUsersModel()
                         {
                             ASSIGNED_USER = UserIdentity.UserID,
-                            //BUSINESS_ACCOUNT_ID = model.Id,
+                            COMPANY_ID = model.Id,
                             ROLE_TYPE = "ADMIN"
                         });
 
                         if (result2.Status)
                         {
-                            var result3 = await businessUserService.UpdateAssignedCompany(new List<UserAssignedCompanyModel>()
-                            {
-                                new UserAssignedCompanyModel()
-                                {
-                                    ASSIGN_ID = result2.Data,
-                                    COMPANY_ID = "",
-                                    STATUS = "ACTIVE"
-                                }
-                            });
-
                             ViewBag.SuccessMessage = "You are assigned a new Company!";
                         }
 
@@ -930,7 +959,7 @@ namespace Barrway.Controllers
 
                 BusinessUserInvitationModel inviteModel = new BusinessUserInvitationModel()
                 {
-                    BUSINESS_ACCOUNT_ID = BusinessId,
+                    COMPANY_ID = BusinessId,
                     INVITED_EMAIL = Email,
                     REQUEST_TOKEN = Guid.NewGuid().ToString(),
                     SENT_BY = UserIdentity.UserID,
@@ -1046,7 +1075,6 @@ namespace Barrway.Controllers
             {
                 BusinessCompanyModel companyModel = new BusinessCompanyModel()
                 {
-                    BUSINESS_ACCOUNT_ID = model.BUSINESS_ACCOUNT_ID,
                     COMPANY_SERVICE = model.COMPANY_SERVICE,
                     Id = model.Id
                 };
@@ -1087,7 +1115,6 @@ namespace Barrway.Controllers
 
                 BusinessCompanyModel companyModel = new BusinessCompanyModel()
                 {
-                    BUSINESS_ACCOUNT_ID = model.BUSINESS_ACCOUNT_ID,
                     CITY_ID = model.CITY_ID,
                     COMPANY_ADDRESS = model.COMPANY_ADDRESS,
                     COMPANY_BANNER_NAME = model.COMPANY_BANNER_NAME,

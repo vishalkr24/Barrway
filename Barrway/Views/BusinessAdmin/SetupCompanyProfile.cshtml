@@ -17,13 +17,7 @@
                         <div class="form-inner">
                             <form class="js-validate needs-validation" method="post" action="/BusinessAdmin/SaveCompanyProfileDetails?IsNew=@ViewBag.IsNew.ToString()" novalidate>
                                 @Html.TextBoxFor(model => model.Id, new { @class = "form-control", @placeholder = "Company name", @style="display:none", @required = "true" })
-                                <div class="form-group">
-                                    <label for="pwd">@Resource.Business *</label>
-
-                                    @Html.DropDownListFor(model => model.BUSINESS_ACCOUNT_ID, new SelectList(Enum.GetValues(typeof(CompanyCategory))), "Select Business", new { @class = "form-control", @required = "true" })
-                                    @Html.ValidationMessageFor(model => model.BUSINESS_ACCOUNT_ID, "", new { @class = "invalid-feedback-2" })
-
-                                </div>
+                                
                                 <div class="form-group">
                                     <label for="companyname">@Resource.Company_Name (English) *</label>
 
