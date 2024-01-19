@@ -1077,6 +1077,18 @@ button.blogtag_num {
         margin: calc(var(--bs-modal-footer-gap) * 0.5);
     }
 
+
+/*new*/
+.carusal {
+    width: 100%;
+    float: left;
+    height: 200px;
+}
+/*new end*/
+
+
+
+
 @media (min-width: 576px) {
     .modal {
         --bs-modal-margin: 1.75rem;

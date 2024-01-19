@@ -13,8 +13,8 @@
         background-color: lightblue;
         color: white;
     }
-
 </style>
+
 <main id="content" role="main" class="">
     <!-- Content -->
     <div class="container">
@@ -22,9 +22,70 @@
 
         <div class="row">
             <div class="col-lg-5 col-xl-5">
-                <div class="main-left">
+                <div class="main-left custom-main">
                     <div class="bred-nav">
                         <span><a href="#" ui-sref="home()">{{translation.User}}</a> / <span> <a href="#" ui-sref="home()">{{translation.Dashboard}}</a> </span></span>
+                    </div>
+                    <div class="carusal-ticket">
+                        <div id="owl-demo-ticket" class="owl-carousel owl-theme owl-demo-ticket">
+                            <div class="item">
+                                <div class="item-inner">
+                                    <div class="ticket-content">
+                                        <h1>A13</h1>
+                                        <p>Your turn</p>
+                                    </div>
+                                    <div class="ticket-logo">
+                                        <div class="ticket-logo-img">
+                                            <img src="/assets/marketplace/image/alogo.png">
+                                        </div>
+                                        <span class="">Comapany Name</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="item-inner">
+                                    <div class="ticket-content">
+                                        <h1>A13</h1>
+                                        <p>Your turn</p>
+                                    </div>
+                                    <div class="ticket-logo">
+                                        <div class="ticket-logo-img">
+                                            <img src="/assets/marketplace/image/alogo.png">
+                                        </div>
+                                        <span class="">Comapany Name</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="item-inner">
+                                    <div class="ticket-content">
+                                        <h1>A13</h1>
+                                        <p>Your turn</p>
+                                    </div>
+                                    <div class="ticket-logo">
+                                        <div class="ticket-logo-img">
+                                            <img src="/assets/marketplace/image/alogo.png">
+                                        </div>
+                                        <span class="">Comapany Name</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="item-inner">
+                                    <div class="ticket-content">
+                                        <h1>A13</h1>
+                                        <p>Your turn</p>
+                                    </div>
+                                    <div class="ticket-logo">
+                                        <div class="ticket-logo-img">
+                                            <img src="/assets/marketplace/image/alogo.png">
+                                        </div>
+                                        <span class="">Comapany Name</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                     <div class="ml-content">
                         <h2>{{translation.Your_recently_booked_calendar}}</h2>
@@ -32,7 +93,7 @@
                         <div class="wrap" ng-repeat="company in CalendarCompanyList">
                             <div class="wrap-im">
                                 <img src="{{company.COMPANY_LOGO_PATH}}">
-                                
+
                             </div>
                             <div class="wrap-con">
                                 <p><b>{{company.COMPANY_NAME_ENGLISH}}</b></p>
@@ -103,8 +164,29 @@
         <!-- End Row -->
     </div>
     <!-- End Content -->
+
+    <script>
+        $('.owl-demo-ticket').owlCarousel({
+            loop: true,
+            margin: 10,
+            responsiveClass: true,
+            dots: false,
+            responsive: {
+                0: {
+                    items: 1,
+                    nav: true
+                },
+                600: {
+                    items: 2,
+                    nav: false
+                },
+                1000: {
+                    items: 2,
+                    nav: true,
+                    loop: false
+                }
+            }
+        })
+
+    </script>
 </main>
-<script>
-
-
-</script>
