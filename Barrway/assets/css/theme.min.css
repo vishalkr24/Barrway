@@ -34333,7 +34333,7 @@ button#backtomarketplace {
     width: 100%;
     float: left;
     max-height: 100vh;
-    overflow-x: auto;
+   /* overflow-x: auto;*/
 }
 
 .bred-nav {
@@ -35080,8 +35080,163 @@ p.btcd {
     color: #444444;
 }
 
-@media screen and (min-width:1681px) and (max-width:2560px) {
-    .pricing-custome-inner {
+/*new design */
+.mycompany {
+    width: 100%;
+    float: left;
+    text-align: left;
+    border-top: 1px solid #fff;
+    padding-top: 12px;
+    padding-left: 15px;
+}
+
+    .mycompany p {
+        color: #fff;
+    }
+button.create-company {
+    color: #E2476C;
+    background-color: #fff;
+    border: 1px solid #E2476C;
+    padding: 8px 10px;
+    border-radius: 40px;
+    margin-bottom: 15px;
+}
+.all-company {
+    width: 100%;
+    float: left;
+}
+
+.added-company {
+    width: 100%;
+    float: left;
+    margin-bottom: 15px;
+}
+
+.all-company img {
+    width: 25px;
+    height: 25px;
+    border-radius: 90px;
+    background-color: #D9D9D9;
+    margin-right: 5px;
+    object-fit: contain;
+}
+.added-company span {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 400;
+}
+.all-company img {
+    width: 25px;
+    height: 25px;
+    border-radius: 90px;
+    margin-right: 5px;
+    object-fit: contain;
+}
+
+span.img-container {
+    width: 25px;
+    height: 25px;
+    border-radius: 90px;
+    background-color: #D9D9D9;
+    margin-right: 5px;
+    object-fit: contain;
+    float: left;
+}
+/*end*/
+/*start*/
+.carusal-ticket .item-inner {
+    background-color: #ECFAFB;
+    padding: 10px;
+    border: 1px solid #3FBFC7;
+    border-radius: 4px;
+    text-align: center;
+}
+    .carusal-ticket .item-inner .ticket-logo .ticket-logo-img {
+        width: 30px;
+        height: 30px;
+        border-radius: 40px;
+        border: 1px solid #ddd;
+        float: left;
+        position: relative;
+        top: -4px;
+    }
+    .carusal-ticket .item-inner .ticket-logo img {
+        width: 28px;
+        height: 28px;
+        border-radius: 40px;
+    }
+
+    .carusal-ticket .item-inner .ticket-logo span {
+        
+        color: #000;
+    }
+.ticket-content p {
+    color: #000;
+}
+.ticket-content h1 {
+    font-size: 32px;
+    font-weight: 700;
+    font-family: poppins;
+}
+.carusal-ticket .owl-nav button.owl-prev {
+    position: absolute;
+    top: 35%;
+    left: -18px;
+    padding: 0;
+    line-height: 0;
+    width: 30px;
+    height: 30px;
+    z-index: 99999;
+    background: #fff;
+    color: #3FBFC7;
+    text-decoration: none;
+    border: 1px solid #3FBFC7 !important;
+}
+.carusal-ticket .owl-nav button.owl-next {
+    position: absolute;
+    top: 35%;
+    right: -18px;
+    padding: 0;
+    line-height: 0;
+    width: 30px;
+    height: 30px;
+    z-index: 99999;
+    background: #fff;
+    color: #3FBFC7;
+    text-decoration: none;
+    border: 1px solid #3FBFC7 !important;
+}
+.carusal-ticket .owl-nav button.owl-prev span, .carusal-ticket .owl-nav button.owl-next span {
+    opacity: 0;
+}
+
+.carusal-ticket .owl-nav button.owl-next:after {
+    content: "\f285";
+    font-family: bootstrap-icons !important;
+    font-size: 12px;
+    transform: scale3d(1.5, 1.5, 1.5);
+    top: 15px;
+    left: 8px;
+    position: absolute;
+}
+.carusal-ticket .owl-nav button.owl-prev:after {
+    content: "\f284";
+    font-family: bootstrap-icons !important;
+    font-size: 12px;
+    transform: scale3d(1.5, 1.5, 1.5);
+    top: 15px;
+    left: 8px;
+    position: absolute;
+}
+.carusal-ticket .item-inner:hover {
+    background-color: #3fbfc7;
+}
+    .carusal-ticket .item-inner:hover .ticket-content h1, .carusal-ticket .item-inner:hover .ticket-content p {
+        color: #fff;
+    }
+    /*end*/
+    @media screen and (min-width:1681px) and (max-width:2560px) {
+        .pricing-custome-inner {
         min-height: 50vh;
     }
 }

@@ -44,6 +44,8 @@
     <link rel="preload" href="assets/css/theme.min.css" data-hs-appearance="default" as="style">
     <link rel="preload" href="assets/css/theme-dark.min.css" data-hs-appearance="dark" as="style">
 
+    <script src="fg-assets/js/jquery.min.js" type="text/javascript"></script>
+
 
     <style data-hs-appearance-onload-styles>
         * {
@@ -309,11 +311,15 @@
             padding: 0px !important
         }
     </style>
+    <!-- Owl Stylesheets -->
+    <link rel="stylesheet" href="~/assets/marketplace/owl/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/assets/marketplace/owl/owl.theme.default.min.css">
     <script>
         localStorage.setItem("detail", '{"Id":30314,"firebase_uid":null,"chatId":"jXZMF2dU3Uyz2okULv6shQuu","uid":"kk53yimj","fullName":"AG Ashutosh Shukla","name":"augursuser","email":"formgeneratorclient@gmail.com","emailVerified":"0","emailCheck":"0","isEmailCheck":false,"isQuickSignUp":false,"password":"","newPassword":null,"password_confirmation":null,"confirmPassword":null,"isUpdatePassword":0,"remember_token":null,"userIcon":"user-avatar-with-check-mark.png","phoneNumber":null,"phoneVerified":"No","isPhoneVerified":null,"phoneCheck":"No","isPhoneCheck":false,"role":1,"status":"Active","planID":9,"planSequence":"1,2,5,13","tooltipSequence":null,"FB_id":null,"GPlus_id":null,"created_ip":"","groupId":0,"checkType":null,"title":null,"verificationCode":null,"isVerificationReq":false,"ayCheck":0,"specialAccess":"1","reset_token":null,"reset_valid_till":null,"isUsable":0,"action":0,"created_by":0,"updated_by":0,"created_at":"Jan 20 2021  3:32PM","newcreated_at":null,"updated_at":"Jan 20 2021  3:32PM","newupdated_at":null,"res":1,"Message":"Login Success|登錄成功|登录成功","IsActive":false,"IsDeleted":false,"IsUnique":false,"page":0,"size":0,"total_records":0,"last_page":0,"page_records":0,"filters":null,"sorters":null,"query":null}');
     </script>
 
     <!--end setup-->
+
 </head>
 
 <body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl navbar-vertical-aside-compact-mini-mode navbar-vertical-aside-compact-mode" ng-app="FormGeneratorApp" ng-controller="PublicIndexController">
@@ -492,24 +498,24 @@
 
                                 <!-- Dropdown -->
                                 @*<div class="dropdown">
-                        <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown1" data-bs-toggle="dropdown" aria-expanded="false">Set status</a>
+                                        <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown1" data-bs-toggle="dropdown" aria-expanded="false">Set status</a>
 
-                        <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown1">
-                            <a class="dropdown-item" href="javascript:void(0)">
-                                <span class="legend-indicator bg-success me-1"></span> Available
-                            </a>
-                            <a class="dropdown-item" href="javascript:void(0)">
-                                <span class="legend-indicator bg-danger me-1"></span> Busy
-                            </a>
-                            <a class="dropdown-item" href="javascript:void(0)">
-                                <span class="legend-indicator bg-warning me-1"></span> Away
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="javascript:void(0)">
-                                Reset status
-                            </a>
-                        </div>
-                    </div>*@
+                                        <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown1">
+                                            <a class="dropdown-item" href="javascript:void(0)">
+                                                <span class="legend-indicator bg-success me-1"></span> Available
+                                            </a>
+                                            <a class="dropdown-item" href="javascript:void(0)">
+                                                <span class="legend-indicator bg-danger me-1"></span> Busy
+                                            </a>
+                                            <a class="dropdown-item" href="javascript:void(0)">
+                                                <span class="legend-indicator bg-warning me-1"></span> Away
+                                            </a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="javascript:void(0)">
+                                                Reset status
+                                            </a>
+                                        </div>
+                                    </div>*@
                                 <!-- End Dropdown -->
 
                                 <a class="dropdown-item" href="javascript:void(0)" ui-sref="my_profile()">@Resource.Profile &amp; @Resource.Account</a>
@@ -519,22 +525,22 @@
 
                                 <!-- Dropdown -->
                                 @*<div class="dropdown">
-                        <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown2" data-bs-toggle="dropdown" aria-expanded="false">Customization</a>
+                                        <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown2" data-bs-toggle="dropdown" aria-expanded="false">Customization</a>
 
-                        <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown2">
-                            <a class="dropdown-item" href="javascript:void(0)">
-                                Invite people
-                            </a>
-                            <a class="dropdown-item" href="javascript:void(0)">
-                                Analytics
-                                <i class="bi-box-arrow-in-up-right"></i>
-                            </a>
-                            <a class="dropdown-item" href="javascript:void(0)">
-                                Customize Front
-                                <i class="bi-box-arrow-in-up-right"></i>
-                            </a>
-                        </div>
-                    </div>*@
+                                        <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown2">
+                                            <a class="dropdown-item" href="javascript:void(0)">
+                                                Invite people
+                                            </a>
+                                            <a class="dropdown-item" href="javascript:void(0)">
+                                                Analytics
+                                                <i class="bi-box-arrow-in-up-right"></i>
+                                            </a>
+                                            <a class="dropdown-item" href="javascript:void(0)">
+                                                Customize Front
+                                                <i class="bi-box-arrow-in-up-right"></i>
+                                            </a>
+                                        </div>
+                                    </div>*@
                                 <!-- End Dropdown -->
                                 @*<a class="dropdown-item" href="javascript:void(0)">Manage team</a>*@
 
@@ -617,7 +623,24 @@
 
                         </div>
 
-
+                        <div class="mycompany">
+                            <p><b>My company</b></p>
+                            <button class="create-company"> + create a company</button>
+                            <div class="all-company">
+                                <div class="added-company">
+                                    <span class="img-container">
+                                        <img src="assets/svg/logos/logo.png" />
+                                    </span>
+                                    <span>Company A</span>
+                                </div>
+                                <div class="added-company">
+                                    <span class="img-container">
+                                        <img src="assets/svg/logos/logo.png" />
+                                    </span>
+                                    <span>Company B</span>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
 
@@ -1144,7 +1167,7 @@
     <!-- JS Implementing Plugins -->
 
     <script src="assets/js/vendor.min.js"></script>
-    <script src="fg-assets/js/jquery.min.js" type="text/javascript"></script>
+    
     <script src="fg-assets/js/jquery-ui.js"></script>
 
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.9.1/fullcalendar.min.js"></script>
@@ -1193,6 +1216,8 @@
     <script type="text/javascript" src="fg-assets/formValidation/js/framework/bootstrap.min.js"></script>
     <script src="fg-assets/js/app.js"></script>
     <script src="fg-assets/js/jquery.cookie.min.js"></script>
+
+
     <!-- JS Plugins Init. -->
     <script>
         (function () {
@@ -1286,111 +1311,11 @@
     </script>
 
     @RenderSection("scripts", required: false)
-    @* Momentum based scroll behaviour *@
-    @*<script>
-        $(document).ready(function () {
-            // $fn.scrollSpeed(step, speed, easing);
-            jQuery.scrollSpeed(200, 800);
-        });
 
-        // Custom scrolling speed with jQuery
-        // Source: github.com/ByNathan/jQuery.scrollSpeed
-        // Version: 1.0.2
-
-        (function ($) {
-
-            jQuery.scrollSpeed = function (step, speed, easing) {
-
-                var $document = $(document),
-                    $window = $(window),
-                    $body = $('html, body'),
-                    option = easing || 'default',
-                    root = 0,
-                    scroll = false,
-                    scrollY,
-                    scrollX,
-                    view;
-
-                if (window.navigator.msPointerEnabled)
-
-                    return false;
-
-                $window.on('mousewheel DOMMouseScroll', function (e) {
-
-                    var deltaY = e.originalEvent.wheelDeltaY,
-                        detail = e.originalEvent.detail;
-                    scrollY = $document.height() > $window.height();
-                    scrollX = $document.width() > $window.width();
-                    scroll = true;
-
-                    if (scrollY) {
-
-                        view = $window.height();
-
-                        if (deltaY < 0 || detail > 0)
-
-                            root = (root + view) >= $document.height() ? root : root += step;
-
-                        if (deltaY > 0 || detail < 0)
-
-                            root = root <= 0 ? 0 : root -= step;
-
-                        $body.stop().animate({
-
-                            scrollTop: root
-
-                        }, speed, option, function () {
-
-                            scroll = false;
-
-                        });
-                    }
-
-                    if (scrollX) {
-
-                        view = $window.width();
-
-                        if (deltaY < 0 || detail > 0)
-
-                            root = (root + view) >= $document.width() ? root : root += step;
-
-                        if (deltaY > 0 || detail < 0)
-
-                            root = root <= 0 ? 0 : root -= step;
-
-                        $body.stop().animate({
-
-                            scrollLeft: root
-
-                        }, speed, option, function () {
-
-                            scroll = false;
-
-                        });
-                    }
-
-                    return false;
-
-                }).on('scroll', function () {
-
-                    if (scrollY && !scroll) root = $window.scrollTop();
-                    if (scrollX && !scroll) root = $window.scrollLeft();
-
-                }).on('resize', function () {
-
-                    if (scrollY && !scroll) view = $window.height();
-                    if (scrollX && !scroll) view = $window.width();
-
-                });
-            };
-
-            jQuery.easing.default = function (x, t, b, c, d) {
-
-                return -c * ((t = t / d - 1) * t * t * t - 1) + b;
-            };
-
-        })(jQuery);
-    </script>*@
     <!-- End Style Switcher JS -->
+    @*==================*@
+    
+    <script src="assets/marketplace/owl/owl.carousel.js"></script>
+   
 </body>
 </html>
