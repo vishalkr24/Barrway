@@ -788,6 +788,22 @@ namespace Barrway.Service.Repository
                 }
             }
 
+            if (role == "GENERAL_USER")
+            {
+                string sqlQuery = $@"select * from USER_MASTER_1915 where USER_ID = '{userID}'";
+                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+                if (result.Count() > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "Invalid Email or Password" };
+                }
+            }
+
+
             if (role == "SUPERADMIN_USER")
             {
                 string sqlQuery = "SELECT user_m.[USER_ID],user_m.[USER_EMAIL],user_m.[USER_PASSWORD],user_m.[USER_PHONE],user_m.[SIGNUP_TYPE],user_m.[IS_ACTIVE],user_m.[IS_EMAIL_VERIFIED], user_m.[IS_PHONE_VERIFIED],user_m.[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS]                       FROM USER_MASTER_1915 user_m                          join[dbo].[ROLE_MASTER_1917] user_role on user_role.Id = user_m.[ROLE_ID]                             where user_m.[USER_ID]= '" + userID + "' and user_m.ROLE_ID = '3'";

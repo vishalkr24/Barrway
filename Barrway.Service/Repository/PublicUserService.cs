@@ -76,7 +76,7 @@ namespace Barrway.Service.Repository
                               ,publicUser.[IS_ACTIVE]
                               ,publicUser.[PROFILE_STATUS]
                               ,publicUser.[ROLE_ID]
-                              ,publicUser.[SIGNUP_TYPE], publicUser.[Id]      ,publicUser.[created_at]      ,publicUser.[updated_at]      ,publicUser.[created_by]      ,publicUser.[updated_by]      ,publicUser.[USER_ID]      ,[SUBSCRIPTION_PLAN_ID]      ,[CURRENT_STEP]     ,[FIRST_NAME]      ,[LAST_NAME]      ,[PROFILE_PHOTO_PATH]      ,[PROFILE_PHOTO_NAME]      ,[CHINESE_NAME]      ,[NICK_NAME]      ,[GENDER]      ,[DATE_OF_BIRTH]  
+                              ,publicUser.[SIGNUP_TYPE], publicUser.[Id]      ,publicUser.[created_at]      ,publicUser.[updated_at]      ,publicUser.[created_by]      ,publicUser.[updated_by]      ,publicUser.[USER_ID]      ,[SUBSCRIPTION_PLAN_ID]      ,account.[CURRENT_STEP]     ,[FIRST_NAME]      ,[LAST_NAME]      ,[PROFILE_PHOTO_PATH]      ,[PROFILE_PHOTO_NAME]      ,[CHINESE_NAME]      ,[NICK_NAME]      ,[GENDER]      ,[DATE_OF_BIRTH]  
                         FROM[dbo].[PUBLIC_USER_ACCOUNT_1943] account 
                         join USER_MASTER_1915 publicUser on publicUser.USER_ID = account.USER_ID
                         where publicUser.USER_ID = '" + UserId + "'";
@@ -119,7 +119,7 @@ namespace Barrway.Service.Repository
             }
 
             string query = $@"update PUBLIC_USER_ACCOUNT_1943 set FIRST_NAME = '{model.FIRST_NAME}', LAST_NAME = '{model.LAST_NAME}', CHINESE_NAME = N'{model.CHINESE_NAME}', NICK_NAME = '{model.NICK_NAME}', GENDER = '{model.GENDER}', DATE_OF_BIRTH = '{model.DATE_OF_BIRTH.ToString("yyyy-MM-ddTHH:mm:ss")}' where USER_ID = '{model.USER_ID}'
-                              update USER_MASTER_1915 set {subQuery}  USER_PHONE = '{model.USER_PHONE}' where USER_ID = '{model.USER_ID}' and ROLE_ID = 2
+                              update USER_MASTER_1915 set {subQuery}  USER_PHONE = '{model.USER_PHONE}' where USER_ID = '{model.USER_ID}'
                     
                             ";
 
@@ -137,7 +137,7 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> EnrollPublicUserForCalendar(CalendarEnrollModel model)
         {
-            var user = await authService.GetUser(model.USER_ID, FormRole.PUBLIC_USER);
+            var user = await authService.GetUser(model.USER_ID, FormRole.GENERAL_USER);
 
             // check for sufficient B$ Balance
             var balance = await GetUserCoinBalance(model.USER_ID, model.participant.COMPANY_CODE, model.participant.CALENDAR_CODE);
@@ -397,7 +397,7 @@ namespace Barrway.Service.Repository
             {
                 try
                 {
-                    var userResult = await authService.GetUser(userName, FormRole.PUBLIC_USER);
+                    var userResult = await authService.GetUser(userName, FormRole.GENERAL_USER);
 
                     // check for sufficient B$ Balance
                     var balance = await GetUserCoinBalance(userName, eventModal.companyCode, eventModal.calendarCode);
@@ -815,7 +815,7 @@ namespace Barrway.Service.Repository
                                           ,[CALENDAR_CODE]
                                           ,[USER_ID]
                                           ,[IS_PUBIC_USER]
-                                      FROM [dbo].[FAVORITE_CALENDAR_MASTER_1949] where USER_ID = '{userId}' and IS_PUBLIC_USER = 'Y' and CALENDAR_CODE = '{CalendarCode}' ";
+                                      FROM [dbo].[FAVORITE_CALENDAR_MASTER_1949] where USER_ID = '{userId}' and CALENDAR_CODE = '{CalendarCode}' ";
 
                 List<IDictionary<string, object>> result0 = await sqlFunction.ExecuteSqlQuery(query0);
 
@@ -855,7 +855,7 @@ namespace Barrway.Service.Repository
                                           ,[CALENDAR_CODE]
                                           ,[USER_ID]
                                           ,[IS_PUBIC_USER]
-                                      FROM [dbo].[FAVORITE_CALENDAR_MASTER_1949] where USER_ID = '{userId}' and IS_PUBLIC_USER = 'Y' {CompanyLogic} ";
+                                      FROM [dbo].[FAVORITE_CALENDAR_MASTER_1949] where USER_ID = '{userId}' {CompanyLogic} ";
 
                 List<IDictionary<string, object>> result0 = await sqlFunction.ExecuteSqlQuery(query0);
 

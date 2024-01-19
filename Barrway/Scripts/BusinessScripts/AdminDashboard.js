@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    if (getUserRole() == "BUSINESS_USER") {
+    if (getUserRole() == "BUSINESS_USER" || getUserRole() == "GENERAL_USER") {
         setPageStatus();
     } else {
         $("#content-2").show();

@@ -187,7 +187,7 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetSingleBusinessWebsite(string UserId)
         {
-            string query = "SELECT [Id]          ,[created_at]      ,[updated_at]      ,[created_by]      ,[updated_by]      ,[CURRENT_STEP]      ,[SUBSCRIPTION_PLAN_ID]      ,[USER_ID]      ,[COMPANY_CALENDAR_STATUS]      ,[COMPANY_PROFILE_STATUS]  FROM [dbo].[BUSINESS_ACCOUNT_WEBSITE_1918] where USER_ID = '" + UserId + "'";
+            string query = "SELECT * FROM USER_MASTER_1915 where USER_ID = '" + UserId + "'";
 
             List<IDictionary<string, object>> businessWebsiteResult = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -1431,7 +1431,7 @@ namespace Barrway.Service.Repository
 
                         if (website.Data["COMPANY_PROFILE_STATUS"].ToString() == "N")
                         {
-                            query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set COMPANY_PROFILE_STATUS = 'Y', updated_at = '" + DateTime.Now.ToString("yyyy-MM-dd") + "' where USER_ID = '" + UserName + "'";
+                            query = "update USER_MASTER_1915 set COMPANY_PROFILE_STATUS = 'Y', updated_at = '" + DateTime.Now.ToString("yyyy-MM-dd") + "' where USER_ID = '" + UserName + "'";
                             saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                         }
 
@@ -1439,12 +1439,12 @@ namespace Barrway.Service.Repository
                         {
                             if (website.Data["CURRENT_STEP"].ToString() == "COMPANY PROFILE")
                             {
-                                query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'CALENDAR', updated_at = '" + DateTime.Now.ToString("yyyy-MM-dd") + "'  where USER_ID = '" + UserName + "'";
+                                query = "update USER_MASTER_1915 set CURRENT_STEP = 'CALENDAR', updated_at = '" + DateTime.Now.ToString("yyyy-MM-dd") + "'  where USER_ID = '" + UserName + "'";
                                 saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                             }
                             else if (website.Data["CURRENT_STEP"].ToString() == "COMPANY WEBSITE")
                             {
-                                query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'COMPLETED', updated_at = '" + DateTime.Now.ToString("yyyy-MM-dd") + "'  where USER_ID = '" + UserName + "'";
+                                query = "update USER_MASTER_1915 set CURRENT_STEP = 'COMPLETED', updated_at = '" + DateTime.Now.ToString("yyyy-MM-dd") + "'  where USER_ID = '" + UserName + "'";
                                 saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
 
                                 // registration and 3 steps are completed here and now activate free plan of user
@@ -1519,25 +1519,14 @@ namespace Barrway.Service.Repository
                             }
                         }
 
-                        string sqlQuery = $@"select * from BUSINESS_ASSIGNED_USERS_1964 where ASSIGNED_USER = '{UserId}' and BUSINESS_ACCOUNT_ID = '{model.BUSINESS_ACCOUNT_ID}'";
-                        var assignResult = await sqlFunction.ExecuteSqlQuery(sqlQuery);
-
-                        if (assignResult.Count > 0)
+                        BusinessAssignedUsersModel businessAssignedUsersModel = new BusinessAssignedUsersModel()
                         {
-                            UserAssignedCompanyModel userAssignedCompanyModel = new UserAssignedCompanyModel()
-                            {
-                                ASSIGN_ID = assignResult.FirstOrDefault()["Id"]?.ToString(),
-                                COMPANY_ID = formResult.Id.ToString(),
-                                STATUS = "ACTIVE"
-                            };
+                            ASSIGNED_USER = UserId,
+                            COMPANY_ID = formResult.Id.ToString(),
+                            ROLE_TYPE = "SUPERUSER"
+                        };
 
-                            var addAssignedCompanyResult = await UpdateAssignedCompany(new List<UserAssignedCompanyModel>()
-                            {
-                                userAssignedCompanyModel
-                            });
-
-                        }
-
+                        var result = await AddBusinessAssignedUser(businessAssignedUsersModel);
 
                     }
 
@@ -1605,7 +1594,7 @@ namespace Barrway.Service.Repository
                     {
                         if (website.Data["COMPANY_PROFILE_STATUS"].ToString() == "N")
                         {
-                            query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set COMPANY_PROFILE_STATUS = 'Y', updated_at = getdate() where USER_ID = '" + UserName + "'";
+                            query = "update USER_MASTER_1915 set COMPANY_PROFILE_STATUS = 'Y', updated_at = getdate() where USER_ID = '" + UserName + "'";
                             saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                         }
 
@@ -1614,12 +1603,12 @@ namespace Barrway.Service.Repository
                         {
                             if (website.Data["CURRENT_STEP"].ToString() == "COMPANY PROFILE")
                             {
-                                query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'CALENDAR', updated_at = getdate()  where USER_ID = '" + UserName + "'";
+                                query = "update USER_MASTER_1915 set CURRENT_STEP = 'CALENDAR', updated_at = getdate()  where USER_ID = '" + UserName + "'";
                                 saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                             }
                             else if (website.Data["CURRENT_STEP"].ToString() == "COMPANY WEBSITE")
                             {
-                                query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'COMPLETED', updated_at = getdate()  where USER_ID = '" + UserName + "'";
+                                query = "update USER_MASTER_1915 set CURRENT_STEP = 'COMPLETED', updated_at = getdate()  where USER_ID = '" + UserName + "'";
                                 saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
 
                             }
