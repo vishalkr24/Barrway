@@ -88,7 +88,7 @@ namespace Barrway.Service.Repository
 
                 string strSql = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
                                      select *from [dbo].[LOCATION_MASTER_1936] f
-                                    where f.COMPANY_CODE='{companyCode}' and f.CALENDAR_CODE='{calendarCode}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+                                    where f.COMPANY_CODE='{companyCode}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
                                     )
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
 
@@ -168,7 +168,7 @@ namespace Barrway.Service.Repository
 
                 string strSql = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
                                      select *from [dbo].[SERVICE_MASTER_1933] f
-                                    where f.COMPANY_CODE='{companyCode}' and f.CALENDAR_CODE='{calendarCode}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+                                    where f.COMPANY_CODE='{companyCode}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
                                     )
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
 
@@ -249,7 +249,7 @@ namespace Barrway.Service.Repository
 
                 string strSql = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
                                      select *from [dbo].[SERVICE_PROVIDER_MASTER_1934] f
-                                    where f.COMPANY_CODE='{companyCode}' and f.CALENDAR_CODE='{calendarCode}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+                                    where f.COMPANY_CODE='{companyCode}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
                                     )
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
 
@@ -318,7 +318,6 @@ namespace Barrway.Service.Repository
                                 applyFilter.Add(filter);
                             }
                         }
-
                     }
                 }
 
@@ -649,7 +648,7 @@ namespace Barrway.Service.Repository
                                       join BUSINESS_CALENDAR_MASTER_1925 cal on cal.CALENDAR_CODE = f.CALENDAR_CODE
                                       join PAYMENT_HISTORY_MASTER_1956 history on history.PAYMENT_ID = f.ORDER_NO
                                       join CALENDAR_PACKAGE_MASTER_1952 pack on pack.Id = history.PLAN_ID
-                                      where f.COMPANY_CODE = '{companyCode}' and f.CALENDAR_CODE = '{calendarCode}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+                                      where f.COMPANY_CODE = '{companyCode}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
                                     )
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
 

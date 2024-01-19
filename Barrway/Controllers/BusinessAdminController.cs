@@ -18,7 +18,7 @@ using Barrway.Utility.Common;
 
 namespace Barrway.Controllers
 {
-    [BusinessAuthorize(Roles = "BUSINESS_USER,SUPERADMIN_USER")]
+    [BusinessAuthorize(Roles = "BUSINESS_USER,SUPERADMIN_USER,GENERAL_USER")]
     public class BusinessAdminController : BaseController
     {
 
@@ -883,7 +883,7 @@ namespace Barrway.Controllers
                         var result2 = await businessUserService.AddBusinessAssignedUser(new BusinessAssignedUsersModel()
                         {
                             ASSIGNED_USER = UserIdentity.UserID,
-                            BUSINESS_ACCOUNT_ID = model.Id,
+                            //BUSINESS_ACCOUNT_ID = model.Id,
                             ROLE_TYPE = "ADMIN"
                         });
 

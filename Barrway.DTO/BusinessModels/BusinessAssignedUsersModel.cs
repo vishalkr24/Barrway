@@ -8,8 +8,8 @@ namespace Barrway.DTO.BusinessModels
 {
     public class BusinessAssignedUsersModel
     {
-        public string BUSINESS_ACCOUNT_ID { get; set; }
         public string ASSIGNED_USER { get; set; }
+        public string COMPANY_ID { get; set; }
         public string ROLE_TYPE { get; set; } = "ADMIN";
     }
 }

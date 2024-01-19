@@ -1261,8 +1261,8 @@
                 url: "/public/GetRole",
                 type: "get",
                 success: function (response) {
-                    if (response != "PUBLIC_USER") {
-                        window.location.href = "/Account/Login"
+                    if (response != "PUBLIC_USER" && response != "GENERAL_USER") {
+                        window.location.href = "/Account/BusinessLogin"
                     }
                 }
             })

@@ -17,7 +17,7 @@ using System.Net.Http;
 
 namespace Barrway.Controllers
 {
-    [PublicAuthorize(Roles = "PUBLIC_USER")]
+    [PublicAuthorize(Roles = "PUBLIC_USER,GENERAL_USER")]
     public class UserAdminController : BaseController
     {
         private readonly ISqlFunction sqlFunction;
@@ -105,7 +105,7 @@ namespace Barrway.Controllers
         {
             try
             {
-                var userData = await authService.GetUser(User.Identity.Name, FormRole.PUBLIC_USER);
+                var userData = await authService.GetUser(User.Identity.Name, FormRole.GENERAL_USER);
 
                 bool UpdatePassword = false;
 

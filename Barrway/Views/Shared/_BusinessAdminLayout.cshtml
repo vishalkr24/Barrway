@@ -1141,7 +1141,7 @@
                 url: "/public/GetRole",
                 type: "get",
                 success: function (response) {
-                    if (response != "BUSINESS_USER" && response != "SUPERADMIN_USER") {
+                    if (response != "BUSINESS_USER" && response != "SUPERADMIN_USER" && response != "GENERAL_USER") {
                         window.location.href = "/Account/BusinessLogin"
                     }
                 }

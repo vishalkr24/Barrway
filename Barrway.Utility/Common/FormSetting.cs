@@ -64,6 +64,7 @@ namespace Barrway.Utility.Common
     {
         BUSINESS_USER = 1,
         PUBLIC_USER = 2,
-        SUPERADMIN_USER = 3
+        SUPERADMIN_USER = 3,
+        GENERAL_USER = 4
     }
 }
