@@ -19,6 +19,8 @@ namespace Barrway.DTO.BusinessModels
         public string PROFILE_STATUS { get; set; }  
         public string ROLE_ID { get; set; }
         public string SIGNUP_TYPE { get; set; }
-
+        public string CURRENT_STEP { get; set; }
+        public string COMPANY_PROFILE_STATUS { get; set; }
+        public string COMPANY_CALENDAR_STATUS { get; set; }
     }
 }

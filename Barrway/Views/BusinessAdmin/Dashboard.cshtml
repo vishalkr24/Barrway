@@ -15,80 +15,53 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-7">
-                <div class="row">
-                    <div class="startbusiness" style="margin-left:0px;">
-                        <div class="setup">
-                            <span>@Resource.Step 1</span><span> - @Resource.Set_up_company_profile</span><span id="CompanyProfileSetupBtn" style="float: right;" onclick="location.href = '/BusinessAdmin/SetupCompanyProfile?IsNew=true'"><a href="javascript:void(0)" class="purple">@Resource.Go</a> </span>
+            <div class="col-lg-12">
+                <div class="row" style="max-width: 80%;">
+                    
+                    <div class="startbusiness row" style="margin-left:0px;">
+                        <div class="col-md-12">
+                            <div class="hed-til">
+                                <h1>3 Steps to start your business here.</h1>
+                            </div>
                         </div>
-                        <div class="setup">
-                            <span>@Resource.Step 2</span><span> - @Resource.Set_up_calendar</span><span id="CalendarSetupBtn" style="float: right;" onclick="location.href = '/BusinessAdmin/SetupCompanyCalendar?IsPartial=true'"><a href="javascript:void(0)" class="purple">@Resource.Go</a> </span>
+                        <div class="col-md-4">
+                            <div class="setup">
+                                <span>@Resource.Step 1</span>
+                                <br />
+                                <h3>@Resource.Set_up_company_profile</h3>
+                                
+                                <span id="CompanyProfileSetupBtn" onclick="location.href = '/BusinessAdmin/SetupCompanyProfile?IsNew=true'">
+                                    <a href="javascript:void(0)" class="purple">@Resource.Go</a>
+                                </span>
+                            </div>
                         </div>
-                        <div class="setup">
-                            <span>@Resource.Step 3</span><span> - @Resource.Set_up_company_webiste</span><span style="float: right;" onclick="showComapanyWebsiteDetails(1)"><a href="javascript:void(0)" class="purple">@Resource.Go</a> </span>
+                        <div class="col-md-4">
+                            <div class="setup">
+                                <span>@Resource.Step 2</span>
+                                <br />
+                                <h3>@Resource.Set_up_calendar</h3>
+
+                                <span id="CalendarSetupBtn" onclick="location.href = '/BusinessAdmin/SetupCompanyCalendar?IsPartial=true'">
+                                    <a href="javascript:void(0)" class="purple">@Resource.Go</a>
+                                </span>
+                            </div>
                         </div>
+                        <div class="col-md-4">
+                            <div class="setup">
+                                <span>@Resource.Step 3</span>
+                                <br />
+                                <h3>@Resource.Set_up_company_webiste</h3>
+
+                                <span onclick="showComapanyWebsiteDetails(1)">
+                                    <a href="javascript:void(0)" class="purple">@Resource.Go</a>
+                                </span>
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
-            <div class="col-lg-5">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="wraping">
-                            <div class="top-head barrway-red">
-                                <h3>@Resource.Website_visits</h3>
-                                <img src="/assets/img/ques.png">
-                            </div>
-                            <div class="wrap-body">
-                                <div class="wb-top">
-                                    <p>@Resource.Lets_set_up_your_website. <a onclick="showComapanyWebsiteDetails(1)" href="javascript:void(0)" style="color: #72328A;"><u>@Resource.Set_up_now.</u></a></p>
-                                </div>
-                                <div class="wb-bottom">
-
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    @*<div class="col-md-12">
-                            <div class="wraping">
-                                <div class="top-head barrway-red">
-                                    <h3>@Resource.Your_plans___subscription</h3>
-                                    <img src="/assets/img/ques.png">
-                                </div>
-                                <div class="wrap-body">
-                                    <div class="wb-top">
-                                        <div class="w-l w-80">
-                                            <h3>Basic Plan HK$299/month</h3>
-                                        </div>
-                                        <div class="w-r w-20">
-                                            <h3><img src="" /></h3>
-                                        </div>
-                                    </div>
-                                    <div class="wb-bottom">
-                                        <div class="w-l w-80">
-                                            <table>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Vaid till:</td>
-                                                        <td>YYYY-MM-DD</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Booking available</td>
-                                                        <td>1,000/5,000</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div class="w-r w-20">
-                                            <p><a href="javascript:void(0)" class="see-plan purple"> See plans</a></p>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>*@
-                </div>
-            </div>
+            
         </div>
         <!-- End Content -->
     </div>

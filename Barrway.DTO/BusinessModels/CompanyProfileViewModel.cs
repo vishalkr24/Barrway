@@ -10,7 +10,7 @@ namespace Barrway.DTO.BusinessModels
     public class CompanyProfileViewModel
     {
         public string Id { get; set; }
-        public string BUSINESS_ACCOUNT_ID { get; set; }
+        
         [Required(ErrorMessage = "Company name is required")]
         public string COMPANY_NAME_ENGLISH { get; set; }
 

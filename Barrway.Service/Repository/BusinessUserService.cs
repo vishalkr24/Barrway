@@ -31,32 +31,6 @@ namespace Barrway.Service.Repository
             this.masterService = masterService;
         }
 
-        public async Task<AddUpdateDelete> CreateBusinessWebsite(BusinessAccountWebsiteModel model)
-        {
-            Form_DataTable data = new Form_DataTable();
-            data.action = (int)FormAction.Save;
-            data.formId = (int)FormSetting.BUSINESS_ACCOUNT_WEBSITE;
-
-            data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.ToDictionary());
-            data.formGroupKey = Guid.NewGuid().ToString();
-            var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
-
-            if (formResult.res == 1)
-            {
-                string BusinessCode = "BIZ" + formResult.Id.ToString().PadLeft(5, '0'); ;
-
-                string sqlQuery = $@"update BUSINESS_ACCOUNT_WEBSITE_1918 set BUSINESS_CODE = '{BusinessCode}' where Id = {formResult.Id}";
-
-                var result = await sqlFunction.ExecuteSqlCommandQuery(sqlQuery);
-
-                return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() };
-            }
-            else
-            {
-                return new AddUpdateDelete() { Message = formResult.Message, Status = false };
-            }
-        }
-
         public async Task<AddUpdateDelete> AddBusinessAssignedUser(BusinessAssignedUsersModel model)
         {
             Form_DataTable data = new Form_DataTable();
@@ -246,11 +220,11 @@ namespace Barrway.Service.Repository
             {
                 string sqlQuery = $@"with cte as (select Count(f.Id) as present 
                                         from BUSINESS_USER_INVITATION_MANAGER_1965 f
-                                        where f.BUSINESS_ACCOUNT_ID = '{inviteModel.BUSINESS_ACCOUNT_ID}' and f.INVITED_EMAIL = '{inviteModel.INVITED_EMAIL}' and f.STATUS in ('OPENED', 'PENDING')
+                                        where f.COMPANY_ID = '{inviteModel.COMPANY_ID}' and f.INVITED_EMAIL = '{inviteModel.INVITED_EMAIL}' and f.STATUS in ('OPENED', 'PENDING')
                                         Union
                                         select Count(f.Id) as present from BUSINESS_ASSIGNED_USERS_1964 f
                                         join USER_MASTER_1915 um on um.Id = f.ASSIGNED_USER
-                                        where f.BUSINESS_ACCOUNT_ID = '{inviteModel.BUSINESS_ACCOUNT_ID}' and um.USER_EMAIL = '{inviteModel.INVITED_EMAIL}'
+                                        where f.COMPANY_ID = '{inviteModel.COMPANY_ID}' and um.USER_EMAIL = '{inviteModel.INVITED_EMAIL}'
                                         )
                                         select * from cte";
 
@@ -274,7 +248,6 @@ namespace Barrway.Service.Repository
                             return new AddUpdateDelete() { Status = false, Message = "User with this email is already assigned to the business." };
                         }
                     }
-
                 }
 
                 Form_DataTable data = new Form_DataTable();
@@ -291,7 +264,7 @@ namespace Barrway.Service.Repository
                                     <div class='container'>
                                         <div class='themes' style='background-color: #ffffff; width: 50%; margin:20px auto;'>
                                             <div style='height: 70px;line-height: 70px;background-color: #ffffff;padding:0 20px; border-radius: 8px 8px 0 0'>
-                                                <h2 style='color: #3e6b6b;line-height: 70px;'>Barrway Business</h2>
+                                                <h2 style='color: #3e6b6b;line-height: 70px;'>Barrway</h2>
                                             </div>
                                             <div class='content_body' style='padding:20px; text-align: left;'>
                                                 <p>Dear User,</p>
@@ -302,7 +275,7 @@ namespace Barrway.Service.Repository
                                     </div>
                                 </body>");
 
-                var result = EmailNotification.SendEmailAsync(inviteModel.INVITED_EMAIL, strBody.ToString(), "Barrway Business Invite");
+                var result = EmailNotification.SendEmailAsync(inviteModel.INVITED_EMAIL, strBody.ToString(), "Barrway Invite");
                 if (result)
                 {
                     return new AddUpdateDelete() { Status = true, Message = "Invite sent successfully" };
@@ -311,7 +284,6 @@ namespace Barrway.Service.Repository
                 {
                     return new AddUpdateDelete() { Status = false, Message = "Email not sent." };
                 }
-
 
             }
             catch (Exception ex)
@@ -322,10 +294,11 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> ValidateInvitationTokenAndUser(string Token, string UserId)
         {
-            string sqlQuery = $@"select um.*, baw.BUSINESS_CODE, baw.Id as 'BUSINESS_ID'
+            string sqlQuery = $@"select um2.*, f.COMPANY_ID, f.STATUS, company.COMPANY_NAME_ENGLISH
                                     from BUSINESS_USER_INVITATION_MANAGER_1965 f
-                                    join (select * from USER_MASTER_1915 where ROLE_ID = '1') um on um.USER_EMAIL = f.INVITED_EMAIL
-                                    join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.Id = f.BUSINESS_ACCOUNT_ID
+                                    join USER_MASTER_1915 um on um.USER_EMAIL = f.INVITED_EMAIL
+                                    join USER_MASTER_1915 um2 on um2.Id = f.SENT_BY
+									join BUSINESS_COMPANY_MASTER_1924 company on company.Id = f.COMPANY_ID
                                     where f.REQUEST_TOKEN = '{Token}' and um.Id = '{UserId}' and f.STATUS in ('PENDING','OPENED')";
             var validationResult = await sqlFunction.ExecuteSqlQuery(sqlQuery);
             if (validationResult.Count > 0)
@@ -502,14 +475,10 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> getAllAssignedCompanies(string AssignedId, string UserId)
         {
-            string query = $@"declare @bstAccount varchar(max)
-                                set @bstAccount = stuff((select ',' + BUSINESS_ACCOUNT_ID from BUSINESS_ASSIGNED_USERS_1964 f where f.ASSIGNED_USER = '{UserId}' and ROLE_TYPE = 'SUPERUSER' for xml path('')), 1, 1, '')
-
-                                select case when (uac.COMPANY_ID is null) then 'N' else 'Y' end as 'IS_ASSIGNED', company.* from 
-                                BUSINESS_COMPANY_MASTER_1924 company
-                                left join (select * from USER_ASSIGNED_COMPANIES_1967 where ASSIGN_ID = '{AssignedId}') uac on uac.COMPANY_ID = company.Id
-                                where company.BUSINESS_ACCOUNT_ID in (select cast(item as integer) from dbo.SplitString(@bstAccount, ','))
-                                ";
+            string query = $@"select bau.ROLE_TYPE, company.* from BUSINESS_COMPANY_MASTER_1924 company
+                            join BUSINESS_ASSIGNED_USERS_1964 bau on bau.COMPANY_ID = company.Id
+                            where bau.ASSIGNED_USER = {UserId}
+                            ";
             List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
             return new AddUpdateDelete() { Status = true, Data = result, Message = AppMessage.Success };
@@ -619,11 +588,9 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetAllCompaniesByUserId(string UserId)
         {
-            string query = $@"select f.* 
-                            from BUSINESS_COMPANY_MASTER_1924 f
-                            join USER_ASSIGNED_COMPANIES_1967 uac on uac.COMPANY_ID = f.Id
-                            join BUSINESS_ASSIGNED_USERS_1964 bau on bau.Id = uac.ASSIGN_ID
-                            where bau.ASSIGNED_USER = '{UserId}'";
+            string query = $@"select bau.ROLE_TYPE, company.* from BUSINESS_COMPANY_MASTER_1924 company
+                                join BUSINESS_ASSIGNED_USERS_1964 bau on bau.COMPANY_ID = company.Id
+                                where bau.ASSIGNED_USER = '{UserId}'";
 
             List<IDictionary<string, object>> BusinessCompanyResult = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -691,13 +658,9 @@ namespace Barrway.Service.Repository
             int PageNumber = data.page > 0 ? data.page : 1;
 
             string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
-                                    select (case when (bau.ROLE_TYPE='SUPERUSER') then 'Y' else 'N' end) as 'IS_EDITABLE'
-                                    ,baw.BUSINESS_CODE, company.* 
-                                    from BUSINESS_COMPANY_MASTER_1924 company
-                                    join USER_ASSIGNED_COMPANIES_1967 uac on uac.COMPANY_ID = company.Id
-                                    join BUSINESS_ASSIGNED_USERS_1964 bau on bau.Id = uac.ASSIGN_ID
-									join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.Id = bau.BUSINESS_ACCOUNT_ID
-                                    where bau.ASSIGNED_USER = '{UserId}' and company.IS_ACTIVE = 'Y' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")} 
+                                    select bau.ROLE_TYPE, (case when (bau.ROLE_TYPE='SUPERUSER') then 'Y' else 'N' end) as 'IS_EDITABLE', company.* from BUSINESS_COMPANY_MASTER_1924 company
+                                    join BUSINESS_ASSIGNED_USERS_1964 bau on bau.COMPANY_ID = company.Id
+                                    where bau.ASSIGNED_USER = 56 and company.IS_ACTIVE = 'Y' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
                                     )
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
             var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
@@ -712,7 +675,7 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> GetAllBusinessAssignedUsers(GenerateDynamicFormData data, string UserId)
+        public async Task<AddUpdateDelete> GetAllBusinessAssignedUsers(GenerateDynamicFormData data, string CompanyId)
         {
             Dictionary<string, string> filters = new Dictionary<string, string>() {
                     { "BUSINESS_CODE","account.BUSINESS_CODE"},
@@ -763,14 +726,14 @@ namespace Barrway.Service.Repository
             int PageNumber = data.page > 0 ? data.page : 1;
 
             string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; 
-                                declare @Ids varchar(max)
-                                set @Ids = (select stuff((select ',' + BUSINESS_ACCOUNT_ID from BUSINESS_ASSIGNED_USERS_1964 where ASSIGNED_USER = (select Id from USER_MASTER_1915 where USER_ID = '{UserId}') and ROLE_TYPE = 'SUPERUSER' for xml path('')), 1, 1, ''));
+                                
                                 with formdata as (
-                                    select account.BUSINESS_CODE, user_m.USER_EMAIL, user_m.USER_ID, f.* 
+                                    select user_m.USER_EMAIL, user_m.USER_ID, account.NICK_NAME, company.COMPANY_NAME_ENGLISH, f.* 
                                     from BUSINESS_ASSIGNED_USERS_1964 f
                                     join USER_MASTER_1915 user_m on user_m.Id = f.ASSIGNED_USER
-                                    Join BUSINESS_ACCOUNT_WEBSITE_1918 account on account.Id = f.BUSINESS_ACCOUNT_ID
-                                    where f.BUSINESS_ACCOUNT_ID in (select cast(item as integer) from dbo.SplitString(@Ids,',')) {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+									join BUSINESS_COMPANY_MASTER_1924 company on company.Id = f.COMPANY_ID
+                                    Join PUBLIC_USER_ACCOUNT_1943 account on account.USER_ID = user_m.USER_ID
+                                    where f.COMPANY_ID =  '{CompanyId}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
                                 )
                                 Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
             var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
@@ -1255,37 +1218,12 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> GetDefaultCompanyByBusinessId(string BusinessAccountId, string UserId)
-        {
-            string query = $@"select f.* 
-                                from BUSINESS_COMPANY_MASTER_1924 f
-                                join USER_ASSIGNED_COMPANIES_1967 uac on uac.COMPANY_ID = f.Id
-                                join BUSINESS_ASSIGNED_USERS_1964 bau on bau.Id = uac.ASSIGN_ID
-                                where bau.BUSINESS_ACCOUNT_ID = '{BusinessAccountId}' and bau.ASSIGNED_USER = '{UserId}' and f.IS_DEFAULT = 'Y'";
-
-            List<IDictionary<string, object>> BusinessCompanyResult = await sqlFunction.ExecuteSqlQuery(query);
-
-            if (BusinessCompanyResult.Count > 0)
-            {
-                var businessCompany = BusinessCompanyResult.FirstOrDefault();
-                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = businessCompany };
-            }
-            else
-            {
-                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
-            }
-        }
-
         public async Task<AddUpdateDelete> GetDefaultCompanyByUserId(string UserId)
         {
 
-            string query = $@"select f.* 
-                                from BUSINESS_COMPANY_MASTER_1924 f
-                                join USER_ASSIGNED_COMPANIES_1967 uac on uac.COMPANY_ID = f.Id
-                                join BUSINESS_ASSIGNED_USERS_1964 bau on bau.Id = uac.ASSIGN_ID
-                                join USER_MASTER_1915 um on um.Id = bau.ASSIGNED_USER
-                                join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.USER_ID = um.USER_ID
-                                where um.Id = '{UserId}'and f.IS_DEFAULT = 'Y' and baw.Id = bau.BUSINESS_ACCOUNT_ID and f.IS_ACTIVE = 'Y'";
+            string query = $@"select bau.ROLE_TYPE, f.* from BUSINESS_COMPANY_MASTER_1924 f
+                            join BUSINESS_ASSIGNED_USERS_1964 bau on bau.COMPANY_ID = f.Id
+                            where bau.ASSIGNED_USER = '{UserId}' and f.IS_DEFAULT = 'Y' and f.IS_ACTIVE = 'Y'";
 
 
             List<IDictionary<string, object>> BusinessCompanyResult = await sqlFunction.ExecuteSqlQuery(query);
@@ -1562,7 +1500,6 @@ namespace Barrway.Service.Repository
 
                 string query = $@"UPDATE [dbo].[BUSINESS_COMPANY_MASTER_1924] SET 
                                [updated_at] = getdate()
-                              ,[BUSINESS_ACCOUNT_ID] = '{model.BUSINESS_ACCOUNT_ID}'
                               ,[COMPANY_NAME_ENGLISH] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_NAME_ENGLISH)}'
                               ,[COMPANY_NAME_CHINESE] = N'{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_NAME_CHINESE)}'
                               {LogoUpdateQuery}
@@ -2597,13 +2534,13 @@ namespace Barrway.Service.Repository
                             {
                                 if (website.Data["COMPANY_CALENDAR_STATUS"].ToString() == "N")
                                 {
-                                    query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set COMPANY_CALENDAR_STATUS = 'Y', updated_at = getdate() where USER_ID = '" + UserId + "'";
+                                    query = "update USER_MASTER_1915 set COMPANY_CALENDAR_STATUS = 'Y', updated_at = getdate() where USER_ID = '" + UserId + "'";
                                     saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                                 }
 
                                 if (website.Data["CURRENT_STEP"].ToString() == "CALENDAR")
                                 {
-                                    query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'COMPANY WEBSITE', updated_at = getdate()  where USER_ID = '" + UserId + "'";
+                                    query = "update USER_MASTER_1915 set CURRENT_STEP = 'COMPANY WEBSITE', updated_at = getdate()  where USER_ID = '" + UserId + "'";
                                     saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                                 }
                             }
@@ -2720,13 +2657,13 @@ namespace Barrway.Service.Repository
                     {
                         if (website.Data["COMPANY_CALENDAR_STATUS"].ToString() == "N")
                         {
-                            query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set COMPANY_CALENDAR_STATUS = 'Y', updated_at = getdate() where USER_ID = '" + UserId + "'";
+                            query = "update USER_MASTER_1915 set COMPANY_CALENDAR_STATUS = 'Y', updated_at = getdate() where USER_ID = '" + UserId + "'";
                             saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                         }
 
                         if (website.Data["CURRENT_STEP"].ToString() == "CALENDAR")
                         {
-                            query = "update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'COMPANY WEBSITE', updated_at = getdate()  where USER_ID = '" + UserId + "'";
+                            query = "update USER_MASTER_1915 set CURRENT_STEP = 'COMPANY WEBSITE', updated_at = getdate()  where USER_ID = '" + UserId + "'";
                             saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                         }
                     }
@@ -3162,8 +3099,7 @@ namespace Barrway.Service.Repository
                 {
                     sqlString = $@"select calendar.* from BUSINESS_ASSIGNED_USERS_1964 f
                                 join USER_MASTER_1915 um on um.Id = f.ASSIGNED_USER
-                                join USER_ASSIGNED_COMPANIES_1967 uac on uac.ASSIGN_ID = f.Id
-                                join BUSINESS_COMPANY_MASTER_1924 company on company.Id = uac.COMPANY_ID
+                                join BUSINESS_COMPANY_MASTER_1924 company on company.Id = f.COMPANY_ID
                                 Join BUSINESS_CALENDAR_MASTER_1925 calendar on calendar.COMPANY_CODE = company.COMPANY_CODE
                                 where um.Id = {UserId} and calendar.CALENDAR_CODE = '{calendarCode}'";
                 }

@@ -4,23 +4,7 @@ var tabulator2 = [];
 $(document).ready(function () {
     showNavbarNavigation('companyUsersMegaMenu');
     setCalendarMaster();
-    bindBusinesses();
 })
-
-function bindBusinesses() {
-    debugger;
-    var businessData = getSuperBusiness();
-
-    var options = "";
-
-    $("#invite-business-selector").empty();
-
-    businessData.Data.forEach(x => {
-        options += `<option value="${x.BUSINESS_ACCOUNT_ID}">${x.BUSINESS_CODE} - ${x.USER_ID}</option>`;
-    });
-
-    $("#invite-business-selector").append(options);
-}
 
 function AssignSuperUser(Id) {
     var data = tabulator.getData().filter(x => x.Id == Id)[0];
@@ -102,8 +86,7 @@ $(document).on("click", "input[name=assign-module-radio]", function () {
 
 function sendInvitation() {
     var email = $("#invite-input").val();
-    var businessId = $("#invite-business-selector option:selected").val();
-
+    
     if (!validateEmail(email)) {
         swal({
             icon: "warning",
@@ -116,7 +99,7 @@ function sendInvitation() {
             type: "POST",
             data: {
                 Email: email,
-                BusinessId: businessId
+                BusinessId: localStorage.getItem("COMPANY_ID")
             },
             success: function (response) {
                 if (response.Status) {
@@ -247,11 +230,20 @@ function DeleteAdmin(Id) {
     }
 }
 
-function setCalendarMaster() {
+function groupAdminRecords(groupBy) {
+    setCalendarMaster(groupBy)
+}
+
+function openInviteModal() {
+    $("#invite-input").val("");
+    $("#InviteUserModal").modal("show");
+}
+
+function setCalendarMaster(groupBy = "ROLE_TYPE") {
     //var data = GetCompanyCalendars(localStorage.getItem("COMPANY_ID"), "", "");
     //console.log(data);
 
-    var CalendarMasterList = function () {
+    var CalendarMasterList = function (groupBy) {
         var columns = [
             {
                 title: '', field: 'ACTION', formatter: function (cell, formatter) {
@@ -264,11 +256,12 @@ function setCalendarMaster() {
 
                 }, headerSort: false
             },
-            { title: 'Business Code', field: 'BUSINESS_CODE', headerFilter: "input" },
+            { title: 'Company Name', field: 'COMPANY_NAME_ENGLISH', headerFilter: "input" },
             { title: 'User Id', field: 'USER_ID', headerFilter: "input" },
+            { title: 'NickName', field: 'NICK_NAME', headerFilter: "input" },
             { title: 'Email Id', field: 'USER_EMAIL', headerFilter: "input" },
             {
-                title: 'Role Type', field: 'ROLE_TYPE', headerFilter: "input", formatter: function (cell, formatter) {
+                title: 'Role', field: 'ROLE_TYPE', headerFilter: "input", formatter: function (cell, formatter) {
                     if (cell.getData().ROLE_TYPE == 'SUPERUSER') {
                         return `<label style="background:crimson; border-radius:3px; color:white; font-size: smaller; padding:4px 10px; ">Super User</label>`;
                     } else {
@@ -289,7 +282,7 @@ function setCalendarMaster() {
                 tooltips: function (cell) {
                     return cell.getValue();
                 },
-                groupBy: "BUSINESS_CODE",
+                groupBy: groupBy,
                 groupStartOpen: true,
                 groupHeader: function (value, count, data, group) {
                     //value - the value all members of this group share
@@ -354,7 +347,7 @@ function setCalendarMaster() {
                 ajaxConfig: "POST", //ajax HTTP request type
                 ajaxContentType: "json",
                 ajaxParams: { //ajax parameters
-
+                    CompanyId: localStorage.getItem("COMPANY_ID")
                 },
                 ajaxProgressiveLoad: "scroll",
                 ajaxProgressiveLoadScrollMargin: 75,
@@ -391,7 +384,7 @@ function setCalendarMaster() {
 
     };
 
-    CalendarMasterList();
+    CalendarMasterList(groupBy);
 
 }
 

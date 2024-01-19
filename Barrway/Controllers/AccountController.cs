@@ -188,14 +188,11 @@ namespace Barrway.Controllers
 
                 //var assignedData = JsonConvert.DeserializeObject<Dictionary<string, object>>(loginresult.Data["AssignedData"].ToString());
 
-                string roleType = "ADMIN";
-                
                 var claims = new ClaimsIdentity(new[] {
                                                     new Claim(ClaimTypes.NameIdentifier,user["USER_ID"].ToString()),
                                                     new Claim(ClaimTypes.Name,user["USER_ID"].ToString()),
                                                     new Claim(ClaimTypes.Email, user["USER_EMAIL"].ToString()),
                                                     new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
-                                                    new Claim("UserRoleType", roleType),
                                                     new Claim(ClaimTypes.Sid, user["Id"].ToString()),
                                                     //new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
                                                     }, CookieAuthenticationDefaults.AuthenticationType);
@@ -317,7 +314,10 @@ namespace Barrway.Controllers
                     USER_EMAIL = model.USER_EMAIL,
                     USER_PASSWORD = model.USER_PASSWORD,
                     USER_ID = model.USER_NAME,
-                    ROLE_ID = generalRoleId
+                    ROLE_ID = generalRoleId,
+                    COMPANY_PROFILE_STATUS = "N",
+                    COMPANY_CALENDAR_STATUS = "N",
+                    CURRENT_STEP = "COMPANY PROFILE"
                 };
 
                 AddUpdateDelete result = await signupService.RegisterUser(userMaserModel.ToDictionary());

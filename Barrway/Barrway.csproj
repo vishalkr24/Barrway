@@ -527,10 +527,14 @@
     <Content Include="assets\marketplace\image\alogo22.png" />
     <Content Include="assets\marketplace\image\ban-img.png" />
     <Content Include="assets\marketplace\image\banner-back.jpg" />
+    <Content Include="assets\marketplace\image\Business_Icons.png" />
+    <Content Include="assets\marketplace\image\Business_Icons_2.png" />
     <Content Include="assets\marketplace\image\chat.png" />
     <Content Include="assets\marketplace\image\facebook.png" />
     <Content Include="assets\marketplace\image\filter.png" />
     <Content Include="assets\marketplace\image\glo.png" />
+    <Content Include="assets\marketplace\image\Group 811536.png" />
+    <Content Include="assets\marketplace\image\Group 811540.png" />
     <Content Include="assets\marketplace\image\hdiw.png" />
     <Content Include="assets\marketplace\image\insta.png" />
     <Content Include="assets\marketplace\image\lo.png" />
@@ -543,6 +547,7 @@
     <Content Include="assets\marketplace\image\p2.png" />
     <Content Include="assets\marketplace\image\post_img.jpg" />
     <Content Include="assets\marketplace\image\pro.png" />
+    <Content Include="assets\marketplace\image\Real_State_Icons.png" />
     <Content Include="assets\marketplace\image\rectangle.png" />
     <Content Include="assets\marketplace\image\search-icon.png" />
     <Content Include="assets\marketplace\image\service.jpg" />

@@ -39,51 +39,14 @@ namespace Barrway.Service.Repository
             //_client = new RestClient("www.google.com");
         }
 
-        public async Task<AddUpdateDelete> CheckRoleTypeClaim(string email)
-        {
-            try
-            {
-
-                string sqlQuery = $@"select
-									(select case when (count(abc.Id) = 0) then 'ADMIN' else 'SUPERUSER' end from BUSINESS_ASSIGNED_USERS_1964 abc where abc.ASSIGNED_USER = user_m.Id and abc.ROLE_TYPE = 'SUPERUSER') as 'ROLE_TYPE'
-                                    from USER_MASTER_1915 user_m
-                                    join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.USER_ID = user_m.USER_ID
-                                    join BUSINESS_ASSIGNED_USERS_1964 bau on bau.BUSINESS_ACCOUNT_ID = baw.Id
-                                    join ROLE_MASTER_1917 user_role on user_role.Id = user_m.ROLE_ID
-                                    where user_m.USER_EMAIL = '{email}' and bau.ASSIGNED_USER = user_m.Id";
-
-                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
-                if (result.Count() > 0)
-                {
-                    return new AddUpdateDelete() { Data = result, Status = true };
-                }
-                else
-                {
-                    return new AddUpdateDelete() { Status = false, Message = "Invalid Email" };
-                }
-            }
-            catch (Exception ex)
-            {
-
-                return new AddUpdateDelete() { Status = false, Message = ex.Message };
-            }
-
-        }
-
         public async Task<AddUpdateDelete<IDictionary<string, object>>> GetUser(string email, string password, bool isToken = false)
         {
             try
             {
 
-                string sqlQuery = $@"select
-									(select case when (count(abc.Id) = 0) then 'ADMIN' else 'SUPERUSER' end from BUSINESS_ASSIGNED_USERS_1964 abc where abc.ASSIGNED_USER = user_m.Id and abc.ROLE_TYPE = 'SUPERUSER') as 'ROLE_TYPE'
-									, baw.Id as 'BUSINESS_ACCOUNT_ID',user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],user_m.[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
-                                    [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD] 
-                                    from USER_MASTER_1915 user_m
-                                    join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.USER_ID = user_m.USER_ID
-                                    join BUSINESS_ASSIGNED_USERS_1964 bau on bau.BUSINESS_ACCOUNT_ID = baw.Id
-                                    join ROLE_MASTER_1917 user_role on user_role.Id = user_m.ROLE_ID
-                                    where user_m.USER_EMAIL = '{email}' and bau.ASSIGNED_USER = user_m.Id";
+                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
+join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                                     where user_m.USER_EMAIL = '{email}'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
@@ -101,22 +64,8 @@ namespace Barrway.Service.Repository
 
                     if (user["IS_ACTIVE"]?.ToString() == "Y")
                     {
-                        if (string.IsNullOrEmpty(user["ROLE_NAME"]?.ToString()))
-                        {
-                            return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Access denied!!" };
-                        }
-                        if (isToken)
-                        {
-                            return new AddUpdateDelete<IDictionary<string, object>>() { Status = true, Message = "Success", Data = user };
-                        }
-                        if (user["ROLE_NAME"].ToString().ToUpper() == "BUSINESS_USER")
-                        {
-                            return new AddUpdateDelete<IDictionary<string, object>>() { Status = true, Message = "Success", Data = user };
-                        }
-                        else
-                        {
-                            return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Access denied!!" };
-                        }
+                        return new AddUpdateDelete<IDictionary<string, object>>() { Status = true, Message = "Success", Data = user };
+                        
                     }
                     else
                     {
@@ -141,29 +90,9 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string sqlQuery = "";
-
-                if (RoleId == 1)
-                {
-                    sqlQuery = $@"select
-									(select case when (count(abc.Id) = 0) then 'ADMIN' else 'SUPERUSER' end from BUSINESS_ASSIGNED_USERS_1964 abc where abc.ASSIGNED_USER = user_m.Id and abc.ROLE_TYPE = 'SUPERUSER') as 'ROLE_TYPE'
-									, baw.Id as 'BUSINESS_ACCOUNT_ID',user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],user_m.[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
-                                    [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD] 
-                                    from USER_MASTER_1915 user_m
-                                    join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.USER_ID = user_m.USER_ID
-                                    join BUSINESS_ASSIGNED_USERS_1964 bau on bau.BUSINESS_ACCOUNT_ID = baw.Id
-                                    join ROLE_MASTER_1917 user_role on user_role.Id = user_m.ROLE_ID
-                                    where user_m.USER_EMAIL = '{email}' and user_m.ROLE_ID = '{RoleId.ToString()}' and bau.ASSIGNED_USER = user_m.Id";
-                }
-                else
-                {
-                    sqlQuery = $@"select user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],user_m.[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
-                                    [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD] 
-                                    from USER_MASTER_1915 user_m
-                                    join ROLE_MASTER_1917 user_role on user_role.Id = user_m.ROLE_ID
-                                    where user_m.USER_EMAIL = '{email}' and user_m.ROLE_ID = '{RoleId.ToString()}'";
-                }
-                
+                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
+join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                                     where user_m.USER_EMAIL = '{email}'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
@@ -181,10 +110,7 @@ namespace Barrway.Service.Repository
 
                     if (user["IS_ACTIVE"]?.ToString() == "Y")
                     {
-                        if (string.IsNullOrEmpty(user["ROLE_NAME"]?.ToString()))
-                        {
-                            return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Access denied!!" };
-                        }
+                        
                         if (isToken)
                         {
                             return new AddUpdateDelete<IDictionary<string, object>>() { Status = true, Message = "Success", Data = user };
@@ -267,11 +193,9 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string sqlQuery = $@"select user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_NAME],                [USER_EMAIL],[USER_PHONE],[USER_UID],[USER_SOURCE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],[USER_PASSWORD],
-                                [IS_PHONE_VERIFIED],[USER_ROLE],user_role.[ROLE_NAME],[PROFILE_STATUS]
-                                from USER_MASTER_1921 user_m 
-                                left join [dbo].[USER_ROLE_1924] user_role on user_role.Id=user_m.[USER_ROLE]
-                                where [USER_EMAIL]='{email}'";
+                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
+join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                                where user_m.[USER_EMAIL]='{email}'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
@@ -290,14 +214,7 @@ namespace Barrway.Service.Repository
 
                     if (user["IS_ACTIVE"]?.ToString() == "YES")
                     {
-                        if (string.IsNullOrEmpty(user["ROLE_NAME"]?.ToString()))
-                        {
-                            return new AddUpdateDelete() { Status = false, Message = "Access denied!!" };
-                        }
-                        string role = user["ROLE_NAME"].ToString();
-                        string username = user["USER_NAME"].ToString();
-
-                        return await GetUserByRole(username, role);
+                        return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
                     }
                     else
                     {
@@ -323,11 +240,9 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string sqlQuery = $@"select user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_NAME],                [USER_EMAIL],[USER_PHONE],[USER_UID],[USER_SOURCE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],[USER_PASSWORD],
-                                [IS_PHONE_VERIFIED],[USER_ROLE],user_role.[ROLE_NAME],[PROFILE_STATUS]
-                                from USER_MASTER_1921 user_m 
-                                left join [dbo].[USER_ROLE_1924] user_role on user_role.Id=user_m.[USER_ROLE]
-                                where [USER_PHONE]='{phone}'";
+                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
+join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                                where user_m.[USER_PHONE]='{phone}'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
@@ -346,14 +261,7 @@ namespace Barrway.Service.Repository
 
                     if (user["IS_ACTIVE"]?.ToString() == "YES")
                     {
-                        if (string.IsNullOrEmpty(user["ROLE_NAME"]?.ToString()))
-                        {
-                            return new AddUpdateDelete() { Status = false, Message = "Access denied!!" };
-                        }
-                        string role = user["ROLE_NAME"].ToString();
-                        string username = user["USER_NAME"].ToString();
-
-                        return await GetUserByRole(username, role);
+                        return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
                     }
                     else
                     {
@@ -391,13 +299,7 @@ namespace Barrway.Service.Repository
                     var user = result.FirstOrDefault();
                     if (user["IS_ACTIVE"]?.ToString() == "YES")
                     {
-                        if (string.IsNullOrEmpty(user["ROLE_NAME"]?.ToString()))
-                        {
-                            return new AddUpdateDelete() { Status = false, Message = "Access denied!!" };
-                        }
-                        string role = user["ROLE_NAME"].ToString();
-                        string username = user["USER_NAME"].ToString();
-                        return await GetUserByRole(username, role);
+                        return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
                     }
                     else
                     {
@@ -423,27 +325,14 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string sqlQuery = $@"select
-									(select case when (count(abc.Id) = 0) then 'ADMIN' else 'SUPERUSER' end from BUSINESS_ASSIGNED_USERS_1964 abc where abc.ASSIGNED_USER = user_m.Id and abc.ROLE_TYPE = 'SUPERUSER') as 'ROLE_TYPE'
-									, baw.Id as 'BUSINESS_ACCOUNT_ID',user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],user_m.[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
-                                    [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD] 
-                                    from USER_MASTER_1915 user_m
-                                    join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.USER_ID = user_m.USER_ID
-                                    join BUSINESS_ASSIGNED_USERS_1964 bau on bau.BUSINESS_ACCOUNT_ID = baw.Id
-                                    join ROLE_MASTER_1917 user_role on user_role.Id = user_m.ROLE_ID
-                                    where user_m.[USER_ID]='{userID}' and bau.ASSIGNED_USER = user_m.Id";
+                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
+join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                                    where user_m.[USER_ID]='{userID}'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
                 {
-                    var user = result.FirstOrDefault();
-                    string role = user["ROLE_NAME"].ToString();
-                    string username = user["USER_ID"].ToString();
-                    var userResult = await GetUserByRole(username, role);
-                    if (!userResult.Status)
-                        return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
-                    else
-                        return userResult;
+                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
                 }
                 else
                 {
@@ -477,10 +366,8 @@ namespace Barrway.Service.Repository
                 }
                 else
                 {
-                    sqlQuery = $@"select user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],user_m.[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
-                                    [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD] 
-                                    from USER_MASTER_1915 user_m
-                                    join ROLE_MASTER_1917 user_role on user_role.Id = user_m.ROLE_ID
+                    sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
+join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
                                     where user_m.USER_ID = '{userID}' and user_m.ROLE_ID = '{((int)formRole).ToString()}'";
                 }
                 
@@ -489,14 +376,7 @@ namespace Barrway.Service.Repository
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
                 {
-                    var user = result.FirstOrDefault();
-                    string role = user["ROLE_NAME"].ToString();
-                    string username = user["USER_ID"].ToString();
-                    var userResult = await GetUserByRole(username, role);
-                    if (!userResult.Status)
-                        return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
-                    else
-                        return userResult;
+                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
                 }
                 else
                 {
@@ -514,30 +394,14 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string sqlQuery = $@"select
-									(select case when (count(abc.Id) = 0) then 'ADMIN' else 'SUPERUSER' end from BUSINESS_ASSIGNED_USERS_1964 abc where abc.ASSIGNED_USER = user_m.Id and abc.ROLE_TYPE = 'SUPERUSER') as 'ROLE_TYPE'
-									, baw.Id as 'BUSINESS_ACCOUNT_ID',user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],user_m.[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
-                                    [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD] 
-                                    from USER_MASTER_1915 user_m
-                                    join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.USER_ID = user_m.USER_ID
-                                    join BUSINESS_ASSIGNED_USERS_1964 bau on bau.BUSINESS_ACCOUNT_ID = baw.Id
-                                    join ROLE_MASTER_1917 user_role on user_role.Id = user_m.ROLE_ID
-                                    where user_m.USER_EMAIL = '{email}' and bau.ASSIGNED_USER = user_m.Id";
+                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
+join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                                    where user_m.USER_EMAIL = '{email}'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
                 {
-                    var user = result.FirstOrDefault();
-
-
-                    string role = user["ROLE_NAME"].ToString();
-                    string username = user["USER_ID"].ToString();
-
-                    var userResult = await GetUserByRole(username, role);
-                    if (!userResult.Status)
-                        return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
-                    else
-                        return userResult;
+                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
                 }
                 else
                 {
@@ -571,27 +435,15 @@ namespace Barrway.Service.Repository
                 }
                 else
                 {
-                    sqlQuery = $@"select user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],user_m.[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
-                                    [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD] 
-                                    from USER_MASTER_1915 user_m
-                                    join ROLE_MASTER_1917 user_role on user_role.Id = user_m.ROLE_ID
+                    sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
+join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
                                     where user_m.USER_EMAIL = '{email}' and user_m.ROLE_ID = '{Role_Id.ToString()}'";
                 }
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
                 {
-                    var user = result.FirstOrDefault();
-
-
-                    string role = user["ROLE_NAME"].ToString();
-                    string username = user["USER_ID"].ToString();
-
-                    var userResult = await GetUserByRole(username, role);
-                    if (!userResult.Status)
-                        return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
-                    else
-                        return userResult;
+                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
                 }
                 else
                 {
@@ -609,28 +461,14 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string sqlQuery = $@"select
-									(select case when (count(abc.Id) = 0) then 'ADMIN' else 'SUPERUSER' end from BUSINESS_ASSIGNED_USERS_1964 abc where abc.ASSIGNED_USER = user_m.Id and abc.ROLE_TYPE = 'SUPERUSER') as 'ROLE_TYPE'
-									, baw.Id as 'BUSINESS_ACCOUNT_ID',user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],user_m.[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
-                                    [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD] 
-                                    from USER_MASTER_1915 user_m
-                                    join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.USER_ID = user_m.USER_ID
-                                    join BUSINESS_ASSIGNED_USERS_1964 bau on bau.BUSINESS_ACCOUNT_ID = baw.Id
-                                    join ROLE_MASTER_1917 user_role on user_role.Id = user_m.ROLE_ID
+                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
+join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
                                     where user_m.USER_PHONE = '{phone}' and bau.ASSIGNED_USER = user_m.Id";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
                 {
-                    var user = result.FirstOrDefault();
-
-                    string role = user["ROLE_NAME"].ToString();
-                    string username = user["USER_NAME"].ToString();
-                    var userResult = await GetUserByRole(username, role);
-                    if (!userResult.Status)
-                        return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
-                    else
-                        return userResult;
+                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
 
 
                 }

@@ -8,7 +8,6 @@
 <link href="~/fg-newAssets/css/style.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 <main id="content" role="main" class="main">
-
     <div class="modal modal-lg" id="AssignDetailsModal" role="dialog">
 
         <style>
@@ -131,11 +130,48 @@
         </div>
     </div>
 
+    <div class="modal modal-m" id="InviteUserModal" role="dialog">
+
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="text-align:right;">
+                    <span type="button" onclick="$('#InviteUserModal').modal('hide')"  style=" font-size: 50px; float: right; position: relative; line-height: 18px; left: 90%;">&times;</span>
+                </div>
+
+                <div class="modal-body" style="padding: 0px 40px;">
+                    <h2 style="font-size: calc(1.25625rem + 0.075vw); padding-bottom: 16px;" class="modal-title"><b>Add User as Admin</b></h2>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>
+                                <b>Search user by email</b>
+                            </label>
+                            <div class="input-holder">
+                                <input id="invite-input" class="form-control" />
+                                <button class="btn"><i class="fa fa-search" style="font-size: 18px;" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <br /><br />
+                    <div>
+                        <button type="button" onclick="$('#InviteUserModal').modal('hide')" class="btn btn-default">Cancel</button>
+                        <button type="button" onclick="sendInvitation()" class="btn btn-primary">Add</button>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     <div class="content container-fluid">
         <div class="row">
             <div class="col-md-12">
                 <div class="bredcrump">
-                    <span><a class="" href="javascript:void(0)">@Resource.Barrway_business</a> / <a href="javascript:void(0)">@Resource.Manage @Resource.Admin</a> </span>
+                    <span><a class="" href="javascript:void(0)">@Resource.Barrway_business</a> / <a href="javascript:void(0)">@Resource.Manage @Resource.Company @Resource.Admin</a> </span>
                 </div>
             </div>
         </div>
@@ -144,14 +180,14 @@
             .input-holder {
                 border: 1px solid lightgrey;
                 border-radius: 3px;
-                width: calc(100% - 40px);
+                width: calc(100%);
                 float: left;
             }
 
                 .input-holder input {
                     outline: none;
                     border: none;
-                    width: calc(100% - 135px - 250px);
+                    width: calc(100% - 50px);
                     display: inline;
                 }
 
@@ -168,7 +204,7 @@
                 .input-holder button {
                     outline: none;
                     border: none;
-                    width: 130px;
+                    width: 45px;
                     border-radius: 4px;
                     height: 42px;
                     max-width: 130px !important;
@@ -181,7 +217,7 @@
                 .input-holder input {
                     outline: none;
                     border: none;
-                    width: calc(100% - 105px);
+                    width: calc(100% - 50px);
                     display: inline;
                 }
 
@@ -195,14 +231,6 @@
                     border-bottom-right-radius: 0px;
                 }
 
-                .input-holder button {
-                    outline: none;
-                    border: none;
-                    width: 100px;
-                    border-radius: 4px;
-                    height: 41px;
-                    max-width: 100px !important;
-                }
             }
 
             .invitation-btn {
@@ -221,24 +249,31 @@
 
         <div class="row mb-2">
             <div class="col-md-12 form-inner" style="max-width:100%;">
-                <h2><b>@Resource.Manage @Resource.Admin</b></h2>
+                <h2><b>@Resource.Manage @Resource.Company @Resource.Admin</b></h2>
             </div>
             <div class="col-md-12 form-inner" style="max-width:100%;">
                 <div style="">
-                    <div class="input-holder">
-                        <select class="form-control" id="invite-business-selector">
-                            <option>Loading Business...</option>
-                        </select>
-                        <input type="text" class="form-control" placeholder="registered email address..." id="invite-input" />
+                    @*<div class="input-holder">
+                            <input type="text" class="form-control" placeholder="registered email address..." id="invite-input" />
 
-                        <button class="btn btn-primary" onclick="sendInvitation()">Invite</button>
-                    </div>
-
-                    <button title="View Invitations" class="btn btn-primary invitation-btn" onclick="setInvitationHistoryMaster()"><i class="fa fa-list" aria-hidden="true"></i></button>
-                    <div style="height:20px;">
-                        <div id="EmailError" style="font-size:smaller; display:none; color:crimson; padding: 4px; width: 100%;">
-                            Invalid Email Address!
+                            <button class="btn btn-primary" onclick="sendInvitation()">Invite</button>
                         </div>
+
+                        <button title="View Invitations" class="btn btn-primary invitation-btn" onclick="setInvitationHistoryMaster()"><i class="fa fa-list" aria-hidden="true"></i></button>
+                        <div style="height:20px;">
+                            <div id="EmailError" style="font-size:smaller; display:none; color:crimson; padding: 4px; width: 100%;">
+                                Invalid Email Address!
+                            </div>
+                        </div>*@
+
+                    <div class="">
+                        <label>Group Records By:</label>
+                        <select id="filter-admin-records" class="form-control" onchange="groupAdminRecords(this.value)" style="max-width: 150px;">
+                            <option value="USER_EMAIL">Email</option>
+                            <option value="USER_ID">User Id</option>
+                            <option selected value="ROLE_TYPE">Role</option>
+                        </select>
+                        <button style="float:right; margin-top:-40px;" class="btn btn-primary" onclick="openInviteModal()">Add User</button>
                     </div>
 
                 </div>

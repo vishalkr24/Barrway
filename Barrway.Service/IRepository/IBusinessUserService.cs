@@ -16,7 +16,6 @@ namespace Barrway.Service.IRepository
     {
 
         #region Business Webiste
-        Task<AddUpdateDelete> CreateBusinessWebsite(BusinessAccountWebsiteModel model);
         Task<AddUpdateDelete> AddBusinessAssignedUser(BusinessAssignedUsersModel model);
         Task<AddUpdateDelete> UpdateAdmin(string NewSuperUserId, string oldSuperUserId, string BusinessAccountId);
         Task<AddUpdateDelete> UpdateAssignedCompany(List<UserAssignedCompanyModel> data);
@@ -46,16 +45,14 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetSingleCompanyById(string Id);
         Task<AddUpdateDelete> GetAllCompaniesByUserId(string UserId);
         Task<AddUpdateDelete> GetAllCompaniesMasterByUserId(GenerateDynamicFormData data, string UserId);
-        Task<AddUpdateDelete> GetAllBusinessAssignedUsers(GenerateDynamicFormData data, string UserId);
+        Task<AddUpdateDelete> GetAllBusinessAssignedUsers(GenerateDynamicFormData data, string CompanyId);
         Task<AddUpdateDelete> GetSingleBusinessUserMaster(GenerateDynamicFormData data, string UserId);
         Task<AddUpdateDelete> AddCompany(BusinessCompanyModel model, string UserName, string UserId, bool IsDefault = false);
         Task<AddUpdateDelete> UpdateCompanyService(BusinessCompanyModel model);
         
         Task<AddUpdateDelete> GetSingleCompanyByCompanyCode(string CompanyCode);
-        Task<AddUpdateDelete> GetDefaultCompanyByBusinessId(string BusinessAccountId, string UserId);
         Task<AddUpdateDelete> GetDefaultCompanyByUserId(string UserId);
         Task<AddUpdateDelete> UpdateBusinessCompanyProfileStatusByUserId(string userId, bool isActive);
-        Task<AddUpdateDelete> UpdateBusinessCompanyProfileStatusByBusinessId(string businessId, bool isActive);
         Task<AddUpdateDelete> getCompanyDashboardData(string CompanyCode, string UserId);
         Task<AddUpdateDelete> getAllAssignedCompanies(string AssignedId, string UserId);
         Task<AddUpdateDelete> getCompanyCalendarDashboardData(string CompanyCode, string CalendarCode);

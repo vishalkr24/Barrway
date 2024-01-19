@@ -553,6 +553,62 @@
                                     </div>
                                 </a>
                             </li>
+                            <li class="hs-has-sub-menu nav-item">
+                                <a id="nav-location-master" class="hs-mega-menu-invoker nav-link" href="/calendar/index#/calendar/location-master/2306" role="button">
+
+                                    <div class="button-body-wrap">
+                                        <div class="button-body">
+                                            <button class="cus-button">
+                                                <img src="/assets/marketplace/image/Real_State_Icons.png" alt="" class="hns" />
+                                                <img src="/assets/marketplace/image/location1.png" alt="" class="hs" />
+                                                <span class="button_title">@Resource.Location_Master</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="hs-has-sub-menu nav-item">
+                                <a id="nav-service-master" class="hs-mega-menu-invoker nav-link" href="/calendar/index#/calendar/service-master/2303" role="button">
+
+                                    <div class="button-body-wrap">
+                                        <div class="button-body">
+                                            <button class="cus-button">
+                                                <img src="/assets/marketplace/image/Group 811540.png" alt="" class="hns" />
+                                                <img src="/assets/marketplace/image/serv1.png" alt="" class="hs" />
+                                                <span class="button_title">@Resource.Service_Master</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="hs-has-sub-menu nav-item">
+                                <a id="nav-service-provider-master" class="hs-mega-menu-invoker nav-link" href="/calendar/index#/calendar/service-provider-master/2304" " role="button">
+
+                                    <div class="button-body-wrap">
+                                        <div class="button-body">
+                                            <button class="cus-button">
+                                                <img src="/assets/marketplace/image/Group 811536.png" alt="" class="hns" />
+                                                <img src="/assets/marketplace/image/servpro1.png" alt="" class="hs" />
+                                                <span class="button_title">@Resource.Service_Provider_Master</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="nav-item hide-for-superadmin">
+                                <a class="nav-link " id="nav-package-master" href="calendar/index#/calendar/calendar-package/2322" data-placement="left">
+                                    <div class="button-body-wrap">
+                                        <div class="button-body">
+                                            <button class="cus-button">
+                                                <img src="/assets/marketplace/image/sp.png" alt="" class="hns" />
+                                                <img src="/assets/marketplace/image/sp1.png" alt="" class="hs" />
+                                                <span class="button_title"> @Resource.Service_package_master </span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </a>
+                            </li>
                             <!-- End Dashboards -->
                             <!-- Pages -->
                             <li class="hs-has-sub-menu nav-item hide-for-superadmin">
@@ -570,67 +626,52 @@
                             </li>
                             <!-- End Pages -->
                             <!-- Apps -->
-                            @if (UserIdentity.UserRoleType.ToString() == "SUPERUSER")
-                            {
-                                <li class="hs-has-sub-menu nav-item">
-                                    <a id="companyUsersMegaMenu" class="hs-mega-menu-invoker nav-link" href="/BusinessAdmin/AdminMaster" role="button">
+
+                            <li class="hs-has-sub-menu nav-item" id="admin-master-nav">
+                                <a id="companyUsersMegaMenu" class="hs-mega-menu-invoker nav-link" onclick="goToCompanyAdminMaster()" href="javascript:void(0)" role="button">
+                                    <div class="button-body-wrap">
+                                        <div class="button-body">
+                                            <button class="cus-button">
+                                                <img src="/assets/marketplace/image/user.png" alt="" class="hns" />
+                                                <img src="/assets/marketplace/image/user1.png" alt="" class="hs" />
+                                                <span class="button_title"> @Resource.User </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+
+                            <!-- End Apps -->
+                            @*<li class="nav-item hide-for-superadmin">
+                                    <a class="nav-link " href="javascript:void(0)">
                                         <div class="button-body-wrap">
                                             <div class="button-body">
                                                 <button class="cus-button">
-                                                    <img src="/assets/marketplace/image/user.png" alt="" class="hns" />
-                                                    <img src="/assets/marketplace/image/user1.png" alt="" class="hs" />
-                                                    <span class="button_title"> @Resource.User </span>
+                                                    <img src="/assets/marketplace/image/spwr.png" alt="" class="hns" />
+                                                    <img src="/assets/marketplace/image/spwr1.png" alt="" class="hs" />
+                                                    <span class="button_title">@Resource.Service_provider_work_record </span>
                                                 </button>
                                             </div>
                                         </div>
+
                                     </a>
                                 </li>
-                            }
-                            <!-- End Apps -->
 
-                            <li class="nav-item hide-for-superadmin">
-                                <a class="nav-link " href="javascript:void(0)">
-                                    <div class="button-body-wrap">
-                                        <div class="button-body">
-                                            <button class="cus-button">
-                                                <img src="/assets/marketplace/image/spwr.png" alt="" class="hns" />
-                                                <img src="/assets/marketplace/image/spwr1.png" alt="" class="hs" />
-                                                <span class="button_title">@Resource.Service_provider_work_record </span>
-                                            </button>
+                                <li class="nav-item hide-for-superadmin">
+                                    <a class="nav-link " id="nav-client-payment-history" href="/calendar/index#/calendar/client-payment-history/" data-placement="left">
+                                        <div class="button-body-wrap">
+                                            <div class="button-body">
+                                                <button class="cus-button">
+                                                    <img src="/assets/marketplace/image/cph.png" alt="" class="hns" />
+                                                    <img src="/assets/marketplace/image/cph1.png" alt="" class="hs" />
+                                                    <span class="button_title"> @Resource.Client_payment_history </span>
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                </a>
-                            </li>
+                                    </a>
+                                </li>*@
 
-                            <li class="nav-item hide-for-superadmin">
-                                <a class="nav-link " id="nav-client-payment-history" href="/calendar/index#/calendar/client-payment-history/" data-placement="left">
-                                    <div class="button-body-wrap">
-                                        <div class="button-body">
-                                            <button class="cus-button">
-                                                <img src="/assets/marketplace/image/cph.png" alt="" class="hns" />
-                                                <img src="/assets/marketplace/image/cph1.png" alt="" class="hs" />
-                                                <span class="button_title"> @Resource.Client_payment_history </span>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                </a>
-                            </li>
-                            <li class="nav-item hide-for-superadmin">
-                                <a class="nav-link " id="nav-package-master" href="calendar/index#/calendar/calendar-package/2322" data-placement="left">
-                                    <div class="button-body-wrap">
-                                        <div class="button-body">
-                                            <button class="cus-button">
-                                                <img src="/assets/marketplace/image/sp.png" alt="" class="hns" />
-                                                <img src="/assets/marketplace/image/sp1.png" alt="" class="hs" />
-                                                <span class="button_title"> @Resource.Service_package_master </span>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                </a>
-                            </li>
                         </ul>
 
                     </div>
@@ -718,59 +759,6 @@
 
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" id="nav-location-master" href="/calendar/index#/calendar/location-master/2306">
-
-                                <div class="button-body">
-                                    <button class="cus-button">
-                                        <img src="/assets/marketplace/image/location.png" alt="" class="hns" />
-                                        <img src="/assets/marketplace/image/location1.png" alt="" class="hs" />
-                                        <span class="button_title">@Resource.Location_Master</span>
-                                    </button>
-                                </div>
-                            </a>
-                        </li>
-
-                        <li class="nav-item hide-for-superadmin">
-                            <a id="nav-service-master" href="/calendar/index#/calendar/service-master/2303" class="nav-link" role="button">
-
-                                <div class="button-body">
-                                    <button class="cus-button">
-                                        <img src="/assets/marketplace/image/serv.png" alt="" class="hns" />
-                                        <img src="/assets/marketplace/image/serv1.png" alt="" class="hs" />
-                                        <span class="button_title">@Resource.Service_Master</span>
-                                    </button>
-                                </div>
-                            </a>
-
-                        </li>
-
-                        <li class="nav-item hide-for-superadmin">
-                            <a id="nav-service-provider-master" href="/calendar/index#/calendar/service-provider-master/2304" class="nav-link" href="javascript:void(0)" role="button">
-
-                                <div class="button-body">
-                                    <button class="cus-button">
-                                        <img src="/assets/marketplace/image/servpro.png" alt="" class="hns" />
-                                        <img src="/assets/marketplace/image/servpro1.png" alt="" class="hs" />
-                                        <span class="button_title">@Resource.Service_Provider_Master</span>
-                                    </button>
-                                </div>
-                            </a>
-
-                        </li>
-
-                        <li class="nav-item hide-for-superadmin">
-                            <a class="nav-link " id="nav-participant-master" href="/calendar/index#/calendar/participant-master/2310">
-                                <div class="button-body">
-                                    <button class="cus-button">
-                                        <img src="/assets/marketplace/image/party.png" alt="" class="hns" />
-                                        <img src="/assets/marketplace/image/party1.png" alt="" class="hs" />
-                                        <span class="button_title">@Resource.Participant</span>
-                                    </button>
-                                </div>
-
-                            </a>
-                        </li>
                         <li class="nav-item hide-for-superadmin">
                             <a class="nav-link " id="nav-schedular-form" href="/calendar/index#/calendar/schedular-form/2311">
                                 <div class="button-body">

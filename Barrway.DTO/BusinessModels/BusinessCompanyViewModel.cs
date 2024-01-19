@@ -15,8 +15,7 @@ namespace Barrway.DTO.BusinessModels
     {
         public string Id { get; set; }
 
-        [Required]
-        public string BUSINESS_ACCOUNT_ID { get; set; }
+        public string CREATED_USER_ID { get; set; }
 
         [Required(ErrorMessage = "Invalid Company Code")]
         public string COMPANY_CODE { get; set; } = String.Empty;
