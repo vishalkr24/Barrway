@@ -36,12 +36,19 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2 style="font-size: calc(1.25625rem + 0.075vw)" class="modal-title"><b>Assign to User</b></h2>
+
+
+                    <h2 style="font-size: calc(1.25625rem + 0.075vw)" class="modal-title"><b>Assign as Super User</b></h2>
+                    <div style="font-size:32px; line-height:24px; text-align:right;">
+                        <a href="javascript:void(0)" style="text-decoration:none; color:black;" onclick="$(document.getElementById('AssignDetailsModal')).modal('hide')">&times;</a>
+                    </div>
                 </div>
 
-                <div class="modal-body pt-0">
+                <div class="modal-body pt-4">
 
-                    <div class="selector-container">
+                    <button type="button" id="update-permit-btn" class="btn btn-primary">Assign Company</button>
+
+                    @*<div class="selector-container">
 
                         <input type="radio" name="assign-module-radio" class="assign-module-radio" checked value="Company" style="display:none;" id="assign-company-module" />
                         <label for="assign-company-module" class="">Company</label>
@@ -60,14 +67,14 @@
                             </select>
                         </div>
 
-                    </div>
-
+                    </div>*@
+                <p class="pt-4" style="font-size: smaller;">
+                    <b>Note:</b> <br />
+                    &bull; Assigning other user as the Super user of the company will give that user rights to add or remove users from selected company.<br />
+                    &bull; Once the user is assigned as the Super User you will become a admin of the same company.
+                </p>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" onclick="$('#AssignDetailsModal').modal('hide')" class="btn back">@Resource.Cancel</button>
-                    <button type="button" id="update-permit-btn" class="btn btn-default">Update Permissions</button>
-                </div>
-
+                
             </div>
         </div>
     </div>

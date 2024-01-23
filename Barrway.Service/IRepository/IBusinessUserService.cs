@@ -18,7 +18,7 @@ namespace Barrway.Service.IRepository
         #region Business Webiste
         Task<AddUpdateDelete> AddBusinessAssignedUser(BusinessAssignedUsersModel model);
         Task<AddUpdateDelete> UpdateAdmin(string NewSuperUserId, string oldSuperUserId, string BusinessAccountId);
-        Task<AddUpdateDelete> UpdateAssignedCompany(List<UserAssignedCompanyModel> data);
+        Task<AddUpdateDelete> UpdateAssignedCompany(UserAssignedCompanyModel data, string UserId);
         Task<AddUpdateDelete> DeleteAdmin(string Id);
         Task<AddUpdateDelete> GetSingleBusinessWebsite(string UserId);
         Task<AddUpdateDelete> GetAllAssignedBusinessList(string UserId);

@@ -438,7 +438,7 @@
                                 <div class="register">
                                     <h3>@Resource.Login </h3>
 
-                                    <form class="js-validate needs-validation" method="post" action="/Account/BusinessLogin" novalidate>
+                                    <form class="js-validate needs-validation" method="post" action="/Account/BusinessLogin?returnUrl=@Model.ReturnUrl" novalidate>
 
                                         @Html.AntiForgeryToken()
 

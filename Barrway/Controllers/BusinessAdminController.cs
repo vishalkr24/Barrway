@@ -1026,11 +1026,11 @@ namespace Barrway.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> UpdateAssignedCompany(List<UserAssignedCompanyModel> data)
+        public async Task<ActionResult> UpdateAssignedCompany(UserAssignedCompanyModel data)
         {
             try
             {
-                var Data = await businessUserService.UpdateAssignedCompany(data);
+                var Data = await businessUserService.UpdateAssignedCompany(data, UserIdentity.UserID);
 
                 return Json(Data, JsonRequestBehavior.AllowGet);
             }

@@ -42,36 +42,7 @@ function AssignSuperUser(Id) {
 }
 
 function ShowAssignModal(Id) {
-
-    $.ajax({
-        url: "/BusinessAdmin/getAllAssignedCompanies",
-        type: "GET",
-        data: {
-            AssignedId: Id,
-            UserId: tabulator.getData().filter(x => x.Id == Id)[0].ASSIGNED_USER
-        },
-        success: function (response) {
-            if (response.Status) {
-                var data = response.Data;
-                var elements = `<select id="company-selector" autocomplete="off" multiple><option value="">Select Companies...</option>`;
-                $("#tom-select-container").empty();
-                data.forEach(x => {
-                    if (x.IS_ASSIGNED == 'Y') {
-                        elements += `<option selected value="${x.Id}">${x.COMPANY_CODE} - ${x.COMPANY_NAME_ENGLISH}</option>`;
-                    } else {
-                        elements += `<option value="${x.Id}">${x.COMPANY_CODE} - ${x.COMPANY_NAME_ENGLISH}</option>`;
-                    }
-                });
-                $("#tom-select-container").append(elements + "</select>");
-                new TomSelect("#company-selector", {});
-                $("#update-permit-btn").attr("onclick", `UpdatePermissions(${Id})`);
-            }
-        },
-        error: function (err) {
-
-        }
-    })
-
+    $("#update-permit-btn").attr("onclick", `UpdatePermissions(${Id})`);
     $("#AssignDetailsModal").modal("show");
 }
 
@@ -145,55 +116,35 @@ const validateEmail = (email) => {
 };
 
 function UpdatePermissions(Id) {
-    if (confirm("Are you sure you want to update the permissions?")) {
-        if ($("input[name=assign-module-radio]:checked").attr('id').split('-')[1] == 'company') {
-            var selectedData = $("#company-selector").val()
-            if (selectedData != null) {
-                if (selectedData.length > 0) {
+    if (confirm("Are you sure you want to assign this user as Super User of this company?")) {
+        var finalData = {
+            ASSIGN_ID: Id,
+            COMPANY_ID: localStorage.getItem('COMPANY_ID')
+        };
 
-                    var finalData = [];
+        if (finalData != null) {
 
-                    selectedData.forEach(x => {
-                        finalData.push({
-                            ASSIGN_ID: Id,
-                            COMPANY_ID: x
-                        });
+            $.ajax({
+                url: "/BusinessAdmin/UpdateAssignedCompany",
+                type: "POST",
+                data: {
+                    data: finalData
+                },
+                success: function (success) {
+
+                    swal({
+                        icon: "success",
+                        title: "Success",
+                        text: "Permissions Updated Successfully!"
+                    }).then(function (check) {
+                        window.location.href = '/BusinessAdmin/Dashboard';
                     });
+                },
+                error: function (err) {
 
-                    if (finalData.length > 0) {
-
-                        $.ajax({
-                            url: "/BusinessAdmin/UpdateAssignedCompany",
-                            type: "POST",
-                            data: {
-                                data: finalData
-                            },
-                            success: function (success) {
-
-                                swal({
-                                    icon: "success",
-                                    title: "Success",
-                                    text: "Permissions Updated Successfully!"
-                                }).then(function (check) {
-                                    ShowAssignModal(Id);
-                                });
-                            },
-                            error: function (err) {
-
-                            }
-                        })
-
-                    }
-
-
-                } else {
-                    alert("Please select a company");
                 }
-            } else {
-                alert("Please select a company");
-            }
-        } else {
-            AssignSuperUser(Id);
+            })
+
         }
     }
 
@@ -248,7 +199,7 @@ function setCalendarMaster(groupBy = "ROLE_TYPE") {
             {
                 title: '', field: 'ACTION', formatter: function (cell, formatter) {
                     if (cell.getData().ROLE_TYPE == "ADMIN") {
-                        return `<button onclick="ShowAssignModal(${cell.getData().Id})" class="btn btn-primary text-light">Permissions</button>
+                        return `<button onclick="ShowAssignModal(${cell.getData().Id})" class="btn btn-primary text-light">Edit</button>
                                 <button onclick="DeleteAdmin(${cell.getData().Id})" class="btn btn-danger text-light"><i class="fa fa-trash-o" style="font-size: larger;" aria-hidden="true"></i></button>`;
                     } else {
                         return ``;

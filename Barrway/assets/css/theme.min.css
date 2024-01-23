@@ -30224,7 +30224,13 @@ div#navbarVerticalMenu .nav-item:hover > .nav-link {
     border-bottom: 0.0625rem solid rgba(231, 234, 243, 0.7);
     padding-top: 2rem;
     padding-bottom: 2rem;
-   /* margin-bottom: 2.25rem;*/
+    /* margin-bottom: 2.25rem;*/
+}
+
+.page-header {
+    border-bottom: none !important;
+    padding-top: 0rem !important;
+    padding-bottom: 0rem !important;
 }
 
     .page-header .breadcrumb {
@@ -33951,17 +33957,17 @@ a:hover .text-inherit {
     padding: 0.18rem 1rem;
 }*/
 
-    .tom-select-custom .ts-wrapper.form-select .ts-control .tom-select-custom-hide,
-    .tom-select-custom .ts-wrapper.multi .ts-control.has-items.hs-select-single-multiple .tom-select-custom-hide {
-        display: none;
-    }
+.tom-select-custom .ts-wrapper.form-select .ts-control .tom-select-custom-hide,
+.tom-select-custom .ts-wrapper.multi .ts-control.has-items.hs-select-single-multiple .tom-select-custom-hide {
+    display: none;
+}
 
-    .tom-select-custom .ts-wrapper.form-select .ts-control .focus,
-    .tom-select-custom .ts-wrapper.form-select .ts-control:focus,
-    .tom-select-custom .ts-wrapper.multi .ts-control.has-items.hs-select-single-multiple .focus,
-    .tom-select-custom .ts-wrapper.multi .ts-control.has-items.hs-select-single-multiple:focus {
-        box-shadow: none;
-    }
+.tom-select-custom .ts-wrapper.form-select .ts-control .focus,
+.tom-select-custom .ts-wrapper.form-select .ts-control:focus,
+.tom-select-custom .ts-wrapper.multi .ts-control.has-items.hs-select-single-multiple .focus,
+.tom-select-custom .ts-wrapper.multi .ts-control.has-items.hs-select-single-multiple:focus {
+    box-shadow: none;
+}
 
 .tom-select-custom .ts-control,
 .tom-select-custom .ts-control input,
@@ -34333,7 +34339,7 @@ button#backtomarketplace {
     width: 100%;
     float: left;
     max-height: 100vh;
-   /* overflow-x: auto;*/
+    /* overflow-x: auto;*/
 }
 
 .bred-nav {
@@ -34782,7 +34788,7 @@ select.select-company {
     select.select-company {
         padding: 2px 19px 0px 0px;
         background-position: calc(100% - 8px) calc(1em + -5px), calc(100% - 3px) calc(1em + -5px), 100% 0;
-        margin-right:0px;
+        margin-right: 0px;
     }
 
     .cp-10 {
@@ -34851,29 +34857,29 @@ select.select-company {
                 color: #E2476C;
             }
 
-            /*.startbusiness .setup span:nth-child(2) {
+        /*.startbusiness .setup span:nth-child(2) {
                 color: #222222;
             }
 */
-            .startbusiness .setup a {
-                border-radius: 30px;
-                font-size: 16px;
-                color: #FFFFFF;
-                font-weight: 400;
-                line-height: 40px;
-                text-align: center;
-                padding: 5px 25px;
-            }
-
-        .startbusiness .setup a.activated {
+        .startbusiness .setup a {
             border-radius: 30px;
-            font-size: 15px;
-            color: black;
+            font-size: 16px;
+            color: #FFFFFF;
             font-weight: 400;
             line-height: 40px;
             text-align: center;
-            padding: 5px 0px;
+            padding: 5px 25px;
         }
+
+            .startbusiness .setup a.activated {
+                border-radius: 30px;
+                font-size: 15px;
+                color: black;
+                font-weight: 400;
+                line-height: 40px;
+                text-align: center;
+                padding: 5px 0px;
+            }
 
 /*custome css*/
 .navbar-brand.cal-name {
@@ -35104,6 +35110,7 @@ p.btcd {
     .mycompany p {
         color: #fff;
     }
+
 button.create-company {
     color: #E2476C;
     background-color: #fff;
@@ -35112,6 +35119,7 @@ button.create-company {
     border-radius: 40px;
     margin-bottom: 15px;
 }
+
 .all-company {
     width: 100%;
     float: left;
@@ -35131,11 +35139,13 @@ button.create-company {
     margin-right: 5px;
     object-fit: contain;
 }
+
 .added-company span {
     color: #fff;
     font-size: 14px;
     font-weight: 400;
 }
+
 .all-company img {
     width: 25px;
     height: 25px;
@@ -35162,6 +35172,7 @@ span.img-container {
     border-radius: 4px;
     text-align: center;
 }
+
     .carusal-ticket .item-inner .ticket-logo .ticket-logo-img {
         width: 30px;
         height: 30px;
@@ -35171,6 +35182,7 @@ span.img-container {
         position: relative;
         top: -4px;
     }
+
     .carusal-ticket .item-inner .ticket-logo img {
         width: 28px;
         height: 28px;
@@ -35178,17 +35190,19 @@ span.img-container {
     }
 
     .carusal-ticket .item-inner .ticket-logo span {
-        
         color: #000;
     }
+
 .ticket-content p {
     color: #000;
 }
+
 .ticket-content h1 {
     font-size: 32px;
     font-weight: 700;
     font-family: poppins;
 }
+
 .carusal-ticket .owl-nav button.owl-prev {
     position: absolute;
     top: 35%;
@@ -35203,6 +35217,7 @@ span.img-container {
     text-decoration: none;
     border: 1px solid #3FBFC7 !important;
 }
+
 .carusal-ticket .owl-nav button.owl-next {
     position: absolute;
     top: 35%;
@@ -35217,19 +35232,21 @@ span.img-container {
     text-decoration: none;
     border: 1px solid #3FBFC7 !important;
 }
-.carusal-ticket .owl-nav button.owl-prev span, .carusal-ticket .owl-nav button.owl-next span {
-    opacity: 0;
-}
 
-.carusal-ticket .owl-nav button.owl-next:after {
-    content: "\f285";
-    font-family: bootstrap-icons !important;
-    font-size: 12px;
-    transform: scale3d(1.5, 1.5, 1.5);
-    top: 15px;
-    left: 8px;
-    position: absolute;
-}
+    .carusal-ticket .owl-nav button.owl-prev span, .carusal-ticket .owl-nav button.owl-next span {
+        opacity: 0;
+    }
+
+    .carusal-ticket .owl-nav button.owl-next:after {
+        content: "\f285";
+        font-family: bootstrap-icons !important;
+        font-size: 12px;
+        transform: scale3d(1.5, 1.5, 1.5);
+        top: 15px;
+        left: 8px;
+        position: absolute;
+    }
+
 .carusal-ticket .owl-nav button.owl-prev:after {
     content: "\f284";
     font-family: bootstrap-icons !important;
@@ -35239,15 +35256,17 @@ span.img-container {
     left: 8px;
     position: absolute;
 }
+
 .carusal-ticket .item-inner:hover {
     background-color: #3fbfc7;
 }
+
     .carusal-ticket .item-inner:hover .ticket-content h1, .carusal-ticket .item-inner:hover .ticket-content p {
         color: #fff;
     }
-    /*end*/
-    @media screen and (min-width:1681px) and (max-width:2560px) {
-        .pricing-custome-inner {
+/*end*/
+@media screen and (min-width:1681px) and (max-width:2560px) {
+    .pricing-custome-inner {
         min-height: 50vh;
     }
 }
@@ -35279,12 +35298,13 @@ span.img-container {
         min-height: 80vh;
     }
 }
+
 @media screen and (min-width:900px) and (max-width:1024px) {
     .Pricing-wrapper .pricing-custome {
         width: 33%;
     }
-
 }
+
 @media screen and (min-width:769px) and (max-width:1024px) {
 
     .pricing-custome-inner {
@@ -35307,6 +35327,7 @@ span.img-container {
         padding-bottom: 20px;
     }
 }
+
 button#backtomarketplace {
     border: 1px solid #3FBFC7;
     border-radius: 40px;

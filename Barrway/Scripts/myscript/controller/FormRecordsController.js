@@ -4558,7 +4558,7 @@
                             //url - the URL of the request
                             //params - the parameters passed with the request
                             //response - the JSON object returned in the body of the response.
-                            
+                            debugger;
                             $('#form-records').unblock();
                             $.unblockUI();
                             var result = angular.copy(response.data);
@@ -4590,6 +4590,11 @@
                                 return response;
                             }
                             else {
+                                if ($scope.currentFormId == "2306" || $scope.currentFormId == "2304" || $scope.currentFormId == "2303" ) {
+                                    window.location.href = "/calendar/index#/form/saveEntry/" + $scope.currentFormId;
+                                    return null;
+                                }
+                                
                                 return response;
                             }
 
