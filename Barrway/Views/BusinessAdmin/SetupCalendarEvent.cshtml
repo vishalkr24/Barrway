@@ -185,13 +185,14 @@
         padding: 0px 0px !important;
     }
 
-    div#step-3 p, div#step-4 p, div#step-5 p, div#step-6 p {
+    div#step-2 p, div#step-3 p, div#step-4 p, div#step-5 p, div#step-6 p {
         font-weight: 700;
         font-size: 24px;
         color: rgba(226, 71, 108, 1);
+        margin-bottom: 0.5rem !important;
     }
 
-    div#step-3 .ycaml p, div#step-4 .ycaml p {
+    div#step-2 .ycaml p, div#step-3 .ycaml p, div#step-4 .ycaml p, div#step-5 .ycaml p {
         font-size: 15px;
         font-weight: 400;
         position: relative;
@@ -200,7 +201,7 @@
     }
 
 
-    div#step-3 .ycaml button, div#step-4 .ycaml button {
+    div#step-2 .ycaml button, div#step-3 .ycaml button, div#step-4 .ycaml button {
         border: 1px solid rgba(129, 113, 176, 1);
         color: rgba(129, 113, 176, 1);
         background: transparent;
@@ -375,11 +376,37 @@
         color: red !important;
         margin-bottom: 11px;
     }
+
+    .final-btn{
+        background-color: crimson!important;
+    }
 </style>
 
 <main id="content" role="main" class="main">
 
     <div class="container">
+        <div id="step-2" style="display:none;" class="row pt-lg-6">
+
+            <div class="col-md-5 m-auto">
+
+                <div class="form-inner" style="max-width:100%;">
+                    <p>Step 2 of 5</p>
+                    <div class="hed-til">
+                        <p></p>
+                    </div>
+
+                    <div class="f_of_f-wrap-o">
+                        <div class="choose">
+
+                        </div>
+                        <button type="button" onclick="backToStep(1)" class="back">@Resource.Back</button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
         <div id="step-3" style="display:none;" class="row pt-lg-6">
 
             <div class="col-md-12">
@@ -387,7 +414,7 @@
                     <div class="form-inner" style="max-width:100%;">
                         <p>Step 3 of 5</p>
                         <div class="hed-til">
-                            <p>Give a name for your event location</p>
+                            <p class="heading-title"></p>
                         </div>
                         <div>
 
@@ -439,7 +466,8 @@
                                                 <button class="bg-t-b" onclick="addMoreLocation(null, true, true)">+Add more</button>
                                             </div>
 
-                                            <button type="button" onclick="moveToStep(2)" class="back">@Resource.Back</button>
+                                            <button type="button" onclick="backToStep(2)" class="back">@Resource.Back</button>
+                                            <button type="button" style="display:none;" onclick="skipToStep(4)" class="back skip-button">Skip</button>
                                             <button type="button" class="btn btn-primary" onclick="moveToStep(4)">@Resource.Next</button>
 
 
@@ -486,7 +514,8 @@
                                             <p>You can add more service providers if your event has more than one service providers.</p>
                                             <button class="bg-t-b" onclick="addMoreProvider(null, true, true)">+Add more</button>
                                         </div>
-                                        <button type="button" onclick="moveToStep(3)" class="back">@Resource.Back</button>
+                                        <button type="button" onclick="backToStep(3)" class="back">@Resource.Back</button>
+                                        <button type="button" style="display:none;" onclick="skipToStep(5)" class="back skip-button">Skip</button>
                                         <button type="button" class="btn btn-primary" onclick="moveToStep(5)">@Resource.Next</button>
 
 
@@ -504,59 +533,10 @@
             </div>
 
         </div>
+
         <div id="step-5" style="display:none;" class="row pt-lg-6">
 
-            <div class="col-md-5 m-auto">
-
-                <div class="form-inner" style="max-width:100%;">
-                    <p>Step 5 of 5</p>
-                    <div class="hed-til">
-                        <p>Which one describe your course the best?</p>
-                    </div>
-
-                    <div class="f_of_f-wrap-o">
-                        <div class="choose">
-                            @if (Model.CALENDAR_CATEGORY_ID == "1" || Model.CALENDAR_CATEGORY_ID == "5")
-                            {
-                                <input type="radio" name="calendarTypeRadio" style="display:none;" value="PACKAGE" id="calendarTypePackage" />
-                                <div class="chose-inner" onclick="moveToStep(6, 'Package')">
-                                    <div class="one">
-                                        <img src="../assets/svg/logos/favicon.png" />
-                                    </div>
-                                    <div class="two">
-                                        <p>Fixed number of sessions within the course</p>
-                                    </div>
-                                    <div class="three">
-                                        <p><img src="../assets/img/purple.png" /></p>
-                                    </div>
-                                </div>
-                            }
-
-
-                            <input type="radio" name="calendarTypeRadio" style="display:none;" value="MANUAL" id="calendarTypeManual" />
-                            <div class="chose-inner" onclick="moveToStep(6, 'Manual')">
-                                <div class="one">
-                                    <img src="../assets/svg/logos/favicon.png" />
-                                </div>
-                                <div class="two">
-                                    <p>Customer can buy credits and freely book any session within a period of time</p>
-                                </div>
-                                <div class="three">
-                                    <p><img src="../assets/img/purple.png" /></p>
-                                </div>
-                            </div>
-                        </div>
-                        <button type="button" onclick="backToStep(4)" class="back">@Resource.Back</button>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-        <div id="step-6" style="display:none;" class="row pt-lg-6">
-
-            <div class="col-md-5 ">
+            <div class="col-md-12">
 
                 <div class="form-inner" style="max-width:100%;">
                     <p>Step 5 of 5</p>
@@ -564,167 +544,71 @@
                     <div class="f_of_f-wrap-t">
                         <div class="form-inner set-cal" style="max-width:100%;">
                             <div class="hed-til">
-                                <p>Set up service and sessions of the course</p>
+                                <p></p>
                             </div>
+                            <div>
 
-                            <div class="form-group">
+                                <div id="div1">
+                                    <div class="text-center">
+                                        <div class="profile-form">
+                                            <style>
+                                                .form-inner {
+                                                    margin-left: 0px !important;
+                                                }
 
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label for="calendarname">Service Name *</label>
+                                                .element-remover {
+                                                    text-align: center;
+                                                    border: 1px solid #6f6f6f;
+                                                    cursor: pointer;
+                                                    height: 30px;
+                                                    padding: 4px;
+                                                    width: 30px;
+                                                    border-radius: 20px;
+                                                    position: absolute;
+                                                    margin-left: -50px;
+                                                    margin-top: 7px;
+                                                }
 
-                                        <input type="text" class="form-control" id="serviceName" placeholder="" name="serviceName">
-                                        <div class="invalid-feedback-3" id="SCH_ACTIVITY_ERROR">
-                                            Please mention name of service
-                                        </div>
-                                    </div>
-                                    @if (Model.CALENDAR_CATEGORY_ID == "1" || Model.CALENDAR_CATEGORY_ID == "5")
-                                    {
-                                        <div class="col-md-6">
-                                            <label for="calendarname">Max. Participants *</label>
-                                            <input type="number" class="form-control" id="maxParticipants" value="50" placeholder="" name="serviceName">
-                                            <div class="invalid-feedback-3" id="SCH_PARTI_ERROR">
-                                                Please enter maximum participants
+                                                @@media screen and (max-width: 800px) {
+                                                    .element-remover {
+                                                        text-align: center;
+                                                        border: 1px solid #6f6f6f;
+                                                        cursor: pointer;
+                                                        height: 30px;
+                                                        padding: 4px;
+                                                        width: 30px;
+                                                        border-radius: 20px;
+                                                        position: relative;
+                                                        margin-left: 0px;
+                                                        margin-top: 10px;
+                                                        margin-bottom: 8px;
+                                                    }
+                                                }
+                                            </style>
+                                            <div style="text-align:right; color:crimson;">* mandatory</div>
+                                            <div class="form-inner set-cal" style="max-width:100%;">
+                                                <div id="service-div">
+
+                                                </div>
+
+
+
                                             </div>
                                         </div>
-                                    }
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="form-group ">
-                                <div class="row">
-                                    <div class="col-md-6 cus-radio">
-                                        <div>
-                                            <label>Is Service Paid?</label>
-                                        </div>
-
-                                        <input type="radio" id="test1" name="servicePaid" value="Y" checked>
-                                        <label for="test1">Yes</label>
-
-
-                                        <input type="radio" id="test2" name="servicePaid" value="N">
-                                        <label for="test2">No</label>
-                                    </div>
-                                    <div class="col-md-6" id="feesPerSessionDiv">
-                                        <label for="feesPerSession">Fees per Session *</label>
-
-                                        <input type="number" class="form-control" id="feesPerSession" value="0" placeholder="" name="feesPerSession">
-                                        <div class="invalid-feedback-3" id="SCH_FEES_ERROR">
-                                            Please enter a Fees
-                                        </div>
-                                    </div>
-                                </div>
-
+                            <div class="ycaml" style="justify-content: space-between;">
+                                <p>You can add multiple courses to the calendar.</p>
+                                <button class="bg-t-b" onclick="addMoreService(null, true, true)">+ Add more</button>
+                            </div>
+                            <div class="mt-5">
+                                <button type="button" onclick="backToStep(4)" class="back">@Resource.Back</button>
+                                <button type="button" style="display:none;" onclick="skipToStep(7)" class="back skip-button">Skip</button>
+                                <button type="button" class="btn btn-primary final-btn" style="float:right;" onclick="moveToStep(7)">Create Calendar</button>
                             </div>
 
-                            <div class="form-group">
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label for="sessionLocationMaster">Location</label>
-                                        <select class="form-control" id="sessionLocationMaster" placeholder="" name="sessionLocationMaster"></select>
-                                        <div class="invalid-feedback-3" id="SCH_LOCATION_ERROR">
-                                            Please select Location
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="sessionServiceProviderMaster">Service Provider</label>
-                                        <select class="form-control" id="sessionServiceProviderMaster" placeholder="" name="sessionServiceProviderMaster"></select>
-                                        <div class="invalid-feedback-3" id="SCH_RESOURCE_ERROR">
-                                            Please select Service Provider
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <br />
-                            <div class="form-group">
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label for="SCH_FROM_DATE">Start Date *</label>
-                                        <input type="date" class="form-control" id="SCH_FROM_DATE" placeholder="" name="SCH_FROM_DATE">
-                                        <div class="invalid-feedback-3" id="SCH_FROM_DATE_ERROR">
-                                            Please select from date
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="SCH_TO_DATE">End Date *</label>
-                                        <input type="date" class="form-control" id="SCH_TO_DATE" placeholder="" name="SCH_TO_DATE">
-                                        <div class="invalid-feedback-3" id="SCH_TO_DATE_ERROR">
-                                            Please select to date
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    <input type="checkbox" name="TimeSameAsMonday" onclick="setSameTime()" /> {{translation.Time_same_as_monday}}
-                                </div>
-                                <div class="invalid-feedback-3" id="SCH_TIME_ERROR">
-                                    Please mention the slot timings
-                                </div>
-                                <div class="col-md-12">
-                                    <table class="schedular-table" width="100%">
-                                        <thead>
-                                            <tr>
-                                                <td>Day</td>
-                                                <td>{{translation.Start_Time}}</td>
-                                                <td>{{translation.End_Time}}</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>MON</td>
-                                                <td><input type="time" id="Monday_Start_Time" onchange="setSameDateValue()" class="form-control" /></td>
-                                                <td><input type="time" id="Monday_End_Time" onchange="setSameDateValue()" class="form-control" /></td>
-                                            </tr>
-                                            <tr>
-                                                <td>TUE</td>
-                                                <td><input type="time" id="Tuesday_Start_Time" class="form-control" /></td>
-                                                <td><input type="time" id="Tuesday_End_Time" class="form-control" /></td>
-                                            </tr>
-                                            <tr>
-                                                <td>WED</td>
-                                                <td><input type="time" id="Wednesday_Start_Time" class="form-control" /></td>
-                                                <td><input type="time" id="Wednesday_End_Time" class="form-control" /></td>
-                                            </tr>
-                                            <tr>
-                                                <td>THU</td>
-                                                <td><input type="time" id="Thursday_Start_Time" class="form-control" /></td>
-                                                <td><input type="time" id="Thursday_End_Time" class="form-control" /></td>
-                                            </tr>
-                                            <tr>
-                                                <td>FRI</td>
-                                                <td><input type="time" id="Friday_Start_Time" class="form-control" /></td>
-                                                <td><input type="time" id="Friday_End_Time" class="form-control" /></td>
-                                            </tr>
-                                            <tr>
-                                                <td>SAT</td>
-                                                <td><input type="time" id="Saturday_Start_Time" class="form-control" /></td>
-                                                <td><input type="time" id="Saturday_End_Time" class="form-control" /></td>
-                                            </tr>
-
-                                            <tr>
-                                                <td>SUN</td>
-                                                <td><input type="time" id="Sunday_Start_Time" class="form-control" /></td>
-                                                <td><input type="time" id="Sunday_End_Time" class="form-control" /></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            @*<div class="" style="text-align: right;">
-                                    <button class="bg-t-b" style="width: 150px;">+Add more Session</button>
-                                </div>*@
-
-                            <button type="button" onclick="backToStep(5)" class="back">@Resource.Back</button>
-                            <button type="button" class="btn btn-primary" onclick="submitCalendar()">@Resource.Save</button>
 
 
                         </div>
@@ -735,16 +619,6 @@
 
                 <!-- Title -->
                 <!-- End Title -->
-            </div>
-            <div class="col-md-5">
-                <div class="form-inner" style="max-width:100%;">
-                    <div style="text-align:right; padding: 8px;">
-                        Preview
-                    </div>
-                    <div id="preview-calendar-div">
-
-                    </div>
-                </div>
             </div>
         </div>
     </div>

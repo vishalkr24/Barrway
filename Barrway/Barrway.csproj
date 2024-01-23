@@ -529,6 +529,7 @@
     <Content Include="assets\marketplace\image\banner-back.jpg" />
     <Content Include="assets\marketplace\image\Business_Icons.png" />
     <Content Include="assets\marketplace\image\Business_Icons_2.png" />
+    <Content Include="assets\marketplace\image\Business_Icons_white.png" />
     <Content Include="assets\marketplace\image\chat.png" />
     <Content Include="assets\marketplace\image\facebook.png" />
     <Content Include="assets\marketplace\image\filter.png" />
@@ -551,6 +552,7 @@
     <Content Include="assets\marketplace\image\rectangle.png" />
     <Content Include="assets\marketplace\image\search-icon.png" />
     <Content Include="assets\marketplace\image\service.jpg" />
+    <Content Include="assets\marketplace\image\siren_white.png" />
     <Content Include="assets\marketplace\image\slogan.png" />
     <Content Include="assets\marketplace\image\star.png" />
     <Content Include="assets\marketplace\image\tagre.png" />
@@ -3039,6 +3041,7 @@
     <Content Include="CalendarConfiguration\TypeCConfiguration.json" />
     <Content Include="CalendarConfiguration\BasicConfiguration.json" />
     <Content Include="App_Browsers\qt.browser" />
+    <Content Include="CalendarSetupMatrix\CalendarSetupMatrix.json" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\BusinessScripts\AdminDashboard.js" />
     <Content Include="Scripts\BusinessScripts\AdminMaster.js" />

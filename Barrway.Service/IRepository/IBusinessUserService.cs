@@ -66,6 +66,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetAllCalendarTemplatesByCategory(string CalendarCategoryId);
 
         Task<AddUpdateDelete> GetSingleCalendarById(string Id);
+        Task<AddUpdateDelete> UpdateCalendarType(string CalendarCode, string CalendarType);
         Task<AddUpdateDelete> GetCompanyCalendarByCompanyId(string CompanyId);
         Task<AddUpdateDelete> GetMarcketPlaceCompanyCalendarByCompanyId(string CompanyId);
         Task<AddUpdateDelete> GetCompanyCalendars(GenerateDynamicFormData data, string CompanyId);
