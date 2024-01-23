@@ -453,7 +453,7 @@ namespace Barrway.Service.Repository
             finalList.Add(result5[0]);
             finalList.Add(result6[0]);
             finalList.Add(SubscriptionData.Data);
-            
+
             finalList2.Add(finalList);
             finalList2.Add(SubsData2.Data);
 
@@ -863,6 +863,29 @@ namespace Barrway.Service.Repository
             else
             {
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
+        public async Task<AddUpdateDelete> UpdateCalendarType(string CalendarCode, string CalendarType)
+        {
+            try
+            {
+                string query = $@"update BUSINESS_CALENDAR_MASTER_1925 set CALENDAR_TYPE = '{CalendarType}' where CALENDAR_CODE = '{CalendarCode}'";
+                var result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                if (result > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "Kindly Refresh and Try Again!" };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
             }
         }
 
@@ -1438,7 +1461,7 @@ namespace Barrway.Service.Repository
                                     {
 
                                     }
-                                   
+
 
                                 }
                             }
@@ -1634,7 +1657,7 @@ namespace Barrway.Service.Repository
                             join BUSINESS_ORDER_MASTER_1970 bom on bom.ORDER_NO = subsdet.ORDER_ID
                             where company.Id = '{Id}' and subsdet.IS_ACTIVE = 'Y'";
             }
-            
+
             var result = await sqlFunction.ExecuteSqlQuery(query);
 
             if (result.Count > 0)
@@ -1650,7 +1673,8 @@ namespace Barrway.Service.Repository
                     {
                         return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result.FirstOrDefault() };
                     }
-                }catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     return new AddUpdateDelete() { Status = false, Message = "No Active Subscription Plan" };
                 }
@@ -1659,7 +1683,7 @@ namespace Barrway.Service.Repository
             {
                 return new AddUpdateDelete() { Status = false, Message = "No Active Subscription Plan" };
             }
-            
+
         }
 
         public async Task<AddUpdateDelete> GetSessionsForThisMonth(string CompanyCode)
@@ -1712,7 +1736,7 @@ namespace Barrway.Service.Repository
 
             if (result.Count > 0)
             {
-                if (result.Any(x=> x.ContainsKey("result")))
+                if (result.Any(x => x.ContainsKey("result")))
                 {
                     return new AddUpdateDelete() { Status = false, Message = "You Don't have any active subscription plan" };
                 }
@@ -1804,7 +1828,7 @@ namespace Barrway.Service.Repository
             {
                 return new AddUpdateDelete() { Status = false, Message = "You Don't have any active subscription plan" };
             }
-           
+
 
         }
 
@@ -1958,7 +1982,7 @@ namespace Barrway.Service.Repository
                 string sqlQuery = $@"select * from BUSINESS_CALENDAR_MASTER_1925 f
                                         join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
                                         where f.COMPANY_CODE = '{model.COMPANY_CODE}'";
-                 
+
                 var companiesCreated = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
                 sqlQuery = $@"select ASSIGNED_CALENDARS from COMPANY_SUBSCRIPTION_DETAILS_1939 subsdet
@@ -2557,13 +2581,13 @@ namespace Barrway.Service.Repository
                     {
                         return new AddUpdateDelete() { Status = false, Message = "Calendar Limit Reached. Upgrade your Plan to create new calendars." };
                     }
-                    
+
                 }
                 else
                 {
                     return package;
                 }
-                
+
             }
             else
             {
@@ -3113,7 +3137,7 @@ namespace Barrway.Service.Repository
             {
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
             }
-            
+
         }
 
     }

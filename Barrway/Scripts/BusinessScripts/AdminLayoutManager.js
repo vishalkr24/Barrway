@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
     setCompanyDetails();
     setTop5Calendars();
-    
+
     $(document).ajaxStart(function () {
         ajaxStart();
     });
@@ -209,7 +209,7 @@ function toggleDropdown2() {
 }
 
 function selectItem(item) {
-    debugger;
+    
     var CompanyId = item.attributes["data-id"].nodeValue.split("_")[2];
     if (parseInt(CompanyId) > 0) {
         $("#navbar-company-selector").val(CompanyId);
@@ -219,7 +219,7 @@ function selectItem(item) {
 }
 
 function selectItem2(item) {
-    debugger;
+    
     var CalendarId = item.attributes["data-id"].nodeValue.split("_")[2];
     
     if (CalendarId != null && !CalendarId.includes("undefined")) {
@@ -296,7 +296,7 @@ function showNavbarNavigation(divId) {
 }
 
 function setCompanyDetails() {
-    debugger;
+    
     var allCompanies = getAllCompanies();
     var user = getSingleUser();
     
@@ -330,7 +330,14 @@ function setCompanyDetails() {
             }
 
             if (localStorage.getItem("COMPANY_ID") == data[i].Id) {
-                
+
+                localStorage.setItem("COMPANY_CODE", data[i].COMPANY_CODE);
+
+                localStorage.setItem("COMPANY_NAME_ENGLISH", data[i].COMPANY_NAME_ENGLISH);
+                localStorage.setItem("COMPANY_NAME_CHINESE", data[i].COMPANY_NAME_CHINESE);
+                localStorage.setItem("COMPANY_CATEGORY_ID", data[i].COMPANY_CATEGORY_ID);
+                localStorage.setItem("COMPANY_SUB_CATEGORY_ID", data[i].COMPANY_SUB_CATEGORY_ID);
+
                 $("#navbar-company-selector").val(localStorage.getItem("COMPANY_ID"));
                 localStorage.setItem("COMPANY_ROLE", data[i].ROLE_TYPE);
 

@@ -1,6 +1,68 @@
 ﻿$(document).ready(function () {
     setUserDetails();
+    setCompanyDetails();
 });
+
+function setCompanyDetails() {
+    
+    var allCompanies = getAllCompanies();
+    var user = getSingleUserDetailsByUserId().data;
+
+    if (allCompanies.Status) {
+        var data = allCompanies.Data;
+        $("#user-admin-layout-all-company").empty();
+        
+        for (var i = 0; i < data.length; i++) {
+
+            if (data[i].IS_DEFAULT == "Y") {
+                defaultId = data[i].Id;
+
+                if (localStorage.getItem("COMPANY_ID") == null || localStorage.getItem("COMPANY_ID") == "null" || localStorage.getItem("COMPANY_ID") == undefined) {
+                    localStorage.setItem("COMPANY_ID", data[i].Id);
+                    localStorage.setItem("COMPANY_CODE", data[i].COMPANY_CODE);
+
+                    localStorage.setItem("COMPANY_NAME_ENGLISH", data[i].COMPANY_NAME_ENGLISH);
+                    localStorage.setItem("COMPANY_NAME_CHINESE", data[i].COMPANY_NAME_CHINESE);
+                    localStorage.setItem("COMPANY_CATEGORY_ID", data[i].COMPANY_CATEGORY_ID);
+                    localStorage.setItem("COMPANY_SUB_CATEGORY_ID", data[i].COMPANY_SUB_CATEGORY_ID);
+                }
+            } else {
+
+            }
+
+            $("#user-admin-layout-all-company").append(`<div class="added-company" onclick="openCompanyDashboard(${data[i].Id})">
+                                    <span class="img-container">
+                                        <img src="${data[i].COMPANY_LOGO_PATH}" onerror="this.src='assets/svg/logos/logo.png'" />
+                                    </span>
+                                    <span>${data[i].COMPANY_NAME_ENGLISH} [${data[i].COMPANY_CODE}]</span>
+                                </div>`);
+
+        }
+
+
+    } else {
+
+        if (!window.location.href.includes("SetupCompanyProfile") && getUserRole() == "SUPERADMIN_USER") {
+            window.location.href = "/BusinessAdmin/SetupCompanyProfile?&IsNew=true";
+        }
+
+    }
+
+    if (localStorage.getItem("COMPANY_ROLE") == "SUPERUSER") {
+        $("#admin-master-nav").show();
+    } else {
+        $("#admin-master-nav").hide();
+    }
+
+    $("#disp-navbar-company-selector").append(`<div class="add-company">
+                                            <a href="/BusinessAdmin/CompanyMaster"><button>+ Add new company</button></a>
+                                        </div>`);
+}
+
+function openCompanyDashboard(companyId) {
+    localStorage.setItem("COMPANY_ID", companyId);
+    window.location.href = "/BusinessAdmin/Dashboard";
+}
 
 function setUserDetails() {
     var user = getSingleUserDetailsByUserId().data;

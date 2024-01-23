@@ -1217,6 +1217,30 @@ namespace Barrway.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult> GetCalendarSetupMatrix()
+        {
+            using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarSetupMatrix/CalendarSetupMatrix.json")))
+            {
+                var result = sr.ReadToEnd();
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateCalendarType(string CalendarCode, string CalendarType)
+        {
+            if (!string.IsNullOrEmpty(CalendarCode) && !string.IsNullOrEmpty(CalendarType))
+            {
+                var result = await businessUserService.UpdateCalendarType(CalendarCode, CalendarType);
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = "Kindly Refresh and Try Again!"});
+            }
+        }
+
         [HttpPost]
         public async Task<ActionResult> AddCalendar(BusinessCalendarViewModel model, bool IsPartial)
         {
@@ -1235,10 +1259,7 @@ namespace Barrway.Controllers
                 {
                     if (string.IsNullOrEmpty(model.SLOT_DURATION_IN_MINS))
                     {
-                        ModelState.AddModelError("SLOT_DURATION_IN_MINS", "Slot duration is required");
-                        ViewBag.IsPartial = IsPartial;
-                        ViewBag.IsStep2 = 'Y';
-                        return View("SetupCompanyCalendar", model);
+                        model.SLOT_DURATION_IN_MINS = "0";
                     }
                     else
                     {
@@ -1417,7 +1438,7 @@ namespace Barrway.Controllers
                                 {
                                     TempData["SuccessMessage"] = "Calendar Created Successfully!\nLet's setup calendar location.";
 
-                                    return RedirectToAction("SetupCalendarEvent", new { CompanyId = company.Data["Id"]?.ToString(), CalendarCode = calendarModel.CALENDAR_CODE, Step = 3 });
+                                    return RedirectToAction("SetupCalendarEvent", new { CompanyId = company.Data["Id"]?.ToString(), CalendarCode = calendarModel.CALENDAR_CODE, Step = 2 });
                                 }
                                 else
                                 {

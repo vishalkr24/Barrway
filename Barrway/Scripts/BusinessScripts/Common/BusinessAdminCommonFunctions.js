@@ -34,6 +34,22 @@ function getSuperBusiness() {
     return data;
 }
 
+function getCalendarSetupMatrix() {
+    var data;
+    $.ajax({
+        url: "/BusinessAdmin/GetCalendarSetupMatrix",
+        async: false,
+        type: "GET",
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    });
+    return data;
+}
+
 function getCompanyWebsite() {
     var data;
     $.ajax({

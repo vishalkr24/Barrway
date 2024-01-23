@@ -1,12 +1,16 @@
 ﻿var templateList = [];
 var locationList = [];
+var serviceList = [];
 var locationModelList = [];
 var providerModelList = [];
 var serviceProviderList = [];
+var serviceModelList = [];
 const createdCalendarCode = $("#calendarCodeInput").val();
 const createdCompanyCode = $("#companyCodeInput").val();
 const createdCalendarType = $("#calendarCategoryInput").val();
 var createdServiceType = "";
+var ConfigData = {};
+var CalendarData = {};
 
 $(document).ready(function () {
 
@@ -19,6 +23,9 @@ $(document).ready(function () {
 
 function readyPage() {
     checkRegistrationStep();
+
+    ConfigData = JSON.parse(getCalendarSetupMatrix());
+    CalendarData = getSingleCalendar(createdCalendarCode);
 
     let step = window.location.href.split('?')[1].replaceAll('&&', '&').split('&')[2].split('=')[1];
     backToStep(parseInt(step));
@@ -47,7 +54,8 @@ function moveToStep(stepId, helper = '') {
             goToStep2();
             break;
         case 3:
-            bindCalendarLocationMaster();
+            updateCalendarType(helper);
+            //bindCalendarLocationMaster();
             break;
         case 4:
             createLocationMaster();
@@ -56,7 +64,7 @@ function moveToStep(stepId, helper = '') {
             createServiceProviderMaster();
             break;
         case 6:
-            BindStep6(helper);
+            
         default:
             break;
     };
@@ -64,6 +72,9 @@ function moveToStep(stepId, helper = '') {
 
 function backToStep(stepId) {
     switch (stepId) {
+        case 1:
+            goToStep1();
+            break;
         case 2:
             goToStep2();
             break;
@@ -74,23 +85,75 @@ function backToStep(stepId) {
             bindCalendarServiceProviderMaster();
             break;
         case 5:
-            BindEventData();
+            BindStep5();
             break;
         default:
             break;
     };
 }
 
-function goToStep2() {
+function goToStep1() {
     swal({
         icon: "warning",
         title: "Are you sure!",
-        text: "Are you sure to go back to step 2?"
+        text: "Are you sure to go back to step 1?"
     }).then(function (check) {
         if (check) {
             window.location.replace(`/BusinessAdmin/SetupCompanyCalendar?CompanyId=${localStorage.getItem("COMPANY_ID")}&IsPartial=false&CalendarCode=${createdCalendarCode}`)
         }
     })
+}
+
+function configureStep(step) {
+    debugger;
+    let configStep = ConfigData["Type" + createdCalendarType]["Step" + step];
+
+    $("#step-" + step + " .hed-til p").text(configStep.Heading_Title);
+
+    if (configStep.Is_Skippable == true) {
+        $("#step-" + step + " .skip-button").show();
+    } else {
+        $("#step-" + step + " .skip-button").hide();
+    }
+
+    if (configStep.Has_Multiple_Steps == true) {
+        let counter = 1;
+        let binderString = "";
+
+        while (configStep.Steps["2_" + counter] != undefined && configStep.Steps["2_" + counter] != null) {
+            binderString += `<div class="chose-inner" onclick="moveToStep(${(parseInt(step) + 1)}, ${counter})">
+                                <div class="one">
+                                    <img src="${configStep.Steps["2_" + counter].Image}" onerror="this.src='../assets/svg/logos/favicon.png'" />
+                                </div>
+                                <div class="two">
+                                    <p>${configStep.Steps["2_" + counter].Text}</p>
+                                </div>
+                                <div class="three">
+                                    <p><img src="../assets/img/purple.png" /></p>
+                                </div>
+                            </div>`;
+            counter++;
+        }
+
+        $("#step-" + step + " .choose").append(binderString);
+    }
+
+    if (configStep.Helper_After_Form != null && configStep.Helper_After_Form != undefined) {
+
+
+
+    }
+    
+
+    $("#step-" + step).fadeIn();
+}
+
+function goToStep2() {
+    $("#step-3").fadeOut();
+    $("#step-4").fadeOut();
+    $("#step-5").fadeOut();
+
+    configureStep(2);
 }
 
 $(document).on("click", "input[name=servicePaid]", function () {
@@ -332,7 +395,7 @@ function submitCalendar() {
         })
 
     } else {
-         window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
 
@@ -349,7 +412,7 @@ function submitCalendar() {
 function validateSchedularFormData(data) {
     debugger;
     var finalCheck = true;
-    
+
     if ($("#serviceName").val() == "" || $("#serviceName").val() == null) {
         finalCheck = false;
         $("#SCH_ACTIVITY_ERROR").show();
@@ -427,16 +490,106 @@ function validateSchedularFormData(data) {
     return finalCheck;
 }
 
-function BindStep6(type) {
+function BindStep5(type) {
     $("#step-4").hide();
     $("#step-5").fadeOut();
+    debugger;
+    configureStep(5);
+
+    $("#ddlMasterCalendar").val(createdCalendarCode);
+    localStorage.setItem("CALENDAR_CODE", createdCalendarCode)
+    $(".selectable-calendar-item").removeClass("selected");
     setTimeout(function () {
-        $("#step-6").fadeIn();
-    }, 500)
+        $(".selectable-calendar-item[data-id=CLR_SEL_" + localStorage.getItem("CALENDAR_CODE") + "]").addClass("selected");
+        $(".lbl-calendar-name").text($("#ddlMasterCalendar option:selected").text());
+    }, 500);
 
-    $("#calendarType" + type).prop("checked", true);
+    // Define Location Model
+    $.ajax({
+        url: "/FormAPI/ManageForm",
+        method: "POST",
+        async: false,
+        data: {
+            data: {
+                action: 7,
+                formId: "2303"
+            }
+        },
+        success: function (response) {
 
-    createdServiceType = type;
+            if (response.length > 0) {
+
+                var data = JSON.parse(response[0].fields);
+
+                if (data["Page 1"] != null && data["Page 1"] != undefined) {
+                    var data2 = JSON.parse(data["Page 1"]);
+
+                    let containerClass = "";
+
+                    if (data2 != null && data2 != undefined) {
+                        data2 = data2.filter(x => x["required"] != undefined && x["required"] == true);
+                    }
+
+                    containerClass = (data2.length == 1) ? "col-md-12" : "col-md-6";
+
+                    data2.forEach(x => {
+                        serviceModelList.push({
+                            label: x["label"],
+                            containerClass: containerClass,
+                            name: x["name"],
+                            type: x["type"],
+                            values: (x["type"] == "radio-group" || x["type"] == "select" || x["type"] == "checkbox-group") ? x["values"] : null
+                        });
+
+                    });
+
+                }
+
+            }
+
+
+        },
+        error: function (error) {
+
+        }
+    })
+
+    // Bind Location Master
+    $.ajax({
+        url: "/Calendar/GetServiceMasterList",
+        method: "POST",
+        data: {
+            data: {},
+            companyCode: createdCompanyCode,
+            calendarCode: createdCalendarCode
+        },
+        success: function (response) {
+
+            var data = response.data;
+
+            if (data != null) {
+
+                locationList = [];
+
+                data.forEach(x => {
+                    addMoreService(x, false, false);
+                });
+
+                if (data.length == 0) {
+                    addMoreService(null, false, true);
+                }
+
+            } else {
+                addMoreService(null, false, true);
+            }
+
+        },
+        error: function (er) {
+
+        }
+    })
+
+    //createdServiceType = type;
 }
 
 function validateStep(stepId) {
@@ -501,15 +654,42 @@ function validateStep(stepId) {
     return flag;
 }
 
+function updateCalendarType(type) {
+    $.ajax({
+        url: "/BusinessAdmin/UpdateCalendarType",
+        method: "POST",
+        data: {
+            CalendarCode: createdCalendarCode,
+            CalendarType: type
+        },
+        success: function (response) {
+            if (response.Status) {
+
+                window.location.replace(`/BusinessAdmin/SetupCalendarEvent?CompanyId=${localStorage.getItem("COMPANY_ID")}&CalendarCode=${createdCalendarCode}&Step=3`)
+
+            } else {
+                swal({
+                    icon: "error",
+                    title: "Error",
+                    text: response.Message
+                }).then(function () {
+                    window.location.reload();
+                })
+            }
+        },
+        error: function (err) {
+
+        }
+    })
+}
 
 function bindCalendarLocationMaster() {
-    
+
     $("#step-4").fadeOut();
     $("#step-5").fadeOut();
     $("#step-6").fadeOut();
-    setTimeout(function () {
-        $("#step-3").fadeIn();
-    }, 500);
+    
+    configureStep(3)
 
     $("#ddlMasterCalendar").val(createdCalendarCode);
     localStorage.setItem("CALENDAR_CODE", createdCalendarCode)
@@ -531,7 +711,7 @@ function bindCalendarLocationMaster() {
             }
         },
         success: function (response) {
-            
+
             if (response.length > 0) {
 
                 var data = JSON.parse(response[0].fields);
@@ -553,15 +733,15 @@ function bindCalendarLocationMaster() {
                             containerClass: containerClass,
                             name: x["name"],
                             type: x["type"],
-                            values: (x["type"] == "radio-group" || x["type"] == "select" || x["type"] == "checkbox-group")? x["values"]: null
+                            values: (x["type"] == "radio-group" || x["type"] == "select" || x["type"] == "checkbox-group") ? x["values"] : null
                         });
 
                     });
 
                 }
-                
+
             }
-            
+
 
         },
         error: function (error) {
@@ -581,7 +761,7 @@ function bindCalendarLocationMaster() {
         success: function (response) {
 
             var data = response.data;
-            
+
             if (data != null) {
 
                 locationList = [];
@@ -611,9 +791,8 @@ function bindCalendarServiceProviderMaster() {
     $("#step-5").fadeOut();
     $("#step-3").fadeOut();
     $("#step-6").fadeOut();
-    setTimeout(function () {
-        $("#step-4").fadeIn();
-    }, 500);
+
+    configureStep(4);
 
     $("#ddlMasterCalendar").val(createdCalendarCode);
     localStorage.setItem("CALENDAR_CODE", createdCalendarCode)
@@ -685,7 +864,7 @@ function bindCalendarServiceProviderMaster() {
         success: function (response) {
 
             var data = response.data;
-            
+
             if (data != null) {
 
                 serviceProviderList = [];
@@ -741,7 +920,7 @@ function addMoreProvider(dataItem, isRemovable, isNew) {
             });
         });
     }, 500);
-    
+
 }
 
 function addMoreLocation(dataItem, isRemovable, isNew) {
@@ -754,17 +933,17 @@ function addMoreLocation(dataItem, isRemovable, isNew) {
     };
 
     $("#locations-div").append(`<div class="form" id="location-elem-${dataModel.Id}"> ${(isRemovable) ? `<div class="element-remover" onclick="removeLocation(${dataModel.Id})"><i class="fa fa-times" aria-hidden="true"></i></div>` : ""} <div class="row"></div></div>`)
-    
+
     locationModelList.forEach(x => {
 
         dataModel[x.name] = (dataItem == null) ? "" : dataItem[x.name];
-        
+
         $("#locations-div #location-elem-" + dataModel.Id + " .row").append(`<div class="${x.containerClass}">
                                             <div class="form-group">
                                                 ${generateInputBox(x, dataModel.Id, "location-input")}
                                             </div>
                                         </div>`);
-        
+
         $(`input[name=${x.name}${dataModel.Id}]`).val(dataModel[x.name]);
     });
 
@@ -774,6 +953,41 @@ function addMoreLocation(dataItem, isRemovable, isNew) {
             $(`input[name^=${x.name}]`).bind("keyup change paste", function () {
                 let inputId = $(this).attr("data-input-id");
                 locationList.find(y => y.Id == inputId)[x.name] = this.value;
+            })
+        });
+    }, 500);
+}
+
+function addMoreService(dataItem, isRemovable, isNew) {
+    debugger;
+    let dataModel = {
+        Id: (dataItem == null) ? parseInt(getMaxId(serviceList)) + 1 : dataItem.Id,
+        CALENDAR_CODE: createdCalendarCode,
+        COMPANY_CODE: createdCompanyCode,
+        Is_New: isNew
+    };
+
+    $("#service-div").append(`<div class="form" id="service-elem-${dataModel.Id}"> ${(isRemovable) ? `<div class="element-remover" onclick="removeService(${dataModel.Id})"><i class="fa fa-times" aria-hidden="true"></i></div>` : ""} <div class="row"></div></div>`)
+
+    serviceModelList.forEach(x => {
+
+        dataModel[x.name] = (dataItem == null) ? "" : dataItem[x.name];
+
+        $("#service-div #service-elem-" + dataModel.Id + " .row").append(`<div class="col-md-2">
+                                            <div class="form-group">
+                                                ${generateInputBox(x, dataModel.Id, "location-input")}
+                                            </div>
+                                        </div>`);
+
+        $(`input[name=${x.name}${dataModel.Id}]`).val(dataModel[x.name]);
+    });
+
+    serviceList.push(dataModel);
+    setTimeout(function () {
+        serviceModelList.forEach(x => {
+            $(`input[name^=${x.name}]`).bind("keyup change paste", function () {
+                let inputId = $(this).attr("data-input-id");
+                serviceList.find(y => y.Id == inputId)[x.name] = this.value;
             })
         });
     }, 500);
@@ -858,6 +1072,15 @@ function removeLocation(Id) {
         if (locationList.find(x => x.Id == Id).Is_New) {
             locationList = locationList.filter(x => x.Id != Id);
             $("#location-elem-" + Id).remove();
+        }
+    }
+}
+
+function removeService(Id) {
+    if (serviceList.filter(x => x.Id == Id).length > 0) {
+        if (serviceList.find(x => x.Id == Id).Is_New) {
+            serviceList = serviceList.filter(x => x.Id != Id);
+            $("#service-elem-" + Id).remove();
         }
     }
 }
