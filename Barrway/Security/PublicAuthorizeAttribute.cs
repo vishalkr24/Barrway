@@ -17,7 +17,7 @@ namespace Barrway.Security
             if (!filterContext.HttpContext.User.Identity.IsAuthenticated)
             {
                 filterContext.Result = new RedirectToRouteResult(
-                        new RouteValueDictionary(new { controller = "Account", action = "BusinessLogin" })
+                        new RouteValueDictionary(new { controller = "Account", action = "BusinessLogin", returnUrl = "" })
                 );
             }
         }

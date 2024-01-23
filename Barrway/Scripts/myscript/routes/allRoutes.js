@@ -376,7 +376,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/formEntryPage.html?token=' + uuid,
+                        templateUrl: '/Templates/formgenerator/formEntryBarrwayThemePage.html?token=' + uuid,
                         controller: 'FormEntryController'
                     }
                 },

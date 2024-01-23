@@ -1497,11 +1497,11 @@ ol.breadcrumb {
 }
 
 ol.breadcrumb li {
-    padding: 0 5px;
+    padding: 0 0px;
 }
 
 ol.breadcrumb li a, ol.breadcrumb li span {
-    padding-left: 5px;
+    padding-left: 0px;
 }
 .tabulator[role="grid"] {
     margin-top: 10px;

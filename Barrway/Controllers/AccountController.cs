@@ -44,7 +44,7 @@ namespace Barrway.Controllers
         [AllowAnonymous]
         [HttpGet]
         [OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.None)]
-        public async Task<ActionResult> BusinessLogin()
+        public async Task<ActionResult> BusinessLogin(string returnUrl = null)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -69,7 +69,7 @@ namespace Barrway.Controllers
                     return RedirectToAction("BusinessLogin");
                 }
             }
-            return View(new LoginViewModel { ReturnUrl = "" });
+            return View(new LoginViewModel { ReturnUrl = returnUrl });
         }
 
         [AllowAnonymous]
@@ -173,7 +173,7 @@ namespace Barrway.Controllers
         [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> BusinessLogin(LoginViewModel model)
+        public async Task<ActionResult> BusinessLogin(LoginViewModel model, string returnUrl = null)
         {
             if (!ModelState.IsValid)
             {
@@ -199,6 +199,10 @@ namespace Barrway.Controllers
 
 
                 HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = model.REMEMBER_ME }, claims);
+                if (!string.IsNullOrEmpty(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
                 return Redirect("/UserAdmin#/userdashboard");
                 //return RedirectToAction("Dashboard", "BusinessAdmin");
             }

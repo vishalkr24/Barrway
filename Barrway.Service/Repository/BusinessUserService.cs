@@ -77,38 +77,25 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> UpdateAssignedCompany(List<UserAssignedCompanyModel> modelList)
+        public async Task<AddUpdateDelete> UpdateAssignedCompany(UserAssignedCompanyModel model, string UserId)
         {
             try
             {
 
-                string sqlQuery = $@"delete from USER_ASSIGNED_COMPANIES_1967 where ASSIGN_ID = '{modelList.FirstOrDefault().ASSIGN_ID}'";
+                string sqlQuery = $@"declare @UserId varchar(50)
+                                    set @UserId = (select ASSIGNED_USER from BUSINESS_ASSIGNED_USERS_1964 where Id = '{model.ASSIGN_ID}')
+                                    update BUSINESS_ASSIGNED_USERS_1964 set ROLE_TYPE = 'ADMIN' where ASSIGNED_USER = '{UserId}' and COMPANY_ID = '{model.COMPANY_ID}' and ROLE_TYPE = 'SUPERUSER';
+                                    update BUSINESS_ASSIGNED_USERS_1964 set ROLE_TYPE = 'SUPERUSER' where Id = '{model.ASSIGN_ID}';
+                                    update USER_MASTER_1915 set COMPANY_CALENDAR_STATUS = 'Y', COMPANY_PROFILE_STATUS = 'Y', CURRENT_STEP = 'COMPLETED' where Id = @UserId";
                 var result = await sqlFunction.ExecuteSqlCommandQuery(sqlQuery);
 
-                List<string> requestList = new List<string>();
-                List<string> formGroupKeyListTemp = new List<string>();
-
-                modelList.ForEach(assign =>
+                if (result > 0)
                 {
-                    requestList.Add(CustomMethods.ConvertDicToNameValuePair(assign.ToDictionary()));
-                    formGroupKeyListTemp.Add(Guid.NewGuid().ToString());
-                });
-
-                Form_DataTable request = new Form_DataTable();
-                request.action = (int)FormAction.Save;
-                request.formId = (int)FormSetting.USER_ASSIGNED_COMPANIES;
-                request.IsMaxOneRecordPerUser = false;
-                request.formfieldDataListTempList = requestList.ToArray();
-                request.formGroupKeyListTemp = formGroupKeyListTemp.ToArray();
-                var formResult = (await formAPIRepository.BulkGeneratedFormData(request)).Data;
-
-                if (formResult.res == 1)
-                {
-                    return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() };
+                    return new AddUpdateDelete() { Message = AppMessage.Success, Status = true };
                 }
                 else
                 {
-                    return new AddUpdateDelete() { Message = formResult.Message, Status = false };
+                    return new AddUpdateDelete() { Message = AppMessage.SomeInternalError, Status = false };
                 }
 
             }

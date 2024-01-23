@@ -3152,6 +3152,7 @@
     <Content Include="Templates\formgenerator\ConfigrationPopup.html" />
     <Content Include="Templates\formgenerator\democalenderRecords.html" />
     <Content Include="Templates\formgenerator\democalenderRecordsTemp.html" />
+    <Content Include="Templates\formgenerator\formEntryBarrwayThemePage.html" />
     <Content Include="Templates\formgenerator\formEntryPage.html" />
     <Content Include="Templates\formgenerator\formEntryPage1.html" />
     <Content Include="Templates\formgenerator\formEntryPageCalender.html" />
