@@ -143,6 +143,11 @@ namespace Barrway.Controllers
 
         }
 
+        public async Task<ActionResult> Reports()
+        {
+            return View();
+        }
+
         public async Task<ActionResult> SetupCompanyCalendar(string CompanyId = null, bool IsPartial = false, string CalendarCode = null)
         {
             try
@@ -1474,9 +1479,6 @@ namespace Barrway.Controllers
                         ViewBag.IsStep2 = 'Y';
                         return View("SetupCompanyCalendar", model);
                     }
-                    
-
-
                 }
                 else
                 {

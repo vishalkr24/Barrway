@@ -64,7 +64,7 @@ function moveToStep(stepId, helper = '') {
             createServiceProviderMaster();
             break;
         case 6:
-            
+            createServiceMaster();
         default:
             break;
     };
@@ -87,9 +87,15 @@ function backToStep(stepId) {
         case 5:
             BindStep5();
             break;
+        case 6:
+            BindStep6();
         default:
             break;
     };
+}
+
+function skipToStep(stepId) {
+    window.location.href = "/BusinessAdmin/SetupCalendarEvent?CompanyId=" + localStorage.getItem("COMPANY_ID") + "&&CalendarCode=" + createdCalendarCode + "&&Step=" + stepId;
 }
 
 function goToStep1() {
@@ -101,7 +107,7 @@ function goToStep1() {
         if (check) {
             window.location.replace(`/BusinessAdmin/SetupCompanyCalendar?CompanyId=${localStorage.getItem("COMPANY_ID")}&IsPartial=false&CalendarCode=${createdCalendarCode}`)
         }
-    })
+    });
 }
 
 function configureStep(step) {
@@ -120,8 +126,24 @@ function configureStep(step) {
         let counter = 1;
         let binderString = "";
 
-        while (configStep.Steps["2_" + counter] != undefined && configStep.Steps["2_" + counter] != null) {
-            binderString += `<div class="chose-inner" onclick="moveToStep(${(parseInt(step) + 1)}, ${counter})">
+        if (step == 6) {
+            while (configStep.Helpers["Helper_" + counter] != undefined && configStep.Helpers["Helper_" + counter] != null) {
+                binderString += `<div class="chose-inner" onclick="moveToStep(${(parseInt(step) + 1)}, ${counter})">
+                                <div class="one">
+                                    <img src="${configStep.Helpers["Helper_" + counter].Image}" onerror="this.src='../assets/svg/logos/favicon.png'" />
+                                </div>
+                                <div class="two">
+                                    <p>${configStep.Helpers["Helper_" + counter].Text}</p>
+                                </div>
+                                <div class="three">
+                                    <p><img src="../assets/img/purple.png" /></p>
+                                </div>
+                            </div>`;
+                counter++;
+            }
+        } else {
+            while (configStep.Steps["2_" + counter] != undefined && configStep.Steps["2_" + counter] != null) {
+                binderString += `<div class="chose-inner" onclick="moveToStep(${(parseInt(step) + 1)}, ${counter})">
                                 <div class="one">
                                     <img src="${configStep.Steps["2_" + counter].Image}" onerror="this.src='../assets/svg/logos/favicon.png'" />
                                 </div>
@@ -132,8 +154,11 @@ function configureStep(step) {
                                     <p><img src="../assets/img/purple.png" /></p>
                                 </div>
                             </div>`;
-            counter++;
+                counter++;
+            }
         }
+
+        
 
         $("#step-" + step + " .choose").append(binderString);
     }
@@ -168,246 +193,6 @@ $(document).on("click", "input[name=servicePaid]", function () {
         $("label[for=feesPerSession]").text("Fees per Session")
     }
 })
-
-function BindEventData() {
-    $("#step-3").hide();
-    $("#step-4").hide();
-    $("#step-6").fadeOut();
-    setTimeout(function () {
-        $("#step-5").fadeIn();
-    }, 500)
-
-    $("#ddlMasterCalendar").val(createdCalendarCode);
-    localStorage.setItem("CALENDAR_CODE", createdCalendarCode)
-    $(".selectable-calendar-item").removeClass("selected");
-    setTimeout(function () {
-        $(".selectable-calendar-item[data-id=CLR_SEL_" + localStorage.getItem("CALENDAR_CODE") + "]").addClass("selected");
-        $(".lbl-calendar-name").text($("#ddlMasterCalendar option:selected").text());
-    }, 500);
-
-    $.ajax({
-        url: "/Calendar/GetLocationMasterList",
-        method: "POST",
-        data: {
-            data: {},
-            companyCode: createdCompanyCode,
-            calendarCode: createdCalendarCode
-        },
-        success: function (response) {
-
-            var data = response.data;
-            var divString = "";
-
-            if (data != null) {
-                if (data.length <= 0) {
-                    window.location.replace(`/BusinessAdmin/SetupCalendarEvent?CompanyId=${localStorage.getItem("COMPANY_ID")}&CalendarCode=${createdCalendarCode}&Step=3`);
-                    return;
-                }
-
-                data.forEach(x => {
-                    divString += `<option value="${x.Id}">${x.LOCATION_ADDRESS}</option>`;
-                })
-                $("#sessionLocationMaster").empty();
-            } else {
-                window.location.replace(`/BusinessAdmin/SetupCalendarEvent?CompanyId=${localStorage.getItem("COMPANY_ID")}&CalendarCode=${createdCalendarCode}&Step=3`)
-                return;
-            }
-
-            $("#sessionLocationMaster").append(divString);
-        },
-        error: function (er) {
-
-        }
-    })
-
-    $.ajax({
-        url: "/Calendar/GetServiceProviderMasterList",
-        method: "POST",
-        data: {
-            data: {},
-            companyCode: createdCompanyCode,
-            calendarCode: createdCalendarCode
-        },
-        success: function (response) {
-
-            var data = response.data;
-            var divString = "";
-
-            if (data != null) {
-                if (data.length <= 0) {
-                    window.location.replace(`/BusinessAdmin/SetupCalendarEvent?CompanyId=${localStorage.getItem("COMPANY_ID")}&CalendarCode=${createdCalendarCode}&Step=4`);
-                    return;
-                }
-
-                data.forEach(x => {
-                    divString += `<option value="${x.Id}">${x.FIRST_NAME} ${x.LAST_NAME}</option>`;
-                });
-
-                $("#sessionServiceProviderMaster").empty();
-            } else {
-                window.location.replace(`/BusinessAdmin/SetupCalendarEvent?CompanyId=${localStorage.getItem("COMPANY_ID")}&CalendarCode=${createdCalendarCode}&Step=4`);
-                return;
-            }
-
-            $("#sessionServiceProviderMaster").append(divString);
-        },
-        error: function (er) {
-
-        }
-    })
-}
-
-function submitCalendar() {
-
-
-    var scheduleTableData = {
-        "Monday": {
-            "Start": $("#Monday_Start_Time").val(),
-            "End": $("#Monday_End_Time").val()
-        },
-        "Tuesday": {
-            "Start": $("#Tuesday_Start_Time").val(),
-            "End": $("#Tuesday_End_Time").val(),
-        },
-        "Wednesday": {
-            "Start": $("#Wednesday_Start_Time").val(),
-            "End": $("#Wednesday_End_Time").val(),
-        },
-        "Thursday": {
-            "Start": $("#Thursday_Start_Time").val(),
-            "End": $("#Thursday_End_Time").val(),
-        },
-        "Friday": {
-            "Start": $("#Friday_Start_Time").val(),
-            "End": $("#Friday_End_Time").val()
-        },
-        "Saturday": {
-            "Start": $("#Saturday_Start_Time").val(),
-            "End": $("#Saturday_End_Time").val()
-        },
-        "Sunday": {
-            "Start": $("#Sunday_Start_Time").val(),
-            "End": $("#Saturday_End_Time").val()
-        }
-    };
-
-    var data = {
-        Id: 0,
-        COMPANY_CODE: createdCompanyCode,
-        CALENDAR_CODE: createdCalendarCode,
-        SCH__NAME: "",
-        SCH_LOCATION: $("#sessionLocationMaster option:selected").val(),
-        SCH_ACTIVITY: 0,
-        SCH_RESOURCE: $("#sessionServiceProviderMaster option:selected").val(),
-        SCH_MEDIUM: "ZOOM",
-        SCH_DESCRIPTION: "",
-        SCH_FROM_DATE: $("#SCH_FROM_DATE").val(),
-        SCH_TO_DATE: $("#SCH_TO_DATE").val(),
-        SCH_DAYS: 0,
-        SCH_ALTERNATIVE_WEEK: "EVERY-WEEK",
-        IF_SLOT_EXIST: "SKIP",
-        IF_SLOT_DOES_NOT_EXIST: "INSERT",
-        table: scheduleTableData,
-        CREATION_TYPE: "MANUAL"
-    }
-
-    if (validateSchedularFormData(data)) {
-        //data = JSON.stringify(data);
-
-        var dataModel = {
-            COMPANY_CODE: createdCompanyCode,
-            CALENDAR_CODE: createdCalendarCode,
-            ACTIVITY_NAME: $("#serviceName").val(),
-            fees_1: $("#feesPerSession").val(),
-            IS_SERVICE_PAID: $("input[name=servicePaid]:checked").val(),
-            SERVICE_TYPE: createdServiceType,
-            MAXIMUM_NO_OF_PARTICIPANTS: (createdCalendarType == '1' || createdCalendarType == '5') ? $("#maxParticipants").val() : 0
-        }
-
-        $.ajax({
-            url: "/Calendar/AddMasterData",
-            method: "POST",
-            beforeSend: function () {
-                $(".favicon-loader-overlay").removeClass("ng-hide");
-            },
-            complete: function () {
-                $(".favicon-loader-overlay").removeClass("ng-hide");
-            },
-            data: {
-                data: [dataModel],
-                ModelId: 3
-            },
-            success: function (response) {
-                // after success response
-                if (response.Status) {
-
-                    data.SCH_ACTIVITY = response.Data;
-
-                    $.ajax({
-                        url: "/Calendar/AddSchedule",
-                        method: "POST",
-                        beforeSend: function () {
-                            $(".favicon-loader-overlay").removeClass("ng-hide");
-                        },
-                        complete: function () {
-                            $(".favicon-loader-overlay").addClass("ng-hide");
-                        },
-                        data: { dataList: [data] },
-                        dataType: "json",
-                        success: function (response) {
-                            // after success response
-                            if (response == "Success") {
-
-                                swal({
-                                    icon: "success",
-                                    title: "Session Created",
-                                    text: "Sessions created successfully!"
-                                }).then(function (check) {
-                                    window.location.href = '/calendar/index#/calender/2305';
-                                });
-
-                            } else {
-                                swal({
-                                    icon: "error",
-                                    title: "Error",
-                                    text: response.Message
-                                });
-                            }
-
-                        },
-                        error: function (er) {
-
-                        }
-                    })
-
-                } else {
-                    swal({
-                        icon: "error",
-                        title: "Error",
-                        text: response.Message
-                    });
-                }
-
-            },
-            error: function (er) {
-
-            }
-        })
-
-    } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-
-    return;
-    swal({
-        icon: "success",
-        title: "Success",
-        text: "Calendar created successfully!"
-    }).then(function (check) {
-        window.location.replace("/BusinessAdmin/CalendarMaster");
-    });
-}
 
 function validateSchedularFormData(data) {
     debugger;
@@ -590,6 +375,22 @@ function BindStep5(type) {
     })
 
     //createdServiceType = type;
+}
+
+function BindStep6(type) {
+    $("#step-4").hide();
+    $("#step-5").fadeOut();
+    
+    configureStep(6);
+
+    $("#ddlMasterCalendar").val(createdCalendarCode);
+    localStorage.setItem("CALENDAR_CODE", createdCalendarCode)
+    $(".selectable-calendar-item").removeClass("selected");
+    setTimeout(function () {
+        $(".selectable-calendar-item[data-id=CLR_SEL_" + localStorage.getItem("CALENDAR_CODE") + "]").addClass("selected");
+        $(".lbl-calendar-name").text($("#ddlMasterCalendar option:selected").text());
+    }, 500);
+
 }
 
 function validateStep(stepId) {
@@ -1095,7 +896,7 @@ function removeProvider(Id) {
 }
 
 function createLocationMaster() {
-    if (validateStep(3)) {
+    if (true) {
 
         $.ajax({
             url: "/Calendar/AddMasterData",
@@ -1132,8 +933,44 @@ function createLocationMaster() {
     }
 }
 
+function createServiceMaster() {
+    if (true) {
+        $.ajax({
+            url: "/Calendar/AddMasterData",
+            method: "POST",
+            data: {
+                data: locationList,
+                ModelId: 3
+            },
+            success: function (response) {
+                // after success response
+                if (response.Status) {
+                    swal({
+                        icon: "success",
+                        title: "Service Added",
+                        text: "Service added successfully!"
+                    }).then(function (check) {
+                        window.location.href = '/BusinessAdmin/SetupCalendarEvent?CompanyId=' + localStorage.getItem("COMPANY_ID") + "&CalendarCode=" + createdCalendarCode + "&Step=6";
+                    });
+
+                } else {
+                    swal({
+                        icon: "error",
+                        title: "Error",
+                        text: response.Message
+                    });
+                }
+
+            },
+            error: function (er) {
+
+            }
+        })
+    }
+}
+
 function createServiceProviderMaster() {
-    if (validateStep(4)) {
+    if (true) {
         $.ajax({
             url: "/Calendar/AddMasterData",
             method: "POST",
@@ -1166,8 +1003,6 @@ function createServiceProviderMaster() {
 
             }
         })
-
-
     }
 }
 
