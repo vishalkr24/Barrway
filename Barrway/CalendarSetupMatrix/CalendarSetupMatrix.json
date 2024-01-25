@@ -4,7 +4,8 @@
       "Title": "Basic Details",
       "Heading_Title": "Fill in some details for your Calendar",
       "Has_Multiple_Steps": false,
-      "Is_Skippable": false
+      "Is_Skippable": false,
+      "Is_Final_Step": false
     },
     "Step2": {
       "Title": "Calendar Type",
@@ -20,7 +21,8 @@
           "Text": "Customers buy individual class"
         }
       },
-      "Is_Skippable": false
+      "Is_Skippable": false,
+      "Is_Final_Step": false
     },
     "Step3": {
       "Title": "Location Master",
@@ -31,7 +33,8 @@
           "Image": "",
           "Text": "You may edit these information and add more details in the future by going to location master."
         }
-      }
+      },
+      "Is_Final_Step": false
     },
     "Step4": {
       "Title": "Service Provider Master",
@@ -42,7 +45,8 @@
           "Image": "",
           "Text": "You may edit these information and add more details in the future by going to service provider master."
         }
-      }
+      },
+      "Is_Final_Step": false
     },
     "Step5": {
       "Title": "Service Master",
@@ -71,10 +75,12 @@
           "Image": "",
           "Text": "You may set the price list in Pricelist master."
         }
-      }
+      },
+      "Is_Final_Step": false
     },
     "Step6": {
       "Success_Message": "Congratulations, you have created a calendar!",
+      "Has_Multiple_Steps": true,
       "Helpers": {
         "Helper_1": {
           "Image": "",
@@ -92,7 +98,8 @@
             "Link": "/Calendar/Index#/Calendar"
           }
         }
-      }
+      },
+      "Is_Final_Step": true
     }
   },
 
