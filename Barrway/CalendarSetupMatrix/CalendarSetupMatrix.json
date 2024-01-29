@@ -1,6 +1,7 @@
 {
   "Type1": {
     "Step1": {
+      "Is_Step": true,
       "Title": "Basic Details",
       "Heading_Title": "Fill in some details for your Calendar",
       "Has_Multiple_Steps": false,
@@ -8,6 +9,7 @@
       "Is_Final_Step": false
     },
     "Step2": {
+      "Is_Step": true,
       "Title": "Calendar Type",
       "Heading_Title": "Which one describe your course the best?",
       "Has_Multiple_Steps": true,
@@ -25,6 +27,7 @@
       "Is_Final_Step": false
     },
     "Step3": {
+      "Is_Step": true,
       "Title": "Location Master",
       "Heading_Title": "Give a name for your class location",
       "Is_Skippable": true,
@@ -37,6 +40,7 @@
       "Is_Final_Step": false
     },
     "Step4": {
+      "Is_Step": true,
       "Title": "Service Provider Master",
       "Heading_Title": "Add your instructors details.",
       "Is_Skippable": true,
@@ -49,57 +53,101 @@
       "Is_Final_Step": false
     },
     "Step5": {
-      "Title": "Service Master",
-      "Heading_Title": "Set up course details",
-      "Is_Skippable": true,
       "2_1": {
-        "Helper_1": {
-          "Image": "",
-          "Text": "We support visa master paypal..."
-        },
-        "Helper_2": {
-          "Image": "",
-          "Text": "You may edit these information and add more details in the future by going to service master."
+        "Is_Step": true,
+        "Title": "Service Master",
+        "Heading_Title": "Set up course details",
+        "Is_Skippable": true,
+        "Is_Final_Step": false,
+        "Is_Kanban": false,
+        "Helpers": {
+          "Helper_1": {
+            "Image": "",
+            "Text": "We support visa master paypal..."
+          },
+          "Helper_2": {
+            "Image": "",
+            "Text": "You may edit these information and add more details in the future by going to service master."
+          }
         }
+
       },
       "2_2": {
-        "Helper_1": {
-          "Image": "",
-          "Text": "We support visa master paypal..."
-        },
-        "Helper_2": {
-          "Image": "",
-          "Text": "You may edit these information and add more details in the future by going to service master."
-        },
-        "Helper_3": {
-          "Image": "",
-          "Text": "You may set the price list in Pricelist master."
+        "Is_Step": true,
+        "Title": "Service Master",
+        "Heading_Title": "Set up course details",
+        "Is_Skippable": true,
+        "Is_Final_Step": false,
+        "Is_Kanban": false,
+        "Helpers": {
+          "Helper_1": {
+            "Image": "",
+            "Text": "We support visa master paypal..."
+          },
+          "Helper_2": {
+            "Image": "",
+            "Text": "You may edit these information and add more details in the future by going to service master."
+          },
+          "Helper_3": {
+            "Image": "",
+            "Text": "You may set the price list in Pricelist master."
+          }
         }
-      },
-      "Is_Final_Step": false
+
+      }
     },
     "Step6": {
-      "Success_Message": "Congratulations, you have created a calendar!",
-      "Has_Multiple_Steps": true,
-      "Helpers": {
-        "Helper_1": {
-          "Image": "",
-          "Text": "Let’s add your course/service schedule to the calendar",
-          "Button": {
-            "Text": "Go",
-            "Link": "/BusinessAdmin/SchedularMaster"
+      "2_1": {
+        "Is_Step": true,
+        "Success_Message": "Congratulations, you have created a calendar!",
+        "Helpers": {
+          "Helper_1": {
+            "Image": "",
+            "Text": "Let’s add your course/service schedule to the calendar",
+            "Button": {
+              "Text": "Go",
+              "Link": "/BusinessAdmin/SchedularMaster"
+            }
+          },
+          "Helper_2": {
+            "Image": "",
+            "Text": "I will set up the course/service schedule later. Let me see the calendar I created.",
+            "Button": {
+              "Text": "Go",
+              "Link": "/Calendar/Index#/Calendar"
+            }
           }
         },
-        "Helper_2": {
-          "Image": "",
-          "Text": "I will set up the course/service schedule later. Let me see the calendar I created.",
-          "Button": {
-            "Text": "Go",
-            "Link": "/Calendar/Index#/Calendar"
-          }
-        }
+        "Is_Final_Step": true,
+        "Is_Skippable": false,
+        "HasStep7": false
       },
-      "Is_Final_Step": true
+      "2_2": {
+        "Is_Step": true,
+        "Success_Message": "Congratulations, you have created a calendar!",
+        "Helpers": {
+          "Helper_1": {
+            "Image": "",
+            "Text": "Let’s add your course/service schedule to the calendar",
+            "Button": {
+              "Text": "Go",
+              "Link": "/BusinessAdmin/SchedularMaster"
+            }
+          },
+          "Helper_2": {
+            "Image": "",
+            "Text": "I will set up the course/service schedule later. Let me see the calendar I created.",
+            "Button": {
+              "Text": "Go",
+              "Link": "/Calendar/Index#/Calendar"
+            }
+          }
+        },
+        "Is_Final_Step": true,
+        "Is_Skippable": false,
+        "HasStep7": false
+      }
+
     }
   },
 
@@ -109,12 +157,15 @@
 
   "Type2": {
     "Step1": {
+      "Is_Step": true,
       "Title": "Basic Details",
       "Heading_Title": "Fill in some details for your Calendar.",
       "Has_Multiple_Steps": false,
-      "Is_Skippable": false
+      "Is_Skippable": false,
+      "Is_Final_Step": false
     },
     "Step2": {
+      "Is_Step": true,
       "Title": "Calendar Type",
       "Heading_Title": "Which one describe your booking the best?",
       "Has_Multiple_Steps": true,
@@ -129,15 +180,22 @@
         },
         "2_3": {
           "Image": "",
+          "Text": "Your business enable customer to choose multiple services in one booking"
+        },
+        "2_4": {
+          "Image": "",
           "Text": "Generate tickets and in first-come-first-serve basis"
         }
       },
-      "Is_Skippable": false
+      "Is_Skippable": false,
+      "Is_Final_Step": false
     },
     "Step3": {
+      "Is_Step": true,
       "Title": "Location Master",
       "Heading_Title": "Give a name for your service location",
       "Is_Skippable": true,
+      "Is_Final_Step": false,
       "Helper_After_Form": {
         "Helper_1": {
           "Image": "",
@@ -146,9 +204,11 @@
       }
     },
     "Step4": {
+      "Is_Step": true,
       "Title": "Service Provider Master",
       "Heading_Title": "Add your practitioners details",
       "Is_Skippable": true,
+      "Is_Final_Step": false,
       "Helper_After_Form": {
         "Helper_1": {
           "Image": "",
@@ -157,56 +217,82 @@
       }
     },
     "Step5": {
-      "Title": "Service Master",
-      "Heading_Title": "Set up course details",
-      "Is_Skippable": true,
       "2_1": {
-        "Helper_1": {
-          "Image": "",
-          "Text": "We support visa master paypal..."
-        },
-        "Helper_2": {
-          "Image": "",
-          "Text": "You may edit these information and add more details in the future by going to service master."
-        },
-        "Helper_3": {
-          "Image": "",
-          "Text": "You may set the price list in Pricelist master."
+        "Is_Step": true,
+        "Title": "Service Master",
+        "Heading_Title": "Set up course details",
+        "Is_Skippable": true,
+        "Is_Final_Step": false,
+        "Is_Kanban": false,
+        "Helpers": {
+          "Helper_1": {
+            "Image": "",
+            "Text": "We support visa master paypal..."
+          },
+          "Helper_2": {
+            "Image": "",
+            "Text": "You may edit these information and add more details in the future by going to service master."
+          },
+          "Helper_3": {
+            "Image": "",
+            "Text": "You may set the price list in Pricelist master."
+          }
         }
       },
       "2_2": {
-        "Helper_1": {
-          "Image": "",
-          "Text": "We support visa master paypal..."
-        },
-        "Helper_2": {
-          "Image": "",
-          "Text": "You may edit these information and add more details in the future by going to service master."
-        },
-        "Helper_3": {
-          "Image": "",
-          "Text": "You may set the price list in Pricelist master."
+        "Is_Step": true,
+        "Title": "Service Master",
+        "Heading_Title": "Set up course details",
+        "Is_Skippable": true,
+        "Is_Final_Step": false,
+        "Is_Kanban": false,
+        "Helpers": {
+          "Helper_1": {
+            "Image": "",
+            "Text": "We support visa master paypal..."
+          },
+          "Helper_2": {
+            "Image": "",
+            "Text": "You may edit these information and add more details in the future by going to service master."
+          },
+          "Helper_3": {
+            "Image": "",
+            "Text": "You may set the price list in Pricelist master."
+          }
         }
       },
       "2_3": {
-        "Helper_1": {
-          "Image": "",
-          "Text": "We support visa master paypal..."
-        },
-        "Helper_2": {
-          "Image": "",
-          "Text": "You may edit these information and add more details in the future by going to service master."
-        },
-        "Helper_3": {
-          "Image": "",
-          "Text": "You may set the price list in Pricelist master."
+        "Is_Step": true,
+        "Title": "Service Master",
+        "Heading_Title": "Set up course details",
+        "Is_Skippable": true,
+        "Is_Final_Step": false,
+        "Is_Kanban": false,
+        "Helpers": {
+          "Helper_1": {
+            "Image": "",
+            "Text": "We support visa master paypal..."
+          },
+          "Helper_2": {
+            "Image": "",
+            "Text": "You may edit these information and add more details in the future by going to service master."
+          },
+          "Helper_3": {
+            "Image": "",
+            "Text": "You may set the price list in Pricelist master."
+          }
         }
+      },
+      "2_4": {
+        "Is_Step": false,
+        "Is_Kanban": true
       }
     },
     "Step6": {
-      "Success_Message": "Congratulations, you have created a calendar!",
-      "Helpers": {
-        "2_1": {
+      "2_1": {
+        "Is_Step": true,
+        "Success_Message": "Congratulations, you have created a calendar!",
+        "Helpers": {
           "Helper_1": {
             "Image": "",
             "Text": "Let’s add your course/service schedule to the calendar",
@@ -224,7 +310,14 @@
             }
           }
         },
-        "2_2": {
+        "Is_Skippable": false,
+        "Is_Final_Step": true,
+        "HasStep7": false
+      },
+      "2_2": {
+        "Is_Step": true,
+        "Success_Message": "Congratulations, you have created a calendar!",
+        "Helpers": {
           "Helper_1": {
             "Image": "",
             "Text": "Let’s add your course/service schedule to the calendar",
@@ -242,7 +335,13 @@
             }
           }
         },
-        "2_3": {
+        "Is_Skippable": false,
+        "Is_Final_Step": true,
+        "HasStep7": false
+      },
+      "2_3": {
+        "Success_Message": "Congratulations, you have created a calendar!",
+        "Helpers": {
           "Helper_1": {
             "Image": "",
             "Text": "Let’s add your course/service schedule to the calendar",
@@ -259,7 +358,41 @@
               "Link": "/Calendar/Index#/Kanban"
             }
           }
-        }
+        },
+        "Is_Step": true,
+        "Is_Skippable": false,
+        "Is_Final_Step": false,
+        "HasStep7": true
+      },
+      "2_4": {
+        "Is_Step": false
+      }
+
+    },
+    "Step7": {
+      "2_3": {
+        "Is_Step": true,
+        "Success_Message": "Congratulations, you have created a calendar!",
+        "Helpers": {
+          "Helper_1": {
+            "Image": "",
+            "Text": "Let’s add your course/service schedule to the calendar",
+            "Button": {
+              "Text": "Go",
+              "Link": "/BusinessAdmin/SchedularMaster"
+            }
+          },
+          "Helper_2": {
+            "Image": "",
+            "Text": "I will set up the course/service schedule later. Let me see the Kanban I created.",
+            "Button": {
+              "Text": "Go",
+              "Link": "/Calendar/Index#/Kanban"
+            }
+          }
+        },
+        "Is_Skippable": false,
+        "Is_Final_Step": true
       }
     }
   }

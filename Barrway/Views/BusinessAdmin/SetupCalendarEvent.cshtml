@@ -381,7 +381,40 @@
         background-color: crimson!important;
     }
 </style>
+<style>
+    .form-inner {
+        margin-left: 0px !important;
+    }
 
+    .element-remover {
+        text-align: center;
+        border: 1px solid #6f6f6f;
+        cursor: pointer;
+        height: 30px;
+        padding: 4px;
+        width: 30px;
+        border-radius: 20px;
+        position: absolute;
+        margin-left: -50px;
+        margin-top: 7px;
+    }
+
+    @@media screen and (max-width: 800px) {
+        .element-remover {
+            text-align: center;
+            border: 1px solid #6f6f6f;
+            cursor: pointer;
+            height: 30px;
+            padding: 4px;
+            width: 30px;
+            border-radius: 20px;
+            position: relative;
+            margin-left: 0px;
+            margin-top: 10px;
+            margin-bottom: 8px;
+        }
+    }
+</style>
 <main id="content" role="main" class="main">
 
     <div class="container">
@@ -391,17 +424,9 @@
 
                 <div class="form-inner" style="max-width:100%;">
                     <p>Step 2 of 5</p>
-                    <div class="hed-til">
-                        <p></p>
+                    <div class="template-binder">
+
                     </div>
-
-                    <div class="f_of_f-wrap-o">
-                        <div class="choose">
-
-                        </div>
-                        <button type="button" onclick="backToStep(1)" class="back">@Resource.Back</button>
-                    </div>
-
                 </div>
 
             </div>
@@ -413,70 +438,10 @@
                 <div class="m-width_50">
                     <div class="form-inner" style="max-width:100%;">
                         <p>Step 3 of 5</p>
-                        <div class="hed-til">
-                            <p class="heading-title"></p>
-                        </div>
-                        <div>
-
-                            <div id="div1">
-                                <div class="text-center">
-                                    <div class="profile-form">
-                                        <style>
-                                            .form-inner {
-                                                margin-left: 0px !important;
-                                            }
-
-                                            .element-remover {
-                                                text-align: center;
-                                                border: 1px solid #6f6f6f;
-                                                cursor: pointer;
-                                                height: 30px;
-                                                padding: 4px;
-                                                width: 30px;
-                                                border-radius: 20px;
-                                                position: absolute;
-                                                margin-left: -50px;
-                                                margin-top: 7px;
-                                            }
-
-                                            @@media screen and (max-width: 800px) {
-                                                .element-remover {
-                                                    text-align: center;
-                                                    border: 1px solid #6f6f6f;
-                                                    cursor: pointer;
-                                                    height: 30px;
-                                                    padding: 4px;
-                                                    width: 30px;
-                                                    border-radius: 20px;
-                                                    position: relative;
-                                                    margin-left: 0px;
-                                                    margin-top: 10px;
-                                                    margin-bottom: 8px;
-                                                }
-                                            }
-                                        </style>
-                                        <div style="text-align:right; color:crimson;">* mandatory</div>
-                                        <div class="form-inner set-cal" style="max-width:100%;">
-                                            <div id="locations-div">
-
-                                            </div>
-
-                                            <div class="ycaml">
-                                                <p>You can add more location if your event takes place in more than one location.</p>
-                                                <button class="bg-t-b" onclick="addMoreLocation(null, true, true)">+Add more</button>
-                                            </div>
-
-                                            <button type="button" onclick="backToStep(2)" class="back">@Resource.Back</button>
-                                            <button type="button" style="display:none;" onclick="skipToStep(4)" class="back skip-button">Skip</button>
-                                            <button type="button" class="btn btn-primary" onclick="moveToStep(4)">@Resource.Next</button>
-
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="template-binder">
 
                         </div>
+                        
 
                     </div>
                 </div>
@@ -491,41 +456,10 @@
 
                 <div class="form-inner" style="max-width:100%;">
                     <p> Step 4 of 5</p>
-                    <div class="hed-til">
-                        <p>Service provider details</p>
-                    </div>
-                    <div>
-
-                        <div id="div1">
-                            <div class="text-center">
-                                <div class="profile-form">
-                                    <style>
-                                        .form-inner {
-                                            margin-left: 0px !important;
-                                        }
-                                    </style>
-
-                                    <div class="form-inner set-cal" style="max-width:100%;">
-                                        <div id="providers-div">
-
-                                        </div>
-
-                                        <div class="ycaml">
-                                            <p>You can add more service providers if your event has more than one service providers.</p>
-                                            <button class="bg-t-b" onclick="addMoreProvider(null, true, true)">+Add more</button>
-                                        </div>
-                                        <button type="button" onclick="backToStep(3)" class="back">@Resource.Back</button>
-                                        <button type="button" style="display:none;" onclick="skipToStep(5)" class="back skip-button">Skip</button>
-                                        <button type="button" class="btn btn-primary" onclick="moveToStep(5)">@Resource.Next</button>
-
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="template-binder">
 
                     </div>
-
+                    
                 </div>
 
                 <!-- Title -->
@@ -539,82 +473,11 @@
             <div class="col-md-12">
 
                 <div class="form-inner" style="max-width:100%;">
-                    <p>Step 5 of 5</p>
+                    <p class="final-step-p">Step 5 of 5</p>
+                    <div class="template-binder">
 
-                    <div class="f_of_f-wrap-t">
-                        <div class="form-inner set-cal" style="max-width:100%;">
-                            <div class="hed-til">
-                                <p></p>
-                            </div>
-                            <div>
-
-                                <div id="div1">
-                                    <div class="text-center">
-                                        <div class="profile-form">
-                                            <style>
-                                                .form-inner {
-                                                    margin-left: 0px !important;
-                                                }
-
-                                                .element-remover {
-                                                    text-align: center;
-                                                    border: 1px solid #6f6f6f;
-                                                    cursor: pointer;
-                                                    height: 30px;
-                                                    padding: 4px;
-                                                    width: 30px;
-                                                    border-radius: 20px;
-                                                    position: absolute;
-                                                    margin-left: -50px;
-                                                    margin-top: 7px;
-                                                }
-
-                                                @@media screen and (max-width: 800px) {
-                                                    .element-remover {
-                                                        text-align: center;
-                                                        border: 1px solid #6f6f6f;
-                                                        cursor: pointer;
-                                                        height: 30px;
-                                                        padding: 4px;
-                                                        width: 30px;
-                                                        border-radius: 20px;
-                                                        position: relative;
-                                                        margin-left: 0px;
-                                                        margin-top: 10px;
-                                                        margin-bottom: 8px;
-                                                    }
-                                                }
-                                            </style>
-                                            <div style="text-align:right; color:crimson;">* mandatory</div>
-                                            <div class="form-inner set-cal" style="max-width:100%;">
-                                                <div id="service-div">
-
-                                                </div>
-
-
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="ycaml" style="justify-content: space-between;">
-                                <p>You can add multiple courses to the calendar.</p>
-                                <button class="bg-t-b" onclick="addMoreService(null, true, true)">+ Add more</button>
-                            </div>
-                            <div class="mt-5">
-                                <button type="button" onclick="backToStep(4)" class="back">@Resource.Back</button>
-                                <button type="button" style="display:none;" onclick="skipToStep(6)" class="back skip-button">Skip</button>
-                                <button type="button" class="btn btn-primary final-btn" style="float:right;" onclick="moveToStep(6)">Create Calendar</button>
-                            </div>
-
-
-
-                        </div>
                     </div>
-
-
+                    
                 </div>
 
                 <!-- Title -->
@@ -626,7 +489,7 @@
             <div class="col-md-5 m-auto">
 
                 <div class="form-inner" style="max-width:100%;">
-                    <p>Congratulations, You have created a Calendar!</p>
+                    <p class="final-step-p">Congratulations, You have created a Calendar!</p>
                     
                     <div class="f_of_f-wrap-o">
                         <div class="choose">
