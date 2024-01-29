@@ -26,7 +26,7 @@ function readyPage() {
 
     ConfigData = JSON.parse(getCalendarSetupMatrix());
     CalendarData = getSingleCalendar(createdCalendarCode);
-
+    
     let step = window.location.href.split('?')[1].replaceAll('&&', '&').split('&')[2].split('=')[1];
     backToStep(parseInt(step));
 
@@ -114,36 +114,42 @@ function configureStep(step) {
     debugger;
     let configStep = ConfigData["Type" + createdCalendarType]["Step" + step];
 
-    $("#step-" + step + " .hed-til p").text(configStep.Heading_Title);
+    // steps and common and special based on JSON architecture type
+    let specialSteps = [5, 6, 7];
 
-    if (configStep.Is_Skippable == true) {
-        $("#step-" + step + " .skip-button").show();
-    } else {
-        $("#step-" + step + " .skip-button").hide();
+    if (specialSteps.includes(step)) {
+        if (CalendarData.Data.CALENDAR_TYPE != undefined && CalendarData.Data.CALENDAR_TYPE != null) {
+            configStep = configStep["2_" + CalendarData.Data.CALENDAR_TYPE];
+        }
     }
 
-    if (configStep.Has_Multiple_Steps == true) {
-        let counter = 1;
-        let binderString = "";
+    if (configStep.Is_Step == null || configStep.Is_Step == undefined) {
+        alert("Something went wrong!");
+        return;
+    }
 
-        if (step == 6) {
-            while (configStep.Helpers["Helper_" + counter] != undefined && configStep.Helpers["Helper_" + counter] != null) {
-                binderString += `<div class="chose-inner" onclick="moveToStep(${(parseInt(step) + 1)}, ${counter})">
-                                <div class="one">
-                                    <img src="${configStep.Helpers["Helper_" + counter].Image}" onerror="this.src='../assets/svg/logos/favicon.png'" />
-                                </div>
-                                <div class="two">
-                                    <p>${configStep.Helpers["Helper_" + counter].Text}</p>
-                                </div>
-                                <div class="three">
-                                    <p><img src="../assets/img/purple.png" /></p>
-                                </div>
-                            </div>`;
-                counter++;
-            }
+    if (configStep.Is_Step == true) {
+        $("#step-" + step + " .template-binder").empty();
+
+        if (configStep.Is_Kanban == true) {
+            // bind Kanban Template
         } else {
-            while (configStep.Steps["2_" + counter] != undefined && configStep.Steps["2_" + counter] != null) {
-                binderString += `<div class="chose-inner" onclick="moveToStep(${(parseInt(step) + 1)}, ${counter})">
+            if (configStep.Has_Multiple_Steps == true) {
+                $("#step-" + step + " .template-binder").append(`<div class="hed-til">
+                        <p></p>
+                    </div>
+
+                    <div class="f_of_f-wrap-o">
+                        <div class="choose">
+
+                        </div>
+                        <button type="button" onclick="backToStep(${(step - 1)})" class="back">Back</button>
+                    </div>`);
+
+                let counter = 1;
+                let binderString = "";
+                while (configStep.Steps["2_" + counter] != undefined && configStep.Steps["2_" + counter] != null) {
+                    binderString += `<div class="chose-inner" onclick="moveToStep(${(parseInt(step) + 1)}, ${counter})">
                                 <div class="one">
                                     <img src="${configStep.Steps["2_" + counter].Image}" onerror="this.src='../assets/svg/logos/favicon.png'" />
                                 </div>
@@ -154,21 +160,107 @@ function configureStep(step) {
                                     <p><img src="../assets/img/purple.png" /></p>
                                 </div>
                             </div>`;
-                counter++;
+                    counter++;
+                }
+                $("#step-" + step + " .choose").append(binderString);
+            } else {
+                let masterName = "";
+                let addFuncName = "";
+
+                if (configStep.Title == "Location Master") {
+                    masterName = "locations"
+                    addFuncName = "addMoreLocation"
+                }
+                else if (configStep.Title == "Service Provider Master") {
+                    masterName = "providers"
+                    addFuncName = "addMoreProvider"
+                }
+                else if (configStep.Title == "Service Master") {
+                    masterName = "service"
+                    addFuncName = "addMoreService"
+                }
+
+                if (configStep.Is_Final_Step) {
+
+                    $("#step-" + step + " .template-binder").append(`<div class="hed-til">
+                        <p></p>
+                    </div>
+
+                    <div class="f_of_f-wrap-o">
+                        <div class="choose">
+
+                        </div>
+                        <button type="button" onclick="backToStep(${(step - 1)})" class="back">Back</button>
+                    </div>`);
+
+                    let binderString = "";
+                    let counter = 1;
+                    while (configStep.Helpers["Helper_" + counter] != undefined && configStep.Helpers["Helper_" + counter] != null) {
+                        binderString += `<div class="chose-inner" onclick="moveToStep(${(parseInt(step) + 1)}, ${counter})">
+                                <div class="one">
+                                    <img src="${configStep.Helpers["Helper_" + counter].Image}" onerror="this.src='../assets/svg/logos/favicon.png'" />
+                                </div>
+                                <div class="two">
+                                    <p>${configStep.Helpers["Helper_" + counter].Text}</p>
+                                </div>
+                                <div class="three">
+                                    <p><img src="../assets/img/purple.png" /></p>
+                                </div>
+                            </div>`;
+                        counter++;
+                    }
+
+                    $("#step-" + step + " .choose").append(binderString);
+                } else {
+                    $("#step-" + step + " .template-binder").append(`<div class="hed-til">
+                            <p class="heading-title"></p>
+                        </div>
+                        <div>
+
+                            <div id="div1">
+                                <div class="text-center">
+                                    <div class="profile-form">
+                                        
+                                        <div style="text-align:right; color:crimson;">* mandatory</div>
+                                        <div class="form-inner set-cal" style="max-width:100%;">
+                                            <div id="${masterName}-div">
+
+                                            </div>
+
+                                            <div class="ycaml">
+                                                <p>You can add more location if your event takes place in more than one location.</p>
+                                                <button class="bg-t-b" onclick="${addFuncName}(null, true, true)">+Add more</button>
+                                            </div>
+
+                                            <button type="button" onclick="backToStep(${(step - 1)})" class="back">Back</button>
+                                            <button type="button" style="display:none;" onclick="skipToStep(${(step + 1)})" class="back skip-button">Skip</button>
+                                            <button type="button" class="btn btn-primary" onclick="moveToStep(${(step + 1)})">Next</button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>`);
+                }
             }
         }
 
-        
+        $("#step-" + step + " .hed-til p").text(configStep.Heading_Title);
 
-        $("#step-" + step + " .choose").append(binderString);
+        if (configStep.Is_Skippable == true) {
+            $("#step-" + step + " .skip-button").show();
+        } else {
+            $("#step-" + step + " .skip-button").hide();
+        }
+
+        if (configStep.Helper_After_Form != null && configStep.Helper_After_Form != undefined) {
+
+        }
+
+    } else {
+        backToStep((parseInt(step) + 1));
     }
-
-    if (configStep.Helper_After_Form != null && configStep.Helper_After_Form != undefined) {
-
-
-
-    }
-    
 
     $("#step-" + step).fadeIn();
 }
@@ -301,7 +393,7 @@ function BindStep5(type) {
             }
         },
         success: function (response) {
-
+            debugger;
             if (response.length > 0) {
 
                 var data = JSON.parse(response[0].fields);
@@ -315,12 +407,10 @@ function BindStep5(type) {
                         data2 = data2.filter(x => x["required"] != undefined && x["required"] == true);
                     }
 
-                    containerClass = (data2.length == 1) ? "col-md-12" : "col-md-6";
-
                     data2.forEach(x => {
                         serviceModelList.push({
                             label: x["label"],
-                            containerClass: containerClass,
+                            containerClass: "col-md-" + parseInt(( 12/parseInt(100 / parseInt(x["column_width"])) )),
                             name: x["name"],
                             type: x["type"],
                             values: (x["type"] == "radio-group" || x["type"] == "select" || x["type"] == "checkbox-group") ? x["values"] : null
@@ -768,13 +858,13 @@ function addMoreService(dataItem, isRemovable, isNew) {
         Is_New: isNew
     };
 
-    $("#service-div").append(`<div class="form" id="service-elem-${dataModel.Id}"> ${(isRemovable) ? `<div class="element-remover" onclick="removeService(${dataModel.Id})"><i class="fa fa-times" aria-hidden="true"></i></div>` : ""} <div class="row"></div></div>`)
+    $("#service-div").append(`<div class="form" id="service-elem-${dataModel.Id}"> ${(isRemovable) ? `<div class="element-remover" onclick="removeService(${dataModel.Id})"><i class="fa fa-times" aria-hidden="true"></i></div>` : ""} <div class="row mt-2"></div></div>`)
 
     serviceModelList.forEach(x => {
 
         dataModel[x.name] = (dataItem == null) ? "" : dataItem[x.name];
 
-        $("#service-div #service-elem-" + dataModel.Id + " .row").append(`<div class="col-md-2">
+        $("#service-div #service-elem-" + dataModel.Id + " .row").append(`<div class="${x.containerClass}">
                                             <div class="form-group">
                                                 ${generateInputBox(x, dataModel.Id, "location-input")}
                                             </div>
@@ -817,11 +907,12 @@ function generateInputBox(modelItem, id, additionalClass) {
         case "radio-group":
             if (modelItem.values != null) {
                 value += `<label for="${modelItem.name}${id}">${modelItem.label} *</label> <br />`;
+                debugger;
                 modelItem.values.forEach(x => {
                     value += `
                             <div style="float:left;">
-                                <input type="radio" class="" id="${modelItem.name}${x.value}" name="${modelItem.name}${id}" value="${x.value}" data-input-id="${id}">
-                                <label class="form-check-label" for="${modelItem.name}${x.value}">${x.label}</label>
+                                <input type="radio" ${(x.selected == true) ? "checked" : ""} class="" id="${modelItem.name}${x.value}${id}" name="${modelItem.name}${id}" value="${x.value}" data-input-id="${id}">
+                                <label class="form-check-label" for="${modelItem.name}${x.value}${id}">${x.label}</label>
                             </div>
                             `
                 });
@@ -833,8 +924,8 @@ function generateInputBox(modelItem, id, additionalClass) {
                 modelItem.values.forEach(x => {
                     value += `
                             <div style="float:left;">
-                                <input type="checkbox" class="" id="${modelItem.name}${x.value}" name="${modelItem.name}${id}" value="${x.value}" data-input-id="${id}">
-                                <label class="form-check-label" for="${modelItem.name}${x.value}">${x.label}</label>
+                                <input type="checkbox" class="" id="${modelItem.name}${x.value}${id}" name="${modelItem.name}${id}" value="${x.value}" data-input-id="${id}">
+                                <label class="form-check-label" for="${modelItem.name}${x.value}${id}">${x.label}</label>
                             </div>
                             `
                 });
