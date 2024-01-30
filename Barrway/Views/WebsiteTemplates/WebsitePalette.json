@@ -1,0 +1,23 @@
+{
+  "Palette1": {
+    "--primary-color": "",
+    "--secondary-color": "",
+    "--text-color": "",
+    "--background-color": "",
+    "--special-area-background": ""
+  },
+  "Palette2": {
+    "--primary-color": "",
+    "--secondary-color": "",
+    "--text-color": "",
+    "--background-color": "",
+    "--special-area-background": ""
+  },
+  "Palette3": {
+    "--primary-color": "",
+    "--secondary-color": "",
+    "--text-color": "",
+    "--background-color": "",
+    "--special-area-background": ""
+  }
+}

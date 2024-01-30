@@ -60,7 +60,7 @@
         "Is_Skippable": true,
         "Is_Final_Step": false,
         "Is_Kanban": false,
-        "Helpers": {
+        "Helper_After_Form": {
           "Helper_1": {
             "Image": "",
             "Text": "We support visa master paypal..."
@@ -79,7 +79,7 @@
         "Is_Skippable": true,
         "Is_Final_Step": false,
         "Is_Kanban": false,
-        "Helpers": {
+        "Helper_After_Form": {
           "Helper_1": {
             "Image": "",
             "Text": "We support visa master paypal..."
@@ -224,7 +224,7 @@
         "Is_Skippable": true,
         "Is_Final_Step": false,
         "Is_Kanban": false,
-        "Helpers": {
+        "Helper_After_Form": {
           "Helper_1": {
             "Image": "",
             "Text": "We support visa master paypal..."
@@ -246,7 +246,7 @@
         "Is_Skippable": true,
         "Is_Final_Step": false,
         "Is_Kanban": false,
-        "Helpers": {
+        "Helper_After_Form": {
           "Helper_1": {
             "Image": "",
             "Text": "We support visa master paypal..."
@@ -268,7 +268,7 @@
         "Is_Skippable": true,
         "Is_Final_Step": false,
         "Is_Kanban": false,
-        "Helpers": {
+        "Helper_After_Form": {
           "Helper_1": {
             "Image": "",
             "Text": "We support visa master paypal..."

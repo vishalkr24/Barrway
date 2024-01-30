@@ -136,7 +136,7 @@ function configureStep(step) {
         } else {
             if (configStep.Has_Multiple_Steps == true) {
                 $("#step-" + step + " .template-binder").append(`<div class="hed-til">
-                        <p></p>
+                        <p class="step"></p>
                     </div>
 
                     <div class="f_of_f-wrap-o">
@@ -144,6 +144,9 @@ function configureStep(step) {
 
                         </div>
                         <button type="button" onclick="backToStep(${(step - 1)})" class="back">Back</button>
+                    </div>
+                    <div class="blocks">
+
                     </div>`);
 
                 let counter = 1;
@@ -183,37 +186,38 @@ function configureStep(step) {
                 if (configStep.Is_Final_Step) {
 
                     $("#step-" + step + " .template-binder").append(`<div class="hed-til">
-                        <p></p>
+                        <p class="step"></p>
                     </div>
 
                     <div class="f_of_f-wrap-o">
-                        <div class="choose">
+                        <div class="blocks">
 
                         </div>
                         <button type="button" onclick="backToStep(${(step - 1)})" class="back">Back</button>
-                    </div>`);
+                    </div>
+                    `);
 
                     let binderString = "";
                     let counter = 1;
                     while (configStep.Helpers["Helper_" + counter] != undefined && configStep.Helpers["Helper_" + counter] != null) {
-                        binderString += `<div class="chose-inner" onclick="moveToStep(${(parseInt(step) + 1)}, ${counter})">
-                                <div class="one">
-                                    <img src="${configStep.Helpers["Helper_" + counter].Image}" onerror="this.src='../assets/svg/logos/favicon.png'" />
-                                </div>
-                                <div class="two">
-                                    <p>${configStep.Helpers["Helper_" + counter].Text}</p>
-                                </div>
-                                <div class="three">
-                                    <p><img src="../assets/img/purple.png" /></p>
-                                </div>
-                            </div>`;
+                        binderString += `<div class="block-inner">
+                        <div class="block-image">
+                            <img src="${configStep.Helpers["Helper_" + counter].Image}" onerror="this.src='../assets/svg/logos/favicon.png'">
+                        </div>
+                        <div class="block-text">
+                            <p>${configStep.Helpers["Helper_" + counter].Text}</p>
+                            <div class="block-lower">
+                                <span><button class="my-button">Go</button></span>
+                            </div>
+                        </div>
+                    </div>`;
                         counter++;
                     }
 
-                    $("#step-" + step + " .choose").append(binderString);
+                    $("#step-" + step + " .blocks").append(binderString);
                 } else {
                     $("#step-" + step + " .template-binder").append(`<div class="hed-til">
-                            <p class="heading-title"></p>
+                            <p class="heading-title step"></p>
                         </div>
                         <div>
 
@@ -222,7 +226,7 @@ function configureStep(step) {
                                     <div class="profile-form">
                                         
                                         <div style="text-align:right; color:crimson;">* mandatory</div>
-                                        <div class="form-inner set-cal" style="max-width:100%;">
+                                        <div class="form-inner set-cal" style="max-width:100%; margin-bottom: 1em;">
                                             <div id="${masterName}-div">
 
                                             </div>
@@ -235,11 +239,15 @@ function configureStep(step) {
                                             <button type="button" onclick="backToStep(${(step - 1)})" class="back">Back</button>
                                             <button type="button" style="display:none;" onclick="skipToStep(${(step + 1)})" class="back skip-button">Skip</button>
                                             <button type="button" class="btn btn-primary" onclick="moveToStep(${(step + 1)})">Next</button>
-
+                                            
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+                        </div>
+
+                        <div class="blocks">
 
                         </div>`);
                 }
@@ -256,6 +264,24 @@ function configureStep(step) {
 
         if (configStep.Helper_After_Form != null && configStep.Helper_After_Form != undefined) {
 
+            let counter = 1;
+            let stringBinder = "";
+
+            $(".blocks").empty();
+
+            while (configStep.Helper_After_Form["Helper_" + counter] != undefined) {
+                stringBinder += `<div class="block-inner">
+                    <div class="block-image">
+                        <img src="${configStep.Helper_After_Form["Helper_" + counter].Image}" onerror="this.src='/assets/marketplace/image/hands.png'">
+                    </div>
+                    <div class="block-text">
+                        <p>${configStep.Helper_After_Form["Helper_" + counter].Text} </p>
+                    </div>
+                </div>`;
+                counter++;
+            }
+
+            $(".blocks").append(stringBinder);
         }
 
     } else {
