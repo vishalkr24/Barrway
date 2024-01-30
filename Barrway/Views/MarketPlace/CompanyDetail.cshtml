@@ -16,7 +16,7 @@
 <input id="hiddenInputPaletteId" value="@PaletteId" readonly style="display:none;" />
 <input id="hiddenInputTemplateId" value="@TemplateId" readonly style="display:none;" />
 
-@RenderPage("~/Views/WebsiteTemplates/_Template" + TemplateId + ".cshtml", Model);
+@RenderPage("~/Views/WebsiteTemplates/_Template" + TemplateId + ".cshtml", Model)
 
 @section scripts{
     <script src="~/Scripts/MarketplaceScripts/WebsiteTemplateManager.js"></script>

@@ -1,11 +1,11 @@
 ﻿@model Barrway.DTO.MarketplaceModels.MarketplaceCompanyModel
 
 <!-- heading -->
-<section class="heading company-detail-hed">
+<section class="heading templet-one">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <div class="head">
+                <div class="templet-one-head">
                     <h2>@(string.IsNullOrEmpty(Model.COMPANY_NAME_ENGLISH)? "Company Name" : Model.COMPANY_NAME_ENGLISH) (@Model.COMPANY_NAME_CHINESE)</h2>
                 </div>
             </div>
@@ -17,9 +17,16 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <div class="cd-banner">
-                    <img onerror="this.src='../assets/marketplace/image/marketplace-detail.jpg'" src="@Model.COMPANY_BANNER_PATH.Replace("~", "..")" style="width: 100%; max-height:300px;">
+                <div class="main-banner">
+                    <div class="main-banner-inner">
+                        <div class="main-banner-inner-content">                            
+                            <button class="banner-button">Book Now</button>
+                        </div>
+                    </div>
                 </div>
+               @* <div class="cd-banner">
+                    <img onerror="this.src='../assets/marketplace/image/marketplace-detail.jpg'" src="@Model.COMPANY_BANNER_PATH.Replace("~", "..")" style="width: 100%; max-height:300px;">
+                </div>*@
             </div>
         </div>
         <div class="row mt-30">
@@ -40,6 +47,9 @@
                             <a href="@(string.IsNullOrEmpty(Model.FACEBOOK_URL)? "#": Model.FACEBOOK_URL)"><img src="~/assets/marketplace/image/facebook.png"></a>
                             <a href="@(string.IsNullOrEmpty(Model.WECHAT_URL)? "#": Model.WECHAT_URL)"><img src="~/assets/marketplace/image/chat.png"></a>
                         </p>
+                    </div>
+                    <div class="chat-button">
+                        <button><img src="~/assets/marketplace/image/cahe-button.png" /><span>Chat</span></button>
                     </div>
                 </div>
             </div>
