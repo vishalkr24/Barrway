@@ -140,6 +140,23 @@ namespace Barrway.Controllers
 
         }
 
+        public async Task<ActionResult> getCompanyWebsitePalette()
+        {
+            try
+            {
+                using (StreamReader sr = new StreamReader(Server.MapPath("~/Views/WebsiteTemplates/WebsitePalette.json")))
+                {
+                    var result = sr.ReadToEnd();
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
         public async Task<ActionResult> GetCompanySubCategory(string CategoryId)
         {
             try

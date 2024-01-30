@@ -369,6 +369,8 @@
     <Content Include="assets\css\images\marker-icon.html" />
     <Content Include="assets\css\media.css" />
     <Content Include="assets\css\style.css" />
+    <Content Include="assets\css\website-template-manager.css" />
+    <Content Include="assets\css\website-template-root-variables.css" />
     <Content Include="assets\css\theme-dark.html" />
     <Content Include="assets\css\theme-dark.min.css" />
     <Content Include="assets\css\theme.min.css" />
@@ -3080,6 +3082,7 @@
     <Content Include="Scripts\MarketplaceScripts\News.js" />
     <Content Include="Scripts\MarketplaceScripts\BusinessSite.js" />
     <Content Include="Scripts\MarketplaceScripts\homepage.js" />
+    <Content Include="Scripts\MarketplaceScripts\WebsiteTemplateManager.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\myscript\commonFunctions - Copy.js" />
     <Content Include="Scripts\myscript\commonFunctions-16032021.js" />
@@ -3263,6 +3266,10 @@
     <Content Include="Views\Payment\BzCancel.cshtml" />
     <Content Include="Views\BusinessAdmin\SetupCalendarEvent.cshtml" />
     <Content Include="Views\BusinessAdmin\Reports.cshtml" />
+    <Content Include="Views\WebsiteTemplates\_Template1.cshtml" />
+    <Content Include="Views\WebsiteTemplates\WebsitePalette.json" />
+    <Content Include="Views\WebsiteTemplates\_Template2.cshtml" />
+    <Content Include="Views\WebsiteTemplates\_Template3.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -16,6 +16,24 @@
     return data;
 }
 
+function getCompanyWebsitePalette() {
+    var data;
+    $.ajax({
+        url: "/Public/getCompanyWebsitePalette/",
+        type: "GET",
+        async: false,
+        success: function (response) {
+
+            data = response;
+        },
+        error: function (errorResponse) {
+
+            data = null;
+        }
+    })
+    return data;
+}
+
 function getUserRole() {
     var role = "";
     $.ajax({

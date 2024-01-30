@@ -185,11 +185,16 @@
         padding: 0px 0px !important;
     }
 
-    div#step-2 p, div#step-3 p, div#step-4 p, div#step-5 p, div#step-6 p {
+    div#step-2 p.step, div#step-3 p.step, div#step-4 p.step, div#step-5 p.step, div#step-6 p.step {
         font-weight: 700;
         font-size: 24px;
         color: rgba(226, 71, 108, 1);
         margin-bottom: 0.5rem !important;
+    }
+
+    .ycaml {
+        justify-content: space-between;
+        margin: 1rem 0px;
     }
 
     div#step-2 .ycaml p, div#step-3 .ycaml p, div#step-4 .ycaml p, div#step-5 .ycaml p {
@@ -377,8 +382,8 @@
         margin-bottom: 11px;
     }
 
-    .final-btn{
-        background-color: crimson!important;
+    .final-btn {
+        background-color: crimson !important;
     }
 </style>
 <style>
@@ -423,7 +428,7 @@
             <div class="col-md-5 m-auto">
 
                 <div class="form-inner" style="max-width:100%;">
-                    <p>Step 2 of 5</p>
+                    <p class="step">Step 2 of 5</p>
                     <div class="template-binder">
 
                     </div>
@@ -437,11 +442,11 @@
             <div class="col-md-12">
                 <div class="m-width_50">
                     <div class="form-inner" style="max-width:100%;">
-                        <p>Step 3 of 5</p>
+                        <p class="step">Step 3 of 5</p>
                         <div class="template-binder">
 
                         </div>
-                        
+
 
                     </div>
                 </div>
@@ -455,11 +460,11 @@
             <div class="col-md-5 m-auto">
 
                 <div class="form-inner" style="max-width:100%;">
-                    <p> Step 4 of 5</p>
+                    <p class="step"> Step 4 of 5</p>
                     <div class="template-binder">
 
                     </div>
-                    
+
                 </div>
 
                 <!-- Title -->
@@ -473,11 +478,11 @@
             <div class="col-md-12">
 
                 <div class="form-inner" style="max-width:100%;">
-                    <p class="final-step-p">Step 5 of 5</p>
+                    <p class="step">Step 5 of 5</p>
                     <div class="template-binder">
 
                     </div>
-                    
+
                 </div>
 
                 <!-- Title -->
@@ -490,8 +495,8 @@
 
                 <div class="form-inner" style="max-width:100%;">
 
-                    <p class="final-step-p">Congratulations, You have created a Calendar!</p>
-                    
+                    <p class="step">Congratulations, You have created a Calendar!</p>
+
 
                     <div class="f_of_f-wrap-o">
                         <div class="choose">
@@ -499,39 +504,16 @@
                         </div>
                     </div>
 
+                    
+
                 </div>
 
             </div>
 
         </div>
         <div class="m-width_50">
-            <div class="blocks">
-                <div class="block-inner">
-                    <div class="block-image">
-                        <img src="/assets/marketplace/image/hands.png">
-                    </div>
-                    <div class="block-text">
-                        <p>We support visa master paypal.... </p>
-                    </div>
-                </div>
-                <div class="block-inner">
-                    <div class="block-image">
-                        <img src="/assets/marketplace/image/Group 811540.png">
-                    </div>
-                    <div class="block-text">
-                        <p>You may edit these information and add more details in the future by going to service master. </p>
-                    </div>
-                </div>
-                <div class="block-inner">
-                    <div class="block-image">
-                        <img src="/assets/marketplace/image/sp.png">
-                    </div>
-                    <div class="block-text">
-                        <p>We support visa master paypal.... </p>
-                    </div>
-                </div>
-                @*===========================================*@
-                <div class="blocks">
+            
+            @*<div class="blocks">
                     <div class="congratulation_msg">
                         <p class="pink font-600 font-18">Congradulation, you have created a calendar!</p>
                     </div>
@@ -547,77 +529,60 @@
                             </div>
                         </div>
                     </div>
-                    <div class="block-inner">
-                        <div class="block-image">
-                            <img src="/assets/marketplace/image/hands.png">
-                        </div>
-                        <div class="block-text">
-                            <p>We support visa master paypal.... </p>
-                            <div class="block-lower">
-                                <span><button class="my-button">Go</button></span>
-                                <span class="pink">Go to schedular page</span>
-                            </div>
-                        </div>
+                    
+                </div>*@
+            @*<div class="cal-table">
+                <div class="tab-notification">Tick on the box for the staff who can offer the service</div>
+                <div class="table-content">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td>Service A name</td>
+                                <td>Service B name</td>
+                                <td>Service C name</td>
+                                <td>Service D name</td>
+                            </tr>
+                            <tr>
+                                <td>Staff A name</td>
+                                <td><img src="~/assets/marketplace/image/Isolation_Mode.png" /></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Staff B name</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Staff C name</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Staff D name</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                    <div class="table-button">
+                        <button type="button" class="back">Back</button>
+                        <button type="button" class="back">Skip</button>
+                        <button class="pink-button right">Create calendar</button>
                     </div>
-                </div>
-                <div class="cal-table">
-                    <div class="tab-notification">Tick on the box for the staff who can offer the service</div>
-                    <div class="table-content">
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td></td>
-                                    <td>Service A name</td>
-                                    <td>Service B name</td>
-                                    <td>Service C name</td>
-                                    <td>Service D name</td>
-                                </tr>
-                                <tr>
-                                    <td>Staff A name</td>
-                                    <td><img src="~/assets/marketplace/image/Isolation_Mode.png"/></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Staff B name</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Staff C name</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Staff D name</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-
-                            </tbody>
-                        </table>
-
-                        <div class="table-button">
-                            <button type="button" class="back">Back</button>
-                            <button type="button" class="back">Skip</button>
-                            <button class="pink-button right">Create calendar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+                </div>*@
         </div>
-
-        
     </div>
-   
 
 </main>
 
