@@ -1085,8 +1085,13 @@ button.blogtag_num {
     height: 200px;
 }
 /*new end*/
-
-
+section.bottom-nav .com-det {
+    box-shadow: none;
+    margin-top: 30px;
+}
+.no-mt{
+    margin-top:0px !important;
+}
 
 
 @media (min-width: 576px) {
