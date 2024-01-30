@@ -1,23 +1,24 @@
 {
+ 
   "Palette1": {
-    "--primary-color": "",
-    "--secondary-color": "",
-    "--text-color": "",
-    "--background-color": "",
-    "--special-area-background": ""
+    "--primary-color": "#E2476C",
+    "--secondary-color": "#3FBFC7",
+    "--text-color": "#222222",
+    "--background-color": "#ffffff",
+    "--special-area-background": "#ECFAFB"
   },
   "Palette2": {
-    "--primary-color": "",
-    "--secondary-color": "",
-    "--text-color": "",
-    "--background-color": "",
-    "--special-area-background": ""
+    "--primary-color": "#0095E9",
+    "--secondary-color": "#0095E9",
+    "--text-color": "#222222",
+    "--background-color": "#FFFFFF",
+    "--special-area-background": "#E3F5FF"
   },
   "Palette3": {
-    "--primary-color": "",
-    "--secondary-color": "",
-    "--text-color": "",
-    "--background-color": "",
-    "--special-area-background": ""
+    "--primary-color": "#E2476C",
+    "--secondary-color": "#F38592",
+    "--text-color": "#222222",
+    "--background-color": "#F0F0F0",
+    "--special-area-background": "#EBEBEB"
   }
 }
