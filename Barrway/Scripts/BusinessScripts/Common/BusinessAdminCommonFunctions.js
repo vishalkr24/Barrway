@@ -2,6 +2,48 @@
     window.location.href = "/Calendar/PaymentReceipt?Id=" + LedgerId;
 }
 
+function getServiceProviderData(companyCode, calendarCode) {
+    var data;
+    $.ajax({
+        url: "/Calendar/GetServiceProviderMasterList/",
+        async: false,
+        type: "POST",
+        data: {
+            data: {},
+            companyCode: companyCode,
+            calendarCode: calendarCode
+        },
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    });
+    return data;
+}
+
+function getServiceMasterData(companyCode, calendarCode) {
+    var data;
+    $.ajax({
+        url: "/Calendar/GetServiceMasterList/",
+        async: false,
+        type: "POST",
+        data: {
+            data: {},
+            companyCode: companyCode,
+            calendarCode: calendarCode
+        },
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    });
+    return data;
+}
+
 function getBusiness() {
     var data;
     $.ajax({

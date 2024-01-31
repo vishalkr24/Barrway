@@ -429,35 +429,70 @@ namespace Barrway.Controllers
                 {
                     try
                     {
-                        var dataSerialized = JsonConvert.SerializeObject(data.FirstOrDefault());
-
-                        CalendarServiceMasterModel serviceMasterModel = JsonConvert.DeserializeObject<CalendarServiceMasterModel>(dataSerialized);
                         
-                        Form_DataTable dataForm = new Form_DataTable();
-                        dataForm.action = (int)FormAction.Save;
-                        dataForm.formId = (int)FormSetting.SERVICE_MASTER;
+                        var dataSerialized = data.Where(x => x["Is_New"]?.ToString() == "true").ToList();
 
-                        dataForm.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(serviceMasterModel.ToDictionary());
-                        dataForm.formGroupKey = Guid.NewGuid().ToString();
-                        var formResult = (await formAPIRepository.GeneratedFormData(dataForm)).Data;
-
-                        if (formResult.res == 1)
+                        //List<CalendarServiceProviderMasterModel> locMasMod = JsonConvert.DeserializeObject<List<CalendarServiceProviderMasterModel>>(dataSerialized);
+                        if (dataSerialized.Count > 0)
                         {
-                            string ActivityCode = "AC" + formResult.Id.ToString().PadLeft(5, '0');
+                            List<string> requestList = new List<string>();
+                            List<string> formGroupKeyListTemp = new List<string>();
 
-                            string query = $@"UPDATE [dbo].[SERVICE_MASTER_1933]
-                                               SET [ACTIVITY_CODE] = '{ActivityCode}'
-                                             WHERE Id = '{formResult.Id.ToString()}'";
+                            dataSerialized.ForEach(assign =>
+                            {
+                                Dictionary<string, object> sd = new Dictionary<string, object>();
+                                foreach (KeyValuePair<string, string> keyValuePair in assign)
+                                {
+                                    if (keyValuePair.Key != "Is_New" && keyValuePair.Key != "Id")
+                                    {
+                                        sd.Add(keyValuePair.Key, keyValuePair.Value.ToString());
+                                    }
 
-                            int saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
+                                }
 
-                            return Json(new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() }, JsonRequestBehavior.AllowGet);
+                                requestList.Add(CustomMethods.ConvertDicToNameValuePair(sd));
+                                formGroupKeyListTemp.Add(Guid.NewGuid().ToString());
+                            });
+
+                            Form_DataTable request = new Form_DataTable();
+                            request.action = (int)FormAction.Save;
+                            request.formId = (int)FormSetting.SERVICE_MASTER;
+                            request.IsMaxOneRecordPerUser = false;
+                            request.formfieldDataListTempList = requestList.ToArray();
+                            request.formGroupKeyListTemp = formGroupKeyListTemp.ToArray();
+                            var formResult = (await formAPIRepository.BulkGeneratedFormData(request)).Data;
+
+                            string query = $@"update SERVICE_MASTER_1933 set ACTIVITY_CODE = (SELECT FORMAT(CONVERT(INT,Id), 'AC00000')) where ACTIVITY_CODE is null";
+                            var sqlResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                         }
-                        else
+
+                        if (data.Where(x => x["Is_New"]?.ToString() == "false").Count() > 0)
                         {
-                            return Json(new AddUpdateDelete() { Message = formResult.Message, Status = false }, JsonRequestBehavior.AllowGet);
-                        }
+                            string query = "";
 
+                            dataSerialized = data.Where(x => x["Is_New"]?.ToString() == "false").ToList();
+
+                            //locMasMod = JsonConvert.DeserializeObject<List<CalendarServiceProviderMasterModel>>(dataSerialized);
+
+                            dataSerialized.ForEach(x =>
+                            {
+
+                                List<string> columns = new List<string>();
+
+                                foreach (var key in x.Keys.Where(y => y != "Is_New" && y != "Id" && y != "COMPANY_CODE" && y != "CALENDAR_CODE"))
+                                {
+                                    columns.Add($@"{key?.ToString()} = '{x[key]}'");
+                                }
+
+                                string combine = string.Join(",", columns);
+
+                                query += $@"update SERVICE_MASTER_1933 set {combine} where Id = '{x["Id"]}';
+                                            ";
+                            });
+
+                            var result = await sqlFunction.ExecuteSqlCommandQuery(query);
+                        }
+                        return Json(new AddUpdateDelete() { Status = true, Message = "Success" }, JsonRequestBehavior.AllowGet);
                     }
                     catch (Exception ex)
                     {

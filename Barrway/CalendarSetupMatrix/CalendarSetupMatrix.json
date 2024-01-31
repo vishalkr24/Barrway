@@ -103,7 +103,7 @@
         "Helpers": {
           "Helper_1": {
             "Image": "",
-            "Text": "Let’s add your course/service schedule to the calendar",
+            "Text": "Let's add your course/service schedule to the calendar",
             "Button": {
               "Text": "Go",
               "Link": "/BusinessAdmin/SchedularMaster"
@@ -128,7 +128,7 @@
         "Helpers": {
           "Helper_1": {
             "Image": "",
-            "Text": "Let’s add your course/service schedule to the calendar",
+            "Text": "Let's add your course/service schedule to the calendar",
             "Button": {
               "Text": "Go",
               "Link": "/BusinessAdmin/SchedularMaster"
@@ -295,7 +295,7 @@
         "Helpers": {
           "Helper_1": {
             "Image": "",
-            "Text": "Let’s add your course/service schedule to the calendar",
+            "Text": "Let's add your course/service schedule to the calendar",
             "Button": {
               "Text": "Go",
               "Link": "/BusinessAdmin/SchedularMaster"
@@ -320,7 +320,7 @@
         "Helpers": {
           "Helper_1": {
             "Image": "",
-            "Text": "Let’s add your course/service schedule to the calendar",
+            "Text": "Let's add your course/service schedule to the calendar",
             "Button": {
               "Text": "Go",
               "Link": "/BusinessAdmin/SchedularMaster"
@@ -344,7 +344,7 @@
         "Helpers": {
           "Helper_1": {
             "Image": "",
-            "Text": "Let’s add your course/service schedule to the calendar",
+            "Text": "Let's add your course/service schedule to the calendar",
             "Button": {
               "Text": "Go",
               "Link": "/BusinessAdmin/SchedularMaster"
@@ -367,7 +367,6 @@
       "2_4": {
         "Is_Step": false
       }
-
     },
     "Step7": {
       "2_3": {
@@ -376,7 +375,7 @@
         "Helpers": {
           "Helper_1": {
             "Image": "",
-            "Text": "Let’s add your course/service schedule to the calendar",
+            "Text": "Let's add your course/service schedule to the calendar",
             "Button": {
               "Text": "Go",
               "Link": "/BusinessAdmin/SchedularMaster"

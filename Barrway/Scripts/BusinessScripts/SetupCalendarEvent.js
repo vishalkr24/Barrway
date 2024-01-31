@@ -111,7 +111,7 @@ function goToStep1() {
 }
 
 function configureStep(step) {
-    debugger;
+    
     let configStep = ConfigData["Type" + createdCalendarType]["Step" + step];
 
     // steps and common and special based on JSON architecture type
@@ -167,6 +167,8 @@ function configureStep(step) {
                 }
                 $("#step-" + step + " .choose").append(binderString);
             } else {
+
+                // bind entry form or final step
                 let masterName = "";
                 let addFuncName = "";
 
@@ -184,6 +186,9 @@ function configureStep(step) {
                 }
 
                 if (configStep.Is_Final_Step) {
+                    debugger;
+
+                    $("#step-" + step + " .step-counter").text(configStep.Success_Message);
 
                     $("#step-" + step + " .template-binder").append(`<div class="hed-til">
                         <p class="step"></p>
@@ -193,7 +198,6 @@ function configureStep(step) {
                         <div class="blocks">
 
                         </div>
-                        <button type="button" onclick="backToStep(${(step - 1)})" class="back">Back</button>
                     </div>
                     `);
 
@@ -216,7 +220,64 @@ function configureStep(step) {
 
                     $("#step-" + step + " .blocks").append(binderString);
                 } else {
-                    $("#step-" + step + " .template-binder").append(`<div class="hed-til">
+
+                    if (step == 6 && CalendarData.Data.CALENDAR_TYPE == 3) {
+
+                        // bind mapper form
+
+                        
+
+                        $("#step-6 .step-counter").text("Step 6 of 6");
+
+                        $("#step-6 .template-binder").append(`<div class="hed-til">
+                            <p class="heading-title step">Staff & Service Mapping</p>
+                        </div>
+                        <div class="cal-table">
+                            <div class="tab-notification">Tick on the box for the staff who can offer the service</div>
+                            <div class="table-content">
+                                <table id="mapper-table">
+                                    <tbody>
+                                    </tbody>
+                                </table>
+
+                                <div class="table-button">
+                                    <button type="button" class="back" onclick="backToStep(5)">Back</button>
+                                    <button type="button" class="back" onclick="skipToStep(7)">Skip</button>
+                                    <button class="pink-button right">Create calendar</button>
+                                </div>
+                            </div>
+                        </div>`);
+                        debugger;
+                        var serviceMasterData = getServiceMasterData(createdCompanyCode, createdCalendarCode).data;
+                        var serviceProviderMasterData = getServiceProviderData(createdCompanyCode, createdCalendarCode).data;
+                        if (serviceProviderMasterData != null && serviceProviderMasterData != null) {
+                            let binderString = `<tr>
+                                            <td></td>`;
+
+                            for (var i = 0; i < serviceMasterData.length; i++) {
+                                binderString += "<td>" + serviceMasterData[i].ACTIVITY_NAME + "</td>"
+                            }
+
+                            binderString += "</tr>";
+
+                            for (var i = 0; i < serviceProviderMasterData.length; i++) {
+                                binderString += "<tr><td>" + serviceProviderMasterData[i].FIRST_NAME + " " + serviceProviderMasterData[i].LAST_NAME + "</td>"
+                                for (var j = 0; j < serviceMasterData.length; j++) {
+                                    binderString += `<td><img src="../assets/marketplace/image/Isolation_Mode.png" /><input type="checkbox" class="form-control" data-service-id="${serviceMasterData[j].Id}" data-provider-id="${serviceProviderMasterData[i].Id}" name="staff-service-mapper-input"></td>`
+                                }
+                                binderString += "</tr>";
+                            }
+
+                            $("#mapper-table tbody").empty();
+                            $("#mapper-table tbody").append(binderString);
+
+                        } else {
+                            $(".tab-notification").text("Please create staff and services in previous steps!")
+                        }
+                        
+                    } else {
+                        // bind entry form
+                        $("#step-" + step + " .template-binder").append(`<div class="hed-til">
                             <p class="heading-title step"></p>
                         </div>
                         <div>
@@ -250,6 +311,9 @@ function configureStep(step) {
                         <div class="blocks">
 
                         </div>`);
+                    }
+
+                    
                 }
             }
         }
@@ -262,6 +326,7 @@ function configureStep(step) {
             $("#step-" + step + " .skip-button").hide();
         }
 
+        // helper text and image after form bindings
         if (configStep.Helper_After_Form != null && configStep.Helper_After_Form != undefined) {
 
             let counter = 1;
@@ -313,7 +378,7 @@ $(document).on("click", "input[name=servicePaid]", function () {
 })
 
 function validateSchedularFormData(data) {
-    debugger;
+    
     var finalCheck = true;
 
     if ($("#serviceName").val() == "" || $("#serviceName").val() == null) {
@@ -396,7 +461,7 @@ function validateSchedularFormData(data) {
 function BindStep5(type) {
     $("#step-4").hide();
     $("#step-5").fadeOut();
-    debugger;
+    
     configureStep(5);
 
     $("#ddlMasterCalendar").val(createdCalendarCode);
@@ -419,7 +484,7 @@ function BindStep5(type) {
             }
         },
         success: function (response) {
-            debugger;
+            
             if (response.length > 0) {
 
                 var data = JSON.parse(response[0].fields);
@@ -841,7 +906,7 @@ function addMoreProvider(dataItem, isRemovable, isNew) {
 }
 
 function addMoreLocation(dataItem, isRemovable, isNew) {
-    debugger;
+    
     let dataModel = {
         Id: (dataItem == null) ? parseInt(getMaxId(locationList)) + 1 : dataItem.Id,
         CALENDAR_CODE: createdCalendarCode,
@@ -876,7 +941,7 @@ function addMoreLocation(dataItem, isRemovable, isNew) {
 }
 
 function addMoreService(dataItem, isRemovable, isNew) {
-    debugger;
+    
     let dataModel = {
         Id: (dataItem == null) ? parseInt(getMaxId(serviceList)) + 1 : dataItem.Id,
         CALENDAR_CODE: createdCalendarCode,
@@ -933,7 +998,7 @@ function generateInputBox(modelItem, id, additionalClass) {
         case "radio-group":
             if (modelItem.values != null) {
                 value += `<label for="${modelItem.name}${id}">${modelItem.label} *</label> <br />`;
-                debugger;
+                
                 modelItem.values.forEach(x => {
                     value += `
                             <div style="float:left;">
@@ -1056,7 +1121,7 @@ function createServiceMaster() {
             url: "/Calendar/AddMasterData",
             method: "POST",
             data: {
-                data: locationList,
+                data: serviceList,
                 ModelId: 3
             },
             success: function (response) {
