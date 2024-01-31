@@ -35268,7 +35268,7 @@ span.img-container {
 .blocks {
     width: 100%;
     float: left;
-    margin-top:20px;
+    margin-top: 20px;
 }
 
     .blocks .block-inner {
@@ -35281,37 +35281,45 @@ span.img-container {
         border-radius: 4px;
         margin-bottom: 15px;
     }
-    .blocks .block-inner .block-image img {
-            width:40px;
-            margin-right:15px;
-    }
 
-    .blocks .block-inner .block-text p {
-        margin-bottom:0px;
-        color:#000;
-    }
-    button.my-button {
-        background-color: #72328A;
-        color: #fff;
-        border-radius: 40px;
-        padding: 8px 34px;
-        box-shadow: none;
-        border: none;
-        margin-top: 5px;
-    }
-    span.pink {
-        color: #E2476C;
-        padding-left: 10px;
-    }
+        .blocks .block-inner .block-image img {
+            width: 40px;
+            margin-right: 15px;
+        }
+
+        .blocks .block-inner .block-text p {
+            margin-bottom: 0px;
+            color: #000;
+            font-size: 15px;
+        }
+
+button.my-button {
+    background-color: #72328A;
+    color: #fff;
+    border-radius: 40px;
+    padding: 8px 34px;
+    box-shadow: none;
+    border: none;
+    margin-top: 5px;
+}
+
+span.pink {
+    color: #E2476C;
+    padding-left: 10px;
+}
+
 .pink {
     color: #E2476C;
 }
-.font-600{  
+
+.font-600 {
     font-weight: 600;
 }
+
 .font-18 {
     font-size: 18px;
 }
+
 .cal-table {
     width: 100%;
     float: left;
@@ -35325,6 +35333,7 @@ span.img-container {
         font-size: 16px;
         color: #72328a;
     }
+
 .table-content {
     width: 100%;
     float: left;
@@ -35339,26 +35348,32 @@ span.img-container {
 
         .table-content table tr td {
             border: 1px solid #ddd;
-            padding: 10px 0px;
+            padding: 10px 10px;
+            min-width: 100px;
         }
+
             .table-content table tr td img {
                 width: 15px;
             }
+
 .table-button {
     width: 100%;
-     float: left; margin:10px 0px;
+    float: left;
+    margin: 10px 0px;
 }
-.table-button .back {
-    background-color: #EBEBEB;
-    color: #777777;
-    padding: 10px 34px;
-    border: 1px solid #777777;
-    border-radius: 50px;
-    font-size:16px;
-    font-weight:600;
-}
+
+    .table-button .back {
+        background-color: #EBEBEB;
+        color: #777777;
+        padding: 10px 34px;
+        border: 1px solid #777777;
+        border-radius: 50px;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
 .pink-button {
-    color:#fff;
+    color: #fff;
     background-color: #E2476C;
     padding: 10px 34px;
     border: none;
@@ -35366,8 +35381,9 @@ span.img-container {
     font-size: 16px;
     font-weight: 600;
 }
-.right{
-    float:right;
+
+.right {
+    float: right;
 }
 
 @media screen and (min-width:1681px) and (max-width:2560px) {
