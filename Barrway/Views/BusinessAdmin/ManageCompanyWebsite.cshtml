@@ -5,6 +5,7 @@
     ViewBag.Title = "Manage Company Website";
     Layout = "~/Views/Shared/_BusinessAdminLayout.cshtml";
 }
+<input type="text" value="@ViewBag.PageId" id="pageCheckId" style="display:none;" readonly />
 
 <style>
     .form-navigation .nav-link {
@@ -24,64 +25,99 @@
         box-shadow: none;
     }
 </style>
-
 <div class="content container-fluid">
-
     <div class="row justify-content-lg-center mt-5">
         <div class="bredcrump">
             <span><a class="lbl-company-name" href="javascript:void(0)">Company name</a> / <a href="javascript:void(0)">@Resource.Manage</a> </span>
         </div>
     </div>
+</div>
 
-    <div class="js-nav-scroller hs-nav-scroller-horizontal mb-5 form-navigation" style="position:sticky; top:0px; background:white;">
-        <span class="hs-nav-scroller-arrow-prev" style="display: none;">
-            <a class="hs-nav-scroller-arrow-link" href="javascript:;">
-                <i class="bi-chevron-left"></i>
-            </a>
-        </span>
+<style>
+    .btn-primary {
+        background-color: #72328A;
+        color: #fff;
+        border-radius: 40px;
+        padding: 8px 20px;
+        box-shadow: none;
+        margin: auto 4px;
+        border: none;
+    }
 
-        <span class="hs-nav-scroller-arrow-next" style="display: none;">
-            <a class="hs-nav-scroller-arrow-link" href="javascript:;">
-                <i class="bi-chevron-right"></i>
-            </a>
-        </span>
+    .btn-danger {
+        background-color: #E2476C;
+        color: #fff;
+        margin: auto 4px;
+        border-radius: 40px;
+        padding: 8px 20px;
+        box-shadow: none;
+        border: none;
+    }
+</style>
 
-        <ul class="nav nav-tabs align-items-center">
-            <li id="btn1" class="nav-item" onclick="renderPage('1')">
-                <a class="nav-link active" href="javascript:void(0)">@Resource.Basic_Information</a>
-            </li>
-            <li id="btn2" class="nav-item" onclick="renderPage('2')">
-                <a class="nav-link" href="javascript:void(0)">@Resource.Service</a>
-            </li>
-            <li id="btn3" class="nav-item" onclick="renderPage('3')">
-                <a class="nav-link" href="javascript:void(0)">@Resource.Calendar_Package</a>
-            </li>
-            <li id="btn4" class="nav-item" onclick="renderPage('4')">
-                <a class="nav-link" href="javascript:void(0)">@Resource.Photo_album</a>
-            </li>
-        </ul>
+<div class="container">
+    <div id="div5" style="display:none;">
+        @RenderPage("~/Views/BusinessAdmin/_CompanyPaletteSelection.cshtml", Model)
     </div>
-    <input type="text" value="@ViewBag.PageId" id="pageCheckId" style="display:none;" readonly />
-    <div class="form-inner" style="max-width:unset;">
-
-        <div id="div1">
-            @RenderPage("~/Views/BusinessAdmin/_EditCompanyInformation.cshtml", Model)
+    <section id="main-forms">
+        <div class="template-div">
+            <b>Select a template for your website</b>
+            <button class="btn btn-primary" style="margin-left:2em;" onclick="renderPage(5)">See Templates</button>
+            <button class="btn btn-danger" onclick="submitTemplate()">Publish</button>
         </div>
 
-        <div id="div2" style="display:none;">
-            @RenderPage("~/Views/BusinessAdmin/_EditCompanyService.cshtml", Model)
+        <div class="js-nav-scroller hs-nav-scroller-horizontal mb-5 form-navigation" style="position:sticky; top:0px; background:white;">
+            <span class="hs-nav-scroller-arrow-prev" style="display: none;">
+                <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                    <i class="bi-chevron-left"></i>
+                </a>
+            </span>
+
+            <span class="hs-nav-scroller-arrow-next" style="display: none;">
+                <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                    <i class="bi-chevron-right"></i>
+                </a>
+            </span>
+
+            <ul class="nav nav-tabs align-items-center">
+                <li id="btn1" class="nav-item" onclick="renderPage('1')">
+                    <a class="nav-link active" href="javascript:void(0)">@Resource.Basic_Information</a>
+                </li>
+                <li id="btn2" class="nav-item" onclick="renderPage('2')">
+                    <a class="nav-link" href="javascript:void(0)">@Resource.Service</a>
+                </li>
+                <li id="btn3" class="nav-item" onclick="renderPage('3')">
+                    <a class="nav-link" href="javascript:void(0)">@Resource.Calendar_Package</a>
+                </li>
+                <li id="btn4" class="nav-item" onclick="renderPage('4')">
+                    <a class="nav-link" href="javascript:void(0)">@Resource.Photo_album</a>
+                </li>
+            </ul>
         </div>
+               
+        <div class="form-inner" id="main-forms" style="max-width:unset;">
 
-        <div id="div3" style="display:none;">
+            <div id="div1" style="display:none;">
+                @RenderPage("~/Views/BusinessAdmin/_EditCompanyInformation.cshtml", Model)
+            </div>
 
+            <div id="div2" style="display:none;">
+                @RenderPage("~/Views/BusinessAdmin/_EditCompanyService.cshtml", Model)
+            </div>
+
+            <div id="div3" style="display:none;">
+
+            </div>
+
+            <div id="div4" style="display:none;">
+                @RenderPage("~/Views/BusinessAdmin/_CompanyPhotoAlbum.cshtml", Model)
+            </div>
+
+
+            <br /><br />
         </div>
-
-        <div id="div4" style="display:none;">
-            @RenderPage("~/Views/BusinessAdmin/_CompanyPhotoAlbum.cshtml", Model)
-        </div>
-        <br /><br />
-
-    </div>
+    </section>
+    
     <div class="modal" id="uploadPhotoModal" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

@@ -69,7 +69,113 @@
     setCompanyCategory();
 
     SetCompanyDetails(companyId);
+
+    SetColorPalettes();
 });
+
+function submitTemplate() {
+    debugger;
+    let PaletteId = String($("input[name=color-palette]:checked").val());
+    let TemplateId = String($("input[name=site-template]:checked").val());
+    TemplateId = TemplateId.substring(1, TemplateId.length);
+    PaletteId = PaletteId.substring(1, PaletteId.length);
+    if (PaletteId != null && PaletteId != "" && TemplateId != null && TemplateId != "") {
+        $.ajax({
+            url: "/BusinessAdmin/UpdateTemplatePalette",
+            method: "POST",
+            data: {
+                model: {
+                    Id: localStorage.getItem("COMPANY_ID"),
+                    TEMPLATE_ID: TemplateId,
+                    PALETTE_ID: PaletteId
+                }
+            },
+            success: function (response) {
+                if (response != null) {
+                    swal({
+                        icon: (response.Status) ? "success" : "error",
+                        title: (response.Status) ? "Success" : "Error",
+                        text: (response.Status) ? "Template Updated Successfully" : "Something went wong",
+                    }).then(function (check) {
+                        if (response.Status == true) {
+                            showComapanyWebsiteDetails(1);
+                        }
+                    });
+                }
+                
+            }
+        })
+    } else {
+        alert("Please choose and template and color palette.");
+    }
+}
+
+$(document).on("change", "input[name=color-palette]", function () {
+    
+    var colorId = $(this).attr("id");
+    $("#color-palettes .palette").removeClass("active")
+    $("#color-palettes input[name=color-palette]").prop("checked", false);
+
+    $("label[data-color-id = " + colorId + "] .palette").addClass("active");
+    $("label[data-color-id = " + colorId + "] input[name=color-palette]").prop("checked", true);
+});
+
+$(document).on("change", "input[name=site-template]", function () {
+    
+    var colorId = $(this).attr("id");
+    $("#site-templates .palette").removeClass("active")
+    $("#site-templates input[name=site-template]").prop("checked", false);
+
+    $("label[data-template-id = " + colorId + "] .palette").addClass("active");
+    $("label[data-template-id = " + colorId + "] input[name=site-template]").prop("checked", true);
+});
+
+function SetColorPalettes() {
+    var data = getCompanyWebsitePalette().Data;
+
+    $("#color-palettes").empty();
+
+    if (data != null && data != undefined) {
+        let counter = 1;
+        data.forEach(x => {
+            if ($("#hiddenInputPaletteId").val() == null || $("#hiddenInputPaletteId").val() == "") {
+                $("#color-palettes").append(`<label for="c${x.Id}" data-color-id="c${x.Id}">
+                                                <input type="radio" name="color-palette" ${(counter == 1) ? "checked" : ""} style="display:none;" id="c${x.Id}" value="c${x.Id}" />
+                                                <div class="palette p-6p ${(counter == 1) ? "active" : ""}">
+                                                    <div class="palette-item" style="background: ${x.PRIMARY_COLOR}"></div>
+                                                    <div class="palette-item" style="background: ${x.SECONDARY_COLOR}"></div>
+                                                    <div class="palette-item" style="background: ${x.TEXT_COLOR}"></div>
+                                                    <div class="palette-item" style="background: ${x.BACKGROUND_COLOR}"></div>
+                                                    <div class="palette-item" style="background: ${x.SPECIAL_AREA_COLOR}"></div>
+                                                </div>
+                                            </label>`);
+            } else {
+                $("#color-palettes").append(`<label for="c${x.Id}" data-color-id="c${x.Id}">
+                                                <input type="radio" name="color-palette" ${($("#hiddenInputPaletteId").val() == x.Id) ? "checked" : ""} style="display:none;" id="c${x.Id}" value="c${x.Id}" />
+                                                <div class="palette p-6p ${($("#hiddenInputPaletteId").val() == x.Id) ? "active" : ""}">
+                                                    <div class="palette-item" style="background: ${x.PRIMARY_COLOR}"></div>
+                                                    <div class="palette-item" style="background: ${x.SECONDARY_COLOR}"></div>
+                                                    <div class="palette-item" style="background: ${x.TEXT_COLOR}"></div>
+                                                    <div class="palette-item" style="background: ${x.BACKGROUND_COLOR}"></div>
+                                                    <div class="palette-item" style="background: ${x.SPECIAL_AREA_COLOR}"></div>
+                                                </div>
+                                            </label>`);
+            }
+           
+            counter++;
+        })
+    }
+
+    var colorId = $("#hiddenInputTemplateId").val();
+    if (colorId != null && colorId != "") {
+        $("#site-templates .palette").removeClass("active")
+        $("#site-templates input[name=site-template]").prop("checked", false);
+
+        $("label[data-template-id=t" + colorId + "] .palette").addClass("active");
+        $("label[data-template-id=t" + colorId + "] input[name=site-template]").prop("checked", true);
+    }
+    
+}
 
 $(document).on("change", "#COUNTRY_ID", function () {
     bindCityData($("#COUNTRY_ID option:selected").val());
@@ -85,7 +191,7 @@ $(document).on("change", "#COMPANY_CATEGORY_ID", function () {
 
 function setCompanyCategory() {
     var response = getCompanyCategory();
-    
+
     $("#COMPANY_CATEGORY_ID").empty();
 
     $("#COMPANY_CATEGORY_ID").append(`<option disabled value="-1">Select Company Category</option>`);
@@ -208,6 +314,10 @@ function renderPage(pageName) {
             $("#btn4 .nav-link").addClass('active');
 
             break;
+        case 5:
+            $("#main-forms").hide();
+            $("#div5").show();
+            break;
         default:
             $("#div1").show();
             $("#div2").hide();
@@ -231,7 +341,7 @@ function SetCompanyDetails(companyId) {
 
     $("#COMPANY_NAME_ENGLISH").val(data.Data.COMPANY_NAME_ENGLISH);
     $("#COMPANY_NAME_CHINESE").val(data.Data.COMPANY_NAME_CHINESE);
-    
+
     $("#COMPANY_CATEGORY_ID").val(data.Data.COMPANY_CATEGORY_ID);
     $("#COMPANY_CATEGORY_ID option[value=" + data.Data.COMPANY_CATEGORY_ID + "]").attr("selected", true);
     BindCompanySubCategory(data.Data.COMPANY_CATEGORY_ID);
@@ -269,7 +379,7 @@ function setCompanyPhotoAlbum() {
                                         <span class="delete-icon" onclick="deletePhotoAlbum(${data.Data[i].Id})">&times;</span>
                                     </div>`)
         }
-        
+
     }
 
 }
@@ -325,7 +435,7 @@ function savePhotoAlbum() {
                 return;
             }
         }
-        
+
 
     }
 

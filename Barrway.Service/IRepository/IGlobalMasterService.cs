@@ -14,6 +14,7 @@ namespace Barrway.Service.IRepository
     public interface IGlobalMasterService
     {
         Task<AddUpdateDelete> GetCompanyCategoryMaster();
+        Task<AddUpdateDelete> getCompanyWebsitePalette();
         Task<AddUpdateDelete> GetCompanySubCategoryMaster();
         Task<AddUpdateDelete> GetFilterCompanyData(string SubCategoryId, string DistrictId);
         Task<AddUpdateDelete> GetCompanySubCategoryMaster(string CategoryId);

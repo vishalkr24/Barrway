@@ -4,8 +4,8 @@
     ViewBag.COMPANY_LOGO_PATH = Model.COMPANY_LOGO_PATH.Replace("~", "..");
     ViewBag.COMPANY_ID = Model.COMPANY_CODE.ToString();
     ViewBag.CALENDAR_ID = Model.DEFAULT_CALENDAR_ID;
-    int TemplateId = 1;
-    int PaletteId = 1;
+    int TemplateId = (string.IsNullOrEmpty(Model.TEMPLATE_ID)) ? 1 : Convert.ToInt32(Model.TEMPLATE_ID);
+    int PaletteId = (string.IsNullOrEmpty(Model.PALETTE_ID)) ? 1 : Convert.ToInt32(Model.PALETTE_ID);
 }
 
 @section styles{
