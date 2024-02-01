@@ -225,8 +225,6 @@ function configureStep(step) {
 
                         // bind mapper form
 
-                        
-
                         $("#step-6 .step-counter").text("Step 6 of 6");
 
                         $("#step-6 .template-binder").append(`<div class="hed-til">

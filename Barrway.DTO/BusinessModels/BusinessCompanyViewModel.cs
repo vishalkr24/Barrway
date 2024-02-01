@@ -67,6 +67,8 @@ namespace Barrway.DTO.BusinessModels
         [ValidDropdownValue(ErrorMessage = "Please select your district")]
         public string DISTRICT_ID { get; set; } = String.Empty;
 
+        public string TEMPLATE_ID { get; set; }
+        public string PALETTE_ID { get; set; }
 
         public CompanyPhotoAlbumViewModel photoAlbumForm { get; set; }
 

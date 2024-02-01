@@ -328,7 +328,8 @@ namespace Barrway.Controllers
                             COMPANY_CODE = company.Data["COMPANY_CODE"].ToString(),
                             COMPANY_DESCRIPTION = company.Data["COMPANY_DESCRIPTION"].ToString(),
                             COMPANY_LOGO_NAME = company.Data["COMPANY_LOGO_NAME"].ToString(),
-
+                            TEMPLATE_ID = company.Data["TEMPLATE_ID"].ToString(),
+                            PALETTE_ID = company.Data["PALETTE_ID"].ToString(),
                             COMPANY_NAME_CHINESE = company.Data["COMPANY_NAME_CHINESE"].ToString(),
                             COMPANY_NAME_ENGLISH = company.Data["COMPANY_NAME_ENGLISH"].ToString(),
                             COMPANY_PHONE = company.Data["COMPANY_PHONE"].ToString(),
@@ -611,8 +612,27 @@ namespace Barrway.Controllers
             {
                 return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
             }
+        }
 
+        public async Task<ActionResult> UpdateTemplatePalette(BusinessCompanyModel model)
+        {
+            try
+            {
+                var data = await businessUserService.UpdateTemplatePalette(model);
 
+                if (data.Status)
+                {
+                    return Json(new AddUpdateDelete() { Status = true, Data = data.Data, Message = AppMessage.Success }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new AddUpdateDelete() { Status = false, Message = "Something went wong" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         public async Task<ActionResult> GetAllCompanies()

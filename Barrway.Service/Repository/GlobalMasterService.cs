@@ -47,6 +47,22 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> getCompanyWebsitePalette()
+        {
+            string query = "select * from WEBSITE_PALETTE_MASTER_1972";
+
+            List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (result.Count > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result.ToList() };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
         public async Task<AddUpdateDelete> GetCompanySubCategoryMaster()
         {
             string query = "SELECT [Id]        ,[COMPANY_SUB_CATEGORY_NAME]      ,[created_at]      ,[updated_at]      ,[created_by]      ,[updated_by]      ,[COMPANY_CATEGORY_ID]  FROM [dbo].[COMPANY_SUB_CATEGORY_MASTER_1921]";

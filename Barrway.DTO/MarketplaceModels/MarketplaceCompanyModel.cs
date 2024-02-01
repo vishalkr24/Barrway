@@ -12,7 +12,9 @@ namespace Barrway.DTO.MarketplaceModels
     public class MarketplaceCompanyModel
     {
         public string Id { get; set; }
-        
+        public string TEMPLATE_ID { get; set; }
+        public string PALETTE_ID { get; set; }
+
         public string COMPANY_CODE { get; set; } = String.Empty;
         public string COMPANY_LOGO_NAME { get; set; } = String.Empty;
         public string COMPANY_LOGO_PATH { get; set; } = String.Empty;

@@ -388,7 +388,7 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetSingleCompanyById(string Id)
         {
-            string query = $@"SELECT company.[Id], city.CITY_NAME as 'COMPANY_CITY_NAME', district.DISTRICT_NAME as 'COMPANY_DISTRICT_NAME', country.COUNTRY_NAME as 'COMPANY_COUNTRY_NAME', category.COMPANY_CATEGORY_NAME, subCategory.COMPANY_SUB_CATEGORY_NAME      ,company.[created_at]      ,company.[updated_at]      ,company.[created_by]      ,company.[updated_by]     ,[BUSINESS_ACCOUNT_ID]      ,[COMPANY_CODE],     [COMPANY_EMAIL]      ,[COMPANY_NAME_ENGLISH]      ,[COMPANY_NAME_CHINESE]      ,[COMPANY_LOGO_NAME]      ,[COMPANY_LOGO_PATH]      ,[COMPANY_BANNER_NAME]      ,[COMPANY_BANNER_PATH]      ,[COMPANY_PHONE]      ,[COMPANY_ADDRESS]      ,[FACEBOOK_URL]      ,[INSTAGRAM_URL]      ,[WECHAT_URL]      ,[TWITTER_URL]      ,[PAGE_URL]      ,[COMPANY_DESCRIPTION]      ,[COMPANY_SERVICE]      ,[TAGS]      ,[IS_SEARCHABLE_IN_MARKETPLACE],     [COMPANY_EMAIL]      ,company.[COMPANY_CATEGORY_ID]      ,[COMPANY_SUB_CATEGORY_ID]      ,company.[COUNTRY_ID]      ,company.[CITY_ID]      ,[DISTRICT_ID]      ,[TOTAL_WEBSITE_VISITS]      ,[IS_DEFAULT],[IS_ACTIVE]  
+            string query = $@"SELECT company.[Id], company.TEMPLATE_ID, company.PALETTE_ID, city.CITY_NAME as 'COMPANY_CITY_NAME', district.DISTRICT_NAME as 'COMPANY_DISTRICT_NAME', country.COUNTRY_NAME as 'COMPANY_COUNTRY_NAME', category.COMPANY_CATEGORY_NAME, subCategory.COMPANY_SUB_CATEGORY_NAME      ,company.[created_at]      ,company.[updated_at]      ,company.[created_by]      ,company.[updated_by]     ,[BUSINESS_ACCOUNT_ID]      ,[COMPANY_CODE],     [COMPANY_EMAIL]      ,[COMPANY_NAME_ENGLISH]      ,[COMPANY_NAME_CHINESE]      ,[COMPANY_LOGO_NAME]      ,[COMPANY_LOGO_PATH]      ,[COMPANY_BANNER_NAME]      ,[COMPANY_BANNER_PATH]      ,[COMPANY_PHONE]      ,[COMPANY_ADDRESS]      ,[FACEBOOK_URL]      ,[INSTAGRAM_URL]      ,[WECHAT_URL]      ,[TWITTER_URL]      ,[PAGE_URL]      ,[COMPANY_DESCRIPTION]      ,[COMPANY_SERVICE]      ,[TAGS]      ,[IS_SEARCHABLE_IN_MARKETPLACE],     [COMPANY_EMAIL]      ,company.[COMPANY_CATEGORY_ID]      ,[COMPANY_SUB_CATEGORY_ID]      ,company.[COUNTRY_ID]      ,company.[CITY_ID]      ,[DISTRICT_ID]      ,[TOTAL_WEBSITE_VISITS]      ,[IS_DEFAULT],[IS_ACTIVE]  
                                 FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company
                                 join DISTRICT_MASTER_1928 district on district.Id = company.DISTRICT_ID
                                 join CITY_MASTER_1927 city on city.Id = company.CITY_ID
@@ -1251,7 +1251,7 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetSingleCompanyByCompanyCode(string CompanyCode)
         {
-            string query = $@"SELECT company.[Id], company.[IS_TEMPLATE], category.COMPANY_CATEGORY_NAME as 'COMPANY_CATEGORY_NAME', subCategory.COMPANY_SUB_CATEGORY_NAME as 'COMPANY_SUB_CATEGORY_NAME', country.COUNTRY_NAME as 'COMPANY_COUNTRY_NAME', city.CITY_NAME as 'COMPANY_CITY_NAME', district.DISTRICT_NAME as 'COMPANY_DISTRICT_NAME'     ,company.[created_at]      ,company.[updated_at]      ,company.[created_by]      ,company.[updated_by]      ,[BUSINESS_ACCOUNT_ID]      ,[COMPANY_CODE]      ,[COMPANY_NAME_ENGLISH]      ,[COMPANY_NAME_CHINESE]      ,[COMPANY_LOGO_NAME]      ,[COMPANY_LOGO_PATH]      ,[COMPANY_BANNER_NAME]      ,[COMPANY_BANNER_PATH]      ,[COMPANY_PHONE]      ,[COMPANY_ADDRESS]      ,[FACEBOOK_URL]      ,[INSTAGRAM_URL]      ,[WECHAT_URL]      ,[TWITTER_URL]      ,[PAGE_URL]      ,[COMPANY_DESCRIPTION]      ,[COMPANY_SERVICE]      ,[TAGS]      ,[IS_SEARCHABLE_IN_MARKETPLACE]      ,company.[COMPANY_CATEGORY_ID]      ,[COMPANY_SUB_CATEGORY_ID],     [COMPANY_EMAIL]      ,company.[COUNTRY_ID]      ,company.[CITY_ID]      ,[DISTRICT_ID]      ,[TOTAL_WEBSITE_VISITS]      ,[IS_DEFAULT],[IS_ACTIVE]  
+            string query = $@"SELECT company.[Id], company.[IS_TEMPLATE], company.TEMPLATE_ID, company.PALETTE_ID, category.COMPANY_CATEGORY_NAME as 'COMPANY_CATEGORY_NAME', subCategory.COMPANY_SUB_CATEGORY_NAME as 'COMPANY_SUB_CATEGORY_NAME', country.COUNTRY_NAME as 'COMPANY_COUNTRY_NAME', city.CITY_NAME as 'COMPANY_CITY_NAME', district.DISTRICT_NAME as 'COMPANY_DISTRICT_NAME'     ,company.[created_at]      ,company.[updated_at]      ,company.[created_by]      ,company.[updated_by]      ,[BUSINESS_ACCOUNT_ID]      ,[COMPANY_CODE]      ,[COMPANY_NAME_ENGLISH]      ,[COMPANY_NAME_CHINESE]      ,[COMPANY_LOGO_NAME]      ,[COMPANY_LOGO_PATH]      ,[COMPANY_BANNER_NAME]      ,[COMPANY_BANNER_PATH]      ,[COMPANY_PHONE]      ,[COMPANY_ADDRESS]      ,[FACEBOOK_URL]      ,[INSTAGRAM_URL]      ,[WECHAT_URL]      ,[TWITTER_URL]      ,[PAGE_URL]      ,[COMPANY_DESCRIPTION]      ,[COMPANY_SERVICE]      ,[TAGS]      ,[IS_SEARCHABLE_IN_MARKETPLACE]      ,company.[COMPANY_CATEGORY_ID]      ,[COMPANY_SUB_CATEGORY_ID],     [COMPANY_EMAIL]      ,company.[COUNTRY_ID]      ,company.[CITY_ID]      ,[DISTRICT_ID]      ,[TOTAL_WEBSITE_VISITS]      ,[IS_DEFAULT],[IS_ACTIVE]  
                                 FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company
                                 join COMPANY_CATEGORY_MASTER_1920 category on category.Id = company.COMPANY_CATEGORY_ID
                                 join COMPANY_SUB_CATEGORY_MASTER_1921 subCategory on subCategory.Id = company.COMPANY_SUB_CATEGORY_ID
@@ -1636,6 +1636,30 @@ namespace Barrway.Service.Repository
             {
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
             }
+        }
+
+        public async Task<AddUpdateDelete> UpdateTemplatePalette(BusinessCompanyModel model)
+        {
+            try
+            {
+                string query = $@"UPDATE BUSINESS_COMPANY_MASTER_1924 SET TEMPLATE_ID = '{model.TEMPLATE_ID}',PALETTE_ID = '{model.PALETTE_ID}' WHERE Id = '{model.Id}'";
+
+                int result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                if (result > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+
         }
 
         public async Task<AddUpdateDelete> GetCompanyActiveSubscriptionDetails(string Id, bool isCompanyCode = false)

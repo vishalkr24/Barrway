@@ -137,11 +137,11 @@
 
                                     @if (User.Identity.IsAuthenticated)
                                     {
-                                        if (UserIdentity.Role == "PUBLIC_USER")
+                                        if (UserIdentity.Role == "GENERAL_USER")
                                         {
                                             <ul class="nav navbar-nav navbar-right">
                                                 <li class="rl">
-                                                    <a href="/UserAdmin">@Resource.Account</a>
+                                                    <a href="/UserAdmin#/userDashboard">@Resource.Account</a>
                                                 </li>
 
                                             </ul>

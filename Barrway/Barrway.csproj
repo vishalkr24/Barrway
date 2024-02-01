@@ -513,6 +513,9 @@
     <Content Include="assets\img\tagre.png" />
     <Content Include="assets\img\three.png" />
     <Content Include="assets\img\two.png" />
+    <Content Include="assets\img\WebsiteTemplates\Template1.png" />
+    <Content Include="assets\img\WebsiteTemplates\Template2.png" />
+    <Content Include="assets\img\WebsiteTemplates\Template3.png" />
     <Content Include="assets\img\whatsapp.png" />
     <Content Include="assets\js\demo.js" />
     <Content Include="assets\js\hs.theme-appearance-charts.js" />
@@ -3267,9 +3270,9 @@
     <Content Include="Views\BusinessAdmin\SetupCalendarEvent.cshtml" />
     <Content Include="Views\BusinessAdmin\Reports.cshtml" />
     <Content Include="Views\WebsiteTemplates\_Template1.cshtml" />
-    <Content Include="Views\WebsiteTemplates\WebsitePalette.json" />
     <Content Include="Views\WebsiteTemplates\_Template2.cshtml" />
     <Content Include="Views\WebsiteTemplates\_Template3.cshtml" />
+    <Content Include="Views\BusinessAdmin\_CompanyPaletteSelection.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

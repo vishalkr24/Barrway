@@ -49,7 +49,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetSingleBusinessUserMaster(GenerateDynamicFormData data, string UserId);
         Task<AddUpdateDelete> AddCompany(BusinessCompanyModel model, string UserName, string UserId, bool IsDefault = false);
         Task<AddUpdateDelete> UpdateCompanyService(BusinessCompanyModel model);
-        
+        Task<AddUpdateDelete> UpdateTemplatePalette(BusinessCompanyModel model);
         Task<AddUpdateDelete> GetSingleCompanyByCompanyCode(string CompanyCode);
         Task<AddUpdateDelete> GetDefaultCompanyByUserId(string UserId);
         Task<AddUpdateDelete> UpdateBusinessCompanyProfileStatusByUserId(string userId, bool isActive);

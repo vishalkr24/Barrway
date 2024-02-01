@@ -144,11 +144,9 @@ namespace Barrway.Controllers
         {
             try
             {
-                using (StreamReader sr = new StreamReader(Server.MapPath("~/Views/WebsiteTemplates/WebsitePalette.json")))
-                {
-                    var result = sr.ReadToEnd();
-                    return Json(result, JsonRequestBehavior.AllowGet);
-                }
+                var categoryData = await globalMasterService.getCompanyWebsitePalette();
+
+                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = categoryData.Data }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
