@@ -37,6 +37,7 @@ namespace Barrway.Controllers
             this.businessUserService = businessUserService;
             this.authService = authService;
         }
+
         public ActionResult Index()
         {
             return View();
@@ -81,6 +82,36 @@ namespace Barrway.Controllers
             }
 
             return Json(new { data = locationList, last_page });
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GetStaffServiceMappingData(string CalendarCode)
+        {
+            try
+            {
+                var data = await businessUserService.GetStaffServiceMappingData(CalendarCode);
+
+                return Json(data, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateStaffServiceMapping(List<StaffServiceMappingModel> model)
+        {
+            try
+            {
+                var data = await businessUserService.UpdateStaffServiceMapping(model);
+
+                return Json(data, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         [HttpPost]
