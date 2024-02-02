@@ -3082,6 +3082,7 @@
     <Content Include="Scripts\MarketplaceScripts\CompanySchedule.js" />
     <Content Include="Scripts\MarketplaceScripts\CompanyService.js" />
     <Content Include="Scripts\MarketplaceScripts\CompanyDetail.js" />
+    <Content Include="Scripts\MarketplaceScripts\Pricing.js" />
     <Content Include="Scripts\MarketplaceScripts\News.js" />
     <Content Include="Scripts\MarketplaceScripts\BusinessSite.js" />
     <Content Include="Scripts\MarketplaceScripts\homepage.js" />
@@ -3273,6 +3274,7 @@
     <Content Include="Views\WebsiteTemplates\_Template2.cshtml" />
     <Content Include="Views\WebsiteTemplates\_Template3.cshtml" />
     <Content Include="Views\BusinessAdmin\_CompanyPaletteSelection.cshtml" />
+    <Content Include="Views\MarketPlace\Pricing.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

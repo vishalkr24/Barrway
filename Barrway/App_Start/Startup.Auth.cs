@@ -25,12 +25,14 @@ namespace Barrway
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 //LoginPath = new PathString("/Account/Login"),
-                SlidingExpiration = true
+                SlidingExpiration = true,
+                CookieName = "BarrwayCookie",
             });
             app.UseCors(CorsOptions.AllowAll);
 
             OAuthAuthorizationServerOptions option = new OAuthAuthorizationServerOptions
             {
+                
                 TokenEndpointPath = new PathString("/token"),
                 Provider = new ApplicationAuthProvider(),
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(30)

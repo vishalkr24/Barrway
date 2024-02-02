@@ -178,6 +178,10 @@ namespace Barrway.Controllers
 
         }
 
+        public async Task<ActionResult> Pricing()
+        {
+            return View();
+        }
         public async Task<ActionResult> News()
         {
             return View();
