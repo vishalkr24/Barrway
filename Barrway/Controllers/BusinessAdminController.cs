@@ -1754,7 +1754,7 @@ namespace Barrway.Controllers
                 return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
             }
         }
-
+        [AllowAnonymous]
         public async Task<ActionResult> GetAllSubscriptionPlansForBusiness()
         {
             try

@@ -260,3 +260,19 @@ function viewMarketplaceCompanyDetails(companyCode, calendarId) {
 function viewMarketplaceCompanyCalendar(companyCode, calendarCode) {
     window.location.replace("/Marketplace/CompanySchedule?CompanyCode=" + companyCode + "&CalendarCode=" + calendarCode);
 }
+
+function GetAllSubscriptionPlansForBusiness() {
+    var data;
+    $.ajax({
+        url: "/BusinessAdmin/GetAllSubscriptionPlansForBusiness/",
+        async: false,
+        type: "GET",
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    })
+    return data;
+}
