@@ -185,7 +185,7 @@
         padding: 0px 0px !important;
     }
 
-    div#step-2 p.step, div#step-3 p.step, div#step-4 p.step, div#step-5 p.step, div#step-6 p.step {
+    div#step p.step {
         font-weight: 700;
         font-size: 24px;
         color: rgba(226, 71, 108, 1);
@@ -197,7 +197,7 @@
         margin: 1rem 0px;
     }
 
-    div#step-2 .ycaml p, div#step-3 .ycaml p, div#step-4 .ycaml p, div#step-5 .ycaml p {
+    div#step .ycaml p {
         font-size: 15px;
         font-weight: 400;
         position: relative;
@@ -206,7 +206,7 @@
     }
 
 
-    div#step-2 .ycaml button, div#step-3 .ycaml button, div#step-4 .ycaml button {
+    div#step .ycaml button {
         border: 1px solid rgba(129, 113, 176, 1);
         color: rgba(129, 113, 176, 1);
         background: transparent;
@@ -404,6 +404,36 @@
         margin-top: 7px;
     }
 
+    .service-div {
+        max-height: 600px;
+        overflow: hidden;
+        overflow-y: scroll;
+    }
+
+        .service-div::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        /* Track */
+        .service-div::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        /* Handle */
+        .service-div::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+            /* Handle on hover */
+            .service-div::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+
+    .m-width-2 {
+        width: 100%;
+        max-width: 50%;
+    }
+
     @@media screen and (max-width: 800px) {
         .element-remover {
             text-align: center;
@@ -419,112 +449,30 @@
             margin-bottom: 8px;
         }
     }
+
+    @@media screen and (max-width: 990px) {
+        .m-width-2 {
+            width: 100%;
+            max-width: 100%;
+        }
+    }
 </style>
 <main id="content" role="main" class="main">
 
     <div class="container">
-        <div id="step-2" style="display:none;" class="row pt-lg-6">
+        <div id="step" class="row pt-lg-6">
 
-            <div class="col-md-5 m-auto">
-
-                <div class="form-inner" style="max-width:100%;">
-                    <p class="step step-counter">Step 2 of 5</p>
-                    <div class="template-binder">
-
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-        <div id="step-3" style="display:none;" class="row pt-lg-6">
-
-            <div class="col-md-12">
-                <div class="m-width_50">
-                    <div class="form-inner" style="max-width:100%;">
-                        <p class="step step-counter">Step 3 of 5</p>
-                        <div class="template-binder">
-
-                        </div>
-
-
-                    </div>
-                </div>
-                <!-- Title -->
-                <!-- End Title -->
-            </div>
-
-        </div>
-        <div id="step-4" style="display:none;" class="row pt-lg-6">
-
-            <div class="col-md-5 m-auto">
+            <div class="m-width-2 m-auto">
 
                 <div class="form-inner" style="max-width:100%;">
-                    <p class="step step-counter"> Step 4 of 5</p>
-                    <div class="template-binder">
-
-                    </div>
-
-                </div>
-
-                <!-- Title -->
-                <!-- End Title -->
-            </div>
-
-        </div>
-
-        <div id="step-5" style="display:none;" class="row pt-lg-6">
-
-            <div class="col-md-12">
-
-                <div class="form-inner" style="max-width:100%;">
-                    <p class="step step-counter">Step 5 of 5</p>
-                    <div class="template-binder">
-
-                    </div>
-
-                </div>
-
-                <!-- Title -->
-                <!-- End Title -->
-            </div>
-        </div>
-        <div id="step-6" style="display:none;" class="row pt-lg-6">
-
-            <div class="col-md-4 m-auto">
-
-                <div class="form-inner" style="max-width:100%;">
-
                     <p class="step step-counter"></p>
                     <div class="template-binder">
 
                     </div>
-
                 </div>
 
             </div>
 
-        </div>
-        <div class="m-width_50">
-            
-            @*<div class="blocks">
-                    <div class="congratulation_msg">
-                        <p class="pink font-600 font-18">Congradulation, you have created a calendar!</p>
-                    </div>
-                    <div class="block-inner">
-                        <div class="block-image">
-                            <img src="/assets/marketplace/image/hands.png">
-                        </div>
-                        <div class="block-text">
-                            <p>We support visa master paypal.... </p>
-                            <div class="block-lower">
-                                <span><button class="my-button">Go</button></span>
-                                <span class="pink">Go to schedular page</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>*@
         </div>
     </div>
 

@@ -1,15 +1,11 @@
-﻿var templateList = [];
-var locationList = [];
-var serviceList = [];
-var locationModelList = [];
-var providerModelList = [];
-var serviceProviderList = [];
-var serviceModelList = [];
+﻿var dataList = [];
+var dataModelList = [];
 const createdCalendarCode = $("#calendarCodeInput").val();
 const createdCompanyCode = $("#companyCodeInput").val();
 const createdCalendarType = $("#calendarCategoryInput").val();
-var createdServiceType = "";
 var ConfigData = {};
+var ConfigStep = {};
+var CurrentStep = 0;
 var CalendarData = {};
 
 $(document).ready(function () {
@@ -26,9 +22,9 @@ function readyPage() {
 
     ConfigData = JSON.parse(getCalendarSetupMatrix());
     CalendarData = getSingleCalendar(createdCalendarCode);
-    
-    let step = window.location.href.split('?')[1].replaceAll('&&', '&').split('&')[2].split('=')[1];
-    backToStep(parseInt(step));
+
+    CurrentStep = window.location.href.split('?')[1].replaceAll('&&', '&').split('&')[2].split('=')[1];
+    bindStep(CurrentStep);
 
     var obj = { 'create': true, 'placeholder': 'Add tags...' };
     $("#content").show();
@@ -48,94 +44,129 @@ function checkRegistrationStep() {
 
 }
 
-function moveToStep(stepId, helper = '') {
-    switch (stepId) {
-        case 2:
-            goToStep2();
-            break;
-        case 3:
-            updateCalendarType(helper);
-            //bindCalendarLocationMaster();
-            break;
-        case 4:
-            createLocationMaster();
-            break;
-        case 5:
-            createServiceProviderMaster();
-            break;
-        case 6:
-            createServiceMaster();
-        default:
-            break;
-    };
-}
+//function moveToStep(stepId, helper = '') {
+//    switch (stepId) {
+//        case 2:
+//            goToStep2();
+//            break;
+//        case 3:
+//            updateCalendarType(helper);
+//            //bindCalendarLocationMaster();
+//            break;
+//        case 4:
+//            createLocationMaster();
+//            break;
+//        case 5:
+//            createServiceProviderMaster();
+//            break;
+//        case 6:
+//            createServiceMaster();
+//        default:
+//            break;
+//    };
+//}
 
-function backToStep(stepId) {
-    switch (stepId) {
-        case 1:
-            goToStep1();
-            break;
-        case 2:
-            goToStep2();
-            break;
-        case 3:
-            bindCalendarLocationMaster();
-            break;
-        case 4:
-            bindCalendarServiceProviderMaster();
-            break;
-        case 5:
-            BindStep5();
-            break;
-        case 6:
-            BindStep6();
-        default:
-            break;
-    };
-}
+//function backToStep(stepId) {
+//    switch (stepId) {
+//        case 1:
+//            goToStep1();
+//            break;
+//        case 2:
+//            goToStep2();
+//            break;
+//        case 3:
+//            bindCalendarLocationMaster();
+//            break;
+//        case 4:
+//            bindCalendarServiceProviderMaster();
+//            break;
+//        case 5:
+//            BindStep5();
+//            break;
+//        case 6:
+//            BindStep6();
+//        default:
+//            break;
+//    };
+//}
 
 function skipToStep(stepId) {
     window.location.href = "/BusinessAdmin/SetupCalendarEvent?CompanyId=" + localStorage.getItem("COMPANY_ID") + "&&CalendarCode=" + createdCalendarCode + "&&Step=" + stepId;
 }
 
-function goToStep1() {
-    swal({
-        icon: "warning",
-        title: "Are you sure!",
-        text: "Are you sure to go back to step 1?"
-    }).then(function (check) {
-        if (check) {
-            window.location.replace(`/BusinessAdmin/SetupCompanyCalendar?CompanyId=${localStorage.getItem("COMPANY_ID")}&IsPartial=false&CalendarCode=${createdCalendarCode}`)
-        }
-    });
+function backToStep(stepId) {
+    window.location.href = "/BusinessAdmin/SetupCalendarEvent?CompanyId=" + localStorage.getItem("COMPANY_ID") + "&&CalendarCode=" + createdCalendarCode + "&&Step=" + stepId;
 }
 
-function configureStep(step) {
-    
-    let configStep = ConfigData["Type" + createdCalendarType]["Step" + step];
+function bindStep(step) {
+    debugger;
+    $("#ddlMasterCalendar").val(createdCalendarCode);
+    localStorage.setItem("CALENDAR_CODE", createdCalendarCode)
+    $(".selectable-calendar-item").removeClass("selected");
+    setTimeout(function () {
+        $(".selectable-calendar-item[data-id=CLR_SEL_" + localStorage.getItem("CALENDAR_CODE") + "]").addClass("selected");
+        $(".lbl-calendar-name").text($("#ddlMasterCalendar option:selected").text());
+    }, 500);
 
-    // steps and common and special based on JSON architecture type
-    let specialSteps = [5, 6, 7];
+    if (step == 1) {
+        swal({
+            icon: "warning",
+            title: "Are you sure!",
+            text: "Are you sure to go back to step 1?"
+        }).then(function (check) {
+            if (check) {
+                window.location.replace(`/BusinessAdmin/SetupCompanyCalendar?CompanyId=${localStorage.getItem("COMPANY_ID")}&IsPartial=false&CalendarCode=${createdCalendarCode}`)
+            }
+        });
+    } else {
 
-    if (specialSteps.includes(step)) {
-        if (CalendarData.Data.CALENDAR_TYPE != undefined && CalendarData.Data.CALENDAR_TYPE != null) {
-            configStep = configStep["2_" + CalendarData.Data.CALENDAR_TYPE];
+        ConfigStep = ConfigData["Type" + createdCalendarType]["Step" + step];
+
+        if (ConfigStep.Is_Based_On_Category) {
+            if (CalendarData.Data.CALENDAR_TYPE != undefined && CalendarData.Data.CALENDAR_TYPE != null) {
+                ConfigStep = ConfigStep.Category["2_" + CalendarData.Data.CALENDAR_TYPE];
+            }
         }
+
+        switch (ConfigStep.View_Name) {
+            case "MULTI_VIEW":
+                BindMultiViewTemplate();
+                break;
+            case "DYNAMIC_FORM":
+                BindDynamicFormTemplate();
+                break;
+            case "FINAL_VIEW":
+                BindFinalViewTemplate();
+                break;
+            case "STAFF_SERVICE_MAPPING_VIEW":
+                BindStaffServiceMappingTemplate();
+                break;
+            default:
+                break;
+        }
+
+        if (ConfigStep.View_Name != "FINAL_VIEW") {
+            $("#step .step-counter").text("Step " + step + " of 6");
+
+            $("#step .hed-til p").text(ConfigStep.Heading_Title);
+
+            if (ConfigStep.Is_Skippable == true) {
+                $("#step .skip-button").show();
+            } else {
+                $("#step .skip-button").hide();
+            }
+        }
+        
+
     }
+}
 
-    if (configStep.Is_Step == null || configStep.Is_Step == undefined) {
-        alert("Something went wrong!");
-        return;
-    }
+function BindMultiViewTemplate() {
 
-    if (configStep.Is_Step == true) {
-        $("#step-" + step + " .template-binder").empty();
+    let counter = 1;
+    let binderString = "";
 
-        if (configStep.Is_Kanban == true) {
-            // bind Kanban Template
-        } else {
-            if (configStep.Has_Multiple_Steps == true) {
-                $("#step-" + step + " .template-binder").append(`<div class="hed-til">
+    $("#step .template-binder").append(`<div class="hed-til">
                         <p class="step"></p>
                     </div>
 
@@ -143,139 +174,33 @@ function configureStep(step) {
                         <div class="choose">
 
                         </div>
-                        <button type="button" onclick="backToStep(${(step - 1)})" class="back">Back</button>
-                    </div>
-                    <div class="blocks">
-
+                        <button type="button" onclick="backToStep(${(parseInt(CurrentStep) - 1)})" class="back">Back</button>
                     </div>`);
 
-                let counter = 1;
-                let binderString = "";
-                while (configStep.Steps["2_" + counter] != undefined && configStep.Steps["2_" + counter] != null) {
-                    binderString += `<div class="chose-inner" onclick="moveToStep(${(parseInt(step) + 1)}, ${counter})">
+    while (ConfigStep.Steps["Step" + counter] != undefined) {
+        binderString += `<div class="chose-inner" onclick="updateCalendarType(${counter})">
                                 <div class="one">
-                                    <img src="${configStep.Steps["2_" + counter].Image}" onerror="this.src='../assets/svg/logos/favicon.png'" />
+                                    <img src="${ConfigStep.Steps["Step" + counter].Image}" onerror="this.src='../assets/svg/logos/favicon.png'" />
                                 </div>
                                 <div class="two">
-                                    <p>${configStep.Steps["2_" + counter].Text}</p>
+                                    <p>${ConfigStep.Steps["Step" + counter].Text}</p>
                                 </div>
                                 <div class="three">
                                     <p><img src="../assets/img/purple.png" /></p>
                                 </div>
                             </div>`;
-                    counter++;
-                }
-                $("#step-" + step + " .choose").append(binderString);
-            } else {
+        counter++;
+    }
 
-                // bind entry form or final step
-                let masterName = "";
-                let addFuncName = "";
+    $("#step .template-binder .choose").append(binderString);
 
-                if (configStep.Title == "Location Master") {
-                    masterName = "locations"
-                    addFuncName = "addMoreLocation"
-                }
-                else if (configStep.Title == "Service Provider Master") {
-                    masterName = "providers"
-                    addFuncName = "addMoreProvider"
-                }
-                else if (configStep.Title == "Service Master") {
-                    masterName = "service"
-                    addFuncName = "addMoreService"
-                }
+}
 
-                if (configStep.Is_Final_Step) {
-                    debugger;
+function BindDynamicFormTemplate() {
 
-                    $("#step-" + step + " .step-counter").text(configStep.Success_Message);
-
-                    $("#step-" + step + " .template-binder").append(`<div class="hed-til">
-                        <p class="step"></p>
-                    </div>
-
-                    <div class="f_of_f-wrap-o">
-                        <div class="blocks">
-
-                        </div>
-                    </div>
-                    `);
-
-                    let binderString = "";
-                    let counter = 1;
-                    while (configStep.Helpers["Helper_" + counter] != undefined && configStep.Helpers["Helper_" + counter] != null) {
-                        binderString += `<div class="block-inner">
-                        <div class="block-image">
-                            <img src="${configStep.Helpers["Helper_" + counter].Image}" onerror="this.src='../assets/svg/logos/favicon.png'">
-                        </div>
-                        <div class="block-text">
-                            <p>${configStep.Helpers["Helper_" + counter].Text}</p>
-                            <div class="block-lower">
-                                <span><button class="my-button">Go</button></span>
-                            </div>
-                        </div>
-                    </div>`;
-                        counter++;
-                    }
-
-                    $("#step-" + step + " .blocks").append(binderString);
-                } else {
-
-                    if (step == 6 && CalendarData.Data.CALENDAR_TYPE == 3) {
-
-                        // bind mapper form
-
-                        $("#step-6 .step-counter").text("Step 6 of 6");
-
-                        $("#step-6 .template-binder").append(`<div class="hed-til">
-                            <p class="heading-title step">Staff & Service Mapping</p>
-                        </div>
-                        <div class="cal-table">
-                            <div class="tab-notification">Tick on the box for the staff who can offer the service</div>
-                            <div class="table-content">
-                                <table id="mapper-table">
-                                    <tbody>
-                                    </tbody>
-                                </table>
-
-                                <div class="table-button">
-                                    <button type="button" class="back" onclick="backToStep(5)">Back</button>
-                                    <button type="button" class="back" onclick="skipToStep(7)">Skip</button>
-                                    <button class="pink-button right">Create calendar</button>
-                                </div>
-                            </div>
-                        </div>`);
-                        debugger;
-                        var serviceMasterData = getServiceMasterData(createdCompanyCode, createdCalendarCode).data;
-                        var serviceProviderMasterData = getServiceProviderData(createdCompanyCode, createdCalendarCode).data;
-                        if (serviceProviderMasterData != null && serviceProviderMasterData != null) {
-                            let binderString = `<tr>
-                                            <td></td>`;
-
-                            for (var i = 0; i < serviceMasterData.length; i++) {
-                                binderString += "<td>" + serviceMasterData[i].ACTIVITY_NAME + "</td>"
-                            }
-
-                            binderString += "</tr>";
-
-                            for (var i = 0; i < serviceProviderMasterData.length; i++) {
-                                binderString += "<tr><td>" + serviceProviderMasterData[i].FIRST_NAME + " " + serviceProviderMasterData[i].LAST_NAME + "</td>"
-                                for (var j = 0; j < serviceMasterData.length; j++) {
-                                    binderString += `<td><img src="../assets/marketplace/image/Isolation_Mode.png" /><input type="checkbox" class="form-control" data-service-id="${serviceMasterData[j].Id}" data-provider-id="${serviceProviderMasterData[i].Id}" name="staff-service-mapper-input"></td>`
-                                }
-                                binderString += "</tr>";
-                            }
-
-                            $("#mapper-table tbody").empty();
-                            $("#mapper-table tbody").append(binderString);
-
-                        } else {
-                            $(".tab-notification").text("Please create staff and services in previous steps!")
-                        }
-                        
-                    } else {
-                        // bind entry form
-                        $("#step-" + step + " .template-binder").append(`<div class="hed-til">
+    let formId = ConfigStep.Form_Id;
+    
+    $("#step .template-binder").append(`<div class="hed-til">
                             <p class="heading-title step"></p>
                         </div>
                         <div>
@@ -286,18 +211,18 @@ function configureStep(step) {
                                         
                                         <div style="text-align:right; color:crimson;">* mandatory</div>
                                         <div class="form-inner set-cal" style="max-width:100%; margin-bottom: 1em;">
-                                            <div id="${masterName}-div">
+                                            <div id="service-div" class="service-div">
 
                                             </div>
 
                                             <div class="ycaml">
                                                 <p>You can add more location if your event takes place in more than one location.</p>
-                                                <button class="bg-t-b" onclick="${addFuncName}(null, true, true)">+Add more</button>
+                                                <button class="bg-t-b" onclick="addMoreRow(null, true, true)">+Add more</button>
                                             </div>
 
-                                            <button type="button" onclick="backToStep(${(step - 1)})" class="back">Back</button>
-                                            <button type="button" style="display:none;" onclick="skipToStep(${(step + 1)})" class="back skip-button">Skip</button>
-                                            <button type="button" class="btn btn-primary" onclick="moveToStep(${(step + 1)})">Next</button>
+                                            <button type="button" onclick="backToStep(${(parseInt(CurrentStep) - 1)})" class="back">Back</button>
+                                            <button type="button" style="display:none;" onclick="skipToStep(${(parseInt(CurrentStep) + 1)})" class="back skip-button">Skip</button>
+                                            <button type="button" class="btn btn-primary" onclick="createMasterData(${(parseInt(CurrentStep) + 1)})">Next</button>
                                             
                                         </div>
                                     </div>
@@ -309,168 +234,31 @@ function configureStep(step) {
                         <div class="blocks">
 
                         </div>`);
-                    }
 
-                    
-                }
-            }
-        }
+    
+    if (ConfigStep.Helper_After_Form != null && ConfigStep.Helper_After_Form != undefined) {
 
-        $("#step-" + step + " .hed-til p").text(configStep.Heading_Title);
+        let counter = 1;
+        let binderString = "";
 
-        if (configStep.Is_Skippable == true) {
-            $("#step-" + step + " .skip-button").show();
-        } else {
-            $("#step-" + step + " .skip-button").hide();
-        }
+        $(".blocks").empty();
 
-        // helper text and image after form bindings
-        if (configStep.Helper_After_Form != null && configStep.Helper_After_Form != undefined) {
-
-            let counter = 1;
-            let stringBinder = "";
-
-            $(".blocks").empty();
-
-            while (configStep.Helper_After_Form["Helper_" + counter] != undefined) {
-                stringBinder += `<div class="block-inner">
+        while (ConfigStep.Helper_After_Form["Helper_" + counter] != undefined) {
+            binderString += `<div class="block-inner">
                     <div class="block-image">
-                        <img src="${configStep.Helper_After_Form["Helper_" + counter].Image}" onerror="this.src='/assets/marketplace/image/hands.png'">
+                        <img src="${ConfigStep.Helper_After_Form["Helper_" + counter].Image}" onerror="this.src='/assets/marketplace/image/hands.png'">
                     </div>
                     <div class="block-text">
-                        <p>${configStep.Helper_After_Form["Helper_" + counter].Text} </p>
+                        <p>${ConfigStep.Helper_After_Form["Helper_" + counter].Text} </p>
                     </div>
                 </div>`;
-                counter++;
-            }
-
-            $(".blocks").append(stringBinder);
+            counter++;
         }
 
-    } else {
-        backToStep((parseInt(step) + 1));
+        $(".blocks").append(binderString);
     }
 
-    $("#step-" + step).fadeIn();
-}
-
-function goToStep2() {
-    $("#step-3").fadeOut();
-    $("#step-4").fadeOut();
-    $("#step-5").fadeOut();
-
-    configureStep(2);
-}
-
-$(document).on("click", "input[name=servicePaid]", function () {
-    if ($(this).val() == "Y") {
-        $("#feesPerSession").attr("disabled", false);
-        $("#feesPerSessionDiv").fadeIn();
-        $("label[for=feesPerSession]").text("Fees per Session *")
-    } else {
-        $("#feesPerSession").val("0");
-        $("#feesPerSession").attr("disabled", true);
-        $("#feesPerSessionDiv").fadeOut();
-        $("label[for=feesPerSession]").text("Fees per Session")
-    }
-})
-
-function validateSchedularFormData(data) {
-    
-    var finalCheck = true;
-
-    if ($("#serviceName").val() == "" || $("#serviceName").val() == null) {
-        finalCheck = false;
-        $("#SCH_ACTIVITY_ERROR").show();
-    } else {
-        $("#SCH_ACTIVITY_ERROR").hide();
-    }
-
-    if (createdServiceType == "Package") {
-        if ($("#maxParticipants").val() == "" || $("#maxParticipants").val() == null) {
-            finalCheck = false;
-            $("#SCH_PARTI_ERROR").show();
-        } else {
-            $("#SCH_PARTI_ERROR").hide();
-        }
-    }
-
-    if ($("input[name=servicePaid]:checked").val() == "Y") {
-        if ($("#feesPerSession").val() == "" || $("#feesPerSession").val() == null) {
-            finalCheck = false;
-            $("#SCH_FEES_ERROR").show();
-        } else {
-            $("#SCH_FEES_ERROR").hide();
-        }
-    }
-
-    if (data.SCH_LOCATION == "" || data.SCH_LOCATION == null) {
-        finalCheck = false;
-        $("#SCH_LOCATION_ERROR").show();
-    } else {
-        $("#SCH_LOCATION_ERROR").hide();
-    }
-
-    if (data.SCH_RESOURCE == "" || data.SCH_RESOURCE == null) {
-        finalCheck = false;
-        $("#SCH_RESOURCE_ERROR").show();
-    } else {
-        $("#SCH_RESOURCE_ERROR").hide();
-    }
-
-    if (data.SCH_FROM_DATE == "" || data.SCH_FROM_DATE == null) {
-        finalCheck = false;
-        $("#SCH_FROM_DATE_ERROR").show();
-    } else {
-        $("#SCH_FROM_DATE_ERROR").hide();
-    }
-
-    if (data.SCH_TO_DATE == "" || data.SCH_TO_DATE == null) {
-        finalCheck = false;
-        $("#SCH_TO_DATE_ERROR").show();
-    } else {
-        $("#SCH_TO_DATE_ERROR").hide();
-    }
-
-    if (data.SCH_FROM_DATE > data.SCH_TO_DATE) {
-        alert("From date should be earlier than To date.");
-        finalCheck = false;
-    }
-
-    var temp = false;
-    for (let key in data.table) {
-        if (data.table.hasOwnProperty(key)) {
-            if (data.table[key].Start != "" && data.table[key].End != "") {
-                temp = true;
-            }
-        }
-    }
-
-    if (!temp) {
-        finalCheck = false;
-        $("#SCH_TIME_ERROR").show();
-    } else {
-        $("#SCH_TIME_ERROR").hide();
-    }
-
-    return finalCheck;
-}
-
-function BindStep5(type) {
-    $("#step-4").hide();
-    $("#step-5").fadeOut();
-    
-    configureStep(5);
-
-    $("#ddlMasterCalendar").val(createdCalendarCode);
-    localStorage.setItem("CALENDAR_CODE", createdCalendarCode)
-    $(".selectable-calendar-item").removeClass("selected");
-    setTimeout(function () {
-        $(".selectable-calendar-item[data-id=CLR_SEL_" + localStorage.getItem("CALENDAR_CODE") + "]").addClass("selected");
-        $(".lbl-calendar-name").text($("#ddlMasterCalendar option:selected").text());
-    }, 500);
-
-    // Define Location Model
+    // Define Data Model
     $.ajax({
         url: "/FormAPI/ManageForm",
         method: "POST",
@@ -478,11 +266,11 @@ function BindStep5(type) {
         data: {
             data: {
                 action: 7,
-                formId: "2303"
+                formId: formId
             }
         },
         success: function (response) {
-            
+
             if (response.length > 0) {
 
                 var data = JSON.parse(response[0].fields);
@@ -496,10 +284,15 @@ function BindStep5(type) {
                         data2 = data2.filter(x => x["required"] != undefined && x["required"] == true);
                     }
 
+                    if (ConfigStep.Form_Fields != undefined && ConfigStep.Form_Fields != undefined) {
+                        data2 = data2.filter(x => ConfigStep.Form_Fields.find(y => y == x.name));
+                    }
+
                     data2.forEach(x => {
-                        serviceModelList.push({
+                        
+                        dataModelList.push({
                             label: x["label"],
-                            containerClass: "col-md-" + parseInt(( 12/parseInt(100 / parseInt(x["column_width"])) )),
+                            containerClass: "col-md-" + parseInt((12 / parseInt(100 / parseInt(x["column_width"])))),
                             name: x["name"],
                             type: x["type"],
                             values: (x["type"] == "radio-group" || x["type"] == "select" || x["type"] == "checkbox-group") ? x["values"] : null
@@ -518,225 +311,26 @@ function BindStep5(type) {
         }
     })
 
-    // Bind Location Master
-    $.ajax({
-        url: "/Calendar/GetServiceMasterList",
-        method: "POST",
-        data: {
-            data: {},
-            companyCode: createdCompanyCode,
-            calendarCode: createdCalendarCode
-        },
-        success: function (response) {
-
-            var data = response.data;
-
-            if (data != null) {
-
-                locationList = [];
-
-                data.forEach(x => {
-                    addMoreService(x, false, false);
-                });
-
-                if (data.length == 0) {
-                    addMoreService(null, false, true);
-                }
-
-            } else {
-                addMoreService(null, false, true);
-            }
-
-        },
-        error: function (er) {
-
-        }
-    })
-
-    //createdServiceType = type;
-}
-
-function BindStep6(type) {
-    $("#step-4").hide();
-    $("#step-5").fadeOut();
-    
-    configureStep(6);
-
-    $("#ddlMasterCalendar").val(createdCalendarCode);
-    localStorage.setItem("CALENDAR_CODE", createdCalendarCode)
-    $(".selectable-calendar-item").removeClass("selected");
-    setTimeout(function () {
-        $(".selectable-calendar-item[data-id=CLR_SEL_" + localStorage.getItem("CALENDAR_CODE") + "]").addClass("selected");
-        $(".lbl-calendar-name").text($("#ddlMasterCalendar option:selected").text());
-    }, 500);
-
-}
-
-function validateStep(stepId) {
-    var flag = true;
-    if (stepId == 3) {
-        let inputList = document.getElementsByClassName("location-input");
-        inputList.forEach(x => {
-            if (x.value == "" || x.value == null) {
-                swal({
-                    icon: "warning",
-                    title: "Warning",
-                    text: "Please fill all location fields."
-                });
-                flag = false;
-            }
-        });
+    // Bind Data Master
+    let FormIdToMethod = {
+        2303: "GetServiceMasterList",
+        2304: "GetServiceProviderMasterList",
+        2306: "GetLocationMasterList"
     }
 
-    if (stepId == 4) {
-        let tempFlag1 = true;
-        let tempFlag2 = true;
-        let inputList = document.getElementsByClassName("provider-first-input");
-        inputList.forEach(x => {
-            if (x.value == "" || x.value == null) {
-
-                tempFlag1 = false;
-            }
-        });
-
-        let inputList2 = document.getElementsByClassName("provider-last-input");
-        inputList2.forEach(x => {
-            if (x.value == "" || x.value == null) {
-
-                tempFlag2 = false;
-            }
-        });
-
-        if (!tempFlag1 && !tempFlag2) {
-            swal({
-                icon: "warning",
-                title: "Warning",
-                text: "Please fill first & last name fields."
-            });
-            flag = false;
-        } else if (!tempFlag1) {
-            swal({
-                icon: "warning",
-                title: "Warning",
-                text: "Please fill first name fields."
-            });
-            flag = false;
-        } else if (!tempFlag2) {
-            swal({
-                icon: "warning",
-                title: "Warning",
-                text: "Please fill last name fields."
-            });
-            flag = false;
-        }
-    }
-
-    return flag;
-}
-
-function updateCalendarType(type) {
     $.ajax({
-        url: "/BusinessAdmin/UpdateCalendarType",
+        url: "/Calendar/" + FormIdToMethod[formId],
         method: "POST",
-        data: {
-            CalendarCode: createdCalendarCode,
-            CalendarType: type
-        },
-        success: function (response) {
-            if (response.Status) {
-
-                window.location.replace(`/BusinessAdmin/SetupCalendarEvent?CompanyId=${localStorage.getItem("COMPANY_ID")}&CalendarCode=${createdCalendarCode}&Step=3`)
-
-            } else {
-                swal({
-                    icon: "error",
-                    title: "Error",
-                    text: response.Message
-                }).then(function () {
-                    window.location.reload();
-                })
-            }
-        },
-        error: function (err) {
-
-        }
-    })
-}
-
-function bindCalendarLocationMaster() {
-
-    $("#step-4").fadeOut();
-    $("#step-5").fadeOut();
-    $("#step-6").fadeOut();
-    
-    configureStep(3)
-
-    $("#ddlMasterCalendar").val(createdCalendarCode);
-    localStorage.setItem("CALENDAR_CODE", createdCalendarCode)
-    $(".selectable-calendar-item").removeClass("selected");
-    setTimeout(function () {
-        $(".selectable-calendar-item[data-id=CLR_SEL_" + localStorage.getItem("CALENDAR_CODE") + "]").addClass("selected");
-        $(".lbl-calendar-name").text($("#ddlMasterCalendar option:selected").text());
-    }, 500);
-
-    // Define Location Model
-    $.ajax({
-        url: "/FormAPI/ManageForm",
-        method: "POST",
-        async: false,
         data: {
             data: {
-                action: 7,
-                formId: "2306"
-            }
-        },
-        success: function (response) {
-
-            if (response.length > 0) {
-
-                var data = JSON.parse(response[0].fields);
-
-                if (data["Page 1"] != null && data["Page 1"] != undefined) {
-                    var data2 = JSON.parse(data["Page 1"]);
-
-                    let containerClass = "";
-
-                    if (data2 != null && data2 != undefined) {
-                        data2 = data2.filter(x => x["required"] != undefined && x["required"] == true);
-                    }
-
-                    containerClass = (data2.length == 1) ? "col-md-12" : "col-md-6";
-
-                    data2.forEach(x => {
-                        locationModelList.push({
-                            label: x["label"],
-                            containerClass: containerClass,
-                            name: x["name"],
-                            type: x["type"],
-                            values: (x["type"] == "radio-group" || x["type"] == "select" || x["type"] == "checkbox-group") ? x["values"] : null
-                        });
-
-                    });
-
-                }
-
-            }
-
-
-        },
-        error: function (error) {
-
-        }
-    })
-
-    // Bind Location Master
-    $.ajax({
-        url: "/Calendar/GetLocationMasterList",
-        method: "POST",
-        data: {
-            data: {},
-            companyCode: createdCompanyCode,
-            calendarCode: createdCalendarCode
+                IsCustomFilter: true,
+                filters: [{
+                    field: "CALENDAR_CODE",
+                    type: "=",
+                    value: createdCalendarCode
+                }]
+            },
+            companyCode: createdCompanyCode
         },
         success: function (response) {
 
@@ -744,18 +338,18 @@ function bindCalendarLocationMaster() {
 
             if (data != null) {
 
-                locationList = [];
+                dataList = [];
 
                 data.forEach(x => {
-                    addMoreLocation(x, false, false);
+                    addMoreRow(x, false, false);
                 });
 
                 if (data.length == 0) {
-                    addMoreLocation(null, false, true);
+                    addMoreRow(null, false, true);
                 }
 
             } else {
-                addMoreLocation(null, false, true);
+                addMoreRow(null, false, true);
             }
 
         },
@@ -766,212 +360,155 @@ function bindCalendarLocationMaster() {
 
 }
 
-function bindCalendarServiceProviderMaster() {
+function BindFinalViewTemplate() {
 
-    $("#step-5").fadeOut();
-    $("#step-3").fadeOut();
-    $("#step-6").fadeOut();
+    let binderString = "";
+    let counter = 1;
 
-    configureStep(4);
+    $("#step .step-counter").text(ConfigStep.Success_Message);
 
-    $("#ddlMasterCalendar").val(createdCalendarCode);
-    localStorage.setItem("CALENDAR_CODE", createdCalendarCode)
-    $(".selectable-calendar-item").removeClass("selected");
-    setTimeout(function () {
-        $(".selectable-calendar-item[data-id=CLR_SEL_" + localStorage.getItem("CALENDAR_CODE") + "]").addClass("selected");
-        $(".lbl-calendar-name").text($("#ddlMasterCalendar option:selected").text());
-    }, 500);
+    $("#step .template-binder").append(`<div class="hed-til">
+                        <p class="step"></p>
+                    </div>
 
-    // Define Provider Model
-    $.ajax({
-        url: "/FormAPI/ManageForm",
-        method: "POST",
-        async: false,
-        data: {
-            data: {
-                action: 7,
-                formId: "2304"
-            }
-        },
-        success: function (response) {
+                    <div class="f_of_f-wrap-o">
+                        <div class="blocks">
 
-            if (response.length > 0) {
+                        </div>
+                    </div>
+                    `);
 
-                var data = JSON.parse(response[0].fields);
+    while (ConfigStep.Helpers["Helper_" + counter] != undefined && ConfigStep.Helpers["Helper_" + counter] != null) {
+        binderString += `<div class="block-inner">
+                        <div class="block-image">
+                            <img src="${ConfigStep.Helpers["Helper_" + counter].Image}" onerror="this.src='../assets/svg/logos/favicon.png'">
+                        </div>
+                        <div class="block-text">
+                            <p>${ConfigStep.Helpers["Helper_" + counter].Text}</p>
+                            <div class="block-lower">
+                                <span><button class="my-button">Go</button></span>
+                            </div>
+                        </div>
+                    </div>`;
+        counter++;
+    }
 
-                if (data["Page 1"] != null && data["Page 1"] != undefined) {
-                    var data2 = JSON.parse(data["Page 1"]);
-
-                    let containerClass = "";
-
-                    if (data2 != null && data2 != undefined) {
-                        data2 = data2.filter(x => x["required"] != undefined && x["required"] == true);
-                    }
-
-                    containerClass = (data2.length == 1) ? "col-md-12" : "col-md-6";
-
-                    data2.forEach(x => {
-                        providerModelList.push({
-                            label: x["label"],
-                            containerClass: containerClass,
-                            name: x["name"],
-                            type: x["type"],
-                            values: (x["type"] == "radio-group" || x["type"] == "select" || x["type"] == "checkbox-group") ? x["values"] : null
-                        });
-
-                    });
-
-                }
-
-            }
-
-
-        },
-        error: function (error) {
-
-        }
-    })
-
-    // BInd Provider Data
-    $.ajax({
-        url: "/Calendar/GetServiceProviderMasterList",
-        method: "POST",
-        data: {
-            data: {},
-            companyCode: createdCompanyCode,
-            calendarCode: createdCalendarCode
-        },
-        success: function (response) {
-
-            var data = response.data;
-
-            if (data != null) {
-
-                serviceProviderList = [];
-
-                data.forEach(x => {
-                    addMoreProvider(x, false, false)
-                })
-
-                if (data.length == 0) {
-                    addMoreProvider(null, false, true)
-                }
-
-            } else {
-                addMoreProvider(null, false, true)
-            }
-        },
-        error: function (er) {
-
-        }
-    })
+    $("#step .blocks").append(binderString);
 }
 
-function addMoreProvider(dataItem, isRemovable, isNew) {
-
-    let dataModel = {
-        Id: (dataItem == null) ? parseInt(getMaxId(serviceProviderList)) + 1 : dataItem.Id,
-        CALENDAR_CODE: createdCalendarCode,
-        COMPANY_CODE: createdCompanyCode,
-        Is_New: isNew
-    };
-
-    $("#providers-div").append(`<div class="form" id="provider-elem-${dataModel.Id}"> ${(isRemovable) ? `<div class="element-remover" onclick="removeProvider(${dataModel.Id})"><i class="fa fa-times" aria-hidden="true"></i></div>` : ""} <div class="row"></div></div>`)
-
-    providerModelList.forEach(x => {
-
-        dataModel[x.name] = (dataItem == null) ? "" : dataItem[x.name];
-
-        $("#providers-div #provider-elem-" + dataModel.Id + " .row").append(`<div class="${x.containerClass}">
-                                            <div class="form-group">
-                                                ${generateInputBox(x, dataModel.Id, "provider-input")}
-                                            </div>
-                                        </div>`);
-
-        $(`input[name=${x.name}${dataModel.Id}]`).val(dataModel[x.name]);
-    });
-
-    serviceProviderList.push(dataModel);
-    setTimeout(function () {
-        providerModelList.forEach(x => {
-            $(`input[name^=${x.name}]`).bind("keyup change paste", function () {
-                let inputId = $(this).attr("data-input-id");
-                serviceProviderList.find(y => y.Id == inputId)[x.name] = this.value;
-            });
-        });
-    }, 500);
-
-}
-
-function addMoreLocation(dataItem, isRemovable, isNew) {
+function BindStaffServiceMappingTemplate() {
     
-    let dataModel = {
-        Id: (dataItem == null) ? parseInt(getMaxId(locationList)) + 1 : dataItem.Id,
-        CALENDAR_CODE: createdCalendarCode,
-        COMPANY_CODE: createdCompanyCode,
-        Is_New: isNew
-    };
+    $("#step .template-binder").append(`<div class="hed-til">
+                            <p class="heading-title step"></p>
+                        </div>
+                        <div class="cal-table">
+                            <div class="tab-notification">Tick on the box for the staff who can offer the service</div>
+                            <div class="table-content">
+                                <table id="mapper-table">
+                                    <tbody>
+                                    </tbody>
+                                </table>
 
-    $("#locations-div").append(`<div class="form" id="location-elem-${dataModel.Id}"> ${(isRemovable) ? `<div class="element-remover" onclick="removeLocation(${dataModel.Id})"><i class="fa fa-times" aria-hidden="true"></i></div>` : ""} <div class="row"></div></div>`)
+                                <div class="table-button">
+                                    <button type="button" class="back" onclick="backToStep(${parseInt(CurrentStep) - 1})">Back</button>
+                                    <button type="button" class="back" onclick="skipToStep(${parseInt(CurrentStep) + 1})">Skip</button>
+                                    <button class="pink-button right">Create calendar</button>
+                                </div>
+                            </div>
+                        </div>`);
+    debugger;
 
-    locationModelList.forEach(x => {
+    let serviceMasterData = getServiceMasterDataByCalendar(createdCompanyCode, createdCalendarCode).data;
+    let serviceProviderMasterData = getServiceProviderDataByCalendar(createdCompanyCode, createdCalendarCode).data;
 
-        dataModel[x.name] = (dataItem == null) ? "" : dataItem[x.name];
+    if (serviceProviderMasterData != null && serviceProviderMasterData != null) {
+        let binderString = `<tr>
+                                            <td></td>`;
 
-        $("#locations-div #location-elem-" + dataModel.Id + " .row").append(`<div class="${x.containerClass}">
-                                            <div class="form-group">
-                                                ${generateInputBox(x, dataModel.Id, "location-input")}
-                                            </div>
-                                        </div>`);
+        for (var i = 0; i < serviceMasterData.length; i++) {
+            binderString += "<td>" + serviceMasterData[i].ACTIVITY_NAME + "</td>"
+        }
 
-        $(`input[name=${x.name}${dataModel.Id}]`).val(dataModel[x.name]);
-    });
+        binderString += "</tr>";
 
-    locationList.push(dataModel);
-    setTimeout(function () {
-        locationModelList.forEach(x => {
-            $(`input[name^=${x.name}]`).bind("keyup change paste", function () {
-                let inputId = $(this).attr("data-input-id");
-                locationList.find(y => y.Id == inputId)[x.name] = this.value;
-            })
-        });
-    }, 500);
+        for (var i = 0; i < serviceProviderMasterData.length; i++) {
+            binderString += "<tr><td>" + serviceProviderMasterData[i].FIRST_NAME + " " + serviceProviderMasterData[i].LAST_NAME + "</td>"
+            for (var j = 0; j < serviceMasterData.length; j++) {
+                binderString += `<td><img src="../assets/marketplace/image/Isolation_Mode.png" /><input type="checkbox" class="form-control" data-service-id="${serviceMasterData[j].Id}" data-provider-id="${serviceProviderMasterData[i].Id}" name="staff-service-mapper-input"></td>`
+            }
+            binderString += "</tr>";
+        }
+
+        $("#mapper-table tbody").empty();
+        $("#mapper-table tbody").append(binderString);
+
+    } else {
+        $(".tab-notification").text("Please create staff and services in previous steps!")
+    }
+
 }
 
-function addMoreService(dataItem, isRemovable, isNew) {
-    
-    let dataModel = {
-        Id: (dataItem == null) ? parseInt(getMaxId(serviceList)) + 1 : dataItem.Id,
-        CALENDAR_CODE: createdCalendarCode,
-        COMPANY_CODE: createdCompanyCode,
-        Is_New: isNew
-    };
+//function validateStep(stepId) {
+//    var flag = true;
+//    if (stepId == 3) {
+//        let inputList = document.getElementsByClassName("location-input");
+//        inputList.forEach(x => {
+//            if (x.value == "" || x.value == null) {
+//                swal({
+//                    icon: "warning",
+//                    title: "Warning",
+//                    text: "Please fill all location fields."
+//                });
+//                flag = false;
+//            }
+//        });
+//    }
 
-    $("#service-div").append(`<div class="form" id="service-elem-${dataModel.Id}"> ${(isRemovable) ? `<div class="element-remover" onclick="removeService(${dataModel.Id})"><i class="fa fa-times" aria-hidden="true"></i></div>` : ""} <div class="row mt-2"></div></div>`)
+//    if (stepId == 4) {
+//        let tempFlag1 = true;
+//        let tempFlag2 = true;
+//        let inputList = document.getElementsByClassName("provider-first-input");
+//        inputList.forEach(x => {
+//            if (x.value == "" || x.value == null) {
 
-    serviceModelList.forEach(x => {
+//                tempFlag1 = false;
+//            }
+//        });
 
-        dataModel[x.name] = (dataItem == null) ? "" : dataItem[x.name];
+//        let inputList2 = document.getElementsByClassName("provider-last-input");
+//        inputList2.forEach(x => {
+//            if (x.value == "" || x.value == null) {
 
-        $("#service-div #service-elem-" + dataModel.Id + " .row").append(`<div class="${x.containerClass}">
-                                            <div class="form-group">
-                                                ${generateInputBox(x, dataModel.Id, "location-input")}
-                                            </div>
-                                        </div>`);
+//                tempFlag2 = false;
+//            }
+//        });
 
-        $(`input[name=${x.name}${dataModel.Id}]`).val(dataModel[x.name]);
-    });
+//        if (!tempFlag1 && !tempFlag2) {
+//            swal({
+//                icon: "warning",
+//                title: "Warning",
+//                text: "Please fill first & last name fields."
+//            });
+//            flag = false;
+//        } else if (!tempFlag1) {
+//            swal({
+//                icon: "warning",
+//                title: "Warning",
+//                text: "Please fill first name fields."
+//            });
+//            flag = false;
+//        } else if (!tempFlag2) {
+//            swal({
+//                icon: "warning",
+//                title: "Warning",
+//                text: "Please fill last name fields."
+//            });
+//            flag = false;
+//        }
+//    }
 
-    serviceList.push(dataModel);
-    setTimeout(function () {
-        serviceModelList.forEach(x => {
-            $(`input[name^=${x.name}]`).bind("keyup change paste", function () {
-                let inputId = $(this).attr("data-input-id");
-                serviceList.find(y => y.Id == inputId)[x.name] = this.value;
-            })
-        });
-    }, 500);
-}
+//    return flag;
+//}
 
 function generateInputBox(modelItem, id, additionalClass) {
 
@@ -996,7 +533,7 @@ function generateInputBox(modelItem, id, additionalClass) {
         case "radio-group":
             if (modelItem.values != null) {
                 value += `<label for="${modelItem.name}${id}">${modelItem.label} *</label> <br />`;
-                
+
                 modelItem.values.forEach(x => {
                     value += `
                             <div style="float:left;">
@@ -1038,157 +575,130 @@ function generateInputBox(modelItem, id, additionalClass) {
     return value;
 }
 
-$(document).on("keyup change paste", ".provider-first-input", function () {
-    let inputId = $(this).attr("data-input-id");
-    serviceProviderList.find(x => x.Id == inputId).FIRST_NAME = this.value;
-})
+function addMoreRow(dataItem, isRemovable, isNew) {
 
-$(document).on("keyup change paste", ".provider-last-input", function () {
-    let inputId = $(this).attr("data-input-id");
-    serviceProviderList.find(x => x.Id == inputId).LAST_NAME = this.value;
-})
+    let dataModel = {
+        Id: (dataItem == null) ? parseInt(getMaxId(dataList)) + 1 : dataItem.Id,
+        CALENDAR_CODE: createdCalendarCode,
+        COMPANY_CODE: createdCompanyCode,
+        Is_New: isNew
+    };
 
-function removeLocation(Id) {
-    if (locationList.filter(x => x.Id == Id).length > 0) {
-        if (locationList.find(x => x.Id == Id).Is_New) {
-            locationList = locationList.filter(x => x.Id != Id);
-            $("#location-elem-" + Id).remove();
-        }
-    }
+    $("#service-div").append(`<div class="form" id="service-elem-${dataModel.Id}"> ${(isRemovable) ? `<div class="element-remover" onclick="removeRow(${dataModel.Id})"><i class="fa fa-times" aria-hidden="true"></i></div>` : ""} <div class="row mt-3" style="border-bottom: 1px dashed #898989;"></div></div>`)
+
+    dataModelList.forEach(x => {
+
+        dataModel[x.name] = (dataItem == null) ? "" : dataItem[x.name];
+
+        $("#service-div #service-elem-" + dataModel.Id + " .row").append(`<div class="${x.containerClass}">
+                                            <div class="form-group">
+                                                ${generateInputBox(x, dataModel.Id, "")}
+                                            </div>
+                                        </div>`);
+
+        $(`input[name=${x.name}${dataModel.Id}]`).val(dataModel[x.name]);
+    });
+
+    dataList.push(dataModel);
+    setTimeout(function () {
+        dataModelList.forEach(x => {
+            $(`input[name^=${x.name}]`).bind("keyup change paste", function () {
+                let inputId = $(this).attr("data-input-id");
+                dataList.find(y => y.Id == inputId)[x.name] = this.value;
+            })
+        });
+    }, 500);
+
+
+    var element = document.querySelector('#service-div');
+    element.scrollTop = element.scrollHeight;
+
 }
 
-function removeService(Id) {
-    if (serviceList.filter(x => x.Id == Id).length > 0) {
-        if (serviceList.find(x => x.Id == Id).Is_New) {
-            serviceList = serviceList.filter(x => x.Id != Id);
+function removeRow(Id) {
+    if (dataList.filter(x => x.Id == Id).length > 0) {
+        if (dataList.find(x => x.Id == Id).Is_New) {
+            dataList = dataList.filter(x => x.Id != Id);
             $("#service-elem-" + Id).remove();
         }
     }
 }
 
-function removeProvider(Id) {
-    if (serviceProviderList.filter(x => x.Id == Id).length > 0) {
-        if (serviceProviderList.find(x => x.Id == Id).Is_New) {
-            serviceProviderList = serviceProviderList.filter(x => x.Id != Id);
-            $("#provider-elem-" + Id).remove();
+function createMasterData() {
+    if (true) {
+
+        $.ajax({
+            url: "/Calendar/AddMasterData",
+            method: "POST",
+            data: {
+                data: dataList,
+                ModelId: (ConfigStep.Form_Id == 2306) ? 1 : (ConfigStep.Form_Id == 2304) ? 2 : 3
+            },
+            success: function (response) {
+                // after success response
+                if (response.Status) {
+                    swal({
+                        icon: "success",
+                        title: "Great!",
+                        text: "Data added successfully!"
+                    }).then(function (check) {
+                        if (ConfigStep.Has_Next_Step) {
+                            window.location.href = '/BusinessAdmin/SetupCalendarEvent?CompanyId=' + localStorage.getItem("COMPANY_ID") + "&CalendarCode=" + createdCalendarCode + "&Step=" + (parseInt(CurrentStep) + 1);
+                        } else {
+                            window.location.href = '/BusinessAdmin/Dashboard';
+                        }
+                        
+                    });
+
+                } else {
+                    swal({
+                        icon: "error",
+                        title: "Error",
+                        text: response.Message
+                    });
+                }
+
+            },
+            error: function (er) {
+
+            }
+        })
+
+    }
+}
+
+function updateCalendarType(type) {
+    $.ajax({
+        url: "/BusinessAdmin/UpdateCalendarType",
+        method: "POST",
+        data: {
+            CalendarCode: createdCalendarCode,
+            CalendarType: type
+        },
+        success: function (response) {
+            if (response.Status) {
+
+                if (ConfigStep.Has_Next_Step) {
+                    window.location.replace(`/BusinessAdmin/SetupCalendarEvent?CompanyId=${localStorage.getItem("COMPANY_ID")}&CalendarCode=${createdCalendarCode}&Step=${(parseInt(CurrentStep) + 1)}`)
+                }
+
+
+            } else {
+                swal({
+                    icon: "error",
+                    title: "Error",
+                    text: response.Message
+                }).then(function () {
+                    window.location.reload();
+                })
+            }
+        },
+        error: function (err) {
+
         }
-    }
+    })
 }
 
-function createLocationMaster() {
-    if (true) {
-
-        $.ajax({
-            url: "/Calendar/AddMasterData",
-            method: "POST",
-            data: {
-                data: locationList,
-                ModelId: 1
-            },
-            success: function (response) {
-                // after success response
-                if (response.Status) {
-                    swal({
-                        icon: "success",
-                        title: "Location Added",
-                        text: "Location added successfully!"
-                    }).then(function (check) {
-                        window.location.href = '/BusinessAdmin/SetupCalendarEvent?CompanyId=' + localStorage.getItem("COMPANY_ID") + "&CalendarCode=" + createdCalendarCode + "&Step=4";
-                    });
-
-                } else {
-                    swal({
-                        icon: "error",
-                        title: "Error",
-                        text: response.Message
-                    });
-                }
-
-            },
-            error: function (er) {
-
-            }
-        })
-
-    }
-}
-
-function createServiceMaster() {
-    if (true) {
-        $.ajax({
-            url: "/Calendar/AddMasterData",
-            method: "POST",
-            data: {
-                data: serviceList,
-                ModelId: 3
-            },
-            success: function (response) {
-                // after success response
-                if (response.Status) {
-                    swal({
-                        icon: "success",
-                        title: "Service Added",
-                        text: "Service added successfully!"
-                    }).then(function (check) {
-                        window.location.href = '/BusinessAdmin/SetupCalendarEvent?CompanyId=' + localStorage.getItem("COMPANY_ID") + "&CalendarCode=" + createdCalendarCode + "&Step=6";
-                    });
-
-                } else {
-                    swal({
-                        icon: "error",
-                        title: "Error",
-                        text: response.Message
-                    });
-                }
-
-            },
-            error: function (er) {
-
-            }
-        })
-    }
-}
-
-function createServiceProviderMaster() {
-    if (true) {
-        $.ajax({
-            url: "/Calendar/AddMasterData",
-            method: "POST",
-            data: {
-                data: serviceProviderList,
-                ModelId: 2
-            },
-            success: function (response) {
-
-                if (response.Status) {
-                    swal({
-                        icon: "success",
-                        title: "Service Provider Added",
-                        text: "Service Provider added successfully!"
-                    }).then(function (check) {
-                        // after success response
-                        window.location.href = '/BusinessAdmin/SetupCalendarEvent?CompanyId=' + localStorage.getItem("COMPANY_ID") + "&CalendarCode=" + createdCalendarCode + "&Step=5";
-                    });
-
-                } else {
-                    swal({
-                        icon: "error",
-                        title: "Error",
-                        text: response.Message
-                    });
-                }
-
-            },
-            error: function (er) {
-
-            }
-        })
-    }
-}
-
-
-
-// Helper functions
 function getMaxId(arr) {
     let max = 1;
     if (arr != null) {
@@ -1205,28 +715,168 @@ function getMaxId(arr) {
     return max;
 }
 
-function setSameTime() {
-    $("#Tuesday_Start_Time").val($("#Monday_Start_Time").val());
-    $("#Tuesday_End_Time").val($("#Monday_End_Time").val());
+//function configureStep(step) {
 
-    $("#Wednesday_Start_Time").val($("#Monday_Start_Time").val());
-    $("#Wednesday_End_Time").val($("#Monday_End_Time").val());
+//    let configStep = ConfigData["Type" + createdCalendarType]["Step" + step];
 
-    $("#Thursday_Start_Time").val($("#Monday_Start_Time").val());
-    $("#Thursday_End_Time").val($("#Monday_End_Time").val());
+//    // steps and common and special based on JSON architecture type
+//    let specialSteps = [5, 6, 7];
 
-    $("#Friday_Start_Time").val($("#Monday_Start_Time").val());
-    $("#Friday_End_Time").val($("#Monday_End_Time").val());
+//    if (specialSteps.includes(step)) {
+//        if (CalendarData.Data.CALENDAR_TYPE != undefined && CalendarData.Data.CALENDAR_TYPE != null) {
+//            configStep = configStep["2_" + CalendarData.Data.CALENDAR_TYPE];
+//        }
+//    }
 
-    $("#Saturday_Start_Time").val($("#Monday_Start_Time").val());
-    $("#Saturday_End_Time").val($("#Monday_End_Time").val());
+//    if (configStep.Is_Step == null || configStep.Is_Step == undefined) {
+//        alert("Something went wrong!");
+//        return;
+//    }
 
-    $("#Sunday_Start_Time").val($("#Monday_Start_Time").val());
-    $("#Sunday_End_Time").val($("#Monday_End_Time").val());
-}
+//    if (configStep.Is_Step == true) {
+//        $("#step-" + step + " .template-binder").empty();
 
-function setSameDateValue() {
-    if ($("input[name=TimeSameAsMonday]:checked").val() == "on") {
-        setSameTime();
-    }
-}
+//        if (configStep.Is_Kanban == true) {
+//            // bind Kanban Template
+//        } else {
+//            if (configStep.Has_Multiple_Steps == true) {
+//                $("#step-" + step + " .template-binder").append(`<div class="hed-til">
+//                        <p class="step"></p>
+//                    </div>
+
+//                    <div class="f_of_f-wrap-o">
+//                        <div class="choose">
+
+//                        </div>
+//                        <button type="button" onclick="backToStep(${(step - 1)})" class="back">Back</button>
+//                    </div>
+//                    <div class="blocks">
+
+//                    </div>`);
+
+//                let counter = 1;
+//                let binderString = "";
+//                while (configStep.Steps["2_" + counter] != undefined && configStep.Steps["2_" + counter] != null) {
+//                    binderString += `<div class="chose-inner" onclick="moveToStep(${(parseInt(step) + 1)}, ${counter})">
+//                                <div class="one">
+//                                    <img src="${configStep.Steps["2_" + counter].Image}" onerror="this.src='../assets/svg/logos/favicon.png'" />
+//                                </div>
+//                                <div class="two">
+//                                    <p>${configStep.Steps["2_" + counter].Text}</p>
+//                                </div>
+//                                <div class="three">
+//                                    <p><img src="../assets/img/purple.png" /></p>
+//                                </div>
+//                            </div>`;
+//                    counter++;
+//                }
+//                $("#step-" + step + " .choose").append(binderString);
+//            } else {
+
+//                // bind entry form or final step
+//                let masterName = "";
+//                let addFuncName = "";
+
+//                if (configStep.Title == "Location Master") {
+//                    masterName = "locations"
+//                    addFuncName = "addMoreLocation"
+//                }
+//                else if (configStep.Title == "Service Provider Master") {
+//                    masterName = "providers"
+//                    addFuncName = "addMoreProvider"
+//                }
+//                else if (configStep.Title == "Service Master") {
+//                    masterName = "service"
+//                    addFuncName = "addMoreService"
+//                }
+
+//                if (configStep.Is_Final_Step) {
+//                    debugger;
+
+//                } else {
+
+//                    if (step == 6 && CalendarData.Data.CALENDAR_TYPE == 3) {
+
+//                        // bind mapper form
+
+
+//                    } else {
+//                        // bind entry form
+//                        $("#step-" + step + " .template-binder").append(`<div class="hed-til">
+//                            <p class="heading-title step"></p>
+//                        </div>
+//                        <div>
+
+//                            <div id="div1">
+//                                <div class="text-center">
+//                                    <div class="profile-form">
+                                        
+//                                        <div style="text-align:right; color:crimson;">* mandatory</div>
+//                                        <div class="form-inner set-cal" style="max-width:100%; margin-bottom: 1em;">
+//                                            <div id="${masterName}-div">
+
+//                                            </div>
+
+//                                            <div class="ycaml">
+//                                                <p>You can add more location if your event takes place in more than one location.</p>
+//                                                <button class="bg-t-b" onclick="${addFuncName}(null, true, true)">+Add more</button>
+//                                            </div>
+
+//                                            <button type="button" onclick="backToStep(${(step - 1)})" class="back">Back</button>
+//                                            <button type="button" style="display:none;" onclick="skipToStep(${(step + 1)})" class="back skip-button">Skip</button>
+//                                            <button type="button" class="btn btn-primary" onclick="moveToStep(${(step + 1)})">Next</button>
+                                            
+//                                        </div>
+//                                    </div>
+//                                </div>
+//                            </div>
+
+//                        </div>
+
+//                        <div class="blocks">
+
+//                        </div>`);
+//                    }
+
+
+//                }
+//            }
+//        }
+
+//        $("#step-" + step + " .hed-til p").text(configStep.Heading_Title);
+
+//        if (configStep.Is_Skippable == true) {
+//            $("#step-" + step + " .skip-button").show();
+//        } else {
+//            $("#step-" + step + " .skip-button").hide();
+//        }
+
+//        // helper text and image after form bindings
+//        if (configStep.Helper_After_Form != null && configStep.Helper_After_Form != undefined) {
+
+//            let counter = 1;
+//            let stringBinder = "";
+
+//            $(".blocks").empty();
+
+//            while (configStep.Helper_After_Form["Helper_" + counter] != undefined) {
+//                stringBinder += `<div class="block-inner">
+//                    <div class="block-image">
+//                        <img src="${configStep.Helper_After_Form["Helper_" + counter].Image}" onerror="this.src='/assets/marketplace/image/hands.png'">
+//                    </div>
+//                    <div class="block-text">
+//                        <p>${configStep.Helper_After_Form["Helper_" + counter].Text} </p>
+//                    </div>
+//                </div>`;
+//                counter++;
+//            }
+
+//            $(".blocks").append(stringBinder);
+//        }
+
+//    } else {
+//        backToStep((parseInt(step) + 1));
+//    }
+
+//    $("#step-" + step).fadeIn();
+//}
