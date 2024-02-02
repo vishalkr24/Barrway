@@ -364,6 +364,338 @@
 
       }
 
+    },
+    "Step7": {
+      "Is_Based_On_Category": true,
+      "Category": {
+        "2_3": {
+          "Has_Next_Step": false,
+          "View_Name": "FINAL_VIEW",
+          "Success_Message": "Congratulations, you have created a calendar!",
+          "Helpers": {
+            "Helper_1": {
+              "Image": "",
+              "Text": "Let's add your course/service schedule to the calendar",
+              "Button": {
+                "Text": "Go",
+                "Link": "/BusinessAdmin/SchedularMaster"
+              }
+            },
+            "Helper_2": {
+              "Image": "",
+              "Text": "I will set up the course/service schedule later. Let me see the calendar I created.",
+              "Button": {
+                "Text": "Go",
+                "Link": "/Calendar/Index#/Calendar"
+              }
+            }
+          }
+        }
+      }
+
+    }
+  },
+
+  "Type3": {
+    "Step1": {
+      "Has_Next_Step": true,
+      "Is_Based_On_Category": false,
+      "View_Name": "CALENDAR_FORM"
+
+    },
+    "Step2": {
+      "Has_Next_Step": true,
+      "Is_Based_On_Category": false,
+      "View_Name": "MULTI_VIEW",
+      "Heading_Title": "Which one describe your booking the best?",
+      "Is_Skippable": false,
+      "Steps": {
+        "Step1": {
+          "Image": "",
+          "Text": "Set up fixed sessions for customer to book"
+        },
+        "Step2": {
+          "Image": "",
+          "Text": "Set up your business hour for customer to book within the period"
+        },
+        "Step3": {
+          "Image": "",
+          "Text": "Generate tickets and in first-come-first-serve basis"
+        }
+      }
+    },
+    "Step3": {
+      "Is_Based_On_Category": true,
+      "Category": {
+        "2_1": {
+          "Has_Next_Step": true,
+          "View_Name": "DYNAMIC_FORM",
+          "Heading_Title": "Set up the rooms for booking",
+          "Is_Skippable": true,
+          "Form_Id": 2306,
+          "Helper_After_Form": {
+            "Helper_1": {
+              "Image": "",
+              "Text": "You may edit these information and add more details in the future by going to location master. "
+            }
+          }
+        },
+        "2_2": {
+          "Has_Next_Step": true,
+          "View_Name": "DYNAMIC_FORM",
+          "Heading_Title": "Set up the rooms for booking",
+          "Is_Skippable": true,
+          "Form_Id": 2306,
+          "Helper_After_Form": {
+            "Helper_1": {
+              "Image": "",
+              "Text": "You may edit these information and add more details in the future by going to location master. "
+            }
+          }
+        }
+      }
+    },
+    "Step4": {
+      "Is_Based_On_Category": true,
+      "Category": {
+        "2_1": {
+          "Has_Next_Step": true,
+          "View_Name": "DYNAMIC_FORM",
+          "Heading_Title": "Set up service details",
+          "Is_Skippable": true,
+          "Form_Id": 2303,
+          "Helper_After_Form": {
+            "Helper_1": {
+              "Image": "",
+              "Text": "We support visa master paypal.... "
+            },
+            "Helper_2": {
+              "Image": "",
+              "Text": "You may edit these information and add more details in the future by going to service master. "
+            },
+            "Helper_3": {
+              "Image": "",
+              "Text": "You may set the price list in Pricelist master."
+            }
+          }
+        },
+        "2_2": {
+          "Has_Next_Step": true,
+          "View_Name": "DYNAMIC_FORM",
+          "Heading_Title": "Set up service details",
+          "Is_Skippable": true,
+          "Form_Id": 2303,
+          "Helper_After_Form": {
+            "Helper_1": {
+              "Image": "",
+              "Text": "We support visa master paypal.... "
+            },
+            "Helper_2": {
+              "Image": "",
+              "Text": "You may edit these information and add more details in the future by going to service master. "
+            },
+            "Helper_3": {
+              "Image": "",
+              "Text": "You may set the price list in Pricelist master."
+            }
+          }
+        },
+        "2_3": {
+          "Has_Next_Step": false,
+          "View_Name": "FINAL_VIEW",
+          "Success_Message": "Congradulation, you have created queues for your restaurant!",
+          "Helpers": {
+            "Helper_1": {
+              "Image": "",
+              "Text": "You can edit your queue setting here. ",
+              "Button": {
+                "Text": "Go",
+                "Link": "/BusinessAdmin/SchedularMaster"
+              }
+            },
+            "Helper_2": {
+              "Image": "",
+              "Text": "Let’s check the queue created. ",
+              "Button": {
+                "Text": "Go",
+                "Link": "/Calendar/Index#/Calendar"
+              }
+            }
+          }
+        }
+      }
+
+    }
+  },
+
+  "Type4": {
+    "Step1": {
+      "Has_Next_Step": true,
+      "Is_Based_On_Category": false,
+      "View_Name": "CALENDAR_FORM"
+
+    },
+    "Step2": {
+      "Has_Next_Step": true,
+      "Is_Based_On_Category": false,
+      "View_Name": "MULTI_VIEW",
+      "Heading_Title": "Which one describe your booking the best?",
+      "Is_Skippable": false,
+      "Steps": {
+        "Step1": {
+          "Image": "",
+          "Text": "Set up fixed sessions for people to book"
+        },
+        "Step2": {
+          "Image": "",
+          "Text": "Set up your business hour for people to book within the period"
+        }
+      }
+    },
+    "Step3": {
+      "Has_Next_Step": true,
+      "Is_Based_On_Category": false,
+      "View_Name": "DYNAMIC_FORM",
+      "Heading_Title": "Give a name for your booking location",
+      "Is_Skippable": true,
+      "Form_Id": 2306,
+      "Helper_After_Form": {
+        "Helper_1": {
+          "Image": "",
+          "Text": "You may edit these information and add more details in the future by going to location master. "
+        }
+      }
+    },
+    "Step4": {
+      "Is_Based_On_Category": true,
+      "Category": {
+        "2_1": {
+          "Has_Next_Step": false,
+          "View_Name": "FINAL_VIEW",
+          "Success_Message": "Congradulation, you have created a calendar!",
+          "Helpers": {
+            "Helper_1": {
+              "Image": "",
+              "Text": "Let’s add your business schedule to the calendar ",
+              "Button": {
+                "Text": "Go",
+                "Link": "/BusinessAdmin/SchedularMaster"
+              }
+            },
+            "Helper_2": {
+              "Image": "",
+              "Text": "I will set up the business schedule later. Let me see the calendar I created. ",
+              "Button": {
+                "Text": "Go",
+                "Link": "/Calendar/Index#/Calendar"
+              }
+            }
+          }
+        },
+        "2_2": {
+          "Has_Next_Step": false,
+          "View_Name": "FINAL_VIEW",
+          "Success_Message": "Congradulation, you have created a calendar!",
+          "Helpers": {
+            "Helper_1": {
+              "Image": "",
+              "Text": "Let’s add your business schedule to the calendar ",
+              "Button": {
+                "Text": "Go",
+                "Link": "/BusinessAdmin/SchedularMaster"
+              }
+            },
+            "Helper_2": {
+              "Image": "",
+              "Text": "I will set up the business schedule later. Let me see the calendar I created. ",
+              "Button": {
+                "Text": "Go",
+                "Link": "/Calendar/Index#/Calendar"
+              }
+            }
+          }
+        }
+
+      }
+
+    }
+  },
+
+  "Type5": {
+    "Step1": {
+      "Has_Next_Step": true,
+      "Is_Based_On_Category": false,
+      "View_Name": "CALENDAR_FORM"
+
+    },
+    "Step2": {
+      "Has_Next_Step": true,
+      "Is_Based_On_Category": false,
+      "View_Name": "DYNAMIC_FORM",
+      "Heading_Title": "Give a name for your event location",
+      "Is_Skippable": true,
+      "Form_Id": 2306,
+      "Helper_After_Form": {
+        "Helper_1": {
+          "Image": "",
+          "Text": "You may edit these information and add more details in the future by going to location master. "
+        }
+      }
+    },
+    "Step3": {
+      "Has_Next_Step": true,
+      "Is_Based_On_Category": false,
+      "View_Name": "DYNAMIC_FORM",
+      "Heading_Title": "Add the host details",
+      "Is_Skippable": true,
+      "Form_Id": 2304,
+      "Helper_After_Form": {
+        "Helper_1": {
+          "Image": "",
+          "Text": "You may edit these information and add more details in the future by going to service provider master.  "
+        }
+      }
+    },
+    "Step4": {
+      "Has_Next_Step": true,
+      "Is_Based_On_Category": false,
+      "View_Name": "DYNAMIC_FORM",
+      "Heading_Title": "Add the host details",
+      "Is_Skippable": true,
+      "Form_Id": 2303,
+      "Helper_After_Form": {
+        "Helper_1": {
+          "Image": "",
+          "Text": "We support visa master paypal.... "
+        },
+        "Helper_2": {
+          "Image": "",
+          "Text": "You may edit these information and add more details in the future by going to service master."
+        }
+      }
+    },
+    "Step5": {
+      "Has_Next_Step": false,
+      "View_Name": "FINAL_VIEW",
+      "Success_Message": "Congradulation, you have created a calendar!",
+      "Helpers": {
+        "Helper_1": {
+          "Image": "",
+          "Text": "Let’s add your course/service schedule to the calendar ",
+          "Button": {
+            "Text": "Go",
+            "Link": "/BusinessAdmin/SchedularMaster"
+          }
+        },
+        "Helper_2": {
+          "Image": "",
+          "Text": "I will set up the course/service schedule later. Let me see the calendar I created. ",
+          "Button": {
+            "Text": "Go",
+            "Link": "/Calendar/Index#/Calendar"
+          }
+        }
+      }
     }
   }
 }

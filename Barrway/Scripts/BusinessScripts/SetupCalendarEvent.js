@@ -1,5 +1,6 @@
 ﻿var dataList = [];
 var dataModelList = [];
+var staffServiceMapping = [];
 const createdCalendarCode = $("#calendarCodeInput").val();
 const createdCompanyCode = $("#companyCodeInput").val();
 const createdCalendarType = $("#calendarCategoryInput").val();
@@ -16,6 +17,23 @@ $(document).ready(function () {
     }, 500);
 
 });
+
+$(document).on("change", "input[name=staff-service-mapper-input]", function () {
+    let serviceId = $(this).attr("data-service-id");
+    let providerId = $(this).attr("data-provider-id");
+
+    staffServiceMapping
+        .find(x => x.SERVICE_ID == serviceId && x.SERVICE_PROVIDER_ID == providerId)
+        .checked = ($(this).is(":checked")) ? true : false;
+
+    if ($(this).is(":checked")) {
+        $(`#SS_IMG_${serviceId}_${providerId}`).show();
+    } else {
+        $(`#SS_IMG_${serviceId}_${providerId}`).hide();
+    }
+    
+
+})
 
 function readyPage() {
     checkRegistrationStep();
@@ -412,7 +430,7 @@ function BindStaffServiceMappingTemplate() {
                                 <div class="table-button">
                                     <button type="button" class="back" onclick="backToStep(${parseInt(CurrentStep) - 1})">Back</button>
                                     <button type="button" class="back" onclick="skipToStep(${parseInt(CurrentStep) + 1})">Skip</button>
-                                    <button class="pink-button right">Create calendar</button>
+                                    <button class="pink-button right" onclick="UpdateStaffServiceMapping()">Create calendar</button>
                                 </div>
                             </div>
                         </div>`);
@@ -434,7 +452,21 @@ function BindStaffServiceMappingTemplate() {
         for (var i = 0; i < serviceProviderMasterData.length; i++) {
             binderString += "<tr><td>" + serviceProviderMasterData[i].FIRST_NAME + " " + serviceProviderMasterData[i].LAST_NAME + "</td>"
             for (var j = 0; j < serviceMasterData.length; j++) {
-                binderString += `<td><img src="../assets/marketplace/image/Isolation_Mode.png" /><input type="checkbox" class="form-control" data-service-id="${serviceMasterData[j].Id}" data-provider-id="${serviceProviderMasterData[i].Id}" name="staff-service-mapper-input"></td>`
+                staffServiceMapping.push({
+                    CALENDAR_CODE: createdCalendarCode,
+                    SERVICE_ID: serviceMasterData[j].Id,
+                    SERVICE_PROVIDER_ID: serviceProviderMasterData[i].Id,
+                    checked: false
+                });
+
+                binderString += `<td style="padding: 0px;">
+                                                <label style="width: 100%; float: left; height: 50px; display: flex; justify-content: center; align-items: center;" for="SS_${serviceMasterData[j].Id}_${serviceProviderMasterData[i].Id}">
+                                                    <img id="SS_IMG_${serviceMasterData[j].Id}_${serviceProviderMasterData[i].Id}" style="width: 18px; position: relative; height: 18px; vertical-align: middle; display:none;" src="../assets/marketplace/image/Isolation_Mode.png" />
+                                                    <input type="checkbox" style="display:none" class="form-control" data-service-id="${serviceMasterData[j].Id}" data-provider-id="${serviceProviderMasterData[i].Id}" id="SS_${serviceMasterData[j].Id}_${serviceProviderMasterData[i].Id}" name="staff-service-mapper-input">
+                                                </label>
+
+                                            </td>`
+
             }
             binderString += "</tr>";
         }
@@ -444,6 +476,20 @@ function BindStaffServiceMappingTemplate() {
 
     } else {
         $(".tab-notification").text("Please create staff and services in previous steps!")
+    }
+    debugger;
+    let mappingData = GetStaffServiceMappingData(createdCalendarCode);
+
+    if (mappingData.Status) {
+
+        if (mappingData.Data != null) {
+            mappingData.Data.forEach(x => {
+                $(`input[data-service-id=${x.SERVICE_ID}][data-provider-id=${x.SERVICE_PROVIDER_ID}]`).prop("checked", true);
+                staffServiceMapping.find(y => y.SERVICE_ID == x.SERVICE_ID && y.SERVICE_PROVIDER_ID == x.SERVICE_PROVIDER_ID).checked = true;
+                $(`#SS_IMG_${x.SERVICE_ID}_${x.SERVICE_PROVIDER_ID}`).show();
+            });
+        }
+
     }
 
 }
@@ -664,6 +710,51 @@ function createMasterData() {
             }
         })
 
+    }
+}
+
+function UpdateStaffServiceMapping() {
+    if (staffServiceMapping.find(x => x.checked == true) == null) {
+        swal({
+            icon: "warning",
+            title: "Warning",
+            text: "Please check the boxes to assign Service(s) to Service Provider(s)"
+        })
+    } else {
+
+        let finalData = staffServiceMapping.filter(x => x.checked == true);
+
+        if (finalData.length > 0) {
+            $.ajax({
+                url: "/Calendar/UpdateStaffServiceMapping",
+                method: "POST",
+                data: {
+                    model: finalData
+                },
+                success: function (response) {
+                    if (response.Status) {
+                        swal({
+                            icon: "success",
+                            title: "Great!",
+                            text: "Staff successfully assigned to Service Providers"
+                        }).then(function (check) {
+                            if (ConfigStep.Has_Next_Step) {
+                                window.location.replace(`/BusinessAdmin/SetupCalendarEvent?CompanyId=${localStorage.getItem("COMPANY_ID")}&CalendarCode=${createdCalendarCode}&Step=${(parseInt(CurrentStep) + 1)}`)
+                            }
+                        })
+                    } else {
+                        swal({
+                            icon: "error",
+                            title: "Error",
+                            text: "Kindly refresh and try again!"
+                        })
+                    }
+                },
+                error: function (error) {
+
+                }
+            })
+        }
     }
 }
 

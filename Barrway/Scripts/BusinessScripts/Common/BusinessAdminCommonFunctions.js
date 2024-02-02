@@ -70,6 +70,25 @@ function getServiceProviderDataByCalendar(companyCode, calendarCode) {
     return data;
 }
 
+function GetStaffServiceMappingData(calendarCode) {
+    var data;
+    $.ajax({
+        url: "/Calendar/GetStaffServiceMappingData/",
+        async: false,
+        type: "POST",
+        data: {
+            CalendarCode: calendarCode
+        },
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    });
+    return data;
+}
+
 function getServiceMasterDataByCalendar(companyCode, calendarCode) {
     var data;
     $.ajax({

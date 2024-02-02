@@ -54,7 +54,6 @@ namespace Barrway.Controllers
         //            }
         //        }
         //    }
-
         //    return true;
         //}
 
@@ -93,6 +92,7 @@ namespace Barrway.Controllers
                     Session.RemoveAll();
                     Session.Abandon();
                     TempData.Clear();
+
                     if (HttpContext != null)
                     {
                         HttpContext.Request.Cookies.Clear();

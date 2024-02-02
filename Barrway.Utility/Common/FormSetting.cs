@@ -48,7 +48,8 @@ namespace Barrway.Utility.Common
         PAYMENT_HISTORY_MASTER = 2326,
         BUSINESS_ASSIGNED_USERS = 2334,
         BUSINESS_USER_INVITATION_MANAGER = 2335,
-        USER_ASSIGNED_COMPANIES = 2336
+        USER_ASSIGNED_COMPANIES = 2336,
+        STAFF_SERVICE_MAPPING = 2341
     }
 
     public enum FormAction

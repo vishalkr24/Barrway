@@ -889,6 +889,81 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> UpdateStaffServiceMapping(List<StaffServiceMappingModel> model)
+        {
+            try
+            {
+                string query = $@"delete from STAFF_SERVICE_MAPPING_1971 where CALENDAR_CODE = '{model.FirstOrDefault().CALENDAR_CODE}'";
+                var result = await sqlFunction.ExecuteSqlCommandQuery(query);
+                
+                List<string> requestList = new List<string>();
+                List<string> formGroupKeyListTemp = new List<string>();
+
+                var dataSerialized = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(JsonConvert.SerializeObject(model));
+
+                dataSerialized.ForEach(assign =>
+                {
+                    Dictionary<string, object> sd = new Dictionary<string, object>();
+                    foreach (KeyValuePair<string, string> keyValuePair in assign)
+                    {
+                        if (keyValuePair.Key != "Id")
+                        {
+                            sd.Add(keyValuePair.Key, keyValuePair.Value.ToString());
+                        }
+                        
+                    }
+
+                    requestList.Add(CustomMethods.ConvertDicToNameValuePair(sd));
+                    formGroupKeyListTemp.Add(Guid.NewGuid().ToString());
+                });
+
+                Form_DataTable request = new Form_DataTable();
+                request.action = (int)FormAction.Save;
+                request.formId = (int)FormSetting.STAFF_SERVICE_MAPPING;
+                request.IsMaxOneRecordPerUser = false;
+                request.formfieldDataListTempList = requestList.ToArray();
+                request.formGroupKeyListTemp = formGroupKeyListTemp.ToArray();
+                var formResult = (await formAPIRepository.BulkGeneratedFormData(request)).Data;
+
+                if (formResult.res == 1)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "Kindly Refresh and Try Again!" };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetStaffServiceMappingData(string CalendarCode)
+        {
+            try
+            {
+                string query = $@"select * from STAFF_SERVICE_MAPPING_1971 where CALENDAR_CODE = '{CalendarCode}'";
+                var result = await sqlFunction.ExecuteSqlQuery(query);
+
+                if (result.Count > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "Kindly Refresh and Try Again!" };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
         public async Task<AddUpdateDelete> GetCompanyCalendarByCompanyId(string CompanyId)
         {
             string query = $@"SELECT calendar.[Id]      ,calendar.[created_at], company.IS_ACTIVE      ,calendar.[updated_at]      ,calendar.[created_by]      ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
