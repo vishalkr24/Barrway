@@ -35467,6 +35467,15 @@ button#backtomarketplace {
     width: 100%;
     float: left;
     text-align: center;
+    
+}
+
+.mt-125rem {
+    margin-top: 1.25rem;
+}
+
+.mt-4rem{
+    margin-top: 4rem;
 }
 
 .queue_message p {
@@ -35491,6 +35500,7 @@ button#backtomarketplace {
 .number_of_queue, .booking_queue_table, .booking_queue_number {
     width: 100%;
     float: left;
+    
 }
 .number_of_queue {
     margin-bottom: 30px;
@@ -35555,6 +35565,6 @@ button#backtomarketplace {
         transform: scale(1);
     }
 .booking_queue_table table {
-    width: 100%;
+    width: max-content;
     float: left;
 }

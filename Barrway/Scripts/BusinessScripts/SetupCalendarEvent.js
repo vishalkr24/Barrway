@@ -31,7 +31,7 @@ $(document).on("change", "input[name=staff-service-mapper-input]", function () {
     } else {
         $(`#SS_IMG_${serviceId}_${providerId}`).hide();
     }
-    
+
 
 })
 
@@ -149,15 +149,28 @@ function bindStep(step) {
         switch (ConfigStep.View_Name) {
             case "MULTI_VIEW":
                 BindMultiViewTemplate();
+                $("#master-wrap-2").hide();
+                $("#master-wrap-1").show();
                 break;
             case "DYNAMIC_FORM":
                 BindDynamicFormTemplate();
+                $("#master-wrap-2").hide();
+                $("#master-wrap-1").show();
                 break;
             case "FINAL_VIEW":
                 BindFinalViewTemplate();
+                $("#master-wrap-2").hide();
+                $("#master-wrap-1").show();
                 break;
             case "STAFF_SERVICE_MAPPING_VIEW":
                 BindStaffServiceMappingTemplate();
+                $("#master-wrap-2").hide();
+                $("#master-wrap-1").show();
+                break;
+            case "QUEUE_1":
+                BindQueue1Template();
+                $("#master-wrap-1").hide();
+                $("#master-wrap-2").show();
                 break;
             default:
                 break;
@@ -174,7 +187,7 @@ function bindStep(step) {
                 $("#step .skip-button").hide();
             }
         }
-        
+
 
     }
 }
@@ -217,7 +230,7 @@ function BindMultiViewTemplate() {
 function BindDynamicFormTemplate() {
 
     let formId = ConfigStep.Form_Id;
-    
+
     $("#step .template-binder").append(`<div class="hed-til">
                             <p class="heading-title step"></p>
                         </div>
@@ -253,7 +266,7 @@ function BindDynamicFormTemplate() {
 
                         </div>`);
 
-    
+
     if (ConfigStep.Helper_After_Form != null && ConfigStep.Helper_After_Form != undefined) {
 
         let counter = 1;
@@ -307,7 +320,7 @@ function BindDynamicFormTemplate() {
                     }
 
                     data2.forEach(x => {
-                        
+
                         dataModelList.push({
                             label: x["label"],
                             containerClass: "col-md-" + parseInt((12 / parseInt(100 / parseInt(x["column_width"])))),
@@ -415,7 +428,7 @@ function BindFinalViewTemplate() {
 }
 
 function BindStaffServiceMappingTemplate() {
-    
+
     $("#step .template-binder").append(`<div class="hed-til">
                             <p class="heading-title step"></p>
                         </div>
@@ -492,6 +505,149 @@ function BindStaffServiceMappingTemplate() {
 
     }
 
+}
+
+function BindQueue1Template() {
+    $("#master-wrap-2").empty();
+    $("#master-wrap-2").append(`<div class="row">
+                    <div class="col-md-12">
+                        <div class="hed-til">
+                            <p class="heading-title step ml-0"></p>
+                        </div></div>
+                    </row>
+                    <div class="row mt-125rem">
+                    <div class="col-md-2">
+                        <div class="img-col mt-125rem">
+                            <img src="/assets/marketplace/image/serv.png" />
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="booking_queue">
+                            <div class="booking_queue_number">
+                                <div class="number_of_queue">
+                                    <div class="quewe_set">
+                                        <label for="number_of_queue"><b style="color:#000;">Number of queue*</b></label>
+                                        <select id="exampleFormControlSelect1" class="form-control">
+                                            <option selected>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>
+                                    </div>
+                                    <div class="queue_message">
+                                        <p>You may set up queues for Customer ticket queue and internal workflow queue (e.g. Queue for Prescription)</p>
+                                    </div>
+                                </div>
+
+                                <div class="booking_queue_table">
+                                    <table class="booking-queue-table" id="booking-queue-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Queue by</th>
+                                                <th>Queue resources*</th>
+                                                <th>Queue name*</th>
+                                                <th>Usage*</th>
+                                                <th>Queue abbreviation(s)*</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-button mt-4rem">
+                                    <button type="button" class="back" onclick="backToStep(${parseInt(CurrentStep) - 1})">Back</button>
+                                    <button type="button" class="back" style="display:none;" onclick="skipToStep(${parseInt(CurrentStep) + 1})">Skip</button>
+                                    <button class="pink-button right" onclick="UpdateStaffServiceMapping()">Create calendar</button>
+                                </div>
+                <div class="blocks"></div>
+                
+`);
+
+    addQueueRow();
+
+    if (ConfigStep.Helper_After_Form != null && ConfigStep.Helper_After_Form != undefined) {
+
+        let counter = 1;
+        let binderString = "";
+
+        $(".blocks").empty();
+
+        while (ConfigStep.Helper_After_Form["Helper_" + counter] != undefined) {
+            binderString += `<div class="block-inner">
+                    <div class="block-image">
+                        <img src="${ConfigStep.Helper_After_Form["Helper_" + counter].Image}" onerror="this.src='/assets/marketplace/image/hands.png'">
+                    </div>
+                    <div class="block-text">
+                        <p>${ConfigStep.Helper_After_Form["Helper_" + counter].Text} </p>
+                    </div>
+                </div>`;
+            counter++;
+        }
+
+        $(".blocks").append(binderString);
+    }
+}
+
+$(document).on("change", "#exampleFormControlSelect1", function () {
+    addQueueRow();
+});
+
+function addQueueRow() {
+    let binderString = "";
+
+    let rowCount = parseInt($("#exampleFormControlSelect1 option:selected").val());
+
+    rowCount = (rowCount > 5) ? 5 : rowCount;
+
+    for (var i = 0; i < rowCount; i++) {
+        binderString += `<tr>
+                                                    <td>
+                                                        <select id="" class="form-control">
+                                                            <option>Staff</option>
+                                                            <option>2</option>
+                                                            <option>3</option>
+                                                            <option>4</option>
+                                                            <option>5</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="" class="form-control">
+                                                            <option>Select staff name from master</option>
+                                                            <option>2</option>
+                                                            <option>3</option>
+                                                            <option>4</option>
+                                                            <option>5</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="" class="form-control">
+                                                            <option>Dr.Team</option>
+                                                            <option>2</option>
+                                                            <option>3</option>
+                                                            <option>4</option>
+                                                            <option>5</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <div class="booking_queue_radio">
+                                                            <input type="radio" id="test1" name="radio-group" checked>
+                                                            <label for="test1">Ticket distribution</label>
+                                                            <input type="radio" id="test2" name="radio-group">
+                                                            <label for="test2">Workflow queue</label>
+                                                        </div>
+                                                    </td>
+                                                    <td style="width:100px;">
+                                                        <input class="form-control " type="text" name="" data-input-id="">
+                                                    </td>
+                                                </tr>`;
+    }
+
+    $(".booking-queue-table tbody").empty();
+    $(".booking-queue-table tbody").append(binderString);
 }
 
 //function validateStep(stepId) {
@@ -693,7 +849,7 @@ function createMasterData() {
                         } else {
                             window.location.href = '/BusinessAdmin/Dashboard';
                         }
-                        
+
                     });
 
                 } else {
@@ -901,7 +1057,7 @@ function getMaxId(arr) {
 //                            <div id="div1">
 //                                <div class="text-center">
 //                                    <div class="profile-form">
-                                        
+
 //                                        <div style="text-align:right; color:crimson;">* mandatory</div>
 //                                        <div class="form-inner set-cal" style="max-width:100%; margin-bottom: 1em;">
 //                                            <div id="${masterName}-div">
@@ -916,7 +1072,7 @@ function getMaxId(arr) {
 //                                            <button type="button" onclick="backToStep(${(step - 1)})" class="back">Back</button>
 //                                            <button type="button" style="display:none;" onclick="skipToStep(${(step + 1)})" class="back skip-button">Skip</button>
 //                                            <button type="button" class="btn btn-primary" onclick="moveToStep(${(step + 1)})">Next</button>
-                                            
+
 //                                        </div>
 //                                    </div>
 //                                </div>

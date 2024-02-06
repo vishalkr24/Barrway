@@ -358,8 +358,18 @@
               "Text": "You may edit this mapping in the future by going to the Staff and Service mapping."
             }
           }
+        },
+        "2_4": {
+          "Has_Next_Step": false,
+          "View_Name": "QUEUE_1",
+          "Heading_Title": "Set up the booking queue",
+          "Helper_After_Form": {
+            "Helper_1": {
+              "Image": "",
+              "Text": "You may edit this mapping in the future by going to the Schedular."
+            }
+          }
         }
-
 
 
       }
@@ -697,5 +707,6 @@
         }
       }
     }
+    
   }
 }
