@@ -3203,7 +3203,7 @@ namespace Barrway.Service.Repository
 
                 if (string.IsNullOrEmpty(UserId))
                 {
-                    sqlString = $@"select *from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE='{calendarCode}'";
+                    sqlString = $@"select *from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE='{calendarCode??""}'";
                 }
                 else
                 {
