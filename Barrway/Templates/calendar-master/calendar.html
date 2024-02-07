@@ -372,11 +372,29 @@
                     <div class="form-top">
                         <label>{{translation.Resources}}</label>
 
-                        <select class="form-control"
-                                ng-model="ySelection"
-                                ng-change="ySelectionChange(ySelection)"
-                                ng-options="v.resourceActivityForm as v.title for v in yaxisFormList"></select>
-                    </div>
+
+<div class="row" style="margin-left:-1.5rem;" id="calendar_view">
+    <div class="col-md-2" ng-show="IS_EXIST_PRE_DEFINED_ACTIVITIES" style="background-color: #bcb3cc; padding:0px;">
+        <section class="sidebar" style="border-right:none!important;">
+            <div class="sedebar__tInner" style="text-align:center">
+                <div class="form-top">
+                    <label>{{translation.Activities}}</label>
+
+                    <select class="form-control"
+                            ng-model="xSelection"
+                            id="xAxis"
+                            ng-change="xSelectionChange(xSelection)"
+                            ng-options="v.resourceActivityForm as v.title for v in xaxisFormList"></select>
+                </div>
+                <div class="form-top">
+                    <label>{{translation.Resources}}</label>
+
+                    <select class="form-control"
+                            ng-model="ySelection"
+                            ng-change="ySelectionChange(ySelection)"
+                            ng-options="v.resourceActivityForm as v.title for v in yaxisFormList"></select>
+                </div>
+
 
                     <div class="form-top mt-2 text-center">
                         <button class="btn btn-primary btn-sm mb-0"
@@ -863,6 +881,7 @@
         </div>
     </div>
 
+
     <div id="queue_view">
         <div class="queue_top">
             <div class="row">
@@ -973,6 +992,7 @@
             </div>
         
     </div>
+
 </div>
 <div id="searchModal"
      class="modal fade"
@@ -1422,3 +1442,7 @@
     $("#nav-calendar-master").addClass("active");
 
 </script>
+
+<!--Signal R Scripts-->
+<script src="../../Scripts/jquery.signalR-2.4.3.min.js"></script>
+<script src="../../Scripts/WebSocket/QueueManager.js"></script>

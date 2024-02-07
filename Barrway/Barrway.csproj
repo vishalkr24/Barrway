@@ -93,6 +93,12 @@
     <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.3\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.4.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.4.3\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.4.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.4.3\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.WebUtilities, Version=1.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebUtilities.1.0.0-rc1-final\lib\net451\Microsoft.AspNet.WebUtilities.dll</HintPath>
     </Reference>
@@ -360,6 +366,7 @@
     <Compile Include="Security\TokenManager.cs" />
     <Compile Include="Security\UserIdentity.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="WebSocket\QueueManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\css\custom-styles.css" />
@@ -3072,6 +3079,8 @@
     <Content Include="Scripts\jquery.blockUI\jquery.blockUI.js" />
     <Content Include="Scripts\jquery.blockUI\jquery.blockUI.min.js" />
     <Content Include="Scripts\jquery.cascadingdropdown.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.3.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.3.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -3132,6 +3141,7 @@
     <Content Include="Scripts\UserAdminScripts\AdminLayoutManager.js" />
     <Content Include="Scripts\UserAdminScripts\Common\UserAdminCommonFunctions.js" />
     <Content Include="Scripts\UserAdminScripts\myCalendar.js" />
+    <Content Include="Scripts\WebSocket\QueueManager.js" />
     <Content Include="Templates\admin\admin-users.html" />
     <Content Include="Templates\admin\article-details.html" />
     <Content Include="Templates\admin\cllractivity.html" />

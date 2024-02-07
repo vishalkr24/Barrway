@@ -13,14 +13,18 @@ using System.Web.Routing;
 using System.Web.Configuration;
 using Stripe;
 using System.Globalization;
+using Microsoft.AspNet.SignalR;
+using Barrway.WebSocket;
 
 namespace Barrway
 {
     public class MvcApplication : System.Web.HttpApplication
     {
-        protected void Application_Start()
+        protected void Application_Start(object sender, EventArgs e)
         {
-            
+            GlobalHost.Configuration.ConnectionTimeout = TimeSpan.FromSeconds(50);
+
+
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
