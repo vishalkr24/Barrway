@@ -134,7 +134,7 @@
         font-weight: bold;
     }
 
-    
+
 
     .schedular-table {
         width: fit-content;
@@ -155,6 +155,7 @@
 
             .schedular-table .schedular-row .form-elements {
                 display: flex;
+                flex-flow: row wrap;
             }
 
             .schedular-table .schedular-row .schedular-element {
@@ -173,7 +174,7 @@
                 }
 
                 .schedular-table .schedular-row .schedular-element.form-element {
-                    border-left:1px solid lightgrey;
+                    border-left: 1px solid lightgrey;
                 }
 
                 .schedular-table .schedular-row .schedular-element.add-element button {
@@ -204,11 +205,11 @@
                 font-size: smaller;
                 padding: 6px 12px;
                 margin-left: 12px;
-                position:relative;
+                position: relative;
                 top: 10px;
             }
 
-                
+
 
 
             .schedular-table .schedular-row:nth-child(1) .schedular-element.add-element {
@@ -216,12 +217,12 @@
                 top: 10px;
             }
 
-            .schedular-table .schedular-row:nth-child(1) .form-elements .schedular-element.form-element:not(:first-child) {
+            /*.schedular-table .schedular-row:nth-child(1) .form-elements .schedular-element.form-element:not(:first-child) div {
                 position: relative;
                 top: 10px;
-            }
+            }*/
 
-            .schedular-table .schedular-row:nth-child(1) .form-elements .schedular-element.form-element:first-child div:nth-child(2) {
+            .schedular-table .schedular-row:nth-child(1) .form-elements .schedular-element.form-element div:nth-child(2) {
                 position: relative;
                 top: 10px;
             }
@@ -242,7 +243,7 @@
                     </ol>
                 </nav>
 
-                <h1 class="schedular-title mt-4">Schedular Form</h1>
+
 
             </div>
             <!-- End Col -->
@@ -250,75 +251,112 @@
         </div>
         <!-- End Row -->
     </div>
-
-    <div class="row mt-3">
-        <div class="col-md-12">
-            <form id="myForm" class="schedular-form">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div><label>{{translation.Location}}</label></div>
-                        <select class="form-control" id="SCH_LOCATION">
-                            <option value="{{l.Id}}" ng-repeat="l in locationList">{{l.LOCATION_BUILDING_NAME}}, {{l.LOCATION_FLOOR}} floor</option>
-                        </select>
-                        <div>
-                            <div class="invalid-feedback-2" id="SCH_LOCATION_ERROR">
-                                Please select a location
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div><label>{{translation.Service}}</label></div>
-                        <select class="form-control" id="SCH_ACTIVITY">
-                            <option value="{{l.Id}}" ng-repeat="l in serviceList">{{l.ACTIVITY_NAME}}</option>
-                        </select>
-                        <div>
-                            <div class="invalid-feedback-2" id="SCH_ACTIVITY_ERROR">
-                                Please select an activity
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div><label>{{translation.Service_Provider}}</label></div>
-                        <select class="form-control" id="SCH_RESOURCE">
-                            <option value="{{l.Id}}" ng-repeat="l in serviceProviderList">{{l.FIRST_NAME}} {{l.LAST_NAME}}</option>
-                        </select>
-                        <div>
-                            <div class="invalid-feedback-2" id="SCH_RESOURCE_ERROR">
-                                Please select a resource
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4 hide-for-superadmin">
-                        <div><label>Fill Schedule {{translation.From}}</label></div>
-                        <input type="date" id="SCH_FROM_DATE" class="js-flatpickr form-control flatpickr-custom" data-hs-flatpickr-options='{ "dateFormat": "d/m/Y" }' placeholder="select from date" />
-                        <div>
-                            <div class="invalid-feedback-2" id="SCH_FROM_DATE_ERROR">
-                                Please choose a start date
-                            </div>
-                        </div>
-
-                    </div>
-
-
-                    <div class="col-md-4 hide-for-superadmin">
-                        <div>
-                            <label>{{translation.To}}</label>
-                        </div>
-
-                        <input type="date" id="SCH_TO_DATE" class="js-flatpickr form-control flatpickr-custom" data-hs-flatpickr-options='{ "dateFormat": "d/m/Y" }' placeholder="select to date" />
-                        <div>
-                            <div class="invalid-feedback-2" id="SCH_TO_DATE_ERROR">
-                                Please choose an end date
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-8 show-for-superadmin">
-                        <div class="col-md-12">
+    <div class="">
+        <h1 class="schedular-title mt-4">Schedular Form</h1>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <form id="myForm" class="schedular-form">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div><label>Course / {{translation.Service}}</label></div>
+                            <select class="form-control" id="SCH_ACTIVITY">
+                                <option value="{{l.Id}}" ng-repeat="l in serviceList">{{l.ACTIVITY_NAME}}</option>
+                            </select>
                             <div>
-                                <label>No. Of Days to Schedule</label>
+                                <div class="invalid-feedback-2" id="SCH_ACTIVITY_ERROR">
+                                    Please select an activity
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div><label>{{translation.Location}}</label></div>
+                            <select class="form-control" id="SCH_LOCATION">
+                                <option value="{{l.Id}}" ng-repeat="l in locationList">{{l.LOCATION_BUILDING_NAME}}, {{l.LOCATION_FLOOR}} floor</option>
+                            </select>
+                            <div>
+                                <div class="invalid-feedback-2" id="SCH_LOCATION_ERROR">
+                                    Please select a location
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div><label>Staff</label></div>
+                            <select class="form-control" id="SCH_RESOURCE">
+                                <option value="{{l.Id}}" ng-repeat="l in serviceProviderList">{{l.FIRST_NAME}} {{l.LAST_NAME}}</option>
+                            </select>
+                            <div>
+                                <div class="invalid-feedback-2" id="SCH_RESOURCE_ERROR">
+                                    Please select a resource
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 hide-for-superadmin">
+                            <div><label>Fill Schedule {{translation.From}}</label></div>
+                            <input type="date" id="SCH_FROM_DATE" class="js-flatpickr form-control flatpickr-custom" data-hs-flatpickr-options='{ "dateFormat": "d/m/Y" }' placeholder="select from date" />
+                            <div>
+                                <div class="invalid-feedback-2" id="SCH_FROM_DATE_ERROR">
+                                    Please choose a start date
+                                </div>
                             </div>
 
+                        </div>
+
+
+                        <div class="col-md-4 hide-for-superadmin">
+                            <div>
+                                <label>{{translation.To}}</label>
+                            </div>
+
+                            <input type="date" id="SCH_TO_DATE" class="js-flatpickr form-control flatpickr-custom" data-hs-flatpickr-options='{ "dateFormat": "d/m/Y" }' placeholder="select to date" />
+                            <div>
+                                <div class="invalid-feedback-2" id="SCH_TO_DATE_ERROR">
+                                    Please choose an end date
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div><label>Alternative week</label></div>
+                            <select class="form-control">
+                                <option value="EVERY-WEEK" selected>{{translation.Every_Week}}</option>
+                                <option value="ALTERNATE-WEEK">{{translation.Alternate_Week}}</option>
+                                <option value="EVERY-3-WEEK">{{translation.Every_3_Week}}</option>
+                                <option value="EVERY-4-WEEK">{{translation.Every_4_Week}}</option>
+                            </select>
+                        </div>
+
+
+                        <div class="col-md-4">
+                            <div>
+                                <label>Duration for each session (minute)</label>
+                            </div>
+
+                            <input type="number" id="SCH_TO_DATE" class="form-control disabled" disabled />
+                            <div>
+                                <div class="invalid-feedback-2" id="SCH_TO_DATE_ERROR">
+                                    Please choose an end date
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="col-md-12">
+                                <div>
+                                    <label>Rest period between session (minute)</label>
+                                </div>
+
+                                <input type="number" id="SCH_DAYS" class="form-control disabled" placeholder="5" disabled />
+                                <div>
+                                    <div class="invalid-feedback-2" id="SCH_DAYS_ERROR">
+                                        Please enter no. of days to be scheduled
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div><label>Capacity (No. of maximum participants)</label></div>
                             <input type="number" id="SCH_DAYS" class="form-control" placeholder="5" />
                             <div>
                                 <div class="invalid-feedback-2" id="SCH_DAYS_ERROR">
@@ -326,160 +364,116 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div><label>Alternative week</label></div>
-                        <select class="form-control">
-                            <option value="EVERY-WEEK" selected>{{translation.Every_Week}}</option>
-                            <option value="ALTERNATE-WEEK">{{translation.Alternate_Week}}</option>
-                            <option value="EVERY-3-WEEK">{{translation.Every_3_Week}}</option>
-                            <option value="EVERY-4-WEEK">{{translation.Every_4_Week}}</option>
-                        </select>
-                    </div>
 
-
-                    <div class="col-md-4 hide-for-superadmin">
-                        <div>
-                            <label>Duration for each session (minute)</label>
-                        </div>
-
-                        <input type="date" id="SCH_TO_DATE" class="js-flatpickr form-control flatpickr-custom" data-hs-flatpickr-options='{ "dateFormat": "d/m/Y" }' placeholder="select to date" />
-                        <div>
-                            <div class="invalid-feedback-2" id="SCH_TO_DATE_ERROR">
-                                Please choose an end date
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-8 show-for-superadmin">
                         <div class="col-md-12">
-                            <div>
-                                <label>Rest period between session (minute)</label>
-                            </div>
-
-                            <input type="number" id="SCH_DAYS" class="form-control" placeholder="5" />
-                            <div>
-                                <div class="invalid-feedback-2" id="SCH_DAYS_ERROR">
-                                    Please enter no. of days to be scheduled
-                                </div>
-                            </div>
+                            <h1 class="schedular-title-2 mt-3">Class schedule</h1>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div><label>Alternative week</label></div>
-                        <input type="number" id="SCH_DAYS" class="form-control" placeholder="5" />
-                        <div>
-                            <div class="invalid-feedback-2" id="SCH_DAYS_ERROR">
-                                Please enter no. of days to be scheduled
+                    <div>
+                        <div class="col-md-12">
+                            <div class="schedular-table">
+                                <div class="schedular-row">
+                                    <div class="schedular-element header">
+                                        Mon
+                                    </div>
+                                    <div class="form-elements" id="elements-row-Mon">
+
+                                    </div>
+
+                                    <div class="schedular-element add-element">
+                                        <button class="btn btn-primary" ng-click="addFormElement('Mon')">+ ADD MORE</button>
+                                    </div>
+                                </div>
+                                <div class="schedular-row">
+                                    <div class="schedular-element header">
+                                        Tue
+                                    </div>
+                                    <div class="form-elements" id="elements-row-Tue">
+
+                                    </div>
+
+
+                                    <div class="schedular-element add-element">
+                                        <button class="btn btn-primary" ng-click="addFormElement('Tue')">+ ADD MORE</button>
+                                    </div>
+                                </div>
+                                <div class="schedular-row">
+                                    <div class="schedular-element header">
+                                        Wed
+                                    </div>
+                                    <div class="form-elements" id="elements-row-Wed">
+
+                                    </div>
+
+
+                                    <div class="schedular-element add-element">
+                                        <button class="btn btn-primary" ng-click="addFormElement('Wed')">+ ADD MORE</button>
+                                    </div>
+                                </div>
+                                <div class="schedular-row">
+                                    <div class="schedular-element header">
+                                        Thu
+                                    </div>
+                                    <div class="form-elements" id="elements-row-Thu">
+
+                                    </div>
+
+
+                                    <div class="schedular-element add-element">
+                                        <button class="btn btn-primary" ng-click="addFormElement('Thu')">+ ADD MORE</button>
+                                    </div>
+                                </div>
+                                <div class="schedular-row">
+                                    <div class="schedular-element header">
+                                        Fri
+                                    </div>
+                                    <div class="form-elements" id="elements-row-Fri">
+
+                                    </div>
+
+
+                                    <div class="schedular-element add-element">
+                                        <button class="btn btn-primary" ng-click="addFormElement('Fri')">+ ADD MORE</button>
+                                    </div>
+                                </div>
+                                <div class="schedular-row">
+                                    <div class="schedular-element header">
+                                        Sat
+                                    </div>
+                                    <div class="form-elements" id="elements-row-Sat">
+
+                                    </div>
+
+                                    <div class="schedular-element add-element">
+                                        <button class="btn btn-primary" ng-click="addFormElement('Sat')">+ ADD MORE</button>
+                                    </div>
+                                </div>
+                                <div class="schedular-row">
+                                    <div class="schedular-element header">
+                                        Sun
+                                    </div>
+                                    <div class="form-elements" id="elements-row-Sun">
+
+                                    </div>
+
+                                    <div class="schedular-element add-element">
+                                        <button class="btn btn-primary" ng-click="addFormElement('Sun')">+ ADD MORE</button>
+                                    </div>
+                                </div>
                             </div>
+
+                        </div>
+                        <div class="col-md-12 mt-5 mb-5">
+                            <button class="btn btn-default" ng-click="hideSchedularFormModal()">{{translation.Cancel}}</button> <button class="btn btn-success" id="final-submit-button" ng-click="saveSchedularForm()">{{translation.Submit}}</button> <button class="btn btn-success" style="display:none;" id="final-save-button" ng-click="saveSchedularForm()">{{translation.Save}}</button>
                         </div>
                     </div>
-
-                    <div class="col-md-12">
-                        <h1 class="schedular-title-2 mt-3">Class schedule</h1>
-                    </div>
-                </div>
-                <div>
-                    <div class="col-md-12">
-                        <div class="schedular-table">
-                            <div class="schedular-row">
-                                <div class="schedular-element header">
-                                    Mon
-                                </div>
-                                <div class="form-elements" id="elements-row-Mon">
-                                    
-                                </div>
-
-                                <div class="schedular-element add-element">
-                                    <button class="btn btn-primary" ng-click="addFormElement('Mon')">+ ADD MORE</button>
-                                </div>
-                            </div>
-                            <div class="schedular-row">
-                                <div class="schedular-element header">
-                                    Tue
-                                </div>
-                                <div class="form-elements" id="elements-row-Tue">
-
-                                </div>
-
-
-                                <div class="schedular-element add-element">
-                                    <button class="btn btn-primary" ng-click="addFormElement('Tue')">+ ADD MORE</button>
-                                </div>
-                            </div>
-                            <div class="schedular-row">
-                                <div class="schedular-element header">
-                                    Wed
-                                </div>
-                                <div class="form-elements" id="elements-row-Wed">
-
-                                </div>
-
-
-                                <div class="schedular-element add-element">
-                                    <button class="btn btn-primary" ng-click="addFormElement('Wed')">+ ADD MORE</button>
-                                </div>
-                            </div>
-                            <div class="schedular-row">
-                                <div class="schedular-element header">
-                                    Thu
-                                </div>
-                                <div class="form-elements" id="elements-row-Thu">
-
-                                </div>
-
-
-                                <div class="schedular-element add-element">
-                                    <button class="btn btn-primary" ng-click="addFormElement('Thu')">+ ADD MORE</button>
-                                </div>
-                            </div>
-                            <div class="schedular-row">
-                                <div class="schedular-element header">
-                                    Fri
-                                </div>
-                                <div class="form-elements" id="elements-row-Fri">
-
-                                </div>
-
-
-                                <div class="schedular-element add-element">
-                                    <button class="btn btn-primary" ng-click="addFormElement('Fri')">+ ADD MORE</button>
-                                </div>
-                            </div>
-                            <div class="schedular-row">
-                                <div class="schedular-element header">
-                                    Sat
-                                </div>
-                                <div class="form-elements" id="elements-row-Sat">
-
-                                </div>
-
-                                <div class="schedular-element add-element">
-                                    <button class="btn btn-primary" ng-click="addFormElement('Sat')">+ ADD MORE</button>
-                                </div>
-                            </div>
-                            <div class="schedular-row">
-                                <div class="schedular-element header">
-                                    Sun
-                                </div>
-                                <div class="form-elements" id="elements-row-Sun">
-
-                                </div>
-
-                                <div class="schedular-element add-element">
-                                    <button class="btn btn-primary" ng-click="addFormElement('Sun')">+ ADD MORE</button>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="col-md-12">
-                        <button class="btn btn-default" ng-click="hideSchedularFormModal()">{{translation.Cancel}}</button> <button class="btn btn-success" id="final-submit-button" ng-click="saveSchedularForm()">{{translation.Submit}}</button> <button class="btn btn-success" style="display:none;" id="final-save-button" ng-click="saveSchedularForm()">{{translation.Save}}</button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </div>
+
+
 
 <script type="text/ng-template" id="importFormData.html">
 
