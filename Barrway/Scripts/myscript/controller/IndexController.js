@@ -331,16 +331,27 @@
     }
 
     $scope.ManageCalendarMaster = function () {
-
+        console.log($scope.calendarList);
         if ($scope.calendarList != null) {
             if ($scope.calendarList.length > 0) {
-                debugger;
+                
                 if (isEmptyLocalStorageValue("CALENDAR_CODE")) {
                     //$("#ddlMasterCalendar option[value='']").remove();
                     localStorage.setItem("CALENDAR_CODE", $("#ddlMasterCalendar option:selected").val());
                 } else {
                     $("#ddlMasterCalendar").val(localStorage.getItem("CALENDAR_CODE"));
                 }
+
+                if ($scope.calendarList.find(x => x.CALENDAR_CODE == localStorage.getItem("CALENDAR_CODE")).CALENDAR_FUNCTION_TYPE == "QUEUE") {
+                    $("#nav-calendar-master").attr("href", "/calendar/index#/queue-manager")
+                    if (window.location.href.includes("/calender/2305")) {
+                        window.location.href = "/calendar/index#/queue-manager";
+                    }
+                } else {
+                    $("#nav-calendar-master").attr("href", "/calendar/index#/calender/2305")
+                };
+
+                localStorage.setItem("CALENDAR_FUNCTION_TYPE", $scope.calendarList.find(x => x.CALENDAR_CODE == localStorage.getItem("CALENDAR_CODE")).CALENDAR_FUNCTION_TYPE);
 
                 $(".lbl-company-name").text(localStorage.getItem("COMPANY_NAME_ENGLISH"));
                 $(".lbl-calendar-name").text($("#ddlMasterCalendar option:selected").text());

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.SignalR;
+﻿using Barrway.Service.IRepository;
+using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hosting;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,28 @@ namespace Barrway.WebSocket
 {
     public class QueueManager : Hub
     {
-        public async Task SendMessage(string user, string message)
+        private readonly IMasterService masterService;
+        private readonly IFormAPIRepository formAPIRepository;
+        private readonly ISqlFunction sqlFunction;
+        private readonly IBusinessUserService businessUserService;
+        private readonly IAuthService authService;
+
+        // GET: Calendar
+        public QueueManager(IMasterService masterService, IFormAPIRepository formAPIRepository, ISqlFunction sqlFunction, IBusinessUserService businessUserService, IAuthService authService)
         {
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
+            this.masterService = masterService;
+            this.formAPIRepository = formAPIRepository;
+            this.sqlFunction = sqlFunction;
+            this.businessUserService = businessUserService;
+            this.authService = authService;
         }
+
+        public void Send(string name, string message)
+        {
+            Clients.All.addNewMessageToPage(name, message);
+        }
+
+
+
     }
 }

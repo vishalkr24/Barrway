@@ -62,7 +62,7 @@ namespace Barrway
             container.RegisterType<ICalendarService, CalendarService>();
             container.RegisterType<IPublicUserService, PublicUserService>();
             container.RegisterType<ISuperAdminUserService, SuperAdminUserService>();
-
+            container.RegisterType<IQueueService, QueueService>();
         }
     }
 }
