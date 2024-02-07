@@ -129,399 +129,399 @@
 </style>
 
 <div ng-controller="CustomTransactionController">
-
-    <div id="transaction-controller-div">
-        <div class="page-header">
-            <div class="row align-items-end">
-                <div class="col-sm mb-2 mb-sm-0">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb breadcrumb-no-gutter">
-                            <li class="breadcrumb-item"><a class="breadcrumb-link" ui-sref="Home()">{{translation.Home}}</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">{{translation.Attendance}}</li>
-                        </ol>
-                    </nav>
-                    <h1 class="page-header-title ms-2">{{translation.Attendance}}</h1>
+    <div class="container-fluid">
+        <div id="transaction-controller-div">
+            <div class="page-header">
+                <div class="row align-items-end">
+                    <div class="col-sm mb-2 mb-sm-0">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb breadcrumb-no-gutter">
+                                <li class="breadcrumb-item"><a class="breadcrumb-link" ui-sref="Home()">{{translation.Home}}</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">{{translation.Attendance}}</li>
+                            </ol>
+                        </nav>
+                        <h1 class="page-header-title ms-2">{{translation.Attendance}}</h1>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card card-default">
-                    <div class="card-body pt-0 mp-0 p-1">
-                        <div id="pageActions">
-                            <div class="table-controls-legend form-inline pageActions action-btns">
-                                <div class="tabulator-section w-100">
-                                    <div class="row mb-3">
-                                        <div class="col-xl-4 mb-2 mb-lg-0">
-                                            <span id="mark-attendance-btn-area">
-                                                <a class="btn btn-primary mb-2 mb-lg-0" ng-click="CreateBulkAttendance()">
-                                                    <i class="bi bi-check2-circle"></i>
-                                                    <span>{{translation.Bulk_Attendance}}</span>
-                                                </a>
-                                            </span>
-                                            <span id="mark-attendance-submit-area" class="custom-hide">
-                                                <a class="btn btn-success mb-2 mb-lg-0" ng-click="SubmitBulkAttendance()">
-                                                    <i class="bi bi-check2"></i>
-                                                    <span class="">{{translation.Submit}}</span>
-                                                </a>
-                                                <a class="btn btn-danger mb-2 mb-lg-0" ng-click="CancelBulkAttendance()">
-                                                    <i class="bi bi-x-circle"></i>
-                                                    <span class="">{{translation.Cancel}}</span>
-                                                </a>
-                                            </span>
-                                           
-                                        </div>
-                                        <div class="col-xl-8 text-lg-end text-md-start">
-
-                                            
-
-
-                                            <a class="btn btn-primary mb-2 mb-lg-0"
-                                               ng-click="generateInvoiceFunc()"
-                                               ng-if="isInvoiceForm">
-                                                <i class="fa fa-file-code-o"></i>
-                                                <span class="action-name">{{translation.Generate_Invoice}}</span>
-                                            </a>
-
-
-                                            <a class="btn btn-primary mb-2 mb-lg-0"
-                                               ng-click="generatePrintInvoiceFunc(2)"
-                                               ng-if="isInvoiceForm">
-                                                <i class="fa fa-file"></i>
-                                                <span class="action-name">{{translation.Print_Invoice}}</span>
-                                            </a>
-                                            <a class="btn btn-primary mb-2 mb-lg-0"
-                                               ng-click="generatePrintReciptFunc(3)"
-                                               ng-if="isInvoiceForm">
-                                                <i class="fa fa-file-text-o"></i>
-                                                <span class="action-name">{{translation.Print_Recipt}}</span>
-                                            </a>
-                                            <a class="btn btn-primary mb-2 mb-lg-0" ng-click="executeButton()" ng-show="isSchedulerForm">
-                                                <i class="fa fa-plus"></i>
-                                                <span class="action-name">{{translation.Execute}}</span>
-                                            </a>
-                                            <a data-action="entry" class="btn btn-primary mb-2 mb-lg-0"
-                                               ui-sref="saveFormEntryData({formId: currentFormId})"
-                                               ng-show="allowAddDelete==true && formDetailsDataInfo.currentFormType!=1 && !isInvoiceForm"
-                                               ng-if="!isTransactionForm">
-                                                <i class="fa fa-plus"></i>
-                                                <span class="action-name">{{translation.Entry}}</span>
-                                            </a>
-
-                                            <a data-action="entry" class="btn btn-primary mb-2 mb-lg-0"
-                                               ng-click="saveFormEntryData()"
-                                               ng-show="formDetailsDataInfo.currentFormType==1">
-                                                <i class="fa fa-plus"> </i>
-                                                <span class="action-name">{{translation.Entry}}</span>
-                                            </a>
-                                            <a class="btn btn-primary mb-2 mb-lg-0" ng-click="uploaddownloadPopup()">
-                                                <i class="fa fa-download"></i><span class="action-name">
-                                                    {{translation.Upload_Download}}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-default">
+                        <div class="card-body pt-0 mp-0 p-1">
+                            <div id="pageActions">
+                                <div class="table-controls-legend form-inline pageActions action-btns">
+                                    <div class="tabulator-section w-100">
+                                        <div class="row mb-3">
+                                            <div class="col-xl-4 mb-2 mb-lg-0">
+                                                <span id="mark-attendance-btn-area">
+                                                    <a class="btn btn-primary mb-2 mb-lg-0" ng-click="CreateBulkAttendance()">
+                                                        <i class="bi bi-check2-circle"></i>
+                                                        <span>{{translation.Bulk_Attendance}}</span>
+                                                    </a>
                                                 </span>
-                                            </a>
-                                            <script id="uploaddownload.html"
-                                                    type="text/ng-template">
-                                                <div class="wrap" ng-controller="CommonCustomDialogController">
-                                                    <div class="col-md-12">
-                                                        <a ng-click="exportAll(1)" class="btn btn-primary m-1">
-                                                            <i class="fa fa-download">
-                                                            </i> <span class="action-name">{{translation.JSON}}</span>
-                                                        </a>
-                                                        <a ng-click="exportAll(2)" class="btn btn-primary m-1">
-                                                            <i class="fa fa-download">
-                                                            </i> <span class="action-name">{{translation.XLSX}}</span>
-                                                        </a>
+                                                <span id="mark-attendance-submit-area" class="custom-hide">
+                                                    <a class="btn btn-success mb-2 mb-lg-0" ng-click="SubmitBulkAttendance()">
+                                                        <i class="bi bi-check2"></i>
+                                                        <span class="">{{translation.Submit}}</span>
+                                                    </a>
+                                                    <a class="btn btn-danger mb-2 mb-lg-0" ng-click="CancelBulkAttendance()">
+                                                        <i class="bi bi-x-circle"></i>
+                                                        <span class="">{{translation.Cancel}}</span>
+                                                    </a>
+                                                </span>
 
-                                                        <a ng-click="exportAll(3)" class="btn btn-primary m-1">
-                                                            <i class="fa fa-download">
-                                                            </i> <span class="action-name">{{translation.CSV}}</span>
-                                                        </a>
-                                                        <a ng-click="exportAll(4)" class="btn btn-primary m-1">
-                                                            <i class="fa fa-download">
-                                                            </i> <span class="action-name">{{translation.PDF}}</span>
-                                                        </a>
-                                                        <a ng-click="exportAll(6)" ng-show="formDetailsDataInfo.currentFormType!=1" class="btn btn-primary m-1">
-                                                            <i class="fa fa-download">
-                                                            </i> <span class="action-name">{{translation.Download_all_records_XLSX}}</span>
-                                                        </a>
-                                                        <!--<a ng-click="exportAll(7)" ng-show="formDetailsDataInfo.currentFormType!=1" class="btn btn-primary m-1" id="download-pdf">
+                                            </div>
+                                            <div class="col-xl-8 text-lg-end text-md-start">
+
+
+
+
+                                                <a class="btn btn-primary mb-2 mb-lg-0"
+                                                   ng-click="generateInvoiceFunc()"
+                                                   ng-if="isInvoiceForm">
+                                                    <i class="fa fa-file-code-o"></i>
+                                                    <span class="action-name">{{translation.Generate_Invoice}}</span>
+                                                </a>
+
+
+                                                <a class="btn btn-primary mb-2 mb-lg-0"
+                                                   ng-click="generatePrintInvoiceFunc(2)"
+                                                   ng-if="isInvoiceForm">
+                                                    <i class="fa fa-file"></i>
+                                                    <span class="action-name">{{translation.Print_Invoice}}</span>
+                                                </a>
+                                                <a class="btn btn-primary mb-2 mb-lg-0"
+                                                   ng-click="generatePrintReciptFunc(3)"
+                                                   ng-if="isInvoiceForm">
+                                                    <i class="fa fa-file-text-o"></i>
+                                                    <span class="action-name">{{translation.Print_Recipt}}</span>
+                                                </a>
+                                                <a class="btn btn-primary mb-2 mb-lg-0" ng-click="executeButton()" ng-show="isSchedulerForm">
+                                                    <i class="fa fa-plus"></i>
+                                                    <span class="action-name">{{translation.Execute}}</span>
+                                                </a>
+                                                <a data-action="entry" class="btn btn-primary mb-2 mb-lg-0"
+                                                   ui-sref="saveFormEntryData({formId: currentFormId})"
+                                                   ng-show="allowAddDelete==true && formDetailsDataInfo.currentFormType!=1 && !isInvoiceForm"
+                                                   ng-if="!isTransactionForm">
+                                                    <i class="fa fa-plus"></i>
+                                                    <span class="action-name">{{translation.Entry}}</span>
+                                                </a>
+
+                                                <a data-action="entry" class="btn btn-primary mb-2 mb-lg-0"
+                                                   ng-click="saveFormEntryData()"
+                                                   ng-show="formDetailsDataInfo.currentFormType==1">
+                                                    <i class="fa fa-plus"> </i>
+                                                    <span class="action-name">{{translation.Entry}}</span>
+                                                </a>
+                                                <a class="btn btn-primary mb-2 mb-lg-0" ng-click="uploaddownloadPopup()">
+                                                    <i class="fa fa-download"></i><span class="action-name">
+                                                        {{translation.Upload_Download}}
+                                                    </span>
+                                                </a>
+                                                <script id="uploaddownload.html"
+                                                        type="text/ng-template">
+                                                    <div class="wrap" ng-controller="CommonCustomDialogController">
+                                                        <div class="col-md-12">
+                                                            <a ng-click="exportAll(1)" class="btn btn-primary m-1">
+                                                                <i class="fa fa-download">
+                                                                </i> <span class="action-name">{{translation.JSON}}</span>
+                                                            </a>
+                                                            <a ng-click="exportAll(2)" class="btn btn-primary m-1">
+                                                                <i class="fa fa-download">
+                                                                </i> <span class="action-name">{{translation.XLSX}}</span>
+                                                            </a>
+
+                                                            <a ng-click="exportAll(3)" class="btn btn-primary m-1">
+                                                                <i class="fa fa-download">
+                                                                </i> <span class="action-name">{{translation.CSV}}</span>
+                                                            </a>
+                                                            <a ng-click="exportAll(4)" class="btn btn-primary m-1">
+                                                                <i class="fa fa-download">
+                                                                </i> <span class="action-name">{{translation.PDF}}</span>
+                                                            </a>
+                                                            <a ng-click="exportAll(6)" ng-show="formDetailsDataInfo.currentFormType!=1" class="btn btn-primary m-1">
+                                                                <i class="fa fa-download">
+                                                                </i> <span class="action-name">{{translation.Download_all_records_XLSX}}</span>
+                                                            </a>
+                                                            <!--<a ng-click="exportAll(7)" ng-show="formDetailsDataInfo.currentFormType!=1" class="btn btn-primary m-1" id="download-pdf">
                                                             <i class="fa fa-download">
                                                             </i> <span class="action-name">{{translation.Download_all_records_XLSX}}</span>
                                                         </a>-->
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </script>
-                                            <a ng-click="saveTabulatorLayout('form-records'+formDetailsDataInfo,true)"
-                                               class="btn btn-primary mb-2 mb-lg-0"
-                                               data-toggle="tooltip"
-                                               title="Save Layout">
-                                                <i class="fa fa-bookmark"></i>
-                                                <span class="action-name">{{translation.Save_Layout}}</span>
-                                            </a>
+                                                </script>
+                                                <a ng-click="saveTabulatorLayout('form-records'+formDetailsDataInfo,true)"
+                                                   class="btn btn-primary mb-2 mb-lg-0"
+                                                   data-toggle="tooltip"
+                                                   title="Save Layout">
+                                                    <i class="fa fa-bookmark"></i>
+                                                    <span class="action-name">{{translation.Save_Layout}}</span>
+                                                </a>
 
-                                            <a data-action="delete" ng-click="deleteRecords()"
-                                               class="btn btn-danger text-white mb-2 mb-lg-0"
-                                               id="delete-json">
-                                                <i class="fa fa-trash"> </i>
-                                                <span class="action-name">{{translation.Delete_Record}}</span>
-                                            </a>
+                                                <a data-action="delete" ng-click="deleteRecords()"
+                                                   class="btn btn-danger text-white mb-2 mb-lg-0"
+                                                   id="delete-json">
+                                                    <i class="fa fa-trash"> </i>
+                                                    <span class="action-name">{{translation.Delete_Record}}</span>
+                                                </a>
 
-                                            <a class="flat-buttons pageActionsToggleer waves-effect waves-button"
-                                               onclick="pageActionsToggleer()">
-                                                <i class="fa fa-chevron-left"></i>
-                                            </a>
+                                                <a class="flat-buttons pageActionsToggleer waves-effect waves-button"
+                                                   onclick="pageActionsToggleer()">
+                                                    <i class="fa fa-chevron-left"></i>
+                                                </a>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="row mt-3" ng-if="isShowAdvanceSearch">
-                                        <div class="col-xl-12">
-                                            <form class="form-inline mb-3">
-                                                <div class="form-group me-1">
-                                                    <label class="pe-2" for="filter-field">
-                                                        {{translation.Field}}:
-                                                    </label>
-                                                    <select id="filter-field"
-                                                            style="max-width: 150px;"
-                                                            class="form-control"
-                                                            ng-model="filterBy.fieldByRecord"
-                                                            ng-change="onFilterFieldByChange()">
-                                                        <option></option>
-                                                        <option value="{{f.field}}"
-                                                                ng-repeat="f in filterFieldsList">
-                                                            {{f.title}}
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group me-1">
-                                                    <label for="filter-type" class="pe-2">
-                                                        {{translation.Type}}:
-                                                    </label>
-                                                    <select id="filter-type"
-                                                            style="max-width: 150px;"
-                                                            ng-model="filterBy.filterByType"
-                                                            ng-change="onFilterFieldByChange()"
-                                                            class="form-control">
-                                                        <option></option>
-                                                        <option value="=">
-                                                            =
-                                                        </option>
-                                                        <option value="<">
-                                                            &lt;
-                                                        </option>
-                                                        <option value="<=">
-                                                            &lt;=
-                                                        </option>
-                                                        <option value=">">
-                                                            &gt;
-                                                        </option>
-                                                        <option value=">=">
-                                                            &gt;=
-                                                        </option>
-                                                        <option value="!=">
-                                                            !=
-                                                        </option>
-                                                        <option value="like">
-                                                            like
-                                                        </option>
-                                                        <option value="Blank">
-                                                            Blank
-                                                        </option>
-                                                        <option value="NotBlank">
-                                                            Not Blank
-                                                        </option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group me-1">
-                                                    <label for="filter-value" class="pe-2">
-                                                        {{translation.Value}}:
-                                                    </label>
-                                                    <input type="text"
-                                                           class="form-control"
-                                                           id="filter-value"
-                                                           ng-model="filterBy.filterByValue"
-                                                           placeholder="{{translation.Value_to_filter}}" />
-                                                </div>
-                                                <div class="form-group me-1">
-                                                    <button type="button"
-                                                            id="filter-clear"
-                                                            class="btn btn-primary"
-                                                            ng-click="clearFilter()">
-                                                        <i class="fa fa-eraser"
-                                                           aria-hidden="true">
-                                                        </i>
-                                                        {{translation.Clear_Filter}}
-                                                    </button>
-                                                </div>
+                                        <div class="row mt-3" ng-if="isShowAdvanceSearch">
+                                            <div class="col-xl-12">
+                                                <form class="form-inline mb-3">
+                                                    <div class="form-group me-1">
+                                                        <label class="pe-2" for="filter-field">
+                                                            {{translation.Field}}:
+                                                        </label>
+                                                        <select id="filter-field"
+                                                                style="max-width: 150px;"
+                                                                class="form-control"
+                                                                ng-model="filterBy.fieldByRecord"
+                                                                ng-change="onFilterFieldByChange()">
+                                                            <option></option>
+                                                            <option value="{{f.field}}"
+                                                                    ng-repeat="f in filterFieldsList">
+                                                                {{f.title}}
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group me-1">
+                                                        <label for="filter-type" class="pe-2">
+                                                            {{translation.Type}}:
+                                                        </label>
+                                                        <select id="filter-type"
+                                                                style="max-width: 150px;"
+                                                                ng-model="filterBy.filterByType"
+                                                                ng-change="onFilterFieldByChange()"
+                                                                class="form-control">
+                                                            <option></option>
+                                                            <option value="=">
+                                                                =
+                                                            </option>
+                                                            <option value="<">
+                                                                &lt;
+                                                            </option>
+                                                            <option value="<=">
+                                                                &lt;=
+                                                            </option>
+                                                            <option value=">">
+                                                                &gt;
+                                                            </option>
+                                                            <option value=">=">
+                                                                &gt;=
+                                                            </option>
+                                                            <option value="!=">
+                                                                !=
+                                                            </option>
+                                                            <option value="like">
+                                                                like
+                                                            </option>
+                                                            <option value="Blank">
+                                                                Blank
+                                                            </option>
+                                                            <option value="NotBlank">
+                                                                Not Blank
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group me-1">
+                                                        <label for="filter-value" class="pe-2">
+                                                            {{translation.Value}}:
+                                                        </label>
+                                                        <input type="text"
+                                                               class="form-control"
+                                                               id="filter-value"
+                                                               ng-model="filterBy.filterByValue"
+                                                               placeholder="{{translation.Value_to_filter}}" />
+                                                    </div>
+                                                    <div class="form-group me-1">
+                                                        <button type="button"
+                                                                id="filter-clear"
+                                                                class="btn btn-primary"
+                                                                ng-click="clearFilter()">
+                                                            <i class="fa fa-eraser"
+                                                               aria-hidden="true">
+                                                            </i>
+                                                            {{translation.Clear_Filter}}
+                                                        </button>
+                                                    </div>
 
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tabulator-section">
-                                <div id="page-tabs"
-                                     class="ui-tabs ui-corner-all ui-widget ui-widget-content"
-                                     ng-if="tabList.length>0">
-                                    <ul class="ui-tabs-nav ui-corner-all ui-helper-reset ui-helper-clearfix ui-widget-header">
-                                        <li tabindex="-1"
-                                            class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
-                                            id="tab-{{$index}}"
-                                            ng-repeat="l in tabList track by $index"
-                                            ng-click="selectedTabFilter(l,$index)">
-                                            <a data-target="#{{l.value}}"
-                                               tabindex="-1"
-                                               class="ui-tabs-anchor">{{l.label}}</a>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <div class="form-builder-loader text-center">
-                                    <div class="loader">
-                                        <i class="fa fa-spinner fa-pulse fa-fw"> </i>
-                                        <div>
-                                            {{translation.Loading_Form_Tabulator}}...
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div id="form-records"></div>
+                                <div class="tabulator-section">
+                                    <div id="page-tabs"
+                                         class="ui-tabs ui-corner-all ui-widget ui-widget-content"
+                                         ng-if="tabList.length>0">
+                                        <ul class="ui-tabs-nav ui-corner-all ui-helper-reset ui-helper-clearfix ui-widget-header">
+                                            <li tabindex="-1"
+                                                class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
+                                                id="tab-{{$index}}"
+                                                ng-repeat="l in tabList track by $index"
+                                                ng-click="selectedTabFilter(l,$index)">
+                                                <a data-target="#{{l.value}}"
+                                                   tabindex="-1"
+                                                   class="ui-tabs-anchor">{{l.label}}</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="form-builder-loader text-center">
+                                        <div class="loader">
+                                            <i class="fa fa-spinner fa-pulse fa-fw"> </i>
+                                            <div>
+                                                {{translation.Loading_Form_Tabulator}}...
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="form-records"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div id="markAttendanceModel"
-             class="modal fade"
-             tabindex="-1"
-             role="dialog"
-             aria-labelledby="myLargeModalLabel">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="jss3726" ng-include="'bg-svg.html'"></div>
-                    <div class="modal-header">
-                        <h3 class="modal-title">Mark Attendance</h3>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="mark-attendance-details">
-                                    <h4 style="font-weight:500">{{currentTransaction.STUDENT_NAME}}</h4>
-                                    <div>Slot: {{currentTransaction.SLOT}}</div>
-                                    <div>Date: {{currentTransactionDate}}</div>
+            <div id="markAttendanceModel"
+                 class="modal fade"
+                 tabindex="-1"
+                 role="dialog"
+                 aria-labelledby="myLargeModalLabel">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="jss3726" ng-include="'bg-svg.html'"></div>
+                        <div class="modal-header">
+                            <h3 class="modal-title">Mark Attendance</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mark-attendance-details">
+                                        <h4 style="font-weight:500">{{currentTransaction.STUDENT_NAME}}</h4>
+                                        <div>Slot: {{currentTransaction.SLOT}}</div>
+                                        <div>Date: {{currentTransactionDate}}</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="mark-attendance-details">
-                                    <h4 style="font-weight:500">Attendance: <b>{{currentTransactionAttendance}}</b></h4>
-                                    <div>
-                                        <button class="btn btn-success" ng-click="markPresent()">Present</button> <button class="btn btn-danger" ng-click="markAbsent()">Absent</button> <button type="button" class="btn btn-default" ng-click="closeAttendanceModel()" aria-label="Close">Cancel</button>
+                                <div class="col-lg-6">
+                                    <div class="mark-attendance-details">
+                                        <h4 style="font-weight:500">Attendance: <b>{{currentTransactionAttendance}}</b></h4>
+                                        <div>
+                                            <button class="btn btn-success" ng-click="markPresent()">Present</button> <button class="btn btn-danger" ng-click="markAbsent()">Absent</button> <button type="button" class="btn btn-default" ng-click="closeAttendanceModel()" aria-label="Close">Cancel</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                    </div>
-                    <div class="modal-footer">
-                        <!--<button type="button"
+                        </div>
+                        <div class="modal-footer">
+                            <!--<button type="button"
                                 class="btn btn-primary"
                                 data-dismiss="modal">
                             {{translation.Submit}}
                         </button>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="searchModal"
+                 class="modal fade"
+                 tabindex="-1"
+                 role="dialog"
+                 aria-labelledby="myLargeModalLabel">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="jss3726" ng-include="'bg-svg.html'"></div>
+                        <div class="modal-header">
+                            <h4 class="modal-title"></h4>
+                            <button type="button"
+                                    class="close"
+                                    data-dismiss="modal"
+                                    aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="search-results" class="list-group"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button"
+                                    class="btn btn-primary"
+                                    data-dismiss="modal">
+                                {{translation.Close}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="galleryModal"
+                 class="modal fade"
+                 tabindex="-1"
+                 role="dialog"
+                 aria-labelledby="myLargeModalLabel">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="jss3726" ng-include="'bg-svg.html'"></div>
+                        <div class="modal-header">
+                            <h4 class="modal-title"></h4>
+                            <button type="button"
+                                    class="close"
+                                    data-dismiss="modal"
+                                    aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body"></div>
+
+                        <div class="modal-footer">
+                            <button type="button"
+                                    class="btn btn-primary"
+                                    data-dismiss="modal">
+                                {{translation.Close}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tabulatorConfigModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="jss3726" ng-include="'bg-svg.html'"></div>
+                        <div class="modal-header">
+                            <h4 class="modal-title"> {{translation.Tabulator_Configurations}}</h4>
+                            <button type="button" class="close" data-dismiss="modal">
+                                &times;
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="alert-area"></div>
+                            <a class="btn btn-sm btn-success" href=""><i class="fa fa-plus"></i> {{translation.Create_New}}</a>
+                            <a href="javascript:;"
+                               class="btn btn-sm btn-primary"
+                               id="toggle_responsive"></a>
+                            <a class="btn btn-primary btn-sm pull-right"
+                               href="javascript:;"
+                               id="delete_per_cookie">
+                                {{translation.Default_Configuration}}
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="searchModal"
-             class="modal fade"
-             tabindex="-1"
-             role="dialog"
-             aria-labelledby="myLargeModalLabel">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="jss3726" ng-include="'bg-svg.html'"></div>
-                    <div class="modal-header">
-                        <h4 class="modal-title"></h4>
-                        <button type="button"
-                                class="close"
-                                data-dismiss="modal"
-                                aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div id="search-results" class="list-group"></div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button"
-                                class="btn btn-primary"
-                                data-dismiss="modal">
-                            {{translation.Close}}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="galleryModal"
-             class="modal fade"
-             tabindex="-1"
-             role="dialog"
-             aria-labelledby="myLargeModalLabel">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="jss3726" ng-include="'bg-svg.html'"></div>
-                    <div class="modal-header">
-                        <h4 class="modal-title"></h4>
-                        <button type="button"
-                                class="close"
-                                data-dismiss="modal"
-                                aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body"></div>
-
-                    <div class="modal-footer">
-                        <button type="button"
-                                class="btn btn-primary"
-                                data-dismiss="modal">
-                            {{translation.Close}}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="tabulatorConfigModal" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="jss3726" ng-include="'bg-svg.html'"></div>
-                    <div class="modal-header">
-                        <h4 class="modal-title"> {{translation.Tabulator_Configurations}}</h4>
-                        <button type="button" class="close" data-dismiss="modal">
-                            &times;
-                        </button>
-                    </div>
-
-                    <div class="modal-body">
-                        <div class="alert-area"></div>
-                        <a class="btn btn-sm btn-success" href=""><i class="fa fa-plus"></i> {{translation.Create_New}}</a>
-                        <a href="javascript:;"
-                           class="btn btn-sm btn-primary"
-                           id="toggle_responsive"></a>
-                        <a class="btn btn-primary btn-sm pull-right"
-                           href="javascript:;"
-                           id="delete_per_cookie">
-                            {{translation.Default_Configuration}}
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
-
-
     <script type="text/ng-template" id="importFormData.html">
 
         <div class="jss3726" ng-include="'bg-svg.html'"></div>

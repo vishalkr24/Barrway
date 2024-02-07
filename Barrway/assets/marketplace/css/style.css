@@ -286,12 +286,12 @@ section.subcatageory {
 }
 
 .my-slide button.owl-prev {
-    left: -60px;
+    left: -45px;
     top: 45%;
 }
 
 .my-slide button.owl-next {
-    right: -60px;
+    right: -45px;
     top: 45%;
 }
 
