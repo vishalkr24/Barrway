@@ -35584,13 +35584,22 @@ button#backtomarketplace {
     }
 
         .top_content > span > button {
-            background-color: #3FBFC7;
-            border: none;
-            color: #ffff;
-            padding: 5px 20px;
-            border-radius: 4px;
-            margin-left: 10px;
+            color: #3FBFC7;
+            background-color:transparent;
+            border:none;
         }
+            .top_content > span > button.active {
+                background-color: #3FBFC7;
+                border: none;
+                color: #ffff;
+                padding: 5px 20px;
+                border-radius: 4px;
+                margin-left: 10px;
+            }
+.d-border-right {
+    border-right: 1px dashed #000;
+    border-width: 2px;
+}
 .queue_backlog_inner {
     width: 100%;
     float: left;
