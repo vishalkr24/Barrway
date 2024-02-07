@@ -119,51 +119,130 @@
         letter-spacing: 0.2px;
     }
 
-    .schedular-form .col-md-4,.col-md-12{
-        padding-top:32px;
-    }
-
-    .schedular-form label{
-        font-weight:bold;
-        padding-bottom:8px;
-    }
-
-    .schedular-form .schedular-table thead{
-        border-bottom:1px solid lightgrey;
-    }
-
-    .schedular-form .schedular-table thead tr td {
+    .schedular-form label {
         font-weight: bold;
-        text-align: center;
-        padding: 8px;
+        padding-bottom: 8px;
     }
 
-    .schedular-form .schedular-table tbody tr td:first-child {
+    .schedular-title {
+        font-size: 32px;
         font-weight: bold;
-        padding: 8px;
-        border-right: 1px solid lightgrey;
-        text-align: center;
     }
 
-    .schedular-form .schedular-table tbody tr td {
-        padding: 8px;
-        text-align: center;
+    .schedular-title-2 {
+        font-size: 25px;
+        font-weight: bold;
     }
 
+    
+
+    .schedular-table {
+        width: fit-content;
+        min-width: 100%;
+        display: block;
+    }
+
+        .schedular-table .schedular-row {
+            display: flex;
+            justify-content: flex-start;
+            border-bottom: 1px solid lightgrey;
+        }
+
+            .schedular-table .schedular-row .schedular-element:nth-child(1) {
+                min-width: 80px;
+            }
+
+
+            .schedular-table .schedular-row .form-elements {
+                display: flex;
+            }
+
+            .schedular-table .schedular-row .schedular-element {
+                padding: 16px;
+                display: flex;
+                align-items: center;
+            }
+
+                .schedular-table .schedular-row .schedular-element.header {
+                    font-weight: bold;
+                }
+
+                .schedular-table .schedular-row .schedular-element.form-element {
+                    display: flex;
+                    justify-content: space-evenly;
+                }
+
+                .schedular-table .schedular-row .schedular-element.form-element {
+                    border-left:1px solid lightgrey;
+                }
+
+                .schedular-table .schedular-row .schedular-element.add-element button {
+                    background: white;
+                    border: 1px solid #8171B0;
+                    color: #8171B0;
+                    border-radius: 40px;
+                    font-size: smaller;
+                    padding: 6px 12px;
+                    min-width: 100px;
+                }
+
+            .schedular-table .schedular-row .form-element .delete-element button {
+                background: white;
+                border: 1px solid #8171B0;
+                color: #8171B0;
+                border-radius: 40px;
+                font-size: smaller;
+                padding: 6px 12px;
+                margin-left: 12px;
+            }
+
+            .schedular-table .schedular-row:first-child .form-element .delete-element button {
+                background: white;
+                border: 1px solid #8171B0;
+                color: #8171B0;
+                border-radius: 40px;
+                font-size: smaller;
+                padding: 6px 12px;
+                margin-left: 12px;
+                position:relative;
+                top: 10px;
+            }
+
+                
+
+
+            .schedular-table .schedular-row:nth-child(1) .schedular-element.add-element {
+                position: relative;
+                top: 10px;
+            }
+
+            .schedular-table .schedular-row:nth-child(1) .form-elements .schedular-element.form-element:not(:first-child) {
+                position: relative;
+                top: 10px;
+            }
+
+            .schedular-table .schedular-row:nth-child(1) .form-elements .schedular-element.form-element:first-child div:nth-child(2) {
+                position: relative;
+                top: 10px;
+            }
+
+            .schedular-table .schedular-row .schedular-element.form-element div:nth-child(2) {
+                padding: 0px 16px;
+            }
 </style>
 <div class="container-fluid">
-    <div class="page-header">
+    <div class="page-header mt-2">
         <div class="row align-items-end">
             <div class="col-sm mb-2 mb-sm-0">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb breadcrumb-no-gutter">
-                        <li class="breadcrumb-item"><a class="breadcrumb-link" ui-sref="Home()">{{translation.Home}}</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{formDetailsDataInfo.title}}</li>
+                        <li class="breadcrumb-item"><a class="breadcrumb-link lbl-company-name" ui-sref="Home()"></a></li>
+                        <li class="breadcrumb-item active lbl-calendar-name" aria-current="page"></li>
+                        <li class="breadcrumb-item active" aria-current="page">Schedular</li>
                     </ol>
                 </nav>
 
-                <h1 class="page-header-title ms-2">{{formDetailsDataInfo.title}}</h1>
-
+                <h1 class="schedular-title mt-4">Schedular Form</h1>
 
             </div>
             <!-- End Col -->
@@ -172,518 +251,232 @@
         <!-- End Row -->
     </div>
 
-    <div class="row" ng-controller="SchedularFormController">
+    <div class="row mt-3">
         <div class="col-md-12">
-            <div class="card card-default">
-                <div class="card-body pt-0 mp-0 p-1">
-                    <div id="pageActions">
+            <form id="myForm" class="schedular-form">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div><label>{{translation.Location}}</label></div>
+                        <select class="form-control" id="SCH_LOCATION">
+                            <option value="{{l.Id}}" ng-repeat="l in locationList">{{l.LOCATION_BUILDING_NAME}}, {{l.LOCATION_FLOOR}} floor</option>
+                        </select>
+                        <div>
+                            <div class="invalid-feedback-2" id="SCH_LOCATION_ERROR">
+                                Please select a location
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div><label>{{translation.Service}}</label></div>
+                        <select class="form-control" id="SCH_ACTIVITY">
+                            <option value="{{l.Id}}" ng-repeat="l in serviceList">{{l.ACTIVITY_NAME}}</option>
+                        </select>
+                        <div>
+                            <div class="invalid-feedback-2" id="SCH_ACTIVITY_ERROR">
+                                Please select an activity
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div><label>{{translation.Service_Provider}}</label></div>
+                        <select class="form-control" id="SCH_RESOURCE">
+                            <option value="{{l.Id}}" ng-repeat="l in serviceProviderList">{{l.FIRST_NAME}} {{l.LAST_NAME}}</option>
+                        </select>
+                        <div>
+                            <div class="invalid-feedback-2" id="SCH_RESOURCE_ERROR">
+                                Please select a resource
+                            </div>
+                        </div>
+                    </div>
 
-                        <div class="table-controls-legend form-inline pageActions action-btns">
-                            <div class="tabulator-section w-100">
-                                <div class="row mb-3">
-                                    <div class="col-xl-4 mb-2 mb-lg-0">
-                                        <form class="form-inline" id="search-form">
-                                            <div class="form-group">
-                                                <label for="filter-field" class="pe-2">
-                                                    {{translation.Default_Grouping}}:
-                                                </label>
-                                                <select id="grouping-field"
-                                                        style="max-width: 150px;"
-                                                        class="form-control"
-                                                        ng-model="filterBy.groupByRecord"
-                                                        ng-change="onGroupByChange(filterBy)">
-                                                    <option></option>
-                                                    <option value="{{f.field}}"
-                                                            ng-repeat="f in filterFieldsList">
-                                                        {{f.title}}
-                                                    </option>
-                                                </select>
-                                            </div>
+                    <div class="col-md-4 hide-for-superadmin">
+                        <div><label>Fill Schedule {{translation.From}}</label></div>
+                        <input type="date" id="SCH_FROM_DATE" class="js-flatpickr form-control flatpickr-custom" data-hs-flatpickr-options='{ "dateFormat": "d/m/Y" }' placeholder="select from date" />
+                        <div>
+                            <div class="invalid-feedback-2" id="SCH_FROM_DATE_ERROR">
+                                Please choose a start date
+                            </div>
+                        </div>
 
-                                            <a ng-click="showAdvancedSearch()"
-                                               class="btn btn-primary mt-3 mt-lg-0 ml-2"
-                                               data-toggle="tooltip"
-                                               title="Advanced search">
-                                                <span class="action-name">{{translation.Advanced_search}}</span>
-                                                <i class="fa"
-                                                   ng-class="{'fa-chevron-down':!isShowAdvanceSearch,'fa-chevron-up':isShowAdvanceSearch}"></i>
-                                            </a>
-                                        </form>
-                                    </div>
-                                    <div class="col-xl-8 text-lg-end text-md-start">
-                                        <a class="btn btn-primary mb-2 mb-lg-0"
-                                           ng-click="generateInvoiceFunc()"
-                                           ng-if="isInvoiceForm">
-                                            <i class="fa fa-file-code-o"></i>
-                                            <span class="action-name">{{translation.Generate_Invoice}}</span>
-                                        </a>
-                                        <a class="btn btn-primary mb-2 mb-lg-0"
-                                           ng-click="generatePrintInvoiceFunc(2)"
-                                           ng-if="isInvoiceForm">
-                                            <i class="fa fa-file"></i>
-                                            <span class="action-name">{{translation.Print_Invoice}}</span>
-                                        </a>
-                                        <a class="btn btn-primary mb-2 mb-lg-0"
-                                           ng-click="generatePrintReciptFunc(3)"
-                                           ng-if="isInvoiceForm">
-                                            <i class="fa fa-file-text-o"></i>
-                                            <span class="action-name">{{translation.Print_Recipt}}</span>
-                                        </a>
-                                        <a class="btn btn-primary mb-2 mb-lg-0"
-                                           ng-click="executeButton()" ng-show="isSchedulerForm">
-                                            <i class="fa fa-plus"> </i>
-                                            <span class="action-name">{{translation.Execute}}</span>
-                                        </a>
-                                        <a data-action="entry" class="btn btn-primary mb-2 mb-lg-0" ng-click="showSchedularFormModal()" ng-show="allowAddDelete==true && formDetailsDataInfo.currentFormType!=1 && !isInvoiceForm" ng-if="!isTransactionForm">
+                    </div>
 
-                                            <i class="fa fa-plus"></i>
-                                            <span class="action-name">{{translation.Entry}}</span>
-                                        </a>
 
-                                        <a data-action="entry" class="btn btn-primary mb-2 mb-lg-0"
-                                           ng-click="saveFormEntryData()"
-                                           ng-show="formDetailsDataInfo.currentFormType==1">
-                                            <i class="fa fa-plus"> </i>
-                                            <span class="action-name">{{translation.Entry}}</span>
-                                        </a>
-                                        <a class="btn btn-primary mb-2 mb-lg-0" ng-click="uploaddownloadPopup()">
-                                            <i class="fa fa-download"></i><span class="action-name">
-                                                {{translation.Upload_Download}}
-                                            </span>
-                                        </a>
-                                        <script id="uploaddownload.html"
-                                                type="text/ng-template">
-                                            <div class="wrap" ng-controller="CommonCustomDialogController">
-                                                <div class="col-md-12">
-                                                    <a ng-click="exportAll(1)" class="btn btn-primary m-1">
-                                                        <i class="fa fa-download">
-                                                        </i> <span class="action-name">{{translation.JSON}}</span>
-                                                    </a>
-                                                    <a ng-click="exportAll(2)" class="btn btn-primary m-1">
-                                                        <i class="fa fa-download">
-                                                        </i> <span class="action-name">{{translation.XLSX}}</span>
-                                                    </a>
+                    <div class="col-md-4 hide-for-superadmin">
+                        <div>
+                            <label>{{translation.To}}</label>
+                        </div>
 
-                                                    <a ng-click="exportAll(3)" class="btn btn-primary m-1">
-                                                        <i class="fa fa-download">
-                                                        </i> <span class="action-name">{{translation.CSV}}</span>
-                                                    </a>
-                                                    <a ng-click="exportAll(4)" class="btn btn-primary m-1">
-                                                        <i class="fa fa-download">
-                                                        </i> <span class="action-name">{{translation.PDF}}</span>
-                                                    </a>
-                                                    <a ng-click="exportAll(6)" ng-show="formDetailsDataInfo.currentFormType!=1" class="btn btn-primary m-1">
-                                                        <i class="fa fa-download">
-                                                        </i> <span class="action-name">{{translation.Download_all_records_XLSX}}</span>
-                                                    </a>
-                                                    <!--<a ng-click="exportAll(7)" ng-show="formDetailsDataInfo.currentFormType!=1" class="btn btn-primary m-1" id="download-pdf">
-                                                        <i class="fa fa-download">
-                                                        </i> <span class="action-name">{{translation.Download_all_records_XLSX}}</span>
-                                                    </a>-->
-                                                </div>
-                                            </div>
-                                        </script>
-                                        <a ng-click="saveTabulatorLayout('form-records'+formDetailsDataInfo,true)"
-                                           class="btn btn-primary mb-2 mb-lg-0"
-                                           data-toggle="tooltip"
-                                           title="Save Layout">
-                                            <i class="fa fa-bookmark"></i>
-                                            <span class="action-name">{{translation.Save_Layout}}</span>
-                                        </a>
+                        <input type="date" id="SCH_TO_DATE" class="js-flatpickr form-control flatpickr-custom" data-hs-flatpickr-options='{ "dateFormat": "d/m/Y" }' placeholder="select to date" />
+                        <div>
+                            <div class="invalid-feedback-2" id="SCH_TO_DATE_ERROR">
+                                Please choose an end date
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8 show-for-superadmin">
+                        <div class="col-md-12">
+                            <div>
+                                <label>No. Of Days to Schedule</label>
+                            </div>
 
-                                        <a data-action="delete" ng-click="deleteRecords()"
-                                           class="btn btn-danger text-white mb-2 mb-lg-0"
-                                           id="delete-json">
-                                            <i class="fa fa-trash"> </i>
-                                            <span class="action-name">{{translation.Delete_Record}}</span>
-                                        </a>
-
-                                        <a class="flat-buttons pageActionsToggleer waves-effect waves-button"
-                                           onclick="pageActionsToggleer()">
-                                            <i class="fa fa-chevron-left"></i>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div class="row mt-3" ng-if="isShowAdvanceSearch">
-                                    <div class="col-xl-12">
-                                        <form class="form-inline mb-3">
-                                            <div class="form-group me-1">
-                                                <label class="pe-2" for="filter-field">
-                                                    {{translation.Field}}:
-                                                </label>
-                                                <select id="filter-field"
-                                                        style="max-width: 150px;"
-                                                        class="form-control"
-                                                        ng-model="filterBy.fieldByRecord"
-                                                        ng-change="onFilterFieldByChange()">
-                                                    <option></option>
-                                                    <option value="{{f.field}}"
-                                                            ng-repeat="f in filterFieldsList">
-                                                        {{f.title}}
-                                                    </option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group me-1">
-                                                <label for="filter-type" class="pe-2">
-                                                    {{translation.Type}}
-                                                </label>
-                                                <select id="filter-type"
-                                                        style="max-width: 150px;"
-                                                        ng-model="filterBy.filterByType"
-                                                        ng-change="onFilterFieldByChange()"
-                                                        class="form-control">
-                                                    <option></option>
-                                                    <option value="=">
-                                                        =
-                                                    </option>
-                                                    <option value="<">
-                                                        &lt;
-                                                    </option>
-                                                    <option value="<=">
-                                                        &lt;=
-                                                    </option>
-                                                    <option value=">">
-                                                        &gt;
-                                                    </option>
-                                                    <option value=">=">
-                                                        &gt;=
-                                                    </option>
-                                                    <option value="!=">
-                                                        !=
-                                                    </option>
-                                                    <option value="like">
-                                                        like
-                                                    </option>
-                                                    <option value="Blank">
-                                                        Blank
-                                                    </option>
-                                                    <option value="NotBlank">
-                                                        Not Blank
-                                                    </option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group me-1">
-                                                <label for="filter-value" class="pe-2">
-                                                    {{translation.Value}}:
-                                                </label>
-                                                <input type="text"
-                                                       class="form-control"
-                                                       id="filter-value"
-                                                       ng-model="filterBy.filterByValue"
-                                                       placeholder="{{translation.Value_to_filter}}" />
-                                            </div>
-                                            <div class="form-group me-1">
-                                                <button type="button"
-                                                        id="filter-clear"
-                                                        class="btn btn-primary"
-                                                        ng-click="clearFilter()">
-                                                    <i class="fa fa-eraser"
-                                                       aria-hidden="true">
-                                                    </i>
-                                                    {{translation.Clear_Filter}}
-                                                </button>
-                                            </div>
-
-                                        </form>
-                                    </div>
+                            <input type="number" id="SCH_DAYS" class="form-control" placeholder="5" />
+                            <div>
+                                <div class="invalid-feedback-2" id="SCH_DAYS_ERROR">
+                                    Please enter no. of days to be scheduled
                                 </div>
                             </div>
                         </div>
-                        <div class="tabulator-section">
-                            <div id="page-tabs"
-                                 class="ui-tabs ui-corner-all ui-widget ui-widget-content"
-                                 ng-if="tabList.length>0">
-                                <ul class="ui-tabs-nav ui-corner-all ui-helper-reset ui-helper-clearfix ui-widget-header">
-                                    <li tabindex="-1"
-                                        class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
-                                        id="tab-{{$index}}"
-                                        ng-repeat="l in tabList track by $index"
-                                        ng-click="selectedTabFilter(l,$index)">
-                                        <a data-target="#{{l.value}}"
-                                           tabindex="-1"
-                                           class="ui-tabs-anchor">{{l.label}}</a>
-                                    </li>
-                                </ul>
-                            </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div><label>Alternative week</label></div>
+                        <select class="form-control">
+                            <option value="EVERY-WEEK" selected>{{translation.Every_Week}}</option>
+                            <option value="ALTERNATE-WEEK">{{translation.Alternate_Week}}</option>
+                            <option value="EVERY-3-WEEK">{{translation.Every_3_Week}}</option>
+                            <option value="EVERY-4-WEEK">{{translation.Every_4_Week}}</option>
+                        </select>
+                    </div>
 
-                            <div class="form-builder-loader text-center">
-                                <div class="loader">
-                                    <i class="fa fa-spinner fa-pulse fa-fw"> </i>
-                                    <div>
-                                        {{translation.Loading_Form_Tabulator}}...
-                                    </div>
-                                </div>
+
+                    <div class="col-md-4 hide-for-superadmin">
+                        <div>
+                            <label>Duration for each session (minute)</label>
+                        </div>
+
+                        <input type="date" id="SCH_TO_DATE" class="js-flatpickr form-control flatpickr-custom" data-hs-flatpickr-options='{ "dateFormat": "d/m/Y" }' placeholder="select to date" />
+                        <div>
+                            <div class="invalid-feedback-2" id="SCH_TO_DATE_ERROR">
+                                Please choose an end date
                             </div>
-                            <div id="form-records"></div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
+                    <div class="col-md-8 show-for-superadmin">
+                        <div class="col-md-12">
+                            <div>
+                                <label>Rest period between session (minute)</label>
+                            </div>
 
-        <div class="modal fade" id="schedularFormNew" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-            <div class="modal-dialog modal-xl" role="document">
-                <div class="modal-content">
-                    <div class="modal-header d-flex">
-                        <h2 class="modal-title"><span class="edit-element">{{translation.Edit}}</span> {{translation.Schedular_Form}}</h2>
-                        <button type="button"
-                                class="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close">
-                            <span aria-hidden="true"></span>
-                        </button>
-                    </div>
-                    <div class="modal-body" style="padding-top:10px;">
-                        <form id="myForm">
-                            <div class="row schedular-form">
-                                <div class="col-md-4">
-                                    <div><label>{{translation.Location}}</label></div>
-                                    <select class="form-control" id="SCH_LOCATION">
-                                        <option value="{{l.Id}}" ng-repeat="l in locationList">{{l.LOCATION_BUILDING_NAME}}, {{l.LOCATION_FLOOR}} floor</option>
-                                    </select>
-                                    <div>
-                                        <div class="invalid-feedback-2" id="SCH_LOCATION_ERROR">
-                                            Please select a location
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div><label>{{translation.Service}}</label></div>
-                                    <select class="form-control" id="SCH_ACTIVITY">
-                                        <option value="{{l.Id}}" ng-repeat="l in serviceList">{{l.ACTIVITY_NAME}}</option>
-                                    </select>
-                                    <div>
-                                        <div class="invalid-feedback-2" id="SCH_ACTIVITY_ERROR">
-                                            Please select an activity
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div><label>{{translation.Service_Provider}}</label></div>
-                                    <select class="form-control" id="SCH_RESOURCE">
-                                        <option value="{{l.Id}}" ng-repeat="l in serviceProviderList">{{l.FIRST_NAME}} {{l.LAST_NAME}}</option>
-                                    </select>
-                                    <div>
-                                        <div class="invalid-feedback-2" id="SCH_RESOURCE_ERROR">
-                                            Please select a resource
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-4 hide-for-superadmin">
-                                    <div><label>{{translation.From}}</label></div>
-                                    <input type="date" id="SCH_FROM_DATE" class="js-flatpickr form-control flatpickr-custom" data-hs-flatpickr-options='{ "dateFormat": "d/m/Y" }' placeholder="select from date" />
-                                    <div>
-                                        <div class="invalid-feedback-2" id="SCH_FROM_DATE_ERROR">
-                                            Please choose a start date
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="col-md-4 hide-for-superadmin">
-                                    <div>
-                                        <label>{{translation.To}}</label>
-                                    </div>
-
-                                    <input type="date" id="SCH_TO_DATE" class="js-flatpickr form-control flatpickr-custom" data-hs-flatpickr-options='{ "dateFormat": "d/m/Y" }' placeholder="select to date" />
-                                    <div>
-                                        <div class="invalid-feedback-2" id="SCH_TO_DATE_ERROR">
-                                            Please choose an end date
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-8 show-for-superadmin">
-                                    <div class="col-md-12">
-                                        <div>
-                                            <label>No. Of Days to Schedule</label>
-                                        </div>
-
-                                        <input type="number" id="SCH_DAYS" class="form-control" placeholder="5" />
-                                        <div>
-                                            <div class="invalid-feedback-2" id="SCH_DAYS_ERROR">
-                                                Please enter no. of days to be scheduled
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div><label>Alternative week</label></div>
-                                    <div><input type="radio" checked name="alternate-week" value="EVERY-WEEK" /> {{translation.Every_Week}}</div>
-                                    <div><input type="radio" name="alternate-week" value="ALTERNATE-WEEK" /> {{translation.Alternate_Week}}</div>
-                                    <div><input type="radio" name="alternate-week" value="EVERY-3-WEEK" /> {{translation.Every_3_Week}}</div>
-                                    <div><input type="radio" name="alternate-week" value="EVERY-4-WEEK" /> {{translation.Every_4_Week}}</div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <input type="checkbox" name="TimeSameAsMonday" onclick="setSameTime()" /> {{translation.Time_same_as_monday}}
-                                </div>
-
-                                <div class="col-md-12">
-                                    <table class="schedular-table" width="100%">
-                                        <thead>
-                                            <tr>
-                                                <td>Time</td>
-                                                <td>MON</td>
-                                                <td>TUE</td>
-                                                <td>WED</td>
-                                                <td>THU</td>
-                                                <td>FRI</td>
-                                                <td>SAT</td>
-                                                <td>SUN</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>{{translation.Start_Time}}</td>
-                                                <td><input type="time" id="Monday_Start_Time" onchange="setSameDateValue()" class="form-control" /></td>
-                                                <td><input type="time" id="Tuesday_Start_Time" class="form-control" /></td>
-                                                <td><input type="time" id="Wednesday_Start_Time" class="form-control" /></td>
-                                                <td><input type="time" id="Thursday_Start_Time" class="form-control" /></td>
-                                                <td><input type="time" id="Friday_Start_Time" class="form-control" /></td>
-                                                <td><input type="time" id="Saturday_Start_Time" class="form-control" /></td>
-                                                <td><input type="time" id="Sunday_Start_Time" class="form-control" /></td>
-                                            </tr>
-                                            <tr>
-                                                <td>{{translation.End_Time}}</td>
-                                                <td><input type="time" id="Monday_End_Time" onchange="setSameDateValue()" class="form-control" /></td>
-                                                <td><input type="time" id="Tuesday_End_Time" class="form-control" /></td>
-                                                <td><input type="time" id="Wednesday_End_Time" class="form-control" /></td>
-                                                <td><input type="time" id="Thursday_End_Time" class="form-control" /></td>
-                                                <td><input type="time" id="Friday_End_Time" class="form-control" /></td>
-                                                <td><input type="time" id="Saturday_End_Time" class="form-control" /></td>
-                                                <td><input type="time" id="Sunday_End_Time" class="form-control" /></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="col-md-12">
-                                    <button class="btn btn-default" ng-click="hideSchedularFormModal()">{{translation.Cancel}}</button> <button class="btn btn-success" id="final-submit-button" ng-click="saveSchedularForm()">{{translation.Submit}}</button> <button class="btn btn-success" style="display:none;" id="final-save-button" ng-click="saveSchedularForm()">{{translation.Save}}</button>
+                            <input type="number" id="SCH_DAYS" class="form-control" placeholder="5" />
+                            <div>
+                                <div class="invalid-feedback-2" id="SCH_DAYS_ERROR">
+                                    Please enter no. of days to be scheduled
                                 </div>
                             </div>
-                        </form>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div><label>Alternative week</label></div>
+                        <input type="number" id="SCH_DAYS" class="form-control" placeholder="5" />
+                        <div>
+                            <div class="invalid-feedback-2" id="SCH_DAYS_ERROR">
+                                Please enter no. of days to be scheduled
+                            </div>
+                        </div>
+                    </div>
 
-
+                    <div class="col-md-12">
+                        <h1 class="schedular-title-2 mt-3">Class schedule</h1>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
+                <div>
+                    <div class="col-md-12">
+                        <div class="schedular-table">
+                            <div class="schedular-row">
+                                <div class="schedular-element header">
+                                    Mon
+                                </div>
+                                <div class="form-elements" id="elements-row-Mon">
+                                    
+                                </div>
+
+                                <div class="schedular-element add-element">
+                                    <button class="btn btn-primary" ng-click="addFormElement('Mon')">+ ADD MORE</button>
+                                </div>
+                            </div>
+                            <div class="schedular-row">
+                                <div class="schedular-element header">
+                                    Tue
+                                </div>
+                                <div class="form-elements" id="elements-row-Tue">
+
+                                </div>
 
 
-<script>
+                                <div class="schedular-element add-element">
+                                    <button class="btn btn-primary" ng-click="addFormElement('Tue')">+ ADD MORE</button>
+                                </div>
+                            </div>
+                            <div class="schedular-row">
+                                <div class="schedular-element header">
+                                    Wed
+                                </div>
+                                <div class="form-elements" id="elements-row-Wed">
 
-    function setSameTime () {
-        $("#Tuesday_Start_Time").val($("#Monday_Start_Time").val());
-        $("#Tuesday_End_Time").val($("#Monday_End_Time").val());
+                                </div>
 
-        $("#Wednesday_Start_Time").val($("#Monday_Start_Time").val());
-        $("#Wednesday_End_Time").val($("#Monday_End_Time").val());
 
-        $("#Thursday_Start_Time").val($("#Monday_Start_Time").val());
-        $("#Thursday_End_Time").val($("#Monday_End_Time").val());
+                                <div class="schedular-element add-element">
+                                    <button class="btn btn-primary" ng-click="addFormElement('Wed')">+ ADD MORE</button>
+                                </div>
+                            </div>
+                            <div class="schedular-row">
+                                <div class="schedular-element header">
+                                    Thu
+                                </div>
+                                <div class="form-elements" id="elements-row-Thu">
 
-        $("#Friday_Start_Time").val($("#Monday_Start_Time").val());
-        $("#Friday_End_Time").val($("#Monday_End_Time").val());
+                                </div>
 
-        $("#Saturday_Start_Time").val($("#Monday_Start_Time").val());
-        $("#Saturday_End_Time").val($("#Monday_End_Time").val());
 
-        $("#Sunday_Start_Time").val($("#Monday_Start_Time").val());
-        $("#Sunday_End_Time").val($("#Monday_End_Time").val());
-    }
+                                <div class="schedular-element add-element">
+                                    <button class="btn btn-primary" ng-click="addFormElement('Thu')">+ ADD MORE</button>
+                                </div>
+                            </div>
+                            <div class="schedular-row">
+                                <div class="schedular-element header">
+                                    Fri
+                                </div>
+                                <div class="form-elements" id="elements-row-Fri">
 
-    function setSameDateValue() {
+                                </div>
 
-        if ($("input[name=TimeSameAsMonday]:checked").val() == "on") {
-            setSameTime();
-        }
-    }
-</script>
 
-<div id="searchModal"
-     class="modal fade"
-     tabindex="-1"
-     role="dialog"
-     aria-labelledby="myLargeModalLabel">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="jss3726" ng-include="'bg-svg.html'"></div>
-            <div class="modal-header">
-                <h4 class="modal-title"></h4>
-                <button type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div id="search-results" class="list-group"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button"
-                        class="btn btn-primary"
-                        data-dismiss="modal">
-                    {{translation.Close}}
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-<div id="galleryModal"
-     class="modal fade"
-     tabindex="-1"
-     role="dialog"
-     aria-labelledby="myLargeModalLabel">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="jss3726" ng-include="'bg-svg.html'"></div>
-            <div class="modal-header">
-                <h4 class="modal-title"></h4>
-                <button type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body"></div>
+                                <div class="schedular-element add-element">
+                                    <button class="btn btn-primary" ng-click="addFormElement('Fri')">+ ADD MORE</button>
+                                </div>
+                            </div>
+                            <div class="schedular-row">
+                                <div class="schedular-element header">
+                                    Sat
+                                </div>
+                                <div class="form-elements" id="elements-row-Sat">
 
-            <div class="modal-footer">
-                <button type="button"
-                        class="btn btn-primary"
-                        data-dismiss="modal">
-                    {{translation.Close}}
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-<div id="tabulatorConfigModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="jss3726" ng-include="'bg-svg.html'"></div>
-            <div class="modal-header">
-                <h4 class="modal-title"> {{translation.Tabulator_Configurations}}</h4>
-                <button type="button" class="close" data-dismiss="modal">
-                    &times;
-                </button>
-            </div>
+                                </div>
 
-            <div class="modal-body">
-                <div class="alert-area"></div>
-                <a class="btn btn-sm btn-success" href=""><i class="fa fa-plus"></i> {{translation.Create_New}}</a>
-                <a href="javascript:;"
-                   class="btn btn-sm btn-primary"
-                   id="toggle_responsive"></a>
-                <a class="btn btn-primary btn-sm pull-right"
-                   href="javascript:;"
-                   id="delete_per_cookie">
-                    {{translation.Default_Configuration}}
-                </a>
-            </div>
+                                <div class="schedular-element add-element">
+                                    <button class="btn btn-primary" ng-click="addFormElement('Sat')">+ ADD MORE</button>
+                                </div>
+                            </div>
+                            <div class="schedular-row">
+                                <div class="schedular-element header">
+                                    Sun
+                                </div>
+                                <div class="form-elements" id="elements-row-Sun">
+
+                                </div>
+
+                                <div class="schedular-element add-element">
+                                    <button class="btn btn-primary" ng-click="addFormElement('Sun')">+ ADD MORE</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-12">
+                        <button class="btn btn-default" ng-click="hideSchedularFormModal()">{{translation.Cancel}}</button> <button class="btn btn-success" id="final-submit-button" ng-click="saveSchedularForm()">{{translation.Submit}}</button> <button class="btn btn-success" style="display:none;" id="final-save-button" ng-click="saveSchedularForm()">{{translation.Save}}</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

@@ -3107,6 +3107,8 @@
     <Content Include="Scripts\myscript\controller\allController_bk.js" />
     <Content Include="Scripts\myscript\controller\ApplicationListController.js" />
     <Content Include="Scripts\myscript\controller\approvalController.js" />
+    <Content Include="Scripts\myscript\controller\NewSchedularFormController.js" />
+    <Content Include="Scripts\myscript\controller\queueController.js" />
     <Content Include="Scripts\myscript\controller\calendarController.js" />
     <Content Include="Scripts\myscript\controller\CalenderRecordsController.js" />
     <Content Include="Scripts\myscript\controller\CreateApplicationController.js" />
@@ -3141,7 +3143,6 @@
     <Content Include="Scripts\UserAdminScripts\AdminLayoutManager.js" />
     <Content Include="Scripts\UserAdminScripts\Common\UserAdminCommonFunctions.js" />
     <Content Include="Scripts\UserAdminScripts\myCalendar.js" />
-    <Content Include="Scripts\WebSocket\QueueManager.js" />
     <Content Include="Templates\admin\admin-users.html" />
     <Content Include="Templates\admin\article-details.html" />
     <Content Include="Templates\admin\cllractivity.html" />
@@ -3153,12 +3154,14 @@
     <Content Include="Templates\admin\schedule.html" />
     <Content Include="Templates\admin\transaction.html" />
     <Content Include="Templates\breadcrumbs.html" />
+    <Content Include="Templates\calendar-master\queue-manager.html" />
     <Content Include="Templates\calendar-master\client-payment-history.html" />
     <Content Include="Templates\calendar-master\calendar.html" />
     <Content Include="Templates\calendar-master\business-user-master.html" />
     <Content Include="Templates\calendar-master\calendar-package-master.html" />
-    <Content Include="Templates\calendar-master\transaction-master.html" />
     <Content Include="Templates\calendar-master\schedular-form.html" />
+    <Content Include="Templates\calendar-master\transaction-master.html" />
+    <Content Include="Templates\calendar-master\schedular-form-table.html" />
     <Content Include="Templates\calendar-master\participant-master.html" />
     <Content Include="Templates\calendar-master\service-provider-master.html" />
     <Content Include="Templates\calendar-master\service-master.html" />

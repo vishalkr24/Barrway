@@ -1911,13 +1911,27 @@
                 }
             })
             // Schedular form route state
+            .state('schedular_form_table', {
+                url: '/calendar/schedular-form-table/:formId',
+                onEnter: function ($window) { $window.document.title = "Schedular Forms"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/calendar-master/schedular-form-table.html?token=' + uuid,
+                        controller: 'FormRecordsController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
             .state('schedular_form', {
-                url: '/calendar/schedular-form/:formId',
+                url: '/calendar/schedular-form/:Id',
                 onEnter: function ($window) { $window.document.title = "Schedular Form"; },
                 views: {
                     'content': {
                         templateUrl: '/Templates/calendar-master/schedular-form.html?token=' + uuid,
-                        controller: 'FormRecordsController'
+                        controller: 'NewSchedularFormController'
                     }
                 },
                 ncyBreadcrumb: {
@@ -1961,6 +1975,20 @@
                     'content': {
                         templateUrl: '/Templates/calendar-master/calendar.html?token=' + uuid,
                         controller: 'NewDemoCalenderRecordsControllerTemp'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
+            .state('queue_view', {
+                url: '/queue-manager',
+                onEnter: function ($window) { $window.document.title = "Queue Manager"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/calendar-master/queue-manager.html?token=' + uuid,
+                        controller: 'queueController'
                     }
                 },
                 ncyBreadcrumb: {
