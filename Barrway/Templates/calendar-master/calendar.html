@@ -356,7 +356,7 @@
     }
 </style>
 
-<div class="row" style="margin-left:-1.5rem; display:none;" id="calendar_view" >
+<div class="row" style="margin-left:-1.5rem;" id="calendar_view">
     <div class="col-md-2" ng-show="IS_EXIST_PRE_DEFINED_ACTIVITIES" style="background-color: #bcb3cc; padding:0px;">
         <section class="sidebar" style="border-right:none!important;">
             <div class="sedebar__tInner" style="text-align:center">
@@ -863,7 +863,32 @@
 </div>
 
 <div id="queue_view">
-    
+    <!--<div class="container">
+        <div class="row p-1">
+            <div class="col-1">User</div>
+            <div class="col-5"><input type="text" id="userInput" /></div>
+        </div>
+        <div class="row p-1">
+            <div class="col-1">Message</div>
+            <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
+        </div>
+        <div class="row p-1">
+            <div class="col-6 text-end">
+                <input type="button" id="sendButton" value="Send Message" />
+            </div>
+        </div>
+        <div class="row p-1">
+            <div class="col-6">
+                <hr />
+            </div>
+        </div>
+        <div class="row p-1">
+            <div class="col-6">
+                <ul id="messagesList"></ul>
+            </div>
+        </div>
+    </div>-->
+
 </div>
 
 <div id="searchModal"
@@ -1314,3 +1339,7 @@
     $("#nav-calendar-master").addClass("active");
 
 </script>
+
+<!--Signal R Scripts-->
+<script src="../../Scripts/jquery.signalR-2.4.3.min.js"></script>
+<script src="../../Scripts/WebSocket/QueueManager.js"></script>

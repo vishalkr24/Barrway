@@ -1,118 +1,118 @@
 $(document).ready(function () {
-  
-     $("#owl-demo1").owlCarousel({
-        loop: true,
-         margin: 10,
-         dots: false,
-         responsiveClass: true,
-         responsive: {
-           0: {
-             items: 1,
-             nav: false
-           },
-           600: {
-             items: 3,
-             nav: false
-           },
-           1000: {
-             items: 5,
-             nav: true,
-             loop: false,
-             margin: 20
-           }
-         }
-        });
 
-     $("#owl-demo2").owlCarousel({
+    $("#owl-demo1").owlCarousel({
         loop: true,
-      margin: 10,
-      dots: false,
-      responsiveClass: true,
-      responsive: {
-        0: {
-          items: 1,
-          nav: false
-        },
-        600: {
-          items: 3,
-          nav: false
-        },
-        1000: {
-          items: 5,
-          nav: true,
-          loop: false,
-          margin: 20
+        margin: 10,
+        dots: false,
+        responsiveClass: true,
+        responsive: {
+            0: {
+                items: 1,
+                nav: false
+            },
+            600: {
+                items: 3,
+                nav: false
+            },
+            1000: {
+                items: 5,
+                nav: true,
+                loop: false,
+                margin: 20
+            }
         }
-      }
-     });
+    });
 
-       $("#owl-demo3").owlCarousel({
+    $("#owl-demo2").owlCarousel({
         loop: true,
-      margin: 10,
-      dots: false,
-      responsiveClass: true,
-      responsive: {
-        0: {
-          items: 1,
-          nav: false
-        },
-        600: {
-          items: 3,
-          nav: false
-        },
-        1000: {
-          items: 5,
-          nav: true,
-          loop: false,
-          margin: 20
+        margin: 10,
+        dots: false,
+        responsiveClass: true,
+        responsive: {
+            0: {
+                items: 1,
+                nav: false
+            },
+            600: {
+                items: 3,
+                nav: false
+            },
+            1000: {
+                items: 5,
+                nav: true,
+                loop: false,
+                margin: 20
+            }
         }
-      }
-     });
+    });
 
-       $("#owl-demo4").owlCarousel({
+    $("#owl-demo3").owlCarousel({
         loop: true,
-      margin: 10,
-      dots: false,
-      responsiveClass: true,
-      responsive: {
-        0: {
-          items: 1,
-          nav: false
-        },
-        600: {
-          items: 3,
-          nav: false
-        },
-        1000: {
-          items: 5,
-          nav: true,
-          loop: false,
-          margin: 20
+        margin: 10,
+        dots: false,
+        responsiveClass: true,
+        responsive: {
+            0: {
+                items: 1,
+                nav: false
+            },
+            600: {
+                items: 3,
+                nav: false
+            },
+            1000: {
+                items: 5,
+                nav: true,
+                loop: false,
+                margin: 20
+            }
         }
-      }
-     });
+    });
 
-       $("#owl-demo5").owlCarousel({
-        loop: true,      
-      dots: false,
-      responsiveClass: true,
-      responsive: {
-        0: {
-          items: 2,
-          nav: false
-        },
-        600: {
-          items: 5,
-          nav: false
-        },
-        1000: {
-          items: 7,
-          nav: true,
-          loop: true,
-          margin: 20
+    $("#owl-demo4").owlCarousel({
+        loop: true,
+        margin: 10,
+        dots: false,
+        responsiveClass: true,
+        responsive: {
+            0: {
+                items: 1,
+                nav: false
+            },
+            600: {
+                items: 3,
+                nav: false
+            },
+            1000: {
+                items: 5,
+                nav: true,
+                loop: false,
+                margin: 20
+            }
         }
-      }
-     });
+    });
+
+    $("#owl-demo5").owlCarousel({
+        loop: true,
+        dots: false,
+        responsiveClass: true,
+        responsive: {
+            0: {
+                items: 2,
+                nav: false
+            },
+            600: {
+                items: 5,
+                nav: false
+            },
+            1000: {
+                items: 6,
+                nav: true,
+                loop: true,
+                margin: 20
+            }
+        }
+    });
 });
 
 // my gallery
@@ -535,60 +535,60 @@ let startCount = 0;
 let endCount = images.length - 1;
 
 closeBtn.addEventListener("click", (e) => {
-  galleryPopup.style.display = "none";
-  galleryPopup.classList.remove("active");
-  selectedImg === null;
-  startCount = 0;
-  endCount = images.length - 1;
-  body.style.overflow = "auto";
+    galleryPopup.style.display = "none";
+    galleryPopup.classList.remove("active");
+    selectedImg === null;
+    startCount = 0;
+    endCount = images.length - 1;
+    body.style.overflow = "auto";
 });
 
 // Click Next Button Function
 function nextImg() {
-  if (selectedImg < 0) return;
-  if (selectedImg === endCount) {
-    selectedImg = startCount;
-  } else {
-    selectedImg++;
-  }
-  showImg.src = images[selectedImg].src;
-  addRemoveAnimationNext();
+    if (selectedImg < 0) return;
+    if (selectedImg === endCount) {
+        selectedImg = startCount;
+    } else {
+        selectedImg++;
+    }
+    showImg.src = images[selectedImg].src;
+    addRemoveAnimationNext();
 }
 
 // Click Prev Button Function
 function prevImg() {
-  if (selectedImg < 0) return;
-  if (selectedImg === startCount) {
-    selectedImg = endCount;
-  } else {
-    selectedImg--;
-  }
-  showImg.src = images[selectedImg].src;
-  addRemoveAnimationPrev();
+    if (selectedImg < 0) return;
+    if (selectedImg === startCount) {
+        selectedImg = endCount;
+    } else {
+        selectedImg--;
+    }
+    showImg.src = images[selectedImg].src;
+    addRemoveAnimationPrev();
 }
 
 // Initial Click Handler
 images.forEach((img, index) => {
-  img.addEventListener("click", (e) => {
-    galleryPopup.style.display = "block";
-    galleryPopup.classList.add("active");
-    showImg.src = e.currentTarget.src;
-    selectedImg = index;
-    body.style.overflow = "hidden";
-  });
+    img.addEventListener("click", (e) => {
+        galleryPopup.style.display = "block";
+        galleryPopup.classList.add("active");
+        showImg.src = e.currentTarget.src;
+        selectedImg = index;
+        body.style.overflow = "hidden";
+    });
 });
 
 // Function for add and Remove Style Attribute
 function addRemoveAnimationNext() {
-  showImg.setAttribute("style", imgTransitionNext);
-  setTimeout(() => {
-    showImg.setAttribute("style", "");
-  }, 500);
+    showImg.setAttribute("style", imgTransitionNext);
+    setTimeout(() => {
+        showImg.setAttribute("style", "");
+    }, 500);
 }
 
 function addRemoveAnimationPrev() {
-  showImg.setAttribute("style", imgTransitionPrev);
-  setTimeout(() => {
-    showImg.setAttribute("style", "");
-  }, 500);
+    showImg.setAttribute("style", imgTransitionPrev);
+    setTimeout(() => {
+        showImg.setAttribute("style", "");
+    }, 500);
 }
