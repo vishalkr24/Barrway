@@ -24,7 +24,6 @@ namespace Barrway
         {
             GlobalHost.Configuration.ConnectionTimeout = TimeSpan.FromSeconds(50);
 
-
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

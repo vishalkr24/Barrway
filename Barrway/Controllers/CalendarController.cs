@@ -355,7 +355,7 @@ namespace Barrway.Controllers
 
                                 List<string> columns = new List<string>();
 
-                                foreach(var key in x.Keys.Where(y=> y != "Is_New" && y != "Id" && y != "COMPANY_CODE" && y != "CALENDAR_CODE"))
+                                foreach (var key in x.Keys.Where(y => y != "Is_New" && y != "Id" && y != "COMPANY_CODE" && y != "CALENDAR_CODE"))
                                 {
                                     columns.Add($@"{key?.ToString()} = '{x[key]}'");
                                 }
@@ -460,7 +460,7 @@ namespace Barrway.Controllers
                 {
                     try
                     {
-                        
+
                         var dataSerialized = data.Where(x => x["Is_New"]?.ToString() == "true").ToList();
 
                         //List<CalendarServiceProviderMasterModel> locMasMod = JsonConvert.DeserializeObject<List<CalendarServiceProviderMasterModel>>(dataSerialized);
@@ -535,7 +535,7 @@ namespace Barrway.Controllers
                 {
                     return Json(new AddUpdateDelete() { Status = false, Message = "Something went wrong" }, JsonRequestBehavior.AllowGet);
                 }
-                
+
             }
             else
             {
@@ -645,6 +645,12 @@ namespace Barrway.Controllers
                         }
                     }
 
+                    var slotCheck = await businessUserService.CheckOverlapingSlots(dataList.FirstOrDefault());
+
+                    if (slotCheck.Status)
+                    {
+                        return Json(new AddUpdateDelete() { Status = false, Data = slotCheck, Message = "Slots Overlaping!" });
+                    }
 
                     var b = data.ToDictionary();
 
@@ -732,113 +738,72 @@ namespace Barrway.Controllers
                                 DateTime SlotStartTime = DateTime.Now;
                                 DateTime SlotEndTime = DateTime.Now;
 
+                                var dictionaryDataList = JsonConvert.DeserializeObject<Dictionary<string, object>>(JsonConvert.SerializeObject(data.table));
+
+                                foreach (var x in dictionaryDataList[dateTracker.DayOfWeek.ToString().Substring(0, 3)] as List<CommonTimeObject>)
+                                {   
+                                    if (string.IsNullOrEmpty(x.start) || string.IsNullOrEmpty(x.end))
+                                    {
+                                        // if time is not mentioned then skip that day
+                                        dateTracker = dateTracker.AddDays(1);
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        SlotStartTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + x.start.ToString());
+                                        SlotEndTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + x.end.ToString());
+                                    }
+
+                                    CalendarFormModel eventData = new CalendarFormModel()
+                                    {
+                                        end = SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss"),
+                                        resources = data.SCH_RESOURCE,
+                                        activities = data.SCH_ACTIVITY,
+                                        start = SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss"),
+                                        title = "Slot " + slotCounter++
+                                    };
+                                    formGroupKey = Guid.NewGuid().ToString();
+
+                                    script += $@"insert into CALENDAR_FORM_1935(
+                                                               [SCHEDULAR_FORM_ID]
+                                                              ,[formGroupKey]
+                                                              ,[formID]
+                                                              ,[userID]
+                                                              ,[Current_Status]
+                                                              ,[cycle]
+                                                              ,[MasterFormID]
+                                                              ,[MasterFormRow]
+                                                              ,[formRecordOrder]
+                                                              ,[formRecordStatus]
+                                                              ,[COMPANY_CODE]
+                                                              ,[CALENDAR_CODE]
+                                                              ,[title]
+                                                              ,[start]
+                                                              ,[end]
+                                                              ,[allDay]
+                                                              ,[resources]
+                                                              ,[activities]
+                                                              ,[COMPANY_SUBSCRIPTION_ID]
+                                                              ,[description]
+                                                              ,[created_at], [updated_at],[EVENT_TYPE])
+	                                                          values('{SchedularFormId}', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter}', '{SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{data.SCH_RESOURCE}', '{data.SCH_ACTIVITY}', '{package.Data["SUBS_ID"]?.ToString()}', '{data.SCH_DESCRIPTION}', getDate(), getDate(),'SCHEDULE');
+                                
+                                                            insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_PROVIDER_MASTER}, '{data.SCH_RESOURCE}', 'SERVICE_PROVIDER_MASTER_1934', 'FIRST_NAME', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_RESOURCE}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+
+                                                            insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_MASTER}, '{data.SCH_ACTIVITY}', 'SERVICE_MASTER_1933', 'ACTIVITY_NAME', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_ACTIVITY}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                        
+                                                            insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{data.SCH_LOCATION}', 'LOCATION_MASTER_1936', 'LOCATION_CODE', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_LOCATION}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+
+                                                            ";
+
+                                }
+
                                 switch (dateTracker.DayOfWeek.ToString())
                                 {
-                                    case "Monday":
-                                        if (string.IsNullOrEmpty(data.table.Monday.Start) || string.IsNullOrEmpty(data.table.Monday.End))
-                                        {
-                                            // if time is not mentioned then skip that day
-                                            dateTracker = dateTracker.AddDays(1);
-                                            continue;
-                                        }
-                                        else
-                                        {
-                                            SlotStartTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Monday.Start.ToString());
-                                            SlotEndTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Monday.End.ToString());
-                                        }
-
-                                        break;
-                                    case "Tuesday":
-
-                                        if (string.IsNullOrEmpty(data.table.Tuesday.Start) || string.IsNullOrEmpty(data.table.Tuesday.End))
-                                        {
-                                            // if time is not mentioned then skip that day
-                                            dateTracker = dateTracker.AddDays(1);
-                                            continue;
-                                        }
-                                        else
-                                        {
-                                            SlotStartTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Tuesday.Start.ToString());
-                                            SlotEndTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Tuesday.End.ToString());
-                                        }
-
-
-                                        break;
-                                    case "Wednesday":
-
-                                        if (string.IsNullOrEmpty(data.table.Wednesday.Start) || string.IsNullOrEmpty(data.table.Wednesday.End))
-                                        {
-                                            // if time is not mentioned then skip that day
-                                            dateTracker = dateTracker.AddDays(1);
-                                            continue;
-                                        }
-                                        else
-                                        {
-                                            SlotStartTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Wednesday.Start.ToString());
-                                            SlotEndTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Wednesday.End.ToString());
-                                        }
-
-                                        break;
-                                    case "Thursday":
-
-                                        if (string.IsNullOrEmpty(data.table.Thursday.Start) || string.IsNullOrEmpty(data.table.Thursday.End))
-                                        {
-                                            // if time is not mentioned then skip that day
-                                            dateTracker = dateTracker.AddDays(1);
-                                            continue;
-                                        }
-                                        else
-                                        {
-                                            SlotStartTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Thursday.Start.ToString());
-                                            SlotEndTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Thursday.End.ToString());
-                                        }
-
-                                        break;
-                                    case "Friday":
-
-                                        if (string.IsNullOrEmpty(data.table.Friday.Start) || string.IsNullOrEmpty(data.table.Friday.End))
-                                        {
-                                            // if time is not mentioned then skip that day
-                                            dateTracker = dateTracker.AddDays(1);
-                                            continue;
-                                        }
-                                        else
-                                        {
-                                            SlotStartTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Friday.Start.ToString());
-                                            SlotEndTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Friday.End.ToString());
-                                        }
-
-                                        break;
-                                    case "Saturday":
-
-                                        if (string.IsNullOrEmpty(data.table.Saturday.Start) || string.IsNullOrEmpty(data.table.Saturday.End))
-                                        {
-                                            // if time is not mentioned then skip that day
-                                            dateTracker = dateTracker.AddDays(1);
-                                            continue;
-                                        }
-                                        else
-                                        {
-                                            SlotStartTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Saturday.Start.ToString());
-                                            SlotEndTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Saturday.End.ToString());
-                                        }
-
-                                        break;
-                                    case "Sunday":
-
-                                        if (string.IsNullOrEmpty(data.table.Sunday.Start) || string.IsNullOrEmpty(data.table.Sunday.End))
-                                        {
-                                            // if time is not mentioned then skip that day
-                                            dateTracker = dateTracker.AddDays(1);
-                                            continue;
-                                        }
-                                        else
-                                        {
-                                            SlotStartTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Sunday.Start.ToString());
-                                            SlotEndTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + data.table.Sunday.End.ToString());
-                                        }
-
-                                        break;
+                                    
                                 }
 
                                 if (data.SCH_ALTERNATIVE_WEEK == "ALTERNATE-WEEK")
@@ -870,51 +835,6 @@ namespace Barrway.Controllers
                                     }
                                 }
 
-                                CalendarFormModel eventData = new CalendarFormModel()
-                                {
-                                    end = SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss"),
-                                    resources = data.SCH_RESOURCE,
-                                    activities = data.SCH_ACTIVITY,
-                                    start = SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss"),
-                                    title = "Slot " + slotCounter++
-                                };
-                                formGroupKey = Guid.NewGuid().ToString();
-
-                                script += $@"insert into CALENDAR_FORM_1935(
-                                       [SCHEDULAR_FORM_ID]
-                                      ,[formGroupKey]
-                                      ,[formID]
-                                      ,[userID]
-                                      ,[Current_Status]
-                                      ,[cycle]
-                                      ,[MasterFormID]
-                                      ,[MasterFormRow]
-                                      ,[formRecordOrder]
-                                      ,[formRecordStatus]
-                                      ,[COMPANY_CODE]
-                                      ,[CALENDAR_CODE]
-                                      ,[title]
-                                      ,[start]
-                                      ,[end]
-                                      ,[allDay]
-                                      ,[resources]
-                                      ,[activities]
-                                      ,[COMPANY_SUBSCRIPTION_ID]
-                                      ,[description]
-                                      ,[created_at], [updated_at],[EVENT_TYPE])
-	                                  values('{SchedularFormId}', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter}', '{SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{data.SCH_RESOURCE}', '{data.SCH_ACTIVITY}', '{package.Data["SUBS_ID"]?.ToString()}', '{data.SCH_DESCRIPTION}', getDate(), getDate(),'SCHEDULE');
-                                
-                                    insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
-                                    values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_PROVIDER_MASTER}, '{data.SCH_RESOURCE}', 'SERVICE_PROVIDER_MASTER_1934', 'FIRST_NAME', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_RESOURCE}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
-
-                                    insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
-                                    values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_MASTER}, '{data.SCH_ACTIVITY}', 'SERVICE_MASTER_1933', 'ACTIVITY_NAME', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_ACTIVITY}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
-                        
-                                    insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
-                                    values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{data.SCH_LOCATION}', 'LOCATION_MASTER_1936', 'LOCATION_CODE', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_LOCATION}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
-
-                                    ";
-
                                 dateTracker = dateTracker.AddDays(1);
                             }
                         }
@@ -942,7 +862,7 @@ namespace Barrway.Controllers
                     }
 
                 }
-                
+
 
             }
             catch (Exception ex)

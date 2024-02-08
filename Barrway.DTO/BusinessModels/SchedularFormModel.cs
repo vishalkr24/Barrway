@@ -6,18 +6,6 @@ using System.Threading.Tasks;
 
 namespace Barrway.DTO.BusinessModels
 {
-    public class Friday
-    {
-        public string Start { get; set; }
-        public string End { get; set; }
-    }
-
-    public class Monday
-    {
-        public string Start { get; set; }
-        public string End { get; set; }
-    }
-
     public class SchedularFormModel
     {
         public string Id { get; set; }
@@ -30,6 +18,9 @@ namespace Barrway.DTO.BusinessModels
         public string SCH_MEDIUM { get; set; }
         public string SCH_DESCRIPTION { get; set; }
         public string SCH_FROM_DATE { get; set; }
+        public string DURATION_FIELD { get; set; }
+        public string REST_PERIOD_BETWEEN_SESSION { get; set; }
+        public string MAXIMUM_NO_OF_PARTICIPANTS { get; set; }
         public string SCH_TO_DATE { get; set; }
         public string SCH_DAYS { get; set; }
         public string IF_SLOT_EXIST { get; set; }
@@ -40,44 +31,23 @@ namespace Barrway.DTO.BusinessModels
         public string CREATION_TYPE { get; set; }
     }
 
-    public class Saturday
+    public class CommonTimeObject
     {
-        public string Start { get; set; }
-        public string End { get; set; }
+        public string Id { get; set; }
+        public string start { get; set; }
+        public string end { get; set; }
+        public string IsOverlapped { get; set; } = "false";
     }
 
     public class SCHSCHEDULETABLE
     {
-        public Monday Monday { get; set; }
-        public Tuesday Tuesday { get; set; }
-        public Wednesday Wednesday { get; set; }
-        public Thursday Thursday { get; set; }
-        public Friday Friday { get; set; }
-        public Saturday Saturday { get; set; }
-        public Sunday Sunday { get; set; }
+        public List<CommonTimeObject> Mon { get; set; }
+        public List<CommonTimeObject> Tue { get; set; }
+        public List<CommonTimeObject> Wed { get; set; }
+        public List<CommonTimeObject> Thu { get; set; }
+        public List<CommonTimeObject> Fri { get; set; }
+        public List<CommonTimeObject> Sat { get; set; }
+        public List<CommonTimeObject> Sun { get; set; }
     }
 
-    public class Sunday
-    {
-        public string Start { get; set; }
-        public string End { get; set; }
-    }
-
-    public class Thursday
-    {
-        public string Start { get; set; }
-        public string End { get; set; }
-    }
-
-    public class Tuesday
-    {
-        public string Start { get; set; }
-        public string End { get; set; }
-    }
-
-    public class Wednesday
-    {
-        public string Start { get; set; }
-        public string End { get; set; }
-    }
 }

@@ -3291,6 +3291,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Controllers\API\V1\" />
     <Folder Include="fg-newAssets\icons\" />
     <Folder Include="Logs\" />
     <Folder Include="UploadCalendar\CalendarImages\" />

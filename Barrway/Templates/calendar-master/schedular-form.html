@@ -177,6 +177,10 @@
                     border-left: 1px solid lightgrey;
                 }
 
+                .schedular-table .schedular-row .schedular-element.form-element.error input[type=time] {
+                    border: 1px solid crimson;
+                }
+
                 .schedular-table .schedular-row .schedular-element.add-element button {
                     background: white;
                     border: 1px solid #8171B0;
@@ -230,6 +234,18 @@
             .schedular-table .schedular-row .schedular-element.form-element div:nth-child(2) {
                 padding: 0px 16px;
             }
+
+    .form-control.disabled {
+        background-color: #ebebeb !important;
+    }
+
+    .invalid-feedback-2 {
+        display: none!important;
+    }
+
+    .schedular-form .col-md-4{
+        margin-top: 1.1rem;
+    }
 </style>
 <div class="container-fluid">
     <div class="page-header mt-2">
@@ -253,13 +269,14 @@
     </div>
     <div class="">
         <h1 class="schedular-title mt-4">Schedular Form</h1>
-        <div class="row mt-3">
+        <div class="row">
             <div class="col-md-12">
                 <form id="myForm" class="schedular-form">
                     <div class="row">
                         <div class="col-md-4">
                             <div><label>Course / {{translation.Service}}</label></div>
-                            <select class="form-control" id="SCH_ACTIVITY">
+                            <select class="form-control" id="SCH_ACTIVITY" onchange="angular.element(this).scope().GetSingleService()">
+                                <option selected value="-1">Select Service</option>
                                 <option value="{{l.Id}}" ng-repeat="l in serviceList">{{l.ACTIVITY_NAME}}</option>
                             </select>
                             <div>
@@ -271,7 +288,7 @@
                         <div class="col-md-4">
                             <div><label>{{translation.Location}}</label></div>
                             <select class="form-control" id="SCH_LOCATION">
-                                <option value="{{l.Id}}" ng-repeat="l in locationList">{{l.LOCATION_BUILDING_NAME}}, {{l.LOCATION_FLOOR}} floor</option>
+                                <option value="{{l.Id}}" ng-repeat="l in locationList">{{l.LOCATION_ADDRESS}}</option>
                             </select>
                             <div>
                                 <div class="invalid-feedback-2" id="SCH_LOCATION_ERROR">
@@ -319,7 +336,7 @@
 
                         <div class="col-md-4">
                             <div><label>Alternative week</label></div>
-                            <select class="form-control">
+                            <select class="form-control" id="SCH_ALTERNATE_WEEK">
                                 <option value="EVERY-WEEK" selected>{{translation.Every_Week}}</option>
                                 <option value="ALTERNATE-WEEK">{{translation.Alternate_Week}}</option>
                                 <option value="EVERY-3-WEEK">{{translation.Every_3_Week}}</option>
@@ -333,7 +350,7 @@
                                 <label>Duration for each session (minute)</label>
                             </div>
 
-                            <input type="number" id="SCH_TO_DATE" class="form-control disabled" disabled />
+                            <input type="number" id="SCH_SESSION_DURATION" value="{{serviceDetails.DURATION_FIELD}}" class="form-control disabled" disabled />
                             <div>
                                 <div class="invalid-feedback-2" id="SCH_TO_DATE_ERROR">
                                     Please choose an end date
@@ -346,7 +363,7 @@
                                     <label>Rest period between session (minute)</label>
                                 </div>
 
-                                <input type="number" id="SCH_DAYS" class="form-control disabled" placeholder="5" disabled />
+                                <input type="number" id="SCH_REST_PERIOD" class="form-control disabled" value="{{serviceDetails.REST_PERIOD_BETWEEN_SESSION}}" disabled />
                                 <div>
                                     <div class="invalid-feedback-2" id="SCH_DAYS_ERROR">
                                         Please enter no. of days to be scheduled
@@ -357,7 +374,7 @@
 
                         <div class="col-md-4">
                             <div><label>Capacity (No. of maximum participants)</label></div>
-                            <input type="number" id="SCH_DAYS" class="form-control" placeholder="5" />
+                            <input type="number" id="SCH_CAPACITY" class="form-control" placeholder="5" />
                             <div>
                                 <div class="invalid-feedback-2" id="SCH_DAYS_ERROR">
                                     Please enter no. of days to be scheduled
@@ -365,11 +382,12 @@
                             </div>
                         </div>
 
-                        <div class="col-md-12">
-                            <h1 class="schedular-title-2 mt-3">Class schedule</h1>
-                        </div>
+                        
                     </div>
                     <div>
+                        <div class="col-md-12">
+                            <h1 class="schedular-title-2 mt-5">Class schedule</h1>
+                        </div>
                         <div class="col-md-12">
                             <div class="schedular-table">
                                 <div class="schedular-row">
