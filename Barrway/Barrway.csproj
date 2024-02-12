@@ -3055,6 +3055,7 @@
     <Content Include="CalendarConfiguration\BasicConfiguration.json" />
     <Content Include="App_Browsers\qt.browser" />
     <Content Include="CalendarSetupMatrix\CalendarSetupMatrix.json" />
+    <Content Include="SchedularTypeMatrix\SchedularTypeJson.json" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\BusinessScripts\AdminDashboard.js" />
     <Content Include="Scripts\BusinessScripts\AdminMaster.js" />

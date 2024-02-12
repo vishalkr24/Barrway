@@ -49,7 +49,10 @@ namespace Barrway.Utility.Common
         BUSINESS_ASSIGNED_USERS = 2334,
         BUSINESS_USER_INVITATION_MANAGER = 2335,
         USER_ASSIGNED_COMPANIES = 2336,
-        STAFF_SERVICE_MAPPING = 2341
+        STAFF_SERVICE_MAPPING = 2341,
+        SESSION_MASTER = 2344,
+        QUEUE_MASTER = 2343,
+        TICKET_MASTER = 2345
     }
 
     public enum FormAction

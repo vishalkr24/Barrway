@@ -1,5 +1,7 @@
 ﻿var dataList = [];
 var dataModelList = [];
+var queueList = [];
+var sessionList = [];
 var staffServiceMapping = [];
 const createdCalendarCode = $("#calendarCodeInput").val();
 const createdCompanyCode = $("#companyCodeInput").val();
@@ -167,8 +169,8 @@ function bindStep(step) {
                 $("#master-wrap-2").hide();
                 $("#master-wrap-1").show();
                 break;
-            case "QUEUE_1":
-                BindQueue1Template();
+            case "QUEUE_2":
+                BindQueue2Template();
                 $("#master-wrap-1").hide();
                 $("#master-wrap-2").show();
                 break;
@@ -507,7 +509,7 @@ function BindStaffServiceMappingTemplate() {
 
 }
 
-function BindQueue1Template() {
+function BindQueue2Template() {
     $("#master-wrap-2").empty();
     $("#master-wrap-2").append(`<div class="row">
                     <div class="col-md-12">
@@ -535,20 +537,60 @@ function BindQueue1Template() {
                                             <option>5</option>
                                         </select>
                                     </div>
-                                    <div class="queue_message">
-                                        <p>You may set up queues for Customer ticket queue and internal workflow queue (e.g. Queue for Prescription)</p>
-                                    </div>
+                                    <div class="queue_message"></div>
                                 </div>
 
                                 <div class="booking_queue_table">
                                     <table class="booking-queue-table" id="booking-queue-table">
                                         <thead>
                                             <tr>
-                                                <th>Queue by</th>
-                                                <th>Queue resources*</th>
-                                                <th>Queue name*</th>
-                                                <th>Usage*</th>
-                                                <th>Queue abbreviation(s)*</th>
+                                                <th width="200px">Name of the queue</th>
+                                                <th width="200px">Queue abbreviation(s)*</th>
+                                                <th width="130px">Start number*</th>
+                                                <th width="130px">End number*</th>
+                                                <th>Reset number*</th>  
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-125rem" style="margin-top: 32px;">
+                    <div class="col-md-2">
+                        <div class="img-col mt-125rem">
+                            <img src="/assets/marketplace/image/serv.png" />
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="booking_queue">
+                            <div class="booking_queue_number">
+                                <div class="number_of_queue">
+                                    <div class="quewe_set">
+                                        <label for="number_of_queue"><b style="color:#000;">Number of queuing session</b><br />(eg. breakfast, lunch, afternoon tea, dinner)</label>
+                                        <select id="exampleFormControlSelect2" class="form-control">
+                                            <option selected>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>
+                                    </div>
+                                    <div class="queue_message"></div>
+                                </div>
+
+                                <div class="booking_queue_table">
+                                    <table class="booking-queue-table" id="booking-session-table">
+                                        <thead>
+                                            <tr>
+                                                <th width="200px">Session name*</th>
+                                                <th width="150px">Start time*</th>
+                                                <th width="150px">End time*</th>
+                                                <th>Start ticketing*</th>
+                                                <th width="150px">Queue open time</th>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>
@@ -561,13 +603,14 @@ function BindQueue1Template() {
                 <div class="table-button mt-4rem">
                                     <button type="button" class="back" onclick="backToStep(${parseInt(CurrentStep) - 1})">Back</button>
                                     <button type="button" class="back" style="display:none;" onclick="skipToStep(${parseInt(CurrentStep) + 1})">Skip</button>
-                                    <button class="pink-button right" onclick="UpdateStaffServiceMapping()">Create calendar</button>
+                                    <button class="pink-button right" onclick="AddQueueSession()">Create calendar</button>
                                 </div>
                 <div class="blocks"></div>
                 
 `);
 
     addQueueRow();
+    addSessionRow();
 
     if (ConfigStep.Helper_After_Form != null && ConfigStep.Helper_After_Form != undefined) {
 
@@ -596,6 +639,73 @@ $(document).on("change", "#exampleFormControlSelect1", function () {
     addQueueRow();
 });
 
+$(document).on("change", "#exampleFormControlSelect2", function () {
+    addSessionRow();
+});
+
+$(document).on("change paste", "#booking-queue-table tbody input", function () {
+
+    let name = ($(this).attr("type") == "radio") ? $(this).attr("name").split("-") : $(this).attr("id").split("-");
+
+    queueList.find(x => x.Id == name[1])[name[0]] = this.value;
+
+});
+
+$(document).on("change paste", "#booking-session-table tbody input", function () {
+
+    let name = ($(this).attr("type") == "radio") ? $(this).attr("name").split("-") : $(this).attr("id").split("-");
+
+    sessionList.find(x => x.Id == name[1])[name[0]] = this.value;
+
+});
+
+function AddQueueSession() {
+    // add validations
+    if (true) {
+
+        $.ajax({
+            url: "/Calendar/AddQueueSession",
+            method: "POST",
+            data: {
+                data: {
+                    QueueList: queueList,
+                    SessionList: sessionList
+                }
+                
+            },
+            success: function (response) {
+                // after success response
+                if (response.Status) {
+                    swal({
+                        icon: "success",
+                        title: "Great!",
+                        text: "Data added successfully!"
+                    }).then(function (check) {
+                        if (ConfigStep.Has_Next_Step) {
+                            window.location.href = '/BusinessAdmin/SetupCalendarEvent?CompanyId=' + localStorage.getItem("COMPANY_ID") + "&CalendarCode=" + createdCalendarCode + "&Step=" + (parseInt(CurrentStep) + 1);
+                        } else {
+                            window.location.href = '/Calendar/index#/calendar/2305';
+                        }
+
+                    });
+
+                } else {
+                    swal({
+                        icon: "error",
+                        title: "Error",
+                        text: response.Message
+                    });
+                }
+            },
+            error: function (err) {
+
+            }
+        })
+
+    }
+
+}
+
 function addQueueRow() {
     let binderString = "";
 
@@ -603,51 +713,90 @@ function addQueueRow() {
 
     rowCount = (rowCount > 5) ? 5 : rowCount;
 
+    queueList = [];
+
     for (var i = 0; i < rowCount; i++) {
+
+        queueList.push({
+            Id: (i + 1),
+            QUEUE_NAME: "",
+            QUEUE_PREFIX: "",
+            QUEUE_START_NUMBER: "",
+            QUEUE_END_NUMBER: "",
+            QUEUE_RESET_NUMBER: "",
+            CALENDAR_CODE: createdCalendarCode,
+            COMPANY_CODE: createdCompanyCode
+        });
+
         binderString += `<tr>
                                                     <td>
-                                                        <select id="" class="form-control">
-                                                            <option>Staff</option>
-                                                            <option>2</option>
-                                                            <option>3</option>
-                                                            <option>4</option>
-                                                            <option>5</option>
-                                                        </select>
+                                                        <input type="text" class="form-control" id="QUEUE_NAME-${(i + 1)}"/>
                                                     </td>
                                                     <td>
-                                                        <select id="" class="form-control">
-                                                            <option>Select staff name from master</option>
-                                                            <option>2</option>
-                                                            <option>3</option>
-                                                            <option>4</option>
-                                                            <option>5</option>
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <select id="" class="form-control">
-                                                            <option>Dr.Team</option>
-                                                            <option>2</option>
-                                                            <option>3</option>
-                                                            <option>4</option>
-                                                            <option>5</option>
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <div class="booking_queue_radio">
-                                                            <input type="radio" id="test1" name="radio-group" checked>
-                                                            <label for="test1">Ticket distribution</label>
-                                                            <input type="radio" id="test2" name="radio-group">
-                                                            <label for="test2">Workflow queue</label>
-                                                        </div>
+                                                        <input type="text" class="form-control" id="QUEUE_PREFIX-${(i + 1)}"/>
                                                     </td>
                                                     <td style="width:100px;">
-                                                        <input class="form-control " type="text" name="" data-input-id="">
+                                                        <input type="number" class="form-control" id="QUEUE_START_NUMBER-${(i + 1)}" value="1" min="0"/>
+                                                    </td>
+                                                    <td style="width:100px;">
+                                                        <input type="number" class="form-control" id="QUEUE_END_NUMBER-${(i + 1)}" value="100"/>
+                                                    </td>
+                                                    <td style="width:160px;">
+                                                        <input type="text" class="form-control" id="QUEUE_RESET_NUMBER-${(i + 1)}"/>
                                                     </td>
                                                 </tr>`;
     }
 
-    $(".booking-queue-table tbody").empty();
-    $(".booking-queue-table tbody").append(binderString);
+    $("#booking-queue-table tbody").empty();
+    $("#booking-queue-table tbody").append(binderString);
+}
+
+function addSessionRow() {
+    let binderString = "";
+
+    let rowCount = parseInt($("#exampleFormControlSelect2 option:selected").val());
+
+    rowCount = (rowCount > 5) ? 5 : rowCount;
+
+    sessionList = [];
+
+    for (var i = 0; i < rowCount; i++) {
+
+        sessionList.push({
+            Id: (i + 1),
+            SESSION_NAME: "",
+            SESSION_START_TIME: "",
+            SESSION_END_TIME: "",
+            TICKETING_TYPE: "Auto",
+            QUEUE_OPEN_TIME: ""
+        });
+
+        binderString += `<tr>
+                                                    <td>
+                                                        <input type="text" class="form-control" id="SESSION_NAME-${(i + 1)}"/>
+                                                    </td>
+                                                    <td>
+                                                        <input type="time" class="form-control" id="SESSION_START_TIME-${(i + 1)}"/>
+                                                    </td>
+                                                    <td style="width:100px;">
+                                                        <input type="time" class="form-control" id="SESSION_END_TIME-${(i + 1)}"/>
+                                                    </td>
+                                                    <td style="width:100px;">
+                                                        <div class="booking_queue_radio">
+                                                            <input type="radio" name="TICKETING_TYPE-${(i + 1)}" id="TICKETING_TYPE-Auto-${(i + 1)}" value="Auto" checked>
+                                                            <label for="TICKETING_TYPE-Auto-${(i + 1)}">Auto</label>
+                                                            <input type="radio" name="TICKETING_TYPE-${(i + 1)}" id="TICKETING_TYPE-Manual-${(i + 1)}" value="Manual">
+                                                            <label for="TICKETING_TYPE-Manual-${(i + 1)}">Manual</label>
+                                                        </div>
+                                                    </td>
+                                                    <td style="width:160px;">
+                                                        <input type="time" class="form-control" id="QUEUE_OPEN_TIME-${(i + 1)}"/>
+                                                    </td>
+                                                </tr>`;
+    }
+
+    $("#booking-session-table tbody").empty();
+    $("#booking-session-table tbody").append(binderString);
 }
 
 //function validateStep(stepId) {

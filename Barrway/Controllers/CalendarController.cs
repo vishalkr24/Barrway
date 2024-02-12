@@ -622,6 +622,37 @@ namespace Barrway.Controllers
         }
 
         [HttpPost]
+        public async Task<ActionResult> AddQueueSession(Dictionary<string, List<Dictionary<string, string>>> data)
+        {
+            try
+            {
+                List<QueueMasterModel> queues = new List<QueueMasterModel>();
+                List<SessionMasterModel> sessions = new List<SessionMasterModel>();
+
+                if (data.ContainsKey("QueueList"))
+                {
+                    queues = JsonConvert.DeserializeObject<List<QueueMasterModel>>(JsonConvert.SerializeObject(data["QueueList"]));
+                }
+
+                if (data.ContainsKey("SessionList"))
+                {
+                    sessions = JsonConvert.DeserializeObject<List<SessionMasterModel>>(JsonConvert.SerializeObject(data["SessionList"]));
+                }
+
+                if (queues.Count > 0 || sessions.Count > 0)
+                {
+                    var result = await businessUserService.AddQueueSession(queues, sessions);
+                }
+
+                return Json(new AddUpdateDelete() { Status = true, Message = "Success" }, JsonRequestBehavior.DenyGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.ToString(), JsonRequestBehavior.DenyGet);
+            }
+        }
+
+        [HttpPost]
         public async Task<ActionResult> AddSchedule(List<SchedularFormModel> dataList)
         {
             try
@@ -740,8 +771,8 @@ namespace Barrway.Controllers
 
                                 var dictionaryDataList = JsonConvert.DeserializeObject<Dictionary<string, object>>(JsonConvert.SerializeObject(data.table));
 
-                                foreach (var x in dictionaryDataList[dateTracker.DayOfWeek.ToString().Substring(0, 3)] as List<CommonTimeObject>)
-                                {   
+                                foreach (var x in JsonConvert.DeserializeObject<List<CommonTimeObject>>(JsonConvert.SerializeObject(dictionaryDataList[dateTracker.DayOfWeek.ToString().Substring(0, 3)])))
+                                {
                                     if (string.IsNullOrEmpty(x.start) || string.IsNullOrEmpty(x.end))
                                     {
                                         // if time is not mentioned then skip that day
@@ -763,6 +794,15 @@ namespace Barrway.Controllers
                                         title = "Slot " + slotCounter++
                                     };
                                     formGroupKey = Guid.NewGuid().ToString();
+                                    string referenceResourceEntry = "";
+
+                                    if (!string.IsNullOrEmpty(data.SCH_RESOURCE))
+                                    {
+                                        referenceResourceEntry = $@"
+                                                            insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_PROVIDER_MASTER}, '{data.SCH_RESOURCE}', 'SERVICE_PROVIDER_MASTER_1934', 'FIRST_NAME', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_RESOURCE}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                                                            ";
+                                    }
 
                                     script += $@"insert into CALENDAR_FORM_1935(
                                                                [SCHEDULAR_FORM_ID]
@@ -787,23 +827,21 @@ namespace Barrway.Controllers
                                                               ,[description]
                                                               ,[created_at], [updated_at],[EVENT_TYPE])
 	                                                          values('{SchedularFormId}', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter}', '{SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{data.SCH_RESOURCE}', '{data.SCH_ACTIVITY}', '{package.Data["SUBS_ID"]?.ToString()}', '{data.SCH_DESCRIPTION}', getDate(), getDate(),'SCHEDULE');
-                                
-                                                            insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
-                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_PROVIDER_MASTER}, '{data.SCH_RESOURCE}', 'SERVICE_PROVIDER_MASTER_1934', 'FIRST_NAME', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_RESOURCE}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+
+                                                            {referenceResourceEntry}                                                                    
 
                                                             insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
                                                             values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_MASTER}, '{data.SCH_ACTIVITY}', 'SERVICE_MASTER_1933', 'ACTIVITY_NAME', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_ACTIVITY}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
-                        
+                                                            
                                                             insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
                                                             values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{data.SCH_LOCATION}', 'LOCATION_MASTER_1936', 'LOCATION_CODE', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_LOCATION}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
-
                                                             ";
 
                                 }
 
                                 switch (dateTracker.DayOfWeek.ToString())
                                 {
-                                    
+
                                 }
 
                                 if (data.SCH_ALTERNATIVE_WEEK == "ALTERNATE-WEEK")
