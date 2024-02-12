@@ -163,6 +163,22 @@ function getCalendarSetupMatrix() {
     return data;
 }
 
+function getScheduleTypeJson() {
+    var data;
+    $.ajax({
+        url: "/BusinessAdmin/getScheduleTypeJson/",
+        type: "GET",
+        async: false,
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    })
+    return data;
+}
+
 function getCompanyWebsite() {
     var data;
     $.ajax({
@@ -381,6 +397,8 @@ function getSingleCalendar(calendarCode) {
     })
     return data;
 }
+
+
 
 function GetCompanyCalendars(companyId) {
     var data;

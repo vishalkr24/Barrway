@@ -28,6 +28,13 @@
             $scope.addFormElement("Sun");
             $scope.addFormElement("Fri");
 
+            adminService.postAsync('/Calendar/GetLocationMasterList/', { companyCode: localStorage.getItem("COMPANY_CODE"), filters: [{ field: "CALENDAR_CODE", type: "=", value: localStorage.getItem("CALENDAR_CODE") }] }).then(function (res) {
+
+                $scope.locationList = res.data.data;
+
+            }, function (err) {
+
+            });
 
             adminService.postAsync('/Calendar/GetLocationMasterList/', { companyCode: localStorage.getItem("COMPANY_CODE"), filters: [{ field: "CALENDAR_CODE", type: "=", value: localStorage.getItem("CALENDAR_CODE") }] }).then(function (res) {
 
@@ -52,7 +59,66 @@
 
             });
 
+
+            setTimeout(function () {
+                $scope.CalendarData = getSingleCalendar(localStorage.getItem("CALENDAR_CODE"));
+                $scope.ConfigData = JSON.parse(getScheduleTypeJson());
+
+                $scope.BindView();
+            }, 500);
+            
+
         };
+
+        $scope.BindView = function () {
+            debugger;
+            $scope.ViewName = "";
+
+            if ($scope.ConfigData["Type" + $scope.CalendarData.Data.CALENDAR_CATEGORY_ID].Is_Category_Based == true) {
+                $scope.ViewName = $scope.ConfigData["Type" + $scope.CalendarData.Data.CALENDAR_CATEGORY_ID].Category["Category" + $scope.CalendarData.Data.CALENDAR_TYPE].View_Name;
+            } else {
+                $scope.ConfigData["Type" + $scope.CalendarData.Data.CALENDAR_CATEGORY_ID].View_Name;
+            }
+
+            if ($scope.ViewName == "S3A") {
+                $("#duration-area").show();
+                $("#sub-heading-helper").text("")
+                $("#duration-helper").text("");
+                $("#schedule-name-helper").text("Class schedule");
+                $("#staff-ddl-area").show();
+            } else if ($scope.ViewName == "S3B") {
+                $("#duration-area").show();
+                $("#sub-heading-helper").text("Please set the business schedule for each service and staff")
+                $("#duration-helper").text("System will divide your business hours into booking sessions.")
+                $("#schedule-name-helper").text("Business hours");
+                $("#staff-ddl-area").show();
+            }
+            else if ($scope.ViewName == "S3D") {
+                $("#duration-area").show();
+                $("#sub-heading-helper").text("Please set the business schedule for each service and location")
+                $("#duration-helper").text("System will divide your business hours into booking sessions.")
+                $("#schedule-name-helper").text("Business hours");
+                $("#staff-ddl-area").hide();
+            }
+            else if ($scope.ViewName == "S3E") {
+                $("#duration-area").show();
+                $("#sub-heading-helper").text("Please set the business schedule for each service and location")
+                $("#duration-helper").text("")
+                $("#schedule-name-helper").text("Business hours");
+                $("#staff-ddl-area").hide();
+            }
+            else if ($scope.ViewName == "S3G") {
+                $("#duration-area").hide();
+                $("#sub-heading-helper").text("")
+                $("#duration-helper").text("")
+                $("#schedule-name-helper").text("Class schedule");
+                $("#staff-ddl-area").hide();
+            }
+            else if ($scope.ViewName == "S3H") {
+
+            }
+
+        }
 
         $scope.GetSingleService = function () {
 
@@ -124,6 +190,39 @@
             return parseInt(maxValue) + 1;
         }
 
+        $scope.validateSchedularForm = function () {
+            let finalStatus = true;
+            debugger;
+            if ($("#SCH_ACTIVITY option:selected").val() == "-1") {
+                $("#SCH_ACTIVITY_ERROR").show();
+                finalStatus = false;
+            } else {
+                $("#SCH_ACTIVITY_ERROR").hide();
+            }
+
+            let arr = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+            let slotError = true;
+
+            arr.forEach(x => {
+                let data = $scope.scheduleList[x];
+
+                data.forEach(y => {
+                    if (y.start != "" && y.end != "" && y.start != null && y.end != null) {
+                        slotError = false;
+                    }
+                });
+            })
+
+            if (slotError) {
+                $("#SCH_SLOT_ERROR").show();
+                finalStatus = false;
+            } else {
+                $("#SCH_SLOT_ERROR").hide();
+            }
+
+            return finalStatus
+        }
 
         $(document).on("change", "input[name=form-time-input]", function () {
             let type = $(this).attr("data-input-type");
@@ -159,8 +258,12 @@
                 CREATION_TYPE: "AUTOMATIC"
             }
 
-            if (true) {
+            if ($scope.validateSchedularForm()) {
                 //data = JSON.stringify(data);
+
+                if ($scope.ViewName == "S3D" || $scope.ViewName == "S3E" || $scope.ViewName == "S3G") {
+                    data.SCH_RESOURCE = null;
+                }
 
                 adminService.postAsync('/Calendar/AddSchedule/', { dataList: [data] }).then(function (res) {
                     if (res.data != "Success") {
@@ -195,6 +298,8 @@
                 }, function (err) {
                     alert("something went wrong!!");
                 });
+            } else {
+                alert("Please recheck the form");
             }
 
 

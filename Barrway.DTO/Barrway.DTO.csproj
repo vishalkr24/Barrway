@@ -73,6 +73,8 @@
     <Compile Include="AuthViewModel\GoogleLoginViewModel.cs" />
     <Compile Include="AuthViewModel\UserToken.cs" />
     <Compile Include="BusinessModels\CalendaLocationMasterModel.cs" />
+    <Compile Include="BusinessModels\SessionMasterModel.cs" />
+    <Compile Include="BusinessModels\QueueMasterModel.cs" />
     <Compile Include="BusinessModels\StaffServiceMappingModel.cs" />
     <Compile Include="BusinessModels\CalendarServiceProviderMasterModel.cs" />
     <Compile Include="BusinessModels\CalendarServiceMasterModel.cs" />

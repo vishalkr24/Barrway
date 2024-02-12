@@ -35467,14 +35467,13 @@ button#backtomarketplace {
     width: 100%;
     float: left;
     text-align: center;
-    
 }
 
 .mt-125rem {
     margin-top: 1.25rem;
 }
 
-.mt-4rem{
+.mt-4rem {
     margin-top: 4rem;
 }
 
@@ -35485,23 +35484,27 @@ button#backtomarketplace {
     font-size: 15px;
     font-weight: 400;
 }
+
 .quewe_set {
     width: 40%;
     float: left;
     padding-right: 15px;
 }
+
 .queue_message {
-    width:60%;
-    float:left;
-    }
+    width: 60%;
+    float: left;
+}
+
 .number_of_queue {
     margin-bottom: 30px;
 }
+
 .number_of_queue, .booking_queue_table, .booking_queue_number {
     width: 100%;
     float: left;
-    
 }
+
 .number_of_queue {
     margin-bottom: 30px;
 }
@@ -35510,62 +35513,68 @@ button#backtomarketplace {
     color: #000;
 }
 
+.booking_queue_table table tbody tr td {
+    padding-right: 16px;
+    padding-top: 16px;
+}
+
 .booking_queue_radio [type="radio"]:checked,
 .booking_queue_radio [type="radio"]:not(:checked) {
     position: absolute;
     left: -9999px;
 }
 
-.booking_queue_radio [type="radio"]:checked + label,
-.booking_queue_radio [type="radio"]:not(:checked) + label {
-    position: relative;
-    padding-left: 28px;
-    cursor: pointer;
-    line-height: 20px;
-    display: inline-block;
-    color: #666;
-}
-
-    .booking_queue_radio [type="radio"]:checked + label:before,
-    .booking_queue_radio [type="radio"]:not(:checked) + label:before {
-        content: '';
-        position: absolute;
-        left: 0px;
-        top: -1px;
-        width: 19px;
-        height: 19px;
-        border: 1px solid #ddd;
-        border-radius: 100%;
-        background: #fff;
+    .booking_queue_radio [type="radio"]:checked + label,
+    .booking_queue_radio [type="radio"]:not(:checked) + label {
+        position: relative;
+        padding-left: 28px;
+        cursor: pointer;
+        line-height: 20px;
+        display: inline-block;
+        color: #666;
     }
 
-    .booking_queue_radio [type="radio"]:checked + label:after,
-    .booking_queue_radio [type="radio"]:not(:checked) + label:after {
-        content: '';
-        width: 14px;
-        height: 13px;
-        background: #72328a;
-        position: absolute;
-        top: 2px;
-        left: 2.5px;
-        border-radius: 100%;
-        -webkit-transition: all 0.2s ease;
-        transition: all 0.2s ease;
-    }
+        .booking_queue_radio [type="radio"]:checked + label:before,
+        .booking_queue_radio [type="radio"]:not(:checked) + label:before {
+            content: '';
+            position: absolute;
+            left: 0px;
+            top: -1px;
+            width: 19px;
+            height: 19px;
+            border: 1px solid #ddd;
+            border-radius: 100%;
+            background: #fff;
+        }
 
-    .booking_queue_radio [type="radio"]:not(:checked) + label:after {
-        opacity: 0;
-        -webkit-transform: scale(0);
-        transform: scale(0);
-    }
+        .booking_queue_radio [type="radio"]:checked + label:after,
+        .booking_queue_radio [type="radio"]:not(:checked) + label:after {
+            content: '';
+            width: 14px;
+            height: 13px;
+            background: #72328a;
+            position: absolute;
+            top: 2px;
+            left: 2.5px;
+            border-radius: 100%;
+            -webkit-transition: all 0.2s ease;
+            transition: all 0.2s ease;
+        }
 
-    .booking_queue_radio [type="radio"]:checked + label:after {
-        opacity: 1;
-        -webkit-transform: scale(1);
-        transform: scale(1);
-    }
+        .booking_queue_radio [type="radio"]:not(:checked) + label:after {
+            opacity: 0;
+            -webkit-transform: scale(0);
+            transform: scale(0);
+        }
+
+        .booking_queue_radio [type="radio"]:checked + label:after {
+            opacity: 1;
+            -webkit-transform: scale(1);
+            transform: scale(1);
+        }
+
 .booking_queue_table table {
-    width: max-content;
+    width: 100%;
     float: left;
 }
 /*===========================================*/
@@ -35576,7 +35585,7 @@ button#backtomarketplace {
     text-align: center;
     padding: 15px 0px;
     border-bottom: 1px solid #ddd;
-    margin-bottom:10px;
+    margin-bottom: 10px;
 }
 
     .top_content > span {
@@ -35585,9 +35594,10 @@ button#backtomarketplace {
 
         .top_content > span > button {
             color: #3FBFC7;
-            background-color:transparent;
-            border:none;
+            background-color: transparent;
+            border: none;
         }
+
             .top_content > span > button.active {
                 background-color: #3FBFC7;
                 border: none;
@@ -35596,10 +35606,12 @@ button#backtomarketplace {
                 border-radius: 4px;
                 margin-left: 10px;
             }
+
 .d-border-right {
-    border-right: 1px dashed #000;
+    border-right: 1px dashed #b9b9b9;
     border-width: 2px;
 }
+
 .queue_backlog_inner {
     width: 100%;
     float: left;
@@ -35616,17 +35628,19 @@ button#backtomarketplace {
     width: 65%;
     float: left;
 }
+
 .queue_backlog h4 {
     color: #777777;
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 15px;
 }
-    .queue-back-log-left h2 {
-        margin-bottom: 0px;
-        text-indent: 20px;
-        color: #CCCCCC;
-    }
+
+.queue-back-log-left h2 {
+    margin-bottom: 0px;
+    text-indent: 20px;
+    color: #CCCCCC;
+}
 
 .queue-back-log-right {
     width: 35%;
@@ -35641,6 +35655,7 @@ button#backtomarketplace {
     top: 0;
     left: 0;
 }
+
 .pink-border {
     background-color: #E2476C;
 }
@@ -35660,6 +35675,7 @@ button#backtomarketplace {
     float: left;
     margin: 5px 0px;
 }
+
 .switch {
     display: inline-block;
     position: relative;
@@ -35670,7 +35686,7 @@ button#backtomarketplace {
     transition: background 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     vertical-align: middle;
     cursor: pointer;
-    top:10px;
+    top: 10px;
 }
 
     .switch::before {
@@ -35707,6 +35723,7 @@ input:checked + .switch {
     float: left;
     margin-top: 15px;
 }
+
 .queue-back-log h2 {
     font-size: 18px;
 }
@@ -35717,6 +35734,7 @@ input:checked + .switch {
     margin-bottom: 20px;
     margin-top: 15px;
 }
+
 .waiting {
     width: 100%;
     float: left;
@@ -35726,10 +35744,11 @@ input:checked + .switch {
     padding: 5px 5px;
 }
 
-.waiting p {
-    margin-bottom: 0px;
-    color: #222222;
-}
+    .waiting p {
+        margin-bottom: 0px;
+        color: #222222;
+    }
+
 .view-eye {
     position: absolute;
     top: 10px;

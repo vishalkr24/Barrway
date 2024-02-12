@@ -358,31 +358,69 @@
         background-color: #ecfafb;
     }
 </style>
-<div class="queue-wraprgb">
-    <div class="container-fluid">
-        <div id="queue_view">
-            <div class="queue_top">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="top_content">
-                            <span><button class="queue_top_button">Queue summary</button></span>
-                            <span><button class="queue_top_button active">Queues</button></span>
-                        </div>
+
+<style>
+    .session-scroller {
+        width: 100%;
+        display: flex;
+        flex-flow: row;
+        max-width:100%;
+        overflow:hidden;
+        overflow-x: auto;
+        align-items: flex-start;
+        justify-content: flex-start;
+    }
+
+        .session-scroller .session-element {
+            width: fit-content;
+            padding: 8px 16px;
+            font-size: 13px;
+            border-radius: 8px;
+            border: 1px solid lightgrey;
+            min-width: fit-content;
+            margin-right: 16px;
+        }
+
+            .session-scroller .session-element.active {
+                border: 2px solid #3FBFC7;
+            }
+
+            .session-scroller .session-element span {
+                font-size: 13px;
+                font-weight: bold;
+            }
+</style>
+
+<div class="container-fluid">
+    <div id="queue_view">
+        <div class="queue_top">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="top_content">
+                        <span><button class="queue_top_button">Queue summary</button></span>
+                        <span><button class="queue_top_button active">Queues</button></span>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="heading_queue">
-                        <h2>Afternoon tea session</h2>
-                    </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="session-scroller" id="session-scroller">
+
                 </div>
-                <div class="col-md-8 d-border-right">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="queue_backlog">
-                                <h4>Backlog (33)</h4>
-                                <div class="queue_backlog_inner">
+            </div>
+            <div class="col-md-12">
+                <div class="heading_queue">
+                    <h2><span class="session-name"></span> session</h2>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="queue_backlog">
+                            <h4>Backlog (0)</h4>
+                            <div id="backlog-list-area">
+                                <!--<div class="queue_backlog_inner">
                                     <div class="right-border pink-border"></div>
                                     <div class="queue-back-log-left">
                                         <h2>A07</h2>
@@ -391,134 +429,7 @@
                                         <span><img src="/assets/marketplace/image/cat-icon.png" /></span>
                                         <span><img src="/assets/marketplace/image/setting-icon.png" /></span>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="queue_backlog_second">
-                                <div class="queue_backlog_inner">
-                                    <div class="queue-back-log">
-                                        <h2>(A) Staff A</h2>
-                                        <div class="view-eye">
-                                            <img src="/assets/marketplace/image/eye-open.png" />
-                                            <img src="/assets/marketplace/image/eye-slash.png" />
-                                        </div>
-                                        <div class="call-button">
-                                            <button>Call</button>
-                                        </div>
-                                    </div>
-                                    <div class="que-wrp-lr">
-                                        <div class="queue-back-log-left">
-                                            <h3 class="pink"><span>Current</span> <b>A10</b></h3>
-                                        </div>
-                                        <div class="queue-back-log-right">
-                                            <input type="checkbox" hidden="hidden" id="username">
-                                            <label class="switch" for="username"></label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="waiting">
-                                <p>Waiting <span>(10)</span></p>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="queue_backlog_second">
-                                <div class="queue_backlog_inner">
-                                    <div class="queue-back-log">
-                                        <h2>(A) Staff A</h2>
-                                        <div class="call-button">
-                                            <button>Call</button>
-                                        </div>
-                                    </div>
-                                    <div class="que-wrp-lr">
-                                        <div class="queue-back-log-left">
-                                            <h3 class="pink"><span>Current</span> <b>A10</b></h3>
-                                        </div>
-                                        <div class="queue-back-log-right">
-                                            <input type="checkbox" hidden="hidden" id="username2">
-                                            <label class="switch" for="username2"></label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="queue_backlog_second">
-                                <div class="queue_backlog_inner">
-                                    <div class="queue-back-log">
-                                        <h2>(A) Staff A</h2>
-                                        <div class="call-button">
-                                            <button>Call</button>
-                                        </div>
-                                    </div>
-                                    <div class="que-wrp-lr">
-                                        <div class="queue-back-log-left">
-                                            <h3 class="pink"><span>Current</span> <b>A10</b></h3>
-                                        </div>
-                                        <div class="queue-back-log-right">
-                                            <input type="checkbox" hidden="hidden" id="username3">
-                                            <label class="switch" for="username3"></label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="queue_backlog_second">
-                                <div class="queue_backlog_inner">
-                                    <div class="queue-back-log">
-                                        <h2>(A) Staff A</h2>
-                                        <div class="view-eye">
-                                            <img src="/assets/marketplace/image/eye-open.png" />
-                                            <img src="/assets/marketplace/image/eye-slash.png" />
-                                        </div>
-                                        <div class="call-button">
-                                            <button>Call</button>
-                                        </div>
-                                    </div>
-                                    <div class="que-wrp-lr">
-                                        <div class="queue-back-log-left">
-                                            <h3 class="pink"><span>Current</span> <b>A10</b></h3>
-                                        </div>
-                                        <div class="queue-back-log-right">
-                                            <input type="checkbox" hidden="hidden" id="username">
-                                            <label class="switch" for="username"></label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="waiting">
-                                <p>Waiting <span>(10)</span></p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="queue_backlog_second">
-                                <div class="queue_backlog_inner">
-                                    <div class="queue-back-log">
-                                        <h2>(A) Staff A</h2>
-                                        <div class="view-eye">
-                                            <img src="/assets/marketplace/image/eye-open.png" />
-                                            <img src="/assets/marketplace/image/eye-slash.png" />
-                                        </div>
-                                        <div class="call-button">
-                                            <button>Call</button>
-                                        </div>
-                                    </div>
-                                    <div class="que-wrp-lr">
-                                        <div class="queue-back-log-left">
-                                            <h3 class="pink"><span>Current</span> <b>A10</b></h3>
-                                        </div>
-                                        <div class="queue-back-log-right">
-                                            <input type="checkbox" hidden="hidden" id="username">
-                                            <label class="switch" for="username"></label>
-                                        </div>
-                                    </div>
-                                </div>
+                                </div>-->
                             </div>
                             <div class="waiting">
                                 <p>Waiting <span>(10)</span></p>
@@ -526,32 +437,42 @@
                         </div>
                     </div>
 
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="heading_queue">
-                        <h2>Afternoon tea session</h2>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="queue_backlog_third">
-                            <div class="queue_backlog_inner">
-                                <div class="queue-back-log">
-                                    <h2>(A) Staff A</h2>
-                                </div>
-                                <div class="que-wrp-lr">
-                                    <div class="queue-back-log-left">
-                                        <h3 class="pink"><span>Current</span></br> <b>A10</b></h3>
+                    <div class="col-md-10">
+                        <div class="row" id="queue-external-area">
+                            <!--<div class="col-md-2">
+                                <div class="queue_backlog_second">
+                                    <div class="queue_backlog_inner">
+                                        <div class="queue-back-log">
+                                            <h2>(A) Staff A</h2>
+                                            <div class="view-eye">
+                                                <img src="/assets/marketplace/image/eye-open.png" />
+                                                <img src="/assets/marketplace/image/eye-slash.png" />
+                                            </div>
+                                            <div class="call-button">
+                                                <button>Call</button>
+                                            </div>
+                                        </div>
+                                        <div class="que-wrp-lr">
+                                            <div class="queue-back-log-left">
+                                                <h3 class="pink"><span>Current</span> <b>A10</b></h3>
+                                            </div>
+                                            <div class="queue-back-log-right">
+                                                <input type="checkbox" hidden="hidden" id="username">
+                                                <label class="switch" for="username"></label>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="summry-text">
-                                        <p>Last ticket  <span>A20</span></p>
-                                    </div>
                                 </div>
-                            </div>
+                                <div class="waiting">
+                                    <p>Waiting <span>(10)</span></p>
+
+                                </div>
+                            </div>-->
+
                         </div>
+
                     </div>
+
                     <div class="col-md-4">
                         <div class="queue_backlog_third">
                             <div class="queue_backlog_inner">
@@ -589,6 +510,7 @@
 
                 </div>
             </div>
+
 
         </div>
     </div>
@@ -788,8 +710,12 @@
                     <input type="text" name='selectedrec' style="background-color:rgb(165 139 241 / 0.41)" placeholder="Type here..." />
                 </div>
             </div>
+            
+
+             c
             <div class="tabulator-section">
                 <div id="form-tableStudent"></div>
+                </
             </div>
         </div>
         <div class="col-sm-12">
@@ -816,12 +742,14 @@
 
                                 {{createEventDetails.description}}
                             </label>-->
+                            re
                             <div class="temp" ng-repeat="d in createEventDetails.dropdownList">
                                 <span class="titleContainer">
                                     <span class="title1"> {{d.formTitle}}</span>
 
                                 </span>
                                 <div class="popoverSelect">
+                                    er
                                     <select class="form-control serchselectChossen form-control-sm w-50" data-placeholder="Choose a Option..." data-id="dropdwn_{{d.formId}}" ng-init="d.selectionDropdown=d.Id" ng-model="d.selectionDropdown">
                                         <option value=""></option>
                                         <option value="{{dform.id}}" ng-repeat="dform in d.dropdownListData.formDataList|orderBy:d.dropdownListData.activities">{{dform[d.dropdownListData.activities]}}</option>
