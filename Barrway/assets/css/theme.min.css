@@ -35754,3 +35754,22 @@ input:checked + .switch {
     top: 10px;
     right: 10px;
 }
+.queue_backlog_third {
+    width: 100%;
+    text-align: center;
+    float:left;
+}
+    .queue_backlog_third .queue-back-log-left {
+        width: 100%;
+        float: left;
+    }
+.summry-text p {
+    color: #222222;
+    margin-top: 15px;
+    margin-bottom: 0px;
+}
+
+.summry-text {
+    width: 100%;
+    float: left;
+}
