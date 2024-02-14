@@ -877,10 +877,12 @@ namespace Barrway.Service.Repository
                 if (checkResult.FirstOrDefault()["CALENDAR_CATEGORY_ID"]?.ToString() == "2" && CalendarType == "4")
                 {
                     additionalUpdate = " CALENDAR_FUNCTION_TYPE = 'QUEUE',";
-                }else if (checkResult.FirstOrDefault()["CALENDAR_CATEGORY_ID"]?.ToString() == "3" && CalendarType == "3")
+                }
+                else if (checkResult.FirstOrDefault()["CALENDAR_CATEGORY_ID"]?.ToString() == "3" && CalendarType == "3")
                 {
                     additionalUpdate = " CALENDAR_FUNCTION_TYPE = 'QUEUE',";
-                }else if (checkResult.FirstOrDefault()["CALENDAR_CATEGORY_ID"]?.ToString() == "6")
+                }
+                else if (checkResult.FirstOrDefault()["CALENDAR_CATEGORY_ID"]?.ToString() == "6")
                 {
                     additionalUpdate = " CALENDAR_FUNCTION_TYPE = 'QUEUE',";
                 }
@@ -1003,11 +1005,11 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetMarcketPlaceCompanyCalendarByCompanyId(string CompanyId)
         {
-            string query = $@"SELECT calendar.[Id]      ,calendar.[created_at], company.IS_ACTIVE      ,calendar.[updated_at]      ,calendar.[created_by]      ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,calendar.[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
+            string query = $@"SELECT calendar.[Id], calendar.CALENDAR_FUNCTION_TYPE,      calendar.[created_at], company.IS_ACTIVE      ,calendar.[updated_at]      ,calendar.[created_by]      ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,calendar.[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                                 join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE 
 								join CALENDAR_CONTROL_SHEET_1944 ccs on ccs.CALENDAR_CODE = calendar.CALENDAR_CODE
                                 join CALENDAR_CATEGORY_MASTER_1929 category on category.Id = calendar.CALENDAR_CATEGORY_ID
-                                where company.IS_ACTIVE = 'Y' and company.Id = '{CompanyId}' and category.[CALENDAR_FORM_TYPE]='PUBLIC' and ccs.CALENDAR_USE_TYPE = 'PUBLIC'";
+                                where company.IS_ACTIVE = 'Y' and company.Id = '{CompanyId}' and ccs.CALENDAR_USE_TYPE = 'PUBLIC'";
 
             List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -2567,124 +2569,76 @@ namespace Barrway.Service.Repository
         {
             try
             {
-
-                if (sessions.Count > 0 && queues.Count > 0)
-                {
-                    // mixed insertion logic
-                    foreach(var x in queues)
-                    {
-                        Form_DataTable data = new Form_DataTable();
-                        data.action = (int)FormAction.Save;
-                        data.formId = (int)FormSetting.QUEUE_MASTER;
-
-                        data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(x.ToDictionary());
-                        data.formGroupKey = Guid.NewGuid().ToString();
-                        var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
-
-                        if (formResult.res > 0)
-                        {
-                            List<string> requestList = new List<string>();
-                            List<string> formGroupKeyListTemp = new List<string>();
-
-                            var dataSerialized = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(JsonConvert.SerializeObject(sessions));
-
-                            dataSerialized.ForEach(assign =>
-                            {
-                                Dictionary<string, object> sd = new Dictionary<string, object>();
-                                foreach (KeyValuePair<string, string> keyValuePair in assign)
-                                {
-                                    if (keyValuePair.Key != "Id")
-                                    {
-                                        if (keyValuePair.Key == "QUEUE_ID")
-                                        {
-                                            sd.Add(keyValuePair.Key, formResult.Id.ToString());
-                                        }
-                                        else
-                                        {
-                                            sd.Add(keyValuePair.Key, keyValuePair.Value);
-                                        }
-                                    }
-                                }
-
-                                requestList.Add(CustomMethods.ConvertDicToNameValuePair(sd));
-                                formGroupKeyListTemp.Add(Guid.NewGuid().ToString());
-                            });
-
-                            Form_DataTable request = new Form_DataTable();
-                            request.action = (int)FormAction.Save;
-                            request.formId = (int)FormSetting.SESSION_MASTER;
-                            request.IsMaxOneRecordPerUser = false;
-                            request.formfieldDataListTempList = requestList.ToArray();
-                            request.formGroupKeyListTemp = formGroupKeyListTemp.ToArray();
-                            var formResult2 = (await formAPIRepository.BulkGeneratedFormData(request)).Data;
-                        }
-                        
-                    };
-                    
-                }
-
-                if (sessions.Count > 0 && queues.Count == 0)
+                if (sessions.Count > 0)
                 {
                     // bulk insert only sessions
                     List<string> requestList = new List<string>();
                     List<string> formGroupKeyListTemp = new List<string>();
 
-                    var dataSerialized = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(JsonConvert.SerializeObject(sessions));
-
-                    dataSerialized.ForEach(assign =>
+                    var dataSerialized = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(JsonConvert.SerializeObject(sessions.Where(y => string.IsNullOrEmpty(y.Id)).ToList()));
+                    if (dataSerialized.Count > 0)
                     {
-                        Dictionary<string, object> sd = new Dictionary<string, object>();
-                        foreach (KeyValuePair<string, string> keyValuePair in assign)
+
+
+                        dataSerialized.ForEach(assign =>
                         {
-                            if (keyValuePair.Key != "Id")
+                            Dictionary<string, object> sd = new Dictionary<string, object>();
+                            foreach (KeyValuePair<string, string> keyValuePair in assign)
                             {
-                                sd.Add(keyValuePair.Key, keyValuePair.Value.ToString());
+                                if (keyValuePair.Key != "Id")
+                                {
+                                    sd.Add(keyValuePair.Key, keyValuePair.Value?.ToString());
+                                }
                             }
-                        }
 
-                        requestList.Add(CustomMethods.ConvertDicToNameValuePair(sd));
-                        formGroupKeyListTemp.Add(Guid.NewGuid().ToString());
-                    });
+                            requestList.Add(CustomMethods.ConvertDicToNameValuePair(sd));
+                            formGroupKeyListTemp.Add(Guid.NewGuid().ToString());
+                        });
 
-                    Form_DataTable request = new Form_DataTable();
-                    request.action = (int)FormAction.Save;
-                    request.formId = (int)FormSetting.SESSION_MASTER;
-                    request.IsMaxOneRecordPerUser = false;
-                    request.formfieldDataListTempList = requestList.ToArray();
-                    request.formGroupKeyListTemp = formGroupKeyListTemp.ToArray();
-                    var formResult = (await formAPIRepository.BulkGeneratedFormData(request)).Data;
+                        Form_DataTable request = new Form_DataTable();
+                        request.action = (int)FormAction.Save;
+                        request.formId = (int)FormSetting.SESSION_MASTER;
+                        request.IsMaxOneRecordPerUser = false;
+                        request.formfieldDataListTempList = requestList.ToArray();
+                        request.formGroupKeyListTemp = formGroupKeyListTemp.ToArray();
+                        var formResult = (await formAPIRepository.BulkGeneratedFormData(request)).Data;
+                    }
                 }
 
-                if (queues.Count > 0 && sessions.Count == 0)
+                if (queues.Count > 0)
                 {
                     // bulk insert only queues
                     List<string> requestList = new List<string>();
                     List<string> formGroupKeyListTemp = new List<string>();
 
-                    var dataSerialized = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(JsonConvert.SerializeObject(queues));
+                    var dataSerialized = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(JsonConvert.SerializeObject(queues.Where(y => string.IsNullOrEmpty(y.Id)).ToList()));
 
-                    dataSerialized.ForEach(assign =>
+                    if (dataSerialized.Count > 0)
                     {
-                        Dictionary<string, object> sd = new Dictionary<string, object>();
-                        foreach (KeyValuePair<string, string> keyValuePair in assign)
+                        dataSerialized.ForEach(assign =>
                         {
-                            if (keyValuePair.Key != "Id")
+                            Dictionary<string, object> sd = new Dictionary<string, object>();
+                            foreach (KeyValuePair<string, string> keyValuePair in assign)
                             {
-                                sd.Add(keyValuePair.Key, keyValuePair.Value.ToString());
+                                if (keyValuePair.Key != "Id")
+                                {
+                                    sd.Add(keyValuePair.Key, keyValuePair.Value.ToString());
+                                }
                             }
-                        }
 
-                        requestList.Add(CustomMethods.ConvertDicToNameValuePair(sd));
-                        formGroupKeyListTemp.Add(Guid.NewGuid().ToString());
-                    });
+                            requestList.Add(CustomMethods.ConvertDicToNameValuePair(sd));
+                            formGroupKeyListTemp.Add(Guid.NewGuid().ToString());
+                        });
 
-                    Form_DataTable request = new Form_DataTable();
-                    request.action = (int)FormAction.Save;
-                    request.formId = (int)FormSetting.QUEUE_MASTER;
-                    request.IsMaxOneRecordPerUser = false;
-                    request.formfieldDataListTempList = requestList.ToArray();
-                    request.formGroupKeyListTemp = formGroupKeyListTemp.ToArray();
-                    var formResult = (await formAPIRepository.BulkGeneratedFormData(request)).Data;
+                        Form_DataTable request = new Form_DataTable();
+                        request.action = (int)FormAction.Save;
+                        request.formId = (int)FormSetting.QUEUE_MASTER;
+                        request.IsMaxOneRecordPerUser = false;
+                        request.formfieldDataListTempList = requestList.ToArray();
+                        request.formGroupKeyListTemp = formGroupKeyListTemp.ToArray();
+                        var formResult = (await formAPIRepository.BulkGeneratedFormData(request)).Data;
+                    }
+
                 }
 
                 return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
@@ -2693,6 +2647,108 @@ namespace Barrway.Service.Repository
             {
                 return new AddUpdateDelete() { Status = false, Message = ex.ToString() };
             }
+        }
+
+        public async Task<AddUpdateDelete> UpdateQueueDetails(List<QueueMasterModel> model)
+        {
+            try
+            {
+                string query = "";
+
+                for (int i = 0; i < model.Count; i++)
+                {
+                    query += $@"UPDATE [dbo].[QUEUE_MASTER_1973]
+                                   SET [QUEUE_BY] = {model[i].QUEUE_BY}
+                                      ,[QUEUE_RESOURCE_ID] = {model[i].QUEUE_RESOURCE_ID}
+                                      ,[QUEUE_NAME] = {model[i].QUEUE_NAME}
+                                      ,[QUEUE_USAGE] = {model[i].QUEUE_USAGE}
+                                      ,[QUEUE_PREFIX] = {model[i].QUEUE_PREFIX}
+                                      ,[ACCEPT_TICKET] = {model[i].ACCEPT_TICKET}
+                                      ,[QUEUE_START_NUMBER] = {model[i].QUEUE_START_NUMBER}
+                                      ,[QUEUE_END_NUMBER] = {model[i].QUEUE_END_NUMBER}
+                                      ,[QUEUE_RESET_NUMBER] = {model[i].QUEUE_RESET_NUMBER}
+                                 WHERE Id = '{model[i].Id}'";
+
+                }
+
+                var Result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                if (Result > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+        public async Task<AddUpdateDelete> UpdateSessionDetails(List<SessionMasterModel> model)
+        {
+            try
+            {
+                string query = "";
+
+                for (int i = 0; i < model.Count; i++)
+                {
+                    query += $@"UPDATE [dbo].[QUEUE_MASTER_1973]
+                                   SET [SESSION_NAME] = {model[i].SESSION_NAME}
+                                  ,[SESSION_START_TIME] ={model[i].SESSION_START_TIME}
+                                  ,[SESSION_END_TIME] = {model[i].SESSION_END_TIME}
+                                  ,[TICKETING_TYPE] = {model[i].TICKETING_TYPE}
+                                  ,[QUEUE_OPEN_TIME] = {model[i].QUEUE_OPEN_TIME}
+                                 WHERE Id = '{model[i].Id}'";
+
+                }
+
+                var Result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                if (Result > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetQueueAndSession(string CompanyCode, string CalendarCode)
+        {
+            try
+            {
+                string query = $@"select * from QUEUE_MASTER_1973 where CALENDAR_CODE = '{CalendarCode}' and COMPANY_CODE = '{CompanyCode}'";
+
+                List<IDictionary<string, object>> Result = await sqlFunction.ExecuteSqlQuery(query);
+
+                query = $@"select * from QUEUE_SESSION_MASTER_1974 where CALENDAR_CODE = '{CalendarCode}' and COMPANY_CODE = '{CompanyCode}'";
+
+                List<IDictionary<string, object>> Result2 = await sqlFunction.ExecuteSqlQuery(query);
+
+                if (Result.Count > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = new { queue = Result, session = Result2 } };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+
         }
 
         public async Task<AddUpdateDelete> CheckOverlapingSlots(SchedularFormModel model)

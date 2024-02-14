@@ -6,8 +6,6 @@
     ViewBag.COMPANY_ID = Model.COMPANY_CODE.ToString();
     ViewBag.CALENDAR_ID = Model.DEFAULT_CALENDAR_ID;
 }
-
-
 @section styles{
 
 
@@ -396,20 +394,23 @@
         }
 
         .fc-bgevent {
-            background: rgba(34, 34, 34, 0.3)!important;
+            background: rgba(34, 34, 34, 0.3) !important;
             opacity: 0.7 !important;
             border: none;
         }
+
         .available-fc-bgevent {
             background: #ffffff !important;
             opacity: 0.7 !important;
             border: 2px solid #385884 !important;
         }
+
         .booking-fc-bgevent {
             background: rgba(34, 34, 34, 0.3) !important;
             opacity: 1 !important;
-            border: none!important;
+            border: none !important;
         }
+
         .tooltip {
             z-index: 100000000;
         }
@@ -418,257 +419,445 @@
         .swal-footer {
             text-align: center;
         }
+
+        .pink{
+            color: #E2476C;
+        }
+
+        /*================================*/
+        .master-wrap {
+            background-color: #F7F4FF;
+            width: 100%;
+            float: left;
+            padding: 25px 15px;
+        }
+
+        .img-col {
+            width: 100%;
+            float: left;
+            text-align: center;
+        }
+
+        .mt-125rem {
+            margin-top: 1.25rem;
+        }
+
+        .mt-4rem {
+            margin-top: 4rem;
+        }
+
+        .queue_message p {
+            margin-bottom: 0px;
+            margin-top: 19px;
+            color: #000;
+            font-size: 15px;
+            font-weight: 400;
+        }
+
+        .quewe_set {
+            width: 40%;
+            float: left;
+            padding-right: 15px;
+        }
+
+        .queue_message {
+            width: 60%;
+            float: left;
+        }
+
+        .number_of_queue {
+            margin-bottom: 30px;
+        }
+
+        .number_of_queue, .booking_queue_table, .booking_queue_number {
+            width: 100%;
+            float: left;
+        }
+
+        .number_of_queue {
+            margin-bottom: 30px;
+        }
+
+        .booking_queue_table table thead tr th {
+            color: #000;
+        }
+
+        .booking_queue_table table tbody tr td {
+            padding-right: 16px;
+            padding-top: 16px;
+        }
+
+        .booking_queue_radio [type="radio"]:checked,
+        .booking_queue_radio [type="radio"]:not(:checked) {
+            position: absolute;
+            left: -9999px;
+        }
+
+            .booking_queue_radio [type="radio"]:checked + label,
+            .booking_queue_radio [type="radio"]:not(:checked) + label {
+                position: relative;
+                padding-left: 28px;
+                cursor: pointer;
+                line-height: 20px;
+                display: inline-block;
+                color: #666;
+            }
+
+                .booking_queue_radio [type="radio"]:checked + label:before,
+                .booking_queue_radio [type="radio"]:not(:checked) + label:before {
+                    content: '';
+                    position: absolute;
+                    left: 0px;
+                    top: -1px;
+                    width: 19px;
+                    height: 19px;
+                    border: 1px solid #ddd;
+                    border-radius: 100%;
+                    background: #fff;
+                }
+
+                .booking_queue_radio [type="radio"]:checked + label:after,
+                .booking_queue_radio [type="radio"]:not(:checked) + label:after {
+                    content: '';
+                    width: 14px;
+                    height: 13px;
+                    background: #72328a;
+                    position: absolute;
+                    top: 2px;
+                    left: 2.5px;
+                    border-radius: 100%;
+                    -webkit-transition: all 0.2s ease;
+                    transition: all 0.2s ease;
+                }
+
+                .booking_queue_radio [type="radio"]:not(:checked) + label:after {
+                    opacity: 0;
+                    -webkit-transform: scale(0);
+                    transform: scale(0);
+                }
+
+                .booking_queue_radio [type="radio"]:checked + label:after {
+                    opacity: 1;
+                    -webkit-transform: scale(1);
+                    transform: scale(1);
+                }
+
+        .booking_queue_table table {
+            width: 100%;
+            float: left;
+        }
+        /*===========================================*/
+
+        .top_content {
+            width: 100%;
+            float: left;
+            text-align: center;
+            padding: 15px 0px;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 10px;
+        }
+
+            .top_content > span {
+                color: #3FBFC7;
+            }
+
+                .top_content > span > button {
+                    color: #3FBFC7;
+                    background-color: transparent;
+                    border: none;
+                }
+
+                    .top_content > span > button.active {
+                        background-color: #3FBFC7;
+                        border: none;
+                        color: #ffff;
+                        padding: 5px 20px;
+                        border-radius: 4px;
+                        margin-left: 10px;
+                    }
+
+        .d-border-right {
+            border-right: 1px dashed #b9b9b9;
+            border-width: 2px;
+        }
+
+        .queue_backlog_inner {
+            width: 100%;
+            float: left;
+            background-color: #ffff;
+            box-shadow: 0px 2px 4px 0px #00000040;
+            padding: 15px 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .queue_backlog h4 {
+            color: #777777;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .queue-back-log-left h2 {
+            margin-bottom: 0px;
+            text-indent: 20px;
+            color: #CCCCCC;
+        }
+
+        .queue-back-log-right {
+            width: 35%;
+            float: left;
+            text-align: right;
+        }
+
+        .right-border.pink-border {
+            position: absolute;
+            width: 10px;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .pink-border {
+            background-color: #E2476C;
+        }
+
+        .call-button button {
+            background-color: #e2476c;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            width: 100%;
+            border-radius: 40px;
+            padding: 6px 0px;
+        }
+
+        .call-button {
+            width: 100%;
+            float: left;
+            margin: 5px 0px;
+        }
+
+        .switch {
+            display: inline-block;
+            position: relative;
+            width: 50px;
+            height: 25px;
+            border-radius: 20px;
+            background: #dfd9ea;
+            transition: background 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+            vertical-align: middle;
+            cursor: pointer;
+            top: 10px;
+        }
+
+            .switch::before {
+                content: '';
+                font-weight: bold;
+                text-align: center;
+                font-size: smaller;
+                padding-top: 2px;
+                position: absolute;
+                top: 1px;
+                left: 2px;
+                width: 22px;
+                height: 22px;
+                background: #fafafa;
+                border-radius: 50%;
+                transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1), background 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .switch:active::before {
+                box-shadow: 0 2px 8px rgba(0,0,0,0.28), 0 0 0 20px rgba(128,128,128,0.1);
+            }
+
+        input:checked + .switch {
+            background: #3FBFC7;
+        }
+
+            input:checked + .switch::before {
+                left: 27px;
+                background: #fff;
+            }
+
+            input:checked + .switch:active::before {
+                box-shadow: 0 2px 8px rgba(0,0,0,0.28), 0 0 0 20px rgba(0,150,136,0.2);
+            }
+
+        .que-wrp-lr {
+            width: 100%;
+            float: left;
+            margin-top: 15px;
+        }
+
+        .queue-back-log h2 {
+            font-size: 18px;
+        }
+
+        .heading_queue {
+            width: 100%;
+            float: left;
+            margin-bottom: 20px;
+            margin-top: 15px;
+        }
+
+        .waiting {
+            width: 100%;
+            float: left;
+            background-color: #B9E8EB;
+            margin-bottom: 25px;
+            border-radius: 4px;
+            padding: 5px 5px;
+        }
+
+            .waiting p {
+                margin-bottom: 0px;
+                color: #222222;
+            }
+
+        .view-eye {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .queue_backlog_third {
+            width: 100%;
+            text-align: center;
+            float: left;
+        }
+
+            .queue_backlog_third .queue-back-log-left {
+                width: 100%;
+                float: left;
+            }
+
+        .summry-text p {
+            color: #222222;
+            margin-top: 15px;
+            margin-bottom: 0px;
+        }
+
+        .summry-text {
+            width: 100%;
+            float: left;
+        }
     </style>
 }
 
-<section class="schedule mihi-71" ng-app="myApp" ng-controller="myCtrl">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-               
+<section class="schedule mihi-71" style="background: #ECFAFB; margin-top:4px;" ng-app="myApp" ng-controller="myCtrl">
+    <div class="container-fluid">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
 
-                <div class="schdule-inner">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="schedule-drop">
-                                <div class="form-group">
-                                    <label for="calendar">@Resource.Calendar</label>
 
-                                    <select class="form-control" id="calendar-selector" onchange="showCalendar('@Model.COMPANY_CODE')">
-                                        <option value="-1" disabled selected>@Resource.select_a_calendar</option>
-                                        @foreach (var item in Model.calendars)
-                                        {
-                                            <option value="@item.CALENDAR_CODE" @((item.Id == Model.DEFAULT_CALENDAR_ID) ? "selected" : "")>@item.CALENDAR_NAME</option>
-                                        }
-                                    </select>
-                                </div>
+                    <div class="schdule-inner">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h2 style="font-weight:bold;">@Model.COMPANY_NAME_ENGLISH (@Model.COMPANY_NAME_CHINESE)</h2>
                             </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="schedule-drop">
-                                <div class="form-group">
-                                    <label for="service">@Resource.Service</label>
 
-                                    <select class="form-control" id="calendar-service">
-                                    </select>
+                            <div class="col-md-6">
+                                <div class="favr">
+                                    @if (!ViewBag.IsUserFavorite)
+                                    {
+                                        <button id="btn-mark" onclick="markAsFavorite('@Model.COMPANY_CODE')"><img src="~/assets/marketplace/image/star.png"> @Resource.Mark_as_favorite</button>
+                                    }
+                                    else
+                                    {
+                                        <button id="btn-unmark" onclick="removeAsFavorite('@Model.COMPANY_CODE')"><img src="~/assets/marketplace/image/star.png"> @Resource.Remove_as_favorite</button>
+                                    }
+
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="favr">
-                                @if (!ViewBag.IsUserFavorite)
-                                {
-                                    <button id="btn-mark" onclick="markAsFavorite('@Model.COMPANY_CODE')"><img src="~/assets/marketplace/image/star.png"> @Resource.Mark_as_favorite</button>
-                                }
-                                else
-                                {
-                                    <button id="btn-unmark" onclick="removeAsFavorite('@Model.COMPANY_CODE')"><img src="~/assets/marketplace/image/star.png"> @Resource.Remove_as_favorite</button>
-                                }
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div id="calendar" style="padding: 0px; margin-top: 15px;">
 
-                        <div id="tabs" style="display:none">
-                            <ul>
-                                <li data-value="List view">
-                                    <a href="#list-view">@Resource.List_View</a>
-                                </li>
-                                <li data-value="External Events">
-                                    <a href="#agenda-view">@Resource.Agenda_View</a>
-                                </li>
-                                <li data-value="Timeline resource view">
-                                    <a href="#timeline-resource-view">@Resource.Timeline_Resource_View</a>
-                                </li>
-                                <li data-value="Vertical resource view">
-                                    <a href="#vertical-resource-view">@Resource.Vertical_Resource_View</a>
-                                </li>
-                            </ul>
-
-                            <div id="list-view">
-                                <div class="calendar"></div>
-                            </div>
-                            <div id="agenda-view">
-                                <div class="calendar"></div>
-                            </div>
-                            <div id="timeline-resource-view">
-                                <div class="calendar"></div>
-                            </div>
-                            <div id="vertical-resource-view">
-                                <div class="calendar"></div>
-                            </div>
-                        </div>
-
-                        <div ui-calendar="{{uiConfig.calendar}}"
-                             calendar="myCalendar"
-                             class="span8 calendar"
-                             ng-model="eventSources"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="modal fade right" id="customEventDetailsModelPopUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-slideout" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">@Resource.Event_Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="event-detail div-flex">
-                        <div class="div-flex">
-                            <div class="title">
-                                <label class="pr-2">
-                                    {{selectEventDetails.description}}
-                                </label>
-                                <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
-                                    <span class="titleContainer">
-                                        <span ng-class="{'text-muted': d.customClass == 'true' , 'title1': d.customClass == 'false'}"> {{d.formTitle}}</span>
-
-                                    </span>
-                                </div>
-
-
-                            </div>
-
-
-                            <div ng-if="!selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
-                            <div ng-if="!selectEventDetails.allDay">{{selectEventDetails.customTime}}</div>
-
-                            <div ng-if="selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
-
-                            <input value="{{selectEventDetails.Id}}" id="newtag-inputHidden" type="hidden">
-
-
-
-                            <div ng-repeat="tag in totalSelectListTagify">
-                                <input value="{{selectEventDetails[tag.name]}}" id="newtag-inputHidden{{tag.name}}" type="hidden">
-                                <input value="{{tag.name}}" id="newtag-inputHidden{{selectEventDetails.Id}}" type="hidden">
-                                <input id="newtag-input{{tag.name}}" type="text" value="{{selectEventDetails[tag.name]}}" placeholder="Add tags">
-                            </div>
-
-                            <p>{{selectEventDetails.DESCRIPTION}} </p>
+            <div id="queue_view">
+                <div class="row" style="margin-top: 3rem;">
+                    <div class="col-md-12">
+                        <div class="row" id="queue-external-area">
+                            
 
                         </div>
-                    </div>
-                    <div class="div-flex div-list-bar"></div>
-                    <div class="div-flex div-list">
-                        <div class="d-flex justify-content-between align-items-center p-0">
-                            <h5 class="list-title mb-0" id="newtabuList"><strong id="strongFormName">0 Student in this Slot</strong></h5>
 
-                        </div>
-                        <ol id="newtabuListUl">
-                        </ol>
-                        <label id="labelWaiting"></label>
-                        <ul id="newtabuListUlWaiting">
-                        </ul>
-                    </div>
-                    <div class="div-flex div-list">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary" ng-click="enrollPublicUser()" style="background: #3FBFC7;">Enroll</button>
                     </div>
                 </div>
-                @*<div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>*@
-            </div>
-
-        </div>
-    </div>
-
-    <div class="modal fade right" id="customEventDetailsServiceModelPopUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-slideout modal-service-type" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">@Resource.Event_Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="event-detail div-flex">
-                        <div class="div-flex">
-                            <div class="title">
-                                <label class="pr-2">
-                                    {{selectEventDetails.description}}
-                                </label>
-                                <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
-                                    <span class="titleContainer">
-                                        <span ng-class="{'text-muted': d.customClass == 'true' , 'title1': d.customClass == 'false'}"> {{d.formTitle}}</span>
-
-                                    </span>
-                                </div>
-
-
-                            </div>
-
-
-                            <div ng-if="!selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
-                            <div ng-if="!selectEventDetails.allDay">{{selectEventDetails.customTime}}</div>
-
-                            <div ng-if="selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
-
-                            <input value="{{selectEventDetails.Id}}" id="newtag-inputHidden" type="hidden">
-
-
-
-                            <div ng-repeat="tag in totalSelectListTagify">
-                                <input value="{{selectEventDetails[tag.name]}}" id="newtag-inputHidden{{tag.name}}" type="hidden">
-                                <input value="{{tag.name}}" id="newtag-inputHidden{{selectEventDetails.Id}}" type="hidden">
-                                <input id="newtag-input{{tag.name}}" type="text" value="{{selectEventDetails[tag.name]}}" placeholder="Add tags">
-                            </div>
-
-
-                            <p>{{selectEventDetails.DESCRIPTION}} </p>
-
-                        </div>
-                    </div>
-                    <div class="div-flex div-list-bar"></div>
-                    <div class="div-flex div-list">
-                        <div class="d-flex justify-content-between align-items-center p-0">
-                            <h5 class="list-title mb-0" id="newtabuList"><strong id="strongFormName">0 Student in this Slot</strong></h5>
-
-                        </div>
-                        <ol id="newtabuListUl">
-                        </ol>
-                        <label id="labelWaiting"></label>
-                        <ul id="newtabuListUlWaiting">
-                        </ul>
-                    </div>
-
-                    <div id="agenda-view2">
-                        <div class="calendar"></div>
-                    </div>
-
-                </div>
-                @*<div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>*@
             </div>
 
         </div>
     </div>
 </section>
 
-
 @section scripts{
-    
-    <script src="~/Scripts/MarketplaceScripts/CompanySchedule.js?@DateTime.Now.ToString("yyyyMmddHHMMssffff")"></script>
+
+    <script src="../../Scripts/jquery.signalR-2.4.3.min.js"></script>
+    <script src="../../signalr/hubs"></script>
 
     <script>
+        $("#nv-company-schedule").addClass("active");
         var app = angular.module('myApp', []);
         app.controller('myCtrl', function ($scope, $rootScope) {
+
+            $scope.currentCalendarCode = "@Model.DEFAULT_CALENDAR_ID";
+            $scope.currentCompanyCode = "@Model.COMPANY_CODE";
+            $scope.queueList = [{}];
+
+            $scope.chat = $.connection.queueManager;
+            $.connection.hub.start().done(function () {
+                $scope.GetQueueList();
+            });
+
+            $scope.GetQueueList = function () {
+                $scope.chat.server.getQueueList(String($scope.currentCalendarCode), String($scope.currentCompanyCode));
+            }
+
+            $scope.chat.client.updateQueues = function (response) {
+                debugger;
+                if (response.Status) {
+
+                    $scope.queueList = response.Data;
+                    let binderString = ``;
+
+                    $scope.queueList.forEach(queue => {
+                        binderString += `<div class="col-md-2">
+                                <div class="queue_backlog_second">
+                                    <div class="queue_backlog_inner">
+                                        <div class="queue-back-log">
+                                            <h2>(${queue.QUEUE_PREFIX}) ${queue.QUEUE_NAME}</h2>
+
+                                            <div class="mt-2">
+                                                <div class="queue-back-log-left">
+                                                    <h4 class="pink"><span>Current</span> <b>--</b></h4>
+                                                </div>
+                                            </div>
+                                            <div class="text-center"><hr /><h3>${queue.QUEUE_PREFIX} 20</h3></div>
+                                            <div class="call-button">
+                                                <button>Get Ticket</button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="waiting">
+                                    <p>Waiting <span>(0)</span></p>
+                                </div>
+                                <div class="waiting">
+                                    <p>Pending <span>(0)</span></p>
+                                </div>
+                            </div>`;
+                    })
+
+                    $("#queue-external-area").append(binderString);
+
+                }
+            }
+
             $scope.rootScopeSafe = function () {
                 $rootScope.safeApply();
             };
@@ -684,16 +873,18 @@
                 }
             };
 
+
+
+
             $scope.enrollPublicUser = function () {
-                console.log($scope.selectEventDetails);
-                showLoader();
+
                 $.ajax({
                     url: "/Account/CheckPublicUserLogin",
                     type: "POST",
                     success: function (response) {
                         hideLoader();
                         if (!response.Status) {
-                            
+
                             swal({
                                 title: "Login Required",
                                 text: "Kindly login into your account and then you can enroll yourself into this calendar.",
@@ -708,134 +899,6 @@
                                 }
                             });
                         } else {
-                            var eventData = $scope.selectEventDetails;
-                            $.ajax({
-                                url: "/Useradmin/GetCurrentPackageDetails",
-                                type: "GET",
-                                data: {
-                                    CompanyCode: eventData.COMPANY_CODE,
-                                    CalendarCode: eventData.CALENDAR_CODE,
-                                    ServiceId: eventData.activities
-                                },
-                                async: false,
-                                success: function (response) {
-                                    if (response.Status) {
-                                        // code to call the service
-                                        
-                                        debugger;
-                                        const wrapper = document.createElement('div');
-                                        wrapper.innerHTML = `<div>
-                                                                ${eventData.customDate}
-                                                            </div>
-                                                            <div>
-                                                                ${eventData.customTime}
-                                                            </div>
-                                                            <div>${eventData.customTitleSplit[2]}</div><br />
-                                                            <div>${eventData.customTitleSplit[1]}</div>
-                                                            <div>${eventData.customTitleSplit[0]}</div><br />
-                                                            <h4 style="color:red">${response.Message}</h4>`;
-
-                                        swal({
-                                            title: "You are going to book",
-                                            content: wrapper,
-                                            buttons: {
-                                                cancel: "Cancel",
-                                                confirm: "Confirm"
-                                            }
-
-                                        }).then(function (response) {
-                                            if (response) {
-                                                showLoader();
-                                                var obj = {
-                                                    USER_ID: "",
-                                                    RESOURCE_NAME: eventData.customTitleSplit[0],
-                                                    ACTIVITY_NAME: eventData.customTitleSplit[1],
-                                                    FormGroupKey: $scope.selectEventDetails.formGroupKey,
-                                                    participant: {
-                                                        DESCRIPTION: eventData.description,
-                                                        COMPANY_CODE: eventData.COMPANY_CODE,
-                                                        CALENDAR_CODE: eventData.CALENDAR_CODE
-                                                    },
-                                                    transaction: {
-                                                        SLOT: eventData.Id,
-                                                        RESOURCE: eventData.resourceId,
-                                                        ACTIVITY: eventData.activities,
-                                                        STUDENT: "",
-                                                        REMARKS: "",
-                                                        FEES: "",
-                                                        ATTENDANCE: "NOT-MARKED",
-                                                        COMPANY_CODE: eventData.COMPANY_CODE,
-                                                        CALENDAR_CODE: eventData.CALENDAR_CODE
-                                                    }
-                                                }
-
-                                                $.ajax({
-                                                    url: "/UserAdmin/EnrollPublicUserForCalendar",
-                                                    type: "POST",
-                                                    data: obj,
-                                                    success: function (data) {
-                                                        hideLoader();
-                                                        if (!data.Status) {
-                                                            if (data.Message == "ALREADY-ENROLLED") {
-                                                                swal({
-                                                                    title: "Can't Enroll Again!",
-                                                                    text: "You are already enrolled in this event.",
-                                                                    icon: "error",
-                                                                    button: "Okay"
-                                                                });
-                                                                //swal({ type: 'error', showCloseButton: true, html: "You are already enrolled in this calendar." });
-                                                            } else if (data.Message == "LIMIT-ERROR") {
-                                                                swal({
-                                                                    title: "Failed to Enroll!",
-                                                                    text: "Maximum no. of participants already enrolled in this activity.",
-                                                                    icon: "error",
-                                                                    button: "Okay"
-                                                                });
-                                                            } else {
-                                                                swal({
-                                                                    title: "Warning!",
-                                                                    text: data.Message,
-                                                                    icon: "error",
-                                                                    button: "Okay"
-                                                                });
-                                                            }
-                                                        } else {
-                                                            swal({
-                                                                title: "Congratulations!",
-                                                                text: "Enrolled Successfully!",
-                                                                icon: "success",
-                                                                button: "Okay"
-                                                            }).then(function (boolValue) {
-                                                                window.location.reload();
-                                                            });
-
-                                                        }
-
-                                                    },
-                                                    error: function () {
-                                                        swal({ type: 'error', showCloseButton: true, html: "something went wrong!" });
-                                                    }
-                                                })
-                                            }
-                                        });
-                                    } else {
-                                        swal({
-                                            icon: "error",
-                                            title: "Warning!",
-                                            text: response.Message,
-                                            buttons: {
-                                                confirm: "Okay"
-                                            }
-
-                                        })
-                                    }
-                                }
-                            })
-
-                            
-
-
-                            
 
                         }
 
@@ -849,7 +912,7 @@
             }
 
 
-            
+
         });
 
 
@@ -899,8 +962,8 @@
                                     }).then(function (boolValue) {
                                         window.location.reload();
                                     });
-                                    
-                                    
+
+
                                 } else {
                                     swal({
                                         title: "Mark Failed!",
@@ -966,8 +1029,8 @@
                                     }).then(function (boolValue) {
                                         window.location.reload();
                                     });
-                                    
-                                    
+
+
                                 } else {
                                     swal({
                                         title: "Unmark Failed!",
@@ -976,8 +1039,8 @@
                                         button: "Okay"
                                     });
                                 }
-                                
-                                
+
+
 
                             }
 
@@ -992,5 +1055,5 @@
         }
 
     </script>
-    
+
 }

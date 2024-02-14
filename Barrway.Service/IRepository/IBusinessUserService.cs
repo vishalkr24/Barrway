@@ -81,6 +81,11 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> AddSchedularForm(SchedularFormModel model, string formGroupKey);
 
         Task<AddUpdateDelete> AddQueueSession(List<QueueMasterModel> queues, List<SessionMasterModel> sessions);
+        Task<AddUpdateDelete> UpdateQueueDetails(List<QueueMasterModel> queues);
+
+        Task<AddUpdateDelete> UpdateSessionDetails(List<SessionMasterModel> sessions);
+
+        Task<AddUpdateDelete> GetQueueAndSession(string CompanyCode, string CalendarCode);
 
         Task<AddUpdateDelete> CheckOverlapingSlots(SchedularFormModel model);
 
