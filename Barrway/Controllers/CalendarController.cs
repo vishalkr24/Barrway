@@ -639,12 +639,37 @@ namespace Barrway.Controllers
                     sessions = JsonConvert.DeserializeObject<List<SessionMasterModel>>(JsonConvert.SerializeObject(data["SessionList"]));
                 }
 
-                if (queues.Count > 0 || sessions.Count > 0)
+                if (queues.Count > 0 || sessions.Where(x => string.IsNullOrEmpty(x.Id)).ToList().Count > 0)
                 {
-                    var result = await businessUserService.AddQueueSession(queues, sessions);
+                    var result = await businessUserService.AddQueueSession(queues, sessions.Where(x => string.IsNullOrEmpty(x.Id)).ToList());
+                }
+
+                if (queues.Where(x => !string.IsNullOrEmpty(x.Id)).ToList().Count > 0)
+                {
+                    var result = await businessUserService.UpdateQueueDetails(queues.Where(x => string.IsNullOrEmpty(x.Id)).ToList());
+                }
+
+                if (sessions.Where(x => !string.IsNullOrEmpty(x.Id)).ToList().Count > 0)
+                {
+                    var result = await businessUserService.UpdateSessionDetails(sessions.Where(x => string.IsNullOrEmpty(x.Id)).ToList());
                 }
 
                 return Json(new AddUpdateDelete() { Status = true, Message = "Success" }, JsonRequestBehavior.DenyGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.ToString(), JsonRequestBehavior.DenyGet);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GetQueueAndSession(string CompanyCode, string CalendarCode)
+        {
+            try
+            {
+                var result = await businessUserService.GetQueueAndSession(CompanyCode, CalendarCode);
+
+                return Json(result, JsonRequestBehavior.DenyGet);
             }
             catch (Exception ex)
             {

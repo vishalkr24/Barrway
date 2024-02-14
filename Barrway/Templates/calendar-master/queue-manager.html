@@ -376,13 +376,18 @@
             padding: 8px 16px;
             font-size: 13px;
             border-radius: 8px;
-            border: 1px solid lightgrey;
+            min-height: 55px;
+            background: white;
+            border: 2px solid #3f91c7;
+            color: black;
             min-width: fit-content;
             margin-right: 16px;
+            cursor: pointer;
         }
 
             .session-scroller .session-element.active {
-                border: 2px solid #3FBFC7;
+                background: #3f91c7;
+                color: white;
             }
 
             .session-scroller .session-element span {
@@ -404,7 +409,15 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <!--<div class="col-md-12">
+                <div class="pt-1 pb-2" style="border-bottom: 1px solid lightgrey;">
+                    <div class="date-scroller" id="dates-scroller">
+
+                    </div>
+                </div>
+                
+            </div>-->
+            <div class="col-md-12 mt-1">
                 <div class="session-scroller" id="session-scroller">
 
                 </div>
@@ -431,22 +444,22 @@
                                     </div>
                                 </div>-->
                             </div>
-                            <div class="waiting">
+                            <!--<div class="waiting">
                                 <p>Waiting <span>(10)</span></p>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
 
                     <div class="col-md-10">
                         <div class="row" id="queue-external-area">
-                            <!--<div class="col-md-2">
+                            <div class="col-md-2" ng-repeat="queue in queueList">
                                 <div class="queue_backlog_second">
                                     <div class="queue_backlog_inner">
                                         <div class="queue-back-log">
-                                            <h2>(A) Staff A</h2>
+                                            <h2>({{queue.QUEUE_PREFIX}}) {{queue.QUEUE_NAME}}</h2>
                                             <div class="view-eye">
                                                 <img src="/assets/marketplace/image/eye-open.png" />
-                                                <img src="/assets/marketplace/image/eye-slash.png" />
+                                                <!--<img src="/assets/marketplace/image/eye-slash.png" />-->
                                             </div>
                                             <div class="call-button">
                                                 <button>Call</button>
@@ -454,26 +467,28 @@
                                         </div>
                                         <div class="que-wrp-lr">
                                             <div class="queue-back-log-left">
-                                                <h3 class="pink"><span>Current</span> <b>A10</b></h3>
+                                                <h3 class="pink"><span>Current</span> <b>--</b></h3>
                                             </div>
                                             <div class="queue-back-log-right">
-                                                <input type="checkbox" hidden="hidden" id="username">
-                                                <label class="switch" for="username"></label>
+                                                <input type="checkbox" name="queue-activator-trigger" hidden="hidden" ng-checked="queue.ACCEPT_TICKET == 'Y'" id="queue_activator-{{queue.Id}}">
+                                                <label class="switch" for="queue_activator-{{queue.Id}}"></label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="waiting">
-                                    <p>Waiting <span>(10)</span></p>
-
+                                    <p>Waiting <span>(0)</span></p>
                                 </div>
-                            </div>-->
+                                <div class="waiting">
+                                    <p>Pending <span>(0)</span></p>
+                                </div>
+                            </div>
 
                         </div>
 
                     </div>
 
-                    <div class="col-md-4">
+                    <!--<div class="col-md-4">
                         <div class="queue_backlog_third">
                             <div class="queue_backlog_inner">
                                 <div class="queue-back-log">
@@ -506,7 +521,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
 
                 </div>
             </div>

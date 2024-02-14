@@ -609,30 +609,29 @@ function BindQueue2Template() {
                 
 `);
 
-    addQueueRow();
-    addSessionRow();
+    $.ajax({
+        url: "/Calendar/GetQueueAndSession",
+        method: "POST",
+        data: {
+            CompanyCode: localStorage.getItem("COMPANY_CODE"),
+            CalendarCode: localStorage.getItem("CALENDAR_CODE")
+        },
+        success: function (response) {
+            if (response.Status) {
+                $("#exampleFormControlSelect1").val(response.Data.queue.length);
+                $("#exampleFormControlSelect2").val(response.Data.session.length);
+                for (var i = 0; i < response.Data.queue.length; i++) {
+                    addQueueRow(response.Data.queue[i]);
+                }
+                for (var i = 0; i < response.Data.session.length; i++) {
+                    addSessionRow(response.Data.session[i]);
+                }
+            }
+        },
+        error: function (err) {
 
-    if (ConfigStep.Helper_After_Form != null && ConfigStep.Helper_After_Form != undefined) {
-
-        let counter = 1;
-        let binderString = "";
-
-        $(".blocks").empty();
-
-        while (ConfigStep.Helper_After_Form["Helper_" + counter] != undefined) {
-            binderString += `<div class="block-inner">
-                    <div class="block-image">
-                        <img src="${ConfigStep.Helper_After_Form["Helper_" + counter].Image}" onerror="this.src='/assets/marketplace/image/hands.png'">
-                    </div>
-                    <div class="block-text">
-                        <p>${ConfigStep.Helper_After_Form["Helper_" + counter].Text} </p>
-                    </div>
-                </div>`;
-            counter++;
         }
-
-        $(".blocks").append(binderString);
-    }
+    });
 }
 
 $(document).on("change", "#exampleFormControlSelect1", function () {
@@ -647,7 +646,7 @@ $(document).on("change paste", "#booking-queue-table tbody input", function () {
 
     let name = ($(this).attr("type") == "radio") ? $(this).attr("name").split("-") : $(this).attr("id").split("-");
 
-    queueList.find(x => x.Id == name[1])[name[0]] = this.value;
+    queueList.find(x => x.rowId == name[1])[name[0]] = this.value;
 
 });
 
@@ -655,7 +654,7 @@ $(document).on("change paste", "#booking-session-table tbody input", function ()
 
     let name = ($(this).attr("type") == "radio") ? $(this).attr("name").split("-") : $(this).attr("id").split("-");
 
-    sessionList.find(x => x.Id == name[1])[name[0]] = this.value;
+    sessionList.find(x => x.rowId == name[1])[name[0]] = this.value;
 
 });
 
@@ -671,7 +670,6 @@ function AddQueueSession() {
                     QueueList: queueList,
                     SessionList: sessionList
                 }
-                
             },
             success: function (response) {
                 // after success response
@@ -706,96 +704,223 @@ function AddQueueSession() {
 
 }
 
-function addQueueRow() {
+function addQueueRow(dataElement = null) {
     let binderString = "";
 
-    let rowCount = parseInt($("#exampleFormControlSelect1 option:selected").val());
-
-    rowCount = (rowCount > 5) ? 5 : rowCount;
-
-    queueList = [];
-
-    for (var i = 0; i < rowCount; i++) {
-
-        queueList.push({
-            Id: (i + 1),
-            QUEUE_NAME: "",
-            QUEUE_PREFIX: "",
-            QUEUE_START_NUMBER: "",
-            QUEUE_END_NUMBER: "",
-            QUEUE_RESET_NUMBER: "",
+    if (dataElement != null) {
+        let queueElement = {
+            Id: dataElement.Id,
+            rowId: dataElement.Id,
+            QUEUE_NAME: dataElement.QUEUE_NAME,
+            QUEUE_PREFIX: dataElement.QUEUE_PREFIX,
+            QUEUE_START_NUMBER: dataElement.QUEUE_START_NUMBER,
+            QUEUE_END_NUMBER: dataElement.QUEUE_END_NUMBER,
+            QUEUE_RESET_NUMBER: dataElement.QUEUE_RESET_NUMBER,
             CALENDAR_CODE: createdCalendarCode,
             COMPANY_CODE: createdCompanyCode
-        });
+        };
 
-        binderString += `<tr>
+        queueList.push(queueElement);
+
+        binderString += `<tr id="queue-table-row-${queueElement.rowId}">
                                                     <td>
-                                                        <input type="text" class="form-control" id="QUEUE_NAME-${(i + 1)}"/>
+                                                        <input type="text" class="form-control" id="QUEUE_NAME-${queueElement.Id}" value="${queueElement.QUEUE_NAME}"/>
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control" id="QUEUE_PREFIX-${(i + 1)}"/>
+                                                        <input type="text" class="form-control" id="QUEUE_PREFIX-${queueElement.Id}" value="${queueElement.QUEUE_PREFIX}"/>
                                                     </td>
                                                     <td style="width:100px;">
-                                                        <input type="number" class="form-control" id="QUEUE_START_NUMBER-${(i + 1)}" value="1" min="0"/>
+                                                        <input type="number" class="form-control" id="QUEUE_START_NUMBER-${queueElement.Id}"  value="${queueElement.QUEUE_START_NUMBER}" min="0"/>
                                                     </td>
                                                     <td style="width:100px;">
-                                                        <input type="number" class="form-control" id="QUEUE_END_NUMBER-${(i + 1)}" value="100"/>
+                                                        <input type="number" class="form-control" id="QUEUE_END_NUMBER-${queueElement.Id}"  value="${queueElement.QUEUE_END_NUMBER}"/>
                                                     </td>
                                                     <td style="width:160px;">
-                                                        <input type="text" class="form-control" id="QUEUE_RESET_NUMBER-${(i + 1)}"/>
+                                                        <input type="text" class="form-control" id="QUEUE_RESET_NUMBER-${queueElement.Id}" value="${queueElement.QUEUE_RESET_NUMBER}"/>
                                                     </td>
                                                 </tr>`;
+    } else {
+        let rowCount = parseInt($("#exampleFormControlSelect1 option:selected").val());
+
+        rowCount = (rowCount > 5) ? 5 : rowCount;
+
+        if (rowCount < queueList.length) {
+            swal({
+                icon: "warning",
+                title: "Warning",
+                text: "Already Sesion can not be removed",
+                confirm: "Ok"
+            }).then(function (check) {
+                if (check) {
+                    debugger;
+                    let elementsToDelete = queueList.length - rowCount ;
+                    for (var i = 0; i < elementsToDelete; i++)
+                    {
+                        if (queueList[queueList.length - 1].Id == undefined || queueList[queueList.length - 1].Id == null) {
+                            $("#queue-table-row-" + queueList[queueList.length - 1].rowId).remove();
+                            queueList.pop();
+                        }
+                    }
+
+                }
+            })
+        } else {
+            let counter = rowCount - queueList.length;
+            for (var i = 0; i < counter; i++) {
+                let queueElement = {
+                    Id: null,
+                    rowId: (queueList.length == 0) ? 1 : parseInt(queueList[queueList.length - 1].rowId) + 1,
+                    QUEUE_NAME: "",
+                    QUEUE_PREFIX: "",
+                    QUEUE_START_NUMBER: "1",
+                    QUEUE_END_NUMBER: "100",
+                    QUEUE_RESET_NUMBER: "",
+                    CALENDAR_CODE: createdCalendarCode,
+                    COMPANY_CODE: createdCompanyCode
+                };
+
+                queueList.push(queueElement);
+
+                binderString += `<tr id="queue-table-row-${queueElement.rowId}">
+                                                    <td>
+                                                        <input type="text" class="form-control" id="QUEUE_NAME-${queueElement.rowId}" value="${queueElement.QUEUE_NAME}"/>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" id="QUEUE_PREFIX-${queueElement.rowId}" value="${queueElement.QUEUE_PREFIX}"/>
+                                                    </td>
+                                                    <td style="width:100px;">
+                                                        <input type="number" class="form-control" id="QUEUE_START_NUMBER-${queueElement.rowId}"  value="${queueElement.QUEUE_START_NUMBER}" min="0"/>
+                                                    </td>
+                                                    <td style="width:100px;">
+                                                        <input type="number" class="form-control" id="QUEUE_END_NUMBER-${queueElement.rowId}"  value="${queueElement.QUEUE_END_NUMBER}"/>
+                                                    </td>
+                                                    <td style="width:160px;">
+                                                        <input type="text" class="form-control" id="QUEUE_RESET_NUMBER-${queueElement.rowId}" value="${queueElement.QUEUE_RESET_NUMBER}"/>
+                                                    </td>
+                                                </tr>`;
+            }
+        }
+
+
+
     }
 
-    $("#booking-queue-table tbody").empty();
+
     $("#booking-queue-table tbody").append(binderString);
 }
 
-function addSessionRow() {
+function addSessionRow(dataElement = null) {
     let binderString = "";
 
-    let rowCount = parseInt($("#exampleFormControlSelect2 option:selected").val());
+    if (dataElement != null) {
+        let sessionElement = {
+            Id: dataElement.Id,
+            rowId: dataElement.Id,
+            SESSION_NAME: dataElement.SESSION_NAME,
+            SESSION_START_TIME: dataElement.SESSION_START_TIME,
+            SESSION_END_TIME: dataElement.SESSION_END_TIME,
+            TICKETING_TYPE: dataElement.TICKETING_TYPE,
+            QUEUE_OPEN_TIME: dataElement.QUEUE_OPEN_TIME,
+            CALENDAR_CODE: createdCalendarCode,
+            COMPANY_CODE: createdCompanyCode
+        };
 
-    rowCount = (rowCount > 5) ? 5 : rowCount;
+        sessionList.push(sessionElement);
 
-    sessionList = [];
-
-    for (var i = 0; i < rowCount; i++) {
-
-        sessionList.push({
-            Id: (i + 1),
-            SESSION_NAME: "",
-            SESSION_START_TIME: "",
-            SESSION_END_TIME: "",
-            TICKETING_TYPE: "Auto",
-            QUEUE_OPEN_TIME: ""
-        });
-
-        binderString += `<tr>
+        binderString += `<tr id="session-table-row-${sessionElement.rowId}">
                                                     <td>
-                                                        <input type="text" class="form-control" id="SESSION_NAME-${(i + 1)}"/>
+                                                        <input type="text" class="form-control" id="SESSION_NAME-${dataElement.Id}" value="${sessionElement.SESSION_NAME}"/>
                                                     </td>
                                                     <td>
-                                                        <input type="time" class="form-control" id="SESSION_START_TIME-${(i + 1)}"/>
+                                                        <input type="time" class="form-control" id="SESSION_START_TIME-${dataElement.Id}" value="${sessionElement.SESSION_START_TIME}"/>
                                                     </td>
                                                     <td style="width:100px;">
-                                                        <input type="time" class="form-control" id="SESSION_END_TIME-${(i + 1)}"/>
+                                                        <input type="time" class="form-control" id="SESSION_END_TIME-${dataElement.Id}" value="${sessionElement.SESSION_END_TIME}"/>
                                                     </td>
                                                     <td style="width:100px;">
                                                         <div class="booking_queue_radio">
-                                                            <input type="radio" name="TICKETING_TYPE-${(i + 1)}" id="TICKETING_TYPE-Auto-${(i + 1)}" value="Auto" checked>
-                                                            <label for="TICKETING_TYPE-Auto-${(i + 1)}">Auto</label>
-                                                            <input type="radio" name="TICKETING_TYPE-${(i + 1)}" id="TICKETING_TYPE-Manual-${(i + 1)}" value="Manual">
-                                                            <label for="TICKETING_TYPE-Manual-${(i + 1)}">Manual</label>
+                                                            <input type="radio" name="TICKETING_TYPE-${dataElement.Id}" id="TICKETING_TYPE-Auto-${dataElement.Id}" value="Auto" ${(sessionElement.TICKETING_TYPE == "Auto") ? "checked" : ""}>
+                                                            <label for="TICKETING_TYPE-Auto-${dataElement.Id}">Auto</label>
+                                                            <input type="radio" name="TICKETING_TYPE-${dataElement.Id}" id="TICKETING_TYPE-Manual-${dataElement.Id}" value="Manual" ${(sessionElement.TICKETING_TYPE == "Auto") ? "checked" : ""}>
+                                                            <label for="TICKETING_TYPE-Manual-${dataElement.Id}">Manual</label>
                                                         </div>
                                                     </td>
                                                     <td style="width:160px;">
-                                                        <input type="time" class="form-control" id="QUEUE_OPEN_TIME-${(i + 1)}"/>
+                                                        <input type="time" class="form-control" id="QUEUE_OPEN_TIME-${dataElement.Id}" value="${sessionElement.QUEUE_OPEN_TIME}"/>
                                                     </td>
                                                 </tr>`;
+    } else {
+        let rowCount = parseInt($("#exampleFormControlSelect2 option:selected").val());
+
+        rowCount = (rowCount > 5) ? 5 : rowCount;
+
+        if (rowCount < sessionList.length) {
+            swal({
+                icon: "warning",
+                title: "Warning",
+                text: "Already Sesion can not be removed",
+                confirm: "Ok"
+            }).then(function (check) {
+                if (check) {
+                    let elementsToDelete = sessionList.length - rowCount;
+                    for (var i = 0; i < elementsToDelete; i++) {
+                        if (sessionList[sessionList.length - 1].Id == undefined || sessionList[sessionList.length - 1].Id == null) {
+                            $("#session-table-row-" + sessionList[sessionList.length - 1].rowId).remove();
+                            sessionList.pop();
+                        }
+
+                    }
+
+                }
+            })
+        } else {
+            let counter = rowCount - sessionList.length;
+            for (var i = 0; i < counter; i++) {
+
+                let sessionElement = {
+                    Id: null,
+                    rowId: (sessionList.length == 0) ? 1 : parseInt(sessionList[sessionList.length - 1].rowId) + 1,
+                    SESSION_NAME: "",
+                    SESSION_START_TIME: "",
+                    SESSION_END_TIME: "",
+                    TICKETING_TYPE: "Auto",
+                    QUEUE_OPEN_TIME: "",
+                    CALENDAR_CODE: createdCalendarCode,
+                    COMPANY_CODE: createdCompanyCode
+                };
+
+                sessionList.push(sessionElement);
+
+                binderString += `<tr id="session-table-row-${sessionElement.rowId}">
+                                                    <td>
+                                                        <input type="text" class="form-control" id="SESSION_NAME-${sessionElement.rowId}" value="${sessionElement.SESSION_NAME}"/>
+                                                    </td>
+                                                    <td>
+                                                        <input type="time" class="form-control" id="SESSION_START_TIME-${sessionElement.rowId}" value="${sessionElement.SESSION_START_TIME}"/>
+                                                    </td>
+                                                    <td style="width:100px;">
+                                                        <input type="time" class="form-control" id="SESSION_END_TIME-${sessionElement.rowId}" value="${sessionElement.SESSION_END_TIME}"/>
+                                                    </td>
+                                                    <td style="width:100px;">
+                                                        <div class="booking_queue_radio">
+                                                            <input type="radio" name="TICKETING_TYPE-${sessionElement.rowId}" id="TICKETING_TYPE-Auto-${sessionElement.rowId}" value="Auto" ${(sessionElement.TICKETING_TYPE == "Auto") ? "checked" : ""}>
+                                                            <label for="TICKETING_TYPE-Auto-${sessionElement.rowId}">Auto</label>
+                                                            <input type="radio" name="TICKETING_TYPE-${sessionElement.rowId}" id="TICKETING_TYPE-Manual-${sessionElement.rowId}" value="Manual" ${(sessionElement.TICKETING_TYPE == "Manual") ? "checked" : ""}>
+                                                            <label for="TICKETING_TYPE-Manual-${sessionElement.rowId}">Manual</label>
+                                                        </div>
+                                                    </td>
+                                                    <td style="width:160px;">
+                                                        <input type="time" class="form-control" id="QUEUE_OPEN_TIME-${sessionElement.rowId}" value="${sessionElement.QUEUE_OPEN_TIME}"/>
+                                                    </td>
+                                                </tr>`;
+            }
+        }
+
+
+
+        //$("#booking-session-table tbody").empty();
     }
 
-    $("#booking-session-table tbody").empty();
     $("#booking-session-table tbody").append(binderString);
 }
 

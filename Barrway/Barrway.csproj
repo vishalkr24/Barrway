@@ -3109,6 +3109,7 @@
     <Content Include="Scripts\myscript\controller\ApplicationListController.js" />
     <Content Include="Scripts\myscript\controller\approvalController.js" />
     <Content Include="Scripts\myscript\controller\NewSchedularFormController.js" />
+    <Content Include="Scripts\myscript\controller\marketplaceQueueController.js" />
     <Content Include="Scripts\myscript\controller\queueController.js" />
     <Content Include="Scripts\myscript\controller\calendarController.js" />
     <Content Include="Scripts\myscript\controller\CalenderRecordsController.js" />
@@ -3289,6 +3290,7 @@
     <Content Include="Views\WebsiteTemplates\_Template3.cshtml" />
     <Content Include="Views\BusinessAdmin\_CompanyPaletteSelection.cshtml" />
     <Content Include="Views\MarketPlace\Pricing.cshtml" />
+    <Content Include="Views\MarketPlace\CompanyQueueSchedule.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

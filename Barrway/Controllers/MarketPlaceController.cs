@@ -291,6 +291,16 @@ namespace Barrway.Controllers
                     MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
                     companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
                     companyModel.calendars = JsonConvert.DeserializeObject<List<BusinessCalendarModel>>(calendarEncrypted);
+
+                    if (!string.IsNullOrEmpty(CalendarCode))
+                    {
+                        if (companyModel.calendars.Any(x => x.CALENDAR_FUNCTION_TYPE == "QUEUE" && x.CALENDAR_CODE == CalendarCode))
+                        {
+                            return RedirectToAction("CompanyQueueSchedule", new { CompanyCode = CompanyCode, CalendarCode = CalendarCode });
+                        }
+                    }
+
+
                     //companyModel.services = JsonConvert.DeserializeObject<List<BusinessCompanyCategoryModel>>(serviceEncrypted);
 
                     ViewBag.IsUserFavorite = false;
@@ -322,13 +332,60 @@ namespace Barrway.Controllers
                 {
                     return RedirectToAction("Index", "Marketplace");
                 }
-                
+
             }
             catch (Exception ex)
             {
                 return RedirectToAction("Index", "Marketplace");
             }
 
+        }
+
+        public async Task<ActionResult> CompanyQueueSchedule(string CompanyCode, string CalendarCode)
+        {
+            var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
+            AddUpdateDelete calendarData = await businessUserService.GetMarcketPlaceCompanyCalendarByCompanyId(companyData.Data["Id"].ToString());
+            //var serviceData = await globalMasterService.GetCompanyCategoryMaster();
+            if (calendarData.Status)
+            {
+                var data = JsonConvert.SerializeObject(companyData.Data);
+                var calendarEncrypted = JsonConvert.SerializeObject(calendarData.Data);
+                //var serviceEncrypted = JsonConvert.SerializeObject(serviceData.Data);
+
+                MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
+                companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
+                companyModel.calendars = JsonConvert.DeserializeObject<List<BusinessCalendarModel>>(calendarEncrypted);
+                //companyModel.services = JsonConvert.DeserializeObject<List<BusinessCompanyCategoryModel>>(serviceEncrypted);
+
+                ViewBag.IsUserFavorite = false;
+
+                if (User.Identity.IsAuthenticated)
+                {
+                    if (UserIdentity.Role == "PUBLIC_USER")
+                    {
+                        // check if calendar is a favorite
+                        var calendarFavCheck = await publicUserService.CheckSingleMyFavoriteCalendar(User.Identity.Name, CalendarCode);
+                        if (calendarFavCheck.Status)
+                        {
+                            ViewBag.IsUserFavorite = true;
+                        }
+                    }
+                }
+
+                ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
+
+                if (!string.IsNullOrEmpty(companyModel.IS_TEMPLATE))
+                {
+                    if (companyModel.IS_TEMPLATE == "Y")
+                        return RedirectToAction("Index", "Marketplace");
+                }
+
+                return View(companyModel);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Marketplace");
+            }
         }
 
         public async Task<ActionResult> CompanyPhotoAlbum(string CompanyCode, string CalendarCode = null)
@@ -486,7 +543,7 @@ namespace Barrway.Controllers
 
                 Response.Redirect(ReturnUrl);
             }
-            catch (Exception) 
+            catch (Exception)
             {
 
             }
