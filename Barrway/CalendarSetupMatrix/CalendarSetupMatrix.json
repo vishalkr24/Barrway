@@ -462,6 +462,12 @@
               "Text": "You may edit these information and add more details in the future by going to location master. "
             }
           }
+        },
+        "2_3": {
+          "Has_Next_Step": true,
+          "View_Name": "QUEUE_2",
+          "Heading_Title": "Set up the booking queue",
+          "Is_Skippable": false
         }
       }
     },

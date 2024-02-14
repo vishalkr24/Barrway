@@ -45,6 +45,8 @@ namespace Barrway.DTO.BusinessModels
 
         public string CALENDAR_TEMPLATE_ID { get; set; }
 
+        public string CALENDAR_FUNCTION_TYPE { get; set; }
+
         public string SCHEDULAR_ID { get; set; }
     }
 

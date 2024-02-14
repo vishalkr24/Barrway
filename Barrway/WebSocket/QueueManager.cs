@@ -1,4 +1,6 @@
-﻿using Barrway.Service.IRepository;
+﻿using Barrway.DTO.Common;
+using Barrway.Service.IRepository;
+using Barrway.Service.Repository;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hosting;
 using System;
@@ -11,25 +13,35 @@ namespace Barrway.WebSocket
 {
     public class QueueManager : Hub
     {
-        private readonly IMasterService masterService;
-        private readonly IFormAPIRepository formAPIRepository;
-        private readonly ISqlFunction sqlFunction;
-        private readonly IBusinessUserService businessUserService;
-        private readonly IAuthService authService;
-
-        // GET: Calendar
-        public QueueManager(IMasterService masterService, IFormAPIRepository formAPIRepository, ISqlFunction sqlFunction, IBusinessUserService businessUserService, IAuthService authService)
-        {
-            this.masterService = masterService;
-            this.formAPIRepository = formAPIRepository;
-            this.sqlFunction = sqlFunction;
-            this.businessUserService = businessUserService;
-            this.authService = authService;
-        }
+        private readonly QueueService queueService = new QueueService(new SqlFunction());
 
         public void Send(string name, string message)
         {
             Clients.All.addNewMessageToPage(name, message);
+        }
+
+        public async Task<AddUpdateDelete> getSessionList(string CalendarCode, string CompanyCode)
+        {
+            try
+            {
+                var result = await queueService.getSessionList(CalendarCode, CompanyCode);
+
+                if (result.Status)
+                {
+                    Clients.Client(Context.ConnectionId).updateSessions(result);
+                }
+                else
+                {
+                    Clients.Client(Context.ConnectionId).showErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to fetch sessions."});
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                Clients.Client(Context.ConnectionId).showErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to fetch sessions." });
+            }
+
+            return null;
         }
 
 
