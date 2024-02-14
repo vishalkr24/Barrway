@@ -30,14 +30,16 @@ namespace Barrway.Controllers
         private readonly ISignupService signupService;
         private readonly IBusinessUserService businessUserService;
         private readonly IPublicUserService publicUserService;
+        private readonly IMessageRepository MessageRepository;
 
-        public AccountController(IAuthService authService, ISqlFunction sqlFunction, ISignupService signupService, IBusinessUserService businessUserService, IPublicUserService publicUserService)
+        public AccountController(IAuthService authService, ISqlFunction sqlFunction, ISignupService signupService, IBusinessUserService businessUserService, IPublicUserService publicUserService, IMessageRepository MessageRepository)
         {
             this.authService = authService;
             this.sqlFunction = sqlFunction;
             this.signupService = signupService;
             this.businessUserService = businessUserService;
             this.publicUserService = publicUserService;
+            this.MessageRepository = MessageRepository;
         }
 
         // GET: Account
@@ -71,6 +73,40 @@ namespace Barrway.Controllers
             }
             return View(new LoginViewModel { ReturnUrl = returnUrl });
         }
+
+
+        [AllowAnonymous]
+        [HttpGet]
+        [OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.None)]
+        public async Task<ActionResult> BusinessPhoenLogin(string returnUrl = null)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = await authService.GetUser(User.Identity.Name, FormRole.GENERAL_USER);
+                if (user.Status)
+                {
+                    Redirect("/UserAdmin#/userdashboard");
+                    //return RedirectToAction("Dashboard", "BusinessAdmin");
+                }
+                else
+                {
+                    Session.Clear();
+                    Session.RemoveAll();
+                    Session.Abandon();
+                    TempData.Clear();
+                    if (HttpContext != null)
+                    {
+                        HttpContext.Request.Cookies.Clear();
+                    }
+
+                    HttpContext.GetOwinContext().Authentication.SignOut();
+                    return RedirectToAction("BusinessLogin");
+                }
+            }
+            return View(new PhoneLoginViewModel { ReturnUrl = returnUrl });
+        }
+
+
 
         [AllowAnonymous]
         [HttpGet]
@@ -214,6 +250,54 @@ namespace Barrway.Controllers
             return View(model);
         }
 
+
+        [AllowAnonymous]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> BusinessPhoneLogin(PhoneLoginViewModel model, string returnUrl = null)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var loginresult = await authService.GetUserbyPhone("+"+model.countryCode + model.USER_PHONE, model.USER_PASSWORD, (int)FormRole.GENERAL_USER, true);
+
+            if (loginresult.Status)
+            {
+                var user = loginresult.Data;
+
+                //var assignedData = JsonConvert.DeserializeObject<Dictionary<string, object>>(loginresult.Data["AssignedData"].ToString());
+
+                var claims = new ClaimsIdentity(new[] {
+                                                    new Claim(ClaimTypes.NameIdentifier,user["USER_ID"].ToString()),
+                                                    new Claim(ClaimTypes.Name,user["USER_ID"].ToString()),
+                                                    new Claim(ClaimTypes.Email, user["USER_EMAIL"].ToString()),
+                                                    new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
+                                                    new Claim(ClaimTypes.Sid, user["Id"].ToString()),
+                                                    //new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
+                                                    }, CookieAuthenticationDefaults.AuthenticationType);
+
+
+                HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = model.REMEMBER_ME }, claims);
+                if (!string.IsNullOrEmpty(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
+                return Redirect("/UserAdmin#/userdashboard");
+                //return RedirectToAction("Dashboard", "BusinessAdmin");
+            }
+            else
+            {
+                ModelState.AddModelError("ERROR_MESSAGE", loginresult.Message);
+            }
+
+            return View(model);
+        }
+
+
+
+
         [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> CheckPublicUserLogin()
@@ -261,6 +345,9 @@ namespace Barrway.Controllers
             }
             return View(new EmailSignUpViewModel() { IS_EXTERNAL_SIGNUP = false });
         }
+
+
+        
 
         //[AllowAnonymous]
         //[HttpGet]
@@ -408,6 +495,245 @@ namespace Barrway.Controllers
 
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        [OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.None)]
+        public async Task<ActionResult> BusinessSignUpPhone()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = await authService.GetUser(User.Identity.Name, FormRole.GENERAL_USER);
+                if (user.Status)
+                {
+                    return RedirectToAction("Dashboard", "UserAdmin");
+                }
+                else
+                {
+                    Logout();
+                }
+
+
+            }
+            return View(new PhoenSignUpViewModel() { IS_EXTERNAL_SIGNUP = false });
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> BusinessSignUpPhone(PhoenSignUpViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (!model.TERMS_ACCEPTED)
+            {
+                ModelState.AddModelError("TERMS_ACCEPTED", "Please check our terms & conditions.");
+                return View(model);
+            }
+
+            var userByEmail = await authService.GetUserByPhone("+" + model.CountryCode + model.USER_PHONE, (int)FormRole.GENERAL_USER);
+            var userByID = await authService.GetUser(model.USER_NAME, FormRole.GENERAL_USER);
+
+            string generalRoleId = ((int)FormRole.GENERAL_USER).ToString();
+
+            if (!userByEmail.Status && !userByID.Status)
+            {
+                // Insert Data in User Master
+
+                UserMaserModel userMaserModel = new UserMaserModel()
+                {
+                    USER_EMAIL = "",
+                    IS_ACTIVE = (model.IS_EXTERNAL_SIGNUP) ? "Y" : "N",
+                    IS_EMAIL_VERIFIED = (model.IS_EXTERNAL_SIGNUP) ? "Y" : "N",
+                    IS_PHONE_VERIFIED = "N",
+                    IS_EXTERNAL_SIGNUP = (model.IS_EXTERNAL_SIGNUP) ? "Y" : "N",
+                    PROFILE_STATUS = "PENDING",
+                    SIGNUP_TYPE = (model.IS_EXTERNAL_SIGNUP) ? "GOOGLE" : "EMAIL",
+                    USER_PHONE = "+" + model.CountryCode + model.USER_PHONE,
+                    USER_PASSWORD = model.USER_PASSWORD,
+                    USER_ID = model.USER_NAME,
+                    ROLE_ID = generalRoleId,
+                    COMPANY_PROFILE_STATUS = "N",
+                    COMPANY_CALENDAR_STATUS = "N",
+                    CURRENT_STEP = "COMPANY PROFILE"
+                };
+
+                AddUpdateDelete result = await signupService.RegisterUser(userMaserModel.ToDictionary());
+
+                // Business Account Creation START
+
+                //BusinessAccountWebsiteModel businessModel = new BusinessAccountWebsiteModel()
+                //{
+                //    USER_ID = model.USER_NAME,
+                //    COMPANY_PROFILE_STATUS = "N",
+                //    COMPANY_CALENDAR_STATUS = "N",
+                //    CURRENT_STEP = (model.IS_EXTERNAL_SIGNUP) ? "COMPANY PROFILE" : "REGISTRATION"
+                //};
+
+                PublicAccountModel businessModel = new PublicAccountModel()
+                {
+                    USER_ID = model.USER_NAME,
+                    CURRENT_STEP = "PENDING"
+                };
+
+                AddUpdateDelete publicResult = await publicUserService.CreatePublicUserAccount(businessModel);
+
+                // Send Activation Link
+                if (!model.IS_EXTERNAL_SIGNUP && publicResult.Status)
+                {
+                    var Result = MessageRepository.SendOtpSmS("+"+model.CountryCode + model.USER_PHONE);
+
+                    if (result.Status)
+                    {
+                       
+                        Session["VarificationMobileNUmber"] = "+" + model.CountryCode+ model.USER_PHONE;
+                        TempData["VERIFICATION"] = "Pending";
+                        TempData["VERIFICATION_Phone"] = "+" + model.CountryCode + model.USER_PHONE;
+                        TempData["MobileVerificationSuccessMessage"] = "an Otp message has been sent to your registered mobile number !";
+                        return RedirectToAction("MobileVerification", "Account");
+
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("USER_NAME", result.Message);
+                        return View(model);
+                    }
+                }
+                else
+                {
+
+                    var result2 = await authService.GetUserByPhone(model.USER_PHONE, 1);
+                    if (result2.Status)
+                    {
+                        var user = result2.Data;
+                        var claims = new ClaimsIdentity(new[] {
+                                                    new Claim(ClaimTypes.NameIdentifier,user["USER_ID"].ToString()),
+                                                    new Claim(ClaimTypes.Name,user["USER_ID"].ToString()),
+                                                    new Claim(ClaimTypes.MobilePhone, user["USER_PHONE"].ToString()),
+                                                    new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
+                                                    new Claim(ClaimTypes.Sid, user["Id"].ToString()),
+                                                    //new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
+                                                    }, CookieAuthenticationDefaults.AuthenticationType);
+
+                        HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = false }, claims);
+
+                        return RedirectToAction("Dashboard", "BusinessAdmin");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("USER_NAME", "Unable to register this user.");
+                        return View(model);
+                    }
+                }
+
+
+            }
+            else
+            {
+                if (userByEmail.Status)
+                {
+                    ModelState.AddModelError("USER_PHONE", "Email already registered");
+                }
+
+                if (userByID.Status)
+                {
+                    ModelState.AddModelError("USER_PHONE", "User name is already taken");
+                }
+
+                return View(model);
+            }
+
+        }
+
+
+
+
+
+
+
+        [AllowAnonymous]
+        
+        public async Task<ActionResult> MobileVerification()
+        {
+            return View();
+
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> MobileVerification(PhoneOtp model)
+        {
+            try
+            {
+                
+                string MObileNumber = Session["VarificationMobileNUmber"].ToString();
+
+                if(MObileNumber != "")
+                {
+                    var Result = MessageRepository.VarifyOtp(MObileNumber, model.OTP);
+                    if (Result.Status == true)
+                    {
+
+                        var UserDetails=await authService.GetUserByPhone(MObileNumber);
+
+                        var _result = await authService.ChangePhoneVarificationStatus(MObileNumber);
+
+
+                        TempData["MobileVerificationSuccessMessage"] = "Mobile verification completed successfully !";
+                        return RedirectToAction("BusinessLogin", "Account");
+                    }
+                    else
+                    {
+                        TempData["MobileVerificationErroMessage"] = "invalid OTP !";
+                    }
+                }
+
+                
+
+
+            }
+            catch (Exception ex)
+            {
+                return View(model);
+            }
+            return View(model);
+        }
+
+
+
+        [AllowAnonymous]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ResendVerificationOTP()
+        {
+            try
+            {
+
+                string MobileNumber = Session["VarificationMobileNUmber"].ToString();
+                if(MobileNumber != "")
+                {
+                    var Result = MessageRepository.SendOtpSmS(MobileNumber);
+                    TempData["MobileVerificationSuccessMessage"] = "new OTP has been sent !";
+                }
+                return RedirectToAction("MobileVerification", "Account");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.VerificationEmail = TempData.Peek("VERIFICATION_Phone");
+            }
+
+            return RedirectToAction("MobileVerification", "Account");
+
+        }
+
+
+
+
+
         //[AllowAnonymous]
         //[HttpPost]
         //[ValidateAntiForgeryToken]
@@ -548,6 +874,9 @@ namespace Barrway.Controllers
             return View();
 
         }
+
+       
+
 
         [HttpPost]
         public ActionResult LogoutSuperAdmin()

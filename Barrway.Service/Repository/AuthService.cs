@@ -164,6 +164,87 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
 
         }
 
+
+
+        public async Task<AddUpdateDelete<IDictionary<string, object>>> GetUserbyPhone(string Phone, string password, int RoleId, bool isToken = false)
+        {
+            try
+            {
+                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
+join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                                     where user_m.USER_PHONE = '{Phone}'";
+
+                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+                if (result.Count() > 0)
+                {
+                    var user = result.FirstOrDefault();
+                    if (string.IsNullOrEmpty(user["USER_PASSWORD"]?.ToString()) || user["USER_PASSWORD"].ToString() != password)
+                    {
+                        return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Invalid Password" };
+                    }
+
+                    if (!(user["IS_PHONE_VERIFIED"]?.ToString() == "Y"))
+                    {
+                        return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Phone not verified, please contact support team." };
+                    }
+
+                    if (user["IS_ACTIVE"]?.ToString() == "Y")
+                    {
+
+                        if (isToken)
+                        {
+                            return new AddUpdateDelete<IDictionary<string, object>>() { Status = true, Message = "Success", Data = user };
+                        }
+
+                        if (RoleId == 1)
+                        {
+                            if (user["ROLE_NAME"].ToString().ToUpper() == "BUSINESS_USER")
+                            {
+                                return new AddUpdateDelete<IDictionary<string, object>>() { Status = true, Message = "Success", Data = user };
+                            }
+                            else
+                            {
+                                return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Access denied!!" };
+                            }
+                        }
+                        else if (RoleId == 2)
+                        {
+                            if (user["ROLE_NAME"].ToString().ToUpper() == "PUBLIC_USER")
+                            {
+                                return new AddUpdateDelete<IDictionary<string, object>>() { Status = true, Message = "Success", Data = user };
+                            }
+                            else
+                            {
+                                return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Access denied!!" };
+                            }
+                        }
+                        else
+                        {
+                            return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Something went wrong!!" };
+                        }
+
+
+                    }
+                    else
+                    {
+                        return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Account is deactive, please contact support team." };
+                    }
+
+                }
+                else
+                {
+                    return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Invalid Email" };
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = ex.Message };
+            }
+
+        }
+
+
         //public async Task<AddUpdateDelete<IDictionary<string, object>>> ValidateSuperAdminUser(string email, string password, bool isToken = false)
         //{
         //    try
@@ -457,13 +538,56 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
             }
         }
 
+
+        public async Task<AddUpdateDelete> GetUserByPhone(string phone, int Role_Id)
+        {
+            try
+            {
+                string sqlQuery = $@"";
+
+                if (Role_Id == 1)
+                {
+                    sqlQuery = $@"select
+									(select case when (count(abc.Id) = 0) then 'ADMIN' else 'SUPERUSER' end from BUSINESS_ASSIGNED_USERS_1964 abc where abc.ASSIGNED_USER = user_m.Id and abc.ROLE_TYPE = 'SUPERUSER') as 'ROLE_TYPE'
+									, baw.Id as 'BUSINESS_ACCOUNT_ID',user_m.Id,user_m.formId,user_m.formGroupKey,user_m.[created_at],user_m.[updated_at],user_m.[created_by],user_m.[updated_by],[USER_EMAIL],[USER_PHONE],user_m.[USER_ID],[SIGNUP_TYPE],[IS_ACTIVE],[IS_EMAIL_VERIFIED],
+                                    [IS_PHONE_VERIFIED],[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS],[USER_PASSWORD] 
+                                    from USER_MASTER_1915 user_m
+                                    join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.USER_ID = user_m.USER_ID
+                                    join BUSINESS_ASSIGNED_USERS_1964 bau on bau.BUSINESS_ACCOUNT_ID = baw.Id
+                                    join ROLE_MASTER_1917 user_role on user_role.Id = user_m.ROLE_ID
+                                    where user_m.USER_PHONE = '{phone}' and user_m.ROLE_ID = '{Role_Id.ToString()}' and bau.ASSIGNED_USER = user_m.Id";
+                }
+                else
+                {
+                    sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
+join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                                    where user_m.USER_PHONE = '{phone}' and user_m.ROLE_ID = '{Role_Id.ToString()}'";
+                }
+
+                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+                if (result.Count() > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
         public async Task<AddUpdateDelete> GetUserByPhone(string phone)
         {
             try
             {
                 string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
-join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
-                                    where user_m.USER_PHONE = '{phone}' and bau.ASSIGNED_USER = user_m.Id";
+                        join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                                                            where user_m.USER_PHONE = '{phone}'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
@@ -514,6 +638,33 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
                 {
                     return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
                 }
+            }
+            catch (Exception ex)
+            {
+
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
+            }
+
+        }
+
+
+        public async Task<AddUpdateDelete> ChangePhoneVarificationStatus(string userID)
+        {
+            try
+            {
+                
+                   string sqlString = $@" update USER_MASTER_1915 set IS_ACTIVE='Y',IS_PHONE_VERIFIED='Y' where USER_PHONE='{userID}'";
+                    var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
+                    if (result > 0)
+                    {
+
+                        return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                    }
+                    else
+                    {
+                        return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                    }
+                
             }
             catch (Exception ex)
             {

@@ -24,4 +24,24 @@ namespace Barrway.Models
 
     }
 
+    public class PhoneLoginViewModel
+    {
+        [Required(ErrorMessage = "Please Enter Email!!")]
+        public string USER_PHONE { get; set; }
+
+        [Required(ErrorMessage = "please enter Country code !")]
+        public string countryCode { get; set; }
+
+
+        [Required(ErrorMessage = "Please Enter Password!!")]
+        public string USER_PASSWORD { get; set; }
+        public bool REMEMBER_ME { get; set; }
+
+        public string ERROR_MESSAGE { get; set; }
+
+        public string ReturnUrl { get; set; }
+
+
+    }
+
 }

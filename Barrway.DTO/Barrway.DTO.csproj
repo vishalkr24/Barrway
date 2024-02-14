@@ -71,6 +71,7 @@
     <Compile Include="AuthViewModel\BusinessExternalEmailLogiViewModel.cs" />
     <Compile Include="AuthViewModel\BarrwayViewModel.cs" />
     <Compile Include="AuthViewModel\GoogleLoginViewModel.cs" />
+    <Compile Include="AuthViewModel\PhoenSignUpViewModel.cs" />
     <Compile Include="AuthViewModel\UserToken.cs" />
     <Compile Include="BusinessModels\CalendaLocationMasterModel.cs" />
     <Compile Include="BusinessModels\StaffServiceMappingModel.cs" />
