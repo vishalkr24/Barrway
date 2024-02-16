@@ -281,16 +281,19 @@ namespace Barrway.Controllers
             {
                 var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
                 AddUpdateDelete calendarData = await businessUserService.GetMarcketPlaceCompanyCalendarByCompanyId(companyData.Data["Id"].ToString());
+                var servilces=await businessUserService.GetServiceList(CalendarCode, CompanyCode);
                 //var serviceData = await globalMasterService.GetCompanyCategoryMaster();
                 if (calendarData.Status)
                 {
                     var data = JsonConvert.SerializeObject(companyData.Data);
                     var calendarEncrypted = JsonConvert.SerializeObject(calendarData.Data);
+                    var servilcesEncrypted = JsonConvert.SerializeObject(servilces.Data);
                     //var serviceEncrypted = JsonConvert.SerializeObject(serviceData.Data);
 
                     MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
                     companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
                     companyModel.calendars = JsonConvert.DeserializeObject<List<BusinessCalendarModel>>(calendarEncrypted);
+                    companyModel.ServicesList = JsonConvert.DeserializeObject<List<ServicesList>>(servilcesEncrypted);
                     //companyModel.services = JsonConvert.DeserializeObject<List<BusinessCompanyCategoryModel>>(serviceEncrypted);
 
                     ViewBag.IsUserFavorite = false;
@@ -368,6 +371,13 @@ namespace Barrway.Controllers
         public async Task<ActionResult> GetCalendarDetails(string id)
         {
             return Json(await businessUserService.GetCalendarDetails(id));
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> GetServiceList(string CompanyCode,string CalanderCode)
+        {
+            return Json(await businessUserService.GetServiceList(CalanderCode,CompanyCode));
         }
 
         public async Task<ActionResult> GetSingleBlogPost(string NewsId)

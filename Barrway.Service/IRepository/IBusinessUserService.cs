@@ -119,5 +119,6 @@ namespace Barrway.Service.IRepository
 
         Task<AddUpdateDelete> GetCalendarDetails(string calendarCode, string UserId = null);
 
+        Task<AddUpdateDelete> GetServiceList(string calendarCode, string CompanyCode);
     }
 }

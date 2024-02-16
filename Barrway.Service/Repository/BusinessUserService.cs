@@ -2799,5 +2799,29 @@ namespace Barrway.Service.Repository
 
         }
 
+
+        public async Task<AddUpdateDelete> GetServiceList(string calendarCode, string CompanyCode)
+        {
+            try
+            {
+                  string sqlString = $@"select COMPANY_CODE,CALENDAR_CODE,ACTIVITY_CODE,ACTIVITY_NAME,PHOTO,CATEGORY,SUB_CATEGORY,START_DATETIME,END_DATETIME from SERVICE_MASTER_1933  where CALENDAR_CODE='{calendarCode}' AND COMPANY_CODE='{CompanyCode}'";
+                
+
+                var result = (await sqlFunction.ExecuteSqlQuery(sqlString)).ToList();
+                if (result != null)
+                {
+                    
+                    return new AddUpdateDelete() { Data = result, Message = AppMessage.Success, Status = true };
+
+                }
+
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+
+        }
     }
 }

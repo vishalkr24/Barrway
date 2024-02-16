@@ -396,20 +396,23 @@
         }
 
         .fc-bgevent {
-            background: rgba(34, 34, 34, 0.3)!important;
+            background: rgba(34, 34, 34, 0.3) !important;
             opacity: 0.7 !important;
             border: none;
         }
+
         .available-fc-bgevent {
             background: #ffffff !important;
             opacity: 0.7 !important;
             border: 2px solid #385884 !important;
         }
+
         .booking-fc-bgevent {
             background: rgba(34, 34, 34, 0.3) !important;
             opacity: 1 !important;
-            border: none!important;
+            border: none !important;
         }
+
         .tooltip {
             z-index: 100000000;
         }
@@ -597,187 +600,143 @@
                 color: #ddd;
             }
 
+        .rating__input {
+            display: none;
+        }
+
+        .owl-nav {
+            padding: 0px;
+        }
+
+        .owl-carousel .owl-nav button.owl-prev {
+            margin: -17px 0px 10px;
+            border-color: #3fbfc7 !important;
+            /* border-color: 1px solid #3fbfc7 !important;*/
+        }
+
+        .owl-carousel .owl-nav button.owl-next {
+            margin: -17px -5px 10px;
+            border-color: #3fbfc7 !important;
+        }
     </style>
 }
 
+<!-- sliders compnay -->
+<section class="subcatageory" id="logo" style="margin-top: 0px !important;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="my-slide featured-company">
+                    <div class="heading-cata">
+                        <h3 style="color:#1a1919;"><h2>@Model.COMPANY_NAME_ENGLISH (@Model.COMPANY_NAME_CHINESE)</h2></h3>
+                    </div>
+                    <div id="owl-demo5" class="owl-carousel owl-theme">
+
+                        @foreach (var item in Model.ServicesList)
+                        {
+                            
+                                <div class="item" style="margin-right: 20px; border: 1px solid #3fbfc7; border-radius: 10px; padding: 10px 13px 10px; min-width: 188px;">
+                                    <div class="item-inner">                                        
+                                        <div class="pro-text">
+                                            <p class="f1"><b>@item.ACTIVITY_NAME</b></p>
+                                            <div id="full-stars-example">
+                                                <div class="rating-group">
+                                                    <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <input class="rating__input" name="rating" id="rating-1" value="1" type="radio">
+                                                    <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <input class="rating__input" name="rating" id="rating-2" value="2" type="radio">
+                                                    <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <input class="rating__input" name="rating" id="rating-3" value="3" type="radio" checked="">
+                                                    <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <input class="rating__input" name="rating" id="rating-4" value="4" type="radio">
+                                                    <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <input class="rating__input" name="rating" id="rating-5" value="5" type="radio">
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+
+
+                        }
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
 <section class="mihi-71" ng-app="myApp" ng-controller="myCtrl">
     <div class="container">
-        <section class="" id="logo">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="my-slide featured-company">
-                            <div class="heading-cata">
-                                <h3 style="color:#1a1919;">Featured Company</h3>
-                            </div>
-                            <div id="owl-demo5" class="owl-carousel owl-theme owl-loaded owl-drag">
-                                <div class="owl-stage-outer">
-                                    <div class="owl-stage" style="transform: translate3d(-1159px, 0px, 0px); transition: all 0s ease 0s; width: 4060px;">
-                                        <div class="owl-item" style="width: 314.333px !important; margin-right: 20px; border: 1px solid #3fbfc7; border-radius: 10px; padding: 10px 13px 10px; ">
-                                            <div class="item">
-                                                <div class="item-inner">
-                                                    <div class="pro-text">
-                                                        <p class="f1"><b>Company Name 1</b></p>
-                                                    </div>
-                                                    <div id="full-stars-example">
-                                                        <div class="rating-group">
-                                                            <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-1" value="1" type="radio">
-                                                            <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-2" value="2" type="radio">
-                                                            <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-3" value="3" type="radio" checked="">
-                                                            <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-4" value="4" type="radio">
-                                                            <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-5" value="5" type="radio">
+        @*<section class="" id="logo">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="my-slide featured-company">
+                                <div class="heading-cata">
+                                    <h3 style="color:#1a1919;"><h2>@Model.COMPANY_NAME_ENGLISH (@Model.COMPANY_NAME_CHINESE)</h2></h3>
+                                </div>
+                                <div id="owl-demo5" class="owl-carousel owl-theme owl-loaded owl-drag">
+                                    <div class="owl-stage-outer">
+                                        <div class="owl-stage" id="Servises_Owl" style="transform: translate3d(-1159px, 0px, 0px); transition: all 0s ease 0s; width: 4060px;">
+
+                                            @foreach (var item in Model.ServicesList)
+                                            {
+                                                <div class="owl-item" style="width: 314.333px !important; margin-right: 20px; border: 1px solid #3fbfc7; border-radius: 10px; padding: 10px 13px 10px; ">
+                                                    <div class="item">
+                                                        <div class="item-inner">
+                                                            <div class="pro-text">
+                                                                <p class="f1"><b>@item.ACTIVITY_NAME</b></p>
+                                                            </div>
+                                                            <div id="full-stars-example">
+                                                                <div class="rating-group">
+                                                                    <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                                    <input class="rating__input" name="rating" id="rating-1" value="1" type="radio">
+                                                                    <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                                    <input class="rating__input" name="rating" id="rating-2" value="2" type="radio">
+                                                                    <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                                    <input class="rating__input" name="rating" id="rating-3" value="3" type="radio" checked="">
+                                                                    <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                                    <input class="rating__input" name="rating" id="rating-4" value="4" type="radio">
+                                                                    <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                                    <input class="rating__input" name="rating" id="rating-5" value="5" type="radio">
+                                                                </div>
+
+                                                            </div>
                                                         </div>
-
                                                     </div>
+
                                                 </div>
-                                            </div>
+                                            }
 
-                                        </div>
-                                        <div class="owl-item" style="width: 314.333px !important; margin-right: 20px; border: 1px solid #3fbfc7; border-radius: 10px; padding: 10px 13px 10px; ">
-                                            <div class="item">
-                                                <div class="item-inner">
-                                                    <div class="pro-text">
-                                                        <p class="f1"><b>Company Name 2</b></p>
-                                                        
-                                                    </div>
-                                                    <div id="full-stars-example">
-                                                        <div class="rating-group">
-                                                            <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-1" value="1" type="radio">
-                                                            <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-2" value="2" type="radio">
-                                                            <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-3" value="3" type="radio" checked="">
-                                                            <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-4" value="4" type="radio">
-                                                            <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-5" value="5" type="radio">
-                                                        </div>
 
-                                                    </div>
-                                                </div>
-                                            </div>
 
-                                        </div>
-                                        <div class="owl-item" style="width: 314.333px !important; margin-right: 20px; border: 1px solid #3fbfc7; border-radius: 10px; padding: 10px 13px 10px; ">
-                                            <div class="item">
-                                                <div class="item-inner">
-                                                    <div class="pro-text">
-                                                        <p class="f1"><b>Company Name 3</b></p>
-                                                        
-                                                    </div>
-                                                    <div id="full-stars-example">
-                                                        <div class="rating-group">
-                                                            <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-1" value="1" type="radio">
-                                                            <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-2" value="2" type="radio">
-                                                            <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-3" value="3" type="radio" checked="">
-                                                            <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-4" value="4" type="radio">
-                                                            <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-5" value="5" type="radio">
-                                                        </div>
 
-                                                    </div>
-                                                </div>
-                                            </div>
 
-                                        </div>
-
-                                        <div class="owl-item" style="width: 314.333px !important; margin-right: 20px; border: 1px solid #3fbfc7; border-radius: 10px; padding: 10px 13px 10px; ">
-                                            <div class="item">
-                                                <div class="item-inner">
-                                                    <div class="pro-text">
-                                                        <p class="f1"><b>Company Name 4</b></p>
-                                                        
-                                                    </div>
-                                                    <div id="full-stars-example">
-                                                        <div class="rating-group">
-                                                            <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-1" value="1" type="radio">
-                                                            <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-2" value="2" type="radio">
-                                                            <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-3" value="3" type="radio" checked="">
-                                                            <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-4" value="4" type="radio">
-                                                            <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-5" value="5" type="radio">
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-
-                                        <div class="owl-item" style="width: 314.333px !important; margin-right: 20px; border: 1px solid #3fbfc7; border-radius: 10px; padding: 10px 13px 10px; ">
-                                            <div class="item">
-                                                <div class="item-inner">
-                                                    <div class="pro-text">
-                                                        <p class="f1"><b>Company Name 5</b></p>
-                                                       
-                                                    </div>
-                                                    <div id="full-stars-example">
-                                                        <div class="rating-group">
-                                                            <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-1" value="1" type="radio">
-                                                            <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-2" value="2" type="radio">
-                                                            <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-3" value="3" type="radio" checked="">
-                                                            <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-4" value="4" type="radio">
-                                                            <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-5" value="5" type="radio">
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <div class="owl-item" style="width: 314.333px !important; margin-right: 20px; border: 1px solid #3fbfc7; border-radius: 10px; padding: 10px 13px 10px; ">
-                                            <div class="item">
-                                                <div class="item-inner">
-                                                    <div class="pro-text">
-                                                        <p class="f1"><b>Company Name 6</b></p>
-                                                    </div>
-                                                    <div id="full-stars-example">
-                                                        <div class="rating-group">
-                                                            <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-1" value="1" type="radio">
-                                                            <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-2" value="2" type="radio">
-                                                            <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-3" value="3" type="radio" checked="">
-                                                            <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-4" value="4" type="radio">
-                                                            <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                            <input class="rating__input" name="rating" id="rating-5" value="5" type="radio">
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </div>
 
                                         </div>
                                     </div>
-                                </div><div class="owl-nav"><button type="button" role="presentation" class="owl-prev" style=" margin: -14px -8px 10px !important; "><span aria-label="Previous">‹</span></button>
-                                <button type="button" role="presentation" class="owl-next" style=" margin: -14px -8px 10px !important; "><span aria-label="Next">›</span></button></div><div class="owl-dots disabled"></div>
+                                    <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><span aria-label="Previous">‹</span></button><button type="button" role="presentation" class="owl-next"><span aria-label="Next">›</span></button></div>
+
+                                    <div class="owl-dots disabled">
+
+                                    </div>
+                                </div>
+
+
+
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>*@
 
         <div class="row">
             <div class="col-md-12">
@@ -810,6 +769,29 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-md-3">
+                            <div class="schedule-drop">
+                                <div class="form-group">
+                                    <label for="service">@Resource.Service_Provider_Master</label>
+
+                                    <select class="form-control" id="calendar-service-Provider">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="schedule-drop">
+                                <div class="form-group">
+                                    <label for="service">@Resource.Location_Master</label>
+
+                                    <select class="form-control" id="calendar-service-Location">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="col-md-6">
                             <div class="favr">
                                 @if (!ViewBag.IsUserFavorite)
@@ -1019,7 +1001,7 @@
 
 
 @section scripts{
-    
+
     <script src="~/Scripts/MarketplaceScripts/CompanySchedule.js?@DateTime.Now.ToString("yyyyMmddHHMMssffff")"></script>
 
     <script>
@@ -1049,7 +1031,7 @@
                     success: function (response) {
                         hideLoader();
                         if (!response.Status) {
-                            
+
                             swal({
                                 title: "Login Required",
                                 text: "Kindly login into your account and then you can enroll yourself into this calendar.",
@@ -1077,19 +1059,19 @@
                                 success: function (response) {
                                     if (response.Status) {
                                         // code to call the service
-                                        
+
                                         debugger;
                                         const wrapper = document.createElement('div');
                                         wrapper.innerHTML = `<div>
-                                                                ${eventData.customDate}
-                                                            </div>
-                                                            <div>
-                                                                ${eventData.customTime}
-                                                            </div>
-                                                            <div>${eventData.customTitleSplit[2]}</div><br />
-                                                            <div>${eventData.customTitleSplit[1]}</div>
-                                                            <div>${eventData.customTitleSplit[0]}</div><br />
-                                                            <h4 style="color:red">${response.Message}</h4>`;
+                                                                            ${eventData.customDate}
+                                                                        </div>
+                                                                        <div>
+                                                                            ${eventData.customTime}
+                                                                        </div>
+                                                                        <div>${eventData.customTitleSplit[2]}</div><br />
+                                                                        <div>${eventData.customTitleSplit[1]}</div>
+                                                                        <div>${eventData.customTitleSplit[0]}</div><br />
+                                                                        <h4 style="color:red">${response.Message}</h4>`;
 
                                         swal({
                                             title: "You are going to book",
@@ -1188,10 +1170,10 @@
                                 }
                             })
 
-                            
 
 
-                            
+
+
 
                         }
 
@@ -1205,7 +1187,7 @@
             }
 
 
-            
+
         });
 
 
@@ -1255,8 +1237,8 @@
                                     }).then(function (boolValue) {
                                         window.location.reload();
                                     });
-                                    
-                                    
+
+
                                 } else {
                                     swal({
                                         title: "Mark Failed!",
@@ -1322,8 +1304,8 @@
                                     }).then(function (boolValue) {
                                         window.location.reload();
                                     });
-                                    
-                                    
+
+
                                 } else {
                                     swal({
                                         title: "Unmark Failed!",
@@ -1332,8 +1314,8 @@
                                         button: "Okay"
                                     });
                                 }
-                                
-                                
+
+
 
                             }
 
@@ -1348,5 +1330,5 @@
         }
 
     </script>
-    
+
 }

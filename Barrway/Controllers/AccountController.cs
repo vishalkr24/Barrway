@@ -78,7 +78,7 @@ namespace Barrway.Controllers
         [AllowAnonymous]
         [HttpGet]
         [OutputCache(NoStore = true, Location = System.Web.UI.OutputCacheLocation.None)]
-        public async Task<ActionResult> BusinessPhoenLogin(string returnUrl = null)
+        public async Task<ActionResult> BusinessPhoneLogin(string returnUrl = null)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -289,7 +289,7 @@ namespace Barrway.Controllers
             }
             else
             {
-                ModelState.AddModelError("ERROR_MESSAGE", loginresult.Message);
+                ModelState.AddModelError("ERROR_MESSAGE", "Invalied Phone number !");
             }
 
             return View(model);

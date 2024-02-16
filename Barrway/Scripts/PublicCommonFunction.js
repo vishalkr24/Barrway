@@ -16,6 +16,53 @@
     return data;
 }
 
+function getServiceProviderData(companyCode, calendarCode) {
+    var data;
+    $.ajax({
+        url: "/Calendar/GetServiceProviderMasterList/",
+        async: false,
+        type: "POST",
+        data: {
+            data: {},
+            companyCode: companyCode,
+            calendarCode: calendarCode
+        },
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    });
+    return data;
+}
+
+function getServiceProviderDataByCalendar(companyCode, calendarCode) {
+    var data;
+    $.ajax({
+        url: "/Calendar/GetServiceProviderMasterList/",
+        async: false,
+        type: "POST",
+        data: {
+            data: {
+                filters: [{
+                    field: "CALENDAR_CODE",
+                    type: "=",
+                    value: calendarCode
+                }]
+            },
+            companyCode: companyCode
+        },
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    });
+    return data;
+}
+
 function getCompanyWebsitePalette() {
     var data;
     $.ajax({

@@ -3281,7 +3281,7 @@
     <Content Include="Views\MarketPlace\Pricing.cshtml" />
     <Content Include="Views\Account\BusinessSignUpPhone.cshtml" />
     <Content Include="Views\Account\MobileVerification.cshtml" />
-    <Content Include="Views\Account\BusinessPhoenLogin.cshtml" />
+    <Content Include="Views\Account\BusinessPhoneLogin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
