@@ -420,7 +420,7 @@
             text-align: center;
         }
 
-        .pink{
+        .pink {
             color: #E2476C;
         }
 
@@ -586,7 +586,7 @@
             float: left;
             background-color: #ffff;
             box-shadow: 0px 2px 4px 0px #00000040;
-            padding: 15px 8px;
+            padding: 15px 0px;
             border-radius: 4px;
             overflow: hidden;
             position: relative;
@@ -745,9 +745,50 @@
             float: left;
         }
     </style>
+    <style>
+        .queue-area {
+            display: flex;
+            max-width: 100%;
+            overflow: hidden;
+            overflow-x: auto;
+        }
+
+            .queue-area .queue-list-area {
+                width: fit-content;
+                min-width: 250px;
+            }
+
+                .queue-area .queue-list-area.same-row {
+                    width: fit-content;
+                    display: flex;
+                    align-content: flex-start;
+                    align-items: flex-start;
+                    justify-content: flex-start;
+                    min-width: 250px;
+                }
+
+        .queue-list-area .queue-element {
+            min-width: 235px;
+            margin: 0px 16px;
+        }
+
+        .hr {
+            background: lightgrey;
+            height: 1px;
+            width: 100%;
+            margin: 3rem 0px;
+            margin-top:0px;
+        }
+
+        .current-ticket-number {
+            font-size: 38px;
+            font-weight: bold;
+            margin-bottom: 2rem;
+        }
+    </style>
 }
 
-<section class="schedule mihi-71" style="background: #ECFAFB; margin-top:4px;" ng-app="myApp" ng-controller="myCtrl">
+<section class="schedule mihi-71" style="background: #ECFAFB; margin-top:4px;" ng-app="myApp" ng-controller="myCtrl" id="quequeDiv">
     <div class="container-fluid">
         <div class="container-fluid">
             <div class="row">
@@ -781,8 +822,34 @@
             <div id="queue_view">
                 <div class="row" style="margin-top: 3rem;">
                     <div class="col-md-12">
-                        <div class="row" id="queue-external-area">
-                            
+                        <div class="queue-area" id="queue-area">
+                            <div class="queue-list-area same-row" style="flex-flow: row wrap;" id="queue-external-area">
+                                <div class="queue-element" ng-repeat="queue in queueList" ng-if="queue.QUEUE_USAGE == 'TICKET'" data-queue-id="{{queue.Id}}">
+
+                                    <div class="queue_backlog_second">
+                                        <div class="queue_backlog_inner">
+                                            <div class="queue-back-log">
+                                                <div style="padding:1.5rem; padding-top:0px;">
+                                                    <h2 style="padding-bottom:8px;"><b>({{queue.QUEUE_PREFIX}}) {{queue.QUEUE_NAME}}</b></h2>
+                                                    <h4 class="pink" style="margin-bottom:4px;"><span>Current</span> <b>A10</b></h4>
+                                                    <span>@DateTime.Now.ToString("hh:mm tt")</span>
+                                                </div>
+                                                
+
+                                                <div class="text-center">
+                                                    <div class="hr"></div>
+                                                    <h3 class="current-ticket-number">{{queue.QUEUE_PREFIX}} 20</h3>
+                                                </div>
+                                                <div class="call-button" style="padding: 0px 1.5rem;">
+                                                    <button ng-click="bookTicket(queue.Id)">Get Ticket</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
 
                         </div>
 
@@ -806,74 +873,77 @@
 
             $scope.currentCalendarCode = "@Model.DEFAULT_CALENDAR_ID";
             $scope.currentCompanyCode = "@Model.COMPANY_CODE";
-            $scope.queueList = [{}];
+            var chat = $.connection.queueManager;
+            var isHubConnected = false;
 
-            $scope.chat = $.connection.queueManager;
-            $.connection.hub.start().done(function () {
-                $scope.GetQueueList();
-            });
+            // general functions and declarations
 
-            $scope.GetQueueList = function () {
-                $scope.chat.server.getQueueList(String($scope.currentCalendarCode), String($scope.currentCompanyCode));
+            $scope.ShowLoading = function () {
+                $scope.showLoader1 = false;
             }
 
-            $scope.chat.client.updateQueues = function (response) {
-                debugger;
-                if (response.Status) {
-
-                    $scope.queueList = response.Data;
-                    let binderString = ``;
-
-                    $scope.queueList.forEach(queue => {
-                        binderString += `<div class="col-md-2">
-                                <div class="queue_backlog_second">
-                                    <div class="queue_backlog_inner">
-                                        <div class="queue-back-log">
-                                            <h2>(${queue.QUEUE_PREFIX}) ${queue.QUEUE_NAME}</h2>
-
-                                            <div class="mt-2">
-                                                <div class="queue-back-log-left">
-                                                    <h4 class="pink"><span>Current</span> <b>--</b></h4>
-                                                </div>
-                                            </div>
-                                            <div class="text-center"><hr /><h3>${queue.QUEUE_PREFIX} 20</h3></div>
-                                            <div class="call-button">
-                                                <button>Get Ticket</button>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <div class="waiting">
-                                    <p>Waiting <span>(0)</span></p>
-                                </div>
-                                <div class="waiting">
-                                    <p>Pending <span>(0)</span></p>
-                                </div>
-                            </div>`;
-                    })
-
-                    $("#queue-external-area").append(binderString);
-
-                }
+            $scope.HideLoading = function () {
+                $scope.showLoader1 = true;
             }
 
-            $scope.rootScopeSafe = function () {
-                $rootScope.safeApply();
+            $scope.init = function () {
+                $scope.$proxyScope = angular.element($('#quequeDiv')).scope();
+                $scope.sessionList = [];
+                $scope.queueList = [];
+                $scope.showLoader1 = true;
+                console.log(chat);
+                $scope.ShowLoading();
+                $scope.getQueueList();
             };
 
-            $rootScope.safeApply = function (fn) {
-                var phase = this.$root.$$phase;
-                if (phase == '$apply' || phase == '$digest') {
-                    if (fn && (typeof (fn) === 'function')) {
-                        fn();
-                    }
+            $scope.bookTicket = function (queueId) {
+                $scope.enrollPublicUser(queueId);
+            }
+
+            // establish Signalr Connection
+            $scope.StartSignalRConnection = function () {
+                if (!isHubConnected) {
+                    $.connection.hub.start().done(function () {
+                        isHubConnected = true;
+                        $scope.init();
+                    });
                 } else {
-                    this.$apply(fn);
+                    $scope.init();
                 }
-            };
+            }
 
 
+
+
+
+
+
+            //Functions to send request to server
+
+            $scope.getQueueList = function () {
+                chat.server.getQueueList(String($scope.currentCalendarCode), String($scope.currentCompanyCode));
+            }
+
+
+
+
+
+
+            //Functions to receive response from server
+
+            chat.client.ShowLoading = function (response) {
+                $scope.ShowLoading();
+            }
+
+            chat.client.updateQueues = function (response) {
+                if (response.Status) {
+                    angular.element($('#quequeDiv')).scope().queueList = response.Data;
+                    $scope.$apply();
+                    $scope.HideLoading();
+                }
+            }
+
+            $scope.StartSignalRConnection();
 
 
             $scope.enrollPublicUser = function () {
@@ -895,11 +965,11 @@
                                 }
                             }).then(function (value) {
                                 if (value) {
-                                    window.location.href = '/Account/Login?returnUrl=/Marketplace/CompanySchedule?' + window.location.href.split('?')[1].replace('&', '$') + '';
+                                    window.location.href = '/Account/BusinessLogin?returnUrl=/Marketplace/CompanySchedule?' + window.location.href.split('?')[1].replace('&', '$') + '';
                                 }
                             });
                         } else {
-
+                            $("#QueueSessionDetailsModal").modal("show");
                         }
 
                     },
@@ -910,8 +980,6 @@
 
 
             }
-
-
 
         });
 

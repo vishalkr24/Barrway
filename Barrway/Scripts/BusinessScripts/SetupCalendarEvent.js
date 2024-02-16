@@ -189,8 +189,6 @@ function bindStep(step) {
                 $("#step .skip-button").hide();
             }
         }
-
-
     }
 }
 
@@ -419,7 +417,7 @@ function BindFinalViewTemplate() {
                         <div class="block-text">
                             <p>${ConfigStep.Helpers["Helper_" + counter].Text}</p>
                             <div class="block-lower">
-                                <span><button class="my-button">Go</button></span>
+                                <span><button class="my-button" onclick="location.href = '${ConfigStep.Helpers["Helper_" + counter].Button.Link}'">${ConfigStep.Helpers["Helper_" + counter].Button.Text}</button></span>
                             </div>
                         </div>
                     </div>`;

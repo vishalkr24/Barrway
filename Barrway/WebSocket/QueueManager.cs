@@ -15,6 +15,18 @@ namespace Barrway.WebSocket
     {
         private readonly QueueService queueService = new QueueService(new SqlFunction());
 
+        public async override Task OnConnected()
+        {
+            Clients.Client(Context.ConnectionId).showSuccessResult(new AddUpdateDelete() { Status = true, Message = "Updating Live." });
+            await base.OnConnected();
+        }
+
+        public async override Task OnDisconnected(bool stopCalled)
+        {
+            Clients.Client(Context.ConnectionId).showSuccessResult(new AddUpdateDelete() { Status = true, Message = "Not Updating Live" });
+            await base.OnDisconnected(stopCalled);
+        }
+
         public void Send(string name, string message)
         {
             Clients.All.addNewMessageToPage(name, message);

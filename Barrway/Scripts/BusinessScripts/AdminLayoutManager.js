@@ -2,6 +2,17 @@
     setCompanyDetails();
     setTop5Calendars();
 
+    if (localStorage.getItem("CALENDAR_FUNCTION_TYPE") == "QUEUE") {
+        $("#nav-calendar-master").attr("href", "/calendar/index#/queue-manager")
+        $("#nav-schedular-form").attr("href", "/calendar/index#/calendar/queue-schedular-form/2311");
+        if (window.location.href.includes("/calender/2305")) {
+            window.location.href = "/calendar/index#/queue-manager";
+        }
+    } else {
+        $("#nav-calendar-master").attr("href", "/calendar/index#/calender/2305")
+        $("#nav-schedular-form").attr("href", "/calendar/index#/calendar/schedular-form-table/2311")
+    };
+
     $(document).ajaxStart(function () {
         ajaxStart();
     });

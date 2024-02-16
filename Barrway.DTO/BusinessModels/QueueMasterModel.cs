@@ -12,7 +12,7 @@ namespace Barrway.DTO.BusinessModels
         public string QUEUE_BY { get; set; }
         public string QUEUE_RESOURCE_ID { get; set; }
         public string QUEUE_NAME { get; set; }
-        public string QUEUE_USAGE { get; set; }
+        public string QUEUE_USAGE { get; set; } = "TICKET";
         public string QUEUE_PREFIX { get; set; }
         public string CALENDAR_CODE { get; set; }
         public string COMPANY_CODE { get; set; }
