@@ -299,7 +299,7 @@
     $scope.bindCalendarDropdown = function () {
         if (localStorage.getItem("COMPANY_ID") != null && localStorage.getItem("COMPANY_ID") != undefined) {
             adminService.postAsync('/BusinessAdmin/GetAllCompanyCalendars/', { companyId: localStorage.getItem("COMPANY_ID") }).then(function (res) {
-
+                debugger;
                 $scope.calendarList = res.data;
 
                 if (isEmptyLocalStorageValue("CALENDAR_CODE")) {
@@ -344,11 +344,16 @@
 
                 if ($scope.calendarList.find(x => x.CALENDAR_CODE == localStorage.getItem("CALENDAR_CODE")).CALENDAR_FUNCTION_TYPE == "QUEUE") {
                     $("#nav-calendar-master").attr("href", "/calendar/index#/queue-manager")
+                    $("#nav-schedular-form").attr("href", "/calendar/index#/calendar/queue-schedular-form/2311");
+                    
+                    /*$("#nav-schedular-form").attr("href", "/BusinessAdmin/SetupCalendarEvent?CompanyId=" + localStorage.getItem("COMPANY_ID") + "&&CalendarCode=" + localStorage.getItem("CALENDAR_CODE") + "&&Step=3");*/
                     if (window.location.href.includes("/calender/2305")) {
                         window.location.href = "/calendar/index#/queue-manager";
                     }
                 } else {
                     $("#nav-calendar-master").attr("href", "/calendar/index#/calender/2305")
+                    $("#nav-schedular-form").attr("href", "/calendar/index#/calendar/queue-schedular-form/2311");
+                    /*$("#nav-schedular-form").attr("href", "/calendar/index#/calendar/schedular-form-table/2311")*/
                 };
 
                 localStorage.setItem("CALENDAR_FUNCTION_TYPE", $scope.calendarList.find(x => x.CALENDAR_CODE == localStorage.getItem("CALENDAR_CODE")).CALENDAR_FUNCTION_TYPE);

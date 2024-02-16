@@ -9,7 +9,12 @@ FormGeneratorApp.run(function ($rootScope, $templateCache, notifierService, $q, 
     $rootScope.ConnectionStarted = false;
     var canceller = $q.defer();
 
-
+    $transitions.onStart({}, function (transition) {
+        if (transition.from().name == "queue_view") {
+            $.connection.hub.stop();
+        }
+        
+    });
 
     $rootScope.$on("ShowLoading", function (event, message, progress) {
         $rootScope.IND_loading = true;
@@ -126,10 +131,13 @@ FormGeneratorApp.controller('DashboardController', function ($scope, $http, $tim
         $state.go("superadmin_dashboard");
     } else {
         $("#nav-calendar-dashboard").addClass("active");
-        setCompanyDetails();
-        setSelectedCalendar();
-        $scope.ManageCalendarMaster();
-        setCalendarDashboardData();
+
+        setTimeout(function () {
+            setCompanyDetails();
+            setSelectedCalendar();
+            $scope.ManageCalendarMaster();
+            setCalendarDashboardData();
+        }, 800);
     }
 
 

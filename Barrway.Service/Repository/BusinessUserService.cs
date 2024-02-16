@@ -2578,8 +2578,6 @@ namespace Barrway.Service.Repository
                     var dataSerialized = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(JsonConvert.SerializeObject(sessions.Where(y => string.IsNullOrEmpty(y.Id)).ToList()));
                     if (dataSerialized.Count > 0)
                     {
-
-
                         dataSerialized.ForEach(assign =>
                         {
                             Dictionary<string, object> sd = new Dictionary<string, object>();
@@ -2587,7 +2585,7 @@ namespace Barrway.Service.Repository
                             {
                                 if (keyValuePair.Key != "Id")
                                 {
-                                    sd.Add(keyValuePair.Key, keyValuePair.Value?.ToString());
+                                    sd.Add(keyValuePair.Key, keyValuePair.Value?.ToString()??"");
                                 }
                             }
 
@@ -2622,7 +2620,7 @@ namespace Barrway.Service.Repository
                             {
                                 if (keyValuePair.Key != "Id")
                                 {
-                                    sd.Add(keyValuePair.Key, keyValuePair.Value.ToString());
+                                    sd.Add(keyValuePair.Key, keyValuePair.Value?.ToString() ?? "");
                                 }
                             }
 
@@ -2735,7 +2733,7 @@ namespace Barrway.Service.Repository
 
                 List<IDictionary<string, object>> Result2 = await sqlFunction.ExecuteSqlQuery(query);
 
-                if (Result.Count > 0)
+                if (Result.Count > 0 || Result2.Count > 0)
                 {
                     return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = new { queue = Result, session = Result2 } };
                 }
@@ -2755,7 +2753,7 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string sqlQuery = $@"select [start], [end] from CALENDAR_FORM_1935 where (cast([start] as date) >= '{model.SCH_FROM_DATE}' and cast([end] as date) <= '{model.SCH_TO_DATE}') ";
+                string sqlQuery = $@"select [start], [end] from CALENDAR_FORM_1935 where (cast([start] as date) >= '{model.SCH_FROM_DATE}' and cast([end] as date) <= '{model.SCH_TO_DATE}') and (CALENDAR_CODE = '{model.CALENDAR_CODE}' and COMPANY_CODE = '{model.COMPANY_CODE}') ";
 
                 var slotsResult = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 

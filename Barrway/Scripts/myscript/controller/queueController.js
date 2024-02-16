@@ -1,52 +1,126 @@
-﻿(function () {
+﻿
+(function () {
     'use strict';
 
     FormGeneratorApp.controller('queueController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
         checkLogin();
 
-        
-        //Functions to send request to server
-        $scope.getSessionList = function () {
-            $scope.chat.server.getSessionList(String(localStorage.getItem("CALENDAR_CODE")), String(localStorage.getItem("COMPANY_CODE")));
-        }
+        var chat = $.connection.queueManager;
+        var isHubConnected = false;
 
-        $scope.chat = $.connection.queueManager;
-        $.connection.hub.start().done(function () {
-            notifierService.notifyMessage("success", "Updating Live!");
-            $scope.getSessionList();
+        // general functions and declarations
+        $(document).on("click", ".session-row-element", function () {
+            $(".session-row-element").removeClass("active");
+            $(this).addClass("active");
+
+            $scope.currentSession = $scope.sessionList.find(x => x.Id == $(this).attr("session-element-id"))
+            $scope.bindSessionData();
         });
 
+        $(document).on("click", "input[name=queue-activator-trigger]", function () {
+            let queueId = $(this).attr("id").split('-')[1];
+            let value = ($(this).is(":checked")) ? 'Y' : 'N';
+            chat.server.updateQueueActivationStatus(String(queueId), String(value));
+        });
+
+        $(document).on("click", "#queue-summary-nav-btn", function () {
+            $("#queue-summary-section").show();
+            $("#queue-section").hide();
+            $("#queue-summary-nav-btn").addClass("active");
+            $("#queue-list-nav-btn").removeClass("active")
+        });
+
+        $(document).on("click", "#queue-list-nav-btn", function () {
+            $("#queue-summary-section").hide();
+            $("#queue-section").show();
+            $("#queue-summary-nav-btn").removeClass("active");
+            $("#queue-list-nav-btn").addClass("active")
+        });
+
+        $scope.bindSessionData = function () {
+            $(".session-name").text($scope.currentSession.SESSION_NAME);
+            $scope.getQueueList();
+        }
+
+        $scope.UpdateQueueSchedular = function () {
+            window.location.href = "/BusinessAdmin/SetupCalendarEvent?CompanyId=" + localStorage.getItem("COMPANY_ID") + "&&CalendarCode=" + localStorage.getItem("CALENDAR_CODE") + "&&Step=3";
+        }
+
+        $scope.ShowLoading = function () {
+            $scope.showLoader1 = false;
+        }
+
+        $scope.HideLoading = function () {
+            $scope.showLoader1 = true;
+        }
+
         $scope.init = function () {
+            $scope.$proxyScope = angular.element($('#quequeDiv')).scope();
             $scope.sessionList = [];
+            $scope.queueList = [];
+            $scope.showLoader1 = true;
+            console.log(chat);
+            $scope.ShowLoading();
+            $scope.getSessionList();
         };
 
-        //Functions to receive response from server
-        $scope.chat.client.showErrorResult = function (response) {
-            notifierService.notifyMessage("error", "Error", response.Message);
-            return;
-        };
-
-        $scope.chat.client.showWarningResult = function (response) {
-            notifierService.notifyMessage("warning", "Warning", response.Message);
-            return;
-        };
-
-        $scope.chat.client.showSuccessResult = function (response) {
-            let msg = response.Message;
-            notifierService.notifyMessage("success", "Success", msg);
-            return;
-        };
-
-        $scope.chat.client.updateQueues = function (response) {
-            if (response.Status) {
-                debugger;
-                $scope.queueList = response.Data;
-
+        // establish Signalr Connection
+        $scope.StartSignalRConnection = function () {
+            if (!isHubConnected) {
+                $.connection.hub.start().done(function () {
+                    isHubConnected = true;
+                    $scope.init();
+                });
+            } else {
+                $scope.init();
             }
         }
 
-        $scope.chat.client.updateSessions = function (response) {
-            
+
+
+
+
+        //Functions to send request to server
+        $scope.getSessionList = function () {
+            chat.server.getSessionList(String(localStorage.getItem("CALENDAR_CODE")), String(localStorage.getItem("COMPANY_CODE")));
+        }
+
+        $scope.getQueueList = function () {
+            chat.server.getQueueList(String(localStorage.getItem("CALENDAR_CODE")), String(localStorage.getItem("COMPANY_CODE")));
+        }
+
+
+
+
+
+
+        //Functions to receive response from server
+        chat.client.showErrorResult = function (response) {
+            notifierService.notifyMessage("error", "Error", response.Message);
+        };
+
+        chat.client.showWarningResult = function (response) {
+            notifierService.notifyMessage("warning", "Warning", response.Message);
+        };
+
+        chat.client.showSuccessResult = function (response) {
+            let msg = response.Message;
+            notifierService.notifyMessage("success", "Success", msg);
+        };
+
+        chat.client.ShowLoading = function (response) {
+            $scope.ShowLoading();
+        }
+
+        chat.client.updateQueues = function (response) {
+            if (response.Status) {
+                angular.element($('#quequeDiv')).scope().queueList = response.Data;
+                $scope.HideLoading();
+            }
+        }
+
+        chat.client.updateSessions = function (response) {
+
             if (response.Status) {
 
                 $scope.sessionList = response.Data;
@@ -93,33 +167,7 @@
 
         };
 
-        $(document).on("click", ".session-row-element", function () {
-            $(".session-row-element").removeClass("active");
-            $(this).addClass("active");
-
-            $scope.currentSession = $scope.sessionList.find(x => x.Id == $(this).attr("session-element-id"))
-            $scope.bindSessionData();
-        });
-
-        $(document).on("click", "input[name=queue-activator-trigger]", function () {
-            let queueId = $(this).attr("id").split('-')[1];
-            let value = ($(this).is(":checked")) ? 'Y' : 'N';
-            $scope.chat.server.updateQueueActivationStatus(String(queueId), String(value));
-        });
-
-        $scope.bindSessionData = function () {
-            $(".session-name").text($scope.currentSession.SESSION_NAME);
-
-            $scope.chat.server.getQueueList(String(localStorage.getItem("CALENDAR_CODE")), String(localStorage.getItem("COMPANY_CODE")));
-
-        }
-
-        $scope.UpdateQueueSchedular = function () {
-            window.location.href = "/BusinessAdmin/SetupCalendarEvent?CompanyId=" + localStorage.getItem("COMPANY_ID") + "&&CalendarCode=" + localStorage.getItem("CALENDAR_CODE") + "&&Step=3";
-        }
-
-        $scope.init();
-
+        $scope.StartSignalRConnection();
     });
 
 }(FormGeneratorApp));

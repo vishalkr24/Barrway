@@ -864,11 +864,6 @@ namespace Barrway.Controllers
 
                                 }
 
-                                switch (dateTracker.DayOfWeek.ToString())
-                                {
-
-                                }
-
                                 if (data.SCH_ALTERNATIVE_WEEK == "ALTERNATE-WEEK")
                                 {
                                     var weekNum = ((int)dateTracker.DayOfWeek);
@@ -902,25 +897,32 @@ namespace Barrway.Controllers
                             }
                         }
 
-                        var count = await sqlFunction.ExecuteSqlCommandQuery(script);
-
-                        if (count > 0)
+                        if (!string.IsNullOrEmpty(script))
                         {
-                            if (caseBreak)
+                            var count = await sqlFunction.ExecuteSqlCommandQuery(script);
+
+                            if (count > 0)
                             {
-                                if (eventCounter == 0)
+                                if (caseBreak)
                                 {
-                                    return Json(new AddUpdateDelete() { Status = false, Message = "No Sessions Created. Session limit reached as per your plan. Upgrade your plan to create more sessions." }, JsonRequestBehavior.AllowGet);
+                                    if (eventCounter == 0)
+                                    {
+                                        return Json(new AddUpdateDelete() { Status = false, Message = "No Sessions Created. Session limit reached as per your plan. Upgrade your plan to create more sessions." }, JsonRequestBehavior.AllowGet);
+                                    }
+                                    else
+                                    {
+                                        return Json(new AddUpdateDelete() { Status = false, Message = "Only " + eventCounter + " Sessions Created. Session limit reached as per your plan. Upgrade your plan to create more sessions." }, JsonRequestBehavior.AllowGet);
+                                    }
                                 }
                                 else
                                 {
-                                    return Json(new AddUpdateDelete() { Status = false, Message = "Only " + eventCounter + " Sessions Created. Session limit reached as per your plan. Upgrade your plan to create more sessions." }, JsonRequestBehavior.AllowGet);
+                                    return Json("Success", JsonRequestBehavior.AllowGet);
                                 }
                             }
-                            else
-                            {
-                                return Json("Success", JsonRequestBehavior.AllowGet);
-                            }
+                        }
+                        else
+                        {
+                            return Json(new AddUpdateDelete() { Status = false, Message = "No Sessions Created. Session limit reached as per your plan. Upgrade your plan to create more sessions." }, JsonRequestBehavior.AllowGet);
                         }
                     }
 
@@ -930,7 +932,7 @@ namespace Barrway.Controllers
             }
             catch (Exception ex)
             {
-                return Json("Failed", JsonRequestBehavior.DenyGet);
+                return Json(ex.ToString(), JsonRequestBehavior.DenyGet);
             }
 
             return Json("Failed", JsonRequestBehavior.DenyGet);
