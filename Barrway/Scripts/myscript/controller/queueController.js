@@ -61,7 +61,7 @@
             $scope.showLoader1 = true;
             console.log(chat);
             $scope.ShowLoading();
-            $scope.getSessionList();
+            $scope.getCurrentSession();
         };
 
         // establish Signalr Connection
@@ -83,6 +83,10 @@
         //Functions to send request to server
         $scope.getSessionList = function () {
             chat.server.getSessionList(String(localStorage.getItem("CALENDAR_CODE")), String(localStorage.getItem("COMPANY_CODE")));
+        }
+
+        $scope.getCurrentSession = function () {
+            chat.server.getCurrentSession(String(localStorage.getItem("CALENDAR_CODE")), String(localStorage.getItem("COMPANY_CODE")));
         }
 
         $scope.getQueueList = function () {
@@ -117,6 +121,12 @@
                 angular.element($('#quequeDiv')).scope().queueList = response.Data;
                 $scope.HideLoading();
             }
+        }
+
+        chat.client.updateCurrentSession = function (response) {
+            debugger;
+            $scope.currentSession = response.Data[0];
+            $scope.bindSessionData();
         }
 
         chat.client.updateSessions = function (response) {

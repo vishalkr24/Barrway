@@ -56,6 +56,30 @@ namespace Barrway.WebSocket
             await Task.CompletedTask;
         }
 
+        public async Task getCurrentSession(string CalendarCode, string CompanyCode)
+        {
+            try
+            {
+                var result = await queueService.getCurrentSession(CalendarCode, CompanyCode);
+
+                if (result.Status)
+                {
+                    Clients.Client(Context.ConnectionId).updateCurrentSession(result);
+                }
+                else
+                {
+                    Clients.Client(Context.ConnectionId).showErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to fetch sessions." });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Clients.Client(Context.ConnectionId).showErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to fetch sessions." });
+            }
+
+            await Task.CompletedTask;
+        }
+
         public async Task getQueueList(string CalendarCode, string CompanyCode)
         {
             try
