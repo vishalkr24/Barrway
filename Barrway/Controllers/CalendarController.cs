@@ -622,7 +622,15 @@ namespace Barrway.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddQueueSession(Dictionary<string, List<Dictionary<string, string>>> data)
+        public async Task<ActionResult> GetScheduleByCalendar(string CompanyCode, string CalendarCode, bool CurrentDate = false)
+        {
+            var schedularData = await businessUserService.GetSchedule(CompanyCode, CalendarCode, User.Identity.Name, CurrentDate);
+
+            return Json(schedularData);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AddQueueSession(Dictionary<string, dynamic> data)
         {
             try
             {
@@ -637,11 +645,18 @@ namespace Barrway.Controllers
                 if (data.ContainsKey("SessionList"))
                 {
                     sessions = JsonConvert.DeserializeObject<List<SessionMasterModel>>(JsonConvert.SerializeObject(data["SessionList"]));
+
+                    sessions.ForEach(session =>
+                    {
+                        session.SESSION_START_TIME = DateTime.Now.ToString("dd-MM-yyyy") + " " + session.SESSION_START_TIME;
+                        session.SESSION_END_TIME = DateTime.Now.ToString("dd-MM-yyyy") + " " + session.SESSION_END_TIME;
+                    });
+
                 }
 
                 if (queues.Count > 0 || sessions.Where(x => string.IsNullOrEmpty(x.Id)).ToList().Count > 0)
                 {
-                    var result = await businessUserService.AddQueueSession(queues, sessions.Where(x => string.IsNullOrEmpty(x.Id)).ToList());
+                    var result = await businessUserService.AddQueueSession(queues, sessions.Where(x => string.IsNullOrEmpty(x.Id)).ToList(), data["ScheduleId"].ToString());
                 }
 
                 if (queues.Where(x => !string.IsNullOrEmpty(x.Id)).ToList().Count > 0)
@@ -654,7 +669,7 @@ namespace Barrway.Controllers
                     var result = await businessUserService.UpdateSessionDetails(sessions.Where(x => string.IsNullOrEmpty(x.Id)).ToList());
                 }
 
-                return Json(new AddUpdateDelete() { Status = true, Message = "Success" }, JsonRequestBehavior.DenyGet);
+                return Json(new AddUpdateDelete() { Status = true, Message = "Success" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -686,93 +701,143 @@ namespace Barrway.Controllers
                 {
                     SchedularFormModel data = dataList[i];
 
-                    if (UserIdentity.Role != "SUPERADMIN_USER")
+                    if (data.SCH_FROM_DATE.Contains("/"))
                     {
-                        if (data.SCH_FROM_DATE.Contains("/"))
-                        {
-                            var startObject = data.SCH_FROM_DATE.ToString().Split('/');
-                            data.SCH_FROM_DATE = Convert.ToDateTime(startObject[2] + "-" + startObject[1] + "-" + startObject[0]).ToString("yyyy-MM-dd");
-                        }
-
-                        if (data.SCH_TO_DATE.Contains("/"))
-                        {
-                            var endObject = data.SCH_TO_DATE.ToString().Split('/');
-                            data.SCH_TO_DATE = Convert.ToDateTime(endObject[2] + "-" + endObject[1] + "-" + endObject[0]).ToString("yyyy-MM-dd");
-                        }
+                        var startObject = data.SCH_FROM_DATE.ToString().Split('/');
+                        data.SCH_FROM_DATE = Convert.ToDateTime(startObject[2] + "-" + startObject[1] + "-" + startObject[0]).ToString("yyyy-MM-dd");
                     }
 
-                    var slotCheck = await businessUserService.CheckOverlapingSlots(dataList.FirstOrDefault());
-
-                    if (slotCheck.Status)
+                    if (data.SCH_TO_DATE.Contains("/"))
                     {
-                        return Json(new AddUpdateDelete() { Status = false, Data = slotCheck, Message = "Slots Overlaping!" });
+                        var endObject = data.SCH_TO_DATE.ToString().Split('/');
+                        data.SCH_TO_DATE = Convert.ToDateTime(endObject[2] + "-" + endObject[1] + "-" + endObject[0]).ToString("yyyy-MM-dd");
                     }
 
-                    var b = data.ToDictionary();
-
-                    data.SCH_SCHEDULE_TABLE = JsonConvert.SerializeObject(b["table"]).ToString();
-                    bool createNewSchedule = false;
-
-                    if (!string.IsNullOrEmpty(data.Id))
+                    // If the schedular is of queue type
+                    if (data.SCHEDULAR_TYPE == "QUEUE")
                     {
-                        // Edit Existing Schedule
-                        if (Convert.ToInt32(data.Id) > 0)
-                        {
-                            string formGroupKey = CustomMethods.CreateUUID();
-                            var response = await businessUserService.AddSchedularForm(data, formGroupKey);
-
-                            return Json("Success", JsonRequestBehavior.AllowGet);
-                        }
-                        else
-                        {
-                            createNewSchedule = true;
-                        }
-
-                    }
-                    else
-                    {
-                        // Create a new Schedule
-                        createNewSchedule = true;
-                    }
-
-                    if (createNewSchedule)
-                    {
-                        var calendarCountCheckData = await businessUserService.GetSessionsForThisMonth(data.COMPANY_CODE);
-                        var package = await businessUserService.GetCompanyActiveSubscriptionDetails(data.COMPANY_CODE, true);
-
-                        if (!calendarCountCheckData.Status)
-                        {
-                            return Json(calendarCountCheckData);
-                        }
-                        else
-                        {
-                            DateTime PackageValidity = Convert.ToDateTime(calendarCountCheckData.Data["VALID_TILL"]?.ToString());
-
-                            if (PackageValidity < Convert.ToDateTime(data.SCH_TO_DATE))
-                            {
-                                data.SCH_TO_DATE = PackageValidity.ToString("yyyy-MM-dd");
-                            }
-
-                            if (Convert.ToInt32(calendarCountCheckData.Data["AVAILABLE_SESSIONS"]?.ToString()) == 0)
-                            {
-                                return Json(new AddUpdateDelete() { Status = false, Message = "You have reached maximum limit of creating sessions for this month. Upgrade you plan to create more sessions." });
-                            }
-                        }
-
-                        string script = "";
+                        // add or edit schedule
                         string formGroupKey = CustomMethods.CreateUUID();
 
                         var response = await businessUserService.AddSchedularForm(data, formGroupKey);
 
-                        int eventCounter = 0;
-                        bool caseBreak = false;
+                        var executeResponse = await ExecuteSchedularForm((string.IsNullOrEmpty(data.Id)) ? response.Data.Id.ToString() : data.Id);
 
-                        if (response.Status)
+                        return executeResponse;
+                    }
+                    else
+                    {
+                        // add or edit schedule
+                        var slotCheck = await businessUserService.CheckOverlapingSlots(data);
+
+                        if (slotCheck.Status)
                         {
-                            if (UserIdentity.Role == "SUPERADMIN_USER")
+                            return Json(new AddUpdateDelete() { Status = false, Data = slotCheck, Message = "Slots Overlaping!" });
+                        }
+
+                        data.SCH_SCHEDULE_TABLE = JsonConvert.SerializeObject(data.table).ToString();
+                        bool createNewSchedule = false;
+
+                        if (!string.IsNullOrEmpty(data.Id))
+                        {
+                            // Edit Existing Schedule
+                            if (Convert.ToInt32(data.Id) > 0)
                             {
-                                return Json("Success", JsonRequestBehavior.AllowGet);
+                                string formGroupKey = CustomMethods.CreateUUID();
+                                var response = await businessUserService.AddSchedularForm(data, formGroupKey);
+
+                                return Json(new AddUpdateDelete() { Status = true, Message = "Success" }, JsonRequestBehavior.AllowGet);
                             }
+                            else
+                            {
+                                createNewSchedule = true;
+                            }
+                        }
+                        else
+                        {
+                            // Create a new Schedule
+                            createNewSchedule = true;
+                        }
+
+                        if (createNewSchedule)
+                        {
+                            var calendarCountCheckData = await businessUserService.GetSessionsForThisMonth(data.COMPANY_CODE);
+                            var package = await businessUserService.GetCompanyActiveSubscriptionDetails(data.COMPANY_CODE, true);
+
+                            if (!calendarCountCheckData.Status)
+                            {
+                                return Json(calendarCountCheckData);
+                            }
+                            else
+                            {
+                                DateTime PackageValidity = Convert.ToDateTime(calendarCountCheckData.Data["VALID_TILL"]?.ToString());
+
+                                if (PackageValidity < Convert.ToDateTime(data.SCH_TO_DATE))
+                                {
+                                    data.SCH_TO_DATE = PackageValidity.ToString("yyyy-MM-dd");
+                                }
+
+                                if (Convert.ToInt32(calendarCountCheckData.Data["AVAILABLE_SESSIONS"]?.ToString()) == 0)
+                                {
+                                    return Json(new AddUpdateDelete() { Status = false, Message = "You have reached maximum limit of creating sessions for this month. Upgrade you plan to create more sessions." });
+                                }
+                            }
+
+                            string formGroupKey = CustomMethods.CreateUUID();
+
+                            var response = await businessUserService.AddSchedularForm(data, formGroupKey);
+
+                            var executeResponse = await ExecuteSchedularForm(response.Data.Id, response.Data.formGroupKey);
+
+                            return executeResponse;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.ToString(), JsonRequestBehavior.DenyGet);
+            }
+
+            return Json("Failed", JsonRequestBehavior.DenyGet);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ExecuteSchedularForm(string Id, string formGroupKey = null)
+        {
+            try
+            {
+                var schedule = await businessUserService.GetSchedule(Id, User.Identity.Name);
+
+                if (schedule.Status)
+                {
+                    if (schedule.Data != null)
+                    {
+                        var rawData = (schedule.Data as List<IDictionary<string, object>>).FirstOrDefault();
+
+                        SchedularFormModel data = JsonConvert.DeserializeObject<SchedularFormModel>(JsonConvert.SerializeObject(rawData));
+
+                        if (data.SCHEDULAR_TYPE == "QUEUE")
+                        {
+                            var queueData = JsonConvert.DeserializeObject<Dictionary<string, List<Dictionary<string, string>>>>(data.SCH_SCHEDULE_TABLE?.ToString());
+
+                            Dictionary<string, dynamic> finalData = new Dictionary<string, dynamic>();
+
+                            finalData.Add("ScheduleId", Id);
+                            finalData.Add("QueueList", queueData["QueueList"]);
+                            finalData.Add("SessionList", queueData["SessionList"]);
+                            var QueueSessionResult = await AddQueueSession(finalData);
+
+                            return QueueSessionResult;
+                        }
+                        else
+                        {
+                            var calendarCountCheckData = await businessUserService.GetSessionsForThisMonth(data.COMPANY_CODE);
+                            var package = await businessUserService.GetCompanyActiveSubscriptionDetails(data.COMPANY_CODE, true);
+
+                            string script = "";
+                            int eventCounter = 0;
+                            bool caseBreak = false;
 
                             var start = Convert.ToDateTime(data.SCH_FROM_DATE);
 
@@ -790,7 +855,7 @@ namespace Barrway.Controllers
                                     break;
                                 }
 
-                                string SchedularFormId = response.Data.Id.ToString();
+                                string SchedularFormId = Id;
                                 DateTime SlotStartTime = DateTime.Now;
                                 DateTime SlotEndTime = DateTime.Now;
 
@@ -895,48 +960,50 @@ namespace Barrway.Controllers
 
                                 dateTracker = dateTracker.AddDays(1);
                             }
-                        }
 
-                        if (!string.IsNullOrEmpty(script))
-                        {
-                            var count = await sqlFunction.ExecuteSqlCommandQuery(script);
 
-                            if (count > 0)
+                            if (!string.IsNullOrEmpty(script))
                             {
-                                if (caseBreak)
+                                var count = await sqlFunction.ExecuteSqlCommandQuery(script);
+
+                                if (count > 0)
                                 {
-                                    if (eventCounter == 0)
+                                    if (caseBreak)
                                     {
-                                        return Json(new AddUpdateDelete() { Status = false, Message = "No Sessions Created. Session limit reached as per your plan. Upgrade your plan to create more sessions." }, JsonRequestBehavior.AllowGet);
+                                        if (eventCounter == 0)
+                                        {
+                                            return Json(new AddUpdateDelete() { Status = false, Message = "No Sessions Created. Session limit reached as per your plan. Upgrade your plan to create more sessions." }, JsonRequestBehavior.AllowGet);
+                                        }
+                                        else
+                                        {
+                                            return Json(new AddUpdateDelete() { Status = false, Message = "Only " + eventCounter + " Sessions Created. Session limit reached as per your plan. Upgrade your plan to create more sessions." }, JsonRequestBehavior.AllowGet);
+                                        }
                                     }
                                     else
                                     {
-                                        return Json(new AddUpdateDelete() { Status = false, Message = "Only " + eventCounter + " Sessions Created. Session limit reached as per your plan. Upgrade your plan to create more sessions." }, JsonRequestBehavior.AllowGet);
+                                        return Json(new AddUpdateDelete() { Status = true, Message = "Success" }, JsonRequestBehavior.AllowGet);
                                     }
                                 }
-                                else
-                                {
-                                    return Json("Success", JsonRequestBehavior.AllowGet);
-                                }
+                            }
+                            else
+                            {
+                                return Json(new AddUpdateDelete() { Status = false, Message = "No Sessions Created. Session limit reached as per your plan. Upgrade your plan to create more sessions." }, JsonRequestBehavior.AllowGet);
                             }
                         }
-                        else
-                        {
-                            return Json(new AddUpdateDelete() { Status = false, Message = "No Sessions Created. Session limit reached as per your plan. Upgrade your plan to create more sessions." }, JsonRequestBehavior.AllowGet);
-                        }
+
                     }
 
                 }
 
-
+                return Json(new AddUpdateDelete() { Status = true, Message = "Success" });
             }
             catch (Exception ex)
             {
-                return Json(ex.ToString(), JsonRequestBehavior.DenyGet);
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() });
             }
 
-            return Json("Failed", JsonRequestBehavior.DenyGet);
         }
+
         private int GetWeekNumberOfMonth(DateTime date)
         {
             date = date.Date;

@@ -14,6 +14,7 @@ namespace Barrway.DTO.BusinessModels
         public string SESSION_START_TIME { get; set; }
         public string SESSION_END_TIME { get; set; }
         public string TICKETING_TYPE { get; set; }
+        public string SESSION_TYPE { get; set; }
         public string COMPANY_CODE { get; set; }
         public string CALENDAR_CODE { get; set; }
     }

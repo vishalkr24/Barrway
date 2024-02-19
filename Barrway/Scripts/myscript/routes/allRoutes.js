@@ -1925,20 +1925,6 @@
                     parent: 'home'
                 }
             })
-            .state('queue_schedular_form', {
-                url: '/calendar/queue-schedular-form/:formId',
-                onEnter: function ($window) { $window.document.title = "Schedular Forms"; },
-                views: {
-                    'content': {
-                        templateUrl: '/Templates/calendar-master/queue-schedular-form.html?token=' + uuid,
-                        controller: 'QueueSchedularFormController'
-                    }
-                },
-                ncyBreadcrumb: {
-                    label: 'admin-users',
-                    parent: 'home'
-                }
-            })
             .state('schedular_form', {
                 url: '/calendar/schedular-form/:Id',
                 onEnter: function ($window) { $window.document.title = "Schedular Form"; },

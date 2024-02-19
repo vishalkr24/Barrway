@@ -16,6 +16,13 @@ FormGeneratorApp.run(function ($rootScope, $templateCache, notifierService, $q, 
         
     });
 
+    $transitions.onSuccess({}, function (transition) {
+        $(".lbl-calendar-name").text($(".dropdown-me-2 .lbl-calendar-name").text())
+        $(".lbl-company-name").text(localStorage.getItem("COMPANY_NAME_ENGLISH"));
+    });
+
+    
+
     $rootScope.$on("ShowLoading", function (event, message, progress) {
         $rootScope.IND_loading = true;
         $rootScope.IND_loadingMessage = message;
