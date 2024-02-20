@@ -7,7 +7,13 @@ $(document).ready(async function () {
 
     COMPANY_CODE = getQueryParamValue("CompanyCode");
     CALENDAR_CODE = getQueryParamValue("CalendarCode");
-    debugger;
+ 
+    getServiceProviderData(COMPANY_CODE, CALENDAR_CODE);
+
+    getServiceProviderDataByCalendar(COMPANY_CODE, CALENDAR_CODE);
+
+    //getServiceList(COMPANY_CODE, CALENDAR_CODE);
+
 
     $('#calendar-selector').val(CALENDAR_CODE);
 
@@ -92,7 +98,7 @@ $(document).ready(async function () {
         //formDataList
         activityResults = activityConfig.formDataList;
 
-
+        debugger;
         var serviceSelect = $('#calendar-service');
         serviceSelect.empty();
         serviceSelect.append($('<option>', {
@@ -2641,3 +2647,85 @@ function postAsync(url, data) {
     });
 }
 
+
+function getServiceProviderData(companyCode, calendarCode) {
+   
+    $.ajax({
+        url: "/Calendar/GetServiceProviderMasterList/",
+        async: false,
+        type: "POST",
+        data: {
+            data: {},
+            companyCode: companyCode,
+            calendarCode: calendarCode
+        },
+        success: function (response) {
+            Service_ProviderList = response.data;          
+            var serviceProvider= $("#calendar-service-Provider").empty();
+            serviceProvider.append($('<option>', {
+                value: "",
+                text: "All Service provider"
+            }));
+
+            $.each(Service_ProviderList, function (index, item) {
+                serviceProvider.append($('<option>', {
+                    value: item.id,
+                    text: item.FIRST_NAME + " " + item.LAST_NAME
+                }));
+            });
+
+
+            
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    });
+    
+}
+
+function getServiceProviderDataByCalendar(companyCode, calendarCode) {
+   
+    $.ajax({
+        url: "/Calendar/GetLocationMasterList/",
+        async: false,
+        type: "POST",
+        data: {
+            data: {
+                filters: [{
+                    field: "CALENDAR_CODE",
+                    type: "=",
+                    value: calendarCode
+                }]
+            },
+            companyCode: companyCode
+        },
+        success: function (response) {
+            data = response;
+
+            console.log(data, "data data data");
+
+
+            Service_Location_List = response.data;
+            var Location = $("#calendar-service-Location").empty();
+            Location.append($('<option>', {
+                value: "",
+                text: "All location"
+            }));
+
+            $.each(Service_Location_List, function (index, item) {
+                Location.append($('<option>', {
+                    value: item.id,
+                    text: item.LOCATION_ADDRESS
+                }));
+            });
+
+
+
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    });
+    return data;
+}

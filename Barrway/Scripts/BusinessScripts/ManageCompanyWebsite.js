@@ -458,11 +458,12 @@ function savePhotoAlbum() {
                 $("#photoAlbumForm_ALBUM_PHOTO_PATH").val("");
                 $("#ALBUM_PHOTO_NAME").text("");
                 $("#ALBUM_PHOTO_ERROR").hide();
-                $("#uploadPhotoModal").modal("hide");
+                $("#uploadPhotoModal").modal("hide");               
+                $(".upload").empty();
                 setCompanyPhotoAlbum();
             } else {
                 console.log(result);
-                alert();
+                
             }
         },
         error: function (err) {

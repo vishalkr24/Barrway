@@ -3215,7 +3215,9 @@
 
     <Content Include="Views\Account\BusinessSignUpPhone.cshtml" />
     <Content Include="Views\Account\MobileVerification.cshtml" />
-    <Content Include="Views\Account\BusinessPhoenLogin.cshtml" />
+
+    <Content Include="Views\Account\BusinessPhoneLogin.cshtml" />
+
 
     <Content Include="Views\MarketPlace\CompanyQueueSchedule.cshtml" />
 
