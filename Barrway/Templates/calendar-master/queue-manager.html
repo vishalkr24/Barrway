@@ -493,6 +493,20 @@
         margin: 0px 16px;
     }
 
+    .queue-dashboard-row {
+        display: flex;
+        align-content: flex-start;
+        align-items: flex-start;
+        flex-flow: row wrap;
+    }
+
+        .queue-dashboard-row .queue-dashboard-element {
+            max-width: 400px;
+            width: 100%;
+            margin-right: 16px;
+            margin-bottom: 16px;
+        }
+
     @media screen and (max-width: 800px) {
         .queue-area .queue-list-area {
             width: fit-content;
@@ -543,7 +557,7 @@
                         </div>-->
                         <div class="col-md-12">
                             <div class="heading_queue">
-                                <h2><span class="session-name"></span> session</h2>
+                                <h2><span class="session-name"></span></h2>
                             </div>
                         </div>
                     </div>
@@ -611,8 +625,8 @@
                     </div>
                 </div>
                 <div id="queue-summary-section">
-                    <div class="row">
-                        <div class="col-md-4" ng-repeat="queue in queueList">
+                    <div class="queue-dashboard-row">
+                        <div class="queue-dashboard-element" ng-repeat="queue in queueList">
                             <div class="queue_backlog_third">
                                 <div class="queue_backlog_inner">
                                     <div class="queue-back-log">
