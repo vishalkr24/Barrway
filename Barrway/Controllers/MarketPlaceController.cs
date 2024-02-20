@@ -275,24 +275,35 @@ namespace Barrway.Controllers
             }
         }
 
-        public async Task<ActionResult> CompanySchedule(string CompanyCode, string CalendarCode = null)
+        public async Task<ActionResult> CompanySchedule(string id = null)
         {
             try
             {
+
+               string CompanyCode = id;
+               string CalendarCode = null;
                 var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
                 AddUpdateDelete calendarData = await businessUserService.GetMarcketPlaceCompanyCalendarByCompanyId(companyData.Data["Id"].ToString());
-                var servilces=await businessUserService.GetServiceList(CalendarCode, CompanyCode);
+                
+                
+                
+                
+                //var servilces=await businessUserService.GetServiceList(CalendarCode, CompanyCode);
                 //var serviceData = await globalMasterService.GetCompanyCategoryMaster();
                 if (calendarData.Status)
                 {
+                    
                     var data = JsonConvert.SerializeObject(companyData.Data);
                     var calendarEncrypted = JsonConvert.SerializeObject(calendarData.Data);
-                    var servilcesEncrypted = JsonConvert.SerializeObject(servilces.Data);
+                    
                     //var serviceEncrypted = JsonConvert.SerializeObject(serviceData.Data);
 
                     MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
                     companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
                     companyModel.calendars = JsonConvert.DeserializeObject<List<BusinessCalendarModel>>(calendarEncrypted);
+
+                    var servilces = await businessUserService.GetServiceList(companyModel.calendars[0].CALENDAR_CODE, CompanyCode);
+                    var servilcesEncrypted = JsonConvert.SerializeObject(servilces.Data);
                     companyModel.ServicesList = JsonConvert.DeserializeObject<List<ServicesList>>(servilcesEncrypted);
                     //companyModel.services = JsonConvert.DeserializeObject<List<BusinessCompanyCategoryModel>>(serviceEncrypted);
 
@@ -311,6 +322,7 @@ namespace Barrway.Controllers
                         }
                     }
 
+                    ViewBag.CompanyCode = CompanyCode;
                     ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
 
                     if (!string.IsNullOrEmpty(companyModel.IS_TEMPLATE))
