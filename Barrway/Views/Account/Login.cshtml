@@ -408,6 +408,12 @@
                                     <h3>@Resource.Login </h3>
 
                                     <form class="js-validate needs-validation" method="post" action="/Account/Login?returnUrl=@ViewBag.ReturnUrl.ToString()" novalidate>
+                                        @if (@TempData["MobileVerificationSuccessMessage"] != null)
+                                        {
+                                            <div class="alert" role="alert" style="color: #00c9a7;">
+                                                @TempData["MobileVerificationSuccessMessage"]
+                                            </div>
+                                        }
 
                                         @Html.AntiForgeryToken()
 
@@ -454,7 +460,7 @@
                                     </div>
                                     <br /><br /><br /><br />
                                     <div class="register-btn text-center">
-                                        @Resource.Don_t_have_an_account? <a href="/Account/Signup">@Resource.Register</a>
+                                        @Resource.Don_t_have_an_account? <a href="/Account/BusinessSignUp">@Resource.Register</a>
                                     </div>
 
 

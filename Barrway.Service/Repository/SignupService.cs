@@ -25,23 +25,30 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> RegisterUser(IDictionary<string, object> keyValuePairs)
         {
-            Form_DataTable data = new Form_DataTable();
-            data.action = (int)FormAction.Save;
-            data.formId = (int)FormSetting.USER_MASTER;
-            
-            data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(keyValuePairs);
-            data.formGroupKey = Guid.NewGuid().ToString();
-            var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
-
-
-
-            if (formResult.res == 1)
+            try
             {
-                return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() };
+                Form_DataTable data = new Form_DataTable();
+                data.action = (int)FormAction.Save;
+                data.formId = (int)FormSetting.USER_MASTER;
+
+                data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(keyValuePairs);
+                data.formGroupKey = Guid.NewGuid().ToString();
+                var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+
+
+                if (formResult.res == 1)
+                {
+                    return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Message = formResult.Message, Status = false };
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return new AddUpdateDelete() { Message = formResult.Message, Status = false };
+                return new AddUpdateDelete() { Message = ex.Message, Status = false };
             }
 
 

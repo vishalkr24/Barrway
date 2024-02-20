@@ -63,8 +63,9 @@ namespace Barrway
             container.RegisterType<IPublicUserService, PublicUserService>();
             container.RegisterType<ISuperAdminUserService, SuperAdminUserService>();
             container.RegisterType<IQueueService, QueueService>();
+            container.RegisterType<IMessageRepository, MessageRepository>();
             container.RegisterSingleton<IQueueService, QueueService>();
-           
+
         }
     }
 }
