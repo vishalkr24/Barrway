@@ -2,11 +2,17 @@
 @{
     ViewBag.Title = Resource.Company_Schedule;
     Layout = "~/Views/Shared/_LayoutMarketPlaceCompany.cshtml";
-    ViewBag.COMPANY_LOGO_PATH = Model.COMPANY_LOGO_PATH.Replace("~", "..");
+    ViewBag.COMPANY_LOGO_PATH = Model.COMPANY_LOGO_PATH.Replace("~", "");
     ViewBag.COMPANY_ID = Model.COMPANY_CODE.ToString();
     ViewBag.CALENDAR_ID = Model.DEFAULT_CALENDAR_ID;
+
+
+    
 }
 
+<script>
+    var COMPANY_CODE = '@ViewBag.CompanyCode';
+</script>
 
 @section styles{
 
@@ -750,9 +756,10 @@
                                     <label for="calendar">@Resource.Calendar</label>
 
                                     <select class="form-control" id="calendar-selector" onchange="showCalendar('@Model.COMPANY_CODE')">
-                                        <option value="-1" disabled selected>@Resource.select_a_calendar</option>
+                                        <option value="-1" disabled>@Resource.select_a_calendar</option>
                                         @foreach (var item in Model.calendars)
                                         {
+                                            
                                             <option value="@item.CALENDAR_CODE" @((item.Id == Model.DEFAULT_CALENDAR_ID) ? "selected" : "")>@item.CALENDAR_NAME</option>
                                         }
                                     </select>

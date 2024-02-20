@@ -5,17 +5,18 @@ $(document).ready(async function () {
 
 
 
-    COMPANY_CODE = getQueryParamValue("CompanyCode");
-    CALENDAR_CODE = getQueryParamValue("CalendarCode");
- 
-    getServiceProviderData(COMPANY_CODE, CALENDAR_CODE);
+    /*COMPANY_CODE = getQueryParamValue("CompanyCode");*/
+   /* CALENDAR_CODE = getQueryParamValue("CalendarCode");*/
 
-    getServiceProviderDataByCalendar(COMPANY_CODE, CALENDAR_CODE);
+    console.log(COMPANY_CODE,"COMPANY_CODE");
+ 
+    getServiceProviderData(COMPANY_CODE);
+
+    getServiceProviderDataByCalendar(COMPANY_CODE);
 
     //getServiceList(COMPANY_CODE, CALENDAR_CODE);
 
-
-    $('#calendar-selector').val(CALENDAR_CODE);
+   /* $('#calendar-selector').val(CALENDAR_CODE);*/
 
     var formdetail = await getFormDetails();
     formDetailsDataInfo = formdetail[0];
@@ -46,7 +47,11 @@ $(document).ready(async function () {
     window["EventBasicDetail"] = manageWindowParams();
 
     var calenderSettings = await getCalenderSettings();
-    calendarDetails = (await getCalendarDetails(CALENDAR_CODE)).Data;
+
+    var calenderCode = $("#calendar-selector").val();   
+    calendarDetails = (await getCalendarDetails(calenderCode)).Data;
+   
+    console.log(calendarDetails,"calendarDetails");
     if (calenderSettings.length > 0) {
 
         var caledarConfig = calenderSettings;
@@ -98,7 +103,7 @@ $(document).ready(async function () {
         //formDataList
         activityResults = activityConfig.formDataList;
 
-        debugger;
+        
         var serviceSelect = $('#calendar-service');
         serviceSelect.empty();
         serviceSelect.append($('<option>', {
@@ -115,11 +120,42 @@ $(document).ready(async function () {
 
 
         $('#calendar-service').change(async function () {
-
+            debugger;
             if ($(this).val() != '') {
                 var searchSrevice = $('#calendar-service option:selected').text();
                 var param = { "action": 29, "formTableColumnData": `   (   (   SERVICE_MASTER_1933.ACTIVITY_NAME like N'${searchSrevice}'    )        )   `, "formTableColumnName": "    left join SERVICE_MASTER_1933 on SERVICE_MASTER_1933.formId=f1.referrenceFormId and SERVICE_MASTER_1933.Id=f1.referrenceId  ", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 }
+                console.log(param,"param");
+                var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+                var view = $('#' + current_tab + ' div.calendar').fullCalendar('getView');
+                param.filter = changeStateOfCalenderController(view);
+                var filterredFormDataTemp = await reBindCalender(param);
+                var eventBasicData = window["EventBasicDetail"];
+                var eventData = filterredFormDataTemp.data;
+                refreshEventResourcesActivityNew('deleteEvent', eventData, eventBasicData.resourceData, eventBasicData.resColumns, eventBasicData.activityData, eventBasicData.activityColumn, eventData);
 
+
+            } else {
+                var param = { "action": 29, "formTableColumnData": "", "formTableColumnName": "", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 };
+                var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+                var view = $('#' + current_tab + ' div.calendar').fullCalendar('getView');
+                param.filter = changeStateOfCalenderController(view);
+                var filterredFormDataTemp = await reBindCalender(param);
+                var eventBasicData = window["EventBasicDetail"];
+                var eventData = filterredFormDataTemp.data;
+                refreshEventResourcesActivityNew('deleteEvent', eventData, eventBasicData.resourceData, eventBasicData.resColumns, eventBasicData.activityData, eventBasicData.activityColumn, eventData);
+
+            };
+        });
+
+
+
+
+
+        $('#calendar-service-Provider').change(async function () {           
+            if ($(this).val() != '') {
+                var searchSrevice = $('#calendar-service-Provider option:selected').val();
+                var param = { "action": 29, "formTableColumnData": `   (   (   SERVICE_PROVIDER_MASTER_1934.FIRST_NAME like N'${searchSrevice}'    )        )   `, "formTableColumnName": "    left join SERVICE_PROVIDER_MASTER_1934 on SERVICE_PROVIDER_MASTER_1934.formId=f1.referrenceFormId and SERVICE_PROVIDER_MASTER_1934.Id=f1.referrenceId  ", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 }
+                console.log(param, "param");
                 var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
                 var view = $('#' + current_tab + ' div.calendar').fullCalendar('getView');
                 param.filter = changeStateOfCalenderController(view);
@@ -260,8 +296,9 @@ function changeStateOfCalenderController(view) {
 
 async function reBindCalender(param) {
     showLoader();
+    var CalanderCode = $("#calendar-selector").val();
     param.IsCustomFilter = true;
-    param.CustomFilters = [{ "FieldName": "COMPANY_CODE", "Value": COMPANY_CODE }, { "FieldName": "CALENDAR_CODE", "Value": CALENDAR_CODE }];
+    param.CustomFilters = [{ "FieldName": "COMPANY_CODE", "Value": COMPANY_CODE }, { "FieldName": "CALENDAR_CODE", "Value": CalanderCode }];
     return new Promise(resolve => {
         $.ajax({
             type: "POST",
@@ -328,11 +365,12 @@ async function getFormDetails() {
 
 async function getCalenderSettings() {
     showLoader();
+    var CalanderCode = $("#calendar-selector").val();
     return new Promise(resolve => {
         $.ajax({
             type: "POST",
             url: BASE_URL + "FormAPI/getCalenderSettingsFormData",
-            data: JSON.stringify({ "action": 4, "formId": CalendarFormId, "IsCustomFilter": true, "CustomFilters": [{ "FieldName": "COMPANY_CODE", "Value": COMPANY_CODE }, { "FieldName": "CALENDAR_CODE", "Value": CALENDAR_CODE }] }),
+            data: JSON.stringify({ "action": 4, "formId": CalendarFormId, "IsCustomFilter": true, "CustomFilters": [{ "FieldName": "COMPANY_CODE", "Value": COMPANY_CODE }, { "FieldName": "CALENDAR_CODE", "Value": CalanderCode }] }),
             contentType: "application/json",
             success: function (response) {
                 hideLoader();
@@ -1050,7 +1088,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
 
     },
 
-
+       
         // List View
         myOptions = {
             header: {
@@ -1087,7 +1125,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 param.filter = changeStateOfCalender(view, start, end);
                 param.filter.field = "start";
                 param.COMPANY_CODE = COMPANY_CODE;
-                param.CALENDAR_CODE = CALENDAR_CODE;
+                param.CALENDAR_CODE = $("#calendar-selector").val();
                 //showLoader();
                 $.ajax({
                     method: 'POST',
@@ -1142,7 +1180,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
 
             param.isCalender = 1;
             param.isEvent = 1;
-
+            debugger;
             param.resourceFormId = ySelection;
             param.ActivityFormId = xSelection;
             var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
@@ -1152,7 +1190,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
             param.filter = changeStateOfCalender(view, start, end);
             param.filter.field = "start";
             param.COMPANY_CODE = COMPANY_CODE;
-            param.CALENDAR_CODE = CALENDAR_CODE;
+            param.CALENDAR_CODE = $("#calendar-selector").val();
             $.ajax({
                 method: 'POST',
                 url: BASE_URL + "/FormAPI/getReferralFormFields",
@@ -1202,6 +1240,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
     $('#agenda-view div.calendar').fullCalendar(calendarOptions);
 
     if (ySelection != 0) {
+        debugger
         if (formDetailsDataInfo != null)
             if (formDetailsDataInfo.calenderSettingsList != null)
                 if (formDetailsDataInfo.calenderSettingsList.length > 0) {
@@ -1379,7 +1418,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
             param.filter = changeStateOfCalender(view, start, end);
             param.filter.field = "start";
             param.COMPANY_CODE = COMPANY_CODE;
-            param.CALENDAR_CODE = CALENDAR_CODE;
+            param.CALENDAR_CODE = $("#calendar-selector").val();
 
             $.ajax({
                 method: 'POST',
@@ -1535,7 +1574,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
             param.filter = changeStateOfCalender(view, start, end);
             param.filter.field = "start";
             param.COMPANY_CODE = COMPANY_CODE;
-            param.CALENDAR_CODE = CALENDAR_CODE;
+            param.CALENDAR_CODE = $("#calendar-selector").val();
             $.ajax({
                 method: 'POST',
                 url: BASE_URL + "/FormAPI/getReferralFormFields",
@@ -1892,6 +1931,7 @@ async function GetFormList() {
 }
 
 async function getCalendarDetails(id) {
+    debugger;
     return new Promise(resolve => {
         $.ajax({
             type: "POST",
@@ -1900,6 +1940,7 @@ async function getCalendarDetails(id) {
             success: function (response) {
                 hideLoader();
                 resolve(response);
+                console.log(response,"response");
             }
         });
 
@@ -2342,7 +2383,7 @@ async function rendarPopupCalendar(assignDate) {
             param.startDate = moment(start.format()).format("YYYY-MM-DD HH:mm:ss");
             param.endDate = moment(end.format()).format("YYYY-MM-DD HH:mm:ss");
             param.COMPANY_CODE = COMPANY_CODE;
-            param.CALENDAR_CODE = CALENDAR_CODE;
+            param.CALENDAR_CODE = $("#calendar-selector").val();
 
 
             var postUrl = BASE_URL + "/FormAPI/getReferralFormFieldsService";
@@ -2544,7 +2585,7 @@ function bookingService(star, end, bgevent) {
         "start": star,
         "end": end,
         "companyCode": COMPANY_CODE,
-        "calendarCode": CALENDAR_CODE,
+        "calendarCode": $("#calendar-selector").val(),
         "resourceFormId": ySelection.toString(),
         "resourceTitle": getTitle(bgevent,"resource"),
         "resourceId": getresourceId(bgevent),
@@ -2648,8 +2689,8 @@ function postAsync(url, data) {
 }
 
 
-function getServiceProviderData(companyCode, calendarCode) {
-   
+function getServiceProviderData(companyCode) {
+    var CalanderCode = $("#calendar-selector").val();
     $.ajax({
         url: "/Calendar/GetServiceProviderMasterList/",
         async: false,
@@ -2657,7 +2698,7 @@ function getServiceProviderData(companyCode, calendarCode) {
         data: {
             data: {},
             companyCode: companyCode,
-            calendarCode: calendarCode
+            calendarCode: CalanderCode
         },
         success: function (response) {
             Service_ProviderList = response.data;          
@@ -2669,7 +2710,7 @@ function getServiceProviderData(companyCode, calendarCode) {
 
             $.each(Service_ProviderList, function (index, item) {
                 serviceProvider.append($('<option>', {
-                    value: item.id,
+                    value: item.FIRST_NAME,
                     text: item.FIRST_NAME + " " + item.LAST_NAME
                 }));
             });
@@ -2684,8 +2725,8 @@ function getServiceProviderData(companyCode, calendarCode) {
     
 }
 
-function getServiceProviderDataByCalendar(companyCode, calendarCode) {
-   
+function getServiceProviderDataByCalendar(companyCode) {
+    var CalanderCode = $("#calendar-selector").val();
     $.ajax({
         url: "/Calendar/GetLocationMasterList/",
         async: false,
@@ -2695,7 +2736,7 @@ function getServiceProviderDataByCalendar(companyCode, calendarCode) {
                 filters: [{
                     field: "CALENDAR_CODE",
                     type: "=",
-                    value: calendarCode
+                    value: CalanderCode
                 }]
             },
             companyCode: companyCode
