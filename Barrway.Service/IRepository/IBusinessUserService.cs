@@ -77,10 +77,16 @@ namespace Barrway.Service.IRepository
 
         Task<AddUpdateDelete> GetCalendarUpcomingBookings(GenerateDynamicFormData data, string CompanyCode, string CalendarCode);
         Task<AddUpdateDelete> GetSchedule(string ScheduleId, string UserId);
+        Task<AddUpdateDelete> GetSchedule(string CompanyCode, string CalendarCode, string UserId, bool CurrentDate = false);
 
         Task<AddUpdateDelete> AddSchedularForm(SchedularFormModel model, string formGroupKey);
 
-        Task<AddUpdateDelete> AddQueueSession(List<QueueMasterModel> queues, List<SessionMasterModel> sessions);
+        Task<AddUpdateDelete> AddQueueSession(List<QueueMasterModel> queues, List<SessionMasterModel> sessions, string ScheduleId);
+        Task<AddUpdateDelete> UpdateQueueDetails(List<QueueMasterModel> queues);
+
+        Task<AddUpdateDelete> UpdateSessionDetails(List<SessionMasterModel> sessions);
+
+        Task<AddUpdateDelete> GetQueueAndSession(string CompanyCode, string CalendarCode);
 
         Task<AddUpdateDelete> CheckOverlapingSlots(SchedularFormModel model);
 

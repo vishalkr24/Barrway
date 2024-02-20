@@ -11,6 +11,8 @@ namespace Barrway.Service.IRepository
     public interface IQueueService
     {
         Task<AddUpdateDelete> getSessionList(string CalendarCode, string CompanyCode);
-        Task<AddUpdateDelete> UpdateCalendarReference(FormCalenderReferrenceTable data);
+        Task<AddUpdateDelete> getCurrentSession(string CalendarCode, string CompanyCode);
+        Task<AddUpdateDelete> getQueueList(string CalendarCode, string CompanyCode);
+        Task<AddUpdateDelete> updateQueueActivationStatus(string QueueId, string Status);
     }
 }

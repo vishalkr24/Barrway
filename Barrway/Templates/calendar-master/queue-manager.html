@@ -354,8 +354,78 @@
         margin-left: -20px;
         position: relative;
     }
+
     .queue-wraprgb {
         background-color: #ecfafb;
+    }
+
+    @keyframes loader {
+
+        0% {
+            width: 0;
+        }
+
+        20% {
+            width: 10%;
+        }
+
+        25% {
+            width: 24%;
+        }
+
+        43% {
+            width: 41%;
+        }
+
+        56% {
+            width: 50%;
+        }
+
+        66% {
+            width: 52%;
+        }
+
+        71% {
+            width: 60%;
+        }
+
+        75% {
+            width: 76%;
+        }
+
+        94% {
+            width: 86%;
+        }
+
+        100% {
+            width: 100%;
+        }
+    }
+
+
+    .progress-bar {
+        border-radius: 30px;
+        overflow: hidden;
+        width: 100%;
+    }
+
+        .progress-bar span {
+            display: block;
+        }
+
+    .bar {
+        background: white;
+    }
+
+    .progress {
+        animation: loader 8s ease;
+        background: #e2476c;
+        height: 5px;
+        padding: 0px;
+        width: 0;
+    }
+
+    .progress-bar {
     }
 </style>
 
@@ -364,8 +434,8 @@
         width: 100%;
         display: flex;
         flex-flow: row;
-        max-width:100%;
-        overflow:hidden;
+        max-width: 100%;
+        overflow: hidden;
         overflow-x: auto;
         align-items: flex-start;
         justify-content: flex-start;
@@ -376,13 +446,18 @@
             padding: 8px 16px;
             font-size: 13px;
             border-radius: 8px;
-            border: 1px solid lightgrey;
+            min-height: 55px;
+            background: white;
+            border: 2px solid #3f91c7;
+            color: black;
             min-width: fit-content;
             margin-right: 16px;
+            cursor: pointer;
         }
 
             .session-scroller .session-element.active {
-                border: 2px solid #3FBFC7;
+                background: #3f91c7;
+                color: white;
             }
 
             .session-scroller .session-element span {
@@ -391,62 +466,117 @@
             }
 </style>
 
-<div class="container-fluid">
+<style>
+    .queue-area {
+        display: flex;
+        max-width: 100%;
+        overflow: hidden;
+        overflow-x: auto;
+    }
+
+        .queue-area .queue-list-area {
+            width: fit-content;
+            min-width: 300px;
+        }
+
+            .queue-area .queue-list-area.same-row {
+                width: fit-content;
+                display: flex;
+                align-content: flex-start;
+                align-items: flex-start;
+                justify-content: flex-start;
+                min-width: 300px;
+            }
+
+    .queue-list-area .queue-element {
+        min-width: 285px;
+        margin: 0px 16px;
+    }
+
+    @media screen and (max-width: 800px) {
+        .queue-area .queue-list-area {
+            width: fit-content;
+            min-width: 270px;
+        }
+
+            .queue-area .queue-list-area.same-row {
+                width: fit-content;
+                display: flex;
+                align-content: flex-start;
+                align-items: flex-start;
+                justify-content: flex-start;
+                min-width: 270px;
+            }
+
+        .queue-list-area .queue-element {
+            min-width: 255px;
+            margin: 0px 16px;
+        }
+    }
+</style>
+
+<div class="container-fluid" id="quequeDiv">
     <div id="queue_view">
         <div class="queue_top">
             <div class="row">
                 <div class="col-md-12">
                     <div class="top_content">
-                        <span><button class="queue_top_button">Queue summary</button></span>
-                        <span><button class="queue_top_button active">Queues</button></span>
+                        <span><button id="queue-summary-nav-btn" class="queue_top_button active">Queue summary</button></span>
+                        <span><button id="queue-list-nav-btn" class="queue_top_button">Queues</button></span>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
+            <div class="progress-bar">
+                <span class="bar" ng-hide="showLoader1">
+                    <span class="progress"></span>
+                </span>
+            </div>
             <div class="col-md-12">
-                <div class="session-scroller" id="session-scroller">
+                <div id="queue-section"  style="display:none;">
+                    <div class="row">
+                        <!--<div class="col-md-12 mt-1">
+                            <div class="session-scroller" id="session-scroller">
 
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="heading_queue">
-                    <h2><span class="session-name"></span> session</h2>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="col-md-2">
-                        <div class="queue_backlog">
-                            <h4>Backlog (0)</h4>
-                            <div id="backlog-list-area">
-                                <!--<div class="queue_backlog_inner">
-                                    <div class="right-border pink-border"></div>
-                                    <div class="queue-back-log-left">
-                                        <h2>A07</h2>
-                                    </div>
-                                    <div class="queue-back-log-right">
-                                        <span><img src="/assets/marketplace/image/cat-icon.png" /></span>
-                                        <span><img src="/assets/marketplace/image/setting-icon.png" /></span>
-                                    </div>
-                                </div>-->
                             </div>
-                            <div class="waiting">
-                                <p>Waiting <span>(10)</span></p>
+                        </div>-->
+                        <div class="col-md-12">
+                            <div class="heading_queue">
+                                <h2><span class="session-name"></span> session</h2>
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="queue-area" id="queue-area">
 
-                    <div class="col-md-10">
-                        <div class="row" id="queue-external-area">
-                            <!--<div class="col-md-2">
+                        <div class="queue-list-area queue_backlog">
+                            <h4>Backlog (0)</h4>
+                            <div id="backlog-list-area">
+                                <!--<div class="queue_backlog_inner">
+                    <div class="right-border pink-border"></div>
+                    <div class="queue-back-log-left">
+                        <h2>A07</h2>
+                    </div>
+                    <div class="queue-back-log-right">
+                        <span><img src="/assets/marketplace/image/cat-icon.png" /></span>
+                        <span><img src="/assets/marketplace/image/setting-icon.png" /></span>
+                    </div>
+                </div>-->
+                            </div>
+                            <!--<div class="waiting">
+                <p>Waiting <span>(10)</span></p>
+            </div>-->
+                        </div>
+                        <div class="queue-list-area same-row" id="queue-external-area">
+                            <div class="queue-element" ng-repeat="queue in queueList" data-queue-id="{{queue.Id}}">
                                 <div class="queue_backlog_second">
                                     <div class="queue_backlog_inner">
                                         <div class="queue-back-log">
-                                            <h2>(A) Staff A</h2>
+                                            <h2>({{queue.QUEUE_PREFIX}}) {{queue.QUEUE_NAME}}</h2>
                                             <div class="view-eye">
                                                 <img src="/assets/marketplace/image/eye-open.png" />
-                                                <img src="/assets/marketplace/image/eye-slash.png" />
+                                                <!--<img src="/assets/marketplace/image/eye-slash.png" />-->
                                             </div>
                                             <div class="call-button">
                                                 <button>Call</button>
@@ -454,66 +584,96 @@
                                         </div>
                                         <div class="que-wrp-lr">
                                             <div class="queue-back-log-left">
-                                                <h3 class="pink"><span>Current</span> <b>A10</b></h3>
+                                                <h3 class="pink"><span>Current</span> <b>--</b></h3>
                                             </div>
                                             <div class="queue-back-log-right">
-                                                <input type="checkbox" hidden="hidden" id="username">
-                                                <label class="switch" for="username"></label>
+                                                <input type="checkbox" name="queue-activator-trigger" hidden="hidden" ng-checked="queue.ACCEPT_TICKET == 'Y'" id="queue_activator-{{queue.Id}}">
+                                                <label class="switch" for="queue_activator-{{queue.Id}}"></label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="waiting">
-                                    <p>Waiting <span>(10)</span></p>
+                                    <p>Waiting <span>(0)</span></p>
+                                </div>
+                                <div class="ticket-list-area" data-ticket-type="Waiting">
 
                                 </div>
-                            </div>-->
+                                <div class="waiting">
+                                    <p>Pending <span>(0)</span></p>
+                                </div>
+                                <div class="ticket-list-area" data-ticket-type="Pending">
 
+                                </div>
+                            </div>
                         </div>
 
                     </div>
-
-                    <div class="col-md-4">
-                        <div class="queue_backlog_third">
-                            <div class="queue_backlog_inner">
-                                <div class="queue-back-log">
-                                    <h2>(A) Staff A</h2>
-                                </div>
-                                <div class="que-wrp-lr">
-                                    <div class="queue-back-log-left">
-                                        <h3 class="pink"><span>Current</span></br> <b>A10</b></h3>
+                </div>
+                <div id="queue-summary-section">
+                    <div class="row">
+                        <div class="col-md-4" ng-repeat="queue in queueList">
+                            <div class="queue_backlog_third">
+                                <div class="queue_backlog_inner">
+                                    <div class="queue-back-log">
+                                        <h2>({{queue.QUEUE_PREFIX}}) {{queue.QUEUE_NAME}}</h2>
                                     </div>
-                                    <div class="summry-text">
-                                        <p>Last ticket  <span>A20</span></p>
+                                    <div class="que-wrp-lr">
+                                        <div class="queue-back-log-left">
+                                            <h3 class="pink"><span>Current</span></br> <b>--</b></h3>
+                                        </div>
+                                        <div class="summry-text">
+                                            <p>Last ticket  <span>--</span></p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="queue_backlog_third">
-                            <div class="queue_backlog_inner">
-                                <div class="queue-back-log">
-                                    <h2>(A) Staff A</h2>
-                                </div>
-                                <div class="que-wrp-lr">
-                                    <div class="queue-back-log-left">
-                                        <h3 class="pink"><span>Current</span></br> <b>A10</b></h3>
-                                    </div>
-                                    <div class="summry-text">
-                                        <p>Last ticket  <span>A20</span></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
+                    </div>
+                </div>
+                
+                <!--<div class="col-md-4">
+        <div class="queue_backlog_third">
+            <div class="queue_backlog_inner">
+                <div class="queue-back-log">
+                    <h2>(A) Staff A</h2>
+                </div>
+                <div class="que-wrp-lr">
+                    <div class="queue-back-log-left">
+                        <h3 class="pink"><span>Current</span></br> <b>A10</b></h3>
+                    </div>
+                    <div class="summry-text">
+                        <p>Last ticket  <span>A20</span></p>
+                    </div>
                 </div>
             </div>
-
-
         </div>
     </div>
+    <div class="col-md-4">
+        <div class="queue_backlog_third">
+            <div class="queue_backlog_inner">
+                <div class="queue-back-log">
+                    <h2>(A) Staff A</h2>
+                </div>
+                <div class="que-wrp-lr">
+                    <div class="queue-back-log-left">
+                        <h3 class="pink"><span>Current</span></br> <b>A10</b></h3>
+                    </div>
+                    <div class="summry-text">
+                        <p>Last ticket  <span>A20</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>-->
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
 </div>
 <div id="searchModal"
      class="modal fade"
@@ -710,9 +870,9 @@
                     <input type="text" name='selectedrec' style="background-color:rgb(165 139 241 / 0.41)" placeholder="Type here..." />
                 </div>
             </div>
-            
 
-             c
+
+            c
             <div class="tabulator-section">
                 <div id="form-tableStudent"></div>
                 </
@@ -744,6 +904,7 @@
                             </label>-->
                             re
                             <div class="temp" ng-repeat="d in createEventDetails.dropdownList">
+                                tD
                                 <span class="titleContainer">
                                     <span class="title1"> {{d.formTitle}}</span>
 

@@ -29,6 +29,7 @@ namespace Barrway.DTO.BusinessModels
         public SCHSCHEDULETABLE table { get; set; }
         public string SCH_SCHEDULE_TABLE { get; set; }
         public string CREATION_TYPE { get; set; }
+        public string SCHEDULAR_TYPE { get; set; }
     }
 
     public class CommonTimeObject

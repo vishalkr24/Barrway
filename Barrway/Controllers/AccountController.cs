@@ -304,7 +304,7 @@ namespace Barrway.Controllers
         {
             if (!string.IsNullOrEmpty(User.Identity.Name))
             {
-                var loginresult = await authService.GetUser(User.Identity.Name, FormRole.PUBLIC_USER);
+                var loginresult = await authService.GetUser(User.Identity.Name, FormRole.GENERAL_USER);
 
                 if (loginresult.Status)
                 {

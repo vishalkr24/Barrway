@@ -22,9 +22,7 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string query = $@"select session_m.* from QUEUE_SESSION_MASTER_1974 session_m
-                                    join QUEUE_MASTER_1973 queue_m on queue_m.Id = session_m.QUEUE_ID
-                                    where cast(session_m.created_at as date) = cast(getDate() as date) and (queue_m.CALENDAR_CODE = '{CalendarCode}' and queue_m.COMPANY_CODE = '{CompanyCode}')";
+                string query = $@"select * from QUEUE_SESSION_MASTER_1974 where CALENDAR_CODE = '{CalendarCode}' and COMPANY_CODE = '{CompanyCode}'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -36,9 +34,46 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> UpdateCalendarReference(FormCalenderReferrenceTable data)
+        public async Task<AddUpdateDelete> getCurrentSession(string CalendarCode, string CompanyCode)
         {
-            string sqlString = $@"update TRANSACTION_MASTER_1942 set CALENDAR_CODE='{data.CALENDAR_CODE}',COMPANY_CODE='{data.COMPANY_CODE}' where formGroupKey='{data.formGroupKey}'";
+            try
+            {
+                string query = $@"select * from QUEUE_SESSION_MASTER_1974 ses
+                                    where ses.CALENDAR_CODE = '{CalendarCode}' and ses.COMPANY_CODE = '{CompanyCode}' and 
+                                    (
+	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.SESSION_START_TIME, 105) and 
+	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) < Convert(datetime, ses.SESSION_END_TIME, 105)
+                                    )";
+
+                var result = await sqlFunction.ExecuteSqlQuery(query);
+
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+        public async Task<AddUpdateDelete> getQueueList(string CalendarCode, string CompanyCode)
+        {
+            try
+            {
+                string query = $@"select * from QUEUE_MASTER_1973 where CALENDAR_CODE = '{CalendarCode}' and COMPANY_CODE = '{CompanyCode}'";
+
+                var result = await sqlFunction.ExecuteSqlQuery(query);
+
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+        public async Task<AddUpdateDelete> updateQueueActivationStatus(string QueueId, string Status)
+        {
+            string sqlString = $@"update QUEUE_MASTER_1973 set ACCEPT_TICKET = '{Status??"N"}' where Id='{QueueId}'";
             var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
             if (result > 0)
             {
