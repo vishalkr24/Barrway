@@ -1,4 +1,6 @@
-﻿using Barrway.Service.IRepository;
+﻿using Barrway.DTO.Common;
+using Barrway.Service.IRepository;
+using Barrway.Service.Repository;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hosting;
 using System;
@@ -11,20 +13,18 @@ namespace Barrway.WebSocket
 {
     public class QueueManager : Hub
     {
-        private readonly IMasterService masterService;
-        private readonly IFormAPIRepository formAPIRepository;
-        private readonly ISqlFunction sqlFunction;
-        private readonly IBusinessUserService businessUserService;
-        private readonly IAuthService authService;
+        private readonly QueueService queueService = new QueueService(new SqlFunction());
 
-        // GET: Calendar
-        public QueueManager(IMasterService masterService, IFormAPIRepository formAPIRepository, ISqlFunction sqlFunction, IBusinessUserService businessUserService, IAuthService authService)
+        public async override Task OnConnected()
         {
-            this.masterService = masterService;
-            this.formAPIRepository = formAPIRepository;
-            this.sqlFunction = sqlFunction;
-            this.businessUserService = businessUserService;
-            this.authService = authService;
+            Clients.Client(Context.ConnectionId).showSuccessResult(new AddUpdateDelete() { Status = true, Message = "Updating Live." });
+            await base.OnConnected();
+        }
+
+        public async override Task OnDisconnected(bool stopCalled)
+        {
+            Clients.Client(Context.ConnectionId).showSuccessResult(new AddUpdateDelete() { Status = true, Message = "Not Updating Live" });
+            await base.OnDisconnected(stopCalled);
         }
 
         public void Send(string name, string message)
@@ -32,6 +32,101 @@ namespace Barrway.WebSocket
             Clients.All.addNewMessageToPage(name, message);
         }
 
+        public async Task getSessionList(string CalendarCode, string CompanyCode)
+        {
+            try
+            {
+                var result = await queueService.getSessionList(CalendarCode, CompanyCode);
+
+                if (result.Status)
+                {
+                    Clients.Client(Context.ConnectionId).updateSessions(result);
+                }
+                else
+                {
+                    Clients.Client(Context.ConnectionId).showErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to fetch sessions."});
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                Clients.Client(Context.ConnectionId).showErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to fetch sessions." });
+            }
+
+            await Task.CompletedTask;
+        }
+
+        public async Task getCurrentSession(string CalendarCode, string CompanyCode)
+        {
+            try
+            {
+                var result = await queueService.getCurrentSession(CalendarCode, CompanyCode);
+
+                if (result.Status)
+                {
+                    Clients.Client(Context.ConnectionId).updateCurrentSession(result);
+                }
+                else
+                {
+                    Clients.Client(Context.ConnectionId).showErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to fetch sessions." });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Clients.Client(Context.ConnectionId).showErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to fetch sessions." });
+            }
+
+            await Task.CompletedTask;
+        }
+
+        public async Task getQueueList(string CalendarCode, string CompanyCode)
+        {
+            try
+            {
+                var result = await queueService.getQueueList(CalendarCode, CompanyCode);
+
+                if (result.Status)
+                {
+                    Clients.Client(Context.ConnectionId).updateQueues(result);
+                }
+                else
+                {
+                    Clients.Client(Context.ConnectionId).showErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to fetch queues." });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Clients.Client(Context.ConnectionId).showErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to fetch queues." });
+            }
+
+            await Task.CompletedTask;
+        }
+
+        public async Task updateQueueActivationStatus(string QueueId, string Status)
+        {
+            try
+            {
+                var result = await queueService.updateQueueActivationStatus(QueueId, Status);
+
+                if (result.Status)
+                {
+                    Clients.Client(Context.ConnectionId).showSuccessResult(new AddUpdateDelete() { Status = true, Message = "Queue ticket distribution" + ((Status == "Y")? " is started.": " is turned off.") });
+                }
+                else
+                {
+                    Clients.Client(Context.ConnectionId).showErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to update queue status." });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Clients.Client(Context.ConnectionId).showErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to update queue status." });
+            }
+
+            await Task.CompletedTask;
+        }
 
 
     }

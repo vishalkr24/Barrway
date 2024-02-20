@@ -107,7 +107,7 @@
               "Text": "Let's add your course/service schedule to the calendar",
               "Button": {
                 "Text": "Go",
-                "Link": "/BusinessAdmin/SchedularMaster"
+                "Link": "/calendar/index#/calendar/schedular-form/0"
               }
             },
             "Helper_2": {
@@ -130,7 +130,7 @@
               "Text": "Let's add your course/service schedule to the calendar",
               "Button": {
                 "Text": "Go",
-                "Link": "/BusinessAdmin/SchedularMaster"
+                "Link": "/calendar/index#/calendar/schedular-form/0"
               }
             },
             "Helper_2": {
@@ -311,7 +311,7 @@
               "Text": "Let's add your course/service schedule to the calendar",
               "Button": {
                 "Text": "Go",
-                "Link": "/BusinessAdmin/SchedularMaster"
+                "Link": "/calendar/index#/calendar/schedular-form/0"
               }
             },
             "Helper_2": {
@@ -334,7 +334,7 @@
               "Text": "Let's add your course/service schedule to the calendar",
               "Button": {
                 "Text": "Go",
-                "Link": "/BusinessAdmin/SchedularMaster"
+                "Link": "/calendar/index#/calendar/schedular-form/0"
               }
             },
             "Helper_2": {
@@ -388,7 +388,7 @@
               "Text": "Let's add your course/service schedule to the calendar",
               "Button": {
                 "Text": "Go",
-                "Link": "/BusinessAdmin/SchedularMaster"
+                "Link": "/calendar/index#/calendar/schedular-form/0"
               }
             },
             "Helper_2": {
@@ -462,6 +462,12 @@
               "Text": "You may edit these information and add more details in the future by going to location master. "
             }
           }
+        },
+        "2_3": {
+          "Has_Next_Step": true,
+          "View_Name": "QUEUE_2",
+          "Heading_Title": "Set up the booking queue",
+          "Is_Skippable": false
         }
       }
     },
@@ -520,7 +526,7 @@
               "Text": "You can edit your queue setting here. ",
               "Button": {
                 "Text": "Go",
-                "Link": "/BusinessAdmin/SchedularMaster"
+                "Link": "/calendar/index#/calendar/schedular-form/0"
               }
             },
             "Helper_2": {
@@ -528,7 +534,7 @@
               "Text": "Let’s check the queue created. ",
               "Button": {
                 "Text": "Go",
-                "Link": "/Calendar/Index#/Calendar"
+                "Link": "/calendar/index#/queue-manager"
               }
             }
           }
@@ -589,7 +595,7 @@
               "Text": "Let’s add your business schedule to the calendar ",
               "Button": {
                 "Text": "Go",
-                "Link": "/BusinessAdmin/SchedularMaster"
+                "Link": "/calendar/index#/calendar/schedular-form/0"
               }
             },
             "Helper_2": {
@@ -612,7 +618,7 @@
               "Text": "Let’s add your business schedule to the calendar ",
               "Button": {
                 "Text": "Go",
-                "Link": "/BusinessAdmin/SchedularMaster"
+                "Link": "/calendar/index#/calendar/schedular-form/0"
               }
             },
             "Helper_2": {
@@ -694,7 +700,7 @@
           "Text": "Let’s add your course/service schedule to the calendar ",
           "Button": {
             "Text": "Go",
-            "Link": "/BusinessAdmin/SchedularMaster"
+            "Link": "/calendar/index#/calendar/schedular-form/0"
           }
         },
         "Helper_2": {

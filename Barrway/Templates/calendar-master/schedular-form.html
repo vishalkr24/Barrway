@@ -177,9 +177,9 @@
                     border-left: 1px solid lightgrey;
                 }
 
-                .schedular-table .schedular-row .schedular-element.form-element.error input[type=time] {
-                    border: 1px solid crimson;
-                }
+                    .schedular-table .schedular-row .schedular-element.form-element.error input[type=time] {
+                        border: 1px solid crimson;
+                    }
 
                 .schedular-table .schedular-row .schedular-element.add-element button {
                     background: white;
@@ -239,12 +239,20 @@
         background-color: #ebebeb !important;
     }
 
-    .invalid-feedback-2 {
-        display: none!important;
+    .invalid-feedback-3 {
+        color: red !important;
+        margin-bottom: 11px;
+        display: none;
     }
 
-    .schedular-form .col-md-4{
+    .schedular-form .col-md-4 {
         margin-top: 1.1rem;
+    }
+
+    .text-helper {
+        padding: 8px 0px;
+        font-weight: bold;
+        margin-bottom: -12px;
     }
 </style>
 <div class="container-fluid">
@@ -267,8 +275,11 @@
         </div>
         <!-- End Row -->
     </div>
-    <div class="">
-        <h1 class="schedular-title mt-4">Schedular Form</h1>
+    <h1 class="schedular-title mt-4">Schedular Form</h1>
+    <div class="" id="schedular-form-section" ng-show="isQueue == 0">
+        <div class="text-helper" id="sub-heading-helper">
+
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <form id="myForm" class="schedular-form">
@@ -280,7 +291,7 @@
                                 <option value="{{l.Id}}" ng-repeat="l in serviceList">{{l.ACTIVITY_NAME}}</option>
                             </select>
                             <div>
-                                <div class="invalid-feedback-2" id="SCH_ACTIVITY_ERROR">
+                                <div class="invalid-feedback-3" id="SCH_ACTIVITY_ERROR">
                                     Please select an activity
                                 </div>
                             </div>
@@ -291,29 +302,30 @@
                                 <option value="{{l.Id}}" ng-repeat="l in locationList">{{l.LOCATION_ADDRESS}}</option>
                             </select>
                             <div>
-                                <div class="invalid-feedback-2" id="SCH_LOCATION_ERROR">
+                                <div class="invalid-feedback-3" id="SCH_LOCATION_ERROR">
                                     Please select a location
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-4" id="staff-ddl-area">
                             <div><label>Staff</label></div>
                             <select class="form-control" id="SCH_RESOURCE">
                                 <option value="{{l.Id}}" ng-repeat="l in serviceProviderList">{{l.FIRST_NAME}} {{l.LAST_NAME}}</option>
                             </select>
                             <div>
-                                <div class="invalid-feedback-2" id="SCH_RESOURCE_ERROR">
+                                <div class="invalid-feedback-3" id="SCH_RESOURCE_ERROR">
                                     Please select a resource
                                 </div>
                             </div>
                         </div>
-
+                    </div>
+                    <div class="row">
                         <div class="col-md-4 hide-for-superadmin">
                             <div><label>Fill Schedule {{translation.From}}</label></div>
                             <input type="date" id="SCH_FROM_DATE" class="js-flatpickr form-control flatpickr-custom" data-hs-flatpickr-options='{ "dateFormat": "d/m/Y" }' placeholder="select from date" />
                             <div>
-                                <div class="invalid-feedback-2" id="SCH_FROM_DATE_ERROR">
+                                <div class="invalid-feedback-3" id="SCH_FROM_DATE_ERROR">
                                     Please choose a start date
                                 </div>
                             </div>
@@ -328,7 +340,7 @@
 
                             <input type="date" id="SCH_TO_DATE" class="js-flatpickr form-control flatpickr-custom" data-hs-flatpickr-options='{ "dateFormat": "d/m/Y" }' placeholder="select to date" />
                             <div>
-                                <div class="invalid-feedback-2" id="SCH_TO_DATE_ERROR">
+                                <div class="invalid-feedback-3" id="SCH_TO_DATE_ERROR">
                                     Please choose an end date
                                 </div>
                             </div>
@@ -344,49 +356,13 @@
                             </select>
                         </div>
 
-
-                        <div class="col-md-4">
-                            <div>
-                                <label>Duration for each session (minute)</label>
-                            </div>
-
-                            <input type="number" id="SCH_SESSION_DURATION" value="{{serviceDetails.DURATION_FIELD}}" class="form-control disabled" disabled />
-                            <div>
-                                <div class="invalid-feedback-2" id="SCH_TO_DATE_ERROR">
-                                    Please choose an end date
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="col-md-12">
-                                <div>
-                                    <label>Rest period between session (minute)</label>
-                                </div>
-
-                                <input type="number" id="SCH_REST_PERIOD" class="form-control disabled" value="{{serviceDetails.REST_PERIOD_BETWEEN_SESSION}}" disabled />
-                                <div>
-                                    <div class="invalid-feedback-2" id="SCH_DAYS_ERROR">
-                                        Please enter no. of days to be scheduled
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div><label>Capacity (No. of maximum participants)</label></div>
-                            <input type="number" id="SCH_CAPACITY" class="form-control" placeholder="5" />
-                            <div>
-                                <div class="invalid-feedback-2" id="SCH_DAYS_ERROR">
-                                    Please enter no. of days to be scheduled
-                                </div>
-                            </div>
-                        </div>
-
-                        
                     </div>
-                    <div>
+                    <div class="row">
                         <div class="col-md-12">
-                            <h1 class="schedular-title-2 mt-5">Class schedule</h1>
+                            <h1 class="schedular-title-2 mt-5" id="schedule-name-helper">Class schedule</h1>
+                        </div>
+                        <div class="invalid-feedback-3" id="SCH_SLOT_ERROR">
+                            Please fill slot timings
                         </div>
                         <div class="col-md-12">
                             <div class="schedular-table">
@@ -481,6 +457,52 @@
                             </div>
 
                         </div>
+                        <div class="row" id="duration-area">
+                            <div class="col-md-12 mt-3">
+                                <div class="text-helper" id="duration-helper">
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div>
+                                    <label>Duration for each session (minute)</label>
+                                </div>
+
+                                <input type="number" id="SCH_SESSION_DURATION" value="{{serviceDetails.DURATION_FIELD}}" class="form-control disabled" disabled />
+                                <div>
+                                    <div class="invalid-feedback-3" id="SCH_TO_DATE_ERROR">
+                                        Please choose an end date
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="col-md-12">
+                                    <div>
+                                        <label>Rest period between session (minute)</label>
+                                    </div>
+
+                                    <input type="number" id="SCH_REST_PERIOD" class="form-control disabled" value="{{serviceDetails.REST_PERIOD_BETWEEN_SESSION}}" disabled />
+                                    <div>
+                                        <div class="invalid-feedback-3" id="SCH_DAYS_ERROR">
+                                            Please enter no. of days to be scheduled
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div><label>Capacity (No. of maximum participants)</label></div>
+                                <input type="number" id="SCH_CAPACITY" class="form-control" placeholder="5" />
+                                <div>
+                                    <div class="invalid-feedback-3" id="SCH_DAYS_ERROR">
+                                        Please enter no. of days to be scheduled
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
                         <div class="col-md-12 mt-5 mb-5">
                             <button class="btn btn-default" ng-click="hideSchedularFormModal()">{{translation.Cancel}}</button> <button class="btn btn-success" id="final-submit-button" ng-click="saveSchedularForm()">{{translation.Submit}}</button> <button class="btn btn-success" style="display:none;" id="final-save-button" ng-click="saveSchedularForm()">{{translation.Save}}</button>
                         </div>
@@ -488,6 +510,95 @@
                 </form>
             </div>
         </div>
+    </div>
+    <div id="queue-schedular-form-section" ng-show="isQueue == 1">
+        <div class="row mt-125rem">
+            <div class="col-md-2">
+                <div class="img-col mt-125rem">
+                    <img src="/assets/marketplace/image/serv.png" />
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div class="booking_queue">
+                    <div class="booking_queue_number">
+                        <div class="number_of_queue">
+                            <div class="quewe_set">
+                                <label for="number_of_queue"><b style="color:#000;">Number of queue*</b></label>
+                                <select id="exampleFormControlSelect1" class="form-control">
+                                    <option selected>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                            </div>
+                            <div class="queue_message"></div>
+                        </div>
+
+                        <div class="booking_queue_table">
+                            <table class="booking-queue-table" id="booking-queue-table">
+                                <thead>
+                                    <tr>
+                                        <th width="200px">Name of the queue</th>
+                                        <th width="200px">Queue abbreviation(s)*</th>
+                                        <th width="130px">Start number*</th>
+                                        <th width="130px">End number*</th>
+                                        <th>Reset number*</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-125rem" style="margin-top: 32px;">
+            <div class="col-md-2">
+                <div class="img-col mt-125rem">
+                    <img src="/assets/marketplace/image/serv.png" />
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div class="booking_queue">
+                    <div class="booking_queue_number">
+                        <div class="number_of_queue">
+                            <div class="quewe_set">
+                                <label for="number_of_queue"><b style="color:#000;">Number of queuing session</b><br />(eg. breakfast, lunch, afternoon tea, dinner)</label>
+                                <select id="exampleFormControlSelect2" class="form-control">
+                                    <option selected>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                            </div>
+                            <div class="queue_message"></div>
+                        </div>
+
+                        <div class="booking_queue_table">
+                            <table class="booking-queue-table" id="booking-session-table">
+                                <thead>
+                                    <tr>
+                                        <th width="200px">Session name*</th>
+                                        <th width="150px">Start time*</th>
+                                        <th width="150px">End time*</th>
+                                        <th>Start ticketing*</th>
+                                        <th width="150px">Queue open time</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-button mt-4rem">
+            <button class="pink-button right" ng-click="AddQueueSession()">Update calendar</button>
+        </div>
+        <div class="blocks"></div>
     </div>
 </div>
 

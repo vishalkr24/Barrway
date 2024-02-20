@@ -1252,6 +1252,16 @@ namespace Barrway.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult> getScheduleTypeJson()
+        {
+            using (StreamReader sr = new StreamReader(Server.MapPath("~/SchedularTypeMatrix/SchedularTypeJson.json")))
+            {
+                var result = sr.ReadToEnd();
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         [HttpPost]
         public async Task<ActionResult> UpdateCalendarType(string CalendarCode, string CalendarType)
         {
@@ -1368,6 +1378,7 @@ namespace Barrway.Controllers
                                 CALENDAR_TEMPLATE_ID = (UserIdentity.Role != "SUPERADMIN_USER") ? ((string.IsNullOrEmpty(model.CALENDAR_TEMPLATE_ID?.ToString())) ? "" : model.CALENDAR_TEMPLATE_ID?.ToString()) : "0",
                                 IS_VISIBLE = "Y",
                                 Id = model.Id,
+                                CALENDAR_FUNCTION_TYPE = (model.CALENDAR_CATEGORY_ID == "6") ? "QUEUE": "CALENDAR",
                                 SCHEDULAR_ID = (string.IsNullOrEmpty(model.SCHEDULAR_ID)) ? "" : model.SCHEDULAR_ID,
                                 DISTRICT_ID = model.DISTRICT_ID.ToString(),
                                 CITY_ID = model.CITY_ID.ToString(),

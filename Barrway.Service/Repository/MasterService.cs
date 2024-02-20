@@ -410,9 +410,9 @@ namespace Barrway.Service.Repository
 
                 string strSql = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
                                      select f.*, loc.LOCATION_BUILDING_NAME, ser.ACTIVITY_NAME, serPro.FIRST_NAME from [dbo].[SCHEDULAR_FORM_1941] f
-                                    join LOCATION_MASTER_1936 loc on loc.Id = f.SCH_LOCATION
-                                    join SERVICE_MASTER_1933 ser on ser.Id = f.SCH_ACTIVITY
-                                    join SERVICE_PROVIDER_MASTER_1934 serPro on serPro.Id = f.SCH_RESOURCE
+                                    left join LOCATION_MASTER_1936 loc on loc.Id = f.SCH_LOCATION
+                                    left join SERVICE_MASTER_1933 ser on ser.Id = f.SCH_ACTIVITY
+                                    left join SERVICE_PROVIDER_MASTER_1934 serPro on serPro.Id = f.SCH_RESOURCE
                                     where f.COMPANY_CODE='{companyCode}' and f.CALENDAR_CODE='{calendarCode}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
                                     )
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
