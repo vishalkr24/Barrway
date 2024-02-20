@@ -1,0 +1,66 @@
+{
+  "Type1": {
+    "Is_Category_Based": true,
+    "Category": {
+      "Category1": {
+        "View_Name": "S3A"
+      },
+      "Category2": {
+        "View_Name": "S3A"
+      }
+    }
+  },
+  "Type2": {
+    "Is_Category_Based": true,
+    "Category": {
+      "Category1": {
+        "View_Name": "S3B"
+      },
+      "Category2": {
+        "View_Name": "S3A"
+      },
+      "Category3": {
+        "View_Name": "S3G"
+      },
+      "Category4": {
+        "View_Name": "S3H"
+      }
+    }
+  },
+  "Type3": {
+    "Is_Category_Based": true,
+    "Category": {
+      "Category1": {
+        "View_Name": "S3D"
+      },
+      "Category2": {
+        "View_Name": "S3E"
+      },
+      "Category3": {
+        "View_Name": "S3F"
+      },
+      "Category4": {
+        "View_Name": "S3H"
+      }
+    }
+  },
+  "Type4": {
+    "Is_Category_Based": true,
+    "Category": {
+      "Category1": {
+        "View_Name": "S3D"
+      },
+      "Category2": {
+        "View_Name": "S3E"
+      }
+    }
+  },
+  "Type5": {
+    "Is_Category_Based": false,
+    "View_Name": "S3A"
+  },
+  "Type6": {
+    "Is_Category_Based": false,
+    "View_Name": "S3H"
+  }
+}

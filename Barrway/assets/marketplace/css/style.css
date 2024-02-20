@@ -759,7 +759,7 @@ p.mt-10 {
 }
 
 .mihi-71 {
-    min-height: 71vh;
+    min-height: calc(100vh - 215px);
 }
 
 /*start*/

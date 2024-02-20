@@ -163,6 +163,62 @@ function getCalendarSetupMatrix() {
     return data;
 }
 
+function getScheduleTypeJson() {
+    var data;
+    $.ajax({
+        url: "/BusinessAdmin/getScheduleTypeJson/",
+        type: "GET",
+        async: false,
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    })
+    return data;
+}
+
+function getSchedule(ScheduleId) {
+    var data;
+    $.ajax({
+        url: "/Calendar/GetSchedule/",
+        type: "POST",
+        async: false,
+        data: {
+            ScheduleId: ScheduleId
+        },
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    })
+    return data;
+}
+
+function getSchedule(companyCode, calendarCode, currentDate = false) {
+    var data;
+    $.ajax({
+        url: "/Calendar/GetScheduleByCalendar/",
+        type: "POST",
+        async: false,
+        data: {
+            CompanyCode: companyCode,
+            CalendarCode: calendarCode,
+            CurrentDate: currentDate
+        },
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    })
+    return data;
+}
+
 function getCompanyWebsite() {
     var data;
     $.ajax({
@@ -381,6 +437,8 @@ function getSingleCalendar(calendarCode) {
     })
     return data;
 }
+
+
 
 function GetCompanyCalendars(companyId) {
     var data;

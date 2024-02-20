@@ -870,7 +870,28 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string query = $@"update BUSINESS_CALENDAR_MASTER_1925 set CALENDAR_TYPE = '{CalendarType}' where CALENDAR_CODE = '{CalendarCode}'";
+                string sqlQuery = $@"select * from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE = '{CalendarCode}'";
+                var checkResult = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+                string additionalUpdate = $@"";
+
+                if (checkResult.FirstOrDefault()["CALENDAR_CATEGORY_ID"]?.ToString() == "2" && CalendarType == "4")
+                {
+                    additionalUpdate = " CALENDAR_FUNCTION_TYPE = 'QUEUE',";
+                }
+                else if (checkResult.FirstOrDefault()["CALENDAR_CATEGORY_ID"]?.ToString() == "3" && CalendarType == "3")
+                {
+                    additionalUpdate = " CALENDAR_FUNCTION_TYPE = 'QUEUE',";
+                }
+                else if (checkResult.FirstOrDefault()["CALENDAR_CATEGORY_ID"]?.ToString() == "6")
+                {
+                    additionalUpdate = " CALENDAR_FUNCTION_TYPE = 'QUEUE',";
+                }
+                else
+                {
+                    additionalUpdate = " CALENDAR_FUNCTION_TYPE = 'CALENDAR',";
+                }
+
+                string query = $@"update BUSINESS_CALENDAR_MASTER_1925 set {additionalUpdate} CALENDAR_TYPE = '{CalendarType}' where CALENDAR_CODE = '{CalendarCode}'";
                 var result = await sqlFunction.ExecuteSqlCommandQuery(query);
 
                 if (result > 0)
@@ -895,7 +916,7 @@ namespace Barrway.Service.Repository
             {
                 string query = $@"delete from STAFF_SERVICE_MAPPING_1971 where CALENDAR_CODE = '{model.FirstOrDefault().CALENDAR_CODE}'";
                 var result = await sqlFunction.ExecuteSqlCommandQuery(query);
-                
+
                 List<string> requestList = new List<string>();
                 List<string> formGroupKeyListTemp = new List<string>();
 
@@ -910,7 +931,7 @@ namespace Barrway.Service.Repository
                         {
                             sd.Add(keyValuePair.Key, keyValuePair.Value.ToString());
                         }
-                        
+
                     }
 
                     requestList.Add(CustomMethods.ConvertDicToNameValuePair(sd));
@@ -984,11 +1005,11 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetMarcketPlaceCompanyCalendarByCompanyId(string CompanyId)
         {
-            string query = $@"SELECT calendar.[Id]      ,calendar.[created_at], company.IS_ACTIVE      ,calendar.[updated_at]      ,calendar.[created_by]      ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,calendar.[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
+            string query = $@"SELECT calendar.[Id], calendar.CALENDAR_FUNCTION_TYPE,      calendar.[created_at], company.IS_ACTIVE      ,calendar.[updated_at]      ,calendar.[created_by]      ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,calendar.[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                                 join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE 
 								join CALENDAR_CONTROL_SHEET_1944 ccs on ccs.CALENDAR_CODE = calendar.CALENDAR_CODE
                                 join CALENDAR_CATEGORY_MASTER_1929 category on category.Id = calendar.CALENDAR_CATEGORY_ID
-                                where company.IS_ACTIVE = 'Y' and company.Id = '{CompanyId}' and category.[CALENDAR_FORM_TYPE]='PUBLIC' and ccs.CALENDAR_USE_TYPE = 'PUBLIC'";
+                                where company.IS_ACTIVE = 'Y' and company.Id = '{CompanyId}' and ccs.CALENDAR_USE_TYPE = 'PUBLIC'";
 
             List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -1283,19 +1304,68 @@ namespace Barrway.Service.Repository
                                       ,[IF_SLOT_EXIST]
                                       ,[IF_SLOT_DOES_NOT_EXIST]
                                       ,[SCH_STUDENT_TABLE]
+									  ,[SCHEDULAR_TYPE]
                                       ,[SCH_SCHEDULE_TABLE]
                                       ,schedular.[COMPANY_CODE]
                                       ,schedular.[CALENDAR_CODE]
                                   FROM [dbo].[SCHEDULAR_FORM_1941] schedular
 								  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = schedular.COMPANY_CODE
-								  join BUSINESS_ACCOUNT_WEBSITE_1918 b_account on b_account.Id = company.BUSINESS_ACCOUNT_ID
-                                  where schedular.Id = '{ScheduleId}' and b_account.USER_ID = '{UserId}'";
+								  join BUSINESS_ASSIGNED_USERS_1964 bau on bau.COMPANY_ID = company.Id
+								  join USER_MASTER_1915 um on um.Id = bau.ASSIGNED_USER
+                                  where schedular.Id = '{ScheduleId}' and um.USER_ID = '{UserId}'";
 
             var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
             if (result.Count > 0)
             {
                 return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetSchedule(string CompanyCode, string CalendarCode, string UserId, bool CurrentDate = false)
+        {
+            string sqlQuery = $@"SELECT top 1  schedular.[Id]
+                                      ,schedular.[created_at]
+                                      ,schedular.[updated_at]
+                                      ,schedular.[created_by]
+                                      ,schedular.[updated_by]
+                                      ,[SCH__NAME]
+                                      ,[SCH_LOCATION]
+                                      ,[SCH_ACTIVITY]
+                                      ,[SCH_RESOURCE]
+                                      ,[SCH_MEDIUM]
+                                      ,[SCH_DESCRIPTION]
+                                      ,[SCH_FROM_DATE]
+                                      ,[SCH_TO_DATE]
+                                      ,[SCH_ALTERNATIVE_WEEK]
+                                      ,[hidden_1683715521753]
+                                      ,[hidden_1683715524413]
+                                      ,[SCH_START]
+                                      ,[SCH_END]
+                                      ,[SCH_COLOR]
+                                      ,[SCH_ALL_DAY]
+                                      ,[IF_SLOT_EXIST]
+                                      ,[IF_SLOT_DOES_NOT_EXIST]
+                                      ,[SCH_STUDENT_TABLE]
+									  ,[SCHEDULAR_TYPE]
+                                      ,[SCH_SCHEDULE_TABLE]
+                                      ,schedular.[COMPANY_CODE]
+                                      ,schedular.[CALENDAR_CODE]
+                                  FROM [dbo].[SCHEDULAR_FORM_1941] schedular
+								  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = schedular.COMPANY_CODE
+								  join BUSINESS_ASSIGNED_USERS_1964 bau on bau.COMPANY_ID = company.Id
+								  join USER_MASTER_1915 um on um.Id = bau.ASSIGNED_USER
+                                  where schedular.COMPANY_CODE = '{CompanyCode}' and schedular.CALENDAR_CODE = '{CalendarCode}' { ((CurrentDate) ? " and (cast([SCH_FROM_DATE] as date) = cast(getDate() as date) and cast([SCH_TO_DATE] as date) = cast(getDate() as date))" : "") } and um.USER_ID = '{UserId}' order by created_at desc";
+
+            var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+            if (result.Count > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result.FirstOrDefault() };
             }
             else
             {
@@ -2544,11 +2614,198 @@ namespace Barrway.Service.Repository
 
         }
 
+        public async Task<AddUpdateDelete> AddQueueSession(List<QueueMasterModel> queues, List<SessionMasterModel> sessions, string ScheduleId)
+        {
+            try
+            {
+                List<int> queueIds = new List<int>();
+                List<int> sessionIds = new List<int>();
+                string CalendarCode = queues.FirstOrDefault().CALENDAR_CODE;
+                string CompanyCode = queues.FirstOrDefault().COMPANY_CODE;
+
+                if (queues.Count > 0)
+                {
+                    foreach (var queue in queues)
+                    {
+                        int queueId = 0;
+
+                        if (string.IsNullOrEmpty(queue.Id))
+                        {
+                            Form_DataTable data = new Form_DataTable();
+                            data.action = (int)FormAction.Save;
+                            data.formId = (int)FormSetting.QUEUE_MASTER;
+
+                            data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(queue.ToDictionary());
+                            data.formGroupKey = Guid.NewGuid().ToString();
+                            var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+                            queueId = formResult.Id;
+                        }
+                        else
+                        {
+                            queueId = Convert.ToInt32(queue.Id);
+                        }
+                        
+                        queueIds.Add(queueId);
+                    }
+
+                    foreach (var session in sessions.Where(x => string.IsNullOrEmpty(x.Id)))
+                    {
+                        int sessionId = 0;
+
+                        Form_DataTable data2 = new Form_DataTable();
+                        data2.action = (int)FormAction.Save;
+                        data2.formId = (int)FormSetting.SESSION_MASTER;
+
+                        data2.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(session.ToDictionary());
+                        data2.formGroupKey = Guid.NewGuid().ToString();
+                        var formResult2 = (await formAPIRepository.GeneratedFormData(data2)).Data;
+
+                        if (formResult2.res == 1)
+                        {
+                            sessionId = formResult2.Id;
+
+                            sessionIds.Add(sessionId);
+                        }
+                    }
+
+                    foreach(var x in queueIds)
+                    {
+                        foreach(var y in sessionIds)
+                        {
+                            Form_DataTable data3 = new Form_DataTable();
+                            data3.action = (int)FormAction.Save;
+                            data3.formId = (int)FormSetting.QUEUE_SESSION_MAPPING;
+
+                            data3.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(new QueueSessionMappingModel()
+                            {
+                                CALENDAR_CODE = CalendarCode,
+                                COMPANY_CODE = CompanyCode,
+                                QUEUE_ID = x.ToString(),
+                                SCHEDULE_ID = ScheduleId.ToString(),
+                                SESSION_ID = y.ToString()
+                            }.ToDictionary());
+                            data3.formGroupKey = Guid.NewGuid().ToString();
+                            var formResult3 = (await formAPIRepository.GeneratedFormData(data3)).Data;
+                        };
+                    }
+                }
+
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.ToString() };
+            }
+        }
+
+        public async Task<AddUpdateDelete> UpdateQueueDetails(List<QueueMasterModel> model)
+        {
+            try
+            {
+                string query = "";
+
+                for (int i = 0; i < model.Count; i++)
+                {
+                    query += $@"UPDATE [dbo].[QUEUE_MASTER_1973]
+                                   SET [QUEUE_BY] = {model[i].QUEUE_BY}
+                                      ,[QUEUE_RESOURCE_ID] = {model[i].QUEUE_RESOURCE_ID}
+                                      ,[QUEUE_NAME] = {model[i].QUEUE_NAME}
+                                      ,[QUEUE_USAGE] = {model[i].QUEUE_USAGE}
+                                      ,[QUEUE_PREFIX] = {model[i].QUEUE_PREFIX}
+                                      ,[ACCEPT_TICKET] = {model[i].ACCEPT_TICKET}
+                                      ,[QUEUE_START_NUMBER] = {model[i].QUEUE_START_NUMBER}
+                                      ,[QUEUE_END_NUMBER] = {model[i].QUEUE_END_NUMBER}
+                                      ,[QUEUE_RESET_NUMBER] = {model[i].QUEUE_RESET_NUMBER}
+                                 WHERE Id = '{model[i].Id}'";
+
+                }
+
+                var Result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                if (Result > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+        public async Task<AddUpdateDelete> UpdateSessionDetails(List<SessionMasterModel> model)
+        {
+            try
+            {
+                string query = "";
+
+                for (int i = 0; i < model.Count; i++)
+                {
+                    query += $@"UPDATE [dbo].[QUEUE_MASTER_1973]
+                                   SET [SESSION_NAME] = {model[i].SESSION_NAME}
+                                  ,[SESSION_START_TIME] ={model[i].SESSION_START_TIME}
+                                  ,[SESSION_END_TIME] = {model[i].SESSION_END_TIME}
+                                  ,[TICKETING_TYPE] = {model[i].TICKETING_TYPE}
+                                  ,[QUEUE_OPEN_TIME] = {model[i].QUEUE_OPEN_TIME}
+                                 WHERE Id = '{model[i].Id}'";
+
+                }
+
+                var Result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                if (Result > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetQueueAndSession(string CompanyCode, string CalendarCode)
+        {
+            try
+            {
+                string query = $@"select * from QUEUE_MASTER_1973 where CALENDAR_CODE = '{CalendarCode}' and COMPANY_CODE = '{CompanyCode}'";
+
+                List<IDictionary<string, object>> Result = await sqlFunction.ExecuteSqlQuery(query);
+
+                query = $@"select * from QUEUE_SESSION_MASTER_1974 where CALENDAR_CODE = '{CalendarCode}' and COMPANY_CODE = '{CompanyCode}'";
+
+                List<IDictionary<string, object>> Result2 = await sqlFunction.ExecuteSqlQuery(query);
+
+                if (Result.Count > 0 || Result2.Count > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = new { queue = Result, session = Result2 } };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+
+        }
+
         public async Task<AddUpdateDelete> CheckOverlapingSlots(SchedularFormModel model)
         {
             try
             {
-                string sqlQuery = $@"select [start], [end] from CALENDAR_FORM_1935 where (cast([start] as date) >= '{model.SCH_FROM_DATE}' and cast([end] as date) <= '{model.SCH_TO_DATE}') ";
+                string sqlQuery = $@"select [start], [end] from CALENDAR_FORM_1935 where (cast([start] as date) >= '{model.SCH_FROM_DATE}' and cast([end] as date) <= '{model.SCH_TO_DATE}') and (CALENDAR_CODE = '{model.CALENDAR_CODE}' and COMPANY_CODE = '{model.COMPANY_CODE}') ";
 
                 var slotsResult = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
@@ -2568,7 +2825,7 @@ namespace Barrway.Service.Repository
 
                         scheduleSlots.ForEach(x =>
                         {
-                            if (!TimeSlotCompare(JsonConvert.DeserializeObject<CommonTimeObject>(JsonConvert.SerializeObject(x)) , existingslot) && x["IsOverlapped"].ToString() == "false")
+                            if (!TimeSlotCompare(JsonConvert.DeserializeObject<CommonTimeObject>(JsonConvert.SerializeObject(x)), existingslot) && x["IsOverlapped"].ToString() == "false")
                             {
                                 x["IsOverlapped"] = "true";
                                 finalStatus = true;
@@ -2763,7 +3020,7 @@ namespace Barrway.Service.Repository
 
                 if (string.IsNullOrEmpty(UserId))
                 {
-                    sqlString = $@"select *from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE='{calendarCode??""}'";
+                    sqlString = $@"select *from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE='{calendarCode ?? ""}'";
                 }
                 else
                 {
