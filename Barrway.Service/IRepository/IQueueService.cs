@@ -1,4 +1,5 @@
-﻿using Barrway.DTO.Common;
+﻿using Barrway.DTO.BusinessModels;
+using Barrway.DTO.Common;
 using FormGeneratorDTOs.DTOs;
 using System;
 using System.Collections.Generic;
@@ -14,5 +15,11 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> getCurrentSession(string CalendarCode, string CompanyCode);
         Task<AddUpdateDelete> getQueueList(string CalendarCode, string CompanyCode);
         Task<AddUpdateDelete> updateQueueActivationStatus(string QueueId, string Status);
+
+        #region marketplace queue
+        Task<AddUpdateDelete> bookTicket(TicketMasterModel model);
+        Task<AddUpdateDelete> updateQueueTicketStatus(TicketMasterModel model);
+        Task<AddUpdateDelete> getMarketplaceQueueList(string CalendarCode, string CompanyCode);
+        #endregion
     }
 }

@@ -61,7 +61,7 @@
             $scope.showLoader1 = true;
             console.log(chat);
             $scope.ShowLoading();
-            $scope.getCurrentSession();
+            $scope.getQueueList();
         };
 
         // establish Signalr Connection
@@ -90,7 +90,7 @@
         }
 
         $scope.getQueueList = function () {
-            chat.server.getQueueList(String(localStorage.getItem("CALENDAR_CODE")), String(localStorage.getItem("COMPANY_CODE")));
+            chat.server.getQueueList(String(localStorage.getItem("CALENDAR_CODE")), String(localStorage.getItem("COMPANY_CODE")), false);
         }
 
 

@@ -52,8 +52,8 @@ namespace Barrway.Utility.Common
         STAFF_SERVICE_MAPPING = 2341,
         SESSION_MASTER = 2344,
         QUEUE_MASTER = 2343,
-        TICKET_MASTER = 2345,
-        QUEUE_SESSION_MAPPING = 2346
+        QUEUE_SESSION_MAPPING = 2346,
+        TICKET_MASTER = 2347
     }
 
     public enum FormAction

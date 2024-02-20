@@ -35616,7 +35616,7 @@ button#backtomarketplace {
     width: 100%;
     float: left;
     background-color: #ffff;
-    box-shadow: 0px 2px 4px 0px #00000040;
+    box-shadow: 0px 2px 4px 0px #00000040, 0px -1px 6px -2px #00000040;
     padding: 15px 8px;
     border-radius: 4px;
     overflow: hidden;
