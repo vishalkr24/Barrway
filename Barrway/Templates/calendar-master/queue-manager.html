@@ -567,16 +567,16 @@
                         <div class="queue-list-area queue_backlog">
                             <h4>Backlog (0)</h4>
                             <div id="backlog-list-area">
-                                <!--<div class="queue_backlog_inner">
-                    <div class="right-border pink-border"></div>
-                    <div class="queue-back-log-left">
-                        <h2>A07</h2>
-                    </div>
-                    <div class="queue-back-log-right">
-                        <span><img src="/assets/marketplace/image/cat-icon.png" /></span>
-                        <span><img src="/assets/marketplace/image/setting-icon.png" /></span>
-                    </div>
-                </div>-->
+                                <div class="queue_backlog_inner" ng-repeat="ticket in queueTicketList" ng-if="ticket.STATUS == 'SERVED' || ticket.STATUS == 'DELETED'">
+                                    <div class="right-border"></div>
+                                    <div class="queue-back-log-left">
+                                        <h2>{{ticket.FULL_TICKET_NUMBER}}</h2>
+                                    </div>
+                                    <div class="queue-back-log-right">
+                                        <span><img src="/assets/marketplace/image/cat-icon.png" /></span>
+                                        <span><img src="/assets/marketplace/image/setting-icon.png" /></span>
+                                    </div>
+                                </div>
                             </div>
                             <!--<div class="waiting">
                 <p>Waiting <span>(10)</span></p>
@@ -593,12 +593,12 @@
                                                 <!--<img src="/assets/marketplace/image/eye-slash.png" />-->
                                             </div>
                                             <div class="call-button">
-                                                <button>Call</button>
+                                                <button ng-click="callNext(queue.Id)">Call</button>
                                             </div>
                                         </div>
                                         <div class="que-wrp-lr">
                                             <div class="queue-back-log-left">
-                                                <h3 class="pink"><span>Current</span> <b>--</b></h3>
+                                                <h3 class="pink"><span>Current</span> <b>{{queue.CurrentTicket}}</b></h3>
                                             </div>
                                             <div class="queue-back-log-right">
                                                 <input type="checkbox" name="queue-activator-trigger" hidden="hidden" ng-checked="queue.ACCEPT_TICKET == 'Y'" id="queue_activator-{{queue.Id}}">
@@ -611,10 +611,10 @@
                                     <p>Waiting <span>(0)</span></p>
                                 </div>
                                 <div class="ticket-list-area" data-ticket-type="Waiting">
-                                    <div class="queue_backlog_inner" ng-repeat="ticket in queueTicketList" ng-if="ticket.QUEUE_ID == queue.Id">
-                                        <div class="right-border pink-border"></div>
+                                    <div class="queue_backlog_inner" ng-repeat="ticket in queueTicketList" ng-if="ticket.QUEUE_ID == queue.Id && (ticket.STATUS == 'WAITING' || ticket.STATUS == 'IN PROGRESS')">
+                                        <div class="right-border" ng-class="{'pink-border': ticket.STATUS == 'IN PROGRESS'}"></div>
                                         <div class="queue-back-log-left">
-                                            <h2>A07</h2>
+                                            <h2>{{ticket.FULL_TICKET_NUMBER}}</h2>
                                         </div>
                                         <div class="queue-back-log-right">
                                             <span><img src="/assets/marketplace/image/cat-icon.png" /></span>
@@ -622,12 +622,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="waiting">
-                                    <p>Pending <span>(0)</span></p>
-                                </div>
-                                <div class="ticket-list-area" data-ticket-type="Pending">
-
-                                </div>
+                                
                             </div>
                         </div>
 
@@ -643,10 +638,10 @@
                                     </div>
                                     <div class="que-wrp-lr">
                                         <div class="queue-back-log-left">
-                                            <h3 class="pink"><span>Current</span></br> <b>--</b></h3>
+                                            <h3 class="pink"><span>Current</span></br> <b>{{queue.CurrentTicket}}</b></h3>
                                         </div>
                                         <div class="summry-text">
-                                            <p>Last ticket  <span>--</span></p>
+                                            <p>Last ticket : <span>{{queue.LastTicket}}</span></p>
                                         </div>
                                     </div>
                                 </div>

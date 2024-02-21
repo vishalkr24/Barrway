@@ -81,7 +81,7 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> getQueueTicketList(string QueueIds = null)
+        public async Task<AddUpdateDelete> getQueueTicketList(string CalendarCode, string CompanyCode, string QueueIds = null)
         {
             try
             {
@@ -92,7 +92,7 @@ namespace Barrway.Service.Repository
                     IdString = $@" stuff((select ',' + cast(q_m.Id as varchar) from QUEUE_SESSION_MASTER_1974 ses
                                     join QUEUE_SESSION_MAPPING_1976 map on map.SESSION_ID = ses.Id
                                     join QUEUE_MASTER_1973 q_m on q_m.Id = map.QUEUE_ID
-                                    where ses.CALENDAR_CODE = 'CLR00086' and ses.COMPANY_CODE = 'CMP00076' and 
+                                    where ses.CALENDAR_CODE = '{CalendarCode}' and ses.COMPANY_CODE = '{CompanyCode}' and 
                                     (
 	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.SESSION_START_TIME, 105) and 
 	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) < Convert(datetime, ses.SESSION_END_TIME, 105)
@@ -116,7 +116,7 @@ namespace Barrway.Service.Repository
 	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.SESSION_START_TIME, 105) and 
 	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) < Convert(datetime, ses.SESSION_END_TIME, 105)
                                     )
-                                )";
+                                ) order by ticket.POSITION";
 
                 var result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -137,6 +137,60 @@ namespace Barrway.Service.Repository
                 return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
             }
             return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+        }
+
+        public async Task<AddUpdateDelete> callNext(string QueueId)
+        {
+            try
+            {
+                string query = $@"declare @QueueIds varchar(max) =  '{QueueId}';
+
+                                update TICKET_MASTER_1975 set STATUS = 'SERVED', POSITION = 0
+                                where (QUEUE_ID in (select cast(item as integer) from dbo.SplitString(@QueueIds,','))) 
+                                and SESSION_ID = (
+	                                select top 1 ses.Id from QUEUE_SESSION_MASTER_1974 ses
+                                    join QUEUE_SESSION_MAPPING_1976 map on map.SESSION_ID = ses.Id
+                                    join QUEUE_MASTER_1973 q_m on q_m.Id = map.QUEUE_ID
+                                    where q_m.Id = TICKET_MASTER_1975.QUEUE_ID and 
+                                    (
+	                                    Convert(datetime, '21-02-2024 13:30:11', 105) > Convert(datetime, ses.SESSION_START_TIME, 105) and 
+	                                    Convert(datetime, '21-02-2024 13:30:11', 105) < Convert(datetime, ses.SESSION_END_TIME, 105)
+                                    )
+                                ) and STATUS = 'IN PROGRESS';";
+
+                var result = await sqlFunction.ExecuteSqlQuery(query);
+
+                await updateQueueTicketPosition(new TicketMasterModel() { QUEUE_ID = QueueId });
+
+                query = $@"declare @QueueIds varchar(max) =  '{QueueId}';
+
+								update TICKET_MASTER_1975 set STATUS = 'IN PROGRESS' where Id = (
+                                select top 1 Id from TICKET_MASTER_1975
+                                where (QUEUE_ID in (select cast(item as integer) from dbo.SplitString(@QueueIds,','))) 
+                                and SESSION_ID = (
+	                                select top 1 ses.Id from QUEUE_SESSION_MASTER_1974 ses
+                                    join QUEUE_SESSION_MAPPING_1976 map on map.SESSION_ID = ses.Id
+                                    join QUEUE_MASTER_1973 q_m on q_m.Id = map.QUEUE_ID
+                                    where q_m.Id = TICKET_MASTER_1975.QUEUE_ID and 
+                                    (
+	                                    Convert(datetime, '21-02-2024 13:30:11', 105) > Convert(datetime, ses.SESSION_START_TIME, 105) and 
+	                                    Convert(datetime, '21-02-2024 13:30:11', 105) < Convert(datetime, ses.SESSION_END_TIME, 105)
+                                    )
+                                ) and STATUS = 'WAITING' ORDER BY TICKET_MASTER_1975.POSITION);";
+
+                var result2 = await sqlFunction.ExecuteSqlQuery(query);
+
+
+                query = $@"select * from QUEUE_MASTER_1973 where Id = '{QueueId}'";
+
+                var result3 = await sqlFunction.ExecuteSqlQuery(query);
+
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result3.FirstOrDefault() };
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
         }
 
 
@@ -169,7 +223,7 @@ namespace Barrway.Service.Repository
                     model.SESSION_ID = result.FirstOrDefault()["Id"]?.ToString();
                 }
 
-                query = $@"select * from TICKET_MASTER_1975 where SESSION_ID = '{model.SESSION_ID}' and QUEUE_ID = '{model.QUEUE_ID}' and USER_ID = '{model.USER_ID}'";
+                query = $@"select * from TICKET_MASTER_1975 where SESSION_ID = '{model.SESSION_ID}' and QUEUE_ID = '{model.QUEUE_ID}' and USER_ID = '{model.USER_ID}' and STATUS not in ('DELETED', 'SERVED')";
 
                 var result2 = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -178,7 +232,7 @@ namespace Barrway.Service.Repository
                     return new AddUpdateDelete() { Status = false, Message = ("You have already booked this ticket: " + (result2.FirstOrDefault()["TICKET_NUMBER"]?.ToString()?? "(ticket not found)") + ".\n\nThis ticket will be removed and new ticket will be assigned.\n\nAre you sure to continue? "), Data = model };
                 }
 
-                query = $@"delete from TICKET_MASTER_1975 where SESSION_ID = '{model.SESSION_ID}' and QUEUE_ID = '{model.QUEUE_ID}' and USER_ID = '{model.USER_ID}'";
+                query = $@"delete from TICKET_MASTER_1975 where SESSION_ID = '{model.SESSION_ID}' and QUEUE_ID = '{model.QUEUE_ID}' and USER_ID = '{model.USER_ID}' and STATUS not in ('DELETED', 'SERVED')";
 
                 var result3 = await sqlFunction.ExecuteSqlCommandQuery(query);
 
@@ -219,7 +273,7 @@ namespace Barrway.Service.Repository
                                    ,0
                                    ,0
                                    ,null
-                                   ,null
+                                   ,(select dbo.GenerateQueueTicketNumber('18','21-02-2024 17:27'))
                                    ,'{model.SESSION_ID}'
                                    ,'{model.QUEUE_ID}'
                                    ,'{model.USER_ID}'
@@ -233,14 +287,18 @@ namespace Barrway.Service.Repository
 
                 var formResult = await sqlFunction.ExecuteSqlQuery(query);
 
-                await updateQueueTicketStatus(model);
+                await updateQueueTicketPosition(model);
+
+                query = $@"UPDATE TICKET_MASTER_1975 set FULL_TICKET_NUMBER = (select QUEUE_PREFIX from QUEUE_MASTER_1973 qp where qp.Id = '{model.QUEUE_ID}') + TICKET_NUMBER where Id = '{formResult.FirstOrDefault()["Id"]?.ToString()}'";
+
+                var result5 = await sqlFunction.ExecuteSqlQuery(query);
 
                 if (formResult.Count > 0)
                 {
                     string finalQuery = $@"select * from TICKET_MASTER_1975 where Id = '{formResult.FirstOrDefault()["Id"]?.ToString()}'";
                     var finalResult = await sqlFunction.ExecuteSqlQuery(finalQuery);
 
-                    return new AddUpdateDelete() { Data = result4.FirstOrDefault(), Message = $"Ticket booked successfully!\n\nTicket#: {finalResult.FirstOrDefault()["TICKET_NUMBER"]?.ToString()}", Status = true };
+                    return new AddUpdateDelete() { Data = result4.FirstOrDefault(), Message = $"Ticket booked successfully!\n\nTicket#: {finalResult.FirstOrDefault()["FULL_TICKET_NUMBER"]?.ToString()}", Status = true };
                 }
                 else
                 {
@@ -253,7 +311,7 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> updateQueueTicketStatus(TicketMasterModel model)
+        public async Task<AddUpdateDelete> updateQueueTicketPosition(TicketMasterModel model)
         {
             try
             {
@@ -275,10 +333,9 @@ namespace Barrway.Service.Repository
                                 DECLARE @QueuePrefix varchar = (select QUEUE_PREFIX from QUEUE_MASTER_1973 where Id = '{model.QUEUE_ID}');
                                 
                                 UPDATE TICKET_MASTER_1975
-                                SET POSITION = @Counter, @Counter = @Counter + 1,
-                                    TICKET_NUMBER = case when ( TICKET_NUMBER is null ) then (@QueuePrefix + cast(@counter as varchar)) else TICKET_NUMBER end
+                                SET POSITION = @Counter , @Counter = @Counter + 1
                                 where 
-                                SESSION_ID = @sessionId and QUEUE_ID = '{model.QUEUE_ID}' and USER_ID = '{model.USER_ID}' and [STATUS] = 'WAITING'";
+                                SESSION_ID = @sessionId and QUEUE_ID = '{model.QUEUE_ID}' and ([STATUS] = 'WAITING' or [STATUS] = 'IN PROGRESS')";
 
                 var result = await sqlFunction.ExecuteSqlCommandQuery(query);
                 if (result > 0)
@@ -323,7 +380,6 @@ namespace Barrway.Service.Repository
                 return new AddUpdateDelete() { Status = false, Message = ex.Message };
             }
         }
-
 
     }
 }

@@ -56,6 +56,9 @@
             chat.server.getMarketplaceQueueList(String($scope.currentCalendarCode), String($scope.currentCompanyCode), false);
         }
 
+        $scope.getQueueTicketList = function () {
+            chat.server.getQueueTicketList(String($scope.currentCalendarCode), String($scope.currentCompanyCode), null, false);
+        }
 
 
 
@@ -80,6 +83,32 @@
             notifierService.notifyMessage("success", "Success", msg);
         };
 
+        chat.client.showMarketplaceResult = function (response) {
+            swal({
+                title: (response.Status) ? "Success": "Alert",
+                text: response.Message,
+                icon: (response.Status) ? "success": "info",
+                buttons: {
+                    confirm: "Ok"
+                }
+            })
+        };
+
+        chat.client.updateQueueTicketList = function (response) {
+            debugger;
+            if (response.Status) {
+                angular.element($('#quequeDiv')).scope().queueTicketList = response.Data;
+
+                angular.element($('#quequeDiv')).scope().queueList.forEach(x => {
+                    x.CurrentTicket = ($scope.queueTicketList.filter(y => y.QUEUE_ID == x.Id && y.STATUS == "IN PROGRESS").length > 0) ? $scope.queueTicketList.find(y => y.QUEUE_ID == x.Id && y.STATUS == "IN PROGRESS").FULL_TICKET_NUMBER : "--";
+                    x.LastTicket = ($scope.queueTicketList.filter(y => y.QUEUE_ID == x.Id && (y.STATUS == "SERVED" || y.STATUS == "DELETED")).length > 0) ? $scope.queueTicketList.filter(y => y.QUEUE_ID == x.Id && (y.STATUS == "SERVED" || y.STATUS == "DELETED"))[0].FULL_TICKET_NUMBER : "--";
+                    x.AvailableTicket = (x.AvailableTicket == "--" || x.AvailableTicket == undefined || x.AvailableTicket == null) ? "--" : x.AvailableTicket;
+                });
+
+                $scope.$apply();
+                $scope.HideLoading();
+            }
+        }
 
         chat.client.bookTicketConfirmation = function (response) {
             swal({
@@ -103,6 +132,7 @@
             debugger;
             if (response.Status) {
                 angular.element($('#quequeDiv')).scope().queueList = response.Data;
+                $scope.getQueueTicketList();
                 $scope.$apply();
                 $scope.HideLoading();
             }

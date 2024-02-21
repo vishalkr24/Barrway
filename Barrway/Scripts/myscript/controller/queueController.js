@@ -58,6 +58,7 @@
             $scope.$proxyScope = angular.element($('#quequeDiv')).scope();
             $scope.sessionList = [];
             $scope.queueList = [];
+            $scope.queueTicketList = [];
             $scope.showLoader1 = true;
             console.log(chat);
             $scope.ShowLoading();
@@ -94,9 +95,12 @@
         }
 
         $scope.getQueueTicketList = function () {
-            chat.server.getQueueTicketList(null, false);
+            chat.server.getQueueTicketList(String(localStorage.getItem("CALENDAR_CODE")), String(localStorage.getItem("COMPANY_CODE")), null, false);
         }
 
+        $scope.callNext = function (id) {
+            chat.server.callNext(String(id));
+        }
 
 
 
@@ -131,9 +135,16 @@
             debugger;
             if (response.Status) {
                 angular.element($('#quequeDiv')).scope().queueTicketList = response.Data;
+
+                angular.element($('#quequeDiv')).scope().queueList.forEach(x => {
+                    x.CurrentTicket = ($scope.queueTicketList.filter(y => y.QUEUE_ID == x.Id && y.STATUS == "IN PROGRESS").length > 0) ? $scope.queueTicketList.find(y => y.QUEUE_ID == x.Id && y.STATUS == "IN PROGRESS").FULL_TICKET_NUMBER : "--";
+                    x.LastTicket = ($scope.queueTicketList.filter(y => y.QUEUE_ID == x.Id && (y.STATUS == "SERVED" || y.STATUS == "DELETED")).length > 0) ? $scope.queueTicketList.filter(y => y.QUEUE_ID == x.Id && (y.STATUS == "SERVED" || y.STATUS == "DELETED"))[0].FULL_TICKET_NUMBER : "--";
+                });
+                $scope.$apply();
                 $scope.HideLoading();
             }
         }
+
 
         chat.client.updateCurrentSession = function (response) {
             debugger;
