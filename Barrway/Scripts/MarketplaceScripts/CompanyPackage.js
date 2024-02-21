@@ -17,7 +17,7 @@ function setCompanyPackageDetails() {
                     <div class="card-top-detail">
                         <div class="media">
                             <div class="media-left">
-                                <img src="${calendarDetails[i].CALENDAR_PHOTO_PATH.replace("~", "..")}" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:195px; max-height: 120px">
+                                <img src="${calendarDetails[i].CALENDAR_PHOTO_PATH.replace("~", "..")}" onerror="this.src='/assets/marketplace/image/pro.png'" class="media-object" style="width:195px; max-height: 120px">
                             </div>
                             <div class="media-body">
                                 <h4 class="media-heading" id="lblCalendarName">${calendarDetails[i].CALENDAR_NAME}</h4>

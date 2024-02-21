@@ -17383,7 +17383,8 @@
                                                         <p><b>${company.COMPANY_NAME_ENGLISH}</b></p>
                                                         <P class="font-2">${company.CALENDAR_NAME}</P>
                                                         <p>Service ${company.CALENDAR_SUB_CATEGORY_NAME}</p>
-                                                        <p><button class="book" onclick="location.href='/Marketplace/CompanySchedule?CompanyCode=${company.COMPANY_CODE}&CalendarCode=${company.CALENDAR_CODE}'">Book</button></p>
+                                                        /*<p><button class="book" onclick="location.href='/Marketplace/CompanySchedule?CompanyCode=${company.COMPANY_CODE}&CalendarCode=${company.CALENDAR_CODE}'">Book</button></p>*/
+                                                        <p><button class="book" onclick="location.href='/Marketplace/Calander/${company.COMPANY_CODE}'">Book</button></p>
                                                     </div>
                                                 </div>`);
                         } else {
@@ -17395,7 +17396,8 @@
                                                         <p><b>${company.COMPANY_NAME_ENGLISH}</b></p>
                                                         <P class="font-2">${company.CALENDAR_NAME}</P>
                                                         <p>Service ${company.CALENDAR_SUB_CATEGORY_NAME}</p>
-                                                        <p><button class="book" onclick="location.href='/Marketplace/CompanySchedule?CompanyCode=${company.COMPANY_CODE}&CalendarCode=${company.CALENDAR_CODE}'">Book</button></p>
+                                                        /*<p><button class="book" onclick="location.href='/Marketplace/CompanySchedule?CompanyCode=${company.COMPANY_CODE}&CalendarCode=${company.CALENDAR_CODE}'">Book</button></p>*/
+                                                        <p><button class="book" onclick="location.href='/Marketplace/Calander/${company.COMPANY_CODE}'">Book</button></p>
                                                     </div>
                                                 </div>`);
                         }

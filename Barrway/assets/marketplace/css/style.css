@@ -783,10 +783,14 @@ p.mt-10 {
 }
 
 .favr {
-    width: 100%;
+    /*width: 100%;*/
     float: left;
     text-align: right;
     padding-top: 28px;
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-state-default, .ui-widget-content .ui-state-default, .fc th {
+    font-family: 'Poppins' !important;
 }
 
 .schedule-drop:after {

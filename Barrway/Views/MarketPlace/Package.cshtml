@@ -1,12 +1,14 @@
 ﻿@model Barrway.DTO.MarketplaceModels.MarketplaceCompanyModel
 @{
-    ViewBag.Title = Resource.Company_Service;
+    ViewBag.Title = Resource.Company_Package;
     Layout = "~/Views/Shared/_LayoutMarketPlaceCompany.cshtml";
-    ViewBag.COMPANY_LOGO_PATH = Model.COMPANY_LOGO_PATH.Replace("~", "..");
+
     ViewBag.COMPANY_ID = Model.COMPANY_CODE.ToString();
     ViewBag.CALENDAR_ID = Model.DEFAULT_CALENDAR_ID;
+    ViewBag.COMPANY_LOGO_PATH = Model.COMPANY_LOGO_PATH.Replace("~", "");
 }
-
+<input id="txtCurrentCompanyCode" value="@ViewBag.COMPANY_ID" readonly style="display:none;"/>
+<input id="txtCurrentCalendarCode" value="@ViewBag.CALENDAR_ID" readonly style="display:none;" />
 
 <!-- heading -->
 <section class="heading company-detail-hed">
@@ -21,22 +23,20 @@
     </div>
 </section>
 <!-- heading -->
-<section class="company-detail-main">
+<section class="company-detail-main mihi-71">
     <div class="container">
         <div class="row">
-            <div class="col-md-12">
-                <div class="cd-banner" style="min-height:70vh">
-                    @Html.Raw(Model.COMPANY_SERVICE)
-                </div>
+            <div class="col-md-12" id="calendars-area">
+                
             </div>
         </div>
-        
     </div>
-</section>
 
+    <form action="/Payment/OrderDetails" method="post" id="paymentForm" style="display:none;"><input id="txtPackageName" name="Id"/></form>
+</section>
 
 
 @section scripts{
 
-    <script src="~/Scripts/MarketplaceScripts/CompanyService.js"></script>
+    <script src="~/Scripts/MarketplaceScripts/CompanyPackage.js"></script>
 }
