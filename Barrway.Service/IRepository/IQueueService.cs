@@ -14,6 +14,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> getSessionList(string CalendarCode, string CompanyCode);
         Task<AddUpdateDelete> getCurrentSession(string CalendarCode, string CompanyCode);
         Task<AddUpdateDelete> getQueueList(string CalendarCode, string CompanyCode);
+        Task<AddUpdateDelete> getQueueTicketList(string QueueIds = null);
         Task<AddUpdateDelete> updateQueueActivationStatus(string QueueId, string Status);
 
         #region marketplace queue

@@ -275,32 +275,40 @@ namespace Barrway.Controllers
             }
         }
 
-         public async Task<ActionResult> CompanySchedule(string id = null)
+        public async Task<ActionResult> CompanySchedule(string id = null)
         {
             try
             {
 
-               string CompanyCode = id;
-               string CalendarCode = null;
+                string CompanyCode = id;
+                string CalendarCode = null;
                 var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
                 AddUpdateDelete calendarData = await businessUserService.GetMarcketPlaceCompanyCalendarByCompanyId(companyData.Data["Id"].ToString());
-                
-                
-                
-                
+
+
+
+
                 //var servilces=await businessUserService.GetServiceList(CalendarCode, CompanyCode);
                 //var serviceData = await globalMasterService.GetCompanyCategoryMaster();
                 if (calendarData.Status)
                 {
-                    
+
                     var data = JsonConvert.SerializeObject(companyData.Data);
                     var calendarEncrypted = JsonConvert.SerializeObject(calendarData.Data);
-                    
+
                     //var serviceEncrypted = JsonConvert.SerializeObject(serviceData.Data);
 
                     MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
                     companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
                     companyModel.calendars = JsonConvert.DeserializeObject<List<BusinessCalendarModel>>(calendarEncrypted);
+
+                    if (!string.IsNullOrEmpty(CalendarCode))
+                    {
+                        if (companyModel.calendars.Any(x => x.CALENDAR_FUNCTION_TYPE == "QUEUE" && x.CALENDAR_CODE == CalendarCode))
+                        {
+                            return RedirectToAction("CompanyQueueSchedule", new { CompanyCode = CompanyCode, CalendarCode = CalendarCode });
+                        }
+                    }
 
                     var servilces = await businessUserService.GetServiceList(companyModel.calendars[0].CALENDAR_CODE, CompanyCode);
                     var servilcesEncrypted = JsonConvert.SerializeObject(servilces.Data);
@@ -337,7 +345,7 @@ namespace Barrway.Controllers
                 {
                     return RedirectToAction("Index", "Marketplace");
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -434,9 +442,9 @@ namespace Barrway.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> GetServiceList(string CompanyCode,string CalanderCode)
+        public async Task<ActionResult> GetServiceList(string CompanyCode, string CalanderCode)
         {
-            return Json(await businessUserService.GetServiceList(CalanderCode,CompanyCode));
+            return Json(await businessUserService.GetServiceList(CalanderCode, CompanyCode));
         }
 
         public async Task<ActionResult> GetSingleBlogPost(string NewsId)

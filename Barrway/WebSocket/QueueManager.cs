@@ -112,6 +112,38 @@ namespace Barrway.WebSocket
             await Task.CompletedTask;
         }
 
+        public async Task getQueueTicketList(string QueueIds = null, bool AllClients = false)
+        {
+            try
+            {
+                var result = await queueService.getQueueTicketList(QueueIds);
+
+                if (result.Status)
+                {
+                    if (AllClients)
+                    {
+                        Clients.All.updateQueueTicketList(result);
+                    }
+                    else
+                    {
+                        Clients.Client(Context.ConnectionId).updateQueueTicketList(result);
+                    }
+
+                }
+                else
+                {
+                    Clients.Client(Context.ConnectionId).showErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to fetch tickets." });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Clients.Client(Context.ConnectionId).showErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to fetch queues." });
+            }
+
+            await Task.CompletedTask;
+        }
+
         public async Task updateQueueActivationStatus(string QueueId, string Status)
         {
             try
