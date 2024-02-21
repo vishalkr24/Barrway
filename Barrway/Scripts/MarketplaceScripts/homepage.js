@@ -133,7 +133,6 @@ function setCalendarSubCategoryWise(showFilterQuery = false, requestFromButton =
                                                         </div>`);
 
                 for (var j = 0; j < calendars.length; j++) {
-
                     var tags = [];
 
                     if (calendars[j].TAGS != null) {
@@ -147,7 +146,7 @@ function setCalendarSubCategoryWise(showFilterQuery = false, requestFromButton =
                     }
                     
                     $("#owl-demo" + corouselCounter).append(` <div class="item">
-                                                    <div class="item-inner" onclick="viewMarketplaceCompanyCalendar('${calendars[j].COMPANY_CODE}')">
+                                                    <div class="item-inner" onclick="viewMarketplaceCompanyCalendar('${calendars[j].COMPANY_CODE}','${calendars[j].CALENDAR_CODE}')">
                                                         <div class="pro-im">
                                                             <img src="${(calendars[j].CALENDAR_PHOTO_PATH == "") ? "../assets/marketplace/image/pro.png" : calendars[j].CALENDAR_PHOTO_PATH.replaceAll("~", "..") }" onerror="this.src='../assets/marketplace/image/pro.png'">
                                                         </div>

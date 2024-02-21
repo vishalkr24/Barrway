@@ -39,6 +39,7 @@ namespace Barrway.Controllers
         }
 
         // GET: MarketPlace
+        
         public async Task<ActionResult> Index()
         {
             return View();
@@ -192,10 +193,14 @@ namespace Barrway.Controllers
             return View();
         }
 
-        public async Task<ActionResult> CompanyDetail(string CompanyCode, string CalendarCode = null)
+        [Route("company/{id}/{pid?}")]
+        public async Task<ActionResult> Company(string id, string Pid = null)
         {
             try
             {
+
+                string CompanyCode = id;
+                string CalendarCode = Pid;
                 var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
 
                 var data = JsonConvert.SerializeObject(companyData.Data);
@@ -220,10 +225,49 @@ namespace Barrway.Controllers
 
         }
 
-        public async Task<ActionResult> CompanyService(string CompanyCode, string CalendarCode = null)
+        [Route("company/service/{id}/{pid?}")]
+        public async Task<ActionResult> Service(string id, string Pid = null)
         {
             try
             {
+                string CompanyCode = id;
+                string CalendarCode = Pid;
+                var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
+
+                var data = JsonConvert.SerializeObject(companyData.Data);
+
+                MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
+                companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
+
+                var servilces = await businessUserService.GetServiceList(CalendarCode, CompanyCode);
+                var servilcesEncrypted = JsonConvert.SerializeObject(servilces.Data);
+                companyModel.ServicesList = JsonConvert.DeserializeObject<List<ServicesList>>(servilcesEncrypted);
+
+                ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
+
+                if (!string.IsNullOrEmpty(companyModel.IS_TEMPLATE))
+                {
+                    if (companyModel.IS_TEMPLATE == "Y")
+                        return RedirectToAction("Index", "Marketplace");
+                }
+
+                return View(companyModel);
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Index", "Marketplace");
+            }
+
+        }
+
+        [Route("company/package/{id}/{pid?}")]
+        public async Task<ActionResult> Package(string id, string Pid = null)
+        {
+            try
+            {
+
+                string CompanyCode = id;
+                string CalendarCode = Pid;
                 var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
 
                 var data = JsonConvert.SerializeObject(companyData.Data);
@@ -245,43 +289,16 @@ namespace Barrway.Controllers
             {
                 return RedirectToAction("Index", "Marketplace");
             }
-
         }
 
-        public async Task<ActionResult> CompanyPackage(string CompanyCode, string CalendarCode = null)
-        {
-            try
-            {
-                var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
-
-                var data = JsonConvert.SerializeObject(companyData.Data);
-
-                MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
-                companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
-
-                ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
-
-                if (!string.IsNullOrEmpty(companyModel.IS_TEMPLATE))
-                {
-                    if (companyModel.IS_TEMPLATE == "Y")
-                        return RedirectToAction("Index", "Marketplace");
-                }
-
-                return View(companyModel);
-            }
-            catch (Exception ex)
-            {
-                return RedirectToAction("Index", "Marketplace");
-            }
-        }
-
-         public async Task<ActionResult> CompanySchedule(string id = null)
+        [Route("company/Calander/{id}/{pid?}")]
+        public async Task<ActionResult> Calander(string id = null,string Pid = null)
         {
             try
             {
 
                string CompanyCode = id;
-               string CalendarCode = null;
+               string CalendarCode = Pid;
                 var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
                 AddUpdateDelete calendarData = await businessUserService.GetMarcketPlaceCompanyCalendarByCompanyId(companyData.Data["Id"].ToString());
                 
@@ -302,7 +319,26 @@ namespace Barrway.Controllers
                     companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
                     companyModel.calendars = JsonConvert.DeserializeObject<List<BusinessCalendarModel>>(calendarEncrypted);
 
-                    var servilces = await businessUserService.GetServiceList(companyModel.calendars[0].CALENDAR_CODE, CompanyCode);
+                   
+
+
+                    if (CalendarCode == null)
+                    {
+                        CalendarCode = companyModel.calendars[0].CALENDAR_CODE;
+                    }
+
+                    if (!string.IsNullOrEmpty(CalendarCode))
+                    {
+                        if (companyModel.calendars.Any(x => x.CALENDAR_FUNCTION_TYPE == "QUEUE" && x.CALENDAR_CODE == CalendarCode))
+                        {
+                            //company/Queue/{id}/{pid
+                            //return RedirectToAction("CompanyQueueSchedule", new { CompanyCode = CompanyCode, CalendarCode = CalendarCode });
+                            return Redirect("/company/Queue/"+ CompanyCode+"/"+ CalendarCode);
+                           // return Redirect("/ControllerName/ActionName");
+                        }
+                    }
+
+                    var servilces = await businessUserService.GetServiceList(CalendarCode, CompanyCode);
                     var servilcesEncrypted = JsonConvert.SerializeObject(servilces.Data);
                     companyModel.ServicesList = JsonConvert.DeserializeObject<List<ServicesList>>(servilcesEncrypted);
                     //companyModel.services = JsonConvert.DeserializeObject<List<BusinessCompanyCategoryModel>>(serviceEncrypted);
@@ -323,6 +359,7 @@ namespace Barrway.Controllers
                     }
 
                     ViewBag.CompanyCode = CompanyCode;
+                    ViewBag.CalendarCode = CalendarCode;
                     ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
 
                     if (!string.IsNullOrEmpty(companyModel.IS_TEMPLATE))
@@ -346,8 +383,15 @@ namespace Barrway.Controllers
 
         }
 
-        public async Task<ActionResult> CompanyQueueSchedule(string CompanyCode, string CalendarCode)
+       
+        [Route("company/Queue/{id}/{pid?}")]
+        public async Task<ActionResult> CompanyQueueSchedule(string id,string pid)
         {
+
+            string CompanyCode = id;
+            string CalendarCode = pid;
+
+
             var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
             AddUpdateDelete calendarData = await businessUserService.GetMarcketPlaceCompanyCalendarByCompanyId(companyData.Data["Id"].ToString());
             //var serviceData = await globalMasterService.GetCompanyCategoryMaster();
@@ -392,11 +436,13 @@ namespace Barrway.Controllers
                 return RedirectToAction("Index", "Marketplace");
             }
         }
-
-        public async Task<ActionResult> CompanyPhotoAlbum(string CompanyCode, string CalendarCode = null)
+        [Route("company/gallery/{id}/{pid?}")]
+        public async Task<ActionResult> Photogallery(string id, string pid = null)
         {
             try
             {
+                string CompanyCode = id;
+                string CalendarCode = pid;
                 var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
                 var photoAlbumData = await businessUserService.GetCompanyPhotoAlbumByCompanyId(companyData.Data["Id"].ToString());
 

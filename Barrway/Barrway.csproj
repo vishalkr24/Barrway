@@ -3174,11 +3174,11 @@
     <Content Include="Views\MarketPlace\News.cshtml" />
     <Content Include="Views\MarketPlace\BusinessPost.cshtml" />
     <Content Include="Views\Shared\_LayoutMarketPlaceCompany.cshtml" />
-    <Content Include="Views\MarketPlace\CompanyDetail.cshtml" />
-    <Content Include="Views\MarketPlace\CompanyService.cshtml" />
-    <Content Include="Views\MarketPlace\CompanyPackage.cshtml" />
-    <Content Include="Views\MarketPlace\CompanySchedule.cshtml" />
-    <Content Include="Views\MarketPlace\CompanyPhotoAlbum.cshtml" />
+    <Content Include="Views\MarketPlace\Company.cshtml" />
+    <Content Include="Views\MarketPlace\Service.cshtml" />
+    <Content Include="Views\MarketPlace\Package.cshtml" />
+    <Content Include="Views\MarketPlace\Calander.cshtml" />
+    <Content Include="Views\MarketPlace\Photogallery.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\SignUp.cshtml" />
     <Content Include="Views\UserAdmin\Index.cshtml" />
@@ -3212,15 +3212,10 @@
     <Content Include="Views\WebsiteTemplates\_Template3.cshtml" />
     <Content Include="Views\BusinessAdmin\_CompanyPaletteSelection.cshtml" />
     <Content Include="Views\MarketPlace\Pricing.cshtml" />
-
     <Content Include="Views\Account\BusinessSignUpPhone.cshtml" />
     <Content Include="Views\Account\MobileVerification.cshtml" />
-
     <Content Include="Views\Account\BusinessPhoneLogin.cshtml" />
-
-
     <Content Include="Views\MarketPlace\CompanyQueueSchedule.cshtml" />
-
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
