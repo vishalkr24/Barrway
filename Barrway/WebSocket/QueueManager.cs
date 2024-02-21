@@ -112,11 +112,11 @@ namespace Barrway.WebSocket
             await Task.CompletedTask;
         }
 
-        public async Task getQueueTicketList(string QueueIds = null, bool AllClients = false)
+        public async Task getQueueTicketList(string CalendarCode = null, string CompanyCode = null, string QueueIds = null, bool AllClients = false)
         {
             try
             {
-                var result = await queueService.getQueueTicketList(QueueIds);
+                var result = await queueService.getQueueTicketList(CalendarCode, CompanyCode, QueueIds);
 
                 if (result.Status)
                 {
@@ -218,9 +218,8 @@ namespace Barrway.WebSocket
 
                     if (result.Status)
                     {
-                        Clients.Client(Context.ConnectionId).showMarketplaceSuccessResult(result);
-                        await getMarketplaceQueueList(result.Data["CALENDAR_CODE"]?.ToString(), result.Data["COMPANY_CODE"]?.ToString(), true);
-                        await getQueueList(result.Data["CALENDAR_CODE"]?.ToString(), result.Data["COMPANY_CODE"]?.ToString(), true);
+                        Clients.Client(Context.ConnectionId).showMarketplaceResult(result);
+                        await getQueueTicketList(result.Data["CALENDAR_CODE"]?.ToString(), result.Data["COMPANY_CODE"]?.ToString(), null, true);
                     }
                     else
                     {
@@ -254,7 +253,7 @@ namespace Barrway.WebSocket
             try
             {
                 model.USER_ID = UserIdentity.UserID;
-                var result = await queueService.updateQueueTicketStatus(model);
+                var result = await queueService.updateQueueTicketPosition(model);
 
                 if (result.Status)
                 {
@@ -273,6 +272,31 @@ namespace Barrway.WebSocket
 
             await Task.CompletedTask;
         }
+
+        public async Task callNext(string QueueId)
+        {
+            try
+            {
+                var result = await queueService.callNext(QueueId);
+
+                if (result.Status)
+                {
+                    await getQueueTicketList(result.Data["CALENDAR_CODE"]?.ToString(), result.Data["COMPANY_CODE"]?.ToString(), null, true);
+                }
+                else
+                {
+                    Clients.Client(Context.ConnectionId).showMarketplaceErrorResult(result);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Clients.Client(Context.ConnectionId).showMarketplaceErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to upadate status" });
+            }
+
+            await Task.CompletedTask;
+        }
+
         #endregion
 
     }

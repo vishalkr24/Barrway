@@ -35639,7 +35639,7 @@ button#backtomarketplace {
 .queue-back-log-left h2 {
     margin-bottom: 0px;
     text-indent: 20px;
-    color: #CCCCCC;
+    color: #222222;
 }
 
 .queue-back-log-right {
@@ -35648,12 +35648,13 @@ button#backtomarketplace {
     text-align: right;
 }
 
-.right-border.pink-border {
+.right-border {
     position: absolute;
     width: 10px;
     height: 100%;
     top: 0;
     left: 0;
+    background-color: #ebebeb;
 }
 
 .pink-border {

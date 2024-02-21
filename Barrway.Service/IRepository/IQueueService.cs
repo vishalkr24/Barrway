@@ -14,12 +14,13 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> getSessionList(string CalendarCode, string CompanyCode);
         Task<AddUpdateDelete> getCurrentSession(string CalendarCode, string CompanyCode);
         Task<AddUpdateDelete> getQueueList(string CalendarCode, string CompanyCode);
-        Task<AddUpdateDelete> getQueueTicketList(string QueueIds = null);
+        Task<AddUpdateDelete> getQueueTicketList(string CalendarCode, string CompanyCode, string QueueIds = null);
         Task<AddUpdateDelete> updateQueueActivationStatus(string QueueId, string Status);
+        Task<AddUpdateDelete> callNext(string QueueId);
 
         #region marketplace queue
         Task<AddUpdateDelete> bookTicket(TicketMasterModel model);
-        Task<AddUpdateDelete> updateQueueTicketStatus(TicketMasterModel model);
+        Task<AddUpdateDelete> updateQueueTicketPosition(TicketMasterModel model);
         Task<AddUpdateDelete> getMarketplaceQueueList(string CalendarCode, string CompanyCode);
         #endregion
     }

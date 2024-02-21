@@ -815,14 +815,14 @@
                                             <div class="queue-back-log">
                                                 <div style="padding:1.5rem; padding-top:0px;">
                                                     <h2 style="padding-bottom:8px;"><b>({{queue.QUEUE_PREFIX}}) {{queue.QUEUE_NAME}}</b></h2>
-                                                    <h4 class="pink" style="margin-bottom:4px;"><span>Current</span> <b>A10</b></h4>
+                                                    <h4 class="pink" style="margin-bottom:4px;"><span>Current</span> <b>{{queue.CurrentTicket}}</b></h4>
                                                     <span>@DateTime.Now.ToString("hh:mm tt")</span>
                                                 </div>
 
 
                                                 <div class="text-center">
                                                     <div class="hr"></div>
-                                                    <h3 class="current-ticket-number">{{queue.QUEUE_PREFIX}} 20</h3>
+                                                    <h3 class="current-ticket-number">{{queue.AvailableTicket}}</h3>
                                                 </div>
                                                 <div class="call-button" style="padding: 0px 1.5rem;">
                                                     <button ng-click="bookTicket(queue.Id)">Get Ticket</button>
