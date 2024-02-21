@@ -1,4 +1,6 @@
-﻿using Barrway.DTO.Common;
+﻿using Barrway.DTO.BusinessModels;
+using Barrway.DTO.Common;
+using Barrway.Security;
 using Barrway.Service.IRepository;
 using Barrway.Service.Repository;
 using Microsoft.AspNet.SignalR;
@@ -8,12 +10,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Security.Principal;
+
 
 namespace Barrway.WebSocket
 {
     public class QueueManager : Hub
     {
-        private readonly QueueService queueService = new QueueService(new SqlFunction());
+        private readonly QueueService queueService = new QueueService(new SqlFunction(), new FormAPIRepository());
 
         public async override Task OnConnected()
         {
@@ -27,11 +31,7 @@ namespace Barrway.WebSocket
             await base.OnDisconnected(stopCalled);
         }
 
-        public void Send(string name, string message)
-        {
-            Clients.All.addNewMessageToPage(name, message);
-        }
-
+        #region admin functions
         public async Task getSessionList(string CalendarCode, string CompanyCode)
         {
             try
@@ -44,9 +44,9 @@ namespace Barrway.WebSocket
                 }
                 else
                 {
-                    Clients.Client(Context.ConnectionId).showErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to fetch sessions."});
+                    Clients.Client(Context.ConnectionId).showErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to fetch sessions." });
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -80,7 +80,7 @@ namespace Barrway.WebSocket
             await Task.CompletedTask;
         }
 
-        public async Task getQueueList(string CalendarCode, string CompanyCode)
+        public async Task getQueueList(string CalendarCode, string CompanyCode, bool AllClients = false)
         {
             try
             {
@@ -88,11 +88,51 @@ namespace Barrway.WebSocket
 
                 if (result.Status)
                 {
-                    Clients.Client(Context.ConnectionId).updateQueues(result);
+                    if (AllClients)
+                    {
+                        Clients.All.updateQueues(result);
+                    }
+                    else
+                    {
+                        Clients.Client(Context.ConnectionId).updateQueues(result);
+                    }
+                    
                 }
                 else
                 {
                     Clients.Client(Context.ConnectionId).showErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to fetch queues." });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Clients.Client(Context.ConnectionId).showErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to fetch queues." });
+            }
+
+            await Task.CompletedTask;
+        }
+
+        public async Task getQueueTicketList(string QueueIds = null, bool AllClients = false)
+        {
+            try
+            {
+                var result = await queueService.getQueueTicketList(QueueIds);
+
+                if (result.Status)
+                {
+                    if (AllClients)
+                    {
+                        Clients.All.updateQueueTicketList(result);
+                    }
+                    else
+                    {
+                        Clients.Client(Context.ConnectionId).updateQueueTicketList(result);
+                    }
+
+                }
+                else
+                {
+                    Clients.Client(Context.ConnectionId).showErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to fetch tickets." });
                 }
 
             }
@@ -112,7 +152,7 @@ namespace Barrway.WebSocket
 
                 if (result.Status)
                 {
-                    Clients.Client(Context.ConnectionId).showSuccessResult(new AddUpdateDelete() { Status = true, Message = "Queue ticket distribution" + ((Status == "Y")? " is started.": " is turned off.") });
+                    Clients.Client(Context.ConnectionId).showSuccessResult(new AddUpdateDelete() { Status = true, Message = "Queue ticket distribution" + ((Status == "Y") ? " is started." : " is turned off.") });
                 }
                 else
                 {
@@ -127,7 +167,113 @@ namespace Barrway.WebSocket
 
             await Task.CompletedTask;
         }
+        #endregion
 
+        #region marketplace functions
+        public async Task getMarketplaceQueueList(string CalendarCode, string CompanyCode, bool AllClients = false)
+        {
+            try
+            {
+                var result = await queueService.getMarketplaceQueueList(CalendarCode, CompanyCode);
+
+                if (result.Status)
+                {
+                    if (AllClients)
+                    {
+                        Clients.All.updateMarketplaceQueues(result);
+                    }
+                    else
+                    {
+                        Clients.Client(Context.ConnectionId).updateMarketplaceQueues(result);
+                    }
+                    
+                }
+                else
+                {
+                    Clients.Client(Context.ConnectionId).showMarketplaceErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to fetch queues." });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Clients.Client(Context.ConnectionId).showMarketplaceErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to fetch queues." });
+            }
+
+            await Task.CompletedTask;
+
+        }
+
+        public async Task bookTicket(TicketMasterModel model)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(model.USER_ID) || model.USER_ID == "null")
+                {
+                    Clients.Client(Context.ConnectionId).showMarketplaceErrorResult(new AddUpdateDelete() { Status = false, Message = "Please login to book a ticket." });
+                    await Task.CompletedTask;
+                }
+                else
+                {
+                    var result = await queueService.bookTicket(model);
+
+                    if (result.Status)
+                    {
+                        Clients.Client(Context.ConnectionId).showMarketplaceSuccessResult(result);
+                        await getMarketplaceQueueList(result.Data["CALENDAR_CODE"]?.ToString(), result.Data["COMPANY_CODE"]?.ToString(), true);
+                        await getQueueList(result.Data["CALENDAR_CODE"]?.ToString(), result.Data["COMPANY_CODE"]?.ToString(), true);
+                    }
+                    else
+                    {
+                        if (result.Data != null)
+                        {
+                            result.Data = model;
+                            Clients.Client(Context.ConnectionId).bookTicketConfirmation(result);
+                        }
+                        else
+                        {
+                            result.Data = model;
+                            Clients.Client(Context.ConnectionId).showMarketplaceErrorResult(result);
+                        }
+
+                    }
+                }
+                
+               
+
+            }
+            catch (Exception ex)
+            {
+                Clients.Client(Context.ConnectionId).showMarketplaceErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to book ticket" });
+            }
+
+            await Task.CompletedTask;
+        }
+
+        public async Task updateQueueTicketStatus(TicketMasterModel model)
+        {
+            try
+            {
+                model.USER_ID = UserIdentity.UserID;
+                var result = await queueService.updateQueueTicketStatus(model);
+
+                if (result.Status)
+                {
+                    Clients.Client(Context.ConnectionId).updateMarketplaceQueueTicketStatus(result);
+                }
+                else
+                {
+                    Clients.Client(Context.ConnectionId).showMarketplaceErrorResult(result);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Clients.Client(Context.ConnectionId).showMarketplaceErrorResult(new AddUpdateDelete() { Status = false, Message = "Unable to upadate status" });
+            }
+
+            await Task.CompletedTask;
+        }
+        #endregion
 
     }
 }

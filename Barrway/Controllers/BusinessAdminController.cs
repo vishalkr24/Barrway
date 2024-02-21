@@ -15,6 +15,8 @@ using System.Text;
 using System.Net.Http.Headers;
 using System.Net.Http;
 using Barrway.Utility.Common;
+using Microsoft.AspNet.SignalR;
+using Barrway.WebSocket;
 
 namespace Barrway.Controllers
 {
@@ -25,12 +27,14 @@ namespace Barrway.Controllers
         private readonly IBusinessUserService businessUserService;
         private readonly IGlobalMasterService globalMasterService;
         private readonly IAuthService authService;
-
-        public BusinessAdminController(IBusinessUserService businessUserService, IGlobalMasterService globalMasterService, IAuthService authService)
+        private readonly IQueueService queueService;
+        
+        public BusinessAdminController(IBusinessUserService businessUserService, IGlobalMasterService globalMasterService, IAuthService authService, IQueueService queueService)
         {
             this.businessUserService = businessUserService;
             this.globalMasterService = globalMasterService;
             this.authService = authService;
+            this.queueService = queueService;
         }
 
         #region View Methods
@@ -1804,7 +1808,6 @@ namespace Barrway.Controllers
                 return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
             }
         }
-
 
         #endregion
 

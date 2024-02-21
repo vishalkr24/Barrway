@@ -291,6 +291,7 @@ namespace Barrway.Controllers
             }
         }
 
+
         [Route("company/Calander/{id}/{pid?}")]
         public async Task<ActionResult> Calander(string id = null,string Pid = null)
         {
@@ -382,6 +383,7 @@ namespace Barrway.Controllers
             }
 
         }
+
 
        
         [Route("company/Queue/{id}/{pid?}")]
@@ -480,9 +482,9 @@ namespace Barrway.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> GetServiceList(string CompanyCode,string CalanderCode)
+        public async Task<ActionResult> GetServiceList(string CompanyCode, string CalanderCode)
         {
-            return Json(await businessUserService.GetServiceList(CalanderCode,CompanyCode));
+            return Json(await businessUserService.GetServiceList(CalanderCode, CompanyCode));
         }
 
         public async Task<ActionResult> GetSingleBlogPost(string NewsId)
