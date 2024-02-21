@@ -93,6 +93,9 @@
             chat.server.getQueueList(String(localStorage.getItem("CALENDAR_CODE")), String(localStorage.getItem("COMPANY_CODE")), false);
         }
 
+        $scope.getQueueTicketList = function () {
+            chat.server.getQueueTicketList(null, false);
+        }
 
 
 
@@ -119,6 +122,15 @@
         chat.client.updateQueues = function (response) {
             if (response.Status) {
                 angular.element($('#quequeDiv')).scope().queueList = response.Data;
+                $scope.getQueueTicketList();
+                $scope.HideLoading();
+            }
+        }
+
+        chat.client.updateQueueTicketList = function (response) {
+            debugger;
+            if (response.Status) {
+                angular.element($('#quequeDiv')).scope().queueTicketList = response.Data;
                 $scope.HideLoading();
             }
         }

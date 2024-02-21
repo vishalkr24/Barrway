@@ -81,6 +81,53 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> getQueueTicketList(string QueueIds = null)
+        {
+            try
+            {
+                string IdString = "";
+
+                if (string.IsNullOrEmpty(QueueIds))
+                {
+                    IdString = $@" stuff((select ',' + cast(q_m.Id as varchar) from QUEUE_SESSION_MASTER_1974 ses
+                                    join QUEUE_SESSION_MAPPING_1976 map on map.SESSION_ID = ses.Id
+                                    join QUEUE_MASTER_1973 q_m on q_m.Id = map.QUEUE_ID
+                                    where ses.CALENDAR_CODE = 'CLR00086' and ses.COMPANY_CODE = 'CMP00076' and 
+                                    (
+	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.SESSION_START_TIME, 105) and 
+	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) < Convert(datetime, ses.SESSION_END_TIME, 105)
+                                    ) for xml path('')), 1, 1, '');";
+                }
+                else
+                {
+                    IdString = "'" + QueueIds + "'";
+                }
+
+                string query = $@"declare @QueueIds varchar(max) = {IdString}
+
+                                select * from TICKET_MASTER_1975 ticket
+                                where (ticket.QUEUE_ID in (select cast(item as integer) from dbo.SplitString(@QueueIds,','))) 
+                                and SESSION_ID = (
+	                                select top 1 ses.Id from QUEUE_SESSION_MASTER_1974 ses
+                                    join QUEUE_SESSION_MAPPING_1976 map on map.SESSION_ID = ses.Id
+                                    join QUEUE_MASTER_1973 q_m on q_m.Id = map.QUEUE_ID
+                                    where q_m.Id = ticket.QUEUE_ID and 
+                                    (
+	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.SESSION_START_TIME, 105) and 
+	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) < Convert(datetime, ses.SESSION_END_TIME, 105)
+                                    )
+                                )";
+
+                var result = await sqlFunction.ExecuteSqlQuery(query);
+
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
         public async Task<AddUpdateDelete> updateQueueActivationStatus(string QueueId, string Status)
         {
             string sqlString = $@"update QUEUE_MASTER_1973 set ACCEPT_TICKET = '{Status ?? "N"}' where Id='{QueueId}'";

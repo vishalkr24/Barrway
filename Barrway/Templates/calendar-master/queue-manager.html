@@ -611,7 +611,16 @@
                                     <p>Waiting <span>(0)</span></p>
                                 </div>
                                 <div class="ticket-list-area" data-ticket-type="Waiting">
-
+                                    <div class="queue_backlog_inner" ng-repeat="ticket in queueTicketList" ng-if="ticket.QUEUE_ID == queue.Id">
+                                        <div class="right-border pink-border"></div>
+                                        <div class="queue-back-log-left">
+                                            <h2>A07</h2>
+                                        </div>
+                                        <div class="queue-back-log-right">
+                                            <span><img src="/assets/marketplace/image/cat-icon.png" /></span>
+                                            <span><img src="/assets/marketplace/image/setting-icon.png" /></span>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="waiting">
                                     <p>Pending <span>(0)</span></p>
