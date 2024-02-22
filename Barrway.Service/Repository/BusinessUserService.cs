@@ -1326,7 +1326,7 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> GetSchedule(string CompanyCode, string CalendarCode, string UserId, bool CurrentDate = false)
+        public async Task<AddUpdateDelete> GetSchedule(string CompanyCode, string CalendarCode, string UserId)
         {
             string sqlQuery = $@"SELECT top 1  schedular.[Id]
                                       ,schedular.[created_at]
@@ -1359,12 +1359,16 @@ namespace Barrway.Service.Repository
 								  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = schedular.COMPANY_CODE
 								  join BUSINESS_ASSIGNED_USERS_1964 bau on bau.COMPANY_ID = company.Id
 								  join USER_MASTER_1915 um on um.Id = bau.ASSIGNED_USER
-                                  where schedular.COMPANY_CODE = '{CompanyCode}' and schedular.CALENDAR_CODE = '{CalendarCode}' { ((CurrentDate) ? " and (cast([SCH_FROM_DATE] as date) = cast(getDate() as date) and cast([SCH_TO_DATE] as date) = cast(getDate() as date))" : "") } and um.USER_ID = '{UserId}' order by created_at desc";
+                                  where schedular.COMPANY_CODE = '{CompanyCode}' and schedular.CALENDAR_CODE = '{CalendarCode}' and um.USER_ID = '{UserId}' order by created_at desc";
 
             var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
             if (result.Count > 0)
             {
+                var queueData = await GetQueueAndSession(CompanyCode, CalendarCode);
+
+                result.FirstOrDefault()["SCH_SCHEDULE_TABLE"] = JsonConvert.SerializeObject(queueData.Data);
+
                 return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result.FirstOrDefault() };
             }
             else

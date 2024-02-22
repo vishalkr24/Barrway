@@ -622,9 +622,9 @@ namespace Barrway.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> GetScheduleByCalendar(string CompanyCode, string CalendarCode, bool CurrentDate = false)
+        public async Task<ActionResult> GetScheduleByCalendar(string CompanyCode, string CalendarCode)
         {
-            var schedularData = await businessUserService.GetSchedule(CompanyCode, CalendarCode, User.Identity.Name, CurrentDate);
+            var schedularData = await businessUserService.GetSchedule(CompanyCode, CalendarCode, User.Identity.Name);
 
             return Json(schedularData);
         }

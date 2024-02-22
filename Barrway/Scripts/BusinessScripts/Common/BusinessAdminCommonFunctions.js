@@ -198,7 +198,7 @@ function getSchedule(ScheduleId) {
     return data;
 }
 
-function getSchedule(companyCode, calendarCode, currentDate = false) {
+function getSchedule(companyCode, calendarCode) {
     var data;
     $.ajax({
         url: "/Calendar/GetScheduleByCalendar/",
@@ -206,8 +206,7 @@ function getSchedule(companyCode, calendarCode, currentDate = false) {
         async: false,
         data: {
             CompanyCode: companyCode,
-            CalendarCode: calendarCode,
-            CurrentDate: currentDate
+            CalendarCode: calendarCode
         },
         success: function (response) {
             data = response;

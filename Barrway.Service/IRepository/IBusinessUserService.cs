@@ -77,7 +77,7 @@ namespace Barrway.Service.IRepository
 
         Task<AddUpdateDelete> GetCalendarUpcomingBookings(GenerateDynamicFormData data, string CompanyCode, string CalendarCode);
         Task<AddUpdateDelete> GetSchedule(string ScheduleId, string UserId);
-        Task<AddUpdateDelete> GetSchedule(string CompanyCode, string CalendarCode, string UserId, bool CurrentDate = false);
+        Task<AddUpdateDelete> GetSchedule(string CompanyCode, string CalendarCode, string UserId);
 
         Task<AddUpdateDelete> AddSchedularForm(SchedularFormModel model, string formGroupKey);
 

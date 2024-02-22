@@ -337,7 +337,7 @@
             addSessionRow();
         });
 
-        $(document).on("change paste", "#booking-queue-table tbody input", function () {
+        $(document).on("change paste", "#booking-queue-table tbody input, select", function () {
 
             let name = ($(this).attr("type") == "radio") ? $(this).attr("name").split("-") : $(this).attr("id").split("-");
 
@@ -345,7 +345,7 @@
 
         });
 
-        $(document).on("change paste", "#booking-session-table tbody input", function () {
+        $(document).on("change paste", "#booking-session-table tbody input, select", function () {
 
             let name = ($(this).attr("type") == "radio") ? $(this).attr("name").split("-") : $(this).attr("id").split("-");
 
@@ -363,8 +363,8 @@
 
                 $scope.SchedularId = response.Id;
 
-                let queue = JSON.parse(response.SCH_SCHEDULE_TABLE).QueueList
-                let session = JSON.parse(response.SCH_SCHEDULE_TABLE).SessionList
+                let queue = JSON.parse(response.SCH_SCHEDULE_TABLE).queue
+                let session = JSON.parse(response.SCH_SCHEDULE_TABLE).session
 
                 $("#exampleFormControlSelect1").val(queue.length);
                 $("#exampleFormControlSelect2").val(session.length);
@@ -524,7 +524,7 @@
                             QUEUE_PREFIX: "",
                             QUEUE_START_NUMBER: "1",
                             QUEUE_END_NUMBER: "100",
-                            QUEUE_RESET_NUMBER: "",
+                            QUEUE_RESET_NUMBER: "AFTER SESSION",
                             CALENDAR_CODE: createdCalendarCode,
                             COMPANY_CODE: createdCompanyCode
                         };
@@ -545,8 +545,8 @@
                                                         <input type="number" class="form-control" id="QUEUE_END_NUMBER-${queueElement.rowId}"  value="${queueElement.QUEUE_END_NUMBER}"/>
                                                     </td>
                                                     <td style="width:160px;">
-                                                        <select class="form-control" id="QUEUE_RESET_NUMBER-${queueElement.rowId}" value="${queueElement.QUEUE_RESET_NUMBER}">
-                                                            <option value="AFTER SESSION">After Session</option>
+                                                        <select class="form-control" id="QUEUE_RESET_NUMBER-${queueElement.rowId}">
+                                                            <option selected value="AFTER SESSION">After Session</option>
                                                             <option value="PER DAY">Per Day</option>
                                                             <option value="PER MONTH">Per Month</option>
                                                             <option value="NO RESET">No Reset</option>
@@ -581,16 +581,16 @@
                 };
 
                 sessionList.push(sessionElement);
-
+                
                 binderString += `<tr id="session-table-row-${sessionElement.rowId}">
                                                     <td>
                                                         <input type="text" class="form-control" id="SESSION_NAME-${dataElement.Id}" value="${sessionElement.SESSION_NAME}"/>
                                                     </td>
                                                     <td>
-                                                        <input type="time" class="form-control" id="SESSION_START_TIME-${dataElement.Id}" value="${sessionElement.SESSION_START_TIME}"/>
+                                                        <input type="time" class="form-control" id="SESSION_START_TIME-${dataElement.Id}" value="${sessionElement.SESSION_START_TIME.substring(11, sessionElement.SESSION_START_TIME.length)}"/>
                                                     </td>
                                                     <td style="width:100px;">
-                                                        <input type="time" class="form-control" id="SESSION_END_TIME-${dataElement.Id}" value="${sessionElement.SESSION_END_TIME}"/>
+                                                        <input type="time" class="form-control" id="SESSION_END_TIME-${dataElement.Id}" value="${sessionElement.SESSION_END_TIME.substring(11,  sessionElement.SESSION_START_TIME.length)}"/>
                                                     </td>
                                                     <td style="width:100px;">
                                                         <div class="booking_queue_radio">
