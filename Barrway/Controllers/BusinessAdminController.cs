@@ -1128,6 +1128,38 @@ namespace Barrway.Controllers
         }
 
         [HttpPost]
+        public  ActionResult CheckCmpanyUrlExists(string  Url)
+        {
+            try
+            {
+                if(Url != "")
+                {
+                    string PAGE_URL = string.IsNullOrEmpty(Url) ? Url : Url.Replace(" ", "_");
+                    bool IsComanyUrlExists = businessUserService.CheckCmpanyUrlExists(PAGE_URL);
+
+                    if (!IsComanyUrlExists)
+                    {
+                        return Json(new { Status = true }, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        return Json(new { Status = false }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    return Json(new { Status = false }, JsonRequestBehavior.AllowGet);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Status = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
+        
+        
+        [HttpPost]
         public async Task<ActionResult> SaveCompanyWebsiteDetails(BusinessCompanyViewModel model)
         {
             try
@@ -1137,6 +1169,21 @@ namespace Barrway.Controllers
                 {
                     return View("ManageCompanyWebsite", model);
                 }
+                if (!string.IsNullOrEmpty(model.PAGE_URL))
+                {
+                    string PAGE_URL = string.IsNullOrEmpty(model.PAGE_URL) ? model.PAGE_URL : model.PAGE_URL.Replace(" ", "_");
+                    bool IsComanyUrlExists = businessUserService.CheckCmpanyUrlExists(PAGE_URL);
+
+                    if(IsComanyUrlExists)
+                    {
+
+                        TempData["CompanyWeurlMessage"] = "This page url already exist !";
+                        return View("ManageCompanyWebsite", model);
+                    }
+
+                }
+                
+
 
                 BusinessCompanyModel companyModel = new BusinessCompanyModel()
                 {
@@ -1160,7 +1207,8 @@ namespace Barrway.Controllers
                     IS_ACTIVE = "Y",
                     INSTAGRAM_URL = model.INSTAGRAM_URL,
                     IS_SEARCHABLE_IN_MARKETPLACE = model.IS_SEARCHABLE_IN_MARKETPLACE,
-                    PAGE_URL = model.PAGE_URL,
+                   // PAGE_URL = model.PAGE_URL.Replace(" ", "_"),
+                    PAGE_URL = string.IsNullOrEmpty(model.PAGE_URL) ? model.PAGE_URL : model.PAGE_URL.Replace(" ", "_"),
                     TAGS = model.TAGS,
                     TWITTER_URL = model.TWITTER_URL,
                     WECHAT_URL = model.WECHAT_URL

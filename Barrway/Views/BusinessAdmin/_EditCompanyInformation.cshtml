@@ -1,6 +1,22 @@
 ﻿@using Barrway.DTO.BusinessModels
 @model Barrway.DTO.BusinessModels.BusinessCompanyViewModel
 
+@{
+    var baseUrl = System.Web.Configuration.WebConfigurationManager.AppSettings["baseURL"].ToString();
+    string token = DateTime.Now.ToString("ddMMyyyyHHmmssffffff");
+
+    HttpCookie languageCookie = System.Web.HttpContext.Current.Request.Cookies["Language"];
+    string language = "";
+    if (languageCookie != null)
+    {
+        language = languageCookie.Value;
+    }
+    else
+    {
+        language = "en";
+    }
+}
+
 @using (Html.BeginForm("SaveCompanyWebsiteDetails", "BusinessAdmin", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     <div style="text-align:right; width:100%;">
@@ -10,6 +26,12 @@
 
     </div>
     <br />
+    if (TempData["CompanyWeurlMessage"] != null)
+    {
+        <div class="col-md-4 mt-5">
+            <p style="color:red;">@TempData["CompanyWeurlMessage"]</p>
+        </div>
+    }
     <div class="row form-group">
         <div class="col-md-4 mt-5">
             <label>@Resource.Company_Code</label>
@@ -20,25 +42,25 @@
         <div class="col-md-4 mt-5">
             <label>@Resource.Company_Logo</label>
             <div class="custome-uploade">
-                
+
                 @*@Html.TextBoxFor(model => model.COMPANY_LOGO_NAME, new { @class = "f-input", @required = "true", @style = "width: 75%; border:none!important;" })*@
 
                 <label for="COMPANY_LOGO_PATH" id="COMPANY_LOGO_NAME" style="width:80%; max-width:300px; padding-left:16px;">@Model.COMPANY_LOGO_NAME</label>
 
                 <div class="fileUpload btn btn--browse">
                     <span>Browse</span>
-                    @Html.TextBoxFor(model => model.COMPANY_LOGO_PATH, new { @class = "upload", Type = "File", @onchange="BindLogoName('COMPANY_LOGO_PATH', 'COMPANY_LOGO_NAME')" })
-                    
+                    @Html.TextBoxFor(model => model.COMPANY_LOGO_PATH, new { @class = "upload", Type = "File", @onchange = "BindLogoName('COMPANY_LOGO_PATH', 'COMPANY_LOGO_NAME')" })
+
                 </div>
             </div>
             @Html.ValidationMessageFor(model => model.COMPANY_LOGO_PATH, "", new { @class = "invalid-feedback-2" })
-            
+
         </div>
         <div class="col-md-4 mt-5">
             <label>@Resource.Website_banner</label>
 
             <div class="custome-uploade">
-               
+
                 @*@Html.TextBoxFor(model => model.COMPANY_BANNER_NAME, new { @class = "f-input", @required = "true", @style = "width: 75%; border:none!important;" })*@
 
                 <label for="COMPANY_BANNER_PATH" id="COMPANY_BANNER_NAME" style="width:80%; max-width:300px; padding-left:16px;">@Model.COMPANY_BANNER_NAME</label>
@@ -46,12 +68,12 @@
                 <div class="fileUpload btn btn--browse">
                     <span>Browse</span>
                     @Html.TextBoxFor(model => model.COMPANY_BANNER_PATH, new { @class = "upload", Type = "File", @onchange = "BindLogoName('COMPANY_BANNER_PATH', 'COMPANY_BANNER_NAME')" })
-                    
+
                 </div>
 
             </div>
             @Html.ValidationMessageFor(model => model.COMPANY_BANNER_PATH, "", new { @class = "invalid-feedback-2" })
-            
+
         </div>
     </div>
 
@@ -60,7 +82,7 @@
             <label>@Resource.Company_Name (English)</label>
             @Html.TextBoxFor(model => model.COMPANY_NAME_ENGLISH, new { @class = "form-control", @placeholder = "Company Name English", @required = "true" })
             @Html.ValidationMessageFor(model => model.COMPANY_NAME_ENGLISH, "", new { @class = "invalid-feedback-2" })
-            
+
         </div>
         <div class="col-md-6 mt-5">
             <label>@Resource.Company_Name (Chinese)</label>
@@ -74,13 +96,13 @@
             <label>@Resource.Company_category</label>
             @Html.DropDownListFor(model => model.COMPANY_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(CompanyCategory))), "Select Company Category", new { @class = "form-control", @required = "true" })
             @Html.ValidationMessageFor(model => model.COMPANY_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
-            
+
         </div>
         <div class="col-md-6 mt-5">
             <label>@Resource.Company_sub_category</label>
             @Html.DropDownListFor(model => model.COMPANY_SUB_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(CompanyCategory))), "Select Company Sub Category", new { @class = "form-control", @required = "true" })
             @Html.ValidationMessageFor(model => model.COMPANY_SUB_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
-            
+
         </div>
     </div>
 
@@ -89,7 +111,7 @@
             <label>@Resource.Address</label>
             @Html.TextBoxFor(model => model.COMPANY_ADDRESS, new { @class = "form-control", @placeholder = "Company Address" })
             @Html.ValidationMessageFor(model => model.COMPANY_ADDRESS, "", new { @class = "invalid-feedback-2" })
-            
+
         </div>
     </div>
 
@@ -98,19 +120,19 @@
             <label>@Resource.Country</label>
             @Html.DropDownListFor(model => model.COUNTRY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select Country", @required = "true" })
             @Html.ValidationMessageFor(model => model.COUNTRY_ID, "", new { @class = "invalid-feedback-2" })
-            
+
         </div>
         <div class="col-md-4 mt-5">
             <label>@Resource.City</label>
             @Html.DropDownListFor(model => model.CITY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select City", @required = "true" })
             @Html.ValidationMessageFor(model => model.CITY_ID, "", new { @class = "invalid-feedback-2" })
-            
+
         </div>
         <div class="col-md-4 mt-5">
             <label>@Resource.District</label>
             @Html.DropDownListFor(model => model.DISTRICT_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select District", @required = "true" })
             @Html.ValidationMessageFor(model => model.DISTRICT_ID, "", new { @class = "invalid-feedback-2" })
-            
+
         </div>
     </div>
 
@@ -119,13 +141,13 @@
             <label>@Resource.Phone</label>
             @Html.TextBoxFor(model => model.COMPANY_PHONE, new { @class = "form-control", @placeholder = "Company Phone" })
             @Html.ValidationMessageFor(model => model.COMPANY_PHONE, "", new { @class = "invalid-feedback-2" })
-            
+
         </div>
         <div class="col-md-6 mt-5">
             <label>@Resource.Email</label>
             @Html.TextBoxFor(model => model.COMPANY_EMAIL, new { @class = "form-control", @placeholder = "Company Email" })
             @Html.ValidationMessageFor(model => model.COMPANY_EMAIL, "", new { @class = "invalid-feedback-2" })
-            
+
         </div>
     </div>
 
@@ -134,25 +156,25 @@
             <label>Facebook Url</label>
             @Html.TextBoxFor(model => model.FACEBOOK_URL, new { @class = "form-control", @placeholder = "Facebook url" })
             @Html.ValidationMessageFor(model => model.FACEBOOK_URL, "", new { @class = "invalid-feedback-2" })
-            
+
         </div>
         <div class="col-md-3 mt-5">
             <label>Instagram Url</label>
             @Html.TextBoxFor(model => model.INSTAGRAM_URL, new { @class = "form-control", @placeholder = "Instagram url" })
             @Html.ValidationMessageFor(model => model.INSTAGRAM_URL, "", new { @class = "invalid-feedback-2" })
-            
+
         </div>
         <div class="col-md-3 mt-5">
             <label>Wechat Url</label>
             @Html.TextBoxFor(model => model.WECHAT_URL, new { @class = "form-control", @placeholder = "Wechat url" })
             @Html.ValidationMessageFor(model => model.WECHAT_URL, "", new { @class = "invalid-feedback-2" })
-            
+
         </div>
         <div class="col-md-3 mt-5">
             <label>Twitter Url</label>
             @Html.TextBoxFor(model => model.TWITTER_URL, new { @class = "form-control", @placeholder = "Twitter url" })
             @Html.ValidationMessageFor(model => model.TWITTER_URL, "", new { @class = "invalid-feedback-2" })
-            
+
         </div>
     </div>
 
@@ -161,7 +183,7 @@
             <label>@Resource.Company_description (200 @Resource.words)</label>
             @Html.TextAreaFor(model => model.COMPANY_DESCRIPTION, new { @class = "form-control", @placeholder = "write your company description in 200 words", @style = "resize:vertical; height:120px;" })
             @Html.ValidationMessageFor(model => model.COMPANY_DESCRIPTION, "", new { @class = "invalid-feedback-2" })
-            
+
         </div>
 
     </div>
@@ -171,7 +193,7 @@
             <label>@Resource.Tags</label>
             @Html.TextBoxFor(model => model.TAGS, new { @class = "form-control", @placeholder = "" })
             @Html.ValidationMessageFor(model => model.TAGS, "", new { @class = "invalid-feedback-2" })
-            
+
         </div>
 
     </div>
@@ -187,11 +209,35 @@
 
         </div>
 
-        <div class="col-md-5 mt-5">
-            <label>Page url</label>
-            @Html.TextBoxFor(model => model.PAGE_URL, new { @class = "form-control", @placeholder = "page url" })
-            @*<input class="form-control" type="text" />*@
+
+        <div class="col-md-5 mt-5" id="basic">
+            <label for="basic-url" class="form-label">Page url</label>
+            <div class="input-group">
+                <span class="input-group-text" id="basic-addon3">@baseUrl</span>
+                @{
+                    string disabledAttribute = Model.PAGE_URL != "" ? "disabled" : "Enable";
+
+                    if (disabledAttribute == "disabled")
+                    {
+
+                        @Html.TextBoxFor(model => model.PAGE_URL, new { @class = "form-control", @placeholder = "page url", @readonly = "readonly" })
+
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.PAGE_URL, new { @class = "form-control pageUrl", @placeholder = "page url", @onkeypress = @"return /[0-9a-zA-Z\s]/i.test(event.key)", @oncut = "return false", @onpaste = "return false", @onchange = "isUrlavailable()" })
+
+                    }
+                }
+
+                @*@Html.TextBoxFor(model => model.PAGE_URL, new { @class = "form-control", @placeholder = "page url", @disabled = disabledAttribute })*@
+
+                @*@Html.TextBoxFor(model => model.PAGE_URL, new { @class = "form-control", @placeholder = "page url" })*@
+            </div>
+
         </div>
+
+
 
         <div class="col-md-2 mt-5">
             <div style="height:24px"></div>
@@ -204,4 +250,33 @@
 <br />
 <br />
 <br />
-<br /> 
+<br />
+
+
+
+<script>
+
+    function isUrlavailable() {
+        var url = $("#PAGE_URL").val();
+            $.ajax({
+                url: '@Url.Action("CheckCmpanyUrlExists", "BusinessAdmin")', // Replace "ControllerName" with your actual controller name
+                type: 'POST',
+                dataType: 'json',
+                data: { Url: url },
+                success: function(response) {
+                    if (response.Status==false) {
+                        $("#basic").append('<br/><p style="color: red;" id="UrlValidationmessage"> This page url already exist !</p>');
+                    } else {
+
+                        $("#UrlValidationmessage").remove();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $("#UrlValidationmessage").empty();
+                }
+            });
+    }
+
+
+
+</script>

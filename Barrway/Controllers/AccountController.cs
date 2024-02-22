@@ -551,7 +551,7 @@ namespace Barrway.Controllers
                     IS_PHONE_VERIFIED = "N",
                     IS_EXTERNAL_SIGNUP = (model.IS_EXTERNAL_SIGNUP) ? "Y" : "N",
                     PROFILE_STATUS = "PENDING",
-                    SIGNUP_TYPE = (model.IS_EXTERNAL_SIGNUP) ? "GOOGLE" : "EMAIL",
+                    SIGNUP_TYPE = (model.IS_EXTERNAL_SIGNUP) ? "GOOGLE" : "Phone",
                     USER_PHONE = "+" + model.CountryCode + model.USER_PHONE,
                     USER_PASSWORD = model.USER_PASSWORD,
                     USER_ID = model.USER_NAME,
@@ -635,7 +635,7 @@ namespace Barrway.Controllers
             {
                 if (userByEmail.Status)
                 {
-                    ModelState.AddModelError("USER_PHONE", "Email already registered");
+                    ModelState.AddModelError("USER_PHONE", "Phone is already registered");
                 }
 
                 if (userByID.Status)

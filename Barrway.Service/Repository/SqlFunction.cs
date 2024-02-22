@@ -54,6 +54,30 @@ namespace Barrway.Service.Repository
             return rows;
         }
 
+        public  List<IDictionary<string, object>> ExecuteSqlQueryNonAsync(string sqlQuery)
+        {
+            List<IDictionary<string, object>> rows = new List<IDictionary<string, object>>();
+            using (var db = new SqlConnection(connectionString))
+            {
+                 db.OpenAsync();
+                using (var reader =  db.ExecuteReader(sqlQuery))
+                {
+                    while (reader.Read())
+                    {
+                        var dict = new Dictionary<string, object>();
+                        for (var i = 0; i < reader.FieldCount; i++)
+                        {
+                            dict[reader.GetName(i)] = reader.GetValue(i);
+                        }
+                        rows.Add(dict);
+                    }
+                }
+            }
+            return rows;
+        }
+
+
+
         public async Task<List<IDictionary<string, object>>> ExecuteSqlQuery(string sqlQuery, DynamicParameters param,CommandType commandType)
         {
             List<IDictionary<string, object>> rows = new List<IDictionary<string, object>>();
