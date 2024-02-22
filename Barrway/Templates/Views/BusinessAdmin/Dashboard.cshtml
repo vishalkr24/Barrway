@@ -1,0 +1,413 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_BusinessAdminLayout.cshtml";
+    ViewBag.Title = @Resource.Dashboard;
+}
+
+<main id="content" role="main" class="main" style="display:none;">
+    <!-- Content -->
+    <div class="content container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="bredcrump">
+                    <span><a class="lbl-company-name" href="javascript:void(0)">Company name</a> / <a href="javascript:void(0)">@Resource.Dashboard</a> </span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row" style="max-width: 80%;">
+                    
+                    <div class="startbusiness row" style="margin-left:0px;">
+                        <div class="col-md-12">
+                            <div class="hed-til">
+                                <h1>3 Steps to start your business here.</h1>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="setup">
+                                <span>@Resource.Step 1</span>
+                                <br />
+                                <h3>@Resource.Set_up_company_profile</h3>
+                                
+                                <span id="CompanyProfileSetupBtn" onclick="location.href = '/BusinessAdmin/SetupCompanyProfile?IsNew=true'">
+                                    <a href="javascript:void(0)" class="purple">@Resource.Go</a>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="setup">
+                                <span>@Resource.Step 2</span>
+                                <br />
+                                <h3>@Resource.Set_up_calendar</h3>
+
+                                <span id="CalendarSetupBtn" onclick="location.href = '/BusinessAdmin/SetupCompanyCalendar?IsPartial=true'">
+                                    <a href="javascript:void(0)" class="purple">@Resource.Go</a>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="setup">
+                                <span>@Resource.Step 3</span>
+                                <br />
+                                <h3>@Resource.Set_up_company_webiste</h3>
+
+                                <span onclick="showComapanyWebsiteDetails(1)">
+                                    <a href="javascript:void(0)" class="purple">@Resource.Go</a>
+                                </span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <!-- End Content -->
+    </div>
+</main>
+
+
+<main id="content-2" role="main" class="main" style="display:none;">
+    <!-- Content -->
+    <div class="content desk-padding">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="bredcrump">
+                    <span><a class="lbl-company-name" href="javascript:void(0)">Company name</a> / <a href="javascript:void(0)">@Resource.Dashboard</a> </span>
+                </div>
+            </div>
+        </div>
+        <div class="row pt-lg-2">
+            <div class="col-lg-7">
+                <div class="row">
+                    <div class="col-md-6 hide-for-superadmin">
+                        <div class="wraping">
+                            <div class="top-head purple">
+                                <h3>@Resource.Booking_todays</h3>
+                                <img src="/assets/img/ques.png">
+                            </div>
+                            <div class="wrap-body">
+                                <div class="wb-top">
+                                    <div class="w-l w-80">
+                                        <h1 id="lblBookingToday">0</h1>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <h3><img src="/assets/img/angle-red.png" /> 2%</h3>
+                                    </div>
+                                </div>
+                                <div class="wb-bottom">
+                                    <div class="w-l w-80">
+                                        <p><span>2023-02-21</span> <span></span> <span></span></p>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <p><a href="/BusinessAdmin/CalendarMaster"> @Resource.View ></a></p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="wraping">
+                            <div class="top-head light-purple">
+                                <h3>@Resource.Number_of_calendars</h3>
+                                <img src="">
+                            </div>
+                            <div class="wrap-body">
+                                <div class="wb-top">
+                                    <div class="w-l w-80">
+                                        <h1 id="lblNumberOfCalendar">0</h1>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <h3><img src="" /> </h3>
+                                    </div>
+                                </div>
+                                <div class="wb-bottom">
+                                    <div class="w-l w-80">
+                                        <p><span></span> <span></span> <span></span></p>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <p><a href="/BusinessAdmin/CalendarMaster"> @Resource.View ></a></p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 hide-for-superadmin">
+                        <div class="wraping">
+                            <div class="top-head purple">
+                                <h3>@Resource.Booking_this_week</h3>
+                                <img src="/assets/img/ques.png">
+                            </div>
+                            <div class="wrap-body">
+                                <div class="wb-top">
+                                    <div class="w-l w-80">
+                                        <h1 id="lblBookingThisWeek">0</h1>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <h3><img src="/assets/img/angle-blue.png" /> 2%</h3>
+                                    </div>
+                                </div>
+                                <div class="wb-bottom">
+                                    <div class="w-l w-80">
+                                        <p><span>2023-02-20</span> - <span>2023 02 -26</span></p>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <p><a href="/BusinessAdmin/CalendarMaster"> @Resource.View ></a></p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="wraping">
+                            <div class="top-head light-purple">
+                                <h3>@Resource.Number_of_Services</h3>
+                                <img src="/assets/img/ques.png">
+                            </div>
+                            <div class="wrap-body">
+                                <div class="wb-top">
+                                    <div class="w-l w-80">
+                                        <h1 id="lblNumberOfServices">0</h1>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <h3><img src="" /></h3>
+                                    </div>
+                                </div>
+                                <div class="wb-bottom">
+                                    <div class="w-l w-80">
+                                        <p><span></span> <span></span> <span></span></p>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <p><a href="/BusinessAdmin/CalendarMaster"> @Resource.View ></a></p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 hide-for-superadmin">
+                        <div class="wraping">
+                            <div class="top-head purple">
+                                <h3>@Resource.Workload_this_week</h3>
+                                <img src="/assets/img/ques.png">
+                            </div>
+                            <div class="wrap-body">
+                                <div class="wb-top">
+                                    <div class="w-l w-80">
+                                        <h1>0 hrs</h1>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <h3></h3>
+                                    </div>
+                                </div>
+                                <div class="wb-bottom">
+                                    <div class="w-l w-80">
+                                        <p><span>2023-02-20</span> - <span>2023 02 -26</span></p>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <p><a href="javascript:void(0)"> @Resource.View ></a></p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="wraping">
+                            <div class="top-head light-purple">
+                                <h3>@Resource.Number_of_Service_Provders</h3>
+                                <img src="/assets/img/ques.png">
+                            </div>
+                            <div class="wrap-body">
+                                <div class="wb-top">
+                                    <div class="w-l w-80">
+                                        <h1 id="lblNumberOfServiceProvider">0</h1>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <h3><img src="" /></h3>
+                                    </div>
+                                </div>
+                                <div class="wb-bottom">
+                                    <div class="w-l w-80">
+                                        <p><span></span>  <span></span></p>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <p><a href="/BusinessAdmin/CalendarMaster"> @Resource.View ></a></p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 hide-for-superadmin">
+                        <div class="wraping">
+                            <div class="top-head salmon">
+                                <h3>@Resource.Income_this_week</h3>
+                                <img src="/assets/img/ques.png">
+                            </div>
+                            <div class="wrap-body">
+                                <div class="wb-top">
+                                    <div class="w-l w-80">
+                                        <h1 id="lblIncomeThisWeek">HK$0</h1>
+                                    </div>
+
+                                </div>
+                                <div class="wb-bottom">
+                                    <div class="w-l w-80">
+                                        <p><span>2023-02-20</span> - <span>2023 02 -26</span></p>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <p><a href="javascript:void(0)"> @Resource.View ></a></p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 hide-for-superadmin">
+                        <div class="wraping">
+                            <div class="top-head light-purple">
+                                <h3>@Resource.Number_of_Clients</h3>
+                                <img src="/assets/img/ques.png">
+                            </div>
+                            <div class="wrap-body">
+                                <div class="wb-top">
+                                    <div class="w-l w-80">
+                                        <h1 id="lblNumberOfClient">0</h1>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <h3><img src="" /></h3>
+                                    </div>
+                                </div>
+                                <div class="wb-bottom">
+                                    <div class="w-l w-80">
+                                        <p><span></span>  <span></span></p>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <p><a href="javascript:void(0)"> @Resource.View ></a></p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 hide-for-superadmin">
+                <div class="row">
+                    <!--if (UserIdentity.UserRoleType.ToString() == "SUPERUSER")
+                    {
+                        <div class="col-md-12">
+                            <div class="wraping">
+                                <div class="top-head salmon">
+                                    <h3>Business Admins</h3>
+                                    <img src="/assets/img/ques.png">
+                                </div>
+                                <div class="wrap-body">
+                                    <div class="wb-top">
+                                        <div class="w-l w-80">
+                                            <h1 class="lblNumberOfAdmin">0</h1>
+                                        </div>
+                                        <div class="w-r w-20">
+                                            <h3><img src="/assets/img/angle-red.png" /> 2%</h3>
+                                        </div>
+                                    </div>
+                                    <div class="wb-bottom">
+                                        <!--<div class="w-l w-80">-->
+                    <!--@*<p><span>2023-02-20</span> <span>-</span> <span> 2023 02 -26</span></p>*@-->
+                    <!--</div>-->
+                    <!--<div class="w-r w-20">
+                                            <p><a href="/BusinessAdmin/AdminMaster"> @Resource.View ></a></p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    }-->
+
+
+                    <div class="col-md-12">
+                        <div class="wraping">
+                            <div class="top-head barrway-red">
+                                <h3>@Resource.Website_visits</h3>
+                                <img src="/assets/img/ques.png">
+                            </div>
+                            <div class="wrap-body">
+                                <div class="wb-top">
+                                    <div class="w-l w-80">
+                                        <h1>0</h1>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <h3><img src="/assets/img/angle-red.png" /> 2%</h3>
+                                    </div>
+                                </div>
+                                <div class="wb-bottom">
+                                    <div class="w-l w-80">
+                                        <p><span>2023-02-20</span> <span>-</span> <span> 2023 02 -26</span></p>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <p><a href="javascript:void(0)"> @Resource.View ></a></p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="wraping">
+                            <div class="top-head barrway-red">
+                                <h3>@Resource.Your_plans___subscription</h3>
+                                <img src="/assets/img/ques.png">
+                            </div>
+                            <div class="wrap-body">
+                                <div class="wb-top">
+                                    <div class="w-l w-80">
+                                        <h3 class="plan-name-and-price"></h3>
+                                    </div>
+                                    <div class="w-r w-20">
+                                        <p>
+                                            <a href="/BusinessAdmin/SubscriptionPlan" class="see-plan barrway-red">See plans</a>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="wb-bottom">
+                                    <div class="w-l w-100">
+                                        <table id="subs-det-table">
+                                            <tbody>
+                                                <tr>
+                                                    <td>Vaid till:</td>
+                                                    <td class="valid-till">YYYY-MM-DD</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Calendar available</td>
+                                                    <td class="booking-available">1/2</td>
+                                                </tr>
+                                                <tr rowspan="2">
+                                                    <td>
+                                                        <b>Available session/ calendar</b>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</main>
+
+
+@section scripts{
+    <script src="~/Scripts/BusinessScripts/AdminDashboard.js"></script>
+}

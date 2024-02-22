@@ -1,0 +1,370 @@
+﻿
+@{
+    ViewBag.Title = "Market Place";
+    Layout = "~/Views/Shared/_LayoutMarketPlace.cshtml";
+}
+<!-- banner -->
+<section class="top-banner">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="banner-form">
+                    <h1>@Resource.Find_your_service__activity___book_it_in_one_stop</h1>
+
+                    <div class="form-inner">
+                        <p>@Resource.Find_a_service___activity_in_your_area!</p>
+                        <div class="fields">
+                            <div class="form-group">
+                                <label for="sel1">@Resource.Subcategory</label>
+                                <select class="form-control" id="filter-sub-category-master">
+                                    <option>@Resource.Select_a_sub_category</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="sel1">@Resource.District</label>
+                                <select class="form-control" id="filter-district-master">
+                                    <option>@Resource.Select_your_district</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                </select>
+                            </div>
+                            <p class="search"><a href="javascript:void(0)" onclick="setCalendarSubCategoryWise(true, true)"> <img src="~/assets/marketplace/image/search-icon.png"> </a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="banner-image">
+                    <img src="~/assets/marketplace/image/ban-img.png">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- sliders -->
+<section class="subcatageory" id="common">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12" id="lblFilterLabel" style="display:none;">@Resource.Showing_results_for  <b><span id="lblSelectedSubCategory"></span></b> & <b><span id="lblSelectedDistrict"></span></b></div>
+            <div class="col-md-12" id="company-category-wise-area">
+                @*<div class="my-slide one">
+                    <div class="heading-cata">
+                        <h3>Service subcategory 1 </h3>
+                    </div>
+                    
+                </div>
+                <div class="my-slide two">
+                    <div class="heading-cata">
+                        <h3>Service subcategory 2 </h3>
+                    </div>
+                    <div id="owl-demo2" class="owl-carousel owl-theme">
+                        <div class="item">
+                            <div class="item-inner">
+                                <div class="pro-im">
+                                    <img src="~/assets/marketplace/image/pro.png">
+                                </div>
+                                <div class="pro-text">
+                                    <p class="p1"><b>ABC Company</b></p>
+                                    <p class="p2">Yoga and health class</p>
+                                    <p class="p3">Tsim Sha Tsui</p>
+                                    <p class="p4"><a href="javascript:void(0)"> Tag1</a>, <a href="javascript:void(0)"> Tag2</a>, <a href="javascript:void(0)"> Tag3</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="item-inner">
+                                <div class="pro-im">
+                                    <img src="~/assets/marketplace/image/pro.png">
+                                </div>
+                                <div class="pro-text">
+                                    <p class="p1"><b>ABC Company</b></p>
+                                    <p class="p2">Yoga and health class</p>
+                                    <p class="p3">Tsim Sha Tsui</p>
+                                    <p class="p4"><a href="javascript:void(0)"> Tag1</a>, <a href="javascript:void(0)"> Tag2</a>, <a href="javascript:void(0)"> Tag3</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="item-inner">
+                                <div class="pro-im">
+                                    <img src="~/assets/marketplace/image/pro.png">
+                                </div>
+                                <div class="pro-text">
+                                    <p class="p1"><b>ABC Company</b></p>
+                                    <p class="p2">Yoga and health class</p>
+                                    <p class="p3">Tsim Sha Tsui</p>
+                                    <p class="p4"><a href="javascript:void(0)"> Tag1</a>, <a href="javascript:void(0)"> Tag2</a>, <a href="javascript:void(0)"> Tag3</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="item-inner">
+                                <div class="pro-im">
+                                    <img src="~/assets/marketplace/image/pro.png">
+                                </div>
+                                <div class="pro-text">
+                                    <p class="p1"><b>ABC Company</b></p>
+                                    <p class="p2">Yoga and health class</p>
+                                    <p class="p3">Tsim Sha Tsui</p>
+                                    <p class="p4"><a href="javascript:void(0)"> Tag1</a>, <a href="javascript:void(0)"> Tag2</a>, <a href="javascript:void(0)"> Tag3</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="item-inner">
+                                <div class="pro-im">
+                                    <img src="~/assets/marketplace/image/pro.png">
+                                </div>
+                                <div class="pro-text">
+                                    <p class="p1"><b>ABC Company</b></p>
+                                    <p class="p2">Yoga and health class</p>
+                                    <p class="p3">Tsim Sha Tsui</p>
+                                    <p class="p4"><a href="javascript:void(0)"> Tag1</a>, <a href="javascript:void(0)"> Tag2</a>, <a href="javascript:void(0)"> Tag3</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="item-inner">
+                                <div class="pro-im">
+                                    <img src="~/assets/marketplace/image/pro.png">
+                                </div>
+                                <div class="pro-text">
+                                    <p class="p1"><b>ABC Company</b></p>
+                                    <p class="p2">Yoga and health class</p>
+                                    <p class="p3">Tsim Sha Tsui</p>
+                                    <p class="p4"><a href="javascript:void(0)"> Tag1</a>, <a href="javascript:void(0)"> Tag2</a>, <a href="javascript:void(0)"> Tag3</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- booking -->
+<section class="bookinng mt-80">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="booking-text">
+                    <h2>@Resource.One_stop_event_sharing_booking_platform</h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce finibus varius hendrerit. Nunc condimentum euismod eros vel consectetur. Suspendisse gravida ex ac ex dictum posuere. Quisque eleifend ante a turpis placerat, et dignissim felis porta. Aliquam</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="booking-im">
+                    <img src="~/assets/marketplace/image/rectangle.png">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- HDIW -->
+<section class="hdiw mt-60 mb-60">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="hdiw-inner">
+                    <h2>@Resource.How_does_it_work?</h2>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="hdiw-cont">
+                                <div class="im">
+                                    <img src="~/assets/marketplace/image/hdiw.png">
+                                </div>
+                                <div class="txt">
+                                    <h3>Step 1 XXXXXXXXX</h3>
+                                    <p>Lorem ipsum dolor sit amet, consec weoiw werwr.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="hdiw-cont">
+                                <div class="im">
+                                    <img src="~/assets/marketplace/image/hdiw.png">
+                                </div>
+                                <div class="txt">
+                                    <h3>Step 1 XXXXXXXXX</h3>
+                                    <p>Lorem ipsum dolor sit amet, consec weoiw werwr.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="hdiw-cont">
+                                <div class="im">
+                                    <img src="~/assets/marketplace/image/hdiw.png">
+                                </div>
+                                <div class="txt">
+                                    <h3>Step 1 XXXXXXXXX</h3>
+                                    <p>Lorem ipsum dolor sit amet, consec weoiw werwr.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="hdiw-cont">
+                                <div class="im">
+                                    <img src="~/assets/marketplace/image/hdiw.png">
+                                </div>
+                                <div class="txt">
+                                    <h3>Step 1 XXXXXXXXX</h3>
+                                    <p>Lorem ipsum dolor sit amet, consec weoiw werwr.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Barrway -->
+<section class="Barrway mt-80">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="booking-text">
+                    <h2>@Resource.Barrway_business</h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce finibus varius hendrerit. Nunc condimentum euismod eros vel consectetur. Suspendisse gravida ex ac ex dictum posuere. Quisque eleifend ante a turpis placerat, et dignissim felis porta. Aliquam</p>
+                    <p><button class="learn-more"><a href="javascript:void(0)">Learn more</a></button></p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="booking-im">
+                    <img src="~/assets/marketplace/image/rectangle.png">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- sliders compnay -->
+<section class="subcatageory" id="logo">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="my-slide featured-company">
+                    <div class="heading-cata">
+                        <h3>@Resource.Featured @Resource.Company</h3>
+                    </div>
+                    <div id="owl-demo5" class="owl-carousel owl-theme">
+                        <div class="item">
+                            <div class="item-inner">
+                                <div class="pro-im">
+                                    <img src="~/assets/marketplace/image/alogo.png">
+                                </div>
+                                <div class="pro-text">
+                                    <p class="f1"><b>Company Name</b></p>
+                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="item-inner">
+                                <div class="pro-im">
+                                    <img src="~/assets/marketplace/image/slogan.png">
+                                </div>
+                                <div class="pro-text">
+                                    <p class="f1"><b>Company Name</b></p>
+                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="item-inner">
+                                <div class="pro-im">
+                                    <img src="~/assets/marketplace/image/alogo2.png">
+                                </div>
+                                <div class="pro-text">
+                                    <p class="f1"><b>Company Name</b></p>
+                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="item-inner">
+                                <div class="pro-im">
+                                    <img src="~/assets/marketplace/image/alogo.png">
+                                </div>
+                                <div class="pro-text">
+                                    <p class="f1"><b>Company Name</b></p>
+                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="item-inner">
+                                <div class="pro-im">
+                                    <img src="~/assets/marketplace/image/slogan.png">
+                                </div>
+                                <div class="pro-text">
+                                    <p class="f1"><b>Company Name</b></p>
+                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="item-inner">
+                                <div class="pro-im">
+                                    <img src="~/assets/marketplace/image/alogo2.png">
+                                </div>
+                                <div class="pro-text">
+                                    <p class="f1"><b>Company Name</b></p>
+                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="item-inner">
+                                <div class="pro-im">
+                                    <img src="~/assets/marketplace/image/alogo.png">
+                                </div>
+                                <div class="pro-text">
+                                    <p class="f1"><b>Company Name</b></p>
+                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="item-inner">
+                                <div class="pro-im">
+                                    <img src="~/assets/marketplace/image/slogan.png">
+                                </div>
+                                <div class="pro-text">
+                                    <p class="f1"><b>Company Name</b></p>
+                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="item-inner">
+                                <div class="pro-im">
+                                    <img src="~/assets/marketplace/image/alogo2.png">
+                                </div>
+                                <div class="pro-text">
+                                    <p class="f1"><b>Company Name</b></p>
+                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+
+    <script src="~/Scripts/MarketplaceScripts/homepage.js"></script>
+}

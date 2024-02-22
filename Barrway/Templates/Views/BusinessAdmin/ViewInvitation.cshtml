@@ -1,0 +1,116 @@
+﻿@model Barrway.DTO.BusinessModels.BusinessUserInvitationModel
+
+@{
+    ViewBag.Title = "View Invitation";
+    Layout = "~/Views/Shared/_BusinessAdminLayout.cshtml";
+}
+
+<main id="content" role="main" class="main">
+    <div class="position-fixed top-0 end-0 start-0 bg-img-start" style="height: 32rem;">
+        <!-- Shape -->
+        <div class="shape shape-bottom zi-1">
+            <svg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 1921 273">
+                <polygon fill="#fff" points="0,273 1921,273 1921,0 " />
+            </svg>
+        </div>
+        <!-- End Shape -->
+    </div>
+
+    <!-- Content -->
+    <div class="container py-5 py-sm-7">
+        <a class="d-flex justify-content-center mb-5" href="index.html">
+            <img class="zi-2" src="~/assets/marketplace/image/logo.png" alt="Image Description">
+        </a>
+
+        <div class="mx-auto" style="max-width: 40rem;">
+            <!-- Card -->
+            <div class="card card-lg mb-5">
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <img class="avatar avatar-xxl avatar-4x3" src="../../assets/svg/illustrations/oc-email-verification.svg" alt="Image Description" data-hs-theme-appearance="default">
+                        <img class="avatar avatar-xxl avatar-4x3" src="../../assets/svg/illustrations-light/oc-email-verification.svg" alt="Image Description" data-hs-theme-appearance="dark">
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.Id))
+                    {
+                        <h1 class="display-5">Business Invitation</h1>
+                        <p class="mb-1">
+                            Dear User,
+                            <br />You have received a Business Invite from <b>@Model.SENT_BY</b> to Join their Company <b>@Model.COMPANY_ID</b>
+                        </p>
+                        <p>
+                            <b>Kindly Approve or Reject the invitation below:</b>
+                        </p>
+                        
+                        using (Html.BeginForm("ApproveRejectInvite", "BusinessAdmin", FormMethod.Post, new { @id="decisionform" }))
+                        {
+                            <div class="form-horizontal">
+                                <div class="form-group" style="display:none">
+                                    <div class="col-md-10" style="display:none">
+                                        @Html.EditorFor(model => model.Id, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                                <div class="form-group" style="display:none">
+                                    <div class="col-md-10" style="display:none">
+                                        @Html.EditorFor(model => model.REQUEST_TOKEN, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+
+                                <div class="form-group" style="display:none">
+                                    <div class="col-md-10" style="display:none">
+                                        @Html.EditorFor(model => model.STATUS, new { htmlAttributes = new { @class = "form-control hide" } })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-offset-2 col-md-12">
+                                        <button type="button" class="btn btn-primary decision-button" value="Accept">Accept</button>
+                                        <button type="button" class="btn btn-danger decision-button" value="Reject">Reject</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+
+
+                    }
+                    else
+                    {
+                        <h1 class="display-5">Invalid Invitation Link</h1>
+                    }
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- End Content -->
+</main>
+
+<script>
+
+    $(document).on("click", ".decision-button", function () {
+        var dec = $(this).val();
+        $("#STATUS").val(dec);
+
+        if ($("#STATUS").val() == null || $("#STATUS").val() == undefined) {
+            return;
+        } else {
+            swal({
+                icon: "warning",
+                title: "Confimation",
+                text: "Are you sure you want to " + dec + " this business invitation?",
+                buttons: {
+                    confirm: "Yes",
+                    cancel: "No"
+                }
+            }).then(function (value) {
+                if (value) {
+                    $("#decisionform").submit();
+                }
+            })
+        }
+
+    });
+
+</script>

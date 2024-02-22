@@ -1,0 +1,516 @@
+﻿@{
+    var baseUrl = System.Web.Configuration.WebConfigurationManager.AppSettings["baseURL"].ToString();
+    string token = DateTime.Now.ToString("ddMMyyyyHHmmssffffff");
+
+    HttpCookie languageCookie = System.Web.HttpContext.Current.Request.Cookies["Language"];
+    string language = "";
+    if (languageCookie != null)
+    {
+        language = languageCookie.Value;
+    }
+    else
+    {
+        language ="en";
+    }
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Barrway | @ViewBag.Title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <!-- font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- Owl Stylesheets -->
+    <link rel="stylesheet" href="~/assets/marketplace/owl/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/assets/marketplace/owl/owl.theme.default.min.css">
+    <link rel="stylesheet" href="~/assets/marketplace/owl/owl.theme.default.min.css">
+    
+    <!-- javascript -->
+    <script>
+        var BASE_URL = '@baseUrl';
+    </script>
+    <link href="~/assets/css/custom-styles.css" rel="stylesheet" />
+    <script src="~/assets/marketplace/owl/jquery.min.js"></script>
+    <script src="~/assets/marketplace/owl/owl.carousel.js"></script>
+    <script src="~/Scripts/PublicCommonFunction.js"></script>
+    @RenderSection("scripts", false)
+
+
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/style.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/media.css">
+    <style>
+        /*=============================*/
+        .heading h2 {
+            font-weight: 700;
+            font-size: 24px;
+            line-height: 30px;
+            color: #222222;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .pricing-custome {
+            width: 25%;
+            max-width: 340px;
+            float: left;
+            padding: 0px 5px;
+        }
+
+        .pricing-custome-inner {
+            width: 100%;
+            float: left;
+            border: 1px solid #CCCCCC;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .pricing-body {
+            padding: 0px 15px;
+            width: 100%;
+            float: left;
+        }
+
+        .heder-price {
+            border-radius: 15px 15px 0px 0px;
+            width: 100%;
+            float: left;
+            height: 20px;
+        }
+
+        .pricing-body h3 {
+            font-weight: 600;
+            font-size: 18px;
+            line-height: 24px;
+            height: 24px;
+            color: #222222;
+            margin-top: 20px;
+            margin-bottom: 5px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .pricing-body h2 {
+            font-weight: 700;
+            font-size: 24px;
+            line-height: 30px;
+            color: #222222;
+            margin-bottom: 15px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .extra-larg {
+            font-size: 48px;
+            line-height: 36px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .sm {
+            font-style: normal;
+            font-weight: 400;
+            font-size: 15px;
+            line-height: 21px;
+            color: #222222;
+            position: relative;
+            top: -12px;
+            padding-left: 8px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .pricing-body p {
+            font-weight: 400;
+            font-size: 15px;
+            color: #222222;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .pricing-body table {
+            width: 100%;
+            float: left;
+        }
+
+            .pricing-body table tbody tr td:last-child {
+                text-align: right;
+            }
+
+            .pricing-body table tbody tr td {
+                color: #000000;
+                font-size: 15px;
+                font-weight: 400;
+                font-family: 'Poppins', sans-serif;
+            }
+
+        .price-btn button.upgrade {
+            background: #E2476C;
+            color: #fff;
+        }
+
+        .price-btn button.contact {
+            background: #FFFFFF;
+            border: 1px solid #E2476C;
+            border-radius: 30px;
+            color: #E2476C;
+        }
+
+
+        .price-btn button {
+            border-radius: 30px;
+            border: none;
+            padding: 10px 0px;
+            margin: 15px 0px;
+        }
+
+        .price-btn {
+            width: 100%;
+            float: left;
+            text-align: center;
+        }
+
+        .purple {
+            background: #72328A;
+        }
+
+        .purple-color {
+            color: #72328A;
+        }
+
+        .turquois {
+            background: #3FBFC7;
+        }
+
+        .turquois-color {
+            color: #3FBFC7;
+        }
+
+        .salmon {
+            background: #F38592;
+        }
+
+        .salmon-color {
+            color: #F38592;
+        }
+
+
+        
+
+        .light-purple {
+            background-color: #8171B0;
+        }
+
+        
+        .barrway-red {
+            background-color: #E2476C;
+        }
+
+        .free-plan .pricing-custome-inner {
+            background-color: #F7F4FF;
+        }
+
+        .free-plan .pricing-body table tbody tr td {
+            color: #4C4C4C;
+        }
+
+        .free-plan h2, .free-plan .extra-larg {
+            color: #444444;
+        }
+        .heder-price-empyty {
+            height: 32px;
+        }
+        .empty-space {
+            width: 100%;
+            float: left;
+            height: 36px;
+        }
+
+    </style>
+
+</head>
+<body>
+    <style>
+
+        .sparcle-div {
+            position: absolute;
+            border-radius: 50%;
+            left: 0;
+            top: 0;
+        }
+    </style>
+    <script>
+        function changeLanguage() {
+            localStorage.setItem("globalLang", $("select[name=langId] option:selected").val())
+            localStorage.setItem("globalLangForm", $("select[name=langId] option:selected").val())
+
+            $("#langForm").attr("action", "/Marketplace/ChangeLanguage?ReturnUrl=" + window.location.href)
+
+            document.getElementById('langForm').submit()
+        }
+    </script>
+    <section class="main-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="top-bar">
+                        <span class="lang">
+                            <img src="~/assets/marketplace/image/glo.png" />
+                            <form action="/Marketplace/ChangeLanguage" method="post" id="langForm" style="display:inline;">
+                                <select style="border:none; outline:none;" onchange="changeLanguage()" name="langId">
+                                    <option value="1" @(language == "en" ? "selected" : "")>English</option>
+                                    <option value="2" @(language == "zh-Hant" ? "selected" : "")>Chinese</option>
+                                </select>
+                            </form>
+                        </span>
+                        <span class="location" id="location"><img src="~/assets/marketplace/image/lo.png" /> </span>
+                        <span class="pyb" onclick="window.location.href='@Url.Action("Index", "BusinessMarketplace")'" style="cursor:pointer;">@Resource.Post_your_business</span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="logo-serch">
+                        <div class="logo"><a href="/Marketplace/Index"><img src="~/assets/marketplace/image/logo.png" /></a></div>
+                        <div class="search-bar">
+                            <form action="/Marketplace/Search" method="get">
+                                <div class="input-group">
+                                    
+                                        <input type="text" name="keyword" class="form-control" placeholder="@Resource.Search_for_business__service">
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-default" type="submit">
+                                                <i class="glyphicon glyphicon-search"></i>
+                                            </button>
+                                        </div>
+                                    
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="main-menu">
+                        <nav class="navbar">
+                            <div class="container-fluid">
+                                <div class="navbar-header">
+                                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                    </button>
+                                </div>
+                                <div class="collapse navbar-collapse" id="myNavbar">
+                                    <ul class="nav navbar-nav">
+                                        <li id="nv-home"><a href="/Marketplace">@Resource.Home</a></li>
+                                        <!-- <li class="dropdown">
+                                          <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">Page 1 <span class="caret"></span></a>
+                                          <ul class="dropdown-menu">
+                                            <li><a href="javascript:void(0)">Page 1-1</a></li>
+                                            <li><a href="javascript:void(0)">Page 1-2</a></li>
+                                            <li><a href="javascript:void(0)">Page 1-3</a></li>
+                                          </ul>
+                                        </li> -->
+                                        <li id="nv-business"><a href="/Marketplace/BusinessSite">@Resource.Business</a></li>
+                                        <li id="nv-Pricing"><a href="/Marketplace/Pricing">@Resource.Pricing</a></li>
+                                        <li id="nv-news"><a href="/Marketplace/News">@Resource.News</a></li>
+                                    </ul>
+
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        if (UserIdentity.Role == "GENERAL_USER")
+                                        {
+                                            <ul class="nav navbar-nav navbar-right">
+                                                <li class="rl">
+                                                    <a href="/UserAdmin#/userDashboard">@Resource.Account</a>
+                                                </li>
+
+                                            </ul>
+                                        }
+                                        else
+                                        {
+                                            <ul class="nav navbar-nav navbar-right">
+                                                <li class="rl">
+                                                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">@Resource.Register / @Resource.Login </a>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a href="/Account/BusinessSignUp">@Resource.Register</a></li>
+                                                        <li><a href="/Account/BusinessLogin">@Resource.Login</a></li>
+                                                    </ul>
+                                                </li>
+
+                                            </ul>
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        <ul class="nav navbar-nav navbar-right">
+                                            <li class="rl">
+                                                <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">@Resource.Register / @Resource.Login</a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/Account/BusinessSignUp">@Resource.Register</a></li>
+                                                    <li><a href="/Account/BusinessLogin">@Resource.Login</a></li>
+                                                </ul>
+                                            </li>
+
+                                        </ul>
+                                    }
+
+
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div>
+        @RenderBody()
+    </div>
+
+    <section class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="fooetr-link">
+                        <a href="javascript:void(0)">@Resource.Terms___condition</a>
+                        <a href="javascript:void(0)">@Resource.Privacy_policy</a>
+                        <a href="javascript:void(0)">@Resource.Contact_us</a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="social-links">
+                        <a href="javascript:void(0)">@Resource.social_media_links</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- my script -->
+    <script src="~/assets/marketplace/owl/myjq.js"></script>
+
+    @* Momentum based scroll behaviour *@
+    @*<script>
+        $(document).ready(function () {
+            // $fn.scrollSpeed(step, speed, easing);
+            jQuery.scrollSpeed(200, 800);
+        });
+
+        // Custom scrolling speed with jQuery
+        // Source: github.com/ByNathan/jQuery.scrollSpeed
+        // Version: 1.0.2
+
+        (function ($) {
+
+            jQuery.scrollSpeed = function (step, speed, easing) {
+
+                var $document = $(document),
+                    $window = $(window),
+                    $body = $('html, body'),
+                    option = easing || 'default',
+                    root = 0,
+                    scroll = false,
+                    scrollY,
+                    scrollX,
+                    view;
+
+                if (window.navigator.msPointerEnabled)
+
+                    return false;
+
+                $window.on('mousewheel DOMMouseScroll', function (e) {
+
+                    var deltaY = e.originalEvent.wheelDeltaY,
+                        detail = e.originalEvent.detail;
+                    scrollY = $document.height() > $window.height();
+                    scrollX = $document.width() > $window.width();
+                    scroll = true;
+
+                    if (scrollY) {
+
+                        view = $window.height();
+
+                        if (deltaY < 0 || detail > 0)
+
+                            root = (root + view) >= $document.height() ? root : root += step;
+
+                        if (deltaY > 0 || detail < 0)
+
+                            root = root <= 0 ? 0 : root -= step;
+
+                        $body.stop().animate({
+
+                            scrollTop: root
+
+                        }, speed, option, function () {
+
+                            scroll = false;
+
+                        });
+                    }
+
+                    if (scrollX) {
+
+                        view = $window.width();
+
+                        if (deltaY < 0 || detail > 0)
+
+                            root = (root + view) >= $document.width() ? root : root += step;
+
+                        if (deltaY > 0 || detail < 0)
+
+                            root = root <= 0 ? 0 : root -= step;
+
+                        $body.stop().animate({
+
+                            scrollLeft: root
+
+                        }, speed, option, function () {
+
+                            scroll = false;
+
+                        });
+                    }
+
+                    return false;
+
+                }).on('scroll', function () {
+
+                    if (scrollY && !scroll) root = $window.scrollTop();
+                    if (scrollX && !scroll) root = $window.scrollLeft();
+
+                }).on('resize', function () {
+
+                    if (scrollY && !scroll) view = $window.height();
+                    if (scrollX && !scroll) view = $window.width();
+
+                });
+            };
+
+            jQuery.easing.default = function (x, t, b, c, d) {
+
+                return -c * ((t = t / d - 1) * t * t * t - 1) + b;
+
+            };
+
+        })(jQuery);
+    </script>*@
+    
+    <script>
+        $(document).ready(function () {
+            fetch('https://api.geoapify.com/v1/ipinfo?apiKey=4006c325508045ae973962551e377999')
+                .then(response => response.json())
+                .then(data => {
+                    $("#location").append(data.country.name);
+                    // You can now access the location data in the "data" object
+                    console.log(data);
+                }
+            )
+        })
+        
+    </script>
+</body>
+</html>

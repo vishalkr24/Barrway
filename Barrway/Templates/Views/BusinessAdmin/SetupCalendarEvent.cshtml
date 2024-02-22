@@ -1,0 +1,569 @@
+﻿@model Barrway.DTO.BusinessModels.BusinessCalendarViewModel
+
+@{
+    ViewBag.Title = "SetupCalendarEvent";
+    Layout = "~/Views/Shared/_BusinessAdminLayout.cshtml";
+}
+
+
+<style>
+    .rectangle:hover {
+        cursor: pointer;
+    }
+
+    .error-div {
+        border-radius: 6px;
+        background: red;
+        color: white;
+        padding: 20px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .advanced-option {
+        display: none;
+    }
+</style>
+
+<style>
+    .form-navigation .nav-link {
+        color: unset;
+    }
+
+    .form-navigation .nav-tabs .nav-link.active {
+        border-color: none !important;
+    }
+
+    .form-navigation .nav-link.active:after {
+        background: none;
+    }
+
+    .form-inner input, .form-inner select, textarea {
+        border: 1px solid #8171B0 !important;
+        box-shadow: none;
+    }
+</style>
+<style>
+    #templates-row .card {
+        /* Change background color */
+        background-color: white;
+        /* Add border */
+        border: 1px solid #bacdd8;
+        /* Add space between the border and the content */
+        padding: 8px;
+        border-radius: 12px;
+    }
+
+        #templates-row .card img {
+            max-height: 200px;
+        }
+
+    /* Style div elements that have class equal to tag */
+    #templates-row .tag {
+        padding: 4px 8px;
+        border: 1px solid #e5eaed;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #788697;
+    }
+
+    /* Style div elements that have class equal to name */
+    #templates-row .name {
+        font-size: 24px;
+        font-weight: 600;
+        margin-top: 16px;
+    }
+
+    /* Style p element */
+    #templates-row p {
+        font-size: 14px;
+        color: #7f8c9b;
+        line-height: 150%;
+        padding-top: 4px;
+    }
+
+    /* Style button element */
+    #templates-row button {
+        border: none;
+        padding: 12px 24px;
+        border-radius: 50px;
+        font-weight: 600;
+        color: #0077ff;
+        background-color: #e0efff;
+        /* Button is inline-block element by default, it need to have block display for margin: 0 auto; to work */
+        margin: 0 auto;
+        display: block;
+        /* Button is a clickable element, therefore it should have a pointer cursor */
+        cursor: pointer;
+    }
+
+        #templates-row button.active {
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            color: white;
+            background-color: #0077ff;
+            /* Button is inline-block element by default, it need to have block display for margin: 0 auto; to work */
+            margin: 0 auto;
+            display: block;
+            /* Button is a clickable element, therefore it should have a pointer cursor */
+            cursor: pointer;
+        }
+
+    #templates-row .card__details {
+        /* Add space around the details */
+        padding: 16px 8px 8px 8px;
+    }
+
+    #templates-row button:focus, button:hover {
+        background-color: #0077ff;
+        color: #e0efff;
+    }
+</style>
+<input type="text" value="@Model.CALENDAR_CODE" id="calendarCodeInput" style="display:none;" readonly />
+<input type="text" value="@Model.COMPANY_CODE" id="companyCodeInput" style="display:none;" readonly />
+<input type="text" value="@Model.CALENDAR_CATEGORY_ID" id="calendarCategoryInput" style="display:none;" readonly />
+
+<style>
+    .template-selection-area #templates-row {
+        min-height: 700px;
+        max-height: 700px;
+        overflow: hidden;
+        overflow-y: scroll;
+        box-shadow: none;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .template-selection-area .col-md-4 {
+        padding: 16px;
+        border-radius: 25px;
+        border: 3px solid white;
+        cursor: pointer;
+    }
+
+        .template-selection-area .col-md-4.active {
+            padding: 16px;
+            border-radius: 25px;
+            border: 3px solid #01aa005c;
+            /*box-shadow: inset 0px 0px 16px #01aa005c;*/
+            cursor: pointer;
+        }
+
+            .template-selection-area .col-md-4.active:hover {
+                padding: 16px;
+                border-radius: 25px;
+                border: 3px solid #01aa005c;
+                /*box-shadow: inset 0px 0px 16px #01aa005c;*/
+                cursor: pointer;
+            }
+
+        .template-selection-area .col-md-4:hover {
+            /*box-shadow: inset 0px 0px 16px #18366d5c;*/
+            border: 3px solid #18366d5c;
+            transition: all 0.2s ease-in-out;
+        }
+
+    .template-image {
+        height: 160px;
+        max-width: 260px;
+        width: 100%;
+        border-radius: 25px;
+        border: none;
+        /*box-shadow: 0px 4px 20px 0px #18366d5c;*/
+    }
+
+    @@media (max-width: 800px) {
+        .template-selection-area #templates-row {
+            min-height: 300px;
+            max-height: 300px;
+        }
+    }
+
+    .set-cal .form-group {
+        padding: 0px 0px !important;
+    }
+
+    div#step p.step {
+        font-weight: 700;
+        font-size: 24px;
+        color: rgba(226, 71, 108, 1);
+        margin-bottom: 0.5rem !important;
+    }
+
+    .ycaml {
+        justify-content: space-between;
+        margin: 1rem 0px;
+    }
+
+    div#step .ycaml p {
+        font-size: 15px;
+        font-weight: 400;
+        position: relative;
+        color: #000;
+        font-style: italic;
+    }
+
+
+    div#step .ycaml button {
+        border: 1px solid rgba(129, 113, 176, 1);
+        color: rgba(129, 113, 176, 1);
+        background: transparent;
+        width: 130px;
+        vertical-align: middle;
+        padding: 8px 0px;
+    }
+
+    p.sp {
+        color: rgba(0, 0, 0, 1) !important;
+        font-size: 18px !important;
+        font-weight: 400 !important;
+        text-align: left;
+    }
+
+    .hed-til p {
+        color: rgba(34, 34, 34, 1) !important;
+    }
+
+    .choose {
+        width: 100%;
+        float: left;
+    }
+
+        .choose .chose-inner {
+            width: 100%;
+            float: left;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+            .choose .chose-inner .one {
+                width: 10%;
+                float: left;
+                text-align: center;
+            }
+
+                .choose .chose-inner .one img {
+                    width: 100%;
+                }
+
+            .choose .chose-inner .two {
+                width: 80%;
+                float: left;
+            }
+
+            .choose .chose-inner .three {
+                width: 10%;
+                float: left;
+            }
+
+            .choose .chose-inner .two p {
+                color: rgba(114, 50, 138, 1) !important;
+                font-size: 18px !important;
+                font-weight: 600 !important;
+                margin-bottom: 0px;
+                display: flex;
+                align-items: center;
+                height: 100%;
+                padding-left: 12px;
+            }
+
+            .choose .chose-inner .three p {
+                display: flex;
+                vertical-align: baseline;
+                align-items: center;
+                height: 100%;
+                justify-content: center;
+            }
+
+                .choose .chose-inner .three p img {
+                    width: 10px;
+                }
+
+
+    [type="radio"]:checked,
+    [type="radio"]:not(:checked) {
+        position: absolute;
+        left: -9999px;
+    }
+
+        [type="radio"]:checked + label, [type="radio"]:not(:checked) + label {
+            position: relative;
+            padding-left: 28px;
+            cursor: pointer;
+            line-height: 20px;
+            display: inline-block;
+            color: #000;
+            font-size: 15px;
+            font-weight: 400;
+            margin-right: 9px;
+        }
+
+            [type="radio"]:checked + label:before,
+            [type="radio"]:not(:checked) + label:before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 19px;
+                height: 19px;
+                border: 1px solid #ddd;
+                border-radius: 100%;
+                background: #fff;
+            }
+
+            [type="radio"]:checked + label:after, [type="radio"]:not(:checked) + label:after {
+                content: '';
+                width: 15px;
+                height: 15px;
+                background: rgba(204, 204, 204, 1);
+                position: absolute;
+                top: 2px;
+                left: 2px;
+                border-radius: 100%;
+                -webkit-transition: all 0.2s ease;
+                transition: all 0.2s ease;
+            }
+
+            [type="radio"]:not(:checked) + label:after {
+                opacity: 0;
+                -webkit-transform: scale(0);
+                transform: scale(0);
+            }
+
+            [type="radio"]:checked + label:after {
+                opacity: 1;
+                -webkit-transform: scale(1);
+                transform: scale(1);
+            }
+
+    button.bg-t-b {
+        border: 1px solid rgba(129, 113, 176, 1);
+        color: rgba(129, 113, 176, 1);
+        background: transparent;
+        width: 130px;
+        vertical-align: middle;
+        padding: 8px 0px;
+    }
+
+    .schedular-table thead {
+        border-bottom: 1px solid lightgrey;
+    }
+
+        .schedular-table thead tr td {
+            font-weight: bold;
+            text-align: center;
+            padding: 8px;
+        }
+
+    .schedular-table tbody tr td:first-child {
+        font-weight: bold;
+        padding: 8px;
+        border-right: 1px solid lightgrey;
+        text-align: center;
+    }
+
+    .schedular-table tbody tr td {
+        padding: 8px;
+        text-align: center;
+    }
+
+        .schedular-table tbody tr td input[type=time] {
+            width: 100% !important;
+        }
+
+    .invalid-feedback-3 {
+        display: none;
+        color: red !important;
+        margin-bottom: 11px;
+    }
+
+    .final-btn {
+        background-color: crimson !important;
+    }
+</style>
+<style>
+    .form-inner {
+        margin-left: 0px !important;
+    }
+
+    .element-remover {
+        text-align: center;
+        border: 1px solid #6f6f6f;
+        cursor: pointer;
+        height: 30px;
+        padding: 4px;
+        width: 30px;
+        border-radius: 20px;
+        position: absolute;
+        margin-left: -50px;
+        margin-top: 7px;
+    }
+
+    .service-div {
+        max-height: 600px;
+        overflow: hidden;
+        overflow-y: scroll;
+    }
+
+        .service-div::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        /* Track */
+        .service-div::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        /* Handle */
+        .service-div::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+            /* Handle on hover */
+            .service-div::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+
+    .m-width-2 {
+        width: 100%;
+        max-width: 50%;
+    }
+
+    @@media screen and (max-width: 800px) {
+        .element-remover {
+            text-align: center;
+            border: 1px solid #6f6f6f;
+            cursor: pointer;
+            height: 30px;
+            padding: 4px;
+            width: 30px;
+            border-radius: 20px;
+            position: relative;
+            margin-left: 0px;
+            margin-top: 10px;
+            margin-bottom: 8px;
+        }
+    }
+
+    @@media screen and (max-width: 990px) {
+        .m-width-2 {
+            width: 100%;
+            max-width: 100%;
+        }
+    }
+</style>
+<main id="content" role="main" class="main">
+
+    <div class="container">
+        <div id="step" class="row pt-lg-6">
+
+            <div class="m-width-2 m-auto" id="master-wrap-1" style="display:none;">
+
+                <div class="form-inner" style="max-width:100%;">
+                    <p class="step step-counter"></p>
+                    <div class="template-binder">
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="master-wrap pt-0" id="master-wrap-2" style="display:none;">
+                @*<div class="row">
+                        <div class="col-md-2">
+                            <div class="img-col">
+                                <img src="/assets/marketplace/image/serv.png" />
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                            <div class="booking_queue">
+                                <div class="booking_queue_number">
+                                    <div class="number_of_queue">
+                                        <div class="quewe_set">
+                                            <label for="number_of_queue"><b style="color:#000;">Number of queue*</b></label>
+                                            <select id="exampleFormControlSelect1" class="form-control">
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                                <option>5</option>
+                                            </select>
+                                        </div>
+                                        <div class="queue_message">
+                                            <p>You may set up queues for Customer ticket queue and internal workflow queue (e.g. Queue for Prescription)</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="booking_queue_table">
+                                        <table class="booking-queue-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Queue by</th>
+                                                    <th>Queue resources*</th>
+                                                    <th>Queue name*</th>
+                                                    <th>Usage*</th>
+                                                    <th>Queue abbreviation(s)*</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <select id="exampleFormControlSelect1" class="form-control">
+                                                            <option>Staff</option>
+                                                            <option>2</option>
+                                                            <option>3</option>
+                                                            <option>4</option>
+                                                            <option>5</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="exampleFormControlSelect1" class="form-control">
+                                                            <option>Select staff name from master</option>
+                                                            <option>2</option>
+                                                            <option>3</option>
+                                                            <option>4</option>
+                                                            <option>5</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select id="exampleFormControlSelect1" class="form-control">
+                                                            <option>Dr.Team</option>
+                                                            <option>2</option>
+                                                            <option>3</option>
+                                                            <option>4</option>
+                                                            <option>5</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <div class="booking_queue_radio">
+                                                            <input type="radio" id="test1" name="radio-group" checked>
+                                                            <label for="test1">Ticket distribution</label>
+                                                            <input type="radio" id="test2" name="radio-group">
+                                                            <label for="test2">Workflow queue</label>
+                                                        </div>
+                                                    </td>
+                                                    <td style="width:100px;">
+                                                        <input class="form-control " type="text" name="" data-input-id="">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@
+            </div>
+
+        </div>
+    </div>
+
+</main>
+
+@section scripts{
+    <script src="~/Scripts/BusinessScripts/SetupCalendarEvent.js"></script>
+}

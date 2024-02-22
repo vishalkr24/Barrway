@@ -1,0 +1,65 @@
+﻿@using Barrway.DTO.BusinessModels
+@model Barrway.DTO.BusinessModels.CompanyProfileViewModel
+@{
+    ViewBag.Title = Resource.Lets_set_up_your_company_profile;
+    Layout = "~/Views/Shared/_BusinessAdminLayout.cshtml";
+}
+
+<main id="content" role="main" class="main">
+    <!-- Content -->
+    <div class="content container">
+        <div class="row justify-content-lg-center pt-lg-5">
+            <div class="col-lg-9">
+                <!-- Title -->
+                <div class="text-center">
+                    <div class="profile-form">
+                        <h1>@Resource.Lets_set_up_your_company_profile</h1>
+                        <div class="form-inner">
+                            <form class="js-validate needs-validation" method="post" action="/BusinessAdmin/SaveCompanyProfileDetails?IsNew=@ViewBag.IsNew.ToString()" novalidate>
+                                @Html.TextBoxFor(model => model.Id, new { @class = "form-control", @placeholder = "Company name", @style="display:none", @required = "true" })
+                                
+                                <div class="form-group">
+                                    <label for="companyname">@Resource.Company_Name (English) *</label>
+
+                                    @Html.TextBoxFor(model => model.COMPANY_NAME_ENGLISH, new { @class = "form-control", @placeholder = "Company name", @required = "true" })
+                                    @Html.ValidationMessageFor(model => model.COMPANY_NAME_ENGLISH, "", new { @class = "invalid-feedback-2" })
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="companynamechinese">@Resource.Company_Name (Chinese)</label>
+
+                                    @Html.TextBoxFor(model => model.COMPANY_NAME_CHINESE, new { @class = "form-control", @placeholder = "Company name Chinese", @required = "true" })
+                                    @Html.ValidationMessageFor(model => model.COMPANY_NAME_CHINESE, "", new { @class = "invalid-feedback-2" })
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="pwd">@Resource.Company_category *</label>
+
+                                    @Html.DropDownListFor(model => model.COMPANY_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(CompanyCategory))), "Select Company Category", new { @class = "form-control", @required = "true" })
+                                    @Html.ValidationMessageFor(model => model.COMPANY_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="pwd">@Resource.Company @Resource.Subcategory *</label>
+                                    @Html.DropDownListFor(model => model.COMPANY_SUB_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(CompanyCategory))), "Select Company Sub Category", new { @class = "form-control", @required = "true" })
+                                    @Html.ValidationMessageFor(model => model.COMPANY_SUB_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                                <button type="button" id="companyProfileSkipButton" class="skip hide-for-superadmin" onclick="location.href = '@Url.Action("SetupCompanyCalendar", "BusinessAdmin")'">Skip for now</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Title -->
+            </div>
+        </div>
+        <!-- End Row -->
+    </div>
+    <!-- End Content -->
+</main>
+
+@section scripts{
+    <script src="~/Scripts/BusinessScripts/SetupCompanyProfile.js"></script>
+}
+
+

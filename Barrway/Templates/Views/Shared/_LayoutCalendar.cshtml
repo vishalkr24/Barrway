@@ -1,0 +1,1564 @@
+﻿@{
+    var baseUrl = System.Web.Configuration.WebConfigurationManager.AppSettings["baseURL"].ToString();
+    var webapibaseurl = System.Web.Configuration.WebConfigurationManager.AppSettings["webapibaseurl"].ToString();
+    string token = DateTime.Now.ToString("ddMMyyyyHHmmssffffff");
+    string calendarUrl = baseUrl + "calendar/index";
+
+    HttpCookie languageCookie = System.Web.HttpContext.Current.Request.Cookies["Language"];
+    string language = "";
+    if (languageCookie != null)
+    {
+        language = languageCookie.Value;
+    }
+    else
+    {
+        language = "en";
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from htmlstream.com/preview/front-dashboard-v2.1.1/layouts/sidebar-compact.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 20 Feb 2023 07:48:18 GMT -->
+<head>
+    <base href="@baseUrl" />
+    <!-- Required Meta Tags Always Come First -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Title -->
+    <title>Barrway-Calendar</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="../favicon.ico">
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;display=swap" rel="stylesheet">
+
+    <!-- CSS Implementing Plugins -->
+    <link rel="stylesheet" href="assets/css/vendor.min.css">
+
+    <!-- CSS Front Template -->
+    <link rel="stylesheet" href="assets/css/theme.minc619.css?v=1.0">
+
+    <link rel="preload" href="assets/css/theme.min.css" data-hs-appearance="default" as="style">
+    <link rel="preload" href="assets/css/theme-dark.min.css" data-hs-appearance="dark" as="style">
+
+    <style data-hs-appearance-onload-styles>
+        * {
+            transition: unset !important;
+        }
+
+        body {
+            opacity: 0;
+        }
+    </style>
+    <script>
+        var ASSET_URL = "@baseUrl", BASE_URL = "@baseUrl";
+        var API_URL = "@webapibaseurl";
+    </script>
+    <script>
+        window.hs_config = { "autopath": "@@autopath", "deleteLine": "hs-builder:delete", "deleteLine:build": "hs-builder:build-delete", "deleteLine:dist": "hs-builder:dist-delete", "previewMode": false, "startPath": "/", "vars": { "themeFont": "https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap", "version": "?v=1.0" }, "layoutBuilder": { "extend": { "switcherSupport": true }, "header": { "layoutMode": "default", "containerMode": "container-fluid" }, "sidebarLayout": "default" }, "themeAppearance": { "layoutSkin": "default", "sidebarSkin": "default", "styles": { "colors": { "primary": "#377dff", "transparent": "transparent", "white": "#fff", "dark": "132144", "gray": { "100": "#f9fafc", "900": "#1e2022" } }, "font": "Inter" } }, "languageDirection": { "lang": "en" }, "skipFilesFromBundle": { "dist": ["assets/js/hs.theme-appearance.js", "assets/js/hs.theme-appearance-charts.html", "assets/js/demo.js"], "build": ["assets/css/theme.css", "assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.html", "assets/js/demo.html", "assets/css/theme-dark.html", "assets/css/docs.html", "assets/vendor/icon-set/style.html", "assets/js/hs.theme-appearance.html", "assets/js/hs.theme-appearance-charts.html", "node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.html", "assets/js/demo.js"] }, "minifyCSSFiles": ["assets/css/theme.css", "assets/css/theme-dark.css"], "copyDependencies": { "dist": { "*assets/js/theme-custom.js": "" }, "build": { "*assets/js/theme-custom.js": "", "node_modules/bootstrap-icons/font/*fonts/**": "assets/css" } }, "buildFolder": "", "replacePathsToCDN": {}, "directoryNames": { "src": "./src", "dist": "./dist", "build": "./build" }, "fileNames": { "dist": { "js": "theme.min.js", "css": "theme.min.css" }, "build": { "css": "theme.min.css", "js": "theme.min.js", "vendorCSS": "vendor.min.css", "vendorJS": "vendor.min.js" } }, "fileTypes": "jpg|png|svg|mp4|webm|ogv|json" }
+        window.hs_config.gulpRGBA = (p1) => {
+            const options = p1.split(',')
+            const hex = options[0].toString()
+            const transparent = options[1].toString()
+
+            var c;
+            if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+                c = hex.substring(1).split('');
+                if (c.length == 3) {
+                    c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+                }
+                c = '0x' + c.join('');
+                return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',' + transparent + ')';
+            }
+            throw new Error('Bad Hex');
+        }
+        window.hs_config.gulpDarken = (p1) => {
+            const options = p1.split(',')
+
+            let col = options[0].toString()
+            let amt = -parseInt(options[1])
+            var usePound = false
+
+            if (col[0] == "#") {
+                col = col.slice(1)
+                usePound = true
+            }
+            var num = parseInt(col, 16)
+            var r = (num >> 16) + amt
+            if (r > 255) {
+                r = 255
+            } else if (r < 0) {
+                r = 0
+            }
+            var b = ((num >> 8) & 0x00FF) + amt
+            if (b > 255) {
+                b = 255
+            } else if (b < 0) {
+                b = 0
+            }
+            var g = (num & 0x0000FF) + amt
+            if (g > 255) {
+                g = 255
+            } else if (g < 0) {
+                g = 0
+            }
+            return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16)
+        }
+        window.hs_config.gulpLighten = (p1) => {
+            const options = p1.split(',')
+
+            let col = options[0].toString()
+            let amt = parseInt(options[1])
+            var usePound = false
+
+            if (col[0] == "#") {
+                col = col.slice(1)
+                usePound = true
+            }
+            var num = parseInt(col, 16)
+            var r = (num >> 16) + amt
+            if (r > 255) {
+                r = 255
+            } else if (r < 0) {
+                r = 0
+            }
+            var b = ((num >> 8) & 0x00FF) + amt
+            if (b > 255) {
+                b = 255
+            } else if (b < 0) {
+                b = 0
+            }
+            var g = (num & 0x0000FF) + amt
+            if (g > 255) {
+                g = 255
+            } else if (g < 0) {
+                g = 0
+            }
+            return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16)
+        }</script>
+
+    <!--Formgenerator setup-->
+    <link href="fg-assets/css/waves.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/3.0.0/toaster.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="fg-newAssets/css/style.css" rel="stylesheet" />
+    <link href="fg-assets/css/app.css" rel="stylesheet" />
+    <link href="fg-assets/tabulator/css/tabulator_site.min.css" rel="stylesheet" />
+    <link href="Content/myStyle.css" rel="stylesheet" />
+    <link id="tabulator-css" rel="stylesheet" href="fg-assets/formValidation/css/formValidation.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/themes/default/style.min.css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" id="jquery-ui-change">
+    <link href="Content/tagify.css" rel="stylesheet" />
+    <link href="Content/sidebar/css/sidebar.css?token=@token" rel="stylesheet" />
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    <script src="~/Scripts/BusinessScripts/SuperAdminLayoutManager.js"></script>
+
+    <style>
+        .invalid-feedback-2 {
+            color: red !important;
+            margin-bottom: 11px;
+            display: none;
+        }
+
+        .form-inline {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-flow: row wrap;
+            flex-flow: row wrap;
+            -ms-flex-align: center;
+            align-items: center;
+        }
+
+            .form-inline .form-group {
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex: 0 0 auto;
+                flex: 0 0 auto;
+                -ms-flex-flow: row wrap;
+                flex-flow: row wrap;
+                -ms-flex-align: center;
+                align-items: center;
+                margin-bottom: 0
+            }
+
+        .form-group {
+            padding: 0px 20px !important;
+        }
+
+        .form-inline label {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-align: center;
+            align-items: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            margin-bottom: 0;
+        }
+
+        .form-inline .form-control {
+            display: inline-block;
+            width: auto;
+            vertical-align: middle;
+        }
+
+        .form-group {
+            margin-bottom: 1rem
+        }
+
+        .form-inline {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-flow: row wrap;
+            flex-flow: row wrap;
+            -ms-flex-align: center;
+            align-items: center
+        }
+
+            .form-inline .form-check {
+                width: 100%
+            }
+
+        @@media (min-width: 576px) {
+            .form-inline label {
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex-align: center;
+                align-items: center;
+                -ms-flex-pack: center;
+                justify-content: center;
+                margin-bottom: 0
+            }
+
+            .form-inline .form-group {
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex: 0 0 auto;
+                flex: 0 0 auto;
+                -ms-flex-flow: row wrap;
+                flex-flow: row wrap;
+                -ms-flex-align: center;
+                align-items: center;
+                margin-bottom: 0
+            }
+
+            .form-inline .form-control {
+                display: inline-block;
+                width: auto;
+                vertical-align: middle
+            }
+
+            .form-inline .form-control-plaintext {
+                display: inline-block
+            }
+
+            .form-inline .custom-select, .form-inline .input-group {
+                width: auto
+            }
+
+            .form-inline .form-check {
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex-align: center;
+                align-items: center;
+                -ms-flex-pack: center;
+                justify-content: center;
+                width: auto;
+                padding-left: 0
+            }
+
+            .form-inline .form-check-input {
+                position: relative;
+                -ms-flex-negative: 0;
+                flex-shrink: 0;
+                margin-top: 0;
+                margin-right: .25rem;
+                margin-left: 0
+            }
+
+            .form-inline .custom-control {
+                -ms-flex-align: center;
+                align-items: center;
+                -ms-flex-pack: center;
+                justify-content: center
+            }
+
+            .form-inline .custom-control-label {
+                margin-bottom: 0
+            }
+        }
+
+        .chosen-container {
+            width: 100% !important;
+        }
+
+        .tagify {
+            padding: 0px !important
+        }
+    </style>
+    <script>
+        localStorage.setItem("detail", '{"Id":30314,"firebase_uid":null,"chatId":"jXZMF2dU3Uyz2okULv6shQuu","uid":"kk53yimj","fullName":"AG Ashutosh Shukla","name":"augursuser","email":"formgeneratorclient@gmail.com","emailVerified":"0","emailCheck":"0","isEmailCheck":false,"isQuickSignUp":false,"password":"","newPassword":null,"password_confirmation":null,"confirmPassword":null,"isUpdatePassword":0,"remember_token":null,"userIcon":"user-avatar-with-check-mark.png","phoneNumber":null,"phoneVerified":"No","isPhoneVerified":null,"phoneCheck":"No","isPhoneCheck":false,"role":1,"status":"Active","planID":9,"planSequence":"1,2,5,13","tooltipSequence":null,"FB_id":null,"GPlus_id":null,"created_ip":"","groupId":0,"checkType":null,"title":null,"verificationCode":null,"isVerificationReq":false,"ayCheck":0,"specialAccess":"1","reset_token":null,"reset_valid_till":null,"isUsable":0,"action":0,"created_by":0,"updated_by":0,"created_at":"Jan 20 2021  3:32PM","newcreated_at":null,"updated_at":"Jan 20 2021  3:32PM","newupdated_at":null,"res":1,"Message":"Login Success|登錄成功|登录成功","IsActive":false,"IsDeleted":false,"IsUnique":false,"page":0,"size":0,"total_records":0,"last_page":0,"page_records":0,"filters":null,"sorters":null,"query":null}');
+    </script>
+    <script>
+
+    </script>
+    <link href="~/assets/css/custom-styles.css" rel="stylesheet" />
+    <script src="~/Scripts/BusinessScripts/AdminLayoutManager.js"></script>
+</head>
+
+<body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl navbar-vertical-aside-compact-mini-mode navbar-vertical-aside-compact-mode" ng-app="FormGeneratorApp" ng-controller="IndexController">
+    <style>
+        /*#header {
+            display: none;
+        }
+
+        #header2 {
+            display: none;
+        }*/
+
+        .show-for-superadmin {
+            display: none;
+        }
+
+        .pl-3 {
+            padding-left: 1.5rem;
+        }
+
+        .pr-3 {
+            padding-right: 1.5rem;
+        }
+    </style>
+    <script>
+        function changeLanguage() {
+            localStorage.setItem("globalLang", $("select[name=langId] option:selected").val())
+            localStorage.setItem("globalLangForm", $("select[name=langId] option:selected").val())
+
+            $("#langForm").attr("action", "/Marketplace/ChangeLanguage?ReturnUrl=" + window.location.href)
+
+            document.getElementById('langForm').submit()
+        }
+    </script>
+    <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-bottom-right'}"></toaster-container>
+    <div class="favicon-loader-overlay active" ng-show="IND_loading">
+        <div class="favicon-loader">
+            <div class="loader-circle"></div>
+            <div class="loader-line-mask">
+                <div class="loader-line"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/hs.theme-appearance.js"></script>
+
+    <script src="assets/vendor/hs-navbar-vertical-aside/dist/hs-navbar-vertical-aside-mini-cache.js"></script>
+
+    <script type="text/ng-template" id="bg-svg.html">
+        <svg fill="#cccccc">
+            @*
+                <use xlink:href="./assets/images/svg/deco-med-bg.svg#main">
+                </use>*@
+            <g id="main">
+                <path id="Rectangle" d="M1280,925c-133.8-192.4-264-288.5-390.5-288.5c-189.8,0-387.2,389.8-606.5,268   C136.8,823.2,42.5,750.6,0,686.5V81c114.5,99.3,229.7,148.9,345.8,148.9c174.1,0,228.2-332.1,454.9-198   C951.8,121.3,1118.6,137.7,1301,81L1280,925z"></path>
+            </g>
+        </svg>
+    </script>
+
+    <script type="text/ng-template" id="tabulatorConfigurationsModelPopup.html">
+        <div class="jss3726" ng-include="'bg-svg.html'"></div>
+        <div class="card-white" ng-controller="tabulatorConfigurationsController">
+            <form name="myForm"
+                  ng-submit="saveConfig()"
+                  class="form-horizontal needs-validation" role="form">
+
+                <div class="">
+                    <div class="form-group">
+                        <label> {{tabulatorConfig.type}} </label>   <label id="lblCurrentConfig">{{tabulatorConfig.configName}}</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtConfigName">Save As</label>
+                        <input type="text" class="form-control" name="configName" id="txtConfigName" ng-model="tabulatorConfig.configName" placeholder="Config Name" required="required">
+                    </div>
+                    <div class="form-group">
+                        <label for="txtRecordsPerPage">Line per page</label>
+                        <input type="number" width="50" ng-model="tabulatorConfig.recordsPerPage" class="form-control" id="txtRecordsPerPage" value="20" placeholder="Line per page" required="required">
+                    </div>
+                    <div class="form-group">
+                        <label for="txtFrozenColumn">Frozen Columns</label>
+                        <input type="number" ng-model="tabulatorConfig.frozenColumn" class="form-control" id="txtFrozenColumn" placeholder="Frozen Columns">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="headingHieght">Heading Height</label>
+                        <input type="text" ng-model="tabulatorConfig.headingHeight" class="form-control" id="headingHieght" placeholder="Heading Height">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="ddlGroupBy">Default Grouping</label>
+                        <select class="form-control" id="ddlGroupBy" ng-model="tabulatorConfig.groupBy" name="ddlGroupBy">
+                            <option selected="selected" value="">No Grouping</option>
+                            <option ng-repeat="g in groupingList" value="{{g.field}}">{{g.title}}</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-0">
+
+                        <button type="submit" id="btnSaveConfig" class="btn btn-success mb-0" data-toggle="tooltip" title="Save Layout">{{tabulatorConfig.saveText}}</button>
+                        <button type="button" id="btnNewConfig" ng-click="clearForNewConfig()" class="btn btn-primary mb-0">New</button>
+                        <button type="button" ng-click="openListConfig()" class="btn btn-primary mb-0"><span class="fa fa-eye"></span></button>
+                        <button type="button" id="btnExit" class="btn btn-danger mb-0" data-toggle="tooltip" title="Exit" ng-click="closeConfig()">Exit</button>
+                        <button type="button" id="btnReset" ng-click="resetConfig()" class="btn btn-danger mb-0" data-toggle="tooltip" title="Reset">Reset</button>
+                    </div>
+                    <div class="form-group"><span id="loading" style="display:none"> <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i></span></div>
+
+                    <div class="tabulator-section">
+
+                        <div id="tabulatorConfigSection">
+
+                        </div>
+
+                    </div>
+
+
+
+
+                </div>
+
+            </form>
+        </div>
+    </script>
+    <!--end Formgenerator Common component-->
+    <!-- ========== HEADER ========== -->
+    <header id="header" class="navbar navbar-expand-lg navbar-bordered navbar-spacer-y-0 flex-lg-column grey-back">
+        <div class="navbar-dark custtome-navbar-dark white-back w-100">
+            <div class="pl-3 pr-3">
+                <nav class="navbar-nav-wrap mje">
+                    <!-- Logo -->
+
+                    <a class="navbar-brand" href="/BusinessAdmin/Dashboard" aria-label="Front">
+                        <img class="business-logo" src="../assets/svg/logos/favicon.png" alt="Logo" data-hs-theme-appearance="default">
+                        @*<span class="bui">@Resource.Business</span>*@
+                    </a>
+
+                    <!-- End Logo -->
+                    <!-- Secondary Content -->
+                    <div class="navbar-nav-wrap-secondary-content">
+                        <!-- Navbar -->
+                        <ul class="navbar-nav">
+                            <li class="hs-has-sub-menu nav-item">
+                                <span class="lang">
+                                    <img src="~/assets/marketplace/image/glo.png" />
+                                    <form action="/Marketplace/ChangeLanguage" method="post" id="langForm" style="display:inline;">
+                                        <select style="border:none; outline:none;" onchange="changeLanguage()" name="langId">
+                                            <option value="1" @(language == "en" ? "selected" : "")>English</option>
+                                            <option value="2" @(language == "zh-Hant" ? "selected" : "")>Chinese</option>
+                                        </select>
+                                    </form>
+                                </span>
+                            </li>
+                            <li class="nav-item">
+                                <!-- Account -->
+                                <div class="dropdown">
+                                    <a class="navbar-dropdown-account-wrapper" href="javascript:;" id="accountNavbarDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" data-bs-dropdown-animation>
+                                        <div class="notification">
+                                            <img class="" src="/assets/marketplace/image/bell.png" alt="notification">
+                                            <span class="notification-num">99+</span>
+                                            @*<span class="avatar-status avatar-sm-status avatar-status-success"></span>*@
+                                        </div>
+                                    </a>
+
+                                    <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-account" aria-labelledby="accountNavbarDropdown" style="width: 16rem;">
+                                    </div>
+                                </div>
+                                <!-- End Account -->
+                            </li>
+                            <li class="nav-item">
+                                <!-- Account -->
+                                <div class="dropdown">
+                                    <a class="navbar-dropdown-account-wrapper" href="javascript:;" id="accountNavbarDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" data-bs-dropdown-animation>
+                                        <div class="avatar avatar-sm avatar-circle">
+                                            <img class="avatar-img company-image" src="" style="min-width: 2.40625rem; max-width: 2.40625rem" onerror="this.src='../assets/img/160x160/img6.jpg'" alt="Image Description">
+                                            <span class="avatar-status avatar-sm-status avatar-status-success"></span>
+                                        </div>
+                                    </a>
+
+                                    <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-account" aria-labelledby="accountNavbarDropdown" style="width: 16rem;">
+                                        <div class="dropdown-item-text hide-for-superadmin">
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar avatar-sm avatar-circle">
+                                                    <img class="avatar-img company-image" style="min-width: 2.40625rem; max-width: 2.40625rem" onerror="this.src='../assets/img/160x160/img6.jpg'" alt="Image Description">
+                                                </div>
+                                                <div class="flex-grow-1 ms-2" style="overflow:hidden">
+                                                    <h5 class="mb-0 user-name">Mark Williams</h5>
+                                                    <p class="card-text text-body company-email">mark@site.com</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="dropdown-divider hide-for-superadmin"></div>
+
+                                        <a class="dropdown-item hide-for-superadmin" href="/Calendar/Index#/calendar/business-user-master/2287">@Resource.Profile &amp; @Resource.Account</a>
+                                        <a class="dropdown-item hide-for-superadmin" href="javascript:void(0)" onclick="showComapanyWebsiteDetails(1)">@Resource.Settings</a>
+
+                                        <div class="dropdown-divider hide-for-superadmin"></div>
+
+                                        <a class="dropdown-item hide-for-superadmin" href="javascript:void(0)">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <div class="avatar avatar-sm avatar-dark avatar-circle">
+                                                        <span class="avatar-initials company-prefix">HS</span>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1 ms-2">
+                                                    <h5 class="mb-0 company-name">Htmlstream <span class="badge bg-primary rounded-pill text-uppercase ms-1">PRO</span></h5>
+                                                    <span class="card-text company-email">hs.example.com</span>
+                                                </div>
+                                            </div>
+                                        </a>
+
+                                        <!-- Dropdown -->
+                                        @*<div class="dropdown">
+                                                <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown2" data-bs-toggle="dropdown" aria-expanded="false">Customization</a>
+
+                                                <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown2">
+                                                    <a class="dropdown-item" href="javascript:void(0)">
+                                                        Invite people
+                                                    </a>
+                                                    <a class="dropdown-item" href="javascript:void(0)">
+                                                        Analytics
+                                                        <i class="bi-box-arrow-in-up-right"></i>
+                                                    </a>
+                                                    <a class="dropdown-item" href="javascript:void(0)">
+                                                        Customize Front
+                                                        <i class="bi-box-arrow-in-up-right"></i>
+                                                    </a>
+                                                </div>
+                                            </div>*@
+                                        <!-- End Dropdown -->
+                                        @*<a class="dropdown-item" href="javascript:void(0)">Manage team</a>*@
+
+                                        <div class="dropdown-divider hide-for-superadmin"></div>
+
+                                        <form id="mySignOutForm" name="mySignOutForm" method="post" action="@Url.Action("Logout","Account")">
+                                            <a class="dropdown-item" href="javascript:void(0)" onclick="Logout()">@Resource.Sign_out</a>
+                                        </form>
+
+
+                                    </div>
+                                </div>
+                                <!-- End Account -->
+                            </li>
+                        </ul>
+                        <!-- End Navbar -->
+                    </div>
+                    <!-- End Secondary Content -->
+                    <!-- Toggler -->
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContainerNavDropdown" aria-controls="navbarContainerNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-default">
+                            <i class="bi-list"></i>
+                        </span>
+                        <span class="navbar-toggler-toggled">
+                            <i class="bi-x"></i>
+                        </span>
+                    </button>
+                    <!-- End Toggler -->
+                    <!-- Collapse -->
+
+                    <style>
+                        .selectable-company-item {
+                            color: black;
+                        }
+
+                            .selectable-company-item.selected {
+                                color: crimson !important;
+                            }
+
+                        .selectable-calendar-item {
+                            color: black;
+                        }
+
+                            .selectable-calendar-item.selected {
+                                color: crimson !important;
+                            }
+                    </style>
+                    <div class="collapse navbar-collapse" id="navbarContainerNavDropdown">
+                        <ul class="navbar-nav">
+                            <!-- Dashboards -->
+                            <select id="navbar-company-selector" onchange="changeCompany()" style="display:none;" class="select-company"></select>
+                            <li class="nav-item overflow_v">
+                                <div class="dropdown-me" onclick="toggleDropdown()">
+                                    <div class="dropdown-toggle">
+                                        <span class="lbl-company-name">Company name</span>
+                                    </div>
+                                    <div class="dropdown-men" id="disp-navbar-company-selector"></div>
+                                </div>
+                            </li>
+                            <li class="hs-has-sub-menu nav-item">
+                                <a id="dashboardMegaMenu" class="hs-mega-menu-invoker nav-link" href="/BusinessAdmin/Dashboard" role="button">
+
+                                    <div class="button-body-wrap">
+                                        <div class="button-body">
+                                            <button class="cus-button">
+                                                <img src="/assets/marketplace/image/graph.png" alt="" class="hns" />
+                                                <img src="/assets/marketplace/image/graph1.png" alt="" class="hs" />
+                                                <span class="button_title"> @Resource.Dashboard </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="hs-has-sub-menu nav-item">
+                                <a id="manage-website" class="hs-mega-menu-invoker nav-link" onclick="showComapanyWebsiteDetails(1)" href="javascript:void(0)" role="button">
+
+                                    <div class="button-body-wrap">
+                                        <div class="button-body">
+                                            <button class="cus-button">
+                                                <img src="/assets/marketplace/image/web.png" alt="" class="hns" />
+                                                <img src="/assets/marketplace/image/web1.png" alt="" class="hs" />
+                                                <span class="button_title"> @Resource.Website </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="hs-has-sub-menu nav-item">
+                                <a id="nav-location-master" class="hs-mega-menu-invoker nav-link" href="/calendar/index#/calendar/location-master/2306" role="button">
+
+                                    <div class="button-body-wrap">
+                                        <div class="button-body">
+                                            <button class="cus-button">
+                                                <img src="/assets/marketplace/image/Real_State_Icons.png" alt="" class="hns" />
+                                                <img src="/assets/marketplace/image/location1.png" alt="" class="hs" />
+                                                <span class="button_title">@Resource.Location_Master</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="hs-has-sub-menu nav-item">
+                                <a id="nav-service-master" class="hs-mega-menu-invoker nav-link" href="/calendar/index#/calendar/service-master/2303" role="button">
+
+                                    <div class="button-body-wrap">
+                                        <div class="button-body">
+                                            <button class="cus-button">
+                                                <img src="/assets/marketplace/image/Group 811540.png" alt="" class="hns" />
+                                                <img src="/assets/marketplace/image/serv1.png" alt="" class="hs" />
+                                                <span class="button_title">@Resource.Service_Master</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="hs-has-sub-menu nav-item">
+                                <a id="nav-service-provider-master" class="hs-mega-menu-invoker nav-link" href="/calendar/index#/calendar/service-provider-master/2304" " role="button">
+
+                                    <div class="button-body-wrap">
+                                        <div class="button-body">
+                                            <button class="cus-button">
+                                                <img src="/assets/marketplace/image/Group 811536.png" alt="" class="hns" />
+                                                <img src="/assets/marketplace/image/servpro1.png" alt="" class="hs" />
+                                                <span class="button_title">@Resource.Service_Provider_Master</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="nav-item hide-for-superadmin">
+                                <a class="nav-link " id="nav-package-master" href="calendar/index#/calendar/calendar-package/2322" data-placement="left">
+                                    <div class="button-body-wrap">
+                                        <div class="button-body">
+                                            <button class="cus-button">
+                                                <img src="/assets/marketplace/image/sp.png" alt="" class="hns" />
+                                                <img src="/assets/marketplace/image/sp1.png" alt="" class="hs" />
+                                                <span class="button_title"> @Resource.Service_package_master </span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </a>
+                            </li>
+                            <!-- End Dashboards -->
+                            <!-- Pages -->
+                            <li class="hs-has-sub-menu nav-item hide-for-superadmin">
+                                <a id="subscriptionsMegaMenu" class="hs-mega-menu-invoker nav-link " href="/BusinessAdmin/SubscriptionPlan" role="button">
+                                    <div class="button-body-wrap">
+                                        <div class="button-body">
+                                            <button class="cus-button">
+                                                <img src="/assets/marketplace/image/subs.png" alt="" class="hns" />
+                                                <img src="/assets/marketplace/image/subs1.png" alt="" class="hs" />
+                                                <span class="button_title">@Resource.Subscription </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <!-- End Pages -->
+                            <!-- Apps -->
+
+                            <li class="hs-has-sub-menu nav-item" id="admin-master-nav">
+                                <a id="companyUsersMegaMenu" class="hs-mega-menu-invoker nav-link" onclick="goToCompanyAdminMaster()" href="javascript:void(0)" role="button">
+                                    <div class="button-body-wrap">
+                                        <div class="button-body">
+                                            <button class="cus-button">
+                                                <img src="/assets/marketplace/image/user.png" alt="" class="hns" />
+                                                <img src="/assets/marketplace/image/user1.png" alt="" class="hs" />
+                                                <span class="button_title"> @Resource.User </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="hs-has-sub-menu nav-item" id="admin-master-nav">
+                                <a id="reportsMegaMenu" class="hs-mega-menu-invoker nav-link" href="/BusinessAdmin/Reports" role="button">
+                                    <div class="button-body-wrap">
+                                        <div class="button-body">
+                                            <button class="cus-button">
+                                                <img src="~/assets/marketplace/image/Business_Icons_2.png" alt="" class="hns" />
+                                                <img src="~/assets/marketplace/image/Business_Icons_white.png" alt="" class="hs" />
+                                                <span class="button_title"> @Resource.Reports </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="hs-has-sub-menu nav-item" id="admin-master-nav">
+                                <a id="notificationsMegaMenu" class="hs-mega-menu-invoker nav-link" onclick="" href="javascript:void(0)" role="button">
+                                    <div class="button-body-wrap">
+                                        <div class="button-body">
+                                            <button class="cus-button">
+                                                <img src="~/assets/marketplace/image/Business_Icons.png" alt="" class="hns" />
+                                                <img src="~/assets/marketplace/image/siren_white.png" alt="" class="hs" />
+                                                <span class="button_title"> @Resource.Notifications </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+
+                    </div>
+                    <!-- End Collapse -->
+                </nav>
+            </div>
+        </div>
+
+        <div class="pl-3 pr-3 cp-10 sec-head" style="margin-right:auto;">
+            <nav class="js-mega-menu navbar-nav-wrap flex-grow-1">
+                <!-- Toggler -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarDoubleLineContainerNavDropdown" aria-controls="navbarDoubleLineContainerNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-default">
+                        <i class="bi-list"></i>
+                    </span>
+                    <span class="navbar-toggler-toggled">
+                        <i class="bi-x"></i>
+                    </span>
+                </button>
+                <!-- End Toggler -->
+                <!-- Collapse -->
+                <div class="collapse navbar-collapse" id="navbarDoubleLineContainerNavDropdown">
+                    <ul class="navbar-nav">
+                        <!-- Dashboards -->
+
+                        <li class="nav-item overflow_v dropdown-me">
+                            <select class="calendar-name dropdown-toggle" style="text-overflow:ellipsis; display:none;" ng-model="selectedCalendarCode" ng-change="ChangeCalendarDropDown()" id="ddlMasterCalendar">
+                                <option value=""></option>
+                                <option value="{{calendar.CALENDAR_CODE}}" ng-repeat="calendar in calendarList">{{calendar.CALENDAR_NAME}} [{{calendar.CALENDAR_CODE}}]</option>
+                            </select>
+                            <div class="dropdown-me dropdown-me-2" onclick="toggleDropdown2()">
+                                <div class="dropdown-toggle">
+                                    <i class="fa fa-calendar" aria-hidden="true" style="padding-right:8px; font-size: 16px;"></i> <span class="lbl-calendar-name">Select Calendar</span>
+                                </div>
+                                <div class="dropdown-men" id="disp-navbar-calendar-selector">
+                                    <a ng-repeat="calendar in calendarList" href="javascript:void(0)" data-id="CLR_SEL_{{calendar.CALENDAR_CODE}}" class="selectable-calendar-item" onclick="selectItem2(this)">{{calendar.CALENDAR_NAME}} [{{calendar.CALENDAR_CODE}}]</a>
+                                    <div class="add-company">
+                                        <a href="/BusinessAdmin/CalendarMaster">
+                                            <button>+ Add new calendar</button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a id="nav-calendar-dashboard" href="/calendar/index#/home" class="nav-link" role="button">
+                                <div class="button-body-wrap">
+                                    <div class="button-body">
+                                        <button class="cus-button">
+                                            <img src="/assets/marketplace/image/cal.png" alt="" class="hns" />
+                                            <img src="/assets/marketplace/image/cal1.png" alt="" class="hs" />
+                                            <span class="button_title">Calendar Summary</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a id="nav-calendar-master" href="/calendar/index#/calender/2305" class="nav-link" role="button">
+                                <div class="button-body-wrap">
+                                    <div class="button-body">
+                                        <button class="cus-button">
+                                            <img src="/assets/marketplace/image/oncal.png" alt="" class="hns" />
+                                            <img src="/assets/marketplace/image/oncal1.png" alt="" class="hs" />
+                                            <span class="button_title">@Resource.Calendar / Kanban</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a id="calendarsMegaMenu" class="nav-link" href="javascript:void(0)" onclick="openCalendarSetting()">
+
+                                <div class="button-body-wrap">
+                                    <div class="button-body">
+                                        <button class="cus-button">
+                                            <img src="/assets/marketplace/image/calse.png" alt="" class="hns" />
+                                            <img src="/assets/marketplace/image/calse1.png" alt="" class="hs" />
+                                            <span class="button_title">Calendar Setting</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </a>
+
+                        </li>
+
+                        <li class="nav-item hide-for-superadmin">
+                            <a class="nav-link " id="nav-schedular-form" href="/calendar/index#/calendar/schedular-form-table/2311">
+                                <div class="button-body">
+                                    <button class="cus-button">
+                                        <img src="/assets/marketplace/image/sch.png" alt="" class="hns" />
+                                        <img src="/assets/marketplace/image/sch1.png" alt="" class="hs" />
+                                        <span class="button_title">@Resource.Schedule</span>
+                                    </button>
+                                </div>
+
+                            </a>
+                        </li>
+                        <li class="nav-item hide-for-superadmin">
+                            <a class="nav-link " id="nav-transaction-master" href="/calendar/index#/calendar/transaction-master/2312">
+                                <div class="button-body">
+                                    <button class="cus-button">
+                                        <img src="/assets/marketplace/image/trans.png" alt="" class="hns" />
+                                        <img src="/assets/marketplace/image/trans1.png" alt="" class="hs" />
+                                        <span class="button_title">@Resource.Transactions</span>
+                                    </button>
+                                </div>
+
+                            </a>
+                        </li>
+
+                        @*<li class="nav-item hide-for-superadmin">
+                                <a class="nav-link " href="javascript:void(0)" data-placement="left">
+                                    @Resource.Notifications
+                                </a>
+                            </li>*@
+                    </ul>
+
+                </div>
+                <!-- End Collapse -->
+            </nav>
+        </div>
+    </header>
+    <main id="content" role="main" class="">
+        <!-- Content -->
+        @*<div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="main-log-com-name">
+                            <div class="row">
+                                <div class="col-md-7">
+                                    <div class="logo-comapany-name">
+                                        <img class="img-company-logo" onerror="this.src= '../assets/img/alogo2.png'" style="width:100%; max-width:200px; max-height:70px; height:auto;" alt="Logo" />
+                                        <span class="lbl-company-name">Company name</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <p class="btcd" style="display:flex">
+                                        <a href="/BusinessAdmin/Dashboard" style="margin-left:auto;">@Resource.Back_to_Company_dashboard</a>
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>*@
+        <div class="content" ui-view="content">
+            @RenderBody()
+        </div>
+    </main>
+    <!-- ========== END MAIN CONTENT ========== -->
+    <!-- ========== SECONDARY CONTENTS ========== -->
+    <!-- Keyboard Shortcuts -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasKeyboardShortcuts" aria-labelledby="offcanvasKeyboardShortcutsLabel">
+        <div class="offcanvas-header">
+            <h4 id="offcanvasKeyboardShortcutsLabel" class="mb-0">Keyboard shortcuts</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="list-group list-group-sm list-group-flush list-group-no-gutters mb-5">
+                <div class="list-group-item">
+                    <h5 class="mb-1">Formatting</h5>
+                </div>
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <span class="fw-semibold">Bold</span>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">Ctrl</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">b</kbd>
+                        </div>
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <em>italic</em>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">Ctrl</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">i</kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <u>Underline</u>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">Ctrl</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">u</kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <s>Strikethrough</s>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">Ctrl</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">Alt</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">s</kbd>
+                            <!-- End Col -->
+                        </div>
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <span class="small">Small text</span>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">Ctrl</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">s</kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <mark>Highlight</mark>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">Ctrl</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">e</kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+            </div>
+
+            <div class="list-group list-group-sm list-group-flush list-group-no-gutters mb-5">
+                <div class="list-group-item">
+                    <h5 class="mb-1">Insert</h5>
+                </div>
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <span>Mention person <a href="javascript:void(0)">(@@Brian)</a></span>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">@@</kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <span>Link to doc <a href="javascript:void(0)">(+Meeting notes)</a></span>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">+</kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <a href="javascript:void(0)">#hashtag</a>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">#hashtag</kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <span>Date</span>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">/date</kbd>
+                            <kbd class="d-inline-block mb-1">Space</kbd>
+                            <kbd class="d-inline-block mb-1">/datetime</kbd>
+                            <kbd class="d-inline-block mb-1">/datetime</kbd>
+                            <kbd class="d-inline-block mb-1">Space</kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <span>Time</span>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">/time</kbd>
+                            <kbd class="d-inline-block mb-1">Space</kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <span>Note box</span>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">/note</kbd>
+                            <kbd class="d-inline-block mb-1">Enter</kbd>
+                            <kbd class="d-inline-block mb-1">/note red</kbd>
+                            <kbd class="d-inline-block mb-1">/note red</kbd>
+                            <kbd class="d-inline-block mb-1">Enter</kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+            </div>
+
+            <div class="list-group list-group-sm list-group-flush list-group-no-gutters mb-5">
+                <div class="list-group-item">
+                    <h5 class="mb-1">Editing</h5>
+                </div>
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <span>Find and replace</span>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">Ctrl</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">r</kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <span>Find next</span>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">Ctrl</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">n</kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <span>Find previous</span>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">Ctrl</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">p</kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <span>Indent</span>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">Tab</kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <span>Un-indent</span>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">Shift</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">Tab</kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <span>Move line up</span>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">Ctrl</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">Shift</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1"><i class="bi-arrow-up-short"></i></kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <span>Move line down</span>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">Ctrl</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">Shift</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1"><i class="bi-arrow-down-short fs-5"></i></kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <span>Add a comment</span>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">Ctrl</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">Alt</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">m</kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <span>Undo</span>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">Ctrl</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">z</kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <span>Redo</span>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">Ctrl</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">y</kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+            </div>
+
+            <div class="list-group list-group-sm list-group-flush list-group-no-gutters">
+                <div class="list-group-item">
+                    <h5 class="mb-1">Application</h5>
+                </div>
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <span>Create new doc</span>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">Ctrl</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">Alt</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">n</kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <span>Present</span>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">Ctrl</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">Shift</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">p</kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <span>Share</span>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">Ctrl</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">Shift</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">s</kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <span>Search docs</span>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">Ctrl</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">Shift</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">o</kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-5">
+                            <span>Keyboard shortcuts</span>
+                        </div>
+                        <!-- End Col -->
+
+                        <div class="col-7 text-end">
+                            <kbd class="d-inline-block mb-1">Ctrl</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">Shift</kbd> <span class="text-muted small">+</span> <kbd class="d-inline-block mb-1">/</kbd>
+                        </div>
+                        <!-- End Col -->
+                    </div>
+                    <!-- End Row -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Welcome Message Modal -->
+    <div class="modal fade" id="welcomeMessageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <!-- Header -->
+                <div class="modal-close">
+                    <button type="button" class="btn btn-ghost-secondary btn-icon btn-sm" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="bi-x-lg"></i>
+                    </button>
+                </div>
+                <!-- End Header -->
+                <!-- Body -->
+                <div class="modal-body p-sm-5">
+                    <div class="text-center">
+                        <div class="w-75 w-sm-50 mx-auto mb-4">
+                            <img class="img-fluid" src="assets/svg/illustrations/oc-collaboration.svg" alt="Image Description" data-hs-theme-appearance="default">
+                            <img class="img-fluid" src="assets/svg/illustrations-light/oc-collaboration.svg" alt="Image Description" data-hs-theme-appearance="dark">
+                        </div>
+
+                        <h4 class="h1">Welcome to Front</h4>
+
+                        <p>We're happy to see you in our community.</p>
+                    </div>
+                </div>
+                <!-- End Body -->
+                <!-- Footer -->
+                <div class="modal-footer d-block text-center py-sm-5">
+                    <small class="text-cap text-muted">Trusted by the world's best teams</small>
+
+                    <div class="w-85 mx-auto">
+                        <div class="row justify-content-between">
+                            <div class="col">
+                                <img class="img-fluid" src="assets/svg/brands/gitlab-gray.svg" alt="Image Description">
+                            </div>
+                            <div class="col">
+                                <img class="img-fluid" src="assets/svg/brands/fitbit-gray.svg" alt="Image Description">
+                            </div>
+                            <div class="col">
+                                <img class="img-fluid" src="assets/svg/brands/flow-xo-gray.svg" alt="Image Description">
+                            </div>
+                            <div class="col">
+                                <img class="img-fluid" src="assets/svg/brands/layar-gray.svg" alt="Image Description">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Footer -->
+            </div>
+        </div>
+    </div>
+    <input style="display:none;" readonly value="@UserIdentity.Role" id="login-checker" />
+    <!-- End Welcome Message Modal -->
+    <!-- ========== END SECONDARY CONTENTS ========== -->
+    <!-- JS Implementing Plugins -->
+
+    <script src="assets/js/vendor.min.js"></script>
+    <script src="fg-assets/js/jquery.min.js" type="text/javascript"></script>
+    <script src="fg-assets/js/jquery-ui.js"></script>
+
+    <!-- JS Front -->
+    <script src="assets/js/theme.min.js"></script>
+
+    <script src="Scripts/CalendarScripts/CalendarLayoutManage.js"></script>
+    <script src="Scripts/PublicCommonFunction.js"></script>
+    <script src="~/Scripts/BusinessScripts/Common/BusinessAdminCommonFunctions.js"></script>
+    <script src="Scripts/tagify.min.js"></script>
+    <script src="Scripts/tagify.polyfills.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/jstree.min.js"></script>
+
+    <script src="fg-assets/tabulator/js/tabulator.js"></script>
+    <script src="fg-assets/js/waves.js"></script>
+    <script src="Content/underscore.js/underscore.min.js"></script>
+    <script src="Content/bootbox/bootbox.min.js"></script>
+    <script src="Scripts/jquery.blockUI/jquery.blockUI.min.js"></script>
+    <script src="Scripts/myscript/globalScript.js"></script>
+    <script src="Scripts/myscript/commonFunctions.js?token=@token"></script>
+    <script src="Scripts/scripts.js"></script>
+    <script type="text/javascript" src="Content/angular.js/angular.min.js"></script>
+    <script src="Content/angular-messages/angular-messages.min.js"></script>
+    <script src="Content/angular-resource/angular-resource.min.js"></script>
+    <script src="Content/angular-filter/angular-filter.min.js"></script>
+    <script src="Scripts/ngBootbox.min.js"></script>
+    <script src="Content/angular-ui-router/angular-ui-router.min.js"></script>
+    <script src="Scripts/ui-bootstrap-tpls.min.js"></script>
+    <script src="Content/angular-breadcrumb/angular-breadcrumb.min.js"></script>
+    <script src="Content/angular-cookies/angular-cookies.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/3.0.0/toaster.min.js"></script>
+    <script src="Scripts/myscript/controller/mainModule.js?token=@token"></script>
+    <script src="~/Scripts/myscript/controller/IndexController.js?token=@token"></script>
+    <script src="Scripts/myscript/controller/allController.js?token=@token"></script>
+    <script src="Scripts/myscript/controller/adminController.js?token=@token"></script>
+    <script src="Scripts/myscript/controller/FormRecordsController.js?token=@token"></script>
+    <script src="Scripts/myscript/controller/FormEntryController.js?token=@token"></script>
+    <script src="Scripts/myscript/controller/calendarController.js?token=@token"></script>
+    <script src="Scripts/myscript/controller/NewSchedularFormController.js?token=@token"></script>
+    
+    <!--Queue Scripts-->
+    <script src="../../Scripts/jquery.signalR-2.4.3.min.js"></script>
+    <script src="../../signalr/hubs"></script>
+    <script src="Scripts/myscript/controller/queueController.js?token=@token"></script>
+
+
+
+    <script src="Scripts/myscript/routes/allRoutes.js?token=@token"></script>
+    <script src="Scripts/myscript/services/services.js?token=@token"></script>
+    <script src="Scripts/myscript/directives/directives.js?token=@token"></script>
+    <script type="text/javascript" src="fg-assets/formValidation/js/formValidation.min.js"></script>
+    <script type="text/javascript" src="fg-assets/formValidation/js/framework/bootstrap.min.js"></script>
+    <script src="fg-assets/js/app.js"></script>
+    <script src="fg-assets/js/jquery.cookie.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <!-- JS Plugins Init. -->
+    <script>
+        (function () {
+            // INITIALIZATION OF NAVBAR VERTICAL ASIDE
+            // =======================================================
+            new HSSideNav('.js-navbar-vertical-aside').init()
+
+
+            // INITIALIZATION OF BOOTSTRAP DROPDOWN
+            // =======================================================
+            HSBsDropdown.init()
+        })()</script>
+
+    <!-- Style Switcher JS -->
+
+    <script>
+        (function () {
+            // STYLE SWITCHER
+            // =======================================================
+            const $dropdownBtn = document.getElementById('selectThemeDropdown') // Dropdowon trigger
+            const $variants = document.querySelectorAll(`[aria-labelledby="selectThemeDropdown"] [data-icon]`) // All items of the dropdown
+
+            // Function to set active style in the dorpdown menu and set icon for dropdown trigger
+            const setActiveStyle = function () {
+                $variants.forEach($item => {
+                    if ($item.getAttribute('data-value') === HSThemeAppearance.getOriginalAppearance()) {
+                        $dropdownBtn.innerHTML = `<i class="${$item.getAttribute('data-icon')}" />`
+                        return $item.classList.add('active')
+                    }
+
+                    $item.classList.remove('active')
+                })
+            }
+
+            // Add a click event to all items of the dropdown to set the style
+            $variants.forEach(function ($item) {
+                $item.addEventListener('click', function () {
+                    HSThemeAppearance.setAppearance($item.getAttribute('data-value'))
+                })
+            })
+
+            // Call the setActiveStyle on load page
+            setActiveStyle()
+
+            // Add event listener on change style to call the setActiveStyle function
+            window.addEventListener('on-hs-appearance-change', function () {
+                setActiveStyle()
+            })
+        })()</script>
+    <script>
+        $(document).ready(function () {
+            if (("@ViewBag.SuccessMessage" != null && "@ViewBag.SuccessMessage" != "") || ("@ViewBag.ErrorMessage" != null && "@ViewBag.ErrorMessage" != "")) {
+                swal({
+                    icon: ("@ViewBag.SuccessMessage" != null) ? "success" : "error",
+                    title: ("@ViewBag.SuccessMessage" != null) ? "Success" : "Error",
+                    text: ("@ViewBag.SuccessMessage" != null) ? "@ViewBag.SuccessMessage" : "@ViewBag.ErrorMessage",
+                })
+            }
+        });
+    </script>
+    <script>
+
+        $(document).ready(function () {
+            $.fn.bstooltip = $.fn.tooltip.noConflict(true);
+
+            // handle if the user is logged out but not on screen
+
+            checkLogin();
+
+        })
+
+        function checkLogin() {
+
+            $.ajax({
+                url: "/public/GetRole",
+                type: "get",
+                success: function (response) {
+                    if (response != "BUSINESS_USER" && response != "SUPERADMIN_USER" && response != "GENERAL_USER") {
+                        window.location.href = "/Account/BusinessLogin"
+                    }
+                }
+            })
+
+
+        }
+
+        $('.nav-link').click(function () {
+
+            $('.nav-link').not(this).removeClass('active');
+            $(this).addClass('active');
+        });
+
+        document.querySelectorAll(".nav-link").forEach((link) => {
+            if (link.href === window.location.href) {
+                $('.nav-link').not(this).removeClass('active');
+                link.classList.add("active");
+                link.setAttribute("aria-current", "page");
+            }
+        });
+
+
+
+    </script>
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

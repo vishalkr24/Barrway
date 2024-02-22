@@ -1,0 +1,81 @@
+﻿
+@{
+    ViewBag.Title = "Reports";
+    Layout = "~/Views/Shared/_BusinessAdminLayout.cshtml";
+}
+
+<style>
+    .setup {
+        min-height: auto !important;
+        max-width: 624px !important;
+        display:flex;
+        align-items: center !important;
+        justify-content: space-between !important;
+    }
+
+        .startbusiness .setup a {
+            padding: 10px 44px;
+        }
+
+    .startbusiness .setup h3 {
+        align-self: flex-end;
+    }
+
+    @@media screen and (max-width: 480px){
+        .setup {
+            display: block;
+        }
+    }
+</style>
+
+<main id="content" role="main" class="main">
+    <!-- Content -->
+    <div class="content container-fluid">
+        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="bredcrump">
+                    <span><a class="lbl-company-name" href="javascript:void(0)">Company name</a> / <a href="javascript:void(0)">@Resource.Reports</a> </span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row">
+
+                    <div class="startbusiness" style="max-width: 100%; margin-left:0px;">
+                        <div class="setup">
+                            <h3>@Resource.Service_provider_work_record</h3>
+                            <span id="CompanyProfileSetupBtn" onclick="location.href = '/BusinessAdmin/SetupCompanyProfile?IsNew=true'">
+                                <a href="javascript:void(0)" class="purple">@Resource.Go</a>
+                            </span>
+                        </div>
+
+                        <div class="setup">
+                            <h3>@Resource.Client_payment_history</h3>
+                            <span  ui-sref="client_payment_history()">
+                                <a href="javascript:void(0)" class="purple">@Resource.Go</a>
+                            </span>
+                        </div>
+
+                        <div class="setup">
+                            <h3>Client booking activity</h3>
+                            <span id="CalendarSetupBtn">
+                                <a href="javascript:void(0)" class="purple">@Resource.Go</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- End Content -->
+    </div>
+</main>
+
+@section scripts{
+    <script>
+        $("#reportsMegaMenu").addClass("active");
+    </script>    
+}

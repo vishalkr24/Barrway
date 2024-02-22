@@ -1,0 +1,39 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Order Failed</title>
+    <link rel="stylesheet" href="/assets/css/vendor.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/style.css">
+    <link rel="stylesheet" href="~/assets/marketplace/owl/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/assets/marketplace/owl/owl.theme.default.min.css">
+
+    <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/media.css">
+    <script src="~/assets/marketplace/owl/jquery.min.js"></script>
+</head>
+<body>
+    
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            swal({
+                icon: "Error",
+                title: "Order Failed !",
+                text: "@Resource.Your_payment_was_Failed",
+                buttons: {
+                    confirm: "@Resource.Go_to_dashboard"
+                }
+            }).then(function () {
+                window.location.href = "/UserAdmin#/userdashboard";
+            })
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+﻿
+@{
+    ViewBag.Title = @Resource.News;
+    Layout = "~/Views/Shared/_LayoutMarketPlace.cshtml";
+}
+
+<div id="list-view" style="display:none;">
+    <!-- bredcrum -->
+    <section class="bredcrum">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="bredcrum-content">
+                        <span><a href="/Marketplace/Index" style="color: #222;">@Resource.Home </a> </span> / <span><a href="/Marketplace/News">@Resource.News</a> </span>
+
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="news-banner">
+                        <img src="~/assets/marketplace/image/news.jpg">
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="blog-slide">
+                        <div id="owl-demo-blog" class="owl-carousel owl-theme">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="filser">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="filter fl-r">
+                        <button class="filter-btn"><img src="~/assets/marketplace/image/filter.png" /> @Resource.Featured </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="inner-content" style="height:540px;">
+                        <div class="row">
+                            <div class="col-md-6" id="row1">
+
+                            </div>
+                            <div class="col-md-6" id="row2">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pagination">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</div>
+
+<div id="detail-view" style="display:none;">
+    <section class="bredcrum">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="bredcrum-content">
+                        <span><a href="/Marketplace/Index" style="color: #222;">@Resource.Home </a> </span> / <span><a href="/Marketplace/News">@Resource.News</a> </span> / <span><a href="" class="post-title post-title-href">@Resource.Post_title</a> </span>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="filser">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="inner-content">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="single-post">
+                                    <div class="single-post-hed">
+                                        <p class="post-tags"><a href=""> Tag1</a></p>
+                                        <h2><b class="post-title">Post title</b></h2>
+                                        <p><span class="post-author">Author name</span>, <span class="post-date"> YYYY-MM-DD</span></p>
+                                    </div>
+                                    <div class="single-post-img">
+                                        <img onerror="this.src='../assets/img/post_img.jpg'" class="media-object post-image" style="width:100%">
+                                    </div>
+                                    <div class="sp-dis">
+                                        <div class="post-content">
+
+                                        </div>
+                                        
+                                        <p class="post-tags">
+                                            
+                                            <a href="javascript:void(0)">Tag2,</a>
+                                            <a href="javascript:void(0)">Tag3</a>
+                                        </p>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="sidebar" id="detail-sidebar">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+@section scripts{
+
+    <script src="~/Scripts/MarketplaceScripts/News.js"></script>
+
+
+
+}

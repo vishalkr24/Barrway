@@ -548,13 +548,8 @@
                 </span>
             </div>
             <div class="col-md-12">
-                <div id="queue-section"  style="display:none;">
+                <div id="queue-section" style="display:none;">
                     <div class="row">
-                        <!--<div class="col-md-12 mt-1">
-                            <div class="session-scroller" id="session-scroller">
-
-                            </div>
-                        </div>-->
                         <div class="col-md-12">
                             <div class="heading_queue">
                                 <h2><span class="session-name"></span></h2>
@@ -562,9 +557,9 @@
                         </div>
                     </div>
                     
-                    <div class="queue-area" id="queue-area">
+                    <div class="queue-area" id="queue-area" >
 
-                        <div class="queue-list-area queue_backlog">
+                        <div class="queue-list-area queue_backlog" style="max-width: 300px;">
                             <h4>Backlog (0)</h4>
                             <div id="backlog-list-area">
                                 <div class="queue_backlog_inner" ng-repeat="ticket in queueTicketList" ng-if="ticket.STATUS == 'SERVED' || ticket.STATUS == 'DELETED'">
@@ -579,8 +574,8 @@
                                 </div>
                             </div>
                             <!--<div class="waiting">
-                <p>Waiting <span>(10)</span></p>
-            </div>-->
+                                <p>Waiting <span>(10)</span></p>
+                            </div>-->
                         </div>
                         <div class="queue-list-area same-row" id="queue-external-area">
                             <div class="queue-element" ng-repeat="queue in queueList" data-queue-id="{{queue.Id}}">

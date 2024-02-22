@@ -1,0 +1,63 @@
+﻿
+@{
+    ViewBag.Title = Resource.Business_Site;
+    Layout = "~/Views/Shared/_LayoutMarketPlace.cshtml";
+}
+
+<!-- heading -->
+<section class="heading">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="head">
+                    <h2>@Resource.Business</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- heading -->
+<section class="filser">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2">
+                <div class="filter">
+                    <p>@Resource.Sort</p>
+                    <button class="filter-btn"><img src="~/assets/marketplace/image/filter.png" /> @Resource.Filter</button>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div class="Search">
+                    <p>@Resource.Filter</p>
+                    <div class="filter-tags">
+                        <input type="text" name="filter">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="inner-content">
+                    <div class="row">
+                        <div class="col-md-6" id="row1">
+
+                        </div>
+                        <div class="col-md-6" id="row2">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="pagination">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+@section scripts{
+
+    <script src="~/Scripts/MarketplaceScripts/BusinessSite.js"></script>
+}
+
