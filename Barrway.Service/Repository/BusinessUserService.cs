@@ -1783,6 +1783,63 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public  bool CheckCmpanyUrlExists(string PageName)
+        {
+
+            string query = $@"select PAGE_URL from BUSINESS_COMPANY_MASTER_1924 where PAGE_URL ='{PageName}'";
+
+            var result =  sqlFunction.ExecuteSqlQueryNonAsync(query);
+
+            if (result.Count() > 0)
+            {
+                return  true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetCompanyCodeByPageUrl(string PageUrl)
+        {
+            try
+            {
+                string query = $@"select COMPANY_CODE from BUSINESS_COMPANY_MASTER_1924 where PAGE_URL ='{PageUrl}'";
+
+                var result =await sqlFunction.ExecuteSqlQuery(query);
+                if (result.Count() > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success,Data= result.FirstOrDefault() };
+                }
+                else
+                {
+                    string queryString = $@"select COMPANY_CODE from BUSINESS_COMPANY_MASTER_1924 where COMPANY_CODE ='{PageUrl}'";
+
+                    var IResult = await sqlFunction.ExecuteSqlQuery(queryString);
+
+                    if (IResult.Count() > 0)
+                    {
+                        return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = IResult.FirstOrDefault() };
+                    }
+                    else
+                    {
+                        return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                    }
+
+
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+
+        }
+
+
+
+
         public async Task<AddUpdateDelete> UpdateTemplatePalette(BusinessCompanyModel model)
         {
             try

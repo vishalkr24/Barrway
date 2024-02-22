@@ -3214,6 +3214,7 @@
     <Content Include="Views\Account\MobileVerification.cshtml" />
     <Content Include="Views\Account\BusinessPhoneLogin.cshtml" />
     <Content Include="Views\MarketPlace\CompanyQueueSchedule.cshtml" />
+    <Content Include="Views\MarketPlace\Error404.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

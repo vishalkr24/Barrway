@@ -45,6 +45,11 @@ namespace Barrway.Controllers
             return View();
         }
 
+        public async Task<ActionResult> Error404()
+        {
+            return View();
+        }
+
         public async Task<ActionResult> BusinessSite()
         {
             return View();
@@ -193,14 +198,25 @@ namespace Barrway.Controllers
             return View();
         }
 
-        [Route("company/{id}/{pid?}")]
-        public async Task<ActionResult> Company(string id, string Pid = null)
+        [Route("company/{id}/{Cid?}")]
+        public async Task<ActionResult> Company(string id, string Cid = null)
         {
             try
             {
 
                 string CompanyCode = id;
-                string CalendarCode = Pid;
+                string CalendarCode = Cid;
+
+                var Compay = await businessUserService.GetCompanyCodeByPageUrl(id);
+                if (Compay.Status == true)
+                {
+                    CompanyCode = Compay.Data["COMPANY_CODE"];
+                }
+                else
+                {
+                    return RedirectToAction("Error404", "Marketplace");
+                }
+
                 var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
 
                 var data = JsonConvert.SerializeObject(companyData.Data);
@@ -225,13 +241,26 @@ namespace Barrway.Controllers
 
         }
 
-        [Route("company/service/{id}/{pid?}")]
-        public async Task<ActionResult> Service(string id, string Pid = null)
+        [Route("company/service/{id}/{Cid?}")]
+        public async Task<ActionResult> Service(string id, string Cid = null)
         {
             try
             {
                 string CompanyCode = id;
-                string CalendarCode = Pid;
+                string CalendarCode = Cid;               
+
+                var Compay = await businessUserService.GetCompanyCodeByPageUrl(id);
+                if (Compay.Status == true)
+                {
+                    CompanyCode = Compay.Data["COMPANY_CODE"];
+                }
+                else
+                {
+                    return RedirectToAction("Error404", "Marketplace");
+                }
+
+
+
                 var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
 
                 var data = JsonConvert.SerializeObject(companyData.Data);
@@ -260,14 +289,24 @@ namespace Barrway.Controllers
 
         }
 
-        [Route("company/package/{id}/{pid?}")]
-        public async Task<ActionResult> Package(string id, string Pid = null)
+        [Route("company/package/{id}/{Cid?}")]
+        public async Task<ActionResult> Package(string id, string Cid = null)
         {
             try
             {
 
                 string CompanyCode = id;
-                string CalendarCode = Pid;
+                string CalendarCode = Cid;  
+                var Compay = await businessUserService.GetCompanyCodeByPageUrl(id);
+                if (Compay.Status == true)
+                {
+                    CompanyCode = Compay.Data["COMPANY_CODE"];
+                }
+                else
+                {
+                    return RedirectToAction("Error404", "Marketplace");
+                }
+
                 var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
 
                 var data = JsonConvert.SerializeObject(companyData.Data);
@@ -292,14 +331,28 @@ namespace Barrway.Controllers
         }
 
 
-        [Route("company/Calander/{id}/{pid?}")]
-        public async Task<ActionResult> Calander(string id = null,string Pid = null)
+        [Route("company/Calander/{id}/{Cid?}")]
+        public async Task<ActionResult> Calander(string id = null,string Cid = null)
         {
             try
             {
 
                string CompanyCode = id;
-               string CalendarCode = Pid;
+               string CalendarCode = Cid;                
+
+                var Compay = await businessUserService.GetCompanyCodeByPageUrl(id);
+                if (Compay.Status == true)
+                {
+                    CompanyCode = Compay.Data["COMPANY_CODE"];
+                }
+                else
+                {
+                    return RedirectToAction("Error404", "Marketplace");
+                }
+
+
+
+
                 var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
                 AddUpdateDelete calendarData = await businessUserService.GetMarcketPlaceCompanyCalendarByCompanyId(companyData.Data["Id"].ToString());
                 
@@ -332,7 +385,7 @@ namespace Barrway.Controllers
                     {
                         if (companyModel.calendars.Any(x => x.CALENDAR_FUNCTION_TYPE == "QUEUE" && x.CALENDAR_CODE == CalendarCode))
                         {
-                            //company/Queue/{id}/{pid
+                            //company/Queue/{id}/{Cid
                             //return RedirectToAction("CompanyQueueSchedule", new { CompanyCode = CompanyCode, CalendarCode = CalendarCode });
                             return Redirect("/company/Queue/"+ CompanyCode+"/"+ CalendarCode);
                            // return Redirect("/ControllerName/ActionName");
@@ -386,13 +439,24 @@ namespace Barrway.Controllers
 
 
        
-        [Route("company/Queue/{id}/{pid?}")]
-        public async Task<ActionResult> CompanyQueueSchedule(string id,string pid)
+        [Route("company/Queue/{id}/{Cid?}")]
+        public async Task<ActionResult> CompanyQueueSchedule(string id,string Cid)
         {
 
             string CompanyCode = id;
-            string CalendarCode = pid;
+            string CalendarCode = Cid;
 
+            
+
+            var Compay = await businessUserService.GetCompanyCodeByPageUrl(id);
+            if (Compay.Status == true)
+            {
+                CompanyCode = Compay.Data["COMPANY_CODE"];
+            }
+            else
+            {
+                return RedirectToAction("Error404", "Marketplace");
+            }
 
             var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
             AddUpdateDelete calendarData = await businessUserService.GetMarcketPlaceCompanyCalendarByCompanyId(companyData.Data["Id"].ToString());
@@ -438,13 +502,27 @@ namespace Barrway.Controllers
                 return RedirectToAction("Index", "Marketplace");
             }
         }
-        [Route("company/gallery/{id}/{pid?}")]
-        public async Task<ActionResult> Photogallery(string id, string pid = null)
+        [Route("company/gallery/{id}/{Cid?}")]
+        public async Task<ActionResult> Photogallery(string id, string Cid = null)
         {
             try
             {
                 string CompanyCode = id;
-                string CalendarCode = pid;
+                string CalendarCode = Cid;
+
+               
+                var Compay = await businessUserService.GetCompanyCodeByPageUrl(id);
+                if (Compay.Status == true)
+                {
+                    CompanyCode = Compay.Data["COMPANY_CODE"];
+                }
+                else
+                {
+                    return RedirectToAction("Error404", "Marketplace");
+                }
+
+
+
                 var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
                 var photoAlbumData = await businessUserService.GetCompanyPhotoAlbumByCompanyId(companyData.Data["Id"].ToString());
 
