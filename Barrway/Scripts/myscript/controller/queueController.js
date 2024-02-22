@@ -138,7 +138,7 @@
 
                 angular.element($('#quequeDiv')).scope().queueList.forEach(x => {
                     x.CurrentTicket = ($scope.queueTicketList.filter(y => y.QUEUE_ID == x.Id && y.STATUS == "IN PROGRESS").length > 0) ? $scope.queueTicketList.find(y => y.QUEUE_ID == x.Id && y.STATUS == "IN PROGRESS").FULL_TICKET_NUMBER : "--";
-                    x.LastTicket = ($scope.queueTicketList.filter(y => y.QUEUE_ID == x.Id && (y.STATUS == "SERVED" || y.STATUS == "DELETED")).length > 0) ? $scope.queueTicketList.filter(y => y.QUEUE_ID == x.Id && (y.STATUS == "SERVED" || y.STATUS == "DELETED"))[0].FULL_TICKET_NUMBER : "--";
+                    x.LastTicket = ($scope.queueTicketList.filter(y => y.QUEUE_ID == x.Id && (y.STATUS == "SERVED" || y.STATUS == "DELETED")).length > 0) ? $scope.queueTicketList.find(y => y.QUEUE_ID == x.Id && (y.STATUS == "SERVED" || y.STATUS == "DELETED")).FULL_TICKET_NUMBER : "--";
                 });
                 $scope.$apply();
                 $scope.HideLoading();

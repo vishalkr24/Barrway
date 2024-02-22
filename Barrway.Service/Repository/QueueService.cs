@@ -37,16 +37,12 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> getCurrentSession(string CalendarCode, string CompanyCode)
+        public async Task<AddUpdateDelete> getCurrentSession(string CalendarCode, string CompanyCode, bool ByDate = false)
         {
             try
             {
                 string query = $@"select * from QUEUE_SESSION_MASTER_1974 ses
-                                    where ses.CALENDAR_CODE = '{CalendarCode}' and ses.COMPANY_CODE = '{CompanyCode}' and 
-                                    (
-	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.SESSION_START_TIME, 105) and 
-	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) < Convert(datetime, ses.SESSION_END_TIME, 105)
-                                    )";
+                                    where ses.CALENDAR_CODE = '{CalendarCode}' and ses.COMPANY_CODE = '{CompanyCode}' and  {getCommonDateConditionString(ByDate)}";
 
                 var result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -58,18 +54,14 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> getQueueList(string CalendarCode, string CompanyCode)
+        public async Task<AddUpdateDelete> getQueueList(string CalendarCode, string CompanyCode, bool ByDate = false)
         {
             try
             {
                 string query = $@"select q_m.* from QUEUE_SESSION_MASTER_1974 ses
                                     join QUEUE_SESSION_MAPPING_1976 map on map.SESSION_ID = ses.Id
                                     join QUEUE_MASTER_1973 q_m on q_m.Id = map.QUEUE_ID
-                                    where ses.CALENDAR_CODE = '{CalendarCode}' and ses.COMPANY_CODE = '{CompanyCode}' and 
-                                    (
-	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.SESSION_START_TIME, 105) and 
-	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) < Convert(datetime, ses.SESSION_END_TIME, 105)
-                                    )";
+                                    where ses.CALENDAR_CODE = '{CalendarCode}' and ses.COMPANY_CODE = '{CompanyCode}' {getCommonDateConditionString(ByDate)}";
 
                 var result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -81,7 +73,16 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> getQueueTicketList(string CalendarCode, string CompanyCode, string QueueIds = null)
+        private string getCommonDateConditionString(bool ByDate = false)
+        {
+            return $@" and 
+                                    (
+	                                    Convert({((ByDate) ? "datetime" : "time")}, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert({((ByDate) ? "datetime" : "time")}, ses.SESSION_START_TIME, 105) and 
+	                                    Convert({((ByDate) ? "datetime" : "time")}, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) < Convert({((ByDate) ? "datetime" : "time")}, ses.SESSION_END_TIME, 105)
+                                    )";
+        }
+
+        public async Task<AddUpdateDelete> getQueueTicketList(string CalendarCode, string CompanyCode, string QueueIds = null, bool ByDate = false)
         {
             try
             {
@@ -92,11 +93,7 @@ namespace Barrway.Service.Repository
                     IdString = $@" stuff((select ',' + cast(q_m.Id as varchar) from QUEUE_SESSION_MASTER_1974 ses
                                     join QUEUE_SESSION_MAPPING_1976 map on map.SESSION_ID = ses.Id
                                     join QUEUE_MASTER_1973 q_m on q_m.Id = map.QUEUE_ID
-                                    where ses.CALENDAR_CODE = '{CalendarCode}' and ses.COMPANY_CODE = '{CompanyCode}' and 
-                                    (
-	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.SESSION_START_TIME, 105) and 
-	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) < Convert(datetime, ses.SESSION_END_TIME, 105)
-                                    ) for xml path('')), 1, 1, '');";
+                                    where ses.CALENDAR_CODE = '{CalendarCode}' and ses.COMPANY_CODE = '{CompanyCode}'  {getCommonDateConditionString(ByDate)} for xml path('')), 1, 1, '');";
                 }
                 else
                 {
@@ -111,11 +108,7 @@ namespace Barrway.Service.Repository
 	                                select top 1 ses.Id from QUEUE_SESSION_MASTER_1974 ses
                                     join QUEUE_SESSION_MAPPING_1976 map on map.SESSION_ID = ses.Id
                                     join QUEUE_MASTER_1973 q_m on q_m.Id = map.QUEUE_ID
-                                    where q_m.Id = ticket.QUEUE_ID and 
-                                    (
-	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.SESSION_START_TIME, 105) and 
-	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) < Convert(datetime, ses.SESSION_END_TIME, 105)
-                                    )
+                                    where q_m.Id = ticket.QUEUE_ID  {getCommonDateConditionString(ByDate)}
                                 ) order by ticket.POSITION";
 
                 var result = await sqlFunction.ExecuteSqlQuery(query);
@@ -139,7 +132,7 @@ namespace Barrway.Service.Repository
             return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
         }
 
-        public async Task<AddUpdateDelete> callNext(string QueueId)
+        public async Task<AddUpdateDelete> callNext(string QueueId, bool ByDate = false)
         {
             try
             {
@@ -151,11 +144,7 @@ namespace Barrway.Service.Repository
 	                                select top 1 ses.Id from QUEUE_SESSION_MASTER_1974 ses
                                     join QUEUE_SESSION_MAPPING_1976 map on map.SESSION_ID = ses.Id
                                     join QUEUE_MASTER_1973 q_m on q_m.Id = map.QUEUE_ID
-                                    where q_m.Id = TICKET_MASTER_1975.QUEUE_ID and 
-                                    (
-	                                    Convert(datetime, '21-02-2024 13:30:11', 105) > Convert(datetime, ses.SESSION_START_TIME, 105) and 
-	                                    Convert(datetime, '21-02-2024 13:30:11', 105) < Convert(datetime, ses.SESSION_END_TIME, 105)
-                                    )
+                                    where q_m.Id = TICKET_MASTER_1975.QUEUE_ID  {getCommonDateConditionString(ByDate)}
                                 ) and STATUS = 'IN PROGRESS';";
 
                 var result = await sqlFunction.ExecuteSqlQuery(query);
@@ -171,11 +160,7 @@ namespace Barrway.Service.Repository
 	                                select top 1 ses.Id from QUEUE_SESSION_MASTER_1974 ses
                                     join QUEUE_SESSION_MAPPING_1976 map on map.SESSION_ID = ses.Id
                                     join QUEUE_MASTER_1973 q_m on q_m.Id = map.QUEUE_ID
-                                    where q_m.Id = TICKET_MASTER_1975.QUEUE_ID and 
-                                    (
-	                                    Convert(datetime, '21-02-2024 13:30:11', 105) > Convert(datetime, ses.SESSION_START_TIME, 105) and 
-	                                    Convert(datetime, '21-02-2024 13:30:11', 105) < Convert(datetime, ses.SESSION_END_TIME, 105)
-                                    )
+                                    where q_m.Id = TICKET_MASTER_1975.QUEUE_ID  {getCommonDateConditionString(ByDate)}
                                 ) and STATUS = 'WAITING' ORDER BY TICKET_MASTER_1975.POSITION);";
 
                 var result2 = await sqlFunction.ExecuteSqlQuery(query);
@@ -195,7 +180,7 @@ namespace Barrway.Service.Repository
 
 
 
-        public async Task<AddUpdateDelete> bookTicket(TicketMasterModel model)
+        public async Task<AddUpdateDelete> bookTicket(TicketMasterModel model, bool ByDate = false)
         {
             try
             {
@@ -203,11 +188,7 @@ namespace Barrway.Service.Repository
                                     join QUEUE_SESSION_MAPPING_1976 map on map.SESSION_ID = ses.Id
                                     join QUEUE_MASTER_1973 q_m on q_m.Id = map.QUEUE_ID
                                     join BUSINESS_CALENDAR_MASTER_1925 cal on cal.CALENDAR_CODE = ses.CALENDAR_CODE
-                                    where map.QUEUE_ID = '{model.QUEUE_ID}' and 
-                                    (
-	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.SESSION_START_TIME, 105) and 
-	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) < Convert(datetime, ses.SESSION_END_TIME, 105)
-                                    ) and 
+                                    where map.QUEUE_ID = '{model.QUEUE_ID}'  {getCommonDateConditionString(ByDate)} and 
                                     (
 	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.QUEUE_OPEN_TIME, 105)
                                     )";
@@ -216,7 +197,7 @@ namespace Barrway.Service.Repository
 
                 if (result.Count == 0)
                 {
-                    return new AddUpdateDelete() { Status =false, Message = "Session expired!" };
+                    return new AddUpdateDelete() { Status = false, Message = "Session expired!" };
                 }
                 else
                 {
@@ -229,7 +210,7 @@ namespace Barrway.Service.Repository
 
                 if (result2.Count > 0 && model.IsApproved == "N")
                 {
-                    return new AddUpdateDelete() { Status = false, Message = ("You have already booked this ticket: " + (result2.FirstOrDefault()["TICKET_NUMBER"]?.ToString()?? "(ticket not found)") + ".\n\nThis ticket will be removed and new ticket will be assigned.\n\nAre you sure to continue? "), Data = model };
+                    return new AddUpdateDelete() { Status = false, Message = ("You have already booked this ticket: " + (result2.FirstOrDefault()["TICKET_NUMBER"]?.ToString() ?? "(ticket not found)") + ".\n\nThis ticket will be removed and new ticket will be assigned.\n\nAre you sure to continue? "), Data = model };
                 }
 
                 query = $@"delete from TICKET_MASTER_1975 where SESSION_ID = '{model.SESSION_ID}' and QUEUE_ID = '{model.QUEUE_ID}' and USER_ID = '{model.USER_ID}' and STATUS not in ('DELETED', 'SERVED')";
@@ -311,7 +292,7 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> updateQueueTicketPosition(TicketMasterModel model)
+        public async Task<AddUpdateDelete> updateQueueTicketPosition(TicketMasterModel model, bool ByDate = false)
         {
             try
             {
@@ -321,11 +302,7 @@ namespace Barrway.Service.Repository
                                     join QUEUE_SESSION_MAPPING_1976 map on map.SESSION_ID = ses.Id
                                     join QUEUE_MASTER_1973 q_m on q_m.Id = map.QUEUE_ID
                                     join BUSINESS_CALENDAR_MASTER_1925 cal on cal.CALENDAR_CODE = ses.CALENDAR_CODE
-                                    where map.QUEUE_ID = '{model.QUEUE_ID}' and 
-                                    (
-	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.SESSION_START_TIME, 105) and 
-	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) < Convert(datetime, ses.SESSION_END_TIME, 105)
-                                    ) and 
+                                    where map.QUEUE_ID = '{model.QUEUE_ID}'  {getCommonDateConditionString(ByDate)} and 
                                     (
 	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.QUEUE_OPEN_TIME, 105)
                                     ))
@@ -346,7 +323,7 @@ namespace Barrway.Service.Repository
                 {
                     return new AddUpdateDelete() { Status = false, Message = "No Status Updated" };
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -354,7 +331,7 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> getMarketplaceQueueList(string CalendarCode, string CompanyCode)
+        public async Task<AddUpdateDelete> getMarketplaceQueueList(string CalendarCode, string CompanyCode, bool ByDate = false)
         {
             try
             {
@@ -362,11 +339,7 @@ namespace Barrway.Service.Repository
                                     join QUEUE_SESSION_MAPPING_1976 map on map.SESSION_ID = ses.Id
                                     join QUEUE_MASTER_1973 q_m on q_m.Id = map.QUEUE_ID
                                     join BUSINESS_CALENDAR_MASTER_1925 cal on cal.CALENDAR_CODE = ses.CALENDAR_CODE
-                                    where ses.CALENDAR_CODE = '{CalendarCode}' and ses.COMPANY_CODE = '{CompanyCode}' and 
-                                    (
-	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.SESSION_START_TIME, 105) and 
-	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) < Convert(datetime, ses.SESSION_END_TIME, 105)
-                                    ) and 
+                                    where ses.CALENDAR_CODE = '{CalendarCode}' and ses.COMPANY_CODE = '{CompanyCode}'  {getCommonDateConditionString(ByDate)} and 
                                     (
 	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.QUEUE_OPEN_TIME, 105)
                                     )";
