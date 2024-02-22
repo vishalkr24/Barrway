@@ -598,8 +598,8 @@ namespace Barrway.Service.Repository
                     { "COMPANY_NAME_ENGLISH","company.COMPANY_NAME_ENGLISH"},
                     { "COMPANY_NAME_CHINESE","company.COMPANY_NAME_CHINESE"},
                     { "COMPANY_PHONE","company.COMPANY_PHONE"},
-                    { "COMPANY_CATEGORY_NAME","company.COMPANY_CATEGORY_NAME"},
-                    { "COMPANY_SUB_CATEGORY_NAME","company.COMPANY_SUB_CATEGORY_NAME"},
+                    { "COMPANY_CATEGORY_NAME","category.COMPANY_CATEGORY_NAME"},
+                    { "COMPANY_SUB_CATEGORY_NAME","subCategory.COMPANY_SUB_CATEGORY_NAME"},
                     { "created_at","company.created_at"},
                     { "updated_at","calendar.updated_at"},
             };
@@ -645,9 +645,11 @@ namespace Barrway.Service.Repository
             int PageNumber = data.page > 0 ? data.page : 1;
 
             string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
-                                    select bau.ROLE_TYPE, (case when (bau.ROLE_TYPE='SUPERUSER') then 'Y' else 'N' end) as 'IS_EDITABLE', company.* from BUSINESS_COMPANY_MASTER_1924 company
+                                    select category.COMPANY_CATEGORY_NAME, subCategory.COMPANY_SUB_CATEGORY_NAME, bau.ROLE_TYPE, (case when (bau.ROLE_TYPE='SUPERUSER') then 'Y' else 'N' end) as 'IS_EDITABLE', company.* from BUSINESS_COMPANY_MASTER_1924 company
                                     join BUSINESS_ASSIGNED_USERS_1964 bau on bau.COMPANY_ID = company.Id
-                                    where bau.ASSIGNED_USER = 56 and company.IS_ACTIVE = 'Y' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+									join COMPANY_CATEGORY_MASTER_1920 category on category.Id = company.COMPANY_CATEGORY_ID
+									join COMPANY_SUB_CATEGORY_MASTER_1921 subCategory on subCategory.Id = company.COMPANY_SUB_CATEGORY_ID
+                                    where bau.ASSIGNED_USER = '{UserId}' and company.IS_ACTIVE = 'Y' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
                                     )
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
             var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);

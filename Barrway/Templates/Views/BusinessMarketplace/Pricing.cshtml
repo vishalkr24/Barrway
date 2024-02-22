@@ -1,0 +1,608 @@
+﻿
+@{
+    ViewBag.Title = Resource.Pricing;
+    Layout = "~/Views/Shared/_LayoutBusinessMarketPlace.cshtml";
+}
+
+<style>
+
+    .selected-red {
+        color: #E2476C;
+        font-weight: bold;
+    }
+
+    .pricing-custome-inner {
+        min-height: 500px !important;
+    }
+
+    .red-color {
+        color: #E2476C;
+    }
+
+    .bg-black {
+        background: black;
+    }
+
+    .pricing-custome {
+        width: 20%;
+        float: left;
+        padding: 0px 5px;
+    }
+
+    .pricing-custome-inner {
+        width: 100%;
+        float: left;
+        border: 1px solid #CCCCCC;
+        border-radius: 15px;
+        margin-top: 30px;
+    }
+
+    .pricing-body {
+        padding: 0px 15px;
+        width: 100%;
+        float: left;
+    }
+
+    .heder-price {
+        border-radius: 15px 15px 0px 0px;
+        width: 100%;
+        float: left;
+        height: 20px;
+    }
+
+    .pricing-body h3 {
+        font-weight: 600;
+        font-size: 18px;
+        line-height: 24px;
+        height: 24px;
+        color: #222222;
+        margin-top: 20px;
+        margin-bottom: 5px;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .pricing-body h2 {
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 30px;
+        color: #222222;
+        margin-bottom: 15px;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .extra-larg {
+        font-size: 48px;
+        line-height: 36px;
+        font-weight: 700;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .sm {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 15px;
+        line-height: 21px;
+        color: #222222;
+        position: relative;
+        top: -12px;
+        padding-left: 8px;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .pricing-body p {
+        font-weight: 400;
+        font-size: 15px;
+        color: #222222;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .pricing-body table {
+        width: 100%;
+        float: left;
+    }
+
+        .pricing-body table tbody tr td:last-child {
+            text-align: right;
+        }
+
+        .pricing-body table tbody tr td {
+            color: #000000;
+            font-size: 15px;
+            font-weight: 400;
+            font-family: 'Poppins', sans-serif;
+        }
+
+    .price-btn button.upgrade {
+        background: #E2476C;
+        color: #fff;
+    }
+
+    .price-btn button.contact {
+        background: #FFFFFF;
+        border: 1px solid #E2476C;
+        border-radius: 30px;
+        color: #E2476C;
+    }
+
+
+    .price-btn button {
+        border-radius: 30px;
+        border: none;
+        width: 100%;
+        padding: 10px 0px;
+        margin: 15px 0px;
+    }
+
+    .price-btn {
+        width: 100%;
+        float: left;
+        text-align: center;
+    }
+
+    .purple {
+        background: #72328A;
+    }
+
+    .purple-color {
+        color: #72328A;
+    }
+
+    .turquois {
+        background: #3FBFC7;
+    }
+
+    .turquois-color {
+        color: #3FBFC7;
+    }
+
+    .salmon {
+        background: #F38592;
+    }
+
+    .salmon-color {
+        color: #F38592;
+    }
+
+    .free-plan .pricing-custome-inner {
+        background-color: #F7F4FF;
+    }
+
+    .free-plan .pricing-body table tbody tr td {
+        color: #4C4C4C;
+    }
+
+    .free-plan h2, .free-plan .extra-larg {
+        color: #444444;
+    }
+
+    @@media screen and (min-width:1681px) and (max-width:2560px) {
+        .pricing-custome-inner {
+            min-height: 50vh;
+        }
+    }
+
+    @@media screen and (max-width:1680px) {
+        .pricing-custome-inner {
+            min-height: 75vh;
+        }
+    }
+
+    @@media screen and (max-width:1440px) {
+        .pricing-custome-inner {
+            min-height: 75vh;
+        }
+    }
+
+    @@media screen and (max-width:1366px) {
+        .pricing-custome-inner {
+            min-height: 91vh;
+        }
+    }
+
+    @@media screen and (max-width:1280px) {
+        .extra-larg {
+            font-size: 35px;
+        }
+
+        .pricing-custome-inner {
+            min-height: 80vh;
+        }
+    }
+
+    @@media screen and (min-width:769px) and (max-width:1024px) {
+        .Pricing-wrapper .pricing-custome {
+            width: 50%;
+        }
+
+        .pricing-custome-inner {
+            min-height: 85vh;
+        }
+    }
+
+    @@media screen and (max-width:768px) {
+        .Pricing-wrapper .pricing-custome {
+            width: 100%;
+        }
+
+        div#navbarDoubleLineContainerNavDropdown, div#navbarContainerNavDropdown {
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+        }
+
+        .pricing-custome-inner {
+            min-height: auto;
+            padding-bottom: 20px;
+        }
+    }
+</style>
+
+<!-- banner -->
+<section class="top-banner bg2">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="banner-form">
+                    <h1>@Resource.Pricing</h1>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="banner-image">
+                    <img src="~/assets/img/cha.png">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="Barrway">
+    <!-- Content -->
+    <div class="container">
+
+        <div class="row Pricing-wrapper">
+            <br />
+            <div class="col-md-12">
+                <div class="text-right pricing-custome" style="float:right">
+
+                    <span class="selected-red">Pay yearly</span>
+
+                    | Pay monthly
+                </div>
+            </div>
+            <div class="col-md-12" id="divSubscriptionPlans">
+                <div class="pricing-custome">
+                    <div class="pricing-custome-inner">
+                        <div class="heder-price"></div>
+                        <div class="pricing-body">
+
+                            <h2>Free</h2>
+                            <p><span class="extra-larg red-color">$XX</span> <span class="sm">/ month</span></p>
+
+                            <div class="price-btn"><button class="upgrade">Upgrade</button></div>
+
+                            <p style="margin-bottom: 16px;">For invidivual xxxxx xxxx x xxxxxx xxxxx xxx xxxxx</p>
+
+                            <div style="height: 1px; background: black;"></div>
+                            <br />
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>Free plan includes:</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            1 company
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            1 calendar
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            xxxxxxxxx
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            xxxxxxxx
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            xxxxxxxx
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            xxxxxxx
+                                        </td>
+                                        <td></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="pricing-custome ">
+                    <div class="pricing-custome-inner">
+                        <div class="heder-price purple"></div>
+                        <div class="pricing-body">
+
+                            <h2>Basic</h2>
+                            <p><span class="extra-larg purple-color">$XX</span> <span class="sm">/ month</span></p>
+
+                            <div class="price-btn"><button class="upgrade">Upgrade</button></div>
+
+                            <p style="margin-bottom: 16px;">For invidivual xxxxx xxxx x xxxxxx xxxxx xxx xxxxx</p>
+
+                            <div style="height: 1px; background: black;"></div>
+                            <br />
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>Basic plan includes:</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Unlimited company
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            1 calendar
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            xxxxxxxxx
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            xxxxxxxx
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            xxxxxxxx
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            xxxxxxx
+                                        </td>
+                                        <td></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="pricing-custome ">
+                    <div class="pricing-custome-inner">
+                        <div class="heder-price turquois"></div>
+                        <div class="pricing-body">
+
+                            <h2>Pro</h2>
+                            <p><span class="extra-larg turquois-color">$XX</span> <span class="sm">/ month</span></p>
+
+                            <div class="price-btn"><button class="upgrade">Upgrade</button></div>
+
+                            <p style="margin-bottom: 16px;">For invidivual xxxxx xxxx x xxxxxx xxxxx xxx xxxxx</p>
+
+                            <div style="height: 1px; background: black;"></div>
+                            <br />
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>Pro plan includes:</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            1 company
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            1 calendar
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            xxxxxxxxx
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            xxxxxxxx
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            xxxxxxxx
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            xxxxxxx
+                                        </td>
+                                        <td></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="pricing-custome ">
+                    <div class="pricing-custome-inner">
+                        <div class="heder-price salmon"></div>
+                        <div class="pricing-body">
+
+                            <h2>NGO</h2>
+                            <p><span class="extra-larg salmon-color">$XX</span> <span class="sm">/ month</span></p>
+
+                            <div class="price-btn"><button class="contact">Contact Us</button></div>
+
+                            <p style="margin-bottom: 16px;">For invidivual xxxxx xxxx x xxxxxx xxxxx xxx xxxxx</p>
+
+                            <div style="height: 1px; background: black;"></div>
+                            <br />
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>NGO plan includes:</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            1 company
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            1 calendar
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            xxxxxxxxx
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            xxxxxxxx
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            xxxxxxxx
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            xxxxxxx
+                                        </td>
+                                        <td></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="pricing-custome">
+                    <div class="pricing-custome-inner">
+                        <div class="heder-price bg-black"></div>
+                        <div class="pricing-body">
+
+                            <h2>Enterprise</h2>
+                            <p><span class="extra-larg purple-color"></span> <span class="sm"></span></p>
+
+                            <div class="price-btn"><button class="contact">Contact Us</button></div>
+
+                            <p style="margin-bottom: 16px;">For invidivual xxxxx xxxx x xxxxxx xxxxx xxx xxxxx</p>
+
+                            <div style="height: 1px; background: black;"></div>
+                            <br />
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>Enterprise plan includes:</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            1 company
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            1 calendar
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            xxxxxxxxx
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            xxxxxxxx
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            xxxxxxxx
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            xxxxxxx
+                                        </td>
+                                        <td></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- <div class="col-md-3">
+
+            </div>
+            <div class="col-md-3">
+
+            </div>
+            <div class="col-md-3">
+
+            </div> -->
+        </div>
+        <!-- end -->
+    </div>
+    <!-- End Content -->
+</section>
+
+
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+            $("#nav-pricing").addClass("active");
+        });
+    </script>
+
+}

@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_BusinessAdminLayout.cshtml";
+}
+
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('#header').remove();
+            $('aside').remove();
+            $('.btcd').remove();
+            setTimeout(function () {
+
+                $('.page-header').remove();
+            },1000);
+
+            
+            $('main#content').css("padding-left", "0px");
+
+        });
+    </script>
+    
+    }

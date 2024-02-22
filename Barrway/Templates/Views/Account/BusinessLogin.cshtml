@@ -1,0 +1,618 @@
+﻿@model Barrway.Models.LoginViewModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Barrway @Resource.Login</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="~/assets/css/custom-styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+
+        .hide-on-small {
+            display: inline-block;
+        }
+
+        .hide-on-large {
+            display: none;
+        }
+
+        @@media screen and (max-width: 560px) {
+            .hide-on-large {
+                display: inline-block;
+            }
+
+            .hide-on-small {
+                display: none;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            widtH: 100%;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body, input, textarea, button, .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-group, label {
+            margin-bottom: 0px;
+        }
+
+        .center {
+            widtH: 100%;
+            padding: 20px;
+            max-width: 90%;
+            margin: 0 auto;
+        }
+
+        .signUp {
+            display: flex;
+            widtH: 100%;
+            background: mintcream;
+            transition: 0.5s ease-in-out;
+            border-radius: 5px;
+            box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.35);
+        }
+
+            .signUp.close {
+                transform: translate(-25%, 0);
+            }
+
+            .signUp .left, .signUp .right {
+                width: 50%;
+                padding: 80px 60px;
+            }
+
+        @@media (max-width: 640px) {
+            .signUp .left, .signUp .right {
+                width: 100%;
+            }
+        }
+
+        .signUp .left {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+            text-align: center;
+            background-image: url("../assets/img/logback.png");
+            background-repeat: none;
+            background-size: cover;
+            background-position: center;
+            color: white;
+            transform-origin: center right;
+            position: relative;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            overflow: hidden;
+        }
+            /*.signUp .left .back {
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background-image: url("../assets/img/logback.png");
+          background-repeat: none;
+          background-size: cover;
+          background-position: center;
+          transform: rotateY(180);
+          z-index: -1;
+        }*/
+            .signUp .left.close {
+                transform: rotateY(-180deg);
+                transition: 1s ease-in-out;
+            }
+
+                .signUp .left.close .back {
+                    transform: rotateY(0);
+                    transition: 1s ease-in-out;
+                }
+
+        .signUp .right {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            flex-direction: column;
+        }
+
+            .signUp .right form {
+                width: 100%;
+                float: left;
+            }
+
+            .signUp .right input[type=text],
+            .signUp .right input[type=email],
+            .signUp .right input[type=password] {
+                width: 100%;
+                display: block;
+                margin: 10px 0;
+                padding: 10px 10px;
+                outline: none;
+                border: 1px solid #3FBFC7;
+                box-shadow: none;
+            }
+
+                .signUp .right input[type=text].first,
+                .signUp .right input[type=email].first,
+                .signUp .right input[type=password].first {
+                    margin-top: 0;
+                }
+
+            .signUp .right input[type=submit] {
+                padding: 10px 40px;
+                border: 2px solid #008c9e;
+                background: white;
+                color: #008c9e;
+                transition: 0.15s ease-in-out;
+                border-radius: 5px;
+                outline: none;
+            }
+
+                .signUp .right input[type=submit]:hover {
+                    background: #008c9e;
+                    color: white;
+                }
+
+            .signUp .right .input-bordered {
+                width: 100%;
+                position: relative;
+            }
+
+                .signUp .right .input-bordered.active label {
+                    top: 0;
+                    left: 0;
+                    transform: translate(0, -50%) scale(0.75);
+                    color: #008c9e;
+                }
+
+                .signUp .right .input-bordered.active:after {
+                    width: 100%;
+                }
+
+                .signUp .right .input-bordered:after {
+                    content: "";
+                    display: block;
+                    width: 0;
+                    height: 1px;
+                    background: #008c9e;
+                    position: absolute;
+                    bottom: 0;
+                    transition: 0.15s ease-in-out;
+                }
+
+                .signUp .right .input-bordered label {
+                    color: #444;
+                    font-size: 15px;
+                    position: absolute;
+                    top: 50%;
+                    left: 0;
+                    transform: translate(0, -50%);
+                    transition: 0.15s ease-in-out;
+                    cursor: text;
+                    transform-origin: center left;
+                }
+
+        .logo img {
+            width: 260px;
+        }
+
+        .logo {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .register h3 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        label.container-label {
+            display: block;
+            position: relative;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+            label.container-label input {
+                position: absolute;
+                opacity: 0;
+                cursor: pointer;
+                height: 0;
+                width: 0;
+            }
+
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 15px;
+            width: 15px;
+            background-color: #3FBFC7;
+        }
+        /* On mouse-over, add a grey background color */
+        .container-label:hover input ~ .checkmark {
+            background-color: #ccc;
+        }
+
+        /* When the checkbox is checked, add a blue background */
+        .container-label input:checked ~ .checkmark {
+            background-color: #2196F3;
+        }
+
+        /* Create the checkmark/indicator (hidden when not checked) */
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        /* Show the checkmark when checked */
+        .container-label input:checked ~ .checkmark:after {
+            display: block;
+        }
+
+        /* Style the checkmark/indicator */
+        .container-label .checkmark:after {
+            left: 6px;
+            top: 2px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+
+        .btn-default {
+            color: #fff;
+            background-color: #3fbfc7;
+            border-color: #3fbfc7;
+            width: 100%;
+            border-radius: 40px;
+            padding: 12px 0px;
+            margin: 10px 0px;
+        }
+
+            .btn-default:hover, .btn-default.focus, .btn-default:focus, .btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus {
+                color: #fff;
+                background-color: #3fbfc7;
+                border-color: #3fbfc7;
+                width: 100%;
+                border-radius: 40px;
+                padding: 12px 0px;
+                outline: none;
+            }
+
+        .login_with .a {
+            border: none;
+            background-color: #3F71BE;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 9px 15px;
+            border-radius: 40px;
+            float: left;
+        }
+
+            .login_with .a:last-child {
+                float: right;
+            }
+
+        .login_with {
+            width: 100%;
+            float: left;
+            margin-bottom: 16px;
+        }
+
+        .register {
+            width: 100%;
+            float: left;
+        }
+
+        .back {
+            position: absolute;
+            width: 80%;
+            top: 14%;
+        }
+
+            .back h1 {
+                font-family: 'Poppins';
+                font-weight: 700;
+                font-size: 40px;
+                color: #FFFFFF;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+                text-align: left;
+            }
+
+
+        .logo .business-label {
+            border-left: 1px solid #777777;
+            position: relative;
+            top: 3px;
+            font-size: 20px;
+            color: #777777;
+            padding-left: 8px;
+            margin-left: 8px;
+        }
+
+        @@media screen and (max-width:768px) {
+
+            .logo .business-label {
+                border-left: 0px solid #777777;
+                position: relative;
+                top: 3px;
+                font-size: 20px;
+                color: #777777;
+                padding-left: 0px;
+                margin-left: 0px;
+            }
+
+            .logo img {
+                width: 100% !important;
+            }
+
+            body {
+                widtH: 100%;
+                min-height: auto;
+                display: block;
+            }
+
+            .center {
+                float: left;
+                width: 100%;
+                padding: 20px;
+                max-width: 100%;
+                margin: 0 auto;
+            }
+
+            .signUp {
+                display: block;
+                widtH: 100%;
+                float: left;
+            }
+
+                .signUp .left, .signUp .right {
+                    width: 100%;
+                    padding: 80px 60px;
+                    float: left;
+                    border-top-right-radius: 0px;
+                    border-bottom-right-radius: 0px;
+                    display: block;
+                }
+        }
+    </style>
+    <style>
+
+        :root {
+            --primary-color: #ffffff;
+            --secondary-color: #3fbfc7;
+        }
+
+        .tabs {
+            display: flex;
+            position: relative;
+            background-color: #fff;
+            /*box-shadow: 0 0 1px 0 rgba(24, 94, 224, 0.15), 0 6px 12px 0 rgba(24, 94, 224, 0.15);*/
+            /*padding: 0.75rem;*/
+            border-radius: 99px;
+            border: 1px solid #3fbfc7;
+        }
+
+        .tab > a {
+            color: #333333;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .active {
+            background-color: #3fbfc7;
+        }
+
+            .active a {
+                background-color: #3fbfc7;
+                color: #fff;
+            }
+
+
+        .tabs * {
+            z-index: 2;
+        }
+
+        input[type=radio] {
+            display: none;
+        }
+
+        .tab {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            width: 100%;
+            font-size: 1.25rem;
+            font-weight: 500;
+            border-radius: 99px;
+            cursor: pointer;
+            transition: color 0.15s ease-in;
+        }
+
+
+
+        input[type=radio]:checked + label {
+            color: var(--primary-color);
+        }
+
+            input[type=radio]:checked + label > .notification {
+                background-color: var(--primary-color);
+                color: #fff;
+            }
+
+        input[id=radio-1]:checked ~ .glider {
+            transform: translateX(0);
+        }
+
+        input[id=radio-2]:checked ~ .glider {
+            transform: translateX(100%);
+        }
+
+        input[id=radio-3]:checked ~ .glider {
+            transform: translateX(200%);
+        }
+
+        .glider {
+            position: absolute;
+            display: flex;
+            height: 40px;
+            width: 100%;
+            background-color: var(--secondary-color);
+            z-index: 1;
+            border-radius: 99px;
+            transition: 0.25s ease-out;
+        }
+
+        @@media (max-width: 700px) {
+            .tabs {
+                /*transform: scale(0.6);*/
+            }
+        }
+    </style>
+</head>
+
+<body class="d-flex align-items-center min-h-100" style="background: linear-gradient(to right, #e2476c, #3fbfc7);">
+
+    <script>
+        $(document).ready(function () {
+            localStorage.removeItem("COMPANY_ID");
+            localStorage.removeItem("COMPANY_CODE");
+            localStorage.removeItem("COMPANY_NAME_ENGLISH");
+            localStorage.removeItem("COMPANY_NAME_CHINESE");
+            localStorage.removeItem("COMPANY_CATEGORY_ID");
+            localStorage.removeItem("COMPANY_SUB_CATEGORY_ID");
+        });
+    </script>
+
+    <section class="login">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class='center'>
+                        <div class='signUp'>
+                            <div class='right'>
+                                <div class="logo">
+                                    <img style="width: 260px;" onclick="location.href = '/BusinessMarketplace/Index'" src="../assets/img/logo.png"> <span class="business-label">@Resource.Business</span>
+                                </div>
+                                <div style="width: 100%;">
+                                    <div class="tabs">
+
+                                        <label class="tab active" for="radio-1"><a href="/Account/BusinessLogin">Email</a></label>
+
+                                        <label class="tab" for="radio-2"><a href="/Account/BusinessPhoneLogin">Phone</a></label>
+
+                                    </div>
+                                </div>
+
+                                <div class="register">
+                                    <h3>@Resource.Login </h3>
+
+                                    <form class="js-validate needs-validation" method="post" action="/Account/BusinessLogin?returnUrl=@Model.ReturnUrl" novalidate>
+                                        @if (@TempData["MobileVerificationSuccessMessage"] != null)
+                                        {
+                                            <div class="alert" role="alert" style="color: #00c9a7;">
+                                                @TempData["MobileVerificationSuccessMessage"]
+                                            </div>
+                                        }
+
+                                        @Html.AntiForgeryToken()
+
+                                        @Html.ValidationMessageFor(model => model.ERROR_MESSAGE, "", new { @class = "invalid-feedback-2" })
+
+                                        <div class="form-group">
+                                            <label for="email">@Resource.Email</label>
+                                            @*<input type="email" class="form-control" id="USER_EMAIL" name="USER_EMAIL" required placeholder="Email">*@
+                                            @Html.TextBoxFor(model => model.USER_EMAIL, new { @class = "form-control", @placeholder = "Email", @required = "true" })
+                                            @Html.ValidationMessageFor(model => model.USER_EMAIL, "", new { @class = "invalid-feedback-2" })
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="pwd">@Resource.Password</label>
+                                            @*<input type="password" class="form-control" id="USER_PASSWORD" name="USER_PASSWORD" required placeholder="********">*@
+                                            @Html.PasswordFor(model => model.USER_PASSWORD, new { @class = "form-control", @placeholder = "********", @required = "true" })
+                                            @Html.ValidationMessageFor(model => model.USER_PASSWORD, "", new { @class = "invalid-feedback-2" })
+                                        </div>
+
+                                        <div class="checkbox">
+                                            <label class="container-label">
+                                                @Resource.Remember_me
+                                                @Html.CheckBoxFor(model => model.REMEMBER_ME)
+                                                @*<input type="checkbox" name="TERMS_ACCEPTED" id="TERMS_ACCEPTED">*@
+                                                <span class="checkmark"></span>
+
+                                                @Html.ValidationMessageFor(model => model.REMEMBER_ME, "", new { @class = "invalid-feedback-2" })
+                                            </label>
+                                        </div>
+
+                                        <div class="register-btn">
+                                            <button type="submit" class="btn btn-default">@Resource.Login</button>
+                                        </div>
+                                    </form>
+                                    <div class="login_with">
+                                        @using (Html.BeginForm("ExternalSignIn", "Account", new { ReturnUrl = Model.ReturnUrl, userType = "1" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+
+                                            <button class="a" type="submit" id="Google" name="provider" value="Google"><span class="hide-on-large"><i class="bi bi-google" aria-hidden="true"></i></span> <span class="hide-on-small">Register with Google</span> </button>
+                                            <button class="a" type="submit" id="Facebook" name="provider" value="Facebook"> <span class="hide-on-large"><i class="bi bi-facebook" aria-hidden="true"></i></span> <span class="hide-on-small">Register with Facebook</span></button>
+                                        }
+
+                                    </div>
+                                    <br /><br /><br />
+                                    <div class="register-btn text-center">
+                                        @Resource.Don_t_have_an_account? <a href="/Account/BusinessSignup">@Resource.Register</a>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class='left'>
+                                <div class='back'><h1>@Resource.Find_your_service__activity___book_it_in_one_stop</h1></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+
+<!-- Mirrored from htmlstream.com/preview/front-dashboard-v2.1.1/authentication-login-cover.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 20 Feb 2023 07:46:28 GMT -->
+</html>

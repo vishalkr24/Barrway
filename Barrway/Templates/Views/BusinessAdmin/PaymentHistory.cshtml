@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewBag.Title = Resource.Company_Payment_History;
+    Layout = "~/Views/Shared/_BusinessAdminLayout.cshtml";
+}
+<link href="~/fg-assets/tabulator/css/tabulator_site.min.css" rel="stylesheet" />
+<link href="~/fg-newAssets/css/style.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<main id="content" role="main" class="main">
+    <!-- Content -->
+    <div class="content container-fluid">
+        <!-- row start -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="bredcrump">
+                    <span><a href="javascript:void(0)" class="lbl-company-name">Company name</a></span> <span>/ <a href="/BusinessAdmin/SubscriptionPlan">@Resource.Subscription</span></a> <span><a href="javascript:void(0)">/ @Resource.Company_Payment_History</a> </span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="heading">
+                    <h2>@Resource.Company_Payment_History</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 tabulator-section">
+                <div class="form-builder-loader">
+                    <div class="loader">
+                        <i class="fa fa-spinner fa-pulse fa-fw"> </i>
+                        <div>
+                            Loading Form Tabulator...
+                        </div>
+                    </div>
+                </div>
+                <div id="form-records"></div>
+            </div>
+        </div>
+
+    </div>
+    <!-- End Content -->
+</main>
+
+@section scripts{
+    <script src="~/Scripts/jquery.blockUI/jquery.blockUI.min.js"></script>
+    <script src="/fg-assets/tabulator/js/tabulator.js"></script>
+    <script src="/Scripts/BusinessScripts/PaymentHistory.js"></script>
+}
+

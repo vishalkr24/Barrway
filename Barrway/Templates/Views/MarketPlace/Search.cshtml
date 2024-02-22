@@ -1,0 +1,197 @@
+﻿@model Barrway.DTO.MarketplaceModels.SearchResultViewModel
+@{
+    ViewBag.Title = "Search results for " + Model.keyword;
+    Layout = "~/Views/Shared/_LayoutMarketPlace.cshtml";
+    string totalResults = (Model.results.Count > 0) ? Model.results.Count.ToString() : "No";
+}
+
+
+<!-- bredcrum -->
+<div style="height: 95vh;">
+    <section class="bredcrum">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="bredcrum-content">
+                        <span><a href="/Marketplace/Index" style="color: #222;">@Resource.Home </a> </span> / <span><a href="javascript:void(0)">Search @Model.keyword </a> </span>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <style>
+        
+        .category{
+            font-size:12px;
+            color: grey;
+            margin-top:-4px;
+        }
+
+        .category-1 {
+            font-size: 14px;
+            color: grey;
+            margin-top: -4px;
+        }
+
+    </style>
+    <!-- heading -->
+    <section class="heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="head">
+                        <h2>Search results for @Model.keyword</h2>
+                        <div class="category-1">@totalResults results found</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- heading -->
+    <section class="filser">
+        <div class="container tag">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="inner-content">
+
+                        @if (Model.results.Where(x => x.ResultType == 3).ToList().Count > 0)
+                        {
+                            <div class="row" style="max-height: 400px; overflow:hidden; overflow-y:scroll;">
+                                <div class="col-md-12">
+                                    <div class="sub-hed">
+                                        <p>@Resource.Service_contains @Model.keyword</p>
+                                    </div>
+                                </div>
+                                @foreach (var item in Model.results)
+                                {
+                                    if (item.ResultType == 3)
+                                    {
+                                        <div class="col-md-6">
+                                            <div class="media">
+                                                <div class="media-left" style="">
+                                                    <img src="@item.ImagePath.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px; height: 100px;">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">@item.Title</h4>
+                                                    <div class="category">Service</div>
+                                                    <p>@item.Description</p>
+                                                    <p>
+                                                        Company: @item.OtherIds[0]["CompanyName"].ToString()
+                                                        <br />
+                                                        Calendar: @item.OtherIds[0]["CalendarName"].ToString()
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+                            <br /><br />
+                        }
+                        @if (Model.results.Where(x => x.ResultType == 2).ToList().Count > 0)
+                        {
+
+                            <div class="row" style="max-height: 400px; overflow:hidden; overflow-y:scroll;">
+                                <div class="col-md-12">
+                                    <div class="sub-hed">
+                                        <p>@Resource.Company_contains @Model.keyword</p>
+                                    </div>
+                                </div>
+                                @foreach (var item in Model.results)
+                                {
+                                    if (item.ResultType == 2)
+                                    {
+                                        <div class="col-md-6">
+                                            <div class="media">
+                                                <div class="media-left" style="">
+                                                    <img src="@item.ImagePath.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px; height: 100px;">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">@item.Title</h4>
+                                                    <div class="category">Company</div>
+                                                    <p style="max-height:44px; overflow:hidden; padding-top: 4px;">@item.Description</p>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+                            <br /><br />
+                        }
+                        @if (Model.results.Where(x => x.ResultType == 1).ToList().Count > 0)
+                        {
+
+                            <div class="row" style="max-height: 400px; overflow:hidden; overflow-y:scroll;">
+                                <div class="col-md-12">
+                                    <div class="sub-hed">
+                                        <p>Calendar Contains @Model.keyword</p>
+                                    </div>
+                                </div>
+                                @foreach (var item in Model.results)
+                                {
+                                    if (item.ResultType == 1)
+                                    {
+                                        <div class="col-md-6">
+                                            <div class="media">
+                                                <div class="media-left" style="">
+                                                    <img src="@item.ImagePath.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px; height: 100px;">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">@item.Title</h4>
+                                                    <div class="category">Calendar</div>
+                                                    <p style="max-height:44px; overflow:hidden; padding-top: 4px;">@item.Description</p>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+                            <br /><br />
+                        }
+                        @if (Model.results.Where(x => x.ResultType == 4).ToList().Count > 0)
+                        {
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="sub-hed">
+                                        <p>Category Contains @Model.keyword</p>
+                                    </div>
+                                </div>
+                                @foreach (var item in Model.results)
+                                {
+                                    if (item.ResultType == 4)
+                                    {
+                                        <div class="col-md-3">
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">@item.Title</h4>
+                                                    <div class="category">Category</div>
+                                                    <p style="max-height:44px; overflow:hidden; padding-top: 4px;">@item.Description</p>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+                            <br /><br />
+                        }
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+</div>

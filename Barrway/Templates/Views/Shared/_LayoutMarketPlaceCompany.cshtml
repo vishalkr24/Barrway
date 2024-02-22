@@ -1,0 +1,202 @@
+﻿
+@{
+    var baseUrl = System.Web.Configuration.WebConfigurationManager.AppSettings["baseURL"].ToString();
+    var webapibaseurl = System.Web.Configuration.WebConfigurationManager.AppSettings["webapibaseurl"].ToString();
+    string token = DateTime.Now.ToString("ddMMyyyyHHmmssffffff");
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Barrway | @ViewBag.Title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="/assets/css/vendor.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/3.0.0/toaster.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <!-- font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- Owl Stylesheets -->
+    <link rel="stylesheet" href="~/assets/marketplace/owl/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/assets/marketplace/owl/owl.theme.default.min.css">
+
+    <!-- javascript -->
+    <script>
+       var ASSET_URL = "@baseUrl", BASE_URL = "@baseUrl";
+        var API_URL = "@webapibaseurl";
+    </script>
+
+    <script src="/assets/js/vendor.min.js"></script>
+
+    <script src="~/assets/marketplace/owl/jquery.min.js"></script>
+    <script src="~/assets/marketplace/owl/owl.carousel.js"></script>
+    <script src="~/Scripts/PublicCommonFunction.js"></script>
+
+
+    <!-- css -->
+    <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/style.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/media.css">
+    @RenderSection("styles", false)
+
+</head>
+<body ng-app="FormGeneratorApp">
+    <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-bottom-right'}"></toaster-container>
+    <section class="main-header">
+
+        <!-- sub navigation -->
+        <nav class="navbar no-mar-bott">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle secondry-nav" data-toggle="collapse" data-target="#secondry-nav">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="javascript:void(0)" style="padding: 6px 15px"><img style="max-height: 48px; max-width: 400px;" src="@ViewBag.COMPANY_LOGO_PATH" onerror="this.src='/assets/marketplace/image/alogo22.png'"></a>
+                </div>
+                <div class="collapse navbar-collapse" id="secondry-nav">
+                    <ul class="nav navbar-nav navbar-right">
+                        @*<li id="nv-company-basic-information"><a href="/Marketplace/CompanyDetail?CompanyCode=@ViewBag.COMPANY_ID&CalendarCode=@ViewBag.CALENDAR_ID">@Resource.Basic_Information</a></li>*@
+                        <li id="nv-company-basic-information"><a href="/company/@ViewBag.COMPANY_ID/@ViewBag.CALENDAR_ID">@Resource.Basic_Information</a></li>
+                        <li id="nv-company-service">
+                            @*<a class="" href="/Marketplace/CompanyService?CompanyCode=@ViewBag.COMPANY_ID&CalendarCode=@ViewBag.CALENDAR_ID">@Resource.Service</a>*@
+                            <a class="" href="/company/Service/@ViewBag.COMPANY_ID/@ViewBag.CALENDAR_ID">@Resource.Service</a>
+                        </li>
+                        @*<li id="nv-company-package"><a href="/Marketplace/CompanyPackage?CompanyCode=@ViewBag.COMPANY_ID&CalendarCode=@ViewBag.CALENDAR_ID">@Resource.Package</a></li>*@
+                        <li id="nv-company-package"><a href="/company/Package/@ViewBag.COMPANY_ID/@ViewBag.CALENDAR_ID">@Resource.Package</a></li>
+                        @*<li id="nv-company-schedule"><a href="/Marketplace/CompanySchedule?CompanyCode=@ViewBag.COMPANY_ID&CalendarCode=@ViewBag.CALENDAR_ID">@Resource.Schedule</a></li>*@
+                        <li id="nv-company-schedule"><a href="/company/Calander/@ViewBag.COMPANY_ID/@ViewBag.CALENDAR_ID">@Resource.Schedule</a></li>
+                        
+                        @*<li id="nv-company-photo-album"><a href="/Marketplace/CompanyPhotoAlbum?CompanyCode=@ViewBag.COMPANY_ID&CalendarCode=@ViewBag.CALENDAR_ID">@Resource.Photo_album</a></li>*@
+                        <li id="nv-company-photo-album"><a href="/company/gallery/@ViewBag.COMPANY_ID/@ViewBag.CALENDAR_ID">@Resource.Photo_album</a></li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+    </section>
+
+
+    <div>
+        @RenderBody()
+    </div>
+    <section class="bottom-nav">
+        <nav class="navbar">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle com-nav-btn" data-toggle="collapse" data-target="#com-nav">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/Marketplace/Index"><img src="~/assets/marketplace/image/logo.png"></a>
+                </div>
+                <form class="navbar-form navbar-left com-nav" action="/action_page.php">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="@Resource.Search">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" type="submit">
+                                <i class="glyphicon glyphicon-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <div class="collapse navbar-collapse" id="com-nav">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="active"><a href="/Marketplace/Index">@Resource.Home</a></li>
+                        <li>
+                            <a class="" href="/Marketplace/BusinessSite">@Resource.Business @*<span class="caret"></span>*@</a>
+                        </li>
+                        <li><a href="/Marketplace/News">@Resource.News</a></li>
+                        <li><a href="/Account/BusinessSignup">@Resource.Post_your_business</a></li>
+                        <li class="rl">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="/Useradmin"> @Resource.Account</a>
+                            <ul class="dropdown-menu Show-top">
+                                <li><a href="javascript:void(0)">@Resource.Register</a></li>
+                                <li>
+                                    <a href="javascript:void(0)">
+                                        @Resource.Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+    </section>
+    <section class="footer no-mt">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="fooetr-link">
+                        <a href="javascript:void(0)">@Resource.Terms___condition</a>
+                        <a href="javascript:void(0)">@Resource.Privacy_policy</a>
+                        <a href="javascript:void(0)">@Resource.Contact_us</a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="social-links">
+                        <a href="javascript:void(0)">@Resource.social_media_links</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- my script -->
+    <script src="~/assets/marketplace/owl/myjq.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script src="~/Scripts/CalendarScripts/CalendarLayoutManage.js"></script>
+    <script src="~/Scripts/PublicCommonFunction.js"></script>
+    <script src="~/Scripts/BusinessScripts/Common/BusinessAdminCommonFunctions.js"></script>
+    <script src="~/Scripts/tagify.min.js"></script>
+    <script src="~/Scripts/tagify.polyfills.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/jstree.min.js"></script>
+
+    <script src="~/fg-assets/tabulator/js/tabulator.js"></script>
+    <script src="~/fg-assets/js/waves.js"></script>
+    <script src="~/Content/underscore.js/underscore.min.js"></script>
+    <script src="~/Content/bootbox/bootbox.min.js"></script>
+    <script src="~/Scripts/jquery.blockUI/jquery.blockUI.min.js"></script>
+    <script src="~/Scripts/myscript/globalScript.js"></script>
+    <script src="~/Scripts/myscript/commonFunctions.js?token=@token"></script>
+    <script src="~/Scripts/scripts.js"></script>
+    <script type="text/javascript" src="~/Content/angular.js/angular.min.js"></script>
+    <script src="~/Content/angular-messages/angular-messages.min.js"></script>
+    <script src="~/Content/angular-resource/angular-resource.min.js"></script>
+    <script src="~/Content/angular-filter/angular-filter.min.js"></script>
+    <script src="~/Scripts/ngBootbox.min.js"></script>
+    <script src="~/Content/angular-ui-router/angular-ui-router.min.js"></script>
+    <script src="~/Scripts/ui-bootstrap-tpls.min.js"></script>
+    <script src="~/Content/angular-breadcrumb/angular-breadcrumb.min.js"></script>
+    <script src="~/Content/angular-cookies/angular-cookies.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/3.0.0/toaster.min.js"></script>
+    <script src="~/Scripts/myscript/controller/mainModule.js?token=@token"></script>
+    
+
+    <script src="~/Scripts/myscript/routes/allRoutes.js?token=@token"></script>
+    <script src="~/Scripts/myscript/services/services.js?token=@token"></script>
+    <script src="~/Scripts/myscript/directives/directives.js?token=@token"></script>
+    <script type="text/javascript" src="~/fg-assets/formValidation/js/formValidation.min.js"></script>
+    <script type="text/javascript" src="~/fg-assets/formValidation/js/framework/bootstrap.min.js"></script>
+    <script src="~/fg-assets/js/app.js"></script>
+    <script src="~/fg-assets/js/jquery.cookie.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    @RenderSection("scripts", false)
+    @* Momentum based scroll behaviour *@
+    <script>
+        $(document).ready(function () {
+            $.fn.bstooltip = $.fn.tooltip.noConflict(true);
+        });
+    </script>
+</body>
+</html>
