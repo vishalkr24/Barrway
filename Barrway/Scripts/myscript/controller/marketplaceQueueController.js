@@ -6,6 +6,7 @@
         $scope.currentCalendarCode = $("#currentCalendarCode").val();
         $scope.currentCompanyCode = $("#currentCompanyCode").val();
         $scope.currentUserId = $("#currentUserId").val();
+        debugger;
         var chat = $.connection.queueManager;
         var isHubConnected = false;
 
