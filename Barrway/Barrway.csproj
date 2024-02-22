@@ -3030,7 +3030,6 @@
     <Content Include="Scripts\myscript\controller\approvalController.js" />
     <Content Include="Scripts\myscript\controller\NewSchedularFormController.js" />
     <Content Include="Scripts\myscript\controller\marketplaceQueueController.js" />
-    <Content Include="Scripts\myscript\controller\QueueSchedularFormController.js" />
     <Content Include="Scripts\myscript\controller\queueController.js" />
     <Content Include="Scripts\myscript\controller\calendarController.js" />
     <Content Include="Scripts\myscript\controller\CalenderRecordsController.js" />
@@ -3082,7 +3081,6 @@
     <Content Include="Templates\calendar-master\calendar.html" />
     <Content Include="Templates\calendar-master\business-user-master.html" />
     <Content Include="Templates\calendar-master\calendar-package-master.html" />
-    <Content Include="Templates\calendar-master\queue-schedular-form.html" />
     <Content Include="Templates\calendar-master\schedular-form.html" />
     <Content Include="Templates\calendar-master\transaction-master.html" />
     <Content Include="Templates\calendar-master\schedular-form-table.html" />
