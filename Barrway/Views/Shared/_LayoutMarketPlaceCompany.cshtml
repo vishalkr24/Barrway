@@ -1,6 +1,7 @@
 ﻿
 @{
     var baseUrl = System.Web.Configuration.WebConfigurationManager.AppSettings["baseURL"].ToString();
+    var webapibaseurl = System.Web.Configuration.WebConfigurationManager.AppSettings["webapibaseurl"].ToString();
     string token = DateTime.Now.ToString("ddMMyyyyHHmmssffffff");
 }
 <!DOCTYPE html>
@@ -12,6 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="/assets/css/vendor.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/3.0.0/toaster.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
@@ -26,8 +28,8 @@
 
     <!-- javascript -->
     <script>
-        var BASE_URL = '@baseUrl';
-        var ASSET_URL = '@baseUrl';
+       var ASSET_URL = "@baseUrl", BASE_URL = "@baseUrl";
+        var API_URL = "@webapibaseurl";
     </script>
 
     <script src="/assets/js/vendor.min.js"></script>
@@ -43,10 +45,10 @@
     @RenderSection("styles", false)
 
 </head>
-<body>
-
+<body ng-app="FormGeneratorApp">
+    <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-bottom-right'}"></toaster-container>
     <section class="main-header">
-       
+
         <!-- sub navigation -->
         <nav class="navbar no-mar-bott">
             <div class="container">
@@ -79,6 +81,7 @@
             </div>
         </nav>
     </section>
+
 
     <div>
         @RenderBody()
@@ -150,6 +153,43 @@
 
     <!-- my script -->
     <script src="~/assets/marketplace/owl/myjq.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script src="~/Scripts/CalendarScripts/CalendarLayoutManage.js"></script>
+    <script src="~/Scripts/PublicCommonFunction.js"></script>
+    <script src="~/Scripts/BusinessScripts/Common/BusinessAdminCommonFunctions.js"></script>
+    <script src="~/Scripts/tagify.min.js"></script>
+    <script src="~/Scripts/tagify.polyfills.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.8/jstree.min.js"></script>
+
+    <script src="~/fg-assets/tabulator/js/tabulator.js"></script>
+    <script src="~/fg-assets/js/waves.js"></script>
+    <script src="~/Content/underscore.js/underscore.min.js"></script>
+    <script src="~/Content/bootbox/bootbox.min.js"></script>
+    <script src="~/Scripts/jquery.blockUI/jquery.blockUI.min.js"></script>
+    <script src="~/Scripts/myscript/globalScript.js"></script>
+    <script src="~/Scripts/myscript/commonFunctions.js?token=@token"></script>
+    <script src="~/Scripts/scripts.js"></script>
+    <script type="text/javascript" src="~/Content/angular.js/angular.min.js"></script>
+    <script src="~/Content/angular-messages/angular-messages.min.js"></script>
+    <script src="~/Content/angular-resource/angular-resource.min.js"></script>
+    <script src="~/Content/angular-filter/angular-filter.min.js"></script>
+    <script src="~/Scripts/ngBootbox.min.js"></script>
+    <script src="~/Content/angular-ui-router/angular-ui-router.min.js"></script>
+    <script src="~/Scripts/ui-bootstrap-tpls.min.js"></script>
+    <script src="~/Content/angular-breadcrumb/angular-breadcrumb.min.js"></script>
+    <script src="~/Content/angular-cookies/angular-cookies.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/3.0.0/toaster.min.js"></script>
+    <script src="~/Scripts/myscript/controller/mainModule.js?token=@token"></script>
+    
+
+    <script src="~/Scripts/myscript/routes/allRoutes.js?token=@token"></script>
+    <script src="~/Scripts/myscript/services/services.js?token=@token"></script>
+    <script src="~/Scripts/myscript/directives/directives.js?token=@token"></script>
+    <script type="text/javascript" src="~/fg-assets/formValidation/js/formValidation.min.js"></script>
+    <script type="text/javascript" src="~/fg-assets/formValidation/js/framework/bootstrap.min.js"></script>
+    <script src="~/fg-assets/js/app.js"></script>
+    <script src="~/fg-assets/js/jquery.cookie.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     @RenderSection("scripts", false)
     @* Momentum based scroll behaviour *@

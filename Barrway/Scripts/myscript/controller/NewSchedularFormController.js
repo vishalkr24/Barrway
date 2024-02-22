@@ -477,7 +477,12 @@
                                                         <input type="number" class="form-control" id="QUEUE_END_NUMBER-${queueElement.Id}"  value="${queueElement.QUEUE_END_NUMBER}"/>
                                                     </td>
                                                     <td style="width:160px;">
-                                                        <input type="text" class="form-control" id="QUEUE_RESET_NUMBER-${queueElement.Id}" value="${queueElement.QUEUE_RESET_NUMBER}"/>
+                                                        <select class="form-control" id="QUEUE_RESET_NUMBER-${queueElement.Id}" value="${queueElement.QUEUE_RESET_NUMBER}">
+                                                            <option value="AFTER SESSION">After Session</option>
+                                                            <option value="PER DAY">Per Day</option>
+                                                            <option value="PER MONTH">Per Month</option>
+                                                            <option value="NO RESET">No Reset</option>
+                                                        </select>
                                                     </td>
                                                 </tr>`;
             } else {
@@ -540,7 +545,12 @@
                                                         <input type="number" class="form-control" id="QUEUE_END_NUMBER-${queueElement.rowId}"  value="${queueElement.QUEUE_END_NUMBER}"/>
                                                     </td>
                                                     <td style="width:160px;">
-                                                        <input type="text" class="form-control" id="QUEUE_RESET_NUMBER-${queueElement.rowId}" value="${queueElement.QUEUE_RESET_NUMBER}"/>
+                                                        <select class="form-control" id="QUEUE_RESET_NUMBER-${queueElement.rowId}" value="${queueElement.QUEUE_RESET_NUMBER}">
+                                                            <option value="AFTER SESSION">After Session</option>
+                                                            <option value="PER DAY">Per Day</option>
+                                                            <option value="PER MONTH">Per Month</option>
+                                                            <option value="NO RESET">No Reset</option>
+                                                        </select>
                                                     </td>
                                                 </tr>`;
                     }

@@ -5,32 +5,13 @@
     ViewBag.COMPANY_LOGO_PATH = Model.COMPANY_LOGO_PATH.Replace("~", "..");
     ViewBag.COMPANY_ID = Model.COMPANY_CODE.ToString();
     ViewBag.CALENDAR_ID = Model.DEFAULT_CALENDAR_ID;
+
+    var baseUrl = System.Web.Configuration.WebConfigurationManager.AppSettings["baseURL"].ToString();
+    var webapibaseurl = System.Web.Configuration.WebConfigurationManager.AppSettings["webapibaseurl"].ToString();
+    string token = DateTime.Now.ToString("ddMMyyyyHHmmssffffff");
 }
 @section styles{
 
-
-    <link href="../../fg-assets/fullcalendar/dist/fullcalendar.css" rel="stylesheet" />
-
-    <link href="../../fg-assets/fullcalendar-scheduler/dist/scheduler.min.css"
-          rel="stylesheet" />
-
-    <script src="../../fg-assets/js/moment.js"></script>
-
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" id="jquery-ui-change">
-    <script src="../../fg-assets/js/app.js"></script>
-    <script src="../../fg-assets/js/jquery-ui.js"></script>
-    <script src="../../fg-assets/fullcalendar/dist/fullcalendar.js"></script>
-    <script src="../../fg-assets/fullcalendar-scheduler/dist/scheduler.js"></script>
-    <script src="../../fg-assets/js/jquery.cookie.min.js"></script>
-    <script src="../../fg-assets/js/scripts.js"></script>
-    <script src="../../Content/underscore.js/underscore.min.js"></script>
-    <script src="../../Scripts/jquery.blockUI/jquery.blockUI.min.js"></script>
-    <script src="../../Scripts/myscript/commonFunctions.js"></script>
-    <script type="text/javascript" src="../../Content/angular.js/angular.min.js"></script>
-    <script src="../../Content/angular-filter/angular-filter.min.js"></script>
-    <script src="../../Scripts/myscript/globalScript.js"></script>
-    <link href="../../fg-assets/css/app.css" rel="stylesheet" />
-    <link href="~/Content/bstooltip.css" rel="stylesheet" />
     <script>
         localStorage.setItem("detail", '{"Id":30314,"firebase_uid":null,"chatId":"jXZMF2dU3Uyz2okULv6shQuu","uid":"kk53yimj","fullName":"AG Ashutosh Shukla","name":"augursuser","email":"formgeneratorclient@gmail.com","emailVerified":"0","emailCheck":"0","isEmailCheck":false,"isQuickSignUp":false,"password":"","newPassword":null,"password_confirmation":null,"confirmPassword":null,"isUpdatePassword":0,"remember_token":null,"userIcon":"user-avatar-with-check-mark.png","phoneNumber":null,"phoneVerified":"No","isPhoneVerified":null,"phoneCheck":"No","isPhoneCheck":false,"role":1,"status":"Active","planID":9,"planSequence":"1,2,5,13","tooltipSequence":null,"FB_id":null,"GPlus_id":null,"created_ip":"","groupId":0,"checkType":null,"title":null,"verificationCode":null,"isVerificationReq":false,"ayCheck":0,"specialAccess":"1","reset_token":null,"reset_valid_till":null,"isUsable":0,"action":0,"created_by":0,"updated_by":0,"created_at":"Jan 20 2021  3:32PM","newcreated_at":null,"updated_at":"Jan 20 2021  3:32PM","newupdated_at":null,"res":1,"Message":"Login Success|登錄成功|登录成功","IsActive":false,"IsDeleted":false,"IsUnique":false,"page":0,"size":0,"total_records":0,"last_page":0,"page_records":0,"filters":null,"sorters":null,"query":null}');
     </script>
@@ -777,7 +758,7 @@
             height: 1px;
             width: 100%;
             margin: 3rem 0px;
-            margin-top:0px;
+            margin-top: 0px;
         }
 
         .current-ticket-number {
@@ -787,9 +768,12 @@
         }
     </style>
 }
+<input id="currentCalendarCode" value="@Model.DEFAULT_CALENDAR_ID" readonly disabled style="display:none;" />
+<input id="currentCompanyCode" value="@Model.COMPANY_CODE" readonly disabled style="display:none;" />
 
-<section class="schedule mihi-71" style="background: #ECFAFB; margin-top:4px;" ng-app="myApp" ng-controller="myCtrl" id="quequeDiv">
-    <div class="container-fluid">
+<section class="schedule mihi-71" style="background: #ECFAFB; margin-top:4px;" ng-controller="marketplaceQueueController" ">
+    <input id="currentUserId" value="@((User.Identity.IsAuthenticated)? User.Identity.Name: null)" readonly disabled style="display:none;" />
+    <div class="container-fluid" id="quequeDiv">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
@@ -831,14 +815,14 @@
                                             <div class="queue-back-log">
                                                 <div style="padding:1.5rem; padding-top:0px;">
                                                     <h2 style="padding-bottom:8px;"><b>({{queue.QUEUE_PREFIX}}) {{queue.QUEUE_NAME}}</b></h2>
-                                                    <h4 class="pink" style="margin-bottom:4px;"><span>Current</span> <b>A10</b></h4>
+                                                    <h4 class="pink" style="margin-bottom:4px;"><span>Current</span> <b>{{queue.CurrentTicket}}</b></h4>
                                                     <span>@DateTime.Now.ToString("hh:mm tt")</span>
                                                 </div>
-                                                
+
 
                                                 <div class="text-center">
                                                     <div class="hr"></div>
-                                                    <h3 class="current-ticket-number">{{queue.QUEUE_PREFIX}} 20</h3>
+                                                    <h3 class="current-ticket-number">{{queue.AvailableTicket}}</h3>
                                                 </div>
                                                 <div class="call-button" style="padding: 0px 1.5rem;">
                                                     <button ng-click="bookTicket(queue.Id)">Get Ticket</button>
@@ -863,126 +847,13 @@
 
 @section scripts{
 
-    <script src="../../Scripts/jquery.signalR-2.4.3.min.js"></script>
-    <script src="../../signalr/hubs"></script>
+    
+    <script src="~/Scripts/jquery.signalR-2.4.3.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script src="~/Scripts/myscript/controller/marketplaceQueueController.js"></script>
 
     <script>
         $("#nv-company-schedule").addClass("active");
-        var app = angular.module('myApp', []);
-        app.controller('myCtrl', function ($scope, $rootScope) {
-
-            $scope.currentCalendarCode = "@Model.DEFAULT_CALENDAR_ID";
-            $scope.currentCompanyCode = "@Model.COMPANY_CODE";
-            var chat = $.connection.queueManager;
-            var isHubConnected = false;
-
-            // general functions and declarations
-
-            $scope.ShowLoading = function () {
-                $scope.showLoader1 = false;
-            }
-
-            $scope.HideLoading = function () {
-                $scope.showLoader1 = true;
-            }
-
-            $scope.init = function () {
-                $scope.$proxyScope = angular.element($('#quequeDiv')).scope();
-                $scope.sessionList = [];
-                $scope.queueList = [];
-                $scope.showLoader1 = true;
-                console.log(chat);
-                $scope.ShowLoading();
-                $scope.getQueueList();
-            };
-
-            $scope.bookTicket = function (queueId) {
-                $scope.enrollPublicUser(queueId);
-            }
-
-            // establish Signalr Connection
-            $scope.StartSignalRConnection = function () {
-                if (!isHubConnected) {
-                    $.connection.hub.start().done(function () {
-                        isHubConnected = true;
-                        $scope.init();
-                    });
-                } else {
-                    $scope.init();
-                }
-            }
-
-
-
-
-
-
-
-            //Functions to send request to server
-
-            $scope.getQueueList = function () {
-                chat.server.getQueueList(String($scope.currentCalendarCode), String($scope.currentCompanyCode));
-            }
-
-
-
-
-
-
-            //Functions to receive response from server
-
-            chat.client.ShowLoading = function (response) {
-                $scope.ShowLoading();
-            }
-
-            chat.client.updateQueues = function (response) {
-                if (response.Status) {
-                    angular.element($('#quequeDiv')).scope().queueList = response.Data;
-                    $scope.$apply();
-                    $scope.HideLoading();
-                }
-            }
-
-            $scope.StartSignalRConnection();
-
-
-            $scope.enrollPublicUser = function () {
-
-                $.ajax({
-                    url: "/Account/CheckPublicUserLogin",
-                    type: "POST",
-                    success: function (response) {
-                        hideLoader();
-                        if (!response.Status) {
-
-                            swal({
-                                title: "Login Required",
-                                text: "Kindly login into your account and then you can enroll yourself into this calendar.",
-                                icon: "info",
-                                buttons: {
-                                    confirm: "Login",
-                                    cancel: "Leave it"
-                                }
-                            }).then(function (value) {
-                                if (value) {
-                                    window.location.href = '/Account/BusinessLogin?returnUrl=/Marketplace/Calander?' + window.location.href.split('?')[1].replace('&', '$') + '';
-                                }
-                            });
-                        } else {
-                            $("#QueueSessionDetailsModal").modal("show");
-                        }
-
-                    },
-                    error: function () {
-
-                    }
-                })
-
-
-            }
-
-        });
-
 
         function markAsFavorite(CompanyCode) {
 
