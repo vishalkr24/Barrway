@@ -48,6 +48,7 @@ namespace Barrway.DTO.MarketplaceModels
         public string COMPANY_CITY_NAME { get; set; } = String.Empty;
         public string COMPANY_COUNTRY_NAME { get; set; } = String.Empty;
         public string COMPANY_DISTRICT_NAME { get; set; } = String.Empty;
+       
 
         public List<BusinessCalendarModel> calendars { get; set; }
         public List<ServicesList> ServicesList { get; set; }

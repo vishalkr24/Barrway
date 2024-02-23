@@ -3,11 +3,12 @@
     ViewBag.Title = Resource.Company_Package;
     Layout = "~/Views/Shared/_LayoutMarketPlaceCompany.cshtml";
 
-    ViewBag.COMPANY_ID = Model.COMPANY_CODE.ToString();
+    ViewBag.COMPANY_CODE = Model.COMPANY_CODE.ToString();
+    ViewBag.COMPANY_ID = Model.PAGE_URL.ToString();
     ViewBag.CALENDAR_ID = Model.DEFAULT_CALENDAR_ID;
     ViewBag.COMPANY_LOGO_PATH = Model.COMPANY_LOGO_PATH.Replace("~", "");
 }
-<input id="txtCurrentCompanyCode" value="@ViewBag.COMPANY_ID" readonly style="display:none;"/>
+<input id="txtCurrentCompanyCode" value="@ViewBag.COMPANY_CODE" readonly style="display:none;"/>
 <input id="txtCurrentCalendarCode" value="@ViewBag.CALENDAR_ID" readonly style="display:none;" />
 
 <!-- heading -->

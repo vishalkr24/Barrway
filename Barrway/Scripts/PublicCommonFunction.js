@@ -324,3 +324,16 @@ function GetAllSubscriptionPlansForBusiness() {
     })
     return data;
 }
+
+
+function CoptoClipboard(inputId) {
+    // Get the text field
+    var copyText = document.getElementById(inputId);
+    var baseUrl = $(".baseUrl").html();
+    // Select the text field
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); // For mobile devices
+    // Copy the text inside the text field
+    navigator.clipboard.writeText(baseUrl+copyText.value);
+
+}

@@ -213,22 +213,23 @@
         <div class="col-md-5 mt-5" id="basic">
             <label for="basic-url" class="form-label">Page url</label>
             <div class="input-group">
-                <span class="input-group-text" id="basic-addon3">@baseUrl</span>
+                <span class="input-group-text baseUrl" id="basic-addon3" style="border: 1px solid #72328a; color: #1e2022;">@(baseUrl+ "company")/</span>
                 @{
-                    string disabledAttribute = Model.PAGE_URL != "" ? "disabled" : "Enable";
+            string disabledAttribute = Model.PAGE_URL != "" ? "disabled" : "Enable";
 
-                    if (disabledAttribute == "disabled")
-                    {
+            if (disabledAttribute == "disabled")
+            {
 
-                        @Html.TextBoxFor(model => model.PAGE_URL, new { @class = "form-control", @placeholder = "page url", @readonly = "readonly" })
-
-                    }
-                    else
-                    {
-                        @Html.TextBoxFor(model => model.PAGE_URL, new { @class = "form-control pageUrl", @placeholder = "page url", @onkeypress = @"return /[0-9a-zA-Z\s]/i.test(event.key)", @oncut = "return false", @onpaste = "return false", @onchange = "isUrlavailable()" })
+                @Html.TextBoxFor(model => model.PAGE_URL, new { @class = "form-control", @placeholder = "page url", @readonly = "readonly" })
 
                     }
-                }
+            else
+            {
+                @Html.TextBoxFor(model => model.PAGE_URL, new { @class = "form-control pageUrl", @placeholder = "page url", @onkeypress = @"return /[0-9a-zA-Z\s]/i.test(event.key)", @oncut = "return false", @onpaste = "return false", @onchange = "isUrlavailable()" })
+
+                    }
+        }
+                <button type="button" class="btn" data-toggle="tooltip" data-placement="top" title="Copy to clipboard" onclick="CoptoClipboard('PAGE_URL')"><i class="fa fa-copy"></i></button>
 
                 @*@Html.TextBoxFor(model => model.PAGE_URL, new { @class = "form-control", @placeholder = "page url", @disabled = disabledAttribute })*@
 
@@ -236,13 +237,11 @@
             </div>
 
         </div>
-
-
-
-        <div class="col-md-2 mt-5">
-            <div style="height:24px"></div>
+        @*<div class="col-md-2 mt-5">           
+            <div style="height:24px">
+            </div>
             <button type="button" class="btn btn-default" onclick="bindPageUrl('@Model.COMPANY_CODE')">@Resource.Public_website_link</button>
-        </div>
+        </div>*@
         @Html.TextBoxFor(model => model.Id, new { @readonly = "true", @style = "visibility:hidden" })
     </div>
 
