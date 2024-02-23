@@ -334,7 +334,7 @@ namespace Barrway.Controllers
         }
 
 
-        [Route("company/Calander/{id}/{Cid?}")]
+        [Route("company/calander/{id}/{Cid?}")]
         public async Task<ActionResult> Calander(string id = null,string Cid = null)
         {
             try
