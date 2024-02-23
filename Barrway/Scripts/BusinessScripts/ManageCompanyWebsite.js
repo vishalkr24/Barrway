@@ -410,6 +410,8 @@ function bindPageUrl(companyCode) {
 
     $("#PAGE_URL").val("/Marketplace/CompanyDetails?CompanyCode=" + companyCode);
 
+    ///company/CMP00076
+
 }
 
 function savePhotoAlbum() {

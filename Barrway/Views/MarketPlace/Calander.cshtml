@@ -3,7 +3,8 @@
     ViewBag.Title = Resource.Company_Schedule;
     Layout = "~/Views/Shared/_LayoutMarketPlaceCompany.cshtml";
     ViewBag.COMPANY_LOGO_PATH = Model.COMPANY_LOGO_PATH.Replace("~", "");
-    ViewBag.COMPANY_ID = Model.COMPANY_CODE.ToString();
+    //ViewBag.COMPANY_ID = Model.COMPANY_CODE.ToString();
+    ViewBag.COMPANY_ID = Model.PAGE_URL.ToString();
     ViewBag.CALENDAR_ID = Model.DEFAULT_CALENDAR_ID;
 
 

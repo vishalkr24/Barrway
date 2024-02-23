@@ -120,6 +120,7 @@ namespace Barrway.Service.Repository
                               ,[COMPANY_BANNER_NAME]
                               ,[COMPANY_BANNER_PATH]
 							  ,[IS_SEARCHABLE_IN_MARKETPLACE]
+                              ,company.PAGE_URL
                          FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                          join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendar.CALENDAR_SUB_CATEGORY_ID
                          join CALENDAR_CATEGORY_MASTER_1929 category on category.Id = calendar.CALENDAR_CATEGORY_ID

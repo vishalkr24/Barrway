@@ -223,6 +223,7 @@ namespace Barrway.Controllers
 
                 MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
                 companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
+                companyModel.PAGE_URL = id;
 
                 ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
 
@@ -267,6 +268,7 @@ namespace Barrway.Controllers
 
                 MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
                 companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
+                companyModel.PAGE_URL = id;
 
                 var servilces = await businessUserService.GetServiceList(CalendarCode, CompanyCode);
                 var servilcesEncrypted = JsonConvert.SerializeObject(servilces.Data);
@@ -313,6 +315,7 @@ namespace Barrway.Controllers
 
                 MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
                 companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
+                companyModel.PAGE_URL = id;
 
                 ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
 
@@ -337,6 +340,7 @@ namespace Barrway.Controllers
             try
             {
 
+               string PageUrl = id;
                string CompanyCode = id;
                string CalendarCode = Cid;                
 
@@ -372,8 +376,9 @@ namespace Barrway.Controllers
                     MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
                     companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
                     companyModel.calendars = JsonConvert.DeserializeObject<List<BusinessCalendarModel>>(calendarEncrypted);
+                    companyModel.PAGE_URL = PageUrl;
 
-                   
+
 
 
                     if (CalendarCode == null)
@@ -413,6 +418,7 @@ namespace Barrway.Controllers
                     }
 
                     ViewBag.CompanyCode = CompanyCode;
+                    ViewBag.PageURl = PageUrl;
                     ViewBag.CalendarCode = CalendarCode;
                     ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
 
@@ -469,6 +475,7 @@ namespace Barrway.Controllers
 
                 MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
                 companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
+                companyModel.PAGE_URL = id;
                 companyModel.calendars = JsonConvert.DeserializeObject<List<BusinessCalendarModel>>(calendarEncrypted);
                 //companyModel.services = JsonConvert.DeserializeObject<List<BusinessCompanyCategoryModel>>(serviceEncrypted);
 
@@ -535,6 +542,7 @@ namespace Barrway.Controllers
                 albumModel.COMPANY_CODE = CompanyCode;
                 albumModel.COMPANY_LOGO_PATH = companyData.Data["COMPANY_LOGO_PATH"].ToString();
                 albumModel.DEFAULT_CALENDAR_ID = CalendarCode;
+                albumModel.PAGE_URL = id;
 
                 ViewBag.Title = companyData.Data["COMPANY_NAME_ENGLISH"].ToString();
 
