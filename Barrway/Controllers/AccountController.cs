@@ -58,22 +58,26 @@ namespace Barrway.Controllers
                 }
                 else
                 {
-                    Session.Clear();
-                    Session.RemoveAll();
-                    Session.Abandon();
-                    TempData.Clear();
-                    if (HttpContext != null)
-                    {
-                        HttpContext.Request.Cookies.Clear();
-                    }
-
-                    HttpContext.GetOwinContext().Authentication.SignOut();
+                    LogoutAllSession();
                     return RedirectToAction("BusinessLogin");
                 }
             }
             return View(new LoginViewModel { ReturnUrl = returnUrl });
         }
 
+        private void LogoutAllSession()
+        {
+            Session.Clear();
+            Session.RemoveAll();
+            Session.Abandon();
+            TempData.Clear();
+            if (HttpContext != null)
+            {
+                HttpContext.Request.Cookies.Clear();
+            }
+
+            HttpContext.GetOwinContext().Authentication.SignOut();
+        }
 
         [AllowAnonymous]
         [HttpGet]
@@ -90,16 +94,7 @@ namespace Barrway.Controllers
                 }
                 else
                 {
-                    Session.Clear();
-                    Session.RemoveAll();
-                    Session.Abandon();
-                    TempData.Clear();
-                    if (HttpContext != null)
-                    {
-                        HttpContext.Request.Cookies.Clear();
-                    }
-
-                    HttpContext.GetOwinContext().Authentication.SignOut();
+                    LogoutAllSession();
                     return RedirectToAction("BusinessLogin");
                 }
             }
@@ -121,18 +116,8 @@ namespace Barrway.Controllers
                 }
                 else
                 {
-                    Session.Clear();
-                    Session.RemoveAll();
-                    Session.Abandon();
-                    TempData.Clear();
-                    if (HttpContext != null)
-                    {
-                        HttpContext.Request.Cookies.Clear();
-                    }
-
-                    HttpContext.GetOwinContext().Authentication.SignOut();
+                    LogoutAllSession();
                 }
-                
             }
             return View(new LoginViewModel { ReturnUrl = "" });
         }
@@ -188,16 +173,7 @@ namespace Barrway.Controllers
                 }
                 else
                 {
-                    Session.Clear();
-                    Session.RemoveAll();
-                    Session.Abandon();
-                    TempData.Clear();
-                    if (HttpContext != null)
-                    {
-                        HttpContext.Request.Cookies.Clear();
-                    }
-
-                    HttpContext.GetOwinContext().Authentication.SignOut();
+                    LogoutAllSession();
                     return RedirectToAction("Login", new { returnUrl });
                 }
             }
