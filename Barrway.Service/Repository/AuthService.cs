@@ -91,7 +91,7 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
             try
             {
                 string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
-join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                                     join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
                                      where user_m.USER_EMAIL = '{email}'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
