@@ -306,7 +306,7 @@ function viewMarketplaceCompanyDetails(companyCode, calendarId) {
 
 function viewMarketplaceCompanyCalendar(companyCode, calendarCode) {
    /* window.location.replace("/Marketplace/CompanySchedule?CompanyCode=" + companyCode + "&CalendarCode=" + calendarCode);*/
-    window.location.replace("/Company/calander/" + companyCode + "/" + calendarCode);
+    window.location.replace("/company/calander/" + companyCode + "/" + calendarCode);
 }
 
 function GetAllSubscriptionPlansForBusiness() {
