@@ -2,6 +2,9 @@
 var dataModelList = [];
 var queueList = [];
 var sessionList = [];
+var locationDetails = [];
+var serviceProviderDetails = [];
+var serviceDetails = [];
 var staffServiceMapping = [];
 const createdCalendarCode = $("#calendarCodeInput").val();
 const createdCompanyCode = $("#companyCodeInput").val();
@@ -173,6 +176,13 @@ function bindStep(step) {
                 BindQueue2Template();
                 $("#master-wrap-1").hide();
                 $("#master-wrap-2").show();
+            case "QUEUE_1":
+                BindQueue1Template();
+                $("#master-wrap-1").hide();
+                $("#master-wrap-2").show();
+                break;
+            case "REDIRECT_TO_SCHEDULE_FORM":
+                window.location.replace("/calendar/index#/calendar/schedular-form/0");
                 break;
             default:
                 break;
@@ -632,6 +642,125 @@ function BindQueue2Template() {
     });
 }
 
+function BindQueue1Template() {
+    $("#master-wrap-2").empty();
+    $("#master-wrap-2").append(`<div class="row">
+                    <div class="col-md-12">
+                        <div class="hed-til">
+                            <p class="heading-title step ml-0"></p>
+                        </div></div>
+                    </row>
+                    <div class="row mt-125rem">
+            <div class="col-md-2">
+                <div class="img-col mt-125rem">
+                    <img src="/assets/marketplace/image/serv.png" />
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div class="booking_queue">
+                    <div class="booking_queue_number">
+                        <div class="number_of_queue">
+                            <div class="quewe_set">
+                                <label for="number_of_queue"><b style="color:#000;">Number of queue*</b></label>
+                                <select id="exampleFormControlSelect3" class="form-control">
+                                    <option selected>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                            </div>
+                            <div class="queue_message"></div>
+                        </div>
+
+                        <div class="booking_queue_table">
+                            <table class="booking-queue-table" id="booking-queue-table">
+                                <thead>
+                                    <tr>
+                                        <th width="200px">Queue By</th>
+                                        <th width="200px">Queue resource*</th>
+                                        <th width="130px">Queue name*</th>
+                                        <th width="130px">Usage*</th>
+                                        <th>Queue Abbreviations*</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-button mt-4rem">
+            <button class="pink-button right" onclick="AddQueueSession()">Create queue</button>
+        </div>
+        <div class="blocks"></div>
+                
+`);
+
+    $.ajax({
+        url: "/Calendar/GetQueueAndSession",
+        method: "POST",
+        data: {
+            CompanyCode: localStorage.getItem("COMPANY_CODE"),
+            CalendarCode: localStorage.getItem("CALENDAR_CODE")
+        },
+        success: function (response) {
+            if (response.Status) {
+                $("#exampleFormControlSelect3").val(response.Data.queue.length);
+
+                for (var i = 0; i < response.Data.queue.length; i++) {
+                    addQueue1Row(response.Data.queue[i]);
+                }
+
+            } else {
+                addQueue1Row();
+            }
+        },
+        error: function (err) {
+
+        }
+    });
+
+    $.ajax({
+        url: "/Calendar/GetLocationMasterList/",
+        method: "POST",
+        data: { companyCode: localStorage.getItem("COMPANY_CODE"), filters: [{ field: "CALENDAR_CODE", type: "=", value: localStorage.getItem("CALENDAR_CODE") }] },
+        success: function (res) {
+            locationDetails = res.data
+        },
+        error: function () {
+
+        }
+    })
+
+    $.ajax({
+        url: "/Calendar/GetServiceProviderMasterList/",
+        method: "POST",
+        data: { companyCode: localStorage.getItem("COMPANY_CODE"), filters: [{ field: "CALENDAR_CODE", type: "=", value: localStorage.getItem("CALENDAR_CODE") }] },
+        success: function (res) {
+            serviceProviderDetails = res.data;
+        },
+        error: function () {
+
+        }
+    })
+
+    $.ajax({
+        url: "/Calendar/GetServiceMasterList/",
+        method: "POST",
+        data: { companyCode: localStorage.getItem("COMPANY_CODE"), filters: [{ field: "CALENDAR_CODE", type: "=", value: localStorage.getItem("CALENDAR_CODE") }] },
+        success: function (res) {
+            serviceDetails = res.data;
+        },
+        error: function () {
+
+        }
+    })
+
+}
+
 $(document).on("change", "#exampleFormControlSelect1", function () {
     addQueueRow();
 });
@@ -640,8 +769,12 @@ $(document).on("change", "#exampleFormControlSelect2", function () {
     addSessionRow();
 });
 
-$(document).on("change paste", "#booking-queue-table tbody input", function () {
+$(document).on("change", "#exampleFormControlSelect3", function () {
+    addQueue1Row();
+});
 
+$(document).on("change paste", "#booking-queue-table tbody input,select", function () {
+    
     let name = ($(this).attr("type") == "radio") ? $(this).attr("name").split("-") : $(this).attr("id").split("-");
 
     queueList.find(x => x.rowId == name[1])[name[0]] = this.value;
@@ -656,6 +789,65 @@ $(document).on("change paste", "#booking-session-table tbody input", function ()
 
 });
 
+$(document).on("change", "select[id^=QUEUE_BY-]", function () {
+    fillQueueResource($(this).attr("id").split('-')[1]);
+});
+
+function fillQueueResource(id = null) {
+    if (id == null) {
+
+        queueList.forEach(y => {
+            var value = $("#QUEUE_BY-" + id).val();
+            var binderString = `<option selected value="-1">Select resource</option>`;
+            $("#QUEUE_RESOURCE_ID-" + y.rowId).empty();
+
+            if (value == "SERVICE_PROVIDER") {
+                serviceProviderDetails.forEach(x => {
+                    binderString += `<option value="${x.Id}">${x.FIRST_NAME} ${x.LAST_NAME}</option>`;
+                })
+
+            } else if (value == "SERVICE") {
+                serviceDetails.forEach(x => {
+                    binderString += `<option value="${x.Id}">${x.ACTIVITY_NAME}</option>`;
+                })
+
+            } else {
+                locationDetails.forEach(x => {
+                    binderString += `<option value="${x.Id}">${x.LOCATION_ADDRESS}</option>`;
+                })
+
+            }
+
+            $("#QUEUE_RESOURCE_ID-" + y.rowId).append(binderString);
+        })
+    } else {
+        debugger;
+        var value = $("#QUEUE_BY-" + id).val();
+        var binderString = `<option selected value="-1">Select resource</option>`;
+        $("#QUEUE_RESOURCE_ID-" + id).empty();
+
+        if (value == "SERVICE_PROVIDER") {
+
+            serviceProviderDetails.forEach(x => {
+                binderString += `<option value="${x.Id}">${x.FIRST_NAME} ${x.LAST_NAME}</option>`;
+            })
+
+        } else if (value == "SERVICE") {
+            serviceDetails.forEach(x => {
+                binderString += `<option value="${x.Id}">${x.ACTIVITY_NAME}</option>`;
+            })
+
+        } else {
+            locationDetails.forEach(x => {
+                binderString += `<option value="${x.Id}">${x.LOCATION_ADDRESS}</option>`;
+            })
+
+        }
+
+        $("#QUEUE_RESOURCE_ID-" + id).append(binderString);
+    }
+}
+
 function AddQueueSession() {
     // add validations
     if (true) {
@@ -665,8 +857,8 @@ function AddQueueSession() {
             method: "POST",
             data: {
                 data: {
-                    QueueList: queueList,
-                    SessionList: sessionList
+                    "QueueList": queueList,
+                    "SessionList": sessionList
                 }
             },
             success: function (response) {
@@ -680,7 +872,7 @@ function AddQueueSession() {
                         if (ConfigStep.Has_Next_Step) {
                             window.location.href = '/BusinessAdmin/SetupCalendarEvent?CompanyId=' + localStorage.getItem("COMPANY_ID") + "&CalendarCode=" + createdCalendarCode + "&Step=" + (parseInt(CurrentStep) + 1);
                         } else {
-                            window.location.href = '/Calendar/index#/calendar/2305';
+                            window.location.href = '/Calendar/index#/queue-manager';
                         }
 
                     });
@@ -714,6 +906,7 @@ function addQueueRow(dataElement = null) {
             QUEUE_START_NUMBER: dataElement.QUEUE_START_NUMBER,
             QUEUE_END_NUMBER: dataElement.QUEUE_END_NUMBER,
             QUEUE_RESET_NUMBER: dataElement.QUEUE_RESET_NUMBER,
+            QUEUE_TYPE: "RESTAURANT",
             CALENDAR_CODE: createdCalendarCode,
             COMPANY_CODE: createdCompanyCode
         };
@@ -920,6 +1113,150 @@ function addSessionRow(dataElement = null) {
     }
 
     $("#booking-session-table tbody").append(binderString);
+}
+
+function addQueue1Row(dataElement = null) {
+    let binderString = "";
+
+    if (dataElement != null) {
+        let queueElement = {
+            Id: dataElement.Id,
+            rowId: dataElement.Id,
+            QUEUE_NAME: dataElement.QUEUE_NAME,
+            QUEUE_PREFIX: dataElement.QUEUE_PREFIX,
+            QUEUE_USAGE: dataElement.QUEUE_USAGE,
+            QUEUE_BY: dataElement.QUEUE_BY,
+            QUEUE_RESOURCE_ID: dataElement.QUEUE_RESOURCE_ID,
+            QUEUE_TYPE: "COUNTER",
+            CALENDAR_CODE: createdCalendarCode,
+            COMPANY_CODE: createdCompanyCode
+        };
+
+        queueList.push(queueElement);
+
+        binderString += `<tr id="queue-table-row-${queueElement.rowId}">
+                                                    <td style="width:100px;">
+                                                        <select class="form-control" id="QUEUE_BY-${queueElement.rowId}">
+                                                            <option value="SERVICE">Service</option>
+                                                            <option value="SERVICE_PROVIDER">Service provider</option>
+                                                            <option value="LOCATION">Location</option>
+                                                            
+                                                        </select>
+                                                    </td>
+                                                    <td style="width:100px;">
+                                                        <select class="form-control" id="QUEUE_RESOURCE_ID-${queueElement.rowId}">
+                                                        </select>
+                                                    </td>
+                                                    <td style="width:120px;">
+                                                        <input type="text" class="form-control" id="QUEUE_NAME-${queueElement.rowId}" value="${queueElement.QUEUE_NAME}"/>
+                                                    </td>
+                                                    <td style="width: 160px">
+                                                        <div class="booking_queue_radio">
+                                                            <input type="radio" id="QUEUE_USAGE-${queueElement.rowId}-TICKET" value="TICKET" name="QUEUE_USAGE-${queueElement.rowId}" checked>
+                                                            <label for="QUEUE_USAGE-${queueElement.rowId}-TICKET">Ticket distribution</label>
+                                                            <input type="radio" id="QUEUE_USAGE-${queueElement.rowId}-WORKFLOW" value="WORKFLOW" name="QUEUE_USAGE-${queueElement.rowId}">
+                                                            <label for="QUEUE_USAGE-${queueElement.rowId}-WORKFLOW">Workflow queue</label>
+                                                        </div>
+                                                    </td>
+                                                    <td style="width:100px;">
+                                                        <input type="text" class="form-control" id="QUEUE_PREFIX-${queueElement.rowId}" value="${queueElement.QUEUE_PREFIX}"/>
+                                                    </td>
+                                                </tr>`;
+
+        $("#booking-queue-table tbody").append(binderString);
+        $("#QUEUE_BY-" + queueElement.Id).val(queueElement.QUEUE_BY);
+        setTimeout(function () {
+            fillQueueResource(queueElement.Id);
+            $("#QUEUE_RESOURCE_ID-" + queueElement.Id).val(queueElement.QUEUE_RESOURCE_ID);
+        }, 1000)
+
+    } else {
+        let rowCount = parseInt($("#exampleFormControlSelect3 option:selected").val());
+
+        if (isNaN(rowCount)) {
+            $("#exampleFormControlSelect3").val("1")
+            rowCount = 1;
+        }
+
+        rowCount = (rowCount > 5) ? 5 : rowCount;
+
+        if (rowCount < queueList.length) {
+            swal({
+                icon: "warning",
+                title: "Warning",
+                text: "Already added queue can not be removed",
+                confirm: "Ok"
+            }).then(function (check) {
+                if (check) {
+                    debugger;
+                    let elementsToDelete = queueList.length - rowCount;
+                    for (var i = 0; i < elementsToDelete; i++) {
+                        if (queueList[queueList.length - 1].Id == undefined || queueList[queueList.length - 1].Id == null) {
+                            $("#queue-table-row-" + queueList[queueList.length - 1].rowId).remove();
+                            queueList.pop();
+                        }
+                    }
+
+                }
+            })
+        } else {
+            let counter = rowCount - queueList.length;
+            for (var i = 0; i < counter; i++) {
+                let queueElement = {
+                    Id: null,
+                    rowId: (queueList.length == 0) ? 1 : parseInt(queueList[queueList.length - 1].rowId) + 1,
+                    QUEUE_NAME: "",
+                    QUEUE_PREFIX: "",
+                    QUEUE_USAGE: "TICKET",
+                    QUEUE_BY: "SERVICE_PROVIDER",
+                    QUEUE_RESOURCE_ID: "-1",
+                    CALENDAR_CODE: createdCalendarCode,
+                    COMPANY_CODE: createdCompanyCode
+                };
+
+                queueList.push(queueElement);
+
+                binderString += `<tr id="queue-table-row-${queueElement.rowId}">
+                                                    <td style="width:100px;">
+                                                        <select class="form-control" id="QUEUE_BY-${queueElement.rowId}">
+                                                            <option selected value="SERVICE_PROVIDER">Service provider</option>
+                                                            <option value="LOCATION">Location</option>
+                                                            <option value="SERVICE">Service</option>
+                                                        </select>
+                                                    </td>
+                                                    <td style="width:100px;">
+                                                        <select class="form-control" id="QUEUE_RESOURCE_ID-${queueElement.rowId}">
+                                                        </select>
+                                                    </td>
+                                                    <td style="width:120px;">
+                                                        <input type="text" class="form-control" id="QUEUE_NAME-${queueElement.rowId}" value="${queueElement.QUEUE_NAME}"/>
+                                                    </td>
+                                                    <td style="width: 160px">
+                                                        <div class="booking_queue_radio">
+                                                            <input type="radio" id="QUEUE_USAGE-${queueElement.rowId}-TICKET" value="TICKET" name="QUEUE_USAGE-${queueElement.rowId}" checked>
+                                                            <label for="QUEUE_USAGE-${queueElement.rowId}-TICKET">Ticket distribution</label>
+                                                            <input type="radio" id="QUEUE_USAGE-${queueElement.rowId}-WORKFLOW" value="WORKFLOW" name="QUEUE_USAGE-${queueElement.rowId}">
+                                                            <label for="QUEUE_USAGE-${queueElement.rowId}-WORKFLOW">Workflow queue</label>
+                                                        </div>
+                                                    </td>
+                                                    <td style="width:100px;">
+                                                        <input type="text" class="form-control" id="QUEUE_PREFIX-${queueElement.rowId}" value="${queueElement.QUEUE_PREFIX}"/>
+                                                    </td>
+                                                </tr>`;
+            }
+
+            $("#booking-queue-table tbody").append(binderString);
+
+            setTimeout(function () {
+                fillQueueResource();
+            }, 500)
+        }
+
+
+
+    }
+
+
 }
 
 //function validateStep(stepId) {

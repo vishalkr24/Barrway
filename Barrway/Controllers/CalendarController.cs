@@ -630,7 +630,7 @@ namespace Barrway.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddQueueSession(Dictionary<string, dynamic> data)
+        public async Task<ActionResult> AddQueueSession(Dictionary<string, List<Dictionary<string, string>>> data, string ScheduleId)
         {
             try
             {
@@ -656,17 +656,17 @@ namespace Barrway.Controllers
 
                 if (queues.Count > 0 || sessions.Where(x => string.IsNullOrEmpty(x.Id)).ToList().Count > 0)
                 {
-                    var result = await businessUserService.AddQueueSession(queues, sessions.Where(x => string.IsNullOrEmpty(x.Id)).ToList(), data["ScheduleId"].ToString());
+                    var result = await businessUserService.AddQueueSession(queues, sessions.Where(x => string.IsNullOrEmpty(x.Id)).ToList(), ScheduleId);
                 }
 
                 if (queues.Where(x => !string.IsNullOrEmpty(x.Id)).ToList().Count > 0)
                 {
-                    var result = await businessUserService.UpdateQueueDetails(queues.Where(x => string.IsNullOrEmpty(x.Id)).ToList());
+                    var result = await businessUserService.UpdateQueueDetails(queues.Where(x => !string.IsNullOrEmpty(x.Id)).ToList());
                 }
 
                 if (sessions.Where(x => !string.IsNullOrEmpty(x.Id)).ToList().Count > 0)
                 {
-                    var result = await businessUserService.UpdateSessionDetails(sessions.Where(x => string.IsNullOrEmpty(x.Id)).ToList());
+                    var result = await businessUserService.UpdateSessionDetails(sessions.Where(x => !string.IsNullOrEmpty(x.Id)).ToList());
                 }
 
                 return Json(new AddUpdateDelete() { Status = true, Message = "Success" }, JsonRequestBehavior.AllowGet);
@@ -787,7 +787,7 @@ namespace Barrway.Controllers
 
                             var response = await businessUserService.AddSchedularForm(data, formGroupKey);
 
-                            var executeResponse = await ExecuteSchedularForm(response.Data.Id, response.Data.formGroupKey);
+                            var executeResponse = await ExecuteSchedularForm(response.Data.Id.ToString(), response.Data.formGroupKey.ToString());
 
                             return executeResponse;
                         }
@@ -821,12 +821,11 @@ namespace Barrway.Controllers
                         {
                             var queueData = JsonConvert.DeserializeObject<Dictionary<string, List<Dictionary<string, string>>>>(data.SCH_SCHEDULE_TABLE?.ToString());
 
-                            Dictionary<string, dynamic> finalData = new Dictionary<string, dynamic>();
+                            Dictionary<string, List<Dictionary<string, string>>> finalData = new Dictionary<string, List<Dictionary<string, string>>>();
 
-                            finalData.Add("ScheduleId", Id);
                             finalData.Add("QueueList", queueData["QueueList"]);
                             finalData.Add("SessionList", queueData["SessionList"]);
-                            var QueueSessionResult = await AddQueueSession(finalData);
+                            var QueueSessionResult = await AddQueueSession(finalData, Id);
 
                             return QueueSessionResult;
                         }

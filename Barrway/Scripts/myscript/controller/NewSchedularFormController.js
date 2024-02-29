@@ -12,6 +12,7 @@
         $scope.isQueue = -1;
 
         $scope.init = function () {
+
             $scope.scheduleList = {
                 "Mon": [],
                 "Tue": [],
@@ -66,7 +67,6 @@
 
             });
 
-
             setTimeout(function () {
                 $scope.CalendarData = getSingleCalendar(localStorage.getItem("CALENDAR_CODE"));
                 $scope.ConfigData = JSON.parse(getScheduleTypeJson());
@@ -74,7 +74,6 @@
                 $scope.BindView();
             }, 500);
             
-
         };
 
         $scope.BindView = function () {
@@ -131,7 +130,8 @@
                 $("#staff-ddl-area").hide();
             }
             else if ($scope.ViewName == "S3H") {
-
+                $scope.isQueue = 2;
+                bindSessionSchedule();
             }
             $scope.$apply();
             
@@ -337,23 +337,22 @@
             addSessionRow();
         });
 
-        $(document).on("change paste", "#booking-queue-table tbody input, select", function () {
-
-            let name = ($(this).attr("type") == "radio") ? $(this).attr("name").split("-") : $(this).attr("id").split("-");
-
-            queueList.find(x => x.rowId == name[1])[name[0]] = this.value;
-
-        });
-
-        $(document).on("change paste", "#booking-session-table tbody input, select", function () {
-
-            let name = ($(this).attr("type") == "radio") ? $(this).attr("name").split("-") : $(this).attr("id").split("-");
-
-            sessionList.find(x => x.rowId == name[1])[name[0]] = this.value;
-
-        });
-
         function bindQueueSchedule() {
+            $(document).on("change paste", "#queue-schedular-form-section #booking-queue-table tbody input, select", function () {
+
+                let name = ($(this).attr("type") == "radio") ? $(this).attr("name").split("-") : $(this).attr("id").split("-");
+
+                queueList.find(x => x.rowId == name[1])[name[0]] = this.value;
+
+            });
+
+            $(document).on("change paste", "#queue-schedular-form-section #booking-session-table tbody input, select", function () {
+
+                let name = ($(this).attr("type") == "radio") ? $(this).attr("name").split("-") : $(this).attr("id").split("-");
+
+                sessionList.find(x => x.rowId == name[1])[name[0]] = this.value;
+
+            });
 
             var data = getSchedule(localStorage.getItem("COMPANY_CODE"), localStorage.getItem("CALENDAR_CODE"), true);
             debugger;
@@ -388,6 +387,10 @@
                 addQueueRow();
                 addSessionRow();
             }
+
+        }
+
+        function bindSessionSchedule() {
 
         }
 
@@ -457,6 +460,7 @@
                     QUEUE_START_NUMBER: dataElement.QUEUE_START_NUMBER,
                     QUEUE_END_NUMBER: dataElement.QUEUE_END_NUMBER,
                     QUEUE_RESET_NUMBER: dataElement.QUEUE_RESET_NUMBER,
+                    QUEUE_TYPE: "RESTAURANT",
                     CALENDAR_CODE: createdCalendarCode,
                     COMPANY_CODE: createdCompanyCode
                 };
@@ -560,7 +564,7 @@
 
             }
 
-            $("#booking-queue-table tbody").append(binderString);
+            $("#queue-schedular-form-section #booking-queue-table tbody").append(binderString);
         }
 
         function addSessionRow(dataElement = null) {
@@ -576,7 +580,6 @@
                     TICKETING_TYPE: dataElement.TICKETING_TYPE,
                     QUEUE_OPEN_TIME: dataElement.QUEUE_OPEN_TIME,
                     CALENDAR_CODE: createdCalendarCode,
-                    SESSION_TYPE: "RESTAURANT",
                     COMPANY_CODE: createdCompanyCode
                 };
 
@@ -642,7 +645,6 @@
                             QUEUE_OPEN_TIME: "",
                             CALENDAR_CODE: createdCalendarCode,
                             COMPANY_CODE: createdCompanyCode,
-                            SESSION_TYPE: "RESTAURANT",
                         };
 
                         sessionList.push(sessionElement);

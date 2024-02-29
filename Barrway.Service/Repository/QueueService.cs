@@ -58,10 +58,13 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string query = $@"select q_m.* from QUEUE_SESSION_MASTER_1974 ses
-                                    join QUEUE_SESSION_MAPPING_1976 map on map.SESSION_ID = ses.Id
-                                    join QUEUE_MASTER_1973 q_m on q_m.Id = map.QUEUE_ID
-                                    where ses.CALENDAR_CODE = '{CalendarCode}' and ses.COMPANY_CODE = '{CompanyCode}' {getCommonDateConditionString(ByDate)}";
+                string query = $@"
+                                select 'Y' as 'QUEUE_SETUP_COMPLETED', q_m.* from QUEUE_SESSION_MASTER_1974 ses
+                                                                    join QUEUE_SESSION_MAPPING_1976 map on map.SESSION_ID = ses.Id
+                                                                    join QUEUE_MASTER_1973 q_m on q_m.Id = map.QUEUE_ID
+                                                                    where ses.CALENDAR_CODE = '{CalendarCode}' and ses.COMPANY_CODE = '{CompanyCode}' {getCommonDateConditionString(ByDate)}
+                                Union All
+                                select  'N' as 'QUEUE_SETUP_COMPLETED', * from QUEUE_MASTER_1973 where QUEUE_TYPE = 'COUNTER' and CALENDAR_CODE = '{CalendarCode}' and COMPANY_CODE = '{CompanyCode}'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -339,7 +342,7 @@ namespace Barrway.Service.Repository
                                     join QUEUE_SESSION_MAPPING_1976 map on map.SESSION_ID = ses.Id
                                     join QUEUE_MASTER_1973 q_m on q_m.Id = map.QUEUE_ID
                                     join BUSINESS_CALENDAR_MASTER_1925 cal on cal.CALENDAR_CODE = ses.CALENDAR_CODE
-                                    where ses.CALENDAR_CODE = '{CalendarCode}' and ses.COMPANY_CODE = '{CompanyCode}'  {getCommonDateConditionString(ByDate)} and 
+                                    where ses.CALENDAR_CODE = '{CalendarCode}' and ses.COMPANY_CODE = '{CompanyCode}' q_m.QUEUE_USAGE = 'TICKET' and {getCommonDateConditionString(ByDate)} and 
                                     (
 	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.QUEUE_OPEN_TIME, 105)
                                     ) order by cast(ses.QUEUE_OPEN_TIME as time) desc";
