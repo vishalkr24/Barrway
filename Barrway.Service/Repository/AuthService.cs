@@ -891,7 +891,31 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
         }
 
 
+        public async Task<AddUpdateDelete> UpdateUserEmailAddress(string Email, string userID)
+        {
+            try
+            {
+               
+                   string sqlString = $@" update USER_MASTER_1915 set USER_EMAIL='{Email}'  where [USER_ID]='{userID}'";
+                   var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
+                    if (result > 0)
+                    {
 
+                        return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                    }
+                    else
+                    {
+                        return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                    }
+                
+            }
+            catch (Exception ex)
+            {
+
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
+            }
+
+        }
 
     }
 }
