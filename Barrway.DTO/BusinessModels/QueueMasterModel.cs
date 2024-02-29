@@ -16,6 +16,7 @@ namespace Barrway.DTO.BusinessModels
         public string QUEUE_PREFIX { get; set; }
         public string CALENDAR_CODE { get; set; }
         public string COMPANY_CODE { get; set; }
+        public string QUEUE_TYPE { get; set; } = "RESTAURANT";
         public string ACCEPT_TICKET { get; set; } = "Y";
         public string QUEUE_START_NUMBER { get; set; }
         public string QUEUE_END_NUMBER { get; set; }

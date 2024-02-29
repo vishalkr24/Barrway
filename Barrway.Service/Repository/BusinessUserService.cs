@@ -2771,17 +2771,16 @@ namespace Barrway.Service.Repository
                 for (int i = 0; i < model.Count; i++)
                 {
                     query += $@"UPDATE [dbo].[QUEUE_MASTER_1973]
-                                   SET [QUEUE_BY] = {model[i].QUEUE_BY}
-                                      ,[QUEUE_RESOURCE_ID] = {model[i].QUEUE_RESOURCE_ID}
-                                      ,[QUEUE_NAME] = {model[i].QUEUE_NAME}
-                                      ,[QUEUE_USAGE] = {model[i].QUEUE_USAGE}
-                                      ,[QUEUE_PREFIX] = {model[i].QUEUE_PREFIX}
-                                      ,[ACCEPT_TICKET] = {model[i].ACCEPT_TICKET}
-                                      ,[QUEUE_START_NUMBER] = {model[i].QUEUE_START_NUMBER}
-                                      ,[QUEUE_END_NUMBER] = {model[i].QUEUE_END_NUMBER}
-                                      ,[QUEUE_RESET_NUMBER] = {model[i].QUEUE_RESET_NUMBER}
+                                   SET [QUEUE_BY] = N'{model[i].QUEUE_BY}'
+                                      ,[QUEUE_RESOURCE_ID] = '{model[i].QUEUE_RESOURCE_ID}'
+                                      ,[QUEUE_NAME] = N'{model[i].QUEUE_NAME}'
+                                      ,[QUEUE_USAGE] = N'{model[i].QUEUE_USAGE}'
+                                      ,[QUEUE_PREFIX] = N'{model[i].QUEUE_PREFIX}'
+                                      ,[ACCEPT_TICKET] = N'{model[i].ACCEPT_TICKET}'
+                                      ,[QUEUE_START_NUMBER] = '{model[i].QUEUE_START_NUMBER}'
+                                      ,[QUEUE_END_NUMBER] = '{model[i].QUEUE_END_NUMBER}'
+                                      ,[QUEUE_RESET_NUMBER] = '{model[i].QUEUE_RESET_NUMBER}'
                                  WHERE Id = '{model[i].Id}'";
-
                 }
 
                 var Result = await sqlFunction.ExecuteSqlCommandQuery(query);
