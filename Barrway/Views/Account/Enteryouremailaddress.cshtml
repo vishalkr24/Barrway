@@ -1,20 +1,102 @@
-﻿@model Barrway.DTO.AuthViewModel.PhoenSignUpViewModel
-@using Microsoft.Owin.Security
+﻿@*@model Barrway.Models.UpdateUserEmailModel
+    @{
+        ViewBag.Title = "Enteryouremailaddress";
+        //Layout = "~/Views/Shared/_BusinessAdminLayout.cshtml";
+        Layout = null;
+    }
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="~/assets/css/custom-styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .card-wrap {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .custome-card {
+            height: 150px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+            .input-group input {
+                flex: 1;
+                padding: 10px;
+                border: none;
+                outline: none;
+            }
+
+            .input-group button {
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                padding: 10px 20px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+                .input-group button:hover {
+                    background-color: #0056b3;
+                }
+    </style>
+
+
+
+    <div class="card-wrap">
+        <div class="custome-card">
+            <h2>Please enter you email address</h2>
+            <form class="js-validate needs-validation" method="post" action="/Account/Enteryouremailaddress" novalidate>
+                <div class="input-group">
+                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @placeholder = "Email", @required = "true" })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "invalid-feedback-2" })
+
+                    <button type="submit" class="btn btn-default">Save</button>
+                </div>
+            </form>
+            <div class="register-btn text-center">
+                <a href="/">Skip</a>
+            </div>
+
+        </div>
+
+    </div>*@
+
+
+@model Barrway.Models.UpdateUserEmailModel
 @{
-    bool IsExternalSignUp = false;
-    if (Model != null)
-    {
-        IsExternalSignUp = Model.IS_EXTERNAL_SIGNUP;
-    }   
     Layout = null;
 }
-
-
 <!DOCTYPE html>
+<html lang="en">
 
-<html>
 <head>
-    <title>Barrway @Resource.Register</title>
+    <title>Barrway @Resource.Login</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -23,8 +105,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link href="~/assets/css/custom-styles.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
-
     <style>
 
         .hide-on-small {
@@ -145,6 +225,7 @@
             align-items: center;
             flex-wrap: wrap;
             flex-direction: column;
+            width: 100%;
         }
 
             .signUp .right form {
@@ -303,27 +384,23 @@
 
         .btn-default {
             color: #fff;
-            background-color: #3fbfc7 !important;
-            border-color: #3fbfc7 !important;
-            width: 100%;
-            border-radius: 40px;
-            /*padding: 12px 0px;*/
-            margin: 10px 0px;
-        }
-        .re-email-number {
-            padding:6px 12px !important;
-            height:45px;
-        }
-
-        .btn-default:hover, .btn-default.focus, .btn-default:focus, .btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus {
-            color: #fff;
             background-color: #3fbfc7;
             border-color: #3fbfc7;
             width: 100%;
             border-radius: 40px;
-            /*padding: 12px 0px;*/
-            outline: none;
+            padding: 12px 0px;
+            margin: 10px 0px;
         }
+
+            .btn-default:hover, .btn-default.focus, .btn-default:focus, .btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus {
+                color: #fff;
+                background-color: #3fbfc7;
+                border-color: #3fbfc7;
+                width: 100%;
+                border-radius: 40px;
+                padding: 12px 0px;
+                outline: none;
+            }
 
         .login_with .a {
             border: none;
@@ -423,7 +500,37 @@
                 }
         }
     </style>
+    <style>
+        .swal-footer {
+            text-align: center;
+        }
 
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: #444;
+            line-height: 33px !important;
+        }
+
+        .select2-container .select2-selection--single {
+            height: 34px !important;
+        }
+
+        .mobileNumberDiv {
+            width: 100%;
+            float: left;
+        }
+
+        .select2-container {
+            width: 45%;
+            float: left !important;
+            margin: 10px 0px !important;
+        }
+
+        .mobileNumberDiv input#USER_PHONE {
+            width: 50%;
+            float: left;
+            margin-left: 10px;
+        }
+    </style>
     <style>
 
         :root {
@@ -502,18 +609,6 @@
             transform: translateX(200%);
         }
 
-        #error-msg{
-            color:red;
-        }
-
-        #valid-msg {
-            color: green;
-        }
-        .iti__globe {
-           /* background-image: url(../img/globe.png);*/
-            background-image:none !important;
-        }
-
         .glider {
             position: absolute;
             display: flex;
@@ -531,13 +626,10 @@
             }
         }
     </style>
-
 </head>
-<body class="d-flex align-items-center min-h-100" style="background: linear-gradient(to right, #e2476c, #3fbfc7); overflow: hidden;">
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jqueryval")
 
-    <!-- ========== HEADER ========== -->
+<body class="d-flex align-items-center min-h-100">   
+
     <section class="login">
         <div class="container">
             <div class="row">
@@ -545,103 +637,27 @@
                     <div class='center'>
                         <div class='signUp'>
                             <div class='right'>
-                                <div class="logo">
-                                    <img style="width: 260px;" onclick="location.href = '/BusinessMarketplace/Index'" src="../assets/img/logo.png"> <span class="business-label">@Resource.Business</span>
-                                </div>
+                                <div class="card-wrap">
+                                    <div class="custome-card">
+                                        <h2>Please enter you email address</h2>
+                                        <form class="js-validate needs-validation" method="post" action="/Account/Enteryouremailaddress" novalidate>
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @placeholder = "Email", @required = "true" })
+                                                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "invalid-feedback-2" })
 
-                                <div style="width:100%">
-                                    <div class="tabs">
-
-                                        <label class="tab" for="radio-1"><a href="/Account/BusinessSignUp">Email</a></label>
-
-                                        <label class="tab active" for="radio-2"><a href="/Account/BusinessSignUpPhone">Phone</a></label>
-
-                                    </div>
-                                </div>
-                                <div class="register">
-
-
-                                    <h3>@Resource.Register </h3>
-                                    <form class="js-validate needs-validation" method="post" action="/Account/BusinessSignUpPhone" novalidate>
-
-                                        @Html.AntiForgeryToken()
-                                        <div class="form-group">
-                                            <label for="username">@Resource.User_name</label>
-                                            @*<input type="text" class="form-control" id="USER_NAME" name="USER_NAME" required placeholder="Username">*@
-                                            @Html.TextBoxFor(model => model.USER_NAME, new { @class = "form-control", @placeholder = "Username", @required = "true" })
-                                            @Html.ValidationMessageFor(model => model.USER_NAME, "", new { @class = "invalid-feedback-2" })
-
-                                        </div>
-                                        <div class="form-group">
-
-                                            <label for="email">@Resource.Phone</label>
-                                            <div class="mobileNumberDiv">
-
-                                                @Html.HiddenFor(model => model.CountryCode)
-
-                                                @Html.TextBoxFor(model => model.USER_PHONE, new { @class = "form-control", @placeholder = "Phone", @required = "true" })
-                                                @Html.ValidationMessageFor(model => model.USER_PHONE, "", new { @class = "invalid-feedback-2" })
-                                                <span id="valid-msg" class="hide">✓ Valid</span>
-                                                <span id="error-msg" class="hide"></span>
+                                                <button type="submit" class="btn btn-default">Save</button>
                                             </div>
+                                        </form>
+                                        <div class="register-btn text-center">
+                                            <a href="/UserAdmin#/userdashboard">Skip</a>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="pwd">@Resource.Password</label>
-                                            @*<input type="password" class="form-control" id="USER_PASSWORD" name="USER_PASSWORD" required placeholder="********">*@
-                                            @Html.PasswordFor(model => model.USER_PASSWORD, new { @class = "form-control", @placeholder = "********", @required = "true" })
-                                            @Html.ValidationMessageFor(model => model.USER_PASSWORD, "", new { @class = "invalid-feedback-2" })
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="repwd">@Resource.Retype_Password</label>
-                                            @*<input type="password" class="form-control" id="USER_CONFIRM_PASSWORD" name="USER_CONFIRM_PASSWORD" required placeholder="********">*@
-                                            @Html.PasswordFor(model => model.USER_CONFIRM_PASSWORD, new { @class = "form-control", @placeholder = "********", @required = "true" })
-                                            @Html.ValidationMessageFor(model => model.USER_CONFIRM_PASSWORD, "", new { @class = "invalid-feedback-2" })
-                                        </div>
-                                        <div class="checkbox">
-                                            <label class="container-label">
-                                                @Resource.Check_here_to_accept_the <a href="javascript:void(0)">@Resource.Terms___condition</a>
-                                                @Html.CheckBoxFor(model => model.TERMS_ACCEPTED)
-                                                @*<input type="checkbox" name="TERMS_ACCEPTED" id="TERMS_ACCEPTED">*@
-                                                <span class="checkmark"></span>
-
-                                                @Html.ValidationMessageFor(model => model.TERMS_ACCEPTED, "", new { @class = "invalid-feedback-2" })
-                                            </label>
-                                        </div>
-
-                                        <div class="register-btn">
-                                            <button type="submit" class="btn btn-default re-email-number" id="btn_submit">@Resource.Register</button>
-                                        </div>
-                                        <div style="display:none;">
-                                            @Html.EditorFor(model => model.IS_EXTERNAL_SIGNUP, new { @class = "form-control", @readonly = true, @style = "visibility:hidden;", @placeholder = "Email", @required = "true" })
-                                        </div>
-
-                                    </form>
-                                    <div class="login_with">
-                                        @using (Html.BeginForm("ExternalSignIn", "Account", new { ReturnUrl = Model.ReturnUrl, userType = "1" }))
-                                        {
-                                            @Html.AntiForgeryToken()
-
-                                            <button class="a" type="submit" id="Google" name="provider" value="Google"><span class="hide-on-large"><i class="bi bi-google" aria-hidden="true"></i></span> <span class="hide-on-small">Register with Google</span> </button>
-                                            <button class="a" type="submit" id="Facebook" name="provider" value="Facebook"> <span class="hide-on-large"><i class="bi bi-facebook" aria-hidden="true"></i></span> <span class="hide-on-small">Register with Facebook</span></button>
-                                        }
 
                                     </div>
-                                    <br /><br /><br />
-                                    <div class="register-btn text-center">
-                                        @Resource.Already_have_an_account? <a href="/Account/BusinessLogin">@Resource.Login</a>
-                                    </div>
-
-
-
-
-
-
 
                                 </div>
+                                
                             </div>
-                            <div class='left'>
-                                <div class='back'><h1>@Resource.Find_your_service__activity___book_it_in_one_stop</h1></div>
-                            </div>
+                            
 
                         </div>
                     </div>
@@ -650,147 +666,19 @@
         </div>
     </section>
 
-    <style>
-        .swal-footer {
-            text-align: center;
-        }
-
-        .select2-container--default .select2-selection--single .select2-selection__rendered {
-            color: #444;
-            line-height: 33px !important;
-        }
-
-        .select2-container .select2-selection--single {
-            height: 34px !important;
-        }
-
-        .mobileNumberDiv {
-            width: 100%;
-            float: left;
-        }
-
-        .select2-container {
-            width: 45%;
-            float: left !important;
-            margin: 10px 0px !important;
-        }
-
-        .iti {
-            position: relative;
-            display: block !important;
-        }
-
-        /*.mobileNumberDiv input#USER_PHONE {
-            width: 50%;
-            float: left;
-            margin-left: 10px;
-        }*/
-    </style>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <link href="~/fg-assets/select2/select2.css" rel="stylesheet" />
     <script src="~/fg-assets/select2/select2.js"></script>
-    <link href="~/assets/intl-tel-input/css/demo.css" rel="stylesheet" />
-    <link href="~/assets/intl-tel-input/css/intlTelInput.css" rel="stylesheet" />
-    <script src="~/assets/intl-tel-input/js/intlTelInput-jquery.min.js"></script>
-    <script src="~/assets/intl-tel-input/js/intlTelInput.js"></script>
     <script>
 
         $(document).ready(function () {
-            if ("@IsExternalSignUp" == "True") {
-                swal({
-                    title: "@Resource.Congratulations!",
-                    text: "@Resource.You_have_successfully_authenticated__Finish_the_last_step_of_your_registration.",
-                    icon: "success",
-                    buttons: {
-                        confirm: "@Resource.Okay"
-                    }
-                });
-            }
-
             $("#countryCode").select2();
-
-
-            
-
-            
-
-           @*<script src="~/assets/intl-tel-input/js/utils.js"></script>*@
-            const input = document.querySelector("#USER_PHONE");
-            const errorMsg = document.querySelector("#error-msg");
-            const validMsg = document.querySelector("#valid-msg");
-            // here, the index maps to the error code returned from getValidationError - see readme
-            const errorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];
-            debugger;
-            // initialise plugin
-            const iti = window.intlTelInput(input, {
-              
-                initialCountry: "auto",
-                geoIpLookup: function (callback) {
-                    $.get('https://ipinfo.io', function () { }, "jsonp").always(function (resp) {
-                        var countryCode = (resp && resp.country) ? resp.country : "";
-                        callback(countryCode);
-                    });
-                },
-                utilsScript: "/assets/intl-tel-input/js/utils.js",
-                preferredCountries: ['hk', 'cn']
-
-                
-                //initialCountry: "us",
-                //utilsScript: "/assets/intl-tel-input/js/utils.js?1708969428263"
-            });
-
-            //console.log(iti.getSelectedCountryData(),"hghjhgj");
-
-            const reset = () => {
-                input.classList.remove("error");
-                errorMsg.innerHTML = "";
-                errorMsg.classList.add("hide");
-                validMsg.classList.add("hide");
-                $('#btn_submit').prop('disabled', false);
-            };
-
-            const showError = (msg) => {
-
-                input.classList.add("error");
-                errorMsg.innerHTML = msg;
-                errorMsg.classList.remove("hide");
-                //btn_submit
-                $('#btn_submit').prop('disabled', true);
-            };
-
-
-
-            $("#USER_PHONE").blur(function () {
-                setContryCodeValue();
-                reset();
-                if (!input.value.trim()) {
-                    //showError("Required");
-                } else if (iti.isValidNumber()) {
-                    validMsg.classList.remove("hide");
-                }
-                else {
-                    const errorCode = iti.getValidationError();
-                    const msg = errorMap[errorCode] || "Invalid number";
-                    showError(msg);
-                }
-
-            });
-
-
-            function setContryCodeValue(){
-                var instance = $("[name=USER_PHONE]")
-                instance.intlTelInput();
-                var countrycode = instance.intlTelInput('getSelectedCountryData').dialCode;
-                $("#CountryCode").val(countrycode);
-            }
-
-
-
-
-
         })
 
     </script>
-
 </body>
+
 </html>
+
+
+

@@ -44,4 +44,15 @@ namespace Barrway.Models
 
     }
 
+
+
+    public class UpdateUserEmailModel
+    {
+        
+        [Required(ErrorMessage = "Please Enter Email your !")]
+        [EmailAddress(ErrorMessage = "Please Enter Valid Email!!")]
+        public string Email { get; set; }
+
+    }
+
 }
