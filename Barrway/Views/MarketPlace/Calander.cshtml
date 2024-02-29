@@ -681,7 +681,7 @@
 </section>
 
 
-<section class="mihi-71" ng-app="myApp" ng-controller="myCtrl">
+<section class="mihi-71" ng-controller="myCtrl">
     <div class="container">
         @*<section class="" id="logo">
                 <div class="container">
@@ -801,7 +801,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="favr">
                                 @if (!ViewBag.IsUserFavorite)
                                 {
@@ -1014,8 +1014,8 @@
     <script src="~/Scripts/MarketplaceScripts/CompanySchedule.js?@DateTime.Now.ToString("yyyyMmddHHMMssffff")"></script>
 
     <script>
-        var app = angular.module('myApp', []);
-        app.controller('myCtrl', function ($scope, $rootScope) {
+        /*var app = angular.module('myApp', []);*/
+        FormGeneratorApp.controller('myCtrl', function ($scope, $rootScope) {
             $scope.rootScopeSafe = function () {
                 $rootScope.safeApply();
             };

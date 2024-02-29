@@ -93,8 +93,9 @@ $(document).ready(function () {
     });
 
     $("#owl-demo5").owlCarousel({
-        loop: true,
-        dots: false,
+        //loop: $('.owl-carousel .item').length > 1 ? true : false,
+        dots: true,
+        nav: true,
         responsiveClass: true,
         responsive: {
             0: {
@@ -108,11 +109,14 @@ $(document).ready(function () {
             1000: {
                 items: 6,
                 nav: true,
-                loop: true,
+                //loop: true,
                 margin: 20
             }
         }
     });
+
+
+
 });
 
 // my gallery
