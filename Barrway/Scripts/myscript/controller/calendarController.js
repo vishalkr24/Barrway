@@ -17128,13 +17128,26 @@
 
     FormGeneratorApp.controller('UserProfileController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
         checkLogin();
+        $('#DATE_OF_BIRTH').datepicker({
+            format: 'DD/MM/YYYY',
+            changeMonth: true, // Enable the months dropdown
+            changeYear: true, // Enable the years dropdown
+            yearRange: '-100:+0' // Specify the range of selectable years (-100 to current year)
+        });
+        $("#DATE_OF_BIRTH").datepicker("option", "dateFormat", "dd-mm-yy");
         $("#user-nav-myprofile").addClass("active")
         adminService.postAsync('/UserAdmin/GetSingleUserByUserId/', { UserId: $("#userIdHidden").val() }).then(function (res) {
 
             if (res.data.data.Status) {
+                debugger;
                 res.data.data.Data.PROFILE_PHOTO_PATH = res.data.data.Data.PROFILE_PHOTO_PATH.replace("~", "..");
-                res.data.data.Data.DATE_OF_BIRTH = res.data.data.Data.DATE_OF_BIRTH.substring(0, 10);
 
+                const dateStr = res.data.data.Data.DATE_OF_BIRTH;
+                const timestamp = moment(dateStr).valueOf();
+                const formattedDate = moment(timestamp).format("DD-MM-YYYY");
+                res.data.data.Data.DATE_OF_BIRTH = formattedDate;
+                //res.data.data.Data.DATE_OF_BIRTH =  res.data.data.Data.DATE_OF_BIRTH.substring(0, 10);
+                $("#DATE_OF_BIRTH").val(formattedDate);
                 $("#gender-" + res.data.data.Data.GENDER.toLowerCase()).attr("checked", true);
 
                 $scope.userData = res.data.data.Data;

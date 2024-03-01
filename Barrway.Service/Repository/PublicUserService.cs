@@ -112,27 +112,60 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> UpdatePublicUserProfileData(PublicUserProfileModel model, bool updatePassword = false)
         {
-            string subQuery = "";
-            if (updatePassword)
+            try
             {
-                subQuery = "USER_PASSWORD = '" + model.USER_PASSWORD + "'";
-            }
+                string subQuery = "";
+                string ChQuery = "";
 
-            string query = $@"update PUBLIC_USER_ACCOUNT_1943 set FIRST_NAME = '{model.FIRST_NAME}', LAST_NAME = '{model.LAST_NAME}', CHINESE_NAME = N'{model.CHINESE_NAME}', NICK_NAME = '{model.NICK_NAME}', GENDER = '{model.GENDER}', DATE_OF_BIRTH = '{model.DATE_OF_BIRTH.ToString("yyyy-MM-ddTHH:mm:ss")}' where USER_ID = '{model.USER_ID}'
+                ChQuery = $@"select USER_EMAIL from USER_MASTER_1915 where USER_EMAIL='{model.USER_EMAIL}' and USER_ID !='{model.USER_ID}'
+";
+
+                List<IDictionary<string, object>> Email = await sqlFunction.ExecuteSqlQuery(ChQuery);
+
+                if (Email.Count > 0)
+                {
+
+                    return new AddUpdateDelete() { Status = false, Message = "This email addres is already in use with diffrent user" };
+                }
+
+
+                ChQuery = $@"select USER_PHONE from USER_MASTER_1915 where USER_PHONE='{model.USER_PHONE}' and USER_ID !='{model.USER_ID}'";
+
+                List<IDictionary<string, object>> Mobile = await sqlFunction.ExecuteSqlQuery(ChQuery);
+
+                if (Mobile.Count > 0)
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "This Phone number is already in use with diffrent user" };
+                }
+
+
+                if (updatePassword)
+                {
+                    subQuery = "USER_PASSWORD = '" + model.USER_PASSWORD + "'";
+                }
+
+                string query = $@"update PUBLIC_USER_ACCOUNT_1943 set FIRST_NAME = '{model.FIRST_NAME}', LAST_NAME = '{model.LAST_NAME}', CHINESE_NAME = N'{model.CHINESE_NAME}', NICK_NAME = '{model.NICK_NAME}', GENDER = '{model.GENDER}', DATE_OF_BIRTH = '{model.DATE_OF_BIRTH.ToString("yyyy-MM-ddTHH:mm:ss")}' where USER_ID = '{model.USER_ID}'
                               update USER_MASTER_1915 set {subQuery}  USER_PHONE = '{model.USER_PHONE}' where USER_ID = '{model.USER_ID}'
                     
                             ";
 
-            int result = await sqlFunction.ExecuteSqlCommandQuery(query);
+                int result = await sqlFunction.ExecuteSqlCommandQuery(query);
 
-            if (result > 0)
-            {
-                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                if (result > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
             }
+            
+            
         }
 
         public async Task<AddUpdateDelete> EnrollPublicUserForCalendar(CalendarEnrollModel model)
