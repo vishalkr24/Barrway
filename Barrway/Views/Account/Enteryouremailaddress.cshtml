@@ -619,7 +619,42 @@
             border-radius: 99px;
             transition: 0.25s ease-out;
         }
+        .custome-card .input-group {
+            width: 100%;
+            float: left;
+            text-align: center;
+        }
 
+        custome-card .register-btn.text-center {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+        }
+        .custome-card .update_email {
+            max-width: 50%;
+        }
+        .right {
+            position: relative;
+        }
+
+        .register-btn {
+            position: absolute;
+            bottom: 19px;
+            right: 25px;
+        }
+
+            .register-btn a {
+                font-size: 15px;
+                font-weight: 600;
+                color: #333333;
+            }
+
+                .register-btn a:after {
+                    content: ">";
+                    padding-left: 2px;
+                    position: relative;
+                    top: 1px;
+                }
         @@media (max-width: 700px) {
             .tabs {
                 /*transform: scale(0.6);*/
@@ -628,7 +663,7 @@
     </style>
 </head>
 
-<body class="d-flex align-items-center min-h-100">   
+<body class="d-flex align-items-center min-h-100" style="background: linear-gradient(to right, #e2476c, #3fbfc7);">   
 
     <section class="login">
         <div class="container">
@@ -645,17 +680,16 @@
                                                 @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @placeholder = "Email", @required = "true" })
                                                 @Html.ValidationMessageFor(model => model.Email, "", new { @class = "invalid-feedback-2" })
 
-                                                <button type="submit" class="btn btn-default">Save</button>
+                                                <button type="submit" class="btn btn-default update_email">Save</button>
                                             </div>
-                                        </form>
-                                        <div class="register-btn text-center">
-                                            <a href="/UserAdmin#/userdashboard">Skip</a>
-                                        </div>
+                                        </form>                                       
 
                                     </div>
 
                                 </div>
-                                
+                                <div class="register-btn text-center">
+                                    <a href="/UserAdmin#/userdashboard">Skip</a>
+                                </div>
                             </div>
                             
 

@@ -1177,6 +1177,7 @@ namespace Barrway.Controllers
         }
 
 
+        [PublicAuthorize(Roles = "PUBLIC_USER,GENERAL_USER")]
         public ActionResult Enteryouremailaddress()
         {
             return View();
