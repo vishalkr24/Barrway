@@ -299,7 +299,7 @@
     $scope.bindCalendarDropdown = function () {
         if (localStorage.getItem("COMPANY_ID") != null && localStorage.getItem("COMPANY_ID") != undefined) {
             adminService.postAsync('/BusinessAdmin/GetAllCompanyCalendars/', { companyId: localStorage.getItem("COMPANY_ID") }).then(function (res) {
-                debugger;
+                
                 $scope.calendarList = res.data;
 
                 if (isEmptyLocalStorageValue("CALENDAR_CODE")) {

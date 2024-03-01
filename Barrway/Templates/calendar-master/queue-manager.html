@@ -610,7 +610,7 @@
                                                 <img src="/assets/marketplace/image/eye-open.png" />
                                             </div>
                                             <div class="call-button">
-                                                <button ng-click="">Set up Schedule</button>
+                                                <button ui-sref="session_schedular_form({Id: queue.Id})">Set up Schedule</button>
                                             </div>
                                         </div>
                                         <div class="que-wrp-lr" style=" color: #2b2b2b; padding: 0px 6px;">
@@ -673,7 +673,7 @@
                                                     <img src="/assets/marketplace/image/eye-open.png" />
                                                 </div>
                                                 <div class="call-button">
-                                                    <button ng-click="">Set up Schedule</button>
+                                                    <button ui-sref="schedular_form({Id: queue.Id})">Set up Schedule</button>
                                                 </div>
                                             </div>
                                             <div class="que-wrp-lr" style=" color: #2b2b2b; padding: 0px 6px;">
@@ -705,7 +705,7 @@
                 </div>
                 <div id="queue-summary-section"  style="display:none;">
                     <div class="queue-dashboard-row" style="justify-content:center;">
-                        <div class="queue-dashboard-element" ng-repeat="queue in queueList" ng-if="queue.QUEUE_SETUP_COMPLETED == 'Y'">
+                        <div class="queue-dashboard-element" ng-repeat="queue in queueList" ng-if="queue.QUEUE_SETUP_COMPLETED == 'Y' && queue.QUEUE_TYPE == 'RESTAURANT'">
                             <div class="queue_backlog_third">
                                 <div class="queue_backlog_inner">
                                     <div class="queue-back-log">
@@ -723,7 +723,7 @@
                             </div>
                         </div>
 
-                        <!--<div class="staff-detail">
+                        <div class="staff-detail" ng-repeat="queue in queueList" ng-if="queue.QUEUE_SETUP_COMPLETED == 'Y' && queue.QUEUE_TYPE == 'COUNTER' && queue.QUEUE_USAGE == 'TICKET'">
                             <div class="staff-name"><b><span>(A)</span> Staff A</b></div>
                             <div class="staff-number">
                                 <span>Next</span><span><b>A18</b></span>
@@ -737,8 +737,8 @@
                                 <p>hh:mm</p>
                             </div>
                         </div>
-                        
-                        <div class="second-wrap">
+
+                        <div class="second-wrap" ng-repeat="queue in queueList" ng-if="queue.QUEUE_SETUP_COMPLETED == 'Y' && queue.QUEUE_TYPE == 'COUNTER' && queue.QUEUE_USAGE == 'WORKFLOW'">
                             <div class="staff-detail second">
                                 <div class="second-number">
                                     <span>Room D</span>
@@ -753,8 +753,39 @@
                             <div class="only-id">
                                 <h3>B13</h3>
                             </div>
-                        </div>-->
-                        
+                        </div>
+                        <!--<div class="staff-detail">
+        <div class="staff-name"><b><span>(A)</span> Staff A</b></div>
+        <div class="staff-number">
+            <span>Next</span><span><b>A18</b></span>
+        </div>
+        <div class="staff-id-number">
+            <h3 class="pink">
+                A 10
+            </h3>
+        </div>
+        <div class="staff-time">
+            <p>hh:mm</p>
+        </div>
+    </div>
+
+    <div class="second-wrap">
+        <div class="staff-detail second">
+            <div class="second-number">
+                <span>Room D</span>
+            </div>
+            <div class="second-id-number">
+                <h3 class="color-black">
+                    A 10
+                </h3>
+            </div>
+        </div>
+        <div class="waiting"><p>Waiting <span>(1)</span></p></div>
+        <div class="only-id">
+            <h3>B13</h3>
+        </div>
+    </div>-->
+
                     </div>
                 </div>
 

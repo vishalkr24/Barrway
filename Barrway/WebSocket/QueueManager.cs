@@ -80,11 +80,11 @@ namespace Barrway.WebSocket
             await Task.CompletedTask;
         }
 
-        public async Task getQueueList(string CalendarCode, string CompanyCode, bool AllClients = false)
+        public async Task getQueueList(string CalendarCode, string CompanyCode, bool AllClients = false, bool ByDate = false)
         {
             try
             {
-                var result = await queueService.getQueueList(CalendarCode, CompanyCode);
+                var result = await queueService.getQueueList(CalendarCode, CompanyCode, ByDate);
 
                 if (result.Status)
                 {

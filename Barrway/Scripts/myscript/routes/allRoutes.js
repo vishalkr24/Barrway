@@ -1939,6 +1939,20 @@
                     parent: 'home'
                 }
             })
+            .state('session_schedular_form', {
+                url: '/calendar/schedular-form/session/:Id',
+                onEnter: function ($window) { $window.document.title = "Schedular Form"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/calendar-master/session-schedular-form.html?token=' + uuid,
+                        controller: 'SessionSchedularFormController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
             .state('business_user_master', {
                 url: '/calendar/business-user-master/:formId',
                 onEnter: function ($window) { $window.document.title = "User master"; },
