@@ -59,16 +59,40 @@ namespace Barrway.Service.Repository
             try
             {
                 string query = $@"
+                                declare @CompanyCode varchar(100) = '{CompanyCode}';
+                                declare @CalendarCode varchar(100) = '{CalendarCode}';
+                                declare @QueueIds varchar(max) = stuff((select ',' + cast(que.Id as varchar(10)) from QUEUE_MASTER_1973 que
+									left join QUEUE_SESSION_MAPPING_1976 map on map.QUEUE_ID = que.Id
+									where ((map.CALENDAR_CODE = @CalendarCode and map.COMPANY_CODE = @CompanyCode) or (map.CALENDAR_CODE is null or map.COMPANY_CODE is null)) and map.Id is null for xml path('')), 1, 1, '')
+									
                                 select 'Y' as 'QUEUE_SETUP_COMPLETED', q_m.* from QUEUE_SESSION_MASTER_1974 ses
                                                                     join QUEUE_SESSION_MAPPING_1976 map on map.SESSION_ID = ses.Id
                                                                     join QUEUE_MASTER_1973 q_m on q_m.Id = map.QUEUE_ID
-                                                                    where ses.CALENDAR_CODE = '{CalendarCode}' and ses.COMPANY_CODE = '{CompanyCode}' {getCommonDateConditionString(ByDate)}
+                                                                    where ses.CALENDAR_CODE = @CalendarCode and ses.COMPANY_CODE = @CompanyCode {getCommonDateConditionString(ByDate)}
                                 Union All
-                                select  'N' as 'QUEUE_SETUP_COMPLETED', * from QUEUE_MASTER_1973 where QUEUE_TYPE = 'COUNTER' and CALENDAR_CODE = '{CalendarCode}' and COMPANY_CODE = '{CompanyCode}'";
+                                select  'N' as 'QUEUE_SETUP_COMPLETED', * from QUEUE_MASTER_1973
+								where QUEUE_TYPE = 'COUNTER' and CALENDAR_CODE = @CalendarCode and COMPANY_CODE = @CompanyCode
+								and Id in (select cast(item as integer) from dbo.SplitString(@QueueIds, ','))";
 
                 var result = await sqlFunction.ExecuteSqlQuery(query);
 
                 return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+        public async Task<AddUpdateDelete> getSingleQueueDetails(string QueueId)
+        {
+            try
+            {
+                string query = $@"select * from QUEUE_MASTER_1973 where Id = '{QueueId}'";
+
+                var result = await sqlFunction.ExecuteSqlQuery(query);
+
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result.FirstOrDefault() };
             }
             catch (Exception ex)
             {

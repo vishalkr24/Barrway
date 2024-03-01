@@ -73,7 +73,7 @@
 
                 $scope.BindView();
             }, 500);
-            
+
         };
 
         $scope.BindView = function () {
@@ -134,7 +134,7 @@
                 bindSessionSchedule();
             }
             $scope.$apply();
-            
+
         }
 
         $scope.GetSingleService = function () {
@@ -283,7 +283,9 @@
                 }
 
                 if ($scope.ViewName == "S3H") {
-                    data.SCHEDULAR_TYPE = "QUEUE";
+                    data.SCHEDULAR_TYPE = "QUEUE_2";
+                } else if ($scope.ViewName == "S3F") {
+                    data.SCHEDULAR_TYPE = "QUEUE_1";
                 } else {
                     data.SCHEDULAR_TYPE = "CALENDAR";
                 }
@@ -354,20 +356,21 @@
 
             });
 
-            var data = getSchedule(localStorage.getItem("COMPANY_CODE"), localStorage.getItem("CALENDAR_CODE"), true);
-            debugger;
-            if (data.Status) {
+            var data = getQueueAndSession(localStorage.getItem("COMPANY_CODE"), localStorage.getItem("CALENDAR_CODE"));
 
+            if (!data.Status) {
+                addQueueRow();
+                addSessionRow();
+                return;
+            } else {
                 var response = data.Data;
 
-                $scope.SchedularId = response.Id;
+                let queue = response.queue
+                debugger;
+                let session = response.session
 
-                let queue = JSON.parse(response.SCH_SCHEDULE_TABLE).queue
-                let session = JSON.parse(response.SCH_SCHEDULE_TABLE).session
-
-                $("#exampleFormControlSelect1").val(queue.length);
-                $("#exampleFormControlSelect2").val(session.length);
                 if (queue.length > 0) {
+                    $("#exampleFormControlSelect1").val(queue.length);
                     for (var i = 0; i < queue.length; i++) {
                         addQueueRow(queue[i]);
                     }
@@ -376,16 +379,13 @@
                 }
 
                 if (session.length) {
+                    $("#exampleFormControlSelect2").val(session.length);
                     for (var i = 0; i < session.length; i++) {
                         addSessionRow(session[i]);
                     }
                 } else {
                     addSessionRow();
                 }
-
-            } else {
-                addQueueRow();
-                addSessionRow();
             }
 
         }
@@ -398,52 +398,35 @@
             debugger;
             // add validations
             if (true) {
-
-                var data = {
-                    Id: $scope.SchedularId,
-                    COMPANY_CODE: localStorage.getItem("COMPANY_CODE"),
-                    CALENDAR_CODE: localStorage.getItem("CALENDAR_CODE"),
-                    SCH__NAME: "",
-                    SCH_LOCATION: "",
-                    SCH_ACTIVITY: "",
-                    SCH_RESOURCE: "",
-                    SCH_MEDIUM: "ZOOM",
-                    DURATION_FIELD: 0,
-                    REST_PERIOD_BETWEEN_SESSION: 0,
-                    MAXIMUM_NO_OF_PARTICIPANTS: 0,
-                    SCH_DESCRIPTION: "",
-                    SCH_FROM_DATE: moment(new Date()).format("YYYY-MM-DD"),
-                    SCH_TO_DATE: moment(new Date()).format("YYYY-MM-DD"),
-                    SCH_ALTERNATIVE_WEEK: "EVERY-WEEK",
-                    IF_SLOT_EXIST: "SKIP",
-                    IF_SLOT_DOES_NOT_EXIST: "INSERT",
-                    SCH_SCHEDULE_TABLE: JSON.stringify({
-                        QueueList: queueList,
-                        SessionList: sessionList
-                    }),
-                    CREATION_TYPE: "AUTOMATIC",
-                    SCHEDULAR_TYPE: "QUEUE"
-                }
-
-                adminService.postAsync('/Calendar/AddSchedule/', { dataList: [data] }).then(function (res) {
-                    if (!res.data.Status) {
-                        swal({
-                            icon: "error",
-                            title: "Error",
-                            text: res.data.Message
-                        });
-                    } else {
-                        swal({
-                            icon: "success",
-                            title: "Success",
-                            text: "Queue and session " + ((data.Id != null) ? " updated " : " created ") + " successfully!"
-                        }).then(function (check) {
-                            window.location.replace("/calendar/index#/queue-manager");
-                        });
+                $.ajax({
+                    url: "/Calendar/AddQueueSession/",
+                    method: "POST",
+                    data: {
+                        data: {
+                            "QueueList": queueList,
+                            "SessionList": sessionList
+                        },
+                        ScheduleId: null                        
+                    },
+                    success: function(response) {
+                        if (!response.Status) {
+                            swal({
+                                icon: "error",
+                                title: "Error",
+                                text: response.Message
+                            });
+                        } else {
+                            swal({
+                                icon: "success",
+                                title: "Success",
+                                text: "Queue and session updated/created successfully!"
+                            }).then(function (check) {
+                                window.location.replace("/calendar/index#/queue-manager");
+                            });
+                        }
                     }
-                });
-
-
+                })
+                
 
             }
         }
@@ -584,7 +567,7 @@
                 };
 
                 sessionList.push(sessionElement);
-                
+
                 binderString += `<tr id="session-table-row-${sessionElement.rowId}">
                                                     <td>
                                                         <input type="text" class="form-control" id="SESSION_NAME-${dataElement.Id}" value="${sessionElement.SESSION_NAME}"/>
@@ -593,7 +576,7 @@
                                                         <input type="time" class="form-control" id="SESSION_START_TIME-${dataElement.Id}" value="${sessionElement.SESSION_START_TIME.substring(11, sessionElement.SESSION_START_TIME.length)}"/>
                                                     </td>
                                                     <td style="width:100px;">
-                                                        <input type="time" class="form-control" id="SESSION_END_TIME-${dataElement.Id}" value="${sessionElement.SESSION_END_TIME.substring(11,  sessionElement.SESSION_START_TIME.length)}"/>
+                                                        <input type="time" class="form-control" id="SESSION_END_TIME-${dataElement.Id}" value="${sessionElement.SESSION_END_TIME.substring(11, sessionElement.SESSION_START_TIME.length)}"/>
                                                     </td>
                                                     <td style="width:100px;">
                                                         <div class="booking_queue_radio">

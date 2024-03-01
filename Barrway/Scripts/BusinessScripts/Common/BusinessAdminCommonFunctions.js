@@ -70,6 +70,25 @@ function getServiceProviderDataByCalendar(companyCode, calendarCode) {
     return data;
 }
 
+function getSingleQueueDetails(Id) {
+    var data;
+    $.ajax({
+        url: "/Calendar/GetSingleQueueDetails/",
+        async: false,
+        type: "POST",
+        data: {
+            QueueId: Id
+        },
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    });
+    return data;
+}
+
 function GetStaffServiceMappingData(calendarCode) {
     var data;
     $.ajax({
@@ -202,6 +221,26 @@ function getSchedule(companyCode, calendarCode) {
     var data;
     $.ajax({
         url: "/Calendar/GetScheduleByCalendar/",
+        type: "POST",
+        async: false,
+        data: {
+            CompanyCode: companyCode,
+            CalendarCode: calendarCode
+        },
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    })
+    return data;
+}
+
+function getQueueAndSession(companyCode, calendarCode) {
+    var data;
+    $.ajax({
+        url: "/Calendar/getQueueAndSession/",
         type: "POST",
         async: false,
         data: {

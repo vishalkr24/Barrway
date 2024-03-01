@@ -17,6 +17,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> getQueueTicketList(string CalendarCode, string CompanyCode, string QueueIds = null, bool ByDate = false);
         Task<AddUpdateDelete> updateQueueActivationStatus(string QueueId, string Status);
         Task<AddUpdateDelete> callNext(string QueueId, bool ByDate = false);
+        Task<AddUpdateDelete> getSingleQueueDetails(string QueueId);
 
         #region marketplace queue
         Task<AddUpdateDelete> bookTicket(TicketMasterModel model, bool ByDate = false);

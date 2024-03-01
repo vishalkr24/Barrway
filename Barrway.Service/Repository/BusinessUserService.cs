@@ -2843,7 +2843,12 @@ namespace Barrway.Service.Repository
 
                 List<IDictionary<string, object>> Result = await sqlFunction.ExecuteSqlQuery(query);
 
-                query = $@"select * from QUEUE_SESSION_MASTER_1974 where CALENDAR_CODE = '{CalendarCode}' and COMPANY_CODE = '{CompanyCode}'";
+                query = $@"select * from QUEUE_SESSION_MASTER_1974 ses where CALENDAR_CODE = '{CalendarCode}' and COMPANY_CODE = '{CompanyCode}'  and 
+                                    (
+	                                    Convert(datetime, '{DateTime.Now.ToString("dd -MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.SESSION_START_TIME, 105) and 
+
+                                        Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) < Convert(datetime, ses.SESSION_END_TIME, 105)
+                                    )";
 
                 List<IDictionary<string, object>> Result2 = await sqlFunction.ExecuteSqlQuery(query);
 
