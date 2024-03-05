@@ -112,7 +112,7 @@ namespace Barrway.Service.IRepository
 
         Task<AddUpdateDelete> GetCompanyActiveSubscriptionDetails(string Id, bool isCompanyCode = false);
 
-        Task<AddUpdateDelete> GetSessionsForThisMonth(string CompanyCode);
+        Task<AddUpdateDelete> GetSessionsForThisMonth(string CompanyCode, string CalendarCode);
 
         Task<AddUpdateDelete> GetSessionsForThisMonthCalendarWise(string CompanyCode);
 

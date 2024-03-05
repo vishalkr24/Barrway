@@ -775,7 +775,7 @@ namespace Barrway.Controllers
 
                         if (createNewSchedule)
                         {
-                            var calendarCountCheckData = await businessUserService.GetSessionsForThisMonth(data.COMPANY_CODE);
+                            var calendarCountCheckData = await businessUserService.GetSessionsForThisMonth(data.COMPANY_CODE, data.CALENDAR_CODE);
                             var package = await businessUserService.GetCompanyActiveSubscriptionDetails(data.COMPANY_CODE, true);
 
                             if (!calendarCountCheckData.Status)
@@ -869,7 +869,7 @@ namespace Barrway.Controllers
 
                             while (dateTracker <= end)
                             {
-                                eventCounter++;
+                                
 
                                 string SchedularFormId = Id;
                                 DateTime SlotStartTime = DateTime.Now;
@@ -893,6 +893,7 @@ namespace Barrway.Controllers
 
                                     try
                                     {
+                                        eventCounter++;
                                         sessionListModel.Add(new SessionMasterModel()
                                         {
                                             CALENDAR_CODE = data.CALENDAR_CODE,
@@ -965,7 +966,7 @@ namespace Barrway.Controllers
                         }
                         else
                         {
-                            var calendarCountCheckData = await businessUserService.GetSessionsForThisMonth(data.COMPANY_CODE);
+                            var calendarCountCheckData = await businessUserService.GetSessionsForThisMonth(data.COMPANY_CODE, data.CALENDAR_CODE);
                             var package = await businessUserService.GetCompanyActiveSubscriptionDetails(data.COMPANY_CODE, true);
 
                             string script = "";
@@ -981,7 +982,7 @@ namespace Barrway.Controllers
 
                             while (dateTracker <= end)
                             {
-                                eventCounter++;
+                                
                                 if (Convert.ToInt32(calendarCountCheckData.Data["AVAILABLE_SESSIONS"]?.ToString()) < eventCounter)
                                 {
                                     caseBreak = true;
@@ -992,7 +993,7 @@ namespace Barrway.Controllers
                                 DateTime SlotStartTime = DateTime.Now;
                                 DateTime SlotEndTime = DateTime.Now;
 
-                                var dictionaryDataList = JsonConvert.DeserializeObject<Dictionary<string, object>>(JsonConvert.SerializeObject(data.table));
+                                var dictionaryDataList = JsonConvert.DeserializeObject<Dictionary<string, List<Dictionary<string, string>>>>(data.SCH_SCHEDULE_TABLE);
 
                                 foreach (var x in JsonConvert.DeserializeObject<List<CommonTimeObject>>(JsonConvert.SerializeObject(dictionaryDataList[dateTracker.DayOfWeek.ToString().Substring(0, 3)])))
                                 {
@@ -1026,7 +1027,7 @@ namespace Barrway.Controllers
                                                             values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_PROVIDER_MASTER}, '{data.SCH_RESOURCE}', 'SERVICE_PROVIDER_MASTER_1934', 'FIRST_NAME', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_RESOURCE}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
                                                             ";
                                     }
-
+                                    eventCounter++;
                                     script += $@"insert into CALENDAR_FORM_1935(
                                                                [SCHEDULAR_FORM_ID]
                                                               ,[formGroupKey]

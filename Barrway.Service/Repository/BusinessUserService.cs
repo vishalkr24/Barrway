@@ -1918,9 +1918,10 @@ namespace Barrway.Service.Repository
 
         }
 
-        public async Task<AddUpdateDelete> GetSessionsForThisMonth(string CompanyCode)
+        public async Task<AddUpdateDelete> GetSessionsForThisMonth(string CompanyCode, string CalendarCode)
         {
-            string query = $@"declare @CompanyCode varchar(100) = '{CompanyCode}';
+            string query = $@"  declare @CompanyCode varchar(100) = '{CompanyCode}';
+                                declare @CalendarCode varchar(100) = '{CalendarCode}';
                                 declare @SubscriptionDate varchar(200);
                                 declare @SubscriptionEndDate varchar(200);
                                 set @SubscriptionDate = (select top 1 f.created_at from COMPANY_SUBSCRIPTION_DETAILS_1939 f join BUSINESS_COMPANY_MASTER_1924 company on company.Id = f.COMPANY_ID join BUSINESS_ORDER_MASTER_1970 bom on bom.ORDER_NO = f.ORDER_ID where company.COMPANY_CODE = @CompanyCode and f.IS_ACTIVE = 'Y' order by f.created_at desc)
@@ -1956,7 +1957,7 @@ namespace Barrway.Service.Repository
 		                                    ((select top 1 f.ASSIGNED_SESSIONS from COMPANY_SUBSCRIPTION_DETAILS_1939 f join BUSINESS_COMPANY_MASTER_1924 company on company.Id = f.COMPANY_ID where company.COMPANY_CODE = @CompanyCode and f.IS_ACTIVE = 'Y' order by f.created_at desc)) as 'ASSIGNED_SESSIONS',
                                             ((select top 1 bom.VALID_TILL from COMPANY_SUBSCRIPTION_DETAILS_1939 f join BUSINESS_COMPANY_MASTER_1924 company on company.Id = f.COMPANY_ID join BUSINESS_ORDER_MASTER_1970 bom on bom.ORDER_NO = f.ORDER_ID  where company.COMPANY_CODE = @CompanyCode and f.IS_ACTIVE = 'Y' order by f.created_at desc)) as 'VALID_TILL'		                                    
                                             from CALENDAR_FORM_1935 f
-		                                    where f.COMPANY_CODE = @CompanyCode and created_at >= @StartDate and created_at <= @EndDate)
+		                                    where f.COMPANY_CODE = @CompanyCode and f.CALENDAR_CODE = @CalendarCode and created_at >= @StartDate and created_at <= @EndDate)
 		                                    select *, (ASSIGNED_SESSIONS - CREATED_EVENTS) as 'AVAILABLE_SESSIONS' from cte
 	                                else 
 		                                select null as 'result'
@@ -2892,11 +2893,15 @@ namespace Barrway.Service.Repository
 
                         scheduleSlots.ForEach(x =>
                         {
-                            if (!TimeSlotCompare(JsonConvert.DeserializeObject<CommonTimeObject>(JsonConvert.SerializeObject(x)), existingslot) && x["IsOverlapped"].ToString() == "false")
+                            if (!string.IsNullOrEmpty(x["start"]?.ToString()) && !string.IsNullOrEmpty(x["start"]?.ToString()))
                             {
-                                x["IsOverlapped"] = "true";
-                                finalStatus = true;
+                                if (!TimeSlotCompare(JsonConvert.DeserializeObject<CommonTimeObject>(JsonConvert.SerializeObject(x)), existingslot) && x["IsOverlapped"].ToString() == "false")
+                                {
+                                    x["IsOverlapped"] = "true";
+                                    finalStatus = true;
+                                }
                             }
+                            
                         });
 
                         scheduleData[day] = JsonConvert.DeserializeObject<Dictionary<string, object>>(JsonConvert.SerializeObject(new { scheduleSlots }))["scheduleSlots"];

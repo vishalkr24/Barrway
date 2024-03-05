@@ -317,7 +317,8 @@
 
                     } else {
                         $scope.SchedularId = 0;
-                        window.location.reload();
+                        window.location.replace("/calendar/index#/calender/2305");
+                        //window.location.reload();
                     }
 
                 }, function (err) {
