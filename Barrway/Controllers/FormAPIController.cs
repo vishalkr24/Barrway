@@ -162,8 +162,9 @@ namespace Barrway.Controllers
                     if (deserData.Any(x => x["name"]?.ToString() == "COMPANY_CODE"))
                     {
                         string companyCode = deserData.FirstOrDefault(x => x["name"]?.ToString() == "COMPANY_CODE")["value"]?.ToString();
+                        string calendarCode = deserData.FirstOrDefault(x => x["name"]?.ToString() == "CALENDAR_CODE")["value"]?.ToString();
 
-                        var checkResult = await businessUserService.GetSessionsForThisMonth(companyCode);
+                        var checkResult = await businessUserService.GetSessionsForThisMonth(companyCode, calendarCode);
 
                         if (checkResult.Status)
                         {
