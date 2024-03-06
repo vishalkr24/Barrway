@@ -121,7 +121,7 @@ $(document).ready(async function () {
 
 
         $('#calendar-service').change(async function () {
-            debugger;
+            //debugger;
             if ($(this).val() != '') {
                 var searchSrevice = $('#calendar-service option:selected').text();
                 var param = { "action": 29, "formTableColumnData": `   (   (   SERVICE_MASTER_1933.ACTIVITY_NAME like N'${searchSrevice}'    )        )   `, "formTableColumnName": "    left join SERVICE_MASTER_1933 on SERVICE_MASTER_1933.formId=f1.referrenceFormId and SERVICE_MASTER_1933.Id=f1.referrenceId  ", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 }
@@ -926,12 +926,13 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
             else {
                 $scope.selectEventDetails.customDate = moment($scope.selectEventDetails.start).format("YYYY-MM-DD");
             }
-            //$scope.selectEventDetails.customFormIdsSplit
-            //$scope.selectEventDetails.customFormsSplit
+            
             $scope.selectEventDetails.customTitleSplit = $scope.selectEventDetails.customTitle.split(',');
 
             var listFormDropdown = _.filter($scope.selectEventDetails.customFormsSplit, function (item) { return item != ySelection.toString(); });
+
             if (listFormDropdown.length > 0) {
+                debugger;
                 //var listActivities = _.filter(xaxisFormList, function (item) { return item.activitiesForm != ySelection; });
                 var listActivities = xaxisFormList;
                 $scope.selectEventDetails.dropdownList = [];
@@ -955,11 +956,6 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                     $scope.selectEventDetails.dropdownList.push(tempDrop);
                 });
             }
-
-
-
-
-
 
             $('.close-event').on('click', function () {
                 $("body .popover").addClass('isPopoverLoaded');
@@ -1023,10 +1019,6 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                         }
                     }
                 });
-
-
-
-
             }, 200);
             $scope.rootScopeSafe();
             var selectedId = $("#newtag-inputHidden").val();
@@ -1182,7 +1174,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
 
             param.isCalender = 1;
             param.isEvent = 1;
-            debugger;
+            ////debugger;
             param.resourceFormId = ySelection;
             param.ActivityFormId = xSelection;
             var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
@@ -1242,7 +1234,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
     $('#agenda-view div.calendar').fullCalendar(calendarOptions);
 
     if (ySelection != 0) {
-        debugger
+        //debugger
         if (formDetailsDataInfo != null)
             if (formDetailsDataInfo.calenderSettingsList != null)
                 if (formDetailsDataInfo.calenderSettingsList.length > 0) {
@@ -1859,21 +1851,21 @@ async function loadEventRecordDetails(paramTemp) {
         $("#newtabuListUlWaiting").empty();
 
         if (param.parentID != param.formId) {
-
-            if (!DataService.isEmpty($scope.eventDataWithoutGroupBy)) {
+            debugger;
+            if ($scope.eventDataWithoutGroupBy) {
                 if ($scope.eventDataWithoutGroupBy.length > 0) {
                     $("#tabuList").empty();
                     $("#newtabuList").empty();
-                    $("#tabuList").append('<strong id="strongFormName">' + $scope.eventDataWithoutGroupBy.length + ' ' + $scope.otherformDetails.title + ' in this Slot</strong>');
-                    $("#newtabuList").append('<strong id="strongFormName">' + $scope.eventDataWithoutGroupBy.length + ' ' + $scope.otherformDetails.title + ' in this Slot</strong>');
+                    $("#tabuList").append('<strong id="strongFormName">' + $scope.eventDataWithoutGroupBy.length + c + ' ' + $scope.otherformDetails.title + ' in this Slot</strong>');
+                    $("#newtabuList").append('<strong id="strongFormName">' + $scope.eventDataWithoutGroupBy.length + (maxrecordList > 0 ? '/' + maxrecordList : "") + ' ' + $scope.otherformDetails.title + ' in this Slot</strong>');
                 }
                 else {
                     $("#tabuList").empty();
                     $("#newtabuList").empty();
                     if (!DataService.isEmpty($scope.otherformDetails)) {
                         if (!DataService.isEmpty($scope.otherformDetails.title)) {
-                            $("#tabuList").append('<strong id="strongFormName"> 0 ' + $scope.otherformDetails.title + ' in this Slot </strong>');
-                            $("#newtabuList").append('<strong id="strongFormName"> 0 ' + $scope.otherformDetails.title + ' in this Slot </strong>');
+                            $("#tabuList").append('<strong id="strongFormName"> 0 ' + $scope.otherformDetails.title + (maxrecordList > 0 ? '/' + maxrecordList : "") + ' in this Slot </strong>');
+                            $("#newtabuList").append('<strong id="strongFormName"> 0 ' + $scope.otherformDetails.title + (maxrecordList > 0 ? '/' + maxrecordList : "") + ' in this Slot </strong>');
                         }
                     }
                 }
@@ -1933,7 +1925,7 @@ async function GetFormList() {
 }
 
 async function getCalendarDetails(id) {
-    debugger;
+    //debugger;
     return new Promise(resolve => {
         $.ajax({
             type: "POST",
@@ -2135,7 +2127,7 @@ async function rendarPopupCalendar(assignDate) {
                     }
                     rowRecord += "<div class='" + moment(eventData.start).format("YYYY-MM-DD") + "'>" + moment(eventData.start).format("MMMM D, YYYY (dddd)") + "</div>";
                 }
-                debugger;
+                //debugger;
                 //var newLabelList = _.filter(_associatedFormIDsTemp, function (item) { return item != $scope.ySelection.toString() });
                 listids = event.customFormIds.split(',');
                 var currentId = 0;
@@ -2408,7 +2400,7 @@ async function rendarPopupCalendar(assignDate) {
         },
         selectable: true,
         select: function (start, end, cell) {
-            debugger;
+            //debugger;
 
             var $scope = angular.element($("#calendar")).scope();
             $scope.BookingService = {};
@@ -2598,7 +2590,7 @@ function bookingService(star, end, bgevent) {
         "otherActivityformId": getOtherActivityFormId(bgevent),
         "otherActivityId": getOtherActivityId(bgevent)
     };
-    debugger;
+    //debugger;
     showLoader();
     postAsync(BASE_URL + "UserAdmin/BookingService", data).then(function (response) {
         hideLoader();
