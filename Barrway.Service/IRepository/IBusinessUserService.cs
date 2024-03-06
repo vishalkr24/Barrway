@@ -61,7 +61,7 @@ namespace Barrway.Service.IRepository
 
         #region Business Calendar
 
-        Task<AddUpdateDelete> AddCalendar(BusinessCalendarModel model, string UserId, CalendarControlModel calendarControlModel);
+        Task<AddUpdateDelete> AddCalendar(BusinessCalendarModel model, string UserId);
 
         
         Task<AddUpdateDelete> GetAllCalendarTemplatesByCategory(string CalendarCategoryId);

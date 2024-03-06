@@ -1009,9 +1009,8 @@ namespace Barrway.Service.Repository
         {
             string query = $@"SELECT calendar.[Id], calendar.CALENDAR_FUNCTION_TYPE,      calendar.[created_at], company.IS_ACTIVE      ,calendar.[updated_at]      ,calendar.[created_by]      ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,calendar.[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                                 join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE 
-								join CALENDAR_CONTROL_SHEET_1944 ccs on ccs.CALENDAR_CODE = calendar.CALENDAR_CODE
                                 join CALENDAR_CATEGORY_MASTER_1929 category on category.Id = calendar.CALENDAR_CATEGORY_ID
-                                where company.IS_ACTIVE = 'Y' and company.Id = '{CompanyId}' and ccs.CALENDAR_USE_TYPE = 'PUBLIC'";
+                                where company.IS_ACTIVE = 'Y' and company.Id = '{CompanyId}' and calendar.CALENDAR_USE_TYPE = 'PUBLIC'";
 
             List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -2198,7 +2197,7 @@ namespace Barrway.Service.Repository
 
         }
 
-        public async Task<AddUpdateDelete> AddCalendar(BusinessCalendarModel model, string UserId, CalendarControlModel calendarControlModel)
+        public async Task<AddUpdateDelete> AddCalendar(BusinessCalendarModel model, string UserId)
         {
             AddUpdateDelete CalendarDetails = new AddUpdateDelete()
             {
@@ -2266,20 +2265,6 @@ namespace Barrway.Service.Repository
                                 }
                             }
 
-
-                            // map data in model
-                            calendarControlModel.CALENDAR_CODE = model.CALENDAR_CODE;
-                            calendarControlModel.COMPANY_CODE = model.COMPANY_CODE;
-                            calendarControlModel.USER_ADMIN_GROUP_NAME = model.COMPANY_CODE.ToString() + model.CALENDAR_CODE.ToString();
-                            calendarControlModel.CALENDAR_GROUP_NAME = model.CALENDAR_CODE.ToString() + model.COMPANY_CODE.ToString();
-
-                            data = new Form_DataTable();
-                            data.action = (int)FormAction.Save;
-                            data.formId = (int)FormSetting.CALENDAR_CONTROL_SHEET;
-                            data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(calendarControlModel.ToDictionary());
-                            data.formGroupKey = Guid.NewGuid().ToString();
-                            formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
-
                             return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() };
                         }
                         else
@@ -2323,50 +2308,7 @@ namespace Barrway.Service.Repository
                                       ,[CALENDAR_SUB_CATEGORY_ID] = '{model.CALENDAR_SUB_CATEGORY_ID}'
                                       ,[COMPANY_CODE] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_CODE)}'
                                  WHERE Id = '{model.Id}'
-
-                                 UPDATE [dbo].[CALENDAR_CONTROL_SHEET_1944]
-                                   SET 
-                                      [updated_at] = getdate()
-                                      ,[DISPLAY_START_TIME] = '{calendarControlModel.DISPLAY_START_TIME}'
-                                      ,[DISPLAY_END_TIME] = '{calendarControlModel.DISPLAY_END_TIME}'
-                                      ,[USER_ADMIN_GROUP_NAME] = '{calendarControlModel.USER_ADMIN_GROUP_NAME}'
-                                      ,[CALENDAR_GROUP_NAME] = '{calendarControlModel.CALENDAR_GROUP_NAME}'
-                                      ,[CALENDAR_USE_TYPE] = '{calendarControlModel.CALENDAR_USE_TYPE}'
-                                      ,[CALENDAR_FORM_NAME] = '{calendarControlModel.CALENDAR_FORM_NAME}'
-                                      ,[THEME_SELECTION] = '{calendarControlModel.THEME_SELECTION}'
-                                      ,[RESOURCE_FORM_YN] = '{calendarControlModel.RESOURCE_FORM_YN}'
-                                      ,[RESOURCE_NAME] = '{calendarControlModel.RESOURCE_NAME}'
-                                      ,[RESOURCE_FORM_CATEGORY] = '{calendarControlModel.RESOURCE_FORM_CATEGORY}'
-                                      ,[RESOURCE_FORM_NAME] = '{calendarControlModel.RESOURCE_FORM_NAME}'
-                                      ,[RESOURCE_ALLOW_OVERLAP_YN] = '{calendarControlModel.RESOURCE_ALLOW_OVERLAP_YN}'
-                                      ,[HAS_ACTIVITIES_YN] = '{calendarControlModel.HAS_ACTIVITIES_YN}'
-                                      ,[ACTIVITY_NAME] = '{calendarControlModel.ACTIVITY_NAME}'
-                                      ,[ACTIVITY_FORM_CATEGORY] = '{calendarControlModel.ACTIVITY_FORM_CATEGORY}'
-                                      ,[ACTIVITY_FORM_NAME] = '{calendarControlModel.ACTIVITY_FORM_NAME}'
-                                      ,[ACTIVITY_ALLOW_OVERLAP_YN] = '{calendarControlModel.ACTIVITY_ALLOW_OVERLAP_YN}'
-                                      ,[LOCATION_NAME] = '{calendarControlModel.LOCATION_NAME}'
-                                      ,[LOCATION_FORM_CATEGORY] = '{calendarControlModel.LOCATION_FORM_CATEGORY}'
-                                      ,[LOCATION_FORM_NAME] = '{calendarControlModel.LOCATION_FORM_NAME}'
-                                      ,[LOCATION_ALLOW_OVERLAP_YN] = '{calendarControlModel.LOCATION_ALLOW_OVERLAP_YN}'
-                                      ,[HAS_PARTICIPANT_FORM_YN] = '{calendarControlModel.HAS_PARTICIPANT_FORM_YN}'
-                                      ,[PARTICIPANT_NAME] = '{calendarControlModel.PARTICIPANT_NAME}'
-                                      ,[PARTICIPANT_FORM_NAME] = '{calendarControlModel.PARTICIPANT_FORM_NAME}'
-                                      ,[PARTICIPANT_ALLOW_REPEAT_YN] = '{calendarControlModel.PARTICIPANT_ALLOW_REPEAT_YN}'
-                                      ,[REQUIRE_REGISTRATION_YN] = '{calendarControlModel.REQUIRE_REGISTRATION_YN}'
-                                      ,[HAS_EVALUATION_YN] = '{calendarControlModel.HAS_EVALUATION_YN}'
-                                      ,[EVALUATION_NAME] = '{calendarControlModel.EVALUATION_NAME}'
-                                      ,[EVALUATION_FORM_CATEGORY] = '{calendarControlModel.EVALUATION_FORM_CATEGORY}'
-                                      ,[EVALUATION_FORM_NAME] = '{calendarControlModel.EVALUATION_FORM_NAME}'
-                                      ,[HAS_ASSESSMENT_YN] = '{calendarControlModel.HAS_ASSESSMENT_YN}'
-                                      ,[ASSESSMENT_NAME] = '{calendarControlModel.ASSESSMENT_NAME}'
-                                      ,[ASSESSMENT_FORM_CATEGORY] = '{calendarControlModel.ASSESSMENT_FORM_CATEGORY}'
-                                      ,[ASSESSMENT_FORM_NAME] = '{calendarControlModel.ASSESSMENT_FORM_NAME}'
-                                      ,[CALENDAR_FORM_CATEGORY] = '{calendarControlModel.CALENDAR_FORM_CATEGORY}'
-                                      ,[REGISTRATION_FORM_NAME] = '{calendarControlModel.REGISTRATION_FORM_NAME}'
-                                      ,[REGISTRATION_FORM_CATEGORY] = '{calendarControlModel.REGISTRATION_FORM_CATEGORY}'
-                                 WHERE CALENDAR_CODE = '{calendarControlModel.CALENDAR_CODE}' and COMPANY_CODE = '{model.COMPANY_CODE}'
-
-";
+                                 ";
 
                 int saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
 
@@ -3108,10 +3050,11 @@ namespace Barrway.Service.Repository
                 {
                     string categoryId = result["CALENDAR_CATEGORY_ID"]?.ToString() ?? "";
                     sqlString = $@"select *from CALENDAR_CONTROL_SHEET_1944 where CALENDAR_CODE='{calendarCode}'";
-                    var controlSheet = (await sqlFunction.ExecuteSqlQuery(sqlString)).FirstOrDefault();
+                    
+                    //var controlSheet = (await sqlFunction.ExecuteSqlQuery(sqlString)).FirstOrDefault();
+                    //result.Add("controlSheet", controlSheet);
 
-                    result.Add("controlSheet", controlSheet);
-                    sqlString = $@"select *from CALENDAR_CATEGORY_MASTER_1929 where Id={categoryId}";
+                    sqlString = $@"select *from CALENDAR_CATEGORY_MASTER_1929 where Id = {categoryId}";
 
                     var category = (await sqlFunction.ExecuteSqlQuery(sqlString)).FirstOrDefault();
                     result.Add("category", category);
