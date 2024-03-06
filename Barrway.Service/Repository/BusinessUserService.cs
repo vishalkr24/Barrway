@@ -13,6 +13,7 @@ using Barrway.DTO.BusinessModels;
 using FormGeneratorDTOs.DTOs;
 using Barrway.Utility.Common;
 using Newtonsoft.Json;
+using System.Security.Cryptography;
 
 namespace Barrway.Service.Repository
 {
@@ -2815,9 +2816,27 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string sqlQuery = $@"select [start], [end] from CALENDAR_FORM_1935 where (cast([start] as date) >= '{model.SCH_FROM_DATE}' and cast([end] as date) <= '{model.SCH_TO_DATE}') and (CALENDAR_CODE = '{model.CALENDAR_CODE}' and COMPANY_CODE = '{model.COMPANY_CODE}') ";
+                string sqlQuery = $@"select distinct clr.formGroupKey, clr.[start], clr.[end],clr_ref.referrenceFormId,clr_ref.referrenceId from CALENDAR_FORM_1935 clr
+                                     join form_calenderreferrence clr_ref on clr_ref.formgroupkey=clr.formGroupKey where (cast([start] as date) >= '{model.SCH_FROM_DATE}' 
+                                     and cast([end] as date) <= '{model.SCH_TO_DATE}') and (CALENDAR_CODE = '{model.CALENDAR_CODE}' and COMPANY_CODE = '{model.COMPANY_CODE}') 
+                                     and ((referrenceFormId={(int)FormSetting.LOCATION_MASTER} and referrenceId={model.SCH_LOCATION}) OR 
+                                    (referrenceFormId={(int)FormSetting.SERVICE_MASTER} and referrenceId={model.SCH_ACTIVITY}) OR 
+                                    (referrenceFormId={(int)FormSetting.SERVICE_PROVIDER_MASTER} and referrenceId={model.SCH_RESOURCE}))";
+
+
 
                 var slotsResult = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+                //slot filter with service same but location and service provider not same
+                var location_slotsResult = slotsResult.Where(x => x["referrenceFormId"].ToString() == ((int)FormSetting.LOCATION_MASTER).ToString() && x["referrenceId"].ToString() == model.SCH_LOCATION.ToString()).ToList();
+                var service_provider_slotsResult = slotsResult.Where(x => x["referrenceFormId"].ToString() == ((int)FormSetting.SERVICE_PROVIDER_MASTER).ToString() && x["referrenceId"].ToString() == model.SCH_RESOURCE.ToString()).ToList();
+
+
+                slotsResult = (from locationSlot in location_slotsResult
+                                 join serviceProviderSlot in service_provider_slotsResult
+                                 on locationSlot["formGroupKey"] equals serviceProviderSlot["formGroupKey"]
+                                 select locationSlot).ToList();
+
 
                 bool finalStatus = false;
 

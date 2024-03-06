@@ -35129,6 +35129,7 @@ button.create-company {
     width: 100%;
     float: left;
     margin-bottom: 15px;
+    cursor:pointer;
 }
 
 .all-company img {
@@ -35677,7 +35678,7 @@ button#backtomarketplace {
     margin: 5px 0px;
 }
 
-.switch {
+lable.switch {
     display: inline-block;
     position: relative;
     width: 50px;
