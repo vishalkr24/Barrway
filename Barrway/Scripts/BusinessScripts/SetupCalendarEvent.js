@@ -176,6 +176,7 @@ function bindStep(step) {
                 BindQueue2Template();
                 $("#master-wrap-1").hide();
                 $("#master-wrap-2").show();
+                break;
             case "QUEUE_1":
                 BindQueue1Template();
                 $("#master-wrap-1").hide();
@@ -634,6 +635,9 @@ function BindQueue2Template() {
                 for (var i = 0; i < response.Data.session.length; i++) {
                     addSessionRow(response.Data.session[i]);
                 }
+            } else {
+                addQueueRow();
+                addSessionRow();
             }
         },
         error: function (err) {

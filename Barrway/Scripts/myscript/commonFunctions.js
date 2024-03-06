@@ -3209,13 +3209,13 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                                 var maxTime = exists.maxTime.trim().replace(' ', ':');
 
 
-                                if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
-                                    minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
-                                }
+                                //if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
+                                //    minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
+                                //}
 
-                                if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
-                                    maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
-                                }
+                                //if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
+                                //    maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
+                                //}
 
                                 $('#agenda-view div.calendar').fullCalendar('option', 'minTime', minTime + ":00");
                                 $('#agenda-view div.calendar').fullCalendar('option', 'maxTime', maxTime + ":00");
@@ -4599,13 +4599,13 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                 var maxTime = exists.maxTime.trim().replace(' ', ':');
 
 
-                if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
-                    minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
-                }
+                //if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
+                //    minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
+                //}
 
-                if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
-                    maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
-                }
+                //if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
+                //    maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
+                //}
 
                 if (Check_EXIST_FIXED_OPERATING_HOURS(calendarDetails)) {
                     myOptions2.minTime = minTime + ":00";

@@ -465,7 +465,7 @@
         },
         "2_3": {
           "Has_Next_Step": true,
-          "View_Name": "QUEUE_2",
+          "View_Name": "REDIRECT_TO_SCHEDULE_FORM",
           "Heading_Title": "Set up the booking queue",
           "Is_Skippable": false
         }
@@ -541,6 +541,57 @@
         }
       }
 
+    },
+    "Step5": {
+      "Is_Based_On_Category": true,
+      "Category": {
+        "2_1": {
+          "Has_Next_Step": false,
+          "View_Name": "FINAL_VIEW",
+          "Success_Message": "Congradulation, you have created a calendar!",
+          "Helpers": {
+            "Helper_1": {
+              "Image": "",
+              "Text": "Let's add your course/service schedule to the calendar ",
+              "Button": {
+                "Text": "Go",
+                "Link": "/calendar/index#/calendar/schedular-form/0"
+              }
+            },
+            "Helper_2": {
+              "Image": "",
+              "Text": "Let's set up the course/service schedule later. Let's check the calendar created.",
+              "Button": {
+                "Text": "Go",
+                "Link": "/calendar/index#/calender/2305"
+              }
+            }
+          }
+        },
+        "2_2": {
+          "Has_Next_Step": false,
+          "View_Name": "FINAL_VIEW",
+          "Success_Message": "Congradulation, you have created a calendar!",
+          "Helpers": {
+            "Helper_1": {
+              "Image": "",
+              "Text": "Let's add your course/service schedule to the calendar ",
+              "Button": {
+                "Text": "Go",
+                "Link": "/calendar/index#/calendar/schedular-form/0"
+              }
+            },
+            "Helper_2": {
+              "Image": "",
+              "Text": "Let's set up the course/service schedule later. Let's check the calendar created.",
+              "Button": {
+                "Text": "Go",
+                "Link": "/calendar/index#/calender/2305"
+              }
+            }
+          }
+        }
+      }
     }
   },
 
@@ -713,6 +764,21 @@
         }
       }
     }
-    
+
+  },
+  "Type6": {
+    "Step1": {
+      "Has_Next_Step": true,
+      "Is_Based_On_Category": false,
+      "View_Name": "CALENDAR_FORM"
+
+    },
+    "Step2": {
+      "Has_Next_Step": false,
+      "Is_Based_On_Category": false,
+      "View_Name": "REDIRECT_TO_SCHEDULE_FORM",
+      "Heading_Title": "Give a name for your event location"
+    }
+
   }
 }

@@ -503,6 +503,7 @@
     <Content Include="assets\img\pro.png" />
     <Content Include="assets\img\ques.png" />
     <Content Include="assets\img\rectangle.png" />
+    <Content Include="assets\img\Restaurant.png" />
     <Content Include="assets\img\search-icon.png" />
     <Content Include="assets\img\service.jpg" />
     <Content Include="assets\img\slogan.png" />
