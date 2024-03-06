@@ -92,30 +92,26 @@ $(document).ready(function () {
         }
     });
 
-    $("#owl-demo5").owlCarousel({
-        //loop: $('.owl-carousel .item').length > 1 ? true : false,
-        dots: true,
-        nav: true,
+    $('#owl-demo5').owlCarousel({
+        loop: false,
+        margin: 10,
         responsiveClass: true,
         responsive: {
             0: {
-                items: 2,
-                nav: false
+                items: 1,
+                nav: true
             },
             600: {
-                items: 5,
+                items: 3,
                 nav: false
             },
             1000: {
-                items: 6,
+                items: 5,
                 nav: true,
-                //loop: true,
-                margin: 20
+                loop: false
             }
         }
-    });
-
-
+    })
 
 });
 

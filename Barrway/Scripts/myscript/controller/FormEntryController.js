@@ -1883,37 +1883,7 @@
                 .then(function (response) {
                     
                     if (response.data != null && angular.isDefined(response.data)) {
-                        var frmDataCheck = response.data;
-                        //console.log(frmDataCheck[0].fields, "frmDataCheck");
-                        if (frmDataCheck.PlanExpired == 1) {
-                            //notifierService.notifySweetAlertMessage('warning', 'Subscription Plan', frmDataCheck.Message);
-                            if (frmDataCheck.GracePeriodActive == 0) {
-                                $rootScope.$emit("HideLoading");
-                                notifierService.notifySweetAlertMessageForRole('warning', 'Subscription Plan', frmDataCheck.Message, 'topic');
-                                return false;
-                            }
-                            else if (frmDataCheck.GracePeriodActive == 2) {
-                                $rootScope.$emit("HideLoading");
-                                notifierService.notifySweetAlertMessageForRole('warning', 'Subscription Plan', "Retention Period is over, kindly re-subscribe to perform entry", 'topic');
-                                return false;
-                            }
-
-
-                        }
-
-                        var formdata = response.data[0];
                         $scope.formDetailsDataInfo = response.data[0];
-                        if ($scope.isEdit == false && formdata.PlanExpired == 1 && formdata.GracePeriodActive == 1) {
-                            $rootScope.$emit("HideLoading");
-                            notifierService.notifySweetAlertMessageForRole('warning', 'Subscription Plan', "Retention Period is active, form entries not allowed", 'topic');
-
-                            return false;
-                        }
-                        if (formdata.res == 5001) {
-                            $rootScope.$emit("HideLoading");
-                            notifierService.notifySweetAlertMessageForRole('warning', 'Form Access Rights', "You do not have the access right to this page. You will proceed to Home page", 'Home');
-                            return false;
-                        }
                         var str1 = JSON.parse(response.data[0].fields);
                         var obj = Object.values(str1);
                         var ary = [];
@@ -1926,8 +1896,6 @@
                                 ary = Object.values(obj)[0];
                             }
                         }
-                        //console.log('converted array', ary, 'str', str1);
-                        var checkcontrol = ary.filter(x => x.type == "PayPal");
                         
                         $scope.PPControl = false;
                         for (var i = 0; i < ary.length; i++) {
@@ -1940,18 +1908,8 @@
                                 $rootScope.amount = ary[i].amount;
                                 $rootScope.paypal_id = ary[i].PAYPAL_ID;
                                 $rootScope.paypal_currency = ary[i].PAYPAL_CURRENCY;
-                                //console.log('amt:', $rootScope.amount, $scope.PPControl);
-
                             }
                         }
-                        
-                        //if (checkcontrol.length > 0) {
-                        //    console.log('$scope.PPControl', checkcontrol.length);
-                        //    //$scope.amount = JSON.parse(Object.values(obj)[0]).filter(x => x.type == "amount").val
-
-
-                        //}
-                        //var checkMapcontrol = JSON.parse(Object.values(obj)[0]).filter(x => x.type == "map");
                         $scope.mapControl = false;
                         for (var i = 0; i < ary.length; i++) {
                             if (ary[i].type === "map") {
