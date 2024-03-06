@@ -18,12 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="iTextSharp" Version="5.5.13.3" />
-    <PackageReference Include="Spire.Office" Version="8.6.0" />
-    <PackageReference Include="Spire.XLS" Version="13.4.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="itextsharp">
       <HintPath>Dto_dlls\itextsharp.dll</HintPath>
     </Reference>

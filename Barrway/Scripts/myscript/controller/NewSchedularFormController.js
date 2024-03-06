@@ -156,6 +156,7 @@
         }
 
         $scope.addFormElement = function (abbr) {
+            debugger;
             let id = getMaxId(abbr);
             console.log($scope.scheduleList[abbr]);
 
@@ -184,7 +185,9 @@
 
         $scope.deleteFormElement = function (abbr, id) {
             if ($scope.scheduleList[abbr].length <= 1) {
-                notifierService.notifyMessage("error", "Warning", "Can not delete all slots!");
+                //notifierService.notifyMessage("error", "Warning", "Can not delete all slots!");
+                $(`[data-input-day="${abbr}"][data-input-type="start"][data-input-id="${id}"]`).val('');
+                $(`[data-input-day="${abbr}"][data-input-type="end"][data-input-id="${id}"]`).val('');
                 return false;
             }
 
@@ -678,6 +681,41 @@
             }
 
             $("#booking-session-table tbody").append(binderString);
+        }
+
+
+
+        /* copy slots */
+
+        $scope.copyslots = function () {
+            if ($('#copy_slots_cheb').is(":checked")) {
+                debugger;
+                let start = [];
+                let end = [];
+                $('[data-input-day="Mon"][data-input-type="start"][data-input-id]').each(function (index, el) {
+                    start.push({ index: $(el).data("input-id"), value: $(el).val() });
+                });
+                $('[data-input-day="Mon"][data-input-type="end"][data-input-id]').each(function (index, el) {
+                    end.push({ index: $(el).data("input-id"), value: $(el).val() });
+                });
+                // $scope.scheduleList
+
+                $.each($scope.scheduleList, function (value) {
+                    if (value != "Mon") {
+                        start.forEach((x,index) => {
+                            if ($(`[data-input-day="${value}"][data-input-type="start"][data-input-id="${x.index}"]`).length == 0) {
+                                $scope.addFormElement(value);
+                            }
+
+                            $(`[data-input-day="${value}"][data-input-type="start"][data-input-id="${x.index}"]`).val(x.value);
+                            $scope.scheduleList[value].find(y => y.Id == x.index)["start"] = x.value;
+                            $(`[data-input-day="${value}"][data-input-type="end"][data-input-id="${x.index}"]`).val(end[index].value);
+                            $scope.scheduleList[value].find(y => y.Id == x.index)["end"] = end[index].value;
+                        });
+                    }
+                });
+
+            }
         }
 
         $scope.init();

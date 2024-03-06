@@ -2135,6 +2135,7 @@ async function rendarPopupCalendar(assignDate) {
                     }
                     rowRecord += "<div class='" + moment(eventData.start).format("YYYY-MM-DD") + "'>" + moment(eventData.start).format("MMMM D, YYYY (dddd)") + "</div>";
                 }
+                debugger;
                 //var newLabelList = _.filter(_associatedFormIDsTemp, function (item) { return item != $scope.ySelection.toString() });
                 listids = event.customFormIds.split(',');
                 var currentId = 0;
