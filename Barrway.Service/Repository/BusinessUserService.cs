@@ -990,7 +990,7 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetCompanyCalendarByCompanyId(string CompanyId)
         {
-            string query = $@"SELECT calendar.[Id]      ,calendar.[CALENDAR_FUNCTION_TYPE], calendar.[created_at], company.IS_ACTIVE      ,calendar.[updated_at]      ,calendar.[created_by]      ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
+            string query = $@"SELECT calendar.[Id]      ,calendar.[CALENDAR_FUNCTION_TYPE], calendar.[CALENDAR_TYPE], calendar.[created_at], company.IS_ACTIVE      ,calendar.[updated_at]      ,calendar.[created_by]      ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                                 join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE 
                                 where company.IS_ACTIVE = 'Y' and company.Id = '{CompanyId}'";
 
@@ -2817,11 +2817,14 @@ namespace Barrway.Service.Repository
             try
             {
                 string sqlQuery = $@"select distinct clr.formGroupKey, clr.[start], clr.[end],clr_ref.referrenceFormId,clr_ref.referrenceId from CALENDAR_FORM_1935 clr
-                                     join form_calenderreferrence clr_ref on clr_ref.formgroupkey=clr.formGroupKey where (cast([start] as date) >= '{model.SCH_FROM_DATE}' 
+                                     join form_calenderreferrence clr_ref on clr_ref.formgroupkey=clr.formGroupKey 
+                                     where (cast([start] as date) >= '{model.SCH_FROM_DATE}' 
                                      and cast([end] as date) <= '{model.SCH_TO_DATE}') and (CALENDAR_CODE = '{model.CALENDAR_CODE}' and COMPANY_CODE = '{model.COMPANY_CODE}') 
-                                     and ((referrenceFormId={(int)FormSetting.LOCATION_MASTER} and referrenceId={model.SCH_LOCATION}) OR 
-                                    (referrenceFormId={(int)FormSetting.SERVICE_MASTER} and referrenceId={model.SCH_ACTIVITY}) OR 
-                                    (referrenceFormId={(int)FormSetting.SERVICE_PROVIDER_MASTER} and referrenceId={model.SCH_RESOURCE}))";
+                                     and (
+                                            (referrenceFormId={(int)FormSetting.LOCATION_MASTER} and referrenceId={model.SCH_LOCATION}) OR 
+                                            (referrenceFormId={(int)FormSetting.SERVICE_MASTER} and referrenceId={model.SCH_ACTIVITY}) OR 
+                                            (referrenceFormId={(int)FormSetting.SERVICE_PROVIDER_MASTER} and referrenceId={model.SCH_RESOURCE})
+                                         )";
 
 
 
@@ -2856,7 +2859,7 @@ namespace Barrway.Service.Repository
                         {
                             if (!string.IsNullOrEmpty(x["start"]?.ToString()) && !string.IsNullOrEmpty(x["start"]?.ToString()))
                             {
-                                if (!TimeSlotCompare(JsonConvert.DeserializeObject<CommonTimeObject>(JsonConvert.SerializeObject(x)), existingslot) && x["IsOverlapped"].ToString() == "false")
+                                if (!TimeSlotCompare(JsonConvert.DeserializeObject<CommonTimeObject>(JsonConvert.SerializeObject(x)), existingslot) && x["IsOverlapped"].ToString().ToLower() == "false")
                                 {
                                     x["IsOverlapped"] = "true";
                                     finalStatus = true;

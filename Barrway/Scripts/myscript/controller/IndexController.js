@@ -355,8 +355,18 @@
                     /*$("#nav-schedular-form").attr("href", "/calendar/index#/calendar/queue-schedular-form/2311");*/
                     /*$("#nav-schedular-form").attr("href", "/calendar/index#/calendar/schedular-form-table/2311")*/
                 };
-
+                
                 localStorage.setItem("CALENDAR_FUNCTION_TYPE", $scope.calendarList.find(x => x.CALENDAR_CODE == localStorage.getItem("CALENDAR_CODE")).CALENDAR_FUNCTION_TYPE);
+                localStorage.setItem("CALENDAR_TYPE", $scope.calendarList.find(x => x.CALENDAR_CODE == localStorage.getItem("CALENDAR_CODE")).CALENDAR_TYPE);
+                localStorage.setItem("CALENDAR_CATEGORY_ID", $scope.calendarList.find(x => x.CALENDAR_CODE == localStorage.getItem("CALENDAR_CODE")).CALENDAR_CATEGORY_ID);
+                debugger;
+                if ((localStorage.getItem("CALENDAR_TYPE") == "3" && localStorage.getItem("CALENDAR_CATEGORY_ID") == "4") || (localStorage.getItem("CALENDAR_TYPE") == "4" && localStorage.getItem("CALENDAR_CATEGORY_ID") == "2")) {
+                    hideElementById("nav-schedular-form-parent");
+                } else if (localStorage.getItem("CALENDAR_CATEGORY_ID") == 6) {
+                    hideElementById("nav-schedular-form-parent");
+                }else {
+                    showElementById("nav-schedular-form-parent");
+                }
 
                 $(".lbl-company-name").text(localStorage.getItem("COMPANY_NAME_ENGLISH"));
                 $(".lbl-calendar-name").text($("#ddlMasterCalendar option:selected").text());
