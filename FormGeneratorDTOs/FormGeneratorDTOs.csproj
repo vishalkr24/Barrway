@@ -22,28 +22,34 @@
       <HintPath>Dto_dlls\itextsharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Word">
-      <HintPath>..\..\Moodies-Web\FormGeneratorDTOs\Dto_dlls\Microsoft.Office.Interop.Word.dll</HintPath>
+      <HintPath>Dto_dlls\Microsoft.Office.Interop.Word.dll</HintPath>
     </Reference>
     <Reference Include="Quartz">
-      <HintPath>..\..\Moodies-Web\FormGeneratorDTOs\Dto_dlls\Quartz.dll</HintPath>
+      <HintPath>Dto_dlls\Quartz.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.Doc">
+      <HintPath>Dto_dlls\Spire.Doc.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.License">
+      <HintPath>Dto_dlls\Spire.License.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.Pdf">
+      <HintPath>Dto_dlls\Spire.Pdf.dll</HintPath>
     </Reference>
     <Reference Include="Spire.XLS">
-      <HintPath>Dto_dlls\Dto_dlls\Spire.XLS.dll</HintPath>
+      <HintPath>Dto_dlls\Spire.XLS.dll</HintPath>
     </Reference>
     <Reference Include="Syncfusion.DocIO.Base">
-      <HintPath>..\..\Moodies-Web\FormGeneratorDTOs\Dto_dlls\Syncfusion.DocIO.Base.dll</HintPath>
+      <HintPath>Dto_dlls\Syncfusion.DocIO.Base.dll</HintPath>
     </Reference>
     <Reference Include="Syncfusion.DocToPDFConverter.Base">
-      <HintPath>..\..\Moodies-Web\FormGeneratorDTOs\Dto_dlls\Syncfusion.DocToPdfConverter.Base.dll</HintPath>
+      <HintPath>Dto_dlls\Syncfusion.DocToPdfConverter.Base.dll</HintPath>
     </Reference>
     <Reference Include="Syncfusion.OfficeChart.Base">
-      <HintPath>..\..\Moodies-Web\FormGeneratorDTOs\Dto_dlls\Syncfusion.OfficeChart.Base.dll</HintPath>
+      <HintPath>Dto_dlls\Syncfusion.OfficeChart.Base.dll</HintPath>
     </Reference>
     <Reference Include="Syncfusion.Pdf.Base">
-      <HintPath>..\..\Moodies-Web\FormGeneratorDTOs\Dto_dlls\Syncfusion.Pdf.Base.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Configuration">
-      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\System.Configuration.dll</HintPath>
+      <HintPath>Dto_dlls\Syncfusion.Pdf.Base.dll</HintPath>
     </Reference>
   </ItemGroup>
 

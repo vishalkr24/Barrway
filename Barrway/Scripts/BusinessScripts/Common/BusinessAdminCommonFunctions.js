@@ -257,6 +257,14 @@ function getQueueAndSession(companyCode, calendarCode) {
     return data;
 }
 
+function hideElementById(id) {
+    $(document.getElementById(id)).hide();
+}
+
+function showElementById(id) {
+    $(document.getElementById(id)).show();
+}
+
 function getCompanyWebsite() {
     var data;
     $.ajax({

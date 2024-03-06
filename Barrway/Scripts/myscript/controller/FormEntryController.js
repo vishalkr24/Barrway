@@ -1047,13 +1047,14 @@
         };
 
         $scope.bindFormDynamically = function (type) {
+            debugger;
             $("#main-html").fadeOut();
             
             setTimeout(function () {
                 debugger;
                 if (type == 2) {
                     
-                    $("#barrwayFormType").text("Advanced");
+                    $("#barrwayFormType").text(" - Advanced");
                     $("#btn-form-switch").text("Switch to Basic Mode");
                     $scope.barrwayFormTypeSwitch = 1;
 
@@ -1073,7 +1074,7 @@
                     $("#main-html").fadeIn();
                 } else {
                     
-                    $("#barrwayFormType").text("Basic");
+                    $("#barrwayFormType").text(" - Basic");
                     $("#btn-form-switch").text("Switch to Advanced Mode");
                     $scope.barrwayFormTypeSwitch = 2;
 
@@ -2067,10 +2068,36 @@
                                         // area of interest
                                         $scope.param = param;
                                         $scope.htmlContentData = $scope.importFormSettings.formContentHTMLTemp;
+                                        
                                         var temp = [];
                                         temp.push({});
 
-                                        $scope.bindFormDynamically($scope.barrwayFormTypeSwitch);
+                                        if (param.formId == '2303' || param.formId == '2304' || param.formId == '2306') {
+                                            debugger;
+                                            $scope.bindFormDynamically($scope.barrwayFormTypeSwitch, $scope.isEdit);
+                                        } else {
+                                            $scope.barrwayFormTypeSwitch
+                                            $("#barrwayFormType").hide();
+                                            $("#btn-form-switch").hide();
+                                            setTimeout(function () {
+                                                $scope.formFields["Page 1"].forEach(x => {
+                                                    if (x["type"] != "button") {
+
+                                                        if (x["type"] == "header" || (x["type"] == "paragraph" && x["name"] == "helper_paragraph")) {
+                                                            $(".border-" + x["name"]).hide();
+                                                        } else {
+                                                            $(".border-" + x["name"]).show();
+                                                        }
+
+                                                    }
+
+                                                });
+
+                                                $("#main-html").fadeIn();
+                                            }, 500)
+                                            
+                                            
+                                        }
 
                                         if (!DataService.isEmpty($scope.importFormSettings.recordAccessSecurity)) {
                                             if (!Array.isArray($scope.importFormSettings.recordAccessSecurity))

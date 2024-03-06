@@ -261,13 +261,17 @@
         }
 
         $(document).on("change", "input[name=form-time-input]", function () {
+            debugger;
             let type = $(this).attr("data-input-type");
             let id = $(this).attr("data-input-id");
             let day = $(this).attr("data-input-day");
             let val = this.value;
 
             $scope.scheduleList[day].find(x => x.Id == id)[type] = val;
-            console.log($scope.scheduleList);
+            $scope.scheduleList[day].find(x => x.Id == id).IsOverlapped = false;
+
+            $("div[data-element-id=SCH_" + id + "]").removeClass("error")
+
         })
 
         $scope.saveSchedularForm = function () {
