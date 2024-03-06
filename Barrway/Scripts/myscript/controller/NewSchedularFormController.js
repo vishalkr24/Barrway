@@ -209,13 +209,15 @@
 
         $scope.validateSchedularForm = function () {
             let finalStatus = true;
-            debugger;
-            if ($("#SCH_ACTIVITY option:selected").val() == "-1") {
-                $("#SCH_ACTIVITY_ERROR").show();
-                finalStatus = false;
-            } else {
-                $("#SCH_ACTIVITY_ERROR").hide();
-            }
+
+            if ($scope.ViewName == "S3A" || $scope.ViewName == "S3G") {
+                if ($("#SCH_ACTIVITY option:selected").val() == "-1") {
+                    $("#SCH_ACTIVITY_ERROR").show();
+                    finalStatus = false;
+                } else {
+                    $("#SCH_ACTIVITY_ERROR").hide();
+                }
+            }            
 
             let arr = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -236,6 +238,20 @@
                 finalStatus = false;
             } else {
                 $("#SCH_SLOT_ERROR").hide();
+            }
+
+            if ($("#SCH_FROM_DATE").val() == "") {
+                $("#SCH_FROM_DATE_ERROR").show();
+                finalStatus = false;
+            } else {
+                $("#SCH_FROM_DATE_ERROR").hide();
+            }
+
+            if ($("#SCH_TO_DATE").val() == "") {
+                $("#SCH_TO_DATE_ERROR").show();
+                finalStatus = false;
+            } else {
+                $("#SCH_TO_DATE_ERROR").hide();
             }
 
             return finalStatus

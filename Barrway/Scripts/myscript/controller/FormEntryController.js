@@ -1050,6 +1050,7 @@
             $("#main-html").fadeOut();
             
             setTimeout(function () {
+                debugger;
                 if (type == 2) {
                     
                     $("#barrwayFormType").text("Advanced");
@@ -2062,7 +2063,7 @@
                                 if (isVarified == true && $scope.QRstring == false) {
 
                                     if (isSubscriptionVarified) {
-
+                                        debugger;
                                         // area of interest
                                         $scope.param = param;
                                         $scope.htmlContentData = $scope.importFormSettings.formContentHTMLTemp;
