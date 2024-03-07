@@ -601,7 +601,7 @@
 
     },
     "Is_Showing_List_Participants": false
-    }
+
   },
 
   "Type4": {
@@ -700,28 +700,6 @@
           "Helpers": {
             "Helper_1": {
               "Image": "",
-              "Text": "Let me see the calendar I created.",
-              "Button": {
-                "Text": "Go",
-                "Link": "/Calendar/Index#/calender/2305"
-              }
-            }
-          }
-        }
-      }
-      
-    },
-    "Step5": {
-      "Is_Based_On_Category": true,
-      "Category": {
-        "2_1": {
-          "Has_Next_Step": false,
-          "View_Name": "FINAL_VIEW",
-          "Success_Message": "Congradulation, you have created a calendar!",
-          "Helpers": {
-            "Helper_1": {
-              "Image": "",
-
               "Text": "Let me see the calendar I created.",
               "Button": {
                 "Text": "Go",
@@ -867,9 +845,6 @@
 
     },
     "Is_Showing_List_Participants": true
-    }
-
-
   },
   "Type6": {
     "Step1": {
@@ -887,7 +862,6 @@
     },
     "Is_Showing_List_Participants": false
 
-    }
-
   }
+
 }
