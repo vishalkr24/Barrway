@@ -20,5 +20,7 @@ namespace Barrway.DTO.MarketplaceModels
         public string activityTitle { get; set; }
         public int otherActivityformId { get; set; }
         public int otherActivityId { get; set; }
+        public int eventId { get; set; }
+        public bool isSlotBooking { get; set; }
     }
 }

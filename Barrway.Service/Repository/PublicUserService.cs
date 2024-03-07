@@ -17,6 +17,9 @@ using Barrway.DTO.UserAdminModels;
 using Barrway.DTO.MarketplaceModels;
 using System.Reflection;
 using System.Diagnostics;
+using Newtonsoft.Json;
+using System.IO;
+using System.Web;
 
 namespace Barrway.Service.Repository
 {
@@ -494,35 +497,75 @@ namespace Barrway.Service.Repository
                             }
                         }
 
-
-                        Form_DataTable request = new Form_DataTable();
-
-                        request.currentFormType = 1;
-                        request.IsMaxOneRecordPerUser = false;
-                        request.action = (int)FormAction.Save;
-                        request.userId = (int)FormSetting.CreatedUser;
-                        request.formId = (int)FormSetting.CALENDAR_FORM;
-                        request.resourceFormId = eventModal.resourceFormId;
-                        request.ActivityFormId = eventModal.activityFormId;
-                        request.topicId = 1935;
-                        request.created_by = (int)FormSetting.CreatedUser;
-                        request.updated_by = (int)FormSetting.CreatedUser;
+                        int eventId = 0;
                         string formGroupKey = Guid.NewGuid().ToString();
-                        request.formGroupKey = formGroupKey;
-                        var start = Convert.ToDateTime(eventModal.start);
-                        var end = Convert.ToDateTime(eventModal.start).AddMinutes(60);
-
-                        var eventData = new { start = start, end = end, allDay = false, EVENT_TYPE = "BOOKING", description = "", resources = eventModal.resourceId, activities = eventModal.activityId, formGroupKey = formGroupKey, COMPANY_CODE = eventModal.companyCode, CALENDAR_CODE = eventModal.calendarCode }.ToDictionary();
-                        eventData["resources_" + eventModal.resourceFormId] = eventModal.resourceId;
-                        eventData["activities_" + eventModal.activityFormId] = eventModal.activityId;
-                        eventData["activities_" + eventModal.otherActivityformId] = eventModal.otherActivityId;
-                        eventData["activities_" + (int)FormSetting.PARTICIPANT_MASTER] = Convert.ToInt32(StudentId);
-
-                        request.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(eventData);
-
-                        GenerateDynamicFormData eventResponse = (await formAPIRepository.GeneratedFormData(request)).Data;
-                        if (eventResponse.res == 1)
+                        if (eventModal.isSlotBooking)
                         {
+                            string _sqlstring = @"select *from CALENDAR_FORM_1935 where Id=" + eventModal.eventId;
+                            var _result = await sqlFunction.ExecuteSqlQuery(_sqlstring);
+                            if (_result != null && _result.Count() > 0)
+                            {
+
+                                var _eventData = _result.FirstOrDefault();
+                                formGroupKey = _eventData["formGroupKey"].ToString();
+
+
+                                List<int> customForms = new List<int>();
+                                List<int> customFormIds = new List<int>();
+                                customForms.Add(eventModal.resourceFormId);
+                                customForms.Add(eventModal.activityFormId);
+                                customForms.Add(eventModal.otherActivityformId);
+                                customForms.Add((int)FormSetting.PARTICIPANT_MASTER);
+
+                                customFormIds.Add(eventModal.resourceId);
+                                customFormIds.Add(eventModal.activityId);
+                                customFormIds.Add(eventModal.otherActivityId);
+                                customFormIds.Add(Convert.ToInt32(StudentId));
+
+                                FormCalenderReferrenceTable request2 = new FormCalenderReferrenceTable()
+                                {
+                                    customForms = string.Join(",", customForms),
+                                    customFormIds = string.Join(",", customFormIds),
+                                    action = 11,
+                                    formId = (int)FormSetting.CALENDAR_FORM,
+                                    formGroupKey = formGroupKey,
+                                    created_by = (int)FormSetting.CreatedUser,
+                                    updated_by = (int)FormSetting.CreatedUser
+                                };
+                                await formAPIRepository.ManageCalenderReferrenceNew(request2);
+                                eventId = eventModal.eventId;
+                                _sqlstring = @"update CALENDAR_FORM_1935 set EVENT_TYPE='BOOKING' where Id="+ eventId;
+                                await sqlFunction.ExecuteSqlCommandQuery(_sqlstring);
+                            }
+                        }
+                        else {
+
+                            Form_DataTable request = new Form_DataTable();
+
+                            request.currentFormType = 1;
+                            request.IsMaxOneRecordPerUser = false;
+                            request.action = (int)FormAction.Save;
+                            request.userId = (int)FormSetting.CreatedUser;
+                            request.formId = (int)FormSetting.CALENDAR_FORM;
+                            request.resourceFormId = eventModal.resourceFormId;
+                            request.ActivityFormId = eventModal.activityFormId;
+                            request.topicId = 1935;
+                            request.created_by = (int)FormSetting.CreatedUser;
+                            request.updated_by = (int)FormSetting.CreatedUser;
+                            request.formGroupKey = formGroupKey;
+                            var start = Convert.ToDateTime(eventModal.start);
+                            var end = Convert.ToDateTime(eventModal.start).AddMinutes(60);
+
+                            var eventData = new { start = start, end = end, allDay = false, EVENT_TYPE = "BOOKING", description = "", resources = eventModal.resourceId, activities = eventModal.activityId, formGroupKey = formGroupKey, COMPANY_CODE = eventModal.companyCode, CALENDAR_CODE = eventModal.calendarCode }.ToDictionary();
+                            eventData["resources_" + eventModal.resourceFormId] = eventModal.resourceId;
+                            eventData["activities_" + eventModal.activityFormId] = eventModal.activityId;
+                            eventData["activities_" + eventModal.otherActivityformId] = eventModal.otherActivityId;
+                            eventData["activities_" + (int)FormSetting.PARTICIPANT_MASTER] = Convert.ToInt32(StudentId);
+
+                            request.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(eventData);
+
+                            GenerateDynamicFormData eventResponse = (await formAPIRepository.GeneratedFormData(request)).Data;
+                            eventModal.eventId = eventResponse.Id;
 
                             List<int> customForms = new List<int>();
                             List<int> customFormIds = new List<int>();
@@ -548,9 +591,13 @@ namespace Barrway.Service.Repository
                             };
                             await formAPIRepository.ManageCalenderReferrenceNew(request2);
 
+                        }
+                        
+                        if (eventModal.eventId!=0)
+                        {
                             IDictionary<string, object> transaction = new Dictionary<string, object>();
 
-                            transaction["SLOT"] = eventResponse.Id;
+                            transaction["SLOT"] = eventModal.eventId;
                             transaction["RESOURCE"] = eventModal.resourceId;
                             transaction["ACTIVITY"] = eventModal.activityId;
                             transaction["STUDENT"] = StudentId;
@@ -575,7 +622,7 @@ namespace Barrway.Service.Repository
 
                             upCommingBooking["COMPANY_CODE"] = eventModal.companyCode.ToString();
                             upCommingBooking["CALENDAR_CODE"] = eventModal.calendarCode.ToString();
-                            upCommingBooking["SLOT"] = eventResponse.Id.ToString();
+                            upCommingBooking["SLOT"] = eventModal.eventId.ToString();
 
                             upCommingBooking["ACTIVITY_NAME"] = eventModal.activityTitle;
                             upCommingBooking["RESOURCE_NAME"] = eventModal.resourceTitle;
@@ -608,7 +655,7 @@ namespace Barrway.Service.Repository
                         }
                         else
                         {
-                            return new AddUpdateDelete() { Status = false, Message = eventResponse.Message };
+                            return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
                         }
                     }
                     else
@@ -623,6 +670,7 @@ namespace Barrway.Service.Repository
             }
             return new AddUpdateDelete() { Status = false, Message = "Invalid response!" };
         }
+
         private async Task<int> UpCommingBookingAdd(IDictionary<string, string> data)
         {
 
