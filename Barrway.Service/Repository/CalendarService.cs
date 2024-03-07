@@ -39,5 +39,12 @@ namespace Barrway.Service.Repository
             var data = await sqlFunction.ExecuteSqlQuery(sqlString);
             return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = true, Data = data };
         }
+
+        public async Task<IDictionary<string,object>> GetCalendarMaster(string code) {
+
+            string sqlString = $@"select *from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE='{code}'";
+            var result = await sqlFunction.ExecuteSqlQuery(sqlString);
+            return result.FirstOrDefault();
+        }
     }
 }

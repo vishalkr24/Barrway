@@ -1,10 +1,7 @@
 ﻿var CalendarFormId = "2305", ySelection = "", xSelection = "", COMPANY_CODE, CALENDAR_CODE, formDetailsDataInfo, counterLoader, xaxisFormList, formAllDatafields, listTabulator, calendarDetails;
-
 $(document).ready(async function () {
+
     $("#nv-company-schedule").addClass("active");
-
-
-
     /*COMPANY_CODE = getQueryParamValue("CompanyCode");*/
    /* CALENDAR_CODE = getQueryParamValue("CalendarCode");*/
 
@@ -51,6 +48,8 @@ $(document).ready(async function () {
 
        
     calendarDetails = (await getCalendarDetails(CALENDAR_CODE)).Data;
+    var IS_APPOINTMENT_BOOKING_CLR = calendarDetails["CALENDAR_CATEGORY_ID"] == "2";
+
    
     console.log(calendarDetails,"calendarDetails");
     if (calenderSettings.length > 0) {
@@ -88,12 +87,11 @@ $(document).ready(async function () {
             }
         }
 
-
-
         $scope.ySelection = ySelection;
         $scope.xSelection = xSelection;
         window["ySelected"] = ySelection;
         window["xSelected"] = xSelection;
+
         xaxisFormList = [];
         angular.forEach(calenderSettings, function (dataRow, position) {
             //console.log(dataRow);
@@ -363,6 +361,7 @@ async function getFormDetails() {
 
     });
 }
+
 
 async function getCalenderSettings() {
     showLoader();
@@ -830,15 +829,15 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 }
 
             }
-            if (formDetailsDataInfo.otherFormIsShow != null && formDetailsDataInfo.otherFormIsShow == true) {
-                if (event.customFourthTitle != null && event.customFourthTitle != "") {
-                    var tempHtml = "<div class='fc-content fcTime' id='" + event.Id + "_Time'><small class='time' title=''> " + event.customFourthTitle + "</small></div> ";
-                    if (current_tab != "agenda-view") {
-                        _mainTempHtml += tempHtml;
-                    }
-                    rowTooltipDisplay += event.customFourthTitle + " <br/> "
-                }
-            }
+            //if (formDetailsDataInfo.otherFormIsShow != null && formDetailsDataInfo.otherFormIsShow == true) {
+            //    if (event.customFourthTitle != null && event.customFourthTitle != "") {
+            //        var tempHtml = "<div class='fc-content fcTime' id='" + event.Id + "_Time'><small class='time' title=''> " + event.customFourthTitle + "</small></div> ";
+            //        if (current_tab != "agenda-view") {
+            //            _mainTempHtml += tempHtml;
+            //        }
+            //        rowTooltipDisplay += event.customFourthTitle + " <br/> "
+            //    }
+            //}
             // For Tag view  //
             //static tagify
             rowRecord += '<div>  <input value="' + eventData.Id + '" id="tag-inputHidden" type="hidden"> ';
@@ -945,15 +944,16 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                         tempDrop.formTitle = $scope.selectEventDetails.customTitleSplit[indexForm];
                         tempDrop.dropdownListData = item;
                         tempDrop.customClass = "false";
-
-                    } else {
-                        tempDrop.formId = item.activitiesForm.toString();
-                        tempDrop.Id = "0";
-                        tempDrop.formTitle = item.title;
-                        tempDrop.dropdownListData = item;
-                        tempDrop.customClass = "true";
+                        $scope.selectEventDetails.dropdownList.push(tempDrop);
                     }
-                    $scope.selectEventDetails.dropdownList.push(tempDrop);
+                    //else {
+                    //    tempDrop.formId = item.activitiesForm.toString();
+                    //    tempDrop.Id = "0";
+                    //    tempDrop.formTitle = item.title;
+                    //    tempDrop.dropdownListData = item;
+                    //    tempDrop.customClass = "true";
+                    //}
+                 
                 });
             }
 
@@ -1851,12 +1851,11 @@ async function loadEventRecordDetails(paramTemp) {
         $("#newtabuListUlWaiting").empty();
 
         if (param.parentID != param.formId) {
-            debugger;
             if ($scope.eventDataWithoutGroupBy) {
                 if ($scope.eventDataWithoutGroupBy.length > 0) {
                     $("#tabuList").empty();
                     $("#newtabuList").empty();
-                    $("#tabuList").append('<strong id="strongFormName">' + $scope.eventDataWithoutGroupBy.length + c + ' ' + $scope.otherformDetails.title + ' in this Slot</strong>');
+                    $("#tabuList").append('<strong id="strongFormName">' + $scope.eventDataWithoutGroupBy.length + (maxrecordList > 0 ? '/' + maxrecordList : "") + ' ' + $scope.otherformDetails.title + ' in this Slot</strong>');
                     $("#newtabuList").append('<strong id="strongFormName">' + $scope.eventDataWithoutGroupBy.length + (maxrecordList > 0 ? '/' + maxrecordList : "") + ' ' + $scope.otherformDetails.title + ' in this Slot</strong>');
                 }
                 else {
@@ -1864,8 +1863,8 @@ async function loadEventRecordDetails(paramTemp) {
                     $("#newtabuList").empty();
                     if (!DataService.isEmpty($scope.otherformDetails)) {
                         if (!DataService.isEmpty($scope.otherformDetails.title)) {
-                            $("#tabuList").append('<strong id="strongFormName"> 0 ' + $scope.otherformDetails.title + (maxrecordList > 0 ? '/' + maxrecordList : "") + ' in this Slot </strong>');
-                            $("#newtabuList").append('<strong id="strongFormName"> 0 ' + $scope.otherformDetails.title + (maxrecordList > 0 ? '/' + maxrecordList : "") + ' in this Slot </strong>');
+                            $("#tabuList").append('<strong id="strongFormName"> 0 ' + (maxrecordList > 0 ? '/' + maxrecordList : '')+' ' + $scope.otherformDetails.title + ' in this Slot </strong>');
+                            $("#newtabuList").append('<strong id="strongFormName"> 0 ' +(maxrecordList > 0 ? '/' + maxrecordList : '') + ' ' + $scope.otherformDetails.title + ' in this Slot </strong>');
                         }
                     }
                 }

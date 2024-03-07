@@ -164,11 +164,15 @@
       "Steps": {
         "Step1": {
           "Image": "",
-          "Text": "Set up fixed sessions for customer to book"
+          "Text": "Set up fixed sessions for customer to book",
+          "IS_SLOT_BOOKING": true,
+          "IS_BUSINESS_HOUR_BOOKING": false
         },
         "Step2": {
           "Image": "",
-          "Text": "Set up your business hour for customer to book within the period"
+          "Text": "Set up your business hour for customer to book within the period",
+          "IS_SLOT_BOOKING": false,
+          "IS_BUSINESS_HOUR_BOOKING": true
         },
         "Step3": {
           "Image": "",

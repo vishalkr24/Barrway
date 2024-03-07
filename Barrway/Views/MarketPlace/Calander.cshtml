@@ -869,7 +869,7 @@
         <div class="modal-dialog modal-dialog-slideout" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">@Resource.Event_Details</h5>
+                    <h4 class="modal-title" id="exampleModalLabel">@Resource.Event_Details</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -880,12 +880,16 @@
                                     {{selectEventDetails.description}}
                                 </label>
                                 <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
-                                    <span class="titleContainer">
-                                        <span ng-class="{'text-muted': d.customClass == 'true' , 'title1': d.customClass == 'false'}"> {{d.formTitle}}</span>
-
-                                    </span>
+                                    <div style="display:block" class="titleContainer">
+                                        <p class="title1" style="font-size:16px;font-weight:600">
+                                            {{d.dropdownListData.title}}
+                                            <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
+                                            <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
+                                            <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
+                                        </p>
+                                        <p class="title1"> {{d.formTitle}}</p>
+                                    </div>
                                 </div>
-
 
                             </div>
 
@@ -905,7 +909,7 @@
                                 <input id="newtag-input{{tag.name}}" type="text" value="{{selectEventDetails[tag.name]}}" placeholder="Add tags">
                             </div>
 
-                            <p>{{selectEventDetails.DESCRIPTION}} </p>
+                            <p>{{selectEventDetails.DESCRIPTION}} </p>-
 
                         </div>
                     </div>
@@ -939,7 +943,7 @@
         <div class="modal-dialog modal-dialog-slideout modal-service-type" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">@Resource.Event_Details</h5>
+                    <h4 class="modal-title" id="exampleModalLabel">@Resource.Event_Details</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -950,32 +954,28 @@
                                     {{selectEventDetails.description}}
                                 </label>
                                 <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
-                                    <span class="titleContainer">
-                                        <span ng-class="{'text-muted': d.customClass == 'true' , 'title1': d.customClass == 'false'}"> {{d.formTitle}}</span>
-
-                                    </span>
+                                    <div style="display:block" class="titleContainer">
+                                        <p class="title1" style="font-size:16px;font-weight:600">
+                                            {{d.dropdownListData.title}}
+                                            <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
+                                            <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
+                                            <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
+                                        </p>
+                                        <p class="title1"> {{d.formTitle}}</p>
+                                    </div>
                                 </div>
-
-
                             </div>
-
-
                             <div ng-if="!selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
                             <div ng-if="!selectEventDetails.allDay">{{selectEventDetails.customTime}}</div>
 
                             <div ng-if="selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
 
                             <input value="{{selectEventDetails.Id}}" id="newtag-inputHidden" type="hidden">
-
-
-
                             <div ng-repeat="tag in totalSelectListTagify">
                                 <input value="{{selectEventDetails[tag.name]}}" id="newtag-inputHidden{{tag.name}}" type="hidden">
                                 <input value="{{tag.name}}" id="newtag-inputHidden{{selectEventDetails.Id}}" type="hidden">
                                 <input id="newtag-input{{tag.name}}" type="text" value="{{selectEventDetails[tag.name]}}" placeholder="Add tags">
                             </div>
-
-
                             <p>{{selectEventDetails.DESCRIPTION}} </p>
 
                         </div>

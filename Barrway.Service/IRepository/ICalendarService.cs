@@ -12,5 +12,6 @@ namespace Barrway.Service.IRepository
     {
         Task<AddUpdateDelete> UpdateCalendarReference(FormCalenderReferrenceTable data);
         Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetPublicUserTransactionEvent(string eventIds);
+        Task<IDictionary<string, object>> GetCalendarMaster(string code);
     }
 }
