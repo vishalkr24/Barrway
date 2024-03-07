@@ -2883,6 +2883,41 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> CheckRoomRentalOverlapingSlots(SchedularFormModel model)
+        {
+            try
+            {
+                string sqlQuery = $@"select distinct clr.formGroupKey, clr.[start], clr.[end],clr_ref.referrenceFormId,clr_ref.referrenceId from CALENDAR_FORM_1935 clr
+                                     join form_calenderreferrence clr_ref on clr_ref.formgroupkey=clr.formGroupKey 
+                                     where (
+										(cast([start] as date) <= '{model.SCH_FROM_DATE}' and (cast([end] as date) <= '{model.SCH_TO_DATE}' and cast([end] as date) >= '{model.SCH_FROM_DATE}')) or
+										((cast([start] as date) >= '{model.SCH_FROM_DATE}' and cast([start] as date) <= '{model.SCH_TO_DATE}') and (cast([end] as date) <= '{model.SCH_TO_DATE}' and cast([end] as date) >= '{model.SCH_FROM_DATE}')) or
+										((cast([start] as date) <= '{model.SCH_TO_DATE}' and cast([start] as date) >= '{model.SCH_FROM_DATE}') and cast([end] as date) >= '{model.SCH_TO_DATE}') or
+										(cast([start] as date) <= '{model.SCH_FROM_DATE}' and cast([end] as date) >= '{model.SCH_TO_DATE}')
+									 )
+									 and (CALENDAR_CODE = '{model.CALENDAR_CODE}' and COMPANY_CODE = '{model.COMPANY_CODE}') 
+                                     and (
+                                            (referrenceFormId={(int)FormSetting.LOCATION_MASTER} and referrenceId={model.SCH_RESOURCE})
+                                         )
+								 	 and clr.EVENT_TYPE = 'BOOKING'";
+
+                var slotsResult = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+                if (slotsResult.Count > 0)
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "Location already booked for selected date range", Data = model };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = true, Message = "success", Data = model };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
         private bool TimeSlotCompare(CommonTimeObject timeA, CommonTimeObject timeB)
         {
             bool testResult = true;
