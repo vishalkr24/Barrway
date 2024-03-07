@@ -17,5 +17,8 @@ namespace Barrway.DTO.BusinessModels
         public string activities { get; set; }
         public string description { get; set; }
         public string color { get; set; }
+        public string CALENDAR_CODE { get; set; }
+        public string COMPANY_CODE { get; set; }
+
     }
 }

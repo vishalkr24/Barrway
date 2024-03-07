@@ -256,12 +256,20 @@ namespace Barrway.Controllers
 
 
                 HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = model.REMEMBER_ME }, claims);
+
+                if (string.IsNullOrEmpty(user["USER_EMAIL"].ToString()))
+                {
+                    return RedirectToAction("Enteryouremailaddress", "Account");
+                }
+
                 if (!string.IsNullOrEmpty(returnUrl))
                 {
                     return Redirect(returnUrl);
                 }
                 return Redirect("/UserAdmin#/userdashboard");
                 //return RedirectToAction("Dashboard", "BusinessAdmin");
+
+                //Enteryouremailaddress
             }
             else
             {
@@ -527,7 +535,7 @@ namespace Barrway.Controllers
                     IS_PHONE_VERIFIED = "N",
                     IS_EXTERNAL_SIGNUP = (model.IS_EXTERNAL_SIGNUP) ? "Y" : "N",
                     PROFILE_STATUS = "PENDING",
-                    SIGNUP_TYPE = (model.IS_EXTERNAL_SIGNUP) ? "GOOGLE" : "Phone",
+                    SIGNUP_TYPE = (model.IS_EXTERNAL_SIGNUP) ? "Google" : "Phone",
                     USER_PHONE = "+" + model.CountryCode + model.USER_PHONE,
                     USER_PASSWORD = model.USER_PASSWORD,
                     USER_ID = model.USER_NAME,
@@ -539,15 +547,7 @@ namespace Barrway.Controllers
 
                 AddUpdateDelete result = await signupService.RegisterUser(userMaserModel.ToDictionary());
 
-                // Business Account Creation START
-
-                //BusinessAccountWebsiteModel businessModel = new BusinessAccountWebsiteModel()
-                //{
-                //    USER_ID = model.USER_NAME,
-                //    COMPANY_PROFILE_STATUS = "N",
-                //    COMPANY_CALENDAR_STATUS = "N",
-                //    CURRENT_STEP = (model.IS_EXTERNAL_SIGNUP) ? "COMPANY PROFILE" : "REGISTRATION"
-                //};
+                
 
                 PublicAccountModel businessModel = new PublicAccountModel()
                 {
@@ -1175,6 +1175,47 @@ namespace Barrway.Controllers
             }
             return RedirectToAction("Index", "Home");
         }
+
+
+        [PublicAuthorize(Roles = "PUBLIC_USER,GENERAL_USER")]
+        public ActionResult Enteryouremailaddress()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Enteryouremailaddress(UpdateUserEmailModel model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+
+                string USER_ID = User.Identity.Name;
+                var result =  await authService.UpdateUserEmailAddress(model.Email, USER_ID);
+
+               
+                if (result.Status==true)
+                {
+                    TempData["UpdateEmailSussess"] = "Email address updated succesfully !";
+                    return Redirect("/UserAdmin#/userdashboard");
+                }
+                else
+                {
+                    return View(model);
+                }
+            
+            
+            }
+            catch (Exception ex)
+            {
+                return View(model);
+            }
+        }
+
+
 
         internal class ChallengeResult : HttpUnauthorizedResult
         {

@@ -36,7 +36,7 @@
                             <label for="PROFILE_PHOTO" class="btn btn-default" style="color: white; border-radius: 100px; font-weight:100; padding-left: 24px; padding-right: 24px;">
                                 {{translation.Add_pic}}
                             </label>
-                            <input type="file" id="PROFILE_PHOTO" name="PROFILE_PHOTO" onchange="validateImage()" style="display:none;" />
+                            <input type="file" id="PROFILE_PHOTO" name="PROFILE_PHOTO" onchange="validateImage()" style="display:none;" accept="image/*" />
                             <div class="invalid-feedback-2" id="PROFILE_PHOTO_ERROR">Please select an image</div>
                         </form>
                     </div>
@@ -120,7 +120,7 @@
                                 <div>
                                     <label>{{translation.Email}}</label>
                                 </div>
-                                <input type="text" class="form-control" id="USER_EMAIL" readonly placeholder="email" value="{{userData.USER_EMAIL}}" />
+                                <input type="text" class="form-control" id="USER_EMAIL"  placeholder="email" value="{{userData.USER_EMAIL}}" />
                                 <div class="invalid-feedback-2" id="USER_EMAIL_ERROR">Email is already registered</div>
                             </div>
 
@@ -154,7 +154,8 @@
                                 <div>
                                     <label>{{translation.Birthday}}</label>
                                 </div>
-                                <input type="date" class="form-control" id="DATE_OF_BIRTH" placeholder="birthday" value="{{userData.DATE_OF_BIRTH}}" />
+                               
+                                <input type="text" class="form-control" id="DATE_OF_BIRTH" placeholder="birthday"  ng-value="{{userData.DATE_OF_BIRTH}}" />
                             </div>
 
                         </div>

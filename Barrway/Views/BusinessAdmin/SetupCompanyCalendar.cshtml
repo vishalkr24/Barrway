@@ -110,21 +110,22 @@
                         <div class="col-md-4">
                             <div class="rectangle" onclick="renderForm(3)">
                                 <div class="rac-img">
-                                    <img src="../assets/img/three.png">
+                                    <img src="../assets/img/Restaurant.png">
                                 </div>
                                 <div class="rac-text">
-                                    <h2>@Resource.Room_rental</h2>
-                                    <p>@Resource.eg__Party_room__co_working_space__dance_studio</p>
+                                    <h2>Restaurant</h2>
+                                    <p>Ticketing system and room booking for restuarant</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="rectangle" onclick="renderForm(4)">
                                 <div class="rac-img">
-                                    <img src="../assets/img/four.png">
+                                    <img src="../assets/img/three.png">
                                 </div>
                                 <div class="rac-text">
-                                    <h2>@Resource.Private_office_room_booking</h2>
+                                    <h2>Room booking</h2>
+                                    <p>@Resource.eg__Party_room__co_working_space__dance_studio</p>
                                 </div>
                             </div>
                         </div>
@@ -439,7 +440,7 @@
                                             <div class="form-group">
                                                 <label for="TAGS">@Resource.Privacy</label>
                                                 <div class="tom-select-custom">
-                                                    @Html.DropDownListFor(model => model.CalendarControlSheet.CALENDAR_USE_TYPE, new SelectList(Enum.GetValues(typeof(PublicPrivateOptions))), new { @class = "js-select form-select" })
+                                                    @Html.DropDownListFor(model => model.CALENDAR_USE_TYPE, new SelectList(Enum.GetValues(typeof(PublicPrivateOptions))), new { @class = "js-select form-select" })
                                                 </div>
 
                                             </div>

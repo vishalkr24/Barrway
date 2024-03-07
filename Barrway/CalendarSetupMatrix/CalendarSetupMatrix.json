@@ -115,7 +115,7 @@
               "Text": "I will set up the course/service schedule later. Let me see the calendar I created.",
               "Button": {
                 "Text": "Go",
-                "Link": "/Calendar/Index#/Calendar"
+                "Link": "/Calendar/Index#/calender/2305"
               }
             }
           }
@@ -138,7 +138,7 @@
               "Text": "I will set up the course/service schedule later. Let me see the calendar I created.",
               "Button": {
                 "Text": "Go",
-                "Link": "/Calendar/Index#/Calendar"
+                "Link": "/Calendar/Index#/calender/2305"
               }
             }
           }
@@ -324,7 +324,7 @@
               "Text": "I will set up the course/service schedule later. Let me see the calendar I created.",
               "Button": {
                 "Text": "Go",
-                "Link": "/Calendar/Index#/Calendar"
+                "Link": "/Calendar/Index#/calender/2305"
               }
             }
           }
@@ -347,7 +347,7 @@
               "Text": "I will set up the course/service schedule later. Let me see the calendar I created.",
               "Button": {
                 "Text": "Go",
-                "Link": "/Calendar/Index#/Calendar"
+                "Link": "/Calendar/Index#/calender/2305"
               }
             }
           }
@@ -401,7 +401,7 @@
               "Text": "I will set up the course/service schedule later. Let me see the calendar I created.",
               "Button": {
                 "Text": "Go",
-                "Link": "/Calendar/Index#/Calendar"
+                "Link": "/Calendar/Index#/calender/2305"
               }
             }
           }
@@ -471,7 +471,7 @@
         },
         "2_3": {
           "Has_Next_Step": true,
-          "View_Name": "QUEUE_2",
+          "View_Name": "REDIRECT_TO_SCHEDULE_FORM",
           "Heading_Title": "Set up the booking queue",
           "Is_Skippable": false
         }
@@ -537,7 +537,7 @@
             },
             "Helper_2": {
               "Image": "",
-              "Text": "Let’s check the queue created. ",
+              "Text": "Let's check the queue created. ",
               "Button": {
                 "Text": "Go",
                 "Link": "/calendar/index#/queue-manager"
@@ -598,8 +598,10 @@
           }
         }
       }
+
     },
     "Is_Showing_List_Participants": false
+    }
   },
 
   "Type4": {
@@ -623,6 +625,10 @@
         "Step2": {
           "Image": "",
           "Text": "Set up your business hour for people to book within the period"
+        },
+        "Step3": {
+          "Image": "",
+          "Text": "For monthly / yearly room booking"
         }
       }
     },
@@ -644,12 +650,78 @@
       "Is_Based_On_Category": true,
       "Category": {
         "2_1": {
+          "Has_Next_Step": true,
+          "View_Name": "DYNAMIC_FORM",
+          "Heading_Title": "Set up service details",
+          "Is_Skippable": true,
+          "Form_Id": 2303,
+          "Form_Fields": [ "ACTIVITY_NAME", "fees_1" ],
+          "Helper_After_Form": {
+            "Helper_1": {
+              "Image": "",
+              "Text": "We support visa master paypal.... "
+            },
+            "Helper_2": {
+              "Image": "",
+              "Text": "You may edit these information and add more details in the future by going to service master. "
+            },
+            "Helper_3": {
+              "Image": "",
+              "Text": "You may set the price list in Pricelist master."
+            }
+          }
+        },
+        "2_2": {
+          "Has_Next_Step": true,
+          "View_Name": "DYNAMIC_FORM",
+          "Heading_Title": "Set up service details",
+          "Is_Skippable": true,
+          "Form_Id": 2303,
+          "Form_Fields": [ "ACTIVITY_NAME", "fees_1" ],
+          "Helper_After_Form": {
+            "Helper_1": {
+              "Image": "",
+              "Text": "We support visa master paypal.... "
+            },
+            "Helper_2": {
+              "Image": "",
+              "Text": "You may edit these information and add more details in the future by going to service master. "
+            },
+            "Helper_3": {
+              "Image": "",
+              "Text": "You may set the price list in Pricelist master."
+            }
+          }
+        },
+        "2_3": {
           "Has_Next_Step": false,
           "View_Name": "FINAL_VIEW",
           "Success_Message": "Congradulation, you have created a calendar!",
           "Helpers": {
             "Helper_1": {
               "Image": "",
+              "Text": "Let me see the calendar I created.",
+              "Button": {
+                "Text": "Go",
+                "Link": "/Calendar/Index#/calender/2305"
+              }
+            }
+          }
+        }
+      }
+      
+    },
+    "Step5": {
+      "Is_Based_On_Category": true,
+      "Category": {
+        "2_1": {
+          "Has_Next_Step": false,
+          "View_Name": "FINAL_VIEW",
+          "Success_Message": "Congradulation, you have created a calendar!",
+          "Helpers": {
+            "Helper_1": {
+              "Image": "",
+
               "Text": "Let me see the calendar I created.",
               "Button": {
                 "Text": "Go",
@@ -682,7 +754,7 @@
               "Text": "I will set up the business schedule later. Let me see the calendar I created. ",
               "Button": {
                 "Text": "Go",
-                "Link": "/Calendar/Index#/Calendar"
+                "Link": "/Calendar/Index#/calender/2305"
               }
             }
           }
@@ -694,7 +766,7 @@
           "Helpers": {
             "Helper_1": {
               "Image": "",
-              "Text": "Let’s add your business schedule to the calendar ",
+              "Text": "Let's add your business schedule to the calendar ",
               "Button": {
                 "Text": "Go",
                 "Link": "/calendar/index#/calendar/schedular-form/0"
@@ -705,7 +777,7 @@
               "Text": "I will set up the business schedule later. Let me see the calendar I created. ",
               "Button": {
                 "Text": "Go",
-                "Link": "/Calendar/Index#/Calendar"
+                "Link": "/Calendar/Index#/calender/2305"
               }
             }
           }
@@ -777,7 +849,7 @@
       "Helpers": {
         "Helper_1": {
           "Image": "",
-          "Text": "Let’s add your course/service schedule to the calendar ",
+          "Text": "Let's add your course/service schedule to the calendar ",
           "Button": {
             "Text": "Go",
             "Link": "/calendar/index#/calendar/schedular-form/0"
@@ -792,8 +864,11 @@
           }
         }
       }
+
     },
     "Is_Showing_List_Participants": true
+    }
+
 
   },
   "Type6": {
@@ -808,7 +883,11 @@
       "Is_Based_On_Category": false,
       "View_Name": "REDIRECT_TO_SCHEDULE_FORM",
       "Heading_Title": "Give a name for your event location"
+
     },
     "Is_Showing_List_Participants": false
+
+    }
+
   }
 }

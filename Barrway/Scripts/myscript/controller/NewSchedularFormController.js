@@ -12,6 +12,7 @@
         $scope.isQueue = -1;
 
         $scope.init = function () {
+
             $scope.scheduleList = {
                 "Mon": [],
                 "Tue": [],
@@ -66,14 +67,12 @@
 
             });
 
-
             setTimeout(function () {
                 $scope.CalendarData = getSingleCalendar(localStorage.getItem("CALENDAR_CODE"));
                 $scope.ConfigData = JSON.parse(getScheduleTypeJson());
 
                 $scope.BindView();
             }, 500);
-            
 
         };
 
@@ -131,10 +130,11 @@
                 $("#staff-ddl-area").hide();
             }
             else if ($scope.ViewName == "S3H") {
-
+                $scope.isQueue = 2;
+                bindSessionSchedule();
             }
             $scope.$apply();
-            
+
         }
 
         $scope.GetSingleService = function () {
@@ -212,13 +212,15 @@
 
         $scope.validateSchedularForm = function () {
             let finalStatus = true;
-            debugger;
-            if ($("#SCH_ACTIVITY option:selected").val() == "-1") {
-                $("#SCH_ACTIVITY_ERROR").show();
-                finalStatus = false;
-            } else {
-                $("#SCH_ACTIVITY_ERROR").hide();
-            }
+
+            if ($scope.ViewName == "S3A" || $scope.ViewName == "S3G") {
+                if ($("#SCH_ACTIVITY option:selected").val() == "-1") {
+                    $("#SCH_ACTIVITY_ERROR").show();
+                    finalStatus = false;
+                } else {
+                    $("#SCH_ACTIVITY_ERROR").hide();
+                }
+            }            
 
             let arr = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -241,17 +243,35 @@
                 $("#SCH_SLOT_ERROR").hide();
             }
 
+            if ($("#SCH_FROM_DATE").val() == "") {
+                $("#SCH_FROM_DATE_ERROR").show();
+                finalStatus = false;
+            } else {
+                $("#SCH_FROM_DATE_ERROR").hide();
+            }
+
+            if ($("#SCH_TO_DATE").val() == "") {
+                $("#SCH_TO_DATE_ERROR").show();
+                finalStatus = false;
+            } else {
+                $("#SCH_TO_DATE_ERROR").hide();
+            }
+
             return finalStatus
         }
 
         $(document).on("change", "input[name=form-time-input]", function () {
+            debugger;
             let type = $(this).attr("data-input-type");
             let id = $(this).attr("data-input-id");
             let day = $(this).attr("data-input-day");
             let val = this.value;
 
             $scope.scheduleList[day].find(x => x.Id == id)[type] = val;
-            console.log($scope.scheduleList);
+            $scope.scheduleList[day].find(x => x.Id == id).IsOverlapped = false;
+
+            $("div[data-element-id=SCH_" + id + "]").removeClass("error")
+
         })
 
         $scope.saveSchedularForm = function () {
@@ -286,7 +306,9 @@
                 }
 
                 if ($scope.ViewName == "S3H") {
-                    data.SCHEDULAR_TYPE = "QUEUE";
+                    data.SCHEDULAR_TYPE = "QUEUE_2";
+                } else if ($scope.ViewName == "S3F") {
+                    data.SCHEDULAR_TYPE = "QUEUE_1";
                 } else {
                     data.SCHEDULAR_TYPE = "CALENDAR";
                 }
@@ -318,7 +340,8 @@
 
                     } else {
                         $scope.SchedularId = 0;
-                        window.location.reload();
+                        window.location.replace("/calendar/index#/calender/2305");
+                        //window.location.reload();
                     }
 
                 }, function (err) {
@@ -340,38 +363,38 @@
             addSessionRow();
         });
 
-        $(document).on("change paste", "#booking-queue-table tbody input, select", function () {
-
-            let name = ($(this).attr("type") == "radio") ? $(this).attr("name").split("-") : $(this).attr("id").split("-");
-
-            queueList.find(x => x.rowId == name[1])[name[0]] = this.value;
-
-        });
-
-        $(document).on("change paste", "#booking-session-table tbody input, select", function () {
-
-            let name = ($(this).attr("type") == "radio") ? $(this).attr("name").split("-") : $(this).attr("id").split("-");
-
-            sessionList.find(x => x.rowId == name[1])[name[0]] = this.value;
-
-        });
-
         function bindQueueSchedule() {
+            $(document).on("change paste", "#queue-schedular-form-section #booking-queue-table tbody input, select", function () {
 
-            var data = getSchedule(localStorage.getItem("COMPANY_CODE"), localStorage.getItem("CALENDAR_CODE"), true);
-            debugger;
-            if (data.Status) {
+                let name = ($(this).attr("type") == "radio") ? $(this).attr("name").split("-") : $(this).attr("id").split("-");
 
+                queueList.find(x => x.rowId == name[1])[name[0]] = this.value;
+
+            });
+
+            $(document).on("change paste", "#queue-schedular-form-section #booking-session-table tbody input, select", function () {
+
+                let name = ($(this).attr("type") == "radio") ? $(this).attr("name").split("-") : $(this).attr("id").split("-");
+
+                sessionList.find(x => x.rowId == name[1])[name[0]] = this.value;
+
+            });
+
+            var data = getQueueAndSession(localStorage.getItem("COMPANY_CODE"), localStorage.getItem("CALENDAR_CODE"));
+
+            if (!data.Status) {
+                addQueueRow();
+                addSessionRow();
+                return;
+            } else {
                 var response = data.Data;
 
-                $scope.SchedularId = response.Id;
+                let queue = response.queue
+                debugger;
+                let session = response.session
 
-                let queue = JSON.parse(response.SCH_SCHEDULE_TABLE).queue
-                let session = JSON.parse(response.SCH_SCHEDULE_TABLE).session
-
-                $("#exampleFormControlSelect1").val(queue.length);
-                $("#exampleFormControlSelect2").val(session.length);
                 if (queue.length > 0) {
+                    $("#exampleFormControlSelect1").val(queue.length);
                     for (var i = 0; i < queue.length; i++) {
                         addQueueRow(queue[i]);
                     }
@@ -380,17 +403,18 @@
                 }
 
                 if (session.length) {
+                    $("#exampleFormControlSelect2").val(session.length);
                     for (var i = 0; i < session.length; i++) {
                         addSessionRow(session[i]);
                     }
                 } else {
                     addSessionRow();
                 }
-
-            } else {
-                addQueueRow();
-                addSessionRow();
             }
+
+        }
+
+        function bindSessionSchedule() {
 
         }
 
@@ -398,52 +422,35 @@
             debugger;
             // add validations
             if (true) {
-
-                var data = {
-                    Id: $scope.SchedularId,
-                    COMPANY_CODE: localStorage.getItem("COMPANY_CODE"),
-                    CALENDAR_CODE: localStorage.getItem("CALENDAR_CODE"),
-                    SCH__NAME: "",
-                    SCH_LOCATION: "",
-                    SCH_ACTIVITY: "",
-                    SCH_RESOURCE: "",
-                    SCH_MEDIUM: "ZOOM",
-                    DURATION_FIELD: 0,
-                    REST_PERIOD_BETWEEN_SESSION: 0,
-                    MAXIMUM_NO_OF_PARTICIPANTS: 0,
-                    SCH_DESCRIPTION: "",
-                    SCH_FROM_DATE: moment(new Date()).format("YYYY-MM-DD"),
-                    SCH_TO_DATE: moment(new Date()).format("YYYY-MM-DD"),
-                    SCH_ALTERNATIVE_WEEK: "EVERY-WEEK",
-                    IF_SLOT_EXIST: "SKIP",
-                    IF_SLOT_DOES_NOT_EXIST: "INSERT",
-                    SCH_SCHEDULE_TABLE: JSON.stringify({
-                        QueueList: queueList,
-                        SessionList: sessionList
-                    }),
-                    CREATION_TYPE: "AUTOMATIC",
-                    SCHEDULAR_TYPE: "QUEUE"
-                }
-
-                adminService.postAsync('/Calendar/AddSchedule/', { dataList: [data] }).then(function (res) {
-                    if (!res.data.Status) {
-                        swal({
-                            icon: "error",
-                            title: "Error",
-                            text: res.data.Message
-                        });
-                    } else {
-                        swal({
-                            icon: "success",
-                            title: "Success",
-                            text: "Queue and session " + ((data.Id != null) ? " updated " : " created ") + " successfully!"
-                        }).then(function (check) {
-                            window.location.replace("/calendar/index#/queue-manager");
-                        });
+                $.ajax({
+                    url: "/Calendar/AddQueueSession/",
+                    method: "POST",
+                    data: {
+                        data: {
+                            "QueueList": queueList,
+                            "SessionList": sessionList
+                        },
+                        ScheduleId: null                        
+                    },
+                    success: function(response) {
+                        if (!response.Status) {
+                            swal({
+                                icon: "error",
+                                title: "Error",
+                                text: response.Message
+                            });
+                        } else {
+                            swal({
+                                icon: "success",
+                                title: "Success",
+                                text: "Queue and session updated/created successfully!"
+                            }).then(function (check) {
+                                window.location.replace("/calendar/index#/queue-manager");
+                            });
+                        }
                     }
-                });
-
-
+                })
+                
 
             }
         }
@@ -460,6 +467,7 @@
                     QUEUE_START_NUMBER: dataElement.QUEUE_START_NUMBER,
                     QUEUE_END_NUMBER: dataElement.QUEUE_END_NUMBER,
                     QUEUE_RESET_NUMBER: dataElement.QUEUE_RESET_NUMBER,
+                    QUEUE_TYPE: "RESTAURANT",
                     CALENDAR_CODE: createdCalendarCode,
                     COMPANY_CODE: createdCompanyCode
                 };
@@ -563,7 +571,7 @@
 
             }
 
-            $("#booking-queue-table tbody").append(binderString);
+            $("#queue-schedular-form-section #booking-queue-table tbody").append(binderString);
         }
 
         function addSessionRow(dataElement = null) {
@@ -579,12 +587,11 @@
                     TICKETING_TYPE: dataElement.TICKETING_TYPE,
                     QUEUE_OPEN_TIME: dataElement.QUEUE_OPEN_TIME,
                     CALENDAR_CODE: createdCalendarCode,
-                    SESSION_TYPE: "RESTAURANT",
                     COMPANY_CODE: createdCompanyCode
                 };
 
                 sessionList.push(sessionElement);
-                
+
                 binderString += `<tr id="session-table-row-${sessionElement.rowId}">
                                                     <td>
                                                         <input type="text" class="form-control" id="SESSION_NAME-${dataElement.Id}" value="${sessionElement.SESSION_NAME}"/>
@@ -593,7 +600,7 @@
                                                         <input type="time" class="form-control" id="SESSION_START_TIME-${dataElement.Id}" value="${sessionElement.SESSION_START_TIME.substring(11, sessionElement.SESSION_START_TIME.length)}"/>
                                                     </td>
                                                     <td style="width:100px;">
-                                                        <input type="time" class="form-control" id="SESSION_END_TIME-${dataElement.Id}" value="${sessionElement.SESSION_END_TIME.substring(11,  sessionElement.SESSION_START_TIME.length)}"/>
+                                                        <input type="time" class="form-control" id="SESSION_END_TIME-${dataElement.Id}" value="${sessionElement.SESSION_END_TIME.substring(11, sessionElement.SESSION_START_TIME.length)}"/>
                                                     </td>
                                                     <td style="width:100px;">
                                                         <div class="booking_queue_radio">
@@ -645,7 +652,6 @@
                             QUEUE_OPEN_TIME: "",
                             CALENDAR_CODE: createdCalendarCode,
                             COMPANY_CODE: createdCompanyCode,
-                            SESSION_TYPE: "RESTAURANT",
                         };
 
                         sessionList.push(sessionElement);

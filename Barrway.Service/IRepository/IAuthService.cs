@@ -39,5 +39,7 @@ namespace Barrway.Service.IRepository
         //Task<AddUpdateDelete> UpdateMoodiesProfile(MoodiesUpdateProfileViewModel model);
         //Task<AddUpdateDelete> UpdateAdminCounsellorProfile(AdminUpdateCLLRAccountViewModel model);
 
+        Task<AddUpdateDelete> UpdateUserEmailAddress(string Email, string userID);
+
     }
 }

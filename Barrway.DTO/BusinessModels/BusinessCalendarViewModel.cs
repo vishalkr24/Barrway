@@ -47,8 +47,7 @@ namespace Barrway.DTO.BusinessModels
         public List<string> TAGS { get; set; }
         
         public string SLOT_DURATION_IN_MINS { get; set; }
-
-        public CalendarControlModel CalendarControlSheet { get; set; }
+        public string CALENDAR_USE_TYPE { get; set; }
 
     }
 

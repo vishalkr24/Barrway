@@ -14,6 +14,7 @@ using Barrway.Utility.Common;
 using Barrway.DTO.UserAdminModels;
 using Barrway.DTO.MarketplaceModels;
 using System.Net.Http;
+using Barrway.DTO.BusinessModels;
 
 namespace Barrway.Controllers
 {
@@ -24,13 +25,15 @@ namespace Barrway.Controllers
         private readonly IPublicUserService publicUserService;
         private readonly IAuthService authService;
         private readonly IMasterService masterService;
+        private readonly IBusinessUserService businessUserService;
 
-        public UserAdminController(ISqlFunction sqlFunction, IPublicUserService publicUserService, IAuthService authService, IMasterService masterService)
+        public UserAdminController(ISqlFunction sqlFunction, IPublicUserService publicUserService, IAuthService authService, IMasterService masterService, IBusinessUserService businessUserService)
         {
             this.sqlFunction = sqlFunction;
             this.publicUserService = publicUserService;
             this.authService = authService;
             this.masterService = masterService;
+            this.businessUserService = businessUserService;
         }
 
         // GET: UserAdmin
@@ -157,10 +160,91 @@ namespace Barrway.Controllers
                 if (result.Status)
                 {
                     // send email to user
-                    var resultEmail = await masterService.SendCalendarFile(UserIdentity.UserEmail, result.Data?.ToString());
+                    //var resultEmail = await masterService.SendCalendarFile(UserIdentity.UserEmail, result.Data?.ToString());
                 }
 
                 return Json(result, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = "Failed" }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateRoomBookingSlot(CalendarFormModel model)
+        {
+            try
+            {
+                var result = await publicUserService.EnrollParticipantForCalendar(model, UserIdentity.UserName, UserIdentity.UserEmail);
+                var a = Convert.ToDateTime(model.start);
+                CalendarFormModel eventData = result.Data;
+
+                var result2 = await businessUserService.CheckRoomRentalOverlapingSlots(new SchedularFormModel()
+                {
+                    COMPANY_CODE = model.COMPANY_CODE,
+                    CALENDAR_CODE = model.CALENDAR_CODE,
+                    SCH_FROM_DATE = model.start,
+                    SCH_TO_DATE = model.end,
+                    SCH_ACTIVITY = model.activities,
+                    SCH_RESOURCE = model.resources
+                });
+
+                if (result2.Status)
+                {
+                    string formGroupKey = Guid.NewGuid().ToString();
+
+                    string referenceActivityEntry = $@"
+                                                            insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.PARTICIPANT_MASTER}, '{model.activities}', 'PARTICIPANT_MASTER_1940', 'STUDENT_NAME', {(int)FormSetting.PARTICIPANT_MASTER}, '{model.activities}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                                                            ";
+
+                    string script = $@"insert into CALENDAR_FORM_1935(
+                                                               [SCHEDULAR_FORM_ID]
+                                                              ,[formGroupKey]
+                                                              ,[formID]
+                                                              ,[userID]
+                                                              ,[Current_Status]
+                                                              ,[cycle]
+                                                              ,[MasterFormID]
+                                                              ,[MasterFormRow]
+                                                              ,[formRecordOrder]
+                                                              ,[formRecordStatus]
+                                                              ,[COMPANY_CODE]
+                                                              ,[CALENDAR_CODE]
+                                                              ,[title]
+                                                              ,[start]
+                                                              ,[end]
+                                                              ,[allDay]
+                                                              ,[resources]
+                                                              ,[activities]
+                                                              ,[COMPANY_SUBSCRIPTION_ID]
+                                                              ,[description]
+                                                              ,[created_at], [updated_at],[EVENT_TYPE])
+	                                                          values('0', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{model.COMPANY_CODE}', '{model.CALENDAR_CODE}', '{eventData.title}', '{Convert.ToDateTime(model.start).ToString("yyyy-MM-ddTHH:mm:ss")}', '{Convert.ToDateTime(model.end).ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{model.resources}', '{model.activities}', '0', '{model.description}', getDate(), getDate(),'BOOKING');
+
+                                                            insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{model.resources}', 'LOCATION_MASTER_1936', 'LOCATION_ADDRESS', {(int)FormSetting.LOCATION_MASTER}, '{model.resources}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                                                            
+                                                            {referenceActivityEntry}
+                                                            ";
+
+                    var finalResult = await sqlFunction.ExecuteSqlCommandQuery(script);
+
+                    if (finalResult > 0)
+                    {
+                        return Json(new AddUpdateDelete() { Status = true, Message = "Booking successfull!"}, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        return Json(new AddUpdateDelete() { Status = true, Message = "Booking failed!" }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    return Json(result2, JsonRequestBehavior.AllowGet);
+                }
 
             }
             catch (Exception ex)
@@ -225,7 +309,7 @@ namespace Barrway.Controllers
                 if (result.Status)
                 {
                     // Send email to user
-                    var resultEmail = await masterService.SendCalendarFile(UserIdentity.UserEmail, result.Data?.ToString());
+                    //var resultEmail = await masterService.SendCalendarFile(UserIdentity.UserEmail, result.Data?.ToString());
                 }
 
                 return Json(result, JsonRequestBehavior.AllowGet);
@@ -427,6 +511,9 @@ namespace Barrway.Controllers
                 return Json(new AddUpdateDelete() { Message = "Failed", Status = false }, JsonRequestBehavior.AllowGet);
             }
         }
+
+
+       
 
     }
 }

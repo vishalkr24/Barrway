@@ -489,7 +489,8 @@
             }
 
     .queue-list-area .queue-element {
-        min-width: 285px;
+        min-width: 265px;
+        max-width: 265px;
         margin: 0px 16px;
     }
 
@@ -524,6 +525,7 @@
 
         .queue-list-area .queue-element {
             min-width: 255px;
+            max-width: 255px;
             margin: 0px 16px;
         }
     }
@@ -535,8 +537,8 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="top_content">
-                        <span><button id="queue-summary-nav-btn" class="queue_top_button active">Queue summary</button></span>
-                        <span><button id="queue-list-nav-btn" class="queue_top_button">Queues</button></span>
+                        <span><button id="queue-summary-nav-btn" class="queue_top_button">Queue summary</button></span>
+                        <span><button id="queue-list-nav-btn" class="queue_top_button active">Queues</button></span>
                     </div>
                 </div>
             </div>
@@ -548,7 +550,7 @@
                 </span>
             </div>
             <div class="col-md-12">
-                <div id="queue-section" style="display:none;">
+                <div id="queue-section">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="heading_queue">
@@ -556,8 +558,8 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="queue-area" id="queue-area" >
+
+                    <div class="queue-area" id="queue-area">
 
                         <div class="queue-list-area queue_backlog" style="max-width: 300px;">
                             <h4>Backlog (0)</h4>
@@ -578,9 +580,9 @@
                             </div>-->
                         </div>
                         <div class="queue-list-area same-row" id="queue-external-area">
-                            <div class="queue-element" ng-repeat="queue in queueList" data-queue-id="{{queue.Id}}">
+                            <div class="queue-element" ng-repeat="queue in queueList" ng-if="queue.QUEUE_USAGE == 'TICKET'" data-queue-id="{{queue.Id}}">
                                 <div class="queue_backlog_second">
-                                    <div class="queue_backlog_inner">
+                                    <div class="queue_backlog_inner" ng-if="queue.QUEUE_SETUP_COMPLETED == 'Y'">
                                         <div class="queue-back-log">
                                             <h2>({{queue.QUEUE_PREFIX}}) {{queue.QUEUE_NAME}}</h2>
                                             <div class="view-eye">
@@ -601,11 +603,25 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="queue_backlog_inner" ng-if="queue.QUEUE_SETUP_COMPLETED == 'N'">
+                                        <div class="queue-back-log">
+                                            <h2>({{queue.QUEUE_PREFIX}}) {{queue.QUEUE_NAME}}</h2>
+                                            <div class="view-eye">
+                                                <img src="/assets/marketplace/image/eye-open.png" />
+                                            </div>
+                                            <div class="call-button">
+                                                <button ui-sref="session_schedular_form({Id: queue.Id})">Set up Schedule</button>
+                                            </div>
+                                        </div>
+                                        <div class="que-wrp-lr" style=" color: #2b2b2b; padding: 0px 6px;">
+                                            You need to set up the work schedule in order to make the queue available.
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="waiting">
+                                <div class="waiting"  ng-if="queue.QUEUE_SETUP_COMPLETED == 'Y'">
                                     <p>Waiting <span>(0)</span></p>
                                 </div>
-                                <div class="ticket-list-area" data-ticket-type="Waiting">
+                                <div class="ticket-list-area" data-ticket-type="Waiting" ng-if="queue.QUEUE_SETUP_COMPLETED == 'Y'">
                                     <div class="queue_backlog_inner" ng-repeat="ticket in queueTicketList" ng-if="ticket.QUEUE_ID == queue.Id && (ticket.STATUS == 'WAITING' || ticket.STATUS == 'IN PROGRESS')">
                                         <div class="right-border" ng-class="{'pink-border': ticket.STATUS == 'IN PROGRESS'}"></div>
                                         <div class="queue-back-log-left">
@@ -617,15 +633,79 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
+                            </div>
+                            
+                            <div style="border-left: 2px dashed lightgrey; display:flex;">
+
+                                <div class="queue-element" ng-repeat="queue in queueList" ng-if="queue.QUEUE_USAGE == 'WORKFLOW'" data-queue-id="{{queue.Id}}">
+                                    
+                                    <div class="queue_backlog_second">
+                                        <div style="background: #3FBFC7; padding:6px; color: white; text-align:center;">
+                                            Workflow Queue
+                                        </div>
+                                        <div class="queue_backlog_inner"  ng-if="queue.QUEUE_SETUP_COMPLETED == 'Y'" style="background: #B9E8EB">
+
+                                            <div class="queue-back-log">
+                                                <h2>({{queue.QUEUE_PREFIX}}) {{queue.QUEUE_NAME}}</h2>
+                                                <div class="view-eye">
+                                                    <img src="/assets/marketplace/image/eye-open.png" />
+                                                    <!--<img src="/assets/marketplace/image/eye-slash.png" />-->
+                                                </div>
+                                                <div class="call-button">
+                                                    <button ng-click="callNext(queue.Id)">Call</button>
+                                                </div>
+                                            </div>
+                                            <div class="que-wrp-lr">
+                                                <div class="queue-back-log-left">
+                                                    <h3 class=""><span>Current</span> <b>{{queue.CurrentTicket}}</b></h3>
+                                                </div>
+                                                <div class="queue-back-log-right">
+                                                    <input type="checkbox" name="queue-activator-trigger" hidden="hidden" ng-checked="queue.ACCEPT_TICKET == 'Y'" id="queue_activator-{{queue.Id}}">
+                                                    <label class="switch" for="queue_activator-{{queue.Id}}"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="queue_backlog_inner" ng-if="queue.QUEUE_SETUP_COMPLETED == 'N'" style="background: #B9E8EB">
+                                            <div class="queue-back-log">
+                                                <h2>({{queue.QUEUE_PREFIX}}) {{queue.QUEUE_NAME}}</h2>
+                                                <div class="view-eye">
+                                                    <img src="/assets/marketplace/image/eye-open.png" />
+                                                </div>
+                                                <div class="call-button">
+                                                    <button ui-sref="schedular_form({Id: queue.Id})">Set up Schedule</button>
+                                                </div>
+                                            </div>
+                                            <div class="que-wrp-lr" style=" color: #2b2b2b; padding: 0px 6px;">
+                                                You need to set up the work schedule in order to make the queue available.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="waiting">
+                                        <p>Waiting <span>(0)</span></p>
+                                    </div>
+                                    <div class="ticket-list-area" data-ticket-type="Waiting">
+                                        <div class="queue_backlog_inner" ng-repeat="ticket in queueTicketList" ng-if="ticket.QUEUE_ID == queue.Id && (ticket.STATUS == 'WAITING' || ticket.STATUS == 'IN PROGRESS')">
+                                            <div class="right-border" ng-class="{'pink-border': ticket.STATUS == 'IN PROGRESS'}"></div>
+                                            <div class="queue-back-log-left">
+                                                <h2>{{ticket.FULL_TICKET_NUMBER}}</h2>
+                                            </div>
+                                            <div class="queue-back-log-right">
+                                                <span><img src="/assets/marketplace/image/cat-icon.png" /></span>
+                                                <span><img src="/assets/marketplace/image/setting-icon.png" /></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
 
                     </div>
                 </div>
-                <div id="queue-summary-section">
-                    <div class="queue-dashboard-row">
-                        <div class="queue-dashboard-element" ng-repeat="queue in queueList">
+                <div id="queue-summary-section"  style="display:none;">
+                    <div class="queue-dashboard-row" style="justify-content:center;">
+                        <div class="queue-dashboard-element" ng-repeat="queue in queueList" ng-if="queue.QUEUE_SETUP_COMPLETED == 'Y' && queue.QUEUE_TYPE == 'RESTAURANT'">
                             <div class="queue_backlog_third">
                                 <div class="queue_backlog_inner">
                                     <div class="queue-back-log">
@@ -643,7 +723,7 @@
                             </div>
                         </div>
 
-                        <div class="staff-detail">
+                        <div class="staff-detail" ng-repeat="queue in queueList" ng-if="queue.QUEUE_SETUP_COMPLETED == 'Y' && queue.QUEUE_TYPE == 'COUNTER' && queue.QUEUE_USAGE == 'TICKET'">
                             <div class="staff-name"><b><span>(A)</span> Staff A</b></div>
                             <div class="staff-number">
                                 <span>Next</span><span><b>A18</b></span>
@@ -657,35 +737,8 @@
                                 <p>hh:mm</p>
                             </div>
                         </div>
-                        <div class="staff-detail">
-                            <div class="staff-name"><b><span>(A)</span> Staff A</b></div>
-                            <div class="staff-number">
-                                <span>Next</span><span><b>A18</b></span>
-                            </div>
-                            <div class="staff-id-number">
-                                <h3 class="pink">
-                                    A 10
-                                </h3>
-                            </div>
-                            <div class="staff-time">
-                                <p>hh:mm</p>
-                            </div>
-                        </div>
-                        <div class="staff-detail">
-                            <div class="staff-name"><b><span>(A)</span> Staff A</b></div>
-                            <div class="staff-number">
-                                <span>Next</span><span><b>A18</b></span>
-                            </div>
-                            <div class="staff-id-number">
-                                <h3 class="pink">
-                                    A 10
-                                </h3>
-                            </div>
-                            <div class="staff-time">
-                                <p>hh:mm</p>
-                            </div>
-                        </div>
-                        <div class="second-wrap">
+
+                        <div class="second-wrap" ng-repeat="queue in queueList" ng-if="queue.QUEUE_SETUP_COMPLETED == 'Y' && queue.QUEUE_TYPE == 'COUNTER' && queue.QUEUE_USAGE == 'WORKFLOW'">
                             <div class="staff-detail second">
                                 <div class="second-number">
                                     <span>Room D</span>
@@ -701,72 +754,83 @@
                                 <h3>B13</h3>
                             </div>
                         </div>
-                        <div class="second-wrap">
-                            <div class="staff-detail second">
-                                <div class="second-number">
-                                    <span>Next</span>
-                                </div>
-                                <div class="second-id-number">
-                                    <h3 class="color-black">
-                                        A 10
-                                    </h3>
-                                </div>
-                            </div>
-                            <div class="waiting"><p>Waiting <span>(1)</span></p></div>
-                            <div class="only-id">
-                                <h3>B13</h3>
-                            </div>
-                            <div class="only-id">
-                                <h3>B13</h3>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
-                
-                <!--<div class="col-md-4">
-        <div class="queue_backlog_third">
-            <div class="queue_backlog_inner">
-                <div class="queue-back-log">
-                    <h2>(A) Staff A</h2>
-                </div>
-                <div class="que-wrp-lr">
-                    <div class="queue-back-log-left">
-                        <h3 class="pink"><span>Current</span></br> <b>A10</b></h3>
-                    </div>
-                    <div class="summry-text">
-                        <p>Last ticket  <span>A20</span></p>
-                    </div>
-                </div>
-            </div>
+                        <!--<div class="staff-detail">
+        <div class="staff-name"><b><span>(A)</span> Staff A</b></div>
+        <div class="staff-number">
+            <span>Next</span><span><b>A18</b></span>
+        </div>
+        <div class="staff-id-number">
+            <h3 class="pink">
+                A 10
+            </h3>
+        </div>
+        <div class="staff-time">
+            <p>hh:mm</p>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="queue_backlog_third">
-            <div class="queue_backlog_inner">
-                <div class="queue-back-log">
-                    <h2>(A) Staff A</h2>
-                </div>
-                <div class="que-wrp-lr">
-                    <div class="queue-back-log-left">
-                        <h3 class="pink"><span>Current</span></br> <b>A10</b></h3>
-                    </div>
-                    <div class="summry-text">
-                        <p>Last ticket  <span>A20</span></p>
-                    </div>
-                </div>
+
+    <div class="second-wrap">
+        <div class="staff-detail second">
+            <div class="second-number">
+                <span>Room D</span>
             </div>
+            <div class="second-id-number">
+                <h3 class="color-black">
+                    A 10
+                </h3>
+            </div>
+        </div>
+        <div class="waiting"><p>Waiting <span>(1)</span></p></div>
+        <div class="only-id">
+            <h3>B13</h3>
         </div>
     </div>-->
 
+                    </div>
+                </div>
+
+                <!--<div class="col-md-4">
+                    <div class="queue_backlog_third">
+                        <div class="queue_backlog_inner">
+                            <div class="queue-back-log">
+                                <h2>(A) Staff A</h2>
+                            </div>
+                            <div class="que-wrp-lr">
+                                <div class="queue-back-log-left">
+                                    <h3 class="pink"><span>Current</span></br> <b>A10</b></h3>
+                                </div>
+                                <div class="summry-text">
+                                    <p>Last ticket  <span>A20</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="queue_backlog_third">
+                        <div class="queue_backlog_inner">
+                            <div class="queue-back-log">
+                                <h2>(A) Staff A</h2>
+                            </div>
+                            <div class="que-wrp-lr">
+                                <div class="queue-back-log-left">
+                                    <h3 class="pink"><span>Current</span></br> <b>A10</b></h3>
+                                </div>
+                                <div class="summry-text">
+                                    <p>Last ticket  <span>A20</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+
             </div>
         </div>
 
 
     </div>
 </div>
-</div>
+
 <div id="searchModal"
      class="modal fade"
      tabindex="-1"
@@ -955,6 +1019,8 @@
                 <!--<span ng-repeat="v in selectedRecords">{{v.value}}</span>-->
                 <div class="input-group">
 
+
+
                     <!--<input type="text"  name="selectedrec" class="form-control"
                     ng-model="selectedRecords" style="color:green"/>-->
                     <!--<textarea name='selectedrec' placeholder='Selected entries'>{{selectedRecords}}</textarea>-->
@@ -1041,6 +1107,7 @@
 
 
                         <!--<input id="newtag-inputnew" type="text" value="{{createEventDetails.tags}}" placeholder="Add tags">-->
+                        re
 
                         <div ng-repeat="tag in totalSelectListTagify">
                             <input value="{{createEventDetails[tag.name]}}" id="createnewtag-inputHidden{{tag.name}}" type="hidden">

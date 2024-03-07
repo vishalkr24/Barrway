@@ -61,7 +61,7 @@ namespace Barrway.Service.IRepository
 
         #region Business Calendar
 
-        Task<AddUpdateDelete> AddCalendar(BusinessCalendarModel model, string UserId, CalendarControlModel calendarControlModel);
+        Task<AddUpdateDelete> AddCalendar(BusinessCalendarModel model, string UserId);
 
         
         Task<AddUpdateDelete> GetAllCalendarTemplatesByCategory(string CalendarCategoryId);
@@ -89,6 +89,8 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetQueueAndSession(string CompanyCode, string CalendarCode);
 
         Task<AddUpdateDelete> CheckOverlapingSlots(SchedularFormModel model);
+        Task<AddUpdateDelete> CheckRoomRentalOverlapingSlots(SchedularFormModel model);
+        
 
         Task<AddUpdateDelete> AddCalendarEventSlot(CalendarFormModel model, string formGroupKey);
 
@@ -112,7 +114,7 @@ namespace Barrway.Service.IRepository
 
         Task<AddUpdateDelete> GetCompanyActiveSubscriptionDetails(string Id, bool isCompanyCode = false);
 
-        Task<AddUpdateDelete> GetSessionsForThisMonth(string CompanyCode);
+        Task<AddUpdateDelete> GetSessionsForThisMonth(string CompanyCode, string CalendarCode);
 
         Task<AddUpdateDelete> GetSessionsForThisMonthCalendarWise(string CompanyCode);
 

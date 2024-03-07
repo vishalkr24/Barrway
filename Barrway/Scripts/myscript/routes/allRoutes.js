@@ -456,7 +456,7 @@
                 cache: false,
                 views: {
                     'content': {
-                        templateUrl: '/Templates/formgenerator/formEntryPage.html?token=' + uuid,
+                        templateUrl: '/Templates/formgenerator/formEntryBarrwayThemePage.html?token=' + uuid,
                         controller: 'FormEntryController'
                     }
                 },
@@ -1932,6 +1932,20 @@
                     'content': {
                         templateUrl: '/Templates/calendar-master/schedular-form.html?token=' + uuid,
                         controller: 'NewSchedularFormController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
+            .state('session_schedular_form', {
+                url: '/calendar/schedular-form/session/:Id',
+                onEnter: function ($window) { $window.document.title = "Schedular Form"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/calendar-master/session-schedular-form.html?token=' + uuid,
+                        controller: 'SessionSchedularFormController'
                     }
                 },
                 ncyBreadcrumb: {

@@ -4203,7 +4203,7 @@
 
             $scope.filterFieldsList = [];
             var headers = [];
-            debugger;
+            
             //headers = bindTColumnHeaderCustom($scope.formDatafields, true, true);
             /*Bind Header from tabulator settings*/
             if (localStorage.getItem("records_" + $stateParams.formId)) {

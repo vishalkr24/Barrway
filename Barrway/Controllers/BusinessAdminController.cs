@@ -194,12 +194,6 @@ namespace Barrway.Controllers
                         }
                     }
 
-                    using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarConfiguration/BasicConfiguration.json")))
-                    {
-                        calendarModel.CalendarControlSheet = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
-                    }
-
-
                 }
                 else
                 {
@@ -226,7 +220,6 @@ namespace Barrway.Controllers
                         calendarModel.IS_VISIBLE = calendarModel2.IS_VISIBLE;
                         calendarModel.SLOT_DURATION_IN_MINS = calendarModel2.SLOT_DURATION_IN_MINS;
                         calendarModel.TAGS = calendarModel2.TAGS.Split(',').ToList();
-                        calendarModel.CalendarControlSheet = JsonConvert.DeserializeObject<CalendarControlModel>(JsonConvert.SerializeObject(data.Data["controlSheet"]));
                     }
                     else
                     {
@@ -289,7 +282,6 @@ namespace Barrway.Controllers
                         calendarModel.IS_VISIBLE = calendarModel2.IS_VISIBLE;
                         calendarModel.SLOT_DURATION_IN_MINS = calendarModel2.SLOT_DURATION_IN_MINS;
                         calendarModel.TAGS = calendarModel2.TAGS.Split(',').ToList();
-                        calendarModel.CalendarControlSheet = JsonConvert.DeserializeObject<CalendarControlModel>(JsonConvert.SerializeObject(data.Data["controlSheet"]));
                     }
                     else
                     {
@@ -1429,6 +1421,7 @@ namespace Barrway.Controllers
                                 SLOT_DURATION_IN_MINS = model.SLOT_DURATION_IN_MINS,
                                 CALENDAR_TEMPLATE_ID = (UserIdentity.Role != "SUPERADMIN_USER") ? ((string.IsNullOrEmpty(model.CALENDAR_TEMPLATE_ID?.ToString())) ? "" : model.CALENDAR_TEMPLATE_ID?.ToString()) : "0",
                                 IS_VISIBLE = "Y",
+                                CALENDAR_USE_TYPE = model.CALENDAR_USE_TYPE,
                                 Id = model.Id,
                                 CALENDAR_FUNCTION_TYPE = (model.CALENDAR_CATEGORY_ID == "6") ? "QUEUE": "CALENDAR",
                                 SCHEDULAR_ID = (string.IsNullOrEmpty(model.SCHEDULAR_ID)) ? "" : model.SCHEDULAR_ID,
@@ -1439,81 +1432,8 @@ namespace Barrway.Controllers
                                 TAGS = ((model.TAGS != null) ? string.Join(", ", model.TAGS) : "")
                             };
 
-                            CalendarControlModel calendarControlModel = new CalendarControlModel();
 
-                            if (calendarModel.CALENDAR_CATEGORY_ID == "1")
-                            {
-                                calendarModel.SLOT_DURATION_IN_MINS = model.SLOT_DURATION_IN_MINS;
-                                using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarConfiguration/TypeB1Configuration.json")))
-                                {
-                                    calendarControlModel = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
-                                }
-                            }
-                            else if (calendarModel.CALENDAR_CATEGORY_ID == "2")
-                            {
-                                calendarModel.SLOT_DURATION_IN_MINS = model.SLOT_DURATION_IN_MINS;
-                                using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarConfiguration/TypeCConfiguration.json")))
-                                {
-                                    calendarControlModel = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
-                                }
-
-                                calendarControlModel.DISPLAY_START_TIME = model.CalendarControlSheet.DISPLAY_START_TIME;
-                                calendarControlModel.DISPLAY_END_TIME = model.CalendarControlSheet.DISPLAY_END_TIME;
-                            }
-                            else if (calendarModel.CALENDAR_CATEGORY_ID == "3")
-                            {
-                                calendarModel.SLOT_DURATION_IN_MINS = "0";
-
-                                using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarConfiguration/TypeAConfiguration.json")))
-                                {
-                                    calendarControlModel = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
-                                }
-                            }
-                            else if (calendarModel.CALENDAR_CATEGORY_ID == "4")
-                            {
-                                calendarModel.SLOT_DURATION_IN_MINS = "0";
-
-                                using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarConfiguration/TypeAConfiguration.json")))
-                                {
-                                    calendarControlModel = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
-                                }
-                            }
-                            else if (calendarModel.CALENDAR_CATEGORY_ID == "5")
-                            {
-                                calendarModel.SLOT_DURATION_IN_MINS = model.SLOT_DURATION_IN_MINS;
-                                using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarConfiguration/TypeB2Configuration.json")))
-                                {
-                                    calendarControlModel = JsonConvert.DeserializeObject<CalendarControlModel>(sr.ReadToEnd());
-                                }
-                            }
-
-                            if (!IsPartial)
-                            {
-                                calendarControlModel.CALENDAR_FORM_NAME = model.CalendarControlSheet.CALENDAR_FORM_NAME;
-                                calendarControlModel.CALENDAR_FORM_CATEGORY = model.CalendarControlSheet.CALENDAR_FORM_CATEGORY;
-                                calendarControlModel.CALENDAR_USE_TYPE = model.CalendarControlSheet.CALENDAR_USE_TYPE;
-                                calendarControlModel.RESOURCE_FORM_NAME = model.CalendarControlSheet.RESOURCE_FORM_NAME;
-                                calendarControlModel.RESOURCE_FORM_CATEGORY = model.CalendarControlSheet.RESOURCE_FORM_CATEGORY;
-                                calendarControlModel.ACTIVITY_FORM_NAME = model.CalendarControlSheet.ACTIVITY_FORM_NAME;
-                                calendarControlModel.ACTIVITY_FORM_CATEGORY = model.CalendarControlSheet.ACTIVITY_FORM_CATEGORY;
-                                calendarControlModel.LOCATION_FORM_NAME = model.CalendarControlSheet.LOCATION_FORM_NAME;
-                                calendarControlModel.LOCATION_FORM_CATEGORY = model.CalendarControlSheet.LOCATION_FORM_CATEGORY;
-                                calendarControlModel.REGISTRATION_FORM_NAME = model.CalendarControlSheet.REGISTRATION_FORM_NAME;
-                                calendarControlModel.REGISTRATION_FORM_CATEGORY = model.CalendarControlSheet.REGISTRATION_FORM_CATEGORY;
-                                calendarControlModel.PARTICIPANT_FORM_NAME = model.CalendarControlSheet.PARTICIPANT_FORM_NAME;
-                                calendarControlModel.PARTICIPANT_FORM_CATEGORY = model.CalendarControlSheet.PARTICIPANT_FORM_CATEGORY;
-                                calendarControlModel.EVALUATION_FORM_NAME = model.CalendarControlSheet.EVALUATION_FORM_NAME;
-                                calendarControlModel.EVALUATION_FORM_CATEGORY = model.CalendarControlSheet.EVALUATION_FORM_CATEGORY;
-                                calendarControlModel.DISPLAY_START_TIME = (!string.IsNullOrEmpty(model.CalendarControlSheet.DISPLAY_START_TIME)) ? Convert.ToDateTime(model.CalendarControlSheet.DISPLAY_START_TIME).ToString("HH:mm") : "";
-                                calendarControlModel.DISPLAY_END_TIME = (!string.IsNullOrEmpty(model.CalendarControlSheet.DISPLAY_END_TIME)) ? Convert.ToDateTime(model.CalendarControlSheet.DISPLAY_END_TIME).ToString("HH:mm") : "";
-                                calendarControlModel.CALENDAR_CODE = model.CALENDAR_CODE;
-                                calendarControlModel.COMPANY_CODE = model.COMPANY_CODE;
-                                calendarControlModel.USER_ADMIN_GROUP_NAME = model.COMPANY_CODE.ToString() + model.CALENDAR_CODE.ToString();
-                                calendarControlModel.CALENDAR_GROUP_NAME = model.CALENDAR_CODE.ToString() + model.COMPANY_CODE.ToString();
-                            }
-
-
-                            var result = await businessUserService.AddCalendar(calendarModel, User.Identity.Name.ToString(), calendarControlModel);
+                            var result = await businessUserService.AddCalendar(calendarModel, User.Identity.Name.ToString());
 
                             if (result.Status)
                             {
