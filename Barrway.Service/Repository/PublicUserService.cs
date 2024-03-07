@@ -423,6 +423,68 @@ namespace Barrway.Service.Repository
             }           
         }
 
+        public async Task<AddUpdateDelete> EnrollParticipantForCalendar(CalendarFormModel model, string UserId, string UserEmail)
+        {
+            // Check if the user already exist in the participant master
+
+            List<IDictionary<string, object>> participantCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from PARTICIPANT_MASTER_1940 where EMAIL = '{UserEmail}' and COMPANY_CODE = '{model.COMPANY_CODE}' and CALENDAR_CODE = '{model.CALENDAR_CODE}'");
+
+            string StudentId = "";
+            if (participantCheckResult.Count > 0)
+            {
+                StudentId = participantCheckResult.FirstOrDefault()["Id"].ToString();
+                model.activities = StudentId;
+                model.title = participantCheckResult.FirstOrDefault()["STUDENT_NAME"]?.ToString();
+            }
+            else
+            {
+                // add entry in participant master table
+                var publicUser = await GetSinglePublicUserAccount(UserId);
+
+                CalendarParticipantModel participant = new CalendarParticipantModel();
+
+                participant.NICKNAME = publicUser.Data["NICK_NAME"].ToString();
+                participant.EMAIL = UserEmail;
+                participant.CALENDAR_CODE = model.CALENDAR_CODE;
+                participant.COMPANY_CODE = model.COMPANY_CODE;
+                participant.ADDRESS = "";
+                participant.GENDER = publicUser.Data["GENDER"].ToString();
+                participant.IS_ACTIVE = "Y";
+                participant.STUDENT_NAME = publicUser.Data["FIRST_NAME"].ToString() + " " + publicUser.Data["LAST_NAME"].ToString();
+                
+                Form_DataTable data = new Form_DataTable();
+                data.action = (int)FormAction.Save;
+                data.formId = (int)FormSetting.PARTICIPANT_MASTER;
+                data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(participant.ToDictionary());
+                data.formGroupKey = Guid.NewGuid().ToString();
+                var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+                if (formResult.res == 1)
+                {
+                    StudentId = formResult.Id.ToString();
+
+                    model.activities = StudentId;
+                    model.title = participant.STUDENT_NAME;
+
+                    string ParticipantCode = "PC" + formResult.Id.ToString().PadLeft(5, '0');
+
+                    string query = $@"UPDATE [dbo].[PARTICIPANT_MASTER_1940]
+                                   SET [PARTICIPANT_CODE] = '{ParticipantCode}'
+                                 WHERE Id = '{formResult.Id.ToString()}'";
+
+                    int saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Message = "Failed to add participant", Status = false };
+                }
+
+            }
+
+            return new AddUpdateDelete() { Status = true, Message = "Success", Data = model };
+
+
+        }
 
         public async Task<AddUpdateDelete> BookingServiceEvent(RequestEventViewModel eventModal, string userName)
         {

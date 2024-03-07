@@ -8,7 +8,7 @@
     ViewBag.CALENDAR_ID = Model.DEFAULT_CALENDAR_ID;
 
 
-    
+
 }
 
 <script>
@@ -642,30 +642,30 @@
 
                         @foreach (var item in Model.ServicesList)
                         {
-                            
-                                <div class="item" style="margin-right: 20px; border: 1px solid #3fbfc7; border-radius: 10px; padding: 10px 13px 10px; min-width: 188px;">
-                                    <div class="item-inner">                                        
-                                        <div class="pro-text">
-                                            <p class="f1"><b>@item.ACTIVITY_NAME</b></p>
-                                            <div id="full-stars-example">
-                                                <div class="rating-group">
-                                                    <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                    <input class="rating__input" name="rating" id="rating-1" value="1" type="radio">
-                                                    <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                    <input class="rating__input" name="rating" id="rating-2" value="2" type="radio">
-                                                    <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                    <input class="rating__input" name="rating" id="rating-3" value="3" type="radio" checked="">
-                                                    <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                    <input class="rating__input" name="rating" id="rating-4" value="4" type="radio">
-                                                    <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                    <input class="rating__input" name="rating" id="rating-5" value="5" type="radio">
-                                                </div>
 
+                            <div class="item" style="margin-right: 20px; border: 1px solid #3fbfc7; border-radius: 10px; padding: 10px 13px 10px; min-width: 188px;">
+                                <div class="item-inner">
+                                    <div class="pro-text">
+                                        <p class="f1"><b>@item.ACTIVITY_NAME</b></p>
+                                        <div id="full-stars-example">
+                                            <div class="rating-group">
+                                                <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                <input class="rating__input" name="rating" id="rating-1" value="1" type="radio">
+                                                <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                <input class="rating__input" name="rating" id="rating-2" value="2" type="radio">
+                                                <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                <input class="rating__input" name="rating" id="rating-3" value="3" type="radio" checked="">
+                                                <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                <input class="rating__input" name="rating" id="rating-4" value="4" type="radio">
+                                                <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                <input class="rating__input" name="rating" id="rating-5" value="5" type="radio">
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
-                            
+                            </div>
+
 
 
                         }
@@ -761,7 +761,7 @@
                                         <option value="-1" disabled>@Resource.select_a_calendar</option>
                                         @foreach (var item in Model.calendars)
                                         {
-                                            
+
                                             <option value="@item.CALENDAR_CODE" @((item.CALENDAR_CODE == Model.DEFAULT_CALENDAR_ID) ? "selected" : "")>@item.CALENDAR_NAME</option>
                                         }
                                     </select>
@@ -818,7 +818,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
@@ -1006,11 +1006,62 @@
 
         </div>
     </div>
+
+    <style>
+        .navigation-element{
+            border:none!important;
+        }
+    </style>
+
+    <div class="modal fade" id="dateRangePickerModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel4" aria-hidden="true">
+        <div class="modal-dialog" style="width: 100%;" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="border-bottom: 1px solid lightgrey;">
+                    <h5 class="modal-title" id="exampleModalLabel">Booking Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div style="margin-bottom:12px;">
+                        @Resource.Location : <span style="font-size: 16px; font-weight: bold; color: #E2476C;" id="selectedLocationName"></span>
+                    </div>
+                    <div style="margin-bottom:16px;">
+                        @Resource.Date : <span style="font-size: 15px; font-weight: bold;" id="startEndDate"></span>
+                    </div>
+
+
+                    <div style="display:flex; border: 1px solid lightgrey;">
+                        <input type="number" id="date-counter" class="form-control" style="border:none; outline:none;" min="1" placeholder="5" value="1" />
+                        <label class="navigation-element btn btn-default btn-primary">
+                            Day
+                            <input type="radio" name="date-calc-type" value="day" style="display:none;" checked />
+                        </label>
+                        <label class="navigation-element btn btn-default">
+                            Month
+                            <input type="radio" name="date-calc-type" value="month" style="display:none;" />
+                        </label>
+                        <label class="navigation-element btn btn-default">
+                            Year
+                            <input type="radio" name="date-calc-type" value="year" style="display:none;" />
+                        </label>
+                    </div>
+                    <span style="font-size:smaller; color:grey;">No. of <span id="txt-calc-type"></span></span>
+
+                    <div style="display: flex; justify-content: flex-end; margin-top: 24px;">
+                        <button class="btn btn-default" style="margin-right: 12px" data-bs-dismiss="modal">Cancel</button> <button class="btn btn-danger" ng-click="enrollPublicUserForRental()">Confirm booking</button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 </section>
 
 
 @section scripts{
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.min.js" integrity="sha512-mh+AjlD3nxImTUGisMpHXW03gE6F4WdQyvuFRkjecwuWLwD2yCijw4tKA3NsEFpA1C3neiKhGXPSIGSfCYPMlQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.css" integrity="sha512-gp+RQIipEa1X7Sq1vYXnuOW96C4704yI1n0YB9T/KqdvqaEgL6nAuTSrKufUX3VBONq/TPuKiXGLVgBKicZ0KA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="~/Scripts/MarketplaceScripts/CompanySchedule.js?@DateTime.Now.ToString("yyyyMmddHHMMssffff")"></script>
 
     <script>
@@ -1019,6 +1070,15 @@
             $scope.rootScopeSafe = function () {
                 $rootScope.safeApply();
             };
+
+            $(document).on("click", ".navigation-element", function () {
+                $(".navigation-element").removeClass("btn-primary");
+                $(this).addClass("btn-primary");
+            })
+
+            angular.element($("#dateRangePickerModel")).scope().selectedLocationName = "";
+            angular.element($("#dateRangePickerModel")).scope().selectedStartDate = "DD-MM-YYYY";
+            angular.element($("#dateRangePickerModel")).scope().selectedEndDate = "DD-MM-YYYY";
 
             $rootScope.safeApply = function (fn) {
                 var phase = this.$root.$$phase;
@@ -1072,15 +1132,15 @@
                                         debugger;
                                         const wrapper = document.createElement('div');
                                         wrapper.innerHTML = `<div>
-                                                                            ${eventData.customDate}
-                                                                        </div>
-                                                                        <div>
-                                                                            ${eventData.customTime}
-                                                                        </div>
-                                                                        <div>${eventData.customTitleSplit[2]}</div><br />
-                                                                        <div>${eventData.customTitleSplit[1]}</div>
-                                                                        <div>${eventData.customTitleSplit[0]}</div><br />
-                                                                        <h4 style="color:red">${response.Message}</h4>`;
+                                                                                                ${eventData.customDate}
+                                                                                            </div>
+                                                                                            <div>
+                                                                                                ${eventData.customTime}
+                                                                                            </div>
+                                                                                            <div>${eventData.customTitleSplit[2]}</div><br />
+                                                                                            <div>${eventData.customTitleSplit[1]}</div>
+                                                                                            <div>${eventData.customTitleSplit[0]}</div><br />
+                                                                                            <h4 style="color:red">${response.Message}</h4>`;
 
                                         swal({
                                             title: "You are going to book",
@@ -1195,7 +1255,86 @@
 
             }
 
+            $scope.enrollPublicUserForRental = function () {
+                
+                showLoader();
+                $.ajax({
+                    url: "/Account/CheckPublicUserLogin",
+                    type: "POST",
+                    success: function (response) {
+                        hideLoader();
+                        if (!response.Status) {
 
+                            swal({
+                                title: "Login Required",
+                                text: "Kindly login into your account and then you can enroll yourself into this calendar.",
+                                icon: "info",
+                                buttons: {
+                                    confirm: "Login",
+                                    cancel: "Leave it"
+                                }
+                            }).then(function (value) {
+                                if (value) {
+                                    window.location.href = '/Account/Login?returnUrl=/Marketplace/Calander?' + window.location.href.split('?')[1].replace('&', '$') + '';
+                                }
+                            });
+                        } else {
+                            showLoader();
+
+                            let eventData = $scope.selectEventDetails;
+
+                            var obj = {
+                                start: eventData.start,
+                                end: eventData.end,
+                                resources: eventData.resources,
+                                activities: "",
+                                description: "",
+                                allDay: "false",
+                                color: "",
+                                CALENDAR_CODE: eventData.CALENDAR_CODE,
+                                COMPANY_CODE: eventData.COMPANY_CODE
+                            }
+
+                            $.ajax({
+                                url: "/UserAdmin/CreateRoomBookingSlot",
+                                type: "POST",
+                                data: obj,
+                                success: function (data) {
+                                    hideLoader();
+                                    if (!data.Status) {
+                                        swal({
+                                            title: "Failed to book",
+                                            text: data.Message,
+                                            icon: "error",
+                                            button: "Okay"
+                                        });
+                                    } else {
+                                        swal({
+                                            title: "Congratulations!",
+                                            text: data.Message,
+                                            icon: "success",
+                                            button: "Okay"
+                                        }).then(function (boolValue) {
+                                            window.location.reload();
+                                        });
+
+                                    }
+
+                                },
+                                error: function () {
+                                    swal({ type: 'error', showCloseButton: true, html: "something went wrong!" });
+                                }
+                            })
+                        }
+
+                    },
+                    error: function () {
+
+                    }
+                })
+
+
+            }
 
         });
 
