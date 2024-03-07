@@ -3080,6 +3080,7 @@ namespace Barrway.Service.Repository
 
                     var category = (await sqlFunction.ExecuteSqlQuery(sqlString)).FirstOrDefault();
                     result.Add("category", category);
+
                     return new AddUpdateDelete() { Data = result, Message = AppMessage.Success, Status = true };
 
                 }

@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -27,8 +28,9 @@ namespace Barrway.Controllers
         private readonly IPublicUserService publicUserService;
         private readonly IAuthService authService;
         private readonly IFormAPIRepository formAPIRepository;
+        private readonly ICalendarService calendarService;
 
-        public MarketPlaceController(IBusinessUserService businessUserService, IGlobalMasterService globalMasterService, IMasterService masterService, IPublicUserService publicUserService, IAuthService authService, IFormAPIRepository formAPIRepository)
+        public MarketPlaceController(IBusinessUserService businessUserService, IGlobalMasterService globalMasterService, IMasterService masterService, IPublicUserService publicUserService, IAuthService authService, IFormAPIRepository formAPIRepository,ICalendarService calendarService)
         {
             this.businessUserService = businessUserService;
             this.globalMasterService = globalMasterService;
@@ -36,6 +38,7 @@ namespace Barrway.Controllers
             this.publicUserService = publicUserService;
             this.authService = authService;
             this.formAPIRepository = formAPIRepository;
+            this.calendarService = calendarService;
         }
 
         // GET: MarketPlace
@@ -563,7 +566,20 @@ namespace Barrway.Controllers
         [HttpPost]
         public async Task<ActionResult> GetCalendarDetails(string id)
         {
-            return Json(await businessUserService.GetCalendarDetails(id));
+            var calendarDetails = await businessUserService.GetCalendarDetails(id);
+            if (calendarDetails.Status) { 
+            var calendarDetails_data=calendarDetails.Data as IDictionary<string,object>;
+                using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarSetupMatrix/CalendarSetupMatrix.json")))
+                {
+                    var json = sr.ReadToEnd();
+                    dynamic jsonData = JsonConvert.DeserializeObject(json);
+                    //CALENDAR_CATEGORY_ID
+                    string clr_categoryId = calendarDetails_data["CALENDAR_CATEGORY_ID"].ToString();
+                    calendarDetails_data.Add("setup_matrix", jsonData["Type" + clr_categoryId].ToString());
+                    calendarDetails.Data = calendarDetails_data;
+                }
+            }
+            return Json(calendarDetails);
         }
 
 
@@ -694,5 +710,20 @@ namespace Barrway.Controllers
 
             }
         }
+
+        //[AllowAnonymous]
+        //[HttpPost]
+        //public async Task<ActionResult> GetCalendarMasterConfig(string code) {
+
+        // var calendarMaster=   await calendarService.GetCalendarMaster(code);
+        // if (calendarMaster == null) return Json(new AddUpdateDelete() { Status=false,Message=AppMessage.NotFound});
+
+        //    using (StreamReader r = new StreamReader(Server))
+        //    {
+        //        string json = r.ReadToEnd();
+        //    }
+
+        //    return Json(new );
+        //}
     }
 }
