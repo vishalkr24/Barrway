@@ -446,8 +446,116 @@ namespace Barrway.Controllers
 
         }
 
+        [Route("company/calanderyearview/{id}/{Cid?}")]
+        public async Task<ActionResult> CalanderYearView(string id = null, string Cid = null)
+        {
+            try
+            {
 
-       
+                string PageUrl = id;
+                string CompanyCode = id;
+                string CalendarCode = Cid;
+
+                var Compay = await businessUserService.GetCompanyCodeByPageUrl(id);
+                if (Compay.Status == true)
+                {
+                    CompanyCode = Compay.Data["COMPANY_CODE"];
+                }
+                else
+                {
+                    return RedirectToAction("Error404", "Marketplace");
+                }
+
+
+
+
+                var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
+                AddUpdateDelete calendarData = await businessUserService.GetMarcketPlaceCompanyCalendarByCompanyId(companyData.Data["Id"].ToString());
+
+
+
+
+                //var servilces=await businessUserService.GetServiceList(CalendarCode, CompanyCode);
+                //var serviceData = await globalMasterService.GetCompanyCategoryMaster();
+                if (calendarData.Status)
+                {
+
+                    var data = JsonConvert.SerializeObject(companyData.Data);
+                    var calendarEncrypted = JsonConvert.SerializeObject(calendarData.Data);
+
+                    //var serviceEncrypted = JsonConvert.SerializeObject(serviceData.Data);
+
+                    MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
+                    companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
+                    companyModel.calendars = JsonConvert.DeserializeObject<List<BusinessCalendarModel>>(calendarEncrypted);
+                    companyModel.PAGE_URL = PageUrl;
+
+
+
+
+                    if (CalendarCode == null)
+                    {
+                        CalendarCode = companyModel.calendars[0].CALENDAR_CODE;
+                    }
+
+                    if (!string.IsNullOrEmpty(CalendarCode))
+                    {
+                        if (companyModel.calendars.Any(x => x.CALENDAR_FUNCTION_TYPE == "QUEUE" && x.CALENDAR_CODE == CalendarCode))
+                        {
+                            //company/Queue/{id}/{Cid
+                            //return RedirectToAction("CompanyQueueSchedule", new { CompanyCode = CompanyCode, CalendarCode = CalendarCode });
+                            return Redirect("/company/Queue/" + CompanyCode + "/" + CalendarCode);
+                            // return Redirect("/ControllerName/ActionName");
+                        }
+                    }
+
+                    var servilces = await businessUserService.GetServiceList(CalendarCode, CompanyCode);
+                    var servilcesEncrypted = JsonConvert.SerializeObject(servilces.Data);
+                    companyModel.ServicesList = JsonConvert.DeserializeObject<List<ServicesList>>(servilcesEncrypted);
+                    //companyModel.services = JsonConvert.DeserializeObject<List<BusinessCompanyCategoryModel>>(serviceEncrypted);
+
+                    ViewBag.IsUserFavorite = false;
+
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        if (UserIdentity.Role == "PUBLIC_USER")
+                        {
+                            // check if calendar is a favorite
+                            var calendarFavCheck = await publicUserService.CheckSingleMyFavoriteCalendar(User.Identity.Name, CalendarCode);
+                            if (calendarFavCheck.Status)
+                            {
+                                ViewBag.IsUserFavorite = true;
+                            }
+                        }
+                    }
+
+                    ViewBag.CompanyCode = CompanyCode;
+                    ViewBag.PageURl = PageUrl;
+                    ViewBag.CalendarCode = CalendarCode;
+                    ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
+
+                    if (!string.IsNullOrEmpty(companyModel.IS_TEMPLATE))
+                    {
+                        if (companyModel.IS_TEMPLATE == "Y")
+                            return RedirectToAction("Index", "Marketplace");
+                    }
+
+                    return View(companyModel);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Marketplace");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Index", "Marketplace");
+            }
+
+        }
+
+
         [Route("company/Queue/{id}/{Cid?}")]
         public async Task<ActionResult> CompanyQueueSchedule(string id,string Cid)
         {

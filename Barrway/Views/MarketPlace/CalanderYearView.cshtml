@@ -1,4 +1,4 @@
-﻿﻿@model Barrway.DTO.MarketplaceModels.MarketplaceCompanyModel
+﻿@model Barrway.DTO.MarketplaceModels.MarketplaceCompanyModel
 @{
     ViewBag.Title = Resource.Company_Schedule;
     Layout = "~/Views/Shared/_LayoutMarketPlaceCompany.cshtml";
@@ -29,8 +29,9 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" id="jquery-ui-change">
     <script src="/fg-assets/js/app.js"></script>
     <script src="/fg-assets/js/jquery-ui.js"></script>
-    <script src="/fg-assets/fullcalendar/dist/fullcalendar.js"></script>
-    <script src="/fg-assets/fullcalendar-scheduler/dist/scheduler.js"></script>
+    @*<script src="/fg-assets/fullcalendar/dist/fullcalendar.js"></script>*@
+
+    @*<script src="/fg-assets/fullcalendar-scheduler/dist/scheduler.js"></script>*@
     <script src="/fg-assets/js/jquery.cookie.min.js"></script>
     <script src="/fg-assets/js/scripts.js"></script>
     <script src="/Content/underscore.js/underscore.min.js"></script>
@@ -627,8 +628,17 @@
             border-color: #3fbfc7 !important;
         }
 
-        .fc-bgevent {
-            border-radius: 0px !important;
+        div#agenda-view .fc-event-container .fc-day-grid-event .fc-content {
+            margin: 0px;
+        }
+
+        div#agenda-view .fc-day-grid-event {
+            margin: 0;
+            padding: 0 1px;
+        }
+
+        #agenda-view .fc-event-container .fc-day-grid-event .fc-content .fc-title {
+            font-size: 10px;
         }
     </style>
 }
@@ -831,32 +841,22 @@
                         <div id="tabs" style="display:none">
                             <ul>
                                 <li data-value="Year view">
-                                    <a href="#yearview" onclick="window.location.href='/company/calanderyearview/@ViewBag.CompanyCode/@ViewBag.CalendarCode'">Year View</a>
+                                    <a href="#year-view">Year View</a>
                                 </li>
                                 <li data-value="List view">
-                                    <a href="#list-view">@Resource.List_View</a>
+                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@ViewBag.CompanyCode/@ViewBag.CalendarCode'">@Resource.List_View</a>
                                 </li>
                                 <li data-value="External Events">
-                                    <a href="#agenda-view">@Resource.Agenda_View</a>
+                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@ViewBag.CompanyCode/@ViewBag.CalendarCode'">@Resource.Agenda_View</a>
                                 </li>
                                 <li data-value="Timeline resource view">
-                                    <a href="#timeline-resource-view">@Resource.Timeline_Resource_View</a>
+                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@ViewBag.CompanyCode/@ViewBag.CalendarCode'">@Resource.Timeline_Resource_View</a>
                                 </li>
                                 <li data-value="Vertical resource view">
-                                    <a href="#vertical-resource-view">@Resource.Vertical_Resource_View</a>
+                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@ViewBag.CompanyCode/@ViewBag.CalendarCode'">@Resource.Vertical_Resource_View</a>
                                 </li>
                             </ul>
-
-                            <div id="list-view">
-                                <div class="calendar"></div>
-                            </div>
-                            <div id="agenda-view">
-                                <div class="calendar"></div>
-                            </div>
-                            <div id="timeline-resource-view">
-                                <div class="calendar"></div>
-                            </div>
-                            <div id="vertical-resource-view">
+                            <div id="year-view">
                                 <div class="calendar"></div>
                             </div>
                         </div>
@@ -923,7 +923,7 @@
                     <div class="div-flex div-list-bar"></div>
                     <div class="div-flex div-list">
                         <div class="d-flex justify-content-between align-items-center p-0">
-                            <h5 class="list-title mb-0" id="newtabuList"></h5>
+                            <h5 class="list-title mb-0" id="newtabuList"><strong id="strongFormName">0 Student in this Slot</strong></h5>
 
                         </div>
                         <ol id="newtabuListUl">
@@ -1069,10 +1069,12 @@
 @section scripts{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.min.js" integrity="sha512-mh+AjlD3nxImTUGisMpHXW03gE6F4WdQyvuFRkjecwuWLwD2yCijw4tKA3NsEFpA1C3neiKhGXPSIGSfCYPMlQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.css" integrity="sha512-gp+RQIipEa1X7Sq1vYXnuOW96C4704yI1n0YB9T/KqdvqaEgL6nAuTSrKufUX3VBONq/TPuKiXGLVgBKicZ0KA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="~/Scripts/MarketplaceScripts/CompanySchedule.js?@DateTime.Now.ToString("yyyyMmddHHMMssffff")"></script>
+
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+    <script src="~/Scripts/MarketplaceScripts/CompanyScheduleYear.js?@DateTime.Now.ToString("yyyyMmddHHMMssffff")"></script>
 
     <script>
-        /*var app = angular.module('myApp', []);*/
+        
         FormGeneratorApp.controller('myCtrl', function ($scope, $rootScope) {
             $scope.rootScopeSafe = function () {
                 $rootScope.safeApply();
@@ -1139,15 +1141,15 @@
                                         debugger;
                                         const wrapper = document.createElement('div');
                                         wrapper.innerHTML = `<div>
-                                                                                                    ${eventData.customDate}
-                                                                                                </div>
-                                                                                                <div>
-                                                                                                    ${eventData.customTime}
-                                                                                                </div>
-                                                                                                <div>${eventData.customTitleSplit[2]}</div><br />
-                                                                                                <div>${eventData.customTitleSplit[1]}</div>
-                                                                                                <div>${eventData.customTitleSplit[0]}</div><br />
-                                                                                                <h4 style="color:red">${response.Message}</h4>`;
+                                                                                                                                ${eventData.customDate}
+                                                                                                                            </div>
+                                                                                                                            <div>
+                                                                                                                                ${eventData.customTime}
+                                                                                                                            </div>
+                                                                                                                            <div>${eventData.customTitleSplit[2]}</div><br />
+                                                                                                                            <div>${eventData.customTitleSplit[1]}</div>
+                                                                                                                            <div>${eventData.customTitleSplit[0]}</div><br />
+                                                                                                                            <h4 style="color:red">${response.Message}</h4>`;
 
                                         swal({
                                             title: "You are going to book",

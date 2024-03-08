@@ -1283,7 +1283,7 @@ function changeStateOfCalender(view,start,end) {
 
     //if (view.intervalStart != undefined)
     //    currentdate = view.intervalStart.format("YYYY-MM-DD");
-    if (view.type != undefined) {
+    if (view!= undefined) {
         //if (view.type.toLowerCase().contains("month")) {
         //    if (view.intervalStart != undefined) {
         //        currentdate = moment(start._d, "YYYY-MM-DD").format("YYYY-MM-DD");
