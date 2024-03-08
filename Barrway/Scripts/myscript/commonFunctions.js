@@ -1275,31 +1275,44 @@ function refreshEventResourcesActivityNew(calenderType, calenderData, resourceDa
 function changeStateOfCalender(view,start,end) {
     var temp = {};
     temp.field = "start";
-    var currentdate = moment(start._d, "YYYY-MM-DD").format("YYYY-MM-DD");
-    var currentend = moment(moment(end._d).subtract(1, "days"), "YYYY-MM-DD").format("YYYY-MM-DD");
+    //var currentdate = moment(start._d, "YYYY-MM-DD").format("YYYY-MM-DD");
+    //var currentend = moment(moment(end._d).subtract(1, "days"), "YYYY-MM-DD").format("YYYY-MM-DD");
+
+    var _start = moment(start._d, "YYYY-MM-DD").format("YYYY-MM-DD");
+    var _end = moment(moment(end._d).subtract(1, "days"), "YYYY-MM-DD").format("YYYY-MM-DD");
+
     //if (view.intervalStart != undefined)
     //    currentdate = view.intervalStart.format("YYYY-MM-DD");
     if (view.type != undefined) {
-        if (view.type.toLowerCase().contains("month")) {
-            if (view.intervalStart != undefined) {
-                currentdate = moment(start._d, "YYYY-MM-DD").format("YYYY-MM-DD");
-            }
-            else
-                currentdate = moment(new Date()).format("YYYY-MM-DD");
-            temp.value = " datepart(mm,[start]) =month('" + currentdate + "')   and datepart(yyyy, [start]) = year('" + currentdate + "') ";
-        }
-        else if (view.type.toLowerCase().contains("year")) {
-            temp.value = " datepart(yyyy, [start]) = year('" + currentdate + "') ";
-        }
-        else if (view.type.toLowerCase().contains("week") || view.type.toLowerCase().contains("twodays") || view.type.toLowerCase().contains("threedays")) {
-            temp.value = " CAST([start] as date) between CAST('" + currentdate + "' as date) and CAST('" + currentend + "' as date)  ";
-        }
-        else if (view.type.toLowerCase().contains("day")) {
-           // currentdate = moment(moment(start._d).subtract(1, "days"), "YYYY-MM-DD").format("YYYY-MM-DD");
+        //if (view.type.toLowerCase().contains("month")) {
+        //    if (view.intervalStart != undefined) {
+        //        currentdate = moment(start._d, "YYYY-MM-DD").format("YYYY-MM-DD");
+        //    }
+        //    else
+        //        currentdate = moment(new Date()).format("YYYY-MM-DD");
+        //    temp.value = " datepart(mm,[start]) =month('" + currentdate + "')   and datepart(yyyy, [start]) = year('" + currentdate + "') ";
+        //}
+        //else if (view.type.toLowerCase().contains("year")) {
+        //    temp.value = " datepart(yyyy, [start]) = year('" + currentdate + "') ";
+        //}
+        //else if (view.type.toLowerCase().contains("week") || view.type.toLowerCase().contains("twodays") || view.type.toLowerCase().contains("threedays")) {
+        //    temp.value = " CAST([start] as date) between CAST('" + currentdate + "' as date) and CAST('" + currentend + "' as date)  ";
+        //}
+        //else if (view.type.toLowerCase().contains("day")) {
+        //   // currentdate = moment(moment(start._d).subtract(1, "days"), "YYYY-MM-DD").format("YYYY-MM-DD");
 
-            temp.value = " CAST([start] as date) =CAST('" + currentdate + "' as date) ";
-        }
+        //    temp.value = " CAST([start] as date) =CAST('" + currentdate + "' as date) ";
+        //}
+
+        temp.value = `((cast([start] as date) <= '${_start}' and (cast([end] as date) <= '${_end}' and cast([end] as date) >= '${_start}')) or
+										((cast([start] as date) >= '${_start}' and cast([start] as date) <= '${_end}') and (cast([end] as date) <= '${_end}' and cast([end] as date) >= '${_start}')) or
+										((cast([start] as date) <= '${_end}' and cast([start] as date) >= '${_start}') and cast([end] as date) >= '${_end}') or
+										(cast([start] as date) <= '${_start}' and cast([end] as date) >= '${_end}'))`;
+
     }
+
+
+
     return temp;
 }
 
@@ -15550,6 +15563,8 @@ function Check_EXIST_PRE_DEFINED_ACTIVITIES(calendarDetails) {
     return calendarDetails && calendarDetails.category && calendarDetails.category.EXIST_PRE_DEFINED_ACTIVITIES != 'N';
 }
 function Check_IS_SERVICE_TYPE(calendarDetails) {
-    return calendarDetails && calendarDetails.category && calendarDetails.category.IS_SERVICE_TYPE != 'N';
+    let setup = JSON.parse(calendarDetails["setup_matrix"]);
+    let type = calendarDetails["CALENDAR_TYPE"];
+    return setup["Step2"]["Steps"]["Step" + type]["IS_SERVICE_TYPE"] == true;
 }
 
