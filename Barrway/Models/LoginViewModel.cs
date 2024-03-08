@@ -30,7 +30,7 @@ namespace Barrway.Models
         public string USER_PHONE { get; set; }
 
         [Required(ErrorMessage = "please enter Country code !")]
-        public string countryCode { get; set; }
+        public string Country_Code { get; set; }
 
 
         [Required(ErrorMessage = "Please Enter Password!!")]
@@ -49,7 +49,7 @@ namespace Barrway.Models
     public class UpdateUserEmailModel
     {
         
-        [Required(ErrorMessage = "Please Enter Email your !")]
+        [Required(ErrorMessage = "Please Enter your Email !")]
         [EmailAddress(ErrorMessage = "Please Enter Valid Email!!")]
         public string Email { get; set; }
 

@@ -237,7 +237,7 @@ namespace Barrway.Controllers
                 return View(model);
             }
 
-            var loginresult = await authService.GetUserbyPhone("+"+model.countryCode + model.USER_PHONE, model.USER_PASSWORD, (int)FormRole.GENERAL_USER, true);
+            var loginresult = await authService.GetUserbyPhone( model.USER_PHONE,  model.Country_Code, model.USER_PASSWORD, (int)FormRole.GENERAL_USER, true);
 
             if (loginresult.Status)
             {
@@ -518,7 +518,7 @@ namespace Barrway.Controllers
                 return View(model);
             }
 
-            var userByEmail = await authService.GetUserByPhone("+" + model.CountryCode + model.USER_PHONE, (int)FormRole.GENERAL_USER);
+            var userByEmail = await authService.GetUserByPhone( model.USER_PHONE, model.Country_Code, (int)FormRole.GENERAL_USER);
             var userByID = await authService.GetUser(model.USER_NAME, FormRole.GENERAL_USER);
 
             string generalRoleId = ((int)FormRole.GENERAL_USER).ToString();
@@ -536,7 +536,8 @@ namespace Barrway.Controllers
                     IS_EXTERNAL_SIGNUP = (model.IS_EXTERNAL_SIGNUP) ? "Y" : "N",
                     PROFILE_STATUS = "PENDING",
                     SIGNUP_TYPE = (model.IS_EXTERNAL_SIGNUP) ? "Google" : "Phone",
-                    USER_PHONE = "+" + model.CountryCode + model.USER_PHONE,
+                    Country_Code = model.Country_Code,
+                    USER_PHONE =  model.USER_PHONE,
                     USER_PASSWORD = model.USER_PASSWORD,
                     USER_ID = model.USER_NAME,
                     ROLE_ID = generalRoleId,
@@ -560,14 +561,14 @@ namespace Barrway.Controllers
                 // Send Activation Link
                 if (!model.IS_EXTERNAL_SIGNUP && publicResult.Status)
                 {
-                    var Result = MessageRepository.SendOtpSmS("+"+model.CountryCode + model.USER_PHONE);
+                    var Result = MessageRepository.SendOtpSmS("+"+model.Country_Code + model.USER_PHONE);
 
                     if (result.Status)
                     {
                        
-                        Session["VarificationMobileNUmber"] = "+" + model.CountryCode+ model.USER_PHONE;
+                        Session["VarificationMobileNUmber"] = "+" + model.Country_Code + model.USER_PHONE;
                         TempData["VERIFICATION"] = "Pending";
-                        TempData["VERIFICATION_Phone"] = "+" + model.CountryCode + model.USER_PHONE;
+                        TempData["VERIFICATION_Phone"] = "+" + model.Country_Code + model.USER_PHONE;
                         TempData["MobileVerificationSuccessMessage"] = "an Otp message has been sent to your registered mobile number !";
                         return RedirectToAction("MobileVerification", "Account");
 
@@ -581,7 +582,7 @@ namespace Barrway.Controllers
                 else
                 {
 
-                    var result2 = await authService.GetUserByPhone(model.USER_PHONE, 1);
+                    var result2 = await authService.GetUserByPhone(model.USER_PHONE, "+"+model.Country_Code, 1);
                     if (result2.Status)
                     {
                         var user = result2.Data;
@@ -1194,19 +1195,43 @@ namespace Barrway.Controllers
                 }
 
                 string USER_ID = User.Identity.Name;
-                var result =  await authService.UpdateUserEmailAddress(model.Email, USER_ID);
 
-               
-                if (result.Status==true)
+                var result = await authService.CheckEmailAddressExists(model.Email , USER_ID);
+
+
+                if (result.Status == true)
                 {
-                    TempData["UpdateEmailSussess"] = "Email address updated succesfully !";
-                    return Redirect("/UserAdmin#/userdashboard");
+
+                    var linkResult = await authService.sendEmailVarificationLink(USER_ID, model.Email);
+
+                    if (linkResult.Status)
+                    {
+                        TempData["VERIFICATION"] = "Pending";
+                        TempData["VERIFICATION_EMAIL"] = model.Email;
+
+                        TempData["UpdateEmailSussess"] = "varification email has been sent to "+ model.Email + " please fallow instructions !";
+
+                        model.Email = "";
+                        return View(model);
+                        //return RedirectToAction("EmailVerification", "Account");
+
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("USER_NAME", linkResult.Message);
+                        return View(model);
+                    }
+
+                    //TempData["UpdateEmailSussess"] = "Email address updated succesfully !";
+                    //return Redirect("/UserAdmin#/userdashboard");
                 }
                 else
                 {
+                    TempData["UpdateEmailFailure"] = "Email address is already in use !";
+
                     return View(model);
                 }
-            
+
             
             }
             catch (Exception ex)
@@ -1214,6 +1239,66 @@ namespace Barrway.Controllers
                 return View(model);
             }
         }
+
+
+        [HttpGet]
+        public async Task<ActionResult> VerifiyEmailaddress(string userName, string token)
+        {
+            if (string.IsNullOrEmpty(token))
+            {
+                TempData["failed"] = "Invalid Request";
+                return View();
+            }
+
+            var result = await authService.GetToken(token, userName);
+            if (result.Status && (result.Data as IDictionary<string, object>)["IS_ACTIVE"]?.ToString() == "Y")
+            {
+                var tokeData = result.Data as IDictionary<string, object>;
+                var _createdTime = tokeData["TOKEN_TIME"]?.ToString();
+                string Email = tokeData["EMAIL"]?.ToString();
+
+                DateTime createdTime;
+
+                if (DateTime.TryParse(_createdTime, out createdTime))
+                {
+
+                    if (DateTime.Now.Subtract(createdTime).TotalHours > 24)
+                    {
+                        TempData["failed"] = "Email Activation Link Expired!";
+                        return View();
+                    }
+                    var verificationResult = await authService.UserVerification(token, userName);
+                    if (verificationResult.Status)
+                    {
+                        TempData["success"] = "Email verification successfull.";                        
+
+                        var Result = await authService.UpdateUserEmailAddress(Email, userName);
+
+                        return View();
+                       
+                    }
+                    else
+                    {
+                        TempData["failed"] = verificationResult.Message;
+                        return View();
+                    }
+                }
+                else
+                {
+                    TempData["failed"] = "Invalid Token";
+                    return View();
+                }
+            }
+            else
+            {
+                TempData["failed"] = "Invalid activation link!";
+                return View();
+            }
+        }
+
+
+
+
 
 
 

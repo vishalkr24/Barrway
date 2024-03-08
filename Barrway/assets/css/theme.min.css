@@ -35864,3 +35864,12 @@ input:checked + .switch {
 .second-wrap .waiting, .second-wrap .only-id {
     margin-bottom: 10px;
 }
+.btnhome {
+    color: #fff;
+    background-color: #3fbfc7;
+    border-color: #3fbfc7;
+    width: 100%;
+    border-radius: 40px;
+    padding: 12px 0px;
+    margin: 10px 0px;
+}

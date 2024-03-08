@@ -166,13 +166,13 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
 
 
 
-        public async Task<AddUpdateDelete<IDictionary<string, object>>> GetUserbyPhone(string Phone, string password, int RoleId, bool isToken = false)
+        public async Task<AddUpdateDelete<IDictionary<string, object>>> GetUserbyPhone(string Phone,string countrycode, string password, int RoleId, bool isToken = false)
         {
             try
             {
                 string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
 join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
-                                     where user_m.USER_PHONE = '{Phone}'";
+                                     where user_m.USER_PHONE = '{Phone}' and Country_Code='{countrycode}' ";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
@@ -540,7 +540,7 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
         }
 
 
-        public async Task<AddUpdateDelete> GetUserByPhone(string phone, int Role_Id)
+        public async Task<AddUpdateDelete> GetUserByPhone(string phone, string CountryCode, int Role_Id)
         {
             try
             {
@@ -556,7 +556,7 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
                                     join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.USER_ID = user_m.USER_ID
                                     join BUSINESS_ASSIGNED_USERS_1964 bau on bau.BUSINESS_ACCOUNT_ID = baw.Id
                                     join ROLE_MASTER_1917 user_role on user_role.Id = user_m.ROLE_ID
-                                    where user_m.USER_PHONE = '{phone}' and user_m.ROLE_ID = '{Role_Id.ToString()}' and bau.ASSIGNED_USER = user_m.Id";
+                                    where user_m.USER_PHONE = '{phone}' and user_m.Country_Code='{CountryCode}' and user_m.ROLE_ID = '{Role_Id.ToString()}' and bau.ASSIGNED_USER = user_m.Id";
                 }
                 else
                 {
@@ -859,6 +859,41 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
             return new AddUpdateDelete() { Status = false, Message = "User Activation Link not generate!" };
         }
 
+
+        public async Task<AddUpdateDelete> sendEmailVarificationLink(string userID, string Email)
+        {
+            var userToken = new UserToken()
+            {
+                EMAIL = Email,
+                USER_ID = userID,
+                TOKEN = Guid.NewGuid().ToString(),
+                TOKEN_TIME = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                IS_ACTIVE = "Y"
+            };
+            var userTokeDic = userToken.ToDictionary();
+
+            Form_DataTable request = new Form_DataTable();
+            request.formId = (int)FormSetting.USER_TOKEN;
+            request.action = (int)FormAction.Save;
+            request.formGroupKey = Guid.NewGuid().ToString();
+            request.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(userTokeDic);
+
+            var result = (await formAPIRepository.GeneratedFormData(request)).Data;
+
+            if (result.res == 1)
+            {
+                var result2 = SendActivationLink.sendvarificationLink(userToken);
+                if (result2.Status)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = "User Activation Link send!" };
+                }
+                return new AddUpdateDelete() { Status = false, Message = result2.Message };
+            }
+            return new AddUpdateDelete() { Status = false, Message = "User Activation Link not generate!" };
+        }
+
+
+
         private async Task<AddUpdateDelete> resetpasswordLink(string UserName, string Email)
         {
             var userToken = new UserToken()
@@ -909,6 +944,33 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
                         return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
                     }
                 
+            }
+            catch (Exception ex)
+            {
+
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
+            }
+
+        }
+
+
+        public async Task<AddUpdateDelete> CheckEmailAddressExists(string Email ,string USER_ID)
+        {
+            try
+            {
+
+                string sqlString = $@"select USER_EMAIL from USER_MASTER_1915 where USER_EMAIL ='{Email}' and USER_ID !='{USER_ID}'";
+                var result = await sqlFunction.ExecuteSqlQuery(sqlString);
+                if (result.Count() > 0)
+                {
+
+                    return new AddUpdateDelete() { Status = false, Message = "Email already exists" };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = true, Message = "Email not exists" };
+                }
+
             }
             catch (Exception ex)
             {

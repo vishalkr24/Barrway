@@ -68,6 +68,7 @@ namespace Barrway.Service.Repository
                               ,publicUser.[USER_ID]
                               ,publicUser.[USER_PASSWORD]
                               ,publicUser.[USER_EMAIL]
+                              ,publicUser.[Country_Code]
                               ,publicUser.[USER_PHONE]
                               ,publicUser.[IS_EXTERNAL_SIGNUP]
                               ,publicUser.[IS_EMAIL_VERIFIED]
@@ -148,9 +149,7 @@ namespace Barrway.Service.Repository
                 }
 
                 string query = $@"update PUBLIC_USER_ACCOUNT_1943 set FIRST_NAME = '{model.FIRST_NAME}', LAST_NAME = '{model.LAST_NAME}', CHINESE_NAME = N'{model.CHINESE_NAME}', NICK_NAME = '{model.NICK_NAME}', GENDER = '{model.GENDER}', DATE_OF_BIRTH = '{model.DATE_OF_BIRTH.ToString("yyyy-MM-ddTHH:mm:ss")}' where USER_ID = '{model.USER_ID}'
-                              update USER_MASTER_1915 set {subQuery}  USER_PHONE = '{model.USER_PHONE}' where USER_ID = '{model.USER_ID}'
-                    
-                            ";
+                              update USER_MASTER_1915 set {subQuery}  USER_PHONE = '{model.USER_PHONE}',Country_Code='{model.Country_Code}' where USER_ID = '{model.USER_ID}' ";
 
                 int result = await sqlFunction.ExecuteSqlCommandQuery(query);
 

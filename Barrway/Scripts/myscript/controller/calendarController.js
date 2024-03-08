@@ -17148,6 +17148,8 @@
                 res.data.data.Data.DATE_OF_BIRTH = formattedDate;
                 //res.data.data.Data.DATE_OF_BIRTH =  res.data.data.Data.DATE_OF_BIRTH.substring(0, 10);
                 $("#DATE_OF_BIRTH").val(formattedDate);
+                $('#countryCode').val(res.data.data.Data.Country_Code).trigger('change');
+                
                 $("#gender-" + res.data.data.Data.GENDER.toLowerCase()).attr("checked", true);
 
                 $scope.userData = res.data.data.Data;
@@ -17198,6 +17200,7 @@
                 USER_ID: $("#USER_ID").val(),
                 USER_PASSWORD: $("#USER_PASSWORD").val(),
                 USER_EMAIL: $("#USER_EMAIL").val(),
+                Country_Code: $("#countryCode").val(),
                 USER_PHONE: $("#USER_PHONE").val(),
                 GENDER: $("input[name=gender-selector]:checked").val(),
                 DATE_OF_BIRTH: $("#DATE_OF_BIRTH").val(),

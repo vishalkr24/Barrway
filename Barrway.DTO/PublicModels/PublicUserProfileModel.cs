@@ -26,6 +26,7 @@ namespace Barrway.DTO.PublicModels
         public string USER_EMAIL { get; set; } = String.Empty;
 
         public string USER_PASSWORD { get; set; } = String.Empty;
+        public string Country_Code { get; set; } = String.Empty;
         public string USER_PHONE { get; set; } = String.Empty;
 
     }
