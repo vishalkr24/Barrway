@@ -2487,16 +2487,55 @@ async function rendarPopupCalendar(assignDate) {
                         x["rendering"] = "";
                     }
                 });
-              let $scopeVar= angular.element($("#calendar")).scope();
-                calenderData = calenderData.filter(x => $scopeVar.selectEventDetails.resourceId == x.resourceId || x.id==0);
+                let $scopeVar = angular.element($("#calendar")).scope();
+                var selectResourceId = $scopeVar.selectEventDetails.resourceId;
+                var _calenderData = [];
+                calenderData.forEach(x => {
+
+                    
+                    if (x.resourceId && x.resourceId != 0 && x.resourceId != null && x.resourceId != "" && selectResourceId == x.resourceId) {
+                        _calenderData.push(x);
+                    } else if (x.id == 0) {
+                        _calenderData.push(x);
+                    } else if (x.id != 0 && x.customForms) {
+                        debugger;
+                        let customFormsIds = x.customForms.split(',');
+                        let index = customFormsIds.findIndex(y => y == "2306");
+                        if (index != - 1) {
+                            let splitcustomFormIds = x.customFormIds.split(',');
+                            if (splitcustomFormIds.length > index) {
+                                if (selectResourceId == splitcustomFormIds[index]) {
+                                    _calenderData.push(x);
+                                } else {
+                                    _calenderData.push({
+                                        "id": 0,
+                                        "start": x.start,
+                                        "end": x.end,
+                                        "title": "",
+                                        "rendering": "background",
+                                        "color": "#ddd",
+                                        "customForms": "2306",
+                                        "customTitle": "Barrway",
+                                        "customFormIds": "1"
+                                    });
+                                }
+                            }
+                        }
+                    } else {
+                        _calenderData.push(x);
+                    }
+
+                });
+
+                //calenderData = calenderData.filter(x => $scopeVar.selectEventDetails.resourceId == x.resourceId || x.id==0);
 
 
-                if (calenderData != undefined) {
+                if (_calenderData != undefined) {
                     if (formDetailsDataInfo.searchByDate != undefined) {
                         $('#vertical-resource-view div.calendar').fullCalendar('removeEvents');
                     }
-                    window["eventListTemp2"] = calenderData;
-                    callback(calenderData);
+                    window["eventListTemp2"] = _calenderData;
+                    callback(_calenderData);
                 }
                 else
                     callback([]);
@@ -2510,12 +2549,11 @@ async function rendarPopupCalendar(assignDate) {
             $scope.BookingService = {};
             $scope.BookingService.start = start;
             $scope.BookingService.end = end;
-
+            debugger;
             var events = window["eventListTemp2"];
 
-            var exist = events.filter(x => moment(start.format()).local() >= moment(x.start).local() && moment(end.format()).local() <= moment(x.end).local() && x.EVENT_TYPE!="SCHEDULE");
-            if (exist.length > 0) {
-
+            var exist = events.filter(x => moment(start.format()).local() >= moment(x.start).local() && moment(end.format()).local() <= moment(x.end).local() && x.EVENT_TYPE=="SCHEDULE");
+            if (exist.length == 0) {
                 swal({
                     title: "Slot Unavailable!",
                     text: "The slot you have selected is not available, Kindly select another slot.",
@@ -2528,27 +2566,7 @@ async function rendarPopupCalendar(assignDate) {
                 //alert('Not available slots!');
                 return;
             }
-            var selectedEvent = events.filter(function (event) {
-                return event.rendering === 'background' &&                 // Filter background events
-                    moment(event.start) <= moment(start.format()) &&       // Check if the event starts before the selected timeslot
-                    moment(event.end) >= moment(end.format());             // Check if the event ends after the selected timeslot
-            });
-            if (selectedEvent.length == 0) {
-
-                swal({
-                    title: "Slot Unavailable!",
-                    text: "The slot you have selected is not available, Kindly select another slot.",
-                    icon: "warning",
-                    buttons: {
-                        confirm: "Okay"
-                    }
-                });
-
-                /*alert('Not available slots!');*/
-                return;
-            }
-
-            var bgevent = selectedEvent[0];
+            var bgevent = exist[0];
 
             //console.log(bgevent.activities);
             //console.log($scope.activityConfig.formDataList[0].DURATION_FIELD);
