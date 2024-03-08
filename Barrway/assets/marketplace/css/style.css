@@ -1196,6 +1196,9 @@ section.bottom-nav .com-det {
         .modal-fullscreen-md-down .modal-body {
             overflow-y: auto;
         }
+    div#owl-demo5 .owl-prev, div#owl-demo5 .owl-next {
+        display: none;
+    }
 }
 
 @media (max-width: 991.98px) {
@@ -1281,4 +1284,46 @@ section.bottom-nav .com-det {
     border: 0;
     border-radius: 0.5rem;
     opacity: 0.5;
+}
+
+
+@media screen and (max-width:1366px) {
+    section.bottom-nav nav.navbar div#com-nav .nav > li > a {
+        position: relative;
+        display: block;
+        padding: 10px 9px;
+        font-size: 16px;
+    }
+    section.bottom-nav .com-nav {
+        margin: 8px 0px 0px 0px;
+    }
+    section.bottom-nav .navbar-brand > img {
+        width: 165px;
+    }
+    /*section.bottom-nav .navbar-collapse.collapse {
+        display: block !important;
+        justify-content: right;
+    }*/
+    div#owl-demo5 {
+        padding-left: 12px;
+    }
+    div#owl-demo5 .owl-prev, div#owl-demo5 .owl-next {
+        margin: -30px -5px 10px;
+        font-size: 31px !important;
+        padding-top: 8px !important;
+        padding-bottom: 11px !important;
+        padding-left: 11px !important;
+        padding-right: 11px !important;
+    }
+    .my-slide button.owl-next {
+        right: -30px;
+    }
+    .my-slide button.owl-prev {
+        left: -30px;
+    }
+}
+@media screen and (min-width:769px) and (max-width:1200px) {
+    section.bottom-nav .navbar-collapse.collapse {
+        display: block !important;
+    }
 }
