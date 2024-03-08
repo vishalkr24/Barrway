@@ -1,4 +1,16 @@
-﻿$(document).ready(function () {
+﻿var calendar_category = [{ "categoryId": 1, "type": "1", "name": "1a" }, { "categoryId": 1, "type": "2", "name": "1b" },
+    { "categoryId": 2, "type": "1", "name": "2a" }, { "categoryId": 2, "type": "2", "name": "2b" }, { "categoryId": 2, "type": "3", "name": "2c" }, { "categoryId": 2, "type": "4", "name": "2d" },
+    { "categoryId": 3, "type": "1", "name": "3a" }, { "categoryId": 3, "type": "2", "name": "3b" }, { "categoryId": 3, "type": "3", "name": "3c" },
+    { "categoryId": 4, "type": "1", "name": "5a" }, { "categoryId": 4, "type": "2", "name": "5b" }, { "categoryId": 4, "type": "3", "name": "5c" },
+    { "categoryId": 6, "type": "1", "name": "6a" }];
+
+function getCalendarCategory(calendar) {
+
+    return calendar_category.find(x => x.categoryId == calendar.CALENDAR_CATEGORY_ID && calendar.CALENDAR_TYPE == x.type)?.name ?? "";
+}
+
+
+$(document).ready(function () {
     $("#nv-home").addClass("active");
     setDistrictMaster();
     setCalendarSubCategory();
@@ -152,7 +164,7 @@ function setCalendarSubCategoryWise(showFilterQuery = false, requestFromButton =
                                                         </div>
                                                         <div class="pro-text">
                                                             <p class="p1"><b>${calendars[j].COMPANY_NAME_ENGLISH}</b></p>
-                                                            <p class="p2">${calendars[j].CALENDAR_NAME}</p>
+                                                            <p class="p2">${calendars[j].CALENDAR_NAME} <span class="clr-tag">${getCalendarCategory(calendars[j])}<span></p>
                                                             <p class="p3">${calendars[j].DISTRICT_NAME}</p>
                                                             <p class="p4">${tagString}</p>
                                                         </div>
