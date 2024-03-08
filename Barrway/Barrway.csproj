@@ -3074,6 +3074,7 @@
     <Content Include="Scripts\MarketplaceScripts\companyCalendarScript.js" />
     <Content Include="Scripts\MarketplaceScripts\CompanyPhotoAlbum.js" />
     <Content Include="Scripts\MarketplaceScripts\CompanyPackage.js" />
+    <Content Include="Scripts\MarketplaceScripts\CompanyScheduleYear.js" />
     <Content Include="Scripts\MarketplaceScripts\CompanySchedule.js" />
     <Content Include="Scripts\MarketplaceScripts\CompanyService.js" />
     <Content Include="Scripts\MarketplaceScripts\CompanyDetail.js" />
@@ -3284,6 +3285,7 @@
     <Content Include="Views\MarketPlace\Error404.cshtml" />
     <Content Include="Views\Account\Enteryouremailaddress.cshtml" />
     <Content Include="Views\Account\VerifiyEmailaddress.cshtml" />
+    <Content Include="Views\MarketPlace\CalanderYearView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
