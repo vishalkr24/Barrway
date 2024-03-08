@@ -30,16 +30,23 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> ResetPassword(string token, string userName, string newPassword);
         Task<AddUpdateDelete> GetUser(string userName, FormRole formRole);
         Task<AddUpdateDelete> sendActivationLink(string userID, string Email, FormRole Role);
-        Task<AddUpdateDelete> GetUserByPhone(string phone, int Role_Id);
+       
         Task<AddUpdateDelete> ChangePhoneVarificationStatus(string userID);
 
-        Task<AddUpdateDelete<IDictionary<string, object>>> GetUserbyPhone(string Phone, string password, int RoleId, bool isToken = false);
+
+        Task<AddUpdateDelete<IDictionary<string, object>>> GetUserbyPhone(string Phone, string countrycode, string password, int RoleId, bool isToken = false);
         //Task<AddUpdateDelete> GuestUserSignUp();
         //Task<AddUpdateDelete> CounsellorSignup(CounsellorSignupViewModel model);
         //Task<AddUpdateDelete> UpdateMoodiesProfile(MoodiesUpdateProfileViewModel model);
         //Task<AddUpdateDelete> UpdateAdminCounsellorProfile(AdminUpdateCLLRAccountViewModel model);
 
         Task<AddUpdateDelete> UpdateUserEmailAddress(string Email, string userID);
+
+        Task<AddUpdateDelete> sendEmailVarificationLink(string userID, string Email);
+
+        Task<AddUpdateDelete> CheckEmailAddressExists(string Email, string USER_ID);
+
+        Task<AddUpdateDelete> GetUserByPhone(string phone, string CountryCode, int Role_Id);
 
     }
 }

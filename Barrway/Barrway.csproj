@@ -3280,6 +3280,7 @@
     <Content Include="Views\MarketPlace\CompanyQueueSchedule.cshtml" />
     <Content Include="Views\MarketPlace\Error404.cshtml" />
     <Content Include="Views\Account\Enteryouremailaddress.cshtml" />
+    <Content Include="Views\Account\VerifiyEmailaddress.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -577,7 +577,7 @@
                                             <label for="email">@Resource.Phone</label>
                                             <div class="mobileNumberDiv">
 
-                                                @Html.HiddenFor(model => model.CountryCode)
+                                                @Html.HiddenFor(model => model.Country_Code)
 
                                                 @Html.TextBoxFor(model => model.USER_PHONE, new { @class = "form-control", @placeholder = "Phone", @required = "true" })
                                                 @Html.ValidationMessageFor(model => model.USER_PHONE, "", new { @class = "invalid-feedback-2" })
@@ -720,26 +720,44 @@
             const validMsg = document.querySelector("#valid-msg");
             // here, the index maps to the error code returned from getValidationError - see readme
             const errorMap = ["Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];
-            debugger;
+
+            var country;
             // initialise plugin
             const iti = window.intlTelInput(input, {
               
                 initialCountry: "auto",
                 geoIpLookup: function (callback) {
+                   
                     $.get('https://ipinfo.io', function () { }, "jsonp").always(function (resp) {
+                        debugger;
                         var countryCode = (resp && resp.country) ? resp.country : "";
+                        var dialCode = getDialCodeByIso2(countryCode);
+                        $("#Country_Code").val(dialCode);
+
                         callback(countryCode);
                     });
                 },
                 utilsScript: "/assets/intl-tel-input/js/utils.js",
                 preferredCountries: ['hk', 'cn']
 
-                
                 //initialCountry: "us",
                 //utilsScript: "/assets/intl-tel-input/js/utils.js?1708969428263"
             });
 
-            //console.log(iti.getSelectedCountryData(),"hghjhgj");
+
+            
+            const countryData = window.intlTelInputGlobals.getCountryData();
+            function getDialCodeByIso2(iso2) {
+               
+                var country = countryData.find(country => country.iso2.toLowerCase() === iso2.toLowerCase());
+              
+                return country ? country.dialCode : null;
+            }
+
+           
+          
+
+            
 
             const reset = () => {
                 input.classList.remove("error");
@@ -760,7 +778,7 @@
 
 
 
-            $("#USER_PHONE").blur(function () {
+            $("#USER_PHONE").change(function () {
                 setContryCodeValue();
                 reset();
                 if (!input.value.trim()) {
@@ -777,11 +795,15 @@
             });
 
 
-            function setContryCodeValue(){
+            function setContryCodeValue() {              
                 var instance = $("[name=USER_PHONE]")
                 instance.intlTelInput();
                 var countrycode = instance.intlTelInput('getSelectedCountryData').dialCode;
-                $("#CountryCode").val(countrycode);
+                if (countrycode != undefined) {
+                    $("#Country_Code").val(countrycode);
+                }
+                
+                
             }
 
 
@@ -789,6 +811,10 @@
 
 
         })
+
+
+        
+
 
     </script>
 
