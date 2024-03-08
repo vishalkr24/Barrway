@@ -2833,7 +2833,7 @@ function getServiceProviderData() {
 }
 
 function getServiceProviderDataByCalendar() {
-   
+    debugger;
     $.ajax({
         url: "/Calendar/GetLocationMasterList/",
         async: false,
@@ -2850,7 +2850,7 @@ function getServiceProviderDataByCalendar() {
         },
         success: function (response) {
             data = response;
-
+            debugger;
             console.log(data, "data data data");
 
 
