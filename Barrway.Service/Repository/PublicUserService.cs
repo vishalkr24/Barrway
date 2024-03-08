@@ -649,7 +649,7 @@ namespace Barrway.Service.Repository
                             request.updated_by = (int)FormSetting.CreatedUser;
                             request.formGroupKey = formGroupKey;
                             var start = Convert.ToDateTime(eventModal.start);
-                            var end = Convert.ToDateTime(eventModal.start).AddMinutes(60);
+                            var end = Convert.ToDateTime(eventModal.end);
 
                             var eventData = new { start = start, end = end, allDay = false, EVENT_TYPE = "BOOKING", description = "", resources = eventModal.resourceId, activities = eventModal.activityId, formGroupKey = formGroupKey, COMPANY_CODE = eventModal.companyCode, CALENDAR_CODE = eventModal.calendarCode }.ToDictionary();
                             eventData["resources_" + eventModal.resourceFormId] = eventModal.resourceId;

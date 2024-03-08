@@ -62,6 +62,9 @@ $(document).ready(async function () {
         xSelection = activityConfig.activitiesForm;
         var $scope = angular.element($("#calendar")).scope();
 
+        $scope.resourceConfig = resourceConfig;
+        $scope.activityConfig = activityConfig;
+
         $scope.otherFormId = 0;
         $scope.otherFormId = formDetailsDataInfo.otherformid;
 
@@ -1940,6 +1943,7 @@ async function loadEventRecordDetails(paramTemp) {
         $("#newtabuListUl").empty();
         $("#newtabuListUlWaiting").empty();
 
+        debugger;
         if (param.parentID != param.formId && checkAllowParticipantsCount()) {
             if ($scope.eventDataWithoutGroupBy) {
                 if ($scope.eventDataWithoutGroupBy.length > 0) {
@@ -1965,7 +1969,7 @@ async function loadEventRecordDetails(paramTemp) {
         else {
             $("#addTransactionRecord").remove();
             $("#newaddTransactionRecord").remove();
-            $('#newtabuList').hide();
+            $('#newtabuList').empty();
         }
         // $("#tabuListLink");
         $scope.rootScopeSafe();
@@ -2483,6 +2487,8 @@ async function rendarPopupCalendar(assignDate) {
                         x["rendering"] = "";
                     }
                 });
+              let $scopeVar= angular.element($("#calendar")).scope();
+                calenderData = calenderData.filter(x => $scopeVar.selectEventDetails.resourceId == x.resourceId || x.id==0);
 
 
                 if (calenderData != undefined) {
@@ -2543,6 +2549,29 @@ async function rendarPopupCalendar(assignDate) {
             }
 
             var bgevent = selectedEvent[0];
+
+            //console.log(bgevent.activities);
+            //console.log($scope.activityConfig.formDataList[0].DURATION_FIELD);
+
+            //checkServiceDuration,checkServiceDurationDrag
+
+            if (checkServiceDuration() && !checkServiceDurationDrag()) {
+                let activity_data = $scope.activityConfig.formDataList.find(x => x.id == bgevent.activities);
+                let duration = activity_data.DURATION_FIELD;
+                end = moment(start).add(duration, 'minutes').format("YYYY-MM-DD HH:mm");
+                start = moment(start).format("YYYY-MM-DD HH:mm");
+            } else if (checkServiceDuration() && checkServiceDurationDrag()) {
+                end = moment(end).format("YYYY-MM-DD HH:mm");
+                start = moment(start).format("YYYY-MM-DD HH:mm");
+            } else if (checkFixedSessionCalendar()) {
+                end = moment(bgevent.end).format("YYYY-MM-DD HH:mm");
+                start = moment(start).format("YYYY-MM-DD HH:mm");
+            } else {
+                end = moment(start).add("60", 'minutes').format("YYYY-MM-DD HH:mm");
+                start = moment(start).format("YYYY-MM-DD HH:mm");
+            }
+            
+
             
             $.ajax({
                 url: "/Account/CheckPublicUserLogin",
@@ -2585,10 +2614,10 @@ async function rendarPopupCalendar(assignDate) {
 
                                     const wrapper = document.createElement('div');
                                     wrapper.innerHTML = `<div>
-                                        ${moment(start.format()).format("DD-MM-YYYY")}
+                                        ${moment(start).format("DD-MM-YYYY")}
                                     </div>
                                     <div>
-                                        ${moment(start.format()).format("hh:mm a")} to ${moment(start.format()).add("minute", 60).format("hh:mm a")}
+                                        ${moment(start).format("hh:mm a")} to ${moment(end).format("hh:mm a")}
                                     </div>
                                     <div>${customTitleSplit[2]}</div><br />
                                     <div>${customTitleSplit[1]}</div>
@@ -2714,6 +2743,18 @@ function checkFixedSessionCalendar() {
     let setup = JSON.parse(calendarDetails["setup_matrix"]);
     let type = calendarDetails["CALENDAR_TYPE"];
     return setup["Step2"]["Steps"]["Step" + type]["IS_SLOT_BOOKING"] == true;
+}
+
+function checkServiceDuration() {
+    let setup = JSON.parse(calendarDetails["setup_matrix"]);
+    let type = calendarDetails["CALENDAR_TYPE"];
+    return setup["Step2"]["Steps"]["Step" + type]["SERVICE_DURATION"] == true;
+}
+
+function checkServiceDurationDrag() {
+    let setup = JSON.parse(calendarDetails["setup_matrix"]);
+    let type = calendarDetails["CALENDAR_TYPE"];
+    return setup["Step2"]["Steps"]["Step" + type]["SERVICE_DURATION_DRAG"] == true;
 }
 
 function checkAllowParticipantsCount() {
