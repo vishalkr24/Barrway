@@ -42,7 +42,42 @@ namespace Barrway.Controllers
         }
 
         // GET: MarketPlace
-        
+        [HttpPost]
+        public async Task<ActionResult> GetLocationMasterList(GenerateDynamicFormData data, string companyCode, string calendarCode)
+        {
+            var locationListData = await masterService.GetLocationMasterList(data, companyCode, calendarCode);
+            var locationList = locationListData.Data;
+            double last_page = 0;
+            if (locationList != null && locationList.Count() > 0)
+            {
+                var singData = locationList.FirstOrDefault();
+                var total_records = Convert.ToInt32(singData.Where(x => x.Key == "total_records").FirstOrDefault().Value);
+                var size = Convert.ToInt32(singData.Where(x => x.Key == "size").FirstOrDefault().Value);
+                double paging = (double)total_records / size;
+                last_page = Math.Floor(paging) + 1;
+            }
+
+            return Json(new { data = locationList, last_page });
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GetServiceMasterList(GenerateDynamicFormData data, string companyCode, string calendarCode)
+        {
+            var locationListData = await masterService.GetServiceMasterList(data, companyCode, calendarCode);
+            var locationList = locationListData.Data;
+            double last_page = 0;
+            if (locationList != null && locationList.Count() > 0)
+            {
+                var singData = locationList.FirstOrDefault();
+                var total_records = Convert.ToInt32(singData.Where(x => x.Key == "total_records").FirstOrDefault().Value);
+                var size = Convert.ToInt32(singData.Where(x => x.Key == "size").FirstOrDefault().Value);
+                double paging = (double)total_records / size;
+                last_page = Math.Floor(paging) + 1;
+            }
+
+            return Json(new { data = locationList, last_page });
+        }
+
         public async Task<ActionResult> Index()
         {
             return View();

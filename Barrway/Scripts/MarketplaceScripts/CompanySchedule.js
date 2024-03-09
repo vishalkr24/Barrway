@@ -49,7 +49,12 @@ $(document).ready(async function () {
        
     calendarDetails = (await getCalendarDetails(CALENDAR_CODE)).Data;
     var IS_APPOINTMENT_BOOKING_CLR = calendarDetails["CALENDAR_CATEGORY_ID"] == "2";
-
+    if (calendarDetails["CALENDAR_CATEGORY_ID"] == "4" && calendarDetails["CALENDAR_TYPE"] == "3") {
+        $("#year-view-nav").show();
+    } else {
+        $("#year-view-nav").hide();
+        $("#tabs li[data-value='External Events'] a").trigger("click");
+    }
    
     console.log(calendarDetails,"calendarDetails");
     if (calenderSettings.length > 0) {
@@ -2859,7 +2864,7 @@ function postAsync(url, data) {
 
 function getServiceProviderData() {
     $.ajax({
-        url: "/Calendar/GetServiceProviderMasterList/",
+        url: "/Marketplace/GetServiceProviderMasterList/",
         async: false,
         type: "POST",
         data: {
@@ -2895,7 +2900,7 @@ function getServiceProviderData() {
 function getServiceProviderDataByCalendar() {
     debugger;
     $.ajax({
-        url: "/Calendar/GetLocationMasterList/",
+        url: "/Marketplace/GetLocationMasterList/",
         async: false,
         type: "POST",
         data: {
