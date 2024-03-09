@@ -1,18 +1,15 @@
 ﻿var CalendarFormId = "2305", ySelection = "", xSelection = "", COMPANY_CODE, CALENDAR_CODE, formDetailsDataInfo, counterLoader, xaxisFormList, formAllDatafields, listTabulator, calendarDetails;
+var calendarObject = {};
 $(document).ready(async function () {
 
     $("#nv-company-schedule").addClass("active");
-   
-    console.log(COMPANY_CODE,"COMPANY_CODE");
-    console.log(CALENDAR_CODE,"CALENDAR_CODE");
- 
-    getServiceProviderData();
 
-    getServiceProviderDataByCalendar();
+
+    getLOCDataByCalendar();
 
     var formdetail = await getFormDetails();
     formDetailsDataInfo = formdetail[0];
-
+    
     var formFields = [];
     var formData = JSON.parse(formDetailsDataInfo.fields);
     _.map(formData, function (pagesData, key) {
@@ -38,12 +35,12 @@ $(document).ready(async function () {
 
     var calenderSettings = await getCalenderSettings();
 
-       
+
     calendarDetails = (await getCalendarDetails(CALENDAR_CODE)).Data;
     var IS_APPOINTMENT_BOOKING_CLR = calendarDetails["CALENDAR_CATEGORY_ID"] == "2";
 
-   
-    console.log(calendarDetails,"calendarDetails");
+
+    console.log(calendarDetails, "calendarDetails");
     if (calenderSettings.length > 0) {
 
         var caledarConfig = calenderSettings;
@@ -94,79 +91,17 @@ $(document).ready(async function () {
         //formDataList
         activityResults = activityConfig.formDataList;
 
-        
-        var serviceSelect = $('#calendar-service');
-        serviceSelect.empty();
-        serviceSelect.append($('<option>', {
-            value: "",
-            text: "All service"
-        }));
+        $('#calendar-service-Location').change(async function () {
+            var param = { "action": 29, "formTableColumnData": "", "formTableColumnName": "", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 };
+            var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+            var view = calendarObject.getView();
+            param.filter = changeStateOfCalenderYearView(view);
+            param.filter.value += " and f.resources = " + $("#calendar-service-Location option:selected").val() + " ";
+            var filterredFormDataTemp = await reBindCalender(param);
+            var eventBasicData = window["EventBasicDetail"];
+            var eventData = filterredFormDataTemp.data;
+            refreshEventResourcesActivityNew('deleteEvent', eventData, eventBasicData.resourceData, eventBasicData.resColumns, eventBasicData.activityData, eventBasicData.activityColumn, eventData);
 
-        $.each(activityResults, function (index, item) {
-            serviceSelect.append($('<option>', {
-                value: item.id,
-                text: item[activityConfig.activities]
-            }));
-        });
-
-
-        $('#calendar-service').change(async function () {
-            //debugger;
-            if ($(this).val() != '') {
-                var searchSrevice = $('#calendar-service option:selected').text();
-                var param = { "action": 29, "formTableColumnData": `   (   (   SERVICE_MASTER_1933.ACTIVITY_NAME like N'${searchSrevice}'    )        )   `, "formTableColumnName": "    left join SERVICE_MASTER_1933 on SERVICE_MASTER_1933.formId=f1.referrenceFormId and SERVICE_MASTER_1933.Id=f1.referrenceId  ", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 }
-                console.log(param,"param");
-                var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
-                var view = $('#' + current_tab + ' div.calendar').fullCalendar('getView');
-                param.filter = changeStateOfCalenderController(view);
-                var filterredFormDataTemp = await reBindCalender(param);
-                var eventBasicData = window["EventBasicDetail"];
-                var eventData = filterredFormDataTemp.data;
-                refreshEventResourcesActivityNew('deleteEvent', eventData, eventBasicData.resourceData, eventBasicData.resColumns, eventBasicData.activityData, eventBasicData.activityColumn, eventData);
-
-
-            } else {
-                var param = { "action": 29, "formTableColumnData": "", "formTableColumnName": "", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 };
-                var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
-                var view = $('#' + current_tab + ' div.calendar').fullCalendar('getView');
-                param.filter = changeStateOfCalenderController(view);
-                var filterredFormDataTemp = await reBindCalender(param);
-                var eventBasicData = window["EventBasicDetail"];
-                var eventData = filterredFormDataTemp.data;
-                refreshEventResourcesActivityNew('deleteEvent', eventData, eventBasicData.resourceData, eventBasicData.resColumns, eventBasicData.activityData, eventBasicData.activityColumn, eventData);
-
-            };
-        });
-
-
-
-
-
-        $('#calendar-service-Provider').change(async function () {           
-            if ($(this).val() != '') {
-                var searchSrevice = $('#calendar-service-Provider option:selected').val();
-                var param = { "action": 29, "formTableColumnData": `   (   (   SERVICE_PROVIDER_MASTER_1934.FIRST_NAME like N'${searchSrevice}'    )        )   `, "formTableColumnName": "    left join SERVICE_PROVIDER_MASTER_1934 on SERVICE_PROVIDER_MASTER_1934.formId=f1.referrenceFormId and SERVICE_PROVIDER_MASTER_1934.Id=f1.referrenceId  ", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 }
-                console.log(param, "param");
-                var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
-                var view = $('#' + current_tab + ' div.calendar').fullCalendar('getView');
-                param.filter = changeStateOfCalenderController(view);
-                var filterredFormDataTemp = await reBindCalender(param);
-                var eventBasicData = window["EventBasicDetail"];
-                var eventData = filterredFormDataTemp.data;
-                refreshEventResourcesActivityNew('deleteEvent', eventData, eventBasicData.resourceData, eventBasicData.resColumns, eventBasicData.activityData, eventBasicData.activityColumn, eventData);
-
-
-            } else {
-                var param = { "action": 29, "formTableColumnData": "", "formTableColumnName": "", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 };
-                var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
-                var view = $('#' + current_tab + ' div.calendar').fullCalendar('getView');
-                param.filter = changeStateOfCalenderController(view);
-                var filterredFormDataTemp = await reBindCalender(param);
-                var eventBasicData = window["EventBasicDetail"];
-                var eventData = filterredFormDataTemp.data;
-                refreshEventResourcesActivityNew('deleteEvent', eventData, eventBasicData.resourceData, eventBasicData.resColumns, eventBasicData.activityData, eventBasicData.activityColumn, eventData);
-
-            };
         });
 
 
@@ -286,7 +221,7 @@ function changeStateOfCalenderController(view) {
 
 
 async function reBindCalender(param) {
-   
+
     var CalanderCode = CALENDAR_CODE;
     param.IsCustomFilter = true;
     param.CustomFilters = [{ "FieldName": "COMPANY_CODE", "Value": COMPANY_CODE }, { "FieldName": "CALENDAR_CODE", "Value": CalanderCode }];
@@ -417,7 +352,7 @@ function showCalendar(companyCode) {
 
     var calendarId = $("#calendar-selector option:selected").val();
 
-   /* window.location.replace("/Marketplace/CompanySchedule?CompanyCode=" + companyCode + "&CalendarCode=" + calendarId);*/
+    /* window.location.replace("/Marketplace/CompanySchedule?CompanyCode=" + companyCode + "&CalendarCode=" + calendarId);*/
     window.location.replace("/Company/Calander/" + companyCode + "/" + calendarId);
 }
 
@@ -879,7 +814,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 background: "rgb(255, 255, 255)",
                 /*borderColor: "#aaa",*/
                 padding: 0,
-                border:"none",
+                border: "none",
                 borderRadius: 5,
 
                 "z-index": 1
@@ -926,7 +861,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
             else {
                 $scope.selectEventDetails.customDate = moment($scope.selectEventDetails.start).format("YYYY-MM-DD");
             }
-            
+
             $scope.selectEventDetails.customTitleSplit = $scope.selectEventDetails.customTitle.split(',');
 
             var listFormDropdown = _.filter($scope.selectEventDetails.customFormsSplit, function (item) { return item != ySelection.toString(); });
@@ -954,7 +889,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                     //    tempDrop.dropdownListData = item;
                     //    tempDrop.customClass = "true";
                     //}
-                 
+
                 });
             }
 
@@ -1081,20 +1016,136 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         //      console.log($(jsEvent.target).closest('tr').attr('data-resource-id'));
         //}
 
-    },
 
-    var calendarEl = document.getElementById('calendar');
 
-    var calendar = new FullCalendar.Calendar($("#year-view div.calendar"), {
-        timeZone: 'UTC',
+    }
+
+    var calendarEl = document.querySelector("#year-view div.calendar");
+
+    calendarObject = new FullCalendar.Calendar(calendarEl, {
         initialView: 'multiMonthYear',
-        editable: true,
-        events: 'https://fullcalendar.io/api/demo-feeds/events.json'
+        events: function (cal_obj, callback) {
+            debugger;
+            var $scope = angular.element($("#calendar")).scope();
+            var param = {};
+            param.action = 1;
+            param.formId = CalendarFormId;
+
+            param.isCalender = 1;
+            param.isEvent = 1;
+
+            param.resourceFormId = ySelection;
+            param.ActivityFormId = xSelection;
+            var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+
+            param.filter = {};
+            param.filter = changeStateOfCalenderYearView(cal_obj, cal_obj.start, cal_obj.end);
+            param.filter.field = "start";
+            param.filter.value += " and f.resources = " + $("#calendar-service-Location option:selected").val() + " ";
+            param.COMPANY_CODE = COMPANY_CODE;
+            param.CALENDAR_CODE = CALENDAR_CODE;
+
+
+            $.ajax({
+                method: 'POST',
+                url: BASE_URL + "/FormAPI/getReferralFormFields",
+                dataType: 'json',
+                contentType: "application/json",
+                data: JSON.stringify(param),
+                success: function (response) {
+                    //$.unblockUI();
+                    var calenderData = changeResourceIDByYSelection((response.events != undefined) ? response.events : response.events);
+                    if (calenderData != undefined) {
+
+                        assignEvents(calenderData);
+                        callback(calenderData);
+                        window["eventListTemp"] = calenderData;
+                        window["CalendarEventListTimeLine"] = calenderData;
+                    }
+                    else
+                        callback([]);
+                },
+                beforeSend: function () {
+                    //showLoader();
+                },
+                complete: function () {
+                    var _ScrollOffset = window["scrollOffset"];
+                    window.scrollTo(0, _ScrollOffset);
+                    $.unblockUI();
+                    // $("#" + current_tab + " div.calendar").unblock();
+                }
+            });
+        },
+        selectable: (calendarDetails.CALENDAR_TYPE == "3" && calendarDetails.CALENDAR_CATEGORY_ID == "4") ? true : false,
+        select: function (cal_obj) {
+            debugger;
+            let currentDate = new Date();
+            let startDate = cal_obj.start;
+            let temp = new Date(startDate);
+            let tempEndDate = "";
+
+            if (currentDate.getDate() > temp.getDate()) {
+                return;
+            }
+
+            var $scope = angular.element($("#calendar")).scope();
+
+            // check calendar is room rental type
+            if (calendarDetails.CALENDAR_TYPE == "3" && calendarDetails.CALENDAR_CATEGORY_ID == "4") {
+                $scope.selectEventDetails = {};
+
+                $scope.selectEventDetails.start = moment(startDate).format("YYYY-MM-DD").toString();
+                $scope.selectEventDetails.resources = $("#calendar-service-Location option:selected").val();
+                $scope.selectEventDetails.COMPANY_CODE = calendarDetails.COMPANY_CODE;
+                $scope.selectEventDetails.CALENDAR_CODE = calendarDetails.CALENDAR_CODE;
+
+                $("#selectedLocationName").text($("#calendar-service-Location option:selected").text());
+
+                $("#startEndDate").text("");
+
+                $("#date-counter").on("change paste keypress click", function () {
+                    tempEndDate = calculateDate(startDate, this.value, $("input[name=date-calc-type]:checked").val());
+                    $("#startEndDate").empty();
+                    $("#startEndDate").append(moment(startDate).format("DD MMMM YYYY").toString() + " <span style='font-weight: 500;'>to</span> " + moment(tempEndDate).format("DD MMMM YYYY").toString());
+                    $scope.selectEventDetails.end = moment(tempEndDate).format("YYYY-MM-DD").toString();
+                })
+
+                $("input[name=date-calc-type]").on("change paste", function () {
+                    tempEndDate = calculateDate(startDate, $("#date-counter").val(), $("input[name=date-calc-type]:checked").val());
+                    if (tempEndDate == "Invalid date") {
+                        tempEndDate = "--";
+                    }
+
+                    $("#txt-calc-type").text($("input[name=date-calc-type]:checked").val() + "s.")
+
+                    $("#startEndDate").empty();
+                    $("#startEndDate").append(moment(startDate).format("DD MMMM YYYY").toString() + " <span style='font-weight: 500;'>to</span> " + moment(tempEndDate).format("DD MMMM YYYY").toString());
+                    $scope.selectEventDetails.end = moment(tempEndDate).format("YYYY-MM-DD").toString();
+                })
+
+                tempEndDate = calculateDate(startDate, $("#date-counter").val(), $("input[name=date-calc-type]:checked").val());
+
+                if (tempEndDate == "Invalid date") {
+                    tempEndDate = "--";
+                }
+
+                $("#startEndDate").empty();
+                $("#startEndDate").append(moment(startDate).format("DD MMMM YYYY").toString() + " <span style='font-weight: 500;'>to</span> " + moment(tempEndDate).format("DD MMMM YYYY").toString());
+                $scope.selectEventDetails.end = moment(tempEndDate).format("YYYY-MM-DD").toString();
+
+                $("#txt-calc-type").text($("input[name=date-calc-type]:checked").val() + "s.")
+
+                $("#dateRangePickerModel").modal("show");
+
+                $("#date-counter").focus();
+            }
+
+
+        }
     });
 
-    calendar.render();
+    calendarObject.render();
     
-
     // tag added callback
     function onAddTag(e) {
         var id = $("#newtag-inputHidden").val();
@@ -1147,12 +1198,12 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
 
     function calculateDate(startDate, counter, type) {
         debugger;
-        let temp = new Date(startDate);
-        let dateObject = moment(moment(temp).format("YYYY-MM-DD"))
+
+        let dateObject = moment(moment(startDate).format("YYYY-MM-DD"))
 
         switch (type) {
             case "day":
-                counter = (counter < 1) ? 0: counter - 1;
+                counter = (counter < 1) ? 0 : counter - 1;
                 dateObject.add(counter, 'days');
                 break;
             case "month":
@@ -1412,8 +1463,8 @@ async function loadEventRecordDetails(paramTemp) {
                     $("#newtabuList").empty();
                     if (!DataService.isEmpty($scope.otherformDetails)) {
                         if (!DataService.isEmpty($scope.otherformDetails.title)) {
-                            $("#tabuList").append('<strong id="strongFormName"> 0 ' + (maxrecordList > 0 ? '/' + maxrecordList : '')+' ' + $scope.otherformDetails.title + ' in this Slot </strong>');
-                            $("#newtabuList").append('<strong id="strongFormName"> 0 ' +(maxrecordList > 0 ? '/' + maxrecordList : '') + ' ' + $scope.otherformDetails.title + ' in this Slot </strong>');
+                            $("#tabuList").append('<strong id="strongFormName"> 0 ' + (maxrecordList > 0 ? '/' + maxrecordList : '') + ' ' + $scope.otherformDetails.title + ' in this Slot </strong>');
+                            $("#newtabuList").append('<strong id="strongFormName"> 0 ' + (maxrecordList > 0 ? '/' + maxrecordList : '') + ' ' + $scope.otherformDetails.title + ' in this Slot </strong>');
                         }
                     }
                 }
@@ -1483,7 +1534,7 @@ async function getCalendarDetails(id) {
             success: function (response) {
                 hideLoader();
                 resolve(response);
-                console.log(response,"response");
+                console.log(response, "response");
             }
         });
 
@@ -1494,7 +1545,7 @@ async function getCalendarDetails(id) {
 var othercalendar;
 async function rendarPopupCalendar(assignDate) {
     var customEventDetailsServiceModelPopUp = angular.element("#customEventDetailsServiceModelPopUp");
-       
+
     customEventDetailsServiceModelPopUp.modal('show');
     customEventDetailsServiceModelPopUp.css({ "z-index": "9999" });
 
@@ -1509,7 +1560,7 @@ function bookingService(star, end, bgevent) {
         "companyCode": COMPANY_CODE,
         "calendarCode": CALENDAR_CODE,
         "resourceFormId": ySelection.toString(),
-        "resourceTitle": getTitle(bgevent,"resource"),
+        "resourceTitle": getTitle(bgevent, "resource"),
         "resourceId": getresourceId(bgevent),
         "activityId": getactivityId(bgevent),
         "activityFormId": xSelection.toString(),
@@ -1547,13 +1598,13 @@ function checkAllowParticipantsCount() {
     return setup["Is_Showing_List_Participants"] == true;
 }
 
-function getTitle(bgevent,type) {
+function getTitle(bgevent, type) {
 
     if (type == "resource") {
         let customFormsSplit = bgevent.customForms.split(',');
         let customTitleSplit = bgevent.customTitle.split(',');
         let index = customFormsSplit.findIndex(x => x == ySelection);
-        if (index!=-1 && customTitleSplit.length > index) {
+        if (index != -1 && customTitleSplit.length > index) {
             return customTitleSplit[index];
         }
         return "";
@@ -1591,7 +1642,7 @@ function getactivityId(bgevent) {
 function getOtherActivityFormId(bgevent) {
     let customFormsSplit = bgevent.customForms.split(',');
     let index = customFormsSplit.findIndex(x => x != ySelection && x != xSelection);
-    if (index!=-1) {
+    if (index != -1) {
         return customFormsSplit[index];
     }
     return "";
@@ -1634,8 +1685,8 @@ function getServiceProviderData() {
             calendarCode: CALENDAR_CODE
         },
         success: function (response) {
-            Service_ProviderList = response.data;          
-            var serviceProvider= $("#calendar-service-Provider").empty();
+            Service_ProviderList = response.data;
+            var serviceProvider = $("#calendar-service-Provider").empty();
             serviceProvider.append($('<option>', {
                 value: "",
                 text: "All Service provider"
@@ -1649,19 +1700,19 @@ function getServiceProviderData() {
             });
 
 
-            
+
         },
         error: function (errorResponse) {
             data = null;
         }
     });
-    
+
 }
 
-function getServiceProviderDataByCalendar() {
-    debugger;
+function getLOCDataByCalendar() {
+
     $.ajax({
-        url: "/Calendar/GetLocationMasterList/",
+        url: "/Marketplace/GetLocationMasterList",
         async: false,
         type: "POST",
         data: {
@@ -1676,22 +1727,16 @@ function getServiceProviderDataByCalendar() {
         },
         success: function (response) {
             data = response;
-            debugger;
+
             console.log(data, "data data data");
 
 
             Service_Location_List = response.data;
             var Location = $("#calendar-service-Location").empty();
-            Location.append($('<option>', {
-                value: "",
-                text: "All location"
-            }));
+
 
             $.each(Service_Location_List, function (index, item) {
-                Location.append($('<option>', {
-                    value: item.id,
-                    text: item.LOCATION_ADDRESS
-                }));
+                Location.append(`<option value="${item.Id}">${item.LOCATION_ADDRESS}</option>`);
             });
 
 

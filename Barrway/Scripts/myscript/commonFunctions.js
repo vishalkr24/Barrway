@@ -1316,6 +1316,49 @@ function changeStateOfCalender(view,start,end) {
     return temp;
 }
 
+function changeStateOfCalenderYearView(view, start, end, resource) {
+    var temp = {};
+    temp.field = "start";
+    //var currentdate = moment(start._d, "YYYY-MM-DD").format("YYYY-MM-DD");
+    //var currentend = moment(moment(end._d).subtract(1, "days"), "YYYY-MM-DD").format("YYYY-MM-DD");
+
+    var _start = moment(start).format("YYYY-01-01");
+    var _end = moment(end).format("YYYY-12-31");
+
+    //if (view.intervalStart != undefined)
+    //    currentdate = view.intervalStart.format("YYYY-MM-DD");
+    if (view != undefined) {
+        //if (view.type.toLowerCase().contains("month")) {
+        //    if (view.intervalStart != undefined) {
+        //        currentdate = moment(start._d, "YYYY-MM-DD").format("YYYY-MM-DD");
+        //    }
+        //    else
+        //        currentdate = moment(new Date()).format("YYYY-MM-DD");
+        //    temp.value = " datepart(mm,[start]) =month('" + currentdate + "')   and datepart(yyyy, [start]) = year('" + currentdate + "') ";
+        //}
+        //else if (view.type.toLowerCase().contains("year")) {
+        //    temp.value = " datepart(yyyy, [start]) = year('" + currentdate + "') ";
+        //}
+        //else if (view.type.toLowerCase().contains("week") || view.type.toLowerCase().contains("twodays") || view.type.toLowerCase().contains("threedays")) {
+        //    temp.value = " CAST([start] as date) between CAST('" + currentdate + "' as date) and CAST('" + currentend + "' as date)  ";
+        //}
+        //else if (view.type.toLowerCase().contains("day")) {
+        //   // currentdate = moment(moment(start._d).subtract(1, "days"), "YYYY-MM-DD").format("YYYY-MM-DD");
+
+        //    temp.value = " CAST([start] as date) =CAST('" + currentdate + "' as date) ";
+        //}
+
+        temp.value = `((cast([start] as date) <= '${_start}' and (cast([end] as date) <= '${_end}' and cast([end] as date) >= '${_start}')) or
+										((cast([start] as date) >= '${_start}' and cast([start] as date) <= '${_end}') and (cast([end] as date) <= '${_end}' and cast([end] as date) >= '${_start}')) or
+										((cast([start] as date) <= '${_end}' and cast([start] as date) >= '${_start}') and cast([end] as date) >= '${_end}') or
+										(cast([start] as date) <= '${_start}' and cast([end] as date) >= '${_end}'))`;
+
+    }
+
+
+
+    return temp;
+}
 
 function renderEventHtml(calenderType, calenderData, resourceData, resColumns, activityFormData, activityColumn, activityEvents, defaultOptions, resourceOrder, activitiesCategory )     {
     var result = "";

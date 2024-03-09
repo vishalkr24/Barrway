@@ -782,27 +782,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="schedule-drop">
-                                <div class="form-group">
-                                    <label for="service">@Resource.Service</label>
-
-                                    <select class="form-control" id="calendar-service">
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="schedule-drop">
-                                <div class="form-group">
-                                    <label for="service">@Resource.Service_Provider_Master</label>
-
-                                    <select class="form-control" id="calendar-service-Provider">
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
 
                         <div class="col-md-3">
                             <div class="schedule-drop">
@@ -814,6 +793,30 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-md-3">
+                            @*<div class="schedule-drop">
+                                <div class="form-group">
+                                    <label for="service">@Resource.Service</label>
+
+                                    <select class="form-control" id="calendar-service">
+                                    </select>
+                                </div>
+                            </div>*@
+                        </div>
+
+                        <div class="col-md-3">
+                            @*<div class="schedule-drop">
+                                <div class="form-group">
+                                    <label for="service">@Resource.Service_Provider_Master</label>
+
+                                    <select class="form-control" id="calendar-service-Provider">
+                                    </select>
+                                </div>
+                            </div>*@
+                        </div>
+
+
 
                         <div class="col-md-12">
                             <div class="favr">
@@ -1100,170 +1103,6 @@
                 }
             };
 
-            $scope.enrollPublicUser = function () {
-                console.log($scope.selectEventDetails);
-                showLoader();
-                $.ajax({
-                    url: "/Account/CheckPublicUserLogin",
-                    type: "POST",
-                    success: function (response) {
-                        hideLoader();
-                        if (!response.Status) {
-
-                            swal({
-                                title: "Login Required",
-                                text: "Kindly login into your account and then you can enroll yourself into this calendar.",
-                                icon: "info",
-                                buttons: {
-                                    confirm: "Login",
-                                    cancel: "Leave it"
-                                }
-                            }).then(function (value) {
-                                if (value) {
-                                    window.location.href = '/Account/BusinessLogin?returnUrl=' + window.location.href + '';
-                                }
-                            });
-                        } else {
-                            var eventData = $scope.selectEventDetails;
-                            $.ajax({
-                                url: "/Useradmin/GetCurrentPackageDetails",
-                                type: "GET",
-                                data: {
-                                    CompanyCode: eventData.COMPANY_CODE,
-                                    CalendarCode: eventData.CALENDAR_CODE,
-                                    ServiceId: eventData.activities
-                                },
-                                async: false,
-                                success: function (response) {
-                                    if (response.Status) {
-                                        // code to call the service
-
-                                        debugger;
-                                        const wrapper = document.createElement('div');
-                                        wrapper.innerHTML = `<div>
-                                                                                                                                ${eventData.customDate}
-                                                                                                                            </div>
-                                                                                                                            <div>
-                                                                                                                                ${eventData.customTime}
-                                                                                                                            </div>
-                                                                                                                            <div>${eventData.customTitleSplit[2]}</div><br />
-                                                                                                                            <div>${eventData.customTitleSplit[1]}</div>
-                                                                                                                            <div>${eventData.customTitleSplit[0]}</div><br />
-                                                                                                                            <h4 style="color:red">${response.Message}</h4>`;
-
-                                        swal({
-                                            title: "You are going to book",
-                                            content: wrapper,
-                                            buttons: {
-                                                cancel: "Cancel",
-                                                confirm: "Confirm"
-                                            }
-
-                                        }).then(function (response) {
-                                            if (response) {
-                                                showLoader();
-                                                var obj = {
-                                                    USER_ID: "",
-                                                    RESOURCE_NAME: eventData.customTitleSplit[0],
-                                                    ACTIVITY_NAME: eventData.customTitleSplit[1],
-                                                    FormGroupKey: $scope.selectEventDetails.formGroupKey,
-                                                    participant: {
-                                                        DESCRIPTION: eventData.description,
-                                                        COMPANY_CODE: eventData.COMPANY_CODE,
-                                                        CALENDAR_CODE: eventData.CALENDAR_CODE
-                                                    },
-                                                    transaction: {
-                                                        SLOT: eventData.Id,
-                                                        RESOURCE: eventData.resourceId,
-                                                        ACTIVITY: eventData.activities,
-                                                        STUDENT: "",
-                                                        REMARKS: "",
-                                                        FEES: "",
-                                                        ATTENDANCE: "NOT-MARKED",
-                                                        COMPANY_CODE: eventData.COMPANY_CODE,
-                                                        CALENDAR_CODE: eventData.CALENDAR_CODE
-                                                    }
-                                                }
-
-                                                $.ajax({
-                                                    url: "/UserAdmin/EnrollPublicUserForCalendar",
-                                                    type: "POST",
-                                                    data: obj,
-                                                    success: function (data) {
-                                                        hideLoader();
-                                                        if (!data.Status) {
-                                                            if (data.Message == "ALREADY-ENROLLED") {
-                                                                swal({
-                                                                    title: "Can't Enroll Again!",
-                                                                    text: "You are already enrolled in this event.",
-                                                                    icon: "error",
-                                                                    button: "Okay"
-                                                                });
-                                                                //swal({ type: 'error', showCloseButton: true, html: "You are already enrolled in this calendar." });
-                                                            } else if (data.Message == "LIMIT-ERROR") {
-                                                                swal({
-                                                                    title: "Failed to Enroll!",
-                                                                    text: "Maximum no. of participants already enrolled in this activity.",
-                                                                    icon: "error",
-                                                                    button: "Okay"
-                                                                });
-                                                            } else {
-                                                                swal({
-                                                                    title: "Warning!",
-                                                                    text: data.Message,
-                                                                    icon: "error",
-                                                                    button: "Okay"
-                                                                });
-                                                            }
-                                                        } else {
-                                                            swal({
-                                                                title: "Congratulations!",
-                                                                text: "Enrolled Successfully!",
-                                                                icon: "success",
-                                                                button: "Okay"
-                                                            }).then(function (boolValue) {
-                                                                window.location.reload();
-                                                            });
-
-                                                        }
-
-                                                    },
-                                                    error: function () {
-                                                        swal({ type: 'error', showCloseButton: true, html: "something went wrong!" });
-                                                    }
-                                                })
-                                            }
-                                        });
-                                    } else {
-                                        swal({
-                                            icon: "error",
-                                            title: "Warning!",
-                                            text: response.Message,
-                                            buttons: {
-                                                confirm: "Okay"
-                                            }
-
-                                        })
-                                    }
-                                }
-                            })
-
-
-
-
-
-
-                        }
-
-                    },
-                    error: function () {
-
-                    }
-                })
-
-
-            }
-
             $scope.enrollPublicUserForRental = function () {
 
                 showLoader();
@@ -1369,7 +1208,7 @@
                             }
                         }).then(function (value) {
                             if (value) {
-                                window.location.href = '/Account/Login?returnUrl=/Marketplace/Calander?' + window.location.href.split('?')[1].replace('&', '$') + '';
+                                window.location.href = '/Account/BusinessLogin?returnUrl=' + window.location.href + '';
                             }
                         });
 
@@ -1489,3 +1328,4 @@
     </script>
 
 }
+zz
