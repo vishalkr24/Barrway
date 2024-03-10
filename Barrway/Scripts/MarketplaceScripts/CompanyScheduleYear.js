@@ -91,18 +91,18 @@ $(document).ready(async function () {
         //formDataList
         activityResults = activityConfig.formDataList;
 
-        $('#calendar-service-Location').change(async function () {
-            var param = { "action": 29, "formTableColumnData": "", "formTableColumnName": "", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 };
-            var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
-            var view = calendarObject.getView();
-            param.filter = changeStateOfCalenderYearView(view);
-            param.filter.value += " and f.resources = " + $("#calendar-service-Location option:selected").val() + " ";
-            var filterredFormDataTemp = await reBindCalender(param);
-            var eventBasicData = window["EventBasicDetail"];
-            var eventData = filterredFormDataTemp.data;
-            refreshEventResourcesActivityNew('deleteEvent', eventData, eventBasicData.resourceData, eventBasicData.resColumns, eventBasicData.activityData, eventBasicData.activityColumn, eventData);
+        //$('#calendar-service-Location').change(async function () {
+        //    var param = { "action": 29, "formTableColumnData": "", "formTableColumnName": "", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 };
+        //    var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+        //    var view = calendarObject.getView();
+        //    param.filter = changeStateOfCalenderYearView(view);
+        //    param.filter.value += " and f.resources = " + $("#calendar-service-Location option:selected").val() + " ";
+        //    var filterredFormDataTemp = await reBindCalender(param);
+        //    var eventBasicData = window["EventBasicDetail"];
+        //    var eventData = filterredFormDataTemp.data;
+        //    refreshEventResourcesActivityNew('deleteEvent', eventData, eventBasicData.resourceData, eventBasicData.resColumns, eventBasicData.activityData, eventBasicData.activityColumn, eventData);
 
-        });
+        //});
 
 
 
@@ -200,6 +200,11 @@ $(document).ready(async function () {
     }
 
 
+    $('#calendar-service-Location').change(function () {
+        calendarObject.refetchEvents();
+    });
+
+
 });
 function changeStateOfCalenderController(view) {
     var temp = {};
@@ -241,7 +246,7 @@ async function reBindCalender(param) {
 }
 
 function tabsActive() {
-
+    debugger;
     $("#tabs").tabs({
         create: function (event, ui) {
             //console.info(ui.tab.data('value'))
@@ -258,11 +263,7 @@ function tabsActive() {
         }
     });
     $("#tabs").show();
-    if (checkCookie('calendar-activeView') !== '') {
-        $("#tabs").tabs("option", "active", parseInt(checkCookie('calendar-activeView')));
-    } else {
-        $("#tabs").tabs("option", "active", 2);
-    }
+    $("#tabs").tabs("option", "active", 0);
 }
 
 async function getFormDetails() {
@@ -451,574 +452,6 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
     function assignEvents(eventsData) {
         window["CalendarEventList"] = angular.copy(eventsData);
     }
-    var defaultOptions = {
-        schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-        theme: true,
-        themeSystem: 'jquery-ui',
-        //  themeSystem:'bootstrap4',
-        nowIndicator: true,
-        slotDuration: '00:15:00',
-        // defaultTimedEventDuration: defaultDuration,
-        //aspectRatio: 1.5,
-        defaultDate: new Date(),
-        eventMouseover: function (event, jsEvent, view) {
-            if (view.name !== 'agendaDay') {
-                ////console.log(event);
-                $(jsEvent.target).attr('title', event.title);
-            }
-        },
-        //lazyFetching: true,
-        now: new Date(),
-        navLinks: true, // can click day/week names to navigate views
-        editable: false,
-        eventLimit: 4, // allow "more" link when too many events            
-        loading: function (bool) {
-            var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
-            if (bool) {
-                showLoader(".calendar .fc-view-container");
-            }
-            else {
-                $(".calendar .fc-view-container").unblock();
-            }
-            //$('#loading').toggle(bool);
-        },
-        eventRender: function (event, element) {
-            //if (countLoader == 0) {
-            //    showLoader();
-            //    countLoader++;
-            //}
-            var $scope = angular.element($("#calendar")).scope();
-            var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
-            var current_subtab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').find('.ui-state-active').attr('class');
-            if (current_tab == "agenda-view") {
-                // $scope.$parent.$parent.IND_loading = true;
-                //if ($scope.counterLoader == undefined)
-                //showLoader();
-                counterLoader = 1;
-            }
-            var rowTooltipDisplay = "";
-            var rowTooltipTitleDisplay = "";
-            var rowRecord = "";
-            var _associatedTitles = event.customTitle;
-            var _associatedFormIDs = event.customForms;
-            var _allSelectables = xaxisFormList; // x options has all selectable options .
-            var _ySelected = window["ySelected"]; // get y selected option.
-            var _xSelected = window["xSelected"];
-            var _lablesToShow = []; var _colorToShow = [];
-            var _tempTitle = "";
-            var _tempTitleSecond = "";
-            var _mainTempHtml = "";
-            var eventData = {
-                Id: event.Id,
-                Images: event.files,
-                title: "Text",
-                start: event.start != null && event.start != undefined && event.start != '' ? customDate(event.start.format()) : '',
-                end: event.end != null && event.end != undefined && event.end != '' ? customDate(event.end.format()) : '',
-                allDay: event.allDay,
-                service: event.service,
-                description: event.description,
-                resources: event.resources,
-                activities: event.activities,
-                activityName: event.activityName,
-                formGroupKey: event.formGroupKey
-            };
-            eventData.title = _tempTitle;
-            eventData.Images = event.files;
-            if (typeof _associatedTitles !== "undefined" && _associatedTitles !== null && _associatedTitles !== "") {
-                var _arrTitles = _associatedTitles.split(',');
-                var _arrColor = [];
-                var _arrFormIDs = _associatedFormIDs.split(",");
-
-                ////getting index of x selected form  from  associated formIDs arr
-                //var _xPos = _arrFormIDs.indexOf(_xSelected.toString());
-                ////swapping position of x occurance  with 0 index;
-                //if (_xPos !== undefined && _xPos !== null && _xPos !== -1) {
-                //    var _temp = "";
-                //    //for titles
-                //    _temp = _arrTitles[0];
-                //    _arrTitles[0] = _arrTitles[_xPos];
-                //    _arrTitles[_xPos] = _temp;
-                //    //for color
-                //    if (_arrColor.length > 0) {
-                //        _temp = _arrColor[0];
-                //        _arrColor[0] = _arrColor[_xPos];
-                //        _arrColor[_xPos] = _temp;
-                //    }
-                //    //for formIDs
-                //    _temp = _arrFormIDs[0];
-                //    _arrFormIDs[0] = _arrFormIDs[_xPos];
-                //    _arrFormIDs[_xPos] = _temp;
-                //}
-                //var eventTemp = angular.copy(event);
-                if (!eventData.allDay) {
-                    eventData.start = eventData.start != null && eventData.start != undefined && eventData.start != '' ? eventData.start : '';
-                    if (eventData.end != "" && eventData.end != null) {
-                        eventData.end = eventData.end != null && eventData.end != undefined && eventData.end != '' ? eventData.end : '';
-                        rowTooltipDisplay += DateWithDayName(eventData, true) + " <br/> "
-                        rowTooltipDisplay += TimeFormatCalender(eventData, true) + " "
-                    } else {
-                        rowTooltipDisplay += moment(eventData.start).format("YYYY-MM-DD") + " "
-                    }
-                }
-                else {
-                    rowTooltipDisplay += moment(eventData.start).format("YYYY-MM-DD") + " "
-                }
-                //element.find('.fc-content').remove();
-                //if (eventData.description != "" && eventData.description != null) {
-                //    _tempTitle += "<label class='pr-2'>" + eventData.description + "</label>";
-                //}
-                var tempHtml = "";
-
-                if (eventData.title != null && eventData.title.length > 0)
-                    rowRecord += "<div class='title " + _tempTitleSecond + "'>" + eventData.title + "</div>";
-                if (!eventData.allDay) {
-                    if (eventData.start != null && eventData.start.length > 0)
-                        rowRecord += "<div class='" + eventData.start + "'>" + DateWithDayName(eventData, true) + "</div>";
-                    rowRecord += "<div>" + TimeFormatCalender(eventData, true) + "</div>";
-                    if (current_tab == "list-view") {
-                        var _associatedFormIDsTemp = _associatedFormIDs.split(",");
-                        var _associatedTitlestemp = _associatedTitles.split(",").map(function (item) {
-                            return item.trim();
-                        });
-                        var _associatedCustomFormIdsTemp = event.customFormIds.split(",");
-                        var exists = _.findIndex(_associatedFormIDsTemp, function (item) { return item == ySelection.toString() });
-                        var lblColor = undefined;
-                        var customLocationTitle = "";
-                        if (exists >= 0) {
-                            customLocationTitle = _associatedTitlestemp[exists];
-                            var tempColor = "";
-                            var colorExists = _.findWhere(xaxisFormList, { resourceActivityForm: ySelection });
-                            var currentId = _associatedCustomFormIdsTemp[exists].toString();
-                            if (colorExists != undefined) {
-                                var colorRow = _.findWhere(colorExists.formDataList, { id: currentId });
-                                if (colorRow != undefined) {
-                                    tempColor = colorRow[colorExists.colorField];
-                                }
-                            }
-                            lblColor = tempColor;
-                        }
-                        if (customLocationTitle != "" && customLocationTitle != null && customLocationTitle != undefined) {
-                            var tempHtml = "<div class='fc-content' id='customLocationTitle' style = 'background:" + (lblColor == undefined || lblColor == "" ? "#7d606c" : lblColor) + ";borderRadius: 3;'><span class='fc-title' title='' > " + customLocationTitle + "</span></div> ";
-                            if (current_tab != "agenda-view") {
-                                _mainTempHtml += tempHtml;
-                            }
-                        }
-                        //var tempHtml = "";
-                        tempHtml = "<div class='fc-content fcTime' id='" + event.Id + "_Time'><small class='time' title=''>" + TimeFormatCalender(eventData, true) + "</small></div>" + _mainTempHtml;
-                        // element.prepend(tempHtml);
-                        if (current_tab != "agenda-view") {
-                            _mainTempHtml = tempHtml;
-                        }
-
-                    } else {
-                        if (current_subtab != undefined) {
-                            if ((current_tab == "agenda-view" || current_tab == "timeline-resource-view") && (current_subtab.contains("fc-month-button") || current_subtab.contains("fc-timelineYear-button") || current_subtab.contains("fc-timelineMonth-button"))) {
-                                var tempHtml = "";
-                                tempHtml = "<div class='fc-content'><span class='text-dark small' title=''>" + TimeFormatCalender(eventData, true) + "</span></div>" + tempHtml;
-                                if (current_tab != "agenda-view") {
-                                    _mainTempHtml += tempHtml;
-                                }
-                            }
-                        }
-
-                    }
-                }
-                else {
-                    if (current_tab == "list-view") {
-                        var _associatedFormIDsTemp = _associatedFormIDs.split(",");
-                        var _associatedTitlestemp = _associatedTitles.split(",").map(function (item) {
-                            return item.trim();
-                        });
-                        var _associatedCustomFormIdsTemp = event.customFormIds.split(",");
-                        var exists = _.findIndex(_associatedFormIDsTemp, function (item) { return item == ySelection.toString() });
-                        var lblColor = undefined;
-                        var customLocationTitle = "";
-                        if (exists >= 0) {
-                            customLocationTitle = _associatedTitlestemp[exists];
-                            var tempColor = "";
-                            var colorExists = _.findWhere(xaxisFormList, { resourceActivityForm: ySelection });
-                            var currentId = _associatedCustomFormIdsTemp[exists].toString();
-                            if (colorExists != undefined) {
-                                var colorRow = _.findWhere(colorExists.formDataList, { id: currentId });
-                                if (colorRow != undefined) {
-                                    tempColor = colorRow[colorExists.colorField];
-                                }
-                            }
-                            lblColor = tempColor;
-                        }
-                        if (customLocationTitle != "" && customLocationTitle != null && customLocationTitle != undefined) {
-                            var tempHtml = "<div class='fc-content' id='dd' style = 'background:" + (lblColor == undefined || lblColor == "" ? "#7d606c" : lblColor) + ";borderRadius: 3;'><span class='fc-title' title='' > " + customLocationTitle + "</span></div > ";
-                            if (current_tab != "agenda-view") {
-                                _mainTempHtml += tempHtml;
-                            }
-                        }
-                    }
-                    rowRecord += "<div class='" + moment(eventData.start).format("YYYY-MM-DD") + "'>" + moment(eventData.start).format("MMMM D, YYYY (dddd)") + "</div>";
-                }
-                let isBookingEvent = true;
-                //if (_arrFormIDs.length == 4) {
-
-                //}
-                //var newLabelList = _.filter(_associatedFormIDsTemp, function (item) { return item != $scope.ySelection.toString() });
-                listids = event.customFormIds.split(',');
-                var currentId = 0;
-                tempHtml = "";
-                var agendaTempHtml = '<div class="fc-content" style="padding: 2px 1px;border-radius: 3px;background: #B9E8EB ;color: #222;" data-bs-original-title="" title="">';
-                var agendaTempHtmlSub = '';
-                var titleCounter = 0;
-                _.each(_arrFormIDs, function (dataRow, position) {
-                    if (dataRow !== _ySelected.toString()) {
-
-                        var lblColor = "";
-                        _lablesToShow.push(dataRow.toString());
-                        var _arrRowData = _arrTitles[position];
-                        currentId = listids[position].toString().trim();
-                        var tempColor = "";
-                        var colorExists = _.findWhere(xaxisFormList, { resourceActivityForm: parseInt(dataRow.toString().trim()) });
-                        if (colorExists != undefined) {
-                            var colorRow = _.findWhere(colorExists.formDataList, { id: currentId.toString() });
-                            if (colorRow != undefined) {
-                                tempColor = colorRow[colorExists.colorField];
-                            }
-                            lblColor = tempColor;
-                        }
-                        _arrRowData = _arrRowData.split('-');
-                        var slipTitle = "";
-                        if (_arrRowData.length == 1)
-                            slipTitle = _arrRowData[0];
-                        else if (_arrRowData.length > 1)
-                            slipTitle = _arrRowData[0] + " - " + _arrRowData[1];
-
-                        if (colorExists != undefined) {
-                            if (colorExists.isVisible)
-                                rowTooltipTitleDisplay += slipTitle + " <br/> ";
-                            else {
-                                if (!colorExists.isVisible && listids.length == 2)
-                                    rowTooltipTitleDisplay += slipTitle + "  <br/> ";
-                            }
-                            if (current_tab != "agenda-view") {
-                                if (colorExists.isVisible)
-                                    tempHtml += "<div class='fc-content' id='" + event.Id + "_" + position + "_" + currentId + "' style='background:" + (lblColor == undefined || lblColor == "" ? "#7d606c" : lblColor) + ";borderRadius: 3;'><span class='fc-title'>" + slipTitle + "</span></div>"
-                                else
-                                    if (!colorExists.isVisible && listids.length == 2)
-                                        tempHtml += "<div class='fc-content' id='" + event.Id + "_" + position + "_" + currentId + "' style='background:" + (lblColor == undefined || lblColor == "" ? "#7d606c" : lblColor) + ";borderRadius: 3;'><span class='fc-title'>" + slipTitle + "</span></div>"
-
-
-                            }
-                            else {
-                                if (titleCounter == 1 && listids.length == 3) {
-                                    if (colorExists.isVisible) {
-                                        if (tempHtml.length > 0)
-                                            agendaTempHtml += "	<span>-</span>  ";
-
-                                        agendaTempHtml += "	<span class='fc-title' style='borderRadius: 3;'>" + slipTitle + "</span> ";
-                                    }
-                                    else {
-                                        if (!colorExists.isVisible && listids.length == 2) {
-                                            if (tempHtml.length > 0)
-                                                agendaTempHtml += "	<span>-</span>  ";
-
-                                            agendaTempHtml += "	<span class='fc-title' style='borderRadius: 3;'>" + slipTitle + "</span> ";
-                                        }
-                                    }
-                                    agendaTempHtml += "	<span class='fc-customtime' >" + formatAMPM(eventData.start) + "</span> ";
-                                }
-                                else {
-                                    if (colorExists.isVisible)
-                                        agendaTempHtml += "	<span class='fc-title' style='borderRadius: 3;'>" + slipTitle + "</span> ";
-                                    else {
-                                        if (!colorExists.isVisible && listids.length == 2)
-                                            agendaTempHtml += "	<span class='fc-title' style='borderRadius: 3;'>" + slipTitle + "</span> ";
-                                    }
-                                    titleCounter += 1;
-                                    if (listids.length == 2) {
-                                        agendaTempHtml += "	<span class='fc-customtime' >" + formatAMPM(eventData.start) + "</span> ";
-                                    }
-                                }
-
-                                //if (titleCounter == 1 && listids.length == 3) {
-                                //    agendaTempHtml += "	<span style='color: #fff;background: #000;'>and</span>  ";
-                                //    agendaTempHtml += "	<span class='fc-title' style='background:" + (lblColor == undefined || lblColor == "" ? "#7d606c" : lblColor) + ";borderRadius: 3;'>" + slipTitle + "</span> ";
-                                //}
-                                //else {
-                                //    agendaTempHtml += "	<span class='fc-title' style='background:" + (lblColor == undefined || lblColor == "" ? "#7d606c" : lblColor) + ";borderRadius: 3;'>" + slipTitle + "</span> ";
-                                //    titleCounter += 1;
-                                //}
-
-                            }
-                        }
-                    }
-
-                });
-                agendaTempHtml += '</div>';
-
-                if (current_tab != "agenda-view") {
-                    _mainTempHtml += tempHtml;
-                }
-                else {
-                    _mainTempHtml += agendaTempHtml;
-                }
-
-            }
-            //if (formDetailsDataInfo.otherFormIsShow != null && formDetailsDataInfo.otherFormIsShow == true) {
-            //    if (event.customFourthTitle != null && event.customFourthTitle != "") {
-            //        var tempHtml = "<div class='fc-content fcTime' id='" + event.Id + "_Time'><small class='time' title=''> " + event.customFourthTitle + "</small></div> ";
-            //        if (current_tab != "agenda-view") {
-            //            _mainTempHtml += tempHtml;
-            //        }
-            //        rowTooltipDisplay += event.customFourthTitle + " <br/> "
-            //    }
-            //}
-            // For Tag view  //
-            //static tagify
-            rowRecord += '<div>  <input value="' + eventData.Id + '" id="tag-inputHidden" type="hidden"> ';
-            //dynamic tagify
-            _.each([], function (item) {
-                var taglist = [];
-                var tempTag = eventData[item.name];
-                if (tempTag != undefined && tempTag != null && tempTag != "") {
-                    taglist = tempTag.replace(/"/g, "'");
-                }
-                rowRecord += '<input value="' + item.name + '" id="tag-inputHidden' + eventData.Id + '" type="hidden"> <input value="' + taglist + '" id="tag-inputHidden' + item.name + '" type="hidden"><input id="tag-input' + item.name + '" type="text"  value="' + taglist + '" placeholder="Add tags">';
-            });
-            rowRecord += '</div>';
-            counterLoader = undefined;
-            var tableTempHtml = "<div class='event-detail div-flex'><div class='div-flex'>" + rowRecord + "</div></div>";
-            var basicDetails = window["EventBasicDetail"];
-            var actionRow = "";
-            actionRow += "<div id='eventCopy' class='mr-10 cursor-pointer' data-formId='" + basicDetails.formId + "' data-formGroupKey='" + eventData.formGroupKey + "' data-eventId='" + event.Id + "'><a> <i class='fa fa-copy'></i></a></div>" + "<div id='eventEdit' class='mr-10 cursor-pointer' data-formId='" + basicDetails.formId + "' data-formGroupKey='" + eventData.formGroupKey + "' data-eventId='" + event.Id + "'><a> <i class='fa fa-pencil'></i></a></div>" + "<div id='eventDelete' data-formId='" + basicDetails.formId + "'    data-formGroupKey='" + eventData.formGroupKey + "' data-eventId='" + event.Id + "' class='delete-event cursor-pointer'><i class='fa fa-trash'></i></div>" + "<a class='btn close-event cursor-pointer' title='close'  data-dismiss='modal' aria-label='Close'> <i class='fa fa-times'></i></a>";
-            tableTempHtml = "<div class='event-detail div-flex'><div class='div-flex'>" + rowRecord + "</div><div class='btn-box'>" + actionRow + "</div><div class='div-flex div-list-bar'></div></div>";
-            var tempHtmlTable = "";
-            if (listTabulator.length > 0) {
-                tempHtmlTable = `<div class="div-flex div-list">
-                            <div class="d-flex justify-content-between align-items-center p-0">
-                                <h5 class="list-title mb-0" id="tabuList"></h5>
-                                <div class="d-block">
-                                    <div id="addTransactionRecord" class="edit-event-student cursor-pointer d-inline-block"><i class="fa fa-plus"></i></div> <div id="tabuListLink" class="edit-event-student mr-0 ml-1 cursor-pointer d-inline-block"  title="Edit"><i class="fa fa-pencil"></i></div> </div>  </div>   <ul id="tabuListUl">  </ul></div>`;
-            }
-            else {
-                tempHtmlTable = `<div class="div-flex div-list">
-                            <div class="d-flex justify-content-between align-items-center p-0">
-                                <h5 class="list-title mb-0" id="tabuList"></h5>
-                                <div class="d-block">
-                                    <div id="addTransactionRecord" class="edit-event-student cursor-pointer d-inline-block"><i class="fa fa-plus"></i></div>  </div>  </div>   <ul id="tabuListUl">  </ul></div>`
-
-            }
-            element.append(_mainTempHtml)
-            tableTempHtml = "<div class='event-detail div-flex'><div class='div-flex'>" + rowRecord + "</div><div class='btn-box'>" + actionRow + "</div><div class='div-flex div-list-bar'></div>" + tempHtmlTable + "</div>";
-            let $fcContent = element.find(".fc-content").detach(),
-                $resize = element.find(".fc-resizer").detach();
-            element.attr('title', rowTooltipTitleDisplay + "  " + rowTooltipDisplay);
-            element.attr('data-html', 'true');
-            element.css({
-                background: "rgb(255, 255, 255)",
-                /*borderColor: "#aaa",*/
-                padding: 0,
-                border: "none",
-                borderRadius: 5,
-
-                "z-index": 1
-            }).droppable({
-                drop: function (event, ui) {
-                    console.log(event);
-                    console.log(ui);
-                },
-                activate: function (event, ui) {
-                    console.log(event);
-                }
-            })
-                .empty().append($fcContent.css({
-                    borderRadius: 3,
-                }), $resize);
-        },
-        eventClick: async function (calEvent, jsEvent, view) {
-            debugger;
-            if (calendarDetails.CALENDAR_CATEGORY_ID == "4" && calendarDetails.CALENDAR_TYPE == "3") {
-                return;
-            }
-            if (Check_IS_SERVICE_TYPE(calendarDetails)) {
-                //customEventDetailsServiceModelPopUp.modal('show');
-                //customEventDetailsServiceModelPopUp.css({ "z-index": "9999" });
-                await rendarPopupCalendar(calEvent.start);
-            } else {
-                customEventDetailsModelPopUp.modal('show');
-                customEventDetailsModelPopUp.css({ "z-index": "9999" });
-            }
-
-            var $scope = angular.element($("#calendar")).scope();
-            $scope.selectEventDetails = calEvent;
-            if (calEvent.formID == undefined) {
-                $scope.selectEventDetails.formID = CalendarFormId;
-            }
-            $scope.selectEventDetails.resourceFormId = ySelection;
-            $scope.selectEventDetails.ActivityFormId = xSelection;
-            $scope.selectEventDetails.start = $scope.selectEventDetails.start != null && $scope.selectEventDetails.start != undefined && $scope.selectEventDetails.start != '' ? customDate($scope.selectEventDetails.start.format()) : ''
-            $scope.selectEventDetails.end = $scope.selectEventDetails.end != null && $scope.selectEventDetails.end != undefined && $scope.selectEventDetails.end != '' ? customDate($scope.selectEventDetails.end.format()) : ''
-            $scope.selectEventDetails.customDate = DateWithDayName($scope.selectEventDetails, true);
-            if (!$scope.selectEventDetails.allDay) {
-                $scope.selectEventDetails.customTime = TimeFormatCalender($scope.selectEventDetails, true);
-            }
-            else {
-                $scope.selectEventDetails.customDate = moment($scope.selectEventDetails.start).format("YYYY-MM-DD");
-            }
-
-            $scope.selectEventDetails.customTitleSplit = $scope.selectEventDetails.customTitle.split(',');
-
-            var listFormDropdown = _.filter($scope.selectEventDetails.customFormsSplit, function (item) { return item != ySelection.toString(); });
-
-            if (listFormDropdown.length > 0) {
-                debugger;
-                //var listActivities = _.filter(xaxisFormList, function (item) { return item.activitiesForm != ySelection; });
-                var listActivities = xaxisFormList;
-                $scope.selectEventDetails.dropdownList = [];
-                _.each(listActivities, function (item, key) {
-                    var tempDrop = {};
-                    var indexForm = _.findIndex($scope.selectEventDetails.customFormsSplit, function (itemForm) { return itemForm.trim() == item.activitiesForm.toString() });
-                    if (indexForm != -1) {
-                        tempDrop.formId = item.activitiesForm.toString();
-                        tempDrop.Id = $scope.selectEventDetails.customFormIdsSplit[indexForm];
-                        tempDrop.formTitle = $scope.selectEventDetails.customTitleSplit[indexForm];
-                        tempDrop.dropdownListData = item;
-                        tempDrop.customClass = "false";
-                        $scope.selectEventDetails.dropdownList.push(tempDrop);
-                    }
-                    //else {
-                    //    tempDrop.formId = item.activitiesForm.toString();
-                    //    tempDrop.Id = "0";
-                    //    tempDrop.formTitle = item.title;
-                    //    tempDrop.dropdownListData = item;
-                    //    tempDrop.customClass = "true";
-                    //}
-
-                });
-            }
-
-            $('.close-event').on('click', function () {
-                $("body .popover").addClass('isPopoverLoaded');
-                $("body .popover").popover('hide');
-                $("#tabuListUl").empty();
-                var $scope = angular.element($("#calendar")).scope();
-                $('.temp').find('.titleContainer').removeClass('d-none');
-                $('.popoverSelect').addClass('d-none');
-
-            });
-            setTimeout(function () {
-
-                removeTitleNew();
-
-                _.each($scope.totalSelectListTagify, function (item, key) {
-                    var param = {};
-
-                    // init Tagify script on the above inputs     
-                    var input = document.getElementById('newtag-input' + item.name);
-                    input.value = [];
-                    item.tagify = {};
-                    if (input != null) {
-                        var tempWhiteControl = $scope.selectEventDetails[item.name];
-                        var tempWhiteList = [];
-                        var tempWh2 = [];
-                        if (tempWhiteControl != undefined && tempWhiteControl != "") {
-                            tempWhiteList = tempWhiteControl;
-                            tempWhiteList = tempWhiteList.replace(/'/g, '"');
-                            tempWhiteList = JSON.parse(tempWhiteList);
-                            var newList = [];
-                            if (tempWhiteList.length > 0) {
-                                if (tempWhiteList[0].value != undefined) {
-                                    _.each(tempWhiteList, function (itemtag) {
-                                        newList.push(itemtag.value);
-                                    });
-                                } else {
-                                    newList = tempWhiteList;
-                                }
-                            }
-                            tempWhiteList = newList.join();
-                            tempWh2 = tempWhiteList.split(",");
-                            input.value = tempWhiteList;
-                            var tmp = [tempWhiteList];
-                        }
-
-                        item.tagify = new Tagify(input, {
-                            whitelist: tempWh2,
-                            maxTags: 10,
-                            dropdown: {
-                                maxItems: 20,           // <- mixumum allowed rendered suggestions
-                                classname: "tags-look", // <- custom classname for this dropdown, so it could be targeted
-                                enabled: 0,             // <- show suggestions on focus
-                                closeOnSelect: false    // <- do not hide the suggestions dropdown once an item has been selected
-                            }
-                        });
-                        if (item.tagify.on != undefined) {
-                            item.tagify.on('add', onAddTag)
-                            item.tagify.on('invalid', onInvalidTag)
-                            item.tagify.on('remove', onRemoveTag)
-                            item.tagify.on('edit', onTagEdit)
-                        }
-                    }
-                });
-            }, 200);
-            $scope.rootScopeSafe();
-            var selectedId = $("#newtag-inputHidden").val();
-            if (selectedId != "") {
-                var param = {};
-                param.selectedId = selectedId;
-                getTabulatorListFromEvents(param);
-            }
-            $(document).on('click', function (e) {
-                if ($('.favicon-loader-overlay.active').length) {
-                }
-                else {
-                    if (!$(e.target).closest('.popover.show').length && !$(e.target).closest('.fc-content').length) {
-                        //$(document).find('.popover.show').remove()
-                        //$("body .popover").addClass('isPopoverLoaded');
-                        //$("body .popover").popover('hide');
-                        //$("#tabuListUl").empty();
-                        //var $scope = angular.element($("#calendar")).scope();
-                        //$('.temp').find('.titleContainer').removeClass('d-none');
-                        //$('.popoverSelect').addClass('d-none');
-                    }
-                }
-            });
-
-
-
-        },
-        eventAfterAllRender: function (event, element, view) {
-
-            var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
-
-            if (current_tab == "agenda-view") {
-                var $scope = angular.element($("#calendar")).scope();
-                //$scope.$parent.$parent.IND_loading = false;
-                setTimeout(function () {
-                    $.unblockUI();
-                }, 1000);
-            } else {
-                $.unblockUI();
-            }
-            setTimeout(function () {
-                jQuery.curCSS = function (element, prop, val) {
-                    return jQuery(element).css(prop, val);
-                };
-                $('.fc-content').bstooltip({ html: true });
-                $('.fc-timeline-event').bstooltip({ html: true });
-                $('.fc-list-item').bstooltip({ html: true });
-                $('.fc-day-grid-event').bstooltip({ html: true });
-                $('.fc-time-grid-event').bstooltip({ html: true });
-                //setTimeout(function () {
-                //    $('#agenda-view div.calendar').fullCalendar('render');
-                //    $('#timeline-resource-view div.calendar').fullCalendar('render');
-                //    $('#vertical-resource-view div.calendar').fullCalendar('render');
-                //}, 150);
-            }, 150);
-        },
-
-        //  eventDragStop: function (event, jsEvent, ui, view) {
-        //      console.log($(jsEvent.target).closest('tr').attr('data-resource-id'));
-        //}
-
-
-
-    }
 
     var calendarEl = document.querySelector("#year-view div.calendar");
 
@@ -1040,21 +473,23 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
 
             param.filter = {};
             param.filter = changeStateOfCalenderYearView(cal_obj, cal_obj.start, cal_obj.end);
-            param.filter.field = "start";
-            param.filter.value += " and f.resources = " + $("#calendar-service-Location option:selected").val() + " ";
+            //param.filter.field = "start";
+            //param.filter.value += " and f.resources = " + $("#calendar-service-Location option:selected").val() + " ";
+            param = addParamsforLocationfilter(param);
             param.COMPANY_CODE = COMPANY_CODE;
             param.CALENDAR_CODE = CALENDAR_CODE;
-
+            
 
             $.ajax({
                 method: 'POST',
-                url: BASE_URL + "/FormAPI/getReferralFormFields",
+                url: BASE_URL + "/FormAPI/GetFormRecordList",
                 dataType: 'json',
                 contentType: "application/json",
                 data: JSON.stringify(param),
                 success: function (response) {
                     //$.unblockUI();
-                    var calenderData = changeResourceIDByYSelection((response.events != undefined) ? response.events : response.events);
+                    var calenderData = changeResourceIDByYSelection((response.data != undefined) ? response.data : response.data);
+                    calenderData.forEach(x => x.title = ' ');
                     if (calenderData != undefined) {
 
                         assignEvents(calenderData);
@@ -1077,16 +512,38 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
             });
         },
         selectable: (calendarDetails.CALENDAR_TYPE == "3" && calendarDetails.CALENDAR_CATEGORY_ID == "4") ? true : false,
-        select: function (cal_obj) {
-            debugger;
-            let currentDate = new Date();
-            let startDate = cal_obj.start;
-            let temp = new Date(startDate);
-            let tempEndDate = "";
+        select: function (info) {
 
-            if (currentDate.getDate() > temp.getDate()) {
+
+
+            var selectedStartDate = info.start;
+            var selectedEndDate = info.end || info.start; // If end date is not provided (e.g., single day selection), use start date
+
+            // Check if any part of the event overlaps with the selected date range
+            var events = calendarObject.getEvents();
+            var overlappingEvents = events.filter(function (event) {
+                return (event.start < selectedEndDate && event.end > selectedStartDate);
+            });
+
+            if (overlappingEvents.length > 0) {
+                // If events overlap with the selected date range, prevent unselect
+                calendarObject.unselect(false);
+                //alert('Events exist during this date range!');
                 return;
             }
+            //else {
+            //    // If no events overlap, continue with unselect action
+            //    //calendar.unselect();
+            //}
+
+            //let currentDate = new Date();
+            let startDate = info.start;
+            //let temp = new Date(startDate);
+            //let tempEndDate = "";
+
+            //if (currentDate.getDate() > temp.getDate()) {
+            //    return;
+            //}
 
             var $scope = angular.element($("#calendar")).scope();
 
@@ -1141,59 +598,19 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
             }
 
 
+        },
+        eventContent: function (info) {
+            return { html: '<div class="fc-content">' + formatAMPM((customDate(info.event.start.toString()))) + '</div>' };
+            
+        },
+        selectAllow: function (info) {
+            // Disallow selection of past dates
+            return info.start >= new Date(); // Only allow dates from today onwards
         }
     });
 
     calendarObject.render();
-    
-    // tag added callback
-    function onAddTag(e) {
-        var id = $("#newtag-inputHidden").val();
-        var fieldName = $("#newtag-inputHidden" + id).val();
-        var $scope = angular.element($("#calendar")).scope();
-        var param = {};
-        var list = [];
-        param.fieldName = fieldName;
-        _.each(e.detail.tagify.value, function (item) {
-            list.push('"' + item.value + '"');
-        });
-        param.fieldDataText = "[" + list.join(',') + "]";
-        param.formId = $scope.currentFormId;
-        param.Id = id;
-        $scope.updateRowDataRecord(param);
-    }
-    // tag remvoed callback
-    function onRemoveTag(e) {
-        var id = $("#newtag-inputHidden").val();
-        var fieldName = $("#newtag-inputHidden" + id).val();
-        var $scope = angular.element($("#calendar")).scope();
-        var param = {};
-        var list = [];
-        param.fieldName = fieldName;
-        _.each(e.detail.tagify.value, function (item) {
-            list.push('"' + item.value + '"');
-        });
-        param.fieldDataText = "[" + list.join(',') + "]";
-        param.Id = id;
-        param.formId = $scope.currentFormId;
-        $scope.updateRowDataRecord(param);
-    }
-    function onTagEdit(e) {
-        //console.log("onTagEdit: ", e.detail);
-    }
-    // invalid tag added callback
-    function onInvalidTag(e) {
-        //console.log("onInvalidTag: ", e.detail);
-    }
-
-    function GetCalendarDateRange() {
-        var calendar = $('#timeline-resource-view div.calendar').fullCalendar('getCalendar');
-        var view = calendar.view;
-        var start = view.start._d;
-        var end = view.end._d;
-        var dates = { start: start, end: end };
-        return dates;
-    }
+   
 
 
     function calculateDate(startDate, counter, type) {
@@ -1747,4 +1164,20 @@ function getLOCDataByCalendar() {
         }
     });
     return data;
+}
+
+
+
+function addParamsforLocationfilter(params) {
+    var newparam = {};
+    newparam.action = 29;
+    let selected_location = $('#calendar-service-Location option:selected').text();
+    newparam.formTableColumnData = `(   (   LOCATION_MASTER_1936.LOCATION_ADDRESS like N'${selected_location}'    )        ) `;
+    newparam.formTableColumnName = ` left join LOCATION_MASTER_1936 on LOCATION_MASTER_1936.formId=f1.referrenceFormId and LOCATION_MASTER_1936.Id=f1.referrenceId `;
+    newparam.formId = 2305;
+    newparam.formTableName = "CALENDAR_FORM_1935";
+    newparam.created_by = 30314;
+    newparam.update_by = 30314;
+    newparam.filter = params.filter;
+    return newparam;
 }
