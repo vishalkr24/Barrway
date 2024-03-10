@@ -20,7 +20,8 @@
           "IS_BUSINESS_HOUR_BOOKING": false,
           "IS_SERVICE_TYPE": false,
           "SERVICE_DURATION": false,
-          "SERVICE_DURATION_DRAG": false
+          "SERVICE_DURATION_DRAG": false,
+          "IS_SHOWING_EVENT_TITLE":true
         },
         "Step2": {
           "Image": "",
@@ -29,7 +30,8 @@
           "IS_BUSINESS_HOUR_BOOKING": false,
           "IS_SERVICE_TYPE": false,
           "SERVICE_DURATION": false,
-          "SERVICE_DURATION_DRAG": false
+          "SERVICE_DURATION_DRAG": false,
+          "IS_SHOWING_EVENT_TITLE": true
         }
       }
     },
@@ -180,7 +182,8 @@
           "IS_BUSINESS_HOUR_BOOKING": false,
           "IS_SERVICE_TYPE": true,
           "SERVICE_DURATION": false,
-          "SERVICE_DURATION_DRAG": false
+          "SERVICE_DURATION_DRAG": false,
+          "IS_SHOWING_EVENT_TITLE": true
         },
         "Step2": {
           "Image": "",
@@ -189,7 +192,8 @@
           "IS_BUSINESS_HOUR_BOOKING": true,
           "IS_SERVICE_TYPE": true,
           "SERVICE_DURATION": true,
-          "SERVICE_DURATION_DRAG": false
+          "SERVICE_DURATION_DRAG": false,
+          "IS_SHOWING_EVENT_TITLE": true
         },
         "Step3": {
           "Image": "",
@@ -449,7 +453,8 @@
           "IS_BUSINESS_HOUR_BOOKING": false,
           "IS_SERVICE_TYPE": true,
           "SERVICE_DURATION": false,
-          "SERVICE_DURATION_DRAG": false
+          "SERVICE_DURATION_DRAG": false,
+          "IS_SHOWING_EVENT_TITLE": true
         },
         "Step2": {
           "Image": "",
@@ -458,7 +463,8 @@
           "IS_BUSINESS_HOUR_BOOKING": false,
           "IS_SERVICE_TYPE": true,
           "SERVICE_DURATION": false,
-          "SERVICE_DURATION_DRAG": false
+          "SERVICE_DURATION_DRAG": false,
+          "IS_SHOWING_EVENT_TITLE": true
         },
         "Step3": {
           "Image": "",
@@ -467,7 +473,8 @@
           "IS_BUSINESS_HOUR_BOOKING": false,
           "IS_SERVICE_TYPE": true,
           "SERVICE_DURATION": false,
-          "SERVICE_DURATION_DRAG": false
+          "SERVICE_DURATION_DRAG": false,
+          "IS_SHOWING_EVENT_TITLE": true
         }
       }
     },
@@ -656,7 +663,8 @@
           "IS_BUSINESS_HOUR_BOOKING": false,
           "IS_SERVICE_TYPE": true,
           "SERVICE_DURATION": false,
-          "SERVICE_DURATION_DRAG": false
+          "SERVICE_DURATION_DRAG": false,
+          "IS_SHOWING_EVENT_TITLE": true
         },
         "Step2": {
           "Image": "",
@@ -665,7 +673,8 @@
           "IS_BUSINESS_HOUR_BOOKING": true,
           "IS_SERVICE_TYPE": true,
           "SERVICE_DURATION": true,
-          "SERVICE_DURATION_DRAG": true
+          "SERVICE_DURATION_DRAG": true,
+          "IS_SHOWING_EVENT_TITLE": true
         },
         "Step3": {
           "Image": "",

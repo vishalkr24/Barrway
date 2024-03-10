@@ -48,7 +48,6 @@ $(document).ready(async function () {
 
        
     calendarDetails = (await getCalendarDetails(CALENDAR_CODE)).Data;
-    var IS_APPOINTMENT_BOOKING_CLR = calendarDetails["CALENDAR_CATEGORY_ID"] == "2";
     if (calendarDetails["CALENDAR_CATEGORY_ID"] == "4" && calendarDetails["CALENDAR_TYPE"] == "3") {
         $("#year-view-nav").show();
     } else {
@@ -271,7 +270,20 @@ $(document).ready(async function () {
             eventBasicData.activityColumn = activityColumns;
 
             window["EventBasicDetail"] = eventBasicData;
-            tabsActive();
+
+            let urlSplit = window.location.href.split('/');
+            let lastParam = urlSplit[urlSplit.length - 1];
+            if (!lastParam.includes('#')) {
+                lastParam = '#' + lastParam;
+            }
+
+            if ($('a[href="' + lastParam + '"]').length > 0) {
+                tabsActive($('a[href="' + lastParam + '"]').parent().index());
+            } else {
+                tabsActive();
+            }
+
+            
             marcketplaceCalendar("", [], resResults, resColumns, activityResults, activityColumns, []);
 
 
@@ -282,6 +294,9 @@ $(document).ready(async function () {
 
 
 });
+
+
+
 function changeStateOfCalenderController(view) {
     var temp = {};
     temp.field = "start";
@@ -321,13 +336,14 @@ async function reBindCalender(param) {
     });
 }
 
-function tabsActive() {
+function tabsActive(param=0) {
 
     $("#tabs").tabs({
         create: function (event, ui) {
             //console.info(ui.tab.data('value'))
         },
         activate: function (event, ui) {
+            debugger;
             //console.info($(ui.newTab).find('a').attr('href'));//ui.oldTab.data('value')
             var target = $(ui.newTab).find('a').attr('href');
             // $(target + ' div.calendar').fullCalendar('render');
@@ -339,10 +355,14 @@ function tabsActive() {
         }
     });
     $("#tabs").show();
-    if (checkCookie('calendar-activeView') !== '') {
-        $("#tabs").tabs("option", "active", parseInt(checkCookie('calendar-activeView')));
+    if (param == 0) {
+        if (checkCookie('calendar-activeView') !== '') {
+            $("#tabs").tabs("option", "active", parseInt(checkCookie('calendar-activeView')));
+        } else {
+            $("#tabs").tabs("option", "active", 2);
+        }
     } else {
-        $("#tabs").tabs("option", "active", 2);
+        $("#tabs").tabs("option", "active", param);
     }
 }
 
@@ -833,12 +853,16 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 });
                 agendaTempHtml += '</div>';
 
-                if (current_tab != "agenda-view") {
-                    _mainTempHtml += tempHtml;
-                }
-                else {
-                    _mainTempHtml += agendaTempHtml;
-                }
+
+                
+                    if (current_tab != "agenda-view") {
+                        _mainTempHtml += tempHtml;
+                    }
+                    else {
+                        _mainTempHtml += agendaTempHtml;
+                    }
+                
+                
 
             }
             //if (formDetailsDataInfo.otherFormIsShow != null && formDetailsDataInfo.otherFormIsShow == true) {
@@ -885,32 +909,50 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                                     <div id="addTransactionRecord" class="edit-event-student cursor-pointer d-inline-block"><i class="fa fa-plus"></i></div>  </div>  </div>   <ul id="tabuListUl">  </ul></div>`
 
             }
-            element.append(_mainTempHtml)
-            tableTempHtml = "<div class='event-detail div-flex'><div class='div-flex'>" + rowRecord + "</div><div class='btn-box'>" + actionRow + "</div><div class='div-flex div-list-bar'></div>" + tempHtmlTable + "</div>";
-            let $fcContent = element.find(".fc-content").detach(),
-                $resize = element.find(".fc-resizer").detach();
-            element.attr('title', rowTooltipTitleDisplay + "  " + rowTooltipDisplay);
-            element.attr('data-html', 'true');
-            element.css({
-                background: "rgb(255, 255, 255)",
-                /*borderColor: "#aaa",*/
-                padding: 0,
-                border:"none",
-                borderRadius: 5,
-
-                "z-index": 1
-            }).droppable({
-                drop: function (event, ui) {
-                    console.log(event);
-                    console.log(ui);
-                },
-                activate: function (event, ui) {
-                    console.log(event);
+            if (!checkShowTitle()) {
+                element.append(_mainTempHtml)
+                element.find(".fc-content[id]").remove();
+                element.find("a[data-bs-original-title]").attr('data-bs-original-title', '');
+                if (current_tab == "timeline-resource-view") {
+                    element.find("a").closest("div.fc-event-container").css("height", "100%");
+                    element.find("a").css({ "height": "60%" });
+                    element.css({ "background": "#3FBFC7" });
+                } else if (current_tab == "agenda-view") {
+                    element.find("span.fc-title").html("&nbsp;");
+                    element.css({ "background": "#3FBFC7" });
+                } else {
+                    element.css({ "background": "#3FBFC7"});
                 }
-            })
-                .empty().append($fcContent.css({
-                    borderRadius: 3,
-                }), $resize);
+                
+
+            } else {
+                element.append(_mainTempHtml);
+                tableTempHtml = "<div class='event-detail div-flex'><div class='div-flex'>" + rowRecord + "</div><div class='btn-box'>" + actionRow + "</div><div class='div-flex div-list-bar'></div>" + tempHtmlTable + "</div>";
+                let $fcContent = element.find(".fc-content").detach(),
+                    $resize = element.find(".fc-resizer").detach();
+                element.attr('title', rowTooltipTitleDisplay + "  " + rowTooltipDisplay);
+                element.attr('data-html', 'true');
+                element.css({
+                    background: "rgb(255, 255, 255)",
+                    /*borderColor: "#aaa",*/
+                    padding: 0,
+                    border: "none",
+                    borderRadius: 5,
+                    "z-index": 1
+                }).droppable({
+                    drop: function (event, ui) {
+                        console.log(event);
+                        console.log(ui);
+                    },
+                    activate: function (event, ui) {
+                        console.log(event);
+                    }
+                })
+                    .empty().append($fcContent.css({
+                        borderRadius: 3,
+                    }), $resize);
+            }
+           
         },
         eventClick: async function (calEvent, jsEvent, view) {
             debugger;
@@ -1487,14 +1529,33 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         },
         selectable: (calendarDetails.CALENDAR_TYPE == "3" && calendarDetails.CALENDAR_CATEGORY_ID == "4") ? true : false,
         select: function (startDate, endDate, jsEvent, view, resource) {
-            debugger;
-            let currentDate = new Date();
-            let temp = new Date(startDate);
-            let tempEndDate = "";
 
-            if (currentDate.getDate() > temp.getDate()) {
+            debugger;
+            var selectedStartDate = startDate;
+            var selectedEndDate = endDate || startDate; // If end date is not provided (e.g., single day selection), use start date
+
+            // Check if any part of the event overlaps with the selected date range
+            var events = $('#timeline-resource-view div.calendar').fullCalendar('clientEvents');
+            var overlappingEvents = events.filter(function (event) {
+                return (event.start < selectedEndDate && event.end > selectedStartDate);
+            });
+            overlappingEvents = overlappingEvents.filter(x => x.resourceId == resource.id);
+
+            if (overlappingEvents.length > 0) {
+                // If events overlap with the selected date range, prevent unselect
+                $('#calendar').fullCalendar('unselect');
                 return;
+                //alert('Events exist during this date range!');
             }
+
+
+            //let currentDate = new Date();
+            //let temp = new Date(startDate);
+            //let tempEndDate = "";
+
+            //if (currentDate.getDate() > temp.getDate()) {
+            //    return;
+            //}
 
             var $scope = angular.element($("#calendar")).scope();
             
@@ -1552,8 +1613,19 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         }
     };
     countLoader = 0;
+    if (calendarDetails.CALENDAR_TYPE == "3" && calendarDetails.CALENDAR_CATEGORY_ID == "4") {
+        myOptions1.selectAllow = function (selectInfo) {
+            // Disallow selection of past dates
+            return selectInfo.start.isSameOrAfter(moment(), 'day');
+        }
+    }
     calendarOptions = $.extend({}, defaultOptions, resourceOptions, myOptions1);
+
+    
+
     $('#timeline-resource-view div.calendar').fullCalendar(calendarOptions);
+
+
     
     function calculateDate(startDate, counter, type) {
         debugger;
@@ -2232,6 +2304,7 @@ async function rendarPopupCalendar(assignDate) {
                 listids = event.customFormIds.split(',');
                 var currentId = 0;
                 tempHtml = "";
+                
                 var agendaTempHtml = '<div class="fc-content" style="padding: 2px 1px;border-radius: 3px;background: #3FBFC7;color: #000;" data-bs-original-title="" title="">';
                 var agendaTempHtmlSub = '';
                 var titleCounter = 0;
@@ -2784,6 +2857,12 @@ function checkServiceDurationDrag() {
 function checkAllowParticipantsCount() {
     let setup = JSON.parse(calendarDetails["setup_matrix"]);
     return setup["Is_Showing_List_Participants"] == true;
+}
+
+function checkShowTitle() {
+    let setup = JSON.parse(calendarDetails["setup_matrix"]);
+    let type = calendarDetails["CALENDAR_TYPE"];
+    return setup["Step2"]["Steps"]["Step" + type]["IS_SHOWING_EVENT_TITLE"] == true;
 }
 
 function getTitle(bgevent,type) {

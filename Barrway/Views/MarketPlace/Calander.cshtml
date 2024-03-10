@@ -830,7 +830,7 @@
 
                         <div id="tabs" style="display:none">
                             <ul>
-                                <li id="year-view-nav" data-value="Year view">
+                                <li id="year-view-nav" data-value="year view">
                                     <a href="#yearview" onclick="window.location.href='/company/calanderyearview/@ViewBag.CompanyCode/@ViewBag.CalendarCode'">Year View</a>
                                 </li>
                                 <li data-value="List view">
@@ -846,7 +846,9 @@
                                     <a href="#vertical-resource-view">@Resource.Vertical_Resource_View</a>
                                 </li>
                             </ul>
-
+                            <div id="yearview">
+                                <div class="calendar"></div>
+                            </div>
                             <div id="list-view">
                                 <div class="calendar"></div>
                             </div>

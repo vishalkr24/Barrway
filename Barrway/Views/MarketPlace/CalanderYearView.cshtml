@@ -640,6 +640,9 @@
         #agenda-view .fc-event-container .fc-day-grid-event .fc-content .fc-title {
             font-size: 10px;
         }
+        .fc-event {
+            background-color: #3FBFC7
+        }
     </style>
 }
 
@@ -847,16 +850,16 @@
                                     <a href="#year-view">Year View</a>
                                 </li>
                                 <li data-value="List view">
-                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@ViewBag.CompanyCode/@ViewBag.CalendarCode'">@Resource.List_View</a>
+                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@(ViewBag.CompanyCode+"/"+@ViewBag.CalendarCode)#list-view'">@Resource.List_View</a>
                                 </li>
                                 <li data-value="External Events">
-                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@ViewBag.CompanyCode/@ViewBag.CalendarCode'">@Resource.Agenda_View</a>
+                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@(ViewBag.CompanyCode+"/"+@ViewBag.CalendarCode)#agenda-view'">@Resource.Agenda_View</a>
                                 </li>
                                 <li data-value="Timeline resource view">
-                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@ViewBag.CompanyCode/@ViewBag.CalendarCode'">@Resource.Timeline_Resource_View</a>
+                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@(ViewBag.CompanyCode+"/"+@ViewBag.CalendarCode)#timeline-resource-view'">@Resource.Timeline_Resource_View</a>
                                 </li>
                                 <li data-value="Vertical resource view">
-                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@ViewBag.CompanyCode/@ViewBag.CalendarCode'">@Resource.Vertical_Resource_View</a>
+                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@(ViewBag.CompanyCode+"/"+@ViewBag.CalendarCode)#vertical-resource-view'">@Resource.Vertical_Resource_View</a>
                                 </li>
                             </ul>
                             <div id="year-view">
