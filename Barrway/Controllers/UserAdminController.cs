@@ -156,7 +156,7 @@ namespace Barrway.Controllers
                 model.USER_ID = User.Identity.Name;
 
                 var result = await publicUserService.EnrollPublicUserForCalendar(model);
-                
+
                 if (result.Status)
                 {
                     // send email to user
@@ -234,7 +234,7 @@ namespace Barrway.Controllers
 
                     if (finalResult > 0)
                     {
-                        return Json(new AddUpdateDelete() { Status = true, Message = "Booking successfull!"}, JsonRequestBehavior.AllowGet);
+                        return Json(new AddUpdateDelete() { Status = true, Message = "Booking successfull!" }, JsonRequestBehavior.AllowGet);
                     }
                     else
                     {
@@ -285,11 +285,11 @@ namespace Barrway.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetCurrentPackageDetails(string CompanyCode, string CalendarCode, string ServiceId)
+        public async Task<ActionResult> GetCurrentPackageDetails(string CompanyCode, string CalendarCode, string ServiceId, string start, string end)
         {
             try
             {
-                var result = await publicUserService.GetCurrentPackageDetails(User.Identity.Name, CompanyCode, CalendarCode, ServiceId);
+                var result = await publicUserService.GetCurrentPackageDetails(User.Identity.Name, CompanyCode, CalendarCode, ServiceId, new CommonTimeObject() { start = start, end = end });
 
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
@@ -360,7 +360,7 @@ namespace Barrway.Controllers
         {
             try
             {
-                var result = await publicUserService.GetRecentlyBookedCalendars(UserIdentity.UserEmail.ToString());
+                var result = await publicUserService.GetRecentlyBookedCalendars(UserIdentity.UserEmail.ToString(), UserIdentity.UserName);
 
                 return Json(new { data = result });
             }
@@ -513,7 +513,7 @@ namespace Barrway.Controllers
         }
 
 
-       
+
 
     }
 }

@@ -16241,12 +16241,12 @@
         });
 
 
-        $scope.GoToCalendar = function (companyId, listId = 1) {//list id 2 is for the company event list data on right hand side of the screen, and list id 1 is for left/ recently booked calendars company data... used for mapping companyId with companyCode
+        $scope.GoToCalendar = function (companyCode, listId = 1) {//list id 2 is for the company event list data on right hand side of the screen, and list id 1 is for left/ recently booked calendars company data... used for mapping companyId with companyCode
             var companyCode = "";
 
             if (listId == 1) {
                 for (var i = 0; i < $scope.CalendarCompanyList.length; i++) {
-                    if ($scope.CalendarCompanyList[i].CompanyId == companyId) {
+                    if ($scope.CalendarCompanyList[i].COMPANY_CODE == companyId) {
                         companyCode = $scope.CalendarCompanyList[i].COMPANY_CODE;
                     }
                 }
@@ -16260,10 +16260,23 @@
             }
 
 
+
             localStorage.setItem("publicUserSelectedCompany", companyCode);
             $state.go("my_calendar", { "formId": 2305 });
         }
 
+
+        $scope.GoToCalendar = function (companyCode, calendarCode, redirectType = 1) {//list id 2 is for redirect to useradmin calendar, and list id 1 is for marketplace calendar
+
+            if (redirectType == 1) {
+                window.location.href = "/company/calander/" + companyCode + "/" + calendarCode;
+            } else {
+                localStorage.setItem("publicUserSelectedCompany", companyCode);
+                $state.go("my_calendar", { "formId": 2305 });
+            }
+
+
+        }
 
 
         $scope.getBookingDataForDate = function (date, endDate) {

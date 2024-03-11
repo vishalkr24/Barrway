@@ -16,8 +16,8 @@
 <section class="company-detail-main templet-three">
     <div class="main-banner">
         <div class="main-banner-inner">
-            <div class="main-banner-inner-content">
-                <p class="banner-text-content">Company name english (Company name Chinese)</p>
+            <div class="main-banner-inner-content" style="background-image: url('@Model.COMPANY_BANNER_PATH.Replace("~", "")'); background-size: auto; background-repeat: no-repeat; background-position: center center;">
+                <p class="banner-text-content">@Model.COMPANY_NAME_ENGLISH (@Model.COMPANY_NAME_CHINESE)</p>
                 <button class="banner-button">Book Now</button>
             </div>
         </div>

@@ -902,20 +902,11 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> GetRecentlyBookedCalendars(string userEmail)
+        public async Task<AddUpdateDelete> GetRecentlyBookedCalendars(string userEmail, string userId)
         {
             try
             {
-                string query = $@"SELECT distinct calendar.[COMPANY_CODE]
-                                      ,calendar.[CALENDAR_CODE]
-	                                  ,calendar.[Id]
-                                      ,calendar.[created_at] 'SlotCreated'
-                                      ,company.Id as 'CompanyId'
-                                      ,calendarDetails.*
-	                                  ,company.COMPANY_NAME_ENGLISH
-                                      ,company.COMPANY_LOGO_PATH
-                                      ,service_m.ACTIVITY_NAME
-                                      ,subCategory.CALENDAR_SUB_CATEGORY_NAME
+                string query = $@"declare @Ids varchar(max) = stuff((SELECT distinct ',' + cast(calendarDetails.Id as varchar)
                                   FROM [dbo].[CALENDAR_FORM_1935] calendar
                                   join TRANSACTION_MASTER_1942 transaction_m on calendar.CALENDAR_CODE = transaction_m.CALENDAR_CODE
                                   join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
@@ -924,8 +915,21 @@ namespace Barrway.Service.Repository
 								  join BUSINESS_CALENDAR_MASTER_1925 calendarDetails on calendarDetails.CALENDAR_CODE = calendar.CALENDAR_CODE
 								  join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendarDetails.CALENDAR_SUB_CATEGORY_ID
                                   where EMAIL = '{userEmail}' and calendar.Id = transaction_m.SLOT
-								  order by calendar.created_at desc
-								  offset 0 rows fetch first 5 rows only";
+								  for xml path('')), 1, 1, '')
+
+								  select 
+									  (select ( case when (SUM(ledger.CREDIT_COIN) - SUM(ledger.DEBIT_COIN)) is null then 0 else (SUM(ledger.CREDIT_COIN) - SUM(ledger.DEBIT_COIN)) end) FROM LEDGER_MASTER_1957 ledger where ledger.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and USER_ID = '{userId}') as 'COIN_BALANCE'
+									  ,company.Id as 'CompanyId'
+                                      ,calendarDetails.*
+	                                  ,company.COMPANY_NAME_ENGLISH
+									  , calendarDetails.CALENDAR_NAME
+                                      ,company.COMPANY_LOGO_PATH
+                                      ,subCategory.CALENDAR_SUB_CATEGORY_NAME
+									  ,stuff( (select distinct ',' + ACTIVITY_NAME from SERVICE_MASTER_1933 service_m where service_m.CALENDAR_CODE = calendarDetails.CALENDAR_CODE for xml path('')), 1, 1, '') as 'ServiceList'
+									  FROM BUSINESS_CALENDAR_MASTER_1925 calendarDetails
+                                  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
+								  join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendarDetails.CALENDAR_SUB_CATEGORY_ID
+                                  where calendarDetails.Id in (select cast(item as integer) from dbo.SplitString(@Ids, ','))";
 
                 List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -1264,23 +1268,44 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> GetCurrentPackageDetails(string UserId, string CompanyCode, string CalendarCode, string ServiceId)
+        public async Task<AddUpdateDelete> GetCurrentPackageDetails(string UserId, string CompanyCode, string CalendarCode, string ServiceId, CommonTimeObject TimeRange)
         {
             try
             {
                 var balance = await GetUserCoinBalance(UserId, CompanyCode, CalendarCode);
                 var service = await sqlFunction.ExecuteSqlQuery("select fees_1 from SERVICE_MASTER_1933 where Id = " + ServiceId);
-                var calendar = await sqlFunction.ExecuteSqlQuery($@"select CALENDAR_NAME from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE = '{CalendarCode}'");
+                var calendar = await sqlFunction.ExecuteSqlQuery($@"select * from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE = '{CalendarCode}'");
 
                 bool IsServicePaid = false;
-                int ServiceFees = 0;
+                double ServiceFees = 0;
 
                 if (!string.IsNullOrEmpty(service[0]["fees_1"]?.ToString()))
                 {
                     if (Convert.ToInt32(service[0]["fees_1"]) > 0)
                     {
                         IsServicePaid = true;
-                        ServiceFees = Convert.ToInt32(service[0]["fees_1"]);
+
+                        if (calendar.FirstOrDefault()["CALENDAR_CATEGORY_ID"]?.ToString() == "4" && calendar.FirstOrDefault()["CALENDAR_TYPE"]?.ToString() == "2")
+                        {
+                            ServiceFees = Convert.ToDouble(service[0]["fees_1"]);
+
+                            if (TimeRange != null)
+                            {
+                                if (!string.IsNullOrEmpty(TimeRange.start) && !string.IsNullOrEmpty(TimeRange.end))
+                                {
+                                    TimeSpan timeDifference = Convert.ToDateTime(TimeRange.end) - Convert.ToDateTime(TimeRange.start);
+                                    double hoursDifference = timeDifference.TotalHours;
+
+                                    ServiceFees = ServiceFees * hoursDifference;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            ServiceFees = Convert.ToInt32(service[0]["fees_1"]);
+                        }
+
+                        
                     }
                     else
                     {

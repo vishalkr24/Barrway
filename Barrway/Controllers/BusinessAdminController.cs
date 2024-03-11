@@ -1124,14 +1124,14 @@ namespace Barrway.Controllers
         }
 
         [HttpPost]
-        public  ActionResult CheckCmpanyUrlExists(string  Url)
+        public  ActionResult CheckCmpanyUrlExists(string  Url, string CompanyCode)
         {
             try
             {
                 if(Url != "")
                 {
                     string PAGE_URL = string.IsNullOrEmpty(Url) ? Url : Url.Replace(" ", "_");
-                    bool IsComanyUrlExists = businessUserService.CheckCmpanyUrlExists(PAGE_URL);
+                    bool IsComanyUrlExists = businessUserService.CheckCmpanyUrlExists(PAGE_URL, CompanyCode);
 
                     if (!IsComanyUrlExists)
                     {
@@ -1165,10 +1165,11 @@ namespace Barrway.Controllers
                 {
                     return View("ManageCompanyWebsite", model);
                 }
+                
                 if (!string.IsNullOrEmpty(model.PAGE_URL))
                 {
                     string PAGE_URL = string.IsNullOrEmpty(model.PAGE_URL) ? model.PAGE_URL : model.PAGE_URL.Replace(" ", "_");
-                    bool IsComanyUrlExists = businessUserService.CheckCmpanyUrlExists(PAGE_URL);
+                    bool IsComanyUrlExists = businessUserService.CheckCmpanyUrlExists(PAGE_URL, model.COMPANY_CODE);
 
                     if(IsComanyUrlExists)
                     {
