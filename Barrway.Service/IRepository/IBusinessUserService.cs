@@ -132,7 +132,7 @@ namespace Barrway.Service.IRepository
 
         Task<AddUpdateDelete> GetServiceList(string calendarCode, string CompanyCode);
 
-        bool CheckCmpanyUrlExists(string PageName);
+        bool CheckCmpanyUrlExists(string PageName, string CompanyCode);
 
         Task<AddUpdateDelete> GetCompanyCodeByPageUrl(string PageUrl);
     }

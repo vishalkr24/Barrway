@@ -2687,13 +2687,12 @@ async function rendarPopupCalendar(assignDate) {
                             }
                         }).then(function (value) {
                             if (value) {
-                                window.location.href = '/Account/Login?returnUrl=/Marketplace/Calander?' + window.location.href.split('?')[1].replace('&', '$') + '';
+                                window.location.href = '/Account/BusinessLogin?returnUrl=' + window.location.href + '';
                             }
                         });
 
                         
                     } else {
-
                         var eventData = $scope.selectEventDetails;
                         $.ajax({
                             url: "/Useradmin/GetCurrentPackageDetails",
@@ -2701,7 +2700,9 @@ async function rendarPopupCalendar(assignDate) {
                             data: {
                                 CompanyCode: eventData.COMPANY_CODE,
                                 CalendarCode: eventData.CALENDAR_CODE,
-                                ServiceId: eventData.activities
+                                ServiceId: eventData.activities,
+                                start: start,
+                                end: end
                             },
                             async: false,
                             success: function (response) {
@@ -2716,7 +2717,7 @@ async function rendarPopupCalendar(assignDate) {
                                     <div>
                                         ${moment(start).format("hh:mm a")} to ${moment(end).format("hh:mm a")}
                                     </div>
-                                    <div>${customTitleSplit[2]}</div><br />
+                                    ${(customTitleSplit.length > 2) ? `<div>${customTitleSplit[2]}</div><br />`: ''}
                                     <div>${customTitleSplit[1]}</div>
                                     <div>${customTitleSplit[0]}</div><br />
                                     <h4 style="color:red">${response.Message}</h4>`;
