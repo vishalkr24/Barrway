@@ -1796,8 +1796,14 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 //    maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
                 //}
 
-                myOptions2.minTime = minTime + ":00";
-                myOptions2.maxTime = maxTime + ":00";
+                if (calendarDetails["Id"] == "121" || calendarDetails["Id"] == "122" || calendarDetails["Id"] == "123") {
+                    myOptions2.minTime = "06:00";
+                    myOptions2.maxTime = maxTime + ":00";
+                } else {
+                    myOptions2.minTime = minTime + ":00";
+                    myOptions2.maxTime = maxTime + ":00";
+                }
+                
             }
         }
     }
@@ -2780,9 +2786,15 @@ async function rendarPopupCalendar(assignDate) {
                 //if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
                 //    maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
                 //}
+                
+                if (calendarDetails["Id"] == "121" || calendarDetails["Id"] == "122" || calendarDetails["Id"] == "123") {
+                    myOptions2.minTime = "06:00";
+                    myOptions2.maxTime = maxTime + ":00";
+                } else {
+                    myOptions2.minTime = minTime + ":00";
+                    myOptions2.maxTime = maxTime + ":00";
+                }
 
-                myOptions2.minTime = minTime + ":00";
-                myOptions2.maxTime = maxTime + ":00";
             }
         }
     }
