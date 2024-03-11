@@ -15316,6 +15316,13 @@ function IsJsonString(str) {
 
 function removeColumns(formid,columns) {
     removeActionButtion(formid);
+
+    var removeColumnName = ['COMPANY CODE', 'CALENDAR CODE', 'COMPANY_CODE', 'CALENDAR_CODE'];
+
+    if (formid != 2295 && formid != 2296) {
+        columns = columns.filter(x => !removeColumnName.find(y => x.title && x.title.split('|').find(z => z == y)));
+    }
+
     var removeColumnsFormid = [2240, 2242, 2267, 2311, 2326];
     var removeColumnName = ['Edit'];
     var excludeColumAllTable = ['Move Row'];
@@ -15338,20 +15345,29 @@ function removeColumns(formid,columns) {
     if (formid == 2296) {
         columns.find(x => x.title == "COMPANY CODE").title = "COMPANY NAME";
     }
-    
+
+    var removeColumnName = ['COMPANY CODE', 'CALENDAR CODE', 'COMPANY_CODE', 'CALENDAR_CODE'];
+
+    if (formid != 2295 && formid != 2296) {
+        columns = columns.filter(x => !removeColumnName.find(y => x.title && x.title.split('|').find(z => z == y)));
+    }
+
 
     return columns;
-
 }
 
 function addNewColumns(formid, columns) {
     formid = parseInt(formid);
+    formidList = [2295, 2296, 2303, 2304, 2306, 2305, 2322, 2311];
+    //debugger;
+    //columns.find(x => x.title == "Edit").frozen = true;
+
     switch (formid) {
         case 2240: {
             columns.unshift({
                 title: "View Profile", formatter: function (cell, formatter) {
                     return `<a href='#/admin/gerneral-user/${formid}/${cell.getRow().getData().Id}' class="btn btn-primary text-light">View</a>`
-                }, download: false, width: 80, field: "profileView", headerSort: false
+                }, download: false, width: 80, field: "profileView", headerSort: false, frozen: true
             });
         }
         break;
@@ -15359,7 +15375,7 @@ function addNewColumns(formid, columns) {
             columns.unshift({
                 title: "View Profile", formatter: function (cell, formatter) {
                     return `<a href='#/admin/counsellor/${formid}/${cell.getRow().getData().Id}' class="btn btn-primary text-light">View</a>`
-                }, download: false, width: 80, field: "profileView", headerSort: false
+                }, download: false, width: 80, field: "profileView", headerSort: false, frozen: true
             });
         }
             break;
@@ -15367,7 +15383,7 @@ function addNewColumns(formid, columns) {
             columns.unshift({
                 title: "Action", formatter: function (cell, formatter) {
                     return `<a href='#/admin/forum/${cell.getRow().getData().Id}' class="btn btn-primary text-light"><i class="bi-info-circle"></i></a>`
-                }, download: false, width: 100, field: "profileView", headerSort: false
+                }, download: false, width: 100, field: "profileView", headerSort: false, frozen: true
             });
         }
             break;
@@ -15375,7 +15391,7 @@ function addNewColumns(formid, columns) {
             columns.unshift({
                 title: "Action", formatter: function (cell, formatter) {
                     return `<a href='#/admin/article/${cell.getRow().getData().Id}' class="btn btn-primary text-light"><i class="bi-info-circle"></i></a>`
-                }, download: false, width: 100, field: "profileView", headerSort: false
+                }, download: false, width: 100, field: "profileView", headerSort: false, frozen: true
             });
         }
             break;
@@ -15385,7 +15401,7 @@ function addNewColumns(formid, columns) {
                 title: "Edit", formatter: function (cell, formatter) {
                     var id = cell.getRow().getData().Id;
                     return `<button onclick="angular.element(this).scope().EditSchedularForm(${id})"  class="btn btn-primary text-light"><i class="bi-gear"></i></button>`
-                }, download: false, width: 100, field: "profileView", headerSort: false
+                }, download: false, width: 100, field: "profileView", headerSort: false, frozen: true
             });
         }
             break;
@@ -15412,14 +15428,27 @@ function addNewColumns(formid, columns) {
                     }
 
 
-                }, download: false, width: 100, field: "profileView", headerSort: false
+                }, download: false, width: 100, field: "profileView", headerSort: false, frozen: true
             });
         }
             break;
         
 
     }
-    
+
+    if (formidList.find(x => x == formid) != null) {
+        columns.unshift({
+            title: "COMPANY NAME", formatter: function (cell, formatter) {
+                return cell.getData().COMPANY_NAME_ENGLISH
+            }, frozen: true
+        });
+
+        columns.unshift({
+            title: "CALENDAR NAME", formatter: function (cell, formatter) {
+                return cell.getData().CALENDAR_NAME
+            }, frozen: true
+        });
+    }
 
     return columns;
 

@@ -4192,7 +4192,7 @@
                 });
         };
         function bindtabulatorOnly(type, data) {
-            
+            debugger;
             var details = JSON.parse(localStorage.getItem("detail"));
             var languageIdForm = localStorage.getItem("globalLangForm");
             var languageId = localStorage.getItem("globalLang");
@@ -4254,6 +4254,9 @@
             else {
                 headers = bindTColumnHeader($scope.formDatafields, true, true);
             }
+
+
+
             debugger;
             headers = removeColumns($scope.currentFormId, headers);
             headers = addNewColumns($scope.currentFormId, headers);
