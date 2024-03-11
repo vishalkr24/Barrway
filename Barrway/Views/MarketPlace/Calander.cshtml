@@ -630,6 +630,24 @@
         .fc-bgevent {
             border-radius: 0px !important;
         }
+        .swal-button--confirm, .swal-button--confirm:hover {
+            background: #E2476C;
+            border-color: #E2476C;
+            cursor: pointer;
+            min-width: 120px;
+            border-radius: 100px;
+        }
+        .swal-button:not([disabled]):hover {
+            background-color: #E2476C;
+        }
+        .swal-button--cancel, .swal-button--cancel:hover {
+            cursor: pointer;
+            border: 1px solid #777777;
+            color: #777777;
+            background-color: #EBEBEB;
+            min-width: 120px;
+            border-radius: 100px;
+        }
     </style>
 }
 
@@ -936,7 +954,7 @@
                     </div>
                     <div class="div-flex div-list">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary" ng-click="enrollPublicUser()" style="background: #3FBFC7;">Enroll</button>
+                        <button type="button" class="btn btn-primary public-primary" ng-click="enrollPublicUser()">Enroll</button>
                     </div>
                 </div>
                 @*<div class="modal-footer">
@@ -1115,8 +1133,8 @@
                                 text: "Kindly login into your account and then you can enroll yourself into this calendar.",
                                 icon: "info",
                                 buttons: {
-                                    confirm: "Login",
-                                    cancel: "Leave it"
+                                    cancel: "Leave it",
+                                    confirm: "Login"                                    
                                 }
                             }).then(function (value) {
                                 if (value) {
