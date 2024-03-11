@@ -108,25 +108,27 @@ namespace Barrway.Controllers
         [HttpPost]
         public async Task<ActionResult> GetFormRecordList(GenerateDynamicFormData data)
         {
-            var role = UserIdentity.Role;
+            if (User.Identity != null) {
+                var role = UserIdentity.Role;
 
-            if (role == "PUBLIC_USER" && (data.formId == (int)FormSetting.PAYMENT_HISTORY_MASTER || data.formId == (int)FormSetting.LEDGER_MASTER))
-            {
-                data.CustomFilters.Clear();
-                data.CustomFilters.Add(new CustomFilter() { FieldName = "USER_ID", Value = User.Identity.Name });
-            }
-
-            if (role == "SUPERADMIN_USER")
-            {
-                data.IsCustomFilter = false;
-                data.CustomFilters.Clear();
-
-                if (data.formId == (int)FormSetting.USER_MASTER)
+                if (role == "PUBLIC_USER" && (data.formId == (int)FormSetting.PAYMENT_HISTORY_MASTER || data.formId == (int)FormSetting.LEDGER_MASTER))
                 {
-                    data.IsCustomFilter = true;
-                    data.CustomFilters.Add(new CustomFilter() { FieldName = "ROLE_ID", Value = "3" });
+                    data.CustomFilters.Clear();
+                    data.CustomFilters.Add(new CustomFilter() { FieldName = "USER_ID", Value = User.Identity.Name });
                 }
 
+                if (role == "SUPERADMIN_USER")
+                {
+                    data.IsCustomFilter = false;
+                    data.CustomFilters.Clear();
+
+                    if (data.formId == (int)FormSetting.USER_MASTER)
+                    {
+                        data.IsCustomFilter = true;
+                        data.CustomFilters.Add(new CustomFilter() { FieldName = "ROLE_ID", Value = "3" });
+                    }
+
+                }
             }
 
             var result = (await formAPIRepository.GetFormRecordList(data)).Data;

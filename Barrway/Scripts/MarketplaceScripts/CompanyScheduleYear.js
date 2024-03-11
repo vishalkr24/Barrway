@@ -600,7 +600,8 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
 
         },
         eventContent: function (info) {
-            return { html: '<div class="fc-content">' + formatAMPM((customDate(info.event.start.toString()))) + '</div>' };
+           // return { html: '<div class="fc-content">' + formatAMPM((customDate(info.event.start.toString()))) + '</div>' };
+            return { html: '<div class="fc-content">&nbsp;</div>' };
             
         },
         selectAllow: function (info) {
