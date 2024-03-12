@@ -1088,10 +1088,7 @@
                 <div class="event-detail div-flex">
                     <div class="div-flex">
                         <div class="title" ng-show="IS_EXIST_PRE_DEFINED_ACTIVITIES">
-                            <!--<label class="pr-2">
 
-                                {{createEventDetails.description}}
-                            </label>-->
                             <div class="temp" ng-repeat="d in createEventDetails.dropdownList">
                                 <span class="titleContainer">
                                     <span class="title1"> {{d.formTitle}}</span>
@@ -1134,6 +1131,8 @@
 
                         <input value="{{createEventDetails.Id}}" id="createnewtag-inputHidden" type="hidden">
 
+                        <label class="pr-2" style="font-weight: 400;" ng-bind-html="createEventDetails.description | safeHtml">
+                        </label>
 
                         <!--<input id="newtag-inputnew" type="text" value="{{createEventDetails.tags}}" placeholder="Add tags">-->
 
@@ -1181,9 +1180,7 @@
                 <div class="event-detail div-flex">
                     <div class="div-flex">
                         <div class="title">
-                            <label class="pr-2">
-                                {{selectEventDetails.description}}
-                            </label>
+
                             <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
                                 <span class="titleContainer">
                                     <span ng-class="{'text-muted': d.customClass == 'true' , 'title1': d.customClass == 'false'}"> {{d.formTitle}}</span>
@@ -1211,7 +1208,9 @@
 
                         <input value="{{selectEventDetails.Id}}" id="newtag-inputHidden" type="hidden">
 
+                        <label class="pr-2" style="font-weight: 400;" ng-bind-html="selectEventDetails.description | safeHtml">
 
+                        </label>
 
                         <div ng-repeat="tag in totalSelectListTagify">
                             <input value="{{selectEventDetails[tag.name]}}" id="newtag-inputHidden{{tag.name}}" type="hidden">

@@ -94,6 +94,8 @@ function setCurrentCalendarData() {
                 $("#TAGS").append(`<option selected>${data.Data.TAGS}</option>`);
             }
         }
+
+        $("#CALENDAR_USE_TYPE").val(data.Data.CALENDAR_USE_TYPE);
     }
 
 }

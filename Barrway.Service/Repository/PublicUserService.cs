@@ -1332,10 +1332,16 @@ namespace Barrway.Service.Repository
                     {
                         return new AddUpdateDelete() { Status = false, Message = "You don't have enough B$ Coin of this calendar to book this slot." };
                     }
+
+                    return new AddUpdateDelete() { Status = true, Message = "B$" + ServiceFees.ToString() + " will be deducted from your " + calendar[0]["CALENDAR_NAME"].ToString() + " Calendar package.<br />(Balance after purchase B$" + (Convert.ToInt32(balance.Data) - ServiceFees).ToString() + ")" };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = true, Message = "Are you sure to book this event?" };
                 }
 
 
-                return new AddUpdateDelete() { Status = true, Message = "B$" + ServiceFees.ToString() + " will be deducted from your " + calendar[0]["CALENDAR_NAME"].ToString() + " Calendar package.<br />(Balance after purchase B$" + (Convert.ToInt32(balance.Data) - ServiceFees).ToString() + ")" };
+                
 
 
             }

@@ -350,7 +350,7 @@ function tabsActive(param=0) {
             //$(target + ' div.calendar').fullCalendar('refetchEvents');
             $('body .popover').remove();
             $.cookie("calendar-activeView", $('a[href="' + target + '"]').parent().index(), { expires: 365, path: '/' });
-
+            window.location.href = target;
             $(target + ' div.calendar').fullCalendar('rerenderEvents');
         }
     });
