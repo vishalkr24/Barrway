@@ -434,9 +434,7 @@
                     <div class="event-detail div-flex">
                         <div class="div-flex">
                             <div class="title">
-                                <label class="pr-2">
-                                    {{selectEventDetails.description}}
-                                </label>
+
                                 <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
                                     <span class="titleContainer">
                                         <span ng-class="{'text-muted': d.customClass == 'true' , 'title1': d.customClass == 'false'}"> {{d.formTitle}}</span>
@@ -455,15 +453,13 @@
 
                             <input value="{{selectEventDetails.Id}}" id="newtag-inputHidden" type="hidden">
 
-
-
                             <div ng-repeat="tag in totalSelectListTagify">
                                 <input value="{{selectEventDetails[tag.name]}}" id="newtag-inputHidden{{tag.name}}" type="hidden">
                                 <input value="{{tag.name}}" id="newtag-inputHidden{{selectEventDetails.Id}}" type="hidden">
                                 <input id="newtag-input{{tag.name}}" type="text" value="{{selectEventDetails[tag.name]}}" placeholder="Add tags">
                             </div>
 
-                            <p>{{selectEventDetails.DESCRIPTION}} </p>
+                            <label class="pr-2" style="font-weight: 400;" ng-bind-html="selectEventDetails.description | safeHtml"></label>
 
                         </div>
                     </div>

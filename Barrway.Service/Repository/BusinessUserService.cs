@@ -2307,6 +2307,7 @@ namespace Barrway.Service.Repository
                                       ,[DISTRICT_ID] = '{model.DISTRICT_ID}'
                                       ,[CALENDAR_CATEGORY_ID] = '{model.CALENDAR_CATEGORY_ID}'
                                       ,[CALENDAR_SUB_CATEGORY_ID] = '{model.CALENDAR_SUB_CATEGORY_ID}'
+                                      ,[CALENDAR_USE_TYPE] = '{model.CALENDAR_USE_TYPE}'
                                       ,[COMPANY_CODE] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_CODE)}'
                                  WHERE Id = '{model.Id}'
                                  ";

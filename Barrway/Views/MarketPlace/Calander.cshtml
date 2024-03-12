@@ -903,9 +903,7 @@
                     <div class="event-detail div-flex">
                         <div class="div-flex">
                             <div class="title">
-                                <label class="pr-2">
-                                    {{selectEventDetails.description}}
-                                </label>
+                                
                                 <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
                                     <div style="display:block" class="titleContainer">
                                         <p class="title1" style="font-size:16px;font-weight:600">
@@ -936,8 +934,6 @@
                                 <input id="newtag-input{{tag.name}}" type="text" value="{{selectEventDetails[tag.name]}}" placeholder="Add tags">
                             </div>
 
-                            <p>{{selectEventDetails.DESCRIPTION}} </p>-
-
                         </div>
                     </div>
                     <div class="div-flex div-list-bar"></div>
@@ -946,11 +942,16 @@
                             <h5 class="list-title mb-0" id="newtabuList"></h5>
 
                         </div>
+
+                        <label class="pr-2" style="margin-top: 20px; font-weight: 400;" ng-bind-html="selectEventDetails.description | safeHtml">
+                        </label>
+
                         <ol id="newtabuListUl">
                         </ol>
                         <label id="labelWaiting"></label>
                         <ul id="newtabuListUlWaiting">
                         </ul>
+
                     </div>
                     <div class="div-flex div-list">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal">Cancel</button>
@@ -977,8 +978,7 @@
                     <div class="event-detail div-flex">
                         <div class="div-flex">
                             <div class="title">
-                                <label class="pr-2">
-                                    {{selectEventDetails.description}}
+                                <label class="pr-2" style=" font-weight: 400;" ng-bind-html="selectEventDetails.description | safeHtml">
                                 </label>
                                 <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
                                     <div style="display:block" class="titleContainer">
@@ -1003,8 +1003,6 @@
                                 <input value="{{tag.name}}" id="newtag-inputHidden{{selectEventDetails.Id}}" type="hidden">
                                 <input id="newtag-input{{tag.name}}" type="text" value="{{selectEventDetails[tag.name]}}" placeholder="Add tags">
                             </div>
-                            <p>{{selectEventDetails.DESCRIPTION}} </p>
-
                         </div>
                     </div>
                     <div class="div-flex div-list-bar"></div>
@@ -1107,16 +1105,16 @@
             angular.element($("#dateRangePickerModel")).scope().selectedStartDate = "DD-MM-YYYY";
             angular.element($("#dateRangePickerModel")).scope().selectedEndDate = "DD-MM-YYYY";
 
-            $rootScope.safeApply = function (fn) {
-                var phase = this.$root.$$phase;
-                if (phase == '$apply' || phase == '$digest') {
-                    if (fn && (typeof (fn) === 'function')) {
-                        fn();
-                    }
-                } else {
-                    this.$apply(fn);
-                }
-            };
+            //$rootScope.safeApply = function (fn) {
+            //    var phase = this.$root.$$phase;
+            //    if (phase == '$apply' || phase == '$digest') {
+            //        if (fn && (typeof (fn) === 'function')) {
+            //            fn();
+            //        }
+            //    } else {
+            //        this.$apply(fn);
+            //    }
+            //};
 
             $scope.enrollPublicUser = function () {
                 console.log($scope.selectEventDetails);
@@ -1186,7 +1184,7 @@
                                                     ACTIVITY_NAME: eventData.customTitleSplit[1],
                                                     FormGroupKey: $scope.selectEventDetails.formGroupKey,
                                                     participant: {
-                                                        DESCRIPTION: eventData.description,
+                                                        DESCRIPTION: String(eventData.description),
                                                         COMPANY_CODE: eventData.COMPANY_CODE,
                                                         CALENDAR_CODE: eventData.CALENDAR_CODE
                                                     },
@@ -1363,6 +1361,10 @@
 
             }
 
+        }).filter('safeHtml', function ($sce) {
+            return function (val) {
+                return $sce.trustAsHtml(val);
+            };
         });
 
 

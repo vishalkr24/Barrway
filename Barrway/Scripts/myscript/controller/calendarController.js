@@ -16164,7 +16164,11 @@
 
 
         $scope.init();
-    });
+    }).filter('safeHtml', function ($sce) {
+        return function (val) {
+            return $sce.trustAsHtml(val);
+        };
+    });;
 
     FormGeneratorApp.controller('UserAdminCalendarController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
         checkLogin();
@@ -16219,7 +16223,11 @@
             }
         }
 
-    })
+    }).filter('safeHtml', function ($sce) {
+        return function (val) {
+            return $sce.trustAsHtml(val);
+        };
+    });
 
     FormGeneratorApp.controller('UserDashboardController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
 
