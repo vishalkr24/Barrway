@@ -86,7 +86,16 @@
     <div>
         @RenderBody()
     </div>
-    <section class="bottom-nav">
+
+    <style>
+        .bottom-nav .nav > li > a {
+            position: relative;
+            display: block;
+            padding: 10px 10px;
+        }
+    </style>
+
+    <section class="bottom-nav" style="position: sticky; bottom: 0px; z-index: 1000; background: white; border-top: 1px solid #ebebeb;">
         <nav class="navbar">
             <div class="container">
                 <div class="navbar-header">
