@@ -906,13 +906,13 @@
                                 
                                 <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
                                     <div style="display:block" class="titleContainer">
-                                        <p class="title1" style="font-size:16px;font-weight:600">
+                                        @*<p class="title1" style="font-size:16px;font-weight:600">
                                             {{d.dropdownListData.title}}
                                             <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
                                             <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
                                             <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
-                                        </p>
-                                        <p class="title1"> {{d.formTitle}}</p>
+                                        </p>*@
+                                        <p class="title1" style="font-weight:bold; font-size: 16px;"> {{d.formTitle}}</p>
                                     </div>
                                 </div>
 
@@ -925,8 +925,6 @@
                             <div ng-if="selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
 
                             <input value="{{selectEventDetails.Id}}" id="newtag-inputHidden" type="hidden">
-
-
 
                             <div ng-repeat="tag in totalSelectListTagify">
                                 <input value="{{selectEventDetails[tag.name]}}" id="newtag-inputHidden{{tag.name}}" type="hidden">

@@ -517,7 +517,11 @@ namespace Barrway.Service.Repository
             {
                 List<CustomFilter> customFilters = new List<CustomFilter>();
                 customFilters.Add(new CustomFilter() { FieldName = "COMPANY_CODE", Value = companyCode });
-                customFilters.Add(new CustomFilter() { FieldName = "CALENDAR_CODE", Value = calendarCode });
+                if (resourceActivityForm != "2304")
+                {
+                    customFilters.Add(new CustomFilter() { FieldName = "CALENDAR_CODE", Value = calendarCode });
+                }
+                
                 JsonTreeModel jsonTree = new JsonTreeModel() { 
                 root= root,
                 title= title,

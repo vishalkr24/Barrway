@@ -65,8 +65,6 @@ async function usercalendarLoad() {
         calendarDetails = (await getCalendarDetails(calenderSettings[0].formDataList[0].CALENDAR_CODE)).Data;
     }
     
-
-
     if (calenderSettings.length > 0) {
 
         var caledarConfig = calenderSettings;
