@@ -26,14 +26,16 @@ namespace Barrway.Controllers
         private readonly ICalendarService calendarService;
         private readonly IPublicUserService publicUserService;
         private readonly IBusinessUserService businessUserService;
+        private readonly IMasterService masterService;
 
         // GET: FormAPI
-        public FormAPIController(IFormAPIRepository formAPIRepository, ICalendarService calendarService, IPublicUserService publicUserService, IBusinessUserService businessUserService)
+        public FormAPIController(IFormAPIRepository formAPIRepository, ICalendarService calendarService, IPublicUserService publicUserService, IBusinessUserService businessUserService, IMasterService masterService)
         {
             this.formAPIRepository = formAPIRepository;
             this.calendarService = calendarService;
             this.publicUserService = publicUserService;
             this.businessUserService = businessUserService;
+            this.masterService = masterService;
         }
 
         [HttpPost]
@@ -108,7 +110,8 @@ namespace Barrway.Controllers
         [HttpPost]
         public async Task<ActionResult> GetFormRecordList(GenerateDynamicFormData data)
         {
-            if (User.Identity != null) {
+            if (User.Identity != null)
+            {
                 var role = UserIdentity.Role;
 
                 if (role == "PUBLIC_USER" && (data.formId == (int)FormSetting.PAYMENT_HISTORY_MASTER || data.formId == (int)FormSetting.LEDGER_MASTER))
@@ -413,7 +416,283 @@ namespace Barrway.Controllers
                         }
                     });
                 }
+
+                if (data.IsListView)
+                {
+                    // filter out available slots
+                    
+                    List<string> resourceList = new List<string>();
+                    result.events.ForEach(x =>
+                    {
+                        if (resourceList.Count > 0)
+                        {
+                            if (!resourceList.Contains(x["resources"]?.ToString()))
+                            {
+                                resourceList.Add(x["resources"]?.ToString());
+                            }
+                        }
+                        else
+                        {
+                            resourceList.Add(x["resources"]?.ToString());
+                        }
+                        
+                    });
+                    
+                    List<IDictionary<string, object>> Temp = new List<IDictionary<string, object>>();
+
+                    DateTime StartTime = Convert.ToDateTime(data.startDate);
+                    DateTime EndTime = Convert.ToDateTime(data.endDate);
+
+                    foreach (var resource in resourceList)
+                    {
+                        var events = result.events.Where(x=> x["resources"]?.ToString() == resource).ToList();
+
+                        while (StartTime <= EndTime)
+                        {
+                            DateTime SlotStart = DateTime.Now;
+                            DateTime SlotEnd = DateTime.Now;
+
+                            bool breakFromWhile = false;
+                            Dictionary<string, DateTime> slot = new Dictionary<string, DateTime>();
+
+                            for (int i = 0; i < events.Count; i++)
+                            {
+                                var ev = events[i];
+                                if (Convert.ToDateTime(ev["start"]) <= StartTime)
+                                {
+                                    // is worst case
+                                    if (Convert.ToDateTime(ev["end"]) >= EndTime)
+                                    {
+                                        breakFromWhile = true;
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        StartTime = Convert.ToDateTime(ev["end"]).AddDays(1);
+                                        SlotStart = StartTime;
+                                    }
+                                }
+                                else
+                                {
+                                    if (i == events.Count-1)
+                                    {
+                                        SlotEnd = EndTime;
+                                        StartTime = EndTime;
+                                    }
+                                    else
+                                    {
+                                        if (Convert.ToDateTime(events[i + 1]["start"]) >= SlotStart)
+                                        {
+                                            SlotEnd = Convert.ToDateTime(events[i + 1]["start"]).AddDays(-1);
+                                            StartTime = Convert.ToDateTime(events[i + 1]["start"]);
+                                            break;
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                            }
+
+                            if (breakFromWhile)
+                                break;
+                            else
+                            {
+                                slot.Add("start", SlotStart);
+                                slot.Add("end", SlotEnd);
+                                var newEvent = events.FirstOrDefault();
+                                newEvent["start"] = SlotStart.ToString("yyyy-MM-ddT00:00:00");
+                                newEvent["end"] = SlotEnd.ToString("yyyy-MM-ddT23:59:59");
+                                int index = newEvent["customForms"].ToString().Split(',').ToList().IndexOf("2306");
+                                var list = newEvent["customTitle"].ToString().Split(',');
+                                newEvent["title"] = list[index];
+                                Temp.Add(newEvent);
+                            }
+                            
+                            StartTime = StartTime.AddDays(1);
+                        }
+                    }
+                    
+                    result.events = Temp;
+                }
             }
+
+            if (!data.IsPublicUser)
+            {
+                var calendarDetailsResult = await businessUserService.GetCalendarDetails(data.CALENDAR_CODE);
+                if (calendarDetailsResult.Status)
+                {
+                    var calendarDetails = calendarDetailsResult.Data as IDictionary<string, object>;
+                    if (calendarDetails.ContainsKey("category") && calendarDetails["category"] != null)
+                    {
+                        var calendarCategory = calendarDetails["category"] as IDictionary<string, object>;
+                        if (calendarCategory.ContainsKey("IS_SERVICE_TYPE"))
+                        {
+                            string is_service_type = calendarCategory["IS_SERVICE_TYPE"]?.ToString() ?? "";
+                            if (is_service_type != "N")
+                            {
+                                if (result != null && result.events != null)
+                                {
+                                    result.events = result.events.Where(x => x.ContainsKey("EVENT_TYPE") && x["EVENT_TYPE"]?.ToString() != "BOOKING").ToList();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return Json(result.ToDictionary(), JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> getReferralFormFieldsListView(Form_DataTable data)
+        {
+            if (!string.IsNullOrEmpty(data?.COMPANY_CODE) || !string.IsNullOrEmpty(data?.CALENDAR_CODE))
+            {
+
+                if (data.filter != null)
+                {
+                    if (data.IsPublicUser)
+                    {
+                        if (data.IsCustomInFilter)
+                        {
+                            data.filter.value = data.filter.value + " and F.COMPANY_CODE in (" + data.COMPANY_CODE + ")";
+                        }
+                        else
+                        {
+                            data.filter.value = data.filter.value + " and F.COMPANY_CODE=N'" + data.COMPANY_CODE + "'";
+                        }
+                    }
+                    else
+                    {
+                        data.filter.value = data.filter.value + " and F.COMPANY_CODE=N'" + data.COMPANY_CODE + "' and F.CALENDAR_CODE=N'" + data.CALENDAR_CODE + "'";
+                    }
+
+                }
+            }
+
+            ReferalFormDataResponseModel result = await formAPIRepository.getReferralFormFields(data);
+
+            if (result != null)
+            {
+                if (result.events != null && result.events.Count() > 0)
+                {
+                    result.events.ForEach(e =>
+                    {
+                        if (e.ContainsKey("start") && e["start"] != null)
+                        {
+                            e["start"] = Convert.ToDateTime(e["start"]).ToString("yyyy-MM-ddTHH:mm:ss");
+                        }
+                        if (e.ContainsKey("end") && e["end"] != null)
+                        {
+                            e["end"] = Convert.ToDateTime(e["end"]).ToString("yyyy-MM-ddTHH:mm:ss");
+                        }
+                        if (e.ContainsKey("title") && e["title"] != null)
+                        {
+                            e["title"] = "";
+                        }
+                    });
+                }
+
+                if (data.IsListView)
+                {
+                    // filter out available slots
+
+                    var resourceData = await masterService.GetLocationMasterList(new GenerateDynamicFormData() { action = 1,size = 50, filters = new List<FilterDTO> { new FilterDTO() { type = "=", field = "CALENDAR_CODE", value = data.CALENDAR_CODE} } }, data.COMPANY_CODE, data.CALENDAR_CODE);
+
+                    var resourceList = resourceData.Data as List<IDictionary<string, object>>;
+
+                    List<IDictionary<string, object>> Temp = new List<IDictionary<string, object>>();
+
+                    //foreach (var resource in resourceList)
+                    //{
+                    //    DateTime StartTime = Convert.ToDateTime(data.startDate);
+                    //    DateTime EndTime = Convert.ToDateTime(data.endDate);
+
+                    //    var events = result.events.Where(x => x["resources"]?.ToString() == resource["Id"]?.ToString()).ToList();
+
+                    //    while (StartTime <= EndTime)
+                    //    {
+                    //        DateTime SlotStart = DateTime.Now;
+                    //        DateTime SlotEnd = EndTime;
+
+                    //        bool breakFromWhile = false;
+                    //        Dictionary<string, DateTime> slot = new Dictionary<string, DateTime>();
+
+                    //        if (events.Count > 0)
+                    //        {
+                    //            for (int i = 0; i < events.Count; i++)
+                    //            {
+                    //                var ev = events[i];
+                    //                if (Convert.ToDateTime(ev["start"]) <= StartTime)
+                    //                {
+                    //                    // is worst case
+                    //                    if (Convert.ToDateTime(ev["end"]) >= EndTime)
+                    //                    {
+                    //                        breakFromWhile = true;
+                    //                        break;
+                    //                    }
+                    //                    else
+                    //                    {
+                    //                        StartTime = Convert.ToDateTime(ev["end"]).AddDays(1);
+                    //                        SlotStart = StartTime;
+                    //                    }
+                    //                }
+                    //                else
+                    //                {
+                    //                    if (i == events.Count - 1)
+                    //                    {
+                    //                        SlotEnd = EndTime;
+                    //                        StartTime = EndTime;
+                    //                    }
+                    //                    else
+                    //                    {
+                    //                        if (Convert.ToDateTime(events[i + 1]["start"]) >= SlotStart)
+                    //                        {
+                    //                            SlotEnd = Convert.ToDateTime(events[i + 1]["start"]).AddDays(-1);
+                    //                            StartTime = Convert.ToDateTime(events[i + 1]["start"]);
+                    //                            break;
+                    //                        }
+                    //                    }
+                    //                }
+                    //            }
+
+                    //            if (breakFromWhile)
+                    //                break;
+                    //            else
+                    //            {
+                    //                BarrwayCalendarFormFields model = new BarrwayCalendarFormFields();
+                    //                model.resources = resource["Id"]?.ToString();
+                    //                model.resourceId = resource["Id"]?.ToString();
+                    //                model.start = SlotStart.ToString("yyyy-MM-ddT00:00:00");
+                    //                model.end = SlotEnd.ToString("yyyy-MM-ddT23:59:59");
+                    //                model.title = resource["LOCATION_ADDRESS"]?.ToString();
+                    //                model.CALENDAR_CODE = data.CALENDAR_CODE;
+                    //                model.COMPANY_CODE = data.COMPANY_CODE;
+                    //                Temp.Add(JsonConvert.DeserializeObject<IDictionary<string, object>>(JsonConvert.SerializeObject(model)));
+                    //            }
+                    //        }
+                    //        else
+                    //        {
+                    //            BarrwayCalendarFormFields model = new BarrwayCalendarFormFields();
+                    //            model.resources = resource["Id"]?.ToString();
+                    //            model.resourceId = resource["Id"]?.ToString();
+                    //            model.start = model.end;
+                    //            model.title = resource["LOCATION_ADDRESS"]?.ToString();
+                    //            model.CALENDAR_CODE = data.CALENDAR_CODE;
+                    //            model.COMPANY_CODE = data.COMPANY_CODE;
+                    //            Temp.Add(JsonConvert.DeserializeObject<IDictionary<string, object>>(JsonConvert.SerializeObject(model)));
+                    //        }
+                            
+
+                    //        StartTime = StartTime.AddDays(1);
+                    //    }
+                    //}
+
+                    result.events = Temp;
+                }
+            }
+
             if (!data.IsPublicUser)
             {
                 var calendarDetailsResult = await businessUserService.GetCalendarDetails(data.CALENDAR_CODE);

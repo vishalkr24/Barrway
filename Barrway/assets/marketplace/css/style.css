@@ -1292,6 +1292,7 @@ section.bottom-nav .com-det {
 .public-primary, .public-primary:hover {
     background: #E2476C;
     border-color: #E2476C;
+    color: #fff;
     cursor: pointer;
 }
 .public-cancel, .public-cancel:hover {
