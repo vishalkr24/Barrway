@@ -1157,9 +1157,10 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 listMonth: { buttonText: 'month' },
                 listYear: { buttonText: 'year' }
             },
-            defaultView: 'listDay',
+            defaultView: 'listWeek',
             defaultDate: new Date(),
             // events: calenderData,
+           
             events: function (start, end, timezone, callback) {
 
                 var $scope = angular.element($("#calendar")).scope();
@@ -1179,10 +1180,16 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 param.filter.field = "start";
                 param.COMPANY_CODE = COMPANY_CODE;
                 param.CALENDAR_CODE = CALENDAR_CODE;
-                //showLoader();
+                debugger;
+                if (calendarDetails["CALENDAR_CATEGORY_ID"] == "4" && calendarDetails["CALENDAR_TYPE"] == "3") {
+                    param.IsListView = true;
+                    param.startDate = moment(start).format("YYYY-MM-DD");
+                    param.endDate = moment(end).format("YYYY-MM-DD");
+                }
+
                 $.ajax({
                     method: 'POST',
-                    url: BASE_URL + "/FormAPI/getReferralFormFields",
+                    url: BASE_URL + "/FormAPI/" + ((calendarDetails["CALENDAR_CATEGORY_ID"] == "4" && calendarDetails["CALENDAR_TYPE"] == "3") ? "getReferralFormFieldsListView" : "getReferralFormFields" ),
                     dataType: 'json',
                     contentType: "application/json",
                     data: JSON.stringify(param),

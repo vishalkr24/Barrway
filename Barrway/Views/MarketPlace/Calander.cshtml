@@ -193,6 +193,18 @@
             margin-bottom: 4px;
         }
 
+        #list-view table.fc-list-table .fc-list-item td a {
+            padding: 6px 12px;
+            background: #3a87ad;
+            color: white;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        #list-view table.fc-list-table tr.fc-list-item {
+            display: block;
+        }
+
         .fc-content.fcTime .fc-content {
             color: #fff;
             padding: 0px 5px;
@@ -630,6 +642,7 @@
         .fc-bgevent {
             border-radius: 0px !important;
         }
+
         .swal-button--confirm, .swal-button--confirm:hover {
             background: #E2476C;
             border-color: #E2476C;
@@ -637,9 +650,11 @@
             min-width: 120px;
             border-radius: 100px;
         }
+
         .swal-button:not([disabled]):hover {
             background-color: #E2476C;
         }
+
         .swal-button--cancel, .swal-button--cancel:hover {
             cursor: pointer;
             border: 1px solid #777777;
@@ -881,10 +896,8 @@
                             </div>
                         </div>
 
-                        <div ui-calendar="{{uiConfig.calendar}}"
-                             calendar="myCalendar"
-                             class="span8 calendar"
-                             ng-model="eventSources"></div>
+                        <div ui-calendar="{{uiConfig.calendar}}" calendar="myCalendar" class="span8 calendar" ng-model="eventSources">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -903,15 +916,15 @@
                     <div class="event-detail div-flex">
                         <div class="div-flex">
                             <div class="title">
-                                
+
                                 <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
                                     <div style="display:block" class="titleContainer">
                                         @*<p class="title1" style="font-size:16px;font-weight:600">
-                                            {{d.dropdownListData.title}}
-                                            <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
-                                            <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
-                                            <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
-                                        </p>*@
+                                                {{d.dropdownListData.title}}
+                                                <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
+                                                <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
+                                                <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
+                                            </p>*@
                                         <p class="title1" style="font-weight:bold; font-size: 16px;"> {{d.formTitle}}</p>
                                     </div>
                                 </div>
@@ -1130,7 +1143,7 @@
                                 icon: "info",
                                 buttons: {
                                     cancel: "Leave it",
-                                    confirm: "Login"                                    
+                                    confirm: "Login"
                                 }
                             }).then(function (value) {
                                 if (value) {
@@ -1155,15 +1168,15 @@
                                         debugger;
                                         const wrapper = document.createElement('div');
                                         wrapper.innerHTML = `<div>
-                                                                                                    ${eventData.customDate}
-                                                                                                </div>
-                                                                                                <div>
-                                                                                                    ${eventData.customTime}
-                                                                                                </div>
-                                                                                                <div>${eventData.customTitleSplit[2]}</div><br />
-                                                                                                <div>${eventData.customTitleSplit[1]}</div>
-                                                                                                <div>${eventData.customTitleSplit[0]}</div><br />
-                                                                                                <h4 style="color:red">${response.Message}</h4>`;
+                                                                                                            ${eventData.customDate}
+                                                                                                        </div>
+                                                                                                        <div>
+                                                                                                            ${eventData.customTime}
+                                                                                                        </div>
+                                                                                                        <div>${eventData.customTitleSplit[2]}</div><br />
+                                                                                                        <div>${eventData.customTitleSplit[1]}</div>
+                                                                                                        <div>${eventData.customTitleSplit[0]}</div><br />
+                                                                                                        <h4 style="color:red">${response.Message}</h4>`;
 
                                         swal({
                                             title: "You are going to book",
