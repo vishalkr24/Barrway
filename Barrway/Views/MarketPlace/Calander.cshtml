@@ -193,23 +193,34 @@
             margin-bottom: 4px;
         }
 
-        #list-view table.fc-list-table .fc-list-item td a {
-            padding: 6px 12px;
-            background: #3a87ad;
-            color: white;
-            border-radius: 6px;
-            font-size: 13px;
-        }
-
-        #list-view table.fc-list-table tr.fc-list-item {
-            display: block;
-        }
-
         .fc-content.fcTime .fc-content {
             color: #fff;
             padding: 0px 5px;
             margin: 3px 3px 3px;
         }
+
+        .fc-list-table .event-list-5C {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 8px 14px;
+            margin: 6px;
+            margin-bottom: 0px;
+            background: #e9e9e9;
+            border-radius: 6px;
+        }
+
+            .fc-list-table .event-list-5C .C-element {
+                margin-right: 16px;
+            }
+
+                .fc-list-table .event-list-5C .C-element.C-resource {
+                    padding: 6px 12px;
+                    background: #3a87ad;
+                    color: white;
+                    border-radius: 6px;
+                    font-size: 13px;
+                }
 
         .fc-content.fcTime small.time {
             color: #7b7b7b;
@@ -1061,9 +1072,11 @@
                         @Resource.Location : <span style="font-size: 16px; font-weight: bold; color: #E2476C;" id="selectedLocationName"></span>
                     </div>
                     <div style="margin-bottom:16px;">
-                        @Resource.Date : <span style="font-size: 15px; font-weight: bold;" id="startEndDate"></span>
+                        @Resource.Date :
+                        <input type="text" id="startListViewDate" onkeydown="return false;" style="border: none; outline: none; font-weight: bold; width: 90px; "/> to  <input type="text" onkeydown="return false;" id="endListViewDate" style="border: none; outline: none; font-weight: bold; width: 90px; " />
                     </div>
-
+                    
+                    
 
                     <div style="display:flex; border: 1px solid lightgrey;">
                         <input type="number" id="date-counter" class="form-control" style="border:none; outline:none;" min="1" placeholder="5" value="1" />
@@ -1168,15 +1181,15 @@
                                         debugger;
                                         const wrapper = document.createElement('div');
                                         wrapper.innerHTML = `<div>
-                                                                                                            ${eventData.customDate}
-                                                                                                        </div>
-                                                                                                        <div>
-                                                                                                            ${eventData.customTime}
-                                                                                                        </div>
-                                                                                                        <div>${eventData.customTitleSplit[2]}</div><br />
-                                                                                                        <div>${eventData.customTitleSplit[1]}</div>
-                                                                                                        <div>${eventData.customTitleSplit[0]}</div><br />
-                                                                                                        <h4 style="color:red">${response.Message}</h4>`;
+                                                                                                                    ${eventData.customDate}
+                                                                                                                </div>
+                                                                                                                <div>
+                                                                                                                    ${eventData.customTime}
+                                                                                                                </div>
+                                                                                                                <div>${eventData.customTitleSplit[2]}</div><br />
+                                                                                                                <div>${eventData.customTitleSplit[1]}</div>
+                                                                                                                <div>${eventData.customTitleSplit[0]}</div><br />
+                                                                                                                <h4 style="color:red">${response.Message}</h4>`;
 
                                         swal({
                                             title: "You are going to book",
@@ -1294,6 +1307,21 @@
             $scope.enrollPublicUserForRental = function () {
 
                 showLoader();
+                debugger;
+                try {
+                    let test1 = moment($scope.selectEventDetails.start);
+                    let test2 = moment($scope.selectEventDetails.end)
+                    if (!test1.isValid() || !test2.isValid()) {
+                        alert('Please select date range');
+                        hideLoader();
+                        return;
+                    }
+                } catch (ex) {
+                    alert('Please select date range');
+                    hideLoader();
+                    return;
+                }
+                
                 $.ajax({
                     url: "/Account/CheckPublicUserLogin",
                     type: "POST",
