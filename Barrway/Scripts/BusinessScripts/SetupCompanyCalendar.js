@@ -24,8 +24,16 @@ $(document).ready(function () {
         if ($("#createCalendarCheck").val() == true || $("#createCalendarCheck").val() == "true" ) {
             $(".row-reverse").attr("style", "flex-direction:row-reverse");
         }
-        
     }
+
+    $("#DISPLAY_MIN_TIME").datetimepicker({
+        format: "hh:mm A"
+    });
+
+    $("#DISPLAY_MAX_TIME").datetimepicker({
+        format: "hh:mm A"
+    });
+
 });
 
 function readyPage() {
@@ -96,6 +104,7 @@ function setCurrentCalendarData() {
         }
 
         $("#CALENDAR_USE_TYPE").val(data.Data.CALENDAR_USE_TYPE);
+        $("#DEFAULT_RESOURCE").val(data.Data.DEFAULT_RESOURCE);
     }
 
 }

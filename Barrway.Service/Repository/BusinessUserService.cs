@@ -2308,6 +2308,9 @@ namespace Barrway.Service.Repository
                                       ,[CALENDAR_CATEGORY_ID] = '{model.CALENDAR_CATEGORY_ID}'
                                       ,[CALENDAR_SUB_CATEGORY_ID] = '{model.CALENDAR_SUB_CATEGORY_ID}'
                                       ,[CALENDAR_USE_TYPE] = '{model.CALENDAR_USE_TYPE}'
+                                      ,[DISPLAY_MIN_TIME] = '{model.DISPLAY_MIN_TIME}'
+                                      ,[DISPLAY_MAX_TIME] = '{model.DISPLAY_MAX_TIME}'
+                                      ,[DEFAULT_RESOURCE] = '{model.DEFAULT_RESOURCE}'
                                       ,[COMPANY_CODE] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_CODE)}'
                                  WHERE Id = '{model.Id}'
                                  ";

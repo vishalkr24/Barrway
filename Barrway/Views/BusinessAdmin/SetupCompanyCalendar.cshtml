@@ -445,6 +445,25 @@
 
                                             </div>
 
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="TAGS">Min. Time</label>
+                                                        <div class="tom-select-custom">
+                                                            @Html.TextBoxFor(model => model.DISPLAY_MIN_TIME, new { @class = "form-control", @placeholder = "Calendar min time", @required = "true" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="TAGS">Max. Time</label>
+                                                        <div class="tom-select-custom">
+                                                            @Html.TextBoxFor(model => model.DISPLAY_MAX_TIME, new { @class = "form-control", @placeholder = "Calendar max time", @required = "true" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <div class="form-group" style="display:none;">
                                                 <label for="cala">Calendar category *</label>
 
@@ -463,6 +482,22 @@
 
                                             </div>
 
+                                            <div class="form-group">
+                                                <label for="sub">Default Resource</label>
+
+                                                <select required id="DEFAULT_RESOURCE" name="DEFAULT_RESOURCE" class="form-control" value="@Model.DEFAULT_RESOURCE" >
+                                                    <option value="LOCATION">
+                                                        Location
+                                                    </option>
+                                                    <option value="SERVICE PROVIDER">
+                                                        Service Provider
+                                                    </option>
+                                                </select>
+                                                @Html.ValidationMessageFor(model => model.DEFAULT_RESOURCE, "", new { @class = "invalid-feedback-2" })
+
+
+                                            </div>
+
                                             <div class="form-group" style="display:none;">
                                                 <label for="calendarname">@Resource.Slot_Duration_in_Mins*</label>
 
@@ -473,14 +508,14 @@
                                             </div>
 
                                             @*<div class="form-group">
-                                                <label for="TAGS">@Resource.Tags</label>
-                                                <div class="tom-select-custom">
-                                                    @Html.DropDownListFor(model => model.TAGS, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "js-select form-select", @multiple = "true", @autocomplete = "off" })
-                                                </div>
+            <label for="TAGS">@Resource.Tags</label>
+            <div class="tom-select-custom">
+                @Html.DropDownListFor(model => model.TAGS, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "js-select form-select", @multiple = "true", @autocomplete = "off" })
+            </div>
 
-                                                @Html.ValidationMessageFor(model => model.TAGS, "", new { @class = "invalid-feedback-2" })
+            @Html.ValidationMessageFor(model => model.TAGS, "", new { @class = "invalid-feedback-2" })
 
-                                            </div>*@
+        </div>*@
                                             <div class="form-group">
                                                 <p style="margin-bottom: 0px;"><label for="file">@Resource.Calendar_photo</label></p>
                                                 <div class="custome-uploade">

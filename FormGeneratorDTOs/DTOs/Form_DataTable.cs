@@ -136,6 +136,7 @@ namespace FormGeneratorDTOs.DTOs
         public string customerForms { get; set; }
         public string customFormIds { get; set; }
         public string EVENT_TYPE { get; set; }
+        public bool IsLastEvent { get; set; } = false;
     }
 
     public class FormFieldList

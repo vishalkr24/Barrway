@@ -416,104 +416,6 @@ namespace Barrway.Controllers
                         }
                     });
                 }
-
-                if (data.IsListView)
-                {
-                    // filter out available slots
-                    
-                    List<string> resourceList = new List<string>();
-                    result.events.ForEach(x =>
-                    {
-                        if (resourceList.Count > 0)
-                        {
-                            if (!resourceList.Contains(x["resources"]?.ToString()))
-                            {
-                                resourceList.Add(x["resources"]?.ToString());
-                            }
-                        }
-                        else
-                        {
-                            resourceList.Add(x["resources"]?.ToString());
-                        }
-                        
-                    });
-                    
-                    List<IDictionary<string, object>> Temp = new List<IDictionary<string, object>>();
-
-                    DateTime StartTime = Convert.ToDateTime(data.startDate);
-                    DateTime EndTime = Convert.ToDateTime(data.endDate);
-
-                    foreach (var resource in resourceList)
-                    {
-                        var events = result.events.Where(x=> x["resources"]?.ToString() == resource).ToList();
-
-                        while (StartTime <= EndTime)
-                        {
-                            DateTime SlotStart = DateTime.Now;
-                            DateTime SlotEnd = DateTime.Now;
-
-                            bool breakFromWhile = false;
-                            Dictionary<string, DateTime> slot = new Dictionary<string, DateTime>();
-
-                            for (int i = 0; i < events.Count; i++)
-                            {
-                                var ev = events[i];
-                                if (Convert.ToDateTime(ev["start"]) <= StartTime)
-                                {
-                                    // is worst case
-                                    if (Convert.ToDateTime(ev["end"]) >= EndTime)
-                                    {
-                                        breakFromWhile = true;
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        StartTime = Convert.ToDateTime(ev["end"]).AddDays(1);
-                                        SlotStart = StartTime;
-                                    }
-                                }
-                                else
-                                {
-                                    if (i == events.Count-1)
-                                    {
-                                        SlotEnd = EndTime;
-                                        StartTime = EndTime;
-                                    }
-                                    else
-                                    {
-                                        if (Convert.ToDateTime(events[i + 1]["start"]) >= SlotStart)
-                                        {
-                                            SlotEnd = Convert.ToDateTime(events[i + 1]["start"]).AddDays(-1);
-                                            StartTime = Convert.ToDateTime(events[i + 1]["start"]);
-                                            break;
-                                        }
-                                        
-                                    }
-                                    
-                                }
-                            }
-
-                            if (breakFromWhile)
-                                break;
-                            else
-                            {
-                                slot.Add("start", SlotStart);
-                                slot.Add("end", SlotEnd);
-                                var newEvent = events.FirstOrDefault();
-                                newEvent["start"] = SlotStart.ToString("yyyy-MM-ddT00:00:00");
-                                newEvent["end"] = SlotEnd.ToString("yyyy-MM-ddT23:59:59");
-                                int index = newEvent["customForms"].ToString().Split(',').ToList().IndexOf("2306");
-                                var list = newEvent["customTitle"].ToString().Split(',');
-                                newEvent["title"] = list[index];
-                                Temp.Add(newEvent);
-                            }
-                            
-                            StartTime = StartTime.AddDays(1);
-                        }
-                    }
-                    
-                    result.events = Temp;
-                }
             }
 
             if (!data.IsPublicUser)
@@ -611,158 +513,57 @@ namespace Barrway.Controllers
 
                     foreach (var resource in resourceList)
                     {
-                        DateTime StartTime = (Convert.ToDateTime(data.startDate).Year > DateTime.Now.Year)? Convert.ToDateTime(data.startDate) : DateTime.Now;
-                        DateTime EndTime = Convert.ToDateTime(data.endDate);
+                        DateTime startDate = (Convert.ToDateTime(data.startDate).Year > DateTime.Now.Year)? Convert.ToDateTime(data.startDate) : DateTime.Now;
+                        DateTime endDate = Convert.ToDateTime(data.endDate).AddDays(-1);
 
                         var events = result.events.Where(x => x["resources"]?.ToString() == resource["Id"]?.ToString()).ToList();
 
                         if (events.Count > 0)
                         {
                             events = events.OrderBy(x => Convert.ToDateTime(x["start"])).ToList();
+
+                            List<(DateTime, DateTime)> ps = new List<(DateTime, DateTime)>();
+
+                            events.ForEach(x => {
+                                ps.Add((Convert.ToDateTime(x["start"]), Convert.ToDateTime(x["end"])));
+                            });
+
                         }
 
-                        while (StartTime <= EndTime)
+                        DateTime rangeStart = startDate;
+                        foreach (var ev in events)
                         {
-                            DateTime SlotStart = StartTime;
-                            DateTime SlotEnd = EndTime;
-
-                            bool breakFromWhile = false;
-                            Dictionary<string, DateTime> slot = new Dictionary<string, DateTime>();
-
-                            if (events.Count > 0)
-                            {
-                                for (int i = 0; i < events.Count; i++)
-                                {
-                                    var ev = events[i];
-                                    if (Convert.ToDateTime(ev["start"]) <= StartTime)
-                                    {
-                                        // is worst case
-                                        if (Convert.ToDateTime(ev["end"]) >= EndTime)
-                                        {
-                                            breakFromWhile = true;
-                                            break;
-                                        }
-                                        else
-                                        {
-                                            StartTime = Convert.ToDateTime(Convert.ToDateTime(ev["end"]).AddDays(1).ToString("yyyy-MM-ddT00:00:00"));
-                                            SlotStart = StartTime;
-                                            
-                                            if (events.Count-1 == i && StartTime <= EndTime)
-                                            {
-                                                // is last event break from resource
-
-                                                SlotEnd = EndTime;
-
-                                                BarrwayCalendarFormFields model = new BarrwayCalendarFormFields();
-                                                model.resources = resource["Id"]?.ToString();
-                                                model.resourceId = resource["Id"]?.ToString();
-                                                model.start = SlotStart.ToString("yyyy-MM-ddT00:00:00");
-                                                model.end = SlotEnd.ToString("yyyy-MM-ddT21:00:00");
-                                                model.title = resource["LOCATION_ADDRESS"]?.ToString();
-                                                model.CALENDAR_CODE = data.CALENDAR_CODE;
-                                                model.COMPANY_CODE = data.COMPANY_CODE;
-                                                Temp.Add(JsonConvert.DeserializeObject<IDictionary<string, object>>(JsonConvert.SerializeObject(model)));
-
-                                                breakFromWhile = true;
-                                                break;
-                                            }
-                                            
-
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (Convert.ToDateTime(ev["start"]) >= SlotStart) // abhi aur events hai
-                                        {
-                                            SlotEnd = Convert.ToDateTime(ev["start"]).AddDays(-1);
-
-                                            BarrwayCalendarFormFields model = new BarrwayCalendarFormFields();
-                                            model.resources = resource["Id"]?.ToString();
-                                            model.resourceId = resource["Id"]?.ToString();
-                                            model.start = SlotStart.ToString("yyyy-MM-ddT00:00:00");
-                                            model.end = SlotEnd.ToString("yyyy-MM-ddT21:00:00");
-                                            model.title = resource["LOCATION_ADDRESS"]?.ToString();
-                                            model.CALENDAR_CODE = data.CALENDAR_CODE;
-                                            model.COMPANY_CODE = data.COMPANY_CODE;
-                                            Temp.Add(JsonConvert.DeserializeObject<IDictionary<string, object>>(JsonConvert.SerializeObject(model)));
-
-                                            StartTime = Convert.ToDateTime(Convert.ToDateTime(ev["end"]).AddDays(1).ToString("yyyy-MM-ddT00:00:00"));
-                                            SlotStart = StartTime;
-                                        }
-                                        
-                                        
-                                        //if (i == events.Count - 1)
-                                        //{
-                                            
-                                        //    SlotEnd = EndTime;
-                                            
-                                        //    BarrwayCalendarFormFields model = new BarrwayCalendarFormFields();
-                                        //    model.resources = resource["Id"]?.ToString();
-                                        //    model.resourceId = resource["Id"]?.ToString();
-                                        //    model.start = SlotStart.ToString("yyyy-MM-ddT00:00:00");
-                                        //    model.end = SlotEnd.ToString("yyyy-MM-ddT23:59:59");
-                                        //    model.title = resource["LOCATION_ADDRESS"]?.ToString();
-                                        //    model.CALENDAR_CODE = data.CALENDAR_CODE;
-                                        //    model.COMPANY_CODE = data.COMPANY_CODE;
-                                        //    Temp.Add(JsonConvert.DeserializeObject<IDictionary<string, object>>(JsonConvert.SerializeObject(model)));
-
-                                        //    breakFromWhile = true;
-                                        //    break;
-                                        //}
-                                        //else
-                                        //{
-                                        //    if (Convert.ToDateTime(events[i + 1]["start"]) >= SlotStart)
-                                        //    {
-                                        //        SlotEnd = Convert.ToDateTime(events[i + 1]["start"]).AddDays(-1);
-                                        //        StartTime = Convert.ToDateTime(events[i + 1]["start"]);
-
-                                        //        BarrwayCalendarFormFields model = new BarrwayCalendarFormFields();
-                                        //        model.resources = resource["Id"]?.ToString();
-                                        //        model.resourceId = resource["Id"]?.ToString();
-                                        //        model.start = SlotStart.ToString("yyyy-MM-ddT00:00:00");
-                                        //        model.end = SlotEnd.ToString("yyyy-MM-ddT23:59:59");
-                                        //        model.title = resource["LOCATION_ADDRESS"]?.ToString();
-                                        //        model.CALENDAR_CODE = data.CALENDAR_CODE;
-                                        //        model.COMPANY_CODE = data.COMPANY_CODE;
-                                        //        Temp.Add(JsonConvert.DeserializeObject<IDictionary<string, object>>(JsonConvert.SerializeObject(model)));
-
-                                        //    }
-                                        //}
-                                    }
-                                }
-
-                                if (breakFromWhile)
-                                    break;
-                                else if (StartTime <= EndTime)
-                                {
-                                    BarrwayCalendarFormFields model = new BarrwayCalendarFormFields();
-                                    model.resources = resource["Id"]?.ToString();
-                                    model.resourceId = resource["Id"]?.ToString();
-                                    model.start = StartTime.ToString("yyyy-MM-ddT00:00:00");
-                                    model.end = EndTime.ToString("yyyy-MM-ddT21:00:00");
-                                    model.title = resource["LOCATION_ADDRESS"]?.ToString();
-                                    model.CALENDAR_CODE = data.CALENDAR_CODE;
-                                    model.COMPANY_CODE = data.COMPANY_CODE;
-                                    Temp.Add(JsonConvert.DeserializeObject<IDictionary<string, object>>(JsonConvert.SerializeObject(model)));
-                                    break;
-                                }
-                            }
-                            else
+                            DateTime start = Convert.ToDateTime(ev["start"]);
+                            DateTime end = Convert.ToDateTime(ev["end"]);
+                            if (rangeStart < start)
                             {
                                 BarrwayCalendarFormFields model = new BarrwayCalendarFormFields();
                                 model.resources = resource["Id"]?.ToString();
                                 model.resourceId = resource["Id"]?.ToString();
-                                model.start = SlotStart.ToString("yyyy-MM-ddT00:00:00");
-                                model.end = SlotEnd.ToString("yyyy-MM-ddT21:00:00");
+                                model.start = rangeStart.ToString("yyyy-MM-ddT00:00:00");
+                                model.end = start.AddDays(-2).ToString("yyyy-MM-ddT21:00:00");
                                 model.title = resource["LOCATION_ADDRESS"]?.ToString();
                                 model.CALENDAR_CODE = data.CALENDAR_CODE;
                                 model.COMPANY_CODE = data.COMPANY_CODE;
                                 Temp.Add(JsonConvert.DeserializeObject<IDictionary<string, object>>(JsonConvert.SerializeObject(model)));
-
-                                breakFromWhile = true;
-                                break;
                             }
+                            rangeStart = end.AddDays(1);
                         }
+
+                        if (rangeStart <= endDate)
+                        {
+                            BarrwayCalendarFormFields model = new BarrwayCalendarFormFields();
+                            model.resources = resource["Id"]?.ToString();
+                            model.resourceId = resource["Id"]?.ToString();
+                            model.start = rangeStart.ToString("yyyy-MM-ddT00:00:00");
+                            model.end = endDate.AddDays(-1).ToString("yyyy-MM-ddT21:00:00");
+                            model.title = resource["LOCATION_ADDRESS"]?.ToString();
+                            model.CALENDAR_CODE = data.CALENDAR_CODE;
+                            model.COMPANY_CODE = data.COMPANY_CODE;
+                            model.IsLastEvent = true;
+                            Temp.Add(JsonConvert.DeserializeObject<IDictionary<string, object>>(JsonConvert.SerializeObject(model)));
+                        }
+
                     }
 
                     result.events = Temp;

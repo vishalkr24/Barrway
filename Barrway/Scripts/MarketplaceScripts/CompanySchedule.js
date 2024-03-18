@@ -1260,9 +1260,9 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                     if (eventsList.length > 0) {
                         eventHTML = `<div class="fc-list-heading"><div class="ui-widget-header" style="padding: 8px 14px;" colspan="3<a href="javascript:void(0)" class="fc-list-heading-main">Available Slots</a></div></div>`;
                         eventsList.forEach(event => {
-                            eventHTML += `<div class="event-list-5C" style="cursor: pointer;" onclick="bookListViewSlot('${moment(event.start).format('DD/MM/YYYY')}', '${moment(event.end).format('DD/MM/YYYY')}', '${event.resources}', '${event.title}')">
-                                <div class="C-element" style="font-size: 13px; width: 180px;">
-                                    ${moment(event.start).format('DD/MM/YYYY')} - ${((moment(view.end).format("DD/MM/YYYY") == moment(event.end).format('DD/MM/YYYY')) ? "year end" : moment(event.end).format('DD/MM/YYYY'))}
+                            eventHTML += `<div class="event-list-5C" style="cursor: pointer;" onclick="bookListViewSlot('${moment(event.start).format('DD/MM/YYYY')}', '${((event.IsLastEvent) ? moment(event.start).format('DD/MM/YYYY') : moment(event.end).format('DD/MM/YYYY'))}', '${event.resources}', '${event.title}')">
+                                <div class="C-element" style="font-size: 13px; width: auto;">
+                                    ${moment(event.start).format('DD MMMM YYYY')} - ${((event.IsLastEvent) ? "" : moment(event.end).format('DD MMMM YYYY'))}
                                 </div>
                                 <strong class="C-element C-resource" style="background-color: ${((event.color != undefined && event.color != null && event.color != "") ? event.color : "rgb(125, 96, 108)")};">${event.title}</strong>
                              </div>`;
@@ -1372,13 +1372,13 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                             var minTime = exists.minTime.trim().replace(' ', ':');
                             var maxTime = exists.maxTime.trim().replace(' ', ':');
 
-                            //if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
-                            //    minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
-                            //}
+                            if (calendarDetails.DISPLAY_MIN_TIME != "" && calendarDetails.DISPLAY_MIN_TIME != "null" && calendarDetails.DISPLAY_MIN_TIME != null) {
+                                minTime = moment(calendarDetails.DISPLAY_MIN_TIME, "hh:mm A").format("HH:mm");
+                            }
 
-                            //if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
-                            //    maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
-                            //}
+                            if (calendarDetails.DISPLAY_MAX_TIME != "" && calendarDetails.DISPLAY_MAX_TIME != "null" && calendarDetails.DISPLAY_MAX_TIME != null) {
+                                maxTime = moment(calendarDetails.DISPLAY_MAX_TIME, "hh:mm A").format("HH:mm");
+                            }
 
                             $('#agenda-view div.calendar').fullCalendar('option', 'minTime', minTime + ":00");
                             $('#agenda-view div.calendar').fullCalendar('option', 'maxTime', maxTime + ":00");
@@ -1651,6 +1651,8 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 })
 
                 $("input[name=date-calc-type]").on("change paste", function () {
+                    $("#date-counter").val("1");
+
                     tempEndDate = calculateDate(startDate, $("#date-counter").val(), $("input[name=date-calc-type]:checked").val());
                     if (tempEndDate == "Invalid date") {
                         tempEndDate = "--";
@@ -1667,6 +1669,12 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 $("#endListViewDate").on("change", function () {
 
                     tempEndDate = moment(this.value, "DD/MM/YYYY");
+
+                    $("input[name=date-calc-type][value=day]").prop("checked", true);
+                    $(".navigation-element").removeClass("btn-primary");
+                    setTimeout(function () {
+                        $(document.getElementsByClassName("navigation-element")[0]).addClass("btn-primary");
+                    }, 100);
 
                     if (tempEndDate.diff(startDate, "days") < 0) {
                         tempEndDate = moment(startDate.format("DD/MM/YYYY"), "DD/MM/YYYY")
@@ -1685,11 +1693,11 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 $("#startListViewDate").on("change", function () {
 
                     startDate = moment(this.value, "DD/MM/YYYY");
-
-                    if (moment(tempEndDate).diff(startDate, "days") < 0) {
-                        startDate = moment(moment(tempEndDate).format("DD/MM/YYYY"), "DD/MM/YYYY")
-                        this.value = startDate.format("DD/MM/YYYY");
-                    }
+                    
+                    //if (moment(tempEndDate).diff(startDate, "days") < 0) {
+                    //    startDate = moment(moment(tempEndDate).format("DD/MM/YYYY"), "DD/MM/YYYY")
+                    //    this.value = startDate.format("DD/MM/YYYY");
+                    //}
 
                     tempEndDate = calculateDate(startDate, $("#date-counter").val(), $("input[name=date-calc-type]:checked").val());
 
@@ -1747,13 +1755,13 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                             var minTime = exists.minTime.trim().replace(' ', ':');
                             var maxTime = exists.maxTime.trim().replace(' ', ':');
 
-                            //if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
-                            //    minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
-                            //}
+                            if (calendarDetails.DISPLAY_MIN_TIME != "" && calendarDetails.DISPLAY_MIN_TIME != "null" && calendarDetails.DISPLAY_MIN_TIME != null) {
+                                minTime = moment(calendarDetails.DISPLAY_MIN_TIME, "hh:mm A").format("HH:mm");
+                            }
 
-                            //if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
-                            //    maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
-                            //}
+                            if (calendarDetails.DISPLAY_MAX_TIME != "" && calendarDetails.DISPLAY_MAX_TIME != "null" && calendarDetails.DISPLAY_MAX_TIME != null) {
+                                maxTime = moment(calendarDetails.DISPLAY_MAX_TIME, "hh:mm A").format("HH:mm");
+                            }
 
                             $('#timeline-resource-view div.calendar').fullCalendar('option', 'minTime', minTime + ":00");
                             $('#timeline-resource-view div.calendar').fullCalendar('option', 'maxTime', maxTime + ":00");
@@ -1873,13 +1881,13 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 var minTime = exists.minTime.trim().replace(' ', ':');
                 var maxTime = exists.maxTime.trim().replace(' ', ':');
 
-                //if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
-                //    minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
-                //}
+                if (calendarDetails.DISPLAY_MIN_TIME != "" && calendarDetails.DISPLAY_MIN_TIME != "null" && calendarDetails.DISPLAY_MIN_TIME != null) {
+                    minTime = moment(calendarDetails.DISPLAY_MIN_TIME, "hh:mm A").format("HH:mm");
+                }
 
-                //if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
-                //    maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
-                //}
+                if (calendarDetails.DISPLAY_MAX_TIME != "" && calendarDetails.DISPLAY_MAX_TIME != "null" && calendarDetails.DISPLAY_MAX_TIME != null) {
+                    maxTime = moment(calendarDetails.DISPLAY_MAX_TIME, "hh:mm A").format("HH:mm");
+                }
 
                 if (calendarDetails["Id"] == "121" || calendarDetails["Id"] == "122" || calendarDetails["Id"] == "123") {
                     myOptions2.minTime = "06:00";
@@ -1955,6 +1963,12 @@ function bookListViewSlot(startDate, endDate, resource, title) {
 
         tempEndDate = moment(this.value, "DD/MM/YYYY");
 
+        $("input[name=date-calc-type][value=day]").prop("checked", true);
+        $(".navigation-element").removeClass("btn-primary");
+        setTimeout(function () {
+            $(document.getElementsByClassName("navigation-element")[0]).addClass("btn-primary");
+        }, 100);
+
         if (tempEndDate.diff(startDate, "days") < 0) {
             tempEndDate = moment(startDate.format("DD/MM/YYYY"), "DD/MM/YYYY")
             this.value = tempEndDate.format("DD/MM/YYYY");
@@ -1973,10 +1987,10 @@ function bookListViewSlot(startDate, endDate, resource, title) {
 
         startDate = moment(this.value, "DD/MM/YYYY");
         
-        if (moment(tempEndDate).diff(startDate, "days") < 0) {
-            startDate = moment(moment(tempEndDate).format("DD/MM/YYYY"), "DD/MM/YYYY")
-            this.value = startDate.format("DD/MM/YYYY");
-        }
+        //if (moment(tempEndDate).diff(startDate, "days") < 0) {
+        //    startDate = moment(moment(tempEndDate).format("DD/MM/YYYY"), "DD/MM/YYYY")
+        //    this.value = startDate.format("DD/MM/YYYY");
+        //}
 
         tempEndDate = calculateDate(startDate, $("#date-counter").val(), $("input[name=date-calc-type]:checked").val());
 
@@ -1990,6 +2004,8 @@ function bookListViewSlot(startDate, endDate, resource, title) {
     })
 
     $("input[name=date-calc-type]").on("change paste", function () {
+        $("#date-counter").val("1");
+
         tempEndDate = calculateDate(startDate, $("#date-counter").val(), $("input[name=date-calc-type]:checked").val());
         if (tempEndDate == "Invalid date") {
             tempEndDate = "--";
