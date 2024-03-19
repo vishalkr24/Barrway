@@ -15,6 +15,7 @@ using Barrway.DTO.Common;
 using Barrway.DTO.FormAPI;
 using System.Web;
 using Barrway.Utility.Common;
+using System.Net.Security;
 
 namespace Barrway.Service.Repository
 {
@@ -37,6 +38,11 @@ namespace Barrway.Service.Repository
                 var request = new RestRequest("api/FormAPI/manageTabulatorConfig", Method.Post) { RequestFormat = DataFormat.Json };
                 request.AddBody(data);
                 request.AddHeader("content-type", "application/json");
+                ServicePointManager.ServerCertificateValidationCallback = new
+RemoteCertificateValidationCallback
+(
+   delegate { return true; }
+);
                 var response = await _client.ExecuteAsync(request);
                 if (response.Content != null)
                 {
@@ -70,6 +76,11 @@ namespace Barrway.Service.Repository
                 var request = new RestRequest("api/FormAPI/GetFormRecordList", Method.Post) { RequestFormat = DataFormat.Json };
                 request.AddBody(dataDic);
                 request.AddHeader("content-type", "application/json");
+                ServicePointManager.ServerCertificateValidationCallback = new
+RemoteCertificateValidationCallback
+(
+   delegate { return true; }
+);
                 var response = await _client.ExecuteAsync(request);
                 if (response.Content != null)
                 {
@@ -101,7 +112,13 @@ namespace Barrway.Service.Repository
                 var request = new RestRequest("api/FormAPI/GeneratedFormData", Method.Post) { RequestFormat = DataFormat.Json };
                 request.AddBody(data);
                 request.AddHeader("content-type", "application/json");
+                ServicePointManager.ServerCertificateValidationCallback = new
+RemoteCertificateValidationCallback
+(
+   delegate { return true; }
+);
                 var response = await _client.ExecuteAsync(request);
+
                 if (response.Content != null)
                 {
                     var result = JsonConvert.DeserializeObject<GenerateDynamicFormData>(response.Content);
@@ -132,7 +149,13 @@ namespace Barrway.Service.Repository
                 var request = new RestRequest("api/FormAPI/BulkGeneratedFormData", Method.Post) { RequestFormat = DataFormat.Json };
                 request.AddBody(data);
                 request.AddHeader("content-type", "application/json");
+                ServicePointManager.ServerCertificateValidationCallback = new
+RemoteCertificateValidationCallback
+(
+   delegate { return true; }
+);
                 var response = await _client.ExecuteAsync(request);
+
                 if (response.Content != null)
                 {
                     var result = JsonConvert.DeserializeObject<GenerateDynamicFormData>(response.Content);
@@ -162,6 +185,11 @@ namespace Barrway.Service.Repository
                 var request = new RestRequest("api/FormAPI/EditEventData", Method.Post) { RequestFormat = DataFormat.Json };
                 request.AddBody(data);
                 request.AddHeader("content-type", "application/json");
+                ServicePointManager.ServerCertificateValidationCallback = new
+RemoteCertificateValidationCallback
+(
+   delegate { return true; }
+);
                 var response = await _client.ExecuteAsync(request);
                 if (response.Content != null)
                 {
@@ -194,6 +222,11 @@ namespace Barrway.Service.Repository
                 var request = new RestRequest("api/FormAPI/ManageCalenderReferrenceNew", Method.Post) { RequestFormat = DataFormat.Json };
                 request.AddBody(data);
                 request.AddHeader("content-type", "application/json");
+                ServicePointManager.ServerCertificateValidationCallback = new
+RemoteCertificateValidationCallback
+(
+   delegate { return true; }
+);
                 var response = await _client.ExecuteAsync(request);
                 if (response.Content != null)
                 {
@@ -225,6 +258,11 @@ namespace Barrway.Service.Repository
                 var request = new RestRequest("api/FormAPI/ManageForm", Method.Post) { RequestFormat = DataFormat.Json };
                 request.AddBody(data);
                 request.AddHeader("content-type", "application/json");
+                ServicePointManager.ServerCertificateValidationCallback = new
+RemoteCertificateValidationCallback
+(
+   delegate { return true; }
+);
                 var response = await _client.ExecuteAsync(request);
                 if (response.Content != null)
                 {
@@ -255,6 +293,11 @@ namespace Barrway.Service.Repository
                 var request = new RestRequest("api/FormAPI/ManageFormApp", Method.Post) { RequestFormat = DataFormat.Json };
                 request.AddBody(data);
                 request.AddHeader("content-type", "application/json");
+                ServicePointManager.ServerCertificateValidationCallback = new
+RemoteCertificateValidationCallback
+(
+   delegate { return true; }
+);
                 var response = await _client.ExecuteAsync(request);
                 if (response.Content != null)
                 {
@@ -286,6 +329,11 @@ namespace Barrway.Service.Repository
                 var request = new RestRequest("api/FormAPI/ManageFormRoles", Method.Post) { RequestFormat = DataFormat.Json };
                 request.AddBody(data);
                 request.AddHeader("content-type", "application/json");
+                ServicePointManager.ServerCertificateValidationCallback = new
+RemoteCertificateValidationCallback
+(
+   delegate { return true; }
+);
                 var response = await _client.ExecuteAsync(request);
                 if (response.Content != null)
                 {
@@ -318,6 +366,11 @@ namespace Barrway.Service.Repository
                 var request = new RestRequest("api/FormAPI/ManageLanguages", Method.Post) { RequestFormat = DataFormat.Json };
                 request.AddBody(data);
                 request.AddHeader("content-type", "application/json");
+                ServicePointManager.ServerCertificateValidationCallback = new
+RemoteCertificateValidationCallback
+(
+   delegate { return true; }
+);
                 var response = await _client.ExecuteAsync(request);
                 if (response.Content != null)
                 {
@@ -349,6 +402,11 @@ namespace Barrway.Service.Repository
                 var request = new RestRequest("api/FormAPI/getEventDetails", Method.Post) { RequestFormat = DataFormat.Json };
                 request.AddBody(data);
                 request.AddHeader("content-type", "application/json");
+                ServicePointManager.ServerCertificateValidationCallback = new
+RemoteCertificateValidationCallback
+(
+   delegate { return true; }
+);
                 var response = await _client.ExecuteAsync(request);
                 if (response.Content != null)
                 {
@@ -377,6 +435,11 @@ namespace Barrway.Service.Repository
                 var request = new RestRequest("api/FormAPI/getCalenderSettingsFormData", Method.Post) { RequestFormat = DataFormat.Json };
                 request.AddBody(data);
                 request.AddHeader("content-type", "application/json");
+                ServicePointManager.ServerCertificateValidationCallback = new
+RemoteCertificateValidationCallback
+(
+   delegate { return true; }
+);
                 var response = await _client.ExecuteAsync(request);
                 if (response.Content != null)
                 {
@@ -405,6 +468,11 @@ namespace Barrway.Service.Repository
                 var request = new RestRequest("api/FormAPI/getAxisColumns", Method.Post) { RequestFormat = DataFormat.Json };
                 request.AddBody(data);
                 request.AddHeader("content-type", "application/json");
+                ServicePointManager.ServerCertificateValidationCallback = new
+RemoteCertificateValidationCallback
+(
+   delegate { return true; }
+);
                 var response = await _client.ExecuteAsync(request);
                 if (response.Content != null)
                 {
@@ -433,6 +501,11 @@ namespace Barrway.Service.Repository
                 var request = new RestRequest("api/FormAPI/getReferralFormFields", Method.Post) { RequestFormat = DataFormat.Json };
                 request.AddBody(data);
                 request.AddHeader("content-type", "application/json");
+                ServicePointManager.ServerCertificateValidationCallback = new
+RemoteCertificateValidationCallback
+(
+   delegate { return true; }
+);
                 var response = await _client.ExecuteAsync(request);
                 if (response.Content != null)
                 {
@@ -461,6 +534,11 @@ namespace Barrway.Service.Repository
                 var request = new RestRequest("api/FormAPI/getReferralFormFieldsAndData", Method.Post) { RequestFormat = DataFormat.Json };
                 request.AddBody(data);
                 request.AddHeader("content-type", "application/json");
+                ServicePointManager.ServerCertificateValidationCallback = new
+RemoteCertificateValidationCallback
+(
+   delegate { return true; }
+);
                 var response = await _client.ExecuteAsync(request);
                 if (response.Content != null)
                 {
@@ -490,6 +568,11 @@ namespace Barrway.Service.Repository
                 var request = new RestRequest("api/FormAPI/ManageCalenderReferrenceNew", Method.Post) { RequestFormat = DataFormat.Json };
                 request.AddBody(data);
                 request.AddHeader("content-type", "application/json");
+                ServicePointManager.ServerCertificateValidationCallback = new
+RemoteCertificateValidationCallback
+(
+   delegate { return true; }
+);
                 var response = await _client.ExecuteAsync(request);
                 if (response.Content != null)
                 {
@@ -538,6 +621,11 @@ namespace Barrway.Service.Repository
                 var request = new RestRequest($"api/FormAPI/getJSONjsTreeCustomFilter", Method.Post) { RequestFormat = DataFormat.Json };
                 request.AddBody(jsonTree);
                 request.AddHeader("content-type", "application/json");
+                ServicePointManager.ServerCertificateValidationCallback = new
+RemoteCertificateValidationCallback
+(
+   delegate { return true; }
+);
                 var response = await _client.ExecuteAsync(request);
                 if (response.Content != null)
                 {
@@ -565,6 +653,11 @@ namespace Barrway.Service.Repository
                 var request = new RestRequest("api/FormAPI/GetFormList", Method.Post) { RequestFormat = DataFormat.Json };
                 request.AddBody(data);
                 request.AddHeader("content-type", "application/json");
+                ServicePointManager.ServerCertificateValidationCallback = new
+RemoteCertificateValidationCallback
+(
+   delegate { return true; }
+);
                 var response = await _client.ExecuteAsync(request);
                 if (response.Content != null)
                 {
@@ -592,6 +685,11 @@ namespace Barrway.Service.Repository
             try
             {
                 var request = new RestRequest($"api/FormAPI/getReferralFormFieldsAndDataGET?action={action}&formID={formID}&formGroupKey={formGroupKey}", Method.Get);
+                ServicePointManager.ServerCertificateValidationCallback = new
+RemoteCertificateValidationCallback
+(
+   delegate { return true; }
+);
                 //request.AddHeader("content-type", "application/json");
                 var response = await _client.ExecuteAsync(request);
                 if (response.Content != null)
