@@ -185,11 +185,11 @@ namespace Barrway.Controllers
 
         }
 
-        public async Task<ActionResult> GetFilterCompanyData(string SubCategoryId, string DistrictId)
+        public async Task<ActionResult> GetFilterCompanyData(string CategoryId, string SubCategoryId, string DistrictId)
         {
             try
             {
-                var Data = await globalMasterService.GetFilterCompanyData(SubCategoryId, DistrictId);
+                var Data = await globalMasterService.GetFilterCompanyData(CategoryId, SubCategoryId, DistrictId);
 
                 return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = Data.Data }, JsonRequestBehavior.AllowGet);
             }

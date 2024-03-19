@@ -79,9 +79,15 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> GetFilterCompanyData(string SubCategoryId, string DistrictId)
+        public async Task<AddUpdateDelete> GetFilterCompanyData(string CategoryId, string SubCategoryId, string DistrictId)
         {
             string filter = "";
+
+            if (!string.IsNullOrEmpty(CategoryId))
+            {
+                filter += "and calendar.CALENDAR_CATEGORY_ID = '" + CategoryId + "'";
+            }
+
 
             if (!string.IsNullOrEmpty(SubCategoryId))
             {
@@ -131,19 +137,19 @@ namespace Barrway.Service.Repository
 
             List<IDictionary<string, object>> companyResult = await sqlFunction.ExecuteSqlQuery(query);
 
-            var subCategoryData = await GetCalendarSubCategoryMaster();
-            List<IDictionary<string, object>> subCategory = subCategoryData.Data;
+            var CategoryData = await GetCalendarCategoryMaster();
+            List<IDictionary<string, object>> category = CategoryData.Data;
 
 
             List<List<IDictionary<string, object>>> finalList = new List<List<IDictionary<string, object>>>();
 
-            for (int i = 0; i < subCategory.Count; i++)
+            for (int i = 0; i < category.Count; i++)
             {
                 List<IDictionary<string, object>> tempList = new List<IDictionary<string, object>>();
 
                 for (int j = 0; j < companyResult.Count; j++)
                 {
-                    if (subCategory[i]["Id"].ToString() == companyResult[j]["CALENDAR_SUB_CATEGORY_ID"].ToString())
+                    if (category[i]["Id"].ToString() == companyResult[j]["CALENDAR_CATEGORY_ID"].ToString())
                     {
                         IDictionary<string, object> tempData = companyResult[j];
                         tempList.Add(tempData);

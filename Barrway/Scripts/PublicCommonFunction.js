@@ -204,7 +204,7 @@ function getAllCalendarSubCategory() {
     return data;
 }
 
-function GetFilterCompanyData(subCategoryId, districtId) {
+function GetFilterCompanyData(categoryId, subCategoryId, districtId) {
 
     var data;
     $.ajax({
@@ -212,6 +212,7 @@ function GetFilterCompanyData(subCategoryId, districtId) {
         async: false,
         type: "GET",
         data: {
+            CategoryId: categoryId,
             SubCategoryId: subCategoryId,
             DistrictId: districtId
         },

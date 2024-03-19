@@ -4,7 +4,7 @@
     { "categoryId": 4, "type": "1", "name": "5a" }, { "categoryId": 4, "type": "2", "name": "5b" }, { "categoryId": 4, "type": "3", "name": "5c" },
     { "categoryId": 6, "type": "1", "name": "6a" }];
 
-function getCalendarCategory(calendar) {
+function getCalendarCategoryMatrix(calendar) {
 
     return calendar_category.find(x => x.categoryId == calendar.CALENDAR_CATEGORY_ID && calendar.CALENDAR_TYPE == x.type)?.name ?? "";
 }
@@ -13,7 +13,9 @@ function getCalendarCategory(calendar) {
 $(document).ready(function () {
     $("#nv-home").addClass("active");
     setDistrictMaster();
+    setCalendarCategory();
     setCalendarSubCategory();
+    
     setCalendarSubCategoryWise(false, false);
 });
 
@@ -43,7 +45,7 @@ function setCalendarSubCategory() {
         var districts = data.Data;
 
         $("#filter-sub-category-master").empty();
-        $("#filter-sub-category-master").append(`<option value="-1" selected>All sub-category</option>`);
+        $("#filter-sub-category-master").append(`<option value="-1" selected>All</option>`);
 
         for (var i = 0; i < districts.length; i++) {
             $("#filter-sub-category-master").append(`<option value="${districts[i].Id}">${districts[i].CALENDAR_SUB_CATEGORY_NAME}</option>`);
@@ -53,9 +55,27 @@ function setCalendarSubCategory() {
 
 }
 
+function setCalendarCategory() {
+    var data = getCalendarCategory();
+
+    if (data.Status) {
+
+        var districts = data.Data;
+
+        $("#filter-category-master").empty();
+        $("#filter-category-master").append(`<option value="-1" selected>All</option>`);
+
+        for (var i = 0; i < districts.length; i++) {
+            $("#filter-category-master").append(`<option value="${districts[i].Id}">${districts[i].CALENDAR_CATEGORY_NAME}</option>`);
+        }
+
+    }
+}
+
 function setCalendarSubCategoryWise(showFilterQuery = false, requestFromButton = false) {
 
     var fltr_subCategoryId = $("#filter-sub-category-master option:selected").val();
+    var fltr_CategoryId = $("#filter-category-master option:selected").val();
     var fltr_districtId = $("#filter-district-master option:selected").val();
 
     var queryString = window.location.href.split("?")[1];
@@ -70,11 +90,13 @@ function setCalendarSubCategoryWise(showFilterQuery = false, requestFromButton =
             if (requestFromButton) {
 
             } else {
-                fltr_subCategoryId = object[0].split("=")[1];
-                fltr_districtId = object[1].split("=")[1];
+                fltr_CategoryId = object[0].split("=")[1];
+                fltr_subCategoryId = object[1].split("=")[1];
+                fltr_districtId = object[2].split("=")[1];
                 if (fltr_districtId[fltr_districtId.length-1]=="#") {
                     fltr_districtId = fltr_districtId.substring(0, fltr_districtId.length-1)
                 }
+                $("#filter-category-master").val(fltr_CategoryId);
                 $("#filter-sub-category-master").val(fltr_subCategoryId);
                 $("#filter-district-master").val(fltr_districtId);
             }
@@ -88,11 +110,18 @@ function setCalendarSubCategoryWise(showFilterQuery = false, requestFromButton =
     if (showFilterQuery) {
 
         var title = "Barrway | Marketplace";
-        var url = "/Marketplace/index?CategoryId=" + fltr_subCategoryId + "&DistrictId=" + fltr_districtId + "";
+        var url = "/Marketplace/index?CategoryId=" + fltr_CategoryId + "&SubCategoryId=" + fltr_subCategoryId + "&DistrictId=" + fltr_districtId + "";
 
         window.history.replaceState('index', title, url);
 
         $("#lblFilterLabel").show();
+
+        if (fltr_CategoryId == "-1") {
+            $("#lblSelectedCategory").text("All Categories");
+        } else {
+            $("#lblSelectedCategory").text($("#filter-category-master option:selected").text());
+        }
+
         if (fltr_subCategoryId == "-1") {
             $("#lblSelectedSubCategory").text("All Sub Categories");
         } else {
@@ -107,6 +136,7 @@ function setCalendarSubCategoryWise(showFilterQuery = false, requestFromButton =
 
     } else {
         $("#lblFilterLabel").hide();
+        $("#lblSelectedCategory").text("");
         $("#lblSelectedSubCategory").text("");
         $("#lblSelectedDistrict").text("");
     } 
@@ -115,11 +145,15 @@ function setCalendarSubCategoryWise(showFilterQuery = false, requestFromButton =
         fltr_subCategoryId = "";
     }
 
+    if (fltr_CategoryId == "-1") {
+        fltr_CategoryId = "";
+    }
+
     if (fltr_districtId == "-1") {
         fltr_districtId = "";
     }
 
-    var data = GetFilterCompanyData(fltr_subCategoryId, fltr_districtId);
+    var data = GetFilterCompanyData(fltr_CategoryId,fltr_subCategoryId, fltr_districtId);
     console.log(data);
     if (data.Status) {
         var corouselClassMaster = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
@@ -138,7 +172,7 @@ function setCalendarSubCategoryWise(showFilterQuery = false, requestFromButton =
 
                 $("#company-category-wise-area").append(`<div class="my-slide ${corouselClassMaster[corouselCounter]}">
                                                             <div class="heading-cata">
-                                                                <h3>${calendars[0].CALENDAR_SUB_CATEGORY_NAME}</h3>
+                                                                <h3>${calendars[0].CALENDAR_CATEGORY_NAME}</h3>
                                                             </div>
                                                             <div id="owl-demo${corouselCounter}" class="owl-carousel owl-theme"></div>
 
@@ -164,7 +198,7 @@ function setCalendarSubCategoryWise(showFilterQuery = false, requestFromButton =
                                                         </div>
                                                         <div class="pro-text">
                                                             <p class="p1"><b>${calendars[j].COMPANY_NAME_ENGLISH}</b></p>
-                                                            <p class="p2">${calendars[j].CALENDAR_NAME} <span class="clr-tag">${getCalendarCategory(calendars[j])}<span></p>
+                                                            <p class="p2">${calendars[j].CALENDAR_NAME} <span class="clr-tag">${getCalendarCategoryMatrix(calendars[j])}<span></p>
                                                             <p class="p3">${calendars[j].DISTRICT_NAME}</p>
                                                             <p class="p4">${tagString}</p>
                                                         </div>

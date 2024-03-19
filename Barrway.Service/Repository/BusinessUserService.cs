@@ -2311,6 +2311,7 @@ namespace Barrway.Service.Repository
                                       ,[DISPLAY_MIN_TIME] = '{model.DISPLAY_MIN_TIME}'
                                       ,[DISPLAY_MAX_TIME] = '{model.DISPLAY_MAX_TIME}'
                                       ,[DEFAULT_RESOURCE] = '{model.DEFAULT_RESOURCE}'
+                                      ,[NEED_ADDITIONAL_FORM] = '{model.NEED_ADDITIONAL_FORM}'
                                       ,[COMPANY_CODE] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_CODE)}'
                                  WHERE Id = '{model.Id}'
                                  ";
