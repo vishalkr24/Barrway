@@ -37,6 +37,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetUserBCoinMaster(GenerateDynamicFormData data, string userId);
         
         Task<AddUpdateDelete> GetUserCoinBalance(string UserId);
+        Task<AddUpdateDelete> CheckAdditionalFormDetails(string CalendarCode, string UserId);
         Task<AddUpdateDelete> GetUserCoinBalance(string UserId, string CompanyCode, string CalendarCode);
         Task<AddUpdateDelete> GetCurrentPackageDetails(string UserId, string CompanyCode, string CalendarCode, string ServiceId, CommonTimeObject TimeRange);
 

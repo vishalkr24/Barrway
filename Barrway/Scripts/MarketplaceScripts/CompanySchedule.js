@@ -19,6 +19,7 @@ $(document).ready(async function () {
     getServiceProviderData();
 
     getServiceProviderDataByCalendar();
+    debugger;
 
     //getServiceList(COMPANY_CODE, CALENDAR_CODE);
 
@@ -53,8 +54,7 @@ $(document).ready(async function () {
     window["EventBasicDetail"] = manageWindowParams();
 
     var calenderSettings = await getCalenderSettings();
-
-
+    
     calendarDetails = (await getCalendarDetails(CALENDAR_CODE)).Data;
     if (calendarDetails["CALENDAR_CATEGORY_ID"] == "4" && calendarDetails["CALENDAR_TYPE"] == "3") {
         is5CType = true;
@@ -309,8 +309,6 @@ $(document).ready(async function () {
 
 
 });
-
-
 
 function changeStateOfCalenderController(view) {
     var temp = {};
