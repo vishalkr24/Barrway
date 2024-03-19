@@ -21,6 +21,8 @@ namespace Barrway.DTO.BusinessModels
         public string DISPLAY_MAX_TIME { get; set; }
         public string DISPLAY_MIN_TIME { get; set; }
         public string DEFAULT_RESOURCE { get; set; }
+        public string NEED_ADDITIONAL_FORM { get; set; }
+        public string ADDITIONAL_FORM_ID { get; set; }
         public string CALENDAR_TEMPLATE_ID { get; set; }
         public string SCHEDULAR_ID { get; set; }
 
