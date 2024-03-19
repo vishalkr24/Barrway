@@ -254,6 +254,20 @@ namespace Barrway.Controllers
             }
         }
 
+        public async Task<ActionResult> CheckAdditionalFormDetails(string CalendarCode)
+        {
+            try
+            {
+                string UserId = UserIdentity.UserID;
+                var result = await publicUserService.CheckAdditionalFormDetails(CalendarCode, UserId);
+
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = "Failed" }, JsonRequestBehavior.AllowGet);
+            }
+        }
 
         [HttpGet]
         public async Task<ActionResult> GetUserCoinBalance()

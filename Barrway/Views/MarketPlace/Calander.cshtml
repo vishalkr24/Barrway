@@ -713,14 +713,7 @@
                                     </div>
                                 </div>
                             </div>
-
-
-
                         }
-
-
-
-
                     </div>
                 </div>
             </div>
@@ -1085,8 +1078,8 @@
                             <i class="fa fa-calendar" aria-hidden="true"></i>
                         </label>
                     </div>
-                    
-                    
+
+
 
                     <div style="display:flex; border: 1px solid lightgrey;">
                         <input type="number" id="date-counter" class="form-control" style="border:none; outline:none;" min="1" placeholder="5" value="1" />
@@ -1115,6 +1108,21 @@
         </div>
     </div>
 
+    <div class="modal fade" id="AdditionalDetailsFormModal" style="z-index: 2000;" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel5" aria-hidden="true">
+        <div class="modal-dialog" style="width: 100%;" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="border-bottom: 1px solid lightgrey;">
+                    <h5 class="modal-title" id="exampleModalLabel">Fill your details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div>
+                    <iframe id="AdditionalFormEntryIframe" style="width: 100%; box-shadow: none; border: none; outline:none;" src="{{AdditionalFormEntryUrl}}"></iframe>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 </section>
 
 
@@ -1125,7 +1133,7 @@
 
     <script>
         /*var app = angular.module('myApp', []);*/
-        FormGeneratorApp.controller('myCtrl', function ($scope, $rootScope) {
+        FormGeneratorApp.controller('myCtrl', function ($scope, $rootScope, mainService) {
             $scope.rootScopeSafe = function () {
                 $rootScope.safeApply();
             };
@@ -1191,15 +1199,15 @@
                                         debugger;
                                         const wrapper = document.createElement('div');
                                         wrapper.innerHTML = `<div>
-                                                                                                                    ${eventData.customDate}
-                                                                                                                </div>
-                                                                                                                <div>
-                                                                                                                    ${eventData.customTime}
-                                                                                                                </div>
-                                                                                                                <div>${eventData.customTitleSplit[2]}</div><br />
-                                                                                                                <div>${eventData.customTitleSplit[1]}</div>
-                                                                                                                <div>${eventData.customTitleSplit[0]}</div><br />
-                                                                                                                <h4 style="color:red">${response.Message}</h4>`;
+                                                                                                                                    ${eventData.customDate}
+                                                                                                                                </div>
+                                                                                                                                <div>
+                                                                                                                                    ${eventData.customTime}
+                                                                                                                                </div>
+                                                                                                                                <div>${eventData.customTitleSplit[2]}</div><br />
+                                                                                                                                <div>${eventData.customTitleSplit[1]}</div>
+                                                                                                                                <div>${eventData.customTitleSplit[0]}</div><br />
+                                                                                                                                <h4 style="color:red">${response.Message}</h4>`;
 
                                         swal({
                                             title: "You are going to book",
@@ -1212,74 +1220,91 @@
                                         }).then(function (response) {
                                             if (response) {
                                                 showLoader();
-                                                var obj = {
-                                                    USER_ID: "",
-                                                    RESOURCE_NAME: eventData.customTitleSplit[0],
-                                                    ACTIVITY_NAME: eventData.customTitleSplit[1],
-                                                    FormGroupKey: $scope.selectEventDetails.formGroupKey,
-                                                    participant: {
-                                                        DESCRIPTION: String(eventData.description),
-                                                        COMPANY_CODE: eventData.COMPANY_CODE,
-                                                        CALENDAR_CODE: eventData.CALENDAR_CODE
-                                                    },
-                                                    transaction: {
-                                                        SLOT: eventData.Id,
-                                                        RESOURCE: eventData.resourceId,
-                                                        ACTIVITY: eventData.activities,
-                                                        STUDENT: "",
-                                                        REMARKS: "",
-                                                        FEES: "",
-                                                        ATTENDANCE: "NOT-MARKED",
-                                                        COMPANY_CODE: eventData.COMPANY_CODE,
-                                                        CALENDAR_CODE: eventData.CALENDAR_CODE
-                                                    }
-                                                }
 
                                                 $.ajax({
-                                                    url: "/UserAdmin/EnrollPublicUserForCalendar",
-                                                    type: "POST",
-                                                    data: obj,
-                                                    success: function (data) {
-                                                        hideLoader();
-                                                        if (!data.Status) {
-                                                            if (data.Message == "ALREADY-ENROLLED") {
-                                                                swal({
-                                                                    title: "Can't Enroll Again!",
-                                                                    text: "You are already enrolled in this event.",
-                                                                    icon: "error",
-                                                                    button: "Okay"
-                                                                });
-                                                                //swal({ type: 'error', showCloseButton: true, html: "You are already enrolled in this calendar." });
-                                                            } else if (data.Message == "LIMIT-ERROR") {
-                                                                swal({
-                                                                    title: "Failed to Enroll!",
-                                                                    text: "Maximum no. of participants already enrolled in this activity.",
-                                                                    icon: "error",
-                                                                    button: "Okay"
-                                                                });
-                                                            } else {
-                                                                swal({
-                                                                    title: "Warning!",
-                                                                    text: data.Message,
-                                                                    icon: "error",
-                                                                    button: "Okay"
-                                                                });
-                                                            }
-                                                        } else {
-                                                            swal({
-                                                                title: "Congratulations!",
-                                                                text: "Enrolled Successfully!",
-                                                                icon: "success",
-                                                                button: "Okay"
-                                                            }).then(function (boolValue) {
-                                                                window.location.reload();
-                                                            });
-
-                                                        }
-
+                                                    url: "/UserAdmin/CheckAdditionalFormDetails",
+                                                    method: "GET",
+                                                    data: {
+                                                        CalendarCode: eventData.CALENDAR_CODE
                                                     },
-                                                    error: function () {
-                                                        swal({ type: 'error', showCloseButton: true, html: "something went wrong!" });
+                                                    success: function (response) {
+                                                        if (response.Status) {
+                                                            var obj = {
+                                                                USER_ID: "",
+                                                                RESOURCE_NAME: eventData.customTitleSplit[0],
+                                                                ACTIVITY_NAME: eventData.customTitleSplit[1],
+                                                                FormGroupKey: $scope.selectEventDetails.formGroupKey,
+                                                                participant: {
+                                                                    DESCRIPTION: String(eventData.description),
+                                                                    COMPANY_CODE: eventData.COMPANY_CODE,
+                                                                    CALENDAR_CODE: eventData.CALENDAR_CODE
+                                                                },
+                                                                transaction: {
+                                                                    SLOT: eventData.Id,
+                                                                    RESOURCE: eventData.resourceId,
+                                                                    ACTIVITY: eventData.activities,
+                                                                    STUDENT: "",
+                                                                    REMARKS: "",
+                                                                    FEES: "",
+                                                                    ATTENDANCE: "NOT-MARKED",
+                                                                    COMPANY_CODE: eventData.COMPANY_CODE,
+                                                                    CALENDAR_CODE: eventData.CALENDAR_CODE
+                                                                }
+                                                            }
+
+                                                            $.ajax({
+                                                                url: "/UserAdmin/EnrollPublicUserForCalendar",
+                                                                type: "POST",
+                                                                data: obj,
+                                                                success: function (data) {
+                                                                    hideLoader();
+                                                                    if (!data.Status) {
+                                                                        if (data.Message == "ALREADY-ENROLLED") {
+                                                                            swal({
+                                                                                title: "Can't Enroll Again!",
+                                                                                text: "You are already enrolled in this event.",
+                                                                                icon: "error",
+                                                                                button: "Okay"
+                                                                            });
+                                                                            //swal({ type: 'error', showCloseButton: true, html: "You are already enrolled in this calendar." });
+                                                                        } else if (data.Message == "LIMIT-ERROR") {
+                                                                            swal({
+                                                                                title: "Failed to Enroll!",
+                                                                                text: "Maximum no. of participants already enrolled in this activity.",
+                                                                                icon: "error",
+                                                                                button: "Okay"
+                                                                            });
+                                                                        } else {
+                                                                            swal({
+                                                                                title: "Warning!",
+                                                                                text: data.Message,
+                                                                                icon: "error",
+                                                                                button: "Okay"
+                                                                            });
+                                                                        }
+                                                                    } else {
+                                                                        swal({
+                                                                            title: "Congratulations!",
+                                                                            text: "Enrolled Successfully!",
+                                                                            icon: "success",
+                                                                            button: "Okay"
+                                                                        }).then(function (boolValue) {
+                                                                            window.location.reload();
+                                                                        });
+
+                                                                    }
+
+                                                                },
+                                                                error: function () {
+                                                                    swal({ type: 'error', showCloseButton: true, html: "something went wrong!" });
+                                                                }
+                                                            })
+                                                        } else {
+                                                            $scope.renderAdditionalDetailsForm();
+                                                        }
+                                                    },
+                                                    error: function (error) {
+                                                        console.error(error);
                                                     }
                                                 })
                                             }
@@ -1292,17 +1317,10 @@
                                             buttons: {
                                                 confirm: "Okay"
                                             }
-
                                         })
                                     }
                                 }
                             })
-
-
-
-
-
-
                         }
 
                     },
@@ -1312,6 +1330,10 @@
                 })
 
 
+            }
+
+            $scope.renderAdditionalDetailsForm = function () {
+                $scope.getFormSettings();
             }
 
             $scope.enrollPublicUserForRental = function () {
@@ -1331,7 +1353,7 @@
                     hideLoader();
                     return;
                 }
-                
+
                 $.ajax({
                     url: "/Account/CheckPublicUserLogin",
                     type: "POST",
@@ -1409,6 +1431,20 @@
 
 
             }
+
+
+            $scope.getFormSettings = function () {
+                $scope.AdditionalFormEntryUrl = "/calendar/EditIndex#/form/saveEntry/" + calendarDetails.ADDITIONAL_FORM_ID;
+                $("#AdditionalFormEntryIframe").attr("src", $scope.AdditionalFormEntryUrl);
+                var iframe = document.getElementById('AdditionalFormEntryIframe');
+                iframe.src = iframe.src;
+                setTimeout(function () {
+                    iframe.height = iframe.contentWindow.document.body.scrollHeight;
+                }, 1500)
+
+                $("#AdditionalDetailsFormModal").modal("show");
+                hideLoader();
+            };
 
         }).filter('safeHtml', function ($sce) {
             return function (val) {

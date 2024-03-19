@@ -1206,6 +1206,65 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> CheckAdditionalFormDetails(string CalendarCode, string UserId)
+        {
+            try
+            {
+                string query = $@"select dbo.CheckBookingAdditionalFormDetails('{CalendarCode}') as Result";
+
+                List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+
+                if (result.Count > 0)
+                {
+
+                    if (result[0]["Result"]?.ToString() == "false")
+                    {
+                        query = $@"select t.topicTitle + '_' + cast(f.topicID as varchar(6)) as TableName from form f
+                                    join topic t on t.topicID = f.topicID
+                                    where f.formID = (select ADDITIONAL_FORM_ID from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE = '{CalendarCode}')";
+                        var TableNameRaw = await sqlFunction.ExecuteSqlQuery(query);
+
+                        string TableName = "";
+
+                        if (TableNameRaw.Count > 0)
+                        {
+                            TableName = TableNameRaw[0]["TableName"]?.ToString();
+
+                            query = $@"select * from {TableName} where created_by = '{UserId}' and COMPANY_CODE = (select COMPANY_CODE from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE = '{CalendarCode}')";
+
+                            result = await sqlFunction.ExecuteSqlQuery(query);
+                            
+                            if (result.Count > 0)
+                            {
+                                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                            }
+                            else
+                            {
+                                return new AddUpdateDelete() { Status = false, Message = AppMessage.Success };
+                            }
+                        }
+                        else
+                        {
+                            return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                        }
+                    }
+                    else
+                    {
+                        return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                    }
+
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = 0 };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = 0 };
+            }
+        }
+
         public async Task<AddUpdateDelete> GetUserCoinBalance(string UserId)
         {
             try
