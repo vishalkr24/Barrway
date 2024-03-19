@@ -33,7 +33,19 @@
             color: grey;
             margin-top: -4px;
         }
+        .custome-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
 
+        .custome-scrollbar::-webkit-scrollbar-track {
+            background-color: #dcdcdc;
+            border-radius: 4px;
+        }
+
+        .custome-scrollbar::-webkit-scrollbar-thumb {
+            background: #9d9d9dcf;
+            border-radius: 10px;
+        }
     </style>
     <!-- heading -->
     <section class="heading">
@@ -54,139 +66,154 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="inner-content">
+                        <div class="row">
+                            <div class="col-md-6">
 
-                        @if (Model.results.Where(x => x.ResultType == 3).ToList().Count > 0)
-                        {
-                            <div class="row" style="max-height: 400px; overflow:hidden; overflow-y:scroll;">
-                                <div class="col-md-12">
-                                    <div class="sub-hed">
-                                        <p>@Resource.Service_contains @Model.keyword</p>
-                                    </div>
-                                </div>
-                                @foreach (var item in Model.results)
+                                @if (Model.results.Where(x => x.ResultType == 3).ToList().Count > 0)
                                 {
-                                    if (item.ResultType == 3)
-                                    {
-                                        <div class="col-md-6">
-                                            <div class="media">
-                                                <div class="media-left" style="">
-                                                    <img src="@item.ImagePath.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px; height: 100px;">
-                                                </div>
-                                                <div class="media-body">
-                                                    <h4 class="media-heading">@item.Title</h4>
-                                                    <div class="category">Service</div>
-                                                    <p>@item.Description</p>
-                                                    <p>
-                                                        Company: @item.OtherIds[0]["CompanyName"].ToString()
-                                                        <br />
-                                                        Calendar: @item.OtherIds[0]["CalendarName"].ToString()
-                                                    </p>
-                                                </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="sub-hed">
+                                                <p>@Resource.Service_contains @Model.keyword</p>
                                             </div>
                                         </div>
-                                    }
-                                }
-
-                            </div>
-                            <br /><br />
-                        }
-                        @if (Model.results.Where(x => x.ResultType == 2).ToList().Count > 0)
-                        {
-
-                            <div class="row" style="max-height: 400px; overflow:hidden; overflow-y:scroll;">
-                                <div class="col-md-12">
-                                    <div class="sub-hed">
-                                        <p>@Resource.Company_contains @Model.keyword</p>
                                     </div>
-                                </div>
-                                @foreach (var item in Model.results)
-                                {
-                                    if (item.ResultType == 2)
-                                    {
-                                        <div class="col-md-6">
-                                            <div class="media">
-                                                <div class="media-left" style="">
-                                                    <img src="@item.ImagePath.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px; height: 100px;">
+                                    <div class="row custome-scrollbar" style="max-height: 89vh; overflow:hidden; overflow-y:auto;">
+                                        
+                                        @foreach (var item in Model.results)
+                                        {
+                                            if (item.ResultType == 3)
+                                            {
+                                                <div class="col-md-12">
+                                                    <div class="media">
+                                                        <div class="media-left" style="">
+                                                            <img src="@item.ImagePath.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px; height: 100px;">
+                                                        </div>
+                                                        <div class="media-body">
+                                                            <h4 class="media-heading">@item.Title</h4>
+                                                            <div class="category">Service</div>
+                                                            <p>@item.Description</p>
+                                                            <p>
+                                                                Company: @item.OtherIds[0]["CompanyName"].ToString()
+                                                                <br />
+                                                                Calendar: @item.OtherIds[0]["CalendarName"].ToString()
+                                                            </p>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="media-body">
-                                                    <h4 class="media-heading">@item.Title</h4>
-                                                    <div class="category">Company</div>
-                                                    <p style="max-height:44px; overflow:hidden; padding-top: 4px;">@item.Description</p>
+                                            }
+                                        }
 
-                                                </div>
+                                    </div>
+                                    <br /><br />
+                                }
+                            </div>
+                            <div class="col-md-6">
+                                @if (Model.results.Where(x => x.ResultType == 2).ToList().Count > 0)
+                                {
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="sub-hed">
+                                                <p>@Resource.Company_contains @Model.keyword</p>
                                             </div>
                                         </div>
-                                    }
-                                }
-
-                            </div>
-                            <br /><br />
-                        }
-                        @if (Model.results.Where(x => x.ResultType == 1).ToList().Count > 0)
-                        {
-
-                            <div class="row" style="max-height: 400px; overflow:hidden; overflow-y:scroll;">
-                                <div class="col-md-12">
-                                    <div class="sub-hed">
-                                        <p>Calendar Contains @Model.keyword</p>
                                     </div>
-                                </div>
-                                @foreach (var item in Model.results)
-                                {
-                                    if (item.ResultType == 1)
-                                    {
-                                        <div class="col-md-6">
-                                            <div class="media">
-                                                <div class="media-left" style="">
-                                                    <img src="@item.ImagePath.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px; height: 100px;">
-                                                </div>
-                                                <div class="media-body">
-                                                    <h4 class="media-heading">@item.Title</h4>
-                                                    <div class="category">Calendar</div>
-                                                    <p style="max-height:44px; overflow:hidden; padding-top: 4px;">@item.Description</p>
+                                    <div class="row custome-scrollbar" style="max-height: 40vh; overflow:hidden; overflow-y:scroll;">
+                                        
+                                        @foreach (var item in Model.results)
+                                        {
+                                            if (item.ResultType == 2)
+                                            {
+                                                <div class="col-md-12">
+                                                    <div class="media">
+                                                        <div class="media-left" style="">
+                                                            <img src="@item.ImagePath.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px; height: 100px;">
+                                                        </div>
+                                                        <div class="media-body">
+                                                            <h4 class="media-heading">@item.Title</h4>
+                                                            <div class="category">Company</div>
+                                                            <p style="max-height:44px; overflow:hidden; padding-top: 4px;">@item.Description</p>
 
+                                                        </div>
+                                                    </div>
                                                 </div>
+                                            }
+                                        }
+
+                                    </div>
+                                    <br /><br />
+                                }
+                                @if (Model.results.Where(x => x.ResultType == 1).ToList().Count > 0)
+                                {
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="sub-hed">
+                                                <p>Calendar Contains @Model.keyword</p>
                                             </div>
                                         </div>
-                                    }
-                                }
-
-                            </div>
-                            <br /><br />
-                        }
-                        @if (Model.results.Where(x => x.ResultType == 4).ToList().Count > 0)
-                        {
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="sub-hed">
-                                        <p>Category Contains @Model.keyword</p>
                                     </div>
-                                </div>
-                                @foreach (var item in Model.results)
-                                {
-                                    if (item.ResultType == 4)
-                                    {
-                                        <div class="col-md-3">
-                                            <div class="media">
-                                                <div class="media-body">
-                                                    <h4 class="media-heading">@item.Title</h4>
-                                                    <div class="category">Category</div>
-                                                    <p style="max-height:44px; overflow:hidden; padding-top: 4px;">@item.Description</p>
+                                    <div class="row custome-scrollbar" style="max-height: 40vh; overflow:hidden; overflow-y:scroll;">
+                                        
+                                        @foreach (var item in Model.results)
+                                        {
+                                            if (item.ResultType == 1)
+                                            {
+                                                <div class="col-md-12">
+                                                    <div class="media">
+                                                        <div class="media-left" style="">
+                                                            <img src="@item.ImagePath.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px; height: 100px;">
+                                                        </div>
+                                                        <div class="media-body">
+                                                            <h4 class="media-heading">@item.Title</h4>
+                                                            <div class="category">Calendar</div>
+                                                            <p style="max-height:44px; overflow:hidden; padding-top: 4px;">@item.Description</p>
 
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    }
+                                            }
+                                        }
+
+                                    </div>
+                                    <br /><br />
                                 }
-
                             </div>
-                            <br /><br />
-                        }
+                        </div>
 
+                            
+                            @* @if (Model.results.Where(x => x.ResultType == 4).ToList().Count > 0)
+        {
 
-
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="sub-hed">
+                        <p>Category Contains @Model.keyword</p>
                     </div>
+                </div>
+                @foreach (var item in Model.results)
+                {
+                    if (item.ResultType == 4)
+                    {
+                        <div class="col-md-3">
+                            <div class="media">
+                                <div class="media-body">
+                                    <h4 class="media-heading">@item.Title</h4>
+                                    <div class="category">Category</div>
+                                    <p style="max-height:44px; overflow:hidden; padding-top: 4px;">@item.Description</p>
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+
+            </div>
+            <br /><br />
+        }*@
+
+
+
+                        </div>
                 </div>
             </div>
         </div>
