@@ -15,6 +15,11 @@ using Barrway.DTO.UserAdminModels;
 using Barrway.DTO.MarketplaceModels;
 using System.Net.Http;
 using Barrway.DTO.BusinessModels;
+using static QRCoder.PayloadGenerator;
+using QRCoder;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Configuration;
 
 namespace Barrway.Controllers
 {
@@ -146,6 +151,29 @@ namespace Barrway.Controllers
             }
 
 
+        }
+
+        public async Task<ActionResult> CreateDynamicFormEntry(List<IDictionary<string, string>> data, string formId, string CalendarCode)
+        {
+            if (!string.IsNullOrEmpty(formId))
+            {
+                try
+                {
+                    var result = await publicUserService.CreateDynamicFormEntry(data, formId, UserIdentity.UserID, CalendarCode);
+
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception ex)
+                {
+
+                }
+                return Json(new AddUpdateDelete() { Status = false, Message = "Something went wrong" }, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = "form not Found." }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         [ValidateInput(false)]
@@ -350,8 +378,7 @@ namespace Barrway.Controllers
                 return Json(new AddUpdateDelete() { Message = "Failed", Status = false }, JsonRequestBehavior.AllowGet);
             }
         }
-
-
+        
         [HttpPost]
         public async Task<ActionResult> GetMyAttendanceList(GenerateDynamicFormData data)
         {
@@ -528,7 +555,32 @@ namespace Barrway.Controllers
         }
 
 
+        [HttpGet]
+        public async Task<AddUpdateDelete> GenerateAttendanceQR(string TransactionId)
+        {
+            QRCodeModel model = new QRCodeModel();
+            string Url = ConfigurationManager.AppSettings["baseurl"] + "/useradmin/attendanceReview?TId=" + TransactionId;
+            Payload payload = new Url(Url);
 
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(payload);
+            QRCode qrCode = new QRCode(qrCodeData);
+            var qrCodeAsBitmap = qrCode.GetGraphic(20);
+
+            string base64String = Convert.ToBase64String(BitmapToByteArray(qrCodeAsBitmap));
+            model.QRImageURL = "data:image/png;base64," + base64String;
+
+            return new AddUpdateDelete() { Status = true, Data = model };
+        }
+
+        private byte[] BitmapToByteArray(Bitmap bitmap)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                bitmap.Save(ms, ImageFormat.Png);
+                return ms.ToArray();
+            }
+        }
 
     }
 }

@@ -127,9 +127,9 @@
                     <div style="height: 400px; overflow: hidden; overflow-y: scroll;">
                         <div class="row">
                             <div class="col-md-12 mb-3" ng-repeat="event in bookingEventData">
-                                <div ng-click="GoToCalendar(event.COMPANY_CODE, '', 2)" style="border-radius: 8px; cursor:pointer; background: #ECFAFB; min-height: 107px; ">
+                                <div style="border-radius: 8px; cursor:pointer; background: #ECFAFB; min-height: 107px; ">
 
-                                    <div class="row">
+                                    <div class="row" ng-click="GoToCalendar(event.COMPANY_CODE, '', 2)">
                                         <div class="col-md-9" style="padding:16px 31px">
                                             <h3>{{event.customTitleSplit[1]}}</h3>
                                             <div>
@@ -149,7 +149,15 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                    <div class="row">
+                                        <div class="col-md-12" style="padding:0px 31px; padding-bottom: 16px;">
+                                            <div ng-if="event.ATTEND == 'N'" style="display:flex; justify-content:flex-start;">
+                                                <button class="btn btn-danger" ng-click="AttendSession(event.Id, 'NORMAL')" style="background: #E2476C; padding:6px 16px; border-radius: 50px; margin-right: 8px;">Attend</button>
+                                                <img src="../../assets/img/QR_CODE_LOGO.png" ng-click="AttendSession(event.Id, 'QR')" style="height: 40px; width: 40px;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
 
                                 </div>
                             </div>

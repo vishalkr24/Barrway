@@ -62,7 +62,7 @@ $(document).ready(async function () {
     } else {
         is5CType = false;
         $("#year-view-nav").hide();
-        $("#tabs li[data-value='External Events'] a").trigger("click");
+        /*$("#tabs li[data-value='External Events'] a").trigger("click");*/
     }
 
     console.log(calendarDetails, "calendarDetails");
@@ -136,7 +136,6 @@ $(document).ready(async function () {
 
 
         $('#calendar-service').change(async function () {
-            //debugger;
             if ($(this).val() != '') {
                 var searchSrevice = $('#calendar-service option:selected').text();
                 var param = { "action": 29, "formTableColumnData": `   (   (   SERVICE_MASTER_1933.ACTIVITY_NAME like N'${searchSrevice}'    )        )   `, "formTableColumnName": "    left join SERVICE_MASTER_1933 on SERVICE_MASTER_1933.formId=f1.referrenceFormId and SERVICE_MASTER_1933.Id=f1.referrenceId  ", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 }
@@ -3038,6 +3037,33 @@ async function rendarPopupCalendar(assignDate) {
 
 function bookingService(star, end, bgevent) {
     debugger;
+    $.ajax({
+        url: "/UserAdmin/CheckAdditionalFormDetails",
+        method: "GET",
+        data: {
+            CalendarCode: CALENDAR_CODE
+        },
+        success: function (response) {
+            if (response.Status) {
+                invokeBookingService(star, end, bgevent);
+            } else {
+                angular.element($("#AdditionalDetailsFormModal")).scope().bgEventDetails = {
+                    start: star,
+                    end: end,
+                    bgevent: bgevent
+                };
+                angular.element($("#AdditionalDetailsFormModal")).scope().IsEventBackground = true;
+                angular.element($("#AdditionalDetailsFormModal")).scope().renderAdditionalDetailsForm();
+            }
+        },
+        error: function (error) {
+            console.error(error);
+        }
+    });
+    
+}
+
+function invokeBookingService(star, end, bgevent) {
     var data = {
         "start": star,
         "end": end,
@@ -3065,13 +3091,15 @@ function bookingService(star, end, bgevent) {
             buttons: {
                 confirm: "Okay!"
             }
-        })
+        }).then(function () {
+            $("#AdditionalDetailsFormModal").modal("hide");
+            $("#AdditionalDetailsFormModal #service-div").empty();
+        });
         //alert(response.Message);
         $('#agenda-view2 div.calendar').fullCalendar('removeEvents');
         $('#agenda-view2 div.calendar').fullCalendar('refetchEvents');
     })
 }
-
 
 
 function checkFixedSessionCalendar() {

@@ -313,12 +313,10 @@ namespace Barrway.Controllers
             {
                 if (Convert.ToInt32(ModelId) == 1)
                 {
-                    // location master entry and update
                     try
                     {
                         var dataSerialized = data.Where(x => x["Is_New"]?.ToString() == "true").ToList();
 
-                        //List<CalendarLocationMasterModel> locMasMod = JsonConvert.DeserializeObject<List<CalendarLocationMasterModel>>(dataSerialized);
                         if (dataSerialized.Count > 0)
                         {
                             List<string> requestList = new List<string>();
