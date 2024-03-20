@@ -987,19 +987,13 @@
                            placeholder="search {{filterPopupPlaceHolder.title}}"
                            class="search-input col-md-16 form-control" />
                 </div>
-
-                <button type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close">
-                    <span aria-hidden="true"></span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="row m-0">
                     <input type="hidden" id="treeIndex" value="" />
                     <div class="col-md-3"
-                         ng-repeat="(key,ldata) in lastNodeDataList"
+                         ng-repeat="(key,ldata) in lastNodeDataList | groupBy:'firstChar'"
                          ng-if="(ldata|filter:nodechildModelSearch).length>0">
                         <div class="form-group">
                             <h5 ng-if="(ldata|filter:nodechildModelSearch).length>0">

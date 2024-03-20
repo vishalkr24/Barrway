@@ -1,4 +1,4 @@
-﻿var FormGeneratorApp = angular.module('FormGeneratorApp', ["ui.router", "ngCookies", "ngBootbox", "ngResource", 'toaster', 'ui.bootstrap', 'ui.router.state', 'ncy-angular-breadcrumb']);
+﻿var FormGeneratorApp = angular.module('FormGeneratorApp', ["ui.router", "ngCookies", "ngBootbox", "ngResource", 'toaster', 'ui.bootstrap', 'ui.router.state', 'ncy-angular-breadcrumb', 'angular.filter']);
 
 FormGeneratorApp.run(function ($rootScope, $templateCache, notifierService, $q, $ngBootbox, $timeout, $location, toaster, $filter, $transitions, $state, $breadcrumb, mainService, adminService) {
     $rootScope.isPreviewPage = false;
