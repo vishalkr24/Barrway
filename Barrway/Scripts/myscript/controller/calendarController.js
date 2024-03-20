@@ -9786,7 +9786,7 @@
             window["formGroupKeyList"] = null;
 
             bootbox.hideAll();
-            debugger;
+            //debugger;
             var formId = $stateParams.formId;
             $scope.id = $stateParams.formId;
             $scope.currentFormId = $stateParams.formId;
@@ -10112,7 +10112,7 @@
         };
 
         $scope.createNewEvent = function () {
-            debugger;
+            //debugger;
             //console.log($scope.createEventDetails);
             if ($scope.currentUserFormRole == 0 || $scope.currentUserFormRole == 1) {
                 swal({
@@ -10135,7 +10135,7 @@
                 return;
             }
             var activityForm = $scope.allFormsList.find(x => x.formTag?.toLowerCase().contains("#course"));
-            debugger;
+            //debugger;
 
             var param = {};
             param.action = 1;
@@ -10578,12 +10578,14 @@
                                                             }
                                                             gindx++;
                                                         });
+                                                        debugger;
                                                         if (data.length > listSettings.limitVal) {
                                                             listSettings.generateUniqueModel = generateUniqueNumber();
                                                             listJson.push({ children: false, class: "no_checkbox", id: 'more-button-' + listSettings.generateUniqueModel + '', 'data-formId': listSettings.resourceForm, text: '<a class="morebutton"  id="more-button-' + listSettings.generateUniqueModel + '" data-formId="' + listSettings.resourceForm + '"  ><i class="fa fa-plus"></i> ' + (data.length - listSettings.limitVal) + ' more</a>' });
                                                             $timeout(function () {
                                                                 $("#treeIndex").val(setKey)
                                                                 listSettings.lastNodeDataList = [];
+                                                                debugger;
                                                                 _.each(listSettings.lastNodeData, function (itemList, keyl) {
                                                                     var fieldKeyData = itemList[grbp];
                                                                     var que = grbp + " like '" + fieldKeyData + "' ";
@@ -10604,6 +10606,7 @@
                                                                         selectFormId = $(event.currentTarget).find('.morebutton').data().formid;
                                                                     listSettings.selectFormId = selectFormId;
                                                                     $scope.nodechildModelSearch = "";
+                                                                    debugger;
                                                                     $scope.getSelectedModelPopData(listSettings);
                                                                 });
 
@@ -10878,6 +10881,7 @@
             }, 150);
             //$scope.bindDraggable($scope.xSelection, $scope.ySelection);
         };
+        $scope.lastNodeDataList = [];
         $scope.getSelectedModelPopData = function (listSettings) {
             $scope.getSelectedModelPopSelectFormId = 0;
             if (!DataService.isEmpty(listSettings) && !DataService.isEmpty(listSettings.selectFormId)) {
@@ -10899,6 +10903,7 @@
                 $rootScope.safeApply();
                 $timeout(function () {
                     $scope.lastNodeDataList = listSettings.lastNodeDataList;
+                    $rootScope.safeApply();
                     $('#filterModal').modal('show');
                 }, 100);
             }
@@ -13036,7 +13041,7 @@
             return queryText;
         };
         function reBindCalender() {
-            debugger;
+            //debugger;
             $scope.basicViewCalenderDataTemp.newFilteredEventList = [];
             var whereClouse = " ";
             var joinClouse = "";
@@ -13421,7 +13426,7 @@
         };
         $scope.ySelectionChange = function (formId) {
             try {
-                debugger;
+                //debugger;
                 // alert(formId);
                 showLoader();
                 if ($scope.xSelection == formId) {
@@ -16215,7 +16220,7 @@
         //}
 
         $scope.manageSelectedCompany = function () {
-            debugger;
+            //debugger;
             if (localStorage.getItem("publicUserSelectedCompany") != null && localStorage.getItem("publicUserSelectedCompany") != undefined && localStorage.getItem("publicUserSelectedCompany") != "null") {
                 $("#company-filter-selector").val(localStorage.getItem("publicUserSelectedCompany"));
             } else {
@@ -16621,7 +16626,7 @@
                 { title: 'Method', field: 'METHOD', headerFilter: "input" },
                 {
                     title: 'Client Paid', field: 'AMOUNT', headerFilter: "input", formatter: function (cell, formatter) {
-                        debugger;
+                        //debugger;
                         if (cell.getData().TRANSACTION_TYPE == "Purchase") {
                             var amount = cell.getData().AMOUNT;
                             return "HK$" + amount;
@@ -16752,7 +16757,7 @@
         //$scope.CalendarMasterList();
 
         $scope.updateAttendanceRecord = function (recordId, IsPresent = false) {
-            debugger;
+            //debugger;
             for (var i = 0; i < $scope.AttendanceRecord.length; i++) {
                 if ($scope.AttendanceRecord[i].Id == recordId) {
                     $scope.AttendanceRecord[i].Attendance = (IsPresent) ? "Present" : "Absent";
@@ -16779,7 +16784,7 @@
 
         $scope.SubmitBulkAttendance = function () {
 
-            debugger;
+            //debugger;
             adminService.postAsync('/Calendar/UpdateBulkTransactionAttendance/', { AttendanceJsonString: JSON.stringify($scope.AttendanceRecord) }).then(function (res) {
 
                 if (res.data.Status) {
@@ -16790,7 +16795,7 @@
                         icon: "success",
                         confirmButtonText: 'Okay'
                     }).then((result) => {
-                        debugger;
+                        //debugger;
                         $scope.CancelBulkAttendance();
                     });
 
@@ -17067,7 +17072,7 @@
                         //count - the number of rows in this group
                         //data - an array of all the row data objects in this group
                         //group - the group component for the group
-                        debugger;
+                        //debugger;
                         var creditValue = 0;
                         var debitValue = 0;
                         for (var i = 0; i < data.length; i++) {
@@ -17160,7 +17165,7 @@
         adminService.postAsync('/UserAdmin/GetSingleUserByUserId/', { UserId: $("#userIdHidden").val() }).then(function (res) {
 
             if (res.data.data.Status) {
-                debugger;
+                //debugger;
                 res.data.data.Data.PROFILE_PHOTO_PATH = res.data.data.Data.PROFILE_PHOTO_PATH.replace("~", "..");
 
                 const dateStr = res.data.data.Data.DATE_OF_BIRTH;
@@ -17319,7 +17324,7 @@
         $("#user-nav-myfavorite").addClass("active")
 
         $scope.setFavoritesData = function (pageNumber, IsInnitial = false) {
-            debugger;
+            //debugger;
             var CompanyCode = null;
 
             if ($("#company-filter-selector option:selected").val() != "-1") {

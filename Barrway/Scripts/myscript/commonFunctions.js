@@ -1486,14 +1486,11 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
     }
     calenderData = changeResourceIDByYSelection((calenderData.data != undefined) ? calenderData.data : calenderData);
     window["eventListTemp"] = calenderData;
-    var $scopeVar = angular.element($("#calendar")).scope();
-
   
-
+    var $scopeVar = angular.element($("#calendar")).scope();
     var basicDetails = window["EventBasicDetail"];
 
     var GroupingData = window["colGrouping"];
-    var $scopeVar = angular.element($("#calendar")).scope();
     var formID = basicDetails.formData.formId;
     var resourceColumn = '';
     var activitiesForm = basicDetails.formData.activitiesForm;
@@ -4437,6 +4434,16 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                             if (exists.minTime != "" && exists.minTime != null && exists.minTime != undefined && exists.maxTime != null && exists.maxTime != undefined && exists.maxTime != "") {
                                 var minTime = exists.minTime.trim().replace(' ', ':');
                                 var maxTime = exists.maxTime.trim().replace(' ', ':');
+
+                                let DISPLAY_MIN_TIME = calendarDetails.DISPLAY_MIN_TIME;
+                                let DISPLAY_MAX_TIME = calendarDetails.DISPLAY_MAX_TIME;
+                                if (DISPLAY_MIN_TIME && DISPLAY_MIN_TIME != "" && DISPLAY_MIN_TIME != "null" && DISPLAY_MIN_TIME != null) {
+                                    minTime = moment(DISPLAY_MIN_TIME, "hh:mm A").format("HH:mm");
+                                }
+                                if (DISPLAY_MAX_TIME && DISPLAY_MAX_TIME != "" && DISPLAY_MAX_TIME != "null" && DISPLAY_MAX_TIME != null) {
+                                    maxTime = moment(DISPLAY_MAX_TIME, "hh:mm A").format("HH:mm");
+                                }
+
                                 if (Check_EXIST_FIXED_OPERATING_HOURS(calendarDetails)) {
                                     $('#timeline-resource-view div.calendar').fullCalendar('option', 'minTime', minTime + ":00");
                                     $('#timeline-resource-view div.calendar').fullCalendar('option', 'maxTime', maxTime + ":00");
@@ -4655,13 +4662,14 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                 var maxTime = exists.maxTime.trim().replace(' ', ':');
 
 
-                //if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
-                //    minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
-                //}
-
-                //if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
-                //    maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
-                //}
+                let DISPLAY_MIN_TIME = calendarDetails.DISPLAY_MIN_TIME;
+                let DISPLAY_MAX_TIME = calendarDetails.DISPLAY_MAX_TIME;
+                if (DISPLAY_MIN_TIME && DISPLAY_MIN_TIME != "" && DISPLAY_MIN_TIME != "null" && DISPLAY_MIN_TIME != null) {
+                    minTime = moment(DISPLAY_MIN_TIME, "hh:mm A").format("HH:mm");
+                }
+                if (DISPLAY_MAX_TIME && DISPLAY_MAX_TIME != "" && DISPLAY_MAX_TIME != "null" && DISPLAY_MAX_TIME != null) {
+                    maxTime = moment(DISPLAY_MAX_TIME, "hh:mm A").format("HH:mm");
+                }
 
                 if (Check_EXIST_FIXED_OPERATING_HOURS(calendarDetails)) {
                     myOptions2.minTime = minTime + ":00";
@@ -15639,4 +15647,3 @@ function Check_IS_SERVICE_TYPE(calendarDetails) {
     let type = calendarDetails["CALENDAR_TYPE"];
     return setup["Step2"]["Steps"]["Step" + type]["IS_SERVICE_TYPE"] == true;
 }
-
