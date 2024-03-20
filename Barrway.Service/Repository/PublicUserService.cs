@@ -765,6 +765,59 @@ namespace Barrway.Service.Repository
             return new AddUpdateDelete() { Status = false, Message = "Invalid response!" };
         }
 
+        public async Task<AddUpdateDelete> CreateDynamicFormEntry(List<IDictionary<string, string>> model, string formId, string UserId, string CalendarCode)
+        {
+            try
+            {
+                List<string> requestList = new List<string>();
+                List<string> formGroupKeyListTemp = new List<string>();
+                Dictionary<string, object> sd = new Dictionary<string, object>();
+
+                var assign = model.FirstOrDefault();
+
+                foreach (KeyValuePair<string, string> keyValuePair in assign)
+                {
+                    if (keyValuePair.Key != "Is_New" && keyValuePair.Key != "Id")
+                    {
+                        sd.Add(keyValuePair.Key, keyValuePair.Value.ToString());
+                    }
+
+                }
+
+                Form_DataTable data = new Form_DataTable();
+                data.action = (int)FormAction.Save;
+                data.formId = Convert.ToInt32(formId);
+                data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(sd);
+                data.formGroupKey = Guid.NewGuid().ToString();
+                var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+                if (formResult.res > 0)
+                {
+                    string tableName = (await CheckAdditionalFormDetails(CalendarCode, UserId)).Data;
+                    string query = $@"update {tableName} set created_by = '{UserId}' where Id = '{formResult.Id}'";
+                    var result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                    if (result > 0)
+                    {
+                        return new AddUpdateDelete() { Status = true, Message = "Form saved successfully!" };
+                    }
+                    else
+                    {
+                        return new AddUpdateDelete() { Status = true, Message = "Form not saved!" };
+                    }
+                    
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "Form not saved. Please try again!" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
         private async Task<int> UpCommingBookingAdd(IDictionary<string, string> data)
         {
 
@@ -1240,7 +1293,7 @@ namespace Barrway.Service.Repository
                             }
                             else
                             {
-                                return new AddUpdateDelete() { Status = false, Message = AppMessage.Success };
+                                return new AddUpdateDelete() { Status = false, Message = AppMessage.Success, Data = TableName };
                             }
                         }
                         else
@@ -1606,7 +1659,8 @@ namespace Barrway.Service.Repository
                                     from TRANSACTION_MASTER_1942 inner join PARTICIPANT_MASTER_1940 on TRANSACTION_MASTER_1942.STUDENT = PARTICIPANT_MASTER_1940.Id where TRANSACTION_MASTER_1942.formGroupKey = f.formGroupKey         FOR XML PATH('')), 1, 1, '') customFourthTitle
                                     , (dbo.[GetSubQueryCalender](f.formGroupKey)) customTitle,   (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceFormId) from form_calenderreferrence f2     
                                     where f2.formgroupkey = f.formGroupKey  FOR XML PATH('')), 1, 1, '')   ) customForms  , (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceId) 
-                                    from form_calenderreferrence f2    where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) customFormIds,  '' referrences_1,  '' referrences_2,  '' referrences_3   
+                                    from form_calenderreferrence f2    where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) customFormIds,  '' referrences_1,  '' referrences_2,  '' referrences_3 
+                                    , (select case when (cast(getdate() as datetime) >= cast((DATEADD(minute, -30, f.[start])) as datetime) and cast(getdate() as datetime) <= cast(f.[end] as datetime) ) then 'Y' else 'N' end) as 'ATTEND'
                                     from CALENDAR_FORM_1935 f 
                                     join TRANSACTION_MASTER_1942 transaction_m on transaction_m.CALENDAR_CODE = f.CALENDAR_CODE
                                     join PARTICIPANT_MASTER_1940 participant_m on participant_m.Id = transaction_m.STUDENT

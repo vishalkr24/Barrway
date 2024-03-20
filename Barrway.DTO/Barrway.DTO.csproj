@@ -115,6 +115,7 @@
     <Compile Include="Common\AddUpdateDelete.cs" />
     <Compile Include="Common\AppMessage.cs" />
     <Compile Include="Common\FilterViewModel.cs" />
+    <Compile Include="Common\QRCodeModel.cs" />
     <Compile Include="Common\RoleMasterModel.cs" />
     <Compile Include="CustomValidations\ValidImageFile.cs" />
     <Compile Include="CustomValidations\ValidDropdownValue.cs" />

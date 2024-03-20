@@ -734,7 +734,7 @@
                                     <i class="fa fa-calendar" aria-hidden="true" style="padding-right:8px; font-size: 16px;"></i> <span class="lbl-calendar-name">Select Calendar</span>
                                 </div>
                                 <div class="dropdown-men" id="disp-navbar-calendar-selector">
-                                    <a ng-repeat="calendar in calendarList" href="javascript:void(0)" data-id="CLR_SEL_{{calendar.CALENDAR_CODE}}" class="selectable-calendar-item" onclick="selectItem2(this)">{{calendar.CALENDAR_NAME}} [{{calendar.CALENDAR_CODE}}]</a>
+                                    <a ng-repeat="calendar in calendarList" href="javascript:void(0)" style="padding-right: 8px;" data-id="CLR_SEL_{{calendar.CALENDAR_CODE}}" class="selectable-calendar-item" onclick="selectItem2(this)">{{calendar.CALENDAR_NAME}} [{{calendar.CALENDAR_CODE}}]</a>
                                     <div class="add-company">
                                         <a href="/BusinessAdmin/CalendarMaster">
                                             <button>+ Add new calendar</button>

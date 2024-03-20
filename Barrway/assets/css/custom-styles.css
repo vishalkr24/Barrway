@@ -125,7 +125,8 @@
         z-index: 999;
         border: 1px solid #ccc;
         border-radius: 4px;
-        width: 200px;
+        width: fit-content;
+        max-width: 300px;
     }
 
 .dropdown-me .dropdown-men a {
