@@ -16309,6 +16309,35 @@
             });
         }
 
+        $scope.AttendSession = function (transactionId, type) {
+
+            $scope.currentTransactionId = $scope.bookingEventData.find(x => x.Id == transactionId);
+
+            if (type == "QR") {
+                $scope.generateQRCode();
+            } else {
+                $scope.markPresent();
+            }
+            
+
+        }
+
+        $scope.generateQRCode = function () {
+
+        }
+
+        $scope.markPresent = function () {
+
+            adminService.postAsync('/Calendar/UpdateTransactionAttendance/', { TransactionId: $scope.currentTransaction.Id, IsPresent: true }).then(function (res) {
+
+                $scope.CalendarMasterList(false);
+                $scope.closeAttendanceModel();
+
+            }, function (err) {
+
+            });
+        }
+
         loadcalendar();
 
         //$scope.startDate = moment(new Date());
