@@ -383,7 +383,7 @@
                                 Fill in some details for your Calendar.
                             </p>
                         </div>
-                        <form action="/BusinessAdmin/AddCalendar?IsPartial=@ViewBag.IsPartial.ToString().ToLower()" method="post" enctype="multipart/form-data">
+                        <form id="basic-calendar-form" action="/BusinessAdmin/AddCalendar?IsPartial=@ViewBag.IsPartial.ToString().ToLower()" method="post" enctype="multipart/form-data">
                             <div id="div1">
                                 <div class="text-center">
                                     <div class="profile-form">
@@ -537,6 +537,48 @@
                                                         </option>
                                                     </select>
                                                     @Html.ValidationMessageFor(model => model.DEFAULT_RESOURCE, "", new { @class = "invalid-feedback-2" })
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="sub">Default Calendar View</label>
+
+                                                    <select required id="DEFAULT_CALENDAR_VIEW" name="DEFAULT_CALENDAR_VIEW" class="form-control" value="@Model.DEFAULT_CALENDAR_VIEW">
+                                                        <option value="LIST VIEW">
+                                                            List View
+                                                        </option>
+                                                        <option value="AGENDA VIEW">
+                                                            Agenda View
+                                                        </option>
+                                                        <option value="TIMELINE VIEW">
+                                                            Timeline View
+                                                        </option>
+                                                        <option value="VERTICAL VIEW">
+                                                            Vertical View
+                                                        </option>
+
+                                                    </select>
+                                                    @Html.ValidationMessageFor(model => model.DEFAULT_CALENDAR_VIEW, "", new { @class = "invalid-feedback-2" })
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="sub">Required Calendar Views</label>
+
+                                                    <select required id="REQUIRED_CALENDAR_VIEWS" name="REQUIRED_CALENDAR_VIEWS" class="js-select form-select" multiple="true" placeholder="Select Required Views" value="@Model.REQUIRED_CALENDAR_VIEWS">
+                                                        <option value="LIST VIEW" selected>
+                                                            List View
+                                                        </option>
+                                                        <option value="AGENDA VIEW" selected>
+                                                            Agenda View
+                                                        </option>
+                                                        <option value="TIMELINE VIEW" selected>
+                                                            Timeline View
+                                                        </option>
+                                                        <option value="VERTICAL VIEW" selected>
+                                                            Vertical View
+                                                        </option>
+
+                                                    </select>
+                                                    @Html.ValidationMessageFor(model => model.REQUIRED_CALENDAR_VIEWS, "", new { @class = "invalid-feedback-2" })
                                                 </div>
 
                                                 <div class="form-group">

@@ -56,6 +56,49 @@ $(document).ready(async function () {
     var calenderSettings = await getCalenderSettings();
     
     calendarDetails = (await getCalendarDetails(CALENDAR_CODE)).Data;
+    
+
+    var SelectedCalendarViews = (calendarDetails["REQUIRED_CALENDAR_VIEWS"].includes(",")) ? calendarDetails["REQUIRED_CALENDAR_VIEWS"].split(',') : [calendarDetails["REQUIRED_CALENDAR_VIEWS"]];
+
+    SelectedCalendarViews.forEach(x => {
+        switch (x) {
+            case 'LIST VIEW':
+                $("#list-view-nav").show();
+                break;
+            case 'AGENDA VIEW':
+                $("#agenda-view-nav").show();
+                break;
+            case 'TIMELINE VIEW':
+                $("#timeline-view-nav").show();
+                break;
+            case 'VERTICAL VIEW':
+                $("#vertical-view-nav").show();
+                break;
+            default:
+                $("#timeline-view-nav").show();
+                break;
+        }
+    });
+
+    switch (calendarDetails["DEFAULT_CALENDAR_VIEW"]) {
+        case 'LIST VIEW':
+            $("#list-view-nav a").trigger("click");
+            break;
+        case 'AGENDA VIEW':
+            $("#agenda-view-nav a").trigger("click");
+            break;
+        case 'TIMELINE VIEW':
+            $("#timeline-view-nav a").trigger("click");
+            break;
+        case 'VERTICAL VIEW':
+            $("#vertical-view-nav a").trigger("click");
+            break;
+        default:
+            $("#timeline-view-nav a").trigger("click");
+            break;
+    }
+    
+
     if (calendarDetails["CALENDAR_CATEGORY_ID"] == "4" && calendarDetails["CALENDAR_TYPE"] == "3") {
         is5CType = true;
         $("#year-view-nav").show();

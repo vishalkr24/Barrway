@@ -870,16 +870,16 @@
                                 <li id="year-view-nav" data-value="year view">
                                     <a href="#yearview" onclick="window.location.href='/company/calanderyearview/@ViewBag.CompanyCode/@ViewBag.CalendarCode'">Year View</a>
                                 </li>
-                                <li data-value="List view">
+                                <li  id="list-view-nav" data-value="List view" style="display:none;">
                                     <a href="#list-view">@Resource.List_View</a>
                                 </li>
-                                <li data-value="External Events">
+                                <li id="agenda-view-nav" data-value="External Events" style="display:none;">
                                     <a href="#agenda-view">@Resource.Agenda_View</a>
                                 </li>
-                                <li data-value="Timeline resource view">
+                                <li id="timeline-view-nav" data-value="Timeline resource view" style="display:none;">
                                     <a href="#timeline-resource-view">@Resource.Timeline_Resource_View</a>
                                 </li>
-                                <li data-value="Vertical resource view">
+                                <li id="vertical-view-nav" data-value="Vertical resource view" style="display:none;">
                                     <a href="#vertical-resource-view">@Resource.Vertical_Resource_View</a>
                                 </li>
                             </ul>
@@ -1115,15 +1115,15 @@
     <div class="modal fade" id="AdditionalDetailsFormModal" style="z-index: 2000;" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel5" aria-hidden="true">
         <div class="modal-dialog modal-lg" style="width: 100%;" role="document">
             <div class="modal-content">
-                <div class="modal-header" style="border-bottom: 1px solid lightgrey;">
+                <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Fill your details</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="padding-top: 0px;">
                     <div id="service-div"></div>
-                    <div style="display: flex; justify-content: flex-end; margin-top: 24px;">
+                    @*<div style="display: flex; justify-content: flex-end; margin-top: 24px;">
                         <button class="btn btn-default" style="margin-right: 12px" data-bs-dismiss="modal">Cancel</button> <button class="btn btn-danger" style="background: #E2476C;" ng-click="createDynamicFormEntry()">Confirm booking</button>
-                    </div>
+                    </div>*@
                 </div>
             </div>
 
@@ -1155,6 +1155,8 @@
             angular.element($("#dateRangePickerModel")).scope().selectedLocationName = "";
             angular.element($("#dateRangePickerModel")).scope().selectedStartDate = "DD-MM-YYYY";
             angular.element($("#dateRangePickerModel")).scope().selectedEndDate = "DD-MM-YYYY";
+
+            $scope.userDetail = mainService.loginDetails();
 
             $scope.IsEventBackground = false;
             $scope.bgEventDetails = {};
@@ -1359,19 +1361,13 @@
                         if (response.length > 0) {
 
                             var data = JSON.parse(response[0].fields);
+                            $scope.importFormSettings = response[0];
 
                             if (data["Page 1"] != null && data["Page 1"] != undefined) {
                                 var data2 = JSON.parse(data["Page 1"]);
                                 debugger;
                                 let containerClass = "";
                                 
-                                //if (data2 != null && data2 != undefined) {
-                                //    data2 = data2.filter(x => x["required"] != undefined && x["required"] == true);
-                                //}
-
-                                //if (ConfigStep.Form_Fields != undefined && ConfigStep.Form_Fields != undefined) {
-                                //    data2 = data2.filter(x => ConfigStep.Form_Fields.find(y => y == x.name));
-                                //}
                                 dataModelList = [];
                                 data2.forEach(x => {
 
@@ -1393,36 +1389,48 @@
                                     COMPANY_CODE: calendarDetails.COMPANY_CODE,
                                     Is_New: true
                                 };
+
                                 $("#service-div").empty();
-                                $("#service-div").append(`<div class="form" id="service-elem-${dataModel.Id}"> <div class="row mt-3" style="border-bottom: 1px dashed #898989;"></div></div>`)
+                                $("#service-div").append(`<form class="form" id="service-elem"> <div class="row mt-3"></div></form>`)
+
+                                $("#service-div #service-elem .row").append(response[0].formContentHTMLTemp);
+
+                                $('#service-div #service-elem').on("submit", function (evt) {
+                                    if ($('#service-div #service-elem').valid()) {
+                                        evt.preventDefault();
+                                        $scope.createDynamicFormEntry();
+                                    } else {
+                                        evt.preventDefault();
+                                    }
+                                })
 
                                 dataModelList.forEach(x => {
                                     if (x.name == "COMPANY_CODE" || x.name == "CALENDAR_CODE") {
-                                        $("#service-div #service-elem-" + dataModel.Id + " .row").append(`<div style="display:none!important;" class="${x.containerClass}">
-                                                    <div class="form-group">
-                                                        ${generateInputBox(x, dataModel.Id, "")}
-                                                    </div>
-                                                </div>`);
+                                        //$("#service-div #service-elem-" + dataModel.Id + " .row ").
+                                        $(`#service-div .border-${x.name}`).hide();
                                     } else {
+                                        if (x.name.includes('button')) {
+                                            $(`#service-div .border-${x.name}0`).addClass("col-sm-2");
+                                            $(`#service-div .border-${x.name}00`).addClass("col-sm-2");
+                                        }
                                         dataModel[x.name] = "";
-                                        $("#service-div #service-elem-" + dataModel.Id + " .row").append(`<div class="${x.containerClass}">
-                                                    <div class="form-group">
-                                                        ${generateInputBox(x, dataModel.Id, "")}
-                                                    </div>
-                                                </div>`);
                                     }
                                     
-                                    $(`input[name=${x.name}${dataModel.Id}]`).val(dataModel[x.name]);
+                                    $(`#service-div input[name=${x.name}]`).val(dataModel[x.name]);
                                 });
 
                                 dataList = [];
                                 dataList.push(dataModel);
                                 setTimeout(function () {
                                     dataModelList.forEach(x => {
-                                        $(`input[name^=${x.name}]`).bind("keyup change paste", function () {
-                                            let inputId = $(this).attr("data-input-id");
-                                            dataList.find(y => y.Id == inputId)[x.name] = this.value;
-                                        })
+                                        if (x.type == "file") {
+                                            
+                                        } else {
+                                            $(`#service-div input[name^=${x.name}]`).bind("keyup change paste", function () {
+                                                dataList[0][x.name] = this.value;
+                                            })
+                                        }
+                                        
                                     });
                                 }, 500);
 
@@ -1446,7 +1454,81 @@
                 })
             }
 
-           
+            $scope.existButtonFunc = function () {
+                $("#AdditionalDetailsFormModal").modal("hide");
+                $("#AdditionalDetailsFormModal #service-div").empty();
+            }
+
+            $scope.fileUploadDataEntry = function (id, uploaderType) {
+
+                var oFReader = new FileReader();
+                var files = document.getElementById(id).files;
+                //alert(uploaderType);
+
+                if (files.length > 1) {
+
+                    getMultipleFiles(id);
+
+                }
+                else if (files.length == 1) {
+
+                    getSingleFile(id, uploaderType);
+
+                };
+                $scope.uploadFileOnly(files, id, uploaderType);
+
+            };
+
+            $scope.uploadFileOnly = function (element, id, uploadType) {
+
+                if (angular.isDefined(element)) {
+                    var fileData = element;
+                    var fd = new FormData();
+                    var reqType = "form";
+                    var uid = $scope.userDetail.uid;
+                    var userId = $scope.userDetail.Id;
+                    var appIdParam = $scope.importFormSettings.applicationId;
+                    var appTitleParam = $scope.importFormSettings.applicationTitle;
+                    var formIdParam = $scope.importFormSettings.formId;
+                    var formTitleParam = $scope.importFormSettings.title;
+                    var counterfile = 0;
+                    angular.forEach(fileData, function (value, key) {
+                        //console.log(value);
+                        counterfile++;
+                        var NamingIndex = "file" + counterfile.toString();
+                        fd.append(NamingIndex, value);
+                    });
+                    //fd.append('file', fileData);
+
+                    //console.log(fd);
+                    mainService.uploadFile("UploadFile", fd, reqType, uid, appIdParam, appTitleParam, formIdParam, formTitleParam, false, userId)
+                        .then(function (response) {
+                            if (response.data != null && angular.isDefined(response.data)) {
+                                if (angular.isDefined(response.data)) {
+                                    if (response.data.code == 200) {
+                                        var urlStr = response.data.fileUrl;
+                                        //if()
+                                        if (uploadType == "multi")
+                                            setHiddenField(id, urlStr);
+                                        else {
+                                            $("input:hidden[name=" + id + "]").val(urlStr);
+                                            dataList[0][id] = urlStr
+                                        }
+                                        console.log("uploaded Successfully");
+                                    } else {
+                                        notifierService.notifySweetAlertMessage('error', 'File', response.data.message);
+                                    }
+                                    $rootScope.$emit("HideLoading");
+                                }
+
+                            }
+                        }
+                            , function (err) {
+                                console.log("some error occured." + err);
+                                $rootScope.$emit("HideLoading");
+                            });
+                }
+            };
 
             $scope.createDynamicFormEntry = function () {
                 if (validateDynamicForm()) {
@@ -1682,9 +1764,9 @@
                     requiredList.forEach(x => {
                         if (dataList[0][x.name] == "") {
                             finalResult = false;
-                            $("#service-div input[name=" + x.name + "1]").addClass("error")
+                            $("#service-div input[name=" + x.name + "]").addClass("error")
                         } else {
-                            $("#service-div input[name=" + x.name + "1]").removeClass("error");
+                            $("#service-div input[name=" + x.name + "]").removeClass("error");
                         }
                     })
                     
@@ -1703,6 +1785,38 @@
             }
 
             return finalResult;
+        }
+
+        function getSingleFile(id, uploaderType) {
+            //$('#' + id).parents('.form-group').find('.attachments span.file-attachments').remove();
+            var oFReader = new FileReader();
+            var files = document.getElementById(id).files[0];
+            oFReader.readAsDataURL(files);
+            if (files.type.match('image.*')) {
+                oFReader.onload = function (oFREvent) {
+                    if (uploaderType == "multi") {
+                        getMultipleFiles(id);
+                    }
+                    else {
+                        document.getElementById("uploadPreview_" + id).src = oFREvent.target.result;
+                        $("#uploadPreview_" + id).parent().removeClass("hidden");
+                        $("#uploadPreview_" + id).parent().find('.file-title').html(files.name);
+                    }
+
+                };
+            } else {
+                if (uploaderType == "multi") {
+                    getMultipleFiles(id);
+                }
+                else {
+                    $('#uploadPreview_' + id).removeAttr('src'); $('#uploadPreview_' + id).parent().addClass('hidden');
+                    var fileAttachments = $('#' + id).parents('.form-group').find('.attachments .file-attachments');
+                    fileAttachments.find('p').append(files.name);
+                    fileAttachments.removeClass("hidden");
+                }
+
+
+            }
         }
 
         function generateInputBox(modelItem, id, additionalClass) {

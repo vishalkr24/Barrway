@@ -354,6 +354,7 @@
         margin-left: -20px;
         position: relative;
     }
+
     .btn-primary, .btn-primary:hover {
         background-color: #72328A;
         border-color: #72328A;
@@ -466,6 +467,20 @@
             </div>
         </section>
     </div>
+
+    <style>
+
+        .sidebar .jstree-default ul li.jstree-node {
+            display: flex;
+        }
+
+        .sidebar ul li .jstree-anchor {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap !important;
+            display: block !important;
+        }
+    </style>
     <div class="col-md-10" ng-class="{'col-md-12':!IS_EXIST_PRE_DEFINED_ACTIVITIES}">
         <div class="breadcrumbUi row flex-wrap" style="background:white;">
 
@@ -533,6 +548,8 @@
 
 
             <input type="hidden" value="0" id="FormTypeStatus" />
+
+
 
             <!--{{formDetailsDataInfo.title}}-->
             <!-- <small>
@@ -1057,6 +1074,10 @@
                 <!--<span ng-repeat="v in selectedRecords">{{v.value}}</span>-->
                 <div class="input-group">
 
+
+
+                    
+
                     <!--<input type="text"  name="selectedrec" class="form-control"
                     ng-model="selectedRecords" style="color:green"/>-->
                     <!--<textarea name='selectedrec' placeholder='Selected entries'>{{selectedRecords}}</textarea>-->
@@ -1135,6 +1156,7 @@
                         </label>
 
                         <!--<input id="newtag-inputnew" type="text" value="{{createEventDetails.tags}}" placeholder="Add tags">-->
+                        g-
 
                         <div ng-repeat="tag in totalSelectListTagify">
                             <input value="{{createEventDetails[tag.name]}}" id="createnewtag-inputHidden{{tag.name}}" type="hidden">

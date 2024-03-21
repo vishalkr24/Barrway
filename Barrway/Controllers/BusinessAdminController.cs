@@ -221,6 +221,8 @@ namespace Barrway.Controllers
                         calendarModel.DISTRICT_ID = calendarModel2.DISTRICT_ID;
                         calendarModel.ADDITIONAL_FORM_ID = calendarModel2.ADDITIONAL_FORM_ID;
                         calendarModel.NEED_ADDITIONAL_FORM = calendarModel2.NEED_ADDITIONAL_FORM;
+                        calendarModel.REQUIRED_CALENDAR_VIEWS = calendarModel2.REQUIRED_CALENDAR_VIEWS.Contains(",") ? calendarModel2.REQUIRED_CALENDAR_VIEWS.Split(',').ToList(): new List<string>() { calendarModel2.REQUIRED_CALENDAR_VIEWS };
+                        calendarModel.DEFAULT_CALENDAR_VIEW = calendarModel2.DEFAULT_CALENDAR_VIEW;
                         calendarModel.Id = calendarModel2.Id;
                         calendarModel.IS_VISIBLE = calendarModel2.IS_VISIBLE;
                         calendarModel.SLOT_DURATION_IN_MINS = calendarModel2.SLOT_DURATION_IN_MINS;
@@ -1437,6 +1439,8 @@ namespace Barrway.Controllers
                                 DISPLAY_MIN_TIME = model.DISPLAY_MIN_TIME,
                                 DEFAULT_RESOURCE = model.DEFAULT_RESOURCE,
                                 NEED_ADDITIONAL_FORM = model.NEED_ADDITIONAL_FORM,
+                                DEFAULT_CALENDAR_VIEW = model.DEFAULT_CALENDAR_VIEW,
+                                REQUIRED_CALENDAR_VIEWS = string.Join(",", model.REQUIRED_CALENDAR_VIEWS),
                                 ADDITIONAL_FORM_ID = "2310",
                                 COMPANY_CODE = model.COMPANY_CODE.ToString(),
                                 COUNTRY_ID = model.COUNTRY_ID.ToString(),
