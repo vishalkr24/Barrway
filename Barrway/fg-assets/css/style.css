@@ -128,6 +128,10 @@ img.scaled {
     width: 12.5% !important;
     float: left !important;
 }
+.login_primary .btn-primary {
+    background-color: #72328a;
+    border-color: #72328a;
+}
 
 @media only screen and (min-width : 320px) {
     .col-sm-5 {
