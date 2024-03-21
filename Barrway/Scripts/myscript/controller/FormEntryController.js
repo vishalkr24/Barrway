@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
     FormGeneratorApp.controller('FormEntryController', function ($scope, $rootScope, CookiesPersistenceService, $http, $state, $location, $window, $ngBootbox, $timeout, mainService, adminService, notifierService, $stateParams, DataService, translationService) {
-        
+
         function showFooter(type) {
             if (!DataService.isEmpty(type.column_calculation))
                 return type.column_calculation;
@@ -178,7 +178,7 @@
             return result;
         };
 
-        var isAnonymous = function (searchVal) {           
+        var isAnonymous = function (searchVal) {
             var signUpString = "signUp";
             // var signUp = window.location.href + '?quickReg=signUp'
             if (searchVal.check == "anonymous") {
@@ -395,9 +395,9 @@
             if (!DataService.isEmpty($stateParams.end)) {
                 $scope.default_edate = true;
             }
-            
+
             loadFormHtml();
-            
+
             $scope.formFieldExcelParam = {};
             $scope.listOfOutput = [];
             $scope.formFieldExcelParam.listOfOutput = [];
@@ -430,14 +430,14 @@
 
         $window.pickDefaultValues = function (eventData, id) {
             var $this = $(id)
-            var form_id = $this.attr("data-referral-form-id"),field_name = $this.attr("data-referral-form-field-name"),input_value = $this.val();
+            var form_id = $this.attr("data-referral-form-id"), field_name = $this.attr("data-referral-form-field-name"), input_value = $this.val();
             var param = {};
             param.action = 12;
             param.formId = form_id;
             param.Id = input_value;
             param.fieldName = field_name;
             param.fieldDataText = input_value;
-            
+
             if (input_value != '') {
                 $('div.fieldefault').html('');
                 $.ajax({
@@ -670,7 +670,7 @@
                     $("#customForm :input").each(function () {
                         var objCtrl = {};
 
-                        if ($(this).attr('type') == 'text' || $(this).is("textarea") || $(this).attr('type') == 'email' || $(this).attr('type') == 'password') {                            
+                        if ($(this).attr('type') == 'text' || $(this).is("textarea") || $(this).attr('type') == 'email' || $(this).attr('type') == 'password') {
                             objCtrl["Name"] = $(this).attr('name');
                             if ($(this).parent().hasClass('date')) {
                                 objCtrl["DataType"] = "Date";
@@ -1049,11 +1049,11 @@
         $scope.bindFormDynamically = function (type) {
             debugger;
             $("#main-html").fadeOut();
-            
+
             setTimeout(function () {
                 debugger;
                 if (type == 2) {
-                    
+
                     $("#barrwayFormType").text(" - Advanced");
                     $("#btn-form-switch").text("Switch to Basic Mode");
                     $scope.barrwayFormTypeSwitch = 1;
@@ -1073,7 +1073,7 @@
 
                     $("#main-html").fadeIn();
                 } else {
-                    
+
                     $("#barrwayFormType").text(" - Basic");
                     $("#btn-form-switch").text("Switch to Advanced Mode");
                     $scope.barrwayFormTypeSwitch = 2;
@@ -1093,12 +1093,12 @@
                     $("#main-html").fadeIn();
                 }
             }, 500)
-            
+
 
         }
 
         function loadFormHtml() {
-            
+
             var formGroupKey = $stateParams.formGroupKey;
             var formId = $stateParams.formId;
             $scope.rowId = $stateParams.Id;
@@ -1883,7 +1883,7 @@
             $rootScope.$emit("ShowLoading");
             mainService.manageForm("ManageForm", param)
                 .then(function (response) {
-                    
+
                     if (response.data != null && angular.isDefined(response.data)) {
                         $scope.formDetailsDataInfo = response.data[0];
                         var str1 = JSON.parse(response.data[0].fields);
@@ -1898,7 +1898,7 @@
                                 ary = Object.values(obj)[0];
                             }
                         }
-                        
+
                         $scope.PPControl = false;
                         for (var i = 0; i < ary.length; i++) {
                             if (ary[i].type === "paragraph" && ary[i].name == 'helper_paragraph') {
@@ -2026,7 +2026,7 @@
                                         // area of interest
                                         $scope.param = param;
                                         $scope.htmlContentData = $scope.importFormSettings.formContentHTMLTemp;
-                                        
+
                                         var temp = [];
                                         temp.push({});
 
@@ -2053,8 +2053,8 @@
 
                                                 $("#main-html").fadeIn();
                                             }, 500)
-                                            
-                                            
+
+
                                         }
 
                                         if (!DataService.isEmpty($scope.importFormSettings.recordAccessSecurity)) {
@@ -2231,7 +2231,7 @@
             //console.log('hi I am map');
         }
         $scope.bindUpdateControlsNew = function () {
-            
+
             var isCheckBoxGroup = false;
             $scope.formFieldsAll = [];
             _.each($scope.formFields, function (page) {
@@ -2943,7 +2943,7 @@
             }
         }
         $scope.bindFields = function () {
-            
+
             angular.forEach($scope.formFields, function (pageData, pageKey) {
                 angular.forEach(pageData, function (item, key) {
                     item.controlHtml = "";
@@ -4533,7 +4533,7 @@
             param.parentID = $scope.currentFormId;
             param.fieldName = name;
             param.Id = 0;
-            
+
             if (!DataService.isEmpty($scope.rowId))
                 param.Id = $scope.rowId;
             mainService.getReferralFormFieldsAndData("getReferralFormFieldsAndData", param)
@@ -4576,14 +4576,14 @@
             var finalArray = [];
             var isTabulator = {};
             //console.log(formDetails, 'formDetails')
-            
+
             finalArray.push({
                 title: "Id", visible: false, field: "Id"
             });
             angular.forEach(formDetails, function (item, pageKey) {
-                
+
                 var type = item.columnType;
-                 
+
                 if (item.List_column1 == "Yes") {
                     if (type == "radio-group" || type == "textarea" || type == "text-with-input" || type == "number" || type == "text" || type == "file" || type == "date"
                         || type == "autocomplete" || type == "checkbox-group" || type == "select") {
@@ -4878,7 +4878,7 @@
                         }
                     },
                 });
-                
+
                 mainService.getReferralFormFieldsAndData("getReferralFormFieldsAndData", param)
                     .then(function (response) {
                         //console.log(response);
@@ -5454,7 +5454,8 @@
                         }
                     }
 
-                }                });
+                }
+            });
             finalArray.unshift({
                 title: "formId", field: "formId", visible: false
             });
@@ -6125,7 +6126,7 @@
         };
 
         $scope.onEntryFormSubmit = function (formFields) {
-            
+
             if (!DataService.isEmpty(selectedRecordOneToMany) && selectedRecordOneToMany.length > 0) {
                 $scope.listOfReferrenceFields = [];
                 angular.forEach($scope.formFields, function (pageData, key) {
@@ -6146,6 +6147,56 @@
             } else {
 
             }
+            debugger;
+            if ($scope.currentFormId == "2304") {
+
+                let createEntry = true;
+
+                let tempData = $("#customFormNew").serializeArray();
+                let ProviderName = tempData.find(x => x.name == "FIRST_NAME").value;
+
+                $.ajax({
+                    url: "/Calendar/GetServiceProviderMasterList/",
+                    async: false,
+                    type: "POST",
+                    data: {
+                        data: {
+                            filters: [
+                                {
+                                    field: "FIRST_NAME",
+                                    type: "=",
+                                    value: ProviderName
+                                }
+                            ]
+                        },
+                        companyCode: localStorage.getItem("COMPANY_CODE")
+                    },
+                    success: function (response) {
+                        debugger;
+                        
+                        if (response.data != null) {
+                            if (response.data.length > 0) {
+                                swal({
+                                    icon: "warning",
+                                    title: "Alert",
+                                    text: "Service provider already exist with same name."
+                                });
+                                createEntry = false;
+                            }
+                        }
+
+                    },
+                    error: function (errorResponse) {
+                        data = null;
+                    }
+                });
+
+                if (!createEntry) {
+                    return;
+                    $rootScope.$emit("HideLoading");
+                }
+            }
+
             if ($scope.isEdit == true) {
                 if (DataService.isEmpty($scope.formDetailsDataInfo.recordAccessSecurity.own.edit_time) || $scope.formDetailsDataInfo.recordAccessSecurity.own.edit_time == 0 && $scope.formDetailsDataInfo.userID == $scope.userDetail.Id) {
                     modifyFormData();
@@ -7329,7 +7380,7 @@
 
             if (!DataService.isEmpty(form_id)) {
                 $timeout(function () {
-                    
+
                     var param = {};
                     param.action = 2;
                     param.formId = form_id;
@@ -7576,7 +7627,7 @@
         }
 
         $scope.ApplyMultilingualText = function () {
-             
+
             var langId = '1';
             if (localStorage.getItem("globalLangForm") != null && localStorage.getItem("globalLangForm") != 'null') {
                 langId = localStorage.getItem("globalLangForm");

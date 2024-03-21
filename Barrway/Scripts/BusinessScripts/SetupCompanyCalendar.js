@@ -33,6 +33,34 @@ $(document).ready(function () {
         format: "hh:mm A"
     });
 
+    $("#basic-calendar-form").on("submit", function (evt) {
+        
+        let requireTabs = $("#REQUIRED_CALENDAR_VIEWS").val();
+        let defaultTab = $("#DEFAULT_CALENDAR_VIEW option:selected").val();
+        debugger;
+        if (requireTabs.find(x => x == defaultTab) == null) {
+            swal({
+                icon: "warning",
+                title: "Warning",
+                text: "Required views must contain the default tab. \n\nDo you want to Add default view in required view and continue?",
+                buttons: {
+                    confirm: "Yes",
+                    cancel: "No"
+                }
+            }).then(function (check) {
+                if (check) {
+                    requireTabs.push(defaultTab);
+                    $("#REQUIRED_CALENDAR_VIEWS").val(requireTabs);
+                    $("#basic-calendar-form").submit();
+                } else {
+                    evt.preventDefault();
+                }
+            });
+            evt.preventDefault();
+        }
+
+    })
+
 });
 
 function readyPage() {
@@ -106,6 +134,9 @@ function setCurrentCalendarData() {
 
         $("#CALENDAR_USE_TYPE").val(data.Data.CALENDAR_USE_TYPE);
         $("#DEFAULT_RESOURCE").val(data.Data.DEFAULT_RESOURCE);
+        $("#NEED_ADDITIONAL_FORM[value=" + data.Data.NEED_ADDITIONAL_FORM + "]").prop("checked", true);
+        $("#DEFAULT_CALENDAR_VIEW").val(data.Data.DEFAULT_CALENDAR_VIEW);
+        $("#REQUIRED_CALENDAR_VIEWS").val(((data.Data.REQUIRED_CALENDAR_VIEWS.includes(',')) ? data.Data.REQUIRED_CALENDAR_VIEWS.split(',') : data.Data.REQUIRED_CALENDAR_VIEWS));
     }
 
 }
@@ -114,7 +145,7 @@ function renderForm(CategoryId) {
     $("#CALENDAR_CATEGORY_ID").val(CategoryId);
     $("#CALENDAR_CATEGORY_ID option[value=" + CategoryId + "]").attr("selected", true);
     /*$("#CALENDAR_CATEGORY_ID").attr("disabled", true);*/
-    
+
     $("#content").hide();
     $("#content-2").show();
 
