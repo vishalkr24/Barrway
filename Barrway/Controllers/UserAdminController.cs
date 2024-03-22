@@ -20,6 +20,7 @@ using QRCoder;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Configuration;
+using System.Web.WebPages;
 
 namespace Barrway.Controllers
 {
@@ -582,5 +583,65 @@ namespace Barrway.Controllers
             }
         }
 
+
+        public async Task<ActionResult> UploadDownloadAttachment(List<HttpPostedFileBase> files, string clrcode, string eventid) {
+
+            if (files == null || files.Count() == 0 || string.IsNullOrEmpty(clrcode)) {
+                return Json(new AddUpdateDelete() { Status=false,Message=AppMessage.InvaidRequest});
+            }
+            foreach (var file in files) {
+                if (file == null || file.ContentLength == 0) {
+                    return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.InvaidRequest });
+                }
+            }
+            foreach (var file in files)
+            {
+                string fileExtension = Path.GetExtension(file.FileName).ToLower();
+                if (!IsAllowedFileExtension(fileExtension))
+                {
+                    return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.InvaidRequest });
+                }
+            }
+
+
+            try
+            {
+                string baseurl = ConfigurationManager.AppSettings["baseurl"].ToString();
+                List<Dictionary<string,object>> filePaths = new List<Dictionary<string, object>>();
+                foreach (var file in files) {
+
+                    string folderPath = "UploadCalendar/DownloadAttachment/" + clrcode + "/";
+                    string url = baseurl + folderPath + file.FileName;
+                    string _filepath = "/" + folderPath + file.FileName;
+                    filePaths.Add(new Dictionary<string, object>() { { "url", url }, { "path", _filepath }, { "name", file.FileName } });
+                    folderPath = Server.MapPath("~/"+ folderPath);
+                    if (!Directory.Exists(folderPath))
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
+                    string fileName = Path.GetFileName(file.FileName);
+                    string filePath = Path.Combine(folderPath, fileName);
+                    file.SaveAs(filePath);
+                }
+                int _eventId;
+                if (int.TryParse(eventid, out _eventId)) { 
+                
+                }
+                return Json(new AddUpdateDelete() { Status=true,Message=AppMessage.Success,Data= filePaths });
+                
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status=false,Message=AppMessage.SomeInternalError});
+            }
+
+        }
+
+        private bool IsAllowedFileExtension(string fileExtension)
+        {
+            // Define the list of allowed file extensions
+            string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".pdf", ".doc", ".docx", ".xls", ".xlsx" };
+            return allowedExtensions.Contains(fileExtension);
+        }
     }
 }
