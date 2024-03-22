@@ -18,7 +18,33 @@
         .main-left {
             max-height: 100%;
         }
-
+        .mob-scroll {
+            width: 100%;
+            float: left;
+            display: inline-flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            margin-bottom: 15px;
+        }
+            .mob-scroll .wrap {
+                min-width: 255px;
+                float: left;
+                margin-bottom: 10px;
+               
+            }
+                .mob-scroll .wrap .wrap-im {
+                    width: 40%;
+                    float: left;
+                }
+                .mob-scroll .wrap .wrap-con {
+                    width: 58%;
+                    float: left;
+                    white-space: normal;
+                }
+        .ml-content h2 {
+            font-size: 18px;
+            margin-top: 15px;
+        }
     }
        
 </style>
@@ -97,7 +123,7 @@
                     </div>
                     <div class="ml-content">
                         <h2>{{translation.Your_recently_booked_calendar}}</h2>
-
+                        <div class="mob-scroll">
                         <div class="wrap" ng-repeat="calendar in CalendarCompanyList">
                             <div class="wrap-im">
                                 <img src="{{calendar.CALENDAR_PHOTO_PATH.replace('~', '')}}">
@@ -111,7 +137,7 @@
                                 <p><button class="book" ng-click="GoToCalendar(calendar.COMPANY_CODE, calendar.CALENDAR_CODE)">{{translation.Book}}</button></p>
                             </div>
                         </div>
-
+                        </div>
                     </div>
                 </div>
             </div>
@@ -121,8 +147,8 @@
                         <span style="position: relative;top: 2px;">{{translation.Your_booking_reminder}}</span>
                         <span><button ng-click="">{{translation.Go_to_Calendar}}</button></span>
                     </div>
-                    <br /><br /><br />
-                    <div class="row">
+                    
+                    <div class="row mob-calen">
                         <div class="col-md-6">
                             <div id="calendar0" class="fc fc-unthemed fc-ltr"></div>
                         </div>
