@@ -1035,6 +1035,11 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
 
             var $scope = angular.element($("#calendar")).scope();
             $scope.selectEventDetails = calEvent;
+
+            if (calEvent.DOWNLOADABLE_ATTACHMENT && calEvent.DOWNLOADABLE_ATTACHMENT != '' && calEvent.DOWNLOADABLE_ATTACHMENT != 'null') {
+                $scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES = calEvent.DOWNLOADABLE_ATTACHMENT.split(',');
+            }
+
             if (!(moment().local().diff(calEvent.start.format(), 'minute') <= 0)) {
                 $scope.selectEventDetails.isEnroll = false;
             } else {
