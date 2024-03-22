@@ -159,7 +159,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12" style="padding:0px 31px; padding-bottom: 16px;">
-                                            <div ng-if="event.ATTEND == 'N'" style="display:flex; justify-content:flex-start;">
+                                            <div ng-if="event.ATTEND == 'Y'" style="display:flex; justify-content:flex-start;">
                                                 <button class="btn btn-danger" ng-click="AttendSession(event.Id, 'NORMAL')" style="background: #E2476C; padding:6px 16px; border-radius: 50px; margin-right: 8px;">Attend</button>
                                                 <img src="../../assets/img/QR_CODE_LOGO.png" ng-click="AttendSession(event.Id, 'QR')" style="height: 40px; width: 40px;" />
                                             </div>

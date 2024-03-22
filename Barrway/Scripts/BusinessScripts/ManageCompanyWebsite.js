@@ -67,6 +67,7 @@
     }, 500);
     setCountryData();
     setCompanyCategory();
+    BindCompanySubCategory();
 
     SetCompanyDetails(companyId);
 
@@ -185,19 +186,16 @@ $(document).on("change", "#CITY_ID", function () {
     bindDistrictData($("#CITY_ID option:selected").val());
 })
 
-$(document).on("change", "#COMPANY_CATEGORY_ID", function () {
-    BindCompanySubCategory($("#COMPANY_CATEGORY_ID option:selected").val());
-})
 
 function setCompanyCategory() {
-    var response = getCompanyCategory();
+    var response = getCalendarCategory();
 
     $("#COMPANY_CATEGORY_ID").empty();
 
     $("#COMPANY_CATEGORY_ID").append(`<option disabled value="-1">Select Company Category</option>`);
 
     for (var i = 0; i < response.Data.length; i++) {
-        $("#COMPANY_CATEGORY_ID").append(`<option value="${response.Data[i].Id}">${response.Data[i].COMPANY_CATEGORY_NAME}</option>`);
+        $("#COMPANY_CATEGORY_ID").append(`<option value="${response.Data[i].Id}">${response.Data[i].CALENDAR_CATEGORY_NAME}</option>`);
     }
 }
 
@@ -247,17 +245,17 @@ function bindDistrictData(cityId) {
     }
 }
 
-function BindCompanySubCategory(categoryId) {
+function BindCompanySubCategory() {
     $("#COMPANY_SUB_CATEGORY_ID").attr("disabled", false);
 
-    var response = getCompanySubCategory(categoryId);
+    var response = getAllCalendarSubCategory();
 
     $("#COMPANY_SUB_CATEGORY_ID").empty();
 
     $("#COMPANY_SUB_CATEGORY_ID").append(`<option disabled value="-1">Select Company Sub Category</option>`);
 
     for (var i = 0; i < response.Data.length; i++) {
-        $("#COMPANY_SUB_CATEGORY_ID").append(`<option value="${response.Data[i].Id}">${response.Data[i].COMPANY_SUB_CATEGORY_NAME}</option>`);
+        $("#COMPANY_SUB_CATEGORY_ID").append(`<option value="${response.Data[i].Id}">${response.Data[i].CALENDAR_SUB_CATEGORY_NAME}</option>`);
     }
 }
 
@@ -344,7 +342,6 @@ function SetCompanyDetails(companyId) {
 
     $("#COMPANY_CATEGORY_ID").val(data.Data.COMPANY_CATEGORY_ID);
     $("#COMPANY_CATEGORY_ID option[value=" + data.Data.COMPANY_CATEGORY_ID + "]").attr("selected", true);
-    BindCompanySubCategory(data.Data.COMPANY_CATEGORY_ID);
     $("#COMPANY_SUB_CATEGORY_ID").val(data.Data.COMPANY_SUB_CATEGORY_ID);
     $("#COMPANY_SUB_CATEGORY_ID option[value=" + data.Data.COMPANY_SUB_CATEGORY_ID + "]").attr("selected", true);
     $("#COUNTRY_ID").val(data.Data.COUNTRY_ID);

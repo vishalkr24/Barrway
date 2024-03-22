@@ -1172,8 +1172,8 @@ function getLOCDataByCalendar() {
 function addParamsforLocationfilter(params) {
     var newparam = {};
     newparam.action = 29;
-    let selected_location = $('#calendar-service-Location option:selected').text();
-    newparam.formTableColumnData = `(   (   LOCATION_MASTER_1936.LOCATION_ADDRESS like N'${selected_location}'    )        ) `;
+    let selected_location = $('#calendar-service-Location option:selected').val();
+    newparam.formTableColumnData = `(   (   LOCATION_MASTER_1936.Id = '${selected_location}'    )        ) `;
     newparam.formTableColumnName = ` left join LOCATION_MASTER_1936 on LOCATION_MASTER_1936.formId=f1.referrenceFormId and LOCATION_MASTER_1936.Id=f1.referrenceId `;
     newparam.formId = 2305;
     newparam.formTableName = "CALENDAR_FORM_1935";
