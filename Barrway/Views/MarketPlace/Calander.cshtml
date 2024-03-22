@@ -870,7 +870,7 @@
                                 <li id="year-view-nav" data-value="year view">
                                     <a href="#yearview" onclick="window.location.href='/company/calanderyearview/@ViewBag.CompanyCode/@ViewBag.CalendarCode'">Year View</a>
                                 </li>
-                                <li  id="list-view-nav" data-value="List view" style="display:none;">
+                                <li id="list-view-nav" data-value="List view" style="display:none;">
                                     <a href="#list-view">@Resource.List_View</a>
                                 </li>
                                 <li id="agenda-view-nav" data-value="External Events" style="display:none;">
@@ -1122,8 +1122,8 @@
                 <div class="modal-body" style="padding-top: 0px;">
                     <div id="service-div"></div>
                     @*<div style="display: flex; justify-content: flex-end; margin-top: 24px;">
-                        <button class="btn btn-default" style="margin-right: 12px" data-bs-dismiss="modal">Cancel</button> <button class="btn btn-danger" style="background: #E2476C;" ng-click="createDynamicFormEntry()">Confirm booking</button>
-                    </div>*@
+                            <button class="btn btn-default" style="margin-right: 12px" data-bs-dismiss="modal">Cancel</button> <button class="btn btn-danger" style="background: #E2476C;" ng-click="createDynamicFormEntry()">Confirm booking</button>
+                        </div>*@
                 </div>
             </div>
 
@@ -1212,15 +1212,15 @@
                                         debugger;
                                         const wrapper = document.createElement('div');
                                         wrapper.innerHTML = `<div>
-                                                                                                                                            ${eventData.customDate}
-                                                                                                                                        </div>
-                                                                                                                                        <div>
-                                                                                                                                            ${eventData.customTime}
-                                                                                                                                        </div>
-                                                                                                                                        <div>${eventData.customTitleSplit[2]}</div><br />
-                                                                                                                                        <div>${eventData.customTitleSplit[1]}</div>
-                                                                                                                                        <div>${eventData.customTitleSplit[0]}</div><br />
-                                                                                                                                        <h4 style="color:red">${response.Message}</h4>`;
+                                                                                                                                                ${eventData.customDate}
+                                                                                                                                            </div>
+                                                                                                                                            <div>
+                                                                                                                                                ${eventData.customTime}
+                                                                                                                                            </div>
+                                                                                                                                            <div>${eventData.customTitleSplit[2]}</div><br />
+                                                                                                                                            <div>${eventData.customTitleSplit[1]}</div>
+                                                                                                                                            <div>${eventData.customTitleSplit[0]}</div><br />
+                                                                                                                                            <h4 style="color:red">${response.Message}</h4>`;
 
                                         swal({
                                             title: "You are going to book",
@@ -1367,7 +1367,7 @@
                                 var data2 = JSON.parse(data["Page 1"]);
                                 debugger;
                                 let containerClass = "";
-                                
+
                                 dataModelList = [];
                                 data2.forEach(x => {
 
@@ -1415,7 +1415,7 @@
                                         }
                                         dataModel[x.name] = "";
                                     }
-                                    
+
                                     $(`#service-div input[name=${x.name}]`).val(dataModel[x.name]);
                                 });
 
@@ -1424,13 +1424,13 @@
                                 setTimeout(function () {
                                     dataModelList.forEach(x => {
                                         if (x.type == "file") {
-                                            
+
                                         } else {
                                             $(`#service-div input[name^=${x.name}]`).bind("keyup change paste", function () {
                                                 dataList[0][x.name] = this.value;
                                             })
                                         }
-                                        
+
                                     });
                                 }, 500);
 
@@ -1508,10 +1508,14 @@
                                     if (response.data.code == 200) {
                                         var urlStr = response.data.fileUrl;
                                         //if()
-                                        if (uploadType == "multi")
+                                        if (uploadType == "multi") {
                                             setHiddenField(id, urlStr);
+                                            debugger;
+                                            dataList[0][id] = urlStr
+                                        }
                                         else {
                                             $("input:hidden[name=" + id + "]").val(urlStr);
+                                            debugger;
                                             dataList[0][id] = urlStr
                                         }
                                         console.log("uploaded Successfully");
@@ -1630,10 +1634,10 @@
                                             }
                                         })
                                     }
-                                    
+
                                 });
 
-                                
+
 
                             } else {
                                 swal({
@@ -1757,7 +1761,7 @@
 
         function validateDynamicForm() {
             let finalResult = true;
-            
+
             requiredList = dataModelList.filter(x => x.required);
             if (requiredList != null) {
                 if (requiredList.length > 0) {
@@ -1769,7 +1773,7 @@
                             $("#service-div input[name=" + x.name + "]").removeClass("error");
                         }
                     })
-                    
+
                 }
             }
 
@@ -1819,6 +1823,78 @@
             }
         }
 
+        function getMultipleFiles(id) {
+            var files = document.querySelector('#' + id).files;
+            function readAndPreview(file) {
+                var div = $('<div />', { class: 'figure' });
+                div.appendTo($('#shw_profile_' + id + ' > div.fileData'));
+                if (/\.(jpe?g|png|gif)$/i.test(file.name)) {
+                    var reader = new FileReader();
+                    reader.addEventListener("load", function () {
+                        var img = $('<img />', {
+                            class: 'scaled',
+                            height: '100',
+                            src: this.result,
+                            alt: file.name
+                        });
+                        img.appendTo(div);
+
+                        var p = $('<p />').html(file.name);
+                        p.appendTo(div);
+
+                        var span = $('<span />').attr('class', 'img-wrapclose img-close multiple-files').html('×');
+                        span.appendTo(div);
+                    }, false);
+                    reader.readAsDataURL(file);
+                } else {
+                    div.append('<i class="far fa-file-alt fa-2x"></i>');
+
+                    var p = $('<p />').attr('class', 'file-attachments').html(file.name);
+                    p.appendTo(div);
+
+                    div.append('<span class="img-wrapclose file-close multiple-files">×</span>');
+                }
+            }
+            if (files) {
+                [].forEach.call(files, readAndPreview);
+            }
+        }
+
+        function setHiddenField(uploaderId, url) {
+            var value = $("input:hidden[name=" + uploaderId + "]").val();
+
+            if (value == 'null' || value == "" || typeof value === "undefined") {
+                // alert('isnull');
+                $("input:hidden[name=" + uploaderId + "]").attr('value', url);
+
+            }
+            else {
+
+                var Arr = url.split(',');
+
+                angular.forEach(Arr, function (item, key) {
+                    if (value.indexOf(item) > -1) {
+
+                    }
+                    else {
+                        value += ',' + item;
+                    }
+
+                });
+
+
+                $("input:hidden[name=" + uploaderId + "]").attr('value', value);
+
+
+            }
+
+
+
+            //$("input:hidden[name=" + id + "]").attr('value', "");
+
+
+        }
+
         function generateInputBox(modelItem, id, additionalClass) {
 
             let value = "";
@@ -1826,18 +1902,18 @@
             switch (modelItem.type) {
                 case "text":
                     value = `
-                            <label for="${modelItem.name}${id}">${modelItem.label} ${((modelItem.required == true) ? "*" : "")} ${((modelItem.description != undefined && modelItem.description != "") ? `<i class='fa fa-info-circle' aria-hidden='true' title='${modelItem.description}'></i>` : "")} </label>
-                            <input class="form-control ${additionalClass}" type="text" name="${modelItem.name}${id}" data-input-id="${id}" ${((modelItem.required == true) ? "required" : "")}/>`;
+                                <label for="${modelItem.name}${id}">${modelItem.label} ${((modelItem.required == true) ? "*" : "")} ${((modelItem.description != undefined && modelItem.description != "") ? `<i class='fa fa-info-circle' aria-hidden='true' title='${modelItem.description}'></i>` : "")} </label>
+                                <input class="form-control ${additionalClass}" type="text" name="${modelItem.name}${id}" data-input-id="${id}" ${((modelItem.required == true) ? "required" : "")}/>`;
                     break;
                 case "number":
                     value = `
-                            <label for="${modelItem.name}${id}">${modelItem.label}${((modelItem.required == true) ? "*" : "")} ${((modelItem.description != undefined && modelItem.description != "") ? `<i class='fa fa-info-circle' aria-hidden='true' title='${modelItem.description}'></i>` : "")} </label>
-                            <input class="form-control ${additionalClass}" type="number" name="${modelItem.name}${id}" data-input-id="${id}" ${((modelItem.required == true) ? "required" : "")}/>`;
+                                <label for="${modelItem.name}${id}">${modelItem.label}${((modelItem.required == true) ? "*" : "")} ${((modelItem.description != undefined && modelItem.description != "") ? `<i class='fa fa-info-circle' aria-hidden='true' title='${modelItem.description}'></i>` : "")} </label>
+                                <input class="form-control ${additionalClass}" type="number" name="${modelItem.name}${id}" data-input-id="${id}" ${((modelItem.required == true) ? "required" : "")}/>`;
                     break;
                 case "date":
                     value = `
-                            <label for="${modelItem.name}${id}">${modelItem.label}${((modelItem.required == true) ? "*" : "")} ${((modelItem.description != undefined && modelItem.description != "") ? `<i class='fa fa-info-circle' aria-hidden='true' title='${modelItem.description}'></i>` : "")} </label>
-                            <input class="form-control ${additionalClass}" type="date" name="${modelItem.name}${id}" data-input-id="${id}" ${((modelItem.required == true) ? "required" : "")}/>`;
+                                <label for="${modelItem.name}${id}">${modelItem.label}${((modelItem.required == true) ? "*" : "")} ${((modelItem.description != undefined && modelItem.description != "") ? `<i class='fa fa-info-circle' aria-hidden='true' title='${modelItem.description}'></i>` : "")} </label>
+                                <input class="form-control ${additionalClass}" type="date" name="${modelItem.name}${id}" data-input-id="${id}" ${((modelItem.required == true) ? "required" : "")}/>`;
                     break;
                 case "radio-group":
                     if (modelItem.values != null) {
@@ -1845,11 +1921,11 @@
 
                         modelItem.values.forEach(x => {
                             value += `
-                                    <div style="float:left;">
-                                        <input type="radio" ${(x.selected == true) ? "checked" : ""} ${((modelItem.required == true) ? "required" : "")} class="" id="${modelItem.name}${x.value}${id}" name="${modelItem.name}${id}" value="${x.value}" data-input-id="${id}">
-                                        <label class="form-check-label" for="${modelItem.name}${x.value}${id}">${x.label}</label>
-                                    </div>
-                                    `
+                                        <div style="float:left;">
+                                            <input type="radio" ${(x.selected == true) ? "checked" : ""} ${((modelItem.required == true) ? "required" : "")} class="" id="${modelItem.name}${x.value}${id}" name="${modelItem.name}${id}" value="${x.value}" data-input-id="${id}">
+                                            <label class="form-check-label" for="${modelItem.name}${x.value}${id}">${x.label}</label>
+                                        </div>
+                                        `
                         });
                     }
                     break;
@@ -1858,11 +1934,11 @@
                         value += `<label for="${modelItem.name}${id}">${modelItem.label} ${((modelItem.required == true) ? "*" : "")} ${((modelItem.description != undefined && modelItem.description != "") ? `<i class='fa fa-info-circle' aria-hidden='true' title='${modelItem.description}'></i>` : "")} </label> <br />`;
                         modelItem.values.forEach(x => {
                             value += `
-                                    <div style="float:left;">
-                                        <input type="checkbox" class="" id="${modelItem.name}${x.value}${id}" name="${modelItem.name}${id}" ${((modelItem.required == true) ? "required" : "")} value="${x.value}" data-input-id="${id}">
-                                        <label class="form-check-label" for="${modelItem.name}${x.value}${id}">${x.label}</label>
-                                    </div>
-                                    `
+                                        <div style="float:left;">
+                                            <input type="checkbox" class="" id="${modelItem.name}${x.value}${id}" name="${modelItem.name}${id}" ${((modelItem.required == true) ? "required" : "")} value="${x.value}" data-input-id="${id}">
+                                            <label class="form-check-label" for="${modelItem.name}${x.value}${id}">${x.label}</label>
+                                        </div>
+                                        `
                         });
                     }
                     break;
@@ -1871,8 +1947,8 @@
                         value += `<label for="${modelItem.name}${id}">${modelItem.label} ${((modelItem.required == true) ? "*" : "")} ${((modelItem.description != undefined && modelItem.description != "") ? `<i class='fa fa-info-circle' aria-hidden='true' title='${modelItem.description}'></i>` : "")} </label> <br /><select class="form-control" name="${modelItem.name}${id}" data-input-id="${id}" ${((modelItem.required != undefined && modelItem.required != '' && modelItem.required != 'N') ? "required" : "")}>`;
                         modelItem.values.forEach(x => {
                             value += `
-                                    <option value="${x.value}">${x.label}</option>
-                                    `
+                                        <option value="${x.value}">${x.label}</option>
+                                        `
                         });
                         value += "</select>";
                     }
