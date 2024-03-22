@@ -9855,6 +9855,85 @@
             $scope.createEventDetails = {};
         };
 
+
+
+
+        $scope.validateForm = function (_fileInput, isrequired = false) {
+            var fileInput = document.getElementById(_fileInput);
+            var fileError = document.getElementById('fileError');
+            var EventUploadBtn = $('#EventUploadBtn');
+            var allowedExtensions = ['image/jpeg', 'image/png', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+
+            if (fileInput.files.length === 0 && isrequired) {
+                fileError.textContent = 'Please select a file.';
+                EventUploadBtn.attr("disabled", "disabled");
+                EventUploadBtn.addClass("disabled");
+                return false;
+            }
+
+            for (var i = 0; i < fileInput.files.length; i++) {
+                if (!allowedExtensions.includes(fileInput.files[i].type)) {
+                    fileError.textContent = 'Invalid file type. Allowed types are: image, PDF, Word document, Excel.';
+                    EventUploadBtn.attr("disabled", "disabled");
+                    EventUploadBtn.addClass("disabled");
+                    return false;
+                }
+            }
+
+            EventUploadBtn.removeAttr("disabled");
+            EventUploadBtn.removeClass("disabled");
+            fileError.textContent = '';
+            return true;
+        }
+
+
+        $scope.uploadFiles = function () {
+            var fileInput = $('#DOWNLOADABLE_ATTACHMENT')[0].files;
+
+            if ($scope.validateForm('DOWNLOADABLE_ATTACHMENT',true)) {
+                var formData = new FormData();
+                $.each(fileInput, function (key, value) {
+                    formData.append('files', value);
+                });
+
+                // You can add additional form fields here if needed
+                formData.append('clrcode', localStorage.getItem("CALENDAR_CODE"));
+                formData.append('eventid', '');
+
+                // AJAX post request
+                $.ajax({
+                    url: BASE_URL +'UserAdmin/UploadDownloadAttachment',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.Status) {
+
+                            $scope.createEventDetails.DOWNLOADABLE_ATTACHMENT_FILES = response.Data;
+                            $rootScope.safeApply();
+                            let filepaths = response.Data.map(x => x.path).join(",");
+                            $scope.createEventDetails.DOWNLOADABLE_ATTACHMENT = filepaths;
+
+                            $('#DOWNLOADABLE_ATTACHMENT').val(null);
+                            var EventUploadBtn = $('#EventUploadBtn');
+                            EventUploadBtn.attr("disabled", "disabled");
+                            EventUploadBtn.addClass("disabled");
+                        } else {
+                            alert(response.Message);
+                        }
+                        // Handle successful upload
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Upload failed: ' + error);
+                        // Handle upload failure
+                    }
+                });
+            }
+        }
+
+
+
         function GeneratedFormData(dataParam) {
             $scope.customForms = [];
             $scope.customFormIds = [];
@@ -9910,6 +9989,9 @@
 
             temp.push({ "name": "COMPANY_CODE", "value": localStorage.getItem("COMPANY_CODE") });
             temp.push({ "name": "CALENDAR_CODE", "value": localStorage.getItem("CALENDAR_CODE") });
+            temp.push({ "name": "DOWNLOADABLE_ATTACHMENT", "value": $scope.createEventDetails.DOWNLOADABLE_ATTACHMENT });
+            temp.push({ "name": "IS_UPLOAD_REQUIRED", "value": $scope.createEventDetails.IS_UPLOAD_REQUIRED });
+            temp.push({ "name": "UPLOAD_TIME", "value": $scope.createEventDetails.UPLOAD_TIME });
 
 
             param.formfieldDataListTemp = JSON.stringify(temp);

@@ -1272,13 +1272,20 @@ function refreshEventResourcesActivityNew(calenderType, calenderData, resourceDa
 }
 
 
-function changeStateOfCalender(view,start,end) {
+function changeStateOfCalender(view,start,end,default_start=0) {
     var temp = {};
     temp.field = "start";
     //var currentdate = moment(start._d, "YYYY-MM-DD").format("YYYY-MM-DD");
     //var currentend = moment(moment(end._d).subtract(1, "days"), "YYYY-MM-DD").format("YYYY-MM-DD");
 
-    var _start = moment(start._d, "YYYY-MM-DD").format("YYYY-MM-DD");
+    var _start = "";
+
+    if (default_start == 1) {
+        _start = moment(start._d, "YYYY-MM-DD").format("YYYY-MM-01");
+    } else {
+        _start = moment(start._d, "YYYY-MM-DD").format("YYYY-MM-DD");
+    }
+    
     var _end = moment(moment(end._d).subtract(1, "days"), "YYYY-MM-DD").format("YYYY-MM-DD");
 
     //if (view.intervalStart != undefined)

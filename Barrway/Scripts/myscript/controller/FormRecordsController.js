@@ -874,7 +874,7 @@
             var images = [];
             images = temp.split(',');
             if (images.length > 1)
-                return '<button type="button" class="btn btn-xs btn-default" data-toggle="modal" data-target="#galleryModal"  title="Show all files" data-formGroupKey="' + cell.getData().formGroupKey + '"> Show all files</button> ';
+                return '<button type="button" class="btn btn-xs btn-default" data-bs-toggle="modal" data-bs-target="#galleryModal"  title="Show all files" data-formGroupKey="' + cell.getData().formGroupKey + '"> Show all files</button> ';
             else
                 return arrowImage(cell, formatterParams);
         }

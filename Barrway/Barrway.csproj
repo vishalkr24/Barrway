@@ -3301,6 +3301,8 @@
     <Folder Include="fg-newAssets\icons\" />
     <Folder Include="Logs\" />
     <Folder Include="UploadCalendar\CalendarImages\" />
+    <Folder Include="UploadCalendar\DownloadAttachment\" />
+    <Folder Include="UploadCalendar\UploadAttachment\" />
     <Folder Include="UploadCompanyPhotoAlbum\" />
     <Folder Include="UploadCompany\CompanyBanners\" />
     <Folder Include="UploadCompany\CompanyLogos\" />
