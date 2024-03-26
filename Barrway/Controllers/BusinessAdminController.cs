@@ -209,6 +209,7 @@ namespace Barrway.Controllers
                         calendarModel2 = JsonConvert.DeserializeObject<BusinessCalendarModel>(JsonConvert.SerializeObject(data.Data));
                         calendarModel.CALENDAR_CATEGORY_ID = calendarModel2.CALENDAR_CATEGORY_ID;
                         calendarModel.CALENDAR_NAME = calendarModel2.CALENDAR_NAME;
+                        calendarModel.CALENDAR_COMMON_CATEGORY_ID = calendarModel2.CALENDAR_COMMON_CATEGORY_ID;
                         calendarModel.CALENDAR_PHOTO_NAME = calendarModel2.CALENDAR_PHOTO_NAME;
                         calendarModel.CALENDAR_SUB_CATEGORY_ID = calendarModel2.CALENDAR_SUB_CATEGORY_ID;
                         calendarModel.CITY_ID = calendarModel2.CITY_ID;
@@ -277,6 +278,7 @@ namespace Barrway.Controllers
                         BusinessCalendarModel calendarModel2 = new BusinessCalendarModel();
                         calendarModel2 = JsonConvert.DeserializeObject<BusinessCalendarModel>(JsonConvert.SerializeObject(data.Data));
                         calendarModel.CALENDAR_CATEGORY_ID = calendarModel2.CALENDAR_CATEGORY_ID;
+                        calendarModel.CALENDAR_COMMON_CATEGORY_ID = calendarModel2.CALENDAR_COMMON_CATEGORY_ID;
                         calendarModel.CALENDAR_NAME = calendarModel2.CALENDAR_NAME;
                         calendarModel.CALENDAR_PHOTO_NAME = calendarModel2.CALENDAR_PHOTO_NAME;
                         calendarModel.CALENDAR_SUB_CATEGORY_ID = calendarModel2.CALENDAR_SUB_CATEGORY_ID;
@@ -1421,6 +1423,7 @@ namespace Barrway.Controllers
 
                             BusinessCalendarModel calendarModel = new BusinessCalendarModel()
                             {
+                                CALENDAR_COMMON_CATEGORY_ID = model.CALENDAR_COMMON_CATEGORY_ID,
                                 CALENDAR_CATEGORY_ID = model.CALENDAR_CATEGORY_ID.ToString(),
                                 CALENDAR_NAME = model.CALENDAR_NAME.ToString(),
                                 CALENDAR_SUB_CATEGORY_ID = model.CALENDAR_SUB_CATEGORY_ID.ToString(),

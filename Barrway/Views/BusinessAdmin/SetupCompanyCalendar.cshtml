@@ -399,7 +399,7 @@
                                             @Html.TextBoxFor(model => model.CALENDAR_CODE, new { @style = "display:none" })
                                             @Html.TextBoxFor(model => model.CALENDAR_TEMPLATE_ID, new { @style = "display:none" })
                                             @Html.TextBoxFor(model => model.SCHEDULAR_ID, new { @style = "display:none" })
-
+                                            @Html.DropDownListFor(model => model.CALENDAR_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @style = "display:none" })
                                             <div class="form-group">
                                                 <label for="calendarname">@Resource.Calendar_Name *</label>
 
@@ -447,8 +447,8 @@
                                             <div class="form-group">
                                                 <label for="cala">Calendar category *</label>
 
-                                                @Html.DropDownListFor(model => model.CALENDAR_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @onchange = "checkSlot()", @placeholder = "Select Calendar Category", @required = "true" })
-                                                @Html.ValidationMessageFor(model => model.CALENDAR_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
+                                                @Html.DropDownListFor(model => model.CALENDAR_COMMON_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select Calendar Category", @required = "true" })
+                                                @Html.ValidationMessageFor(model => model.CALENDAR_COMMON_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
                                             </div>
 
                                             <div class="form-group">

@@ -168,6 +168,23 @@ function getCalendarCategory() {
     return data;
 }
 
+function getCalendarCommonCategory() {
+    var data;
+    $.ajax({
+        url: "/Public/GetCalendarCommonCategory/",
+        type: "GET",
+        async: false,
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+
+            data = null;
+        }
+    })
+    return data;
+}
+
 function getCalendarSubCategory(categoryId) {
     var data;
     $.ajax({

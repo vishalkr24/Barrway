@@ -9,6 +9,9 @@ function getCalendarCategoryMatrix(calendar) {
     return calendar_category.find(x => x.categoryId == calendar.CALENDAR_CATEGORY_ID && calendar.CALENDAR_TYPE == x.type)?.name ?? "";
 }
 
+$(document).on("change", "#filter-category-master", function () {
+    setCalendarSubCategory($("#filter-category-master option:selected").val());
+});
 
 $(document).ready(function () {
     $("#nv-home").addClass("active");
@@ -37,26 +40,30 @@ function setDistrictMaster() {
 
 }
 
-function setCalendarSubCategory() {
-    var data = getAllCalendarSubCategory();
-
-    if (data.Status) {
-
-        var districts = data.Data;
-
+function setCalendarSubCategory(id = null) {
+    if (id == null || id == "-1") {
         $("#filter-sub-category-master").empty();
         $("#filter-sub-category-master").append(`<option value="-1" selected>All</option>`);
+    } else {
+        var data = getCalendarSubCategory(id);
 
-        for (var i = 0; i < districts.length; i++) {
-            $("#filter-sub-category-master").append(`<option value="${districts[i].Id}">${districts[i].CALENDAR_SUB_CATEGORY_NAME}</option>`);
+        if (data.Status) {
+
+            var districts = data.Data;
+
+
+            $("#filter-sub-category-master").empty();
+            $("#filter-sub-category-master").append(`<option value="-1" selected>All</option>`);
+            for (var i = 0; i < districts.length; i++) {
+                $("#filter-sub-category-master").append(`<option value="${districts[i].Id}">${districts[i].CALENDAR_SUB_CATEGORY_NAME}</option>`);
+            }
+
         }
-
     }
-
 }
 
 function setCalendarCategory() {
-    var data = getCalendarCategory();
+    var data = getCalendarCommonCategory();
 
     if (data.Status) {
 
@@ -66,7 +73,7 @@ function setCalendarCategory() {
         $("#filter-category-master").append(`<option value="-1" selected>All</option>`);
 
         for (var i = 0; i < districts.length; i++) {
-            $("#filter-category-master").append(`<option value="${districts[i].Id}">${districts[i].CALENDAR_CATEGORY_NAME}</option>`);
+            $("#filter-category-master").append(`<option value="${districts[i].Id}">${districts[i].CMN_CATEGORY_NAME}</option>`);
         }
 
     }
@@ -172,7 +179,7 @@ function setCalendarSubCategoryWise(showFilterQuery = false, requestFromButton =
 
                 $("#company-category-wise-area").append(`<div class="my-slide ${corouselClassMaster[corouselCounter]}">
                                                             <div class="heading-cata">
-                                                                <h3>${calendars[0].CALENDAR_CATEGORY_NAME}</h3>
+                                                                <h3>${calendars[0].CMN_CATEGORY_NAME}</h3>
                                                             </div>
                                                             <div id="owl-demo${corouselCounter}" class="owl-carousel owl-theme"></div>
 
@@ -181,16 +188,16 @@ function setCalendarSubCategoryWise(showFilterQuery = false, requestFromButton =
                 for (var j = 0; j < calendars.length; j++) {
                     var tags = [];
 
-                    if (calendars[j].TAGS != null) {
+                    if (calendars[j].TAGS != null && calendars[j].TAGS != "") {
                         tags = calendars[j].TAGS.split(",");
+                        
+                        for (var k = 0; k < tags.length; k++) {
+                            tags[k] = `<a href='/Marketplace/Tag?tag=${tags[k].trim()}'>${tags[k]}</a>`;
+                        }
                     }
                     
+                    var tagString = (tags != null) ? tags.join(", ") : "";
 
-                    var tagString = "";
-                    for (var k = 0; k < tags.length; k++) {
-                        tagString += "<a href='/Marketplace/Tag?tag=" + tags[k].trim() + "'>"+tags[k]+"</a>, ";
-                    }
-                    
                     $("#owl-demo" + corouselCounter).append(` <div class="item">
                                                     <div class="item-inner" onclick="viewMarketplaceCompanyCalendar('${calendars[j].PAGE_URL ? calendars[j].PAGE_URL : calendars[j].COMPANY_CODE}','${calendars[j].CALENDAR_CODE}')">
                                                         <div class="pro-im">

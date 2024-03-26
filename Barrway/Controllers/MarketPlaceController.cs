@@ -125,44 +125,17 @@ namespace Barrway.Controllers
                 {
                     SearchResultModel temp = new SearchResultModel();
 
-                    // for calendar
-                    var calendarData = data[0];
-                    for (int i = 0; i < calendarData.Count; i++)
-                    {
-                        temp = new SearchResultModel();
-                        temp.Id = calendarData[i]["Id"]?.ToString();
-                        temp.Title = calendarData[i]["CALENDAR_NAME"]?.ToString();
-                        temp.Description = calendarData[i]["COMPANY_NAME_ENGLISH"]?.ToString();
-                        temp.ImagePath = calendarData[i]["CALENDAR_PHOTO_PATH"]?.ToString();
-                        temp.ResultType = 1;
-                        temp.OtherIds = new List<IDictionary<string, string>>()
-                        {
-                            new Dictionary<string, string>()
-                            {
-                                {"CalendarCode", calendarData[i]["CALENDAR_CODE"]?.ToString() },
-                                {"CompanyCode", calendarData[i]["COMPANY_CODE"]?.ToString() }
-                            }
-                        };
-                        finalResult.Add(temp);
-                    }
-
                     // for company
                     var companyData = data[1];
                     for (int i = 0; i < companyData.Count; i++)
                     {
                         temp = new SearchResultModel();
                         temp.Id = companyData[i]["Id"]?.ToString();
-                        temp.Title = companyData[i]["COMPANY_NAME_ENGLISH"]?.ToString();
+                        temp.CompanyName = companyData[i]["COMPANY_NAME_ENGLISH"]?.ToString();
+                        temp.CompanyCode = companyData[i]["COMPANY_CODE"]?.ToString();
                         temp.Description = companyData[i]["COMPANY_DESCRIPTION"]?.ToString();
                         temp.ImagePath = companyData[i]["COMPANY_LOGO_PATH"]?.ToString();
-                        temp.ResultType = 2;
-                        temp.OtherIds = new List<IDictionary<string, string>>()
-                        {
-                            new Dictionary<string, string>()
-                            {
-                                {"CompanyCode", companyData[i]["COMPANY_CODE"]?.ToString() }
-                            }
-                        };
+                        temp.ResultType = 1;
                         finalResult.Add(temp);
                     }
 
@@ -172,35 +145,23 @@ namespace Barrway.Controllers
                     {
                         temp = new SearchResultModel();
                         temp.Id = serviceData[i]["Id"]?.ToString();
-                        temp.Title = serviceData[i]["ACTIVITY_NAME"]?.ToString();
-                        temp.Description = "";
+                        temp.Description = serviceData[i]["ACTIVITY_NAME"]?.ToString();
                         temp.ImagePath = serviceData[i]["CALENDAR_PHOTO_PATH"]?.ToString();
-                        temp.ResultType = 3;
-                        temp.OtherIds = new List<IDictionary<string, string>>()
+                        temp.ResultType = 2;
+                        temp.CalendarName = serviceData[i]["CALENDAR_NAME"]?.ToString();
+                        temp.CompanyName = serviceData[i]["COMPANY_NAME_ENGLISH"]?.ToString();
+                        temp.CompanyCode = serviceData[i]["COMPANY_CODE"]?.ToString();
+                        temp.CalendarCode = serviceData[i]["CALENDAR_CODE"]?.ToString();
+                        if (!string.IsNullOrEmpty(serviceData[i]["TAG"]?.ToString()))
                         {
-                            new Dictionary<string, string>()
-                            {
-                                {"CompanyCode", serviceData[i]["COMPANY_CODE"]?.ToString() },
-                                {"CalendarCode", serviceData[i]["CALENDAR_CODE"]?.ToString() },
-                                {"CompanyName", serviceData[i]["COMPANY_NAME_ENGLISH"]?.ToString() },
-                                {"CalendarName", serviceData[i]["CALENDAR_NAME"]?.ToString() }
-
-                            }
-                        };
-                        finalResult.Add(temp);
-                    }
-
-                    // for category
-                    var categoryData = data[3];
-                    for (int i = 0; i < categoryData.Count; i++)
-                    {
-                        temp = new SearchResultModel();
-                        temp.Id = categoryData[i]["Id"]?.ToString();
-                        temp.Title = categoryData[i]["CALENDAR_SUB_CATEGORY_NAME"]?.ToString();
-                        temp.Description = "";
-                        temp.ImagePath = "";
-                        temp.ResultType = 4;
-                        temp.OtherIds = new List<IDictionary<string, string>>();
+                            var tagsList = serviceData[i]["TAG"].ToString().Split(',');
+                            temp.Tags = String.Join(", ", tagsList);
+                        }
+                        else
+                        {
+                            temp.Tags = "";
+                        }
+                        
                         finalResult.Add(temp);
                     }
 
@@ -240,11 +201,11 @@ namespace Barrway.Controllers
 
         }
 
-        public async Task<ActionResult> Pricing()
+        public async Task<ActionResult> Subcategory()
         {
             return View();
         }
-        public async Task<ActionResult> News()
+        public async Task<ActionResult> Blogs()
         {
             return View();
         }

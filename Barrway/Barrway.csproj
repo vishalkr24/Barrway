@@ -3244,7 +3244,7 @@
     <Content Include="Views\MarketPlace\index.cshtml" />
     <Content Include="Views\MarketPlace\BusinessSite.cshtml" />
     <Content Include="Views\MarketPlace\Tag.cshtml" />
-    <Content Include="Views\MarketPlace\News.cshtml" />
+    <Content Include="Views\MarketPlace\Blogs.cshtml" />
     <Content Include="Views\MarketPlace\BusinessPost.cshtml" />
     <Content Include="Views\Shared\_LayoutMarketPlaceCompany.cshtml" />
     <Content Include="Views\MarketPlace\Company.cshtml" />
@@ -3284,7 +3284,7 @@
     <Content Include="Views\WebsiteTemplates\_Template2.cshtml" />
     <Content Include="Views\WebsiteTemplates\_Template3.cshtml" />
     <Content Include="Views\BusinessAdmin\_CompanyPaletteSelection.cshtml" />
-    <Content Include="Views\MarketPlace\Pricing.cshtml" />
+    <Content Include="Views\MarketPlace\Subcategory.cshtml" />
     <Content Include="Views\Account\BusinessSignUpPhone.cshtml" />
     <Content Include="Views\Account\MobileVerification.cshtml" />
     <Content Include="Views\Account\BusinessPhoneLogin.cshtml" />
