@@ -215,6 +215,21 @@ namespace Barrway.Controllers
 
         }
 
+        public async Task<ActionResult> GetCalendarCommonCategory()
+        {
+            try
+            {
+                var categoryData = await globalMasterService.GetCalendarCommonCategoryMaster();
+
+                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = categoryData.Data }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
         public async Task<ActionResult> GetCalendarSubCategory(string CalendarCategoryId)
         {
             try

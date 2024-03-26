@@ -38,6 +38,8 @@ namespace Barrway.DTO.BusinessModels
         public string DISTRICT_ID { get; set; }
 
         public string CALENDAR_CATEGORY_ID { get; set; }
+        
+        public string CALENDAR_COMMON_CATEGORY_ID { get; set; }
 
         public string CALENDAR_SUB_CATEGORY_ID { get; set; }
         
