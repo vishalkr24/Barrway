@@ -266,7 +266,6 @@ namespace Barrway.Controllers
                 var result = await businessUserService.UpdateTransactionAttendance(TransactionId, IsPresent);
 
                 return Json(result, JsonRequestBehavior.AllowGet);
-
             }
             else
             {

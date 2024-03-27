@@ -9890,7 +9890,7 @@
         $scope.uploadFiles = function () {
             var fileInput = $('#DOWNLOADABLE_ATTACHMENT')[0].files;
 
-            if ($scope.validateForm('DOWNLOADABLE_ATTACHMENT',true)) {
+            if ($scope.validateForm('DOWNLOADABLE_ATTACHMENT', true)) {
                 var formData = new FormData();
                 $.each(fileInput, function (key, value) {
                     formData.append('files', value);
@@ -9902,7 +9902,7 @@
 
                 // AJAX post request
                 $.ajax({
-                    url: BASE_URL +'UserAdmin/UploadDownloadAttachment',
+                    url: BASE_URL + 'UserAdmin/UploadDownloadAttachment',
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -16398,9 +16398,9 @@
             if (type == "QR") {
                 $scope.generateQRCode();
             } else {
-                $scope.markPresent();
+                openWebCam();
             }
-            
+
 
         }
 
@@ -17251,7 +17251,7 @@
         tempArr.push({
             field: "COMPANY_NAME_ENGLISH",
             title: "Company Name",
-            selected: true 
+            selected: true
         })
 
         $scope.filterFieldsList = tempArr;
@@ -17286,7 +17286,7 @@
                 //res.data.data.Data.DATE_OF_BIRTH =  res.data.data.Data.DATE_OF_BIRTH.substring(0, 10);
                 $("#DATE_OF_BIRTH").val(formattedDate);
                 $('#countryCode').val(res.data.data.Data.Country_Code).trigger('change');
-                
+
                 $("#gender-" + res.data.data.Data.GENDER.toLowerCase()).attr("checked", true);
 
                 $scope.userData = res.data.data.Data;
