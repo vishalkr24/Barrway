@@ -108,12 +108,53 @@ $(document).ready(function () {
             1000: {
                 items: 5,
                 nav: true,
-                loop: false
+                loop: false,
+                dots: true
             }
         }
     })
 
+    $('#owl-demo-blog').owlCarousel({
+        nav: false,
+        dots: true,
+        loop: false,
+        margin: 10,
+        responsiveClass: true,        
+        responsive: {
+            0: {
+                items: 1
+            },
+            600: {
+                items: 1
+            },
+            1000: {
+                items: 1
+            }
+        }
+    })
+
+    $('#owl-demo-button-slide').owlCarousel({
+        nav: false,
+        dots: true,
+        loop: false,
+        margin: 10,
+        responsiveClass: true,
+        responsive: {
+            0: {
+                items: 4
+            },
+            600: {
+                items: 6
+            },
+            1000: {
+                items: 8
+            }
+        }
+    })
 });
+
+
+
 
 // my gallery
 
