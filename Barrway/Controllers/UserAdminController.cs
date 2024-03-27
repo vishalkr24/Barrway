@@ -15,6 +15,12 @@ using Barrway.DTO.UserAdminModels;
 using Barrway.DTO.MarketplaceModels;
 using System.Net.Http;
 using Barrway.DTO.BusinessModels;
+using static QRCoder.PayloadGenerator;
+using QRCoder;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Configuration;
+using System.Web.WebPages;
 
 namespace Barrway.Controllers
 {
@@ -148,6 +154,30 @@ namespace Barrway.Controllers
 
         }
 
+        public async Task<ActionResult> CreateDynamicFormEntry(List<IDictionary<string, string>> data, string formId, string CalendarCode)
+        {
+            if (!string.IsNullOrEmpty(formId))
+            {
+                try
+                {
+                    var result = await publicUserService.CreateDynamicFormEntry(data, formId, UserIdentity.UserID, CalendarCode);
+
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception ex)
+                {
+
+                }
+                return Json(new AddUpdateDelete() { Status = false, Message = "Something went wrong" }, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = "form not Found." }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [ValidateInput(false)]
         [HttpPost]
         public async Task<ActionResult> EnrollPublicUserForCalendar(CalendarEnrollModel model)
         {
@@ -156,7 +186,7 @@ namespace Barrway.Controllers
                 model.USER_ID = User.Identity.Name;
 
                 var result = await publicUserService.EnrollPublicUserForCalendar(model);
-                
+
                 if (result.Status)
                 {
                     // send email to user
@@ -234,7 +264,7 @@ namespace Barrway.Controllers
 
                     if (finalResult > 0)
                     {
-                        return Json(new AddUpdateDelete() { Status = true, Message = "Booking successfull!"}, JsonRequestBehavior.AllowGet);
+                        return Json(new AddUpdateDelete() { Status = true, Message = "Booking successfull!" }, JsonRequestBehavior.AllowGet);
                     }
                     else
                     {
@@ -253,6 +283,20 @@ namespace Barrway.Controllers
             }
         }
 
+        public async Task<ActionResult> CheckAdditionalFormDetails(string CalendarCode)
+        {
+            try
+            {
+                string UserId = UserIdentity.UserID;
+                var result = await publicUserService.CheckAdditionalFormDetails(CalendarCode, UserId);
+
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = "Failed" }, JsonRequestBehavior.AllowGet);
+            }
+        }
 
         [HttpGet]
         public async Task<ActionResult> GetUserCoinBalance()
@@ -285,11 +329,11 @@ namespace Barrway.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetCurrentPackageDetails(string CompanyCode, string CalendarCode, string ServiceId)
+        public async Task<ActionResult> GetCurrentPackageDetails(string CompanyCode, string CalendarCode, string ServiceId, string start, string end)
         {
             try
             {
-                var result = await publicUserService.GetCurrentPackageDetails(User.Identity.Name, CompanyCode, CalendarCode, ServiceId);
+                var result = await publicUserService.GetCurrentPackageDetails(User.Identity.Name, CompanyCode, CalendarCode, ServiceId, new CommonTimeObject() { start = start, end = end });
 
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
@@ -335,8 +379,7 @@ namespace Barrway.Controllers
                 return Json(new AddUpdateDelete() { Message = "Failed", Status = false }, JsonRequestBehavior.AllowGet);
             }
         }
-
-
+        
         [HttpPost]
         public async Task<ActionResult> GetMyAttendanceList(GenerateDynamicFormData data)
         {
@@ -360,7 +403,7 @@ namespace Barrway.Controllers
         {
             try
             {
-                var result = await publicUserService.GetRecentlyBookedCalendars(UserIdentity.UserEmail.ToString());
+                var result = await publicUserService.GetRecentlyBookedCalendars(UserIdentity.UserEmail.ToString(), UserIdentity.UserName);
 
                 return Json(new { data = result });
             }
@@ -513,7 +556,92 @@ namespace Barrway.Controllers
         }
 
 
-       
+        [HttpGet]
+        public async Task<AddUpdateDelete> GenerateAttendanceQR(string TransactionId)
+        {
+            QRCodeModel model = new QRCodeModel();
+            string Url = ConfigurationManager.AppSettings["baseurl"] + "/useradmin/attendanceReview?TId=" + TransactionId;
+            Payload payload = new Url(Url);
 
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(payload);
+            QRCode qrCode = new QRCode(qrCodeData);
+            var qrCodeAsBitmap = qrCode.GetGraphic(20);
+
+            string base64String = Convert.ToBase64String(BitmapToByteArray(qrCodeAsBitmap));
+            model.QRImageURL = "data:image/png;base64," + base64String;
+
+            return new AddUpdateDelete() { Status = true, Data = model };
+        }
+
+        private byte[] BitmapToByteArray(Bitmap bitmap)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                bitmap.Save(ms, ImageFormat.Png);
+                return ms.ToArray();
+            }
+        }
+
+
+        public async Task<ActionResult> UploadDownloadAttachment(List<HttpPostedFileBase> files, string clrcode, string eventid) {
+
+            if (files == null || files.Count() == 0 || string.IsNullOrEmpty(clrcode)) {
+                return Json(new AddUpdateDelete() { Status=false,Message=AppMessage.InvaidRequest});
+            }
+            foreach (var file in files) {
+                if (file == null || file.ContentLength == 0) {
+                    return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.InvaidRequest });
+                }
+            }
+            foreach (var file in files)
+            {
+                string fileExtension = Path.GetExtension(file.FileName).ToLower();
+                if (!IsAllowedFileExtension(fileExtension))
+                {
+                    return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.InvaidRequest });
+                }
+            }
+
+
+            try
+            {
+                string baseurl = ConfigurationManager.AppSettings["baseurl"].ToString();
+                List<Dictionary<string,object>> filePaths = new List<Dictionary<string, object>>();
+                foreach (var file in files) {
+
+                    string folderPath = "UploadCalendar/DownloadAttachment/" + clrcode + "/";
+                    string url = baseurl + folderPath + file.FileName;
+                    string _filepath = "/" + folderPath + file.FileName;
+                    filePaths.Add(new Dictionary<string, object>() { { "url", url }, { "path", _filepath }, { "name", file.FileName } });
+                    folderPath = Server.MapPath("~/"+ folderPath);
+                    if (!Directory.Exists(folderPath))
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
+                    string fileName = Path.GetFileName(file.FileName);
+                    string filePath = Path.Combine(folderPath, fileName);
+                    file.SaveAs(filePath);
+                }
+                int _eventId;
+                if (int.TryParse(eventid, out _eventId)) { 
+                
+                }
+                return Json(new AddUpdateDelete() { Status=true,Message=AppMessage.Success,Data= filePaths });
+                
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status=false,Message=AppMessage.SomeInternalError});
+            }
+
+        }
+
+        private bool IsAllowedFileExtension(string fileExtension)
+        {
+            // Define the list of allowed file extensions
+            string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".pdf", ".doc", ".docx", ".xls", ".xlsx" };
+            return allowedExtensions.Contains(fileExtension);
+        }
     }
 }

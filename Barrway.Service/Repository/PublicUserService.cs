@@ -647,7 +647,7 @@ namespace Barrway.Service.Repository
                             request.updated_by = (int)FormSetting.CreatedUser;
                             request.formGroupKey = formGroupKey;
                             var start = Convert.ToDateTime(eventModal.start);
-                            var end = Convert.ToDateTime(eventModal.start).AddMinutes(60);
+                            var end = Convert.ToDateTime(eventModal.end);
 
                             var eventData = new { start = start, end = end, allDay = false, EVENT_TYPE = "BOOKING", description = "", resources = eventModal.resourceId, activities = eventModal.activityId, formGroupKey = formGroupKey, COMPANY_CODE = eventModal.companyCode, CALENDAR_CODE = eventModal.calendarCode }.ToDictionary();
                             eventData["resources_" + eventModal.resourceFormId] = eventModal.resourceId;
@@ -762,6 +762,59 @@ namespace Barrway.Service.Repository
                 }
             }
             return new AddUpdateDelete() { Status = false, Message = "Invalid response!" };
+        }
+
+        public async Task<AddUpdateDelete> CreateDynamicFormEntry(List<IDictionary<string, string>> model, string formId, string UserId, string CalendarCode)
+        {
+            try
+            {
+                List<string> requestList = new List<string>();
+                List<string> formGroupKeyListTemp = new List<string>();
+                Dictionary<string, object> sd = new Dictionary<string, object>();
+
+                var assign = model.FirstOrDefault();
+
+                foreach (KeyValuePair<string, string> keyValuePair in assign)
+                {
+                    if (keyValuePair.Key != "Is_New" && keyValuePair.Key != "Id")
+                    {
+                        sd.Add(keyValuePair.Key, keyValuePair.Value.ToString());
+                    }
+
+                }
+
+                Form_DataTable data = new Form_DataTable();
+                data.action = (int)FormAction.Save;
+                data.formId = Convert.ToInt32(formId);
+                data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(sd);
+                data.formGroupKey = Guid.NewGuid().ToString();
+                var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+                if (formResult.res > 0)
+                {
+                    string tableName = (await CheckAdditionalFormDetails(CalendarCode, UserId)).Data;
+                    string query = $@"update {tableName} set created_by = '{UserId}' where Id = '{formResult.Id}'";
+                    var result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                    if (result > 0)
+                    {
+                        return new AddUpdateDelete() { Status = true, Message = "Form saved successfully!" };
+                    }
+                    else
+                    {
+                        return new AddUpdateDelete() { Status = true, Message = "Form not saved!" };
+                    }
+                    
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "Form not saved. Please try again!" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
         }
 
         private async Task<int> UpCommingBookingAdd(IDictionary<string, string> data)
@@ -901,20 +954,11 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> GetRecentlyBookedCalendars(string userEmail)
+        public async Task<AddUpdateDelete> GetRecentlyBookedCalendars(string userEmail, string userId)
         {
             try
             {
-                string query = $@"SELECT distinct calendar.[COMPANY_CODE]
-                                      ,calendar.[CALENDAR_CODE]
-	                                  ,calendar.[Id]
-                                      ,calendar.[created_at] 'SlotCreated'
-                                      ,company.Id as 'CompanyId'
-                                      ,calendarDetails.*
-	                                  ,company.COMPANY_NAME_ENGLISH
-                                      ,company.COMPANY_LOGO_PATH
-                                      ,service_m.ACTIVITY_NAME
-                                      ,subCategory.CALENDAR_SUB_CATEGORY_NAME
+                string query = $@"declare @Ids varchar(max) = stuff((SELECT distinct ',' + cast(calendarDetails.Id as varchar)
                                   FROM [dbo].[CALENDAR_FORM_1935] calendar
                                   join TRANSACTION_MASTER_1942 transaction_m on calendar.CALENDAR_CODE = transaction_m.CALENDAR_CODE
                                   join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
@@ -923,8 +967,21 @@ namespace Barrway.Service.Repository
 								  join BUSINESS_CALENDAR_MASTER_1925 calendarDetails on calendarDetails.CALENDAR_CODE = calendar.CALENDAR_CODE
 								  join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendarDetails.CALENDAR_SUB_CATEGORY_ID
                                   where EMAIL = '{userEmail}' and calendar.Id = transaction_m.SLOT
-								  order by calendar.created_at desc
-								  offset 0 rows fetch first 5 rows only";
+								  for xml path('')), 1, 1, '')
+
+								  select 
+									  (select ( case when (SUM(ledger.CREDIT_COIN) - SUM(ledger.DEBIT_COIN)) is null then 0 else (SUM(ledger.CREDIT_COIN) - SUM(ledger.DEBIT_COIN)) end) FROM LEDGER_MASTER_1957 ledger where ledger.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and USER_ID = '{userId}') as 'COIN_BALANCE'
+									  ,company.Id as 'CompanyId'
+                                      ,calendarDetails.*
+	                                  ,company.COMPANY_NAME_ENGLISH
+									  , calendarDetails.CALENDAR_NAME
+                                      ,company.COMPANY_LOGO_PATH
+                                      ,subCategory.CALENDAR_SUB_CATEGORY_NAME
+									  ,stuff( (select distinct ',' + ACTIVITY_NAME from SERVICE_MASTER_1933 service_m where service_m.CALENDAR_CODE = calendarDetails.CALENDAR_CODE for xml path('')), 1, 1, '') as 'ServiceList'
+									  FROM BUSINESS_CALENDAR_MASTER_1925 calendarDetails
+                                  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
+								  join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendarDetails.CALENDAR_SUB_CATEGORY_ID
+                                  where calendarDetails.Id in (select cast(item as integer) from dbo.SplitString(@Ids, ','))";
 
                 List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -1201,6 +1258,65 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> CheckAdditionalFormDetails(string CalendarCode, string UserId)
+        {
+            try
+            {
+                string query = $@"select dbo.CheckBookingAdditionalFormDetails('{CalendarCode}') as Result";
+
+                List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+
+                if (result.Count > 0)
+                {
+
+                    if (result[0]["Result"]?.ToString() == "false")
+                    {
+                        query = $@"select t.topicTitle + '_' + cast(f.topicID as varchar(6)) as TableName from form f
+                                    join topic t on t.topicID = f.topicID
+                                    where f.formID = (select ADDITIONAL_FORM_ID from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE = '{CalendarCode}')";
+                        var TableNameRaw = await sqlFunction.ExecuteSqlQuery(query);
+
+                        string TableName = "";
+
+                        if (TableNameRaw.Count > 0)
+                        {
+                            TableName = TableNameRaw[0]["TableName"]?.ToString();
+
+                            query = $@"select * from {TableName} where created_by = '{UserId}' and COMPANY_CODE = (select COMPANY_CODE from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE = '{CalendarCode}')";
+
+                            result = await sqlFunction.ExecuteSqlQuery(query);
+                            
+                            if (result.Count > 0)
+                            {
+                                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                            }
+                            else
+                            {
+                                return new AddUpdateDelete() { Status = false, Message = AppMessage.Success, Data = TableName };
+                            }
+                        }
+                        else
+                        {
+                            return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                        }
+                    }
+                    else
+                    {
+                        return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                    }
+
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = 0 };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = 0 };
+            }
+        }
+
         public async Task<AddUpdateDelete> GetUserCoinBalance(string UserId)
         {
             try
@@ -1263,23 +1379,44 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> GetCurrentPackageDetails(string UserId, string CompanyCode, string CalendarCode, string ServiceId)
+        public async Task<AddUpdateDelete> GetCurrentPackageDetails(string UserId, string CompanyCode, string CalendarCode, string ServiceId, CommonTimeObject TimeRange)
         {
             try
             {
                 var balance = await GetUserCoinBalance(UserId, CompanyCode, CalendarCode);
                 var service = await sqlFunction.ExecuteSqlQuery("select fees_1 from SERVICE_MASTER_1933 where Id = " + ServiceId);
-                var calendar = await sqlFunction.ExecuteSqlQuery($@"select CALENDAR_NAME from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE = '{CalendarCode}'");
+                var calendar = await sqlFunction.ExecuteSqlQuery($@"select * from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE = '{CalendarCode}'");
 
                 bool IsServicePaid = false;
-                int ServiceFees = 0;
+                double ServiceFees = 0;
 
                 if (!string.IsNullOrEmpty(service[0]["fees_1"]?.ToString()))
                 {
                     if (Convert.ToInt32(service[0]["fees_1"]) > 0)
                     {
                         IsServicePaid = true;
-                        ServiceFees = Convert.ToInt32(service[0]["fees_1"]);
+
+                        if (calendar.FirstOrDefault()["CALENDAR_CATEGORY_ID"]?.ToString() == "4" && calendar.FirstOrDefault()["CALENDAR_TYPE"]?.ToString() == "2")
+                        {
+                            ServiceFees = Convert.ToDouble(service[0]["fees_1"]);
+
+                            if (TimeRange != null)
+                            {
+                                if (!string.IsNullOrEmpty(TimeRange.start) && !string.IsNullOrEmpty(TimeRange.end))
+                                {
+                                    TimeSpan timeDifference = Convert.ToDateTime(TimeRange.end) - Convert.ToDateTime(TimeRange.start);
+                                    double hoursDifference = timeDifference.TotalHours;
+
+                                    ServiceFees = ServiceFees * hoursDifference;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            ServiceFees = Convert.ToInt32(service[0]["fees_1"]);
+                        }
+
+                        
                     }
                     else
                     {
@@ -1306,10 +1443,16 @@ namespace Barrway.Service.Repository
                     {
                         return new AddUpdateDelete() { Status = false, Message = "You don't have enough B$ Coin of this calendar to book this slot." };
                     }
+
+                    return new AddUpdateDelete() { Status = true, Message = "B$" + ServiceFees.ToString() + " will be deducted from your " + calendar[0]["CALENDAR_NAME"].ToString() + " Calendar package.<br />(Balance after purchase B$" + (Convert.ToInt32(balance.Data) - ServiceFees).ToString() + ")" };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = true, Message = "Are you sure to book this event?" };
                 }
 
 
-                return new AddUpdateDelete() { Status = true, Message = "B$" + ServiceFees.ToString() + " will be deducted from your " + calendar[0]["CALENDAR_NAME"].ToString() + " Calendar package.<br />(Balance after purchase B$" + (Convert.ToInt32(balance.Data) - ServiceFees).ToString() + ")" };
+                
 
 
             }
@@ -1515,7 +1658,8 @@ namespace Barrway.Service.Repository
                                     from TRANSACTION_MASTER_1942 inner join PARTICIPANT_MASTER_1940 on TRANSACTION_MASTER_1942.STUDENT = PARTICIPANT_MASTER_1940.Id where TRANSACTION_MASTER_1942.formGroupKey = f.formGroupKey         FOR XML PATH('')), 1, 1, '') customFourthTitle
                                     , (dbo.[GetSubQueryCalender](f.formGroupKey)) customTitle,   (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceFormId) from form_calenderreferrence f2     
                                     where f2.formgroupkey = f.formGroupKey  FOR XML PATH('')), 1, 1, '')   ) customForms  , (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceId) 
-                                    from form_calenderreferrence f2    where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) customFormIds,  '' referrences_1,  '' referrences_2,  '' referrences_3   
+                                    from form_calenderreferrence f2    where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) customFormIds,  '' referrences_1,  '' referrences_2,  '' referrences_3 
+                                    , (select case when (cast(getdate() as datetime) >= cast((DATEADD(minute, -30, f.[start])) as datetime) and cast(getdate() as datetime) <= cast(f.[end] as datetime) ) then 'Y' else 'N' end) as 'ATTEND'
                                     from CALENDAR_FORM_1935 f 
                                     join TRANSACTION_MASTER_1942 transaction_m on transaction_m.CALENDAR_CODE = f.CALENDAR_CODE
                                     join PARTICIPANT_MASTER_1940 participant_m on participant_m.Id = transaction_m.STUDENT

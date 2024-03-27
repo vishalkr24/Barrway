@@ -16,7 +16,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetCompanyCategoryMaster();
         Task<AddUpdateDelete> getCompanyWebsitePalette();
         Task<AddUpdateDelete> GetCompanySubCategoryMaster();
-        Task<AddUpdateDelete> GetFilterCompanyData(string SubCategoryId, string DistrictId);
+        Task<AddUpdateDelete> GetFilterCompanyData(string CategoryId, string SubCategoryId, string DistrictId);
         Task<AddUpdateDelete> GetCompanySubCategoryMaster(string CategoryId);
         Task<AddUpdateDelete> GetCountryMaster();
         Task<AddUpdateDelete> GetCityMaster(string CountryId);
@@ -24,6 +24,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetDistrictMaster(string DisctrictId);
         
         Task<AddUpdateDelete> GetCalendarCategoryMaster();
+        Task<AddUpdateDelete> GetCalendarCommonCategoryMaster();
         Task<AddUpdateDelete> GetCalendarSubCategoryMaster(string CalendarCategoryId);
         Task<AddUpdateDelete> GetCalendarSubCategoryMaster();
 

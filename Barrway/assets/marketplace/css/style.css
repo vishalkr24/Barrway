@@ -1285,10 +1285,39 @@ section.bottom-nav .com-det {
     border-radius: 0.5rem;
     opacity: 0.5;
 }
+.div-list button{
+    min-width: 120px;
+    border-radius: 100px;
+}
+.public-primary, .public-primary:hover {
+    background: #E2476C;
+    border-color: #E2476C;
+    color: #fff;
+    cursor: pointer;
+}
+.public-cancel, .public-cancel:hover {
+    cursor: pointer;
+    border: 1px solid #777777;
+    color: #777777;
+    background-color: #EBEBEB;
+}
+    
+    .public-primary.active.focus, .public-primary.active:focus, .public-primary.focus, .public-primary:active.focus, .public-primary:active:focus, .public-primary:focus {
+        outline: none;
+        outline-offset: -2px;
+        background: #E2476C;
+        border-color: #E2476C;
+    }
+.public-cancel.active.focus, .public-cancel.active:focus, .public-cancel.focus, .public-cancel:active.focus, .public-cancel:active:focus, .public-cancel:focus {
+    outline: none;
+    outline-offset: -2px;
+    color: #777777;
+    background-color: #EBEBEB;
+}
 
 
 @media screen and (max-width:1366px) {
-    section.bottom-nav nav.navbar div#com-nav .nav > li > a {
+    section .bottom-nav nav.navbar div#com-nav .nav > li > a {
         position: relative;
         display: block;
         padding: 10px 9px;
@@ -1325,5 +1354,10 @@ section.bottom-nav .com-det {
 @media screen and (min-width:769px) and (max-width:1200px) {
     section.bottom-nav .navbar-collapse.collapse {
         display: block !important;
+    }
+}
+@media screen and (min-width:1680px) and (max-width:2560px) {
+    .photo-album-inner {
+        margin-top: 60px;
     }
 }

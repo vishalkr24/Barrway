@@ -185,11 +185,11 @@ namespace Barrway.Controllers
 
         }
 
-        public async Task<ActionResult> GetFilterCompanyData(string SubCategoryId, string DistrictId)
+        public async Task<ActionResult> GetFilterCompanyData(string CategoryId, string SubCategoryId, string DistrictId)
         {
             try
             {
-                var Data = await globalMasterService.GetFilterCompanyData(SubCategoryId, DistrictId);
+                var Data = await globalMasterService.GetFilterCompanyData(CategoryId, SubCategoryId, DistrictId);
 
                 return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = Data.Data }, JsonRequestBehavior.AllowGet);
             }
@@ -205,6 +205,21 @@ namespace Barrway.Controllers
             try
             {
                 var categoryData = await globalMasterService.GetCalendarCategoryMaster();
+
+                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = categoryData.Data }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        public async Task<ActionResult> GetCalendarCommonCategory()
+        {
+            try
+            {
+                var categoryData = await globalMasterService.GetCalendarCommonCategoryMaster();
 
                 return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = categoryData.Data }, JsonRequestBehavior.AllowGet);
             }

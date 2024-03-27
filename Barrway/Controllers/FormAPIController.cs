@@ -26,14 +26,16 @@ namespace Barrway.Controllers
         private readonly ICalendarService calendarService;
         private readonly IPublicUserService publicUserService;
         private readonly IBusinessUserService businessUserService;
+        private readonly IMasterService masterService;
 
         // GET: FormAPI
-        public FormAPIController(IFormAPIRepository formAPIRepository, ICalendarService calendarService, IPublicUserService publicUserService, IBusinessUserService businessUserService)
+        public FormAPIController(IFormAPIRepository formAPIRepository, ICalendarService calendarService, IPublicUserService publicUserService, IBusinessUserService businessUserService, IMasterService masterService)
         {
             this.formAPIRepository = formAPIRepository;
             this.calendarService = calendarService;
             this.publicUserService = publicUserService;
             this.businessUserService = businessUserService;
+            this.masterService = masterService;
         }
 
         [HttpPost]
@@ -108,25 +110,28 @@ namespace Barrway.Controllers
         [HttpPost]
         public async Task<ActionResult> GetFormRecordList(GenerateDynamicFormData data)
         {
-            var role = UserIdentity.Role;
-
-            if (role == "PUBLIC_USER" && (data.formId == (int)FormSetting.PAYMENT_HISTORY_MASTER || data.formId == (int)FormSetting.LEDGER_MASTER))
+            if (User.Identity != null)
             {
-                data.CustomFilters.Clear();
-                data.CustomFilters.Add(new CustomFilter() { FieldName = "USER_ID", Value = User.Identity.Name });
-            }
+                var role = UserIdentity.Role;
 
-            if (role == "SUPERADMIN_USER")
-            {
-                data.IsCustomFilter = false;
-                data.CustomFilters.Clear();
-
-                if (data.formId == (int)FormSetting.USER_MASTER)
+                if (role == "PUBLIC_USER" && (data.formId == (int)FormSetting.PAYMENT_HISTORY_MASTER || data.formId == (int)FormSetting.LEDGER_MASTER))
                 {
-                    data.IsCustomFilter = true;
-                    data.CustomFilters.Add(new CustomFilter() { FieldName = "ROLE_ID", Value = "3" });
+                    data.CustomFilters.Clear();
+                    data.CustomFilters.Add(new CustomFilter() { FieldName = "USER_ID", Value = User.Identity.Name });
                 }
 
+                if (role == "SUPERADMIN_USER")
+                {
+                    data.IsCustomFilter = false;
+                    data.CustomFilters.Clear();
+
+                    if (data.formId == (int)FormSetting.USER_MASTER)
+                    {
+                        data.IsCustomFilter = true;
+                        data.CustomFilters.Add(new CustomFilter() { FieldName = "ROLE_ID", Value = "3" });
+                    }
+
+                }
             }
 
             var result = (await formAPIRepository.GetFormRecordList(data)).Data;
@@ -412,6 +417,159 @@ namespace Barrway.Controllers
                     });
                 }
             }
+
+            if (!data.IsPublicUser)
+            {
+                var calendarDetailsResult = await businessUserService.GetCalendarDetails(data.CALENDAR_CODE);
+                if (calendarDetailsResult.Status)
+                {
+                    var calendarDetails = calendarDetailsResult.Data as IDictionary<string, object>;
+                    if (calendarDetails.ContainsKey("category") && calendarDetails["category"] != null)
+                    {
+                        var calendarCategory = calendarDetails["category"] as IDictionary<string, object>;
+                        if (calendarCategory.ContainsKey("IS_SERVICE_TYPE"))
+                        {
+                            string is_service_type = calendarCategory["IS_SERVICE_TYPE"]?.ToString() ?? "";
+                            if (is_service_type != "N")
+                            {
+                                if (result != null && result.events != null)
+                                {
+                                    result.events = result.events.Where(x => x.ContainsKey("EVENT_TYPE") && x["EVENT_TYPE"]?.ToString() != "BOOKING").ToList();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return Json(result.ToDictionary(), JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> getReferralFormFieldsListView(Form_DataTable data)
+        {
+            if (!string.IsNullOrEmpty(data?.COMPANY_CODE) || !string.IsNullOrEmpty(data?.CALENDAR_CODE))
+            {
+
+                if (data.filter != null)
+                {
+                    if (data.IsPublicUser)
+                    {
+                        if (data.IsCustomInFilter)
+                        {
+                            data.filter.value = data.filter.value + " and F.COMPANY_CODE in (" + data.COMPANY_CODE + ")";
+                        }
+                        else
+                        {
+                            data.filter.value = data.filter.value + " and F.COMPANY_CODE=N'" + data.COMPANY_CODE + "'";
+                        }
+                    }
+                    else
+                    {
+                        data.filter.value = data.filter.value + " and F.COMPANY_CODE=N'" + data.COMPANY_CODE + "' and F.CALENDAR_CODE=N'" + data.CALENDAR_CODE + "'";
+                    }
+
+                }
+            }
+
+            ReferalFormDataResponseModel result = await formAPIRepository.getReferralFormFields(data);
+
+            if (result != null)
+            {
+                if (result.events != null && result.events.Count() > 0)
+                {
+                    result.events.ForEach(e =>
+                    {
+                        if (e.ContainsKey("start") && e["start"] != null)
+                        {
+                            e["start"] = Convert.ToDateTime(e["start"]).ToString("yyyy-MM-ddTHH:mm:ss");
+                        }
+                        if (e.ContainsKey("end") && e["end"] != null)
+                        {
+                            e["end"] = Convert.ToDateTime(e["end"]).ToString("yyyy-MM-ddTHH:mm:ss");
+                        }
+                        if (e.ContainsKey("title") && e["title"] != null)
+                        {
+                            e["title"] = "";
+                        }
+                    });
+                }
+
+                if (data.IsListView)
+                {
+                    // filter out available slots
+
+                    var resourceData = await masterService.GetLocationMasterList(new GenerateDynamicFormData() { action = 1,size = 50, filters = new List<FilterDTO> { new FilterDTO() { type = "=", field = "CALENDAR_CODE", value = data.CALENDAR_CODE} } }, data.COMPANY_CODE, data.CALENDAR_CODE);
+
+                    var resourceList = resourceData.Data as List<IDictionary<string, object>>;
+
+                    if (data.resourceId > 0)
+                    {
+                        resourceList = resourceList.Where(x => x["Id"]?.ToString() == data.resourceId.ToString()).ToList();
+                    }
+
+                    List<IDictionary<string, object>> Temp = new List<IDictionary<string, object>>();
+
+                    foreach (var resource in resourceList)
+                    {
+                        DateTime startDate = (Convert.ToDateTime(data.startDate).Year > DateTime.Now.Year)? Convert.ToDateTime(data.startDate) : DateTime.Now;
+                        DateTime endDate = Convert.ToDateTime(data.endDate).AddDays(-1);
+
+                        var events = result.events.Where(x => x["resources"]?.ToString() == resource["Id"]?.ToString()).ToList();
+
+                        if (events.Count > 0)
+                        {
+                            events = events.OrderBy(x => Convert.ToDateTime(x["start"])).ToList();
+
+                            List<(DateTime, DateTime)> ps = new List<(DateTime, DateTime)>();
+
+                            events.ForEach(x => {
+                                ps.Add((Convert.ToDateTime(x["start"]), Convert.ToDateTime(x["end"])));
+                            });
+
+                        }
+
+                        DateTime rangeStart = startDate;
+                        foreach (var ev in events)
+                        {
+                            DateTime start = Convert.ToDateTime(ev["start"]);
+                            DateTime end = Convert.ToDateTime(ev["end"]);
+                            if (rangeStart < start)
+                            {
+                                BarrwayCalendarFormFields model = new BarrwayCalendarFormFields();
+                                model.resources = resource["Id"]?.ToString();
+                                model.resourceId = resource["Id"]?.ToString();
+                                model.start = rangeStart.ToString("yyyy-MM-ddT00:00:00");
+                                model.end = start.AddDays(-2).ToString("yyyy-MM-ddT21:00:00");
+                                model.title = resource["LOCATION_ADDRESS"]?.ToString();
+                                model.CALENDAR_CODE = data.CALENDAR_CODE;
+                                model.COMPANY_CODE = data.COMPANY_CODE;
+                                Temp.Add(JsonConvert.DeserializeObject<IDictionary<string, object>>(JsonConvert.SerializeObject(model)));
+                            }
+                            rangeStart = end.AddDays(1);
+                        }
+
+                        if (rangeStart <= endDate)
+                        {
+                            BarrwayCalendarFormFields model = new BarrwayCalendarFormFields();
+                            model.resources = resource["Id"]?.ToString();
+                            model.resourceId = resource["Id"]?.ToString();
+                            model.start = rangeStart.ToString("yyyy-MM-ddT00:00:00");
+                            model.end = endDate.AddDays(-1).ToString("yyyy-MM-ddT21:00:00");
+                            model.title = resource["LOCATION_ADDRESS"]?.ToString();
+                            model.CALENDAR_CODE = data.CALENDAR_CODE;
+                            model.COMPANY_CODE = data.COMPANY_CODE;
+                            model.IsLastEvent = true;
+                            Temp.Add(JsonConvert.DeserializeObject<IDictionary<string, object>>(JsonConvert.SerializeObject(model)));
+                        }
+
+                    }
+
+                    result.events = Temp;
+                }
+            }
+
             if (!data.IsPublicUser)
             {
                 var calendarDetailsResult = await businessUserService.GetCalendarDetails(data.CALENDAR_CODE);

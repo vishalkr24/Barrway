@@ -31,18 +31,20 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> RemoveFavoriteCalendar(FavoriteCalendarModel model);
         Task<AddUpdateDelete> GetAllEnrolledCompaniesData(string userEmail, bool IsDistinct = true);
         Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetMyAttendanceList(GenerateDynamicFormData data, string userEmail);
-        Task<AddUpdateDelete> GetRecentlyBookedCalendars(string userEmail);
+        Task<AddUpdateDelete> GetRecentlyBookedCalendars(string userEmail, string userId);
         Task<AddUpdateDelete> CheckSingleMyFavoriteCalendar(string userId, string CalendarCode = null);
         Task<AddUpdateDelete> GetMyFavoriteCalendars(GenerateDynamicFormData data, string userId, string CalendarCode = null);
         Task<AddUpdateDelete> GetUserBCoinMaster(GenerateDynamicFormData data, string userId);
         
         Task<AddUpdateDelete> GetUserCoinBalance(string UserId);
+        Task<AddUpdateDelete> CheckAdditionalFormDetails(string CalendarCode, string UserId);
         Task<AddUpdateDelete> GetUserCoinBalance(string UserId, string CompanyCode, string CalendarCode);
-        Task<AddUpdateDelete> GetCurrentPackageDetails(string UserId, string CompanyCode, string CalendarCode, string ServiceId);
+        Task<AddUpdateDelete> GetCurrentPackageDetails(string UserId, string CompanyCode, string CalendarCode, string ServiceId, CommonTimeObject TimeRange);
 
         Task<AddUpdateDelete> GetAllEnrolledCalendarsData(string CompanyCode, string UserEmail, string filterDate = null, bool IsCustomInFilter = false);
         Task<AddUpdateDelete> GetFullCalendarEvents(string StartDate, string EndDate, string UserEmail);
         Task<AddUpdateDelete> BookingServiceEvent(RequestEventViewModel eventModal, string userName);
+        Task<AddUpdateDelete> CreateDynamicFormEntry(List<IDictionary<string, string>> data, string formId, string UserId, string CalendarCode);
 
         #endregion
 

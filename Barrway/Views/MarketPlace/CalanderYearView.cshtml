@@ -1,0 +1,1334 @@
+﻿@model Barrway.DTO.MarketplaceModels.MarketplaceCompanyModel
+@{
+    ViewBag.Title = Resource.Company_Schedule;
+    Layout = "~/Views/Shared/_LayoutMarketPlaceCompany.cshtml";
+    ViewBag.COMPANY_LOGO_PATH = Model.COMPANY_LOGO_PATH.Replace("~", "");
+    //ViewBag.COMPANY_ID = Model.COMPANY_CODE.ToString();
+    ViewBag.COMPANY_ID = Model.PAGE_URL.ToString();
+    ViewBag.CALENDAR_ID = Model.DEFAULT_CALENDAR_ID;
+
+
+
+}
+
+<script>
+    var COMPANY_CODE = '@ViewBag.CompanyCode';
+    var CALENDAR_CODE = '@ViewBag.CalendarCode';
+</script>
+
+@section styles{
+
+
+    <link href="/fg-assets/fullcalendar/dist/fullcalendar.css" rel="stylesheet" />
+
+    <link href="/fg-assets/fullcalendar-scheduler/dist/scheduler.min.css"
+          rel="stylesheet" />
+
+    <script src="/fg-assets/js/moment.js"></script>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" id="jquery-ui-change">
+    <script src="/fg-assets/js/app.js"></script>
+    <script src="/fg-assets/js/jquery-ui.js"></script>
+    @*<script src="/fg-assets/fullcalendar/dist/fullcalendar.js"></script>*@
+
+    @*<script src="/fg-assets/fullcalendar-scheduler/dist/scheduler.js"></script>*@
+    <script src="/fg-assets/js/jquery.cookie.min.js"></script>
+    <script src="/fg-assets/js/scripts.js"></script>
+    <script src="/Content/underscore.js/underscore.min.js"></script>
+    <script src="/Scripts/jquery.blockUI/jquery.blockUI.min.js"></script>
+    <script src="/Scripts/myscript/commonFunctions.js"></script>
+    <script type="text/javascript" src="/Content/angular.js/angular.min.js"></script>
+    <script src="/Content/angular-filter/angular-filter.min.js"></script>
+    <script src="/Scripts/myscript/globalScript.js"></script>
+    <link href="/fg-assets/css/app.css" rel="stylesheet" />
+    <link href="~/Content/bstooltip.css" rel="stylesheet" />
+    <script>
+        localStorage.setItem("detail", '{"Id":30314,"firebase_uid":null,"chatId":"jXZMF2dU3Uyz2okULv6shQuu","uid":"kk53yimj","fullName":"AG Ashutosh Shukla","name":"augursuser","email":"formgeneratorclient@gmail.com","emailVerified":"0","emailCheck":"0","isEmailCheck":false,"isQuickSignUp":false,"password":"","newPassword":null,"password_confirmation":null,"confirmPassword":null,"isUpdatePassword":0,"remember_token":null,"userIcon":"user-avatar-with-check-mark.png","phoneNumber":null,"phoneVerified":"No","isPhoneVerified":null,"phoneCheck":"No","isPhoneCheck":false,"role":1,"status":"Active","planID":9,"planSequence":"1,2,5,13","tooltipSequence":null,"FB_id":null,"GPlus_id":null,"created_ip":"","groupId":0,"checkType":null,"title":null,"verificationCode":null,"isVerificationReq":false,"ayCheck":0,"specialAccess":"1","reset_token":null,"reset_valid_till":null,"isUsable":0,"action":0,"created_by":0,"updated_by":0,"created_at":"Jan 20 2021  3:32PM","newcreated_at":null,"updated_at":"Jan 20 2021  3:32PM","newupdated_at":null,"res":1,"Message":"Login Success|登錄成功|登录成功","IsActive":false,"IsDeleted":false,"IsUnique":false,"page":0,"size":0,"total_records":0,"last_page":0,"page_records":0,"filters":null,"sorters":null,"query":null}');
+    </script>
+    <style>
+        .fc-timeline .fc-body .fc-scroller {
+            height: 500px !important;
+        }
+        /*Agenda & Timeline Source event design*/
+        .fc-event-container .fc-timeline-event .fc-content:nth-of-type(1),
+        .fc-event-container .fc-time-grid-event .fc-content:nth-of-type(1),
+        .fc-event-container .fc-day-grid-event .fc-content:nth-of-type(1) {
+            margin-top: 0px;
+        }
+
+        .fc-event-container .fc-timeline-event .fc-content,
+        .fc-event-container .fc-time-grid-event .fc-content,
+        .fc-event-container .fc-day-grid-event .fc-content {
+            margin-top: 3px;
+            margin-bottom: 0px;
+            padding: 0px 8px;
+        }
+
+            .fc-event-container .fc-timeline-event .fc-content .fc-title,
+            .fc-event-container .fc-time-grid-event .fc-content .fc-title,
+            .fc-event-container .fc-day-grid-event .fc-content .fc-title {
+                font-size: 16px;
+                font-family: Arial;
+            }
+
+            .fc-event-container .fc-timeline-event .fc-content:nth-last-of-type(1),
+            .fc-event-container .fc-time-grid-event .fc-content:nth-last-of-type(1),
+            .fc-event-container .fc-day-grid-event .fc-content:nth-last-of-type(1) {
+                margin-bottom: 0px;
+            }
+
+        .fc th {
+            text-align: center;
+            font-weight: 400;
+            font-family: 'Montserrat-bold';
+            font-size: 80%;
+        }
+
+        .fc button {
+            font-family: 'Montserrat';
+        }
+
+        .ui-widget .ui-widget, .calendar {
+            font-family: 'Montserrat' !important;
+        }
+
+        #vertical-resource-view .fc-view-container {
+            overflow-x: scroll;
+        }
+        /*   div#agenda-view .fc-view-container {
+            height: auto !important;
+        }*/
+
+
+        #vertical-resource-view .fc-view.fc-agendaDay-view.fc-agenda-view {
+            width: 100%;
+        }
+        /* **For 2 day view** */
+        #vertical-resource-view .fc-view.fc-agendaTwoDays-view.fc-agenda-view {
+            width: 500%;
+        }
+
+        #vertical-resource-view .fc-view.fc-agendaThreeDays-view.fc-agenda-view {
+            width: 600%;
+        }
+
+        #vertical-resource-view .fc-view.fc-agendaWeek-view.fc-agenda-view {
+            width: 1500%;
+        }
+        /*end*/
+
+        .lightbox {
+            display: none;
+        }
+
+        .popover {
+            z-index: 99;
+        }
+
+        .ui-state-highlight,
+        .ui-widget-content .ui-state-highlight {
+            border: 1px solid #72c3ec !important;
+            background: #e9f3fc url(images/ui-bg_highlight-soft_25_ffef8f_1x100.png) 50% top repeat-x !important;
+        }
+
+        .fa-sm {
+            font-size: 12px;
+        }
+
+        .titleContainer,
+        .popoverSelect {
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar ul li a {
+            color: #3e246b !important;
+        }
+
+        .customTitle {
+            background: rgb(255, 255, 255);
+            border-color: #aaa;
+            padding: 2px;
+            border-radius: 5px;
+            z-index: 1;
+        }
+
+        .btn.btn-outline-success {
+            color: #3e246b;
+            border: 1px solid #3e246b;
+            background-color: transparent;
+        }
+
+            .btn.btn-outline-success:hover {
+                background-color: #3e246b !important;
+                color: #fff;
+            }
+
+        .btn-group > .btn-group:not(:first-child) > .btn,
+        .btn-group > .btn:not(:first-child) {
+            border-top-left-radius: 0 !important;
+            border-bottom-left-radius: 0 !important;
+            margin-right: 0px;
+        }
+
+        .btn-group > .btn-group:not(:last-child) > .btn,
+        .btn-group > .btn:not(:last-child):not(.dropdown-toggle) {
+            border-top-right-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+            margin-right: 0 !important;
+        }
+
+        .fc-listYear-view tr.fc-list-item,
+        .fc-listMonth-view tr.fc-list-item,
+        .fc-listWeek-view tr.fc-list-item,
+        .fc-listDay-view tr.fc-list-item {
+            background: #e2e2e2 !important;
+            margin-bottom: 10px;
+            display: flex;
+            margin: 3px;
+        }
+
+        #list-view table.fc-list-table tr .fc-content {
+            margin: 3px;
+            margin-top: 10px;
+            margin-bottom: 4px;
+        }
+
+        .fc-content.fcTime .fc-content {
+            color: #fff;
+            padding: 0px 5px;
+            margin: 3px 3px 3px;
+        }
+
+        .fc-content.fcTime small.time {
+            color: #7b7b7b;
+        }
+
+        .fc-content.fcTime {
+            margin: 7px 0px !important;
+        }
+
+        .breadcrumbUi.row {
+            /*margin-left: -20px !important;*/
+        }
+
+        .custom-br {
+            font-size: 14px;
+            font-style: italic;
+            font-family: Roboto;
+            font-weight: 500;
+            letter-spacing: .2px;
+        }
+
+        .course-click {
+            transition: all linear .3s;
+            cursor: pointer;
+        }
+
+            .course-click.right {
+                transform: rotate(90deg);
+            }
+
+
+
+        .modal-dialog-slideout {
+            min-height: 100%;
+            margin: 0 0 0 auto;
+            background: #fff;
+        }
+
+        .modal.fade {
+            padding-right: 0px !important;
+            opacity: 1 !important;
+        }
+
+            .modal.fade .modal-dialog.modal-dialog-slideout {
+                -webkit-transform: translate(100%,0)scale(1);
+                transform: translate(100%,0)scale(1);
+            }
+
+            .modal.fade.show .modal-dialog.modal-dialog-slideout {
+                -webkit-transform: translate(0,0);
+                transform: translate(0,0);
+                display: flex;
+                align-items: stretch;
+                -webkit-box-align: stretch;
+                height: 100%;
+            }
+
+                .modal.fade.show .modal-dialog.modal-dialog-slideout .modal-body {
+                    overflow-y: auto;
+                    overflow-x: hidden;
+                }
+
+        .modal-dialog-slideout .modal-content {
+            border: 0;
+        }
+
+        .modal-dialog-slideout .modal-header, .modal-dialog-slideout .modal-footer {
+            /* height: 69px;
+            display: block;*/
+        }
+
+            .modal-dialog-slideout .modal-header h5 {
+                float: left;
+            }
+
+        .fc-event-container .fc-timeline-event .fc-content:nth-of-type(1), .fc-event-container .fc-time-grid-event .fc-content:nth-of-type(1), .fc-event-container .fc-day-grid-event .fc-content:nth-of-type(1) {
+            display: none;
+        }
+
+        #agenda-view .fc-event-container .fc-timeline-event .fc-content .fc-title, #agenda-view .fc-event-container .fc-time-grid-event .fc-content .fc-title,
+        #agenda-view .fc-event-container .fc-day-grid-event .fc-content .fc-title {
+            font-size: 12px;
+        }
+
+        #agenda-view .fc-event-container .fc-timeline-event .fc-content, #agenda-view .fc-event-container .fc-time-grid-event .fc-content,
+        #agenda-view .fc-event-container .fc-day-grid-event .fc-content {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 30px !important;
+        }
+
+            #agenda-view .fc-event-container .fc-timeline-event .fc-content, #agenda-view .fc-event-container .fc-time-grid-event .fc-content,
+            #agenda-view .fc-event-container .fc-day-grid-event .fc-content .fc-customtime {
+                position: absolute;
+                right: 1px;
+                top: 4px;
+                font-size: 12px;
+            }
+
+        #vertical-resource-view .fc table {
+            table-layout: auto;
+        }
+
+        #vertical-resource-view .fc-view > table {
+            min-width: 0;
+            width: auto;
+        }
+
+        #vertical-resource-view .fc-axis {
+            min-width: 100px; /*the width of times column*/
+            width: 100px; /*the width of times column*/
+        }
+
+        #vertical-resource-view .fc-day, .fc-resource-cell {
+            min-width: 350px;
+            width: 100%;
+        }
+
+        #vertical-resource-view .fc-content-col {
+            /* min-width: 350px;
+            width: 100%;*/
+        }
+
+        div#calendar .fc-timeline .fc-body .fc-scroller {
+            height: auto !important;
+        }
+
+        .modalscrollable {
+            overflow-y: auto;
+            max-height: 500px;
+            min-height: 500px;
+        }
+
+
+
+
+        /* Important part */
+        /*.modal-dialog {
+            overflow-y: initial !important
+        }
+
+        .modal-body {
+            height: 80vh;
+            overflow-y: auto;
+        }*/
+
+        .modalscrollable {
+            overflow-y: auto;
+            max-height: 500px;
+            min-height: 500px;
+        }
+
+
+        /* Important part */
+        /*.modal-dialog {
+            overflow-y: initial !important
+        }
+        .modal-body {
+            height: 80vh;
+            overflow-y: auto;
+        }*/
+        div#calendar .fc-timeline .fc-body .fc-scroller {
+            height: auto !important;
+            min-height: 400px;
+        }
+
+        .menu-icon_box {
+            display: inline-block;
+            height: 25px;
+            position: relative;
+            text-align: left;
+            width: 25px;
+        }
+
+        .Hideleftmenu {
+            padding: 56px 0px 0;
+            margin-left: -20px;
+            position: relative;
+        }
+
+        .modal-service-type {
+            max-width: 100%
+        }
+
+        @@media (min-width: 768px) {
+            .modal-service-type {
+                width: 50%;
+            }
+        }
+
+        /* Styles for mobile phones and tablets */
+        @@media (max-width: 767px) {
+            .modal-service-type {
+                width: 100%;
+            }
+        }
+
+        div#agenda-view2 .fc-past {
+            /*background: #aaa;*/
+        }
+
+        .fc-bgevent {
+            opacity: 0.7 !important;
+        }
+
+        .fc-bgevent {
+            background: rgba(34, 34, 34, 0.3) !important;
+            opacity: 0.7 !important;
+            border: none;
+        }
+
+        .available-fc-bgevent {
+            background: #ffffff !important;
+            opacity: 0.7 !important;
+            border: 2px solid #385884 !important;
+        }
+
+        .booking-fc-bgevent {
+            background: rgba(34, 34, 34, 0.3) !important;
+            opacity: 1 !important;
+            border: none !important;
+        }
+
+        .tooltip {
+            z-index: 100000000;
+        }
+    </style>
+    <style>
+        .swal-footer {
+            text-align: center;
+        }
+
+        #full-stars-example .rating-group {
+            display: inline-flex;
+        }
+
+        #full-stars-example .rating__icon {
+            pointer-events: none;
+        }
+
+        #full-stars-example .rating__input {
+            position: absolute !important;
+            left: -9999px !important;
+        }
+
+        #full-stars-example .rating__label {
+            cursor: pointer;
+            padding: 0 0.1em;
+            font-size: 2rem;
+        }
+
+        #full-stars-example .rating__icon--star {
+            color: orange;
+        }
+
+        #full-stars-example .rating__icon--none {
+            color: #eee;
+        }
+
+        #full-stars-example .rating__input--none:checked + .rating__label .rating__icon--none {
+            color: red;
+        }
+
+        #full-stars-example .rating__input:checked ~ .rating__label .rating__icon--star {
+            color: #ddd;
+        }
+
+        #full-stars-example .rating-group:hover .rating__label .rating__icon--star {
+            color: orange;
+        }
+
+        #full-stars-example .rating__input:hover ~ .rating__label .rating__icon--star {
+            color: #ddd;
+        }
+
+        #full-stars-example .rating-group:hover .rating__input--none:not(:hover) + .rating__label .rating__icon--none {
+            color: #eee;
+        }
+
+        #full-stars-example .rating__input--none:hover + .rating__label .rating__icon--none {
+            color: red;
+        }
+
+        #half-stars-example {
+            /* use display:inline-flex to prevent whitespace issues. alternatively, you can put all the children of .rating-group on a single line */
+            /* make hover effect work properly in IE */
+            /* hide radio inputs */
+            /* set icon padding and size */
+            /* add padding and positioning to half star labels */
+            /* set default star color */
+            /* set color of none icon when unchecked */
+            /* if none icon is checked, make it red */
+            /* if any input is checked, make its following siblings grey */
+            /* make all stars orange on rating group hover */
+            /* make hovered input's following siblings grey on hover */
+            /* make none icon grey on rating group hover */
+            /* make none icon red on hover */
+        }
+
+            #half-stars-example .rating-group {
+                display: inline-flex;
+            }
+
+            #half-stars-example .rating__icon {
+                pointer-events: none;
+            }
+
+            #half-stars-example .rating__input {
+                position: absolute !important;
+                left: -9999px !important;
+            }
+
+            #half-stars-example .rating__label {
+                cursor: pointer;
+                /* if you change the left/right padding, update the margin-right property of .rating__label--half as well. */
+                padding: 0 0.1em;
+                font-size: 2rem;
+            }
+
+            #half-stars-example .rating__label--half {
+                padding-right: 0;
+                margin-right: -0.6em;
+                z-index: 2;
+            }
+
+            #half-stars-example .rating__icon--star {
+                color: orange;
+            }
+
+            #half-stars-example .rating__icon--none {
+                color: #eee;
+            }
+
+            #half-stars-example .rating__input--none:checked + .rating__label .rating__icon--none {
+                color: red;
+            }
+
+            #half-stars-example .rating__input:checked ~ .rating__label .rating__icon--star {
+                color: #ddd;
+            }
+
+            #half-stars-example .rating-group:hover .rating__label .rating__icon--star,
+            #half-stars-example .rating-group:hover .rating__label--half .rating__icon--star {
+                color: orange;
+            }
+
+            #half-stars-example .rating__input:hover ~ .rating__label .rating__icon--star,
+            #half-stars-example .rating__input:hover ~ .rating__label--half .rating__icon--star {
+                color: #ddd;
+            }
+
+            #half-stars-example .rating-group:hover .rating__input--none:not(:hover) + .rating__label .rating__icon--none {
+                color: #eee;
+            }
+
+            #half-stars-example .rating__input--none:hover + .rating__label .rating__icon--none {
+                color: red;
+            }
+
+        #full-stars-example-two {
+            /* use display:inline-flex to prevent whitespace issues. alternatively, you can put all the children of .rating-group on a single line */
+            /* make hover effect work properly in IE */
+            /* hide radio inputs */
+            /* hide 'none' input from screenreaders */
+            /* set icon padding and size */
+            /* set default star color */
+            /* if any input is checked, make its following siblings grey */
+            /* make all stars orange on rating group hover */
+            /* make hovered input's following siblings grey on hover */
+        }
+
+            #full-stars-example-two .rating-group {
+                display: inline-flex;
+            }
+
+            #full-stars-example-two .rating__icon {
+                pointer-events: none;
+            }
+
+            #full-stars-example-two .rating__input {
+                position: absolute !important;
+                left: -9999px !important;
+            }
+
+            #full-stars-example-two .rating__input--none {
+                display: none;
+            }
+
+            #full-stars-example-two .rating__label {
+                cursor: pointer;
+                padding: 0 0.1em;
+                font-size: 2rem;
+            }
+
+            #full-stars-example-two .rating__icon--star {
+                color: orange;
+            }
+
+            #full-stars-example-two .rating__input:checked ~ .rating__label .rating__icon--star {
+                color: #ddd;
+            }
+
+            #full-stars-example-two .rating-group:hover .rating__label .rating__icon--star {
+                color: orange;
+            }
+
+            #full-stars-example-two .rating__input:hover ~ .rating__label .rating__icon--star {
+                color: #ddd;
+            }
+
+        .rating__input {
+            display: none;
+        }
+
+        .owl-nav {
+            padding: 0px;
+        }
+
+        .owl-carousel .owl-nav button.owl-prev {
+            margin: -17px 0px 10px;
+            border-color: #3fbfc7 !important;
+            /* border-color: 1px solid #3fbfc7 !important;*/
+        }
+
+        .owl-carousel .owl-nav button.owl-next {
+            margin: -17px -5px 10px;
+            border-color: #3fbfc7 !important;
+        }
+
+        div#agenda-view .fc-event-container .fc-day-grid-event .fc-content {
+            margin: 0px;
+        }
+
+        div#agenda-view .fc-day-grid-event {
+            margin: 0;
+            padding: 0 1px;
+        }
+
+        #agenda-view .fc-event-container .fc-day-grid-event .fc-content .fc-title {
+            font-size: 10px;
+        }
+        .fc-event {
+            background-color: #3FBFC7
+        }
+    </style>
+}
+
+<!-- sliders compnay -->
+<section class="subcatageory" id="logo" style="margin-top: 0px !important;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="my-slide featured-company">
+                    <div class="heading-cata">
+                        <h3 style="color:#1a1919;"><h2>@Model.COMPANY_NAME_ENGLISH (@Model.COMPANY_NAME_CHINESE)</h2></h3>
+                    </div>
+                    <div id="owl-demo5" class="owl-carousel owl-theme">
+
+                        @foreach (var item in Model.ServicesList)
+                        {
+
+                            <div class="item" style="margin-right: 20px; border: 1px solid #3fbfc7; border-radius: 10px; padding: 10px 13px 10px; min-width: 188px;">
+                                <div class="item-inner">
+                                    <div class="pro-text">
+                                        <p class="f1"><b>@item.ACTIVITY_NAME</b></p>
+                                        <div id="full-stars-example">
+                                            <div class="rating-group">
+                                                <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                <input class="rating__input" name="rating" id="rating-1" value="1" type="radio">
+                                                <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                <input class="rating__input" name="rating" id="rating-2" value="2" type="radio">
+                                                <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                <input class="rating__input" name="rating" id="rating-3" value="3" type="radio" checked="">
+                                                <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                <input class="rating__input" name="rating" id="rating-4" value="4" type="radio">
+                                                <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                <input class="rating__input" name="rating" id="rating-5" value="5" type="radio">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        }
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="mihi-71" ng-controller="myCtrl">
+    <div class="container">
+        @*<section class="" id="logo">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="my-slide featured-company">
+                                <div class="heading-cata">
+                                    <h3 style="color:#1a1919;"><h2>@Model.COMPANY_NAME_ENGLISH (@Model.COMPANY_NAME_CHINESE)</h2></h3>
+                                </div>
+                                <div id="owl-demo5" class="owl-carousel owl-theme owl-loaded owl-drag">
+                                    <div class="owl-stage-outer">
+                                        <div class="owl-stage" id="Servises_Owl" style="transform: translate3d(-1159px, 0px, 0px); transition: all 0s ease 0s; width: 4060px;">
+
+                                            @foreach (var item in Model.ServicesList)
+                                            {
+                                                <div class="owl-item" style="width: 314.333px !important; margin-right: 20px; border: 1px solid #3fbfc7; border-radius: 10px; padding: 10px 13px 10px; ">
+                                                    <div class="item">
+                                                        <div class="item-inner">
+                                                            <div class="pro-text">
+                                                                <p class="f1"><b>@item.ACTIVITY_NAME</b></p>
+                                                            </div>
+                                                            <div id="full-stars-example">
+                                                                <div class="rating-group">
+                                                                    <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                                    <input class="rating__input" name="rating" id="rating-1" value="1" type="radio">
+                                                                    <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                                    <input class="rating__input" name="rating" id="rating-2" value="2" type="radio">
+                                                                    <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                                    <input class="rating__input" name="rating" id="rating-3" value="3" type="radio" checked="">
+                                                                    <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                                    <input class="rating__input" name="rating" id="rating-4" value="4" type="radio">
+                                                                    <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                                    <input class="rating__input" name="rating" id="rating-5" value="5" type="radio">
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            }
+
+
+
+
+
+
+                                        </div>
+                                    </div>
+                                    <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><span aria-label="Previous">‹</span></button><button type="button" role="presentation" class="owl-next"><span aria-label="Next">›</span></button></div>
+
+                                    <div class="owl-dots disabled">
+
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>*@
+
+        <div class="row">
+            <div class="col-md-12">
+
+
+                <div class="schdule-inner">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="schedule-drop">
+                                <div class="form-group">
+                                    <label for="calendar">@Resource.Calendar</label>
+
+                                    <select class="form-control" id="calendar-selector" onchange="showCalendar('@Model.COMPANY_CODE')">
+                                        <option value="-1" disabled>@Resource.select_a_calendar</option>
+                                        @foreach (var item in Model.calendars)
+                                        {
+
+                                            <option value="@item.CALENDAR_CODE" @((item.CALENDAR_CODE == Model.DEFAULT_CALENDAR_ID) ? "selected" : "")>@item.CALENDAR_NAME</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="schedule-drop">
+                                <div class="form-group">
+                                    <label for="service">@Resource.Location_Master</label>
+
+                                    <select class="form-control" id="calendar-service-Location">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            @*<div class="schedule-drop">
+                                <div class="form-group">
+                                    <label for="service">@Resource.Service</label>
+
+                                    <select class="form-control" id="calendar-service">
+                                    </select>
+                                </div>
+                            </div>*@
+                        </div>
+
+                        <div class="col-md-3">
+                            @*<div class="schedule-drop">
+                                <div class="form-group">
+                                    <label for="service">@Resource.Service_Provider_Master</label>
+
+                                    <select class="form-control" id="calendar-service-Provider">
+                                    </select>
+                                </div>
+                            </div>*@
+                        </div>
+
+
+
+                        <div class="col-md-12">
+                            <div class="favr">
+                                @if (!ViewBag.IsUserFavorite)
+                                {
+                                    <button id="btn-mark" onclick="markAsFavorite('@Model.COMPANY_CODE')"><img src="~/assets/marketplace/image/star.png"> @Resource.Mark_as_favorite</button>
+                                }
+                                else
+                                {
+                                    <button id="btn-unmark" onclick="removeAsFavorite('@Model.COMPANY_CODE')"><img src="~/assets/marketplace/image/star.png"> @Resource.Remove_as_favorite</button>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div id="calendar" style="padding: 0px; margin-top: 15px;">
+
+                        <div id="tabs" style="display:none">
+                            <ul>
+                                <li data-value="Year view">
+                                    <a href="#year-view">Year View</a>
+                                </li>
+                                <li data-value="List view">
+                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@(ViewBag.CompanyCode+"/"+@ViewBag.CalendarCode)#list-view'">@Resource.List_View</a>
+                                </li>
+                                <li data-value="External Events">
+                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@(ViewBag.CompanyCode+"/"+@ViewBag.CalendarCode)#agenda-view'">@Resource.Agenda_View</a>
+                                </li>
+                                <li data-value="Timeline resource view">
+                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@(ViewBag.CompanyCode+"/"+@ViewBag.CalendarCode)#timeline-resource-view'">@Resource.Timeline_Resource_View</a>
+                                </li>
+                                <li data-value="Vertical resource view">
+                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@(ViewBag.CompanyCode+"/"+@ViewBag.CalendarCode)#vertical-resource-view'">@Resource.Vertical_Resource_View</a>
+                                </li>
+                            </ul>
+                            <div id="year-view">
+                                <div class="calendar"></div>
+                            </div>
+                        </div>
+
+                        <div ui-calendar="{{uiConfig.calendar}}"
+                             calendar="myCalendar"
+                             class="span8 calendar"
+                             ng-model="eventSources"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal fade right" id="customEventDetailsModelPopUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-slideout" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">@Resource.Event_Details</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="event-detail div-flex">
+                        <div class="div-flex">
+                            <div class="title">
+                                <label class="pr-2">
+                                    {{selectEventDetails.description}}
+                                </label>
+                                <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
+                                    <div style="display:block" class="titleContainer">
+                                        <p class="title1" style="font-size:16px;font-weight:600">
+                                            {{d.dropdownListData.title}}
+                                            <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
+                                            <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
+                                            <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
+                                        </p>
+                                        <p class="title1"> {{d.formTitle}}</p>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div ng-if="!selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
+                            <div ng-if="!selectEventDetails.allDay">{{selectEventDetails.customTime}}</div>
+
+                            <div ng-if="selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
+
+                            <input value="{{selectEventDetails.Id}}" id="newtag-inputHidden" type="hidden">
+
+
+
+                            <div ng-repeat="tag in totalSelectListTagify">
+                                <input value="{{selectEventDetails[tag.name]}}" id="newtag-inputHidden{{tag.name}}" type="hidden">
+                                <input value="{{tag.name}}" id="newtag-inputHidden{{selectEventDetails.Id}}" type="hidden">
+                                <input id="newtag-input{{tag.name}}" type="text" value="{{selectEventDetails[tag.name]}}" placeholder="Add tags">
+                            </div>
+
+                            <p>{{selectEventDetails.DESCRIPTION}} </p>-
+
+                        </div>
+                    </div>
+                    <div class="div-flex div-list-bar"></div>
+                    <div class="div-flex div-list">
+                        <div class="d-flex justify-content-between align-items-center p-0">
+                            <h5 class="list-title mb-0" id="newtabuList"><strong id="strongFormName">0 Student in this Slot</strong></h5>
+
+                        </div>
+                        <ol id="newtabuListUl">
+                        </ol>
+                        <label id="labelWaiting"></label>
+                        <ul id="newtabuListUlWaiting">
+                        </ul>
+                    </div>
+                    <div class="div-flex div-list">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" ng-click="enrollPublicUser()" style="background: #3FBFC7;">Enroll</button>
+                    </div>
+                </div>
+                @*<div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>*@
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade right" id="customEventDetailsServiceModelPopUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-slideout modal-service-type" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">@Resource.Event_Details</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="event-detail div-flex">
+                        <div class="div-flex">
+                            <div class="title">
+                                <label class="pr-2">
+                                    {{selectEventDetails.description}}
+                                </label>
+                                <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
+                                    <div style="display:block" class="titleContainer">
+                                        <p class="title1" style="font-size:16px;font-weight:600">
+                                            {{d.dropdownListData.title}}
+                                            <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
+                                            <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
+                                            <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
+                                        </p>
+                                        <p class="title1"> {{d.formTitle}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ng-if="!selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
+                            <div ng-if="!selectEventDetails.allDay">{{selectEventDetails.customTime}}</div>
+
+                            <div ng-if="selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
+
+                            <input value="{{selectEventDetails.Id}}" id="newtag-inputHidden" type="hidden">
+                            <div ng-repeat="tag in totalSelectListTagify">
+                                <input value="{{selectEventDetails[tag.name]}}" id="newtag-inputHidden{{tag.name}}" type="hidden">
+                                <input value="{{tag.name}}" id="newtag-inputHidden{{selectEventDetails.Id}}" type="hidden">
+                                <input id="newtag-input{{tag.name}}" type="text" value="{{selectEventDetails[tag.name]}}" placeholder="Add tags">
+                            </div>
+                            <p>{{selectEventDetails.DESCRIPTION}} </p>
+
+                        </div>
+                    </div>
+                    <div class="div-flex div-list-bar"></div>
+                    <div class="div-flex div-list">
+                        <div class="d-flex justify-content-between align-items-center p-0">
+                            <h5 class="list-title mb-0" id="newtabuList"><strong id="strongFormName">0 Student in this Slot</strong></h5>
+
+                        </div>
+                        <ol id="newtabuListUl">
+                        </ol>
+                        <label id="labelWaiting"></label>
+                        <ul id="newtabuListUlWaiting">
+                        </ul>
+                    </div>
+
+                    <div id="agenda-view2">
+                        <div class="calendar"></div>
+                    </div>
+
+                </div>
+                @*<div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>*@
+            </div>
+
+        </div>
+    </div>
+
+    <style>
+        .navigation-element {
+            border: none !important;
+        }
+    </style>
+
+    <div class="modal fade" id="dateRangePickerModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel4" aria-hidden="true">
+        <div class="modal-dialog" style="width: 100%;" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="border-bottom: 1px solid lightgrey;">
+                    <h5 class="modal-title" id="exampleModalLabel">Booking Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div style="margin-bottom:12px;">
+                        @Resource.Location : <span style="font-size: 16px; font-weight: bold; color: #E2476C;" id="selectedLocationName"></span>
+                    </div>
+                    <div style="margin-bottom:16px;">
+                        @Resource.Date : <span style="font-size: 15px; font-weight: bold;" id="startEndDate"></span>
+                    </div>
+
+
+                    <div style="display:flex; border: 1px solid lightgrey;">
+                        <input type="number" id="date-counter" class="form-control" style="border:none; outline:none;" min="1" placeholder="5" value="1" />
+                        <label class="navigation-element btn btn-default btn-primary">
+                            Day
+                            <input type="radio" name="date-calc-type" value="day" style="display:none;" checked />
+                        </label>
+                        <label class="navigation-element btn btn-default">
+                            Month
+                            <input type="radio" name="date-calc-type" value="month" style="display:none;" />
+                        </label>
+                        <label class="navigation-element btn btn-default">
+                            Year
+                            <input type="radio" name="date-calc-type" value="year" style="display:none;" />
+                        </label>
+                    </div>
+                    <span style="font-size:smaller; color:grey;">No. of <span id="txt-calc-type"></span></span>
+
+                    <div style="display: flex; justify-content: flex-end; margin-top: 24px;">
+                        <button class="btn btn-default" style="margin-right: 12px" data-bs-dismiss="modal">Cancel</button> <button class="btn btn-danger" ng-click="enrollPublicUserForRental()">Confirm booking</button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+
+@section scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.min.js" integrity="sha512-mh+AjlD3nxImTUGisMpHXW03gE6F4WdQyvuFRkjecwuWLwD2yCijw4tKA3NsEFpA1C3neiKhGXPSIGSfCYPMlQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.css" integrity="sha512-gp+RQIipEa1X7Sq1vYXnuOW96C4704yI1n0YB9T/KqdvqaEgL6nAuTSrKufUX3VBONq/TPuKiXGLVgBKicZ0KA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+    <script src="~/Scripts/MarketplaceScripts/CompanyScheduleYear.js?@DateTime.Now.ToString("yyyyMmddHHMMssffff")"></script>
+
+    <script>
+        
+        FormGeneratorApp.controller('myCtrl', function ($scope, $rootScope) {
+            $scope.rootScopeSafe = function () {
+                $rootScope.safeApply();
+            };
+
+            $(document).on("click", ".navigation-element", function () {
+                $(".navigation-element").removeClass("btn-primary");
+                $(this).addClass("btn-primary");
+            })
+
+            angular.element($("#dateRangePickerModel")).scope().selectedLocationName = "";
+            angular.element($("#dateRangePickerModel")).scope().selectedStartDate = "DD-MM-YYYY";
+            angular.element($("#dateRangePickerModel")).scope().selectedEndDate = "DD-MM-YYYY";
+
+            $rootScope.safeApply = function (fn) {
+                var phase = this.$root.$$phase;
+                if (phase == '$apply' || phase == '$digest') {
+                    if (fn && (typeof (fn) === 'function')) {
+                        fn();
+                    }
+                } else {
+                    this.$apply(fn);
+                }
+            };
+
+            $scope.enrollPublicUserForRental = function () {
+
+                showLoader();
+                $.ajax({
+                    url: "/Account/CheckPublicUserLogin",
+                    type: "POST",
+                    success: function (response) {
+                        hideLoader();
+                        if (!response.Status) {
+
+                            swal({
+                                title: "Login Required",
+                                text: "Kindly login into your account and then you can enroll yourself into this calendar.",
+                                icon: "info",
+                                buttons: {
+                                    confirm: "Login",
+                                    cancel: "Leave it"
+                                }
+                            }).then(function (value) {
+                                if (value) {
+                                    window.location.href = '/Account/BusinessLogin?returnUrl=' + window.location.href + '';
+                                }
+                            });
+                        } else {
+                            showLoader();
+
+                            let eventData = $scope.selectEventDetails;
+
+                            var obj = {
+                                start: eventData.start,
+                                end: eventData.end,
+                                resources: eventData.resources,
+                                activities: "",
+                                description: "",
+                                allDay: "false",
+                                color: "",
+                                CALENDAR_CODE: eventData.CALENDAR_CODE,
+                                COMPANY_CODE: eventData.COMPANY_CODE
+                            }
+
+                            $.ajax({
+                                url: "/UserAdmin/CreateRoomBookingSlot",
+                                type: "POST",
+                                data: obj,
+                                success: function (data) {
+                                    hideLoader();
+                                    if (!data.Status) {
+                                        swal({
+                                            title: "Failed to book",
+                                            text: data.Message,
+                                            icon: "error",
+                                            button: "Okay"
+                                        });
+                                    } else {
+                                        swal({
+                                            title: "Congratulations!",
+                                            text: data.Message,
+                                            icon: "success",
+                                            button: "Okay"
+                                        }).then(function (boolValue) {
+                                            window.location.reload();
+                                        });
+
+                                    }
+
+                                },
+                                error: function () {
+                                    swal({ type: 'error', showCloseButton: true, html: "something went wrong!" });
+                                }
+                            })
+                        }
+
+                    },
+                    error: function () {
+
+                    }
+                })
+
+
+            }
+
+        });
+
+
+        function markAsFavorite(CompanyCode) {
+
+            var CalendarCode = $("#calendar-selector option:selected").val();
+
+            $.ajax({
+                url: "/Account/CheckPublicUserLogin",
+                type: "POST",
+                success: function (response) {
+
+                    if (!response.Status) {
+
+                        swal({
+                            title: "Login Required",
+                            text: "Kindly login into your account and then you can mark calendar as favorite.",
+                            icon: "info",
+                            buttons: {
+                                confirm: "Login",
+                                cancel: "Leave it"
+                            }
+                        }).then(function (value) {
+                            if (value) {
+                                window.location.href = '/Account/BusinessLogin?returnUrl=' + window.location.href + '';
+                            }
+                        });
+
+                    } else {
+
+                        $.ajax({
+
+                            url: "/UserAdmin/AddFavoriteCalendar",
+                            type: "POST",
+                            data: {
+                                CALENDAR_CODE: CalendarCode,
+                                COMPANY_CODE: CompanyCode
+                            },
+                            success: function (response) {
+                                if (response.Status) {
+                                    $("#btn-mark").remove();
+                                    swal({
+                                        title: "Marked Successfully!",
+                                        text: "Calendar marked as favorite!",
+                                        icon: "success",
+                                        button: "Okay"
+                                    }).then(function (boolValue) {
+                                        window.location.reload();
+                                    });
+
+
+                                } else {
+                                    swal({
+                                        title: "Mark Failed!",
+                                        text: "Failed to mark calendar as favorite!",
+                                        icon: "error",
+                                        button: "Okay"
+                                    });
+                                }
+
+                            }
+
+                        })
+
+                    }
+
+
+                }
+            });
+
+        }
+
+        function removeAsFavorite(CompanyCode) {
+
+            var CalendarCode = $("#calendar-selector option:selected").val();
+
+            $.ajax({
+                url: "/Account/CheckPublicUserLogin",
+                type: "POST",
+                success: function (response) {
+
+                    if (!response.Status) {
+                        swal({
+                            title: "Login Required",
+                            text: "Kindly login into your account and then you can Unmark calendar as favorite.",
+                            icon: "info",
+                            buttons: {
+                                confirm: "Login",
+                                cancel: "Leave it"
+                            }
+                        }).then(function (value) {
+                            if (value) {
+                                window.location.href = '/Account/BusinessLogin?returnUrl=' + window.location.href + '';
+                            }
+                        });
+                    } else {
+
+                        $.ajax({
+
+                            url: "/UserAdmin/RemoveFavoriteCalendar",
+                            type: "POST",
+                            data: {
+                                CALENDAR_CODE: CalendarCode,
+                                COMPANY_CODE: CompanyCode
+                            },
+                            success: function (response) {
+                                if (response.Status) {
+                                    $("#btn-unmark").remove();
+                                    swal({
+                                        title: "Unmarked Successfully!",
+                                        text: "Calendar removed from favorites!",
+                                        icon: "success",
+                                        button: "Okay"
+                                    }).then(function (boolValue) {
+                                        window.location.reload();
+                                    });
+
+
+                                } else {
+                                    swal({
+                                        title: "Unmark Failed!",
+                                        text: "Failed to Unmark calendar as favorite!",
+                                        icon: "error",
+                                        button: "Okay"
+                                    });
+                                }
+
+
+
+                            }
+
+                        })
+
+                    }
+
+
+                }
+            });
+
+        }
+
+    </script>
+
+}
+zz

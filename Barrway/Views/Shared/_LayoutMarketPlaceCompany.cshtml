@@ -72,7 +72,7 @@
                         <li id="nv-company-package"><a href="/company/package/@ViewBag.COMPANY_ID/@ViewBag.CALENDAR_ID">@Resource.Package</a></li>
                         @*<li id="nv-company-schedule"><a href="/Marketplace/CompanySchedule?CompanyCode=@ViewBag.COMPANY_ID&CalendarCode=@ViewBag.CALENDAR_ID">@Resource.Schedule</a></li>*@
                         <li id="nv-company-schedule"><a href="/company/calander/@ViewBag.COMPANY_ID/@ViewBag.CALENDAR_ID">@Resource.Schedule</a></li>
-                        
+
                         @*<li id="nv-company-photo-album"><a href="/Marketplace/CompanyPhotoAlbum?CompanyCode=@ViewBag.COMPANY_ID&CalendarCode=@ViewBag.CALENDAR_ID">@Resource.Photo_album</a></li>*@
                         <li id="nv-company-photo-album"><a href="/company/gallery/@ViewBag.COMPANY_ID/@ViewBag.CALENDAR_ID">@Resource.Photo_album</a></li>
                     </ul>
@@ -86,7 +86,16 @@
     <div>
         @RenderBody()
     </div>
-    <section class="bottom-nav">
+
+    <style>
+        .bottom-nav .nav > li > a {
+            position: relative;
+            display: block;
+            padding: 10px 10px;
+        }
+    </style>
+
+    <section class="bottom-nav" style="position: sticky; bottom: 0px; z-index: 1000; background: white; border-top: 1px solid #ebebeb;">
         <nav class="navbar">
             <div class="container">
                 <div class="navbar-header">
@@ -120,49 +129,49 @@
                         {
                             if (UserIdentity.Role == "GENERAL_USER")
                             {
-                                    <li class="rl">
-                                        <a href="/UserAdmin#/userdashboard">@Resource.Account</a>
-                                    </li>
+                                <li class="rl">
+                                    <a href="/UserAdmin#/userdashboard">@Resource.Account</a>
+                                </li>
 
                             }
                             else
                             {
-                                    <li class="rl">
-                                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">@Resource.Register / @Resource.Login </a>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="/Account/BusinessSignUp">@Resource.Register</a></li>
-                                            <li><a href="/Account/BusinessLogin">@Resource.Login</a></li>
-                                        </ul>
-                                    </li>
-
-                            }
-
-                        }
-                        else
-                        {
-                            
                                 <li class="rl">
-                                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">@Resource.Register / @Resource.Login</a>
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">@Resource.Register / @Resource.Login </a>
                                     <ul class="dropdown-menu">
                                         <li><a href="/Account/BusinessSignUp">@Resource.Register</a></li>
                                         <li><a href="/Account/BusinessLogin">@Resource.Login</a></li>
                                     </ul>
                                 </li>
 
-                            
+                            }
+
+                        }
+                        else
+                        {
+
+                            <li class="rl">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">@Resource.Register / @Resource.Login</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/Account/BusinessSignUp">@Resource.Register</a></li>
+                                    <li><a href="/Account/BusinessLogin">@Resource.Login</a></li>
+                                </ul>
+                            </li>
+
+
                         }
 
                         @*<li class="rl">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="/Useradmin"> @Resource.Account</a>
-                            <ul class="dropdown-menu Show-top">
-                                <li><a href="javascript:void(0)">@Resource.Register</a></li>
-                                <li>
-                                    <a href="javascript:void(0)">
-                                        @Resource.Logout
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>*@
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="/Useradmin"> @Resource.Account</a>
+                                <ul class="dropdown-menu Show-top">
+                                    <li><a href="javascript:void(0)">@Resource.Register</a></li>
+                                    <li>
+                                        <a href="javascript:void(0)">
+                                            @Resource.Logout
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>*@
                     </ul>
 
                 </div>
@@ -218,13 +227,14 @@
     <script src="~/Content/angular-cookies/angular-cookies.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/3.0.0/toaster.min.js"></script>
     <script src="~/Scripts/myscript/controller/mainModule.js?token=@token"></script>
-    
+
 
     <script src="~/Scripts/myscript/routes/allRoutes.js?token=@token"></script>
     <script src="~/Scripts/myscript/services/services.js?token=@token"></script>
     <script src="~/Scripts/myscript/directives/directives.js?token=@token"></script>
     <script type="text/javascript" src="~/fg-assets/formValidation/js/formValidation.min.js"></script>
     <script type="text/javascript" src="~/fg-assets/formValidation/js/framework/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script src="~/fg-assets/js/app.js"></script>
     <script src="~/fg-assets/js/jquery.cookie.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

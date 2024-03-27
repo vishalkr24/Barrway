@@ -18,7 +18,13 @@ namespace Barrway.DTO.BusinessModels
         public string COMPANY_CODE { get; set; }
         public string CALENDAR_CODE { get; set; }
         public string UNIVERSAL_ERROR { get; set; }
-
+        public string DISPLAY_MAX_TIME { get; set; }
+        public string DISPLAY_MIN_TIME { get; set; }
+        public string DEFAULT_RESOURCE { get; set; }
+        public string NEED_ADDITIONAL_FORM { get; set; }
+        public string ADDITIONAL_FORM_ID { get; set; }
+        public string DEFAULT_CALENDAR_VIEW { get; set; }
+        public List<string> REQUIRED_CALENDAR_VIEWS { get; set; }
         public string CALENDAR_TEMPLATE_ID { get; set; }
         public string SCHEDULAR_ID { get; set; }
 
@@ -40,6 +46,8 @@ namespace Barrway.DTO.BusinessModels
         [Required(ErrorMessage = "Please select a calendar category")]
         [ValidDropdownValue(ErrorMessage = "Please select a calendar category")]
         public string CALENDAR_CATEGORY_ID { get; set; }
+
+        public string CALENDAR_COMMON_CATEGORY_ID { get; set; }
 
         [Required(ErrorMessage = "Please select a sub category")]
         [ValidDropdownValue(ErrorMessage = "Please select a sub category")]

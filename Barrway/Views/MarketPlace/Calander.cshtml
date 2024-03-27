@@ -1,4 +1,4 @@
-﻿@model Barrway.DTO.MarketplaceModels.MarketplaceCompanyModel
+﻿﻿@model Barrway.DTO.MarketplaceModels.MarketplaceCompanyModel
 @{
     ViewBag.Title = Resource.Company_Schedule;
     Layout = "~/Views/Shared/_LayoutMarketPlaceCompany.cshtml";
@@ -198,6 +198,29 @@
             padding: 0px 5px;
             margin: 3px 3px 3px;
         }
+
+        .fc-list-table .event-list-5C {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 8px 14px;
+            margin: 6px;
+            margin-bottom: 0px;
+            background: #e9e9e9;
+            border-radius: 6px;
+        }
+
+            .fc-list-table .event-list-5C .C-element {
+                margin-right: 16px;
+            }
+
+                .fc-list-table .event-list-5C .C-element.C-resource {
+                    padding: 6px 12px;
+                    background: #3a87ad;
+                    color: white;
+                    border-radius: 6px;
+                    font-size: 13px;
+                }
 
         .fc-content.fcTime small.time {
             color: #7b7b7b;
@@ -626,6 +649,31 @@
             margin: -17px -5px 10px;
             border-color: #3fbfc7 !important;
         }
+
+        .fc-bgevent {
+            border-radius: 0px !important;
+        }
+
+        .swal-button--confirm, .swal-button--confirm:hover {
+            background: #E2476C;
+            border-color: #E2476C;
+            cursor: pointer;
+            min-width: 120px;
+            border-radius: 100px;
+        }
+
+        .swal-button:not([disabled]):hover {
+            background-color: #E2476C;
+        }
+
+        .swal-button--cancel, .swal-button--cancel:hover {
+            cursor: pointer;
+            border: 1px solid #777777;
+            color: #777777;
+            background-color: #EBEBEB;
+            min-width: 120px;
+            border-radius: 100px;
+        }
     </style>
 }
 
@@ -665,14 +713,7 @@
                                     </div>
                                 </div>
                             </div>
-
-
-
                         }
-
-
-
-
                     </div>
                 </div>
             </div>
@@ -826,20 +867,25 @@
 
                         <div id="tabs" style="display:none">
                             <ul>
-                                <li data-value="List view">
+                                <li id="year-view-nav" data-value="year view">
+                                    <a href="#yearview" onclick="window.location.href='/company/calanderyearview/@ViewBag.CompanyCode/@ViewBag.CalendarCode'">Year View</a>
+                                </li>
+                                <li id="list-view-nav" data-value="List view" style="display:none;">
                                     <a href="#list-view">@Resource.List_View</a>
                                 </li>
-                                <li data-value="External Events">
+                                <li id="agenda-view-nav" data-value="External Events" style="display:none;">
                                     <a href="#agenda-view">@Resource.Agenda_View</a>
                                 </li>
-                                <li data-value="Timeline resource view">
+                                <li id="timeline-view-nav" data-value="Timeline resource view" style="display:none;">
                                     <a href="#timeline-resource-view">@Resource.Timeline_Resource_View</a>
                                 </li>
-                                <li data-value="Vertical resource view">
+                                <li id="vertical-view-nav" data-value="Vertical resource view" style="display:none;">
                                     <a href="#vertical-resource-view">@Resource.Vertical_Resource_View</a>
                                 </li>
                             </ul>
-
+                            <div id="yearview">
+                                <div class="calendar"></div>
+                            </div>
                             <div id="list-view">
                                 <div class="calendar"></div>
                             </div>
@@ -854,10 +900,8 @@
                             </div>
                         </div>
 
-                        <div ui-calendar="{{uiConfig.calendar}}"
-                             calendar="myCalendar"
-                             class="span8 calendar"
-                             ng-model="eventSources"></div>
+                        <div ui-calendar="{{uiConfig.calendar}}" calendar="myCalendar" class="span8 calendar" ng-model="eventSources">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -876,18 +920,16 @@
                     <div class="event-detail div-flex">
                         <div class="div-flex">
                             <div class="title">
-                                <label class="pr-2">
-                                    {{selectEventDetails.description}}
-                                </label>
+
                                 <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
                                     <div style="display:block" class="titleContainer">
-                                        <p class="title1" style="font-size:16px;font-weight:600">
-                                            {{d.dropdownListData.title}}
-                                            <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
-                                            <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
-                                            <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
-                                        </p>
-                                        <p class="title1"> {{d.formTitle}}</p>
+                                        @*<p class="title1" style="font-size:16px;font-weight:600">
+                        {{d.dropdownListData.title}}
+                        <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
+                        <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
+                        <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
+                    </p>*@
+                                        <p class="title1" style="font-weight:bold; font-size: 16px;"> {{d.formTitle}}</p>
                                     </div>
                                 </div>
 
@@ -901,33 +943,42 @@
 
                             <input value="{{selectEventDetails.Id}}" id="newtag-inputHidden" type="hidden">
 
-
-
                             <div ng-repeat="tag in totalSelectListTagify">
                                 <input value="{{selectEventDetails[tag.name]}}" id="newtag-inputHidden{{tag.name}}" type="hidden">
                                 <input value="{{tag.name}}" id="newtag-inputHidden{{selectEventDetails.Id}}" type="hidden">
                                 <input id="newtag-input{{tag.name}}" type="text" value="{{selectEventDetails[tag.name]}}" placeholder="Add tags">
                             </div>
 
-                            <p>{{selectEventDetails.DESCRIPTION}} </p>-
+
+                            <div class="form-group mt-2 p-0" ng-if="selectEventDetails.DOWNLOADABLE_ATTACHMENT && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='null'">
+                                <label>Attachment Files</label>
+                                <ul style="list-style-type:none;margin:0;padding:0;margin-top:10px;">
+                                    <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES"><a ng-href="{{item}}" target="_blank"><i class="fa fa-file"></i> File {{$index+1}}</a></li>
+                                </ul>
+                            </div>
 
                         </div>
                     </div>
                     <div class="div-flex div-list-bar"></div>
                     <div class="div-flex div-list">
                         <div class="d-flex justify-content-between align-items-center p-0">
-                            <h5 class="list-title mb-0" id="newtabuList"><strong id="strongFormName">0 Student in this Slot</strong></h5>
+                            <h5 class="list-title mb-0" id="newtabuList"></h5>
 
                         </div>
+
+                        <label class="pr-2" style="margin-top: 20px; font-weight: 400;" ng-bind-html="selectEventDetails.description | safeHtml">
+                        </label>
+
                         <ol id="newtabuListUl">
                         </ol>
                         <label id="labelWaiting"></label>
                         <ul id="newtabuListUlWaiting">
                         </ul>
+
                     </div>
                     <div class="div-flex div-list">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary" ng-click="enrollPublicUser()" style="background: #3FBFC7;">Enroll</button>
+                        <button type="button" class="btn btn-primary public-primary" ng-if="selectEventDetails.isEnroll" ng-click="enrollPublicUser()">Enroll</button>
                     </div>
                 </div>
                 @*<div class="modal-footer">
@@ -950,8 +1001,7 @@
                     <div class="event-detail div-flex">
                         <div class="div-flex">
                             <div class="title">
-                                <label class="pr-2">
-                                    {{selectEventDetails.description}}
+                                <label class="pr-2" style=" font-weight: 400;" ng-bind-html="selectEventDetails.description | safeHtml">
                                 </label>
                                 <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
                                     <div style="display:block" class="titleContainer">
@@ -976,7 +1026,12 @@
                                 <input value="{{tag.name}}" id="newtag-inputHidden{{selectEventDetails.Id}}" type="hidden">
                                 <input id="newtag-input{{tag.name}}" type="text" value="{{selectEventDetails[tag.name]}}" placeholder="Add tags">
                             </div>
-                            <p>{{selectEventDetails.DESCRIPTION}} </p>
+
+                            <div class="form-group mt-2 p-0" ng-if="selectEventDetails.DOWNLOADABLE_ATTACHMENT && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='null'">
+                                <ul style="list-style-type:none;">
+                                    <li ng-repeat="item in createEventDetails.DOWNLOADABLE_ATTACHMENT_FILES"><a ng-href="{{item}}" target="_blank"><i class="fa fa-file-alt"></i></a></li>
+                                </ul>
+                            </div>
 
                         </div>
                     </div>
@@ -1008,8 +1063,12 @@
     </div>
 
     <style>
-        .navigation-element{
-            border:none!important;
+        .navigation-element {
+            border: none !important;
+        }
+
+        #service-div input.form-control.error, select.form-control.error {
+            border: 1px solid red;
         }
     </style>
 
@@ -1025,8 +1084,20 @@
                         @Resource.Location : <span style="font-size: 16px; font-weight: bold; color: #E2476C;" id="selectedLocationName"></span>
                     </div>
                     <div style="margin-bottom:16px;">
-                        @Resource.Date : <span style="font-size: 15px; font-weight: bold;" id="startEndDate"></span>
+                        @Resource.Date :
+                        <label for="startListViewDate" class="form-group form-control" style="display: inline; border: 1px solid lightgrey;">
+                            <input type="text" id="startListViewDate" onkeydown="return false;" style="border: none; outline: none; font-weight: bold; width: 90px;" />
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                        </label>
+                        <span style="margin: 0px 8px;">
+                            to
+                        </span>
+                        <label for="endListViewDate" class="form-group form-control" style="display: inline; border: 1px solid lightgrey;">
+                            <input type="text" id="endListViewDate" onkeydown="return false;" style="border: none; outline: none; font-weight: bold; width: 90px;" />
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                        </label>
                     </div>
+
 
 
                     <div style="display:flex; border: 1px solid lightgrey;">
@@ -1047,9 +1118,27 @@
                     <span style="font-size:smaller; color:grey;">No. of <span id="txt-calc-type"></span></span>
 
                     <div style="display: flex; justify-content: flex-end; margin-top: 24px;">
-                        <button class="btn btn-default" style="margin-right: 12px" data-bs-dismiss="modal">Cancel</button> <button class="btn btn-danger" ng-click="enrollPublicUserForRental()">Confirm booking</button>
+                        <button class="btn btn-default" style="margin-right: 12px" data-bs-dismiss="modal">Cancel</button> <button class="btn btn-danger" style="background: #E2476C;" ng-click="enrollPublicUserForRental()">Confirm booking</button>
                     </div>
 
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="AdditionalDetailsFormModal" style="z-index: 2000;" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel5" aria-hidden="true">
+        <div class="modal-dialog modal-lg" style="width: 100%;" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Fill your details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="padding-top: 0px;">
+                    <div id="service-div"></div>
+                    @*<div style="display: flex; justify-content: flex-end; margin-top: 24px;">
+                            <button class="btn btn-default" style="margin-right: 12px" data-bs-dismiss="modal">Cancel</button> <button class="btn btn-danger" style="background: #E2476C;" ng-click="createDynamicFormEntry()">Confirm booking</button>
+                        </div>*@
                 </div>
             </div>
 
@@ -1065,8 +1154,10 @@
     <script src="~/Scripts/MarketplaceScripts/CompanySchedule.js?@DateTime.Now.ToString("yyyyMmddHHMMssffff")"></script>
 
     <script>
+        var dataModelList = [];
+        var dataList = [];
         /*var app = angular.module('myApp', []);*/
-        FormGeneratorApp.controller('myCtrl', function ($scope, $rootScope) {
+        FormGeneratorApp.controller('myCtrl', function ($scope, $rootScope, mainService) {
             $scope.rootScopeSafe = function () {
                 $rootScope.safeApply();
             };
@@ -1080,16 +1171,20 @@
             angular.element($("#dateRangePickerModel")).scope().selectedStartDate = "DD-MM-YYYY";
             angular.element($("#dateRangePickerModel")).scope().selectedEndDate = "DD-MM-YYYY";
 
-            $rootScope.safeApply = function (fn) {
-                var phase = this.$root.$$phase;
-                if (phase == '$apply' || phase == '$digest') {
-                    if (fn && (typeof (fn) === 'function')) {
-                        fn();
-                    }
-                } else {
-                    this.$apply(fn);
-                }
-            };
+            $scope.userDetail = mainService.loginDetails();
+
+            $scope.IsEventBackground = false;
+            $scope.bgEventDetails = {};
+            //$rootScope.safeApply = function (fn) {
+            //    var phase = this.$root.$$phase;
+            //    if (phase == '$apply' || phase == '$digest') {
+            //        if (fn && (typeof (fn) === 'function')) {
+            //            fn();
+            //        }
+            //    } else {
+            //        this.$apply(fn);
+            //    }
+            //};
 
             $scope.enrollPublicUser = function () {
                 console.log($scope.selectEventDetails);
@@ -1106,12 +1201,12 @@
                                 text: "Kindly login into your account and then you can enroll yourself into this calendar.",
                                 icon: "info",
                                 buttons: {
-                                    confirm: "Login",
-                                    cancel: "Leave it"
+                                    cancel: "Leave it",
+                                    confirm: "Login"
                                 }
                             }).then(function (value) {
                                 if (value) {
-                                    window.location.href = '/Account/BusinessLogin?returnUrl=/Marketplace/Calander?' + window.location.href.split('?')[1].replace('&', '$') + '';
+                                    window.location.href = '/Account/BusinessLogin?returnUrl=' + window.location.href + '';
                                 }
                             });
                         } else {
@@ -1132,15 +1227,15 @@
                                         debugger;
                                         const wrapper = document.createElement('div');
                                         wrapper.innerHTML = `<div>
-                                                                                                ${eventData.customDate}
-                                                                                            </div>
-                                                                                            <div>
-                                                                                                ${eventData.customTime}
-                                                                                            </div>
-                                                                                            <div>${eventData.customTitleSplit[2]}</div><br />
-                                                                                            <div>${eventData.customTitleSplit[1]}</div>
-                                                                                            <div>${eventData.customTitleSplit[0]}</div><br />
-                                                                                            <h4 style="color:red">${response.Message}</h4>`;
+                                                                                                                                                ${eventData.customDate}
+                                                                                                                                            </div>
+                                                                                                                                            <div>
+                                                                                                                                                ${eventData.customTime}
+                                                                                                                                            </div>
+                                                                                                                                            <div>${eventData.customTitleSplit[2]}</div><br />
+                                                                                                                                            <div>${eventData.customTitleSplit[1]}</div>
+                                                                                                                                            <div>${eventData.customTitleSplit[0]}</div><br />
+                                                                                                                                            <h4 style="color:red">${response.Message}</h4>`;
 
                                         swal({
                                             title: "You are going to book",
@@ -1153,76 +1248,93 @@
                                         }).then(function (response) {
                                             if (response) {
                                                 showLoader();
-                                                var obj = {
-                                                    USER_ID: "",
-                                                    RESOURCE_NAME: eventData.customTitleSplit[0],
-                                                    ACTIVITY_NAME: eventData.customTitleSplit[1],
-                                                    FormGroupKey: $scope.selectEventDetails.formGroupKey,
-                                                    participant: {
-                                                        DESCRIPTION: eventData.description,
-                                                        COMPANY_CODE: eventData.COMPANY_CODE,
-                                                        CALENDAR_CODE: eventData.CALENDAR_CODE
-                                                    },
-                                                    transaction: {
-                                                        SLOT: eventData.Id,
-                                                        RESOURCE: eventData.resourceId,
-                                                        ACTIVITY: eventData.activities,
-                                                        STUDENT: "",
-                                                        REMARKS: "",
-                                                        FEES: "",
-                                                        ATTENDANCE: "NOT-MARKED",
-                                                        COMPANY_CODE: eventData.COMPANY_CODE,
-                                                        CALENDAR_CODE: eventData.CALENDAR_CODE
-                                                    }
-                                                }
 
                                                 $.ajax({
-                                                    url: "/UserAdmin/EnrollPublicUserForCalendar",
-                                                    type: "POST",
-                                                    data: obj,
-                                                    success: function (data) {
-                                                        hideLoader();
-                                                        if (!data.Status) {
-                                                            if (data.Message == "ALREADY-ENROLLED") {
-                                                                swal({
-                                                                    title: "Can't Enroll Again!",
-                                                                    text: "You are already enrolled in this event.",
-                                                                    icon: "error",
-                                                                    button: "Okay"
-                                                                });
-                                                                //swal({ type: 'error', showCloseButton: true, html: "You are already enrolled in this calendar." });
-                                                            } else if (data.Message == "LIMIT-ERROR") {
-                                                                swal({
-                                                                    title: "Failed to Enroll!",
-                                                                    text: "Maximum no. of participants already enrolled in this activity.",
-                                                                    icon: "error",
-                                                                    button: "Okay"
-                                                                });
-                                                            } else {
-                                                                swal({
-                                                                    title: "Warning!",
-                                                                    text: data.Message,
-                                                                    icon: "error",
-                                                                    button: "Okay"
-                                                                });
-                                                            }
-                                                        } else {
-                                                            swal({
-                                                                title: "Congratulations!",
-                                                                text: "Enrolled Successfully!",
-                                                                icon: "success",
-                                                                button: "Okay"
-                                                            }).then(function (boolValue) {
-                                                                window.location.reload();
-                                                            });
-
-                                                        }
-
+                                                    url: "/UserAdmin/CheckAdditionalFormDetails",
+                                                    method: "GET",
+                                                    data: {
+                                                        CalendarCode: eventData.CALENDAR_CODE
                                                     },
-                                                    error: function () {
-                                                        swal({ type: 'error', showCloseButton: true, html: "something went wrong!" });
+                                                    success: function (response) {
+                                                        if (response.Status) {
+                                                            var obj = {
+                                                                USER_ID: "",
+                                                                RESOURCE_NAME: eventData.customTitleSplit[0],
+                                                                ACTIVITY_NAME: eventData.customTitleSplit[1],
+                                                                FormGroupKey: $scope.selectEventDetails.formGroupKey,
+                                                                participant: {
+                                                                    DESCRIPTION: String(eventData.description),
+                                                                    COMPANY_CODE: eventData.COMPANY_CODE,
+                                                                    CALENDAR_CODE: eventData.CALENDAR_CODE
+                                                                },
+                                                                transaction: {
+                                                                    SLOT: eventData.Id,
+                                                                    RESOURCE: eventData.resourceId,
+                                                                    ACTIVITY: eventData.activities,
+                                                                    STUDENT: "",
+                                                                    REMARKS: "",
+                                                                    FEES: "",
+                                                                    ATTENDANCE: "NOT-MARKED",
+                                                                    COMPANY_CODE: eventData.COMPANY_CODE,
+                                                                    CALENDAR_CODE: eventData.CALENDAR_CODE
+                                                                }
+                                                            }
+
+                                                            $.ajax({
+                                                                url: "/UserAdmin/EnrollPublicUserForCalendar",
+                                                                type: "POST",
+                                                                data: obj,
+                                                                success: function (data) {
+                                                                    hideLoader();
+                                                                    if (!data.Status) {
+                                                                        if (data.Message == "ALREADY-ENROLLED") {
+                                                                            swal({
+                                                                                title: "Can't Enroll Again!",
+                                                                                text: "You are already enrolled in this event.",
+                                                                                icon: "error",
+                                                                                button: "Okay"
+                                                                            });
+                                                                            //swal({ type: 'error', showCloseButton: true, html: "You are already enrolled in this calendar." });
+                                                                        } else if (data.Message == "LIMIT-ERROR") {
+                                                                            swal({
+                                                                                title: "Failed to Enroll!",
+                                                                                text: "Maximum no. of participants already enrolled in this activity.",
+                                                                                icon: "error",
+                                                                                button: "Okay"
+                                                                            });
+                                                                        } else {
+                                                                            swal({
+                                                                                title: "Warning!",
+                                                                                text: data.Message,
+                                                                                icon: "error",
+                                                                                button: "Okay"
+                                                                            });
+                                                                        }
+                                                                    } else {
+                                                                        swal({
+                                                                            title: "Congratulations!",
+                                                                            text: "Enrolled Successfully!",
+                                                                            icon: "success",
+                                                                            button: "Okay"
+                                                                        }).then(function (boolValue) {
+                                                                            window.location.reload();
+                                                                        });
+
+                                                                    }
+
+                                                                },
+                                                                error: function () {
+                                                                    swal({ type: 'error', showCloseButton: true, html: "something went wrong!" });
+                                                                }
+                                                            })
+                                                        } else {
+                                                            $scope.renderAdditionalDetailsForm();
+                                                        }
+                                                    },
+                                                    error: function (error) {
+                                                        console.error(error);
                                                     }
-                                                })
+                                                });
                                             }
                                         });
                                     } else {
@@ -1233,17 +1345,10 @@
                                             buttons: {
                                                 confirm: "Okay"
                                             }
-
                                         })
                                     }
                                 }
                             })
-
-
-
-
-
-
                         }
 
                     },
@@ -1255,9 +1360,335 @@
 
             }
 
+            $scope.renderAdditionalDetailsForm = function () {
+                $.ajax({
+                    url: "/FormAPI/ManageForm",
+                    method: "POST",
+                    async: false,
+                    data: {
+                        data: {
+                            action: 7,
+                            formId: calendarDetails.ADDITIONAL_FORM_ID
+                        }
+                    },
+                    success: function (response) {
+
+                        if (response.length > 0) {
+
+                            var data = JSON.parse(response[0].fields);
+                            $scope.importFormSettings = response[0];
+
+                            if (data["Page 1"] != null && data["Page 1"] != undefined) {
+                                var data2 = JSON.parse(data["Page 1"]);
+                                debugger;
+                                let containerClass = "";
+
+                                dataModelList = [];
+                                data2.forEach(x => {
+
+                                    dataModelList.push({
+                                        label: x["label"],
+                                        containerClass: "col-md-" + parseInt((12 / parseInt(100 / parseInt(x["column_width"])))),
+                                        name: x["name"],
+                                        type: x["type"],
+                                        required: x["required"],
+                                        description: x["description"],
+                                        values: (x["type"] == "radio-group" || x["type"] == "select" || x["type"] == "checkbox-group") ? x["values"] : null
+                                    });
+
+                                });
+
+                                let dataModel = {
+                                    Id: 1,
+                                    CALENDAR_CODE: calendarDetails.CALENDAR_CODE,
+                                    COMPANY_CODE: calendarDetails.COMPANY_CODE,
+                                    Is_New: true
+                                };
+
+                                $("#service-div").empty();
+                                $("#service-div").append(`<form class="form" id="service-elem"> <div class="row mt-3"></div></form>`)
+
+                                $("#service-div #service-elem .row").append(response[0].formContentHTMLTemp);
+
+                                $('#service-div #service-elem').on("submit", function (evt) {
+                                    if ($('#service-div #service-elem').valid()) {
+                                        evt.preventDefault();
+                                        $scope.createDynamicFormEntry();
+                                    } else {
+                                        evt.preventDefault();
+                                    }
+                                })
+
+                                dataModelList.forEach(x => {
+                                    if (x.name == "COMPANY_CODE" || x.name == "CALENDAR_CODE") {
+                                        //$("#service-div #service-elem-" + dataModel.Id + " .row ").
+                                        $(`#service-div .border-${x.name}`).hide();
+                                    } else {
+                                        if (x.name.includes('button')) {
+                                            $(`#service-div .border-${x.name}0`).addClass("col-sm-2");
+                                            $(`#service-div .border-${x.name}00`).addClass("col-sm-2");
+                                        }
+                                        dataModel[x.name] = "";
+                                    }
+
+                                    $(`#service-div input[name=${x.name}]`).val(dataModel[x.name]);
+                                });
+
+                                dataList = [];
+                                dataList.push(dataModel);
+                                setTimeout(function () {
+                                    dataModelList.forEach(x => {
+                                        if (x.type == "file") {
+
+                                        } else {
+                                            $(`#service-div input[name^=${x.name}]`).bind("keyup change paste", function () {
+                                                dataList[0][x.name] = this.value;
+                                            })
+                                        }
+
+                                    });
+                                }, 500);
+
+
+                                var element = document.querySelector('#service-div');
+                                element.scrollTop = element.scrollHeight;
+
+                                $("#customEventDetailsModelPopUp").modal("hide");
+                                $("#customEventDetailsServiceModelPopUp").modal("hide");
+                                $("#AdditionalDetailsFormModal").modal("show");
+                                hideLoader();
+                            }
+
+                        }
+
+
+                    },
+                    error: function (error) {
+
+                    }
+                })
+            }
+
+            $scope.existButtonFunc = function () {
+                $("#AdditionalDetailsFormModal").modal("hide");
+                $("#AdditionalDetailsFormModal #service-div").empty();
+            }
+
+            $scope.fileUploadDataEntry = function (id, uploaderType) {
+
+                var oFReader = new FileReader();
+                var files = document.getElementById(id).files;
+                //alert(uploaderType);
+
+                if (files.length > 1) {
+
+                    getMultipleFiles(id);
+
+                }
+                else if (files.length == 1) {
+
+                    getSingleFile(id, uploaderType);
+
+                };
+                $scope.uploadFileOnly(files, id, uploaderType);
+
+            };
+
+            $scope.uploadFileOnly = function (element, id, uploadType) {
+
+                if (angular.isDefined(element)) {
+                    var fileData = element;
+                    var fd = new FormData();
+                    var reqType = "form";
+                    var uid = $scope.userDetail.uid;
+                    var userId = $scope.userDetail.Id;
+                    var appIdParam = $scope.importFormSettings.applicationId;
+                    var appTitleParam = $scope.importFormSettings.applicationTitle;
+                    var formIdParam = $scope.importFormSettings.formId;
+                    var formTitleParam = $scope.importFormSettings.title;
+                    var counterfile = 0;
+                    angular.forEach(fileData, function (value, key) {
+                        //console.log(value);
+                        counterfile++;
+                        var NamingIndex = "file" + counterfile.toString();
+                        fd.append(NamingIndex, value);
+                    });
+                    //fd.append('file', fileData);
+
+                    //console.log(fd);
+                    mainService.uploadFile("UploadFile", fd, reqType, uid, appIdParam, appTitleParam, formIdParam, formTitleParam, false, userId)
+                        .then(function (response) {
+                            if (response.data != null && angular.isDefined(response.data)) {
+                                if (angular.isDefined(response.data)) {
+                                    if (response.data.code == 200) {
+                                        var urlStr = response.data.fileUrl;
+                                        //if()
+                                        if (uploadType == "multi") {
+                                            setHiddenField(id, urlStr);
+                                            debugger;
+                                            dataList[0][id] = urlStr
+                                        }
+                                        else {
+                                            $("input:hidden[name=" + id + "]").val(urlStr);
+                                            debugger;
+                                            dataList[0][id] = urlStr
+                                        }
+                                        console.log("uploaded Successfully");
+                                    } else {
+                                        notifierService.notifySweetAlertMessage('error', 'File', response.data.message);
+                                    }
+                                    $rootScope.$emit("HideLoading");
+                                }
+
+                            }
+                        }
+                            , function (err) {
+                                console.log("some error occured." + err);
+                                $rootScope.$emit("HideLoading");
+                            });
+                }
+            };
+
+            $scope.createDynamicFormEntry = function () {
+                if (validateDynamicForm()) {
+                    var eventData = $scope.selectEventDetails;
+                    $.ajax({
+                        url: "/UserAdmin/CreateDynamicFormEntry",
+                        method: "POST",
+                        data: {
+                            data: dataList,
+                            formId: calendarDetails.ADDITIONAL_FORM_ID,
+                            CalendarCode: calendarDetails.CALENDAR_CODE
+                        },
+                        success: function (response) {
+                            // after success response
+                            if (response.Status) {
+
+                                swal({
+                                    icon: "success",
+                                    title: "Great!",
+                                    text: "Form saved successfully!",
+                                    buttons: {
+                                        confirm: "Okay"
+                                    }
+                                }).then(function (value) {
+                                    debugger;
+                                    if ($scope.IsEventBackground) {
+                                        invokeBookingService($scope.bgEventDetails.start, $scope.bgEventDetails.end, $scope.bgEventDetails.bgevent);
+                                    } else {
+                                        var obj = {
+                                            USER_ID: "",
+                                            RESOURCE_NAME: eventData.customTitleSplit[0],
+                                            ACTIVITY_NAME: eventData.customTitleSplit[1],
+                                            FormGroupKey: $scope.selectEventDetails.formGroupKey,
+                                            participant: {
+                                                DESCRIPTION: String(eventData.description),
+                                                COMPANY_CODE: eventData.COMPANY_CODE,
+                                                CALENDAR_CODE: eventData.CALENDAR_CODE
+                                            },
+                                            transaction: {
+                                                SLOT: eventData.Id,
+                                                RESOURCE: eventData.resourceId,
+                                                ACTIVITY: eventData.activities,
+                                                STUDENT: "",
+                                                REMARKS: "",
+                                                FEES: "",
+                                                ATTENDANCE: "NOT-MARKED",
+                                                COMPANY_CODE: eventData.COMPANY_CODE,
+                                                CALENDAR_CODE: eventData.CALENDAR_CODE
+                                            }
+                                        }
+
+                                        $.ajax({
+                                            url: "/UserAdmin/EnrollPublicUserForCalendar",
+                                            type: "POST",
+                                            data: obj,
+                                            success: function (data) {
+                                                hideLoader();
+                                                if (!data.Status) {
+                                                    if (data.Message == "ALREADY-ENROLLED") {
+                                                        swal({
+                                                            title: "Can't Enroll Again!",
+                                                            text: "You are already enrolled in this event.",
+                                                            icon: "error",
+                                                            button: "Okay"
+                                                        });
+                                                        //swal({ type: 'error', showCloseButton: true, html: "You are already enrolled in this calendar." });
+                                                    } else if (data.Message == "LIMIT-ERROR") {
+                                                        swal({
+                                                            title: "Failed to Enroll!",
+                                                            text: "Maximum no. of participants already enrolled in this activity.",
+                                                            icon: "error",
+                                                            button: "Okay"
+                                                        });
+                                                    } else {
+                                                        swal({
+                                                            title: "Warning!",
+                                                            text: data.Message,
+                                                            icon: "error",
+                                                            button: "Okay"
+                                                        });
+                                                    }
+                                                } else {
+                                                    swal({
+                                                        title: "Congratulations!",
+                                                        text: "Enrolled Successfully!",
+                                                        icon: "success",
+                                                        button: "Okay"
+                                                    }).then(function (boolValue) {
+                                                        window.location.reload();
+                                                    });
+
+                                                }
+
+                                                $("#AdditionalDetailsFormModal").modal("hide");
+                                                $("#AdditionalDetailsFormModal #service-div").empty();
+                                            },
+                                            error: function () {
+                                                swal({ type: 'error', showCloseButton: true, html: "something went wrong!" });
+                                            }
+                                        })
+                                    }
+
+                                });
+
+
+
+                            } else {
+                                swal({
+                                    icon: "error",
+                                    title: "Error",
+                                    text: response.Message
+                                });
+                            }
+
+                        },
+                        error: function (er) {
+
+                        }
+                    })
+                }
+
+            }
+
             $scope.enrollPublicUserForRental = function () {
-                
+
                 showLoader();
+                debugger;
+                try {
+                    let test1 = moment($scope.selectEventDetails.start);
+                    let test2 = moment($scope.selectEventDetails.end)
+                    if (!test1.isValid() || !test2.isValid()) {
+                        alert('Please select date range');
+                        hideLoader();
+                        return;
+                    }
+                } catch (ex) {
+                    alert('Please select date range');
+                    hideLoader();
+                    return;
+                }
+
                 $.ajax({
                     url: "/Account/CheckPublicUserLogin",
                     type: "POST",
@@ -1275,7 +1706,7 @@
                                 }
                             }).then(function (value) {
                                 if (value) {
-                                    window.location.href = '/Account/Login?returnUrl=/Marketplace/Calander?' + window.location.href.split('?')[1].replace('&', '$') + '';
+                                    window.location.href = '/Account/BusinessLogin?returnUrl=' + window.location.href + '';
                                 }
                             });
                         } else {
@@ -1336,8 +1767,213 @@
 
             }
 
+
+        }).filter('safeHtml', function ($sce) {
+            return function (val) {
+                return $sce.trustAsHtml(val);
+            };
         });
 
+        function validateDynamicForm() {
+            let finalResult = true;
+
+            requiredList = dataModelList.filter(x => x.required);
+            if (requiredList != null) {
+                if (requiredList.length > 0) {
+                    requiredList.forEach(x => {
+                        if (dataList[0][x.name] == "") {
+                            finalResult = false;
+                            $("#service-div input[name=" + x.name + "]").addClass("error")
+                        } else {
+                            $("#service-div input[name=" + x.name + "]").removeClass("error");
+                        }
+                    })
+
+                }
+            }
+
+            if (!finalResult) {
+                swal({
+                    icon: "warning",
+                    title: "Alert",
+                    text: "Please fill the mandatory fields of form to proceed."
+                }).then(function (res) {
+                    var element = document.querySelector('#service-div');
+                    element.scrollTop = element.scrollHeight;
+                });
+            }
+
+            return finalResult;
+        }
+
+        function getSingleFile(id, uploaderType) {
+            //$('#' + id).parents('.form-group').find('.attachments span.file-attachments').remove();
+            var oFReader = new FileReader();
+            var files = document.getElementById(id).files[0];
+            oFReader.readAsDataURL(files);
+            if (files.type.match('image.*')) {
+                oFReader.onload = function (oFREvent) {
+                    if (uploaderType == "multi") {
+                        getMultipleFiles(id);
+                    }
+                    else {
+                        document.getElementById("uploadPreview_" + id).src = oFREvent.target.result;
+                        $("#uploadPreview_" + id).parent().removeClass("hidden");
+                        $("#uploadPreview_" + id).parent().find('.file-title').html(files.name);
+                    }
+
+                };
+            } else {
+                if (uploaderType == "multi") {
+                    getMultipleFiles(id);
+                }
+                else {
+                    $('#uploadPreview_' + id).removeAttr('src'); $('#uploadPreview_' + id).parent().addClass('hidden');
+                    var fileAttachments = $('#' + id).parents('.form-group').find('.attachments .file-attachments');
+                    fileAttachments.find('p').append(files.name);
+                    fileAttachments.removeClass("hidden");
+                }
+
+
+            }
+        }
+
+        function getMultipleFiles(id) {
+            var files = document.querySelector('#' + id).files;
+            function readAndPreview(file) {
+                var div = $('<div />', { class: 'figure' });
+                div.appendTo($('#shw_profile_' + id + ' > div.fileData'));
+                if (/\.(jpe?g|png|gif)$/i.test(file.name)) {
+                    var reader = new FileReader();
+                    reader.addEventListener("load", function () {
+                        var img = $('<img />', {
+                            class: 'scaled',
+                            height: '100',
+                            src: this.result,
+                            alt: file.name
+                        });
+                        img.appendTo(div);
+
+                        var p = $('<p />').html(file.name);
+                        p.appendTo(div);
+
+                        var span = $('<span />').attr('class', 'img-wrapclose img-close multiple-files').html('×');
+                        span.appendTo(div);
+                    }, false);
+                    reader.readAsDataURL(file);
+                } else {
+                    div.append('<i class="far fa-file-alt fa-2x"></i>');
+
+                    var p = $('<p />').attr('class', 'file-attachments').html(file.name);
+                    p.appendTo(div);
+
+                    div.append('<span class="img-wrapclose file-close multiple-files">×</span>');
+                }
+            }
+            if (files) {
+                [].forEach.call(files, readAndPreview);
+            }
+        }
+
+        function setHiddenField(uploaderId, url) {
+            var value = $("input:hidden[name=" + uploaderId + "]").val();
+
+            if (value == 'null' || value == "" || typeof value === "undefined") {
+                // alert('isnull');
+                $("input:hidden[name=" + uploaderId + "]").attr('value', url);
+
+            }
+            else {
+
+                var Arr = url.split(',');
+
+                angular.forEach(Arr, function (item, key) {
+                    if (value.indexOf(item) > -1) {
+
+                    }
+                    else {
+                        value += ',' + item;
+                    }
+
+                });
+
+
+                $("input:hidden[name=" + uploaderId + "]").attr('value', value);
+
+
+            }
+
+
+
+            //$("input:hidden[name=" + id + "]").attr('value', "");
+
+
+        }
+
+        function generateInputBox(modelItem, id, additionalClass) {
+
+            let value = "";
+
+            switch (modelItem.type) {
+                case "text":
+                    value = `
+                                <label for="${modelItem.name}${id}">${modelItem.label} ${((modelItem.required == true) ? "*" : "")} ${((modelItem.description != undefined && modelItem.description != "") ? `<i class='fa fa-info-circle' aria-hidden='true' title='${modelItem.description}'></i>` : "")} </label>
+                                <input class="form-control ${additionalClass}" type="text" name="${modelItem.name}${id}" data-input-id="${id}" ${((modelItem.required == true) ? "required" : "")}/>`;
+                    break;
+                case "number":
+                    value = `
+                                <label for="${modelItem.name}${id}">${modelItem.label}${((modelItem.required == true) ? "*" : "")} ${((modelItem.description != undefined && modelItem.description != "") ? `<i class='fa fa-info-circle' aria-hidden='true' title='${modelItem.description}'></i>` : "")} </label>
+                                <input class="form-control ${additionalClass}" type="number" name="${modelItem.name}${id}" data-input-id="${id}" ${((modelItem.required == true) ? "required" : "")}/>`;
+                    break;
+                case "date":
+                    value = `
+                                <label for="${modelItem.name}${id}">${modelItem.label}${((modelItem.required == true) ? "*" : "")} ${((modelItem.description != undefined && modelItem.description != "") ? `<i class='fa fa-info-circle' aria-hidden='true' title='${modelItem.description}'></i>` : "")} </label>
+                                <input class="form-control ${additionalClass}" type="date" name="${modelItem.name}${id}" data-input-id="${id}" ${((modelItem.required == true) ? "required" : "")}/>`;
+                    break;
+                case "radio-group":
+                    if (modelItem.values != null) {
+                        value += `<label for="${modelItem.name}${id}">${modelItem.label} ${((modelItem.required == true) ? "*" : "")} ${((modelItem.description != undefined && modelItem.description != "") ? `<i class='fa fa-info-circle' aria-hidden='true' title='${modelItem.description}'></i>` : "")} </label> <br />`;
+
+                        modelItem.values.forEach(x => {
+                            value += `
+                                        <div style="float:left;">
+                                            <input type="radio" ${(x.selected == true) ? "checked" : ""} ${((modelItem.required == true) ? "required" : "")} class="" id="${modelItem.name}${x.value}${id}" name="${modelItem.name}${id}" value="${x.value}" data-input-id="${id}">
+                                            <label class="form-check-label" for="${modelItem.name}${x.value}${id}">${x.label}</label>
+                                        </div>
+                                        `
+                        });
+                    }
+                    break;
+                case "checkbox-group":
+                    if (modelItem.values != null) {
+                        value += `<label for="${modelItem.name}${id}">${modelItem.label} ${((modelItem.required == true) ? "*" : "")} ${((modelItem.description != undefined && modelItem.description != "") ? `<i class='fa fa-info-circle' aria-hidden='true' title='${modelItem.description}'></i>` : "")} </label> <br />`;
+                        modelItem.values.forEach(x => {
+                            value += `
+                                        <div style="float:left;">
+                                            <input type="checkbox" class="" id="${modelItem.name}${x.value}${id}" name="${modelItem.name}${id}" ${((modelItem.required == true) ? "required" : "")} value="${x.value}" data-input-id="${id}">
+                                            <label class="form-check-label" for="${modelItem.name}${x.value}${id}">${x.label}</label>
+                                        </div>
+                                        `
+                        });
+                    }
+                    break;
+                case "select":
+                    if (modelItem.values != null) {
+                        value += `<label for="${modelItem.name}${id}">${modelItem.label} ${((modelItem.required == true) ? "*" : "")} ${((modelItem.description != undefined && modelItem.description != "") ? `<i class='fa fa-info-circle' aria-hidden='true' title='${modelItem.description}'></i>` : "")} </label> <br /><select class="form-control" name="${modelItem.name}${id}" data-input-id="${id}" ${((modelItem.required != undefined && modelItem.required != '' && modelItem.required != 'N') ? "required" : "")}>`;
+                        modelItem.values.forEach(x => {
+                            value += `
+                                        <option value="${x.value}">${x.label}</option>
+                                        `
+                        });
+                        value += "</select>";
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            return value;
+        }
 
         function markAsFavorite(CompanyCode) {
 
@@ -1428,7 +2064,7 @@
                             }
                         }).then(function (value) {
                             if (value) {
-                                window.location.href = '/Account/Login?returnUrl=/Marketplace/Calander?' + window.location.href.split('?')[1].replace('&', '$') + '';
+                                window.location.href = '/Account/BusinessLogin?returnUrl=' + window.location.href + '';
                             }
                         });
                     } else {

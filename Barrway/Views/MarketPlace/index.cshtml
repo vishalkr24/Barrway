@@ -3,6 +3,25 @@
     ViewBag.Title = "Market Place";
     Layout = "~/Views/Shared/_LayoutMarketPlace.cshtml";
 }
+
+<style>
+    .clr-tag {
+        border-radius: 3px;
+        padding: 3px;
+        background-color: #e2476c;
+        font-weight: 600;
+        color: white;
+        font-size: 12px;
+    }
+    .fields {
+        display: flex;
+    }
+    @@media screen and (max-width:767px){
+        .fields {
+         display:block;
+        }
+    } 
+</style>
 <!-- banner -->
 <section class="top-banner">
     <div class="container">
@@ -13,7 +32,16 @@
 
                     <div class="form-inner">
                         <p>@Resource.Find_a_service___activity_in_your_area!</p>
-                        <div class="fields">
+                        <div class="fields" style="align-items: baseline;">
+                            <div class="form-group">
+                                <label for="sel1">Category</label>
+                                <select class="form-control" id="filter-category-master">
+                                    <option>select a category</option>
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                </select>
+                            </div>
                             <div class="form-group">
                                 <label for="sel1">@Resource.Subcategory</label>
                                 <select class="form-control" id="filter-sub-category-master">
@@ -23,6 +51,7 @@
                                     <option>4</option>
                                 </select>
                             </div>
+                            
                             <div class="form-group">
                                 <label for="sel1">@Resource.District</label>
                                 <select class="form-control" id="filter-district-master">

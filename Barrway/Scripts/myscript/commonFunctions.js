@@ -1272,18 +1272,25 @@ function refreshEventResourcesActivityNew(calenderType, calenderData, resourceDa
 }
 
 
-function changeStateOfCalender(view,start,end) {
+function changeStateOfCalender(view,start,end,default_start=0) {
     var temp = {};
     temp.field = "start";
     //var currentdate = moment(start._d, "YYYY-MM-DD").format("YYYY-MM-DD");
     //var currentend = moment(moment(end._d).subtract(1, "days"), "YYYY-MM-DD").format("YYYY-MM-DD");
 
-    var _start = moment(start._d, "YYYY-MM-DD").format("YYYY-MM-DD");
+    var _start = "";
+
+    if (default_start == 1) {
+        _start = moment(start._d, "YYYY-MM-DD").format("YYYY-MM-01");
+    } else {
+        _start = moment(start._d, "YYYY-MM-DD").format("YYYY-MM-DD");
+    }
+    
     var _end = moment(moment(end._d).subtract(1, "days"), "YYYY-MM-DD").format("YYYY-MM-DD");
 
     //if (view.intervalStart != undefined)
     //    currentdate = view.intervalStart.format("YYYY-MM-DD");
-    if (view.type != undefined) {
+    if (view!= undefined) {
         //if (view.type.toLowerCase().contains("month")) {
         //    if (view.intervalStart != undefined) {
         //        currentdate = moment(start._d, "YYYY-MM-DD").format("YYYY-MM-DD");
@@ -1316,6 +1323,49 @@ function changeStateOfCalender(view,start,end) {
     return temp;
 }
 
+function changeStateOfCalenderYearView(view, start, end, resource) {
+    var temp = {};
+    temp.field = "start";
+    //var currentdate = moment(start._d, "YYYY-MM-DD").format("YYYY-MM-DD");
+    //var currentend = moment(moment(end._d).subtract(1, "days"), "YYYY-MM-DD").format("YYYY-MM-DD");
+
+    var _start = moment(start).format("YYYY-01-01");
+    var _end = moment(end).format("YYYY-12-31");
+
+    //if (view.intervalStart != undefined)
+    //    currentdate = view.intervalStart.format("YYYY-MM-DD");
+    if (view != undefined) {
+        //if (view.type.toLowerCase().contains("month")) {
+        //    if (view.intervalStart != undefined) {
+        //        currentdate = moment(start._d, "YYYY-MM-DD").format("YYYY-MM-DD");
+        //    }
+        //    else
+        //        currentdate = moment(new Date()).format("YYYY-MM-DD");
+        //    temp.value = " datepart(mm,[start]) =month('" + currentdate + "')   and datepart(yyyy, [start]) = year('" + currentdate + "') ";
+        //}
+        //else if (view.type.toLowerCase().contains("year")) {
+        //    temp.value = " datepart(yyyy, [start]) = year('" + currentdate + "') ";
+        //}
+        //else if (view.type.toLowerCase().contains("week") || view.type.toLowerCase().contains("twodays") || view.type.toLowerCase().contains("threedays")) {
+        //    temp.value = " CAST([start] as date) between CAST('" + currentdate + "' as date) and CAST('" + currentend + "' as date)  ";
+        //}
+        //else if (view.type.toLowerCase().contains("day")) {
+        //   // currentdate = moment(moment(start._d).subtract(1, "days"), "YYYY-MM-DD").format("YYYY-MM-DD");
+
+        //    temp.value = " CAST([start] as date) =CAST('" + currentdate + "' as date) ";
+        //}
+
+        temp.value = `((cast([start] as date) <= '${_start}' and (cast([end] as date) <= '${_end}' and cast([end] as date) >= '${_start}')) or
+										((cast([start] as date) >= '${_start}' and cast([start] as date) <= '${_end}') and (cast([end] as date) <= '${_end}' and cast([end] as date) >= '${_start}')) or
+										((cast([start] as date) <= '${_end}' and cast([start] as date) >= '${_start}') and cast([end] as date) >= '${_end}') or
+										(cast([start] as date) <= '${_start}' and cast([end] as date) >= '${_end}'))`;
+
+    }
+
+
+
+    return temp;
+}
 
 function renderEventHtml(calenderType, calenderData, resourceData, resColumns, activityFormData, activityColumn, activityEvents, defaultOptions, resourceOrder, activitiesCategory )     {
     var result = "";
@@ -1443,14 +1493,11 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
     }
     calenderData = changeResourceIDByYSelection((calenderData.data != undefined) ? calenderData.data : calenderData);
     window["eventListTemp"] = calenderData;
-    var $scopeVar = angular.element($("#calendar")).scope();
-
   
-
+    var $scopeVar = angular.element($("#calendar")).scope();
     var basicDetails = window["EventBasicDetail"];
 
     var GroupingData = window["colGrouping"];
-    var $scopeVar = angular.element($("#calendar")).scope();
     var formID = basicDetails.formData.formId;
     var resourceColumn = '';
     var activitiesForm = basicDetails.formData.activitiesForm;
@@ -4394,6 +4441,16 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                             if (exists.minTime != "" && exists.minTime != null && exists.minTime != undefined && exists.maxTime != null && exists.maxTime != undefined && exists.maxTime != "") {
                                 var minTime = exists.minTime.trim().replace(' ', ':');
                                 var maxTime = exists.maxTime.trim().replace(' ', ':');
+
+                                let DISPLAY_MIN_TIME = calendarDetails.DISPLAY_MIN_TIME;
+                                let DISPLAY_MAX_TIME = calendarDetails.DISPLAY_MAX_TIME;
+                                if (DISPLAY_MIN_TIME && DISPLAY_MIN_TIME != "" && DISPLAY_MIN_TIME != "null" && DISPLAY_MIN_TIME != null) {
+                                    minTime = moment(DISPLAY_MIN_TIME, "hh:mm A").format("HH:mm");
+                                }
+                                if (DISPLAY_MAX_TIME && DISPLAY_MAX_TIME != "" && DISPLAY_MAX_TIME != "null" && DISPLAY_MAX_TIME != null) {
+                                    maxTime = moment(DISPLAY_MAX_TIME, "hh:mm A").format("HH:mm");
+                                }
+
                                 if (Check_EXIST_FIXED_OPERATING_HOURS(calendarDetails)) {
                                     $('#timeline-resource-view div.calendar').fullCalendar('option', 'minTime', minTime + ":00");
                                     $('#timeline-resource-view div.calendar').fullCalendar('option', 'maxTime', maxTime + ":00");
@@ -4612,13 +4669,14 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                 var maxTime = exists.maxTime.trim().replace(' ', ':');
 
 
-                //if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
-                //    minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
-                //}
-
-                //if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
-                //    maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
-                //}
+                let DISPLAY_MIN_TIME = calendarDetails.DISPLAY_MIN_TIME;
+                let DISPLAY_MAX_TIME = calendarDetails.DISPLAY_MAX_TIME;
+                if (DISPLAY_MIN_TIME && DISPLAY_MIN_TIME != "" && DISPLAY_MIN_TIME != "null" && DISPLAY_MIN_TIME != null) {
+                    minTime = moment(DISPLAY_MIN_TIME, "hh:mm A").format("HH:mm");
+                }
+                if (DISPLAY_MAX_TIME && DISPLAY_MAX_TIME != "" && DISPLAY_MAX_TIME != "null" && DISPLAY_MAX_TIME != null) {
+                    maxTime = moment(DISPLAY_MAX_TIME, "hh:mm A").format("HH:mm");
+                }
 
                 if (Check_EXIST_FIXED_OPERATING_HOURS(calendarDetails)) {
                     myOptions2.minTime = minTime + ":00";
@@ -15273,6 +15331,13 @@ function IsJsonString(str) {
 
 function removeColumns(formid,columns) {
     removeActionButtion(formid);
+
+    var removeColumnName = ['COMPANY CODE', 'CALENDAR CODE', 'COMPANY_CODE', 'CALENDAR_CODE'];
+
+    if (formid != 2295 && formid != 2296) {
+        columns = columns.filter(x => !removeColumnName.find(y => x.title && x.title.split('|').find(z => z == y)));
+    }
+
     var removeColumnsFormid = [2240, 2242, 2267, 2311, 2326];
     var removeColumnName = ['Edit'];
     var excludeColumAllTable = ['Move Row'];
@@ -15295,20 +15360,29 @@ function removeColumns(formid,columns) {
     if (formid == 2296) {
         columns.find(x => x.title == "COMPANY CODE").title = "COMPANY NAME";
     }
-    
+
+    var removeColumnName = ['COMPANY CODE', 'CALENDAR CODE', 'COMPANY_CODE', 'CALENDAR_CODE'];
+
+    if (formid != 2295 && formid != 2296) {
+        columns = columns.filter(x => !removeColumnName.find(y => x.title && x.title.split('|').find(z => z == y)));
+    }
+
 
     return columns;
-
 }
 
 function addNewColumns(formid, columns) {
     formid = parseInt(formid);
+    formidList = [2295, 2296, 2303, 2304, 2306, 2305, 2322, 2311];
+    //debugger;
+    //columns.find(x => x.title == "Edit").frozen = true;
+
     switch (formid) {
         case 2240: {
             columns.unshift({
                 title: "View Profile", formatter: function (cell, formatter) {
                     return `<a href='#/admin/gerneral-user/${formid}/${cell.getRow().getData().Id}' class="btn btn-primary text-light">View</a>`
-                }, download: false, width: 80, field: "profileView", headerSort: false
+                }, download: false, width: 80, field: "profileView", headerSort: false, frozen: true
             });
         }
         break;
@@ -15316,7 +15390,7 @@ function addNewColumns(formid, columns) {
             columns.unshift({
                 title: "View Profile", formatter: function (cell, formatter) {
                     return `<a href='#/admin/counsellor/${formid}/${cell.getRow().getData().Id}' class="btn btn-primary text-light">View</a>`
-                }, download: false, width: 80, field: "profileView", headerSort: false
+                }, download: false, width: 80, field: "profileView", headerSort: false, frozen: true
             });
         }
             break;
@@ -15324,7 +15398,7 @@ function addNewColumns(formid, columns) {
             columns.unshift({
                 title: "Action", formatter: function (cell, formatter) {
                     return `<a href='#/admin/forum/${cell.getRow().getData().Id}' class="btn btn-primary text-light"><i class="bi-info-circle"></i></a>`
-                }, download: false, width: 100, field: "profileView", headerSort: false
+                }, download: false, width: 100, field: "profileView", headerSort: false, frozen: true
             });
         }
             break;
@@ -15332,7 +15406,7 @@ function addNewColumns(formid, columns) {
             columns.unshift({
                 title: "Action", formatter: function (cell, formatter) {
                     return `<a href='#/admin/article/${cell.getRow().getData().Id}' class="btn btn-primary text-light"><i class="bi-info-circle"></i></a>`
-                }, download: false, width: 100, field: "profileView", headerSort: false
+                }, download: false, width: 100, field: "profileView", headerSort: false, frozen: true
             });
         }
             break;
@@ -15342,7 +15416,7 @@ function addNewColumns(formid, columns) {
                 title: "Edit", formatter: function (cell, formatter) {
                     var id = cell.getRow().getData().Id;
                     return `<button onclick="angular.element(this).scope().EditSchedularForm(${id})"  class="btn btn-primary text-light"><i class="bi-gear"></i></button>`
-                }, download: false, width: 100, field: "profileView", headerSort: false
+                }, download: false, width: 100, field: "profileView", headerSort: false, frozen: true
             });
         }
             break;
@@ -15369,14 +15443,27 @@ function addNewColumns(formid, columns) {
                     }
 
 
-                }, download: false, width: 100, field: "profileView", headerSort: false
+                }, download: false, width: 100, field: "profileView", headerSort: false, frozen: true
             });
         }
             break;
         
 
     }
-    
+
+    if (formidList.find(x => x == formid) != null) {
+        columns.unshift({
+            title: "COMPANY NAME", formatter: function (cell, formatter) {
+                return cell.getData().COMPANY_NAME_ENGLISH
+            }, frozen: true
+        });
+
+        columns.unshift({
+            title: "CALENDAR NAME", formatter: function (cell, formatter) {
+                return cell.getData().CALENDAR_NAME
+            }, frozen: true
+        });
+    }
 
     return columns;
 
@@ -15567,4 +15654,3 @@ function Check_IS_SERVICE_TYPE(calendarDetails) {
     let type = calendarDetails["CALENDAR_TYPE"];
     return setup["Step2"]["Steps"]["Step" + type]["IS_SERVICE_TYPE"] == true;
 }
-

@@ -383,7 +383,7 @@
                                 Fill in some details for your Calendar.
                             </p>
                         </div>
-                        <form action="/BusinessAdmin/AddCalendar?IsPartial=@ViewBag.IsPartial.ToString().ToLower()" method="post" enctype="multipart/form-data">
+                        <form id="basic-calendar-form" action="/BusinessAdmin/AddCalendar?IsPartial=@ViewBag.IsPartial.ToString().ToLower()" method="post" enctype="multipart/form-data">
                             <div id="div1">
                                 <div class="text-center">
                                     <div class="profile-form">
@@ -399,7 +399,7 @@
                                             @Html.TextBoxFor(model => model.CALENDAR_CODE, new { @style = "display:none" })
                                             @Html.TextBoxFor(model => model.CALENDAR_TEMPLATE_ID, new { @style = "display:none" })
                                             @Html.TextBoxFor(model => model.SCHEDULAR_ID, new { @style = "display:none" })
-
+                                            @Html.DropDownListFor(model => model.CALENDAR_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @style = "display:none" })
                                             <div class="form-group">
                                                 <label for="calendarname">@Resource.Calendar_Name *</label>
 
@@ -442,25 +442,20 @@
                                                 <div class="tom-select-custom">
                                                     @Html.DropDownListFor(model => model.CALENDAR_USE_TYPE, new SelectList(Enum.GetValues(typeof(PublicPrivateOptions))), new { @class = "js-select form-select" })
                                                 </div>
-
-                                            </div>
-
-                                            <div class="form-group" style="display:none;">
-                                                <label for="cala">Calendar category *</label>
-
-                                                @Html.DropDownListFor(model => model.CALENDAR_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @onchange = "checkSlot()", @placeholder = "Select Calendar Category", @required = "true" })
-                                                @Html.ValidationMessageFor(model => model.CALENDAR_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
-
-
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="sub">@Resource.Calendar @Resource.Subcategory *</label>
+                                                <label for="cala">Calendar category *</label>
+
+                                                @Html.DropDownListFor(model => model.CALENDAR_COMMON_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select Calendar Category", @required = "true" })
+                                                @Html.ValidationMessageFor(model => model.CALENDAR_COMMON_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="sub">@Resource.Subcategory *</label>
 
                                                 @Html.DropDownListFor(model => model.CALENDAR_SUB_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select Calendar Sub Category", @required = "true" })
                                                 @Html.ValidationMessageFor(model => model.CALENDAR_SUB_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
-
-
                                             </div>
 
                                             <div class="form-group" style="display:none;">
@@ -472,15 +467,6 @@
                                                 @*<input type="text" class="form-control" id="calendarname" placeholder="" name="calendarname">*@
                                             </div>
 
-                                            @*<div class="form-group">
-                                                <label for="TAGS">@Resource.Tags</label>
-                                                <div class="tom-select-custom">
-                                                    @Html.DropDownListFor(model => model.TAGS, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "js-select form-select", @multiple = "true", @autocomplete = "off" })
-                                                </div>
-
-                                                @Html.ValidationMessageFor(model => model.TAGS, "", new { @class = "invalid-feedback-2" })
-
-                                            </div>*@
                                             <div class="form-group">
                                                 <p style="margin-bottom: 0px;"><label for="file">@Resource.Calendar_photo</label></p>
                                                 <div class="custome-uploade">
@@ -498,15 +484,121 @@
 
                                             </div>
 
+                                            <div class="form-group">
+                                                <label for="TAGS">@Resource.Tags</label>
+                                                <div class="tom-select-custom">
+                                                    @Html.DropDownListFor(model => model.TAGS, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "js-select form-select", @multiple = "true", @autocomplete = "off" })
+                                                </div>
+
+                                                @Html.ValidationMessageFor(model => model.TAGS, "", new { @class = "invalid-feedback-2" })
+                                            </div>
+
+                                            <style>
+                                                .additional-input-groups-label {
+                                                    display: flex;
+                                                    justify-content: space-between;
+                                                    padding-top: 16px;
+                                                    margin-bottom: 16px;
+                                                    border-radius: 4px;
+                                                    color: black;
+                                                    font-size: 16px;
+                                                    font-weight: 600;
+                                                }
+                                            </style>
+                                            <div class="additional-input-groups">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="TAGS">Min. Time</label>
+                                                            <div class="tom-select-custom">
+                                                                @Html.TextBoxFor(model => model.DISPLAY_MIN_TIME, new { @class = "form-control", @placeholder = "Calendar min time", @required = "true" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="TAGS">Max. Time</label>
+                                                            <div class="tom-select-custom">
+                                                                @Html.TextBoxFor(model => model.DISPLAY_MAX_TIME, new { @class = "form-control", @placeholder = "Calendar max time", @required = "true" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="sub">Default Resource</label>
+
+                                                    <select required id="DEFAULT_RESOURCE" name="DEFAULT_RESOURCE" class="form-control" value="@Model.DEFAULT_RESOURCE">
+                                                        <option value="LOCATION">
+                                                            Location
+                                                        </option>
+                                                        <option value="SERVICE PROVIDER">
+                                                            Service Provider
+                                                        </option>
+                                                    </select>
+                                                    @Html.ValidationMessageFor(model => model.DEFAULT_RESOURCE, "", new { @class = "invalid-feedback-2" })
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="sub">Default Calendar View</label>
+
+                                                    <select required id="DEFAULT_CALENDAR_VIEW" name="DEFAULT_CALENDAR_VIEW" class="form-control" value="@Model.DEFAULT_CALENDAR_VIEW">
+                                                        <option value="LIST VIEW">
+                                                            List View
+                                                        </option>
+                                                        <option value="AGENDA VIEW">
+                                                            Agenda View
+                                                        </option>
+                                                        <option value="TIMELINE VIEW">
+                                                            Timeline View
+                                                        </option>
+                                                        <option value="VERTICAL VIEW">
+                                                            Vertical View
+                                                        </option>
+
+                                                    </select>
+                                                    @Html.ValidationMessageFor(model => model.DEFAULT_CALENDAR_VIEW, "", new { @class = "invalid-feedback-2" })
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="sub">Required Calendar Views</label>
+
+                                                    <select required id="REQUIRED_CALENDAR_VIEWS" name="REQUIRED_CALENDAR_VIEWS" class="js-select form-select" multiple="true" placeholder="Select Required Views" value="@Model.REQUIRED_CALENDAR_VIEWS">
+                                                        <option value="LIST VIEW" selected>
+                                                            List View
+                                                        </option>
+                                                        <option value="AGENDA VIEW" selected>
+                                                            Agenda View
+                                                        </option>
+                                                        <option value="TIMELINE VIEW" selected>
+                                                            Timeline View
+                                                        </option>
+                                                        <option value="VERTICAL VIEW" selected>
+                                                            Vertical View
+                                                        </option>
+
+                                                    </select>
+                                                    @Html.ValidationMessageFor(model => model.REQUIRED_CALENDAR_VIEWS, "", new { @class = "invalid-feedback-2" })
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="sub">Additional form <i class="fa fa-info-circle" aria-hidden="true" title="Participant will fill this form before booking."></i></label>
+                                                    <div style="min-width: 200px; border: 1px solid #8171B0; min-height: 40px" class="form-control">@Model.ADDITIONAL_FORM_ID</div>
+                                                </div>
+
+                                                @if (!string.IsNullOrEmpty(Model.ADDITIONAL_FORM_ID))
+                                                {
+                                                    <div class="form-group">
+                                                        <label for="sub">Do you require additional form? <i class="fa fa-info-circle" aria-hidden="true" title="Participant will need to fill this form before booking."></i></label>
+                                                        <input type="radio" name="NEED_ADDITIONAL_FORM" id="NEED_ADDITIONAL_FORM" value="Y" /> Yes
+                                                        <input type="radio" name="NEED_ADDITIONAL_FORM" id="NEED_ADDITIONAL_FORM" value="N" /> NO
+                                                        @Html.ValidationMessageFor(model => model.NEED_ADDITIONAL_FORM, "", new { @class = "invalid-feedback-2" })
+                                                    </div>
+                                                }
+
+                                            </div>
+
                                             <button type="button" onclick="renderCategory()" class="back">@Resource.Back</button>
-                                            @*@if (ViewBag.IsPartial)
-        {
-            <button type="submit" class="btn btn-primary">@Resource.Save</button>
-        }
-        else
-        {
-            <button type="button" class="btn btn-primary" onclick="renderPage(2)">@Resource.Next</button>
-        }*@
 
                                             <button type="submit" class="btn btn-primary">@Resource.Save</button>
 

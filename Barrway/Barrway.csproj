@@ -181,6 +181,11 @@
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="QRCoder, Version=1.4.3.0, Culture=neutral, PublicKeyToken=c4ed5b9ae8358a28, processorArchitecture=MSIL">
+      <HintPath>..\packages\QRCoder.1.4.3\lib\net40\QRCoder.dll</HintPath>
+    </Reference>
     <Reference Include="RestSharp, Version=110.2.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.110.2.0\lib\net471\RestSharp.dll</HintPath>
     </Reference>
@@ -308,6 +313,7 @@
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -501,6 +507,7 @@
     <Content Include="assets\img\p2.png" />
     <Content Include="assets\img\post_img.jpg" />
     <Content Include="assets\img\pro.png" />
+    <Content Include="assets\img\QR_CODE_LOGO.png" />
     <Content Include="assets\img\ques.png" />
     <Content Include="assets\img\rectangle.png" />
     <Content Include="assets\img\Restaurant.png" />
@@ -3074,6 +3081,7 @@
     <Content Include="Scripts\MarketplaceScripts\companyCalendarScript.js" />
     <Content Include="Scripts\MarketplaceScripts\CompanyPhotoAlbum.js" />
     <Content Include="Scripts\MarketplaceScripts\CompanyPackage.js" />
+    <Content Include="Scripts\MarketplaceScripts\CompanyScheduleYear.js" />
     <Content Include="Scripts\MarketplaceScripts\CompanySchedule.js" />
     <Content Include="Scripts\MarketplaceScripts\CompanyService.js" />
     <Content Include="Scripts\MarketplaceScripts\CompanyDetail.js" />
@@ -3236,7 +3244,7 @@
     <Content Include="Views\MarketPlace\index.cshtml" />
     <Content Include="Views\MarketPlace\BusinessSite.cshtml" />
     <Content Include="Views\MarketPlace\Tag.cshtml" />
-    <Content Include="Views\MarketPlace\News.cshtml" />
+    <Content Include="Views\MarketPlace\Blogs.cshtml" />
     <Content Include="Views\MarketPlace\BusinessPost.cshtml" />
     <Content Include="Views\Shared\_LayoutMarketPlaceCompany.cshtml" />
     <Content Include="Views\MarketPlace\Company.cshtml" />
@@ -3276,7 +3284,7 @@
     <Content Include="Views\WebsiteTemplates\_Template2.cshtml" />
     <Content Include="Views\WebsiteTemplates\_Template3.cshtml" />
     <Content Include="Views\BusinessAdmin\_CompanyPaletteSelection.cshtml" />
-    <Content Include="Views\MarketPlace\Pricing.cshtml" />
+    <Content Include="Views\MarketPlace\Subcategory.cshtml" />
     <Content Include="Views\Account\BusinessSignUpPhone.cshtml" />
     <Content Include="Views\Account\MobileVerification.cshtml" />
     <Content Include="Views\Account\BusinessPhoneLogin.cshtml" />
@@ -3284,6 +3292,7 @@
     <Content Include="Views\MarketPlace\Error404.cshtml" />
     <Content Include="Views\Account\Enteryouremailaddress.cshtml" />
     <Content Include="Views\Account\VerifiyEmailaddress.cshtml" />
+    <Content Include="Views\MarketPlace\CalanderYearView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3292,6 +3301,8 @@
     <Folder Include="fg-newAssets\icons\" />
     <Folder Include="Logs\" />
     <Folder Include="UploadCalendar\CalendarImages\" />
+    <Folder Include="UploadCalendar\DownloadAttachment\" />
+    <Folder Include="UploadCalendar\UploadAttachment\" />
     <Folder Include="UploadCompanyPhotoAlbum\" />
     <Folder Include="UploadCompany\CompanyBanners\" />
     <Folder Include="UploadCompany\CompanyLogos\" />

@@ -12,7 +12,7 @@ namespace FormGeneratorDTOs.DTOs
         public string seperatedIds { get; set; }
         public string seperatedTitles { get; set; }
         public string seperatedFormIDs { get; set; }
-
+        public bool IsListView { get; set; } = false;
         public string seperatedResFormIDs { get; set; }
         public string seperatedResEntryIDs { get; set; }
         public string seperatedResColValues { get; set; }
@@ -111,6 +111,32 @@ namespace FormGeneratorDTOs.DTOs
         public List<CustomFilter> CustomFilters { get; set; }
         //public string Query { get; set; }
 
+    }
+
+    public class BarrwayCalendarFormFields
+    {
+        public int Id { get; set; }
+        public int formId { get; set; }
+        public string formGroupKey { get; set; }
+        public int userID { get; set; }
+        public string start { get; set; }
+        public string end { get; set; }
+        public string color { get; set; }
+        public string allDay { get; set; }
+        public string resources { get; set; }
+        public string resourceId { get; set; }
+        public string activities { get; set; }
+        public string activityId { get; set; }
+        public string service { get; set; }
+        public string description { get; set; }
+        public string CALENDAR_CODE { get; set; }
+        public string COMPANY_CODE { get; set; }
+        public string customTitle { get; set; }
+        public string title { get; set; }
+        public string customerForms { get; set; }
+        public string customFormIds { get; set; }
+        public string EVENT_TYPE { get; set; }
+        public bool IsLastEvent { get; set; } = false;
     }
 
     public class FormFieldList

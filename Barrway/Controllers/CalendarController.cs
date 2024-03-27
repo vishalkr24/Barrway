@@ -313,12 +313,10 @@ namespace Barrway.Controllers
             {
                 if (Convert.ToInt32(ModelId) == 1)
                 {
-                    // location master entry and update
                     try
                     {
                         var dataSerialized = data.Where(x => x["Is_New"]?.ToString() == "true").ToList();
 
-                        //List<CalendarLocationMasterModel> locMasMod = JsonConvert.DeserializeObject<List<CalendarLocationMasterModel>>(dataSerialized);
                         if (dataSerialized.Count > 0)
                         {
                             List<string> requestList = new List<string>();
@@ -1070,7 +1068,7 @@ namespace Barrway.Controllers
                                                             {referenceActivityEntry}
                                                             
                                                             insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
-                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{data.SCH_LOCATION}', 'LOCATION_MASTER_1936', 'LOCATION_CODE', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_LOCATION}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{data.SCH_LOCATION}', 'LOCATION_MASTER_1936', 'LOCATION_ADDRESS', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_LOCATION}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
                                                             ";
 
                                 }

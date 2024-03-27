@@ -168,6 +168,23 @@ function getCalendarCategory() {
     return data;
 }
 
+function getCalendarCommonCategory() {
+    var data;
+    $.ajax({
+        url: "/Public/GetCalendarCommonCategory/",
+        type: "GET",
+        async: false,
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+
+            data = null;
+        }
+    })
+    return data;
+}
+
 function getCalendarSubCategory(categoryId) {
     var data;
     $.ajax({
@@ -204,7 +221,7 @@ function getAllCalendarSubCategory() {
     return data;
 }
 
-function GetFilterCompanyData(subCategoryId, districtId) {
+function GetFilterCompanyData(categoryId, subCategoryId, districtId) {
 
     var data;
     $.ajax({
@@ -212,6 +229,7 @@ function GetFilterCompanyData(subCategoryId, districtId) {
         async: false,
         type: "GET",
         data: {
+            CategoryId: categoryId,
             SubCategoryId: subCategoryId,
             DistrictId: districtId
         },

@@ -14,10 +14,13 @@ namespace Barrway.Security
         {
             get
             {
-                var identity = (System.Security.Claims.ClaimsIdentity)HttpContext.Current.User.Identity;
-                IEnumerable<System.Security.Claims.Claim> claims = identity.Claims;
-                string UID = claims.Where(x => x.Type == ClaimTypes.Role).FirstOrDefault().Value;
-                return UID;
+                if (HttpContext.Current != null && HttpContext.Current.User != null && HttpContext.Current.User.Identity!=null && !string.IsNullOrEmpty(HttpContext.Current.User.Identity.Name)) {
+                    var identity = (System.Security.Claims.ClaimsIdentity)HttpContext.Current.User.Identity;
+                    IEnumerable<System.Security.Claims.Claim> claims = identity.Claims;
+                    string UID = claims.Where(x => x.Type == ClaimTypes.Role).FirstOrDefault().Value;
+                    return UID;
+                }
+                return "";
             }
         }
 
@@ -25,10 +28,14 @@ namespace Barrway.Security
         {
             get
             {
-                var identity = (System.Security.Claims.ClaimsIdentity)HttpContext.Current.User.Identity;
-                IEnumerable<System.Security.Claims.Claim> claims = identity.Claims;
-                string UID = claims.Where(x => x.Type == ClaimTypes.Sid).FirstOrDefault().Value;
-                return UID;
+                if (HttpContext.Current != null && HttpContext.Current.User != null && HttpContext.Current.User.Identity != null && !string.IsNullOrEmpty(HttpContext.Current.User.Identity.Name))
+                {
+                    var identity = (System.Security.Claims.ClaimsIdentity)HttpContext.Current.User.Identity;
+                    IEnumerable<System.Security.Claims.Claim> claims = identity.Claims;
+                    string UID = claims.Where(x => x.Type == ClaimTypes.Sid).FirstOrDefault().Value;
+                    return UID;
+                }
+                return "";
             }
         }
 
@@ -36,29 +43,36 @@ namespace Barrway.Security
         {
             get
             {
-                var identity = (System.Security.Claims.ClaimsIdentity)HttpContext.Current.User.Identity;
-                IEnumerable<System.Security.Claims.Claim> claims = identity.Claims;
-                string UID = claims.Where(x => x.Type == ClaimTypes.Email).FirstOrDefault()?.Value;
-                return UID;
+                if (HttpContext.Current != null && HttpContext.Current.User != null && HttpContext.Current.User.Identity != null && !string.IsNullOrEmpty(HttpContext.Current.User.Identity.Name))
+                {
+                    var identity = (System.Security.Claims.ClaimsIdentity)HttpContext.Current.User.Identity;
+                    IEnumerable<System.Security.Claims.Claim> claims = identity.Claims;
+                    string UID = claims.Where(x => x.Type == ClaimTypes.Email).FirstOrDefault()?.Value;
+                    return UID;
+                }return "";
             }
         }
 
 
         public static string UpdateClaim(string ClaimType, string newValue)
         {
-            var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
-            
-            // check for existing claim and remove it
-            var existingClaim = identity.FindFirst(ClaimType);
-            if (existingClaim != null)
-                identity.RemoveClaim(existingClaim);
+            if (HttpContext.Current != null && HttpContext.Current.User != null && HttpContext.Current.User.Identity != null && !string.IsNullOrEmpty(HttpContext.Current.User.Identity.Name))
+            {
+                var identity = HttpContext.Current.User.Identity as ClaimsIdentity;
 
-            // add new claim
-            identity.AddClaim(new Claim(ClaimType, newValue));
+                // check for existing claim and remove it
+                var existingClaim = identity.FindFirst(ClaimType);
+                if (existingClaim != null)
+                    identity.RemoveClaim(existingClaim);
 
-            var authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
-            authenticationManager.AuthenticationResponseGrant = new AuthenticationResponseGrant(new ClaimsPrincipal(identity), new AuthenticationProperties() { IsPersistent = true });
-            return "Success";
+                // add new claim
+                identity.AddClaim(new Claim(ClaimType, newValue));
+
+                var authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
+                authenticationManager.AuthenticationResponseGrant = new AuthenticationResponseGrant(new ClaimsPrincipal(identity), new AuthenticationProperties() { IsPersistent = true });
+                return "Success";
+            }
+            return "";
         }
     }
 }

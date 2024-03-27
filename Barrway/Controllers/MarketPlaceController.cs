@@ -42,7 +42,60 @@ namespace Barrway.Controllers
         }
 
         // GET: MarketPlace
-        
+        [HttpPost]
+        public async Task<ActionResult> GetLocationMasterList(GenerateDynamicFormData data, string companyCode, string calendarCode)
+        {
+            var locationListData = await masterService.GetLocationMasterList(data, companyCode, calendarCode);
+            var locationList = locationListData.Data;
+            double last_page = 0;
+            if (locationList != null && locationList.Count() > 0)
+            {
+                var singData = locationList.FirstOrDefault();
+                var total_records = Convert.ToInt32(singData.Where(x => x.Key == "total_records").FirstOrDefault().Value);
+                var size = Convert.ToInt32(singData.Where(x => x.Key == "size").FirstOrDefault().Value);
+                double paging = (double)total_records / size;
+                last_page = Math.Floor(paging) + 1;
+            }
+
+            return Json(new { data = locationList, last_page });
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GetServiceMasterList(GenerateDynamicFormData data, string companyCode, string calendarCode)
+        {
+            var locationListData = await masterService.GetServiceMasterList(data, companyCode, calendarCode);
+            var locationList = locationListData.Data;
+            double last_page = 0;
+            if (locationList != null && locationList.Count() > 0)
+            {
+                var singData = locationList.FirstOrDefault();
+                var total_records = Convert.ToInt32(singData.Where(x => x.Key == "total_records").FirstOrDefault().Value);
+                var size = Convert.ToInt32(singData.Where(x => x.Key == "size").FirstOrDefault().Value);
+                double paging = (double)total_records / size;
+                last_page = Math.Floor(paging) + 1;
+            }
+
+            return Json(new { data = locationList, last_page });
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GetServiceProviderMasterList(GenerateDynamicFormData data, string companyCode, string calendarCode)
+        {
+            var locationListData = await masterService.GetServiceProviderMasterList(data, companyCode, calendarCode);
+            var locationList = locationListData.Data;
+            double last_page = 0;
+            if (locationList != null && locationList.Count() > 0)
+            {
+                var singData = locationList.FirstOrDefault();
+                var total_records = Convert.ToInt32(singData.Where(x => x.Key == "total_records").FirstOrDefault().Value);
+                var size = Convert.ToInt32(singData.Where(x => x.Key == "size").FirstOrDefault().Value);
+                double paging = (double)total_records / size;
+                last_page = Math.Floor(paging) + 1;
+            }
+
+            return Json(new { data = locationList, last_page });
+        }
+
         public async Task<ActionResult> Index()
         {
             return View();
@@ -72,44 +125,17 @@ namespace Barrway.Controllers
                 {
                     SearchResultModel temp = new SearchResultModel();
 
-                    // for calendar
-                    var calendarData = data[0];
-                    for (int i = 0; i < calendarData.Count; i++)
-                    {
-                        temp = new SearchResultModel();
-                        temp.Id = calendarData[i]["Id"]?.ToString();
-                        temp.Title = calendarData[i]["CALENDAR_NAME"]?.ToString();
-                        temp.Description = calendarData[i]["COMPANY_NAME_ENGLISH"]?.ToString();
-                        temp.ImagePath = calendarData[i]["CALENDAR_PHOTO_PATH"]?.ToString();
-                        temp.ResultType = 1;
-                        temp.OtherIds = new List<IDictionary<string, string>>()
-                        {
-                            new Dictionary<string, string>()
-                            {
-                                {"CalendarCode", calendarData[i]["CALENDAR_CODE"]?.ToString() },
-                                {"CompanyCode", calendarData[i]["COMPANY_CODE"]?.ToString() }
-                            }
-                        };
-                        finalResult.Add(temp);
-                    }
-
                     // for company
                     var companyData = data[1];
                     for (int i = 0; i < companyData.Count; i++)
                     {
                         temp = new SearchResultModel();
                         temp.Id = companyData[i]["Id"]?.ToString();
-                        temp.Title = companyData[i]["COMPANY_NAME_ENGLISH"]?.ToString();
+                        temp.CompanyName = companyData[i]["COMPANY_NAME_ENGLISH"]?.ToString();
+                        temp.CompanyCode = companyData[i]["COMPANY_CODE"]?.ToString();
                         temp.Description = companyData[i]["COMPANY_DESCRIPTION"]?.ToString();
                         temp.ImagePath = companyData[i]["COMPANY_LOGO_PATH"]?.ToString();
-                        temp.ResultType = 2;
-                        temp.OtherIds = new List<IDictionary<string, string>>()
-                        {
-                            new Dictionary<string, string>()
-                            {
-                                {"CompanyCode", companyData[i]["COMPANY_CODE"]?.ToString() }
-                            }
-                        };
+                        temp.ResultType = 1;
                         finalResult.Add(temp);
                     }
 
@@ -119,35 +145,23 @@ namespace Barrway.Controllers
                     {
                         temp = new SearchResultModel();
                         temp.Id = serviceData[i]["Id"]?.ToString();
-                        temp.Title = serviceData[i]["ACTIVITY_NAME"]?.ToString();
-                        temp.Description = "";
+                        temp.Description = serviceData[i]["ACTIVITY_NAME"]?.ToString();
                         temp.ImagePath = serviceData[i]["CALENDAR_PHOTO_PATH"]?.ToString();
-                        temp.ResultType = 3;
-                        temp.OtherIds = new List<IDictionary<string, string>>()
+                        temp.ResultType = 2;
+                        temp.CalendarName = serviceData[i]["CALENDAR_NAME"]?.ToString();
+                        temp.CompanyName = serviceData[i]["COMPANY_NAME_ENGLISH"]?.ToString();
+                        temp.CompanyCode = serviceData[i]["COMPANY_CODE"]?.ToString();
+                        temp.CalendarCode = serviceData[i]["CALENDAR_CODE"]?.ToString();
+                        if (!string.IsNullOrEmpty(serviceData[i]["TAG"]?.ToString()))
                         {
-                            new Dictionary<string, string>()
-                            {
-                                {"CompanyCode", serviceData[i]["COMPANY_CODE"]?.ToString() },
-                                {"CalendarCode", serviceData[i]["CALENDAR_CODE"]?.ToString() },
-                                {"CompanyName", serviceData[i]["COMPANY_NAME_ENGLISH"]?.ToString() },
-                                {"CalendarName", serviceData[i]["CALENDAR_NAME"]?.ToString() }
-
-                            }
-                        };
-                        finalResult.Add(temp);
-                    }
-
-                    // for category
-                    var categoryData = data[3];
-                    for (int i = 0; i < categoryData.Count; i++)
-                    {
-                        temp = new SearchResultModel();
-                        temp.Id = categoryData[i]["Id"]?.ToString();
-                        temp.Title = categoryData[i]["CALENDAR_SUB_CATEGORY_NAME"]?.ToString();
-                        temp.Description = "";
-                        temp.ImagePath = "";
-                        temp.ResultType = 4;
-                        temp.OtherIds = new List<IDictionary<string, string>>();
+                            var tagsList = serviceData[i]["TAG"].ToString().Split(',');
+                            temp.Tags = String.Join(", ", tagsList);
+                        }
+                        else
+                        {
+                            temp.Tags = "";
+                        }
+                        
                         finalResult.Add(temp);
                     }
 
@@ -187,11 +201,11 @@ namespace Barrway.Controllers
 
         }
 
-        public async Task<ActionResult> Pricing()
+        public async Task<ActionResult> Subcategory()
         {
             return View();
         }
-        public async Task<ActionResult> News()
+        public async Task<ActionResult> Blogs()
         {
             return View();
         }
@@ -446,8 +460,116 @@ namespace Barrway.Controllers
 
         }
 
+        [Route("company/calanderyearview/{id}/{Cid?}")]
+        public async Task<ActionResult> CalanderYearView(string id = null, string Cid = null)
+        {
+            try
+            {
 
-       
+                string PageUrl = id;
+                string CompanyCode = id;
+                string CalendarCode = Cid;
+
+                var Compay = await businessUserService.GetCompanyCodeByPageUrl(id);
+                if (Compay.Status == true)
+                {
+                    CompanyCode = Compay.Data["COMPANY_CODE"];
+                }
+                else
+                {
+                    return RedirectToAction("Error404", "Marketplace");
+                }
+
+
+
+
+                var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
+                AddUpdateDelete calendarData = await businessUserService.GetMarcketPlaceCompanyCalendarByCompanyId(companyData.Data["Id"].ToString());
+
+
+
+
+                //var servilces=await businessUserService.GetServiceList(CalendarCode, CompanyCode);
+                //var serviceData = await globalMasterService.GetCompanyCategoryMaster();
+                if (calendarData.Status)
+                {
+
+                    var data = JsonConvert.SerializeObject(companyData.Data);
+                    var calendarEncrypted = JsonConvert.SerializeObject(calendarData.Data);
+
+                    //var serviceEncrypted = JsonConvert.SerializeObject(serviceData.Data);
+
+                    MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
+                    companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
+                    companyModel.calendars = JsonConvert.DeserializeObject<List<BusinessCalendarModel>>(calendarEncrypted);
+                    companyModel.PAGE_URL = PageUrl;
+
+
+
+
+                    if (CalendarCode == null)
+                    {
+                        CalendarCode = companyModel.calendars[0].CALENDAR_CODE;
+                    }
+
+                    if (!string.IsNullOrEmpty(CalendarCode))
+                    {
+                        if (companyModel.calendars.Any(x => x.CALENDAR_FUNCTION_TYPE == "QUEUE" && x.CALENDAR_CODE == CalendarCode))
+                        {
+                            //company/Queue/{id}/{Cid
+                            //return RedirectToAction("CompanyQueueSchedule", new { CompanyCode = CompanyCode, CalendarCode = CalendarCode });
+                            return Redirect("/company/Queue/" + CompanyCode + "/" + CalendarCode);
+                            // return Redirect("/ControllerName/ActionName");
+                        }
+                    }
+
+                    var servilces = await businessUserService.GetServiceList(CalendarCode, CompanyCode);
+                    var servilcesEncrypted = JsonConvert.SerializeObject(servilces.Data);
+                    companyModel.ServicesList = JsonConvert.DeserializeObject<List<ServicesList>>(servilcesEncrypted);
+                    //companyModel.services = JsonConvert.DeserializeObject<List<BusinessCompanyCategoryModel>>(serviceEncrypted);
+
+                    ViewBag.IsUserFavorite = false;
+
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        if (UserIdentity.Role == "PUBLIC_USER")
+                        {
+                            // check if calendar is a favorite
+                            var calendarFavCheck = await publicUserService.CheckSingleMyFavoriteCalendar(User.Identity.Name, CalendarCode);
+                            if (calendarFavCheck.Status)
+                            {
+                                ViewBag.IsUserFavorite = true;
+                            }
+                        }
+                    }
+
+                    ViewBag.CompanyCode = CompanyCode;
+                    ViewBag.PageURl = PageUrl;
+                    ViewBag.CalendarCode = CalendarCode;
+                    ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
+
+                    if (!string.IsNullOrEmpty(companyModel.IS_TEMPLATE))
+                    {
+                        if (companyModel.IS_TEMPLATE == "Y")
+                            return RedirectToAction("Index", "Marketplace");
+                    }
+
+                    return View(companyModel);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Marketplace");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Index", "Marketplace");
+            }
+
+        }
+
+
         [Route("company/Queue/{id}/{Cid?}")]
         public async Task<ActionResult> CompanyQueueSchedule(string id,string Cid)
         {

@@ -322,7 +322,7 @@ namespace Barrway.Service.Repository
                     { "COMPANY_NAME_CHINESE","company.COMPANY_NAME_CHINESE"},
                     { "COMPANY_PHONE","company.COMPANY_PHONE"},
                     { "COMPANY_CATEGORY_NAME","company.COMPANY_CATEGORY_NAME"},
-                    { "COMPANY_SUB_CATEGORY_NAME","company.COMPANY_SUB_CATEGORY_NAME"},
+                    { "CALENDAR_SUB_CATEGORY_NAME","company.CALENDAR_SUB_CATEGORY_NAME"},
                     { "created_at","company.created_at"},
                     { "updated_at","calendar.updated_at"},
             };
@@ -389,13 +389,13 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetSingleCompanyById(string Id)
         {
-            string query = $@"SELECT company.[Id], company.TEMPLATE_ID, company.PALETTE_ID, city.CITY_NAME as 'COMPANY_CITY_NAME', district.DISTRICT_NAME as 'COMPANY_DISTRICT_NAME', country.COUNTRY_NAME as 'COMPANY_COUNTRY_NAME', category.COMPANY_CATEGORY_NAME, subCategory.COMPANY_SUB_CATEGORY_NAME      ,company.[created_at]      ,company.[updated_at]      ,company.[created_by]      ,company.[updated_by]     ,[BUSINESS_ACCOUNT_ID]      ,[COMPANY_CODE],     [COMPANY_EMAIL]      ,[COMPANY_NAME_ENGLISH]      ,[COMPANY_NAME_CHINESE]      ,[COMPANY_LOGO_NAME]      ,[COMPANY_LOGO_PATH]      ,[COMPANY_BANNER_NAME]      ,[COMPANY_BANNER_PATH]      ,[COMPANY_PHONE]      ,[COMPANY_ADDRESS]      ,[FACEBOOK_URL]      ,[INSTAGRAM_URL]      ,[WECHAT_URL]      ,[TWITTER_URL]      ,[PAGE_URL]      ,[COMPANY_DESCRIPTION]      ,[COMPANY_SERVICE]      ,[TAGS]      ,[IS_SEARCHABLE_IN_MARKETPLACE],     [COMPANY_EMAIL]      ,company.[COMPANY_CATEGORY_ID]      ,[COMPANY_SUB_CATEGORY_ID]      ,company.[COUNTRY_ID]      ,company.[CITY_ID]      ,[DISTRICT_ID]      ,[TOTAL_WEBSITE_VISITS]      ,[IS_DEFAULT],[IS_ACTIVE]  
+            string query = $@"SELECT company.[Id], company.TEMPLATE_ID, company.PALETTE_ID, city.CITY_NAME as 'COMPANY_CITY_NAME', district.DISTRICT_NAME as 'COMPANY_DISTRICT_NAME', country.COUNTRY_NAME as 'COMPANY_COUNTRY_NAME', category.CALENDAR_CATEGORY_NAME, subCategory.CALENDAR_SUB_CATEGORY_NAME      ,company.[created_at]      ,company.[updated_at]      ,company.[created_by]      ,company.[updated_by]     ,[BUSINESS_ACCOUNT_ID]      ,[COMPANY_CODE],     [COMPANY_EMAIL]      ,[COMPANY_NAME_ENGLISH]      ,[COMPANY_NAME_CHINESE]      ,[COMPANY_LOGO_NAME]      ,[COMPANY_LOGO_PATH]      ,[COMPANY_BANNER_NAME]      ,[COMPANY_BANNER_PATH]      ,[COMPANY_PHONE]      ,[COMPANY_ADDRESS]      ,[FACEBOOK_URL]      ,[INSTAGRAM_URL]      ,[WECHAT_URL]      ,[TWITTER_URL]      ,[PAGE_URL]      ,[COMPANY_DESCRIPTION]      ,[COMPANY_SERVICE]      ,[TAGS]      ,[IS_SEARCHABLE_IN_MARKETPLACE],     [COMPANY_EMAIL]      ,company.[COMPANY_CATEGORY_ID]      ,[COMPANY_SUB_CATEGORY_ID]      ,company.[COUNTRY_ID]      ,company.[CITY_ID]      ,[DISTRICT_ID]      ,[TOTAL_WEBSITE_VISITS]      ,[IS_DEFAULT],[IS_ACTIVE]  
                                 FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company
                                 join DISTRICT_MASTER_1928 district on district.Id = company.DISTRICT_ID
                                 join CITY_MASTER_1927 city on city.Id = company.CITY_ID
                                 join COUNTRY_MASTER_1926 country on country.Id = company.COUNTRY_ID
-                                join COMPANY_CATEGORY_MASTER_1920 category on category.Id = company.COMPANY_CATEGORY_ID
-                                join COMPANY_SUB_CATEGORY_MASTER_1921 subCategory on subCategory.Id = company.COMPANY_SUB_CATEGORY_ID
+                                join CALENDAR_CATEGORY_MASTER_1929 category on category.Id = company.COMPANY_CATEGORY_ID
+                                join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = company.COMPANY_SUB_CATEGORY_ID
                                 where IS_ACTIVE = 'Y' and company.Id = '{Id}'";
 
             List<IDictionary<string, object>> BusinessCompanyResult = await sqlFunction.ExecuteSqlQuery(query);
@@ -599,8 +599,8 @@ namespace Barrway.Service.Repository
                     { "COMPANY_NAME_ENGLISH","company.COMPANY_NAME_ENGLISH"},
                     { "COMPANY_NAME_CHINESE","company.COMPANY_NAME_CHINESE"},
                     { "COMPANY_PHONE","company.COMPANY_PHONE"},
-                    { "COMPANY_CATEGORY_NAME","category.COMPANY_CATEGORY_NAME"},
-                    { "COMPANY_SUB_CATEGORY_NAME","subCategory.COMPANY_SUB_CATEGORY_NAME"},
+                    { "CALENDAR_CATEGORY_NAME","category.CALENDAR_CATEGORY_NAME"},
+                    { "CALENDAR_SUB_CATEGORY_NAME","subCategory.CALENDAR_SUB_CATEGORY_NAME"},
                     { "created_at","company.created_at"},
                     { "updated_at","calendar.updated_at"},
             };
@@ -646,10 +646,10 @@ namespace Barrway.Service.Repository
             int PageNumber = data.page > 0 ? data.page : 1;
 
             string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
-                                    select category.COMPANY_CATEGORY_NAME, subCategory.COMPANY_SUB_CATEGORY_NAME, bau.ROLE_TYPE, (case when (bau.ROLE_TYPE='SUPERUSER') then 'Y' else 'N' end) as 'IS_EDITABLE', company.* from BUSINESS_COMPANY_MASTER_1924 company
+                                    select category.CALENDAR_CATEGORY_NAME, subCategory.CALENDAR_SUB_CATEGORY_NAME, bau.ROLE_TYPE, (case when (bau.ROLE_TYPE='SUPERUSER') then 'Y' else 'N' end) as 'IS_EDITABLE', company.* from BUSINESS_COMPANY_MASTER_1924 company
                                     join BUSINESS_ASSIGNED_USERS_1964 bau on bau.COMPANY_ID = company.Id
-									join COMPANY_CATEGORY_MASTER_1920 category on category.Id = company.COMPANY_CATEGORY_ID
-									join COMPANY_SUB_CATEGORY_MASTER_1921 subCategory on subCategory.Id = company.COMPANY_SUB_CATEGORY_ID
+									join CALENDAR_CATEGORY_MASTER_1929 category on category.Id = company.COMPANY_CATEGORY_ID
+									join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = company.COMPANY_SUB_CATEGORY_ID
                                     where bau.ASSIGNED_USER = '{UserId}' and company.IS_ACTIVE = 'Y' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
                                     )
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
@@ -1010,7 +1010,7 @@ namespace Barrway.Service.Repository
         {
             string query = $@"SELECT calendar.[Id], calendar.CALENDAR_FUNCTION_TYPE,      calendar.[created_at], company.IS_ACTIVE      ,calendar.[updated_at]      ,calendar.[created_by]      ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,calendar.[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                                 join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE 
-                                join CALENDAR_CATEGORY_MASTER_1929 category on category.Id = calendar.CALENDAR_CATEGORY_ID
+                                join CALENDAR_COMMON_CATEGORY_1978 category on category.Id = calendar.CALENDAR_COMMON_CATEGORY_ID
                                 where company.IS_ACTIVE = 'Y' and company.Id = '{CompanyId}' and calendar.CALENDAR_USE_TYPE = 'PUBLIC'";
 
             List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
@@ -1066,7 +1066,7 @@ namespace Barrway.Service.Repository
                     { "COMPANY_CODE","company.COMPANY_CODE"},
                     { "COMPANY_NAME_ENGLISH","company.COMPANY_NAME"},
                     { "CALENDAR_NAME","calendar.CALENDAR_NAME_ENGLISH"},
-                    { "CALENDAR_CATEGORY_NAME","category.CALENDAR_CATEGORY_NAME"},
+                    { "CALENDAR_CATEGORY_NAME","category.CMN_CATEGORY_NAME"},
                     { "created_at","calendar.created_at"},
                     { "updated_at","calendar.updated_at"},
             };
@@ -1112,9 +1112,9 @@ namespace Barrway.Service.Repository
             int PageNumber = data.page > 0 ? data.page : 1;
 
             string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
-                                    SELECT calendar.[Id], company.IS_ACTIVE      ,calendar.[created_at]      ,calendar.[updated_at]      ,calendar.[created_by], company.[COMPANY_NAME_ENGLISH] , company.Id as 'COMPANY_ID'     ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,calendar.[CALENDAR_CATEGORY_ID], category.CALENDAR_CATEGORY_NAME, subCategory.CALENDAR_SUB_CATEGORY_NAME      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
+                                    SELECT calendar.[Id], company.IS_ACTIVE      ,calendar.[created_at]      ,calendar.[updated_at]      ,calendar.[created_by], company.[COMPANY_NAME_ENGLISH] , company.Id as 'COMPANY_ID'     ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,calendar.[CALENDAR_CATEGORY_ID], category.CMN_CATEGORY_NAME as 'CALENDAR_CATEGORY_NAME', subCategory.CALENDAR_SUB_CATEGORY_NAME      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                                     join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE 
-                                    join CALENDAR_CATEGORY_MASTER_1929 category on category.Id = calendar.CALENDAR_CATEGORY_ID
+                                    join CALENDAR_COMMON_CATEGORY_1978 category on category.Id = calendar.CALENDAR_COMMON_CATEGORY_ID
 									join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendar.CALENDAR_SUB_CATEGORY_ID
 									where company.IS_ACTIVE = 'Y' and company.Id = '{CompanyId}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
                                     )
@@ -1183,9 +1183,9 @@ namespace Barrway.Service.Repository
             int PageNumber = data.page > 0 ? data.page : 1;
 
             string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
-                                    SELECT calendar.[Id], company.IS_ACTIVE      ,calendar.[created_at]      ,calendar.[updated_at]      ,calendar.[created_by], company.[COMPANY_NAME_ENGLISH] , company.Id as 'COMPANY_ID'     ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,calendar.[CALENDAR_CATEGORY_ID], category.CALENDAR_CATEGORY_NAME, subCategory.CALENDAR_SUB_CATEGORY_NAME      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
+                                    SELECT calendar.[Id], company.IS_ACTIVE      ,calendar.[created_at]      ,calendar.[updated_at]      ,calendar.[created_by], company.[COMPANY_NAME_ENGLISH] , company.Id as 'COMPANY_ID'     ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,calendar.[CALENDAR_CATEGORY_ID], category.CMN_CATEGORY_NAME as 'CALENDAR_CATEGORY_NAME', subCategory.CALENDAR_SUB_CATEGORY_NAME      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                                     join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE 
-                                    join CALENDAR_CATEGORY_MASTER_1929 category on category.Id = calendar.CALENDAR_CATEGORY_ID
+                                    join CALENDAR_COMMON_CATEGORY_1978 category on category.Id = calendar.CALENDAR_COMMON_CATEGORY_ID
 									join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendar.CALENDAR_SUB_CATEGORY_ID
 									where company.IS_ACTIVE = 'Y' and company.Id = '{CompanyCode}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
                                     )
@@ -1402,10 +1402,10 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetSingleCompanyByCompanyCode(string CompanyCode)
         {
-            string query = $@"SELECT company.[Id], company.[IS_TEMPLATE], company.TEMPLATE_ID, company.PALETTE_ID, category.COMPANY_CATEGORY_NAME as 'COMPANY_CATEGORY_NAME', subCategory.COMPANY_SUB_CATEGORY_NAME as 'COMPANY_SUB_CATEGORY_NAME', country.COUNTRY_NAME as 'COMPANY_COUNTRY_NAME', city.CITY_NAME as 'COMPANY_CITY_NAME', district.DISTRICT_NAME as 'COMPANY_DISTRICT_NAME'     ,company.[created_at]      ,company.[updated_at]      ,company.[created_by]      ,company.[updated_by]      ,[BUSINESS_ACCOUNT_ID]      ,[COMPANY_CODE]      ,[COMPANY_NAME_ENGLISH]      ,[COMPANY_NAME_CHINESE]      ,[COMPANY_LOGO_NAME]      ,[COMPANY_LOGO_PATH]      ,[COMPANY_BANNER_NAME]      ,[COMPANY_BANNER_PATH]      ,[COMPANY_PHONE]      ,[COMPANY_ADDRESS]      ,[FACEBOOK_URL]      ,[INSTAGRAM_URL]      ,[WECHAT_URL]      ,[TWITTER_URL]      ,[PAGE_URL]      ,[COMPANY_DESCRIPTION]      ,[COMPANY_SERVICE]      ,[TAGS]      ,[IS_SEARCHABLE_IN_MARKETPLACE]      ,company.[COMPANY_CATEGORY_ID]      ,[COMPANY_SUB_CATEGORY_ID],     [COMPANY_EMAIL]      ,company.[COUNTRY_ID]      ,company.[CITY_ID]      ,[DISTRICT_ID]      ,[TOTAL_WEBSITE_VISITS]      ,[IS_DEFAULT],[IS_ACTIVE]  
+            string query = $@"SELECT company.[Id], company.[IS_TEMPLATE], company.TEMPLATE_ID, company.PALETTE_ID, category.CALENDAR_CATEGORY_NAME as 'CALENDAR_CATEGORY_NAME', subCategory.CALENDAR_SUB_CATEGORY_NAME as 'CALENDAR_SUB_CATEGORY_NAME', country.COUNTRY_NAME as 'COMPANY_COUNTRY_NAME', city.CITY_NAME as 'COMPANY_CITY_NAME', district.DISTRICT_NAME as 'COMPANY_DISTRICT_NAME'     ,company.[created_at]      ,company.[updated_at]      ,company.[created_by]      ,company.[updated_by]      ,[BUSINESS_ACCOUNT_ID]      ,[COMPANY_CODE]      ,[COMPANY_NAME_ENGLISH]      ,[COMPANY_NAME_CHINESE]      ,[COMPANY_LOGO_NAME]      ,[COMPANY_LOGO_PATH]      ,[COMPANY_BANNER_NAME]      ,[COMPANY_BANNER_PATH]      ,[COMPANY_PHONE]      ,[COMPANY_ADDRESS]      ,[FACEBOOK_URL]      ,[INSTAGRAM_URL]      ,[WECHAT_URL]      ,[TWITTER_URL]      ,[PAGE_URL]      ,[COMPANY_DESCRIPTION]      ,[COMPANY_SERVICE]      ,[TAGS]      ,[IS_SEARCHABLE_IN_MARKETPLACE]      ,company.[COMPANY_CATEGORY_ID]      ,[COMPANY_SUB_CATEGORY_ID],     [COMPANY_EMAIL]      ,company.[COUNTRY_ID]      ,company.[CITY_ID]      ,[DISTRICT_ID]      ,[TOTAL_WEBSITE_VISITS]      ,[IS_DEFAULT],[IS_ACTIVE]  
                                 FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company
-                                join COMPANY_CATEGORY_MASTER_1920 category on category.Id = company.COMPANY_CATEGORY_ID
-                                join COMPANY_SUB_CATEGORY_MASTER_1921 subCategory on subCategory.Id = company.COMPANY_SUB_CATEGORY_ID
+                                join CALENDAR_CATEGORY_MASTER_1929 category on category.Id = company.COMPANY_CATEGORY_ID
+                                join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = company.COMPANY_SUB_CATEGORY_ID
                                 join COUNTRY_MASTER_1926 country on country.Id = company.COUNTRY_ID
                                 join CITY_MASTER_1927 city on city.Id = company.CITY_ID
                                 join DISTRICT_MASTER_1928 district on district.Id = company.DISTRICT_ID
@@ -1649,31 +1649,31 @@ namespace Barrway.Service.Repository
 
                 if (!string.IsNullOrEmpty(model.COMPANY_LOGO_PATH))
                 {
-                    LogoUpdateQuery = $@",[COMPANY_LOGO_NAME] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_LOGO_NAME)}'
-                                            ,[COMPANY_LOGO_PATH] = '{model.COMPANY_LOGO_PATH}'";
+                    LogoUpdateQuery = $@"N,[COMPANY_LOGO_NAME] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_LOGO_NAME)}'
+                                            N,[COMPANY_LOGO_PATH] = '{model.COMPANY_LOGO_PATH}'";
                 }
 
                 if (!string.IsNullOrEmpty(model.COMPANY_BANNER_PATH))
                 {
-                    BannerUpdateQuery = $@",[COMPANY_BANNER_NAME] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_BANNER_NAME)}'
-                                            ,[COMPANY_BANNER_PATH] = '{model.COMPANY_BANNER_PATH}'";
+                    BannerUpdateQuery = $@"N,[COMPANY_BANNER_NAME] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_BANNER_NAME)}'
+                                            N,[COMPANY_BANNER_PATH] = '{model.COMPANY_BANNER_PATH}'";
                 }
 
                 string query = $@"UPDATE [dbo].[BUSINESS_COMPANY_MASTER_1924] SET 
                                [updated_at] = getdate()
-                              ,[COMPANY_NAME_ENGLISH] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_NAME_ENGLISH)}'
+                              ,[COMPANY_NAME_ENGLISH] = N'{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_NAME_ENGLISH)}'
                               ,[COMPANY_NAME_CHINESE] = N'{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_NAME_CHINESE)}'
                               {LogoUpdateQuery}
                               {BannerUpdateQuery}
                               ,[COMPANY_PHONE] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_PHONE)}'
-                              ,[COMPANY_ADDRESS] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_ADDRESS)}'
+                              ,[COMPANY_ADDRESS] = N'{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_ADDRESS)}'
                               ,[FACEBOOK_URL] = '{SQLUtility.TreatSingleQuoteForQuery(model.FACEBOOK_URL)}'
                               ,[INSTAGRAM_URL] = '{SQLUtility.TreatSingleQuoteForQuery(model.INSTAGRAM_URL)}'
                               ,[WECHAT_URL] = '{SQLUtility.TreatSingleQuoteForQuery(model.WECHAT_URL)}'
                               ,[TWITTER_URL] = '{SQLUtility.TreatSingleQuoteForQuery(model.TWITTER_URL)}'
-                              ,[PAGE_URL] = '{SQLUtility.TreatSingleQuoteForQuery(model.PAGE_URL)}'
-                              ,[COMPANY_DESCRIPTION] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_DESCRIPTION)}'
-                              ,[TAGS] = '{SQLUtility.TreatSingleQuoteForQuery(model.TAGS)}'
+                              ,[PAGE_URL] = N'{SQLUtility.TreatSingleQuoteForQuery(model.PAGE_URL)}'
+                              ,[COMPANY_DESCRIPTION] = N'{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_DESCRIPTION)}'
+                              ,[TAGS] = N'{SQLUtility.TreatSingleQuoteForQuery(model.TAGS)}'
                               ,[IS_SEARCHABLE_IN_MARKETPLACE] = '{model.IS_SEARCHABLE_IN_MARKETPLACE}'
                               ,[COMPANY_CATEGORY_ID] = '{model.COMPANY_CATEGORY_ID}'
                               ,[COMPANY_SUB_CATEGORY_ID] = '{model.COMPANY_SUB_CATEGORY_ID}'
@@ -1708,57 +1708,56 @@ namespace Barrway.Service.Repository
                             {
                                 query = "update USER_MASTER_1915 set CURRENT_STEP = 'COMPLETED', updated_at = getdate()  where USER_ID = '" + UserName + "'";
                                 saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
-
                             }
-                        }
 
-                        AddUpdateDelete freeSubscription = await GetCompanyFreeSubscriptionDetails(CompanyDetails.Data["Id"].ToString());
+                            AddUpdateDelete freeSubscription = await GetCompanyFreeSubscriptionDetails(CompanyDetails.Data["Id"].ToString());
 
-                        if (!freeSubscription.Status)
-                        {
-                            var freeSubscriptionPackage = await GetFreeCompanyPackage();
-
-                            if (freeSubscriptionPackage.Status)
+                            if (!freeSubscription.Status)
                             {
-                                BusinessOrderModel businessOrderModel = new BusinessOrderModel()
-                                {
-                                    BOOKING_SESSION_COMPANY = freeSubscription.Data["BOOKING_SESSION_COMPANY"]?.ToString(),
-                                    CALENDAR_AVAILABLE = freeSubscription.Data["CALENDAR_AVAILABLE"]?.ToString(),
-                                    PACKAGE_ID = freeSubscription.Data["Id"]?.ToString(),
-                                    PLAN_DESCRIPTION = freeSubscription.Data["PLAN_DESCRIPTION"]?.ToString(),
-                                    PLAN_NAME = freeSubscription.Data["PLAN_NAME"]?.ToString(),
-                                    SESSION_MONTH_COMPANY = freeSubscription.Data["SESSION_MONTH_COMPANY"]?.ToString(),
-                                    VALIDITY_DAYS = 30,
-                                    VALID_TILL = DateTime.Now.AddMonths(1).ToString("yyyy-MM-dd HH:mm"),
-                                    ORDER_PRICE = 0,
-                                    USER_ID = UserId,
-                                    ORDER_QTY = 1,
-                                    IS_MONTHLY = "Y",
-                                    COMPANY_ID = CompanyDetails.Data["Id"].ToString()
-                                };
+                                var freeSubscriptionPackage = await GetFreeCompanyPackage();
 
-                                var orderResult = await masterService.CreateBusinessOrder(businessOrderModel);
-
-                                if (orderResult.Status)
+                                if (freeSubscriptionPackage.Status)
                                 {
-                                    CompanySubscriptionDetailsModel companySubscriptionDetailsModel = new CompanySubscriptionDetailsModel()
+                                    BusinessOrderModel businessOrderModel = new BusinessOrderModel()
                                     {
-                                        ASSIGNED_BOOKINGS = Convert.ToDouble(businessOrderModel.BOOKING_SESSION_COMPANY),
-                                        ASSIGNED_CALENDARS = Convert.ToDouble(businessOrderModel.CALENDAR_AVAILABLE),
-                                        ASSIGNED_SESSIONS = Convert.ToDouble(businessOrderModel.SESSION_MONTH_COMPANY),
-                                        ORDER_ID = orderResult.Data,
-                                        PLAN_ID = freeSubscription.Data["Id"]?.ToString(),
-                                        COMPANY_ID = CompanyDetails.Data["Id"].ToString(),
-                                        IS_FREE_PLAN = "Y",
-                                        IS_ACTIVE = "Y",
+                                        BOOKING_SESSION_COMPANY = freeSubscription.Data["BOOKING_SESSION_COMPANY"]?.ToString(),
+                                        CALENDAR_AVAILABLE = freeSubscription.Data["CALENDAR_AVAILABLE"]?.ToString(),
+                                        PACKAGE_ID = freeSubscription.Data["Id"]?.ToString(),
+                                        PLAN_DESCRIPTION = freeSubscription.Data["PLAN_DESCRIPTION"]?.ToString(),
+                                        PLAN_NAME = freeSubscription.Data["PLAN_NAME"]?.ToString(),
+                                        SESSION_MONTH_COMPANY = freeSubscription.Data["SESSION_MONTH_COMPANY"]?.ToString(),
+                                        VALIDITY_DAYS = 30,
+                                        VALID_TILL = DateTime.Now.AddMonths(1).ToString("yyyy-MM-dd HH:mm"),
+                                        ORDER_PRICE = 0,
+                                        USER_ID = UserId,
+                                        ORDER_QTY = 1,
+                                        IS_MONTHLY = "Y",
+                                        COMPANY_ID = CompanyDetails.Data["Id"].ToString()
                                     };
 
-                                    var subscriptionSaveResult = await AddCompanySubscriptionDetails(companySubscriptionDetailsModel);
+                                    var orderResult = await masterService.CreateBusinessOrder(businessOrderModel);
+
+                                    if (orderResult.Status)
+                                    {
+                                        CompanySubscriptionDetailsModel companySubscriptionDetailsModel = new CompanySubscriptionDetailsModel()
+                                        {
+                                            ASSIGNED_BOOKINGS = Convert.ToDouble(businessOrderModel.BOOKING_SESSION_COMPANY),
+                                            ASSIGNED_CALENDARS = Convert.ToDouble(businessOrderModel.CALENDAR_AVAILABLE),
+                                            ASSIGNED_SESSIONS = Convert.ToDouble(businessOrderModel.SESSION_MONTH_COMPANY),
+                                            ORDER_ID = orderResult.Data,
+                                            PLAN_ID = freeSubscription.Data["Id"]?.ToString(),
+                                            COMPANY_ID = CompanyDetails.Data["Id"].ToString(),
+                                            IS_FREE_PLAN = "Y",
+                                            IS_ACTIVE = "Y",
+                                        };
+
+                                        var subscriptionSaveResult = await AddCompanySubscriptionDetails(companySubscriptionDetailsModel);
+                                    }
                                 }
+
                             }
 
                         }
-
 
                     }
 
@@ -1789,13 +1788,14 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public  bool CheckCmpanyUrlExists(string PageName)
+        public  bool CheckCmpanyUrlExists(string PageName, string CompanyCode)
         {
 
-            string query = $@"select PAGE_URL from BUSINESS_COMPANY_MASTER_1924 where PAGE_URL ='{PageName}'";
+            string query = $@"select PAGE_URL from BUSINESS_COMPANY_MASTER_1924 company
+                                where PAGE_URL = '{PageName}' and company.COMPANY_CODE <> '{CompanyCode}'";
 
             var result =  sqlFunction.ExecuteSqlQueryNonAsync(query);
-
+            
             if (result.Count() > 0)
             {
                 return  true;
@@ -2291,22 +2291,29 @@ namespace Barrway.Service.Repository
 
                 if (!string.IsNullOrEmpty(model.CALENDAR_PHOTO_PATH))
                 {
-                    CalendarPhotoQuery = $@",[CALENDAR_PHOTO_NAME] = '{SQLUtility.TreatSingleQuoteForQuery(model.CALENDAR_PHOTO_NAME)}'
-                                            ,[CALENDAR_PHOTO_PATH] = '{SQLUtility.TreatSingleQuoteForQuery(model.CALENDAR_PHOTO_PATH)}'";
+                    CalendarPhotoQuery = $@"N,[CALENDAR_PHOTO_NAME] = '{SQLUtility.TreatSingleQuoteForQuery(model.CALENDAR_PHOTO_NAME)}'
+                                            N,[CALENDAR_PHOTO_PATH] = '{SQLUtility.TreatSingleQuoteForQuery(model.CALENDAR_PHOTO_PATH)}'";
                 }
 
                 string query = $@"UPDATE [dbo].[BUSINESS_CALENDAR_MASTER_1925]
                                    SET [updated_at] = getdate()
-                                      ,[CALENDAR_NAME] = '{SQLUtility.TreatSingleQuoteForQuery(model.CALENDAR_NAME)}'
+                                      ,[CALENDAR_NAME] = N'{SQLUtility.TreatSingleQuoteForQuery(model.CALENDAR_NAME)}'
                                        {CalendarPhotoQuery}
-                                      ,[TAGS] = '{model.TAGS}'
+                                      ,[TAGS] = N'{model.TAGS}'
                                       ,[IS_VISIBLE] = '{model.IS_VISIBLE}'
                                       ,[COUNTRY_ID] = '{model.COUNTRY_ID}'
                                       ,[CITY_ID] = '{model.CITY_ID}'
                                       ,[SLOT_DURATION_IN_MINS] = '{model.SLOT_DURATION_IN_MINS}'
                                       ,[DISTRICT_ID] = '{model.DISTRICT_ID}'
-                                      ,[CALENDAR_CATEGORY_ID] = '{model.CALENDAR_CATEGORY_ID}'
+                                      ,[CALENDAR_COMMON_CATEGORY_ID] = '{model.CALENDAR_COMMON_CATEGORY_ID}'
                                       ,[CALENDAR_SUB_CATEGORY_ID] = '{model.CALENDAR_SUB_CATEGORY_ID}'
+                                      ,[CALENDAR_USE_TYPE] = '{model.CALENDAR_USE_TYPE}'
+                                      ,[DISPLAY_MIN_TIME] = '{model.DISPLAY_MIN_TIME}'
+                                      ,[DISPLAY_MAX_TIME] = '{model.DISPLAY_MAX_TIME}'
+                                      ,[DEFAULT_RESOURCE] = '{model.DEFAULT_RESOURCE}'
+                                      ,[NEED_ADDITIONAL_FORM] = '{model.NEED_ADDITIONAL_FORM}'
+                                      ,[DEFAULT_CALENDAR_VIEW] = '{model.DEFAULT_CALENDAR_VIEW}'
+                                      ,[REQUIRED_CALENDAR_VIEWS] = '{model.REQUIRED_CALENDAR_VIEWS}'
                                       ,[COMPANY_CODE] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_CODE)}'
                                  WHERE Id = '{model.Id}'
                                  ";
@@ -3106,11 +3113,7 @@ namespace Barrway.Service.Repository
                 if (result != null)
                 {
                     string categoryId = result["CALENDAR_CATEGORY_ID"]?.ToString() ?? "";
-                    sqlString = $@"select *from CALENDAR_CONTROL_SHEET_1944 where CALENDAR_CODE='{calendarCode}'";
                     
-                    //var controlSheet = (await sqlFunction.ExecuteSqlQuery(sqlString)).FirstOrDefault();
-                    //result.Add("controlSheet", controlSheet);
-
                     sqlString = $@"select *from CALENDAR_CATEGORY_MASTER_1929 where Id = {categoryId}";
 
                     var category = (await sqlFunction.ExecuteSqlQuery(sqlString)).FirstOrDefault();

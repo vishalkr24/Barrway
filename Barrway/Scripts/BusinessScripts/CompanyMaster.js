@@ -29,8 +29,8 @@ function setCalendarMaster() {
             { title: 'Company Name', field: 'COMPANY_NAME_ENGLISH', headerFilter: "input" },
             { title: 'Chinese Name', field: 'COMPANY_NAME_CHINESE', headerFilter: "input" },
             { title: 'Company Phone', field: 'COMPANY_PHONE', headerFilter: "input" },
-            { title: 'Company Category', field: 'COMPANY_CATEGORY_NAME', headerFilter: "input" },
-            { title: 'Sub Category', field: 'COMPANY_SUB_CATEGORY_NAME', headerFilter: "input" },
+            { title: 'Company Category', field: 'CALENDAR_CATEGORY_NAME', headerFilter: "input" },
+            { title: 'Sub Category', field: 'CALENDAR_SUB_CATEGORY_NAME', headerFilter: "input" },
             {
                 title: 'Created Date', field: 'created_at', headerFilter: "input", formatter: function (cell, formatter) {
                     return moment(cell.getData().created_at).format("DD-MM-YYYY HH:mm:ss")
@@ -109,8 +109,7 @@ function setCalendarMaster() {
                 ajaxConfig: "POST", //ajax HTTP request type
                 ajaxContentType: "json",
                 ajaxParams: { //ajax parameters
-                    
-                }, 
+                },
                 ajaxProgressiveLoad: "scroll",
                 ajaxProgressiveLoadScrollMargin: 75,
                 ajaxRequesting: function (url, params) {

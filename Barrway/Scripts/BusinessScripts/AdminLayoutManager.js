@@ -111,7 +111,7 @@ function setCalendarDashboardData() {
                 tooltips: function (cell) {
                     return cell.getValue();
                 },
-                height: "530px",
+                height: "75vh",
                 layout: "fitColumns",
                 responsiveLayout: false,
                 initialSort: [

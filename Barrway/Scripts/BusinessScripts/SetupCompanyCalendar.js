@@ -8,47 +8,88 @@ $(document).on("change", "#CITY_ID", function () {
     bindDistrictData($("#CITY_ID option:selected").val());
 })
 
-$(document).on("change", "#CALENDAR_CATEGORY_ID", function () {
-    renderTemplates($("#CALENDAR_CATEGORY_ID option:selected").val())
-    bindCalendarSubCategoryData($("#CALENDAR_CATEGORY_ID option:selected").val());
-})
+
+$(document).on("change", "#CALENDAR_COMMON_CATEGORY_ID", function () {
+    bindCalendarSubCategoryData($("#CALENDAR_COMMON_CATEGORY_ID option:selected").val())
+});
+
+
 
 $(document).ready(function () {
-    
+
     readyPage();
     setTimeout(function () {
         $("#calendarsMegaMenu").addClass("active");
     }, 500);
-    
+
     if (getUserRole() != "SUPERADMIN_USER") {
-        if ($("#createCalendarCheck").val() == true || $("#createCalendarCheck").val() == "true" ) {
+        if ($("#createCalendarCheck").val() == true || $("#createCalendarCheck").val() == "true") {
             $(".row-reverse").attr("style", "flex-direction:row-reverse");
         }
-        
     }
+
+    $("#DISPLAY_MIN_TIME").datetimepicker({
+        format: "hh:mm A"
+    });
+
+    $("#DISPLAY_MAX_TIME").datetimepicker({
+        format: "hh:mm A"
+    });
+
+    $("#basic-calendar-form").on("submit", function (evt) {
+        
+        let requireTabs = $("#REQUIRED_CALENDAR_VIEWS").val();
+        let defaultTab = $("#DEFAULT_CALENDAR_VIEW option:selected").val();
+        debugger;
+        if (requireTabs.find(x => x == defaultTab) == null) {
+            swal({
+                icon: "warning",
+                title: "Warning",
+                text: "Required views must contain the default tab. \n\nDo you want to Add default view in required view and continue?",
+                buttons: {
+                    confirm: "Yes",
+                    cancel: "No"
+                }
+            }).then(function (check) {
+                if (check) {
+                    requireTabs.push(defaultTab);
+                    $("#REQUIRED_CALENDAR_VIEWS").val(requireTabs);
+                    $("#basic-calendar-form").submit();
+                } else {
+                    evt.preventDefault();
+                }
+            });
+            evt.preventDefault();
+        }
+
+    })
+
 });
 
 function readyPage() {
-    
+
     setCalendarCategory();
+    setCalendarCommonCategory();
 
     checkRegistrationStep();
     setCountryData();
-    renderTemplates($("#CALENDAR_CATEGORY_ID option:selected").val())
+    
 
-    if ($("#createCalendarCheck").val() == false || $("#createCalendarCheck").val() == "false" ) {
-        
+    if ($("#createCalendarCheck").val() == false || $("#createCalendarCheck").val() == "false") {
+
         $("#content").hide();
         $("#content-2").show();
+        $("#CALENDAR_SUB_CATEGORY_ID").attr("disabled", false);
         setCurrentCalendarData();
 
         $("#btn2").attr("onclick", "renderPage(2)");
 
-        var obj = { 'create': true, 'placeholder': 'Add tags...' };
+        var obj = { 'create': true, 'placeholder': 'Add tags...', maxItems: 15 };
         $("#TAGS").attr("data-hs-tom-select-options", JSON.stringify(obj));
         HSCore.components.HSTomSelect.init('.js-select')
     } else {
-        var obj = { 'create': true, 'placeholder': 'Add tags...' };
+        $("#CALENDAR_SUB_CATEGORY_ID").attr("disabled", true);
+        var obj = { 'create': true, 'placeholder': 'Add tags...', maxItems: 15 };
 
         if ($("#stepIndicatorInput").val() == "Y") {
             $("#content").hide();
@@ -57,14 +98,15 @@ function readyPage() {
             $("#content").show();
             $("#content-2").hide();
         }
-        
+
         $("#TAGS").attr("data-hs-tom-select-options", JSON.stringify(obj));
         HSCore.components.HSTomSelect.init('.js-select')
     }
+
 }
 
 function setCurrentCalendarData() {
-    
+
     var data = getSingleCalendar($("#calendarCodeInput").val());
 
     console.log(data);
@@ -78,7 +120,13 @@ function setCurrentCalendarData() {
         bindDistrictData(data.Data.DISTRICT_ID);
         $("#DISTRICT_ID").val(data.Data.DISTRICT_ID);
         $("#DISTRICT_ID option[value=" + data.Data.DISTRICT_ID + "]").attr("selected", true);
+
         renderForm(data.Data.CALENDAR_CATEGORY_ID);
+
+        $("#CALENDAR_COMMON_CATEGORY_ID").val(data.Data.CALENDAR_COMMON_CATEGORY_ID);
+        $("#CALENDAR_COMMON_CATEGORY_ID option[value=" + data.Data.CALENDAR_COMMON_CATEGORY_ID + "]").attr("selected", true);
+
+        bindCalendarSubCategoryData(data.Data.CALENDAR_COMMON_CATEGORY_ID);
         $("#CALENDAR_SUB_CATEGORY_ID").val(data.Data.CALENDAR_SUB_CATEGORY_ID);
         $("#CALENDAR_SUB_CATEGORY_ID option[value=" + data.Data.CALENDAR_SUB_CATEGORY_ID + "]").attr("selected", true);
 
@@ -94,6 +142,12 @@ function setCurrentCalendarData() {
                 $("#TAGS").append(`<option selected>${data.Data.TAGS}</option>`);
             }
         }
+
+        $("#CALENDAR_USE_TYPE").val(data.Data.CALENDAR_USE_TYPE);
+        $("#DEFAULT_RESOURCE").val(data.Data.DEFAULT_RESOURCE);
+        $("#NEED_ADDITIONAL_FORM[value=" + data.Data.NEED_ADDITIONAL_FORM + "]").prop("checked", true);
+        $("#DEFAULT_CALENDAR_VIEW").val(data.Data.DEFAULT_CALENDAR_VIEW);
+        $("#REQUIRED_CALENDAR_VIEWS").val(((data.Data.REQUIRED_CALENDAR_VIEWS.includes(',')) ? data.Data.REQUIRED_CALENDAR_VIEWS.split(',') : data.Data.REQUIRED_CALENDAR_VIEWS));
     }
 
 }
@@ -102,131 +156,19 @@ function renderForm(CategoryId) {
     $("#CALENDAR_CATEGORY_ID").val(CategoryId);
     $("#CALENDAR_CATEGORY_ID option[value=" + CategoryId + "]").attr("selected", true);
     /*$("#CALENDAR_CATEGORY_ID").attr("disabled", true);*/
-    bindCalendarSubCategoryData($("#CALENDAR_CATEGORY_ID option:selected").val());
+
     $("#content").hide();
     $("#content-2").show();
-
-    renderTemplates(CategoryId);
-
-    checkSlot();
 }
 
 function closeSchedularModal() {
     $('#SchedularModal').modal('hide')
 }
 
-$(document).on("click", "#templates-row .template-choose-btn", function () {
-    let CalendarTemplateId = 0;
-    debugger;
-    $("#SCHEDULAR_ID").val("");
-    $("#SCHEDULAR_ID").attr("value", "");
-
-    $("#templates-row .template-choose-btn").removeClass("active");
-    $("#templates-row .template-choose-btn").text("Select template");
-    if (this.classList.contains('active')) {
-        $(this).removeClass("active");
-        CalendarTemplateId = 0;
-    } else {
-        $(this).addClass("active");
-        $(this).text("Selected");
-        CalendarTemplateId = $(this).attr("data-value");
-    }
-
-    $("#CALENDAR_TEMPLATE_ID").val(CalendarTemplateId);
-    $("#CALENDAR_TEMPLATE_ID").attr("value", CalendarTemplateId);
-
-    var template = templateList.find(x => x.Id == CalendarTemplateId)
-
-    $("#CALENDAR_NAME").val(template.CALENDAR_NAME);
-    $("#COUNTRY_ID").val(template.COUNTRY_ID);
-
-    bindCityData(template.COUNTRY_ID);
-    $("#CITY_ID").val(template.CITY_ID);
-
-    bindDistrictData(template.CITY_ID);
-    $("#DISTRICT_ID").val(template.DISTRICT_ID);
-
-    $("#CALENDAR_CATEGORY_ID").val(template.CALENDAR_CATEGORY_ID);
-    $("#CALENDAR_SUB_CATEGORY_ID").val(template.CALENDAR_SUB_CATEGORY_ID);
-    $("#SLOT_DURATION_IN_MINS").val(template.SLOT_DURATION_IN_MINS);
-
-
-    // bind schedules
-    $.ajax({
-        url: "/Calendar/GetSchedularFormList",
-        type: "POST",
-        data: {
-            data: {},
-            companyCode: template.COMPANY_CODE,
-            calendarCode: template.CALENDAR_CODE
-        },
-        success: function (response) {
-            if (response.data != null) {
-                if (response.data.length > 0) {
-                    console.log(response);
-                    $("#schedular-selector").empty();
-                    $("#schedular-selector").append("<option selected value='-1'>Select one</option>")
-                    for (var i = 0; i < response.data.length; i++) {
-                        $("#schedular-selector").append(`<option value="${response.data[i].Id}">${response.data[i].SCH_DAYS} Days | ${response.data[i].ACTIVITY_NAME} | ${response.data[i].FIRST_NAME} | ${response.data[i].LOCATION_BUILDING_NAME}</option>`);
-                    }
-                    $("#SchedularModal").modal("show");
-                }
-            }
-            
-        },
-        error: function (error) {
-
-        }
-    })
-
-});
-
 function bindSchedularId() {
-    
+
     $("#SCHEDULAR_ID").val($("#schedular-selector option:selected").val());
     $("#SCHEDULAR_ID").attr("value", $("#schedular-selector option:selected").val());
-}
-
-function renderTemplates(CategoryId) {
-    var data = getTemplatesList(CategoryId);
-    debugger;
-    $("#templates-row").empty();
-    templateList = [];
-    if (data.Status) {
-        
-        for (var i = 0; i < data.Data.length; i++) {
-            templateList.push(data.Data[i]);
-            $("#templates-row").append(`<div class="col-sm-6"><div class="card">
-                                          <img src="${data.Data[i].CALENDAR_PHOTO_PATH.replace('~', '..')}" onerror="this.src='../assets/img/160x160/img5.jpg'">
-
-                                          <!-- A div with card__details class to hold the details in the card  -->
-                                          <div class="card__details">
-
-                                            <span class="tag">${data.Data[i].CALENDAR_SUB_CATEGORY_NAME}</span>
-                                            <span class="tag">${data.Data[i].TOTAL_SCHEDULARS} Schedulars</span>
-                                            <!-- A div with name class for the name of the card -->
-                                            <div class="name">${data.Data[i].CALENDAR_NAME}</div>
-                                            
-                                            <p>
-                                            <span class="tag">${data.Data[i].TOTAL_SERVICES} Service</span>
-                                            <span class="tag">${data.Data[i].TOTAL_LOCATIONS} Location</span>
-                                            <span class="tag">${data.Data[i].TOTAL_SERVICE_PROVIDERS} Providers</span>
-                                            </p>
-
-                                            <button class="template-choose-btn" data-value="${data.Data[i].Id}">Select template</button>
-                                          </div>
-
-
-                                        </div></div>`);
-
-            //$("#templates-row").append(`<div class="col-md-4 col-sm-6 text-center" >
-
-            //                <img class="template-image" src="${data.Data[i].CALENDAR_PHOTO_PATH.replace('~','..')}" onerror="this.src='../assets/img/160x160/img5.jpg'" />
-            //                <div style="padding-top:12px;"></div>
-
-            //            </div>`);
-        }
-    }
 }
 
 function renderPage(pageName) {
@@ -262,7 +204,7 @@ function renderPage(pageName) {
             $("#btn4 .nav-link").removeClass('active');
 
             break;
-       
+
         default:
             $("#div1").show();
             $("#div2").hide();
@@ -281,7 +223,7 @@ function renderPage(pageName) {
 
 function renderCategory() {
     $("#content-2").hide();
-    $("#content").show();    
+    $("#content").show();
 }
 
 function checkRegistrationStep() {
@@ -295,17 +237,19 @@ function checkRegistrationStep() {
 
 }
 
-function checkSlot() {
-    categoryId = $("#CALENDAR_CATEGORY_ID option:selected").val();
+function setCalendarCommonCategory() {
+    var data = getCalendarCommonCategory();
 
-    if (categoryId == 1 || categoryId == 2 || categoryId == 5) {
-        $(".advanced-option").show();
-        $("#duration-entry-field").show();
-    } else {
-        $(".advanced-option").hide();
-        $("#duration-entry-field").hide();
+    console.log(data);
+
+    $("#CALENDAR_COMMON_CATEGORY_ID").empty();
+    $("#CALENDAR_COMMON_CATEGORY_ID").append(`<option value="-1" selected disabled>Select a Calendar Category</option>`);
+
+    if (data.Status == "true" || data.Status == true) {
+        for (var i = 0; i < data.Data.length; i++) {
+            $("#CALENDAR_COMMON_CATEGORY_ID").append(`<option value="${data.Data[i].Id}">${data.Data[i].CMN_CATEGORY_NAME}</option>`);
+        }
     }
-
 }
 
 function setCalendarCategory() {
@@ -313,9 +257,8 @@ function setCalendarCategory() {
 
     console.log(data);
 
-    $("#CALENDAR_CATEGORY_ID").empty();
-    $("#CALENDAR_CATEGORY_ID").append(`<option value="-1" selected disabled>Select a Calendar Category</option>`);
-
+    $("#CALENDAR_COMMON_CATEGORY_ID").empty();
+    
     if (data.Status == "true" || data.Status == true) {
         for (var i = 0; i < data.Data.length; i++) {
 
@@ -334,7 +277,7 @@ function setCountryData() {
 
     if (data.Status == "true" || data.Status == true) {
         for (var i = 0; i < data.Data.length; i++) {
-            
+
             $("#COUNTRY_ID").append(`<option value="${data.Data[i].Id}">${data.Data[i].COUNTRY_NAME}</option>`);
         }
     }
@@ -370,10 +313,12 @@ function bindDistrictData(cityId) {
     }
 }
 
-function bindCalendarSubCategoryData(categoryId) {
-    var data = getCalendarSubCategory(categoryId);
+function bindCalendarSubCategoryData(id) {
+    var data = getCalendarSubCategory(id);
 
     console.log(data);
+
+    $("#CALENDAR_SUB_CATEGORY_ID").attr("disabled", false);
 
     $("#CALENDAR_SUB_CATEGORY_ID").empty();
     $("#CALENDAR_SUB_CATEGORY_ID").append(`<option value="-1" selected disabled>Select a sub Category</option>`);

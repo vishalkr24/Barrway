@@ -215,20 +215,25 @@
             <div class="input-group">
                 <span class="input-group-text baseUrl" id="basic-addon3" style="border: 1px solid #72328a; color: #1e2022;">@(baseUrl+ "company")/</span>
                 @{
-            string disabledAttribute = Model.PAGE_URL != "" ? "disabled" : "Enable";
+                    string disabledAttribute = Model.PAGE_URL != "" ? "disabled" : "Enable";
 
-            if (disabledAttribute == "disabled")
-            {
-
-                @Html.TextBoxFor(model => model.PAGE_URL, new { @class = "form-control", @placeholder = "page url", @readonly = "readonly" })
+                    if (disabledAttribute == "disabled")
+                    {
+                        if (TempData["CompanyWeurlMessage"] != null)
+                        {
+                            @Html.TextBoxFor(model => model.PAGE_URL, new { @class = "form-control pageUrl", @placeholder = "page url", @onkeypress = @"return /[0-9a-zA-Z\s]/i.test(event.key)", @oncut = "return false", @onpaste = "return false", @onchange = "isUrlavailable()" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.PAGE_URL, new { @class = "form-control", @placeholder = "page url", @readonly = "readonly" })
+                        }
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(model => model.PAGE_URL, new { @class = "form-control pageUrl", @placeholder = "page url", @onkeypress = @"return /[0-9a-zA-Z\s]/i.test(event.key)", @oncut = "return false", @onpaste = "return false", @onchange = "isUrlavailable()" })
 
                     }
-            else
-            {
-                @Html.TextBoxFor(model => model.PAGE_URL, new { @class = "form-control pageUrl", @placeholder = "page url", @onkeypress = @"return /[0-9a-zA-Z\s]/i.test(event.key)", @oncut = "return false", @onpaste = "return false", @onchange = "isUrlavailable()" })
-
-                    }
-        }
+                }
                 <button type="button" class="btn" data-toggle="tooltip" data-placement="top" title="Copy to clipboard" onclick="CoptoClipboard('PAGE_URL')"><i class="fa fa-copy"></i></button>
 
                 @*@Html.TextBoxFor(model => model.PAGE_URL, new { @class = "form-control", @placeholder = "page url", @disabled = disabledAttribute })*@
@@ -237,11 +242,11 @@
             </div>
 
         </div>
-        @*<div class="col-md-2 mt-5">           
-            <div style="height:24px">
-            </div>
-            <button type="button" class="btn btn-default" onclick="bindPageUrl('@Model.COMPANY_CODE')">@Resource.Public_website_link</button>
-        </div>*@
+        @*<div class="col-md-2 mt-5">
+                <div style="height:24px">
+                </div>
+                <button type="button" class="btn btn-default" onclick="bindPageUrl('@Model.COMPANY_CODE')">@Resource.Public_website_link</button>
+            </div>*@
         @Html.TextBoxFor(model => model.Id, new { @readonly = "true", @style = "visibility:hidden" })
     </div>
 
@@ -261,9 +266,10 @@
                 url: '@Url.Action("CheckCmpanyUrlExists", "BusinessAdmin")', // Replace "ControllerName" with your actual controller name
                 type: 'POST',
                 dataType: 'json',
-                data: { Url: url },
+                data: { Url: url, CompanyCode: "@Model.COMPANY_CODE" },
                 success: function(response) {
-                    if (response.Status==false) {
+                    if (response.Status == false) {
+
                         $("#basic").append('<br/><p style="color: red;" id="UrlValidationmessage"> This page url already exist !</p>');
                     } else {
 

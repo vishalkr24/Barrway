@@ -18,14 +18,20 @@
           "Text": "Customers buy course with fixed number of classes",
           "IS_SLOT_BOOKING": false,
           "IS_BUSINESS_HOUR_BOOKING": false,
-          "IS_SERVICE_TYPE": false
+          "IS_SERVICE_TYPE": false,
+          "SERVICE_DURATION": false,
+          "SERVICE_DURATION_DRAG": false,
+          "IS_SHOWING_EVENT_TITLE":true
         },
         "Step2": {
           "Image": "",
           "Text": "Customers buy individual class",
           "IS_SLOT_BOOKING": false,
           "IS_BUSINESS_HOUR_BOOKING": false,
-          "IS_SERVICE_TYPE": false
+          "IS_SERVICE_TYPE": false,
+          "SERVICE_DURATION": false,
+          "SERVICE_DURATION_DRAG": false,
+          "IS_SHOWING_EVENT_TITLE": true
         }
       }
     },
@@ -174,14 +180,20 @@
           "Text": "Set up fixed sessions for customer to book",
           "IS_SLOT_BOOKING": true,
           "IS_BUSINESS_HOUR_BOOKING": false,
-          "IS_SERVICE_TYPE": true
+          "IS_SERVICE_TYPE": true,
+          "SERVICE_DURATION": false,
+          "SERVICE_DURATION_DRAG": false,
+          "IS_SHOWING_EVENT_TITLE": true
         },
         "Step2": {
           "Image": "",
           "Text": "Set up your business hour for customer to book within the period",
           "IS_SLOT_BOOKING": false,
           "IS_BUSINESS_HOUR_BOOKING": true,
-          "IS_SERVICE_TYPE": true
+          "IS_SERVICE_TYPE": true,
+          "SERVICE_DURATION": true,
+          "SERVICE_DURATION_DRAG": false,
+          "IS_SHOWING_EVENT_TITLE": true
         },
         "Step3": {
           "Image": "",
@@ -439,21 +451,30 @@
           "Text": "Set up fixed sessions for customer to book",
           "IS_SLOT_BOOKING": false,
           "IS_BUSINESS_HOUR_BOOKING": false,
-          "IS_SERVICE_TYPE": true
+          "IS_SERVICE_TYPE": true,
+          "SERVICE_DURATION": false,
+          "SERVICE_DURATION_DRAG": false,
+          "IS_SHOWING_EVENT_TITLE": true
         },
         "Step2": {
           "Image": "",
           "Text": "Set up your business hour for customer to book within the period",
           "IS_SLOT_BOOKING": false,
           "IS_BUSINESS_HOUR_BOOKING": false,
-          "IS_SERVICE_TYPE": true
+          "IS_SERVICE_TYPE": true,
+          "SERVICE_DURATION": false,
+          "SERVICE_DURATION_DRAG": false,
+          "IS_SHOWING_EVENT_TITLE": true
         },
         "Step3": {
           "Image": "",
           "Text": "Generate tickets and in first-come-first-serve basis",
           "IS_SLOT_BOOKING": false,
           "IS_BUSINESS_HOUR_BOOKING": false,
-          "IS_SERVICE_TYPE": true
+          "IS_SERVICE_TYPE": true,
+          "SERVICE_DURATION": false,
+          "SERVICE_DURATION_DRAG": false,
+          "IS_SHOWING_EVENT_TITLE": true
         }
       }
     },
@@ -640,14 +661,20 @@
           "Text": "Set up fixed sessions for people to book",
           "IS_SLOT_BOOKING": true,
           "IS_BUSINESS_HOUR_BOOKING": false,
-          "IS_SERVICE_TYPE": true
+          "IS_SERVICE_TYPE": true,
+          "SERVICE_DURATION": false,
+          "SERVICE_DURATION_DRAG": false,
+          "IS_SHOWING_EVENT_TITLE": true
         },
         "Step2": {
           "Image": "",
           "Text": "Set up your business hour for people to book within the period",
           "IS_SLOT_BOOKING": false,
           "IS_BUSINESS_HOUR_BOOKING": true,
-          "IS_SERVICE_TYPE": true
+          "IS_SERVICE_TYPE": true,
+          "SERVICE_DURATION": true,
+          "SERVICE_DURATION_DRAG": true,
+          "IS_SHOWING_EVENT_TITLE": true
         },
         "Step3": {
           "Image": "",

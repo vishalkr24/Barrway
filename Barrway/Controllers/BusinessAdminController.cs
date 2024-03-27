@@ -209,13 +209,21 @@ namespace Barrway.Controllers
                         calendarModel2 = JsonConvert.DeserializeObject<BusinessCalendarModel>(JsonConvert.SerializeObject(data.Data));
                         calendarModel.CALENDAR_CATEGORY_ID = calendarModel2.CALENDAR_CATEGORY_ID;
                         calendarModel.CALENDAR_NAME = calendarModel2.CALENDAR_NAME;
+                        calendarModel.CALENDAR_COMMON_CATEGORY_ID = calendarModel2.CALENDAR_COMMON_CATEGORY_ID;
                         calendarModel.CALENDAR_PHOTO_NAME = calendarModel2.CALENDAR_PHOTO_NAME;
                         calendarModel.CALENDAR_SUB_CATEGORY_ID = calendarModel2.CALENDAR_SUB_CATEGORY_ID;
                         calendarModel.CITY_ID = calendarModel2.CITY_ID;
                         calendarModel.COMPANY_CODE = calendarModel2.COMPANY_CODE;
                         calendarModel.CALENDAR_CODE = calendarModel2.CALENDAR_CODE;
                         calendarModel.COUNTRY_ID = calendarModel2.COUNTRY_ID;
+                        calendarModel.DISPLAY_MIN_TIME = calendarModel2.DISPLAY_MIN_TIME;
+                        calendarModel.DISPLAY_MAX_TIME = calendarModel2.DISPLAY_MAX_TIME;
+                        calendarModel.DEFAULT_RESOURCE = calendarModel2.DEFAULT_RESOURCE;
                         calendarModel.DISTRICT_ID = calendarModel2.DISTRICT_ID;
+                        calendarModel.ADDITIONAL_FORM_ID = calendarModel2.ADDITIONAL_FORM_ID;
+                        calendarModel.NEED_ADDITIONAL_FORM = calendarModel2.NEED_ADDITIONAL_FORM;
+                        calendarModel.REQUIRED_CALENDAR_VIEWS = calendarModel2.REQUIRED_CALENDAR_VIEWS.Contains(",") ? calendarModel2.REQUIRED_CALENDAR_VIEWS.Split(',').ToList(): new List<string>() { calendarModel2.REQUIRED_CALENDAR_VIEWS };
+                        calendarModel.DEFAULT_CALENDAR_VIEW = calendarModel2.DEFAULT_CALENDAR_VIEW;
                         calendarModel.Id = calendarModel2.Id;
                         calendarModel.IS_VISIBLE = calendarModel2.IS_VISIBLE;
                         calendarModel.SLOT_DURATION_IN_MINS = calendarModel2.SLOT_DURATION_IN_MINS;
@@ -270,6 +278,7 @@ namespace Barrway.Controllers
                         BusinessCalendarModel calendarModel2 = new BusinessCalendarModel();
                         calendarModel2 = JsonConvert.DeserializeObject<BusinessCalendarModel>(JsonConvert.SerializeObject(data.Data));
                         calendarModel.CALENDAR_CATEGORY_ID = calendarModel2.CALENDAR_CATEGORY_ID;
+                        calendarModel.CALENDAR_COMMON_CATEGORY_ID = calendarModel2.CALENDAR_COMMON_CATEGORY_ID;
                         calendarModel.CALENDAR_NAME = calendarModel2.CALENDAR_NAME;
                         calendarModel.CALENDAR_PHOTO_NAME = calendarModel2.CALENDAR_PHOTO_NAME;
                         calendarModel.CALENDAR_SUB_CATEGORY_ID = calendarModel2.CALENDAR_SUB_CATEGORY_ID;
@@ -1124,14 +1133,14 @@ namespace Barrway.Controllers
         }
 
         [HttpPost]
-        public  ActionResult CheckCmpanyUrlExists(string  Url)
+        public  ActionResult CheckCmpanyUrlExists(string  Url, string CompanyCode)
         {
             try
             {
                 if(Url != "")
                 {
                     string PAGE_URL = string.IsNullOrEmpty(Url) ? Url : Url.Replace(" ", "_");
-                    bool IsComanyUrlExists = businessUserService.CheckCmpanyUrlExists(PAGE_URL);
+                    bool IsComanyUrlExists = businessUserService.CheckCmpanyUrlExists(PAGE_URL, CompanyCode);
 
                     if (!IsComanyUrlExists)
                     {
@@ -1165,10 +1174,11 @@ namespace Barrway.Controllers
                 {
                     return View("ManageCompanyWebsite", model);
                 }
+                
                 if (!string.IsNullOrEmpty(model.PAGE_URL))
                 {
                     string PAGE_URL = string.IsNullOrEmpty(model.PAGE_URL) ? model.PAGE_URL : model.PAGE_URL.Replace(" ", "_");
-                    bool IsComanyUrlExists = businessUserService.CheckCmpanyUrlExists(PAGE_URL);
+                    bool IsComanyUrlExists = businessUserService.CheckCmpanyUrlExists(PAGE_URL, model.COMPANY_CODE);
 
                     if(IsComanyUrlExists)
                     {
@@ -1413,6 +1423,7 @@ namespace Barrway.Controllers
 
                             BusinessCalendarModel calendarModel = new BusinessCalendarModel()
                             {
+                                CALENDAR_COMMON_CATEGORY_ID = model.CALENDAR_COMMON_CATEGORY_ID,
                                 CALENDAR_CATEGORY_ID = model.CALENDAR_CATEGORY_ID.ToString(),
                                 CALENDAR_NAME = model.CALENDAR_NAME.ToString(),
                                 CALENDAR_SUB_CATEGORY_ID = model.CALENDAR_SUB_CATEGORY_ID.ToString(),
@@ -1427,6 +1438,13 @@ namespace Barrway.Controllers
                                 SCHEDULAR_ID = (string.IsNullOrEmpty(model.SCHEDULAR_ID)) ? "" : model.SCHEDULAR_ID,
                                 DISTRICT_ID = model.DISTRICT_ID.ToString(),
                                 CITY_ID = model.CITY_ID.ToString(),
+                                DISPLAY_MAX_TIME = model.DISPLAY_MAX_TIME,
+                                DISPLAY_MIN_TIME = model.DISPLAY_MIN_TIME,
+                                DEFAULT_RESOURCE = model.DEFAULT_RESOURCE,
+                                NEED_ADDITIONAL_FORM = model.NEED_ADDITIONAL_FORM,
+                                DEFAULT_CALENDAR_VIEW = model.DEFAULT_CALENDAR_VIEW,
+                                REQUIRED_CALENDAR_VIEWS = string.Join(",", model.REQUIRED_CALENDAR_VIEWS),
+                                ADDITIONAL_FORM_ID = "2310",
                                 COMPANY_CODE = model.COMPANY_CODE.ToString(),
                                 COUNTRY_ID = model.COUNTRY_ID.ToString(),
                                 TAGS = ((model.TAGS != null) ? string.Join(", ", model.TAGS) : "")
