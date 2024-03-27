@@ -3301,6 +3301,7 @@
     <Folder Include="fg-assets\fullcalendar\dist\locale\" />
     <Folder Include="fg-newAssets\icons\" />
     <Folder Include="Logs\" />
+    <Folder Include="QRCodes\Events\" />
     <Folder Include="UploadCalendar\CalendarImages\" />
     <Folder Include="UploadCalendar\DownloadAttachment\" />
     <Folder Include="UploadCalendar\UploadAttachment\" />

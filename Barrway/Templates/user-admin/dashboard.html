@@ -208,7 +208,7 @@
         <div class="modal-dialog" style="width: 100%;" role="document">
             <div class="modal-content">
                 <div class="scanner-title">
-                    Scan the QR Code using your webcam
+                    Scan Company's QR Code using your webcam
                 </div>
                 <div class="qr-container">
                     <div class="qr-scanner" id="qr-scanner">
@@ -219,6 +219,18 @@
 
         </div>
     </div>
+
+    <div class="modal fade" id="GeneratedQRCodeModal" style="z-index: 2000;" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel5" aria-hidden="true">
+        <div class="modal-dialog" style="width: 100%;" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <img src="" style="height: auto; width:100%; max-height: 400px;" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     <style>
 
         .scanner-title {
@@ -229,7 +241,6 @@
         }
 
         #qr-scanner {
-            
         }
 
             #qr-scanner #qr-scanner__scan_region {
@@ -237,7 +248,7 @@
             }
 
                 #qr-scanner #qr-scanner__scan_region img {
-                    opacity: 0.3!important;
+                    opacity: 0.3 !important;
                 }
 
             #qr-scanner img[alt='Info icon'] {
@@ -285,45 +296,66 @@
             }
         })
 
-        function openWebCam() {
+        function openWebCam(eventId) {
 
-            const scanner = new Html5QrcodeScanner("qr-scanner", {
+            const scannerUser = new Html5QrcodeScanner("qr-scanner", {
                 qrbox: {
-                    width: 250,
-                    height: 250,
+                    width: 350,
+                    height: 350,
                 },
                 fps: 20,
             });
-            scanner.render(success, error);
+            scannerUser.render(successUser, errorUser);
 
             $("#html5-qrcode-button-camera-permission").addClass("btn btn-primary");
             $("#html5-qrcode-anchor-scan-type-change").addClass("btn btn-danger");
             $("#html5-qrcode-anchor-scan-type-change").empty();
             $("#html5-qrcode-anchor-scan-type-change").append(`Upload image to scan`);
 
-            function success(result) {
+            function successUser(result) {
                 debugger;
-                if (result.includes("Useradmin/MarkPresent")) {
-                    $.get(result, function (response) {
-                        if (response.status) {
-                            swal({
-                                icon: "success",
-                                title: "Success",
-                                text: "Attendance marked"
-                            });
-                        } else {
-                            swal({
-                                icon: "error",
-                                title: "Error",
-                                text: "Failed to mark the attendance"
-                            });
-                        }
+                if (result.includes("Public/MarkPresent")) {
+                    if (eventId == result.split('=')[1]) {
+                        $.ajax({
+                            url: result,
+                            type: "get",
+
+                            success: function (response) {
+                                if (response.status) {
+                                    swal({
+                                        icon: "success",
+                                        title: "Success",
+                                        text: "Attendance marked"
+                                    });
+                                } else {
+                                    swal({
+                                        icon: "error",
+                                        title: "Error",
+                                        text: response.Message
+                                    });
+                                }
+                            }
+                        })
+                    } else {
+                        swal({
+                            icon: "error",
+                            title: "Invalid QR",
+                            text: "QR Code does not belong to the event selected. Please scan or select the right QR Code."
+                        });
+                    }
+                    
+                } else {
+                    swal({
+                        icon: "error",
+                        title: "Invalid QR",
+                        text: "Please scan or select a valid QR Code"
                     });
                 }
                 
             }
 
-            function error(err) {
+            function errorUser(err) {
+                debugger;
                 console.log(err)
             }
 

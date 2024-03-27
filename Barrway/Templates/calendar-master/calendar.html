@@ -28,8 +28,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.js"></script>
 <script type="text/javascript" src="fg-assets/js/jAutoCalc.js"></script>
-<link rel="stylesheet" href="fg-assets/sweetalert2/sweetalert2.min.css">
-<script src="fg-assets/sweetalert2/sweetalert2.min.js"></script>
+
 <style>
     .fc-timeline .fc-body .fc-scroller {
         height: 500px !important;
@@ -1070,7 +1069,7 @@
 
 
 
-                    
+
 
                     <!--<input type="text"  name="selectedrec" class="form-control"
                     ng-model="selectedRecords" style="color:green"/>-->
@@ -1174,14 +1173,14 @@
                             </ul>
 
                             <div class="form-group borderSet col-sm-6 border-IS_UPLOAD_REQUIRED">
-                                <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="IS_UPLOAD_REQUIRED">IS UPLOAD REQUIRED</label><br/><div class="form-check"> <label class="form-check-label" for="IS_UPLOAD_REQUIRED0"> <input type="radio" class="form-check-input" id="IS_UPLOAD_REQUIRED0" ng-model="createEventDetails.IS_UPLOAD_REQUIRED" name="IS_UPLOAD_REQUIRED" value="Y">  Y</label></div><div class="form-check"> <label class="form-check-label" for="IS_UPLOAD_REQUIRED1"><input ng-model="createEventDetails.IS_UPLOAD_REQUIRED" type="radio" class="form-check-input" id="IS_UPLOAD_REQUIRED1" name="IS_UPLOAD_REQUIRED" value="N" checked>   N</label></div></div>
+                                <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="IS_UPLOAD_REQUIRED">IS UPLOAD REQUIRED</label><br /><div class="form-check"> <label class="form-check-label" for="IS_UPLOAD_REQUIRED0"> <input type="radio" class="form-check-input" id="IS_UPLOAD_REQUIRED0" ng-model="createEventDetails.IS_UPLOAD_REQUIRED" name="IS_UPLOAD_REQUIRED" value="Y">  Y</label></div><div class="form-check"> <label class="form-check-label" for="IS_UPLOAD_REQUIRED1"><input ng-model="createEventDetails.IS_UPLOAD_REQUIRED" type="radio" class="form-check-input" id="IS_UPLOAD_REQUIRED1" name="IS_UPLOAD_REQUIRED" value="N" checked>   N</label></div></div>
                             </div>
 
                             <div class="form-group borderSet col-sm-6 border-UPLOAD_TIME" ng-if="createEventDetails.IS_UPLOAD_REQUIRED=='Y'">
                                 <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="UPLOAD_TIME">UPLOAD TIME</label><select name="UPLOAD_TIME" ng-model="createEventDetails.UPLOAD_TIME" id="UPLOAD_TIME" class="form-control inputClass form-control "><option value="ANYTIME" selected="">ANYTIME</option><option value="BEFORE">BEFORE</option><option value="AFTER">AFTER</option></select></div>
                             </div>
                         </div>
-                        </div>
+                    </div>
                     <button type="button" class="btn btn-primary" ng-click="createNewEvent()" ng-show="IS_EXIST_PRE_DEFINED_ACTIVITIES">Create Event</button>
                     <button type="button" class="btn btn-primary" ng-click="createNewEventWithoutPredefinedActivity()" ng-show="!IS_EXIST_PRE_DEFINED_ACTIVITIES">Create Event</button>
                 </div>
@@ -1205,49 +1204,85 @@
     </div>
 </div>
 
+<style>
+
+    .barrway-calendar-event-detail {
+        margin-bottom: 24px;
+    }
+
+        .barrway-calendar-event-detail .event-title {
+            font-weight: bold;
+            font-size: 16px;
+            text-transform: capitalize;
+        }
+
+        .barrway-calendar-event-detail .event-details {
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 32px;
+            text-transform: capitalize;
+        }
+</style>
 
 <div class="modal fade right" id="customEventDetailsModelPopUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3" aria-hidden="true">
     <div class="modal-dialog modal-dialog-slideout" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Event Details</h5>
+                <h3 class="modal-title" id="exampleModalLabel">Event Details</h3>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="event-detail div-flex">
-                    <div class="div-flex">
-                        <div class="title">
+                <div class="barrway-calendar-event-detail">
+                    <div class="event-title">
+                        Date & Time
+                    </div>
+                    <div class="event-details">
+                        <div ng-if="!selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}} ({{selectEventDetails.customTime}})</div>
+                        <div ng-if="selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
+                    </div>
+                </div>
 
-                            <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
-                                <span class="titleContainer">
-                                    <span ng-class="{'text-muted': d.customClass == 'true' , 'title1': d.customClass == 'false'}"> {{d.formTitle}}</span>
-                                    <i ng-if="d.customClass== 'false'" class="fa fa-pencil editTitle ml-2 cursor-pointer fa-sm"></i>
-                                    <i ng-if="d.customClass== 'false'" class="fa fa-trash deleteTitle ml-2 cursor-pointer fa-sm" ng-click="deleteDimensionClick(selectEventDetails,d,$event);"></i>
-                                    <i ng-if="d.customClass== 'true'" class="fa fa-plus editTitle ml-2 cursor-pointer fa-sm"></i>
-                                </span>
-                                <div class="d-none popoverSelect">
-                                    <select class="form-control form-control-sm w-50 selectCustom" ng-init="d.selectionDropdown=d.Id" ng-model="d.selectionDropdown"
-                                            ng-change="updateDimensionCalenderEventClick(d,d.selectionDropdown,selectEventDetails,$this);">
-                                        <option value="{{dform.id}}" ng-repeat="dform in d.dropdownListData.formDataList">{{dform[d.dropdownListData.activities]}}</option>
-                                    </select>
-                                    <i class="fa fa-times closeSelect cursor-pointer ml-2 fa-sm"></i>
-                                </div>
-                            </div>
-
-
+                <div class="barrway-calendar-event-detail" ng-repeat="d in selectEventDetails.dropdownList">
+                    <div class="event-title">
+                        {{d.dropdownListData.title.toLowerCase()}}
+                    </div>
+                    <div class="event-details temp">
+                        <div class="titleContainer" ng-class="{'text-muted': d.customClass == 'true'}">
+                            {{d.formTitle.toLowerCase()}}
+                            <span style="margin-left: 8px;">
+                                <i ng-if="d.customClass== 'false'" class="fa fa-pencil editTitle cursor-pointer"></i>
+                            </span>
+                            <span  style="margin-left: 8px;">
+                                <i ng-if="d.customClass== 'false'" class="fa fa-trash-o deleteTitle cursor-pointer" ng-click="deleteDimensionClick(selectEventDetails,d,$event);"></i>
+                            </span>
+                            <span style="margin-left: 8px;">
+                                <i ng-if="d.customClass== 'true'" class="fa fa-plus-square-o editTitle cursor-pointer"></i>
+                            </span>
                         </div>
 
+                        <div class="d-none popoverSelect">
+                            <select class="form-control" ng-init="d.selectionDropdown=d.Id" ng-model="d.selectionDropdown"
+                                    ng-change="updateDimensionCalenderEventClick(d,d.selectionDropdown,selectEventDetails,$this);">
+                                <option value="{{dform.id}}" ng-repeat="dform in d.dropdownListData.formDataList">{{dform[d.dropdownListData.activities]}}</option>
+                            </select>
+                            <span style="margin-left: 8px;"><i class="fa fa-times closeSelect cursor-pointer"></i></span>
+                        </div>
+                    </div>
+                </div>
 
-                        <div ng-if="!selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
-                        <div ng-if="!selectEventDetails.allDay">{{selectEventDetails.customTime}}</div>
+                <input value="{{selectEventDetails.Id}}" id="newtag-inputHidden" type="hidden">
 
-                        <div ng-if="selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
+                <div class="barrway-calendar-event-detail" ng-if="selectEventDetails.description != ''">
+                    <div class="event-title">
+                        {{translation.Description}}
+                    </div>
+                    <div class="event-details">
+                        <div class="pr-2" style="font-weight: 400;" ng-bind-html="selectEventDetails.description | safeHtml"></div>
+                    </div>
+                </div>
 
-                        <input value="{{selectEventDetails.Id}}" id="newtag-inputHidden" type="hidden">
-
-                        <label class="pr-2" style="font-weight: 400;" ng-bind-html="selectEventDetails.description | safeHtml">
-
-                        </label>
+                <div class="">
+                    <div class="">
 
                         <div ng-repeat="tag in totalSelectListTagify">
                             <input value="{{selectEventDetails[tag.name]}}" id="newtag-inputHidden{{tag.name}}" type="hidden">
@@ -1266,7 +1301,8 @@
                     <div class="d-flex justify-content-between align-items-center p-0">
                         <h5 class="list-title mb-0" id="newtabuList"><strong id="strongFormName">0 Student in this Slot</strong></h5>
                         <div class="d-block">
-                            <div id="newaddTransactionRecord" class="edit-event-student cursor-pointer d-inline-block"><i class="fa fa-plus"></i></div> <div id="newtabuListLink" class="edit-event-student mr-0 ml-1 cursor-pointer d-inline-block" title="Edit"><i class="fa fa-pencil"></i></div>
+                            <div id="newaddTransactionRecord" class="edit-event-student cursor-pointer d-inline-block"><i class="fa fa-plus"></i></div> 
+                            <div id="newtabuListLink" class="edit-event-student mr-0 ml-1 cursor-pointer d-inline-block" title="Edit"><i class="fa fa-pencil"></i></div>
                         </div>
                     </div>
                     <ol id="newtabuListUl">
@@ -1275,6 +1311,12 @@
                     <ul id="newtabuListUlWaiting">
                     </ul>
                 </div>
+
+                <div class="d-flex justify-content-start">
+                    <button class="btn btn-primary" ng-click="ScanStudentQR()" style="border-radius: 50px; margin-right: 8px;">Scan QR mark attendance</button>
+                    <img src="../../assets/img/QR_CODE_LOGO.png" ng-click="GenerateEventQR(selectEventDetails.Id)" style="height: 40px; width: 40px;" />
+                </div>
+
             </div>
         </div>
         <!--<div class="modal-footer">
@@ -1283,6 +1325,80 @@
         </div>-->
     </div>
 </div>
+
+<div class="modal fade" id="WebCamModal" style="z-index: 2000;" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel5" aria-hidden="true">
+    <div class="modal-dialog" style="width: 100%;" role="document">
+        <div class="modal-content">
+            <div class="scanner-title">
+                Scan attendee's QR Code using your webcam
+            </div>
+            <div class="qr-container">
+                <div class="qr-scanner" id="qr-scanner">
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="GeneratedQRCodeModal" style="z-index: 2000;" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel5" aria-hidden="true">
+    <div class="modal-dialog" style="width: 100%;" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a class="btn btn-primary" id="btn-print-qr" href="javascript:void(0)" download><i class="fa fa-download" aria-hidden="true"></i> Download QR</a>
+            </div>
+            <div class="modal-body">
+                <img src="" style="height: auto; width:100%; max-height: 400px;"/>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<style>
+
+    .scanner-title {
+        font-weight: bold;
+        font-size: 15px;
+        text-align: center;
+        padding: 20px 0px;
+    }
+
+    #qr-scanner {
+    }
+
+        #qr-scanner #qr-scanner__scan_region {
+            background: rgb(243 243 243);
+        }
+
+            #qr-scanner #qr-scanner__scan_region img {
+                opacity: 0.3 !important;
+            }
+
+        #qr-scanner img[alt='Info icon'] {
+            display: none;
+        }
+
+    #qr-scanner__dashboard_section {
+        width: 100%;
+        padding: 16px 0px !important;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #html5-qrcode-anchor-scan-type-change {
+        text-decoration: none !important;
+        margin-left: 20px;
+    }
+
+    #qr-scanner__header_message {
+        border-radius: 10px;
+    }
+</style>
 
 <script src="fg-assets/lightbox/js/lightbox-2.6.min.js"></script>
 <script>
