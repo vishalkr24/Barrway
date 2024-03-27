@@ -121,8 +121,7 @@ namespace Barrway.Service.Repository
                 string subQuery = "";
                 string ChQuery = "";
 
-                ChQuery = $@"select USER_EMAIL from USER_MASTER_1915 where USER_EMAIL='{model.USER_EMAIL}' and USER_ID !='{model.USER_ID}'
-";
+                ChQuery = $@"select USER_EMAIL from USER_MASTER_1915 where USER_EMAIL='{model.USER_EMAIL}' and USER_ID !='{model.USER_ID}'";
 
                 List<IDictionary<string, object>> Email = await sqlFunction.ExecuteSqlQuery(ChQuery);
 

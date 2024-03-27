@@ -35873,3 +35873,14 @@ input:checked + .switch {
     padding: 12px 0px;
     margin: 10px 0px;
 }
+
+.btnhome:hover {
+    color: #fff;
+    background-color: #3fbfc7;
+    border-color: #3fbfc7;
+    width: 100%;
+    border-radius: 40px;
+    padding: 12px 0px;
+    margin: 10px 0px;
+}
+
