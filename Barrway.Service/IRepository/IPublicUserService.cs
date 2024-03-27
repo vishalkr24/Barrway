@@ -46,6 +46,8 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> BookingServiceEvent(RequestEventViewModel eventModal, string userName);
         Task<AddUpdateDelete> CreateDynamicFormEntry(List<IDictionary<string, string>> data, string formId, string UserId, string CalendarCode);
 
+        Task<AddUpdateDelete> MarkPresent(string EventId, string UserId);
+
         #endregion
 
 

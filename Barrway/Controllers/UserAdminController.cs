@@ -555,7 +555,11 @@ namespace Barrway.Controllers
             }
         }
 
-
+        /// <summary>
+        /// It will generate a QR of attendee booking for company to scan it
+        /// </summary>
+        /// <param name="TransactionId"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<AddUpdateDelete> GenerateAttendanceQR(string TransactionId)
         {
@@ -572,6 +576,14 @@ namespace Barrway.Controllers
             model.QRImageURL = "data:image/png;base64," + base64String;
 
             return new AddUpdateDelete() { Status = true, Data = model };
+        }
+
+        [HttpGet]
+        public async Task<AddUpdateDelete> MarkPresent(string EventId)
+        {
+            var result = publicUserService.MarkPresent(EventId, UserIdentity.UserID);
+
+            return new AddUpdateDelete() { Status = true, Data = result };
         }
 
         private byte[] BitmapToByteArray(Bitmap bitmap)

@@ -210,6 +210,11 @@ namespace Barrway.Controllers
             return View();
         }
 
+        public async Task<ActionResult> BlogDetails()
+        {
+            return View();
+        }
+
         public async Task<ActionResult> BusinessPost()
         {
             return View();

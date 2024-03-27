@@ -817,6 +817,56 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> MarkPresent(string EventId, string UserId)
+        {
+            try
+            {
+                string query = $@"select cf.[start], cf.[end], t.* from TRANSACTION_MASTER_1942 t
+                                  join CALENDAR_FORM_1935 cf on cf.Id = t.SLOT
+                                  where t.SLOT = '{EventId}' and t.STUDENT = '{UserId}'";
+
+                var result = await sqlFunction.ExecuteSqlQuery(query);
+
+                if (result.Count > 0)
+                {
+                    if (result[0]["ATTENDANCE"]?.ToString() == "PRESENT")
+                    {
+                        return new AddUpdateDelete() { Status = false, Message = "Attendance already marked as present!" };
+                    }
+                    else
+                    {
+                        if (DateTime.Now <= Convert.ToDateTime(result[0]["end"]?.ToString())  && DateTime.Now >= Convert.ToDateTime(result[0]["start"]?.ToString()).AddMinutes(-30))
+                        {
+                            query = $@"update TRANSACTION_MASTER_1942 set ATTENDANCE = 'PRESENT' where Id = '{result[0]["Id"].ToString()}'";
+                            var result2 = await sqlFunction.ExecuteSqlCommandQuery(query);
+                            
+                            if (result2 > 0)
+                            {
+                                return new AddUpdateDelete() { Status = false, Message = "Attendance marked successfully!" };
+                            }
+                            else
+                            {
+                                return new AddUpdateDelete() { Status = false, Message = "Attendance not marked. Ask the company to mark your attendance." };
+                            }
+                            
+                        }
+                        else
+                        {
+                            return new AddUpdateDelete() { Status = false, Message = "Event is over can't mark the attendance now." };
+                        }
+                    }
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "You are not enrolled in this event!" };
+                }
+                
+            }catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
         private async Task<int> UpCommingBookingAdd(IDictionary<string, string> data)
         {
 
