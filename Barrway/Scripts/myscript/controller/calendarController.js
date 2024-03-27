@@ -9720,6 +9720,7 @@
 
     FormGeneratorApp.controller('NewDemoCalenderRecordsControllerTemp', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
         checkLogin();
+        
         var tabulatorChildren = {};
         //var tabulator = '';
         var arrowImage = function (cell, formatterParams) {
@@ -9855,8 +9856,84 @@
             $scope.createEventDetails = {};
         };
 
+        $scope.GenerateEventQR = function (eventId) {
+            $.ajax({
+                url: "/Calendar/GenerateEventQR",
+                type: "Get",
+                data: {
+                    eventId: eventId
+                },
+                success: function (response) {
+                    debugger;
+                    if (response != null) {
+                        if (response.Status) {
+                            $("#GeneratedQRCodeModal img").attr("src", response.Data.QRImageURL.replace("~", ".."));
+                            $("#GeneratedQRCodeModal #btn-print-qr").attr("href", response.Data.QRImageURL.replace("~", ".."));
+                            $("#GeneratedQRCodeModal").modal("show");
+                        } else {
+                            alert("Failed to generate QR Code");
+                        }
+                    }
+                    $rootScope.$emit("HideLoading");
+                }
+            })
+            
+        }
 
+        $scope.ScanStudentQR = function () {
+            debugger;
+            $scope.selectEventDetails;
 
+            const scanner = new Html5QrcodeScanner("qr-scanner", {
+                qrbox: {
+                    width: 250,
+                    height: 250,
+                },
+                fps: 20,
+            });
+            scanner.render(success, error);
+
+            $("#html5-qrcode-button-camera-permission").addClass("btn btn-primary");
+            $("#html5-qrcode-anchor-scan-type-change").addClass("btn btn-danger");
+            $("#html5-qrcode-anchor-scan-type-change").empty();
+            $("#html5-qrcode-anchor-scan-type-change").append(`Upload image to scan`);
+
+            function success(result) {
+                debugger;
+                if (result.includes("Public/MarkPresentByCompany")) {
+                    $.ajax({
+                        url: result,
+                        type: "get",
+                        data: {
+                            EventId: $scope.selectEventDetails.Id
+                        },
+                        success: function (response) {
+                            if (response.status) {
+                                swal({
+                                    icon: "success",
+                                    title: "Success",
+                                    text: "Attendance marked"
+                                });
+                            } else {
+                                swal({
+                                    icon: "error",
+                                    title: "Error",
+                                    text: response.Message
+                                });
+                            }
+                        }
+                    })
+                }
+
+            }
+
+            function error(err) {
+                console.log(err)
+            }
+
+            $("#WebCamModal").modal("show");
+
+        }
 
         $scope.validateForm = function (_fileInput, isrequired = false) {
             var fileInput = document.getElementById(_fileInput);
@@ -16391,20 +16468,35 @@
             });
         }
 
-        $scope.AttendSession = function (transactionId, type) {
-
-            $scope.currentTransactionId = $scope.bookingEventData.find(x => x.Id == transactionId);
+        $scope.AttendSession = function (eventId, type) {
+            debugger;
+            $scope.currentTransaction = $scope.bookingEventData.find(x => x.Id == eventId);
 
             if (type == "QR") {
-                $scope.generateQRCode();
+                $scope.generateQRCode($scope.currentTransaction.TransactionId);
             } else {
-                openWebCam();
+                openWebCam($scope.currentTransaction.Id);
             }
-
 
         }
 
-        $scope.generateQRCode = function () {
+        $scope.generateQRCode = function (TId) {
+            $.ajax({
+                url: "/Useradmin/GenerateAttendanceQR?TransactionId=" + TId,
+                type: "Get",
+                success: function (response) {
+                    debugger;
+                    if (response != null) {
+                        if (response.Status) {
+                            $("#GeneratedQRCodeModal img").attr("src", response.Data.QRImageURL.replace("~", ".."));
+                            $("#GeneratedQRCodeModal").modal("show");
+                        } else {
+                            alert("Failed to generate QR Code");
+                        }
+                    }
+                    $rootScope.$emit("HideLoading");
+                }
+            })
 
         }
 

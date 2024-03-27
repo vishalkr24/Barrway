@@ -6,9 +6,14 @@ using Barrway.Service.Repository;
 using Barrway.Utility.Common;
 using FormGeneratorDTOs.DTOs;
 using Newtonsoft.Json;
+using QRCoder;
 using Rotativa;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
@@ -16,6 +21,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Cors;
 using System.Web.Mvc;
+using static QRCoder.PayloadGenerator;
 
 namespace Barrway.Controllers
 {
@@ -285,6 +291,66 @@ namespace Barrway.Controllers
 
             return Json(result, JsonRequestBehavior.AllowGet);
 
+        }
+
+        /// <summary>
+        /// It will generate a QR of attendee booking for company to scan it
+        /// </summary>
+        /// <param name="TransactionId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<ActionResult> GenerateEventQR(string EventId)
+        {
+            QRCodeModel model = new QRCodeModel();
+            string Url = ConfigurationManager.AppSettings["baseurl"] + "Public/MarkPresent?EventId=" + EventId;
+            Payload payload = new Url(Url);
+
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(payload);
+            QRCode qrCode = new QRCode(qrCodeData);
+            var qrCodeAsBitmap = qrCode.GetGraphic(20);
+
+            string base64String = Convert.ToBase64String(BitmapToByteArray(qrCodeAsBitmap));
+            
+            
+            string path = "";
+            string fileName = "";
+
+            string folderPath = Server.MapPath("~/QRCodes/Events/" + EventId);
+            fileName = "EventQR.png";
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+            else
+            {
+                Directory.Delete(folderPath, true);
+                Directory.CreateDirectory(folderPath);
+            }
+
+            path = "~/QRCodes/Events/" + EventId + "/" + fileName;
+            model.QRImageURL = path;
+
+            byte[] bytes = Convert.FromBase64String(base64String);
+
+            Image image;
+            using (MemoryStream ms = new MemoryStream(bytes))
+            {
+                image = Image.FromStream(ms);
+            }
+
+            image.Save(Server.MapPath(path));
+
+            return Json(new AddUpdateDelete() { Status = true, Data = model }, JsonRequestBehavior.AllowGet);
+        }
+
+        private byte[] BitmapToByteArray(Bitmap bitmap)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                bitmap.Save(ms, ImageFormat.Png);
+                return ms.ToArray();
+            }
         }
 
         [HttpPost]
