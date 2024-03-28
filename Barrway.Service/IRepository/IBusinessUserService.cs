@@ -135,5 +135,9 @@ namespace Barrway.Service.IRepository
         bool CheckCmpanyUrlExists(string PageName, string CompanyCode);
 
         Task<AddUpdateDelete> GetCompanyCodeByPageUrl(string PageUrl);
+
+        Task<AddUpdateDelete> GetFeaturedBlogs();
+        Task<AddUpdateDelete> GetBlogs();
+        Task<AddUpdateDelete> GetBlogsTags();
     }
 }

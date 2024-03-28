@@ -3085,6 +3085,7 @@
     <Content Include="Scripts\MarketplaceScripts\CompanySchedule.js" />
     <Content Include="Scripts\MarketplaceScripts\CompanyService.js" />
     <Content Include="Scripts\MarketplaceScripts\CompanyDetail.js" />
+    <Content Include="Scripts\MarketplaceScripts\Blog.js" />
     <Content Include="Scripts\MarketplaceScripts\Pricing.js" />
     <Content Include="Scripts\MarketplaceScripts\News.js" />
     <Content Include="Scripts\MarketplaceScripts\BusinessSite.js" />

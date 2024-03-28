@@ -11,9 +11,11 @@
         border: 1px solid #ddd;
         border-radius: 8px;
     }
+
     #owl-demo-blog .owl-dots.disabled {
         display: block !important;
     }
+
     #owl-demo-blog .owl-dots button.owl-dot.active span {
         background: #3fbfc8;
     }
@@ -26,6 +28,7 @@
     .owl-dots button.owl-dot:focus {
         outline: none;
     }
+
     #owl-demo-blog h3.post_tittle {
         font-size: 24px;
         color: #000000;
@@ -34,17 +37,20 @@
         margin-top: 15px;
         font-family: 'Poppins';
     }
+
     #owl-demo-blog p.fature {
         color: #E2476C;
         font-size: 18px;
         font-weight: 800;
         font-family: 'Poppins';
     }
+
     #owl-demo-blog p.date {
         color: #000000;
         font-family: 'Poppins';
         margin-bottom: 15px;
     }
+
     .button-slide {
         width: 100%;
         float: left;
@@ -59,46 +65,48 @@
             border-radius: 80px;
             margin-right: 10px;
         }
+
     .blog-post-vew .pro-im {
         display: block;
         min-height: 200px;
         max-height: 200px;
     }
 
-    .blog-post-vew .pro-im img {
-        width: 100%;
-        min-height: 200px;
-        max-height: 200px;
-    }
+        .blog-post-vew .pro-im img {
+            width: 100%;
+            min-height: 200px;
+            max-height: 200px;
+        }
+
     .blog-post-vew {
-     position:relative;
-    
+        position: relative;
     }
+
     .hot {
         position: absolute;
         top: 6px;
         left: 8px;
         color: #E2476C;
-        font-weight:600;
+        font-weight: 600;
     }
 </style>
-<div id="list-view" style="display:none;">
+<div id="list-view">
     <!-- bredcrum -->
     <section class="bredcrum">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
                     <div class="bredcrum-content">
-                        <span><a href="/Marketplace/Index" style="color: #222;">@Resource.Home </a> </span> / <span><a href="/Marketplace/News">@Resource.News</a> </span>
+                        <span><a href="/Marketplace/Index" style="color: #222;">@Resource.Home </a> </span> / <span><a href="/Marketplace/Blogs">Blogs</a> </span>
 
                     </div>
                 </div>
-                <div class="col-md-12">
-                    <div class="news-banner">
-                        <img src="~/assets/marketplace/image/news.jpg">
-                    </div>
-                </div>
-                
+                @*<div class="col-md-12">
+                        <div class="news-banner">
+                            <img src="~/assets/marketplace/image/news.jpg">
+                        </div>
+                    </div>*@
+
             </div>
         </div>
     </section>
@@ -110,76 +118,119 @@
                 <div class="col-md-12">
                     <div class="blog-slide">
                         <div id="owl-demo-blog" class="owl-carousel owl-theme">
-                            <div class="item">
-                                <div class="item-inner">
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            <div class="pro-im">
-                                                <img src="~/assets/marketplace/image/alogo.png">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="pro-text">
-                                                <p class="fature">Featured post 1</p>
-                                                <h3 class="post_tittle">Post title xdhoeqhwrowe</h3>
-                                                <p class="date">yyyy-mm-dd</p>
-                                                <p class="tag">
-                                                    <a href="javascript:void(0)"> Tag1</a>
-                                                    <a href="javascript:void(0)"> Tag2</a>
-                                                    <a href="javascript:void(0)"> Tag3</a>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="item-inner">
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            <div class="pro-im">
-                                                <img src="~/assets/marketplace/image/alogo.png">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="pro-text">
-                                                <p class="fature">Featured post 2</p>
-                                                <h3 class="post_tittle">Post title xdhoeqhwrowe</h3>
-                                                <p class="date">yyyy-mm-dd</p>
-                                                <p class="f2">
-                                                    <a href="javascript:void(0)"> Tag1</a>
-                                                    <a href="javascript:void(0)"> Tag2</a>
-                                                    <a href="javascript:void(0)"> Tag3</a>
-                                                </p>
+
+                            @if (ViewBag.FeaturedBlogs != null)
+                            {
+                                foreach (var item in ViewBag.FeaturedBlogs)
+                                {
+
+                                    <div class="item">
+                                        <div class="item-inner">
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    <div class="pro-im">
+                                                        @*<img src="~/assets/marketplace/image/alogo.png">*@
+                                                        <img src="@item.IMAGE">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="pro-text">
+                                                        <p class="fature">Featured post</p>
+                                                        @*<h3 class="post_tittle">@item.BLOG_CONTENT</h3>*@
+                                                    <h3 class="post_tittle">@item.BLOG_TITLE</h3>                                                       
+                                                        <p class="date">@item.created_at.ToString("yyyy-MM-dd HH:mm")</p>
+                                                        <p class="tag">
+                                                            <a href="javascript:void(0)"> Tag1</a>
+                                                            <a href="javascript:void(0)"> Tag2</a>
+                                                            <a href="javascript:void(0)"> Tag3</a>
+                                                        </p>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="item-inner">
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            <div class="pro-im">
-                                                <img src="~/assets/marketplace/image/alogo.png">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="pro-text">
-                                                <p class="fature">Featured post 3</p>
-                                                <h3 class="post_tittle">Post title xdhoeqhwrowe</h3>
-                                                <p class="date">yyyy-mm-dd</p>
-                                                <p class="f2">
-                                                    <a href="javascript:void(0)"> Tag1</a>
-                                                    <a href="javascript:void(0)"> Tag2</a>
-                                                    <a href="javascript:void(0)"> Tag3</a>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                }
+                            }
+
+
+
+
+
+
+
                         </div>
+
+                        @*<div id="owl-demo-blog" class="owl-carousel owl-theme">
+                                <div class="item">
+                                    <div class="item-inner">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="pro-im">
+                                                    <img src="~/assets/marketplace/image/alogo.png">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="pro-text">
+                                                    <p class="fature">Featured post 1</p>
+                                                    <h3 class="post_tittle">Post title xdhoeqhwrowe</h3>
+                                                    <p class="date">yyyy-mm-dd</p>
+                                                    <p class="tag">
+                                                        <a href="javascript:void(0)"> Tag1</a>
+                                                        <a href="javascript:void(0)"> Tag2</a>
+                                                        <a href="javascript:void(0)"> Tag3</a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="item-inner">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="pro-im">
+                                                    <img src="~/assets/marketplace/image/alogo.png">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="pro-text">
+                                                    <p class="fature">Featured post 2</p>
+                                                    <h3 class="post_tittle">Post title xdhoeqhwrowe</h3>
+                                                    <p class="date">yyyy-mm-dd</p>
+                                                    <p class="f2">
+                                                        <a href="javascript:void(0)"> Tag1</a>
+                                                        <a href="javascript:void(0)"> Tag2</a>
+                                                        <a href="javascript:void(0)"> Tag3</a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="item-inner">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="pro-im">
+                                                    <img src="~/assets/marketplace/image/alogo.png">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="pro-text">
+                                                    <p class="fature">Featured post 3</p>
+                                                    <h3 class="post_tittle">Post title xdhoeqhwrowe</h3>
+                                                    <p class="date">yyyy-mm-dd</p>
+                                                    <p class="f2">
+                                                        <a href="javascript:void(0)"> Tag1</a>
+                                                        <a href="javascript:void(0)"> Tag2</a>
+                                                        <a href="javascript:void(0)"> Tag3</a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>*@
                     </div>
                     <div class="button-slide">
                         <div id="owl-demo-button-slide" class="owl-carousel owl-theme">
@@ -224,7 +275,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -238,60 +289,90 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <div class="inner-content" style="height:540px;">
+                    <div class="inner-content blogslist" style="height:540px;">
                         <div class="row">
-                            <div class="col-md-4">
-                                <div class="blog-post-vew">
-                                    <div class="hot"><span>Hot</span></div>
-                                    <div class="pro-im">
-                                        <img src="../assets/marketplace/image/pro.png" onerror="this.src='../assets/marketplace/image/pro.png'">
+
+                            @if (ViewBag.Blogs != null)
+                            {
+                                foreach (var item in ViewBag.Blogs)
+                                {
+                                    <div class="col-md-4">
+                                        <div class="blog-post-vew">
+                                            <div class="hot"><span>Hot</span></div>
+                                            <div class="pro-im">
+                                                <img src="@item.IMAGE" onerror="this.src='../assets/marketplace/image/pro.png'">
+                                            </div>
+                                            <div class="pro-text">
+                                                <p class="p1"><b>@item.BLOG_TITLE</b></p>
+                                                <p class="date">@item.created_at.ToString("yyyy-MM-dd HH:mm")</p>
+                                                <p class="tag">
+                                                    <a href="javascript:void(0)"> Tag1</a>
+                                                    <a href="javascript:void(0)"> Tag2</a>
+                                                    <a href="javascript:void(0)"> Tag3</a>
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="pro-text">
-                                        <p class="p1"><b>Post title</b></p>
-                                        <p class="date">YYYY-MM-DD</p>
-                                        <p class="tag">
-                                            <a href="javascript:void(0)"> Tag1</a>
-                                            <a href="javascript:void(0)"> Tag2</a>
-                                            <a href="javascript:void(0)"> Tag3</a>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="blog-post-vew">
-                                    <div class="hot"><span>Hot</span></div>
-                                    <div class="pro-im">
-                                        <img src="../assets/marketplace/image/pro.png" onerror="this.src='../assets/marketplace/image/pro.png'">
-                                    </div>
-                                    <div class="pro-text">
-                                        <p class="p1"><b>Post title</b></p>
-                                        <p class="p2">Restaurant 1 <span class="clr-tag">3a<span></span></span></p>
-                                        <p class="tag">
-                                            <a href="javascript:void(0)"> Tag1</a>
-                                            <a href="javascript:void(0)"> Tag2</a>
-                                            <a href="javascript:void(0)"> Tag3</a>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="blog-post-vew">
-                                    <div class="hot"><span>Hot</span></div>
-                                    <div class="pro-im">
-                                        <img src="../assets/marketplace/image/pro.png" onerror="this.src='../assets/marketplace/image/pro.png'">
-                                    </div>
-                                    <div class="pro-text">
-                                        <p class="p1"><b>Rohan Technology</b></p>
-                                        <p class="p2">Restaurant 1 <span class="clr-tag">3a<span></span></span></p>
-                                        <p class="tag">
-                                            <a href="javascript:void(0)"> Tag1</a>
-                                            <a href="javascript:void(0)"> Tag2</a>
-                                            <a href="javascript:void(0)"> Tag3</a>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+                                }
+                            }
+
+
+
+
                         </div>
+                        @*<div class="row">
+                                <div class="col-md-4">
+                                    <div class="blog-post-vew">
+                                        <div class="hot"><span>Hot</span></div>
+                                        <div class="pro-im">
+                                            <img src="../assets/marketplace/image/pro.png" onerror="this.src='../assets/marketplace/image/pro.png'">
+                                        </div>
+                                        <div class="pro-text">
+                                            <p class="p1"><b>Post title</b></p>
+                                            <p class="date">YYYY-MM-DD</p>
+                                            <p class="tag">
+                                                <a href="javascript:void(0)"> Tag1</a>
+                                                <a href="javascript:void(0)"> Tag2</a>
+                                                <a href="javascript:void(0)"> Tag3</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="blog-post-vew">
+                                        <div class="hot"><span>Hot</span></div>
+                                        <div class="pro-im">
+                                            <img src="../assets/marketplace/image/pro.png" onerror="this.src='../assets/marketplace/image/pro.png'">
+                                        </div>
+                                        <div class="pro-text">
+                                            <p class="p1"><b>Post title</b></p>
+                                            <p class="p2">Restaurant 1 <span class="clr-tag">3a<span></span></span></p>
+                                            <p class="tag">
+                                                <a href="javascript:void(0)"> Tag1</a>
+                                                <a href="javascript:void(0)"> Tag2</a>
+                                                <a href="javascript:void(0)"> Tag3</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="blog-post-vew">
+                                        <div class="hot"><span>Hot</span></div>
+                                        <div class="pro-im">
+                                            <img src="../assets/marketplace/image/pro.png" onerror="this.src='../assets/marketplace/image/pro.png'">
+                                        </div>
+                                        <div class="pro-text">
+                                            <p class="p1"><b>Rohan Technology</b></p>
+                                            <p class="p2">Restaurant 1 <span class="clr-tag">3a<span></span></span></p>
+                                            <p class="tag">
+                                                <a href="javascript:void(0)"> Tag1</a>
+                                                <a href="javascript:void(0)"> Tag2</a>
+                                                <a href="javascript:void(0)"> Tag3</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>*@
                     </div>
                     <div class="pagination">
 
@@ -304,68 +385,3 @@
 
 </div>
 
-<div id="detail-view" style="display:none;">
-    <section class="bredcrum">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="bredcrum-content">
-                        <span><a href="/Marketplace/Index" style="color: #222;">@Resource.Home </a> </span> / <span><a href="/Marketplace/News">@Resource.News</a> </span> / <span><a href="" class="post-title post-title-href">@Resource.Post_title</a> </span>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="filser">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="inner-content">
-                        <div class="row">
-                            <div class="col-md-7">
-                                <div class="single-post">
-                                    <div class="single-post-hed">
-                                        <p class="post-tags"><a href=""> Tag1</a></p>
-                                        <h2><b class="post-title">Post title</b></h2>
-                                        <p><span class="post-author">Author name</span>, <span class="post-date"> YYYY-MM-DD</span></p>
-                                    </div>
-                                    <div class="single-post-img">
-                                        <img onerror="this.src='../assets/img/post_img.jpg'" class="media-object post-image" style="width:100%">
-                                    </div>
-                                    <div class="sp-dis">
-                                        <div class="post-content">
-
-                                        </div>
-                                        
-                                        <p class="post-tags">
-                                            
-                                            <a href="javascript:void(0)">Tag2,</a>
-                                            <a href="javascript:void(0)">Tag3</a>
-                                        </p>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div class="col-md-5">
-                                <div class="sidebar" id="detail-sidebar">
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-</div>
-
-
-@section scripts{
-
-    <script src="~/Scripts/MarketplaceScripts/News.js"></script>
-
-
-
-}
