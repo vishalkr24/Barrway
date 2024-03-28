@@ -3,6 +3,137 @@
     ViewBag.Title = "Blog Details";
     Layout = "~/Views/Shared/_LayoutMarketPlace.cshtml";
 }
+<style>
+    .single-blog-post-vew .post-title {
+        font-size: 24px;
+    }
 
-<h2>BlogDetails</h2>
+    .single-blog-post-vew .tag {
+        font-size: 16px;
+    }
+
+    .single-blog-post-vew {
+        width: 100%;
+        float: left;
+        margin-top: 30px;
+    }
+
+        .single-blog-post-vew .pro-text {
+            margin-bottom: 15px;
+        }
+
+        .single-blog-post-vew .pro-im {
+            display: block;
+            min-height: 300px;
+            max-height: 300px;
+            margin-bottom: 15px;
+        }
+
+            .single-blog-post-vew .pro-im img {
+                width: 100%;
+                min-height: 300px;
+                max-height: 300px;
+                border-radius:8px;
+            }
+    .single-blog-details {
+        width: 100%;
+        float: left;
+    }
+    .social-img {
+        width: 100%;
+        float: left;
+        margin-top: 15px;
+    }
+    .blod-sidebar {
+        width: 100%;
+        float: left;
+        margin-top: 80px;
+        height: 75vh;
+        overflow-y: auto;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="single-blog-post-vew">
+                <div class="pro-text">
+                    <p class="post-title"><b>Post title</b></p>
+                    <p class="date">YYYY-MM-DD</p>
+                    <p class="tag">
+                        <a href="javascript:void(0)"> Tag1</a>
+                        <a href="javascript:void(0)"> Tag2</a>
+                        <a href="javascript:void(0)"> Tag3</a>
+                    </p>
+                </div>
+                <div class="pro-im">
+                    <img src="../assets/marketplace/image/pro.png" onerror="this.src='../assets/marketplace/image/pro.png'">
+                </div>
+            </div>
+            <div class="single-blog-details">
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Etiam tempus convallis nisi, sit amet eleifend est laoreet 
+                    porttitor. Mauris posuere mauris eget tincidunt aliquet. 
+                    Quisque metus dolor, rutrum a enim ut, sagittis consequat est. 
+                    Nam et condimentum lorem. Quisque mattis est et odio malesuada.
+                </p>
+                <div class="social-img">
+                    <img src="../assets/marketplace/image/facebooknew.png " />
+                    <img src="../assets/marketplace/image/whatsappnew.png " />
+                    <img src="../assets/marketplace/image/linkind.png " />
+                    <img src="../assets/marketplace/image/link.png " />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="blod-sidebar">
+                <div class="media">
+                    <div class="media-left" style="">
+                        <img src="../UploadCalendar/CalendarImages/CMP00077/1693463807410.jpeg" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px; height: 100px;">
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading" style="margin-bottom:0px;">Featured post</h4>
+                        <div class="tittle"><b>Post title</b></div>
+                        <div class="date">YYYY-MM-DD</div>
+                        <div class="tags">
+                            <a href="#">Tag 1</a>
+                            <a href="#">Tag 2</a>
+                            <a href="#">Tag 3</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="media">
+                    <div class="media-left" style="">
+                        <img src="../UploadCalendar/CalendarImages/CMP00077/1693463807410.jpeg" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px; height: 100px;">
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading" style="margin-bottom:0px;">Featured post</h4>
+                        <div class="tittle"><b>Post title</b></div>
+                        <div class="date">YYYY-MM-DD</div>
+                        <div class="tags">
+                            <a href="#">Tag 1</a>
+                            <a href="#">Tag 2</a>
+                            <a href="#">Tag 3</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="media">
+                    <div class="media-left" style="">
+                        <img src="../UploadCalendar/CalendarImages/CMP00077/1693463807410.jpeg" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px; height: 100px;">
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading" style="margin-bottom:0px;">Featured post</h4>
+                        <div class="tittle"><b>Post title</b></div>
+                        <div class="date">YYYY-MM-DD</div>
+                        <div class="tags">
+                            <a href="#">Tag 1</a>
+                            <a href="#">Tag 2</a>
+                            <a href="#">Tag 3</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
