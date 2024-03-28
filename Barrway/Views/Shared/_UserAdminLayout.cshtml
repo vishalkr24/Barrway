@@ -50,7 +50,6 @@
         * {
             transition: unset !important;
         }
-
         body {
             opacity: 0;
         }
@@ -142,8 +141,6 @@
             return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16)
         }</script>
 
-
-
     <!--Formgenerator setup-->
     <link href="fg-assets/css/waves.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/3.0.0/toaster.min.css" rel="stylesheet" />
@@ -160,7 +157,7 @@
 
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.9.1/fullcalendar.min.css" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.9.1/fullcalendar.print.css" media="print" />
-
+   
     <!-- css -->
     <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/style.css">
     <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/media.css">
@@ -787,6 +784,17 @@
                                     <i class="bi-person nav-icon"></i>
                                     <span class="nav-link-title">@Resource.My_Profile</span>
                                 </a>
+                            </div>
+
+                            <div class="nav-item">
+                                <a class="nav-link " id="user-nav-my_blogs"  href="javascript:void(0)" ui-sref="my_blogs({formId:2351})" data-placement="left">
+                                    <i class="bi bi-collection nav-icon"></i>
+                                    <span class="nav-link-title">my blogs</span>
+                                </a>
+
+                               
+
+
                             </div>
 
                         </div>

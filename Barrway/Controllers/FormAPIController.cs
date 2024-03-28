@@ -110,6 +110,9 @@ namespace Barrway.Controllers
         [HttpPost]
         public async Task<ActionResult> GetFormRecordList(GenerateDynamicFormData data)
         {
+
+            
+            
             if (User.Identity != null)
             {
                 var role = UserIdentity.Role;
