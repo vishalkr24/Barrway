@@ -2080,6 +2080,22 @@
                     parent: 'home'
                 }
             })
+
+            .state('my_blogs', {
+                url: '/my_blogs/:formId',
+                onEnter: function ($window) { $window.document.title = "My blogs"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/user-admin/blogs.html?token=' + uuid,
+                        controller: 'FormRecordsController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
+
             .state('user_b_coin_balance', {
                 url: '/b_coin_balance/:formId',
                 onEnter: function ($window) { $window.document.title = "B Coin Balance"; },

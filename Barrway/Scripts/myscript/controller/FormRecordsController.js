@@ -4502,8 +4502,8 @@
                             action: 32, formId: $scope.currentFormId, created_by: $scope.userDetail.Id, update_by: $scope.userDetail.Id, topicId: $scope.formDetailsDataInfo.topicId,
                             currentFormType: $scope.formDetailsDataInfo.currentFormType,
                             companyCode: localStorage.getItem("COMPANY_CODE"), calendarCode: localStorage.getItem("CALENDAR_CODE"),
-                            "IsCustomFilter": true,
-                            "CustomFilters": [{ "FieldName": "COMPANY_CODE", "Value": localStorage.getItem("COMPANY_CODE") }, { "FieldName": "CALENDAR_CODE", "Value": localStorage.getItem("CALENDAR_CODE") }]
+                            //"IsCustomFilter": true,
+                            //"CustomFilters": [{ "FieldName": "COMPANY_CODE", "Value": localStorage.getItem("COMPANY_CODE") }, { "FieldName": "CALENDAR_CODE", "Value": localStorage.getItem("CALENDAR_CODE") }]
                         }, //ajax parameters
                         ajaxProgressiveLoad: "scroll",
                         ajaxProgressiveLoadScrollMargin: 75,

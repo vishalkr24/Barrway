@@ -3196,6 +3196,7 @@
     <Content Include="Templates\superadmin\BusinessUserList.html" />
     <Content Include="Templates\user-admin\dashboard.html" />
     <Content Include="Templates\user-admin\my-b-coin-balance.html" />
+    <Content Include="Templates\user-admin\blogs.html" />
     <Content Include="Templates\user-admin\my-payment-history.html" />
     <Content Include="Templates\user-admin\my-calendar.html" />
     <Content Include="Templates\user-admin\my-attendance.html" />
