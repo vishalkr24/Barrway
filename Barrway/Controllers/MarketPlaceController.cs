@@ -207,6 +207,13 @@ namespace Barrway.Controllers
         }
         public async Task<ActionResult> Blogs()
         {
+            var result=await businessUserService.GetFeaturedBlogs();
+
+            var FBlogs = JsonConvert.SerializeObject(result.Data);
+            ViewBag.FeaturedBlogs = JsonConvert.DeserializeObject<List<BlogList>>(FBlogs);           
+            var Result = await businessUserService.GetBlogs();
+            var Blogs = JsonConvert.SerializeObject(Result.Data);
+            ViewBag.Blogs = JsonConvert.DeserializeObject<List<BlogList>>(Blogs);           
             return View();
         }
 
@@ -837,6 +844,29 @@ namespace Barrway.Controllers
 
             }
         }
+
+
+        [HttpPost]
+        public async Task<ActionResult> GetFeaturedBlogs()
+        {
+            return Json(await businessUserService.GetFeaturedBlogs());
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GetBlogs()
+        {
+            return Json(await businessUserService.GetBlogs());
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> GetBlogsTags()
+        {
+            return Json(await businessUserService.GetBlogsTags());
+        }
+
+
+
 
         //[AllowAnonymous]
         //[HttpPost]

@@ -122,6 +122,7 @@
     <Compile Include="FormAPI\AxixColumnsResponseModel.cs" />
     <Compile Include="FormAPI\GetFormRecordListResponseModel.cs" />
     <Compile Include="FormAPI\ReferalFormDataResponseModel.cs" />
+    <Compile Include="MarketplaceModels\BlogModel.cs" />
     <Compile Include="MarketplaceModels\FavoriteCalendarModel.cs" />
     <Compile Include="MarketplaceModels\MarketplaceCompanyGalleryModel.cs" />
     <Compile Include="MarketplaceModels\MarketplaceCompanyModel.cs" />
