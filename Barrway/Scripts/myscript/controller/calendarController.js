@@ -1108,7 +1108,7 @@
                 confirmButtonText: 'Subscribe',
                 cancelButtonText: 'Cancel'
             }).then(function (isConfirm) {
-                if (isConfirm.dismiss == "cancel") {
+                if (!isConfirm) {
                     var url = mainService.getBaseUrl() + "#/application/edit/" + $scope.importFormSettings.applicationId + "";
                     window.location.href = url;
                 }
@@ -9869,6 +9869,7 @@
                         if (response.Status) {
                             $("#GeneratedQRCodeModal img").attr("src", response.Data.QRImageURL.replace("~", ".."));
                             $("#GeneratedQRCodeModal #btn-print-qr").attr("href", response.Data.QRImageURL.replace("~", ".."));
+                            $("#customEventDetailsModelPopUp").modal("hide");
                             $("#GeneratedQRCodeModal").modal("show");
                         } else {
                             alert("Failed to generate QR Code");
@@ -9893,13 +9894,33 @@
             });
             scanner.render(success, error);
 
+            $("#customEventDetailsModelPopUp").modal("hide");
             $("#html5-qrcode-button-camera-permission").addClass("btn btn-primary");
             $("#html5-qrcode-anchor-scan-type-change").addClass("btn btn-danger");
             $("#html5-qrcode-anchor-scan-type-change").empty();
             $("#html5-qrcode-anchor-scan-type-change").append(`Upload image to scan`);
+            setTimeout(function () {
+                $("#html5-qrcode-button-camera-start").addClass("btn btn-primary");
+            }, 1000);
+
+            $("#html5-qrcode-button-camera-start").on("click", function () {
+                setTimeout(function () {
+                    $("#html5-qrcode-button-camera-stop").addClass("btn btn-danger");
+                }, 500);
+            })
+
+            $("#html5-qrcode-button-camera-stop").on("click", function () {
+                setTimeout(function () {
+                    $("#html5-qrcode-button-camera-start").addClass("btn btn-primary");
+                }, 500);
+            })
+
+            $('#WebCamModal').on('hidden.bs.modal', function () {
+                scanner.clear();
+            });
 
             function success(result) {
-                debugger;
+                
                 if (result.includes("Public/MarkPresentByCompany")) {
                     $.ajax({
                         url: result,
@@ -9908,11 +9929,11 @@
                             EventId: $scope.selectEventDetails.Id
                         },
                         success: function (response) {
-                            if (response.status) {
+                            if (response.Status) {
                                 swal({
                                     icon: "success",
                                     title: "Success",
-                                    text: "Attendance marked"
+                                    text: "Attendance marked!"
                                 });
                             } else {
                                 swal({
@@ -9921,14 +9942,20 @@
                                     text: response.Message
                                 });
                             }
+                        },
+                        error: function (err) {
+                            alert("Request not allowed");
                         }
                     })
+
+                    $("#html5-qrcode-button-camera-stop").trigger("click");
+
                 }
 
             }
 
             function error(err) {
-                console.log(err)
+                
             }
 
             $("#WebCamModal").modal("show");
@@ -11509,16 +11536,16 @@
                                         });
                                         $("#newtabuListUl").append(_newtabuListUlHtml);
                                         $("#newtabuListUlWaiting").append(_newtabuListUlHtmlWaiting);
-                                        $("#tabuList").append('<strong id="strongFormName">' + $scope.eventDataWithoutGroupBy.length + ' ' + $scope.otherformDetails.title + ' in this Slot</strong>');
-                                        $("#newtabuList").append('<strong id="strongFormName">' + $scope.eventDataWithoutGroupBy.length + ' ' + $scope.otherformDetails.title + ' in this Slot</strong>');
+                                        $("#tabuList").append('<span id="strongFormName">' + $scope.eventDataWithoutGroupBy.length + ' ' + $scope.otherformDetails.title.toLowerCase() + '</span>');
+                                        $("#newtabuList").append('<span id="strongFormName">' + $scope.eventDataWithoutGroupBy.length + ' ' + $scope.otherformDetails.title.toLowerCase() + '</span>');
                                     }
                                     else {
                                         $("#tabuList").empty();
                                         $("#newtabuList").empty();
                                         if (!DataService.isEmpty($scope.otherformDetails)) {
                                             if (!DataService.isEmpty($scope.otherformDetails.title)) {
-                                                $("#tabuList").append('<strong id="strongFormName"> 0 ' + $scope.otherformDetails.title + ' in this Slot </strong>');
-                                                $("#newtabuList").append('<strong id="strongFormName"> 0 ' + $scope.otherformDetails.title + ' in this Slot </strong>');
+                                                $("#tabuList").append('<span id="strongFormName"> 0 ' + $scope.otherformDetails.title.toLowerCase() + '</span>');
+                                                $("#newtabuList").append('<span id="strongFormName"> 0 ' + $scope.otherformDetails.title.toLowerCase() + '</span>');
                                             }
                                         }
                                     }
@@ -15968,12 +15995,12 @@
             swal({
                 title: "Are you sure to delete?",
                 type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                buttons: {
+                    confirm: 'Yes, delete it!',
+                    cancel: 'cancel'
+                }
             }).then((result) => {
-                if (result.value) {
+                if (result) {
 
 
                     var param = {};
@@ -15990,6 +16017,7 @@
                     param.formGroupKey = $scope.selectEventDetails.formGroupKey;
                     param.parentID = $scope.currentFormId;
                     setTimeout(function () {
+                        debugger;
                         $.ajax({
                             method: 'POST',
                             url: BASE_URL + "FormAPI/EditEventData",
