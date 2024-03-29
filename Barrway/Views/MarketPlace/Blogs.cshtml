@@ -10,11 +10,16 @@
         background-color: #ddd;
         border: 1px solid #ddd;
         border-radius: 8px;
+        overflow:hidden;
     }
-
-    #owl-demo-blog .owl-dots.disabled {
-        display: block !important;
-    }
+        div#owl-demo-blog .owl-item .item-inner .pro-im img {
+            min-height: 100%;
+            max-height: 100%;
+            object-fit:fill;
+        }
+        #owl-demo-blog .owl-dots.disabled {
+            display: block !important;
+        }
 
     #owl-demo-blog .owl-dots button.owl-dot.active span {
         background: #3fbfc8;
@@ -33,7 +38,7 @@
         font-size: 24px;
         color: #000000;
         font-weight: 700;
-        margin-bottom: 0px;
+        margin-bottom: 10px;
         margin-top: 15px;
         font-family: 'Poppins';
     }
@@ -64,6 +69,7 @@
             padding: 8px 25px;
             border-radius: 80px;
             margin-right: 10px;
+            white-space: nowrap;
         }
 
     .blog-post-vew .pro-im {
@@ -89,6 +95,7 @@
         color: #E2476C;
         font-weight: 600;
     }
+
 </style>
 <div id="list-view">
     <!-- bredcrum -->
@@ -281,7 +288,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <div class="filter fl-r">
+                    <div class="filter fl-l">
                         <button class="filter-btn"><img src="~/assets/marketplace/image/filter.png" /> @Resource.Featured </button>
                     </div>
                 </div>

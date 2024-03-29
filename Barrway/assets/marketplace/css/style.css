@@ -834,6 +834,11 @@ li.rl > ul > li > a {
     float: right;
 }
 
+.fl-l {
+    width: 150px;
+    float: left;
+}
+
 .news-banner img {
     width: 100%;
 }
