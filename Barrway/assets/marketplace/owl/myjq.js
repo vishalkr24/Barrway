@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    /*demo one*/
 
     $("#owl-demo1").owlCarousel({
         loop: true,
@@ -23,6 +24,7 @@ $(document).ready(function () {
         }
     });
 
+    /*demo two*/
     $("#owl-demo2").owlCarousel({
         loop: true,
         margin: 10,
@@ -46,6 +48,7 @@ $(document).ready(function () {
         }
     });
 
+    /*demo three*/
     $("#owl-demo3").owlCarousel({
         loop: true,
         margin: 10,
@@ -69,6 +72,7 @@ $(document).ready(function () {
         }
     });
 
+    /*demo four*/
     $("#owl-demo4").owlCarousel({
         loop: true,
         margin: 10,
@@ -92,6 +96,7 @@ $(document).ready(function () {
         }
     });
 
+    /*demo five*/
     $('#owl-demo5').owlCarousel({
         loop: false,
         margin: 10,
@@ -114,6 +119,7 @@ $(document).ready(function () {
         }
     })
 
+    /*demo demo-blog*/
     $('#owl-demo-blog').owlCarousel({
         nav: false,
         dots: true,
@@ -133,18 +139,19 @@ $(document).ready(function () {
         }
     })
 
+    /*demo demo-button-slide*/
     $('#owl-demo-button-slide').owlCarousel({
         nav: false,
-        dots: true,
+        dots: false,
         loop: false,
         margin: 10,
         responsiveClass: true,
         responsive: {
             0: {
-                items: 4
+                items:2
             },
             600: {
-                items: 6
+                items: 4
             },
             1000: {
                 items: 8

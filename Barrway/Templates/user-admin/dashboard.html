@@ -204,11 +204,11 @@
 
     </div>
 
-    <div class="modal fade" id="WebCamModal" style="z-index: 2000;" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel5" aria-hidden="true">
+    <div class="modal fade" id="WebCamModal" style="z-index: 2000;" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel5" aria-hidden="true">
         <div class="modal-dialog" style="width: 100%;" role="document">
             <div class="modal-content">
                 <div class="scanner-title">
-                    Scan Company's QR Code using your webcam
+                    Scan Company's QR Code using your webcam <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="qr-container">
                     <div class="qr-scanner" id="qr-scanner">
@@ -296,12 +296,15 @@
             }
         })
 
+        
+
+
         function openWebCam(eventId) {
 
             const scannerUser = new Html5QrcodeScanner("qr-scanner", {
                 qrbox: {
-                    width: 350,
-                    height: 350,
+                    width: 250,
+                    height: 250,
                 },
                 fps: 20,
             });
@@ -311,17 +314,36 @@
             $("#html5-qrcode-anchor-scan-type-change").addClass("btn btn-danger");
             $("#html5-qrcode-anchor-scan-type-change").empty();
             $("#html5-qrcode-anchor-scan-type-change").append(`Upload image to scan`);
+            setTimeout(function () {
+                $("#html5-qrcode-button-camera-start").addClass("btn btn-primary");
+            }, 1000);
+
+            $("#html5-qrcode-button-camera-start").on("click", function () {
+                setTimeout(function () {
+                    $("#html5-qrcode-button-camera-stop").addClass("btn btn-danger");
+                }, 500);
+            })
+
+            $("#html5-qrcode-button-camera-stop").on("click", function () {
+                setTimeout(function () {
+                    $("#html5-qrcode-button-camera-start").addClass("btn btn-primary");
+                }, 500);
+            })
+
+            $('#WebCamModal').on('hidden.bs.modal', function () {
+                scannerUser.clear();
+            });
 
             function successUser(result) {
-                debugger;
+                
                 if (result.includes("Public/MarkPresent")) {
                     if (eventId == result.split('=')[1]) {
                         $.ajax({
                             url: result,
                             type: "get",
-
                             success: function (response) {
-                                if (response.status) {
+                                debugger;
+                                if (response.Status) {
                                     swal({
                                         icon: "success",
                                         title: "Success",
@@ -334,6 +356,9 @@
                                         text: response.Message
                                     });
                                 }
+                            },
+                            error: function (err) {
+                                alert("Request not allowed");
                             }
                         })
                     } else {
@@ -351,12 +376,11 @@
                         text: "Please scan or select a valid QR Code"
                     });
                 }
-                
+                $("#html5-qrcode-button-camera-stop").trigger("click");
             }
 
             function errorUser(err) {
-                debugger;
-                console.log(err)
+                
             }
 
             $("#WebCamModal").modal("show");
