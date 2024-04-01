@@ -1074,6 +1074,90 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
             }
         }
 
+
+        public async Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetAllBlog(GenerateDynamicFormData data)
+        {
+            try
+            {
+
+                string column = "", dir = "";
+                if (data.sorters != null && data.sorters.Count() > 0)
+                {
+                    column = data.sorters.FirstOrDefault().field;
+                    dir = data.sorters.FirstOrDefault().dir;
+                }
+                else
+                {
+                    column = "created_at";
+                    dir = "desc";
+                }
+
+
+
+                List<string> applyFilter = new List<string>();
+
+                if (data.filter != null)
+                {
+                    if (!string.IsNullOrEmpty(data.filter.value))
+                        if (data.filter.type == "like")
+                        {
+                            applyFilter.Add("f.[" + data.filter.field + "]  " + data.filter.type + " '%" + data.filter.value + "%'");
+                        }
+                        else
+                            applyFilter.Add("f.[" + data.filter.field + "] " + data.filter.type + " '" + data.filter.value + "'");
+                }
+
+
+                if (data.filters != null && data.filters.Count() > 0)
+                {
+                    foreach (var item in data.filters)
+                    {
+                        if (!string.IsNullOrEmpty(item.value))
+                        {
+                            if (item.field == "created_at" || item.field == "updated_at")
+                            {
+                                string filter = await sqlFunction.GetDateFilter(item, "news");
+                                applyFilter.Add(filter);
+                            }
+                            else
+                            {
+                                string filter = "f.[" + item.field + "] like N'%" + item.value + "%'";
+                                applyFilter.Add(filter);
+                            }
+                        }
+
+                    }
+                }
+
+                string applyFilterQuery = string.Join(" and ", applyFilter);
+                applyFilterQuery = applyFilterQuery.TrimEnd("and ".ToCharArray());
+
+                int PageSize = data.size > 0 ? data.size : 20;
+                int PageNumber = data.page > 0 ? data.page : 1;
+
+                string strSql = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+                                     select  distinct  a_0.[BLOG_CATEGORY] [BLOG_CATEGORY] , a_0.[Id] [BLOG_CATEGORY_Id] ,f.Id,f.formGroupKey,f.formID,f.userID,f.Current_Status,f.cycle,f.MasterFormID,f.MasterFormRow,f.formRecordOrder,
+                                        f.formRecordStatus,f.ApprovalStatus ,f.created_at,f.updated_at ,f.[BLOG_TITLE],f.[IMAGE],f.[BLOG_CONTENT],f.[TAG],f.[YOUTUBE_LINK],f.[MARKED_AS_HOT] from  BLOG_1980   f   left join  BLOG_CATEGORY_1981  a_0  on f.[BLOG_CATEGORY] = a_0.[Id]
+                                      
+                                    )
+                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY [formRecordOrder] desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+
+                var listresult = await sqlFunction.ExecuteSqlQuery(strSql);
+                if (listresult.Count() > 0)
+                {
+                    return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = true, Data = listresult };
+                }
+
+                return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = false };
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = false, Message = ex.Message };
+            }
+        }
+
+
         public async Task<AddUpdateDelete> GetMasterSearchResult(string keyword)
         {
             try
