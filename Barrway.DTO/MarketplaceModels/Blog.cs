@@ -6,16 +6,7 @@ using System.Threading.Tasks;
 
 namespace Barrway.DTO.MarketplaceModels
 {
-    public class BlogModel
-    {
-
-        public List<BlogList> FeturedBlogList { get; set; }
-        public List<BlogList> BlogList { get; set; }
-       
-    }
-
-
-    public class BlogList
+    public class Blog
     {
         public int Id { get; set; }
         public string BLOG_CATEGORY { get; set; }
@@ -24,8 +15,19 @@ namespace Barrway.DTO.MarketplaceModels
         public string BLOG_CONTENT { get; set; }
         public string MARKED_AS_HOT { get; set; }
         public string TAG { get; set; }
+        public List<TagsObject> TAGs { get; set; }
         public DateTime created_at { get; set; }
 
-
     }
-  }
+
+    public class TagsObject
+    {
+        public string value { get; set; }
+    }
+
+
+    public class Tag
+    {
+        public string TAG { get; set; }
+    }
+}

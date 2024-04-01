@@ -138,6 +138,8 @@ namespace Barrway.Service.IRepository
 
         Task<AddUpdateDelete> GetFeaturedBlogs();
         Task<AddUpdateDelete> GetBlogs();
-        Task<AddUpdateDelete> GetBlogsTags();
+        //Task<AddUpdateDelete> GetBlogsTags();
+        Task<Resultdata> GetAllBlogsTags();
+        Task<AddUpdateDelete> GetBlogbyId(string Id);
     }
 }

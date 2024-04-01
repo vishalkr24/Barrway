@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Barrway.DTO.MarketplaceModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,15 @@ namespace Barrway.DTO.Common
         public bool Status { get; set; }
         public dynamic Data { get; set; }
     }
+
+    public class Resultdata
+    {
+        public string Message { get; set; }
+        public bool Status { get; set; }
+        public List<Tag> Data { get; set; }
+    }
+
+
     public class LoginResponse
     {
         public string Message { get; set; }

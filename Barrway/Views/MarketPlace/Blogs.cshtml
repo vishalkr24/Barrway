@@ -1,4 +1,4 @@
-﻿
+﻿@model Barrway.DTO.MarketplaceModels.BlogViewModel
 @{
     ViewBag.Title = @Resource.News;
     Layout = "~/Views/Shared/_LayoutMarketPlace.cshtml";
@@ -38,11 +38,29 @@
         font-family: 'Poppins';
     }
 
+        #owl-demo-blog h3.post_tittle a {
+            font-size: 24px;
+            color: #000000;
+            font-weight: 700;
+            margin-bottom: 0px;
+            margin-top: 15px;
+            font-family: 'Poppins';
+            text-decoration: none;
+        }
+
+            #owl-demo-blog h3.post_tittle a:hover {
+                color: #e2476c;
+            }
+
     #owl-demo-blog p.fature {
         color: #E2476C;
         font-size: 18px;
         font-weight: 800;
         font-family: 'Poppins';
+    }
+
+    .blogimg img {
+        border-radius: 10px;
     }
 
     #owl-demo-blog p.date {
@@ -89,6 +107,10 @@
         color: #E2476C;
         font-weight: 600;
     }
+
+    .pro-im img {
+        border-radius: 10px;
+    }
 </style>
 <div id="list-view">
     <!-- bredcrum -->
@@ -119,30 +141,37 @@
                     <div class="blog-slide">
                         <div id="owl-demo-blog" class="owl-carousel owl-theme">
 
-                            @if (ViewBag.FeaturedBlogs != null)
+                            @if (Model.FeaturedBlogs != null)
                             {
-                                foreach (var item in ViewBag.FeaturedBlogs)
+                                foreach (var item in Model.FeaturedBlogs)
                                 {
 
                                     <div class="item">
                                         <div class="item-inner">
                                             <div class="row">
                                                 <div class="col-md-8">
-                                                    <div class="pro-im">
+                                                    <div class="blogimg">
                                                         @*<img src="~/assets/marketplace/image/alogo.png">*@
-                                                        <img src="@item.IMAGE">
+                                                        <a href="/MarketPlace/BlogDetails/@item.Id"><img src="@item.IMAGE"></a>
+
+
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="pro-text">
                                                         <p class="fature">Featured post</p>
                                                         @*<h3 class="post_tittle">@item.BLOG_CONTENT</h3>*@
-                                                    <h3 class="post_tittle">@item.BLOG_TITLE</h3>                                                       
+                                                        <h3 class="post_tittle"><a href="/MarketPlace/BlogDetails/@item.Id">@item.BLOG_TITLE</a></h3>
                                                         <p class="date">@item.created_at.ToString("yyyy-MM-dd HH:mm")</p>
                                                         <p class="tag">
-                                                            <a href="javascript:void(0)"> Tag1</a>
-                                                            <a href="javascript:void(0)"> Tag2</a>
-                                                            <a href="javascript:void(0)"> Tag3</a>
+                                                            @if (item.TAGs != null)
+                                                            {
+                                                                foreach (var Tagitem in item.TAGs)
+                                                                {
+                                                                    <a href="javascript:void(0)"> @Tagitem.value</a>
+                                                                }
+                                                            }
+
                                                         </p>
                                                     </div>
                                                 </div>
@@ -151,129 +180,67 @@
                                     </div>
                                 }
                             }
-
-
-
-
-
-
-
                         </div>
-
-                        @*<div id="owl-demo-blog" class="owl-carousel owl-theme">
-                                <div class="item">
-                                    <div class="item-inner">
-                                        <div class="row">
-                                            <div class="col-md-8">
-                                                <div class="pro-im">
-                                                    <img src="~/assets/marketplace/image/alogo.png">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="pro-text">
-                                                    <p class="fature">Featured post 1</p>
-                                                    <h3 class="post_tittle">Post title xdhoeqhwrowe</h3>
-                                                    <p class="date">yyyy-mm-dd</p>
-                                                    <p class="tag">
-                                                        <a href="javascript:void(0)"> Tag1</a>
-                                                        <a href="javascript:void(0)"> Tag2</a>
-                                                        <a href="javascript:void(0)"> Tag3</a>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="item-inner">
-                                        <div class="row">
-                                            <div class="col-md-8">
-                                                <div class="pro-im">
-                                                    <img src="~/assets/marketplace/image/alogo.png">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="pro-text">
-                                                    <p class="fature">Featured post 2</p>
-                                                    <h3 class="post_tittle">Post title xdhoeqhwrowe</h3>
-                                                    <p class="date">yyyy-mm-dd</p>
-                                                    <p class="f2">
-                                                        <a href="javascript:void(0)"> Tag1</a>
-                                                        <a href="javascript:void(0)"> Tag2</a>
-                                                        <a href="javascript:void(0)"> Tag3</a>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="item-inner">
-                                        <div class="row">
-                                            <div class="col-md-8">
-                                                <div class="pro-im">
-                                                    <img src="~/assets/marketplace/image/alogo.png">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="pro-text">
-                                                    <p class="fature">Featured post 3</p>
-                                                    <h3 class="post_tittle">Post title xdhoeqhwrowe</h3>
-                                                    <p class="date">yyyy-mm-dd</p>
-                                                    <p class="f2">
-                                                        <a href="javascript:void(0)"> Tag1</a>
-                                                        <a href="javascript:void(0)"> Tag2</a>
-                                                        <a href="javascript:void(0)"> Tag3</a>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>*@
                     </div>
                     <div class="button-slide">
                         <div id="owl-demo-button-slide" class="owl-carousel owl-theme">
-                            <div class="item">
-                                <div class="item-inner">
-                                    <button>Blog Tag 1</button>
+                            @if (Model.TagList != null)
+                            {
+
+                                foreach (var tagItem in Model.TagList)
+                                {
+
+                                    <div class="item">
+                                        <div class="item-inner">
+                                            <button>@tagItem.TAG</button>
+                                        </div>
+                                    </div>
+
+                                }
+
+                            }
+
+
+                            @*<div class="item">
+                                    <div class="item-inner">
+                                        <button>Blog Tag 1</button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="item">
-                                <div class="item-inner">
-                                    <button>Blog Tag 1</button>
+                                <div class="item">
+                                    <div class="item-inner">
+                                        <button>Blog Tag 1</button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="item">
-                                <div class="item-inner">
-                                    <button>Blog Tag 1</button>
+                                <div class="item">
+                                    <div class="item-inner">
+                                        <button>Blog Tag 1</button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="item">
-                                <div class="item-inner">
-                                    <button>Blog Tag 1</button>
+                                <div class="item">
+                                    <div class="item-inner">
+                                        <button>Blog Tag 1</button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="item">
-                                <div class="item-inner">
-                                    <button>Blog Tag 1</button>
+                                <div class="item">
+                                    <div class="item-inner">
+                                        <button>Blog Tag 1</button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="item">
-                                <div class="item-inner">
-                                    <button>Blog Tag 1</button>
+                                <div class="item">
+                                    <div class="item-inner">
+                                        <button>Blog Tag 1</button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="item">
-                                <div class="item-inner">
-                                    <button>Blog Tag 1</button>
+                                <div class="item">
+                                    <div class="item-inner">
+                                        <button>Blog Tag 1</button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="item">
-                                <div class="item-inner">
-                                    <button>Blog Tag 1</button>
-                                </div>
-                            </div>
+                                <div class="item">
+                                    <div class="item-inner">
+                                        <button>Blog Tag 1</button>
+                                    </div>
+                                </div>*@
                         </div>
 
                     </div>
@@ -292,23 +259,29 @@
                     <div class="inner-content blogslist" style="height:540px;">
                         <div class="row">
 
-                            @if (ViewBag.Blogs != null)
+                            @if (Model.BlogList != null)
                             {
-                                foreach (var item in ViewBag.Blogs)
+
+                                foreach (var item in Model.BlogList)
                                 {
                                     <div class="col-md-4">
                                         <div class="blog-post-vew">
                                             <div class="hot"><span>Hot</span></div>
                                             <div class="pro-im">
-                                                <img src="@item.IMAGE" onerror="this.src='../assets/marketplace/image/pro.png'">
+                                                <a href="/MarketPlace/BlogDetails/@item.Id"><img src="@item.IMAGE" onerror="this.src='../assets/marketplace/image/pro.png'"></a>
                                             </div>
                                             <div class="pro-text">
                                                 <p class="p1"><b>@item.BLOG_TITLE</b></p>
                                                 <p class="date">@item.created_at.ToString("yyyy-MM-dd HH:mm")</p>
                                                 <p class="tag">
-                                                    <a href="javascript:void(0)"> Tag1</a>
-                                                    <a href="javascript:void(0)"> Tag2</a>
-                                                    <a href="javascript:void(0)"> Tag3</a>
+                                                    @if (item.TAGs != null)
+                                                    {
+                                                        foreach (var Tagitem in item.TAGs)
+                                                        {
+                                                            <a href="javascript:void(0)"> @Tagitem.value</a>
+                                                        }
+                                                    }
+
                                                 </p>
                                             </div>
                                         </div>
@@ -316,72 +289,18 @@
                                 }
                             }
 
-
-
-
                         </div>
-                        @*<div class="row">
-                                <div class="col-md-4">
-                                    <div class="blog-post-vew">
-                                        <div class="hot"><span>Hot</span></div>
-                                        <div class="pro-im">
-                                            <img src="../assets/marketplace/image/pro.png" onerror="this.src='../assets/marketplace/image/pro.png'">
-                                        </div>
-                                        <div class="pro-text">
-                                            <p class="p1"><b>Post title</b></p>
-                                            <p class="date">YYYY-MM-DD</p>
-                                            <p class="tag">
-                                                <a href="javascript:void(0)"> Tag1</a>
-                                                <a href="javascript:void(0)"> Tag2</a>
-                                                <a href="javascript:void(0)"> Tag3</a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="blog-post-vew">
-                                        <div class="hot"><span>Hot</span></div>
-                                        <div class="pro-im">
-                                            <img src="../assets/marketplace/image/pro.png" onerror="this.src='../assets/marketplace/image/pro.png'">
-                                        </div>
-                                        <div class="pro-text">
-                                            <p class="p1"><b>Post title</b></p>
-                                            <p class="p2">Restaurant 1 <span class="clr-tag">3a<span></span></span></p>
-                                            <p class="tag">
-                                                <a href="javascript:void(0)"> Tag1</a>
-                                                <a href="javascript:void(0)"> Tag2</a>
-                                                <a href="javascript:void(0)"> Tag3</a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="blog-post-vew">
-                                        <div class="hot"><span>Hot</span></div>
-                                        <div class="pro-im">
-                                            <img src="../assets/marketplace/image/pro.png" onerror="this.src='../assets/marketplace/image/pro.png'">
-                                        </div>
-                                        <div class="pro-text">
-                                            <p class="p1"><b>Rohan Technology</b></p>
-                                            <p class="p2">Restaurant 1 <span class="clr-tag">3a<span></span></span></p>
-                                            <p class="tag">
-                                                <a href="javascript:void(0)"> Tag1</a>
-                                                <a href="javascript:void(0)"> Tag2</a>
-                                                <a href="javascript:void(0)"> Tag3</a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>*@
                     </div>
                     <div class="pagination">
-
+                        <button class="btn" onclick="setNewsData(1)"><img src="../assets/marketplace/image/p1.png"></button>
+                        <button class="btn" id="next-page-nav" onclick="setNewsData(1)"><img src="/assets/marketplace/image/p12.png"></button>
+                        <button class="btn" id="next-page-nav" onclick="setNewsData(2)"><img src="/assets/marketplace/image/p11.png"></button>
+                        <button class="btn" id="last-page-nav" onclick="setNewsData(0)"><img src="/assets/marketplace/image/p2.png"></button>
                     </div>
                 </div>
             </div>
         </div>
-
     </section>
-
+    @*<script src="~/Scripts/MarketplaceScripts/News.js"></script>*@
 </div>
 
