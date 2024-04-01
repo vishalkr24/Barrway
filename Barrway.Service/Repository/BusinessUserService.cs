@@ -14,6 +14,7 @@ using FormGeneratorDTOs.DTOs;
 using Barrway.Utility.Common;
 using Newtonsoft.Json;
 using System.Security.Cryptography;
+using Barrway.DTO.MarketplaceModels;
 
 namespace Barrway.Service.Repository
 {
@@ -23,7 +24,7 @@ namespace Barrway.Service.Repository
         private readonly ISqlFunction sqlFunction;
         private readonly IFormAPIRepository formAPIRepository;
         private readonly IMasterService masterService;
-
+        
         public BusinessUserService(IFormAPIRepository formAPIRepository, ISqlFunction sqlFunction, IMasterService masterService)
         {
             this.connectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
@@ -3183,6 +3184,31 @@ namespace Barrway.Service.Repository
         }
 
 
+        public async Task<AddUpdateDelete> GetBlogbyId(string Id)
+        {
+            try
+            {
+                string sqlString = $@"SELECT Id,BLOG_CATEGORY,BLOG_TITLE,IMAGE,BLOG_CONTENT,MARKED_AS_HOT,TAG,created_at FROM BLOG_1980 WHERE Id='{Id}'";
+
+
+                var result = (await sqlFunction.ExecuteSqlQuery(sqlString)).FirstOrDefault();
+                if (result != null)
+                {
+
+                    return new AddUpdateDelete() { Data = result, Message = AppMessage.Success, Status = true };
+
+                }
+
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+
+        }
+
+
         public async Task<AddUpdateDelete> GetBlogs()
         {
             try
@@ -3208,28 +3234,46 @@ namespace Barrway.Service.Repository
         }
 
 
-        public async Task<AddUpdateDelete> GetBlogsTags()
+        //public async Task<AddUpdateDelete> GetBlogsTags()
+        //{
+        //    try
+        //    {
+        //        string sqlString = $@"select TAG from BLOG_1980";                
+
+        //        var result = (await sqlFunction.ExecuteSqlQueryDapper<TagsObject>(sqlString)).ToList();
+        //        if (result != null)
+        //        {
+
+        //            return new AddUpdateDelete() { Data = result, Message = AppMessage.Success, Status = true };
+
+        //        }
+
+        //        return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+        //    }
+
+        //}
+
+       
+
+        public async Task<Resultdata> GetAllBlogsTags()
         {
-            try
+            //connection string
+            string myCS = connectionString;
+            
+
+            string query = "select TAG from BLOG_1980";
+
+            using (var connection = new SqlConnection(myCS))
             {
-                string sqlString = $@"select COMPANY_CODE,CALENDAR_CODE,ACTIVITY_CODE,ACTIVITY_NAME,PHOTO,CATEGORY,SUB_CATEGORY,START_DATETIME,END_DATETIME from SERVICE_MASTER_1933  ";
-
-
-                var result = (await sqlFunction.ExecuteSqlQuery(sqlString)).ToList();
-                if (result != null)
-                {
-
-                    return new AddUpdateDelete() { Data = result, Message = AppMessage.Success, Status = true };
-
-                }
-
-                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
-            }
-            catch (Exception ex)
-            {
-                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                var result = await connection.QueryAsync<Tag>(query);
+                return new Resultdata() { Status = false, Message = AppMessage.NotFound, Data = result.ToList() };
             }
 
+            
         }
     }
 }

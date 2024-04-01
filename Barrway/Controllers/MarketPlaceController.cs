@@ -207,20 +207,107 @@ namespace Barrway.Controllers
         }
         public async Task<ActionResult> Blogs()
         {
-            var result=await businessUserService.GetFeaturedBlogs();
+            BlogViewModel blogs = new BlogViewModel();
+            List<Tag> FinalTagList = new List<Tag>();
+            var Result = await businessUserService.GetFeaturedBlogs();
+            var FBlogs = JsonConvert.SerializeObject(Result.Data);
+            blogs.FeaturedBlogs = JsonConvert.DeserializeObject<List<Blog>>(FBlogs);
 
-            var FBlogs = JsonConvert.SerializeObject(result.Data);
-            ViewBag.FeaturedBlogs = JsonConvert.DeserializeObject<List<BlogList>>(FBlogs);           
-            var Result = await businessUserService.GetBlogs();
-            var Blogs = JsonConvert.SerializeObject(Result.Data);
-            ViewBag.Blogs = JsonConvert.DeserializeObject<List<BlogList>>(Blogs);           
-            return View();
+            for (int i = 0; i < blogs.FeaturedBlogs.Count(); i++)
+            {
+                var JsonTags = blogs.FeaturedBlogs[i].TAG;
+                if (JsonTags != null)
+                {
+                    List<TagsObject> Tagobjects = JsonConvert.DeserializeObject<List<TagsObject>>(JsonTags);
+                    blogs.FeaturedBlogs[i].TAGs = Tagobjects;
+                }
+            }
+
+            var BlogResult = await businessUserService.GetBlogs();
+            var Blogs = JsonConvert.SerializeObject(BlogResult.Data);
+            blogs.BlogList = JsonConvert.DeserializeObject<List<Blog>>(Blogs);
+
+            for (int i = 0; i < blogs.BlogList.Count(); i++)
+            {
+                var JsonTags = blogs.BlogList[i].TAG;
+                if (JsonTags != null)
+                {
+                    List<TagsObject> Tagobjects = JsonConvert.DeserializeObject<List<TagsObject>>(JsonTags);
+                    blogs.BlogList[i].TAGs = Tagobjects;
+                }
+            }
+            var Tagresult = await businessUserService.GetAllBlogsTags();
+            var TagList = Tagresult.Data;
+
+            for (int i = 0; i < TagList.Count(); i++)
+            {
+                var JsonTags = TagList[i].TAG;
+                if (JsonTags != null)
+                {
+                    List<TagsObject> Tagobjects = JsonConvert.DeserializeObject<List<TagsObject>>(JsonTags);
+                    for (int j = 0; j < Tagobjects.Count(); j++)
+                    {
+                        var stringTag = Tagobjects[j].value;
+                        bool stringExists = FinalTagList.Any(tag => tag.TAG == stringTag);
+
+                        if (!stringExists)
+                        {
+                            FinalTagList.Add(new Tag { TAG = stringTag });
+
+                           
+                        }  
+                    }
+                }
+            }
+
+            blogs.TagList = FinalTagList;
+
+
+            //var TagsObj = Tagresult.Data as List<TagsObject>;//TagsObj.ToDictionary().Count()
+            return View(blogs);
         }
 
-        public async Task<ActionResult> BlogDetails()
+        public async Task<ActionResult> BlogDetails(string id = null)
         {
-            return View();
+            BlogDetailsViewModel Blogs = new BlogDetailsViewModel();
+            if(id != "null")
+            {
+                var result = await businessUserService.GetBlogbyId(id);
+                var Blog = JsonConvert.SerializeObject(result.Data);               
+                Blogs.Blog = JsonConvert.DeserializeObject<Blog>(Blog);
+
+                string json = Blogs.Blog.TAG;
+                if (json != null)
+                {
+                    List<TagsObject> objects = JsonConvert.DeserializeObject<List<TagsObject>>(json);
+                    Blogs.Blog.TAGs = objects;
+                }
+
+                var Result = await businessUserService.GetFeaturedBlogs();
+                var FBlogs = JsonConvert.SerializeObject(Result.Data);                
+                Blogs.FeaturedBlogs = JsonConvert.DeserializeObject<List<Blog>>(FBlogs);
+
+                for (int i = 0; i < Blogs.FeaturedBlogs.Count(); i++)
+                {
+                    var JsonTags = Blogs.FeaturedBlogs[i].TAG;
+                    if (JsonTags != null)
+                    {
+                        List<TagsObject> Tagobjects = JsonConvert.DeserializeObject<List<TagsObject>>(JsonTags);
+                        Blogs.FeaturedBlogs[i].TAGs = Tagobjects;
+                    }
+
+
+                }
+            }
+            
+            
+
+
+            return View(Blogs);
         }
+
+        
+
 
         public async Task<ActionResult> BusinessPost()
         {
@@ -862,7 +949,7 @@ namespace Barrway.Controllers
         [HttpPost]
         public async Task<ActionResult> GetBlogsTags()
         {
-            return Json(await businessUserService.GetBlogsTags());
+            return Json(await businessUserService.GetAllBlogsTags());
         }
 
 
