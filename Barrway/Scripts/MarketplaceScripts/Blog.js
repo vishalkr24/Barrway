@@ -1,59 +1,170 @@
 ﻿$(document).ready(function () {
     $("#nv-news").addClass("active");
-    //$(".blog-slide").append('<div id="owl-demo-blog" class="owl-carousel owl-theme"><div class="item"><div class="item-inner"><div class="row"><div class="col-md-8"><div class="pro-im"><img src="/assets/marketplace/image/alogo.png"></div></div><div class="col-md-4"><div class="pro-text"><p class="fature">Featured post 1</p><h3 class="post_tittle">Post title xdhoeqhwrowe</h3><p class="date">yyyy-mm-dd</p><p class="tag"><a href="javascript:void(0)"> Tag1</a><a href="javascript:void(0)"> Tag2</a><a href="javascript:void(0)"> Tag3</a></p></div></div></div></div></div><div class="item"><div class="item-inner"><div class="row"><div class="col-md-8"><div class="pro-im"><img src="/assets/marketplace/image/alogo.png"></div></div><div class="col-md-4"><div class="pro-text"><p class="fature">Featured post 2</p><h3 class="post_tittle">Post title xdhoeqhwrowe</h3><p class="date">yyyy-mm-dd</p><p class="f2"><a href="javascript:void(0)"> Tag1</a><a href="javascript:void(0)"> Tag2</a><a href="javascript:void(0)"> Tag3</a></p></div></div></div></div></div><div class="item"><div class="item-inner"><div class="row"><div class="col-md-8"><div class="pro-im"><img src="/assets/marketplace/image/alogo.png"></div></div><div class="col-md-4"><div class="pro-text"><p class="fature">Featured post 3</p><h3 class="post_tittle">Post title xdhoeqhwrowe</h3><p class="date">yyyy-mm-dd</p><p class="f2"><a href="javascript:void(0)"> Tag1</a><a href="javascript:void(0)"> Tag2</a><a href="javascript:void(0)"> Tag3</a></p></div></div></div></div></div></div>');
-    //$(".blogslist").append('<div class="row"><div class="col-md-4"><div class="blog-post-vew"><div class="hot"><span>Hot</span></div><div class="pro-im"><img src="../assets/marketplace/image/pro.png" onerror="this.src="/assets/marketplace/image/pro.png""></div><div class="pro-text"><p class="p1"><b>Post title</b></p><p class="date">YYYY-MM-DD</p><p class="tag"><a href="javascript:void(0)"> Tag1</a><a href="javascript:void(0)"> Tag2</a><a href="javascript:void(0)"> Tag3</a></p></div></div></div><div class="col-md-4"><div class="blog-post-vew"><div class="hot"><span>Hot</span></div><div class="pro-im"><img src="../assets/marketplace/image/pro.png" onerror="this.src="/assets/marketplace/image/pro.png""></div><div class="pro-text"><p class="p1"><b>Post title</b></p><p class="p2">Restaurant 1 <span class="clr-tag">3a<span></span></span></p><p class="tag"><a href="javascript:void(0)"> Tag1</a><a href="javascript:void(0)"> Tag2</a><a href="javascript:void(0)"> Tag3</a></p></div></div></div><div class="col-md-4"><div class="blog-post-vew"><div class="hot"><span>Hot</span></div><div class="pro-im"><img src="../assets/marketplace/image/pro.png" onerror="this.src="/assets/marketplace/image/pro.png""></div><div class="pro-text"><p class="p1"><b>Rohan Technology</b></p><p class="p2">Restaurant 1 <span class="clr-tag">3a<span></span></span></p><p class="tag"><a href="javascript:void(0)"> Tag1</a><a href="javascript:void(0)"> Tag2</a><a href="javascript:void(0)"> Tag3</a></p></div></div></div></div>');
-
-    //$(".pagination").append('<button class="btn" onclick="setNewsData(1)"><img src="../assets/marketplace/image/p1.png" /></button>');
-    //$(".pagination").append('<button class="btn" id="next-page-nav" onclick="setNewsData(${(pageNumber <= 1) ? 1 : (pageNumber - 1)})"><img src="../assets/marketplace/image/p12.png" /></button>');
-
-
-    getFeaturedbolgs();
+    GetBlogs(1);
 });
 
 
+function GetBlogs(pageNumber) {
 
-function getFeaturedbolgs() {
+    var filterObj = {
+        field: "fieldName",
+        type: "equals",
+        value: "someValue"
+    };
+
+    // Serialize the FilterDTO object to JSON
+    var filterJson = JSON.stringify(filterObj);
+
     $.ajax({
-        url: '/Marketplace/GetFeaturedBlogs',
-        type: 'POST',
-        dataType: 'json',
+        url: "/MarketPlace/GetAllBlog/",
+        type: "GET",
+        data: {
+            page: pageNumber,
+            size: 6,
+            page_records: 0,
+            res: 0,
+            filter: filterJson
+        },
         success: function (response) {
-            var FeaturedBlogs = response.Data;
-            console.log(FeaturedBlogs, "FeaturedBlogsresponse");            
-            var featuredBloghtml = '<div id="owl-demo-blog" class="owl-carousel owl-theme">';
-            for (let i = 0; i < FeaturedBlogs.length; i++) {
-                featuredBloghtml += '<div class="item">';
-                featuredBloghtml += '    <div class="item-inner">';
-                featuredBloghtml += '        <div class="row">';
-                featuredBloghtml += '            <div class="col-md-8">';
-                featuredBloghtml += '                <div class="pro-im">';
-                featuredBloghtml += '                    <img src="/assets/marketplace/image/alogo.png">';
-                featuredBloghtml += '                            </div>';
-                featuredBloghtml += '                </div>';
-                featuredBloghtml += '                <div class="col-md-4">';
-                featuredBloghtml += '                    <div class="pro-text">';
-                featuredBloghtml += '                        <p class="fature">Featured post 1</p>';
-                featuredBloghtml += '                        <h3 class="post_tittle">Post title xdhoeqhwrowe</h3>';
-                featuredBloghtml += '                        <p class="date">yyyy-mm-dd</p>';
-                featuredBloghtml += '                        <p class="tag">';
-                featuredBloghtml += '                            <a href="javascript:void(0)"> Tag1</a>';
-                featuredBloghtml += '                            <a href="javascript:void(0)"> Tag2</a>';
-                featuredBloghtml += '                            <a href="javascript:void(0)"> Tag3</a>';
-                featuredBloghtml += '                        </p>';
-                featuredBloghtml += '                    </div>';
-                featuredBloghtml += '                </div>';
-                featuredBloghtml += '            </div>';
-                featuredBloghtml += '        </div>';
-                featuredBloghtml += '    </div>';
+            debugger;
+            var nextPage = 0;
+            if (pageNumber == response.last_page) {
+                nextPage = response.last_page;
+            } else {
+                nextPage = pageNumber + 1;
             }
-             featuredBloghtml += '</div>';
-            //console.log(featuredBloghtml,"featuredBloghtml");
+            var hardBindLimit = (response.last_page < 5) ? response.last_page : 5;
+            $(".pagination").empty();
+            $(".pagination").append(`<button class="btn" onclick="setCompanyData(1)"><img src="../assets/marketplace/image/p1.png" /></button>`);
+            $(".pagination").append(`<button class="btn" id="next-page-nav" onclick="GetBlogs(${(pageNumber <= 1) ? 1 : (pageNumber - 1)})"><img src="../assets/marketplace/image/p12.png" /></button>`);
 
-            $(".blog-slide").append(featuredBloghtml);
+            for (var i = 1; i <= hardBindLimit; i++) {
+                if (i == pageNumber) {
+                    $(".pagination").append(`<a href="#" onclick="GetBlogs(${i})" class="page-link page-link--current">${i}</a>`);
+                } else {
+                    $(".pagination").append(`<a href="#" onclick="GetBlogs(${i})" class="page-link">${i}</a>`);
+                }
+
+            }
+
+            $(".pagination").append(`<button class="btn" id="next-page-nav" onclick="GetBlogs(${nextPage})"><img src="../assets/marketplace/image/p11.png" /></button>`);
+            $(".pagination").append(`<button class="btn" id="last-page-nav" onclick="GetBlogs(${response.last_page})"><img src="../assets/marketplace/image/p2.png" /></button>`);
+
+
+            $("#blogrow").empty();          
+
+            var html = '';
+            for (var i = 0; i < response.data.length; i++) {
+                console.log(response.data[i], "Result_data");
+                var formattedDate = moment(parseInt(response.data[i].created_at.substr(6))).format("YYYY-MM-DD HH:mm");
+                html += '<div class="col-md-4">';
+                html += '    <div class="blog-post-vew">';
+                html += '        <div class="hot"><span>Hot</span></div>';
+                html += '        <div class="pro-im">';
+                html += '            <a href="/MarketPlace/BlogDetails/' + response.data[i].Id + '"><img src="' + response.data[i].IMAGE + '"></a>';
+                html += '                            </div>';
+                html += '            <div class="pro-text">';
+                html += '                <p class="p1"><b>' + response.data[i].BLOG_TITLE + '</b></p>';
+                html += '                <p class="date">' + formattedDate + '</p>';
+                html += '                <p class="tag">';
+
+                if (response.data[i].TAG != null) {
+                    var array = JSON.parse(response.data[i].TAG);
+                    for (var j = 0; j < array.length; j++) {
+                        html += '<a href="javascript:void(0)">' + array[j].value + '</a>';
+                    }
+                }
+                html += '                </p>';
+                html += '            </div>';
+                html += '        </div>';
+                html += '    </div>';
+
+            }
+
+            $("#blogrow").append(html);
 
         },
-        error: function (xhr, status, error) {
-            console.error(xhr.responseText);
+        error: function (errorResponse) {
+            alert();
         }
-    });
+    })
 }
+
+
+//function GetBlogs(pageNumber) {
+//    $.ajax({
+//        url: "/MarketPlace/GetAllBlog/",
+//        type: "GET",
+//        data: {
+//            page: pageNumber,
+//            size: 6,
+//            page_records: 0,
+//            res: 0
+//        },
+//        success: function (response) {
+//            debugger;
+//            var nextPage = 0;
+//            if (pageNumber == response.last_page) {
+//                nextPage = response.last_page;
+//            } else {
+//                nextPage = pageNumber + 1;
+//            }
+//            var hardBindLimit = (response.last_page < 5) ? response.last_page : 5;
+//            $(".pagination").empty();
+//            $(".pagination").append(`<button class="btn" onclick="setCompanyData(1)"><img src="../assets/marketplace/image/p1.png" /></button>`);
+//            $(".pagination").append(`<button class="btn" id="next-page-nav" onclick="GetBlogs(${(pageNumber <= 1) ? 1 : (pageNumber - 1)})"><img src="../assets/marketplace/image/p12.png" /></button>`);
+
+//            for (var i = 1; i <= hardBindLimit; i++) {
+//                if (i == pageNumber) {
+//                    $(".pagination").append(`<a href="#" onclick="GetBlogs(${i})" class="page-link page-link--current">${i}</a>`);
+//                } else {
+//                    $(".pagination").append(`<a href="#" onclick="GetBlogs(${i})" class="page-link">${i}</a>`);
+//                }
+
+//            }
+
+//            $(".pagination").append(`<button class="btn" id="next-page-nav" onclick="GetBlogs(${nextPage})"><img src="../assets/marketplace/image/p11.png" /></button>`);
+//            $(".pagination").append(`<button class="btn" id="last-page-nav" onclick="GetBlogs(${response.last_page})"><img src="../assets/marketplace/image/p2.png" /></button>`);
+
+
+//            $("#blogrow").empty();
+
+//            var html = '';
+//            for (var i = 0; i < response.data.length; i++) {
+//                console.log(response.data[i], "Result_data");
+//                var formattedDate = moment(parseInt(response.data[i].created_at.substr(6))).format("YYYY-MM-DD HH:mm");
+//                html += '<div class="col-md-4">';
+//                html += '    <div class="blog-post-vew">';
+//                html += '        <div class="hot"><span>Hot</span></div>';
+//                html += '        <div class="pro-im">';
+//                html += '            <a href="/MarketPlace/BlogDetails/' + response.data[i].Id + '"><img src="' + response.data[i].IMAGE + '"></a>';
+//                html += '                            </div>';
+//                html += '            <div class="pro-text">';
+//                html += '                <p class="p1"><b>' + response.data[i].BLOG_TITLE + '</b></p>';
+//                html += '                <p class="date">' + formattedDate + '</p>';
+//                html += '                <p class="tag">';
+
+//                if (response.data[i].TAG != null) {
+//                    var array = JSON.parse(response.data[i].TAG);
+//                    for (var j = 0; j < array.length; j++) {
+//                        html += '<a href="javascript:void(0)">' + array[j].value + '</a>';
+//                    }
+//                }
+//                html += '                </p>';
+//                html += '            </div>';
+//                html += '        </div>';
+//                html += '    </div>';
+
+//            }
+
+//            $("#blogrow").append(html);
+
+//        },
+//        error: function (errorResponse) {
+//            alert();
+//        }
+//    })
+//}
+
+
+
