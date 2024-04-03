@@ -37,4 +37,15 @@ namespace Barrway.DTO.Common
         public bool Status { get; set; }
         public T Data { get; set; }
     }
+
+
+    public class Pagination
+    {
+        public int Id { get; set; }
+        public int page { get; set; }
+        public int size { get; set; }
+        public int res { get; set; }
+        public string SearchText { get; set; }
+    }
+
 }

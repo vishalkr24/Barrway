@@ -41,12 +41,6 @@ function remove_hash_from_url() {
 }
 
 
-
-
-
-
-
-
 function setCompanyData(pageNumber, Subcategory, SearchText) {
     
     remove_hash_from_url();
