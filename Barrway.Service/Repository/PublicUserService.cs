@@ -121,8 +121,7 @@ namespace Barrway.Service.Repository
                 string subQuery = "";
                 string ChQuery = "";
 
-                ChQuery = $@"select USER_EMAIL from USER_MASTER_1915 where USER_EMAIL='{model.USER_EMAIL}' and USER_ID !='{model.USER_ID}'
-";
+                ChQuery = $@"select USER_EMAIL from USER_MASTER_1915 where USER_EMAIL='{model.USER_EMAIL}' and USER_ID !='{model.USER_ID}'";
 
                 List<IDictionary<string, object>> Email = await sqlFunction.ExecuteSqlQuery(ChQuery);
 
@@ -811,6 +810,100 @@ namespace Barrway.Service.Repository
                 {
                     return new AddUpdateDelete() { Status = false, Message = "Form not saved. Please try again!" };
                 }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+        public async Task<AddUpdateDelete> MarkPresent(string EventId, string UserEmail)
+        {
+            try
+            {
+                string query = $@"select cf.[start], cf.[end], t.* from TRANSACTION_MASTER_1942 t
+                                  join CALENDAR_FORM_1935 cf on cf.Id = t.SLOT
+								  join PARTICIPANT_MASTER_1940 part on part.Id = t.STUDENT
+                                  where t.SLOT = '{EventId}' and part.EMAIL = '{UserEmail}'";
+
+                var result = await sqlFunction.ExecuteSqlQuery(query);
+
+                if (result.Count > 0)
+                {
+                    if (result[0]["ATTENDANCE"]?.ToString() == "PRESENT")
+                    {
+                        return new AddUpdateDelete() { Status = false, Message = "Attendance already marked as present!" };
+                    }
+                    else
+                    {
+                        if (DateTime.Now <= Convert.ToDateTime(result[0]["end"]?.ToString())  && DateTime.Now >= Convert.ToDateTime(result[0]["start"]?.ToString()).AddMinutes(-30))
+                        {
+                            query = $@"update TRANSACTION_MASTER_1942 set ATTENDANCE = 'PRESENT' where Id = '{result[0]["Id"].ToString()}'";
+                            var result2 = await sqlFunction.ExecuteSqlCommandQuery(query);
+                            
+                            if (result2 > 0)
+                            {
+                                return new AddUpdateDelete() { Status = false, Message = "Attendance marked successfully!" };
+                            }
+                            else
+                            {
+                                return new AddUpdateDelete() { Status = false, Message = "Attendance not marked. Ask the company to mark your attendance." };
+                            }
+                            
+                        }
+                        else
+                        {
+                            return new AddUpdateDelete() { Status = false, Message = "Can't mark the attendance now." };
+                        }
+                    }
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "You are not enrolled in this event!" };
+                }
+                
+            }catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+        public async Task<AddUpdateDelete> MarkPresentByCompany(string TransactionId, string EventId)
+        {
+            try
+            {
+                string query = $@"select cf.[start], cf.[end], t.* from TRANSACTION_MASTER_1942 t
+                                  join CALENDAR_FORM_1935 cf on cf.Id = t.SLOT
+                                  where t.Id = '{TransactionId}' and t.SLOT = '{EventId}'";
+
+                var result = await sqlFunction.ExecuteSqlQuery(query);
+
+                if (result.Count > 0)
+                {
+                    if (result[0]["ATTENDANCE"]?.ToString() == "PRESENT")
+                    {
+                        return new AddUpdateDelete() { Status = false, Message = "Attendance already marked as present!" };
+                    }
+                    else
+                    {
+                        query = $@"update TRANSACTION_MASTER_1942 set ATTENDANCE = 'PRESENT' where Id = '{result[0]["Id"].ToString()}'";
+                        var result2 = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                        if (result2 > 0)
+                        {
+                            return new AddUpdateDelete() { Status = false, Message = "Attendance marked successfully!" };
+                        }
+                        else
+                        {
+                            return new AddUpdateDelete() { Status = false, Message = "Attendance not marked. Ask the Attendee to mark through company's QR." };
+                        }
+                    }
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "QR Code does not belong to selected event." };
+                }
+
             }
             catch (Exception ex)
             {
@@ -1655,7 +1748,7 @@ namespace Barrway.Service.Repository
                                     DECLARE @customTitleQuery nvarchar(max);           
 
                                     IF OBJECT_ID(N'tempdb..#temptable') IS NOT NULL  BEGIN DROP TABLE #temptable END 
-                                    ;with cte1 as( select distinct  f.*,f.resources 'resourceId', company.COMPANY_LOGO_PATH, company.Id as 'COMPANY_ID', company.COMPANY_NAME_ENGLISH ,  STUFF((SELECT ',' +  PARTICIPANT_MASTER_1940.[STUDENT_NAME]  
+                                    ;with cte1 as( select distinct  f.*,f.resources 'resourceId', transaction_m.Id as 'TransactionId', company.COMPANY_LOGO_PATH, company.Id as 'COMPANY_ID', company.COMPANY_NAME_ENGLISH ,  STUFF((SELECT ',' +  PARTICIPANT_MASTER_1940.[STUDENT_NAME]  
                                     from TRANSACTION_MASTER_1942 inner join PARTICIPANT_MASTER_1940 on TRANSACTION_MASTER_1942.STUDENT = PARTICIPANT_MASTER_1940.Id where TRANSACTION_MASTER_1942.formGroupKey = f.formGroupKey         FOR XML PATH('')), 1, 1, '') customFourthTitle
                                     , (dbo.[GetSubQueryCalender](f.formGroupKey)) customTitle,   (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceFormId) from form_calenderreferrence f2     
                                     where f2.formgroupkey = f.formGroupKey  FOR XML PATH('')), 1, 1, '')   ) customForms  , (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceId) 

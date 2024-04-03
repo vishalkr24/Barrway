@@ -19,11 +19,13 @@ namespace Barrway.Controllers
 
         private readonly IBusinessUserService businessUserService;
         private readonly IGlobalMasterService globalMasterService;
+        private readonly IPublicUserService publicUserService;
 
-        public PublicController(IBusinessUserService businessUserService, IGlobalMasterService globalMasterService)
+        public PublicController(IBusinessUserService businessUserService, IGlobalMasterService globalMasterService, IPublicUserService publicUserService)
         {
             this.businessUserService = businessUserService;
             this.globalMasterService = globalMasterService;
+            this.publicUserService = publicUserService;
         }
 
         #region Data Methods
@@ -215,6 +217,21 @@ namespace Barrway.Controllers
 
         }
 
+        public async Task<ActionResult> GetCalendarCommonCategory()
+        {
+            try
+            {
+                var categoryData = await globalMasterService.GetCalendarCommonCategoryMaster();
+
+                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = categoryData.Data }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
         public async Task<ActionResult> GetCalendarSubCategory(string CalendarCategoryId)
         {
             try
@@ -243,6 +260,34 @@ namespace Barrway.Controllers
                 return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
             }
 
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> MarkPresent(string EventId)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var result = await publicUserService.MarkPresent(EventId, UserIdentity.UserEmail);
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = "Please login to mark your attendance." }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> MarkPresentByCompany(string TransactionId, string EventId)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var result = await publicUserService.MarkPresentByCompany(TransactionId, EventId);
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = "Please login to start marking attendance." }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         #endregion

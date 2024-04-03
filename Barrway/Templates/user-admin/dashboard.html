@@ -18,6 +18,7 @@
         .main-left {
             max-height: 100%;
         }
+
         .mob-scroll {
             width: 100%;
             float: left;
@@ -26,27 +27,29 @@
             white-space: nowrap;
             margin-bottom: 15px;
         }
+
             .mob-scroll .wrap {
                 min-width: 255px;
                 float: left;
                 margin-bottom: 10px;
-               
             }
+
                 .mob-scroll .wrap .wrap-im {
                     width: 40%;
                     float: left;
                 }
+
                 .mob-scroll .wrap .wrap-con {
                     width: 58%;
                     float: left;
                     white-space: normal;
                 }
+
         .ml-content h2 {
             font-size: 18px;
             margin-top: 15px;
         }
     }
-       
 </style>
 
 <main id="content" role="main" class="">
@@ -124,19 +127,19 @@
                     <div class="ml-content">
                         <h2>{{translation.Your_recently_booked_calendar}}</h2>
                         <div class="mob-scroll">
-                        <div class="wrap" ng-repeat="calendar in CalendarCompanyList">
-                            <div class="wrap-im">
-                                <img src="{{calendar.CALENDAR_PHOTO_PATH.replace('~', '')}}">
+                            <div class="wrap" ng-repeat="calendar in CalendarCompanyList">
+                                <div class="wrap-im">
+                                    <img src="{{calendar.CALENDAR_PHOTO_PATH.replace('~', '')}}">
 
+                                </div>
+                                <div class="wrap-con">
+                                    <p><b>{{calendar.COMPANY_NAME_ENGLISH}}</b></p>
+                                    <P class="font-2">{{calendar.CALENDAR_NAME}}</P>
+                                    <p style="max-height: 40px; overflow:hidden;">{{calendar.ServiceList}}</p>
+                                    <p>Balance: {{calendar.COIN_BALANCE}}</p>
+                                    <p><button class="book" ng-click="GoToCalendar(calendar.COMPANY_CODE, calendar.CALENDAR_CODE)">{{translation.Book}}</button></p>
+                                </div>
                             </div>
-                            <div class="wrap-con">
-                                <p><b>{{calendar.COMPANY_NAME_ENGLISH}}</b></p>
-                                <P class="font-2">{{calendar.CALENDAR_NAME}}</P>
-                                <p style="max-height: 40px; overflow:hidden;">{{calendar.ServiceList}}</p>
-                                <p>Balance: {{calendar.COIN_BALANCE}}</p>
-                                <p><button class="book" ng-click="GoToCalendar(calendar.COMPANY_CODE, calendar.CALENDAR_CODE)">{{translation.Book}}</button></p>
-                            </div>
-                        </div>
                         </div>
                     </div>
                 </div>
@@ -147,7 +150,7 @@
                         <span style="position: relative;top: 2px;">{{translation.Your_booking_reminder}}</span>
                         <span><button ng-click="">{{translation.Go_to_Calendar}}</button></span>
                     </div>
-                    
+
                     <div class="row mob-calen">
                         <div class="col-md-6">
                             <div id="calendar0" class="fc fc-unthemed fc-ltr"></div>
@@ -185,28 +188,91 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12" style="padding:0px 31px; padding-bottom: 16px;">
-                                            <div ng-if="event.ATTEND == 'Y'" style="display:flex; justify-content:flex-start;">
+                                            <div ng-if="event.ATTEND == 'N'" style="display:flex; justify-content:flex-start;">
                                                 <button class="btn btn-danger" ng-click="AttendSession(event.Id, 'NORMAL')" style="background: #E2476C; padding:6px 16px; border-radius: 50px; margin-right: 8px;">Attend</button>
                                                 <img src="../../assets/img/QR_CODE_LOGO.png" ng-click="AttendSession(event.Id, 'QR')" style="height: 40px; width: 40px;" />
                                             </div>
                                         </div>
                                     </div>
-
-
                                 </div>
                             </div>
                         </div>
                     </div>
-
-
-
                 </div>
             </div>
         </div>
-        <!-- End Row -->
-    </div>
-    <!-- End Content -->
 
+    </div>
+
+    <div class="modal fade" id="WebCamModal" style="z-index: 2000;" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel5" aria-hidden="true">
+        <div class="modal-dialog" style="width: 100%;" role="document">
+            <div class="modal-content">
+                <div class="scanner-title">
+                    Scan Company's QR Code using your webcam <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="qr-container">
+                    <div class="qr-scanner" id="qr-scanner">
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="GeneratedQRCodeModal" style="z-index: 2000;" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel5" aria-hidden="true">
+        <div class="modal-dialog" style="width: 100%;" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <img src="" style="height: auto; width:100%; max-height: 400px;" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <style>
+
+        .scanner-title {
+            font-weight: bold;
+            font-size: 15px;
+            text-align: center;
+            padding: 20px 0px;
+        }
+
+        #qr-scanner {
+        }
+
+            #qr-scanner #qr-scanner__scan_region {
+                background: rgb(243 243 243);
+            }
+
+                #qr-scanner #qr-scanner__scan_region img {
+                    opacity: 0.3 !important;
+                }
+
+            #qr-scanner img[alt='Info icon'] {
+                display: none;
+            }
+
+        #qr-scanner__dashboard_section {
+            width: 100%;
+            padding: 16px 0px !important;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #html5-qrcode-anchor-scan-type-change {
+            text-decoration: none !important;
+            margin-left: 20px;
+        }
+
+        #qr-scanner__header_message {
+            border-radius: 10px;
+        }
+    </style>
     <script>
         $('.owl-demo-ticket').owlCarousel({
             loop: true,
@@ -229,6 +295,98 @@
                 }
             }
         })
+
+        
+
+
+        function openWebCam(eventId) {
+
+            const scannerUser = new Html5QrcodeScanner("qr-scanner", {
+                qrbox: {
+                    width: 250,
+                    height: 250,
+                },
+                fps: 20,
+            });
+            scannerUser.render(successUser, errorUser);
+
+            $("#html5-qrcode-button-camera-permission").addClass("btn btn-primary");
+            $("#html5-qrcode-anchor-scan-type-change").addClass("btn btn-danger");
+            $("#html5-qrcode-anchor-scan-type-change").empty();
+            $("#html5-qrcode-anchor-scan-type-change").append(`Upload image to scan`);
+            setTimeout(function () {
+                $("#html5-qrcode-button-camera-start").addClass("btn btn-primary");
+            }, 1000);
+
+            $("#html5-qrcode-button-camera-start").on("click", function () {
+                setTimeout(function () {
+                    $("#html5-qrcode-button-camera-stop").addClass("btn btn-danger");
+                }, 500);
+            })
+
+            $("#html5-qrcode-button-camera-stop").on("click", function () {
+                setTimeout(function () {
+                    $("#html5-qrcode-button-camera-start").addClass("btn btn-primary");
+                }, 500);
+            })
+
+            $('#WebCamModal').on('hidden.bs.modal', function () {
+                scannerUser.clear();
+            });
+
+            function successUser(result) {
+                
+                if (result.includes("Public/MarkPresent")) {
+                    if (eventId == result.split('=')[1]) {
+                        $.ajax({
+                            url: result,
+                            type: "get",
+                            success: function (response) {
+                                debugger;
+                                if (response.Status) {
+                                    swal({
+                                        icon: "success",
+                                        title: "Success",
+                                        text: "Attendance marked"
+                                    });
+                                } else {
+                                    swal({
+                                        icon: "error",
+                                        title: "Error",
+                                        text: response.Message
+                                    });
+                                }
+                            },
+                            error: function (err) {
+                                alert("Request not allowed");
+                            }
+                        })
+                    } else {
+                        swal({
+                            icon: "error",
+                            title: "Invalid QR",
+                            text: "QR Code does not belong to the event selected. Please scan or select the right QR Code."
+                        });
+                    }
+                    
+                } else {
+                    swal({
+                        icon: "error",
+                        title: "Invalid QR",
+                        text: "Please scan or select a valid QR Code"
+                    });
+                }
+                $("#html5-qrcode-button-camera-stop").trigger("click");
+            }
+
+            function errorUser(err) {
+                
+            }
+
+            $("#WebCamModal").modal("show");
+        };
+
+
 
     </script>
 </main>

@@ -556,12 +556,16 @@ namespace Barrway.Controllers
             }
         }
 
-
+        /// <summary>
+        /// It will generate a QR of attendee booking for company to scan it
+        /// </summary>
+        /// <param name="TransactionId"></param>
+        /// <returns></returns>
         [HttpGet]
-        public async Task<AddUpdateDelete> GenerateAttendanceQR(string TransactionId)
+        public async Task<ActionResult> GenerateAttendanceQR(string TransactionId)
         {
             QRCodeModel model = new QRCodeModel();
-            string Url = ConfigurationManager.AppSettings["baseurl"] + "/useradmin/attendanceReview?TId=" + TransactionId;
+            string Url = ConfigurationManager.AppSettings["baseurl"] + "Public/MarkPresentByCompany?TransactionId=" + TransactionId;
             Payload payload = new Url(Url);
 
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
@@ -572,7 +576,7 @@ namespace Barrway.Controllers
             string base64String = Convert.ToBase64String(BitmapToByteArray(qrCodeAsBitmap));
             model.QRImageURL = "data:image/png;base64," + base64String;
 
-            return new AddUpdateDelete() { Status = true, Data = model };
+            return Json(new AddUpdateDelete() { Status = true, Data = model }, JsonRequestBehavior.AllowGet);
         }
 
         private byte[] BitmapToByteArray(Bitmap bitmap)

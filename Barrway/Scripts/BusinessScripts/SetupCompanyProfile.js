@@ -1,8 +1,12 @@
 ﻿$(document).ready(function () {
     $("#COMPANY_SUB_CATEGORY_ID").attr("disabled", true);
     setCompanyCategory();
-    BindCompanySubCategory($("#COMPANY_CATEGORY_ID option:selected").val());
+    
     setCompanyWebsite();
+})
+
+$(document).on("change", "#COMPANY_CATEGORY_ID", function () {
+    BindCompanySubCategory($("#COMPANY_CATEGORY_ID option:selected").val());
 })
 
 function setCompanyWebsite() {
@@ -23,21 +27,21 @@ function setCompanyWebsite() {
 }
 
 function setCompanyCategory() {
-    var response = getCalendarCategory();
+    var response = getCalendarCommonCategory();
 
     $("#COMPANY_CATEGORY_ID").empty();
 
     $("#COMPANY_CATEGORY_ID").append(`<option selected disabled value="-1">Select Company Category</option>`);
 
     for (var i = 0; i < response.Data.length; i++) {
-        $("#COMPANY_CATEGORY_ID").append(`<option value="${response.Data[i].Id}">${response.Data[i].CALENDAR_CATEGORY_NAME}</option>`);
+        $("#COMPANY_CATEGORY_ID").append(`<option value="${response.Data[i].Id}">${response.Data[i].CMN_CATEGORY_NAME}</option>`);
     }
 }
 
-function BindCompanySubCategory() {
+function BindCompanySubCategory(id) {
     $("#COMPANY_SUB_CATEGORY_ID").attr("disabled", false);
 
-    var response = getAllCalendarSubCategory();
+    var response = getCalendarSubCategory(id);
 
     $("#COMPANY_SUB_CATEGORY_ID").empty();
 

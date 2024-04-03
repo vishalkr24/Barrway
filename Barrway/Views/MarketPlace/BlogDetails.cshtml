@@ -1,0 +1,148 @@
+﻿@model Barrway.DTO.MarketplaceModels.BlogDetailsViewModel
+@{
+    ViewBag.Title = "Blog Details";
+    Layout = "~/Views/Shared/_LayoutMarketPlace.cshtml";
+}
+<style>
+    .single-blog-post-vew .post-title {
+        font-size: 24px;
+    }
+
+    .single-blog-post-vew .tag {
+        font-size: 16px;
+    }
+
+    .single-blog-post-vew {
+        width: 100%;
+        float: left;
+        margin-top: 30px;
+    }
+
+        .single-blog-post-vew .pro-text {
+            margin-bottom: 15px;
+        }
+
+        .single-blog-post-vew .pro-im {
+            display: block;
+            min-height: 300px;
+            max-height: 300px;
+            margin-bottom: 15px;
+        }
+
+            .single-blog-post-vew .pro-im img {
+                width: 100%;
+                min-height: 300px;
+                max-height: 300px;
+                border-radius: 8px;
+            }
+
+    .single-blog-details {
+        width: 100%;
+        float: left;
+    }
+
+    .social-img {
+        width: 100%;
+        float: left;
+        margin-top: 15px;
+    }
+
+    .blod-sidebar {
+        width: 100%;
+        float: left;
+        margin-top: 80px;
+        height: 75vh;
+        overflow-y: auto;
+    }
+
+    .tittle a {
+        color: rgb(51 51 51);
+        text-decoration: none;
+    }
+
+        .tittle a:hover {
+            color: rgb(226 71 108);
+        }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+
+            @if (Model.Blog != null)
+            {
+                <div class="single-blog-post-vew">
+                    <div class="pro-text">
+                        <p class="post-title"><b>@Model.Blog.BLOG_TITLE</b></p>
+                        <p class="date">@Model.Blog.created_at.ToString("yyyy-MM-dd HH:mm")</p>
+                        <p class="tag">
+                            @if (Model.Blog.TAGs != null)
+                            {
+                                foreach (var item in Model.Blog.TAGs)
+                                {
+                                    <a href="javascript:void(0)"> @item.value</a>
+                                }
+                            }
+
+
+                        </p>
+                    </div>
+                    <div class="pro-im">
+                        <img src="@Model.Blog.IMAGE" onerror="this.src='/assets/marketplace/image/pro.png'">
+                    </div>
+                </div>
+                <div class="single-blog-details">
+                    <p>
+                        @Html.Raw(Model.Blog.BLOG_CONTENT)
+
+                    </p>
+                    <div class="social-img">
+                        <img src="/assets/marketplace/image/facebooknew.png " />
+                        <img src="/assets/marketplace/image/whatsappnew.png " />
+                        <img src="/assets/marketplace/image/linkind.png " />
+                        <img src="/assets/marketplace/image/link.png " />
+                    </div>
+                </div>
+
+            }
+
+
+        </div>
+        <div class="col-md-4">
+            <div class="blod-sidebar">
+                @if (Model.FeaturedBlogs != null)
+                {
+                    foreach (var item in Model.FeaturedBlogs)
+                    {
+                        <div class="media">
+                            <div class="media-left" style="">
+                                <img src="@item.IMAGE" onerror="this.src='/assets/marketplace/image/pro.png'" class="media-object" style="width:150px; height: 100px;">
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading" style="margin-bottom:0px;">Featured post</h4>
+                                <div class="tittle"><a href="/MarketPlace/BlogDetails/@item.Id"><b>@item.BLOG_TITLE</b></a></div>
+                                @*<div class="tittle"><b>@item.BLOG_TITLE</b></div>*@
+                                <div class="date">@item.created_at.ToString("yyyy-MM-dd HH:mm")</div>
+                                <div class="tags">
+
+                                    @if (item.TAGs != null)
+                                    {
+                                        foreach (var i in item.TAGs)
+                                        {
+                                            <a href="javascript:void(0)"> @i.value</a>
+                                        }
+                                    }
+
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                }
+
+                
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -133,6 +133,7 @@ img.scaled {
     border-color: #72328a;
 }
 
+
 @media only screen and (min-width : 320px) {
     .col-sm-5 {
         width: 50% !important;

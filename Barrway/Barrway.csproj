@@ -3078,6 +3078,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\MarketplaceScripts\Subcategory.js" />
     <Content Include="Scripts\MarketplaceScripts\companyCalendarScript.js" />
     <Content Include="Scripts\MarketplaceScripts\CompanyPhotoAlbum.js" />
     <Content Include="Scripts\MarketplaceScripts\CompanyPackage.js" />
@@ -3085,6 +3086,7 @@
     <Content Include="Scripts\MarketplaceScripts\CompanySchedule.js" />
     <Content Include="Scripts\MarketplaceScripts\CompanyService.js" />
     <Content Include="Scripts\MarketplaceScripts\CompanyDetail.js" />
+    <Content Include="Scripts\MarketplaceScripts\Blog.js" />
     <Content Include="Scripts\MarketplaceScripts\Pricing.js" />
     <Content Include="Scripts\MarketplaceScripts\News.js" />
     <Content Include="Scripts\MarketplaceScripts\BusinessSite.js" />
@@ -3196,6 +3198,7 @@
     <Content Include="Templates\superadmin\BusinessUserList.html" />
     <Content Include="Templates\user-admin\dashboard.html" />
     <Content Include="Templates\user-admin\my-b-coin-balance.html" />
+    <Content Include="Templates\user-admin\blogs.html" />
     <Content Include="Templates\user-admin\my-payment-history.html" />
     <Content Include="Templates\user-admin\my-calendar.html" />
     <Content Include="Templates\user-admin\my-attendance.html" />
@@ -3244,7 +3247,7 @@
     <Content Include="Views\MarketPlace\index.cshtml" />
     <Content Include="Views\MarketPlace\BusinessSite.cshtml" />
     <Content Include="Views\MarketPlace\Tag.cshtml" />
-    <Content Include="Views\MarketPlace\News.cshtml" />
+    <Content Include="Views\MarketPlace\Blogs.cshtml" />
     <Content Include="Views\MarketPlace\BusinessPost.cshtml" />
     <Content Include="Views\Shared\_LayoutMarketPlaceCompany.cshtml" />
     <Content Include="Views\MarketPlace\Company.cshtml" />
@@ -3284,7 +3287,7 @@
     <Content Include="Views\WebsiteTemplates\_Template2.cshtml" />
     <Content Include="Views\WebsiteTemplates\_Template3.cshtml" />
     <Content Include="Views\BusinessAdmin\_CompanyPaletteSelection.cshtml" />
-    <Content Include="Views\MarketPlace\Pricing.cshtml" />
+    <Content Include="Views\MarketPlace\Subcategory.cshtml" />
     <Content Include="Views\Account\BusinessSignUpPhone.cshtml" />
     <Content Include="Views\Account\MobileVerification.cshtml" />
     <Content Include="Views\Account\BusinessPhoneLogin.cshtml" />
@@ -3293,6 +3296,7 @@
     <Content Include="Views\Account\Enteryouremailaddress.cshtml" />
     <Content Include="Views\Account\VerifiyEmailaddress.cshtml" />
     <Content Include="Views\MarketPlace\CalanderYearView.cshtml" />
+    <Content Include="Views\MarketPlace\BlogDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3300,6 +3304,7 @@
     <Folder Include="fg-assets\fullcalendar\dist\locale\" />
     <Folder Include="fg-newAssets\icons\" />
     <Folder Include="Logs\" />
+    <Folder Include="QRCodes\Events\" />
     <Folder Include="UploadCalendar\CalendarImages\" />
     <Folder Include="UploadCalendar\DownloadAttachment\" />
     <Folder Include="UploadCalendar\UploadAttachment\" />

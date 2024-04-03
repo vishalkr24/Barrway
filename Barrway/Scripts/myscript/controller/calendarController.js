@@ -1108,7 +1108,7 @@
                 confirmButtonText: 'Subscribe',
                 cancelButtonText: 'Cancel'
             }).then(function (isConfirm) {
-                if (isConfirm.dismiss == "cancel") {
+                if (!isConfirm) {
                     var url = mainService.getBaseUrl() + "#/application/edit/" + $scope.importFormSettings.applicationId + "";
                     window.location.href = url;
                 }
@@ -9720,6 +9720,7 @@
 
     FormGeneratorApp.controller('NewDemoCalenderRecordsControllerTemp', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
         checkLogin();
+        
         var tabulatorChildren = {};
         //var tabulator = '';
         var arrowImage = function (cell, formatterParams) {
@@ -9855,8 +9856,111 @@
             $scope.createEventDetails = {};
         };
 
+        $scope.GenerateEventQR = function (eventId) {
+            $.ajax({
+                url: "/Calendar/GenerateEventQR",
+                type: "Get",
+                data: {
+                    eventId: eventId
+                },
+                success: function (response) {
+                    debugger;
+                    if (response != null) {
+                        if (response.Status) {
+                            $("#GeneratedQRCodeModal img").attr("src", response.Data.QRImageURL.replace("~", ".."));
+                            $("#GeneratedQRCodeModal #btn-print-qr").attr("href", response.Data.QRImageURL.replace("~", ".."));
+                            $("#customEventDetailsModelPopUp").modal("hide");
+                            $("#GeneratedQRCodeModal").modal("show");
+                        } else {
+                            alert("Failed to generate QR Code");
+                        }
+                    }
+                    $rootScope.$emit("HideLoading");
+                }
+            })
+            
+        }
 
+        $scope.ScanStudentQR = function () {
+            debugger;
+            $scope.selectEventDetails;
 
+            const scanner = new Html5QrcodeScanner("qr-scanner", {
+                qrbox: {
+                    width: 250,
+                    height: 250,
+                },
+                fps: 20,
+            });
+            scanner.render(success, error);
+
+            $("#customEventDetailsModelPopUp").modal("hide");
+            $("#html5-qrcode-button-camera-permission").addClass("btn btn-primary");
+            $("#html5-qrcode-anchor-scan-type-change").addClass("btn btn-danger");
+            $("#html5-qrcode-anchor-scan-type-change").empty();
+            $("#html5-qrcode-anchor-scan-type-change").append(`Upload image to scan`);
+            setTimeout(function () {
+                $("#html5-qrcode-button-camera-start").addClass("btn btn-primary");
+            }, 1000);
+
+            $("#html5-qrcode-button-camera-start").on("click", function () {
+                setTimeout(function () {
+                    $("#html5-qrcode-button-camera-stop").addClass("btn btn-danger");
+                }, 500);
+            })
+
+            $("#html5-qrcode-button-camera-stop").on("click", function () {
+                setTimeout(function () {
+                    $("#html5-qrcode-button-camera-start").addClass("btn btn-primary");
+                }, 500);
+            })
+
+            $('#WebCamModal').on('hidden.bs.modal', function () {
+                scanner.clear();
+            });
+
+            function success(result) {
+                
+                if (result.includes("Public/MarkPresentByCompany")) {
+                    $.ajax({
+                        url: result,
+                        type: "get",
+                        data: {
+                            EventId: $scope.selectEventDetails.Id
+                        },
+                        success: function (response) {
+                            if (response.Status) {
+                                swal({
+                                    icon: "success",
+                                    title: "Success",
+                                    text: "Attendance marked!"
+                                });
+                            } else {
+                                swal({
+                                    icon: "error",
+                                    title: "Error",
+                                    text: response.Message
+                                });
+                            }
+                        },
+                        error: function (err) {
+                            alert("Request not allowed");
+                        }
+                    })
+
+                    $("#html5-qrcode-button-camera-stop").trigger("click");
+
+                }
+
+            }
+
+            function error(err) {
+                
+            }
+
+            $("#WebCamModal").modal("show");
+
+        }
 
         $scope.validateForm = function (_fileInput, isrequired = false, isEvent = false) {
             var fileInput = document.getElementById(_fileInput);
@@ -9903,6 +10007,7 @@
 
 
 
+
             if ($scope.validateForm(inputfileName, true, isEvent)) {
                 var formData = new FormData();
                 $.each(fileInput, function (key, value) {
@@ -9920,7 +10025,7 @@
 
                 // AJAX post request
                 $.ajax({
-                    url: BASE_URL +'UserAdmin/UploadDownloadAttachment',
+                    url: BASE_URL + 'UserAdmin/UploadDownloadAttachment',
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -11578,16 +11683,16 @@
                                         });
                                         $("#newtabuListUl").append(_newtabuListUlHtml);
                                         $("#newtabuListUlWaiting").append(_newtabuListUlHtmlWaiting);
-                                        $("#tabuList").append('<strong id="strongFormName">' + $scope.eventDataWithoutGroupBy.length + ' ' + $scope.otherformDetails.title + ' in this Slot</strong>');
-                                        $("#newtabuList").append('<strong id="strongFormName">' + $scope.eventDataWithoutGroupBy.length + ' ' + $scope.otherformDetails.title + ' in this Slot</strong>');
+                                        $("#tabuList").append('<span id="strongFormName">' + $scope.eventDataWithoutGroupBy.length + ' ' + $scope.otherformDetails.title.toLowerCase() + '</span>');
+                                        $("#newtabuList").append('<span id="strongFormName">' + $scope.eventDataWithoutGroupBy.length + ' ' + $scope.otherformDetails.title.toLowerCase() + '</span>');
                                     }
                                     else {
                                         $("#tabuList").empty();
                                         $("#newtabuList").empty();
                                         if (!DataService.isEmpty($scope.otherformDetails)) {
                                             if (!DataService.isEmpty($scope.otherformDetails.title)) {
-                                                $("#tabuList").append('<strong id="strongFormName"> 0 ' + $scope.otherformDetails.title + ' in this Slot </strong>');
-                                                $("#newtabuList").append('<strong id="strongFormName"> 0 ' + $scope.otherformDetails.title + ' in this Slot </strong>');
+                                                $("#tabuList").append('<span id="strongFormName"> 0 ' + $scope.otherformDetails.title.toLowerCase() + '</span>');
+                                                $("#newtabuList").append('<span id="strongFormName"> 0 ' + $scope.otherformDetails.title.toLowerCase() + '</span>');
                                             }
                                         }
                                     }
@@ -16037,12 +16142,12 @@
             swal({
                 title: "Are you sure to delete?",
                 type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                buttons: {
+                    confirm: 'Yes, delete it!',
+                    cancel: 'cancel'
+                }
             }).then((result) => {
-                if (result.value) {
+                if (result) {
 
 
                     var param = {};
@@ -16059,6 +16164,7 @@
                     param.formGroupKey = $scope.selectEventDetails.formGroupKey;
                     param.parentID = $scope.currentFormId;
                     setTimeout(function () {
+                        debugger;
                         $.ajax({
                             method: 'POST',
                             url: BASE_URL + "FormAPI/EditEventData",
@@ -16537,20 +16643,35 @@
             });
         }
 
-        $scope.AttendSession = function (transactionId, type) {
-
-            $scope.currentTransactionId = $scope.bookingEventData.find(x => x.Id == transactionId);
+        $scope.AttendSession = function (eventId, type) {
+            debugger;
+            $scope.currentTransaction = $scope.bookingEventData.find(x => x.Id == eventId);
 
             if (type == "QR") {
-                $scope.generateQRCode();
+                $scope.generateQRCode($scope.currentTransaction.TransactionId);
             } else {
-                $scope.markPresent();
+                openWebCam($scope.currentTransaction.Id);
             }
-            
 
         }
 
-        $scope.generateQRCode = function () {
+        $scope.generateQRCode = function (TId) {
+            $.ajax({
+                url: "/Useradmin/GenerateAttendanceQR?TransactionId=" + TId,
+                type: "Get",
+                success: function (response) {
+                    debugger;
+                    if (response != null) {
+                        if (response.Status) {
+                            $("#GeneratedQRCodeModal img").attr("src", response.Data.QRImageURL.replace("~", ".."));
+                            $("#GeneratedQRCodeModal").modal("show");
+                        } else {
+                            alert("Failed to generate QR Code");
+                        }
+                    }
+                    $rootScope.$emit("HideLoading");
+                }
+            })
 
         }
 
@@ -17397,7 +17518,7 @@
         tempArr.push({
             field: "COMPANY_NAME_ENGLISH",
             title: "Company Name",
-            selected: true 
+            selected: true
         })
 
         $scope.filterFieldsList = tempArr;
@@ -17432,7 +17553,7 @@
                 //res.data.data.Data.DATE_OF_BIRTH =  res.data.data.Data.DATE_OF_BIRTH.substring(0, 10);
                 $("#DATE_OF_BIRTH").val(formattedDate);
                 $('#countryCode').val(res.data.data.Data.Country_Code).trigger('change');
-                
+
                 $("#gender-" + res.data.data.Data.GENDER.toLowerCase()).attr("checked", true);
 
                 $scope.userData = res.data.data.Data;

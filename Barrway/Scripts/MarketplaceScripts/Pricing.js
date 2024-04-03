@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    $("#nv-Pricing").addClass("active");
+    $("#nav-pricing").addClass("active");
     GetAllSubscriptionPlansForBusiness();
 });
 

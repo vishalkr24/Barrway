@@ -13,6 +13,14 @@
         color: white;
         font-size: 12px;
     }
+    .fields {
+        display: flex;
+    }
+    @@media screen and (max-width:767px){
+        .fields {
+         display:block;
+        }
+    } 
 </style>
 <!-- banner -->
 <section class="top-banner">
@@ -24,7 +32,7 @@
 
                     <div class="form-inner">
                         <p>@Resource.Find_a_service___activity_in_your_area!</p>
-                        <div class="fields" style="display:flex; align-items: baseline;">
+                        <div class="fields" style="align-items: baseline;">
                             <div class="form-group">
                                 <label for="sel1">Category</label>
                                 <select class="form-control" id="filter-category-master">

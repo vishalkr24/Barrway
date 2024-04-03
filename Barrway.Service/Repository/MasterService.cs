@@ -1074,6 +1074,105 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
             }
         }
 
+
+        public async Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetAllBlog(GenerateDynamicFormData data)
+        {
+            try
+            {
+
+                string column = "", dir = "";
+                if (data.sorters != null && data.sorters.Count() > 0)
+                {
+                    column = data.sorters.FirstOrDefault().field;
+                    dir = data.sorters.FirstOrDefault().dir;
+                }
+                else
+                {
+                    column = "created_at";
+                    dir = "desc";
+                }
+
+
+
+                List<string> applyFilter = new List<string>();
+
+                if (data.filter != null)
+                {
+                    if (!string.IsNullOrEmpty(data.filter.value))
+                        if (data.filter.type == "like")
+                        {
+                            applyFilter.Add("f.[" + data.filter.field + "]  " + data.filter.type + " '%" + data.filter.value + "%'");
+                        }
+                        else
+                            applyFilter.Add("f.[" + data.filter.field + "] " + data.filter.type + " '" + data.filter.value + "'");
+                }
+
+
+                if (data.filters != null && data.filters.Count() > 0)
+                {
+                    foreach (var item in data.filters)
+                    {
+                        if (!string.IsNullOrEmpty(item.value))
+                        {
+                            if (item.field == "created_at" || item.field == "updated_at")
+                            {
+                                string filter = await sqlFunction.GetDateFilter(item, "news");
+                                applyFilter.Add(filter);
+                            }
+                            else
+                            {
+                                string filter = "f.[" + item.field + "] like N'%" + item.value + "%'";
+                                applyFilter.Add(filter);
+                            }
+                        }
+
+                    }
+                }
+
+                string applyFilterQuery = string.Join(" and ", applyFilter);
+                applyFilterQuery = applyFilterQuery.TrimEnd("and ".ToCharArray());
+
+                int PageSize = data.size > 0 ? data.size : 20;
+                int PageNumber = data.page > 0 ? data.page : 1;
+
+                string strSql = "";
+                if (data.SearchText == null)
+                {
+                     strSql = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+                                     select  distinct  a_0.[BLOG_CATEGORY] [BLOG_CATEGORY] , a_0.[Id] [BLOG_CATEGORY_Id] ,f.Id,f.formGroupKey,f.formID,f.userID,f.Current_Status,f.cycle,f.MasterFormID,f.MasterFormRow,f.formRecordOrder,
+                                        f.formRecordStatus,f.ApprovalStatus ,f.created_at,f.updated_at ,f.[BLOG_TITLE],f.[IMAGE],f.[BLOG_CONTENT],f.[TAG],f.[YOUTUBE_LINK],f.[MARKED_AS_HOT] from  BLOG_1980   f   left join  BLOG_CATEGORY_1981  a_0  on f.[BLOG_CATEGORY] = a_0.[Id]
+                                      
+                                    )
+                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY [formRecordOrder] desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+
+                }
+                else
+                {
+                    strSql = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+                                     select  distinct  a_0.[BLOG_CATEGORY] [BLOG_CATEGORY] , a_0.[Id] [BLOG_CATEGORY_Id] ,f.Id,f.formGroupKey,f.formID,f.userID,f.Current_Status,f.cycle,f.MasterFormID,f.MasterFormRow,f.formRecordOrder,
+                                        f.formRecordStatus,f.ApprovalStatus ,f.created_at,f.updated_at ,f.[BLOG_TITLE],f.[IMAGE],f.[BLOG_CONTENT],f.[TAG],f.[YOUTUBE_LINK],f.[MARKED_AS_HOT] from  BLOG_1980   f   left join  BLOG_CATEGORY_1981  a_0  on f.[BLOG_CATEGORY] = a_0.[Id]
+                                        where f.[TAG] like '%{data.SearchText}%'
+                                    )
+                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY [formRecordOrder] desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+
+                }
+
+                var listresult = await sqlFunction.ExecuteSqlQuery(strSql);
+                if (listresult.Count() > 0)
+                {
+                    return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = true, Data = listresult };
+                }
+
+                return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = false };
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = false, Message = ex.Message };
+            }
+        }
+
+
         public async Task<AddUpdateDelete> GetMasterSearchResult(string keyword)
         {
             try
@@ -1100,6 +1199,25 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 finalResult.Add(result);
 
                 return new AddUpdateDelete() { Status = true, Data = finalResult };
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+
+        public async Task<AddUpdateDelete> GetAllSubcategory()
+        {
+            try
+            {
+                
+
+                string sqlQuery = $@"select Id,CALENDAR_SUB_CATEGORY_NAME from CALENDAR_SUB_CATEGORY_MASTER_1930";
+                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);              
+
+                return new AddUpdateDelete() { Status = true, Data = result };
 
             }
             catch (Exception ex)
@@ -1220,6 +1338,135 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = false, Message = ex.Message };
             }
         }
+
+        public async Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetAllFeaturedCompany_SubCategoryWise(GenerateDynamicFormData data)
+        {
+            try
+            {
+
+                string column = "", dir = "";
+                if (data.sorters != null && data.sorters.Count() > 0)
+                {
+                    column = data.sorters.FirstOrDefault().field;
+                    dir = data.sorters.FirstOrDefault().dir;
+                }
+                else
+                {
+                    column = "created_at";
+                    dir = "desc";
+                }
+
+               
+
+                int PageSize = data.size > 0 ? data.size : 20;
+                int PageNumber = data.page > 0 ? data.page : 1;
+
+                string strSql = "";
+                if (data.SearchText != "")
+                {
+
+                    strSql = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+                                         SELECT [Id]
+                                          ,[created_at]
+                                          ,[updated_at]
+                                          ,[created_by]
+                                          ,[updated_by]
+                                          ,[BUSINESS_ACCOUNT_ID]
+                                          ,[COMPANY_CODE]
+                                          ,[COMPANY_NAME_ENGLISH]
+                                          ,[COMPANY_NAME_CHINESE]
+                                          ,[COMPANY_LOGO_NAME]
+                                          ,[COMPANY_LOGO_PATH]
+                                          ,[COMPANY_BANNER_NAME]
+                                          ,[COMPANY_BANNER_PATH]
+                                          ,[COMPANY_PHONE]
+                                          ,[COMPANY_ADDRESS]
+                                          ,[FACEBOOK_URL]
+                                          ,[INSTAGRAM_URL]
+                                          ,[WECHAT_URL]
+                                          ,[TWITTER_URL]
+                                          ,[PAGE_URL]
+                                          ,[COMPANY_DESCRIPTION]
+                                          ,[COMPANY_SERVICE]
+                                          ,[TAGS]
+                                          ,[IS_SEARCHABLE_IN_MARKETPLACE]
+                                          ,[COMPANY_CATEGORY_ID]
+                                          ,[COMPANY_SUB_CATEGORY_ID]
+                                          ,[COUNTRY_ID]
+                                          ,[CITY_ID]
+                                          ,[DISTRICT_ID]
+                                          ,[TOTAL_WEBSITE_VISITS]
+                                          ,[IS_DEFAULT]
+                                          ,[COMPANY_EMAIL]
+                                          ,[IS_ACTIVE]
+                                      FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] where IS_ACTIVE = 'Y' and IS_SEARCHABLE_IN_MARKETPLACE = 'Y' and COMPANY_SUB_CATEGORY_ID='{data.Id}' and COMPANY_NAME_ENGLISH like '%{data.SearchText}%'
+                                    )
+                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY created_at desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+
+
+                }
+
+                else
+                {
+
+                    strSql = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+                                         SELECT [Id]
+                                          ,[created_at]
+                                          ,[updated_at]
+                                          ,[created_by]
+                                          ,[updated_by]
+                                          ,[BUSINESS_ACCOUNT_ID]
+                                          ,[COMPANY_CODE]
+                                          ,[COMPANY_NAME_ENGLISH]
+                                          ,[COMPANY_NAME_CHINESE]
+                                          ,[COMPANY_LOGO_NAME]
+                                          ,[COMPANY_LOGO_PATH]
+                                          ,[COMPANY_BANNER_NAME]
+                                          ,[COMPANY_BANNER_PATH]
+                                          ,[COMPANY_PHONE]
+                                          ,[COMPANY_ADDRESS]
+                                          ,[FACEBOOK_URL]
+                                          ,[INSTAGRAM_URL]
+                                          ,[WECHAT_URL]
+                                          ,[TWITTER_URL]
+                                          ,[PAGE_URL]
+                                          ,[COMPANY_DESCRIPTION]
+                                          ,[COMPANY_SERVICE]
+                                          ,[TAGS]
+                                          ,[IS_SEARCHABLE_IN_MARKETPLACE]
+                                          ,[COMPANY_CATEGORY_ID]
+                                          ,[COMPANY_SUB_CATEGORY_ID]
+                                          ,[COUNTRY_ID]
+                                          ,[CITY_ID]
+                                          ,[DISTRICT_ID]
+                                          ,[TOTAL_WEBSITE_VISITS]
+                                          ,[IS_DEFAULT]
+                                          ,[COMPANY_EMAIL]
+                                          ,[IS_ACTIVE]
+                                      FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] where IS_ACTIVE = 'Y' and IS_SEARCHABLE_IN_MARKETPLACE = 'Y' and COMPANY_SUB_CATEGORY_ID='{data.Id}'
+                                    )
+                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY created_at desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+
+
+                    
+                }
+
+
+                var listresult = await sqlFunction.ExecuteSqlQuery(strSql);
+                if (listresult.Count() > 0)
+                {
+                    return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = true, Data = listresult };
+                }
+
+                return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = false };
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = false, Message = ex.Message };
+            }
+        }
+
 
         public async Task<AddUpdateDelete> GetSingleBlogPost(string NewsId)
         {

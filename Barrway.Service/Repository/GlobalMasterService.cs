@@ -85,7 +85,7 @@ namespace Barrway.Service.Repository
 
             if (!string.IsNullOrEmpty(CategoryId))
             {
-                filter += "and calendar.CALENDAR_CATEGORY_ID = '" + CategoryId + "'";
+                filter += "and calendar.CALENDAR_COMMON_CATEGORY_ID = '" + CategoryId + "'";
             }
 
 
@@ -112,12 +112,13 @@ namespace Barrway.Service.Repository
                               ,calendar.[CITY_ID]
                               ,calendar.[DISTRICT_ID]
                               ,calendar.[CALENDAR_CATEGORY_ID]
+                              ,calendar.[CALENDAR_COMMON_CATEGORY_ID]
                               ,calendar.[CALENDAR_SUB_CATEGORY_ID]
                               ,calendar.[CALENDAR_TYPE]
                               ,calendar.[COMPANY_CODE]
                               ,calendar.[CALENDAR_CODE]
 	                          ,[CALENDAR_SUB_CATEGORY_NAME]
-	                          ,[CALENDAR_CATEGORY_NAME]
+	                          ,[CMN_CATEGORY_NAME]
 	                          ,[DISTRICT_NAME]
 	                          ,calendar.TAGS
 	                          ,[COMPANY_NAME_ENGLISH]
@@ -130,7 +131,7 @@ namespace Barrway.Service.Repository
                               ,company.PAGE_URL
                          FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                          join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendar.CALENDAR_SUB_CATEGORY_ID
-                         join CALENDAR_CATEGORY_MASTER_1929 category on category.Id = calendar.CALENDAR_CATEGORY_ID
+                         join CALENDAR_COMMON_CATEGORY_1978 category on category.Id = calendar.CALENDAR_COMMON_CATEGORY_ID
                          join DISTRICT_MASTER_1928 district on district.Id = calendar.DISTRICT_ID
                          join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
                          where company.IS_SEARCHABLE_IN_MARKETPLACE = 'Y' and company.IS_ACTIVE = 'Y' and company.IS_TEMPLATE = 'N' and calendar.CALENDAR_USE_TYPE = 'PUBLIC' {(!string.IsNullOrEmpty(filter) ? filter : "")}";
@@ -149,7 +150,7 @@ namespace Barrway.Service.Repository
 
                 for (int j = 0; j < companyResult.Count; j++)
                 {
-                    if (category[i]["Id"].ToString() == companyResult[j]["CALENDAR_CATEGORY_ID"].ToString())
+                    if (category[i]["Id"].ToString() == companyResult[j]["CALENDAR_COMMON_CATEGORY_ID"].ToString())
                     {
                         IDictionary<string, object> tempData = companyResult[j];
                         tempList.Add(tempData);
@@ -258,6 +259,22 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> GetCalendarCommonCategoryMaster()
+        {
+            string query = "SELECT *  FROM [dbo].[CALENDAR_COMMON_CATEGORY_1978]";
+
+            List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (result.Count > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result.ToList() };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
         public async Task<AddUpdateDelete> GetCalendarSubCategoryMaster(string CalendarCategoryId)
         {
             string query = $@"SELECT [Id]      ,[created_at]      ,[updated_at]      ,[created_by]      ,[updated_by]      ,[CALENDAR_SUB_CATEGORY_NAME]      ,[CALENDAR_CATEGORY_ID]  FROM [dbo].[CALENDAR_SUB_CATEGORY_MASTER_1930] WHERE CALENDAR_CATEGORY_ID = '{CalendarCategoryId}'";
@@ -312,6 +329,7 @@ namespace Barrway.Service.Repository
                               ,calendar.[CITY_ID]
                               ,calendar.[DISTRICT_ID]
                               ,[CALENDAR_CATEGORY_ID]
+                              ,[CALENDAR_COMMON_CATEGORY_ID]
                               ,[CALENDAR_SUB_CATEGORY_ID]
                               ,calendar.[COMPANY_CODE]
                               ,[CALENDAR_CODE]
