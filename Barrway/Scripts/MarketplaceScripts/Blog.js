@@ -4,20 +4,7 @@
 });
 
 
-function GetBlogs(pageNumber, blog_tag) {
-
-    //var filterObj = {
-    //    field: "fieldName",
-    //    type: "equals",
-    //    value: "someValue"
-    //};
-
-
-    //[{ field: "Task", type: "62", value:"yu"}]
-
-    // Serialize the FilterDTO object to JSON
-    //var filterJson = JSON.stringify(filterObj);
-    //console.log(filterObj,"filterObj");
+function GetBlogs(pageNumber, blog_tag) {    
     $.ajax({
         url: "/MarketPlace/GetAllBlog/",
         type: "GET",

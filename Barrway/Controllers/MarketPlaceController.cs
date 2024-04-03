@@ -201,10 +201,17 @@ namespace Barrway.Controllers
 
         }
 
+        public async Task<ActionResult> Category()
+        {
+            return View();
+        }
+
         public async Task<ActionResult> Subcategory()
         {
             return View();
         }
+
+
 
         public async Task<ActionResult> GetAllSubcategory()
         {
@@ -220,11 +227,11 @@ namespace Barrway.Controllers
         }
 
 
-        public async Task<ActionResult> GetAllFeaturedCompany_SubCategoryWise(GenerateDynamicFormData data)
+        public async Task<ActionResult> GetAllCompany_SubCategoryWise(Pagination data)
         {
             try
             {
-                var transactionData = await masterService.GetAllFeaturedCompany_SubCategoryWise(data);
+                var transactionData = await masterService.GetAllCompany_SubCategoryWise(data);
                 var transactionList = transactionData.Data;
                 double last_page = 0;
                 if (transactionList != null && transactionList.Count > 0)
@@ -894,7 +901,7 @@ namespace Barrway.Controllers
 
         //GetAllBlog
 
-        public async Task<ActionResult> GetAllBlog(GenerateDynamicFormData data)
+        public async Task<ActionResult> GetAllBlog(Pagination data)
         {
             try
             {

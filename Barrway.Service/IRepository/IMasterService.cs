@@ -38,9 +38,11 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> CreateLedgerEntry(LedgerModel model);
         Task<AddUpdateDelete> CreatePaymentHistory(PaymentHistoryModel model);
         Task<AddUpdateDelete> CreateCompanyPaymentHistory(CompanyPaymentHistoryModel model);
-        Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetAllBlog(GenerateDynamicFormData data);
+        Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetAllBlog(Pagination data);
         Task<AddUpdateDelete> GetAllSubcategory();
-        Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetAllFeaturedCompany_SubCategoryWise(GenerateDynamicFormData data);
+        Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetAllCompany_SubCategoryWise(Pagination data);
+
+        //GetAllFeaturedCompany_SubCategoryWise(Pagination data)
 
     }
 }
