@@ -18,7 +18,7 @@ $(document).ready(async function () {
 
     getServiceProviderData();
 
-    getServiceProviderDataByCalendar();
+    getLocationMaster();
     //debugger;
 
     //getServiceList(COMPANY_CODE, CALENDAR_CODE);
@@ -171,6 +171,9 @@ $(document).ready(async function () {
             value: "",
             text: "All service"
         }));
+        if(activityResults.length > 0) {
+            $("#div-calendar-service").show();
+        }
 
         $.each(activityResults, function (index, item) {
             serviceSelect.append($('<option>', {
@@ -514,7 +517,12 @@ function showCalendar(companyCode) {
     window.location.replace("/Company/Calander/" + companyCode + "/" + calendarId);
 }
 
+
+
 function marcketplaceCalendar(calenderType, calenderData, resourceData, resColumns, activityFormData, activityColumn, activityEvents) {
+
+   
+
     try {
         if (calenderData.length > 0)
             showLoader();
@@ -631,7 +639,23 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         editable: false,
         eventLimit: 4, // allow "more" link when too many events            
         loading: function (bool) {
-            var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+            let datepicker_ele = $('button.fc-datePickerButton-button span');
+            let datepicker_ele2 = $('button.fc-datePickerButton2-button span');
+            let datepicker_ele3 = $('button.fc-datePickerButton3-button span');
+
+            var classNames = datepicker_ele.attr("class");
+            var classNames2 = datepicker_ele2.attr("class");
+            var classNames3 = datepicker_ele3.attr("class");
+
+            datepicker_ele.removeClass(classNames);
+            datepicker_ele.addClass("fa fa-calendar");
+
+            datepicker_ele2.removeClass(classNames2);
+            datepicker_ele2.addClass("fa fa-calendar");
+
+            datepicker_ele3.removeClass(classNames3);
+            datepicker_ele3.addClass("fa fa-calendar");
+
             if (bool) {
                 showLoader(".calendar .fc-view-container");
             }
@@ -1034,11 +1058,14 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
             }
 
             var $scope = angular.element($("#calendar")).scope();
+            if (calEvent.DOWNLOAD_FILE_LIST && calEvent.DOWNLOAD_FILE_LIST != '' && calEvent.DOWNLOAD_FILE_LIST != 'null' && IsJsonString(calEvent.DOWNLOAD_FILE_LIST)) {
+                calEvent.DOWNLOADABLE_ATTACHMENT_FILES = JSON.parse(calEvent.DOWNLOAD_FILE_LIST);
+            }
             $scope.selectEventDetails = calEvent;
 
-            if (calEvent.DOWNLOADABLE_ATTACHMENT && calEvent.DOWNLOADABLE_ATTACHMENT != '' && calEvent.DOWNLOADABLE_ATTACHMENT != 'null') {
-                $scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES = calEvent.DOWNLOADABLE_ATTACHMENT.split(',');
-            }
+            //if (calEvent.DOWNLOADABLE_ATTACHMENT && calEvent.DOWNLOADABLE_ATTACHMENT != '' && calEvent.DOWNLOADABLE_ATTACHMENT != 'null') {
+            //    $scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES = calEvent.DOWNLOADABLE_ATTACHMENT.split(',');
+            //}
 
             if (!(moment().local().diff(calEvent.start.format(), 'minute') <= 0)) {
                 $scope.selectEventDetails.isEnroll = false;
@@ -1236,7 +1263,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
 
     myOptions = {
         header: {
-            left: 'prev,next',
+            left: 'prev,next datePickerButton3',
             center: 'title',
             right: (is5CType) ? 'listYear' : 'listDay,listWeek,listMonth,listYear'
         },
@@ -1336,6 +1363,38 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
 
         },
         allDaySlot: (is5CType) ? false : true,
+        customButtons: {
+            datePickerButton3: {
+                themeIcon: 'custom-datepicker',
+                click: function () {
+
+                    var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+                    var $btnCustom = $('.fc-datePickerButton3-button'); // name of custom  button in the generated code
+                    $btnCustom.after('<input type="hidden" id="hiddenDate3" class="datepicker"/>');
+
+                    $("#hiddenDate3").datepicker({
+                        showOn: "button",
+                        dateFormat: "yy-mm-dd",
+                        onSelect: function (dateText, inst) {
+                            $("#" + current_tab + " .calendar").fullCalendar('gotoDate', dateText);
+                            //$('.calendar').fullCalendar('gotoDate', dateText);
+                        },
+                        defaultDate: $("#" + current_tab + " .calendar").fullCalendar('getDate').format("YYYY-MM-DD"),
+                        changeMonth: true,
+                        changeYear: true
+                    });
+
+                    var $btnDatepicker = $(".ui-datepicker-trigger"); // name of the generated datepicker UI 
+                    //Below are required for manipulating dynamically created datepicker on custom button click
+                    $("#hiddenDate3").show().focus().hide();
+                    $btnDatepicker.trigger("click"); //dynamically generated button for datepicker when clicked on input textbox
+                    $btnDatepicker.hide();
+                    $btnDatepicker.remove();
+                    $("input.datepicker").not(":first").remove();//dynamically appended every time on custom button click
+
+                }
+            }
+        }
     };
     var calendarOptions = $.extend({}, defaultOptions, myOptions);
     $('#list-view div.calendar').fullCalendar(calendarOptions);
@@ -1525,28 +1584,39 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         //defaultDate: '2017-12-07',
         scrollTime: '00:00', // undo default 6am scrollTime
         header: {
-            left: 'myCustomButton prev,next today',
+            left: 'prev,next today datePickerButton',
             center: 'title',
             right: 'timelineDay,timelineWeek,timelineMonth,timelineYear'
         },
         customButtons: {
-            myCustomButton: {
-                text: "Export To Excel",
+            datePickerButton: {
+                themeIcon: 'custom-datepicker',
                 click: function () {
-                    alert('Export To Excel')
-                    var resourceFormId = window["ySelected"];
-                    var formId = CalendarFormId;
-                    var userId = userDetail.Id;
-                    var typeView = 0;
-                    var current_subtab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').find('.ui-state-active').attr('class');
-                    if (current_subtab.contains('fc-timelineMonth-button'))
-                        typeView = 1;
-                    else if (current_subtab.contains('fc-timelineYear-button'))
-                        typeView = 2;
-                    var dates = GetCalendarDateRange();
-                    var currentDate = moment(dates.start).format("YYYY-MM-DD");
-                    var newpath = $scope.EndPointUrl + '/downloadCalenderExcel?formId=' + formId + '&resourceFormId=' + resourceFormId + '&userId=' + userId + '&typeView=' + typeView + '&currentDate=' + currentDate + '';
-                    window.location.href = $scope.EndPointUrl + '/downloadCalenderExcel?formId=' + formId + '&resourceFormId=' + resourceFormId + '&userId=' + userId + '&typeView=' + typeView + '&currentDate=' + currentDate + '';
+
+                    var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+                    var $btnCustom = $('.fc-datePickerButton-button'); // name of custom  button in the generated code
+                    $btnCustom.after('<input type="hidden" id="hiddenDate" class="datepicker"/>');
+
+                    $("#hiddenDate").datepicker({
+                        showOn: "button",
+                        dateFormat: "yy-mm-dd",
+                        onSelect: function (dateText, inst) {
+                            $("#" + current_tab + " .calendar").fullCalendar('gotoDate', dateText);
+                            //$('.calendar').fullCalendar('gotoDate', dateText);
+                        },
+                        defaultDate: $("#" + current_tab + " .calendar").fullCalendar('getDate').format("YYYY-MM-DD"),
+                        changeMonth: true,
+                        changeYear: true
+                    });
+
+                    var $btnDatepicker = $(".ui-datepicker-trigger"); // name of the generated datepicker UI 
+                    //Below are required for manipulating dynamically created datepicker on custom button click
+                    $("#hiddenDate").show().focus().hide();
+                    $btnDatepicker.trigger("click"); //dynamically generated button for datepicker when clicked on input textbox
+                    $btnDatepicker.hide();
+                    $btnDatepicker.remove();
+                    $("input.datepicker").not(":first").remove();//dynamically appended every time on custom button click
+
                 }
             }
         },
@@ -1832,7 +1902,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         //defaultDate: '2017-12-07',
         scrollTime: '00:00', // undo default 6am scrollTime    
         header: {
-            left: 'myCustomButton prev,next today',
+            left: 'prev,next today datePickerButton2',
             center: 'title',
             right: 'agendaDay,agendaTwoDays,agendaThreeDays,agendaWeek'
         },
@@ -1910,7 +1980,38 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         },
         resources: resourceData,
         allDaySlot: true,
-        selectable: false
+        selectable: false,
+        customButtons: {
+            datePickerButton2: {
+                themeIcon: 'custom-datepicker',
+                click: function () {
+                    var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+                    var $btnCustom = $('.fc-datePickerButton2-button'); // name of custom  button in the generated code
+                    $btnCustom.after('<input type="hidden" id="hiddenDate2" class="datepicker"/>');
+
+                    $("#hiddenDate2").datepicker({
+                        showOn: "button",
+                        dateFormat: "yy-mm-dd",
+                        onSelect: function (dateText, inst) {
+                            $("#" + current_tab + " .calendar").fullCalendar('gotoDate', dateText);
+                            //$('.calendar').fullCalendar('gotoDate', dateText);
+                        },
+                        defaultDate: $("#" + current_tab + " .calendar").fullCalendar('getDate').format("YYYY-MM-DD"),
+                        changeMonth: true,
+                        changeYear: true
+                    });
+
+                    var $btnDatepicker = $(".ui-datepicker-trigger"); // name of the generated datepicker UI 
+                    //Below are required for manipulating dynamically created datepicker on custom button click
+                    $("#hiddenDate2").show().focus().hide();
+                    $btnDatepicker.trigger("click"); //dynamically generated button for datepicker when clicked on input textbox
+                    $btnDatepicker.hide();
+                    $btnDatepicker.remove();
+                    $("input.datepicker").not(":first").remove();//dynamically appended every time on custom button click
+
+                }
+            }
+        },
     };
     if (formDetailsDataInfo.calenderSettingsList?.length > 0) {
         var exists = _.findWhere(formDetailsDataInfo.calenderSettingsList, { resourceForm: ySelection });
@@ -3245,6 +3346,9 @@ function getServiceProviderData() {
                 value: "",
                 text: "All Service provider"
             }));
+            if (Service_ProviderList.length > 0) {
+                $("#div-calendar-service-Provider").show();
+            }
 
             $.each(Service_ProviderList, function (index, item) {
                 serviceProvider.append($('<option>', {
@@ -3263,7 +3367,7 @@ function getServiceProviderData() {
 
 }
 
-function getServiceProviderDataByCalendar() {
+function getLocationMaster() {
     //debugger;
     $.ajax({
         url: "/Marketplace/GetLocationMasterList/",
@@ -3286,6 +3390,11 @@ function getServiceProviderDataByCalendar() {
 
 
             Service_Location_List = response.data;
+
+            if (Service_Location_List.length > 0) {
+                $("#div-calendar-service-Location").show();
+            }
+
             var Location = $("#calendar-service-Location").empty();
             Location.append($('<option>', {
                 value: "",

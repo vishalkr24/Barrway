@@ -9962,12 +9962,12 @@
 
         }
 
-        $scope.validateForm = function (_fileInput, isrequired = false) {
+        $scope.validateForm = function (_fileInput, isrequired = false, isEvent = false) {
             var fileInput = document.getElementById(_fileInput);
-            var fileError = document.getElementById('fileError');
-            var EventUploadBtn = $('#EventUploadBtn');
+            var fileError = document.getElementById((isEvent ? "fileError2" : "fileError"));
+            var EventUploadBtn = $((isEvent ? "#EventUploadBtn2" : "#EventUploadBtn"));
             var allowedExtensions = ['image/jpeg', 'image/png', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
-
+            var maxSize = 5 * 1024*1024; // 5MB
             if (fileInput.files.length === 0 && isrequired) {
                 fileError.textContent = 'Please select a file.';
                 EventUploadBtn.attr("disabled", "disabled");
@@ -9982,6 +9982,14 @@
                     EventUploadBtn.addClass("disabled");
                     return false;
                 }
+
+                var fileSize = fileInput.files[i].size; // in bytes
+                
+
+                if (fileSize > maxSize) {
+                    fileError.textContent = 'File size exceeds the maximum limit of 5MB.';
+                    return;
+                }
             }
 
             EventUploadBtn.removeAttr("disabled");
@@ -9991,10 +9999,16 @@
         }
 
 
-        $scope.uploadFiles = function () {
-            var fileInput = $('#DOWNLOADABLE_ATTACHMENT')[0].files;
+        $scope.uploadFiles = function (isEvent = false) {
 
-            if ($scope.validateForm('DOWNLOADABLE_ATTACHMENT', true)) {
+            let inputfileName = isEvent ? "SELECT_DOWNLOADABLE_ATTACHMENT" : "DOWNLOADABLE_ATTACHMENT";
+
+            var fileInput = $('#' + inputfileName)[0].files;
+
+
+
+
+            if ($scope.validateForm(inputfileName, true, isEvent)) {
                 var formData = new FormData();
                 $.each(fileInput, function (key, value) {
                     formData.append('files', value);
@@ -10002,7 +10016,12 @@
 
                 // You can add additional form fields here if needed
                 formData.append('clrcode', localStorage.getItem("CALENDAR_CODE"));
-                formData.append('eventid', '');
+                if (isEvent) {
+                    formData.append('eventid', $scope.selectEventDetails.Id);
+                } else {
+                    formData.append('eventid', '');
+                }
+               
 
                 // AJAX post request
                 $.ajax({
@@ -10013,14 +10032,26 @@
                     contentType: false,
                     success: function (response) {
                         if (response.Status) {
+                            notifierService.notifyMessage('success', 'Calender', 'File Uploaded Successfully');
+                            if (!isEvent) {
+                                $scope.createEventDetails.DOWNLOADABLE_ATTACHMENT_FILES = response.Data;
+                                $rootScope.safeApply();
+                                let filepaths = response.Data.map(x => x.path).join(",");
+                                $scope.createEventDetails.DOWNLOADABLE_ATTACHMENT = filepaths;
+                                $scope.createEventDetails.DOWNLOAD_FILE_LIST = JSON.stringify(response.Data);
+                            } else {
 
-                            $scope.createEventDetails.DOWNLOADABLE_ATTACHMENT_FILES = response.Data;
-                            $rootScope.safeApply();
-                            let filepaths = response.Data.map(x => x.path).join(",");
-                            $scope.createEventDetails.DOWNLOADABLE_ATTACHMENT = filepaths;
+                                $scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES = response.Data;
+                                $rootScope.safeApply();
+                                let filepaths = response.Data.map(x => x.path).join(",");
+                                $scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT = filepaths;
+                                $scope.selectEventDetails.DOWNLOAD_FILE_LIST = JSON.stringify(response.Data);
+                            }
+                            
 
-                            $('#DOWNLOADABLE_ATTACHMENT').val(null);
-                            var EventUploadBtn = $('#EventUploadBtn');
+
+                            $('#' + inputfileName).val(null);
+                            var EventUploadBtn = $('#EventUploadBtn,#EventUploadBtn2');
                             EventUploadBtn.attr("disabled", "disabled");
                             EventUploadBtn.addClass("disabled");
                         } else {
@@ -10036,6 +10067,121 @@
             }
         }
 
+        function uploadfilesDelete(filePath, eventid = '', downloadable_attachment = '', download_file_list='') {
+            var formData = new FormData();
+            formData.append("filePath", filePath);
+            formData.append("eventid", eventid);
+            formData.append("downloadable_attachment", downloadable_attachment);
+            formData.append("download_file_list", download_file_list);
+
+            $.ajax({
+                url: BASE_URL + 'UserAdmin/DeleteEventUploadFiles',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.Status) {
+                        $(".calendar").fullCalendar('refetchEvents'); 
+                        notifierService.notifyMessage('success', 'Calender', 'File Deleted Successfully');
+                    } else {
+                        alert(response.Message);
+                    }
+                    // Handle successful upload
+                },
+                error: function (xhr, status, error) {
+                    console.error('delete failed: ' + error);
+                    // Handle upload failure
+                }
+            });
+
+        }
+
+
+        $scope.calendarOtherFieldChange = function (ele) {
+            let eventId = $scope.selectEventDetails.Id;
+            let value = $(ele).val();
+
+            var formData = new FormData();
+            formData.append("field", $(ele).data("field"));
+            formData.append("value", value);
+            formData.append("eventid", eventId);
+            updateOtherFields(formData);
+        }
+
+        function updateOtherFields(formData) {
+
+            $.ajax({
+                url: BASE_URL + 'UserAdmin/UpdateEventOtherField',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.Status) {
+                        $(".calendar").fullCalendar('refetchEvents');
+                        notifierService.notifyMessage('success', 'Calender', 'Update Successfully');
+                    } else {
+                        alert(response.Message);
+                    }
+                    // Handle successful upload
+                },
+                error: function (xhr, status, error) {
+                    console.error('delete failed: ' + error);
+                    // Handle upload failure
+                }
+            });
+
+        }
+
+
+        $scope.changeUploadFileType = function (isEvent) {
+            if (isEvent) {
+                let DOWNLOADABLE_ATTACHMENT_FILES = $scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES;
+                let eventId = $scope.selectEventDetails.Id;
+                let DOWNLOAD_FILE_LIST = JSON.stringify(DOWNLOADABLE_ATTACHMENT_FILES);
+                $scope.selectEventDetails.DOWNLOAD_FILE_LIST = DOWNLOAD_FILE_LIST;
+                var formData = new FormData();
+                formData.append("field", "DOWNLOAD_FILE_LIST");
+                formData.append("value", DOWNLOAD_FILE_LIST);
+                formData.append("eventid", eventId);
+                updateOtherFields(formData);
+            } else {
+                let DOWNLOADABLE_ATTACHMENT_FILES = $scope.createEventDetails.DOWNLOADABLE_ATTACHMENT_FILES;
+                let DOWNLOAD_FILE_LIST = JSON.stringify(DOWNLOADABLE_ATTACHMENT_FILES);
+                $scope.createEventDetails.DOWNLOAD_FILE_LIST = DOWNLOAD_FILE_LIST;
+            }
+        }
+
+
+        $scope.removeFiles = function (index) {
+
+            if (!confirm("Are you sure delete this file?")) {
+                return;
+            }
+            if ($scope.createEventDetails.DOWNLOADABLE_ATTACHMENT_FILES.length > index) {
+                let filepath = $scope.createEventDetails.DOWNLOADABLE_ATTACHMENT_FILES[index].path;
+                $scope.createEventDetails.DOWNLOADABLE_ATTACHMENT_FILES.splice(index, 1);
+                $scope.createEventDetails.DOWNLOAD_FILE_LIST = JSON.stringify($scope.createEventDetails.DOWNLOADABLE_ATTACHMENT_FILES);
+                $scope.createEventDetails.DOWNLOADABLE_ATTACHMENT = $scope.createEventDetails.DOWNLOADABLE_ATTACHMENT_FILES.map(x => x.path).join(",");
+                uploadfilesDelete(filepath);
+            }
+        }
+
+        $scope.selectedEventRemoveFiles = function (index) {
+
+            if (!confirm("Are you sure delete this file?")) {
+                return;
+            }
+            if ($scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES.length > index) {
+                let filepath = $scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES[index].path;
+                $scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES.splice(index, 1);
+                $scope.selectEventDetails.DOWNLOAD_FILE_LIST = JSON.stringify($scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES);
+                $scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT = $scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES.map(x => x.path).join(",");
+                let eventId = $scope.selectEventDetails.Id;
+                uploadfilesDelete(filepath, eventId, $scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT, JSON.stringify($scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES));
+            }
+        }
 
 
         function GeneratedFormData(dataParam) {
@@ -10096,6 +10242,7 @@
             temp.push({ "name": "DOWNLOADABLE_ATTACHMENT", "value": $scope.createEventDetails.DOWNLOADABLE_ATTACHMENT });
             temp.push({ "name": "IS_UPLOAD_REQUIRED", "value": $scope.createEventDetails.IS_UPLOAD_REQUIRED });
             temp.push({ "name": "UPLOAD_TIME", "value": $scope.createEventDetails.UPLOAD_TIME });
+            temp.push({ "name": "DOWNLOAD_FILE_LIST", "value": $scope.createEventDetails.DOWNLOAD_FILE_LIST });
 
 
             param.formfieldDataListTemp = JSON.stringify(temp);

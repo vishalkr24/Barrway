@@ -866,6 +866,8 @@ namespace Barrway.Controllers
 
                             var executeResponse = await ExecuteSchedularForm(response.Data.Id.ToString(), response.Data.formGroupKey.ToString());
 
+                            await businessUserService.updateSchedularCalendarOtherField(response.Data.Id, data);
+
                             return executeResponse;
                         }
                     }

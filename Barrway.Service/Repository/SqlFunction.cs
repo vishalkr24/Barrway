@@ -54,6 +54,15 @@ namespace Barrway.Service.Repository
             return rows;
         }
 
+        public async Task<IEnumerable<T>> ExecuteSqlQuery<T>(string sqlQuery)
+        {
+            using (var db = new SqlConnection(connectionString))
+            {
+                await db.OpenAsync();
+                return await db.QueryAsync<T>(sqlQuery);
+            }
+        }
+
         public  List<IDictionary<string, object>> ExecuteSqlQueryNonAsync(string sqlQuery)
         {
             List<IDictionary<string, object>> rows = new List<IDictionary<string, object>>();
@@ -205,4 +214,7 @@ namespace Barrway.Service.Repository
             return customWhere;
         }
     }
+
+
+    //public class SqlFunction<T>
 }

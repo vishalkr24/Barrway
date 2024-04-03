@@ -479,8 +479,9 @@
                             if (data.length > 2) {
                                 if (isJsonString(data)) {
                                     data = JSON.parse(data);
+                                } else {
+                                    data = {};
                                 }
-                                data = {};
                                 var list = "";
                                 _.each(data, function (itelist) {
                                     list += itelist.value + ",";
