@@ -63,32 +63,15 @@ namespace FormGeneratorDTOs.DTOs
         public int topicId { get; set; }
         public string start { get; set; }
         public string end { get; set; }
-
-
-
-
-
         public int totalRecords { get; set; }
-
-
         public int totalRecordsByTopic { get; set; }
-
         public int totalRecordsByUser { get; set; }
         public string formGroupKey { get; set; }
         public int isResizedEvent { get; set; }
-
-
-
         public string lastUpdated_at { get; set; }
-
-        public int DiffDateTimeUpdateInSecond { get; set; }
-
-        /*form record filter*/
+        public int DiffDateTimeUpdateInSecond { get; set; }       
         public FilterDTO filter { get; set; }
-
-#pragma warning disable CS0108 // 'GenerateDynamicFormData.sorters' hides inherited member 'CommonClass.sorters'. Use the new keyword if hiding was intended.
         public List<SortDTO> sorters { get; set; }
-#pragma warning restore CS0108 // 'GenerateDynamicFormData.sorters' hides inherited member 'CommonClass.sorters'. Use the new keyword if hiding was intended.
         public int taskid { get; set; }
         public string ApprovalStatus { get; set; }
         public string kanbanorder { get; set; }
@@ -108,6 +91,8 @@ namespace FormGeneratorDTOs.DTOs
         public bool IsCustomInFilter { get; set; }
         public string COMPANY_CODE { get; set; }
         public List<CustomFilter> CustomFilters { get; set; }
+        
+        public string SearchText { get; set; }
     }
 
 

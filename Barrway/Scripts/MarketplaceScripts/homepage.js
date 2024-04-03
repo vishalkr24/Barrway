@@ -80,7 +80,7 @@ function setCalendarCategory() {
 }
 
 function setCalendarSubCategoryWise(showFilterQuery = false, requestFromButton = false) {
-
+    debugger;
     var fltr_subCategoryId = $("#filter-sub-category-master option:selected").val();
     var fltr_CategoryId = $("#filter-category-master option:selected").val();
     var fltr_districtId = $("#filter-district-master option:selected").val();

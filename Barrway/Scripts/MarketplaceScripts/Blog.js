@@ -1,20 +1,23 @@
 ﻿$(document).ready(function () {
     $("#nv-news").addClass("active");
-    GetBlogs(1);
+    GetBlogs(1,'');
 });
 
 
-function GetBlogs(pageNumber) {
+function GetBlogs(pageNumber, blog_tag) {
 
-    var filterObj = {
-        field: "fieldName",
-        type: "equals",
-        value: "someValue"
-    };
+    //var filterObj = {
+    //    field: "fieldName",
+    //    type: "equals",
+    //    value: "someValue"
+    //};
+
+
+    //[{ field: "Task", type: "62", value:"yu"}]
 
     // Serialize the FilterDTO object to JSON
-    var filterJson = JSON.stringify(filterObj);
-
+    //var filterJson = JSON.stringify(filterObj);
+    //console.log(filterObj,"filterObj");
     $.ajax({
         url: "/MarketPlace/GetAllBlog/",
         type: "GET",
@@ -23,7 +26,7 @@ function GetBlogs(pageNumber) {
             size: 6,
             page_records: 0,
             res: 0,
-            filter: filterJson
+            SearchText: blog_tag
         },
         success: function (response) {
             debugger;
@@ -36,19 +39,19 @@ function GetBlogs(pageNumber) {
             var hardBindLimit = (response.last_page < 5) ? response.last_page : 5;
             $(".pagination").empty();
             $(".pagination").append(`<button class="btn" onclick="setCompanyData(1)"><img src="../assets/marketplace/image/p1.png" /></button>`);
-            $(".pagination").append(`<button class="btn" id="next-page-nav" onclick="GetBlogs(${(pageNumber <= 1) ? 1 : (pageNumber - 1)})"><img src="../assets/marketplace/image/p12.png" /></button>`);
+            $(".pagination").append(`<button class="btn" id="next-page-nav" onclick="GetBlogs(${(pageNumber <= 1) ? 1 : (pageNumber - 1)},'')"><img src="../assets/marketplace/image/p12.png" /></button>`);
 
             for (var i = 1; i <= hardBindLimit; i++) {
                 if (i == pageNumber) {
-                    $(".pagination").append(`<a href="#" onclick="GetBlogs(${i})" class="page-link page-link--current">${i}</a>`);
+                    $(".pagination").append(`<a href="#" onclick="GetBlogs(${i},'')" class="page-link page-link--current">${i}</a>`);
                 } else {
-                    $(".pagination").append(`<a href="#" onclick="GetBlogs(${i})" class="page-link">${i}</a>`);
+                    $(".pagination").append(`<a href="#" onclick="GetBlogs(${i},'')" class="page-link">${i}</a>`);
                 }
 
             }
 
-            $(".pagination").append(`<button class="btn" id="next-page-nav" onclick="GetBlogs(${nextPage})"><img src="../assets/marketplace/image/p11.png" /></button>`);
-            $(".pagination").append(`<button class="btn" id="last-page-nav" onclick="GetBlogs(${response.last_page})"><img src="../assets/marketplace/image/p2.png" /></button>`);
+            $(".pagination").append(`<button class="btn" id="next-page-nav" onclick="GetBlogs(${nextPage},'')"><img src="../assets/marketplace/image/p11.png" /></button>`);
+            $(".pagination").append(`<button class="btn" id="last-page-nav" onclick="GetBlogs(${response.last_page},'')"><img src="../assets/marketplace/image/p2.png" /></button>`);
 
 
             $("#blogrow").empty();          
