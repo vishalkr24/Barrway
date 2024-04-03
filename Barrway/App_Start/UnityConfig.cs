@@ -7,6 +7,7 @@ using System;
 
 using Unity;
 using Unity.Injection;
+using Unity.Lifetime;
 
 namespace Barrway
 {
@@ -53,6 +54,7 @@ namespace Barrway
             container.RegisterInstance<IMapper>(mapper);
             container.RegisterType<ILogger>(new InjectionFactory(c =>{return LogManager.GetCurrentClassLogger();}));
             container.RegisterType<IAuthService, AuthService>();
+            //container.RegisterType(typeof(ISqlFunction<>), typeof(SqlFunction<>), new TransientLifetimeManager());
             container.RegisterType<ISqlFunction, SqlFunction>();
             container.RegisterType<IFormAPIRepository, FormAPIRepository>();
             container.RegisterType<ISignupService, SignupService>();

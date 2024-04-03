@@ -21,6 +21,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Configuration;
 using System.Web.WebPages;
+using Newtonsoft.Json;
 
 namespace Barrway.Controllers
 {
@@ -583,7 +584,7 @@ namespace Barrway.Controllers
             }
         }
 
-
+        [HttpPost]
         public async Task<ActionResult> UploadDownloadAttachment(List<HttpPostedFileBase> files, string clrcode, string eventid) {
 
             if (files == null || files.Count() == 0 || string.IsNullOrEmpty(clrcode)) {
@@ -607,13 +608,13 @@ namespace Barrway.Controllers
             try
             {
                 string baseurl = ConfigurationManager.AppSettings["baseurl"].ToString();
-                List<Dictionary<string,object>> filePaths = new List<Dictionary<string, object>>();
+                List<IDictionary<string,object>> filePaths = new List<IDictionary<string, object>>();
                 foreach (var file in files) {
 
                     string folderPath = "UploadCalendar/DownloadAttachment/" + clrcode + "/";
                     string url = baseurl + folderPath + file.FileName;
                     string _filepath = "/" + folderPath + file.FileName;
-                    filePaths.Add(new Dictionary<string, object>() { { "url", url }, { "path", _filepath }, { "name", file.FileName } });
+                    filePaths.Add(new Dictionary<string, object>() { { "url", url }, { "path", _filepath }, { "name", file.FileName }, { "type", "public" } });
                     folderPath = Server.MapPath("~/"+ folderPath);
                     if (!Directory.Exists(folderPath))
                     {
@@ -624,8 +625,31 @@ namespace Barrway.Controllers
                     file.SaveAs(filePath);
                 }
                 int _eventId;
-                if (int.TryParse(eventid, out _eventId)) { 
-                
+                if (int.TryParse(eventid, out _eventId)) {
+
+                    var result = (await businessUserService.getCalendarUploadFiles(_eventId)).Data as IDictionary<string, object>;
+                    if (result!=null && result.Count()>0) {
+                        //[DOWNLOADABLE_ATTACHMENT],[DOWNLOAD_FILE_LIST]
+                        if (result.ContainsKey("DOWNLOAD_FILE_LIST") && !string.IsNullOrEmpty(result["DOWNLOAD_FILE_LIST"]?.ToString()))
+                        {
+                            string DOWNLOAD_FILE_LIST = result["DOWNLOAD_FILE_LIST"].ToString();
+                            if (isJsonString(DOWNLOAD_FILE_LIST))
+                            {
+                                var parse_json = JsonConvert.DeserializeObject<List<IDictionary<string, object>>>(DOWNLOAD_FILE_LIST);
+                                parse_json.AddRange(filePaths);
+                                filePaths = parse_json;
+                                string DOWNLOADABLE_ATTACHMENT = string.Join(",", filePaths.Select(x => x["path"].ToString()).ToList());
+                                DOWNLOAD_FILE_LIST = JsonConvert.SerializeObject(filePaths);
+                                await businessUserService.updateCalendarUploadFiles(_eventId, DOWNLOADABLE_ATTACHMENT, DOWNLOAD_FILE_LIST);
+                            }
+                        }
+                        else {
+
+                            string DOWNLOADABLE_ATTACHMENT = string.Join(",", filePaths.Select(x => x["path"].ToString()).ToList());
+                            string DOWNLOAD_FILE_LIST = JsonConvert.SerializeObject(filePaths);
+                            await businessUserService.updateCalendarUploadFiles(_eventId, DOWNLOADABLE_ATTACHMENT, DOWNLOAD_FILE_LIST);
+                        }
+                    }
                 }
                 return Json(new AddUpdateDelete() { Status=true,Message=AppMessage.Success,Data= filePaths });
                 
@@ -637,11 +661,75 @@ namespace Barrway.Controllers
 
         }
 
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteEventUploadFiles(string filePath,string eventid,string downloadable_attachment,string download_file_list)
+        {
+
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.InvaidRequest });
+            }
+            try
+            {
+                filePath = Server.MapPath("~" + filePath);
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+
+                int _eventId;
+                if (int.TryParse(eventid, out _eventId))
+                {
+                    await businessUserService.updateCalendarUploadFiles(_eventId, downloadable_attachment, download_file_list);
+                }
+                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success });
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError });
+            }
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateEventOtherField(string eventid, string field, string value)
+        {
+
+            try
+            {
+                int _eventId;
+                if (int.TryParse(eventid, out _eventId))
+                {
+                    await businessUserService.updateCalendarOtherField(_eventId, field, value);
+                }
+                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success });
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError });
+            }
+
+        }
+
         private bool IsAllowedFileExtension(string fileExtension)
         {
             // Define the list of allowed file extensions
             string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".pdf", ".doc", ".docx", ".xls", ".xlsx" };
             return allowedExtensions.Contains(fileExtension);
+        }
+        private bool isJsonString(string json)
+        {
+            try
+            {
+                var parse_json= JsonConvert.DeserializeObject<List<IDictionary<string, object>>>(json);
+                return true;
+            }catch(Exception ex)
+            {
+
+                return false;
+            }
+        
         }
     }
 }

@@ -1169,16 +1169,24 @@
                                 <button type="button" onclick="angular.element(this).scope().uploadFiles()" id="EventUploadBtn" class="btn btn-primary disable" disabled>Upload</button>
                             </div>
                             <input type="hidden" ng-model="createEventDetails.DOWNLOADABLE_ATTACHMENT" value="" id="DOWNLOADABLE_ATTACHMENT_FILES" />
-                            <ul>
-                                <li ng-repeat="item in createEventDetails.DOWNLOADABLE_ATTACHMENT_FILES"><a ng-href="{{item.url}}" target="_blank">{{item.name}}</a></li>
+                            <input type="hidden" ng-model="createEventDetails.DOWNLOAD_FILE_LIST" value="" id="DOWNLOAD_FILE_LIST" />
+                            <ul style="padding:0">
+                                <li ng-repeat="item in createEventDetails.DOWNLOADABLE_ATTACHMENT_FILES">
+                                    <a ng-href="{{item.url}}" target="_blank">{{item.name}}</a>
+                                    <select ng-model="item.type" class="form-control-sm" ng-change="changeUploadFileType(false)">
+                                        <option value="public">Public</option>
+                                        <option value="user">User</option>
+                                    </select>
+                                    <button class="btn btn-link" ng-click="removeFiles($index)"><i class="fa fa-times-circle"></i></button>
+                                </li>
                             </ul>
 
-                            <div class="form-group borderSet col-sm-6 border-IS_UPLOAD_REQUIRED">
-                                <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="IS_UPLOAD_REQUIRED">IS UPLOAD REQUIRED</label><br/><div class="form-check"> <label class="form-check-label" for="IS_UPLOAD_REQUIRED0"> <input type="radio" class="form-check-input" id="IS_UPLOAD_REQUIRED0" ng-model="createEventDetails.IS_UPLOAD_REQUIRED" name="IS_UPLOAD_REQUIRED" value="Y">  Y</label></div><div class="form-check"> <label class="form-check-label" for="IS_UPLOAD_REQUIRED1"><input ng-model="createEventDetails.IS_UPLOAD_REQUIRED" type="radio" class="form-check-input" id="IS_UPLOAD_REQUIRED1" name="IS_UPLOAD_REQUIRED" value="N" checked>   N</label></div></div>
+                            <div class="form-group borderSet col-sm-6 border-IS_UPLOAD_REQUIRED" style="padding:0!important">
+                                <div class="col-sm-12"><label style="display: block;text-align: left!important" class="pull-left" for="IS_UPLOAD_REQUIRED">IS UPLOAD REQUIRED</label><br/><div class="form-check"> <label class="form-check-label" for="IS_UPLOAD_REQUIRED0"> <input type="radio" class="form-check-input" id="IS_UPLOAD_REQUIRED0" ng-model="createEventDetails.IS_UPLOAD_REQUIRED" name="IS_UPLOAD_REQUIRED" value="Y">  Y</label></div><div class="form-check"> <label class="form-check-label" for="IS_UPLOAD_REQUIRED1"><input ng-model="createEventDetails.IS_UPLOAD_REQUIRED" type="radio" class="form-check-input" id="IS_UPLOAD_REQUIRED1" name="IS_UPLOAD_REQUIRED" value="N" checked>   N</label></div></div>
                             </div>
 
-                            <div class="form-group borderSet col-sm-6 border-UPLOAD_TIME" ng-if="createEventDetails.IS_UPLOAD_REQUIRED=='Y'">
-                                <div class="col-sm-12"><label style="display: block;text-align: left;!important" class="pull-left" for="UPLOAD_TIME">UPLOAD TIME</label><select name="UPLOAD_TIME" ng-model="createEventDetails.UPLOAD_TIME" id="UPLOAD_TIME" class="form-control inputClass form-control "><option value="ANYTIME" selected="">ANYTIME</option><option value="BEFORE">BEFORE</option><option value="AFTER">AFTER</option></select></div>
+                            <div class="form-group borderSet col-sm-6 border-UPLOAD_TIME" ng-if="createEventDetails.IS_UPLOAD_REQUIRED=='Y'" style="padding:0!important">
+                                <div class="col-sm-12"><label style="display: block;text-align: left!important" class="pull-left" for="UPLOAD_TIME">UPLOAD TIME</label><select name="UPLOAD_TIME" ng-model="createEventDetails.UPLOAD_TIME" id="UPLOAD_TIME" class="form-control inputClass form-control "><option value="ANYTIME" selected="">ANYTIME</option><option value="BEFORE">BEFORE</option><option value="AFTER">AFTER</option></select></div>
                             </div>
                         </div>
                         </div>
@@ -1253,6 +1261,60 @@
                             <input value="{{selectEventDetails[tag.name]}}" id="newtag-inputHidden{{tag.name}}" type="hidden">
                             <input value="{{tag.name}}" id="newtag-inputHidden{{selectEventDetails.Id}}" type="hidden">
                             <input id="newtag-input{{tag.name}}" type="text" value="{{selectEventDetails[tag.name]}}" placeholder="Add tags">
+                        </div>
+
+
+                        <div>
+                            <div class="form-group mt-2 p-0">
+                                <label for="SELECT_DOWNLOADABLE_ATTACHMENT">Upload Attachments</label>
+                                <input type="file" name="SELECT_DOWNLOADABLE_ATTACHMENT" class="form-control" onchange="angular.element(this).scope().validateForm('SELECT_DOWNLOADABLE_ATTACHMENT',false,true)" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx" multiple id="SELECT_DOWNLOADABLE_ATTACHMENT" />
+                                <span id="fileError2" style="color:red" class="error-message"></span><br>
+                            </div>
+                            <div class="form-group mt-2 p-0">
+                                <button type="button" onclick="angular.element(this).scope().uploadFiles(true)" id="EventUploadBtn2" class="btn btn-primary disable" disabled>Upload</button>
+                            </div>
+                            <input type="hidden" ng-model="selectEventDetails.DOWNLOADABLE_ATTACHMENT" value="" id="DOWNLOADABLE_ATTACHMENT_FILES" />
+                            <input type="hidden" ng-model="selectEventDetails.DOWNLOAD_FILE_LIST" value="" id="DOWNLOAD_FILE_LIST" />
+                            <ul>
+                                <li style="font-weight:600" ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES">
+                                    <a ng-href="{{item.url}}" target="_blank">{{item.name}}</a>
+
+                                    <select ng-model="item.type" class="form-control-sm" ng-change="changeUploadFileType(true)">
+                                        <option value="public">Public</option>
+                                        <option value="user">User</option>
+                                    </select>
+
+                                    <button class="btn btn-link" ng-click="selectedEventRemoveFiles($index)"><i class="fa fa-times-circle"></i></button>
+                                </li>
+                            </ul>
+
+                            <div class="form-group borderSet col-sm-6 border-IS_UPLOAD_REQUIRED">
+                                <div class="col-sm-12">
+                                <label style="display: block;text-align: left!important" class="pull-left" for="IS_UPLOAD_REQUIRED">IS UPLOAD REQUIRED</label>
+                                <br />
+                                <div class="form-check"> 
+                                    <label class="form-check-label" for="EDIT_IS_UPLOAD_REQUIRED0"> 
+                                    <input type="radio" class="form-check-input" id="EDIT_IS_UPLOAD_REQUIRED0" data-field="IS_UPLOAD_REQUIRED" ng-checked="selectEventDetails.IS_UPLOAD_REQUIRED=='Y'" ng-model="selectEventDetails.IS_UPLOAD_REQUIRED" onchange="angular.element(this).scope().calendarOtherFieldChange(this)" name="EDIT_IS_UPLOAD_REQUIRED" value="Y">  Y
+                                        </label>
+                                    </div>
+                                <div class="form-check"> 
+                                    <label class="form-check-label" for="EDIT_IS_UPLOAD_REQUIRED1">
+                                    <input ng-model="selectEventDetails.IS_UPLOAD_REQUIRED" type="radio" data-field="IS_UPLOAD_REQUIRED" ng-checked="selectEventDetails.IS_UPLOAD_REQUIRED=='N'" class="form-check-input" id="EDIT_IS_UPLOAD_REQUIRED1" onchange="angular.element(this).scope().calendarOtherFieldChange(this)" name="EDIT_IS_UPLOAD_REQUIRED" value="N" checked>   N
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group borderSet col-sm-6 border-EDIT_UPLOAD_TIME" ng-show="selectEventDetails.IS_UPLOAD_REQUIRED=='Y'">
+                                <div class="col-sm-12">
+                                <label style="display: block;text-align: left!important" class="pull-left" for="EDIT_UPLOAD_TIME">UPLOAD TIME</label>
+                                <select name="EDIT_UPLOAD_TIME" ng-model="selectEventDetails.UPLOAD_TIME" data-field="UPLOAD_TIME" id="EDIT_UPLOAD_TIME" onchange="angular.element(this).scope().calendarOtherFieldChange(this)" class="form-control inputClass form-control ">
+                                    <option value="ANYTIME" selected="">ANYTIME</option>
+                                    <option value="BEFORE">BEFORE</option>
+                                    <option value="AFTER">AFTER</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
 
                     </div>

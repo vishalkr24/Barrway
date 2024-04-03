@@ -3160,5 +3160,97 @@ namespace Barrway.Service.Repository
             }
 
         }
+
+
+        public async Task<AddUpdateDelete> getCalendarUploadFiles(int eventId)
+        {
+            try
+            {
+                string sqlString = $@"select *from CALENDAR_FORM_1935 where Id="+eventId;
+
+
+                var result = (await sqlFunction.ExecuteSqlQuery(sqlString)).FirstOrDefault();
+                if (result != null)
+                {
+
+                    return new AddUpdateDelete() { Data = result, Message = AppMessage.Success, Status = true };
+
+                }
+
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
+        public async Task<AddUpdateDelete> updateCalendarUploadFiles(int eventId,string downloadable_attachment,string download_file_list)
+        {
+            try
+            {
+                string sqlString = $@"update CALENDAR_FORM_1935 set DOWNLOAD_FILE_LIST=N'{download_file_list}',DOWNLOADABLE_ATTACHMENT=N'{downloadable_attachment}' where Id=" + eventId;
+
+
+                var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
+                if (result >0)
+                {
+
+                    return new AddUpdateDelete() { Data = result, Message = AppMessage.Success, Status = true };
+
+                }
+
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
+        public async Task<AddUpdateDelete> updateCalendarOtherField(int eventId, string field, string value)
+        {
+            try
+            {
+                string sqlString = $@"update CALENDAR_FORM_1935 set {field}=N'{value}' where Id=" + eventId;
+
+
+                var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
+                if (result > 0)
+                {
+                    return new AddUpdateDelete() { Data = result, Message = AppMessage.Success, Status = true };
+                }
+
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+        
+        public async Task<AddUpdateDelete> updateSchedularCalendarOtherField(int schedularId, SchedularFormModel schedularForm)
+        {
+            try
+            {
+                string sqlString = $@"update CALENDAR_FORM_1935 set DOWNLOADABLE_ATTACHMENT=N'{schedularForm.DOWNLOADABLE_ATTACHMENT}',
+                                    DOWNLOAD_FILE_LIST=N'{schedularForm.DOWNLOAD_FILE_LIST}',IS_UPLOAD_REQUIRED=N'{schedularForm.IS_UPLOAD_REQUIRED}',
+                                    UPLOAD_TIME=N'{schedularForm.UPLOAD_TIME}' where SCHEDULAR_FORM_ID='{schedularId}'";
+
+
+                var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
+                if (result > 0)
+                {
+                    return new AddUpdateDelete() { Data = result, Message = AppMessage.Success, Status = true };
+                }
+
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
     }
 }

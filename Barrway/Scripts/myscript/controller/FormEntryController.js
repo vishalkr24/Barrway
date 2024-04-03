@@ -2345,7 +2345,7 @@
                                 if ($("#" + key + "_pad").length)
                                     $("#" + key + "_pad").signature('draw', item);
                             }
-                            else if (controlExists.type == "tinyMCE-content") {
+                            else if (controlExists.type == "tinyMCE-content" || controlExists.subtype == "tinymce") {
                                 tinymce.get("" + key).setContent(item);
                             }
                             else if (controlExists.type == "table") {

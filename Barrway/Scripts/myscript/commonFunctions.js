@@ -2572,8 +2572,14 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
         eventClick: function (calEvent, jsEvent, view) {    
             customEventDetailsModelPopUp.modal('show');
             customEventDetailsModelPopUp.css({ "z-index": "9999" });
-            var $scope = angular.element($("#calendar")).scope();        
-            $scope.selectEventDetails = calEvent;  
+            var $scope = angular.element($("#calendar")).scope();
+            if (calEvent.DOWNLOAD_FILE_LIST && calEvent.DOWNLOAD_FILE_LIST != '' && calEvent.DOWNLOAD_FILE_LIST != 'null' && IsJsonString(calEvent.DOWNLOAD_FILE_LIST)) {
+                calEvent.DOWNLOADABLE_ATTACHMENT_FILES = JSON.parse(calEvent.DOWNLOAD_FILE_LIST);
+            }
+            $scope.selectEventDetails = calEvent; 
+
+
+
             if (calEvent.formID == undefined) {
                 $scope.selectEventDetails.formID = $scope.currentFormId;  
             }
@@ -5817,6 +5823,10 @@ function loadCalendarWithOutEventFunction(calenderType, calenderData, resourceDa
 
 
             $scope.selectEventDetails = calEvent;
+
+          
+
+
             $("#customEventDetailsModelPopUp").modal("show");
             $scope.selectEventDetails.resourceFormId = $scope.ySelection;
             $scope.selectEventDetails.ActivityFormId = $scope.xSelection;

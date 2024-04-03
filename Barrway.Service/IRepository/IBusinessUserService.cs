@@ -135,5 +135,9 @@ namespace Barrway.Service.IRepository
         bool CheckCmpanyUrlExists(string PageName, string CompanyCode);
 
         Task<AddUpdateDelete> GetCompanyCodeByPageUrl(string PageUrl);
+        Task<AddUpdateDelete> getCalendarUploadFiles(int eventId);
+        Task<AddUpdateDelete> updateCalendarUploadFiles(int eventId, string downloadable_attachment, string download_file_list);
+        Task<AddUpdateDelete> updateCalendarOtherField(int eventId, string field, string value);
+        Task<AddUpdateDelete> updateSchedularCalendarOtherField(int schedularId, SchedularFormModel schedularForm);
     }
 }

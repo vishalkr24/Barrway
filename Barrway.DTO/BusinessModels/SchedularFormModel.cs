@@ -30,6 +30,10 @@ namespace Barrway.DTO.BusinessModels
         public string SCH_SCHEDULE_TABLE { get; set; }
         public string CREATION_TYPE { get; set; }
         public string SCHEDULAR_TYPE { get; set; }
+        public string DOWNLOADABLE_ATTACHMENT { get; set; }
+        public string DOWNLOAD_FILE_LIST { get; set; }
+        public string IS_UPLOAD_REQUIRED { get; set; }
+        public string UPLOAD_TIME { get; set; }
     }
 
     public class CommonTimeObject
