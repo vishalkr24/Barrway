@@ -184,7 +184,7 @@ function setCalendarSubCategoryWise(showFilterQuery = false, requestFromButton =
                 $("#company-category-wise-area").append(`<div class="my-slide ${corouselClassMaster[corouselCounter]}">
                                                             <div class="heading-cata"> 
                                                                 <h3>${calendars[0].CMN_CATEGORY_NAME}</h3>
-                                                            <div class="heading-cata">View more</div>
+                                                            <div class="heading-cata"><a href="/marketplace/AllCalanders?Category=${calendars[0].CategoryId}">View more</a></div>
                                                             </div>
                                                             
                                                             <div id="owl-demo${corouselCounter}" class="owl-carousel owl-theme"></div>
@@ -206,7 +206,7 @@ function setCalendarSubCategoryWise(showFilterQuery = false, requestFromButton =
 
                     var feturedSpan_html = ''
                     if (calendars[j].IS_FEATURED == 'Y') {
-                        feturedSpan_html = '<div class="clr-tag"><span>Featured</span></div>';
+                        feturedSpan_html = '<div class="clr-tag new-clr-tag"><span>Featured</span></div>';
                     }
 
                     $("#owl-demo" + corouselCounter).append(` <div class="item">
