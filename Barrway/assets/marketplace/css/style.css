@@ -75,7 +75,7 @@ div#myNavbar .navbar-nav li a:hover {
 div#myNavbar .navbar-nav li ul li a:hover {
     color: #ffffff !important;
 }
-select#filter-category-master {
+.custome-filter-category-master {
     border: 1px solid #ddd;
     background-color: transparent;
     padding: 10px 15px;
@@ -83,10 +83,10 @@ select#filter-category-master {
     float: left;
     border-radius: 40px;
     font-size: 16px;
-    text-align: center;
+    /*text-align: center;*/
     height: 47px;
     -webkit-appearance: none;
-    position:relative;
+    position: relative;
 }
 .custome-ser {
     width: 100%;
