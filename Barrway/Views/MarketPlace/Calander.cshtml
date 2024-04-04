@@ -841,13 +841,16 @@
 
                         <div class="col-md-12">
                             <div class="favr">
+
                                 @if (!ViewBag.IsUserFavorite)
                                 {
                                     <button id="btn-mark" onclick="markAsFavorite('@Model.COMPANY_CODE')"><img src="~/assets/marketplace/image/star.png"> @Resource.Mark_as_favorite</button>
+
                                 }
                                 else
                                 {
-                                    <button id="btn-unmark" onclick="removeAsFavorite('@Model.COMPANY_CODE')"><img src="~/assets/marketplace/image/star.png"> @Resource.Remove_as_favorite</button>
+                                    <button id="btn-mark-fav"><img src="~/assets/marketplace/image/starg.png">favorite</button>
+                                    @*<button id="btn-unmark" onclick="removeAsFavorite('@Model.COMPANY_CODE')"><img src="~/assets/marketplace/image/star.png"> @Resource.Remove_as_favorite</button>*@
                                 }
 
                             </div>
