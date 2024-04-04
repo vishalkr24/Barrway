@@ -1379,7 +1379,7 @@ section.bottom-nav .com-det {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.clr-tag {
+.new-clr-tag {
     position: absolute;
     top: 7px;
     left: 5px;
@@ -1602,4 +1602,14 @@ section.bottom-nav .com-det {
     width: 100%;
     float: left;
     margin-bottom: 16px;
+}
+
+.custome-filser .inner-content .media-left img {
+    height: 129px;
+}
+.mt-25 {
+    margin-top: 25px;
+}
+.custome-filser {
+    min-height: 60.6vh;
 }

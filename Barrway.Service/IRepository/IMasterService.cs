@@ -42,7 +42,8 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetAllSubcategory();
         Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetAllCompany_SubCategoryWise(Pagination data);
         Task<AddUpdateDelete> AllCalandersByCategory(CalandersPagination data);
-
+        Task<AddUpdateDelete> GetHeaderDetails(CalandersPagination data);
+        Task<AddUpdateDelete> GetAllFeaturedCompany();
         //GetAllFeaturedCompany_SubCategoryWise(Pagination data)
 
     }

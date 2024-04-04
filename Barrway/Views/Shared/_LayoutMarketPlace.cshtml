@@ -374,7 +374,7 @@
             // Loop through the JSON data and create dropdown menu items
             $.each(data, function (index, item) {
                 var listItem = $('<li>');
-                var anchor = $('<a>').attr('href', '/Marketplace/Subcategory?id=' + item.Id +'').text(item.CALENDAR_SUB_CATEGORY_NAME);
+                var anchor = $('<a>').attr('href', '/Marketplace/AllCalanders?subcategory=' + item.Id +'').text(item.CALENDAR_SUB_CATEGORY_NAME);
                 listItem.append(anchor);
                 dropdownMenu.append(listItem);
             });
