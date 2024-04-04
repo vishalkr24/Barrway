@@ -29,5 +29,6 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetCalendarSubCategoryMaster();
 
         Task<AddUpdateDelete> GetSingleTagData(string TagName);
+        
     }
 }

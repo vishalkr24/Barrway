@@ -135,7 +135,7 @@ namespace Barrway.Service.Repository
                          join CALENDAR_COMMON_CATEGORY_1978 category on category.Id = calendar.CALENDAR_COMMON_CATEGORY_ID
                          join DISTRICT_MASTER_1928 district on district.Id = calendar.DISTRICT_ID
                          join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
-                         where company.IS_SEARCHABLE_IN_MARKETPLACE = 'Y' and company.IS_ACTIVE = 'Y' and company.IS_TEMPLATE = 'N' and calendar.CALENDAR_USE_TYPE = 'PUBLIC' and calendar.IS_VISIBLE_ON_MARKETPLACE_HOME='Y' ORDER BY  calendar.[PRIORITY] DESC , calendar.[SEQUENCE] asc {(!string.IsNullOrEmpty(filter) ? filter : "")}";
+                         where company.IS_SEARCHABLE_IN_MARKETPLACE = 'Y' and company.IS_ACTIVE = 'Y' and company.IS_TEMPLATE = 'N' and calendar.CALENDAR_USE_TYPE = 'PUBLIC' and calendar.IS_VISIBLE_ON_MARKETPLACE_HOME='Y'  {(!string.IsNullOrEmpty(filter) ? filter : "")} ORDER BY  calendar.[PRIORITY] DESC , calendar.[SEQUENCE] asc";
 
             List<IDictionary<string, object>> companyResult = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -179,6 +179,9 @@ namespace Barrway.Service.Repository
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
             }
         }
+
+       
+
 
         public async Task<AddUpdateDelete> GetCountryMaster()
         {
