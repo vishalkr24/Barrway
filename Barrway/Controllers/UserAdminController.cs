@@ -203,6 +203,29 @@ namespace Barrway.Controllers
             }
         }
 
+        public async Task<ActionResult> CancelPublicUserBooking(CalendarEnrollModel model)
+        {
+            try
+            {
+                model.USER_EMAIL = UserIdentity.UserEmail;
+
+                var result = await publicUserService.CancelPublicUserBooking(model);
+
+                if (result.Status)
+                {
+                    // send email to user
+                    //var resultEmail = await masterService.SendCalendarFile(UserIdentity.UserEmail, result.Data?.ToString());
+                }
+
+                return Json(result, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = "Failed" }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         [HttpPost]
         public async Task<ActionResult> CreateRoomBookingSlot(CalendarFormModel model)
         {

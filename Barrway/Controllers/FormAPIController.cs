@@ -395,9 +395,34 @@ namespace Barrway.Controllers
                     result = finalResult;
 
                 }
-
             }
 
+            {
+                var alreadyEnrolledEvents = (await publicUserService.GetAlreadyEnrolledEvents(data.COMPANY_CODE, UserIdentity.UserEmail, data.filter.value)).Data as List<IDictionary<string, object>>;
+                if (alreadyEnrolledEvents!= null)
+                {
+                    if (alreadyEnrolledEvents.Count > 0)
+                    {
+                        if (result != null)
+                        {
+                            foreach (var item in result.events)
+                            {
+                                if (alreadyEnrolledEvents.Any(x=> x["Id"]?.ToString() == item["Id"]?.ToString()))
+                                {
+                                    item.Add("IsAlreadyBooked", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["IsAlreadyBooked"]);
+                                }
+                                else
+                                {
+                                    item.Add("IsAlreadyBooked", 'N');
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                
+
+            }
 
             if (result != null)
             {

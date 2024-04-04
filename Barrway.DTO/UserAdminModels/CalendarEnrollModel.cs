@@ -10,6 +10,7 @@ namespace Barrway.DTO.UserAdminModels
     public class CalendarEnrollModel
     {
         public string USER_ID { get; set; }
+        public string USER_EMAIL { get; set; }
         public string RESOURCE_NAME { get; set; }
         public string ACTIVITY_NAME { get; set; }
         public string FormGroupKey { get; set; }

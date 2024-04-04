@@ -424,6 +424,43 @@ namespace Barrway.Service.Repository
             }           
         }
 
+        public async Task<AddUpdateDelete> CancelPublicUserBooking(CalendarEnrollModel model)
+        {
+            string query = $@"select cf.[start], cf.[end], t.* from CALENDAR_FORM_1935 cf
+                                join TRANSACTION_MASTER_1942 t on t.SLOT = cf.Id
+                                join PARTICIPANT_MASTER_1940 p on p.Id = t.STUDENT
+                                where cf.Id = ''{model.transaction.SLOT}'' and p.EMAIL = '{model.USER_EMAIL}'";
+            var result = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (result.Count > 0)
+            {
+                if (DateTime.Now < Convert.ToDateTime(result[0]["start"]?.ToString()) && DateTime.Now > Convert.ToDateTime(result[0]["start"]?.ToString()).AddMinutes(-30))
+                {
+                    query = $@"delete from TRANSACTION_MASTER_1942 where Id = '{result[0]["Id"]?.ToString()}'";
+                    var result2 = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                    if (result2 > 0)
+                    {
+                        return new AddUpdateDelete() { Status = true, Message = "Booking cancelled successfully!"};
+                    }
+                    else
+                    {
+                        return new AddUpdateDelete() { Status = false, Message = "Booking not cancelled!" };
+                    }
+
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "Can't cancel your booking now!" };
+                }
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = "Booking not found" };
+            }
+
+        }
+
         public async Task<AddUpdateDelete> EnrollParticipantForCalendar(CalendarFormModel model, string UserId, string UserEmail)
         {
             // Check if the user already exist in the participant master
@@ -1728,6 +1765,43 @@ namespace Barrway.Service.Repository
                                 select* into #temptable from cte2  where len(customtitle)>0;    declare @counter int= 0, @c int= 1;   
                                 select @counter = (select count(1) from #temptable)	while @c <= @counter    begin    select @customTitleQuery = customTitle from #temptable where ROWNUMBER=@c;	SET @sQuery= ' select @retvalOUT = (' + @customTitleQuery + ')'  
                                 SET @ParmDefinition = N'@retvalOUT nvarchar(max) OUTPUT';   
+                                EXEC sp_executesql @sQuery, @ParmDefinition, @retvalOUT = @retval OUTPUT;    update #temptable set customTitle=@retval where ROWNUMBER=@c;	set @c = @c + 1;  end  select* from #temptable
+                                ";
+
+                List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
+            }
+        }
+        public async Task<AddUpdateDelete> GetAlreadyEnrolledEvents(string CompanyCode, string UserEmail, string FilterDate)
+        {
+            try
+            {
+                string query = $@"
+                                DECLARE @retval nvarchar(max);       DECLARE @sQuery nvarchar(max); DECLARE @ParmDefinition nvarchar(max);                        
+                                DECLARE @customTitleQuery nvarchar(max);                          
+                                IF OBJECT_ID(N'tempdb..#temptable') IS NOT NULL  BEGIN DROP TABLE #temptable END   ;with cte1 as( select distinct  f.*,f.resources 'resourceId'  ,  STUFF((SELECT ',' +  PARTICIPANT_MASTER_1940.[STUDENT_NAME]  
+                                from TRANSACTION_MASTER_1942 inner join PARTICIPANT_MASTER_1940 on TRANSACTION_MASTER_1942.STUDENT = PARTICIPANT_MASTER_1940.Id where TRANSACTION_MASTER_1942.formGroupKey = f.formGroupKey         FOR XML PATH('')), 1, 1, '') customFourthTitle
+                                , (dbo.[GetSubQueryCalender](f.formGroupKey)) customTitle,   (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceFormId) from form_calenderreferrence f2     
+                                where f2.formgroupkey = f.formGroupKey  FOR XML PATH('')), 1, 1, '')   ) customForms  , (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceId) from form_calenderreferrence f2    
+                                where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) customFormIds,  '' referrences_1,  '' referrences_2,  '' referrences_3   
+                                , case when (transaction_m.SLOT is not null and participant.EMAIL = '{UserEmail}') then 'Y' else 'N' end as 'IsAlreadyBooked'
+                                from CALENDAR_FORM_1935 f  
+                                  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
+                                  left join TRANSACTION_MASTER_1942 transaction_m on f.Id = transaction_m.SLOT
+                                  left join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
+  
+                                where 
+                                f.formid=2305 and
+                                {FilterDate} ),
+                                cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
+                                select* into #temptable from cte2  where len(customtitle)>0;    declare @counter int= 0, @c int= 1;   
+                                select @counter = (select count(1) from #temptable)	while @c <= @counter    begin    select @customTitleQuery = customTitle from #temptable where ROWNUMBER=@c;	SET @sQuery= ' select @retvalOUT = (' + @customTitleQuery + ')'  
+                                SET @ParmDefinition = N'@retvalOUT nvarchar(max) OUTPUT';
                                 EXEC sp_executesql @sQuery, @ParmDefinition, @retvalOUT = @retval OUTPUT;    update #temptable set customTitle=@retval where ROWNUMBER=@c;	set @c = @c + 1;  end  select* from #temptable
                                 ";
 
