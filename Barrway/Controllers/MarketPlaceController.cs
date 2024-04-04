@@ -572,7 +572,7 @@ namespace Barrway.Controllers
 
                     if (User.Identity.IsAuthenticated)
                     {
-                        if (UserIdentity.Role == "PUBLIC_USER")
+                        if (UserIdentity.Role == "PUBLIC_USER" || UserIdentity.Role== "GENERAL_USER")
                         {
                             // check if calendar is a favorite
                             var calendarFavCheck = await publicUserService.CheckSingleMyFavoriteCalendar(User.Identity.Name, CalendarCode);
@@ -681,7 +681,7 @@ namespace Barrway.Controllers
 
                     if (User.Identity.IsAuthenticated)
                     {
-                        if (UserIdentity.Role == "PUBLIC_USER")
+                        if (UserIdentity.Role == "PUBLIC_USER" || UserIdentity.Role == "GENERAL_USER")
                         {
                             // check if calendar is a favorite
                             var calendarFavCheck = await publicUserService.CheckSingleMyFavoriteCalendar(User.Identity.Name, CalendarCode);
