@@ -26,6 +26,7 @@ namespace Barrway.Service.IRepository
 
         Task<AddUpdateDelete> UpdatePublicUserProfileData(PublicUserProfileModel model, bool updatePassword = false);
         Task<AddUpdateDelete> EnrollPublicUserForCalendar(CalendarEnrollModel model);
+        Task<AddUpdateDelete> CancelPublicUserBooking(CalendarEnrollModel model);
         Task<AddUpdateDelete> EnrollParticipantForCalendar(CalendarFormModel model, string UserId, string UserEmail);
         Task<AddUpdateDelete> AddFavoriteCalendar(FavoriteCalendarModel model);
         Task<AddUpdateDelete> RemoveFavoriteCalendar(FavoriteCalendarModel model);
@@ -42,6 +43,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetCurrentPackageDetails(string UserId, string CompanyCode, string CalendarCode, string ServiceId, CommonTimeObject TimeRange);
 
         Task<AddUpdateDelete> GetAllEnrolledCalendarsData(string CompanyCode, string UserEmail, string filterDate = null, bool IsCustomInFilter = false);
+        Task<AddUpdateDelete> GetAlreadyEnrolledEvents(string CompanyCode, string UserEmail, string filterDate);
         Task<AddUpdateDelete> GetFullCalendarEvents(string StartDate, string EndDate, string UserEmail);
         Task<AddUpdateDelete> BookingServiceEvent(RequestEventViewModel eventModal, string userName);
         Task<AddUpdateDelete> CreateDynamicFormEntry(List<IDictionary<string, string>> data, string formId, string UserId, string CalendarCode);

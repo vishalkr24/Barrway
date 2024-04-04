@@ -1598,7 +1598,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 contentType: "application/json",
                 data: JSON.stringify(param),
                 success: function (response) {
-                    //$.unblockUI();
+                    debugger;
                     var calenderData = changeResourceIDByYSelection((response.events != undefined) ? response.events : response.events);
                     if (calenderData != undefined) {
                         if (formDetailsDataInfo.searchByDate != undefined) {
@@ -1648,7 +1648,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         selectable: (calendarDetails.CALENDAR_TYPE == "3" && calendarDetails.CALENDAR_CATEGORY_ID == "4") ? true : false,
         select: function (startDate, endDate, jsEvent, view, resource) {
 
-            //debugger;
+            debugger;
             var selectedStartDate = startDate;
             var selectedEndDate = endDate || startDate; // If end date is not provided (e.g., single day selection), use start date
 

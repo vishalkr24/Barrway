@@ -974,8 +974,9 @@
 
                     </div>
                     <div class="div-flex div-list">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary public-primary" ng-if="selectEventDetails.isEnroll" ng-click="enrollPublicUser()">Enroll</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary public-primary" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'N'" ng-click="enrollPublicUser()">Enroll</button>
+                        <button type="button" class="btn btn-primary public-primary" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y'" ng-click="cancelPublicUserBooking()">Cancel Booking</button>
                     </div>
                 </div>
                 @*<div class="modal-footer">
@@ -1353,6 +1354,69 @@
 
                     }
                 })
+
+
+            }
+
+            $scope.cancelPublicUserBooking = function () {
+                console.log($scope.selectEventDetails);
+                
+                swal({
+                    title: "Are you sure to cancel the selected booking?",
+                    content: wrapper,
+                    buttons: {
+                        cancel: "No",
+                        confirm: "Yes"
+                    }
+
+                }).then(function (response) {
+                    if (response) {
+                        showLoader();
+
+                        var obj = {
+                            USER_ID: "",
+                            RESOURCE_NAME: eventData.customTitleSplit[0],
+                            ACTIVITY_NAME: eventData.customTitleSplit[1],
+                            FormGroupKey: $scope.selectEventDetails.formGroupKey,
+                            participant: {
+                                DESCRIPTION: String(eventData.description),
+                                COMPANY_CODE: eventData.COMPANY_CODE,
+                                CALENDAR_CODE: eventData.CALENDAR_CODE
+                            },
+                            transaction: {
+                                SLOT: eventData.Id,
+                                RESOURCE: eventData.resourceId,
+                                ACTIVITY: eventData.activities,
+                                STUDENT: "",
+                                REMARKS: "",
+                                FEES: "",
+                                ATTENDANCE: "NOT-MARKED",
+                                COMPANY_CODE: eventData.COMPANY_CODE,
+                                CALENDAR_CODE: eventData.CALENDAR_CODE
+                            }
+                        }
+
+                        $.ajax({
+                            url: "/UserAdmin/CancelPublicUserBooking",
+                            type: "POST",
+                            data: obj,
+                            success: function (data) {
+                                hideLoader();
+
+                                swal({
+                                    title: (data.Status) ? "Success" : "Error",
+                                    text: data.Message,
+                                    icon: (data.Status) ? "success" : "error",
+                                    button: "Okay"
+                                });
+
+                            },
+                            error: function () {
+                                swal({ type: 'error', showCloseButton: true, html: "something went wrong!" });
+                            }
+                        })
+                    }
+                });
 
 
             }
