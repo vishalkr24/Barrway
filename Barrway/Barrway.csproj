@@ -3078,6 +3078,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\MarketplaceScripts\AllCalanders.js" />
     <Content Include="Scripts\MarketplaceScripts\Subcategory.js" />
     <Content Include="Scripts\MarketplaceScripts\companyCalendarScript.js" />
     <Content Include="Scripts\MarketplaceScripts\CompanyPhotoAlbum.js" />
@@ -3297,7 +3298,7 @@
     <Content Include="Views\Account\VerifiyEmailaddress.cshtml" />
     <Content Include="Views\MarketPlace\CalanderYearView.cshtml" />
     <Content Include="Views\MarketPlace\BlogDetails.cshtml" />
-    <Content Include="Views\MarketPlace\Category.cshtml" />
+    <Content Include="Views\MarketPlace\AllCalanders.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

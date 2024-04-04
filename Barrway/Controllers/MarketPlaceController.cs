@@ -201,10 +201,45 @@ namespace Barrway.Controllers
 
         }
 
-        public async Task<ActionResult> Category()
+        public async Task<ActionResult> AllCalanders()
         {
             return View();
         }
+
+
+        public async Task<ActionResult> GetAllCalenderByCategory(CalandersPagination data)
+        {
+            try
+            {
+                var transactionData = await masterService.AllCalandersByCategory(data);
+                var transactionList = transactionData.Data;
+                double last_page = 0;
+                if (transactionList != null && transactionList.Count > 0)
+                {
+                    var singData = transactionList[0];
+                    var total_records = Convert.ToInt32(singData["total_records"].ToString());
+                    var size = Convert.ToInt32(singData["size"].ToString());
+                    double paging = (double)total_records / size;
+
+                    if (total_records == size)
+                    {
+                        last_page = Math.Floor(paging);
+                    }
+                    else
+                    {
+                        last_page = Math.Floor(paging) + 1;
+                    }
+                }
+                return Json(new { data = transactionList, last_page }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ex.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+
 
         public async Task<ActionResult> Subcategory()
         {
