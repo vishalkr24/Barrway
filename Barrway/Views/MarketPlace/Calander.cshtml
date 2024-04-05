@@ -63,7 +63,7 @@
             .fc-event-container .fc-timeline-event .fc-content .fc-title,
             .fc-event-container .fc-time-grid-event .fc-content .fc-title,
             .fc-event-container .fc-day-grid-event .fc-content .fc-title {
-                font-size: 16px;
+                font-size: 14px;
                 font-family: Arial;
             }
 
@@ -318,7 +318,7 @@
             }
 
         #vertical-resource-view .fc table {
-            table-layout: auto;
+            table-layout: fixed;
         }
 
         #vertical-resource-view .fc-view > table {
@@ -671,6 +671,16 @@
             min-width: 120px;
             border-radius: 100px;
         }
+        .info-select{
+            font-size:16px;
+        }
+        /*div#vertical-resource-view .calendar .fc-event {
+            right: calc(3% - 0px) !important;
+        }*/
+        div#vertical-resource-view .fc-time-grid .fc-event, .fc-time-grid .fc-bgevent {
+            margin-top:1px;
+        }
+
     </style>
 }
 
@@ -809,7 +819,7 @@
                         <div class="col-md-3" id="div-calendar-service" style="display:none">
                             <div class="schedule-drop">
                                 <div class="form-group">
-                                    <label for="service">@Resource.Service</label>
+                                    <label for="service">@Resource.Service <span class="info-select" title="Service info" onclick="GetAdvancaePopupForMasterData(2303,'Service Master')"><i class="fa fa-info-circle"></i></span></label>
 
                                     <select class="form-control" id="calendar-service">
                                     </select>
@@ -820,7 +830,7 @@
                         <div class="col-md-3" id="div-calendar-service-Provider" style="display:none">
                             <div class="schedule-drop">
                                 <div class="form-group">
-                                    <label for="service">@Resource.Service_Provider_Master</label>
+                                    <label for="service">@Resource.Service_Provider_Master <span class="info-select" title="Service info" onclick="GetAdvancaePopupForMasterData(2304,'Service Provider Master')"><i class="fa fa-info-circle"></i></span></label>
 
                                     <select class="form-control" id="calendar-service-Provider">
                                     </select>
@@ -831,7 +841,7 @@
                         <div class="col-md-3" id="div-calendar-service-Location" style="display:none">
                             <div class="schedule-drop">
                                 <div class="form-group">
-                                    <label for="service">@Resource.Location_Master</label>
+                                    <label for="service">@Resource.Location_Master <span class="info-select" title="Service info" onclick="GetAdvancaePopupForMasterData(2306,'Location Master')"><i class="fa fa-info-circle"></i></span></label>
 
                                     <select class="form-control" id="calendar-service-Location">
                                     </select>
@@ -852,7 +862,6 @@
                                     <button id="btn-mark-fav"><img src="~/assets/marketplace/image/starg.png">favorite</button>
                                     @*<button id="btn-unmark" onclick="removeAsFavorite('@Model.COMPANY_CODE')"><img src="~/assets/marketplace/image/star.png"> @Resource.Remove_as_favorite</button>*@
                                 }
-
                             </div>
                         </div>
                     </div>
@@ -924,11 +933,11 @@
                                 <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
                                     <div style="display:block" class="titleContainer">
                                         @*<p class="title1" style="font-size:16px;font-weight:600">
-                        {{d.dropdownListData.title}}
-                        <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
-                        <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
-                        <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
-                    </p>*@
+                                                {{d.dropdownListData.title}}
+                                                <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
+                                                <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
+                                                <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
+                                            </p>*@
                                         <p class="title1" style="font-weight:bold; font-size: 16px;"> {{d.formTitle}}</p>
                                     </div>
                                 </div>
@@ -1140,6 +1149,21 @@
                     @*<div style="display: flex; justify-content: flex-end; margin-top: 24px;">
                             <button class="btn btn-default" style="margin-right: 12px" data-bs-dismiss="modal">Cancel</button> <button class="btn btn-danger" style="background: #E2476C;" ng-click="createDynamicFormEntry()">Confirm booking</button>
                         </div>*@
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="info-master-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel4" aria-hidden="true">
+        <div class="modal-dialog modal-lg" style="width: 100%;" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Fill your details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="padding-top: 0px;">
+                    <div id="info-master-div"></div>
                 </div>
             </div>
 
@@ -2060,7 +2084,7 @@
                             }
                         }).then(function (value) {
                             if (value) {
-                                window.location.href = '/Account/Login?returnUrl=/Marketplace/Calander?' + window.location.href.split('?')[1].replace('&', '$') + '';
+                                window.location.href = '/Account/BusinessLogin?returnUrl=/Marketplace/Calander?' + window.location.href.split('?')[1].replace('&', '$') + '';
                             }
                         });
 

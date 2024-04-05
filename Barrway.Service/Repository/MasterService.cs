@@ -1174,6 +1174,20 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
             }
         }
 
+        public async Task<AddUpdateDelete> GetAllFeaturedCompany()
+        {
+            try
+            {
+                string sqlQuery = $@"select Id,COMPANY_NAME_ENGLISH +'|'+COMPANY_NAME_CHINESE AS COMPANY_NAME,COMPANY_NAME_ENGLISH,COMPANY_BANNER_PATH,COMPANY_LOGO_PATH,COMPANY_BANNER_NAME,TAGS  from BUSINESS_COMPANY_MASTER_1924 WHERE IS_FEATURED='Y'";
+                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+                return new AddUpdateDelete() { Status = true, Data = result };
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
         public async Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetAllFeaturedCompany(GenerateDynamicFormData data)
         {
             try
@@ -1403,39 +1417,50 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
 
         public async Task<AddUpdateDelete> AllCalandersByCategory(CalandersPagination data)
         {
-
-            int PageSize = data.size > 0 ? data.size : 20;
-            int PageNumber = data.page > 0 ? data.page : 1;
-
-            string filter = "";
-
-            if (!string.IsNullOrEmpty(data.CategoryId))
+            try
             {
-                filter += "and calendar.CALENDAR_COMMON_CATEGORY_ID = '" + data.CategoryId + "'";
-            }
+                int PageSize = data.size > 0 ? data.size : 20;
+                int PageNumber = data.page > 0 ? data.page : 1;
+
+                string filter = "";
+                string Short = "";
+
+                if (!string.IsNullOrEmpty(data.CategoryId))
+                {
+                    filter += "and calendar.CALENDAR_COMMON_CATEGORY_ID = '" + data.CategoryId + "'";
+                }
 
 
-            if (!string.IsNullOrEmpty(data.SubCategoryId))
-            {
-                filter += "and CALENDAR_SUB_CATEGORY_ID = '" + data.SubCategoryId + "'";
-            }
+                if (!string.IsNullOrEmpty(data.SubCategoryId))
+                {
+                    filter += "and calendar.CALENDAR_SUB_CATEGORY_ID = '" + data.SubCategoryId + "'";
+                }
+
+                if (!string.IsNullOrEmpty(data.Short))
+                {
+                    if (data.Short == "All")
+                    {
+                        Short += "ORDER BY  [SEQUENCE] asc";
+                    }
+
+                    if (data.Short == "Featured")
+                    {
+                        Short += "ORDER BY [IS_FEATURED] DESC";
+                    }
 
 
-            string query = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
-                                SELECT calendar.[Id]
-                              , calendar.[created_at]
-                              ,calendar.[updated_at]
-                              ,calendar.[created_by]
-                              ,calendar.[updated_by]
-                              ,[CALENDAR_NAME]
-                              ,[CALENDAR_PHOTO_NAME]
-                              ,[CALENDAR_PHOTO_PATH]
-                              ,[IS_VISIBLE]
-                              ,calendar.[COUNTRY_ID]
-                              ,calendar.[CITY_ID]
-                              ,calendar.[DISTRICT_ID]
-                              ,calendar.[CALENDAR_CATEGORY_ID]
-                              ,calendar.[CALENDAR_COMMON_CATEGORY_ID]
+
+                }
+                else
+                {
+                    Short += "ORDER BY  [SEQUENCE] asc";
+                }
+
+
+                string query = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+                                SELECT calendar.[Id], calendar.[created_at],calendar.[updated_at],calendar.[created_by],calendar.[updated_by]
+                              ,[CALENDAR_NAME],[CALENDAR_PHOTO_NAME],[CALENDAR_PHOTO_PATH],[IS_VISIBLE],calendar.[COUNTRY_ID],calendar.[CITY_ID]
+                              ,calendar.[DISTRICT_ID],calendar.[CALENDAR_CATEGORY_ID],calendar.[CALENDAR_COMMON_CATEGORY_ID]
                               ,calendar.[CALENDAR_SUB_CATEGORY_ID]
                               ,calendar.[CALENDAR_TYPE]
                               ,calendar.[COMPANY_CODE]
@@ -1452,14 +1477,45 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                               ,[COMPANY_BANNER_PATH]
 							  ,[IS_SEARCHABLE_IN_MARKETPLACE]
                               ,company.PAGE_URL
-                              ,calendar.IS_FEATURED
+                              ,calendar.IS_FEATURED,calendar.[SEQUENCE]
                          FROM[dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                         join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendar.CALENDAR_SUB_CATEGORY_ID
                          join CALENDAR_COMMON_CATEGORY_1978 category on category.Id = calendar.CALENDAR_COMMON_CATEGORY_ID
                          join DISTRICT_MASTER_1928 district on district.Id = calendar.DISTRICT_ID
                          join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
                          where company.IS_SEARCHABLE_IN_MARKETPLACE = 'Y' and company.IS_ACTIVE = 'Y' and company.IS_TEMPLATE = 'N' and calendar.CALENDAR_USE_TYPE = 'PUBLIC' {(!string.IsNullOrEmpty(filter) ? filter : "")}  
-                                )Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY created_at desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+                                )Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  {Short} OFFSET  @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+
+                List<IDictionary<string, object>> companySubCategoryResult = await sqlFunction.ExecuteSqlQuery(query);
+
+                if (companySubCategoryResult.Count > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = companySubCategoryResult.ToList() };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+            }
+            catch(Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+
+        }
+
+
+        public async Task<AddUpdateDelete> GetHeaderDetails(CalandersPagination data)
+        {
+            string query = $@"";
+            if (!string.IsNullOrEmpty(data.CategoryId))
+            {
+                query += "select Id,CALENDAR_CATEGORY_NAME AS Heading from CALENDAR_CATEGORY_MASTER_1929 WHERE Id="+data.CategoryId+"";
+            }
+            if (!string.IsNullOrEmpty(data.SubCategoryId))
+            {
+                query += "SELECT Id,CALENDAR_SUB_CATEGORY_NAME AS Heading FROM CALENDAR_SUB_CATEGORY_MASTER_1930 WHERE Id=" + data.SubCategoryId + "";
+            }
 
             List<IDictionary<string, object>> companySubCategoryResult = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -1472,9 +1528,6 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
             }
         }
-
-
-
 
 
 

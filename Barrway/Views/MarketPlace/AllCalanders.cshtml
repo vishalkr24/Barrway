@@ -3,6 +3,14 @@
     ViewBag.Title = "AllCalanders";
     Layout = "~/Views/Shared/_LayoutMarketPlace.cshtml";
 }
+<style>
+    .new-clr-tag {
+        background-color: #e2476c;
+        color: white;
+        border-radius: 3px;
+        padding: 3px;
+    }
+</style>
 <section class="bredcrum">
     <div class="container">
         <div class="row">
@@ -27,7 +35,7 @@
     </div>
 </section>
 <!-- heading -->
-<section class="filser">
+<section class="filser custome-filser">
     <div class="container">
         <div class="row">
             <div class="col-md-3">
@@ -35,15 +43,16 @@
                     <div class="form-group">
                         <label for="sel1">@Resource.Sort</label>
                         <select class="form-control" id="filter-category-master">
-                            <option value="All" selected="">All</option>
                             <option value="Featured" selected="">Featured</option>
-                            
+                            <option value="All" selected="">All</option>
+
                         </select>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="filter">                    
+                
+                <div class="filter mt-25">
                     <button class="filter-btn"><img src="~/assets/marketplace/image/filter.png" /> @Resource.Filter</button>
                 </div>
             </div>
@@ -62,110 +71,10 @@
                 <div class="inner-content">
                     <div class="row">
                         <div class="col-md-6" id="row1">
-                            <div class="half">
-                                <div class="animated-background">
-                                    <div class="background-masker header-top"></div>
-                                    <div class="background-masker header-left"></div>
-                                    <div class="background-masker header-right"></div>
-                                    <div class="background-masker header-bottom"></div>
-                                    <div class="background-masker subheader-left"></div>
-                                    <div class="background-masker subheader-right"></div>
-                                    <div class="background-masker subheader-bottom"></div>
-                                    <div class="background-masker content-top"></div>
-                                    <div class="background-masker content-first-end"></div>
-                                    <div class="background-masker content-second-line"></div>
-                                    <div class="background-masker content-second-end"></div>
-                                    <div class="background-masker content-third-line"></div>
-                                    <div class="background-masker content-third-end"></div>
-                                </div>
-                            </div>
-                            <div class="half">
-                                <div class="animated-background">
-                                    <div class="background-masker header-top"></div>
-                                    <div class="background-masker header-left"></div>
-                                    <div class="background-masker header-right"></div>
-                                    <div class="background-masker header-bottom"></div>
-                                    <div class="background-masker subheader-left"></div>
-                                    <div class="background-masker subheader-right"></div>
-                                    <div class="background-masker subheader-bottom"></div>
-                                    <div class="background-masker content-top"></div>
-                                    <div class="background-masker content-first-end"></div>
-                                    <div class="background-masker content-second-line"></div>
-                                    <div class="background-masker content-second-end"></div>
-                                    <div class="background-masker content-third-line"></div>
-                                    <div class="background-masker content-third-end"></div>
-                                </div>
-                            </div>
-                            <div class="half">
-                                <div class="animated-background">
-                                    <div class="background-masker header-top"></div>
-                                    <div class="background-masker header-left"></div>
-                                    <div class="background-masker header-right"></div>
-                                    <div class="background-masker header-bottom"></div>
-                                    <div class="background-masker subheader-left"></div>
-                                    <div class="background-masker subheader-right"></div>
-                                    <div class="background-masker subheader-bottom"></div>
-                                    <div class="background-masker content-top"></div>
-                                    <div class="background-masker content-first-end"></div>
-                                    <div class="background-masker content-second-line"></div>
-                                    <div class="background-masker content-second-end"></div>
-                                    <div class="background-masker content-third-line"></div>
-                                    <div class="background-masker content-third-end"></div>
-                                </div>
-                            </div>
+                           
                         </div>
                         <div class="col-md-6" id="row2">
-                            <div class="half">
-                                <div class="animated-background">
-                                    <div class="background-masker header-top"></div>
-                                    <div class="background-masker header-left"></div>
-                                    <div class="background-masker header-right"></div>
-                                    <div class="background-masker header-bottom"></div>
-                                    <div class="background-masker subheader-left"></div>
-                                    <div class="background-masker subheader-right"></div>
-                                    <div class="background-masker subheader-bottom"></div>
-                                    <div class="background-masker content-top"></div>
-                                    <div class="background-masker content-first-end"></div>
-                                    <div class="background-masker content-second-line"></div>
-                                    <div class="background-masker content-second-end"></div>
-                                    <div class="background-masker content-third-line"></div>
-                                    <div class="background-masker content-third-end"></div>
-                                </div>
-                            </div>
-                            <div class="half">
-                                <div class="animated-background">
-                                    <div class="background-masker header-top"></div>
-                                    <div class="background-masker header-left"></div>
-                                    <div class="background-masker header-right"></div>
-                                    <div class="background-masker header-bottom"></div>
-                                    <div class="background-masker subheader-left"></div>
-                                    <div class="background-masker subheader-right"></div>
-                                    <div class="background-masker subheader-bottom"></div>
-                                    <div class="background-masker content-top"></div>
-                                    <div class="background-masker content-first-end"></div>
-                                    <div class="background-masker content-second-line"></div>
-                                    <div class="background-masker content-second-end"></div>
-                                    <div class="background-masker content-third-line"></div>
-                                    <div class="background-masker content-third-end"></div>
-                                </div>
-                            </div>
-                            <div class="half">
-                                <div class="animated-background">
-                                    <div class="background-masker header-top"></div>
-                                    <div class="background-masker header-left"></div>
-                                    <div class="background-masker header-right"></div>
-                                    <div class="background-masker header-bottom"></div>
-                                    <div class="background-masker subheader-left"></div>
-                                    <div class="background-masker subheader-right"></div>
-                                    <div class="background-masker subheader-bottom"></div>
-                                    <div class="background-masker content-top"></div>
-                                    <div class="background-masker content-first-end"></div>
-                                    <div class="background-masker content-second-line"></div>
-                                    <div class="background-masker content-second-end"></div>
-                                    <div class="background-masker content-third-line"></div>
-                                    <div class="background-masker content-third-end"></div>
-                                </div>
-                            </div>
+                           
 
                         </div>
 

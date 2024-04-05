@@ -211,7 +211,8 @@ namespace Barrway.Controllers
         {
             try
             {
-                var transactionData = await masterService.AllCalandersByCategory(data);
+                var Heading = await masterService.GetHeaderDetails(data);
+                var transactionData = await masterService.AllCalandersByCategory(data);                
                 var transactionList = transactionData.Data;
                 double last_page = 0;
                 if (transactionList != null && transactionList.Count > 0)
@@ -230,7 +231,7 @@ namespace Barrway.Controllers
                         last_page = Math.Floor(paging) + 1;
                     }
                 }
-                return Json(new { data = transactionList, last_page }, JsonRequestBehavior.AllowGet);
+                return Json(new { data = transactionList, last_page , Heading }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -614,7 +615,7 @@ namespace Barrway.Controllers
 
                     if (User.Identity.IsAuthenticated)
                     {
-                        if (UserIdentity.Role == "PUBLIC_USER")
+                        if (UserIdentity.Role == "PUBLIC_USER" || UserIdentity.Role== "GENERAL_USER")
                         {
                             // check if calendar is a favorite
                             var calendarFavCheck = await publicUserService.CheckSingleMyFavoriteCalendar(User.Identity.Name, CalendarCode);
@@ -723,7 +724,7 @@ namespace Barrway.Controllers
 
                     if (User.Identity.IsAuthenticated)
                     {
-                        if (UserIdentity.Role == "PUBLIC_USER")
+                        if (UserIdentity.Role == "PUBLIC_USER" || UserIdentity.Role == "GENERAL_USER")
                         {
                             // check if calendar is a favorite
                             var calendarFavCheck = await publicUserService.CheckSingleMyFavoriteCalendar(User.Identity.Name, CalendarCode);
