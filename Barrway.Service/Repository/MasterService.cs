@@ -1127,24 +1127,29 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
             {
                 List<List<IDictionary<string, object>>> finalResult = new List<List<IDictionary<string, object>>>();
 
-                string sqlQuery = $@"select f.*,cmp.COMPANY_NAME_ENGLISH from BUSINESS_CALENDAR_MASTER_1925 f join BUSINESS_COMPANY_MASTER_1924 cmp on cmp.COMPANY_CODE = f.COMPANY_CODE where cmp.IS_TEMPLATE = 'N' and f.CALENDAR_NAME like '%{keyword}%'";
+                string sqlQuery = $@"select f.Id,f.CALENDAR_NAME,f.CALENDAR_PHOTO_NAME,f.CALENDAR_PHOTO_PATH,f.COMPANY_CODE,f.TAGS,cmp.COMPANY_NAME_ENGLISH from BUSINESS_CALENDAR_MASTER_1925 f join BUSINESS_COMPANY_MASTER_1924 cmp on cmp.COMPANY_CODE = f.COMPANY_CODE where cmp.IS_TEMPLATE = 'N' and f.CALENDAR_NAME like '%{keyword}%' OR f.TAGS like '%{keyword}%' ";
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 finalResult.Add(result);
 
-                sqlQuery = $@"select * from BUSINESS_COMPANY_MASTER_1924 f where f.IS_TEMPLATE = 'N' and f.COMPANY_NAME_ENGLISH like '%{keyword}%' or f.COMPANY_NAME_ENGLISH like '%{keyword}%'";
+                sqlQuery = $@"select * from BUSINESS_COMPANY_MASTER_1924 f where f.IS_TEMPLATE = 'N' and f.COMPANY_NAME_ENGLISH like '%{keyword}%' or f.COMPANY_NAME_ENGLISH like '%{keyword}%' OR TAGS LIKE '%{keyword}%' ";
                 result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 finalResult.Add(result);
 
-                sqlQuery = $@"select f.*, cmp.COMPANY_NAME_ENGLISH, cal.CALENDAR_NAME, cal.CALENDAR_PHOTO_PATH from SERVICE_MASTER_1933 f 
-                                join BUSINESS_COMPANY_MASTER_1924 cmp on cmp.COMPANY_CODE = f.COMPANY_CODE
-                                join BUSINESS_CALENDAR_MASTER_1925 cal on cal.CALENDAR_CODE = f.CALENDAR_CODE
-                                where f.ACTIVITY_NAME like '%{keyword}%' and cmp.IS_TEMPLATE = 'N'";
+                sqlQuery = $@"select B.Id,B.BLOG_TITLE,B.IMAGE,B.TAG,BC.BLOG_CATEGORY from BLOG_1980 B inner join BLOG_CATEGORY_1981 BC on   B.BLOG_CATEGORY=BC.Id where B.BLOG_TITLE like '%{keyword}%' or B.TAG like '%{keyword}%' ";
                 result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 finalResult.Add(result);
 
-                sqlQuery = $@"select * from CALENDAR_SUB_CATEGORY_MASTER_1930 f where f.CALENDAR_SUB_CATEGORY_NAME like '%{keyword}%'";
-                result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
-                finalResult.Add(result);
+
+                //sqlQuery = $@"select f.*, cmp.COMPANY_NAME_ENGLISH, cal.CALENDAR_NAME, cal.CALENDAR_PHOTO_PATH from SERVICE_MASTER_1933 f 
+                //                join BUSINESS_COMPANY_MASTER_1924 cmp on cmp.COMPANY_CODE = f.COMPANY_CODE
+                //                join BUSINESS_CALENDAR_MASTER_1925 cal on cal.CALENDAR_CODE = f.CALENDAR_CODE
+                //                where f.ACTIVITY_NAME like '%{keyword}%' and cmp.IS_TEMPLATE = 'N'";
+                //result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+                //finalResult.Add(result);
+
+                //sqlQuery = $@"select * from CALENDAR_SUB_CATEGORY_MASTER_1930 f where f.CALENDAR_SUB_CATEGORY_NAME like '%{keyword}%'";
+                //result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+                //finalResult.Add(result);
 
                 return new AddUpdateDelete() { Status = true, Data = finalResult };
 
@@ -1154,6 +1159,61 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 return new AddUpdateDelete() { Status = false, Message = ex.Message };
             }
         }
+
+
+        public async Task<AddUpdateDelete> GetServiceList(string keyword)
+        {
+            try
+            {
+
+
+                string sqlQuery = $@"select f.Id,f.CALENDAR_NAME,f.CALENDAR_PHOTO_NAME,f.CALENDAR_PHOTO_PATH,f.COMPANY_CODE,f.TAGS,cmp.COMPANY_NAME_ENGLISH from BUSINESS_CALENDAR_MASTER_1925 f join BUSINESS_COMPANY_MASTER_1924 cmp on cmp.COMPANY_CODE = f.COMPANY_CODE where cmp.IS_TEMPLATE = 'N' and f.CALENDAR_NAME like '%{keyword}%' OR f.TAGS like '%{keyword}%' ";
+                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+                return new AddUpdateDelete() { Status = true, Data = result };
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+
+        public async Task<AddUpdateDelete> GetCompanyListt(string keyword)
+        {
+            try
+            {
+
+
+                string sqlQuery = $@"select * from BUSINESS_COMPANY_MASTER_1924 f where f.IS_TEMPLATE = 'N' and f.COMPANY_NAME_ENGLISH like '%{keyword}%' or f.COMPANY_NAME_ENGLISH like '%{keyword}%' OR TAGS LIKE '%{keyword}%'";
+                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+                return new AddUpdateDelete() { Status = true, Data = result };
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetBloagListt(string keyword)
+        {
+            try
+            {
+                string sqlQuery = $@"select B.Id,B.BLOG_TITLE,B.IMAGE,B.TAG,BC.BLOG_CATEGORY from BLOG_1980 B inner join BLOG_CATEGORY_1981 BC on   B.BLOG_CATEGORY=BC.Id where B.BLOG_TITLE like '%{keyword}%' or B.TAG like '%{keyword}%'";
+                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+                return new AddUpdateDelete() { Status = true, Data = result };
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+
 
 
         public async Task<AddUpdateDelete> GetAllSubcategory()

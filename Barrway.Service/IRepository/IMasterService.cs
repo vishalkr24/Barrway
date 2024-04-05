@@ -46,5 +46,9 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetAllFeaturedCompany();
         //GetAllFeaturedCompany_SubCategoryWise(Pagination data)
 
+        Task<AddUpdateDelete> GetServiceList(string keyword);
+        Task<AddUpdateDelete> GetCompanyListt(string keyword);
+        Task<AddUpdateDelete> GetBloagListt(string keyword);
+
     }
 }
