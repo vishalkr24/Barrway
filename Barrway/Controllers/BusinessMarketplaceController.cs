@@ -32,18 +32,7 @@ namespace Barrway.Controllers
             FeaturedCompanyList featuredCompany = new FeaturedCompanyList();
             var transactionData = await masterService.GetAllFeaturedCompany();            
             var FCompanys = JsonConvert.SerializeObject(transactionData.Data);
-            featuredCompany.FeaturedCompanys = JsonConvert.DeserializeObject<List<FeaturedCompany>>(FCompanys);
-
-            //for (int i = 0; i < featuredCompany.FeaturedCompanys.Count(); i++)
-            //{
-            //    var JsonTags = featuredCompany.FeaturedCompanys[i].TAG;
-            //    if (JsonTags != null)
-            //    {
-            //        List<TagsObject> Tagobjects = JsonConvert.DeserializeObject<List<TagsObject>>(JsonTags);
-            //        featuredCompany.FeaturedCompanys[i].TAGs = Tagobjects;
-            //    }
-            //}
-
+            featuredCompany.FeaturedCompanys = JsonConvert.DeserializeObject<List<FeaturedCompany>>(FCompanys);  
             featuredCompany.FeaturedCompanys.ForEach(company =>
             {
                 var JsonTags = company.TAGS;

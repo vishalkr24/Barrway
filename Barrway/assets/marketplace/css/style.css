@@ -552,6 +552,7 @@ h4.media-heading {
 
 .media {
     margin-bottom: 25px;
+    position:relative;
 }
 
 .media-body p {
@@ -1606,10 +1607,19 @@ section.bottom-nav .com-det {
 
 .custome-filser .inner-content .media-left img {
     height: 129px;
+    max-width: 200px;
 }
 .mt-25 {
     margin-top: 25px;
 }
 .custome-filser {
     min-height: 60.6vh;
+}
+
+div#myNavbar .navbar-nav li.rl ul a:hover {
+    color: #e2476c !important;
+}
+
+.dropdown-menu {
+    min-width: 156px !important ;
 }
