@@ -138,13 +138,13 @@ function SetAllCalanders(pageNumber, Short) {
                     }
                     
                     $("#row1").append(`<div class="media" style="cursor:pointer;" onclick="window.location.href = '/Marketplace/CompanyDetail?CompanyCode=${response.data[i].COMPANY_CODE}&CalendarCode=${response.data[i].CALENDAR_CODE}'">
-                               
+                                ${feturedSpan_html}
                                 <div class="media-left">
                                         <img src="${(ResponceData[i].CALENDAR_PHOTO_PATH == "") ? "../assets/marketplace/image/pro.png" : ResponceData[i].CALENDAR_PHOTO_PATH.replaceAll("~", "..")}" onerror="this.src='../assets/marketplace/image/pro.png'">
                                    
                                 </div>
                                 <div class="media-body">
-                                    ${ feturedSpan_html }
+                                    
                                     <h4 class="media-heading">${ResponceData[i].COMPANY_NAME_ENGLISH}</h4>
                                     <p><b>${ResponceData[i].CALENDAR_NAME}</b></p>
                                     <p style="height: 48px; overflow: hidden;">${ResponceData[i].DISTRICT_NAME}</p>
@@ -154,13 +154,14 @@ function SetAllCalanders(pageNumber, Short) {
                 } else {
                     
                     $("#row2").append(`<div class="media" style="cursor:pointer;" onclick="window.location.href = '/Marketplace/CompanyDetail?CompanyCode=${response.data[i].COMPANY_CODE}&CalendarCode=${response.data[i].CALENDAR_CODE}'">
-                                       
+                                        ${feturedSpan_html}
                                     <div class="media-left">
+
                                         <img src="${(ResponceData[i].CALENDAR_PHOTO_PATH == "") ? "../assets/marketplace/image/pro.png" : ResponceData[i].CALENDAR_PHOTO_PATH.replaceAll("~", "..")}" onerror="this.src='../assets/marketplace/image/pro.png'">
                                    
                                 </div>
                                 <div class="media-body">
-                                    ${ feturedSpan_html }
+                                   
                                     <div class="clr-tag new-clr-tag"><span>Featured</span></div>
                                     <h4 class="media-heading">${ResponceData[i].COMPANY_NAME_ENGLISH}</h4>
                                     <p><b>${ResponceData[i].CALENDAR_NAME}</b></p>
