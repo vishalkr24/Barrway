@@ -139,6 +139,7 @@
     <Compile Include="PublicModels\PublicUserProfileModel.cs" />
     <Compile Include="PublicModels\TransactionMasterModel.cs" />
     <Compile Include="UserAdminModels\CalendarEnrollModel.cs" />
+    <Compile Include="UserAdminModels\EventDataListModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1139,13 +1139,28 @@
 
 
                         <div class="{{createEventDetails.customDate}}">{{createEventDetails.customDate}}</div>
-                        <div>{{createEventDetails.customTime}}</div>
+                        <!--<div>{{createEventDetails.customTime}}</div>-->
+                    <div>{{createEventDetails.startTimeFormat}} - {{createEventDetails.endTimeFormat}}</div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <input type="time" class="form-control" onchange="angular.element(this).scope().changeStartEndTime('start')" id="createEventDetails_startTime" />
+                            </div>
+                            <div class="col-6">
+                                <input type="time" class="form-control" onchange="angular.element(this).scope().changeStartEndTime('end')" id="createEventDetails_endTime" />
+                            </div>
+                            <div class="col-12">
+                                <p style="color:red">{{timeerrmsg}}</p>
+                            </div>
+                        </div>
+
 
 
 
                         <input value="{{createEventDetails.Id}}" id="createnewtag-inputHidden" type="hidden">
 
-                        <label class="pr-2" style="font-weight: 400;" ng-bind-html="createEventDetails.description | safeHtml">
+                        <label class="pr-2" style="font-weight: 400;">
+                            {{translation.Description}}
                         </label>
 
                         <!--<input id="newtag-inputnew" type="text" value="{{createEventDetails.tags}}" placeholder="Add tags">-->
@@ -1182,7 +1197,7 @@
 
 
                             <div class="form-group borderSet col-sm-6 border-IS_UPLOAD_REQUIRED" style="padding:0!important">
-                                <div class="col-sm-12"><label style="display: block;text-align: left!important" class="pull-left" for="IS_UPLOAD_REQUIRED">IS UPLOAD REQUIRED</label><br/><div class="form-check"> <label class="form-check-label" for="IS_UPLOAD_REQUIRED0"> <input type="radio" class="form-check-input" id="IS_UPLOAD_REQUIRED0" ng-model="createEventDetails.IS_UPLOAD_REQUIRED" name="IS_UPLOAD_REQUIRED" value="Y">  Y</label></div><div class="form-check"> <label class="form-check-label" for="IS_UPLOAD_REQUIRED1"><input ng-model="createEventDetails.IS_UPLOAD_REQUIRED" type="radio" class="form-check-input" id="IS_UPLOAD_REQUIRED1" name="IS_UPLOAD_REQUIRED" value="N" checked>   N</label></div></div>
+                                <div class="col-sm-12"><label style="display: block;text-align: left!important" class="pull-left" for="IS_UPLOAD_REQUIRED">IS UPLOAD REQUIRED</label><br /><div class="form-check"> <label class="form-check-label" for="IS_UPLOAD_REQUIRED0"> <input type="radio" class="form-check-input" id="IS_UPLOAD_REQUIRED0" ng-model="createEventDetails.IS_UPLOAD_REQUIRED" name="IS_UPLOAD_REQUIRED" value="Y">  Y</label></div><div class="form-check"> <label class="form-check-label" for="IS_UPLOAD_REQUIRED1"><input ng-model="createEventDetails.IS_UPLOAD_REQUIRED" type="radio" class="form-check-input" id="IS_UPLOAD_REQUIRED1" name="IS_UPLOAD_REQUIRED" value="N" checked>   N</label></div></div>
                             </div>
 
                             <div class="form-group borderSet col-sm-6 border-UPLOAD_TIME" ng-if="createEventDetails.IS_UPLOAD_REQUIRED=='Y'" style="padding:0!important">
@@ -1248,8 +1263,31 @@
                         Date & Time
                     </div>
                     <div class="event-details">
-                        <div ng-if="!selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}} ({{selectEventDetails.customTime}})</div>
+                        <div ng-if="!selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}} ({{selectEventDetails.startTimeFormat}} - {{selectEventDetails.endTimeFormat}})
+                        
+                        <button class="btn btn-link" ng-click="selectEventDetails.isEdit=!selectEventDetails.isEdit">
+                            
+                            <i ng-class="{'fa-pencil':!selectEventDetails.isEdit,'fa-times':selectEventDetails.isEdit}" class="fa"></i></button>
+                        </div>
                         <div ng-if="selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
+                        <div ng-if="!selectEventDetails.allDay">
+                            <div class="row" ng-show="selectEventDetails.isEdit">
+                                <div class="col-6">
+                                    <input type="time" class="form-control" onchange="angular.element(this).scope().changeStartEndTime('start',true)" id="selectEventDetails_startTime" />
+                                </div>
+                                <div class="col-6">
+                                    <input type="time" class="form-control" onchange="angular.element(this).scope().changeStartEndTime('end',true)" id="selectEventDetails_endTime" />
+                                </div>
+                                <div class="col-12">
+                                    <p style="color:red">{{timeerrmsg}}</p>
+                                </div>
+                                <div class="col-12">
+                                    <button ng-click="UpdateEventTime()" class="btn btn-primary">Update</button>
+                                </div>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
 
