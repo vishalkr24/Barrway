@@ -485,7 +485,7 @@ section.footer {
 
 /*============================= business ======================================*/
 section.bredcrum {
-    padding: 20px 0px;
+    padding: 20px 0px 0px;
 }
 
 .head h2 {
@@ -1622,4 +1622,43 @@ div#myNavbar .navbar-nav li.rl ul a:hover {
 
 .dropdown-menu {
     min-width: 156px !important ;
+}
+
+
+.custome-filter-category-master, .Search.custome-ser select {
+    border: 1px solid #ddd;
+    background-color: transparent;
+    padding: 10px 15px;
+    width: 100%;
+    float: left;
+    border-radius: 40px;
+    font-size: 16px;
+    height: 47px;
+    -webkit-appearance: none;
+    position: relative;
+}
+
+.custome-ser {
+    width: 100%;
+    float: left;
+    position: relative;
+}
+
+    .custome-ser:after {
+        content: "";
+        width: 17px;
+        height: 10px;
+        position: absolute;
+        top: 45px;
+        right: 15px;
+        background-image: url(/assets/marketplace/image/aerrow.png);
+        background-position: center;
+        background-size: cover;
+    }
+
+.head h2 {
+    font-size: 24px;
+}
+.media-object{
+    border-radius:6px;
 }
