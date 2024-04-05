@@ -3321,11 +3321,17 @@ public async Task<AddUpdateDelete> GetFeaturedBlogs()
             }
         }
 
-        public async Task<AddUpdateDelete> updateCalendarOtherField(int eventId, string field, string value)
+        public async Task<AddUpdateDelete> updateCalendarOtherField(int eventId, Dictionary<string,object> data)
         {
             try
             {
-                string sqlString = $@"update CALENDAR_FORM_1935 set {field}=N'{value}' where Id=" + eventId;
+                string updateKeys = "";
+                data.Keys.ToList().ForEach(key =>
+                {
+                    updateKeys += $" [{key}]=N'{data[key]}', ";
+                });
+                updateKeys = updateKeys.TrimEnd(", ".ToCharArray());
+                string sqlString = $@"update CALENDAR_FORM_1935 set {updateKeys} where Id=" + eventId;
 
 
                 var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);

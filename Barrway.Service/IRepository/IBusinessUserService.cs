@@ -138,7 +138,7 @@ namespace Barrway.Service.IRepository
 
         Task<AddUpdateDelete> getCalendarUploadFiles(int eventId);
         Task<AddUpdateDelete> updateCalendarUploadFiles(int eventId, string downloadable_attachment, string download_file_list);
-        Task<AddUpdateDelete> updateCalendarOtherField(int eventId, string field, string value);
+        Task<AddUpdateDelete> updateCalendarOtherField(int eventId, Dictionary<string, object> data);
         Task<AddUpdateDelete> updateSchedularCalendarOtherField(int schedularId, SchedularFormModel schedularForm);
 
 

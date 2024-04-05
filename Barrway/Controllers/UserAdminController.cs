@@ -22,6 +22,7 @@ using System.Drawing.Imaging;
 using System.Configuration;
 using System.Web.WebPages;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Barrway.Controllers
 {
@@ -728,7 +729,8 @@ namespace Barrway.Controllers
                 int _eventId;
                 if (int.TryParse(eventid, out _eventId))
                 {
-                    await businessUserService.updateCalendarOtherField(_eventId, field, value);
+                    Dictionary<string, object> data = new Dictionary<string, object>() { { field, value } };
+                    await businessUserService.updateCalendarOtherField(_eventId, data);
                 }
                 return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success });
             }
@@ -738,6 +740,27 @@ namespace Barrway.Controllers
             }
 
         }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateEventFieldsData(RootEventDataListModel request)
+        {
+            try
+            {
+                Dictionary<string, object> data = new Dictionary<string, object>();
+                request.data.ForEach(x =>
+                {
+                    data.Add(x.field, x.value);
+                });    
+                await businessUserService.updateCalendarOtherField(request.eventId, data);
+                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success });
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError });
+            }
+
+        }
+
 
         private bool IsAllowedFileExtension(string fileExtension)
         {

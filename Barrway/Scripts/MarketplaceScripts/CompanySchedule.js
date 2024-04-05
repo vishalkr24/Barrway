@@ -831,7 +831,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                         if (current_subtab != undefined) {
                             if ((current_tab == "agenda-view" || current_tab == "timeline-resource-view") && (current_subtab.contains("fc-month-button") || current_subtab.contains("fc-timelineYear-button") || current_subtab.contains("fc-timelineMonth-button"))) {
                                 var tempHtml = "";
-                                tempHtml = "<div><div class='fc-content'><span class='text-dark small' title=''>" + TimeFormatCalender(eventData, true) + "</span></div>" + tempHtml;
+                                tempHtml = "<div class='fc-content'><span class='text-dark small' title=''>" + TimeFormatCalender(eventData, true) + "</span></div>" + tempHtml;
                                 if (current_tab != "agenda-view") {
                                     _mainTempHtml += tempHtml;
                                 }
@@ -887,7 +887,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                         serviceColor = "#3FBFC7";
 
                         if (customLocationTitle != "" && customLocationTitle != null && customLocationTitle != undefined) {
-                            var tempHtml = "<div><div class='fc-content' id='dd' style = 'background:" + (lblColor == undefined || lblColor == "" ? "#7d606c" : lblColor) + ";borderRadius: 3;'><span class='fc-title' title='' > " + customLocationTitle + "</span></div > ";
+                            var tempHtml = "<div class='fc-content' id='dd' style = 'background:" + (lblColor == undefined || lblColor == "" ? "#7d606c" : lblColor) + ";borderRadius: 3;'><span class='fc-title' title='' > " + customLocationTitle + "</span></div > ";
                             if (current_tab != "agenda-view") {
                                 _mainTempHtml += tempHtml;
                             }
@@ -1020,11 +1020,6 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
 
                 });
                 agendaTempHtml += '</div>';
-
-                if (current_tab == "list-view") {
-                    tempHtml +='</div>';
-                }
-
                 if (current_tab != "agenda-view") {
                     _mainTempHtml += tempHtml;
                 }
@@ -1103,13 +1098,13 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 element.attr('title', rowTooltipTitleDisplay + "  " + rowTooltipDisplay);
                 element.attr('data-html', 'true');
                 element.css({
-                    background: (serviceColor && serviceColor != "" ? serviceColor:"rgb(255, 255, 255)"),
+                    background: (serviceColor && serviceColor != "" ? serviceColor : "rgb(255, 255, 255)"),
                     /*borderColor: "#aaa",*/
                     padding: 0,
                     border: "none",
                     borderRadius: 5,
                     "z-index": 1
-                })
+                });
                 if (current_tab == "list-view") {
                     element.empty().
                     //    append("<div class='list-content'></div>").find(".list-content").css({
