@@ -1,5 +1,7 @@
 ﻿using Barrway.DTO.Common;
+using Barrway.DTO.PublicModels;
 using Barrway.Service.IRepository;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,30 +14,49 @@ namespace Barrway.Controllers
     public class BusinessMarketplaceController : BaseController
     {
 
-        private readonly IBusinessUserService businessUserService;
-        private readonly IGlobalMasterService globalMasterService;
+       
         private readonly IMasterService masterService;
-        private readonly IPublicUserService publicUserService;
-        private readonly IAuthService authService;
-        private readonly IFormAPIRepository formAPIRepository;
-        private readonly ICalendarService calendarService;
+        
 
-        public BusinessMarketplaceController(IBusinessUserService businessUserService, IGlobalMasterService globalMasterService, IMasterService masterService, IPublicUserService publicUserService, IAuthService authService, IFormAPIRepository formAPIRepository, ICalendarService calendarService)
+        public BusinessMarketplaceController( IMasterService masterService)
         {
-            this.businessUserService = businessUserService;
-            this.globalMasterService = globalMasterService;
+          
             this.masterService = masterService;
-            this.publicUserService = publicUserService;
-            this.authService = authService;
-            this.formAPIRepository = formAPIRepository;
-            this.calendarService = calendarService;
+            
         }
 
 
         // GET: BusinessMarketplace
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View();
+            FeaturedCompanyList featuredCompany = new FeaturedCompanyList();
+            var transactionData = await masterService.GetAllFeaturedCompany();            
+            var FCompanys = JsonConvert.SerializeObject(transactionData.Data);
+            featuredCompany.FeaturedCompanys = JsonConvert.DeserializeObject<List<FeaturedCompany>>(FCompanys);
+
+            //for (int i = 0; i < featuredCompany.FeaturedCompanys.Count(); i++)
+            //{
+            //    var JsonTags = featuredCompany.FeaturedCompanys[i].TAG;
+            //    if (JsonTags != null)
+            //    {
+            //        List<TagsObject> Tagobjects = JsonConvert.DeserializeObject<List<TagsObject>>(JsonTags);
+            //        featuredCompany.FeaturedCompanys[i].TAGs = Tagobjects;
+            //    }
+            //}
+
+            featuredCompany.FeaturedCompanys.ForEach(company =>
+            {
+                var JsonTags = company.TAGS;
+                if (JsonTags != null)
+                {
+                    List<TagsObject> Tagobjects = JsonConvert.DeserializeObject<List<TagsObject>>(JsonTags);
+                    company.TAGs = Tagobjects;
+                }
+            });
+
+
+
+            return View(featuredCompany);
         }
 
         public async Task<ActionResult> GetAllFeaturedComapy()

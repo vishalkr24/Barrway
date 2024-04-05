@@ -3079,6 +3079,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\MarketplaceScripts\AllCalanders.js" />
+    <Content Include="Scripts\MarketplaceScripts\BussinessMarketPlace.js" />
     <Content Include="Scripts\MarketplaceScripts\Subcategory.js" />
     <Content Include="Scripts\MarketplaceScripts\companyCalendarScript.js" />
     <Content Include="Scripts\MarketplaceScripts\CompanyPhotoAlbum.js" />
