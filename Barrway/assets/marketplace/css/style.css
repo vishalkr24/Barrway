@@ -196,15 +196,16 @@ div#myNavbar .navbar-nav li.rl ul a {
     background-color: transparent;
     color: #222;
 }
-
-/*======================================= bnner section ==================================================*/
-
-section.top-banner {
-    background-image: url("../image/banner-back.jpg");
-    background-position: top;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-}
+    div#myNavbar .navbar-nav li.rl ul a:hover {
+        color: #e2476c !important;
+    } 
+    /*======================================= bnner section ==================================================*/
+    section.top-banner {
+        background-image: url("../image/banner-back.jpg");
+        background-position: top;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+    }
 
 .banner-form h1 {
     font-weight: 700;
