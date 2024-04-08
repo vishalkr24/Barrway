@@ -98,7 +98,28 @@
                                                 <h4 class="media-heading" style="margin-bottom:0px;">@item.COMPANY_NAME_ENGLISH</h4>
                                                 <div class="cal-name">@item.CALENDAR_NAME</div>
                                                 @*<div class="category">@item.Description</div>*@
-                                                <div class="tags">@item.TAGS</div>
+                                                @*<div class="tags">@item.TAGS</div>*@
+                                            <p class="tag">
+                                                @if (item.TAGs != null)
+                                                {
+                                                    bool isFirst = true;
+                                                    foreach (var Titem in item.TAGs)
+                                                    {
+                                                        if (!isFirst)
+                                                        {
+                                                            <span>,</span>
+                                                        }
+                                                        <a href='/Marketplace/Search?keyword=@Titem.value'>@Titem.value</a>
+                                                        isFirst = false;
+                                                    }
+                                                }
+
+
+
+
+
+                                            </p>
+
                                             </div>
                                         </div>
                                     </div>
@@ -117,7 +138,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="sub-hed">
-                                            <p>Bloag @Model.keyword</p>
+                                            <p>@Resource.Company_contains @Model.keyword</p>
                                         </div>
                                     </div>
                                 </div>
@@ -133,7 +154,30 @@
                                                     </div>
                                                     <div class="media-body">
                                                         <h4 class="media-heading">@item.COMPANY_NAME_ENGLISH</h4>
-                                                        <div class="tags">@item.TAGS</div>
+                                                        @*<div class="tags">@item.TAGS</div>*@
+                                                    <p class="tag">
+                                                        @if (item.TAGs != null)
+                                                        {
+
+                                                            bool isFirst = true;
+                                                            foreach (var Titem in item.TAGs)
+                                                            {
+                                                                if (!isFirst)
+                                                                {
+                                                                    <span>,</span>
+                                                                }
+                                                                <a href='/Marketplace/Search?keyword=@Titem.value'>@Titem.value</a>
+                                                                isFirst = false;
+                                                            }
+
+                                                        }
+
+
+
+
+
+                                                    </p>
+
                                                         <p style="max-height:44px; overflow:hidden; text-overflow:ellipsis; padding-top: 4px;">@item.COMPANY_DESCRIPTION</p>
 
                                                     </div>
@@ -146,40 +190,59 @@
                                 <br /><br />
                             }
 
-                            @*@if (Model.results.Where(x => x.ResultType == 1).ToList().Count > 0)
+                            @if (Model.BlogLIst != null)
                             {
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="sub-hed">
-                                            <p>@Resource.Company_contains @Model.keyword</p>
+                                            <p>Blog contains @Model.keyword</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row custome-scrollbar" style="max-height: 40vh; overflow:hidden; overflow-y:scroll;">
 
-                                    @foreach (var item in Model.results)
+                                    @foreach (var item in Model.BlogLIst)
                                     {
-                                        if (item.ResultType == 1)
-                                        {
+                                        
                                             <div class="col-md-12">
                                                 <div class="media">
                                                     <div class="media-left" style="">
-                                                        <img src="@item.ImagePath.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px; height: 100px;">
+                                                        <img src="@item.IMAGE.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px; height: 100px;">
                                                     </div>
                                                     <div class="media-body">
-                                                        <h4 class="media-heading">@item.CompanyName</h4>
-                                                        <div class="tags">@item.Tags</div>
-                                                        <p style="max-height:44px; overflow:hidden; text-overflow:ellipsis; padding-top: 4px;">@item.Description</p>
+                                                        <h4 class="media-heading">@item.BLOG_TITLE</h4>
+                                                        @*<div class="tags">@item.TAG</div>*@
+                                                    <p class="tag">
+                                                        @if (item.TAGs != null)
+                                                        {
+                                                            bool isFirst = true;
+                                                            foreach (var Titem in item.TAGs)
+                                                            {
+                                                                if (!isFirst)
+                                                                {
+                                                                    <span>,</span>
+                                                                }
+                                                                <a href='/Marketplace/Search?keyword=@Titem.value'>@Titem.value</a>
+                                                                isFirst = false;
+                                                            }
+                                                        }
+
+
+
+
+
+                                                    </p>
+                                                        @*<p style="max-height:44px; overflow:hidden; text-overflow:ellipsis; padding-top: 4px;">@item.Description</p>*@
 
                                                     </div>
                                                 </div>
                                             </div>
-                                        }
+                                        
                                     }
 
                                 </div>
                                 <br /><br />
-                            }*@
+                            }
                         </div>
                         </div>
 

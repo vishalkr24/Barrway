@@ -193,17 +193,17 @@ function setCalendarSubCategoryWise(showFilterQuery = false, requestFromButton =
 
                 for (var j = 0; j < calendars.length; j++) {
                     var tags = [];
+                    var tagString = "";
 
+                    
                     if (calendars[j].TAGS != null && calendars[j].TAGS != "") {
-                        tags = calendars[j].TAGS.split(",");
-
-                        for (var k = 0; k < tags.length; k++) {
-                            tags[k] = `<a href='/Marketplace/Tag?tag=${tags[k].trim()}'>${tags[k]}</a>`;
+                        var tags = JSON.parse(calendars[j].TAGS);
+                        for (var k = 0; k < tags.length; k++) {                            
+                            tagString += `<a href='/Marketplace/Search?keyword=${tags[k].value}'>${tags[k].value}</a>`;
                         }
                     }
 
-                    var tagString = (tags != null) ? tags.join(", ") : "";
-
+                   
                     var feturedSpan_html = ''
                     if (calendars[j].IS_FEATURED == 'Y') {
                         feturedSpan_html = '<div class="clr-tag new-clr-tag"><span>Featured</span></div>';

@@ -130,14 +130,15 @@ function SetAllCalanders(pageNumber, Short) {
                
                 
 
-              /*  ${ feturedSpan_html }*/
+                /*  ${ feturedSpan_html }*/
+                debugger;
                 if (i < 3) {
                     var feturedSpan_html = '';
                     if (ResponceData[i].IS_FEATURED == 'Y') {
                         feturedSpan_html = '<div class="clr-tag new-clr-tag"><span>Featured</span></div>';
                     }
-                    
-                    $("#row1").append(`<div class="media" style="cursor:pointer;" onclick="window.location.href = '/Marketplace/CompanyDetail?CompanyCode=${response.data[i].COMPANY_CODE}&CalendarCode=${response.data[i].CALENDAR_CODE}'">
+                    //PAGE_URL //${response.data[i].PAGE_URL ? response.data[i].PAGE_URL : response.data[i].COMPANY_CODE}
+                    $("#row1").append(`<div class="media" style="cursor:pointer;" onclick="window.location.href ='/company/calander/${response.data[i].PAGE_URL ? response.data[i].PAGE_URL : response.data[i].COMPANY_CODE}/${response.data[i].CALENDAR_CODE}'">
                                 ${feturedSpan_html}
                                 <div class="media-left">
                                         <img src="${(ResponceData[i].CALENDAR_PHOTO_PATH == "") ? "../assets/marketplace/image/pro.png" : ResponceData[i].CALENDAR_PHOTO_PATH.replaceAll("~", "..")}" onerror="this.src='../assets/marketplace/image/pro.png'">
@@ -153,7 +154,7 @@ function SetAllCalanders(pageNumber, Short) {
 
                 } else {
                     
-                    $("#row2").append(`<div class="media" style="cursor:pointer;" onclick="window.location.href = '/Marketplace/CompanyDetail?CompanyCode=${response.data[i].COMPANY_CODE}&CalendarCode=${response.data[i].CALENDAR_CODE}'">
+                    $("#row2").append(`<div class="media" style="cursor:pointer;" onclick="window.location.href = '/company/calander/${response.data[i].PAGE_URL ? response.data[i].PAGE_URL : response.data[i].COMPANY_CODE}/${response.data[i].CALENDAR_CODE}'">
                                         ${feturedSpan_html}
                                     <div class="media-left">
 

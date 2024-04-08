@@ -173,11 +173,19 @@
                                                         <h3 class="post_tittle"><a href="/MarketPlace/BlogDetails/@item.Id">@item.BLOG_TITLE</a></h3>
                                                         <p class="date">@item.created_at.ToString("yyyy-MM-dd HH:mm")</p>
                                                         <p class="tag">
+
                                                             @if (item.TAGs != null)
                                                             {
+                                                                bool isFirst = true;
                                                                 foreach (var Tagitem in item.TAGs)
                                                                 {
-                                                                    <a href="javascript:void(0)"> @Tagitem.value</a>
+                                                                    if (!isFirst)
+                                                                    {
+                                                                        <span>,</span>
+                                                                    }
+
+                                                                    <a href="/Marketplace/Search?keyword=@Tagitem.value"> @Tagitem.value</a>
+                                                                    isFirst = false;
                                                                 }
                                                             }
 

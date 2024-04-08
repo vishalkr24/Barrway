@@ -1025,24 +1025,70 @@ namespace Barrway.Controllers
         {
             SearchResultsModel finalResult = new SearchResultsModel();
 
-           
-            if(keyword != "")
+            try
             {
-                var Service = await masterService.GetServiceList(keyword);
-                //var company = (await masterService.GetCompanyListt(keyword)).Data as List<IDictionary<string,object>>;
-                var company = await masterService.GetCompanyListt(keyword);
-                var Blog = await masterService.GetBloagListt(keyword); 
-               
-                finalResult.ServiceList = JsonConvert.DeserializeObject<List<CompanyService>>(JsonConvert.SerializeObject(Service.Data));
-                finalResult.CompanyLIst = JsonConvert.DeserializeObject<List<Company>>(JsonConvert.SerializeObject(company.Data));
-                finalResult.BloagLIst = JsonConvert.DeserializeObject<List<blog>>(JsonConvert.SerializeObject(Blog.Data));
-            }
-            
+                if (keyword != "")
+                {
+                    var Service = await masterService.GetServiceList(keyword);
+                    //var company = (await masterService.GetCompanyListt(keyword)).Data as List<IDictionary<string,object>>;
+                    var company = await masterService.GetCompanyListt(keyword);
+                    var Blog = await masterService.GetBloagListt(keyword);
 
-               
-                   
-                
-            
+                    finalResult.ServiceList = JsonConvert.DeserializeObject<List<CompanyService>>(JsonConvert.SerializeObject(Service.Data));
+                    finalResult.CompanyLIst = JsonConvert.DeserializeObject<List<Company>>(JsonConvert.SerializeObject(company.Data));
+                    finalResult.BlogLIst = JsonConvert.DeserializeObject<List<blog>>(JsonConvert.SerializeObject(Blog.Data));
+
+                    if (finalResult.ServiceList.Count > 0)
+                    {
+                        finalResult.ServiceList.ForEach(service =>
+                        {
+                            var JsonTags = service.TAGS;
+                            if (JsonTags != null)
+                            {
+                                List<TagsObject> Tagobjects = JsonConvert.DeserializeObject<List<TagsObject>>(JsonTags);
+                                service.TAGs = Tagobjects;
+                            }
+                        });
+                    }
+
+
+                    if (finalResult.CompanyLIst.Count > 0)
+                    {
+                        finalResult.CompanyLIst.ForEach(comp =>
+                        {
+                            var JsonTags = comp.TAGS;
+                            if (JsonTags != null)
+                            {
+                                List<TagsObject> Tagobjects = JsonConvert.DeserializeObject<List<TagsObject>>(JsonTags);
+                                comp.TAGs = Tagobjects;
+                            }
+                        });
+                    }
+
+
+
+                    if (finalResult.BlogLIst.Count > 0)
+                    {
+                        finalResult.BlogLIst.ForEach(blog =>
+                        {
+                            var JsonTags = blog.TAG;
+                            if (JsonTags != null)
+                            {
+                                List<TagsObject> Tagobjects = JsonConvert.DeserializeObject<List<TagsObject>>(JsonTags);
+                                blog.TAGs = Tagobjects;
+                            }
+                        });
+                    }
+
+
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
             finalResult.keyword = keyword;
 
             return View(finalResult);

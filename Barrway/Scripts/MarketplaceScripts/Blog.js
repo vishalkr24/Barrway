@@ -59,9 +59,15 @@ function GetBlogs(pageNumber, blog_tag) {
                 html += '                <p class="tag">';
 
                 if (response.data[i].TAG != null) {
+                    
                     var array = JSON.parse(response.data[i].TAG);
+                   
                     for (var j = 0; j < array.length; j++) {
-                        html += '<a href="javascript:void(0)">' + array[j].value + '</a>';
+                        if (j >0) {
+                            html += '<span>,</span>';
+                        }
+                        html += '&nbsp;<a href="/Marketplace/Search?keyword=' + array[j].value + '">' + array[j].value + '</a> &nbsp';
+                        //isFirst = false;
                     }
                 }
                 html += '                </p>';
