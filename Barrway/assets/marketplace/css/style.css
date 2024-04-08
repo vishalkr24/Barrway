@@ -156,7 +156,13 @@ div#myNavbar .navbar-nav li ul li a:hover {
 .search-bar .input-group input, .search-bar .input-group .input-group-btn .btn {
     border: none;
     box-shadow: none;
+    outline: none;
+    background-color: transparent;
 }
+.btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus {
+    outline: none !important;
+}
+
 
 .main-menu nav.navbar {
     margin-bottom: -1px;
@@ -1664,4 +1670,8 @@ div#myNavbar .navbar-nav li.rl ul a:hover {
 }
 p.tag a {
     text-decoration: underline;
+}
+button.btn.btn-default:hover, button.btn.btn-default:focus {
+    background-color: transparent;
+    outline: none;
 }
