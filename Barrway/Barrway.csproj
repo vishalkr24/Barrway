@@ -3079,6 +3079,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\MarketplaceScripts\AllCalanders.js" />
+    <Content Include="Scripts\MarketplaceScripts\BusinessSite.js" />
     <Content Include="Scripts\MarketplaceScripts\BussinessMarketPlace.js" />
     <Content Include="Scripts\MarketplaceScripts\Subcategory.js" />
     <Content Include="Scripts\MarketplaceScripts\companyCalendarScript.js" />
@@ -3091,7 +3092,6 @@
     <Content Include="Scripts\MarketplaceScripts\Blog.js" />
     <Content Include="Scripts\MarketplaceScripts\Pricing.js" />
     <Content Include="Scripts\MarketplaceScripts\News.js" />
-    <Content Include="Scripts\MarketplaceScripts\BusinessSite.js" />
     <Content Include="Scripts\MarketplaceScripts\homepage.js" />
     <Content Include="Scripts\MarketplaceScripts\WebsiteTemplateManager.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />

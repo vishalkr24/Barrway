@@ -198,8 +198,12 @@ function setCalendarSubCategoryWise(showFilterQuery = false, requestFromButton =
                     
                     if (calendars[j].TAGS != null && calendars[j].TAGS != "") {
                         var tags = JSON.parse(calendars[j].TAGS);
-                        for (var k = 0; k < tags.length; k++) {                            
-                            tagString += `<a href='/Marketplace/Search?keyword=${tags[k].value}'>${tags[k].value}</a>`;
+                        for (var k = 0; k < tags.length; k++) {
+
+                            if (k > 0) {
+                                tagString += '<span>,</span>';
+                            }
+                            tagString += `&nbsp;<a href='/Marketplace/Search?keyword=${tags[k].value}'>${tags[k].value}</a>`;
                         }
                     }
 
