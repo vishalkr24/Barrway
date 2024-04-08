@@ -1,4 +1,4 @@
-﻿
+﻿@model Barrway.DTO.PublicModels.FeaturedCompanyList
 @{
     ViewBag.Title = "Martketplace";
     Layout = "~/Views/Shared/_LayoutBusinessMarketPlace.cshtml";
@@ -174,107 +174,138 @@
                         <h3>@Resource.Trusted_and_enjoy_by_these_companies</h3>
                     </div>
                     <div id="owl-demo5" class="owl-carousel owl-theme">
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/img/alogo.png">
+                        @if (Model.FeaturedCompanys != null)
+                        {
+                            foreach (var item in Model.FeaturedCompanys)
+                            {
+                                <div class="item">
+                                    <div class="item-inner">
+                                        <div class="pro-im">
+                                            <img src="@item.COMPANY_LOGO_PATH.Replace("~", "")">
+                                        </div>
+                                        <div class="pro-text">
+                                            <p class="f1"><b>@item.COMPANY_NAME_ENGLISH</b></p>
+                                            <p class="f2">
+                                                @if (item.TAGs != null)
+                                                {
+                                                    foreach (var Titem in item.TAGs)
+                                                    {
+                                                        <a href="javascript:void(0)">@Titem.value</a>
+                                                    }
+                                                }
+
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="pro-text">
-                                    <p class="f1"><b>Company Name</b></p>
-                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/img/slogan.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="f1"><b>Company Name</b></p>
-                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/img/alogo2.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="f1"><b>Company Name</b></p>
-                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/img/alogo.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="f1"><b>Company Name</b></p>
-                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/img/slogan.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="f1"><b>Company Name</b></p>
-                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/img/alogo2.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="f1"><b>Company Name</b></p>
-                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/img/alogo.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="f1"><b>Company Name</b></p>
-                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/img/slogan.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="f1"><b>Company Name</b></p>
-                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/img/alogo2.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="f1"><b>Company Name</b></p>
-                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
-                                </div>
-                            </div>
-                        </div>
+                            }
+                        }
+
 
                     </div>
+
+                    @*<div id="owl-demo5" class="owl-carousel owl-theme">
+                            <div class="item">
+                                <div class="item-inner">
+                                    <div class="pro-im">
+                                        <img src="~/assets/img/alogo.png">
+                                    </div>
+                                    <div class="pro-text">
+                                        <p class="f1"><b>Company Name</b></p>
+                                        <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="item-inner">
+                                    <div class="pro-im">
+                                        <img src="~/assets/img/slogan.png">
+                                    </div>
+                                    <div class="pro-text">
+                                        <p class="f1"><b>Company Name</b></p>
+                                        <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="item-inner">
+                                    <div class="pro-im">
+                                        <img src="~/assets/img/alogo2.png">
+                                    </div>
+                                    <div class="pro-text">
+                                        <p class="f1"><b>Company Name</b></p>
+                                        <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="item-inner">
+                                    <div class="pro-im">
+                                        <img src="~/assets/img/alogo.png">
+                                    </div>
+                                    <div class="pro-text">
+                                        <p class="f1"><b>Company Name</b></p>
+                                        <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="item-inner">
+                                    <div class="pro-im">
+                                        <img src="~/assets/img/slogan.png">
+                                    </div>
+                                    <div class="pro-text">
+                                        <p class="f1"><b>Company Name</b></p>
+                                        <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="item-inner">
+                                    <div class="pro-im">
+                                        <img src="~/assets/img/alogo2.png">
+                                    </div>
+                                    <div class="pro-text">
+                                        <p class="f1"><b>Company Name</b></p>
+                                        <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="item-inner">
+                                    <div class="pro-im">
+                                        <img src="~/assets/img/alogo.png">
+                                    </div>
+                                    <div class="pro-text">
+                                        <p class="f1"><b>Company Name</b></p>
+                                        <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="item-inner">
+                                    <div class="pro-im">
+                                        <img src="~/assets/img/slogan.png">
+                                    </div>
+                                    <div class="pro-text">
+                                        <p class="f1"><b>Company Name</b></p>
+                                        <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="item-inner">
+                                    <div class="pro-im">
+                                        <img src="~/assets/img/alogo2.png">
+                                    </div>
+                                    <div class="pro-text">
+                                        <p class="f1"><b>Company Name</b></p>
+                                        <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>*@
                 </div>
             </div>
         </div>
@@ -303,7 +334,8 @@
 
 
 @section scripts{
-    
+
+    @*<script src="~/Scripts/MarketplaceScripts/BussinessMarketPlace.js"></script>*@
     <script>
         $(document).ready(function () {
             $("#nav-home").addClass("active");

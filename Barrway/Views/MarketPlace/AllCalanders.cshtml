@@ -1,0 +1,97 @@
+﻿
+@{
+    ViewBag.Title = "AllCalanders";
+    Layout = "~/Views/Shared/_LayoutMarketPlace.cshtml";
+}
+<style>
+    .new-clr-tag {
+        background-color: #e2476c;
+        color: white;
+        border-radius: 3px;
+        padding: 3px;
+    }
+</style>
+<section class="bredcrum">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="bredcrum-content">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="heading">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="head">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- heading -->
+<section class="filser custome-filser">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="Search custome-ser">
+                    <div class="form-group">
+                        <label for="sel1">@Resource.Sort</label>
+                        <select class="form-control" id="filter-category-master">
+                            <option value="Featured" selected="">Featured</option>
+                            <option value="All" selected="">All</option>
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                
+                <div class="filter mt-25">
+                    <button class="filter-btn"><img src="~/assets/marketplace/image/filter.png" /> @Resource.Filter</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="Search">
+                    @*<p>@Resource.Filter</p>
+                        <div class="filter-tags">
+                            <input type="text" name="filter" id="filter">
+                        </div>*@
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="inner-content">
+                    <div class="row">
+                        <div class="col-md-6" id="row1">
+                           
+                        </div>
+                        <div class="col-md-6" id="row2">
+                           
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="pagination">
+
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+</section>
+
+@section scripts{
+    <script src="~/Scripts/MarketplaceScripts/AllCalanders.js"></script>
+}

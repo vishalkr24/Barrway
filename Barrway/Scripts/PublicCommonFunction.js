@@ -244,6 +244,31 @@ function GetFilterCompanyData(categoryId, subCategoryId, districtId) {
 
 }
 
+function GetAllCalandersBycategory(categoryId, subCategoryId) {
+    var data;
+    $.ajax({
+        url: "/Public/GetAllCalenderByCategory/",
+        async: false,
+        type: "GET",
+        data: {
+            CategoryId: categoryId,
+            SubCategoryId: subCategoryId           
+        },
+        success: function (response) {
+            data = response;
+        },
+        error: function (errorResponse) {
+            data = null;
+        }
+    })
+    return data;
+
+}
+
+
+
+
+
 function getCountryMaster() {
     var data;
     $.ajax({

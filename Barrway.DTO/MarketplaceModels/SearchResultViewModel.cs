@@ -8,7 +8,7 @@ namespace Barrway.DTO.MarketplaceModels
 {
     public class SearchResultViewModel
     {
-        public List<SearchResultModel> results { get; set; }
-        public string keyword { get; set; }
+        //public List<SearchResultModel> results { get; set; }
+        //public string keyword { get; set; }
     }
 }

@@ -48,4 +48,19 @@ namespace Barrway.DTO.Common
         public string SearchText { get; set; }
     }
 
+
+    public class CalandersPagination
+    {
+        public int Id { get; set; }
+        public int page { get; set; }
+        public int size { get; set; }
+        public int res { get; set; }
+        public string SearchText { get; set; }
+        public string Short { get; set; }
+        public string CategoryId { get; set; }
+        public string SubCategoryId { get; set; }
+
+    }
+
+
 }

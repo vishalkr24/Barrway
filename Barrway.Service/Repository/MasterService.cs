@@ -1127,24 +1127,29 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
             {
                 List<List<IDictionary<string, object>>> finalResult = new List<List<IDictionary<string, object>>>();
 
-                string sqlQuery = $@"select f.*,cmp.COMPANY_NAME_ENGLISH from BUSINESS_CALENDAR_MASTER_1925 f join BUSINESS_COMPANY_MASTER_1924 cmp on cmp.COMPANY_CODE = f.COMPANY_CODE where cmp.IS_TEMPLATE = 'N' and f.CALENDAR_NAME like '%{keyword}%'";
+                string sqlQuery = $@"select f.Id,f.CALENDAR_NAME,f.CALENDAR_PHOTO_NAME,f.CALENDAR_PHOTO_PATH,f.COMPANY_CODE,f.TAGS,cmp.COMPANY_NAME_ENGLISH from BUSINESS_CALENDAR_MASTER_1925 f join BUSINESS_COMPANY_MASTER_1924 cmp on cmp.COMPANY_CODE = f.COMPANY_CODE where cmp.IS_TEMPLATE = 'N' and f.CALENDAR_NAME like '%{keyword}%' OR f.TAGS like '%{keyword}%' ";
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 finalResult.Add(result);
 
-                sqlQuery = $@"select * from BUSINESS_COMPANY_MASTER_1924 f where f.IS_TEMPLATE = 'N' and f.COMPANY_NAME_ENGLISH like '%{keyword}%' or f.COMPANY_NAME_ENGLISH like '%{keyword}%'";
+                sqlQuery = $@"select * from BUSINESS_COMPANY_MASTER_1924 f where f.IS_TEMPLATE = 'N' and f.COMPANY_NAME_ENGLISH like '%{keyword}%' or f.COMPANY_NAME_ENGLISH like '%{keyword}%' OR TAGS LIKE '%{keyword}%' ";
                 result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 finalResult.Add(result);
 
-                sqlQuery = $@"select f.*, cmp.COMPANY_NAME_ENGLISH, cal.CALENDAR_NAME, cal.CALENDAR_PHOTO_PATH from SERVICE_MASTER_1933 f 
-                                join BUSINESS_COMPANY_MASTER_1924 cmp on cmp.COMPANY_CODE = f.COMPANY_CODE
-                                join BUSINESS_CALENDAR_MASTER_1925 cal on cal.CALENDAR_CODE = f.CALENDAR_CODE
-                                where f.ACTIVITY_NAME like '%{keyword}%' and cmp.IS_TEMPLATE = 'N'";
+                sqlQuery = $@"select B.Id,B.BLOG_TITLE,B.IMAGE,B.TAG,BC.BLOG_CATEGORY from BLOG_1980 B inner join BLOG_CATEGORY_1981 BC on   B.BLOG_CATEGORY=BC.Id where B.BLOG_TITLE like '%{keyword}%' or B.TAG like '%{keyword}%' ";
                 result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 finalResult.Add(result);
 
-                sqlQuery = $@"select * from CALENDAR_SUB_CATEGORY_MASTER_1930 f where f.CALENDAR_SUB_CATEGORY_NAME like '%{keyword}%'";
-                result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
-                finalResult.Add(result);
+
+                //sqlQuery = $@"select f.*, cmp.COMPANY_NAME_ENGLISH, cal.CALENDAR_NAME, cal.CALENDAR_PHOTO_PATH from SERVICE_MASTER_1933 f 
+                //                join BUSINESS_COMPANY_MASTER_1924 cmp on cmp.COMPANY_CODE = f.COMPANY_CODE
+                //                join BUSINESS_CALENDAR_MASTER_1925 cal on cal.CALENDAR_CODE = f.CALENDAR_CODE
+                //                where f.ACTIVITY_NAME like '%{keyword}%' and cmp.IS_TEMPLATE = 'N'";
+                //result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+                //finalResult.Add(result);
+
+                //sqlQuery = $@"select * from CALENDAR_SUB_CATEGORY_MASTER_1930 f where f.CALENDAR_SUB_CATEGORY_NAME like '%{keyword}%'";
+                //result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+                //finalResult.Add(result);
 
                 return new AddUpdateDelete() { Status = true, Data = finalResult };
 
@@ -1154,6 +1159,61 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 return new AddUpdateDelete() { Status = false, Message = ex.Message };
             }
         }
+
+
+        public async Task<AddUpdateDelete> GetServiceList(string keyword)
+        {
+            try
+            {
+
+
+                string sqlQuery = $@"select f.Id,f.CALENDAR_NAME,f.CALENDAR_PHOTO_NAME,f.CALENDAR_PHOTO_PATH,f.COMPANY_CODE,f.TAGS,cmp.COMPANY_NAME_ENGLISH from BUSINESS_CALENDAR_MASTER_1925 f join BUSINESS_COMPANY_MASTER_1924 cmp on cmp.COMPANY_CODE = f.COMPANY_CODE where cmp.IS_TEMPLATE = 'N' and f.CALENDAR_NAME like '%{keyword}%' OR f.TAGS like '%{keyword}%' ";
+                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+                return new AddUpdateDelete() { Status = true, Data = result };
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+
+        public async Task<AddUpdateDelete> GetCompanyListt(string keyword)
+        {
+            try
+            {
+
+
+                string sqlQuery = $@"select * from BUSINESS_COMPANY_MASTER_1924 f where f.IS_TEMPLATE = 'N' and f.COMPANY_NAME_ENGLISH like '%{keyword}%' or f.COMPANY_NAME_ENGLISH like '%{keyword}%' OR TAGS LIKE '%{keyword}%'";
+                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+                return new AddUpdateDelete() { Status = true, Data = result };
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetBloagListt(string keyword)
+        {
+            try
+            {
+                string sqlQuery = $@"select B.Id,B.BLOG_TITLE,B.IMAGE,B.TAG,BC.BLOG_CATEGORY from BLOG_1980 B inner join BLOG_CATEGORY_1981 BC on   B.BLOG_CATEGORY=BC.Id where B.BLOG_TITLE like '%{keyword}%' or B.TAG like '%{keyword}%'";
+                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+                return new AddUpdateDelete() { Status = true, Data = result };
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+
 
 
         public async Task<AddUpdateDelete> GetAllSubcategory()
@@ -1167,6 +1227,20 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
 
                 return new AddUpdateDelete() { Status = true, Data = result };
 
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetAllFeaturedCompany()
+        {
+            try
+            {
+                string sqlQuery = $@"select Id,COMPANY_NAME_ENGLISH +'|'+COMPANY_NAME_CHINESE AS COMPANY_NAME,COMPANY_NAME_ENGLISH,COMPANY_BANNER_PATH,COMPANY_LOGO_PATH,COMPANY_BANNER_NAME,TAGS  from BUSINESS_COMPANY_MASTER_1924 WHERE IS_FEATURED='Y'";
+                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+                return new AddUpdateDelete() { Status = true, Data = result };
             }
             catch (Exception ex)
             {
@@ -1291,11 +1365,6 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
         {
             try
             {
-
-                
-
-               
-
                 int PageSize = data.size > 0 ? data.size : 20;
                 int PageNumber = data.page > 0 ? data.page : 1;
 
@@ -1404,6 +1473,123 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = false, Message = ex.Message };
             }
         }
+
+
+        public async Task<AddUpdateDelete> AllCalandersByCategory(CalandersPagination data)
+        {
+            try
+            {
+                int PageSize = data.size > 0 ? data.size : 20;
+                int PageNumber = data.page > 0 ? data.page : 1;
+
+                string filter = "";
+                string Short = "";
+
+                if (!string.IsNullOrEmpty(data.CategoryId))
+                {
+                    filter += "and calendar.CALENDAR_COMMON_CATEGORY_ID = '" + data.CategoryId + "'";
+                }
+
+
+                if (!string.IsNullOrEmpty(data.SubCategoryId))
+                {
+                    filter += "and calendar.CALENDAR_SUB_CATEGORY_ID = '" + data.SubCategoryId + "'";
+                }
+
+                if (!string.IsNullOrEmpty(data.Short))
+                {
+                    if (data.Short == "All")
+                    {
+                        Short += "ORDER BY  [SEQUENCE] asc";
+                    }
+
+                    if (data.Short == "Featured")
+                    {
+                        Short += "ORDER BY [IS_FEATURED] DESC";
+                    }
+
+
+
+                }
+                else
+                {
+                    Short += "ORDER BY  [SEQUENCE] asc";
+                }
+
+
+                string query = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+                                SELECT calendar.[Id], calendar.[created_at],calendar.[updated_at],calendar.[created_by],calendar.[updated_by]
+                              ,[CALENDAR_NAME],[CALENDAR_PHOTO_NAME],[CALENDAR_PHOTO_PATH],[IS_VISIBLE],calendar.[COUNTRY_ID],calendar.[CITY_ID]
+                              ,calendar.[DISTRICT_ID],calendar.[CALENDAR_CATEGORY_ID],calendar.[CALENDAR_COMMON_CATEGORY_ID]
+                              ,calendar.[CALENDAR_SUB_CATEGORY_ID]
+                              ,calendar.[CALENDAR_TYPE]
+                              ,calendar.[COMPANY_CODE]
+                              ,calendar.[CALENDAR_CODE]
+	                          ,[CALENDAR_SUB_CATEGORY_NAME]
+	                          ,[CMN_CATEGORY_NAME]
+	                          ,[DISTRICT_NAME]
+	                          ,calendar.TAGS
+	                          ,[COMPANY_NAME_ENGLISH]
+                              ,[COMPANY_NAME_CHINESE]
+                              ,[COMPANY_LOGO_NAME]
+                              ,[COMPANY_LOGO_PATH]
+                              ,[COMPANY_BANNER_NAME]
+                              ,[COMPANY_BANNER_PATH]
+							  ,[IS_SEARCHABLE_IN_MARKETPLACE]
+                              ,company.PAGE_URL
+                              ,calendar.IS_FEATURED,calendar.[SEQUENCE]
+                         FROM[dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
+                        join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendar.CALENDAR_SUB_CATEGORY_ID
+                         join CALENDAR_COMMON_CATEGORY_1978 category on category.Id = calendar.CALENDAR_COMMON_CATEGORY_ID
+                         join DISTRICT_MASTER_1928 district on district.Id = calendar.DISTRICT_ID
+                         join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
+                         where company.IS_SEARCHABLE_IN_MARKETPLACE = 'Y' and company.IS_ACTIVE = 'Y' and company.IS_TEMPLATE = 'N' and calendar.CALENDAR_USE_TYPE = 'PUBLIC' {(!string.IsNullOrEmpty(filter) ? filter : "")}  
+                                )Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  {Short} OFFSET  @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+
+                List<IDictionary<string, object>> companySubCategoryResult = await sqlFunction.ExecuteSqlQuery(query);
+
+                if (companySubCategoryResult.Count > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = companySubCategoryResult.ToList() };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+            }
+            catch(Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+
+        }
+
+
+        public async Task<AddUpdateDelete> GetHeaderDetails(CalandersPagination data)
+        {
+            string query = $@"";
+            if (!string.IsNullOrEmpty(data.CategoryId))
+            {
+                query += "select Id,CALENDAR_CATEGORY_NAME AS Heading from CALENDAR_CATEGORY_MASTER_1929 WHERE Id="+data.CategoryId+"";
+            }
+            if (!string.IsNullOrEmpty(data.SubCategoryId))
+            {
+                query += "SELECT Id,CALENDAR_SUB_CATEGORY_NAME AS Heading FROM CALENDAR_SUB_CATEGORY_MASTER_1930 WHERE Id=" + data.SubCategoryId + "";
+            }
+
+            List<IDictionary<string, object>> companySubCategoryResult = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (companySubCategoryResult.Count > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = companySubCategoryResult.ToList() };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
+
 
 
         public async Task<AddUpdateDelete> GetSingleBlogPost(string NewsId)

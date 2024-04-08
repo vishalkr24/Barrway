@@ -1,8 +1,8 @@
-﻿@model Barrway.DTO.MarketplaceModels.SearchResultViewModel
+﻿@model Barrway.DTO.MarketplaceModels.SearchResultsModel
 @{
     ViewBag.Title = "Search results for " + Model.keyword;
     Layout = "~/Views/Shared/_LayoutMarketPlace.cshtml";
-    string totalResults = (Model.results.Count > 0) ? Model.results.Count.ToString() : "No";
+    //string totalResults = (Model.results.Count > 0) ? Model.results.Count.ToString() : "No";
 }
 
 
@@ -58,7 +58,7 @@
                 <div class="col-md-12">
                     <div class="head">
                         <h2>Search results for @Model.keyword</h2>
-                        <div class="category-1">@totalResults results found</div>
+                        @*<div class="category-1">@totalResults results found</div>*@
                     </div>
                 </div>
             </div>
@@ -73,7 +73,7 @@
                         <div class="row">
 
 
-                            @if (Model.results.Where(x => x.ResultType == 2).ToList().Count > 0)
+                            @if (Model.ServiceList !=null)
                             {
                             <div class="col-md-6">
                                 <div class="row">
@@ -85,24 +85,24 @@
                                 </div>
                                 <div class="row custome-scrollbar" style="max-height: 89vh; overflow:hidden; overflow-y:auto;">
 
-                                    @foreach (var item in Model.results)
-                                        {
-                                            if (item.ResultType == 2)
-                                            {
+                                    @foreach (var item in Model.ServiceList)
+                                    {
+                                            
                                     <div class="col-md-12">
-                                        <div class="media" onclick="window.location.href = '/company/calander/@item.CompanyCode/@item.CalendarCode'">
+                                        @*<div class="media" onclick="window.location.href = '/company/calander/@item.CompanyCode/@item.CalendarCode'">*@
+                                        <div class="media" onclick="window.location.href = '/company/calander/@item.COMPANY_CODE/@item.COMPANY_CODE'">
                                             <div class="media-left" style="">
-                                                <img src="@item.ImagePath.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px; height: 100px;">
+                                                <img src="@item.CALENDAR_PHOTO_PATH.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px; height: 100px;">
                                             </div>
                                             <div class="media-body">
-                                                <h4 class="media-heading" style="margin-bottom:0px;">@item.CompanyName</h4>
-                                                <div class="cal-name">@item.CalendarName</div>
-                                                <div class="category">@item.Description</div>
-                                                <div class="tags">@item.Tags</div>
+                                                <h4 class="media-heading" style="margin-bottom:0px;">@item.COMPANY_NAME_ENGLISH</h4>
+                                                <div class="cal-name">@item.CALENDAR_NAME</div>
+                                                @*<div class="category">@item.Description</div>*@
+                                                <div class="tags">@item.TAGS</div>
                                             </div>
                                         </div>
                                     </div>
-                                            }
+                                            
                                         }
 
 
@@ -111,9 +111,43 @@
                             </div>
                             }
 
-                            <div class="col-md-6">
-                                @if (Model.results.Where(x => x.ResultType == 1).ToList().Count > 0)
-                                {
+                        <div class="col-md-6">
+                            @if (Model.CompanyLIst !=null)
+                            {
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="sub-hed">
+                                            <p>Bloag @Model.keyword</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row custome-scrollbar" style="max-height: 40vh; overflow:hidden; overflow-y:scroll;">
+
+                                    @foreach (var item in Model.CompanyLIst)
+                                    {
+                                        
+                                            <div class="col-md-12">
+                                                <div class="media">
+                                                    <div class="media-left" style="">
+                                                        <img src="@item.COMPANY_BANNER_PATH.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px; height: 100px;">
+                                                    </div>
+                                                    <div class="media-body">
+                                                        <h4 class="media-heading">@item.COMPANY_NAME_ENGLISH</h4>
+                                                        <div class="tags">@item.TAGS</div>
+                                                        <p style="max-height:44px; overflow:hidden; text-overflow:ellipsis; padding-top: 4px;">@item.COMPANY_DESCRIPTION</p>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        
+                                    }
+
+                                </div>
+                                <br /><br />
+                            }
+
+                            @*@if (Model.results.Where(x => x.ResultType == 1).ToList().Count > 0)
+                            {
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="sub-hed">
@@ -124,29 +158,29 @@
                                 <div class="row custome-scrollbar" style="max-height: 40vh; overflow:hidden; overflow-y:scroll;">
 
                                     @foreach (var item in Model.results)
+                                    {
+                                        if (item.ResultType == 1)
                                         {
-                                            if (item.ResultType == 1)
-                                            {
-                                    <div class="col-md-12">
-                                        <div class="media">
-                                            <div class="media-left" style="">
-                                                <img src="@item.ImagePath.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px; height: 100px;">
-                                            </div>
-                                            <div class="media-body">
-                                                <h4 class="media-heading">@item.CompanyName</h4>
-                                                <div class="tags">@item.Tags</div>
-                                                <p style="max-height:44px; overflow:hidden; text-overflow:ellipsis; padding-top: 4px;">@item.Description</p>
+                                            <div class="col-md-12">
+                                                <div class="media">
+                                                    <div class="media-left" style="">
+                                                        <img src="@item.ImagePath.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px; height: 100px;">
+                                                    </div>
+                                                    <div class="media-body">
+                                                        <h4 class="media-heading">@item.CompanyName</h4>
+                                                        <div class="tags">@item.Tags</div>
+                                                        <p style="max-height:44px; overflow:hidden; text-overflow:ellipsis; padding-top: 4px;">@item.Description</p>
 
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                            }
                                         }
+                                    }
 
                                 </div>
                                 <br /><br />
-                                }
-                            </div>
+                            }*@
+                        </div>
                         </div>
 
 

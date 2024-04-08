@@ -69,8 +69,50 @@ div#myNavbar .navbar-nav li a:hover {
     border-radius: 10px 10px 0px 0px;
 }
 
-div#myNavbar .navbar-nav li ul li a:hover {
+/*div#myNavbar .navbar-nav li ul li a:hover {
     color: #E2476C !important;
+}*/
+div#myNavbar .navbar-nav li ul li a:hover {
+    color: #ffffff !important;
+}
+.custome-filter-category-master {
+    border: 1px solid #ddd;
+    background-color: transparent;
+    padding: 10px 15px;
+    width: 100%;
+    float: left;
+    border-radius: 40px;
+    font-size: 16px;
+    height: 47px;
+    -webkit-appearance: none;
+    position: relative;
+}
+.custome-ser {
+    width: 100%;
+    float: left;
+    position: relative;
+}
+.custome-ser:after {
+    content: "";
+    width: 17px;
+    height: 10px;
+    position: absolute;
+    top: 45px;
+    right: 15px;
+    background-image: url(/assets/marketplace/image/aerrow.png);
+    background-position: center;
+    background-size: cover;
+}
+.favr button#btn-mark-fav img {
+    margin-right: 9px;
+    position: relative;
+    top: -2px;
+}
+
+.favr button#btn-mark-fav {
+    background-color: #ddd;
+    border-color: #ddd;
+    color: #505050;
 }
 
 .logo-serch {
@@ -153,15 +195,16 @@ div#myNavbar .navbar-nav li.rl ul a {
     background-color: transparent;
     color: #222;
 }
-
-/*======================================= bnner section ==================================================*/
-
-section.top-banner {
-    background-image: url("../image/banner-back.jpg");
-    background-position: top;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-}
+    div#myNavbar .navbar-nav li.rl ul a:hover {
+        color: #e2476c !important;
+    } 
+    /*======================================= bnner section ==================================================*/
+    section.top-banner {
+        background-image: url("../image/banner-back.jpg");
+        background-position: top;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+    }
 
 .banner-form h1 {
     font-weight: 700;
@@ -442,7 +485,7 @@ section.footer {
 
 /*============================= business ======================================*/
 section.bredcrum {
-    padding: 20px 0px;
+    padding: 20px 0px 0px;
 }
 
 .head h2 {
@@ -492,6 +535,11 @@ section.bredcrum {
     float: left;
     margin-top: 40px;
 }
+.over-auto .inner-content {
+    max-height: 70vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
 
 h4.media-heading {
     font-weight: 700;
@@ -504,6 +552,7 @@ h4.media-heading {
 
 .media {
     margin-bottom: 25px;
+    position:relative;
 }
 
 .media-body p {
@@ -1320,7 +1369,46 @@ section.bottom-nav .com-det {
     background-color: #EBEBEB;
 }
 
+/**/
+.pro-text p {
+    display: -webkit-box;
+    max-width: 100%;
+    margin: 0 auto;
+    font-size: 14px;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.new-clr-tag {
+    position: absolute;
+    top: 7px;
+    left: 5px;
+}
+.heading-cata > .heading-cata {
+    margin-top: 20px;
+    padding: 0px 10px;
+    margin-left: 5px;
+    color: #E2476C;
+    cursor: pointer;
+}
 
+.heading-cata {
+    width: 100%;
+    display: flex;
+    white-space: nowrap;
+}
+/**/
+@media screen and (max-width:1920px) {
+    .my-slide button.owl-prev {
+        left: -65px;
+        top: 35%;
+    }
+    .my-slide button.owl-next {
+        right: -65px;
+        top: 35%;
+    }
+}
 @media screen and (max-width:1366px) {
     section .bottom-nav nav.navbar div#com-nav .nav > li > a {
         position: relative;
@@ -1350,10 +1438,17 @@ section.bottom-nav .com-det {
         padding-right: 11px !important;
     }
     .my-slide button.owl-next {
-        right: -30px;
+        right: -45px;
     }
     .my-slide button.owl-prev {
-        left: -30px;
+        left: -45px;
+    }
+    .owl-carousel .owl-nav button.owl-next, .owl-carousel .owl-nav button.owl-prev {
+        font-size: 35px !important;
+        padding-top: 10px !important;
+        padding-bottom: 12px !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
     }
 }
 @media screen and (min-width:769px) and (max-width:1200px) {
@@ -1508,4 +1603,62 @@ section.bottom-nav .com-det {
     width: 100%;
     float: left;
     margin-bottom: 16px;
+}
+
+.custome-filser .inner-content .media-left img {
+    height: 129px;
+    max-width: 200px;
+}
+.mt-25 {
+    margin-top: 25px;
+}
+.custome-filser {
+    min-height: 60.6vh;
+}
+
+div#myNavbar .navbar-nav li.rl ul a:hover {
+    color: #e2476c !important;
+}
+
+.dropdown-menu {
+    min-width: 156px !important ;
+}
+
+
+.custome-filter-category-master, .Search.custome-ser select {
+    border: 1px solid #ddd;
+    background-color: transparent;
+    padding: 10px 15px;
+    width: 100%;
+    float: left;
+    border-radius: 40px;
+    font-size: 16px;
+    height: 47px;
+    -webkit-appearance: none;
+    position: relative;
+}
+
+.custome-ser {
+    width: 100%;
+    float: left;
+    position: relative;
+}
+
+    .custome-ser:after {
+        content: "";
+        width: 17px;
+        height: 10px;
+        position: absolute;
+        top: 45px;
+        right: 15px;
+        background-image: url(/assets/marketplace/image/aerrow.png);
+        background-position: center;
+        background-size: cover;
+    }
+
+.head h2 {
+    font-size: 24px;
+}
+.media-object{
+    border-radius:6px;
 }

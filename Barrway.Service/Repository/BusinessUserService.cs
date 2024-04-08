@@ -3186,29 +3186,32 @@ namespace Barrway.Service.Repository
 
         }
 
+
         public async Task<AddUpdateDelete> GetFeaturedBlogs()
         {
             try
             {
                 string sqlString = $@"SELECT Id,BLOG_CATEGORY,BLOG_TITLE,IMAGE,BLOG_CONTENT,MARKED_AS_HOT,TAG,created_at FROM BLOG_1980 WHERE MARKED_AS_HOT='YES'";
 
+                var result = await sqlFunction.ExecuteSqlQuery(sqlString);
 
-                var result = (await sqlFunction.ExecuteSqlQuery(sqlString)).ToList();
-                if (result != null)
+                if (result.Any())
                 {
-
-                    return new AddUpdateDelete() { Data = result, Message = AppMessage.Success, Status = true };
-
+                    return new AddUpdateDelete { Data = result.ToList(), Message = AppMessage.Success, Status = true };
                 }
 
-                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                return new AddUpdateDelete { Status = false, Message = AppMessage.NotFound };
             }
             catch (Exception ex)
             {
-                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                return new AddUpdateDelete { Status = false, Message = AppMessage.NotFound };
             }
-
         }
+
+
+
+
+
 
 
         public async Task<AddUpdateDelete> GetBlogbyId(string Id)
@@ -3236,70 +3239,47 @@ namespace Barrway.Service.Repository
         }
 
 
+       
         public async Task<AddUpdateDelete> GetBlogs()
         {
             try
             {
                 string sqlString = $@"SELECT Id,BLOG_CATEGORY,BLOG_TITLE,IMAGE,BLOG_CONTENT,MARKED_AS_HOT,TAG,created_at FROM BLOG_1980 WHERE MARKED_AS_HOT='NO'";
 
+                var result = await sqlFunction.ExecuteSqlQuery(sqlString);
 
-                var result = (await sqlFunction.ExecuteSqlQuery(sqlString)).ToList();
-                if (result != null)
+                if (result.Any())
                 {
-
-                    return new AddUpdateDelete() { Data = result, Message = AppMessage.Success, Status = true };
-
+                    return new AddUpdateDelete { Data = result.ToList(), Message = AppMessage.Success, Status = true };
                 }
 
-                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                return new AddUpdateDelete { Status = false, Message = AppMessage.NotFound };
             }
             catch (Exception ex)
             {
-                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                return new AddUpdateDelete { Status = false, Message = AppMessage.NotFound };
             }
-
         }
 
 
-        //public async Task<AddUpdateDelete> GetBlogsTags()
-        //{
-        //    try
-        //    {
-        //        string sqlString = $@"select TAG from BLOG_1980";                
-
-        //        var result = (await sqlFunction.ExecuteSqlQueryDapper<TagsObject>(sqlString)).ToList();
-        //        if (result != null)
-        //        {
-
-        //            return new AddUpdateDelete() { Data = result, Message = AppMessage.Success, Status = true };
-
-        //        }
-
-        //        return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
-        //    }
-
-        //}
-
-
-
+       
         public async Task<Resultdata> GetAllBlogsTags()
         {
-            //connection string
-            string myCS = connectionString;
-
-
-            string query = "select TAG from BLOG_1980";
-
-            using (var connection = new SqlConnection(myCS))
+            try
             {
-                var result = await connection.QueryAsync<Tag>(query);
-                return new Resultdata() { Status = false, Message = AppMessage.NotFound, Data = result.ToList() };
-            }
+                string query = "SELECT TAG FROM BLOG_1980";
 
+
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    var result = await connection.QueryAsync<Tag>(query);
+                    return new Resultdata { Status = true, Message = AppMessage.Success, Data = result.ToList() };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Resultdata { Status = false, Message = AppMessage.NotFound };
+            }
 
         }
 
@@ -3349,11 +3329,17 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> updateCalendarOtherField(int eventId, string field, string value)
+        public async Task<AddUpdateDelete> updateCalendarOtherField(int eventId, Dictionary<string,object> data)
         {
             try
             {
-                string sqlString = $@"update CALENDAR_FORM_1935 set {field}=N'{value}' where Id=" + eventId;
+                string updateKeys = "";
+                data.Keys.ToList().ForEach(key =>
+                {
+                    updateKeys += $" [{key}]=N'{data[key]}', ";
+                });
+                updateKeys = updateKeys.TrimEnd(", ".ToCharArray());
+                string sqlString = $@"update CALENDAR_FORM_1935 set {updateKeys} where Id=" + eventId;
 
 
                 var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);

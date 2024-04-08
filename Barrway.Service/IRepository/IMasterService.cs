@@ -41,8 +41,14 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetAllBlog(Pagination data);
         Task<AddUpdateDelete> GetAllSubcategory();
         Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetAllCompany_SubCategoryWise(Pagination data);
-
+        Task<AddUpdateDelete> AllCalandersByCategory(CalandersPagination data);
+        Task<AddUpdateDelete> GetHeaderDetails(CalandersPagination data);
+        Task<AddUpdateDelete> GetAllFeaturedCompany();
         //GetAllFeaturedCompany_SubCategoryWise(Pagination data)
+
+        Task<AddUpdateDelete> GetServiceList(string keyword);
+        Task<AddUpdateDelete> GetCompanyListt(string keyword);
+        Task<AddUpdateDelete> GetBloagListt(string keyword);
 
     }
 }
