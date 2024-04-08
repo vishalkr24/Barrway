@@ -15470,7 +15470,7 @@ function removeColumns(formid,columns) {
 
     var removeColumnName = ['COMPANY CODE', 'CALENDAR CODE', 'COMPANY_CODE', 'CALENDAR_CODE'];
 
-    if (formid != 2295 && formid != 2296) {
+    if (formid != 2295 && formid != 2296 && formid != 2322) {
         columns = columns.filter(x => !removeColumnName.find(y => x.title && x.title.split('|').find(z => z == y)));
     }
 
@@ -15493,13 +15493,14 @@ function removeColumns(formid,columns) {
         //}
     }
 
-    if (formid == 2296) {
-        columns.find(x => x.title == "COMPANY CODE").title = "COMPANY NAME";
+    if (formid == 2296 || formid == 2322) {
+        columns.find(x => x.title == "COMPANY CODE").title = "COMPANY";
+        columns.find(x => x.title == "CALENDAR CODE").title = "CALENDAR";
     }
 
     var removeColumnName = ['COMPANY CODE', 'CALENDAR CODE', 'COMPANY_CODE', 'CALENDAR_CODE'];
 
-    if (formid != 2295 && formid != 2296) {
+    if (formid != 2295 && formid != 2296 && formid != 2322) {
         columns = columns.filter(x => !removeColumnName.find(y => x.title && x.title.split('|').find(z => z == y)));
     }
 
@@ -15509,7 +15510,7 @@ function removeColumns(formid,columns) {
 
 function addNewColumns(formid, columns) {
     formid = parseInt(formid);
-    formidList = [2295, 2296, 2303, 2304, 2306, 2305, 2322, 2311];
+    formidList = [2295, 2296, 2303, 2304, 2306, 2305, 2311];
     //debugger;
     //columns.find(x => x.title == "Edit").frozen = true;
 

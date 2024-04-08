@@ -528,7 +528,10 @@ namespace Barrway.Controllers
                     companyModel.calendars = JsonConvert.DeserializeObject<List<BusinessCalendarModel>>(calendarEncrypted);
                     companyModel.PAGE_URL = PageUrl;
 
-
+                    if (!companyModel.calendars.Any(x=> x.CALENDAR_CODE == CalendarCode && x.STATUS == "PUBLISH"))
+                    {
+                        return RedirectToAction("Index", "Marketplace");
+                    }
 
 
                     if (CalendarCode == null)

@@ -13,7 +13,7 @@ FormGeneratorApp.run(function ($rootScope, $templateCache, notifierService, $q, 
         if (transition.from().name == "queue_view") {
             $.connection.hub.stop();
         }
-        
+
     });
 
     $transitions.onSuccess({}, function (transition) {
@@ -21,7 +21,7 @@ FormGeneratorApp.run(function ($rootScope, $templateCache, notifierService, $q, 
         $(".lbl-company-name").text(localStorage.getItem("COMPANY_NAME_ENGLISH"));
     });
 
-    
+
 
     $rootScope.$on("ShowLoading", function (event, message, progress) {
         $rootScope.IND_loading = true;
@@ -117,7 +117,7 @@ FormGeneratorApp.run(function ($rootScope, $templateCache, notifierService, $q, 
     };
 
 
-   
+
 });
 
 
@@ -130,11 +130,11 @@ FormGeneratorApp.controller('DashboardController', function ($scope, $http, $tim
         $(".hide-for-superadmin").hide();
         $(".show-for-superadmin").show();
     }
-    
+
     if (window.location.href.includes("UserAdmin") || window.location.href.includes("Useradmin") || window.location.href.includes("useradmin")) {
         $state.go("user_dashboard");
     } else if (window.location.href.includes("SuperAdmin") || window.location.href.includes("Superadmin") || window.location.href.includes("superadmin")) {
-        
+
         $state.go("superadmin_dashboard");
     } else {
         $("#nav-calendar-dashboard").addClass("active");
@@ -145,6 +145,34 @@ FormGeneratorApp.controller('DashboardController', function ($scope, $http, $tim
             $scope.ManageCalendarMaster();
             setCalendarDashboardData();
         }, 800);
+    }
+
+    $scope.publishCalendar = function () {
+        if (localStorage.getItem("CALENDAR_CODE") != null && localStorage.getItem("CALENDAR_CODE") != undefined) {
+
+            adminService.postAsync("/BusinessAdmin/PublishCalendar", { CalendarCode: localStorage.getItem("CALENDAR_CODE") }).then(function (response) {
+                if (response.data != null) {
+                    if (response.data.Status) {
+                        swal({
+                            icon: "success",
+                            title: "Success",
+                            text: response.data.Message
+                        }).then(function () {
+                            window.location.reload();
+                        });
+                    } else {
+                        swal({
+                            icon: "warning",
+                            title: "Error",
+                            text: response.data.Message
+                        });
+                    }
+                }
+            })
+
+        } else {
+            alert("Please select a calendar");
+        }
     }
 
 

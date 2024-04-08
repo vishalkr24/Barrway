@@ -74,6 +74,7 @@
     };
     $scope.init = function () {
         $rootScope.isPreviewPage = true;
+        $scope.calendarPublishable = false;
         $scope.loginParam = {};
         $scope.resetParam = {};
         $scope.activatedServicesPlan = {};
@@ -358,6 +359,14 @@
                 
                 localStorage.setItem("CALENDAR_FUNCTION_TYPE", $scope.calendarList.find(x => x.CALENDAR_CODE == localStorage.getItem("CALENDAR_CODE")).CALENDAR_FUNCTION_TYPE);
                 localStorage.setItem("CALENDAR_TYPE", $scope.calendarList.find(x => x.CALENDAR_CODE == localStorage.getItem("CALENDAR_CODE")).CALENDAR_TYPE);
+                localStorage.setItem("CALENDAR_STATUS", $scope.calendarList.find(x => x.CALENDAR_CODE == localStorage.getItem("CALENDAR_CODE")).STATUS);
+
+                if (localStorage.getItem("CALENDAR_STATUS") == 'PUBLISH') {
+                    $scope.calendarPublishable = false;
+                } else {
+                    $scope.calendarPublishable = true;
+                }
+
                 localStorage.setItem("CALENDAR_CATEGORY_ID", $scope.calendarList.find(x => x.CALENDAR_CODE == localStorage.getItem("CALENDAR_CODE")).CALENDAR_CATEGORY_ID);
                 debugger;
                 if ((localStorage.getItem("CALENDAR_TYPE") == "3" && localStorage.getItem("CALENDAR_CATEGORY_ID") == "4") || (localStorage.getItem("CALENDAR_TYPE") == "4" && localStorage.getItem("CALENDAR_CATEGORY_ID") == "2")) {
