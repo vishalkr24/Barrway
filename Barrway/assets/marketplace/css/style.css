@@ -1662,3 +1662,6 @@ div#myNavbar .navbar-nav li.rl ul a:hover {
 .media-object{
     border-radius:6px;
 }
+p.tag a {
+    text-decoration: underline;
+}

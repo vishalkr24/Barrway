@@ -10,7 +10,7 @@ namespace Barrway.DTO.MarketplaceModels
     {
         public List<Company> CompanyLIst { get; set; }       
         public List<CompanyService> ServiceList { get; set; }
-        public List<blog> BloagLIst { get; set; }
+        public List<blog> BlogLIst { get; set; }
         public string keyword { get; set; }
     }
 
@@ -22,6 +22,7 @@ namespace Barrway.DTO.MarketplaceModels
         public string CALENDAR_PHOTO_PATH { get; set; }
         public string COMPANY_CODE { get; set; }
         public string TAGS { get; set; }
+        public List<TagsObject> TAGs { get; set; }
         public string COMPANY_NAME_ENGLISH { get; set; }
 
     }
@@ -61,6 +62,7 @@ namespace Barrway.DTO.MarketplaceModels
         public string COMPANY_DESCRIPTION { get; set; }
         public string COMPANY_SERVICE { get; set; }
         public string TAGS { get; set; }
+        public List<TagsObject> TAGs { get; set; }
         public string IS_SEARCHABLE_IN_MARKETPLACE { get; set; }
         public string COMPANY_CATEGORY_ID { get; set; }
         public string COMPANY_SUB_CATEGORY_ID { get; set; }
@@ -81,8 +83,11 @@ namespace Barrway.DTO.MarketplaceModels
         public string BLOG_TITLE { get; set; }
         public string IMAGE { get; set; }
         public string TAG { get; set; }
+        public List<TagsObject> TAGs { get; set; }
         public string BLOG_CATEGORY { get; set; }
         
     }
+
+    
 
 }

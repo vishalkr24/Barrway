@@ -75,13 +75,23 @@
                         <p class="post-title"><b>@Model.Blog.BLOG_TITLE</b></p>
                         <p class="date">@Model.Blog.created_at.ToString("yyyy-MM-dd HH:mm")</p>
                         <p class="tag">
+                            
+
                             @if (Model.Blog.TAGs != null)
                             {
-                                foreach (var item in Model.Blog.TAGs)
+                                bool isFirst = true;
+                                foreach (var Tagitem in Model.Blog.TAGs)
                                 {
-                                    <a href="javascript:void(0)"> @item.value</a>
+                                    if (!isFirst)
+                                    {
+                                        <span>,</span>
+                                    }
+
+                                    <a href="/Marketplace/Search?keyword=@Tagitem.value"> @Tagitem.value</a>
+                                    isFirst = false;
                                 }
                             }
+
 
 
                         </p>
@@ -124,15 +134,24 @@
                                 <div class="date">@item.created_at.ToString("yyyy-MM-dd HH:mm")</div>
                                 <div class="tags">
 
+                                    
+
                                     @if (item.TAGs != null)
                                     {
-                                        foreach (var i in item.TAGs)
+                                        bool isFirst = true;
+                                        foreach (var Tagitem in item.TAGs)
                                         {
-                                            <a href="javascript:void(0)"> @i.value</a>
+                                            if (!isFirst)
+                                            {
+                                                <span>,</span>
+                                            }
+
+                                            <a href="/Marketplace/Search?keyword=@Tagitem.value"> @Tagitem.value</a>
+                                            isFirst = false;
                                         }
                                     }
 
-                                   
+
                                 </div>
                             </div>
                         </div>
