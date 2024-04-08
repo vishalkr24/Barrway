@@ -1665,3 +1665,13 @@ div#myNavbar .navbar-nav li.rl ul a:hover {
 p.tag a {
     text-decoration: underline;
 }
+
+.heading-cata a {   
+    padding: 0px 10px;
+    margin-left: 5px;
+    color: #E2476C;
+    cursor: pointer;
+}
+.pro-im img, .media-left img{
+    border-radius: 10px;
+}

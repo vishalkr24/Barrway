@@ -1305,6 +1305,15 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 string applyFilterQuery = string.Join(" and ", applyFilter);
                 applyFilterQuery = applyFilterQuery.TrimEnd("and ".ToCharArray());
 
+                string SerrchFilter = "";
+
+                if(!string.IsNullOrEmpty(data.SearchText))
+                {
+                    SerrchFilter = " and COMPANY_NAME_ENGLISH like '%"+ data.SearchText + "%'";
+                }
+
+
+
                 int PageSize = data.size > 0 ? data.size : 20;
                 int PageNumber = data.page > 0 ? data.page : 1;
 
@@ -1342,7 +1351,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                                           ,[IS_DEFAULT]
                                           ,[COMPANY_EMAIL]
                                           ,[IS_ACTIVE]
-                                      FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] where IS_ACTIVE = 'Y' and IS_SEARCHABLE_IN_MARKETPLACE = 'Y'
+                                      FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] where IS_ACTIVE = 'Y' and IS_SEARCHABLE_IN_MARKETPLACE = 'Y' {SerrchFilter}
                                     )
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY created_at desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
 

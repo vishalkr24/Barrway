@@ -58,7 +58,7 @@ function SetAllCalanders(pageNumber, Short) {
             Short: Short
 
         },
-        success: function (response) {            
+        success: function (response) {
             remove_hash_from_url();
             ///Pagination Start
             var heading = response.Heading.Data;
@@ -101,76 +101,86 @@ function SetAllCalanders(pageNumber, Short) {
             $('.head').empty();
             $('.head').append('<h2>' + heading[0].Heading + '</h2>');
 
+            console.log(response.data,"response data");           
 
+            if (response.data != null) {
 
-            // Calanders start
-            $("#row1").empty();
-            $("#row2").empty();
-
-            for (var i = 0; i < response.data.length; i++) {
-                var tagString = "";
-                var ResponceData = response.data;
-                console.log(ResponceData, "ResponceData");
-
-                if (response.data[i].TAGS.includes(",")) {
-                    var tempTagData = response.data[i].TAGS.split(',');
-
-                    for (var j = 0; j < tempTagData.length; j++) {
-                        if (j == tempTagData.length - 1) {
-                            tagString += `<a href="/Marketplace/Tag?tag=${tempTagData[j]}">${tempTagData[j]}</a>`
-                        } else {
-                            tagString += `<a href="/Marketplace/Tag?tag=${tempTagData[j]}">${tempTagData[j]}, </a>`
+                // Calanders start  
+                if (response.data.length > 0) {
+                    $("#Content-row").empty();
+                    var itemCount = 0;
+                    for (var i = 0; i < response.data.length; i++) {
+                        var tagString = "";
+                        var RowHead = '';
+                        var RowEnd = '';
+                        var ResponceData = response.data;
+                        console.log(ResponceData, "ResponceData");
+                        if (response.data[i].TAGS != '') {
+                            var tags = JSON.parse(response.data[i].TAGS);
+                            for (var k = 0; k < tags.length; k++) {
+                                if (k > 0) {
+                                    tagString += '<span>,</span>';
+                                }
+                                tagString += `&nbsp;<a href='/Marketplace/Search?keyword=${tags[k].value}'>${tags[k].value}</a>`;
+                            }
                         }
 
-                    }
+                        var feturedSpan_html = '';
+                        if (ResponceData[i].IS_FEATURED == 'Y') {
+                            feturedSpan_html = '<div class="clr-tag new-clr-tag"><span>Featured</span></div>';
+                        }
 
-                } else {
-                    tagString += `<a href="/Marketplace/Tag?tag=${response.data[i].TAGS}">${response.data[i].TAGS}</a>`
-                }
-               
-                
+                        //if (itemCount == 0) {
+                        //    RowHead = '<div class="row">';                            
+                        //}
+                        //if (itemCount == 1) {
+                        //    RowHead = '</div>';
+                        //}
 
-                /*  ${ feturedSpan_html }*/
-                debugger;
-                if (i < 3) {
-                    var feturedSpan_html = '';
-                    if (ResponceData[i].IS_FEATURED == 'Y') {
-                        feturedSpan_html = '<div class="clr-tag new-clr-tag"><span>Featured</span></div>';
-                    }
-                    //PAGE_URL //${response.data[i].PAGE_URL ? response.data[i].PAGE_URL : response.data[i].COMPANY_CODE}
-                    $("#row1").append(`<div class="media" style="cursor:pointer;" onclick="window.location.href ='/company/calander/${response.data[i].PAGE_URL ? response.data[i].PAGE_URL : response.data[i].COMPANY_CODE}/${response.data[i].CALENDAR_CODE}'">
+                        $("#Content-row").append(`<div class="col-md-6">
+                                <div class="media" style="cursor:pointer;" onclick="window.location.href ='/company/calander/${response.data[i].PAGE_URL ? response.data[i].PAGE_URL : response.data[i].COMPANY_CODE}/${response.data[i].CALENDAR_CODE}'">
                                 ${feturedSpan_html}
                                 <div class="media-left">
                                         <img src="${(ResponceData[i].CALENDAR_PHOTO_PATH == "") ? "../assets/marketplace/image/pro.png" : ResponceData[i].CALENDAR_PHOTO_PATH.replaceAll("~", "..")}" onerror="this.src='../assets/marketplace/image/pro.png'">
                                    
                                 </div>
-                                <div class="media-body">
-                                    
+                                <div class="media-body">                                    
                                     <h4 class="media-heading">${ResponceData[i].COMPANY_NAME_ENGLISH}</h4>
                                     <p><b>${ResponceData[i].CALENDAR_NAME}</b></p>
                                     <p style="height: 48px; overflow: hidden;">${ResponceData[i].DISTRICT_NAME}</p>
                                     <p>${tagString}</p>
-                                </div>`);
+                                </div>                               
+                                </div> </div>`);
 
-                } else {
-                    
-                    $("#row2").append(`<div class="media" style="cursor:pointer;" onclick="window.location.href = '/company/calander/${response.data[i].PAGE_URL ? response.data[i].PAGE_URL : response.data[i].COMPANY_CODE}/${response.data[i].CALENDAR_CODE}'">
-                                        ${feturedSpan_html}
-                                    <div class="media-left">
+                        itemCount++;
 
-                                        <img src="${(ResponceData[i].CALENDAR_PHOTO_PATH == "") ? "../assets/marketplace/image/pro.png" : ResponceData[i].CALENDAR_PHOTO_PATH.replaceAll("~", "..")}" onerror="this.src='../assets/marketplace/image/pro.png'">
-                                   
-                                </div>
-                                <div class="media-body">
-                                   
-                                    <div class="clr-tag new-clr-tag"><span>Featured</span></div>
-                                    <h4 class="media-heading">${ResponceData[i].COMPANY_NAME_ENGLISH}</h4>
-                                    <p><b>${ResponceData[i].CALENDAR_NAME}</b></p>
-                                    <p style="height: 48px; overflow: hidden;">${ResponceData[i].DISTRICT_NAME}</p>
-                                    <p>${tagString}</p>
-                                </div>`);
+                        if (itemCount ==1) {
+                            itemCount = 0;
+                        }
+
+                    }
                 }
+
             }
+            else {
+                $("#Content-row").empty();
+                $("#Content-row").append(`<div class="col-md-6">
+                                <div class="media" style="cursor:pointer;">                              
+                                <div class="media-left"> 
+                                </div>
+                                <div class="media-body">                                    
+                                    <h4 class="media-heading">No data available !</h4>                                    
+                                </div>
+
+                    </div >`);
+
+            }
+
+            
+            
+           
+
+           
 
         },
         error: function (errorResponse) {
@@ -182,9 +192,9 @@ function SetAllCalanders(pageNumber, Short) {
 
 
 function scaltonLoader() {
-    $("#row1").empty();
-    $("#row2").empty();
-    $("#row1").append(`<div class="half">
+   
+    $("#Content-row").empty();
+    $("#Content-row").append(`<div class="col-md-6"><div class="half">
                                 <div class="animated-background">
                                     <div class="background-masker header-top"></div>
                                     <div class="background-masker header-left"></div>
@@ -234,24 +244,8 @@ function scaltonLoader() {
                                     <div class="background-masker content-third-line"></div>
                                     <div class="background-masker content-third-end"></div>
                                 </div>
-                            </div>`);
-    $("#row2").append(`<div class="half">
-                                <div class="animated-background">
-                                    <div class="background-masker header-top"></div>
-                                    <div class="background-masker header-left"></div>
-                                    <div class="background-masker header-right"></div>
-                                    <div class="background-masker header-bottom"></div>
-                                    <div class="background-masker subheader-left"></div>
-                                    <div class="background-masker subheader-right"></div>
-                                    <div class="background-masker subheader-bottom"></div>
-                                    <div class="background-masker content-top"></div>
-                                    <div class="background-masker content-first-end"></div>
-                                    <div class="background-masker content-second-line"></div>
-                                    <div class="background-masker content-second-end"></div>
-                                    <div class="background-masker content-third-line"></div>
-                                    <div class="background-masker content-third-end"></div>
-                                </div>
-                            </div>
+                            </div></div>
+                        <div class="col-md-6">
                             <div class="half">
                                 <div class="animated-background">
                                     <div class="background-masker header-top"></div>
@@ -285,7 +279,26 @@ function scaltonLoader() {
                                     <div class="background-masker content-third-line"></div>
                                     <div class="background-masker content-third-end"></div>
                                 </div>
-                            </div>`);
+                            </div>
+                            <div class="half">
+                                <div class="animated-background">
+                                    <div class="background-masker header-top"></div>
+                                    <div class="background-masker header-left"></div>
+                                    <div class="background-masker header-right"></div>
+                                    <div class="background-masker header-bottom"></div>
+                                    <div class="background-masker subheader-left"></div>
+                                    <div class="background-masker subheader-right"></div>
+                                    <div class="background-masker subheader-bottom"></div>
+                                    <div class="background-masker content-top"></div>
+                                    <div class="background-masker content-first-end"></div>
+                                    <div class="background-masker content-second-line"></div>
+                                    <div class="background-masker content-second-end"></div>
+                                    <div class="background-masker content-third-line"></div>
+                                    <div class="background-masker content-third-end"></div>
+                                </div>
+                            </div>
+                         </div>`);
+    
 }
 
 
