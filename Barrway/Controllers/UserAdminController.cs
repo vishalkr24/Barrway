@@ -580,6 +580,34 @@ namespace Barrway.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<ActionResult> GetMyUpcomingBookings()
+        {
+            try
+            {
+                var result = await publicUserService.GetMyUpcomingBookings(UserIdentity.UserEmail);
+                List<IDictionary<string, object>> finalResult = new List<IDictionary<string, object>>();
+
+                for (int i = 0; i < result.Data.Count; i++)
+                {
+                    if (result.Data[i].Count > 0)
+                    {
+                        var splitData = result.Data[i]["customTitle"].Split(',');
+
+                        result.Data[i].Add("customTitleSplit", splitData);
+                        finalResult.Add(result.Data[i]);
+                    }
+
+                }
+
+                return Json(finalResult, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Message = "Failed", Status = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         /// <summary>
         /// It will generate a QR of attendee booking for company to scan it
         /// </summary>

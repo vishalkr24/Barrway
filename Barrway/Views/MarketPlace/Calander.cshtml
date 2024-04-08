@@ -1386,17 +1386,17 @@
             }
 
             $scope.cancelPublicUserBooking = function () {
-                console.log($scope.selectEventDetails);
-                
+                var eventData = $scope.selectEventDetails;
+
                 swal({
                     title: "Are you sure to cancel the selected booking?",
-                    content: wrapper,
                     buttons: {
                         cancel: "No",
                         confirm: "Yes"
                     }
 
                 }).then(function (response) {
+                    debugger;
                     if (response) {
                         showLoader();
 
@@ -1439,9 +1439,12 @@
 
                             },
                             error: function () {
+                                hideLoader();
                                 swal({ type: 'error', showCloseButton: true, html: "something went wrong!" });
                             }
                         })
+                    }else{
+                        hideLoader();
                     }
                 });
 

@@ -914,6 +914,34 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> PublishCalendar(string CalendarCode, string UserId)
+        {
+            try
+            {
+                string query = $@"declare @id varchar(max) = (select cal.Id from BUSINESS_CALENDAR_MASTER_1925 cal
+                                    join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = cal.COMPANY_CODE
+                                    join BUSINESS_ASSIGNED_USERS_1964 bau on bau.COMPANY_ID = company.Id
+                                    where cal.CALENDAR_CODE = '{CalendarCode}' and bau.ASSIGNED_USER = '{UserId}')
+
+                                    update BUSINESS_CALENDAR_MASTER_1925 set STATUS = 'PUBLISH' where Id = @id";
+                var result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                if (result > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = "Calendar is now published." };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "Transaction Not Allowed." };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
         public async Task<AddUpdateDelete> UpdateStaffServiceMapping(List<StaffServiceMappingModel> model)
         {
             try
@@ -3158,7 +3186,6 @@ namespace Barrway.Service.Repository
 
         }
 
-        
 
         public async Task<AddUpdateDelete> GetFeaturedBlogs()
         {
@@ -3234,12 +3261,14 @@ namespace Barrway.Service.Repository
             }
         }
 
+
        
         public async Task<Resultdata> GetAllBlogsTags()
         {
             try
             {
                 string query = "SELECT TAG FROM BLOG_1980";
+
 
                 using (var connection = new SqlConnection(connectionString))
                 {
@@ -3251,12 +3280,8 @@ namespace Barrway.Service.Repository
             {
                 return new Resultdata { Status = false, Message = AppMessage.NotFound };
             }
+
         }
-
-
-
-
-
 
         public async Task<AddUpdateDelete> getCalendarUploadFiles(int eventId)
         {
