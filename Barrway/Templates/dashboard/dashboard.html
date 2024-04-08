@@ -1,12 +1,18 @@
 ﻿<div class="container-fluid pt-5">
     <div class="row">
         <div class="col-md-12">
-            <div class="bredcrump">
+            <div class="bredcrump" style="display:flex; justify-content: space-between;">
                 <span><a class="lbl-company-name" href="/BusinessAdmin/Dashboard">Company name</a> / <a class="lbl-calendar-name" ui-sref="Home()" href="#/home">Company name</a> / <a ui-sref="Home()" href="#/home">{{translation.Dashboard}}</a> </span>
+                <div class="login_primary">
+                    <button class="btn btn-primary" ng-show="calendarPublishable" ng-click="publishCalendar();" style="border-radius: 50px;">Publish Calendar</button>
+                </div>
             </div>
+
         </div>
+        
     </div>
     <div class="row pt-lg-2 hide-for-superadmin">
+        
         <div class="col-lg-3">
             <div class="row">
                 <div class="col-md-12">

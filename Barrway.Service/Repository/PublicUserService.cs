@@ -426,15 +426,29 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> CancelPublicUserBooking(CalendarEnrollModel model)
         {
-            string query = $@"select cf.[start], cf.[end], t.* from CALENDAR_FORM_1935 cf
+            string query = $@"select ser.CANCELLATION_BEFORE, cf.[start], cf.[end], t.* from CALENDAR_FORM_1935 cf
                                 join TRANSACTION_MASTER_1942 t on t.SLOT = cf.Id
                                 join PARTICIPANT_MASTER_1940 p on p.Id = t.STUDENT
+								join SERVICE_MASTER_1933 ser on ser.Id = t.ACTIVITY
                                 where cf.Id = '{model.transaction.SLOT}' and p.EMAIL = '{model.USER_EMAIL}'";
             var result = await sqlFunction.ExecuteSqlQuery(query);
 
             if (result.Count > 0)
             {
-                if (DateTime.Now < Convert.ToDateTime(result[0]["start"]?.ToString()) && DateTime.Now > Convert.ToDateTime(result[0]["start"]?.ToString()).AddMinutes(-30))
+                int cancellationMinutes = 1440;
+                
+                if (!string.IsNullOrEmpty(result[0]["CANCELLATION_BEFORE"]?.ToString()))
+                {
+                    try
+                    {
+                        cancellationMinutes = Convert.ToInt32(result[0]["CANCELLATION_BEFORE"].ToString());
+                    }catch (Exception ex)
+                    {
+
+                    }
+                }
+
+                if (DateTime.Now < Convert.ToDateTime(result[0]["start"]?.ToString()).AddMinutes(-(cancellationMinutes)))
                 {
                     query = $@"delete from TRANSACTION_MASTER_1942 where Id = '{result[0]["Id"]?.ToString()}'";
                     var result2 = await sqlFunction.ExecuteSqlCommandQuery(query);

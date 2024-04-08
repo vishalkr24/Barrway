@@ -1435,6 +1435,10 @@
                                     text: data.Message,
                                     icon: (data.Status) ? "success" : "error",
                                     button: "Okay"
+                                }).then(function () {
+                                    if (data.Status) {
+                                        window.location.reload();
+                                    }
                                 });
 
                             },

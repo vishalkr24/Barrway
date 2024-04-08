@@ -2,7 +2,7 @@
     'use strict';
     FormGeneratorApp.controller('FormRecordsController', function ($scope, $compile, $rootScope, $ngBootbox, $http, $location, $window, mainService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, translationService) {
 
-        var tabulatorChildren = {};       
+        var tabulatorChildren = {};
         //var isSubscription = $scope.isSubscription($scope.formDetailsDataInfo.formId, "checkIfRequested");;
         $scope.init = function () {
 
@@ -56,12 +56,12 @@
             $scope.getLanguage();
             //Deisy 06102020  
             $scope.ApplyMultilingualText();
-            
-           
-           
-           $scope.importFormSettings = { language: 1 };
 
-            
+
+
+            $scope.importFormSettings = { language: 1 };
+
+
             localStorage.removeItem("newWindow");
 
             $scope.isInvoiceForm = false;
@@ -111,10 +111,10 @@
 
 
         };
-        
+
         /*Tabulator Configration Popup functions*/
         $scope.saveTabulatorLayout = function (type, isForm) {
-             
+
             $scope.tabulatorLayoutId = "tabulator-persisrecords" + $scope.currentFormId;
             if (!DataService.isEmpty(tabulator)) {
                 //$ngBootbox.customDialog({
@@ -150,7 +150,7 @@
                 closeButton: false
             });
             $timeout(function () {
-                 
+
                 $scope.$broadcast("updateTabulatorId", $scope.tabulatorLayoutId, tabulator, $scope.formAllDatafields);
             }, 420);
 
@@ -465,7 +465,7 @@
         }
 
         var arrowDataFormat = function (cell, formatterParams) {
-            
+
             var exists;
             _.each($scope.formDatafields, function (page, key) {
                 exists = _.findWhere(page, { name: cell.getColumn().getField() });
@@ -628,7 +628,7 @@
             //return the editor element
         };
         $scope.ToCustomDateTime = function (date) {
-            
+
             var dateTime = new Date(date);
             dateTime = moment(date).format("YYYY-MM-DD HH:mm");
             return dateTime;
@@ -1008,17 +1008,20 @@
             // console.log('returnObj is' + returnObj);
 
         };
-       
+
         $scope.getFormDetails = function (param, tabularId) {
             param.created_by = $scope.userDetail.Id;
             param.update_by = $scope.userDetail.Id;
             param.language = $scope.formSelectedLanguageId;
             param.currentstage = 0;
             $scope.allowViewSumm = "";
+
+            debugger;
+
             mainService.manageForm("ManageForm", param)
                 .then(function (response) {
                     if (response.data != null && angular.isDefined(response.data)) {
-                        
+
                         $scope.allowViewSumm = response.data[0].allowViewSummary;
                         if (DataService.isEmpty($scope.allowViewSumm))
                             $scope.allowViewSumm = "";
@@ -1029,7 +1032,7 @@
                             $scope.allowAddDelete = false;
                         }
                         var frmData = response.data[0];
-                        
+
                         $scope.screenSize = frmData.screenMode;
                         var KanbanData = JSON.parse(frmData.fields);
                         if ((frmData.toDate_field != null && frmData.fromDate_field != null) && (frmData.toDate_field != '' && frmData.fromDate_field != ''))
@@ -1041,10 +1044,10 @@
                         var qrString = $location.search();
                         $scope.formentries = response.data[0];
                         var subscriptionFormID = frmData.subscriptionFormID;
-                        
-                       
+
+
                         var formDataTemp = response.data[0];
-                        
+
 
                         $scope.formDetailsDataInfo = formDataTemp;
                         if (!DataService.isEmpty($scope.formDetailsDataInfo.scheduler_referrence_formId) && $scope.formDetailsDataInfo.scheduler_referrence_formId != 0) {
@@ -1149,7 +1152,7 @@
             $state.go("saveFormEventData", {
                 "formId": $scope.currentFormId, "popup": 1, "customForms": formList, "customFormIds": formlistIds
             });
-        };        
+        };
         $scope.uploaddownloadPopup = function () {
             var title = "";
 
@@ -1432,7 +1435,7 @@
             if (window["formGroupKeyList"].length > 0) {
                 var latlong = $scope.selectedDeletedRecordList;
                 var Mapdatarr = [];
-                 
+
                 var Dependentcolumns = $scope.MapMarkerControlDescriptionDeppendFields;
 
                 if (Dependentcolumns == undefined) {
@@ -1440,7 +1443,7 @@
                 }
 
                 for (let i = 0; i < latlong.length; i++) {
-                     
+
                     var DependentcolumnsArr = Dependentcolumns.split(",");
                     var colsdata = ""
                     var k = 0;
@@ -1450,32 +1453,32 @@
                             colsdata += latlong[i][DependentcolumnsArr[j]];
                         }
                         else {
-                            colsdata +=" "+ latlong[i][DependentcolumnsArr[j]];
+                            colsdata += " " + latlong[i][DependentcolumnsArr[j]];
                         }
-                        
+
                         k++;
 
                     }
-                    console.log(colsdata,"datacols");
-                     
+                    console.log(colsdata, "datacols");
+
 
                     Mapdatarr.push({
                         Latitude: latlong[i].Latitude,
                         Longitude: latlong[i].Longitude,
                         Desc: colsdata, //latlong[i][DependentcolumnsArr[0]], //+ " " + latlong[i][DependentcolumnsArr[1]],
-                           
-                        });
-                    }
-                    
-                    localStorage.setItem("GooglemapLatlongMapData", JSON.stringify(Mapdatarr));
-                    //var data = MapService.get();
-                    //console.log(data,"data"); 
-                    $window.open('#/GoogleMap/' + $scope.currentFormId, '_blank');
+
+                    });
                 }
-                else {                    
-                    notifierService.notifyMessage('error', 'Form Records', 'Please select atleast one record.');
-                }
-            
+
+                localStorage.setItem("GooglemapLatlongMapData", JSON.stringify(Mapdatarr));
+                //var data = MapService.get();
+                //console.log(data,"data"); 
+                $window.open('#/GoogleMap/' + $scope.currentFormId, '_blank');
+            }
+            else {
+                notifierService.notifyMessage('error', 'Form Records', 'Please select atleast one record.');
+            }
+
         };
 
         function checkDeleteEditAccessRight(type, recordData) {
@@ -1557,7 +1560,7 @@
         }
         $scope.exportAll = function (type) {
             var data = "";
-             
+
             var fileNameDownload = angular.copy($scope.formDetailsDataInfo.title);
             fileNameDownload = fileNameDownload.split(" ").join("");
             var dataformatFile = moment(new Date());
@@ -2694,7 +2697,7 @@
                 return !DataService.isEmpty(data) ? jQuery(data).text() : "";
             }
         };
-        function bindTColumnHeader(formDetails, isExpend, isEdit) {            
+        function bindTColumnHeader(formDetails, isExpend, isEdit) {
             var langId = "1";
             if (localStorage.getItem("globalLangForm") != null && localStorage.getItem("globalLangForm") != 'null') {
                 langId = localStorage.getItem("globalLangForm");
@@ -2866,7 +2869,7 @@
                                     //    }
                                     //}
                                     else if (type == "select") {
-                                        $scope.optionValuesSelect = item.values;                                       
+                                        $scope.optionValuesSelect = item.values;
                                         //const filterListvalues = [{ label: "Lucknow", value: "1" }, { label: "Banarash", value: "2" }, { label: "Alahabad", value: "3" }, { label: "Kanpur", value: "4" }, { label: "Mathura", value: "5" }, { label: "Ayodhya", value: "6" }, { label: "Gorakhpur", value: "7" }, { label: "Noida", value: "9" }, { label: "SaharanPur", value: "10" }];
                                         //const filterListvalues = [{ label: "Lucknow", value: "Lucknow" }, { label: "Banarash", value: "Banarash" }, { label: "Alahabad", value: "Alahabad" }, { label: "Kanpur", value: "Kanpur" }];
 
@@ -3279,7 +3282,7 @@
                     }
                 });
 
-            
+
 
             finalArray.push({
                 title: getStringFromMultiligualText("Created At|創建於|创建于", langId), formatter: arrowDataFormat, titleDownload: getStringFromMultiligualText("Created At|創建於|创建于", langId), width: 140, field: "created_at", headerFilter: "input"
@@ -3295,7 +3298,7 @@
 
         };
         function bindTColumnHeaderCustom(formDetails, isExpend, isEdit) {
-             
+
             //console.log('form details are this ');
             //console.log(formDetails);
             /**/
@@ -4071,7 +4074,7 @@
             // });
             //tabulator.setData(temp);
             $rootScope.$emit("HideLoading");
-        }        
+        }
         function bindTRowsData(groupByData) {
             var dataArray = [];
             angular.forEach(groupByData, function (item, grp) {
@@ -4204,9 +4207,18 @@
 
             $scope.filterFieldsList = [];
             var headers = [];
-            
+
             //headers = bindTColumnHeaderCustom($scope.formDatafields, true, true);
             /*Bind Header from tabulator settings*/
+
+            if ($stateParams.formId == 2322) {
+                $scope.filterBy.groupByRecord = "CALENDAR_CODE";
+            } else if ($stateParams.formId == 2305 || $stateParams.formId == 2312) {
+                $scope.filterBy.groupByRecord = "";
+            } else {
+                $scope.filterBy.groupByRecord = "CALENDAR_NAME";
+            }
+
             if (localStorage.getItem("records_" + $stateParams.formId)) {
                 $scope.filterBy.groupByRecord = localStorage.getItem("records_" + $stateParams.formId);
             }
@@ -4250,7 +4262,7 @@
                 })
                 temp.push($scope.formDatafieldsTemp);
                 headers = bindTColumnHeaderCustom(temp, true, true);
-                
+
             }
             else {
                 headers = bindTColumnHeader($scope.formDatafields, true, true);
@@ -4261,7 +4273,7 @@
             debugger;
             headers = removeColumns($scope.currentFormId, headers);
             headers = addNewColumns($scope.currentFormId, headers);
-            
+
             $timeout(function () {
                 if (!DataService.isEmpty(data))
 
@@ -4480,7 +4492,7 @@
                         footerElement: "<div style='text-align:left;width: auto;margin-left: 14px;' id='no-of-forms'></div>",
                         dataLoaded: function (data) {
                             //data - all data loaded into the table  
-                            
+
                             var count = 0;
                             if (data.length > 0)
                                 if ($scope.isAllowOwnUser == true && $scope.isAllowOtherUser == false) {
@@ -4503,10 +4515,10 @@
                             action: 32, formId: $scope.currentFormId, created_by: $scope.userDetail.Id, update_by: $scope.userDetail.Id, topicId: $scope.formDetailsDataInfo.topicId,
                             currentFormType: $scope.formDetailsDataInfo.currentFormType,
                             companyCode: localStorage.getItem("COMPANY_CODE"), calendarCode: localStorage.getItem("CALENDAR_CODE"),
-                            //"IsCustomFilter": true,
-                            //"CustomFilters": [{ "FieldName": "COMPANY_CODE", "Value": localStorage.getItem("COMPANY_CODE") },
-                            //{ "FieldName": "CALENDAR_CODE", "Value": localStorage.getItem("CALENDAR_CODE") }
-                            //]
+                            "IsCustomFilter": true,
+                            "CustomFilters": [{ "FieldName": "COMPANY_CODE", "Value": localStorage.getItem("COMPANY_CODE") },
+                            { "FieldName": "CALENDAR_CODE", "Value": localStorage.getItem("CALENDAR_CODE") }
+                            ]
                         }, //ajax parameters
                         ajaxProgressiveLoad: "scroll",
                         ajaxProgressiveLoadScrollMargin: 75,
@@ -4596,11 +4608,11 @@
                                 return response;
                             }
                             else {
-                                if ($scope.currentFormId == "2306" || $scope.currentFormId == "2304" || $scope.currentFormId == "2303" ) {
+                                if ($scope.currentFormId == "2306" || $scope.currentFormId == "2304" || $scope.currentFormId == "2303") {
                                     window.location.href = "/calendar/index#/form/saveEntry/" + $scope.currentFormId;
                                     return null;
                                 }
-                                
+
                                 return response;
                             }
 
@@ -4660,7 +4672,7 @@
                 });
         };
         function getAllFiles(formGroupKey, fieldNameParam) {
-             
+
             $rootScope.$emit("ShowLoading");
             $('#galleryModal .modal-body').html('');
             var param = {};
@@ -5086,7 +5098,7 @@
 
         };
         $scope.gotoInformationPage = function () {
-             
+
             var url = $scope.InformationLink.url;
             var setPreviousPage = window.location.href;
             CookiesPersistenceService.setCookieData("informationBackLink", setPreviousPage);
@@ -5142,7 +5154,7 @@
             else
                 $scope.classM = "hide";
         };
-        
+
         //filter
         $scope.filterPath = function (path) {
             var filename = path.replace(/^.*[\\\/]/, '')
@@ -5159,7 +5171,7 @@
                 $chatList = $('.chatListContainer ');
             $chatList.animate({ scrollTop: listHeight }, 1500)
         }
-       
+
         $scope.gotoAnchor = function (x) {
             var newHash = 'div_' + x;
             var objDiv = document.getElementById(newHash);
@@ -5170,8 +5182,8 @@
 
         };
         //Send Private Alert, is commented because of bug
-       
-     
+
+
         $scope.changeClassPrivate = function () {
             if ($scope.classPrivate === "hide")
                 $scope.classPrivate = "";
@@ -5354,12 +5366,12 @@
                 .then(function (response) {
                     if (response.data != null && angular.isDefined(response.data)) {
                         // if ( response.data > 0) {
-                        console.log(response.data, "ldata");                       
+                        console.log(response.data, "ldata");
                         $scope.languageList = response.data;
                         $rootScope.$emit("HideLoading");
                         //}
                     }
-                    $rootScope.$emit("HideLoading");                    
+                    $rootScope.$emit("HideLoading");
                 }, function (err) {
                     $rootScope.$emit("HideLoading");
                     console.log("some error occured." + err);
@@ -5367,7 +5379,7 @@
         };
 
         $scope.ApplyMultilingualText = function () {
-             
+
             var langId = '1';
             if (localStorage.getItem("globalLangForm") != null && localStorage.getItem("globalLangForm") != 'null') {
                 langId = localStorage.getItem("globalLangForm");
@@ -5407,7 +5419,7 @@
             translationService.getTranslation($scope, $scope.selectedLanguage);
             //$scope.ApplyMultilingualText();
         };
-        
+
 
         $scope.init();
 

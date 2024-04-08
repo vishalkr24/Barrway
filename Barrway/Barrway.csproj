@@ -3300,6 +3300,7 @@
     <Content Include="Views\MarketPlace\CalanderYearView.cshtml" />
     <Content Include="Views\MarketPlace\BlogDetails.cshtml" />
     <Content Include="Views\MarketPlace\AllCalanders.cshtml" />
+    <Content Include="Views\Shared\SessionReview.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
