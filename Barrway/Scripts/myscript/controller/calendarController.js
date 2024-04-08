@@ -10184,6 +10184,111 @@
         }
 
 
+        $scope.changeStartEndTime = function (type, isEvent = false) {
+
+            if (!isEvent) {
+                if ('start') {
+                    $scope.createEventDetails.startTime = $('#createEventDetails_startTime').val();
+                    $scope.createEventDetails.startTimeFormat = moment($scope.createEventDetails.startTime, "HH:mm").format("hh:mm A");
+                    $scope.createEventDetails.start = moment($scope.createEventDetails.start, 'YYYY/MM/DD HH:mm').format("YYYY/MM/DD " + $scope.createEventDetails.startTime);
+                }
+                if ('end') {
+                    $scope.createEventDetails.endTime = $('#createEventDetails_endTime').val();
+                    $scope.createEventDetails.endTimeFormat = moment($scope.createEventDetails.endTime, "HH:mm").format("hh:mm A");
+                    $scope.createEventDetails.end = moment($scope.createEventDetails.end, 'YYYY/MM/DD HH:mm').format("YYYY/MM/DD " + $scope.createEventDetails.endTime);
+                }
+                $scope.validateStartandTime();
+                $scope.rootScopeSafe();
+            }
+            else {
+                if ('start') {
+                    $scope.selectEventDetails.startTime = $('#selectEventDetails_startTime').val();
+                    $scope.selectEventDetails.startTimeFormat = moment($scope.selectEventDetails.startTime, "HH:mm").format("hh:mm A");
+                    $scope.selectEventDetails.start = moment($scope.selectEventDetails.start, 'YYYY/MM/DD HH:mm').format("YYYY/MM/DD " + $scope.selectEventDetails.startTime);
+                }
+                if ('end') {
+                    $scope.selectEventDetails.endTime = $('#selectEventDetails_endTime').val();
+                    $scope.selectEventDetails.endTimeFormat = moment($scope.selectEventDetails.endTime, "HH:mm").format("hh:mm A");
+                    $scope.selectEventDetails.end = moment($scope.selectEventDetails.end, 'YYYY/MM/DD HH:mm').format("YYYY/MM/DD " + $scope.selectEventDetails.endTime);
+                }
+                $scope.validateStartandTime(true);
+                $scope.rootScopeSafe();
+            }
+        }
+
+        $scope.validateStartandTime = function (isEvent) {
+            if (!isEvent) {
+                var date1 = moment($scope.createEventDetails.start, 'YYYY/MM/DD HH:mm');
+                var date2 = moment($scope.createEventDetails.end, 'YYYY/MM/DD HH:mm');
+
+                // Comparing the dates
+                if (date1.isBefore(date2)) {
+                    $scope.timeerrmsg = '';
+                    return true;
+                    //console.log("start is before end");
+                } else if (date1.isAfter(date2)) {
+                    $scope.timeerrmsg = "start time is after end time";
+                    return false;
+                } else {
+                    $scope.timeerrmsg = "start time is equal to end time";
+                    return false;
+                }
+            } else {
+
+                var date1 = moment($scope.selectEventDetails.start, 'YYYY/MM/DD HH:mm');
+                var date2 = moment($scope.selectEventDetails.end, 'YYYY/MM/DD HH:mm');
+
+                // Comparing the dates
+                if (date1.isBefore(date2)) {
+                    $scope.timeerrmsg = '';
+                    return true;
+                    //console.log("start is before end");
+                } else if (date1.isAfter(date2)) {
+                    $scope.timeerrmsg = "start time is after end time";
+                    return false;
+                } else {
+                    $scope.timeerrmsg = "start time is equal to end time";
+                    return false;
+                }
+            }
+            
+        }
+
+        $scope.UpdateEventTime = function () {
+            if ($scope.validateStartandTime(true)) {
+                let start = moment($scope.selectEventDetails.start, "YYYY/MM/DD HH:mm").format("YYYY-MM-DDTHH:mm:ss");
+                let end = moment($scope.selectEventDetails.end, "YYYY/MM/DD HH:mm").format("YYYY-MM-DDTHH:mm:ss");
+                let data = { eventId: $scope.selectEventDetails.Id, data: [{ "field": "start", value: start }, { "field": "end", value: end }] };
+
+                $.ajax({
+                    method: 'POST',
+                    url: BASE_URL + "UserAdmin/UpdateEventFieldsData",
+                    dataType: 'json',
+                    contentType: "application/json",
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        $("#customEventDetailsModelPopUp").modal("hide");
+                        if (response.Status) {
+                            $(".calendar").fullCalendar('refetchEvents');
+                            notifierService.notifyMessage('success', 'Calender', "Update Successfully");
+                        } else {
+                            notifierService.notifyMessage('error', 'Calender', response.Message);
+                        }
+                    },
+                    beforeSend: function () {
+                        showLoader();
+                    },
+                    complete: function () {
+                        var _ScrollOffset = window["scrollOffset"];
+                        window.scrollTo(0, _ScrollOffset);
+                        $.unblockUI();
+                    }
+                });
+
+            }
+        }
+
+
         function GeneratedFormData(dataParam) {
             $scope.customForms = [];
             $scope.customFormIds = [];
@@ -10456,10 +10561,11 @@
                 return false;
             }
             console.log($scope.createEventDetails);
-
-            GeneratedFormData($scope.createEventDetails);
-
-
+            if ($scope.validateStartandTime()) {
+                GeneratedFormData($scope.createEventDetails);
+            } else {
+                $scope.rootScopeSafe();
+            }
         };
 
         $scope.createNewEventWithoutPredefinedActivity = function () {
@@ -16626,8 +16732,8 @@
         }
 
 
-        $scope.getBookingDataForDate = function (date, endDate) {
-            adminService.postAsync('/UserAdmin/GetFullCalendarEvents/', { StartDate: date, EndDate: endDate }).then(function (res) {
+        $scope.getMyUpcomingBookings = function () {
+            adminService.postAsync('/UserAdmin/GetMyUpcomingBookings/', {}).then(function (res) {
                 for (var i = 0; i < res.data.length; i++) {
                     var splitTime = res.data[i].start.split('T');
                     res.data[i].COMPANY_LOGO_PATH = res.data[i].COMPANY_LOGO_PATH.replace('~', '..')
@@ -16642,6 +16748,8 @@
 
             });
         }
+
+        $scope.getMyUpcomingBookings();
 
         $scope.AttendSession = function (eventId, type) {
             debugger;
@@ -16731,7 +16839,7 @@
                                     response[i].title = response[i].customTitle;
                                 }
 
-                                $scope.getBookingDataForDate(start, end);
+                                /*$scope.getBookingDataForDate(start, end);*/
 
                                 callback(calenderData);
                                 window["eventListTemp"] = calenderData;

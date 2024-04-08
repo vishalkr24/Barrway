@@ -290,7 +290,6 @@ namespace Barrway.Controllers
             var result = await businessUserService.UpdateTransactionAttendance(AttendanceData, UserIdentity.UserID.ToString());
 
             return Json(result, JsonRequestBehavior.AllowGet);
-
         }
 
         /// <summary>

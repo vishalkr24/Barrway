@@ -16,7 +16,7 @@ namespace Barrway.DTO.BusinessModels
         public string CALENDAR_PHOTO_NAME { get; set; }
 
         public string CALENDAR_PHOTO_PATH { get; set; }
-
+        public string STATUS { get; set; }
         public string IS_VISIBLE { get; set; }
         public string DEFAULT_RESOURCE { get; set; }
         public string DISPLAY_MIN_TIME { get; set; }

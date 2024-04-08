@@ -2271,6 +2271,16 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                 var _arrColor = [];
                 var _arrFormIDs = _associatedFormIDs.split(",");
 
+                let isServiceAndServiceProvider = false;
+                let isNotService = false;
+                var serviceColor = "";
+                if (_arrFormIDs.includes("2303") && _arrFormIDs.includes("2304")) {
+                    isServiceAndServiceProvider = true;
+                }
+                if (!_arrFormIDs.includes("2303") && _arrFormIDs.includes("2304")) {
+                    isNotService = true;
+                }
+
                 ////getting index of x selected form  from  associated formIDs arr
                 //var _xPos = _arrFormIDs.indexOf(_xSelected.toString());
                 ////swapping position of x occurance  with 0 index;
@@ -2339,6 +2349,33 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                             }
                             lblColor = tempColor;
                         }
+
+                        if (isServiceAndServiceProvider || isNotService) {
+                            let formid = isServiceAndServiceProvider ? 2303 : (isNotService ? 2304 : 0);
+                            let _index = _arrFormIDs.findIndex(x => x == formid);
+                            let _currentId = _associatedCustomFormIdsTemp[_index].toString().trim();
+
+                            let colorExists = _.findWhere($scopeVar.xaxisFormList, { resourceActivityForm: formid });
+                            if (colorExists != undefined) {
+                                var colorRow = _.findWhere(colorExists.formDataList, { id: _currentId.toString() });
+                                if (colorRow != undefined) {
+                                    serviceColor = colorRow[colorExists.colorField];
+                                }
+                            }
+                        }
+                        //if (serviceColor && serviceColor != "") {
+                        //    lblColor = serviceColor;
+                        //    lblColor = "#3FBFC7";
+                        //    serviceColor = "#3FBFC7";
+                        //} else {
+                        //    lblColor = "#7d606c";
+                        //    serviceColor = "#7d606c";
+                        //}
+
+                        lblColor = "#3FBFC7";
+                        serviceColor = "#3FBFC7";
+
+
                         if (customLocationTitle != "" && customLocationTitle != null && customLocationTitle != undefined) {
                             var tempHtml = "<div class='fc-content' id='customLocationTitle' style = 'background:" + (lblColor == undefined || lblColor == "" ? "#7d606c" : lblColor) + ";borderRadius: 3;'><span class='fc-title' title='' > " + customLocationTitle + "</span></div> ";
                             if (current_tab != "agenda-view") {
@@ -2356,7 +2393,7 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                         if (current_subtab != undefined) {
                             if ((current_tab == "agenda-view" || current_tab == "timeline-resource-view") && (current_subtab.contains("fc-month-button") || current_subtab.contains("fc-timelineYear-button") || current_subtab.contains("fc-timelineMonth-button"))) {
                                 var tempHtml = "";
-                                tempHtml = "<div class='fc-content'><span class='text-dark small' title=''>" + TimeFormatCalender(eventData, true) + "</span></div>" + tempHtml;
+                                tempHtml = "<div class='fc-content'><span class='small' title=''>" + TimeFormatCalender(eventData, true) + "</span></div>" + tempHtml;
                                 if (current_tab != "agenda-view") {
                                     _mainTempHtml += tempHtml;
                                 }
@@ -2388,6 +2425,30 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                             }
                             lblColor = tempColor;
                         }
+
+                        if (isServiceAndServiceProvider || isNotService) {
+                            let formid = isServiceAndServiceProvider ? 2303 : (isNotService ? 2304 : 0);
+                            let _index = _arrFormIDs.findIndex(x => x == formid);
+                            let _currentId = _associatedCustomFormIdsTemp[_index].toString().trim();
+
+                            let colorExists = _.findWhere($scopeVar.xaxisFormList, { resourceActivityForm: formid });
+                            if (colorExists != undefined) {
+                                var colorRow = _.findWhere(colorExists.formDataList, { id: _currentId.toString() });
+                                if (colorRow != undefined) {
+                                    serviceColor = colorRow[colorExists.colorField];
+                                }
+                            }
+                        }
+                        //if (serviceColor && serviceColor != "") {
+                        //    lblColor = serviceColor;
+                        //} else {
+                        //    lblColor = "#7d606c";
+                        //    serviceColor = "#7d606c";
+                        //}
+
+                        lblColor = "#3FBFC7";
+                        serviceColor = "#3FBFC7";
+
                         if (customLocationTitle != "" && customLocationTitle != null && customLocationTitle != undefined) {
                             var tempHtml = "<div class='fc-content' id='dd' style = 'background:" + (lblColor == undefined || lblColor == "" ? "#7d606c" : lblColor) + ";borderRadius: 3;'><span class='fc-title' title='' > " + customLocationTitle + "</span></div > ";
                             if (current_tab != "agenda-view") {
@@ -2401,7 +2462,7 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                 listids = event.customFormIds.split(',');
                 var currentId = 0;
                 tempHtml = "";
-                var agendaTempHtml = '<div class="fc-content" style="padding: 2px 1px;border-radius: 3px;background: #ddd;color: #000;" data-original-title="" title="">';
+                var agendaTempHtml = '<div class="fc-content" style="padding: 2px 1px;border-radius: 3px;background: #3FBFC7;color: #000;" data-original-title="" title="">';
                 var agendaTempHtmlSub = '';
                 var titleCounter = 0;
                 _.each(_arrFormIDs, function (dataRow, position)
@@ -2421,6 +2482,31 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                             }
                             lblColor = tempColor;
                         }
+
+                        if (isServiceAndServiceProvider || isNotService) {
+                            let formid = isServiceAndServiceProvider ? 2303 : (isNotService ? 2304 : 0);
+                            let _index = _arrFormIDs.findIndex(x => x == formid);
+                            let _currentId = listids[_index].toString().trim();
+
+                            let colorExists = _.findWhere($scopeVar.xaxisFormList, { resourceActivityForm: formid });
+                            if (colorExists != undefined) {
+                                var colorRow = _.findWhere(colorExists.formDataList, { id: _currentId.toString() });
+                                if (colorRow != undefined) {
+                                    serviceColor = colorRow[colorExists.colorField];
+                                }
+                            }
+                        }
+                        if (serviceColor && serviceColor != "") {
+                            lblColor = serviceColor;
+                        } else {
+                            lblColor = "#7d606c";
+                            serviceColor = "#7d606c";
+                        }
+                        if (current_tab == "list-view") {
+                            lblColor = "#3FBFC7";
+                            serviceColor = "#3FBFC7";
+                        }
+
                         _arrRowData = _arrRowData.split('-');
                         var slipTitle = "";
                         if (_arrRowData.length == 1)
@@ -2550,11 +2636,10 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
             element.attr('title', rowTooltipTitleDisplay + "  " + rowTooltipDisplay);
             element.attr('data-html', 'true');
             element.css({
-                background: "rgb(255, 255, 255)",
+                background: (serviceColor && serviceColor != "" && current_tab != "agenda-view" ? serviceColor : (current_tab == "agenda-view" ? "#3FBFC7" : "rgb(255, 255, 255)")),
                 borderColor: "#aaa",
                 padding: 2,
                 borderRadius: 5,
-
                 "z-index": 1
             }).droppable({
                 drop: function (event, ui) {
@@ -2564,10 +2649,7 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                 activate: function (event, ui) {
                     console.log(event);
                 }
-            })
-                .empty().append($fcContent.css({
-                    borderRadius: 3,
-                }), $resize);
+            }).empty().append(current_tab == "list-view" ? $fcContent.css({"margin-left": 0,"margin-right": 0}) : $fcContent.css({ borderRadius: 3 }), $resize);
         },
         eventClick: function (calEvent, jsEvent, view) {    
             customEventDetailsModelPopUp.modal('show');
@@ -2594,6 +2676,18 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
             else {
                 $scope.selectEventDetails.customDate = moment($scope.selectEventDetails.start).format("YYYY-MM-DD");
             }
+
+
+            $scopeVar.selectEventDetails.startTimeFormat = moment(calEvent.start,"YYYY/MM/DD HH:mm").format("hh:mm A");
+            $scopeVar.selectEventDetails.endTimeFormat = moment(calEvent.end, "YYYY/MM/DD HH:mm").format("hh:mm A");
+            $scopeVar.selectEventDetails.startTime = moment(calEvent.start, "YYYY/MM/DD HH:mm").format("HH:mm");
+            $scopeVar.selectEventDetails.endTime = moment(calEvent.end, "YYYY/MM/DD HH:mm").format("HH:mm");
+            $scopeVar.timeerrmsg = '';
+
+            $('#selectEventDetails_startTime').val($scopeVar.selectEventDetails.startTime);
+            $('#selectEventDetails_endTime').val($scopeVar.selectEventDetails.endTime);
+
+
             //$scope.selectEventDetails.customFormIdsSplit
             //$scope.selectEventDetails.customFormsSplit
             $scope.selectEventDetails.customTitleSplit = $scope.selectEventDetails.customTitle.split(',');
@@ -4346,6 +4440,17 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
             $scopeVar.createEventDetails.ActivityFormId = $scopeVar.xSelection;
             $scopeVar.createEventDetails.start = customDate(startDate.format());
             $scopeVar.createEventDetails.end = customDate(endDate.format());
+            //debugger;
+            $scopeVar.createEventDetails.startTimeFormat = moment(startDate.format()).format("hh:mm A");
+            $scopeVar.createEventDetails.endTimeFormat = moment(endDate.format()).format("hh:mm A");
+            $scopeVar.createEventDetails.startTime = moment(startDate.format()).format("HH:mm");
+            $scopeVar.createEventDetails.endTime = moment(endDate.format()).format("HH:mm");
+            $scopeVar.timeerrmsg = '';
+
+            $('#createEventDetails_startTime').val($scopeVar.createEventDetails.startTime);
+            $('#createEventDetails_endTime').val($scopeVar.createEventDetails.endTime);
+
+
             $scopeVar.createEventDetails.customDate = DateWithDayName($scopeVar.createEventDetails, true);           
             $scopeVar.createEventDetails.customTime = TimeFormatCalender($scopeVar.createEventDetails, true);    
             $scopeVar.freshEntryformGroupKey = create_UUID();
@@ -4579,6 +4684,17 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
             $scopeVar.createEventDetails.ActivityFormId = $scopeVar.xSelection;
             $scopeVar.createEventDetails.start = customDate(startDate.format());
             $scopeVar.createEventDetails.end = customDate(endDate.format());
+
+            //debugger;
+            $scopeVar.createEventDetails.startTimeFormat = moment(startDate.format()).format("hh:mm A");
+            $scopeVar.createEventDetails.endTimeFormat = moment(endDate.format()).format("hh:mm A");
+            $scopeVar.createEventDetails.startTime = moment(startDate.format()).format("HH:mm");
+            $scopeVar.createEventDetails.endTime = moment(endDate.format()).format("HH:mm");
+            $scopeVar.timeerrmsg = '';
+
+            $('#createEventDetails_startTime').val($scopeVar.createEventDetails.startTime);
+            $('#createEventDetails_endTime').val($scopeVar.createEventDetails.endTime);
+
             $scopeVar.createEventDetails.customDate = DateWithDayName($scopeVar.createEventDetails, true);
             $scopeVar.createEventDetails.customTime = TimeFormatCalender($scopeVar.createEventDetails, true);
             $scopeVar.freshEntryformGroupKey = create_UUID();
@@ -5547,7 +5663,7 @@ function loadCalendarWithOutEventFunction(calenderType, calenderData, resourceDa
                         if (current_subtab != undefined) {
                             if ((current_tab == "agenda-view" || current_tab == "timeline-resource-view") && (current_subtab.contains("fc-month-button") || current_subtab.contains("fc-timelineYear-button") || current_subtab.contains("fc-timelineMonth-button"))) {
                                 var tempHtml = "";
-                                tempHtml = "<div class='fc-content'><span class='text-dark small' title=''>" + TimeFormatCalender(eventData, true) + "</span></div>" + tempHtml;
+                                tempHtml = "<div class='fc-content'><span class='small' title=''>" + TimeFormatCalender(eventData, true) + "</span></div>" + tempHtml;
                                 _mainTempHtml += tempHtml;
                             }
                         }
@@ -5818,7 +5934,7 @@ function loadCalendarWithOutEventFunction(calenderType, calenderData, resourceDa
 
         },
         eventClick: function (calEvent, jsEvent, view) {
-
+            debugger;
             var $scope = angular.element($("#calendar")).scope();
 
 
@@ -5839,6 +5955,16 @@ function loadCalendarWithOutEventFunction(calenderType, calenderData, resourceDa
             else {
                 $scope.selectEventDetails.customDate = moment($scope.selectEventDetails.start).format("YYYY-MM-DD");
             }
+            $scopeVar.selectEventDetails.isEdit = false;
+            $scopeVar.selectEventDetails.startTimeFormat = moment(calEvent.start.format()).format("hh:mm a");
+            $scopeVar.selectEventDetails.endTimeFormat = moment(calEvent.emnd.format()).format("hh:mm a");
+            $scopeVar.selectEventDetails.startTime = moment(calEvent.start.format()).format("HH:mm");
+            $scopeVar.selectEventDetails.endTime = moment(calEvent.end.format()).format("HH:mm");
+            $scopeVar.timeerrmsg = '';
+
+            $('#selectEventDetails_startTime').val($scopeVar.selectEventDetails.startTime);
+            $('#selectEventDetails_endTime').val($scopeVar.selectEventDetails.endTime);
+
             //$scope.selectEventDetails.customFormIdsSplit
             //$scope.selectEventDetails.customFormsSplit
             $scope.selectEventDetails.customTitleSplit = $scope.selectEventDetails.customTitle.split(',');
@@ -8441,7 +8567,7 @@ function loadCalendartemp(calenderType, calenderData, resourceData, resColumns, 
                     if (current_subtab != undefined) {
                         if ((current_tab == "agenda-view" || current_tab == "timeline-resource-view") && (current_subtab.contains("fc-month-button") || current_subtab.contains("fc-timelineYear-button") || current_subtab.contains("fc-timelineMonth-button"))) {
                             var tempHtml = "";
-                            tempHtml = "<div class='fc-content' ><span class='text-dark small' title=''>" + TimeFormatCalender(eventData, true) + "<span></div>" + tempHtml;
+                            tempHtml = "<div class='fc-content' ><span class='small' title=''>" + TimeFormatCalender(eventData, true) + "<span></div>" + tempHtml;
                             //element.prepend(tempHtml);
 
                             //element.prepend($('<div>', { class: 'fc-content' }).append(
@@ -13092,7 +13218,7 @@ function loadCalendar(calenderType, calenderData, resourceData, resColumns, acti
                         if (current_subtab != undefined) {
                             if ((current_tab == "agenda-view" || current_tab == "timeline-resource-view") && (current_subtab.contains("fc-month-button") || current_subtab.contains("fc-timelineYear-button") || current_subtab.contains("fc-timelineMonth-button"))) {
                                 element.prepend($('<div>', { class: 'fc-content' }).append(
-                                    $('<span class="text-dark small">').text(TimeFormatCalender(eventData, true))
+                                    $('<span class="small">').text(TimeFormatCalender(eventData, true))
                                 ));
                             }
                         }
@@ -15344,7 +15470,7 @@ function removeColumns(formid,columns) {
 
     var removeColumnName = ['COMPANY CODE', 'CALENDAR CODE', 'COMPANY_CODE', 'CALENDAR_CODE'];
 
-    if (formid != 2295 && formid != 2296) {
+    if (formid != 2295 && formid != 2296 && formid != 2322) {
         columns = columns.filter(x => !removeColumnName.find(y => x.title && x.title.split('|').find(z => z == y)));
     }
 
@@ -15367,13 +15493,14 @@ function removeColumns(formid,columns) {
         //}
     }
 
-    if (formid == 2296) {
-        columns.find(x => x.title == "COMPANY CODE").title = "COMPANY NAME";
+    if (formid == 2296 || formid == 2322) {
+        columns.find(x => x.title == "COMPANY CODE").title = "COMPANY";
+        columns.find(x => x.title == "CALENDAR CODE").title = "CALENDAR";
     }
 
     var removeColumnName = ['COMPANY CODE', 'CALENDAR CODE', 'COMPANY_CODE', 'CALENDAR_CODE'];
 
-    if (formid != 2295 && formid != 2296) {
+    if (formid != 2295 && formid != 2296 && formid != 2322) {
         columns = columns.filter(x => !removeColumnName.find(y => x.title && x.title.split('|').find(z => z == y)));
     }
 
@@ -15383,7 +15510,7 @@ function removeColumns(formid,columns) {
 
 function addNewColumns(formid, columns) {
     formid = parseInt(formid);
-    formidList = [2295, 2296, 2303, 2304, 2306, 2305, 2322, 2311];
+    formidList = [2295, 2296, 2303, 2304, 2306, 2305, 2311];
     //debugger;
     //columns.find(x => x.title == "Edit").frozen = true;
 
@@ -15624,7 +15751,7 @@ function GetGeneratedFormDataUrl(formid, isEdit) {
 
 
 function GetFormRecordsUrl(formid) {
-
+    debugger;
     
     if (formid == 2303) {
         return BASE_URL + "Calendar/GetServiceMasterList";
