@@ -45,6 +45,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetAllEnrolledCalendarsData(string CompanyCode, string UserEmail, string filterDate = null, bool IsCustomInFilter = false);
         Task<AddUpdateDelete> GetAlreadyEnrolledEvents(string CompanyCode, string UserEmail, string filterDate);
         Task<AddUpdateDelete> GetFullCalendarEvents(string StartDate, string EndDate, string UserEmail);
+        Task<AddUpdateDelete> GetMyUpcomingBookings(string UserEmail);
         Task<AddUpdateDelete> BookingServiceEvent(RequestEventViewModel eventModal, string userName);
         Task<AddUpdateDelete> CreateDynamicFormEntry(List<IDictionary<string, string>> data, string formId, string UserId, string CalendarCode);
 

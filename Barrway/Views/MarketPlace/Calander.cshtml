@@ -921,11 +921,11 @@
                                 <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
                                     <div style="display:block" class="titleContainer">
                                         @*<p class="title1" style="font-size:16px;font-weight:600">
-                        {{d.dropdownListData.title}}
-                        <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
-                        <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
-                        <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
-                    </p>*@
+                                                {{d.dropdownListData.title}}
+                                                <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
+                                                <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
+                                                <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
+                                            </p>*@
                                         <p class="title1" style="font-weight:bold; font-size: 16px;"> {{d.formTitle}}</p>
                                     </div>
                                 </div>
@@ -1359,17 +1359,17 @@
             }
 
             $scope.cancelPublicUserBooking = function () {
-                console.log($scope.selectEventDetails);
-                
+                var eventData = $scope.selectEventDetails;
+
                 swal({
                     title: "Are you sure to cancel the selected booking?",
-                    content: wrapper,
                     buttons: {
                         cancel: "No",
                         confirm: "Yes"
                     }
 
                 }).then(function (response) {
+                    debugger;
                     if (response) {
                         showLoader();
 
@@ -1412,9 +1412,12 @@
 
                             },
                             error: function () {
+                                hideLoader();
                                 swal({ type: 'error', showCloseButton: true, html: "something went wrong!" });
                             }
                         })
+                    }else{
+                        hideLoader();
                     }
                 });
 

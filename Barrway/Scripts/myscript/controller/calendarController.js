@@ -16626,8 +16626,8 @@
         }
 
 
-        $scope.getBookingDataForDate = function (date, endDate) {
-            adminService.postAsync('/UserAdmin/GetFullCalendarEvents/', { StartDate: date, EndDate: endDate }).then(function (res) {
+        $scope.getMyUpcomingBookings = function () {
+            adminService.postAsync('/UserAdmin/GetMyUpcomingBookings/', {}).then(function (res) {
                 for (var i = 0; i < res.data.length; i++) {
                     var splitTime = res.data[i].start.split('T');
                     res.data[i].COMPANY_LOGO_PATH = res.data[i].COMPANY_LOGO_PATH.replace('~', '..')
@@ -16642,6 +16642,8 @@
 
             });
         }
+
+        $scope.getMyUpcomingBookings();
 
         $scope.AttendSession = function (eventId, type) {
             debugger;
@@ -16731,7 +16733,7 @@
                                     response[i].title = response[i].customTitle;
                                 }
 
-                                $scope.getBookingDataForDate(start, end);
+                                /*$scope.getBookingDataForDate(start, end);*/
 
                                 callback(calenderData);
                                 window["eventListTemp"] = calenderData;

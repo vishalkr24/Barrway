@@ -429,7 +429,7 @@ namespace Barrway.Service.Repository
             string query = $@"select cf.[start], cf.[end], t.* from CALENDAR_FORM_1935 cf
                                 join TRANSACTION_MASTER_1942 t on t.SLOT = cf.Id
                                 join PARTICIPANT_MASTER_1940 p on p.Id = t.STUDENT
-                                where cf.Id = ''{model.transaction.SLOT}'' and p.EMAIL = '{model.USER_EMAIL}'";
+                                where cf.Id = '{model.transaction.SLOT}' and p.EMAIL = '{model.USER_EMAIL}'";
             var result = await sqlFunction.ExecuteSqlQuery(query);
 
             if (result.Count > 0)
@@ -1100,7 +1100,7 @@ namespace Barrway.Service.Repository
                                   where EMAIL = '{userEmail}' and calendar.Id = transaction_m.SLOT
 								  for xml path('')), 1, 1, '')
 
-								  select 
+								  select top 4
 									  (select ( case when (SUM(ledger.CREDIT_COIN) - SUM(ledger.DEBIT_COIN)) is null then 0 else (SUM(ledger.CREDIT_COIN) - SUM(ledger.DEBIT_COIN)) end) FROM LEDGER_MASTER_1957 ledger where ledger.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and USER_ID = '{userId}') as 'COIN_BALANCE'
 									  ,company.Id as 'CompanyId'
                                       ,calendarDetails.*
@@ -1814,6 +1814,7 @@ namespace Barrway.Service.Repository
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
             }
         }
+
         public async Task<AddUpdateDelete> GetFullCalendarEvents(string StartDate, string EndDate, string UserEmail)
         {
             try
@@ -1833,6 +1834,54 @@ namespace Barrway.Service.Repository
                                     join PARTICIPANT_MASTER_1940 participant_m on participant_m.Id = transaction_m.STUDENT
                                     join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
                                     where  (CAST([start] as date) >= CAST('{StartDate}' as date) and  CAST([start] as date) <=CAST('{EndDate}' as date) )    and f.formid=2305   and participant_m.EMAIL = '{UserEmail}' and transaction_m.SLOT = f.Id
+                                    ) ,
+                                    cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
+
+
+                                    select* into #temptable from cte2  where len(customtitle)>0;    declare @counter int= 0, @c int= 1;   
+                                    select @counter = (select count(1) from #temptable)	while @c <= @counter    begin    select @customTitleQuery = customTitle from #temptable where ROWNUMBER=@c;	SET @sQuery= ' select @retvalOUT = (' + @customTitleQuery + ')'  
+                                    SET @ParmDefinition = N'@retvalOUT nvarchar(max) OUTPUT';   
+                                    EXEC sp_executesql @sQuery, @ParmDefinition, @retvalOUT = @retval OUTPUT;    update #temptable set customTitle=@retval where ROWNUMBER=@c;	set @c = @c + 1;  end  select* from #temptable";
+
+                List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+
+                result.Add(new Dictionary<string, object>());
+
+                if (result.Count > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
+            }
+        }
+        public async Task<AddUpdateDelete> GetMyUpcomingBookings(string UserEmail)
+        {
+            try
+            {
+                string query = $@"DECLARE @retval nvarchar(max);       DECLARE @sQuery nvarchar(max); DECLARE @ParmDefinition nvarchar(max);                        
+                                    DECLARE @customTitleQuery nvarchar(max);           
+
+                                    IF OBJECT_ID(N'tempdb..#temptable') IS NOT NULL  BEGIN DROP TABLE #temptable END 
+                                    ;with cte1 as( select top 5 f.*,f.resources 'resourceId', transaction_m.Id as 'TransactionId', company.COMPANY_LOGO_PATH, company.Id as 'COMPANY_ID', company.COMPANY_NAME_ENGLISH ,  STUFF((SELECT ',' +  PARTICIPANT_MASTER_1940.[STUDENT_NAME]  
+                                    from TRANSACTION_MASTER_1942 inner join PARTICIPANT_MASTER_1940 on TRANSACTION_MASTER_1942.STUDENT = PARTICIPANT_MASTER_1940.Id where TRANSACTION_MASTER_1942.formGroupKey = f.formGroupKey         FOR XML PATH('')), 1, 1, '') customFourthTitle
+                                    , (dbo.[GetSubQueryCalender](f.formGroupKey)) customTitle,   (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceFormId) from form_calenderreferrence f2     
+                                    where f2.formgroupkey = f.formGroupKey  FOR XML PATH('')), 1, 1, '')   ) customForms  , (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceId) 
+                                    from form_calenderreferrence f2    where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) customFormIds,  '' referrences_1,  '' referrences_2,  '' referrences_3 
+                                    , (select case when (cast(getdate() as datetime) >= cast((DATEADD(minute, -30, f.[start])) as datetime) and cast(getdate() as datetime) <= cast(f.[end] as datetime) ) then 'Y' else 'N' end) as 'ATTEND'
+                                    from CALENDAR_FORM_1935 f 
+                                    join TRANSACTION_MASTER_1942 transaction_m on transaction_m.CALENDAR_CODE = f.CALENDAR_CODE
+                                    join PARTICIPANT_MASTER_1940 participant_m on participant_m.Id = transaction_m.STUDENT
+                                    join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
+                                    where f.formid=2305 and participant_m.EMAIL = '{UserEmail}' and transaction_m.SLOT = f.Id and cast(f.[start] as datetime) > cast('{DateTime.Now.ToString("yyyy-MM-dd HH:mm")}' as datetime)
+                                    order by cast(f.[start] as datetime)
                                     ) ,
                                     cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
 

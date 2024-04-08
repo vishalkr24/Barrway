@@ -24,7 +24,7 @@ namespace Barrway.Service.Repository
         private readonly ISqlFunction sqlFunction;
         private readonly IFormAPIRepository formAPIRepository;
         private readonly IMasterService masterService;
-        
+
         public BusinessUserService(IFormAPIRepository formAPIRepository, ISqlFunction sqlFunction, IMasterService masterService)
         {
             this.connectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
@@ -914,6 +914,34 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> PublishCalendar(string CalendarCode, string UserId)
+        {
+            try
+            {
+                string query = $@"declare @id varchar(max) = (select cal.Id from BUSINESS_CALENDAR_MASTER_1925 cal
+                                    join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = cal.COMPANY_CODE
+                                    join BUSINESS_ASSIGNED_USERS_1964 bau on bau.COMPANY_ID = company.Id
+                                    where cal.CALENDAR_CODE = '{CalendarCode}' and bau.ASSIGNED_USER = '{UserId}')
+
+                                    update BUSINESS_CALENDAR_MASTER_1925 set STATUS = 'PUBLISH' where Id = @id";
+                var result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                if (result > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = "Calendar is now published." };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "Transaction Not Allowed." };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
         public async Task<AddUpdateDelete> UpdateStaffServiceMapping(List<StaffServiceMappingModel> model)
         {
             try
@@ -1789,17 +1817,17 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public  bool CheckCmpanyUrlExists(string PageName, string CompanyCode)
+        public bool CheckCmpanyUrlExists(string PageName, string CompanyCode)
         {
 
             string query = $@"select PAGE_URL from BUSINESS_COMPANY_MASTER_1924 company
                                 where PAGE_URL = '{PageName}' and company.COMPANY_CODE <> '{CompanyCode}'";
 
-            var result =  sqlFunction.ExecuteSqlQueryNonAsync(query);
-            
+            var result = sqlFunction.ExecuteSqlQueryNonAsync(query);
+
             if (result.Count() > 0)
             {
-                return  true;
+                return true;
             }
             else
             {
@@ -1813,10 +1841,10 @@ namespace Barrway.Service.Repository
             {
                 string query = $@"select COMPANY_CODE from BUSINESS_COMPANY_MASTER_1924 where PAGE_URL ='{PageUrl}'";
 
-                var result =await sqlFunction.ExecuteSqlQuery(query);
+                var result = await sqlFunction.ExecuteSqlQuery(query);
                 if (result.Count() > 0)
                 {
-                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success,Data= result.FirstOrDefault() };
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result.FirstOrDefault() };
                 }
                 else
                 {
@@ -1834,7 +1862,7 @@ namespace Barrway.Service.Repository
                     }
 
 
-                    
+
                 }
             }
             catch (Exception ex)
@@ -2660,7 +2688,7 @@ namespace Barrway.Service.Repository
                         {
                             queueId = Convert.ToInt32(queue.Id);
                         }
-                        
+
                         queueIds.Add(queueId);
                     }
 
@@ -2684,9 +2712,9 @@ namespace Barrway.Service.Repository
                         }
                     }
 
-                    foreach(var x in queueIds)
+                    foreach (var x in queueIds)
                     {
-                        foreach(var y in sessionIds)
+                        foreach (var y in sessionIds)
                         {
                             Form_DataTable data3 = new Form_DataTable();
                             data3.action = (int)FormAction.Save;
@@ -2844,9 +2872,9 @@ namespace Barrway.Service.Repository
 
 
                 slotsResult = (from locationSlot in location_slotsResult
-                                 join serviceProviderSlot in service_provider_slotsResult
-                                 on locationSlot["formGroupKey"] equals serviceProviderSlot["formGroupKey"]
-                                 select locationSlot).ToList();
+                               join serviceProviderSlot in service_provider_slotsResult
+                               on locationSlot["formGroupKey"] equals serviceProviderSlot["formGroupKey"]
+                               select locationSlot).ToList();
 
 
                 bool finalStatus = false;
@@ -2873,7 +2901,7 @@ namespace Barrway.Service.Repository
                                     finalStatus = true;
                                 }
                             }
-                            
+
                         });
 
                         scheduleData[day] = JsonConvert.DeserializeObject<Dictionary<string, object>>(JsonConvert.SerializeObject(new { scheduleSlots }))["scheduleSlots"];
@@ -3114,7 +3142,7 @@ namespace Barrway.Service.Repository
                 if (result != null)
                 {
                     string categoryId = result["CALENDAR_CATEGORY_ID"]?.ToString() ?? "";
-                    
+
                     sqlString = $@"select *from CALENDAR_CATEGORY_MASTER_1929 where Id = {categoryId}";
 
                     var category = (await sqlFunction.ExecuteSqlQuery(sqlString)).FirstOrDefault();
@@ -3138,13 +3166,13 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                  string sqlString = $@"select COMPANY_CODE,CALENDAR_CODE,ACTIVITY_CODE,ACTIVITY_NAME,PHOTO,CATEGORY,SUB_CATEGORY,START_DATETIME,END_DATETIME from SERVICE_MASTER_1933  where CALENDAR_CODE='{calendarCode}' AND COMPANY_CODE='{CompanyCode}'";
-                
+                string sqlString = $@"select COMPANY_CODE,CALENDAR_CODE,ACTIVITY_CODE,ACTIVITY_NAME,PHOTO,CATEGORY,SUB_CATEGORY,START_DATETIME,END_DATETIME from SERVICE_MASTER_1933  where CALENDAR_CODE='{calendarCode}' AND COMPANY_CODE='{CompanyCode}'";
+
 
                 var result = (await sqlFunction.ExecuteSqlQuery(sqlString)).ToList();
                 if (result != null)
                 {
-                    
+
                     return new AddUpdateDelete() { Data = result, Message = AppMessage.Success, Status = true };
 
                 }
@@ -3158,7 +3186,7 @@ namespace Barrway.Service.Repository
 
         }
 
-public async Task<AddUpdateDelete> GetFeaturedBlogs()
+        public async Task<AddUpdateDelete> GetFeaturedBlogs()
         {
             try
             {
@@ -3256,13 +3284,13 @@ public async Task<AddUpdateDelete> GetFeaturedBlogs()
 
         //}
 
-       
+
 
         public async Task<Resultdata> GetAllBlogsTags()
         {
             //connection string
             string myCS = connectionString;
-            
+
 
             string query = "select TAG from BLOG_1980";
 
@@ -3272,14 +3300,14 @@ public async Task<AddUpdateDelete> GetFeaturedBlogs()
                 return new Resultdata() { Status = false, Message = AppMessage.NotFound, Data = result.ToList() };
             }
 
-            
+
         }
-        
+
         public async Task<AddUpdateDelete> getCalendarUploadFiles(int eventId)
         {
             try
             {
-                string sqlString = $@"select *from CALENDAR_FORM_1935 where Id="+eventId;
+                string sqlString = $@"select *from CALENDAR_FORM_1935 where Id=" + eventId;
 
 
                 var result = (await sqlFunction.ExecuteSqlQuery(sqlString)).FirstOrDefault();
@@ -3298,7 +3326,7 @@ public async Task<AddUpdateDelete> GetFeaturedBlogs()
             }
         }
 
-        public async Task<AddUpdateDelete> updateCalendarUploadFiles(int eventId,string downloadable_attachment,string download_file_list)
+        public async Task<AddUpdateDelete> updateCalendarUploadFiles(int eventId, string downloadable_attachment, string download_file_list)
         {
             try
             {
@@ -3306,7 +3334,7 @@ public async Task<AddUpdateDelete> GetFeaturedBlogs()
 
 
                 var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
-                if (result >0)
+                if (result > 0)
                 {
 
                     return new AddUpdateDelete() { Data = result, Message = AppMessage.Success, Status = true };
@@ -3341,7 +3369,7 @@ public async Task<AddUpdateDelete> GetFeaturedBlogs()
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
             }
         }
-        
+
         public async Task<AddUpdateDelete> updateSchedularCalendarOtherField(int schedularId, SchedularFormModel schedularForm)
         {
             try
