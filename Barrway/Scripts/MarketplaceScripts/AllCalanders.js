@@ -137,7 +137,7 @@ function SetAllCalanders(pageNumber, Short) {
                         //    RowHead = '</div>';
                         //}
 
-                        $("#Content-row").append(`<div class="col-md-6">
+                        $("#Content-row").append(`<div class="col-md-6 col-sm-6 col-xs-6">
                                 <div class="media" style="cursor:pointer;" onclick="window.location.href ='/company/calander/${response.data[i].PAGE_URL ? response.data[i].PAGE_URL : response.data[i].COMPANY_CODE}/${response.data[i].CALENDAR_CODE}'">
                                 ${feturedSpan_html}
                                 <div class="media-left">
