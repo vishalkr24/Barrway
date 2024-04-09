@@ -678,6 +678,116 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
             }
         }
 
+        public async Task<AddUpdateDelete> GetMyBookings(string email, string Type)
+        {
+
+            string sqlString = $@"DECLARE @retval nvarchar(max);       DECLARE @sQuery nvarchar(max); DECLARE @ParmDefinition nvarchar(max);                        
+                                    DECLARE @customTitleQuery nvarchar(max);           
+
+                                    IF OBJECT_ID(N'tempdb..#temptable') IS NOT NULL  BEGIN DROP TABLE #temptable END 
+                                    ;with cte1 as( select distinct  f.*,f.resources 'resourceId', transaction_m.Id as 'TransactionId', company.COMPANY_LOGO_PATH, company.Id as 'COMPANY_ID', company.COMPANY_NAME_ENGLISH ,  STUFF((SELECT ',' +  PARTICIPANT_MASTER_1940.[STUDENT_NAME]  
+                                    from TRANSACTION_MASTER_1942 inner join PARTICIPANT_MASTER_1940 on TRANSACTION_MASTER_1942.STUDENT = PARTICIPANT_MASTER_1940.Id where TRANSACTION_MASTER_1942.formGroupKey = f.formGroupKey         FOR XML PATH('')), 1, 1, '') customFourthTitle
+                                    , (dbo.[GetSubQueryCalender](f.formGroupKey)) customTitle,   (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceFormId) from form_calenderreferrence f2     
+                                    where f2.formgroupkey = f.formGroupKey  FOR XML PATH('')), 1, 1, '')   ) customForms  , (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceId) 
+                                    from form_calenderreferrence f2    where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) customFormIds,  '' referrences_1,  '' referrences_2,  '' referrences_3 
+                                    , (select case when (cast(getdate() as datetime) >= cast((DATEADD(minute, -30, f.[start])) as datetime) and cast(getdate() as datetime) <= cast(f.[end] as datetime) ) then 'Y' else 'N' end) as 'ATTEND'
+                                    , case when review.TRANSACTION_ID is null then 'N' else 'Y' end as 'SESSION_REVIEWED'
+									, review.REVIEW_SCORE
+									, review.REVIEW_COMMENT
+									, transaction_m.ATTENDANCE
+									, calendar.CALENDAR_NAME
+									from CALENDAR_FORM_1935 f 
+                                    join TRANSACTION_MASTER_1942 transaction_m on transaction_m.CALENDAR_CODE = f.CALENDAR_CODE
+                                    join PARTICIPANT_MASTER_1940 participant_m on participant_m.Id = transaction_m.STUDENT
+									join BUSINESS_CALENDAR_MASTER_1925 calendar on calendar.CALENDAR_CODE = f.CALENDAR_CODE
+                                    join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
+									left join SESSION_REVIEWS_1983 review on review.TRANSACTION_ID = transaction_m.Id
+                                    where 
+                                    {((Type == "1")? $@"'{DateTime.Now.ToString("yyyy-MM-dd HH:mm")}' >= cast(f.[start] as datetime)" : $@"'{DateTime.Now.ToString("yyyy-MM-dd HH:mm")}' > cast(f.[end] as datetime)")}
+                                    and f.formid=2305 and participant_m.EMAIL = '{email}' and transaction_m.SLOT = f.Id
+                                    ) ,
+                                    cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
+
+
+                                    select* into #temptable from cte2  where len(customtitle)>0;    declare @counter int= 0, @c int= 1;   
+                                    select @counter = (select count(1) from #temptable)	while @c <= @counter    begin    select @customTitleQuery = customTitle from #temptable where ROWNUMBER=@c;	SET @sQuery= ' select @retvalOUT = (' + @customTitleQuery + ')'  
+                                    SET @ParmDefinition = N'@retvalOUT nvarchar(max) OUTPUT';   
+                                    EXEC sp_executesql @sQuery, @ParmDefinition, @retvalOUT = @retval OUTPUT; update #temptable set customTitle=@retval where ROWNUMBER=@c;	set @c = @c + 1;  end  select* from #temptable order by cast([start] as datetime) desc";
+
+            var result = await sqlFunction.ExecuteSqlQuery(sqlString);
+
+            if (result.Count() > 0)
+            {
+                var modified_data = modifiedDataUpcommingEvent(result);
+                return new AddUpdateDelete() { Status = true, Data = modified_data };
+            }
+            return new AddUpdateDelete() { Status = false };
+        }
+
+
+        private List<IDictionary<string, object>> modifiedDataUpcommingEvent(List<IDictionary<string, object>> data)
+        {
+            List<IDictionary<string, object>> modified_data = new List<IDictionary<string, object>>();
+            data.ForEach(x => modified_data.Add(ModifiedMasterData(x)));
+            return modified_data;
+        }
+
+        private IDictionary<string, object> ModifiedMasterData(IDictionary<string, object> data)
+        {
+            string customForms = data["customForms"]?.ToString();
+            string customFormIds = data["customFormIds"]?.ToString();
+            string customTitle = data["customTitle"]?.ToString();
+            if (string.IsNullOrEmpty(customForms) || string.IsNullOrEmpty(customFormIds) || string.IsNullOrEmpty(customTitle))
+            {
+                return data;
+            }
+            string[] customFormsSplit = customForms.Split(',');
+            string[] customFormIdsSplit = customFormIds.Split(',');
+            string[] customTitleSplit = customTitle.Split(',');
+            foreach (var item in customFormsSplit)
+            {
+
+                switch (item)
+                {
+                    case "2303":
+                        {
+                            int index = customFormsSplit.ToList().FindIndex(x=> x == item);
+                            if (customFormIdsSplit.Length > index && customTitleSplit.Length > index)
+                            {
+                                data.Add("SERVICE_TITLE", customTitleSplit[index]);
+                                data.Add("SERVICE_ID", customFormIdsSplit[index]);
+                                data.Add("SERVICE_FORMID", item);
+                            }
+                        }
+                        break;
+                    case "2304":
+                        {
+                            int index = customFormsSplit.ToList().FindIndex(x => x == item);
+                            if (customFormIdsSplit.Length > index && customTitleSplit.Length > index)
+                            {
+                                data.Add("SERVICE_PROVIDER_TITLE", customTitleSplit[index]);
+                                data.Add("SERVICE_PROVIDER_ID", customFormIdsSplit[index]);
+                                data.Add("SERVICE_PROVIDER_FORMID", item);
+                            }
+                        }
+                        break;
+                    case "2306":
+                        {
+                            int index = customFormsSplit.ToList().FindIndex(x => x == item);
+                            if (customFormIdsSplit.Length > index && customTitleSplit.Length > index)
+                            {
+                                data.Add("LOCATION_TITLE", customTitleSplit[index]);
+                                data.Add("LOCATION_ID", customFormIdsSplit[index]);
+                                data.Add("LOCATION_FORMID", item);
+                            }
+                        }
+                        break;
+                    default: break;
+                }
+            }
+            return data;
+        }
+
         public async Task<AddUpdateDelete> GetPaymentReceiptData(string Id)
         {
             string strSql = $@"

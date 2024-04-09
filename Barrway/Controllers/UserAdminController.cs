@@ -227,6 +227,26 @@ namespace Barrway.Controllers
             }
         }
 
+        public async Task<ActionResult> AddSessionReview(SessionReviewModel model)
+        {
+            try
+            {
+                if (User.Identity.IsAuthenticated)
+                {
+                    var result = await publicUserService.AddSessionReview(model, UserIdentity.UserEmail);
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new AddUpdateDelete() { Status = false, Message = "Kindly login to your account to submit your rating."}, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = "Failed" }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         [HttpPost]
         public async Task<ActionResult> CreateRoomBookingSlot(CalendarFormModel model)
         {
@@ -404,7 +424,23 @@ namespace Barrway.Controllers
                 return Json(new AddUpdateDelete() { Message = "Failed", Status = false }, JsonRequestBehavior.AllowGet);
             }
         }
-        
+
+        [HttpPost]
+        public async Task<ActionResult> GetMyBookings(string Type)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var result = await masterService.GetMyBookings(UserIdentity.UserEmail, Type);
+
+                return Json(result.Data, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = "Kindly login and try again." }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
         [HttpPost]
         public async Task<ActionResult> GetMyAttendanceList(GenerateDynamicFormData data)
         {

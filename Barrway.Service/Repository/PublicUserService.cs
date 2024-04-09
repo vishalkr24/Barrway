@@ -165,8 +165,8 @@ namespace Barrway.Service.Repository
             {
                 return new AddUpdateDelete() { Status = false, Message = ex.Message };
             }
-            
-            
+
+
         }
 
         public async Task<AddUpdateDelete> EnrollPublicUserForCalendar(CalendarEnrollModel model)
@@ -421,7 +421,7 @@ namespace Barrway.Service.Repository
             catch (Exception ex)
             {
                 return new AddUpdateDelete() { Message = "Failed to enroll on calendar", Status = false };
-            }           
+            }
         }
 
         public async Task<AddUpdateDelete> CancelPublicUserBooking(CalendarEnrollModel model)
@@ -436,13 +436,14 @@ namespace Barrway.Service.Repository
             if (result.Count > 0)
             {
                 int cancellationMinutes = 1440;
-                
+
                 if (!string.IsNullOrEmpty(result[0]["CANCELLATION_BEFORE"]?.ToString()))
                 {
                     try
                     {
                         cancellationMinutes = Convert.ToInt32(result[0]["CANCELLATION_BEFORE"].ToString());
-                    }catch (Exception ex)
+                    }
+                    catch (Exception ex)
                     {
 
                     }
@@ -455,7 +456,7 @@ namespace Barrway.Service.Repository
 
                     if (result2 > 0)
                     {
-                        return new AddUpdateDelete() { Status = true, Message = "Booking cancelled successfully!"};
+                        return new AddUpdateDelete() { Status = true, Message = "Booking cancelled successfully!" };
                     }
                     else
                     {
@@ -471,6 +472,52 @@ namespace Barrway.Service.Repository
             else
             {
                 return new AddUpdateDelete() { Status = false, Message = "Booking not found" };
+            }
+
+        }
+
+        public async Task<AddUpdateDelete> AddSessionReview(SessionReviewModel model, string UserEmail)
+        {
+            string query = $@"select * from TRANSACTION_MASTER_1942 t
+                            join PARTICIPANT_MASTER_1940 participant on participant.Id = t.STUDENT
+                            where t.Id = '{model.TRANSACTION_ID}' and participant.EMAIL = '{UserEmail}'";
+
+            var result = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (result.Count > 0)
+            {
+                query = $@"select * from SESSION_REVIEWS_1983 where TRANSACTION_ID = '{model.TRANSACTION_ID}'";
+                var result2 = await sqlFunction.ExecuteSqlQuery(query);
+
+                if (result.Count == 0)
+                {
+                    Form_DataTable data2 = new Form_DataTable();
+                    data2.action = (int)FormAction.Save;
+                    data2.formId = (int)FormSetting.SESSION_REVIEWS;
+
+                    data2.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.ToDictionary());
+                    data2.formGroupKey = Guid.NewGuid().ToString();
+                    var formResult2 = (await formAPIRepository.GeneratedFormData(data2)).Data;
+
+                    if (formResult2.res == 1)
+                    {
+                        return new AddUpdateDelete() { Status = true, Message = "Thanks for the review!", Data = formResult2 };
+                    }
+                    else
+                    {
+                        return new AddUpdateDelete { Status = false, Message = "Failed to add your review at the moment. Please try again later." };
+                    }
+
+                }
+                else
+                {
+                    return new AddUpdateDelete { Status = false, Message = "You have already reviewed this session." };
+                }
+
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = "Transaction Not Allowed" };
             }
 
         }
@@ -503,7 +550,7 @@ namespace Barrway.Service.Repository
                 participant.GENDER = publicUser.Data["GENDER"].ToString();
                 participant.IS_ACTIVE = "Y";
                 participant.STUDENT_NAME = publicUser.Data["FIRST_NAME"].ToString() + " " + publicUser.Data["LAST_NAME"].ToString();
-                
+
                 Form_DataTable data = new Form_DataTable();
                 data.action = (int)FormAction.Save;
                 data.formId = (int)FormSetting.PARTICIPANT_MASTER;
@@ -580,14 +627,14 @@ namespace Barrway.Service.Repository
                             {
                                 return new AddUpdateDelete() { Status = false, Message = "You don't have enough B$ Coin of this calendar to book this slot." };
                             }
-                            
+
                         }
                         else
                         {
                             return new AddUpdateDelete() { Status = false, Message = "You don't have enough B$ Coin of this calendar to book this slot." };
                         }
                     }
-                    
+
 
                     if (userResult.Status)
                     {
@@ -678,11 +725,12 @@ namespace Barrway.Service.Repository
                                 };
                                 await formAPIRepository.ManageCalenderReferrenceNew(request2);
                                 eventId = eventModal.eventId;
-                                _sqlstring = @"update CALENDAR_FORM_1935 set EVENT_TYPE='BOOKING' where Id="+ eventId;
+                                _sqlstring = @"update CALENDAR_FORM_1935 set EVENT_TYPE='BOOKING' where Id=" + eventId;
                                 await sqlFunction.ExecuteSqlCommandQuery(_sqlstring);
                             }
                         }
-                        else {
+                        else
+                        {
 
                             Form_DataTable request = new Form_DataTable();
 
@@ -736,8 +784,8 @@ namespace Barrway.Service.Repository
                             await formAPIRepository.ManageCalenderReferrenceNew(request2);
 
                         }
-                        
-                        if (eventModal.eventId!=0)
+
+                        if (eventModal.eventId != 0)
                         {
                             IDictionary<string, object> transaction = new Dictionary<string, object>();
 
@@ -855,7 +903,7 @@ namespace Barrway.Service.Repository
                     {
                         return new AddUpdateDelete() { Status = true, Message = "Form not saved!" };
                     }
-                    
+
                 }
                 else
                 {
@@ -887,11 +935,11 @@ namespace Barrway.Service.Repository
                     }
                     else
                     {
-                        if (DateTime.Now <= Convert.ToDateTime(result[0]["end"]?.ToString())  && DateTime.Now >= Convert.ToDateTime(result[0]["start"]?.ToString()).AddMinutes(-30))
+                        if (DateTime.Now <= Convert.ToDateTime(result[0]["end"]?.ToString()) && DateTime.Now >= Convert.ToDateTime(result[0]["start"]?.ToString()).AddMinutes(-30))
                         {
                             query = $@"update TRANSACTION_MASTER_1942 set ATTENDANCE = 'PRESENT' where Id = '{result[0]["Id"].ToString()}'";
                             var result2 = await sqlFunction.ExecuteSqlCommandQuery(query);
-                            
+
                             if (result2 > 0)
                             {
                                 return new AddUpdateDelete() { Status = false, Message = "Attendance marked successfully!" };
@@ -900,7 +948,7 @@ namespace Barrway.Service.Repository
                             {
                                 return new AddUpdateDelete() { Status = false, Message = "Attendance not marked. Ask the company to mark your attendance." };
                             }
-                            
+
                         }
                         else
                         {
@@ -912,8 +960,9 @@ namespace Barrway.Service.Repository
                 {
                     return new AddUpdateDelete() { Status = false, Message = "You are not enrolled in this event!" };
                 }
-                
-            }catch (Exception ex)
+
+            }
+            catch (Exception ex)
             {
                 return new AddUpdateDelete() { Status = false, Message = ex.Message };
             }
@@ -1258,7 +1307,7 @@ namespace Barrway.Service.Repository
                                               FROM [dbo].BUSINESS_CALENDAR_MASTER_1925 calendarDetails
                                               join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
 								              join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendarDetails.CALENDAR_SUB_CATEGORY_ID
-                                              where {((string.IsNullOrEmpty(calendarCodes)) ? "calendarDetails.CALENDAR_CODE = ''": "calendarDetails.CALENDAR_CODE in ({calendarCodes})")} 
+                                              where {((string.IsNullOrEmpty(calendarCodes)) ? "calendarDetails.CALENDAR_CODE = ''" : "calendarDetails.CALENDAR_CODE in ({calendarCodes})")} 
                                       )
                                   Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY created_at desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
 
@@ -1296,7 +1345,8 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetUserBCoinMaster(GenerateDynamicFormData data, string userId)
         {
-            try {
+            try
+            {
                 Dictionary<string, string> filters = new Dictionary<string, string>() {
                     { "ORDER_NO","f.ORDER_NO"},
                     { "COIN","f.CREDIT_COIN"},
@@ -1355,7 +1405,7 @@ namespace Barrway.Service.Repository
                                 {
                                     filter = item.field + " like N'%" + item.value + "%'";
                                 }
-                                
+
                                 applyFilter.Add(filter);
                             }
                         }
@@ -1430,7 +1480,7 @@ namespace Barrway.Service.Repository
                             query = $@"select * from {TableName} where created_by = '{UserId}' and COMPANY_CODE = (select COMPANY_CODE from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE = '{CalendarCode}')";
 
                             result = await sqlFunction.ExecuteSqlQuery(query);
-                            
+
                             if (result.Count > 0)
                             {
                                 return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
@@ -1561,7 +1611,7 @@ namespace Barrway.Service.Repository
                             ServiceFees = Convert.ToInt32(service[0]["fees_1"]);
                         }
 
-                        
+
                     }
                     else
                     {
@@ -1597,7 +1647,7 @@ namespace Barrway.Service.Repository
                 }
 
 
-                
+
 
 
             }
