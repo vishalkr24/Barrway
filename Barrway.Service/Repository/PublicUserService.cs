@@ -476,20 +476,20 @@ namespace Barrway.Service.Repository
 
         }
 
-        public async Task<AddUpdateDelete> AddSessionReview(SessionReviewModel model, string UserEmail)
+        public async Task<AddUpdateDelete> AddSessionReview(SessionReviewModel model)
         {
             string query = $@"select * from TRANSACTION_MASTER_1942 t
                             join PARTICIPANT_MASTER_1940 participant on participant.Id = t.STUDENT
-                            where t.Id = '{model.TRANSACTION_ID}' and participant.EMAIL = '{UserEmail}'";
+                            where t.SLOT = '{model.EVENT_ID}' and participant.EMAIL = '{model.USER_EMAIL}'";
 
             var result = await sqlFunction.ExecuteSqlQuery(query);
 
             if (result.Count > 0)
             {
-                query = $@"select * from SESSION_REVIEWS_1983 where TRANSACTION_ID = '{model.TRANSACTION_ID}'";
+                query = $@"select * from SESSION_REVIEWS_1983 where EVENT_ID = '{model.EVENT_ID}' and USER_EMAIL = '{model.USER_EMAIL}'";
                 var result2 = await sqlFunction.ExecuteSqlQuery(query);
 
-                if (result.Count == 0)
+                if (result2.Count == 0)
                 {
                     Form_DataTable data2 = new Form_DataTable();
                     data2.action = (int)FormAction.Save;

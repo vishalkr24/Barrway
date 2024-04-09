@@ -18,7 +18,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetSchedularFormList(GenerateDynamicFormData data, string companyCode, string calendarCode);
         Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetTransactionMasterList(GenerateDynamicFormData data, string companyCode, string calendarCode);
         Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetClientPaymentHistory(GenerateDynamicFormData data, string companyCode, string calendarCode);
-        Task<AddUpdateDelete> GetMyBookings(string UserEmail, string Type);
+        Task<AddUpdateDelete> GetMyBookings(string UserEmail, string Type, string TransactionId = null);
         Task<AddUpdateDelete> GetPaymentReceiptData(string Id);
         Task<AddUpdateDelete> GetSingleClientPaymentHistory(string LedgerId);
         Task<AddUpdateDelete> GetSingleSlotDetailsByTransactionId(string TransactionId);

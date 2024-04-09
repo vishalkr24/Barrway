@@ -8,10 +8,27 @@ namespace Barrway.DTO.BusinessModels
 {
     public class SessionReviewModel
     {
-        public string TRANSACTION_ID { get; set; }
+        public string EVENT_ID { get; set; }
+        public string USER_EMAIL { get; set; }
         public string CALENDAR_CODE { get; set; }
         public string COMPANY_CODE { get; set; }
         public double REVIEW_SCORE { get; set; }
         public string REVIEW_COMMENT { get; set; }
+    }
+
+    public class SessionReviewViewModel
+    {
+        public string EVENT_ID { get; set; }
+        public string USER_EMAIL { get; set; }
+        public string CALENDAR_CODE { get; set; }
+        public string COMPANY_CODE { get; set; }
+        public double REVIEW_SCORE { get; set; }
+        public string REVIEW_COMMENT { get; set; }
+        public string SERVICE_NAME { get; set; }
+        public string LOCATION_NAME { get; set; }
+        public string SERVICE_PROVIDER_NAME { get; set; }
+        public DateTime FROM_TIME { get; set; }
+        public DateTime TO_TIME { get; set; }
+        public bool SESSION_REVIEWED { get; set; }
     }
 }
