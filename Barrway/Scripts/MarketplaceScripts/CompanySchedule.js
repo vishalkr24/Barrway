@@ -16,9 +16,7 @@ $(document).ready(async function () {
     console.log(COMPANY_CODE, "COMPANY_CODE");
     console.log(CALENDAR_CODE, "CALENDAR_CODE");
 
-    getServiceProviderData();
-
-    getLocationMaster();
+   
     //debugger;
 
     //getServiceList(COMPANY_CODE, CALENDAR_CODE);
@@ -56,6 +54,10 @@ $(document).ready(async function () {
     calenderSettings = await getCalenderSettings();
     
     calendarDetails = (await getCalendarDetails(CALENDAR_CODE)).Data;
+
+    getServiceProviderData();
+
+    getLocationMaster();
     
 
     var SelectedCalendarViews = (calendarDetails["REQUIRED_CALENDAR_VIEWS"].includes(",")) ? calendarDetails["REQUIRED_CALENDAR_VIEWS"].split(',') : [calendarDetails["REQUIRED_CALENDAR_VIEWS"]];
@@ -518,8 +520,7 @@ function showCalendar(companyCode) {
 }
 
 
-
-function marcketplaceCalendar(calenderType, calenderData, resourceData, resColumns, activityFormData, activityColumn, activityEvents) {
+ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColumns, activityFormData, activityColumn, activityEvents) {
 
    
 
@@ -617,13 +618,21 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
     function assignEvents(eventsData) {
         window["CalendarEventList"] = angular.copy(eventsData);
     }
+    let slotDuration = "00:15:00";
+    if (!isNaN(calendarDetails.INTERVAL_TIME)) {
+        slotDuration = "00:" + calendarDetails.INTERVAL_TIME + ":00";
+        calendarDetails.INTERVAL_TIME=slotDuration;
+    } else {
+        calendarDetails.INTERVAL_TIME = slotDuration;
+    }
+
     var defaultOptions = {
         schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
         theme: true,
         themeSystem: 'jquery-ui',
         //  themeSystem:'bootstrap4',
         nowIndicator: true,
-        slotDuration: '00:15:00',
+        slotDuration: slotDuration,
         // defaultTimedEventDuration: defaultDuration,
         //aspectRatio: 1.5,
         defaultDate: new Date(),
@@ -1127,30 +1136,49 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         eventClick: async function (calEvent, jsEvent, view) {
 
 
-
-
+            $('#fileSuccess').html('');
+            $('#fileError2').html('');
+            var $scope = angular.element($("#calendar")).scope();
             //debugger;
             if (calendarDetails.CALENDAR_CATEGORY_ID == "4" && calendarDetails.CALENDAR_TYPE == "3") {
                 return;
             }
 
-           
+            
 
 
             if (Check_IS_SERVICE_TYPE(calendarDetails)) {
                 //customEventDetailsServiceModelPopUp.modal('show');
                 //customEventDetailsServiceModelPopUp.css({ "z-index": "9999" });
                 await rendarPopupCalendar(calEvent.start);
+
             } else {
                 customEventDetailsModelPopUp.modal('show');
                 customEventDetailsModelPopUp.css({ "z-index": "9999" });
             }
 
-            var $scope = angular.element($("#calendar")).scope();
+           
             if (calEvent.DOWNLOAD_FILE_LIST && calEvent.DOWNLOAD_FILE_LIST != '' && calEvent.DOWNLOAD_FILE_LIST != 'null' && IsJsonString(calEvent.DOWNLOAD_FILE_LIST)) {
                 calEvent.DOWNLOADABLE_ATTACHMENT_FILES = JSON.parse(calEvent.DOWNLOAD_FILE_LIST);
             }
             $scope.selectEventDetails = calEvent;
+
+            var enrollUser = await getUserEnrollDetails(calEvent.Id);
+
+            let is_enroll = false;
+            let enrolled_data = {};
+            if (enrollUser.Status) {
+                is_enroll = true;
+                enrolled_data = enrollUser.Data;
+                $scope.selectEventDetails.TRANSACTION_ID = enrolled_data.TRANSACTION_ID;
+                $scope.selectEventDetails.ASSESSMENT_FILES = enrolled_data.ASSESSMENT_FILES;
+                $scope.selectEventDetails.ASSESSMENT_FILES_LIST = enrolled_data.ASSESSMENT_FILES_LIST;
+                if (IsJsonString(enrolled_data.ASSESSMENT_FILES_LIST)) {
+                    $scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA = JSON.parse(enrolled_data.ASSESSMENT_FILES_LIST);
+                }
+            }
+
+            //$scope.selectEventDetails.user_enroll = is_enroll;
 
             //if (calEvent.DOWNLOADABLE_ATTACHMENT && calEvent.DOWNLOADABLE_ATTACHMENT != '' && calEvent.DOWNLOADABLE_ATTACHMENT != 'null') {
             //    $scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES = calEvent.DOWNLOADABLE_ATTACHMENT.split(',');
@@ -2565,6 +2593,28 @@ async function getCalendarDetails(id) {
 
 }
 
+async function getUserEnrollDetails(id) {
+    
+    return new Promise(resolve => {
+        $.ajax({
+            type: "GET",
+            url: BASE_URL + "UserAdmin/GetEnrollUserDetails/" + id,
+            contentType: "application/json",
+            beforeSend: function () {
+                 showLoader();
+            },
+            success: function (response) {
+                hideLoader();
+                resolve(response);
+                console.log(response, "response");
+            }
+        });
+
+    });
+
+}
+
+
 var othercalendar;
 async function rendarPopupCalendar(assignDate) {
     var customEventDetailsServiceModelPopUp = angular.element("#customEventDetailsServiceModelPopUp");
@@ -2574,7 +2624,7 @@ async function rendarPopupCalendar(assignDate) {
         themeSystem: 'jquery-ui',
         //  themeSystem:'bootstrap4',
         nowIndicator: true,
-        slotDuration: '00:15:00',
+        slotDuration: calendarDetails.INTERVAL_TIME,
         eventOrderStrict: true,
         // defaultTimedEventDuration: defaultDuration,
         //aspectRatio: 1.5,
@@ -3097,7 +3147,6 @@ async function rendarPopupCalendar(assignDate) {
                 return;
             }
             var bgevent = exist[0];
-
             //console.log(bgevent.activities);
             //console.log($scope.activityConfig.formDataList[0].DURATION_FIELD);
 
@@ -3422,89 +3471,122 @@ function postAsync(url, data) {
 
 
 function getServiceProviderData() {
-    $.ajax({
-        url: "/Marketplace/GetServiceProviderMasterList/",
-        async: false,
-        type: "POST",
-        data: {
-            data: {},
-            companyCode: COMPANY_CODE,
-            calendarCode: CALENDAR_CODE
-        },
-        success: function (response) {
-            Service_ProviderList = response.data;
-            var serviceProvider = $("#calendar-service-Provider").empty();
-            serviceProvider.append($('<option>', {
-                value: "",
-                text: "All Service provider"
-            }));
-            if (Service_ProviderList.length > 0) {
-                $("#div-calendar-service-Provider").show();
-            }
+    //$.ajax({
+    //    url: "/Marketplace/GetServiceProviderMasterList/",
+    //    async: false,
+    //    type: "POST",
+    //    data: {
+    //        data: {},
+    //        companyCode: COMPANY_CODE,
+    //        calendarCode: CALENDAR_CODE
+    //    },
+    //    success: function (response) {
+    //        Service_ProviderList = response.data;
+    //        var serviceProvider = $("#calendar-service-Provider").empty();
+    //        serviceProvider.append($('<option>', {
+    //            value: "",
+    //            text: "All Service provider"
+    //        }));
+    //        if (Service_ProviderList.length > 0) {
+    //            $("#div-calendar-service-Provider").show();
+    //        }
 
-            $.each(Service_ProviderList, function (index, item) {
-                serviceProvider.append($('<option>', {
-                    value: item.FIRST_NAME,
-                    text: item.FIRST_NAME + " " + item.LAST_NAME
-                }));
-            });
+    //        $.each(Service_ProviderList, function (index, item) {
+    //            serviceProvider.append($('<option>', {
+    //                value: item.FIRST_NAME,
+    //                text: item.FIRST_NAME + " " + item.LAST_NAME
+    //            }));
+    //        });
 
 
 
-        },
-        error: function (errorResponse) {
-            data = null;
-        }
+    //    },
+    //    error: function (errorResponse) {
+    //        data = null;
+    //    }
+    //});
+
+    Service_ProviderList = calenderSettings.find(x => x.resourceForm == 2304).formDataList;;
+    var serviceProvider = $("#calendar-service-Provider").empty();
+    serviceProvider.append($('<option>', {
+        value: "",
+        text: "All Service provider"
+    }));
+    if (Service_ProviderList.length > 0) {
+        $("#div-calendar-service-Provider").show();
+    }
+
+    $.each(Service_ProviderList, function (index, item) {
+        serviceProvider.append($('<option>', {
+            value: item.FIRST_NAME,
+            text: item.FIRST_NAME + " " + item.LAST_NAME
+        }));
     });
 
 }
 
 function getLocationMaster() {
-    //debugger;
-    $.ajax({
-        url: "/Marketplace/GetLocationMasterList/",
-        async: false,
-        type: "POST",
-        data: {
-            data: {
-                filters: [{
-                    field: "CALENDAR_CODE",
-                    type: "=",
-                    value: CALENDAR_CODE
-                }]
-            },
-            companyCode: COMPANY_CODE
-        },
-        success: function (response) {
-            data = response;
-            //debugger;
-            console.log(data, "data data data");
+    ////debugger;
+    //$.ajax({
+    //    url: "/Marketplace/GetLocationMasterList/",
+    //    async: false,
+    //    type: "POST",
+    //    data: {
+    //        data: {
+    //            filters: [{
+    //                field: "CALENDAR_CODE",
+    //                type: "=",
+    //                value: CALENDAR_CODE
+    //            }]
+    //        },
+    //        companyCode: COMPANY_CODE
+    //    },
+    //    success: function (response) {
+    //        data = response;
+    //        //debugger;
+    //        console.log(data, "data data data");
 
 
-            Service_Location_List = response.data;
+    //        Service_Location_List = response.data;
 
-            if (Service_Location_List.length > 0) {
-                $("#div-calendar-service-Location").show();
-            }
+    //        if (Service_Location_List.length > 0) {
+    //            $("#div-calendar-service-Location").show();
+    //        }
 
-            var Location = $("#calendar-service-Location").empty();
-            Location.append($('<option>', {
-                value: "",
-                text: "All location"
-            }));
+    //        var Location = $("#calendar-service-Location").empty();
+    //        Location.append($('<option>', {
+    //            value: "",
+    //            text: "All location"
+    //        }));
 
-            $.each(Service_Location_List, function (index, item) {
-                Location.append($(`<option value="${item.Id}">${item.LOCATION_ADDRESS}</option>`));
-            });
+    //        $.each(Service_Location_List, function (index, item) {
+    //            Location.append($(`<option value="${item.Id}">${item.LOCATION_ADDRESS}</option>`));
+    //        });
 
 
 
-        },
-        error: function (errorResponse) {
-            data = null;
-        }
+    //    },
+    //    error: function (errorResponse) {
+    //        data = null;
+    //    }
+    //});
+    //return data;
+
+    Service_Location_List = calenderSettings.find(x => x.resourceForm == 2306).formDataList;;
+
+    if (Service_Location_List.length > 0) {
+        $("#div-calendar-service-Location").show();
+    }
+
+    var Location = $("#calendar-service-Location").empty();
+    Location.append($('<option>', {
+        value: "",
+        text: "All location"
+    }));
+
+    $.each(Service_Location_List, function (index, item) {
+        Location.append($(`<option value="${item.Id}">${item.LOCATION_ADDRESS}</option>`));
     });
-    return data;
 }
 
 function GetAdvancaePopupForMasterData(formid,title) {

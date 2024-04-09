@@ -788,6 +788,135 @@ namespace Barrway.Controllers
             }
 
         }
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<ActionResult> GetEnrollUserDetails(int id) {
+
+            if (!User.Identity.IsAuthenticated) {
+                return Json(new AddUpdateDelete() {Status=false,Message=AppMessage.NotFound }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(await businessUserService.GetEnrollUserDetails(id, UserIdentity.UserEmail),JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> UploadAssestementAttachment(List<HttpPostedFileBase> files, string clrcode, string eventid)
+        {
+
+            if (files == null || files.Count() == 0 || string.IsNullOrEmpty(clrcode))
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.InvaidRequest });
+            }
+            foreach (var file in files)
+            {
+                if (file == null || file.ContentLength == 0)
+                {
+                    return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.InvaidRequest });
+                }
+            }
+            foreach (var file in files)
+            {
+                string fileExtension = Path.GetExtension(file.FileName).ToLower();
+                if (!IsAllowedFileExtension(fileExtension))
+                {
+                    return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.InvaidRequest });
+                }
+            }
+
+
+            try
+            {
+                string baseurl = ConfigurationManager.AppSettings["baseurl"].ToString();
+                List<IDictionary<string, object>> filePaths = new List<IDictionary<string, object>>();
+                foreach (var file in files)
+                {
+
+                    string folderPath = "UploadCalendar/UploadAttachment/" + clrcode + "/";
+                    string url = baseurl + folderPath + file.FileName;
+                    string _filepath = "/" + folderPath + file.FileName;
+                    filePaths.Add(new Dictionary<string, object>() { { "url", url }, { "path", _filepath }, { "name", file.FileName }, { "type", "public" } });
+                    folderPath = Server.MapPath("~/" + folderPath);
+                    if (!Directory.Exists(folderPath))
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
+                    string fileName = Path.GetFileName(file.FileName);
+                    string filePath = Path.Combine(folderPath, fileName);
+                    file.SaveAs(filePath);
+                }
+                int _eventId;
+                if (int.TryParse(eventid, out _eventId))
+                {
+
+                    var upload_result = (await businessUserService.GetEnrollUserDetails(_eventId,UserIdentity.UserEmail)).Data as IDictionary<string, object>;
+                    if (upload_result != null)
+                    {
+                        var result = upload_result;
+                        int transaction_id = Convert.ToInt32(result["TRANSACTION_ID"]);
+                        if (result.ContainsKey("ASSESSMENT_FILES") && !string.IsNullOrEmpty(result["ASSESSMENT_FILES_LIST"]?.ToString()))
+                        {
+                            string ASSESSMENT_FILES_LIST = result["ASSESSMENT_FILES_LIST"].ToString();
+                            if (isJsonString(ASSESSMENT_FILES_LIST))
+                            {
+                                var parse_json = JsonConvert.DeserializeObject<List<IDictionary<string, object>>>(ASSESSMENT_FILES_LIST);
+                                parse_json.AddRange(filePaths);
+                                filePaths = parse_json;
+                                string ASSESSMENT_FILES = string.Join(",", filePaths.Select(x => x["path"].ToString()).ToList());
+                                ASSESSMENT_FILES_LIST = JsonConvert.SerializeObject(filePaths);
+                                await businessUserService.updateAssesstmentUploadFiles(transaction_id, ASSESSMENT_FILES, ASSESSMENT_FILES_LIST);
+                            }
+                        }
+                        else
+                        {
+
+                            string ASSESSMENT_FILES = string.Join(",", filePaths.Select(x => x["path"].ToString()).ToList());
+                            string ASSESSMENT_FILES_LIST = JsonConvert.SerializeObject(filePaths);
+                            await businessUserService.updateAssesstmentUploadFiles(transaction_id, ASSESSMENT_FILES, ASSESSMENT_FILES_LIST);
+                        }
+                    }
+                }
+                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = filePaths });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError });
+            }
+
+        }
+
+        
+
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteAssestementUploadFiles(string filePath, string transactionid, string downloadable_attachment, string download_file_list)
+        {
+
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.InvaidRequest });
+            }
+            try
+            {
+                filePath = Server.MapPath("~" + filePath);
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+
+                int _transactionid;
+                if (int.TryParse(transactionid, out _transactionid))
+                {
+                    await businessUserService.updateAssesstmentUploadFiles(_transactionid, downloadable_attachment, download_file_list);
+                }
+                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success });
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError });
+            }
+
+        }
 
 
         private bool IsAllowedFileExtension(string fileExtension)

@@ -228,6 +228,7 @@ namespace Barrway.Controllers
                         calendarModel.IS_VISIBLE = calendarModel2.IS_VISIBLE;
                         calendarModel.SLOT_DURATION_IN_MINS = calendarModel2.SLOT_DURATION_IN_MINS;
                         calendarModel.TAGS = calendarModel2.TAGS.Split(',').ToList();
+                        calendarModel.INTERVAL_TIME = calendarModel2.INTERVAL_TIME;
                     }
                     else
                     {
@@ -1455,7 +1456,8 @@ namespace Barrway.Controllers
                                 ADDITIONAL_FORM_ID = "2310",
                                 COMPANY_CODE = model.COMPANY_CODE.ToString(),
                                 COUNTRY_ID = model.COUNTRY_ID.ToString(),
-                                TAGS = ((model.TAGS != null) ? string.Join(", ", model.TAGS) : "")
+                                TAGS = ((model.TAGS != null) ? string.Join(", ", model.TAGS) : ""),
+                                INTERVAL_TIME= model.INTERVAL_TIME,
                             };
 
                             var result = await businessUserService.AddCalendar(calendarModel, User.Identity.Name.ToString());

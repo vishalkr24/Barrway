@@ -57,6 +57,7 @@ namespace Barrway.DTO.BusinessModels
         public string CALENDAR_USE_TYPE { get; set; }
 
         public string SCHEDULAR_ID { get; set; }
+        public string INTERVAL_TIME { get; set; }
     }
 
     public class ServicesList
