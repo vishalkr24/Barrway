@@ -22,6 +22,7 @@ using System.Drawing.Imaging;
 using System.Configuration;
 using System.Web.WebPages;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Barrway.Controllers
 {
@@ -579,6 +580,34 @@ namespace Barrway.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<ActionResult> GetMyUpcomingBookings()
+        {
+            try
+            {
+                var result = await publicUserService.GetMyUpcomingBookings(UserIdentity.UserEmail);
+                List<IDictionary<string, object>> finalResult = new List<IDictionary<string, object>>();
+
+                for (int i = 0; i < result.Data.Count; i++)
+                {
+                    if (result.Data[i].Count > 0)
+                    {
+                        var splitData = result.Data[i]["customTitle"].Split(',');
+
+                        result.Data[i].Add("customTitleSplit", splitData);
+                        finalResult.Add(result.Data[i]);
+                    }
+
+                }
+
+                return Json(finalResult, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Message = "Failed", Status = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         /// <summary>
         /// It will generate a QR of attendee booking for company to scan it
         /// </summary>
@@ -728,7 +757,8 @@ namespace Barrway.Controllers
                 int _eventId;
                 if (int.TryParse(eventid, out _eventId))
                 {
-                    await businessUserService.updateCalendarOtherField(_eventId, field, value);
+                    Dictionary<string, object> data = new Dictionary<string, object>() { { field, value } };
+                    await businessUserService.updateCalendarOtherField(_eventId, data);
                 }
                 return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success });
             }
@@ -738,6 +768,27 @@ namespace Barrway.Controllers
             }
 
         }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateEventFieldsData(RootEventDataListModel request)
+        {
+            try
+            {
+                Dictionary<string, object> data = new Dictionary<string, object>();
+                request.data.ForEach(x =>
+                {
+                    data.Add(x.field, x.value);
+                });    
+                await businessUserService.updateCalendarOtherField(request.eventId, data);
+                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success });
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError });
+            }
+
+        }
+
 
         private bool IsAllowedFileExtension(string fileExtension)
         {

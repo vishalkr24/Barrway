@@ -68,6 +68,8 @@ namespace Barrway.Service.IRepository
 
         Task<AddUpdateDelete> GetSingleCalendarById(string Id);
         Task<AddUpdateDelete> UpdateCalendarType(string CalendarCode, string CalendarType);
+
+        Task<AddUpdateDelete> PublishCalendar(string CalendarCode, string UserId);
         Task<AddUpdateDelete> UpdateStaffServiceMapping(List<StaffServiceMappingModel> model);
         Task<AddUpdateDelete> GetStaffServiceMappingData(string CalendarCode);
         Task<AddUpdateDelete> GetCompanyCalendarByCompanyId(string CompanyId);
@@ -138,7 +140,7 @@ namespace Barrway.Service.IRepository
 
         Task<AddUpdateDelete> getCalendarUploadFiles(int eventId);
         Task<AddUpdateDelete> updateCalendarUploadFiles(int eventId, string downloadable_attachment, string download_file_list);
-        Task<AddUpdateDelete> updateCalendarOtherField(int eventId, string field, string value);
+        Task<AddUpdateDelete> updateCalendarOtherField(int eventId, Dictionary<string, object> data);
         Task<AddUpdateDelete> updateSchedularCalendarOtherField(int schedularId, SchedularFormModel schedularForm);
 
 

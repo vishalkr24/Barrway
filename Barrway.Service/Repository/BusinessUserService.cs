@@ -914,6 +914,34 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> PublishCalendar(string CalendarCode, string UserId)
+        {
+            try
+            {
+                string query = $@"declare @id varchar(max) = (select cal.Id from BUSINESS_CALENDAR_MASTER_1925 cal
+                                    join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = cal.COMPANY_CODE
+                                    join BUSINESS_ASSIGNED_USERS_1964 bau on bau.COMPANY_ID = company.Id
+                                    where cal.CALENDAR_CODE = '{CalendarCode}' and bau.ASSIGNED_USER = '{UserId}')
+
+                                    update BUSINESS_CALENDAR_MASTER_1925 set STATUS = 'PUBLISH' where Id = @id";
+                var result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                if (result > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = "Calendar is now published." };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "Transaction Not Allowed." };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
         public async Task<AddUpdateDelete> UpdateStaffServiceMapping(List<StaffServiceMappingModel> model)
         {
             try
@@ -991,7 +1019,7 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetCompanyCalendarByCompanyId(string CompanyId)
         {
-            string query = $@"SELECT calendar.[Id]      ,calendar.[CALENDAR_FUNCTION_TYPE], calendar.[CALENDAR_TYPE], calendar.[created_at], company.IS_ACTIVE      ,calendar.[updated_at]      ,calendar.[created_by]      ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
+            string query = $@"SELECT calendar.[Id],calendar.STATUS, calendar.[CALENDAR_FUNCTION_TYPE], calendar.[CALENDAR_TYPE], calendar.[created_at], company.IS_ACTIVE      ,calendar.[updated_at]      ,calendar.[created_by]      ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                                 join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE 
                                 where company.IS_ACTIVE = 'Y' and company.Id = '{CompanyId}'";
 
@@ -1009,10 +1037,10 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetMarcketPlaceCompanyCalendarByCompanyId(string CompanyId)
         {
-            string query = $@"SELECT calendar.[Id], calendar.CALENDAR_FUNCTION_TYPE,      calendar.[created_at], company.IS_ACTIVE      ,calendar.[updated_at]      ,calendar.[created_by]      ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,calendar.[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
+            string query = $@"SELECT calendar.[Id], calendar.CALENDAR_FUNCTION_TYPE, calendar.STATUS, calendar.[created_at], company.IS_ACTIVE      ,calendar.[updated_at]      ,calendar.[created_by]      ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,calendar.[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                                 join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE 
                                 join CALENDAR_COMMON_CATEGORY_1978 category on category.Id = calendar.CALENDAR_COMMON_CATEGORY_ID
-                                where company.IS_ACTIVE = 'Y' and company.Id = '{CompanyId}' and calendar.CALENDAR_USE_TYPE = 'PUBLIC'";
+                                where company.IS_ACTIVE = 'Y' and company.Id = '{CompanyId}' and calendar.CALENDAR_USE_TYPE = 'PUBLIC' and calendar.STATUS = 'PUBLISH'";
 
             List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -3158,7 +3186,6 @@ namespace Barrway.Service.Repository
 
         }
 
-        
 
         public async Task<AddUpdateDelete> GetFeaturedBlogs()
         {
@@ -3234,12 +3261,14 @@ namespace Barrway.Service.Repository
             }
         }
 
+
        
         public async Task<Resultdata> GetAllBlogsTags()
         {
             try
             {
                 string query = "SELECT TAG FROM BLOG_1980";
+
 
                 using (var connection = new SqlConnection(connectionString))
                 {
@@ -3251,12 +3280,8 @@ namespace Barrway.Service.Repository
             {
                 return new Resultdata { Status = false, Message = AppMessage.NotFound };
             }
+
         }
-
-
-
-
-
 
         public async Task<AddUpdateDelete> getCalendarUploadFiles(int eventId)
         {
@@ -3304,11 +3329,17 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> updateCalendarOtherField(int eventId, string field, string value)
+        public async Task<AddUpdateDelete> updateCalendarOtherField(int eventId, Dictionary<string,object> data)
         {
             try
             {
-                string sqlString = $@"update CALENDAR_FORM_1935 set {field}=N'{value}' where Id=" + eventId;
+                string updateKeys = "";
+                data.Keys.ToList().ForEach(key =>
+                {
+                    updateKeys += $" [{key}]=N'{data[key]}', ";
+                });
+                updateKeys = updateKeys.TrimEnd(", ".ToCharArray());
+                string sqlString = $@"update CALENDAR_FORM_1935 set {updateKeys} where Id=" + eventId;
 
 
                 var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);

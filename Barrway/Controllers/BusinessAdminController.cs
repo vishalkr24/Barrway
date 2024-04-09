@@ -1331,6 +1331,13 @@ namespace Barrway.Controllers
         }
 
         [HttpPost]
+        public async Task<ActionResult> PublishCalendar(string CalendarCode)
+        {
+            var result = await businessUserService.PublishCalendar(CalendarCode, UserIdentity.UserID);
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
         public async Task<ActionResult> AddCalendar(BusinessCalendarViewModel model, bool IsPartial)
         {
             model.UNIVERSAL_ERROR = null;
@@ -1432,6 +1439,7 @@ namespace Barrway.Controllers
                                 SLOT_DURATION_IN_MINS = model.SLOT_DURATION_IN_MINS,
                                 CALENDAR_TEMPLATE_ID = (UserIdentity.Role != "SUPERADMIN_USER") ? ((string.IsNullOrEmpty(model.CALENDAR_TEMPLATE_ID?.ToString())) ? "" : model.CALENDAR_TEMPLATE_ID?.ToString()) : "0",
                                 IS_VISIBLE = "Y",
+                                STATUS = "DRAFT",
                                 CALENDAR_USE_TYPE = model.CALENDAR_USE_TYPE,
                                 Id = model.Id,
                                 CALENDAR_FUNCTION_TYPE = (model.CALENDAR_CATEGORY_ID == "6") ? "QUEUE": "CALENDAR",
@@ -1449,7 +1457,6 @@ namespace Barrway.Controllers
                                 COUNTRY_ID = model.COUNTRY_ID.ToString(),
                                 TAGS = ((model.TAGS != null) ? string.Join(", ", model.TAGS) : "")
                             };
-
 
                             var result = await businessUserService.AddCalendar(calendarModel, User.Identity.Name.ToString());
 
