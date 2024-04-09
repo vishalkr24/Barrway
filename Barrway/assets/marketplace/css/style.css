@@ -956,6 +956,12 @@ button.blogtag_num {
         width: 100%;
         float: left;
     }
+    .custome-ser select#filter-category-master {
+        margin-bottom: 15px;
+    }
+    div #Content-row .col-md-6:nth-child(5) {
+        clear: both;
+    }
 }
 /*end*/
 
@@ -1672,6 +1678,18 @@ p.tag a {
     color: #E2476C;
     cursor: pointer;
 }
-.pro-im img, .media-left img{
+.pro-im img, .media-left img {
     border-radius: 10px;
+    border: 1px solid #e9e7e7;
+    
+}
+.media-left img {
+    min-width: 200px;
+    min-height: 132px;
+}
+    div #Content-row .col-md-6:nth-child(3) {
+    clear: both;
+}
+#Content-row {
+    min-height: 450px;
 }
