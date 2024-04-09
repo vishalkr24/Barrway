@@ -74,6 +74,7 @@
     <Compile Include="AuthViewModel\PhoenSignUpViewModel.cs" />
     <Compile Include="AuthViewModel\UserToken.cs" />
     <Compile Include="BusinessModels\CalendaLocationMasterModel.cs" />
+    <Compile Include="BusinessModels\SessionReviewModel.cs" />
     <Compile Include="BusinessModels\TicketMasterModel.cs" />
     <Compile Include="BusinessModels\QueueSessionMappingModel.cs" />
     <Compile Include="BusinessModels\SessionMasterModel.cs" />

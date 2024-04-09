@@ -310,8 +310,8 @@ namespace Barrway.Controllers
             var qrCodeAsBitmap = qrCode.GetGraphic(20);
 
             string base64String = Convert.ToBase64String(BitmapToByteArray(qrCodeAsBitmap));
-            
-            
+
+
             string path = "";
             string fileName = "";
 
@@ -725,7 +725,7 @@ namespace Barrway.Controllers
                             session.SESSION_START_TIME = DateTime.Now.ToString("dd-MM-yyyy") + " " + session.SESSION_START_TIME;
                             session.SESSION_END_TIME = DateTime.Now.ToString("dd-MM-yyyy") + " " + session.SESSION_END_TIME;
                         }
-                        
+
                     });
 
                 }
@@ -933,12 +933,12 @@ namespace Barrway.Controllers
 
                             while (dateTracker <= end)
                             {
-                                
+
 
                                 string SchedularFormId = Id;
                                 DateTime SlotStartTime = DateTime.Now;
                                 DateTime SlotEndTime = DateTime.Now;
-                                
+
                                 List<CommonTimeObject> dictionaryDataList = JsonConvert.DeserializeObject<List<CommonTimeObject>>(JsonConvert.SerializeObject(sessionRaw[dateTracker.DayOfWeek.ToString().Substring(0, 3)]));
 
                                 foreach (var x in dictionaryDataList)
@@ -1046,7 +1046,7 @@ namespace Barrway.Controllers
 
                             while (dateTracker <= end)
                             {
-                                
+
                                 if (Convert.ToInt32(calendarCountCheckData.Data["AVAILABLE_SESSIONS"]?.ToString()) < eventCounter)
                                 {
                                     caseBreak = true;

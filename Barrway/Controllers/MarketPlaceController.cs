@@ -101,6 +101,11 @@ namespace Barrway.Controllers
             return View();
         }
 
+        public async Task<ActionResult> ComingSoon()
+        {
+            return View();
+        }
+
         public async Task<ActionResult> ReviewSessionDesign()
         {
             return View();

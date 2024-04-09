@@ -156,7 +156,13 @@ div#myNavbar .navbar-nav li ul li a:hover {
 .search-bar .input-group input, .search-bar .input-group .input-group-btn .btn {
     border: none;
     box-shadow: none;
+    outline: none;
+    background-color: transparent;
 }
+.btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus {
+    outline: none !important;
+}
+
 
 .main-menu nav.navbar {
     margin-bottom: -1px;
@@ -957,6 +963,12 @@ button.blogtag_num {
         width: 100%;
         float: left;
     }
+    .custome-ser select#filter-category-master {
+        margin-bottom: 15px;
+    }
+    div #Content-row .col-md-6:nth-child(5) {
+        clear: both;
+    }
 }
 /*end*/
 
@@ -1665,4 +1677,31 @@ div#myNavbar .navbar-nav li.rl ul a:hover {
 }
 p.tag a {
     text-decoration: underline;
+}
+
+
+.heading-cata a {   
+    padding: 0px 10px;
+    margin-left: 5px;
+    color: #E2476C;
+    cursor: pointer;
+}
+.pro-im img, .media-left img {
+    border-radius: 10px;
+
+    border: 1px solid #e9e7e7;
+    
+}
+.media-left img {
+    min-width: 200px;
+    min-height: 132px;
+}
+    div #Content-row .col-md-6:nth-child(3) {
+    clear: both;
+}
+#Content-row {
+    min-height: 450px;
+button.btn.btn-default:hover, button.btn.btn-default:focus {
+    background-color: transparent;
+    outline: none;
 }
