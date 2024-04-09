@@ -227,18 +227,20 @@ namespace Barrway.Controllers
             }
         }
 
+        [HttpPost]
         public async Task<ActionResult> AddSessionReview(SessionReviewModel model)
         {
             try
             {
                 if (User.Identity.IsAuthenticated)
                 {
-                    var result = await publicUserService.AddSessionReview(model, UserIdentity.UserEmail);
-                    return Json(result, JsonRequestBehavior.AllowGet);
+                    model.USER_EMAIL = UserIdentity.UserEmail;
+                    var result = await publicUserService.AddSessionReview(model);
+                    return Redirect("/UserAdmin#/mybookings/2354");
                 }
                 else
                 {
-                    return Json(new AddUpdateDelete() { Status = false, Message = "Kindly login to your account to submit your rating."}, JsonRequestBehavior.AllowGet);
+                    return RedirectToAction("BusinessLogin", "Account");
                 }
             }
             catch (Exception ex)
@@ -425,6 +427,46 @@ namespace Barrway.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult> GetSingleEventDetails(string EventId, string Type)
+        {
+            try
+            {
+                SessionReviewViewModel model = new SessionReviewViewModel();
+                var result = await masterService.GetMyBookings(UserIdentity.UserEmail, Type, EventId);
+
+                if (result.Status)
+                {
+                    var data = result.Data;
+
+                    model.COMPANY_CODE = data[0]["COMPANY_CODE"]?.ToString();
+                    model.CALENDAR_CODE = data[0]["CALENDAR_CODE"]?.ToString();
+                    model.LOCATION_NAME = data[0]["LOCATION_TITLE"]?.ToString();
+                    model.SERVICE_NAME = data[0]["SERVICE_TITLE"]?.ToString();
+                    model.SERVICE_PROVIDER_NAME = data[0]["SERVICE_PROVIDER_TITLE"]?.ToString();
+                    model.EVENT_ID = EventId;
+                    model.USER_EMAIL = UserIdentity.UserEmail;
+                    model.FROM_TIME = Convert.ToDateTime(data[0]["start"]?.ToString());
+                    model.TO_TIME = Convert.ToDateTime(data[0]["end"]?.ToString());
+                    model.REVIEW_COMMENT = data[0]["REVIEW_COMMENT"]?.ToString();
+                    model.REVIEW_SCORE = (string.IsNullOrEmpty((data[0]["REVIEW_SCORE"]?.ToString()))) ? 0 : Convert.ToInt32(data[0]["REVIEW_SCORE"]?.ToString());
+                    model.SESSION_REVIEWED = (data[0]["SESSION_REVIEWED"]?.ToString() == "N") ? false : true;
+
+                }
+                else
+                {
+
+                }
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                return View(new SessionReviewViewModel());
+            }
+
+        }
+
         [HttpPost]
         public async Task<ActionResult> GetMyBookings(string Type)
         {
@@ -438,7 +480,6 @@ namespace Barrway.Controllers
             {
                 return Json(new AddUpdateDelete() { Status = false, Message = "Kindly login and try again." }, JsonRequestBehavior.AllowGet);
             }
-
         }
 
         [HttpPost]
@@ -677,13 +718,17 @@ namespace Barrway.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> UploadDownloadAttachment(List<HttpPostedFileBase> files, string clrcode, string eventid) {
+        public async Task<ActionResult> UploadDownloadAttachment(List<HttpPostedFileBase> files, string clrcode, string eventid)
+        {
 
-            if (files == null || files.Count() == 0 || string.IsNullOrEmpty(clrcode)) {
-                return Json(new AddUpdateDelete() { Status=false,Message=AppMessage.InvaidRequest});
+            if (files == null || files.Count() == 0 || string.IsNullOrEmpty(clrcode))
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.InvaidRequest });
             }
-            foreach (var file in files) {
-                if (file == null || file.ContentLength == 0) {
+            foreach (var file in files)
+            {
+                if (file == null || file.ContentLength == 0)
+                {
                     return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.InvaidRequest });
                 }
             }
@@ -700,14 +745,15 @@ namespace Barrway.Controllers
             try
             {
                 string baseurl = ConfigurationManager.AppSettings["baseurl"].ToString();
-                List<IDictionary<string,object>> filePaths = new List<IDictionary<string, object>>();
-                foreach (var file in files) {
+                List<IDictionary<string, object>> filePaths = new List<IDictionary<string, object>>();
+                foreach (var file in files)
+                {
 
                     string folderPath = "UploadCalendar/DownloadAttachment/" + clrcode + "/";
                     string url = baseurl + folderPath + file.FileName;
                     string _filepath = "/" + folderPath + file.FileName;
                     filePaths.Add(new Dictionary<string, object>() { { "url", url }, { "path", _filepath }, { "name", file.FileName }, { "type", "public" } });
-                    folderPath = Server.MapPath("~/"+ folderPath);
+                    folderPath = Server.MapPath("~/" + folderPath);
                     if (!Directory.Exists(folderPath))
                     {
                         Directory.CreateDirectory(folderPath);
@@ -717,10 +763,12 @@ namespace Barrway.Controllers
                     file.SaveAs(filePath);
                 }
                 int _eventId;
-                if (int.TryParse(eventid, out _eventId)) {
+                if (int.TryParse(eventid, out _eventId))
+                {
 
                     var result = (await businessUserService.getCalendarUploadFiles(_eventId)).Data as IDictionary<string, object>;
-                    if (result!=null && result.Count()>0) {
+                    if (result != null && result.Count() > 0)
+                    {
                         //[DOWNLOADABLE_ATTACHMENT],[DOWNLOAD_FILE_LIST]
                         if (result.ContainsKey("DOWNLOAD_FILE_LIST") && !string.IsNullOrEmpty(result["DOWNLOAD_FILE_LIST"]?.ToString()))
                         {
@@ -735,7 +783,8 @@ namespace Barrway.Controllers
                                 await businessUserService.updateCalendarUploadFiles(_eventId, DOWNLOADABLE_ATTACHMENT, DOWNLOAD_FILE_LIST);
                             }
                         }
-                        else {
+                        else
+                        {
 
                             string DOWNLOADABLE_ATTACHMENT = string.Join(",", filePaths.Select(x => x["path"].ToString()).ToList());
                             string DOWNLOAD_FILE_LIST = JsonConvert.SerializeObject(filePaths);
@@ -743,19 +792,19 @@ namespace Barrway.Controllers
                         }
                     }
                 }
-                return Json(new AddUpdateDelete() { Status=true,Message=AppMessage.Success,Data= filePaths });
-                
+                return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = filePaths });
+
             }
             catch (Exception ex)
             {
-                return Json(new AddUpdateDelete() { Status=false,Message=AppMessage.SomeInternalError});
+                return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError });
             }
 
         }
 
 
         [HttpPost]
-        public async Task<ActionResult> DeleteEventUploadFiles(string filePath,string eventid,string downloadable_attachment,string download_file_list)
+        public async Task<ActionResult> DeleteEventUploadFiles(string filePath, string eventid, string downloadable_attachment, string download_file_list)
         {
 
             if (string.IsNullOrEmpty(filePath))
@@ -814,7 +863,7 @@ namespace Barrway.Controllers
                 request.data.ForEach(x =>
                 {
                     data.Add(x.field, x.value);
-                });    
+                });
                 await businessUserService.updateCalendarOtherField(request.eventId, data);
                 return Json(new AddUpdateDelete() { Status = true, Message = AppMessage.Success });
             }
@@ -836,14 +885,15 @@ namespace Barrway.Controllers
         {
             try
             {
-                var parse_json= JsonConvert.DeserializeObject<List<IDictionary<string, object>>>(json);
+                var parse_json = JsonConvert.DeserializeObject<List<IDictionary<string, object>>>(json);
                 return true;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
 
                 return false;
             }
-        
+
         }
     }
 }

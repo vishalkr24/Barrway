@@ -3300,9 +3300,9 @@
     <Content Include="Views\MarketPlace\CalanderYearView.cshtml" />
     <Content Include="Views\MarketPlace\BlogDetails.cshtml" />
     <Content Include="Views\MarketPlace\AllCalanders.cshtml" />
-    <Content Include="Views\Shared\SessionReview.cshtml" />
-    <Content Include="Views\MarketPlace\ReviewSessionDesign.cshtml" />
+    <Content Include="Views\UserAdmin\GetSingleEventDetails.cshtml" />
     <Content Include="Views\MarketPlace\ComingSoon.cshtml" />
+    <Content Include="Views\UserAdmin\GetMyBookings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

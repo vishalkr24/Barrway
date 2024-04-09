@@ -351,7 +351,7 @@
 </head>
 
 <body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl navbar-vertical-aside-compact-mini-mode navbar-vertical-aside-compact-mode" ng-app="FormGeneratorApp" ng-controller="PublicIndexController">
-    
+
     <script>
         function changeLanguage() {
             localStorage.setItem("globalLang", $("select[name=langId] option:selected").val())
@@ -537,24 +537,24 @@
 
                                 <!-- Dropdown -->
                                 @*<div class="dropdown">
-                                    <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown1" data-bs-toggle="dropdown" aria-expanded="false">Set status</a>
+                                        <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown1" data-bs-toggle="dropdown" aria-expanded="false">Set status</a>
 
-                                    <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown1">
-                                        <a class="dropdown-item" href="javascript:void(0)">
-                                            <span class="legend-indicator bg-success me-1"></span> Available
-                                        </a>
-                                        <a class="dropdown-item" href="javascript:void(0)">
-                                            <span class="legend-indicator bg-danger me-1"></span> Busy
-                                        </a>
-                                        <a class="dropdown-item" href="javascript:void(0)">
-                                            <span class="legend-indicator bg-warning me-1"></span> Away
-                                        </a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="javascript:void(0)">
-                                            Reset status
-                                        </a>
-                                    </div>
-                                </div>*@
+                                        <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown1">
+                                            <a class="dropdown-item" href="javascript:void(0)">
+                                                <span class="legend-indicator bg-success me-1"></span> Available
+                                            </a>
+                                            <a class="dropdown-item" href="javascript:void(0)">
+                                                <span class="legend-indicator bg-danger me-1"></span> Busy
+                                            </a>
+                                            <a class="dropdown-item" href="javascript:void(0)">
+                                                <span class="legend-indicator bg-warning me-1"></span> Away
+                                            </a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="javascript:void(0)">
+                                                Reset status
+                                            </a>
+                                        </div>
+                                    </div>*@
                                 <!-- End Dropdown -->
 
                                 <a class="dropdown-item" href="javascript:void(0)" ui-sref="my_profile()">@Resource.Profile &amp; @Resource.Account</a>
@@ -564,22 +564,22 @@
 
                                 <!-- Dropdown -->
                                 @*<div class="dropdown">
-                                    <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown2" data-bs-toggle="dropdown" aria-expanded="false">Customization</a>
+                                        <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown2" data-bs-toggle="dropdown" aria-expanded="false">Customization</a>
 
-                                    <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown2">
-                                        <a class="dropdown-item" href="javascript:void(0)">
-                                            Invite people
-                                        </a>
-                                        <a class="dropdown-item" href="javascript:void(0)">
-                                            Analytics
-                                            <i class="bi-box-arrow-in-up-right"></i>
-                                        </a>
-                                        <a class="dropdown-item" href="javascript:void(0)">
-                                            Customize Front
-                                            <i class="bi-box-arrow-in-up-right"></i>
-                                        </a>
-                                    </div>
-                                </div>*@
+                                        <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown2">
+                                            <a class="dropdown-item" href="javascript:void(0)">
+                                                Invite people
+                                            </a>
+                                            <a class="dropdown-item" href="javascript:void(0)">
+                                                Analytics
+                                                <i class="bi-box-arrow-in-up-right"></i>
+                                            </a>
+                                            <a class="dropdown-item" href="javascript:void(0)">
+                                                Customize Front
+                                                <i class="bi-box-arrow-in-up-right"></i>
+                                            </a>
+                                        </div>
+                                    </div>*@
                                 <!-- End Dropdown -->
                                 @*<a class="dropdown-item" href="javascript:void(0)">Manage team</a>*@
 
@@ -667,12 +667,12 @@
                             </div>
 
                             <div class="nav-item">
-                                <a class="nav-link " id="user-nav-my_blogs"  href="javascript:void(0)" ui-sref="my_blogs({formId:2351})" data-placement="left">
+                                <a class="nav-link " id="user-nav-my_blogs" href="javascript:void(0)" ui-sref="my_blogs({formId:2351})" data-placement="left">
                                     <i class="bi bi-collection nav-icon"></i>
                                     <span class="nav-link-title">My Blogs</span>
                                 </a>
 
-                               
+
 
 
                             </div>
@@ -711,6 +711,18 @@
     <!-- ========== END MAIN CONTENT ========== -->
     <!-- ========== SECONDARY CONTENTS ========== -->
     <!-- Keyboard Shortcuts -->
+
+    <div id="ViewBookingModal" class="modal fade" style="background: #000000b5;" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+
+        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+            <div class="modal-content" style="border-radius: 12px;">
+                <div class="modal-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasKeyboardShortcuts" aria-labelledby="offcanvasKeyboardShortcutsLabel">
         <div class="offcanvas-header">
             <h4 id="offcanvasKeyboardShortcutsLabel" class="mb-0">Keyboard shortcuts</h4>

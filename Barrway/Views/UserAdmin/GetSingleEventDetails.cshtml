@@ -1,0 +1,287 @@
+﻿@model Barrway.DTO.BusinessModels.SessionReviewViewModel
+<style>
+    .session-review, .session-review-add {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+        margin-top: 60px;
+    }
+
+    .session-review-inner, .session-review-add-inner {
+        width: 100%;
+        float: left;
+    }
+
+    .session-review p, .session-review-add p {
+        color: #000;
+        text-align: center;
+    }
+
+    .session-button, .session-review-add-button {
+        width: 100%;
+        float: left;
+        text-align: center;
+    }
+
+    button.pink {
+        background-color: rgba(226, 71, 108, 1);
+        color: #fff;
+        border: none;
+        padding: 12px;
+        border-radius: 41px;
+    }
+
+    button.grey {
+        color: rgba(119, 119, 119, 1);
+        background-color: rgba(235, 235, 235, 1);
+        border: none;
+        padding: 12px;
+        border-radius: 40px;
+        margin-top: 10px;
+        border: 1px solid rgba(119, 119, 119, 1);
+    }
+
+    .session-button button, .session-review-add-button button {
+        width: 200px;
+    }
+
+    .session-review-add-button button {
+        padding: 12px 20px;
+    }
+    /*star*/
+    #full-stars-example-two .rating-group {
+        display: inline-flex;
+    }
+
+    #full-stars-example-two .rating__icon {
+        pointer-events: none;
+    }
+
+    #full-stars-example-two .rating__input {
+        position: absolute !important;
+        left: -9999px !important;
+    }
+
+    #full-stars-example-two .rating__input--none {
+        display: none;
+    }
+
+    #full-stars-example-two .rating__label {
+        cursor: pointer;
+        padding: 0 0.1em;
+        font-size: 2rem;
+    }
+
+    #full-stars-example-two .rating__icon--star {
+        color: #009fff;
+    }
+
+    #full-stars-example-two .rating__input:checked ~ .rating__label .rating__icon--star {
+        color: #ddd;
+    }
+
+    #full-stars-example-two .rating-group:hover .rating__label .rating__icon--star {
+        color: #009fff;
+    }
+
+    #full-stars-example-two .rating__input:hover ~ .rating__label .rating__icon--star {
+        color: #ddd;
+    }
+
+
+
+    div#full-stars-example-two label:before, div#full-stars-example-two label:after {
+        display: none;
+    }
+
+    p.mf {
+        text-align: right;
+        color: #e2476c;
+    }
+
+    div#full-stars-rating {
+        text-align: center;
+        margin: 30px 0px;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="session-review mt-0">
+                <div class="session-review-inner">
+                    <p><b>@((DateTime.Now > Model.TO_TIME) ? "You have finished this session": "Your upcoming event")</b></p>
+                    <p>
+                        <b>
+                            @Model.SERVICE_NAME
+                            <br />
+                            @if (Model.FROM_TIME.Date == Model.TO_TIME.Date)
+                            {
+                                <span>
+                                    @Model.FROM_TIME.ToString("yyyy-MM-dd HH:mm tt") - @Model.TO_TIME.ToString("HH:mm tt")
+                                </span>
+                            }
+                            else
+                            {
+                                <span>
+                                    @Model.FROM_TIME.ToString("yyyy-MM-dd HH:mm tt") - @Model.TO_TIME.ToString("yyyy-MM-dd HH:mm tt")
+                                </span>
+                            }
+                        </b>
+                    </p>
+                    <p>@Model.LOCATION_NAME<br /> @Model.SERVICE_PROVIDER_NAME </p>
+                    <div class="session-button">
+
+                        @if (!Model.SESSION_REVIEWED && DateTime.Now > Model.TO_TIME)
+                        {
+                            <button class="pink" onclick="renderReviewForm()">Leave a comment</button>
+                        }
+                        else
+                        {
+                            if (Model.SESSION_REVIEWED)
+                            {
+                                <div id="full-stars-rating">
+                                    <div id="full-stars-example-two">
+                                        <div class="rating-group">
+                                            @for (int i = 0; i < Model.REVIEW_SCORE; i++)
+                                            {
+                                                <label aria-label="5 stars" class="rating__label" for="rating3-5"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                            }
+                                            @for (int i = 0; i < 5 - Model.REVIEW_SCORE; i++)
+                                            {
+                                                <label aria-label="5 stars" class="rating__label" for="rating3-5"><i class="rating__icon rating__icon--star fa fa-star-o"></i></label>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <label>Comment:</label>
+                                <div>
+                                    @Model.REVIEW_COMMENT
+                                </div>
+                            }
+
+                        }
+
+                        <button class="grey" onclick="$('#ViewBookingModal').modal('hide')">Close</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="session-review-add" style="display:none;">
+                <div class="session-review-add-inner">
+                    <p>
+                        <b>
+                            @Model.SERVICE_NAME
+                            <br />
+                            @if (Model.FROM_TIME.Date == Model.TO_TIME.Date)
+                            {
+                                <span>
+                                    @Model.FROM_TIME.ToString("yyyy-MM-dd HH:mm tt") - @Model.TO_TIME.ToString("HH:mm tt")
+                                </span>
+                            }
+                            else
+                            {
+                                <span>
+                                    @Model.FROM_TIME.ToString("yyyy-MM-dd HH:mm tt") - @Model.TO_TIME.ToString("yyyy-MM-dd HH:mm tt")
+                                </span>
+                            }
+                        </b>
+                    </p>
+                    <p>@Model.LOCATION_NAME<br /> @Model.SERVICE_PROVIDER_NAME </p>
+
+                    @using (Html.BeginForm("AddSessionReview", "UserAdmin", FormMethod.Post, new { @id="sessionReviewForm"}))
+                    {
+                        <div>
+
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="form-group" style="display:none;">
+                                <div class="col-md-10">
+                                    <input type="text" readonly id="EVENT_ID" name="EVENT_ID" value="@Model.EVENT_ID" />
+                                </div>
+                            </div>
+
+
+                            <div class="form-group" style="display:none;">
+                                @Html.LabelFor(model => model.CALENDAR_CODE, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.CALENDAR_CODE, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.CALENDAR_CODE, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="display:none;">
+                                @Html.LabelFor(model => model.COMPANY_CODE, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.COMPANY_CODE, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.COMPANY_CODE, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div id="full-stars-rating">
+                                <div id="full-stars-example-two">
+                                    <div class="rating-group">
+                                        <input disabled checked class="rating__input rating__input--none" name="REVIEW_SCORE" id="rating3-none" value="0" type="radio">
+
+                                        <label aria-label="1 star" class="rating__label" for="rating3-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                        <input class="rating__input" name="REVIEW_SCORE" id="rating3-1" value="1" type="radio">
+
+                                        <label aria-label="2 stars" class="rating__label" for="rating3-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                        <input class="rating__input" name="REVIEW_SCORE" id="rating3-2" value="2" type="radio">
+
+                                        <label aria-label="3 stars" class="rating__label" for="rating3-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                        <input class="rating__input" name="REVIEW_SCORE" id="rating3-3" value="3" type="radio">
+
+                                        <label aria-label="4 stars" class="rating__label" for="rating3-4"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                        <input class="rating__input" name="REVIEW_SCORE" id="rating3-4" value="4" type="radio">
+
+                                        <label aria-label="5 stars" class="rating__label" for="rating3-5"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                        <input class="rating__input" name="REVIEW_SCORE" id="rating3-5" value="5" type="radio">
+                                    </div>
+                                </div>
+                                <div class="text-danger text-center pt-2 d-none" id="ratingError">
+                                    Please give a rating
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="yourcomments" style="font-size: 18px;color: #000;"><b>Your comments:</b></label>
+                                <textarea class="form-control" id="REVIEW_COMMENT" name="REVIEW_COMMENT" rows="4" style="resize: none; border: 1px solid #3fbfc7;"></textarea>
+                            </div>
+
+                            <div class="session-review-add-button">
+                                <button class="grey" type="button" onclick="renderEventDetails(); return false;">Cancel</button>
+                                <button type="submit" class="pink mt-2">Submit</button>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function renderReviewForm() {
+        $(".session-review").hide();
+        $(".session-review-add").show();
+    }
+
+    function renderEventDetails() {
+        $(".session-review").show();
+        $(".session-review-add").hide();
+    }
+
+    $("#sessionReviewForm").on("submit", function (evt) {
+        debugger;
+        if (parseInt($("input[name=REVIEW_SCORE]:checked").val()) == 0) {
+            $("#ratingError").removeClass("d-none");
+            evt.preventDefault();
+        } else {
+            $("#ratingError").addClass("d-none");
+        }
+    })
+
+</script>

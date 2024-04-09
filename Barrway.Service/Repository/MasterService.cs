@@ -678,7 +678,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
             }
         }
 
-        public async Task<AddUpdateDelete> GetMyBookings(string email, string Type)
+        public async Task<AddUpdateDelete> GetMyBookings(string email, string Type, string EventId = null)
         {
 
             string sqlString = $@"DECLARE @retval nvarchar(max);       DECLARE @sQuery nvarchar(max); DECLARE @ParmDefinition nvarchar(max);                        
@@ -691,7 +691,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                                     where f2.formgroupkey = f.formGroupKey  FOR XML PATH('')), 1, 1, '')   ) customForms  , (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceId) 
                                     from form_calenderreferrence f2    where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) customFormIds,  '' referrences_1,  '' referrences_2,  '' referrences_3 
                                     , (select case when (cast(getdate() as datetime) >= cast((DATEADD(minute, -30, f.[start])) as datetime) and cast(getdate() as datetime) <= cast(f.[end] as datetime) ) then 'Y' else 'N' end) as 'ATTEND'
-                                    , case when review.TRANSACTION_ID is null then 'N' else 'Y' end as 'SESSION_REVIEWED'
+                                    , case when review.Id is null then 'N' else 'Y' end as 'SESSION_REVIEWED'
 									, review.REVIEW_SCORE
 									, review.REVIEW_COMMENT
 									, transaction_m.ATTENDANCE
@@ -701,10 +701,10 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                                     join PARTICIPANT_MASTER_1940 participant_m on participant_m.Id = transaction_m.STUDENT
 									join BUSINESS_CALENDAR_MASTER_1925 calendar on calendar.CALENDAR_CODE = f.CALENDAR_CODE
                                     join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
-									left join SESSION_REVIEWS_1983 review on review.TRANSACTION_ID = transaction_m.Id
+									left join SESSION_REVIEWS_1983 review on review.EVENT_ID = transaction_m.SLOT and review.USER_EMAIL = participant_m.EMAIL
                                     where 
-                                    {((Type == "1")? $@"'{DateTime.Now.ToString("yyyy-MM-dd HH:mm")}' >= cast(f.[start] as datetime)" : $@"'{DateTime.Now.ToString("yyyy-MM-dd HH:mm")}' > cast(f.[end] as datetime)")}
-                                    and f.formid=2305 and participant_m.EMAIL = '{email}' and transaction_m.SLOT = f.Id
+                                    {((Type == "1") ? $@"'{DateTime.Now.ToString("yyyy-MM-dd HH:mm")}' <= cast(f.[start] as datetime)" : $@"'{DateTime.Now.ToString("yyyy-MM-dd HH:mm")}' > cast(f.[end] as datetime)")}
+                                    and f.formid=2305 and participant_m.EMAIL = '{email}' and transaction_m.SLOT = f.Id {((!string.IsNullOrEmpty(EventId) ? $@" and f.Id = '{EventId}'" : ""))}
                                     ) ,
                                     cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
 
@@ -751,7 +751,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 {
                     case "2303":
                         {
-                            int index = customFormsSplit.ToList().FindIndex(x=> x == item);
+                            int index = customFormsSplit.ToList().FindIndex(x => x == item);
                             if (customFormIdsSplit.Length > index && customTitleSplit.Length > index)
                             {
                                 data.Add("SERVICE_TITLE", customTitleSplit[index]);
@@ -1196,7 +1196,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 string strSql = "";
                 if (data.SearchText == null)
                 {
-                     strSql = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+                    strSql = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
                                      select  distinct  a_0.[BLOG_CATEGORY] [BLOG_CATEGORY] , a_0.[Id] [BLOG_CATEGORY_Id] ,f.Id,f.formGroupKey,f.formID,f.userID,f.Current_Status,f.cycle,f.MasterFormID,f.MasterFormRow,f.formRecordOrder,
                                         f.formRecordStatus,f.ApprovalStatus ,f.created_at,f.updated_at ,f.[BLOG_TITLE],f.[IMAGE],f.[BLOG_CONTENT],f.[TAG],f.[YOUTUBE_LINK],f.[MARKED_AS_HOT] from  BLOG_1980   f   left join  BLOG_CATEGORY_1981  a_0  on f.[BLOG_CATEGORY] = a_0.[Id]
                                       
@@ -1330,10 +1330,10 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
         {
             try
             {
-                
+
 
                 string sqlQuery = $@"select Id,CALENDAR_SUB_CATEGORY_NAME from CALENDAR_SUB_CATEGORY_MASTER_1930";
-                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);              
+                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
                 return new AddUpdateDelete() { Status = true, Data = result };
 
@@ -1417,9 +1417,9 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
 
                 string SerrchFilter = "";
 
-                if(!string.IsNullOrEmpty(data.SearchText))
+                if (!string.IsNullOrEmpty(data.SearchText))
                 {
-                    SerrchFilter = " and COMPANY_NAME_ENGLISH like '%"+ data.SearchText + "%'";
+                    SerrchFilter = " and COMPANY_NAME_ENGLISH like '%" + data.SearchText + "%'";
                 }
 
 
@@ -1574,7 +1574,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY created_at desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
 
 
-                    
+
                 }
 
 
@@ -1676,7 +1676,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                     return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
             }
@@ -1689,7 +1689,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
             string query = $@"";
             if (!string.IsNullOrEmpty(data.CategoryId))
             {
-                query += "select Id,CALENDAR_CATEGORY_NAME AS Heading from CALENDAR_CATEGORY_MASTER_1929 WHERE Id="+data.CategoryId+"";
+                query += "select Id,CALENDAR_CATEGORY_NAME AS Heading from CALENDAR_CATEGORY_MASTER_1929 WHERE Id=" + data.CategoryId + "";
             }
             if (!string.IsNullOrEmpty(data.SubCategoryId))
             {

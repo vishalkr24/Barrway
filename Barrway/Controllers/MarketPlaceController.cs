@@ -106,11 +106,6 @@ namespace Barrway.Controllers
             return View();
         }
 
-        public async Task<ActionResult> ReviewSessionDesign()
-        {
-            return View();
-        }
-
         public async Task<ActionResult> Error404()
         {
             return View();

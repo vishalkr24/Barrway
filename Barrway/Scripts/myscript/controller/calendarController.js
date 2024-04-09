@@ -9720,7 +9720,7 @@
 
     FormGeneratorApp.controller('NewDemoCalenderRecordsControllerTemp', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
         checkLogin();
-        
+
         var tabulatorChildren = {};
         //var tabulator = '';
         var arrowImage = function (cell, formatterParams) {
@@ -9878,7 +9878,7 @@
                     $rootScope.$emit("HideLoading");
                 }
             })
-            
+
         }
 
         $scope.ScanStudentQR = function () {
@@ -9920,7 +9920,7 @@
             });
 
             function success(result) {
-                
+
                 if (result.includes("Public/MarkPresentByCompany")) {
                     $.ajax({
                         url: result,
@@ -9955,7 +9955,7 @@
             }
 
             function error(err) {
-                
+
             }
 
             $("#WebCamModal").modal("show");
@@ -9967,7 +9967,7 @@
             var fileError = document.getElementById((isEvent ? "fileError2" : "fileError"));
             var EventUploadBtn = $((isEvent ? "#EventUploadBtn2" : "#EventUploadBtn"));
             var allowedExtensions = ['image/jpeg', 'image/png', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
-            var maxSize = 5 * 1024*1024; // 5MB
+            var maxSize = 5 * 1024 * 1024; // 5MB
             if (fileInput.files.length === 0 && isrequired) {
                 fileError.textContent = 'Please select a file.';
                 EventUploadBtn.attr("disabled", "disabled");
@@ -9984,7 +9984,7 @@
                 }
 
                 var fileSize = fileInput.files[i].size; // in bytes
-                
+
 
                 if (fileSize > maxSize) {
                     fileError.textContent = 'File size exceeds the maximum limit of 5MB.';
@@ -10021,7 +10021,7 @@
                 } else {
                     formData.append('eventid', '');
                 }
-               
+
 
                 // AJAX post request
                 $.ajax({
@@ -10047,7 +10047,7 @@
                                 $scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT = filepaths;
                                 $scope.selectEventDetails.DOWNLOAD_FILE_LIST = JSON.stringify(response.Data);
                             }
-                            
+
 
 
                             $('#' + inputfileName).val(null);
@@ -10067,7 +10067,7 @@
             }
         }
 
-        function uploadfilesDelete(filePath, eventid = '', downloadable_attachment = '', download_file_list='') {
+        function uploadfilesDelete(filePath, eventid = '', downloadable_attachment = '', download_file_list = '') {
             var formData = new FormData();
             formData.append("filePath", filePath);
             formData.append("eventid", eventid);
@@ -10082,7 +10082,7 @@
                 contentType: false,
                 success: function (response) {
                     if (response.Status) {
-                        $(".calendar").fullCalendar('refetchEvents'); 
+                        $(".calendar").fullCalendar('refetchEvents');
                         notifierService.notifyMessage('success', 'Calender', 'File Deleted Successfully');
                     } else {
                         alert(response.Message);
@@ -10251,7 +10251,7 @@
                     return false;
                 }
             }
-            
+
         }
 
         $scope.UpdateEventTime = function () {
@@ -17358,21 +17358,57 @@
         checkLogin();
         $("#user-nav-mybookings").addClass("active")
 
+        $scope.ViewEvent = function (eventId, type) {
+            $.ajax({
+                url: "/UserAdmin/GetSingleEventDetails",
+                type: "GET",
+                data: {
+                    EventId: eventId,
+                    Type: type
+                },
+                success: function (response) {
+                    debugger;
+                    $("#ViewBookingModal .modal-body").html(response);
+                    $("#ViewBookingModal").modal("show");
+                },
+                error: function (error) {
+
+                }
+            });
+        }
 
         $scope.BindMyBookings = function (type) {
             // type 1 is for upcoming and 2 for past bookings
-            $('.form-builder-loader').show();
+
             if (type == 1) {
-                
+
                 $("#nav-link-upcoming").addClass("active");
                 $("#nav-link-past").removeClass("active");
+                $("#upcomingBookings").show();
+                $("#pastBookings").hide();
             } else {
-               
+
                 $("#nav-link-upcoming").removeClass("active");
                 $("#nav-link-past").addClass("active");
+                $("#upcomingBookings").hide();
+                $("#pastBookings").show();
             }
-            
+
             var columns = [
+                {
+                    title: 'Action', field: '', headerFilter: "input", formatter: function (cell, formatter) {
+                        if (type == 1) {
+                            return `<button onclick="angular.element(this).scope().ViewEvent(${cell.getData().Id}, ${type})" class="btn btn-primary" style="border-radius: 50px;">View Event</button>`;
+                        } else {
+                            if (cell.getData().SESSION_REVIEWED == "N") {
+                                return `<button onclick="angular.element(this).scope().ViewEvent(${cell.getData().Id}, ${type})" class="btn btn-danger" style="border-radius: 50px;">Rate Event</button>`;
+                            } else {
+                                return `<button onclick="angular.element(this).scope().ViewEvent(${cell.getData().Id}, ${type})" class="btn btn-danger" style="border-radius: 50px;">View Rating</button>`;
+                            }
+                            
+                        }
+                    }
+                },
                 { title: 'Company Name', field: 'COMPANY_NAME_ENGLISH', headerFilter: "input" },
                 { title: 'Calendar Name', field: 'CALENDAR_NAME', headerFilter: "input" },
                 { title: 'Service Name', field: 'SERVICE_TITLE', headerFilter: "input" },
@@ -17380,13 +17416,13 @@
                 { title: 'Location', field: 'LOCATION_TITLE', headerFilter: "input" },
 
                 {
-                    title: 'From time', field: 'FROM_TIME', headerFilter: "input", formatter: function (cell, formatter) {
-                        return moment(cell.getData().FROM_TIME).format("YYYY-MM-DD hh:mm a")
+                    title: 'From time', field: 'start', headerFilter: "input", formatter: function (cell, formatter) {
+                        return moment(cell.getData().start).format("YYYY-MM-DD hh:mm a")
                     }
                 },
                 {
-                    title: 'To time', field: 'TO_TIME', headerFilter: "input", formatter: function (cell, formatter) {
-                        return moment(cell.getData().TO_TIME).format("YYYY-MM-DD hh:mm a")
+                    title: 'To time', field: 'end', headerFilter: "input", formatter: function (cell, formatter) {
+                        return moment(cell.getData().end).format("YYYY-MM-DD hh:mm a")
                     }
                 },
                 { title: 'Attendance', field: 'ATTENDANCE', headerFilter: "input" },
@@ -17411,22 +17447,20 @@
                         $('#' + ((type == 1) ? 'form-records' : 'form-records-2') + ' .tabulator-footer #no-of-forms').text("Total: " + count + " Entries");
 
                         if (type == 1) {
-                            $("#upcomingBookings").show();
-                            $("#pastBookings").hide();
+
                         } else {
-                            $("#upcomingBookings").hide();
-                            $("#pastBookings").show();
+
                         }
 
-                        $('.form-builder-loader').hide();
+
 
                     },
-                    pagination: "local",              
+                    pagination: "local",
                     ajaxURL: "/UserAdmin/GetMyBookings",
                     ajaxConfig: "POST",
                     ajaxFiltering: false,
                     ajaxSorting: false,
-                    ajaxLoader: false,
+                    ajaxLoader: true,
                     ajaxParams: {
                         Type: type
                     },
@@ -17435,13 +17469,13 @@
                     },
                     ajaxRequesting: function (url, params) {
                         var called = true;
-                        
+
                         return called; //abort ajax request
                     },
                     paginationSize: 50
                 };
                 var tabulator = initTabulator(((type == 1) ? 'form-records' : 'form-records-2'), options);
-                
+                $('.form-builder-loader').hide();
             }, 150);
 
         };
