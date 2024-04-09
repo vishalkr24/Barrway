@@ -350,6 +350,8 @@ namespace Barrway.Controllers
                             WECHAT_URL = company.Data["WECHAT_URL"].ToString(),
                             COUNTRY_ID = company.Data["COUNTRY_ID"].ToString(),
                             DISTRICT_ID = company.Data["DISTRICT_ID"].ToString(),
+                            Latitude= company.Data["Latitude"].ToString(),
+                            Longitude= company.Data["Longitude"].ToString(),
                             Id = company.Data["Id"].ToString(),
                             TWITTER_URL = company.Data["TWITTER_URL"].ToString(),
                             photoAlbumList = new List<CompanyPhotoAlbumModel>()
@@ -1216,6 +1218,8 @@ namespace Barrway.Controllers
                    // PAGE_URL = model.PAGE_URL.Replace(" ", "_"),
                     PAGE_URL = string.IsNullOrEmpty(model.PAGE_URL) ? model.PAGE_URL : model.PAGE_URL.Replace(" ", "_"),
                     TAGS = model.TAGS,
+                    Latitude=model.Latitude,
+                    Longitude=model.Longitude,
                     TWITTER_URL = model.TWITTER_URL,
                     WECHAT_URL = model.WECHAT_URL
                 };

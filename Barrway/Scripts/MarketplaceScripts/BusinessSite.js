@@ -26,7 +26,8 @@ function setCompanyData(pageNumber, SearchText) {
     $("#list-view").show();
     $("#detail-view").hide();
     pageNumber = pageNumber;
-
+    $("#ComapanyList").empty();
+    SetScaltonLoader();
     $.ajax({
         url: "/MarketPlace/GetAllFeaturedCompany/",
         type: "GET",
@@ -64,10 +65,10 @@ function setCompanyData(pageNumber, SearchText) {
             $(".pagination").append(`<button class="btn" id="next-page-nav" onclick="setCompanyData(${nextPage},'')"><img src="../assets/marketplace/image/p11.png" /></button>`);
             $(".pagination").append(`<button class="btn" id="last-page-nav" onclick="setCompanyData(${response.last_page},'')"><img src="../assets/marketplace/image/p2.png" /></button>`);
 
-            $("#row1").empty();
-            $("#row2").empty();
+            
 
-           
+            
+            $("#ComapanyList").empty();
 
             for (var i = 0; i < response.data.length; i++) {
 
@@ -81,11 +82,8 @@ function setCompanyData(pageNumber, SearchText) {
                         tagQuery += `&nbsp;<a href='/Marketplace/Search?keyword=${tags[k].value}'>${tags[k].value}</a>`;
                     }
                 }
-
-
-
-                if (i < 3) {
-                    $("#row1").append(`<div class="media" style="cursor:pointer;" onclick="window.location.href = '/Marketplace/CompanyDetail?CompanyCode=${response.data[i].COMPANY_CODE}&CalendarCode=null'">
+                $("#ComapanyList").append(`<div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="media" style="cursor:pointer;" onclick="window.location.href = '/Marketplace/CompanyDetail?CompanyCode=${response.data[i].COMPANY_CODE}&CalendarCode=null'">
                                 <div class="media-left">
                                     <img src="${response.data[i].COMPANY_LOGO_PATH.replace("~", "..")}" onerror="this.src='../assets/marketplace/image/alogo2.png'" class="media-object" style="width:150px">
                                 </div>
@@ -94,19 +92,34 @@ function setCompanyData(pageNumber, SearchText) {
                                     <p><b>${response.data[i].COMPANY_NAME_ENGLISH}</b></p>
                                     <p style="height: 48px; overflow: hidden;">${response.data[i].COMPANY_DESCRIPTION}</p>
                                     <p>${tagQuery}</p>
-                                </div>`);
-                } else {
-                    $("#row2").append(`<div class="media" style="cursor:pointer;" onclick="window.location.href = '/Marketplace/CompanyDetail?CompanyCode=${response.data[i].COMPANY_CODE}&CalendarCode=null'">
-                                <div class="media-left">
-                                    <img src="${response.data[i].COMPANY_LOGO_PATH.replace("~", "..")}" onerror="this.src='../assets/marketplace/image/alogo2.png'" class="media-object" style="width:150px">
                                 </div>
-                                <div class="media-body">
-                                    <h4 class="media-heading">Featured company</h4>
-                                    <p><b>${response.data[i].COMPANY_NAME_ENGLISH}</b></p>
-                                    <p style="height: 48px; overflow: hidden;">${response.data[i].COMPANY_DESCRIPTION}</p>
-                                    <p>${tagQuery}</p>
-                                </div>`);
-                }
+
+                </div>`);
+
+                //<div class="col-md-6 col-sm-6 col-xs-6">
+                //if (i < 3) {
+                //    $("#row1").append(`<div class="media" style="cursor:pointer;" onclick="window.location.href = '/Marketplace/CompanyDetail?CompanyCode=${response.data[i].COMPANY_CODE}&CalendarCode=null'">
+                //                <div class="media-left">
+                //                    <img src="${response.data[i].COMPANY_LOGO_PATH.replace("~", "..")}" onerror="this.src='../assets/marketplace/image/alogo2.png'" class="media-object" style="width:150px">
+                //                </div>
+                //                <div class="media-body">
+                //                    <h4 class="media-heading">Featured company</h4>
+                //                    <p><b>${response.data[i].COMPANY_NAME_ENGLISH}</b></p>
+                //                    <p style="height: 48px; overflow: hidden;">${response.data[i].COMPANY_DESCRIPTION}</p>
+                //                    <p>${tagQuery}</p>
+                //                </div>`);
+                //} else {
+                //    $("#row2").append(`<div class="media" style="cursor:pointer;" onclick="window.location.href = '/Marketplace/CompanyDetail?CompanyCode=${response.data[i].COMPANY_CODE}&CalendarCode=null'">
+                //                <div class="media-left">
+                //                    <img src="${response.data[i].COMPANY_LOGO_PATH.replace("~", "..")}" onerror="this.src='../assets/marketplace/image/alogo2.png'" class="media-object" style="width:150px">
+                //                </div>
+                //                <div class="media-body">
+                //                    <h4 class="media-heading">Featured company</h4>
+                //                    <p><b>${response.data[i].COMPANY_NAME_ENGLISH}</b></p>
+                //                    <p style="height: 48px; overflow: hidden;">${response.data[i].COMPANY_DESCRIPTION}</p>
+                //                    <p>${tagQuery}</p>
+                //                </div>`);
+                //}
             }
 
         },
@@ -116,6 +129,85 @@ function setCompanyData(pageNumber, SearchText) {
     })
 
 }
+
+
+function SetScaltonLoader() {
+    $("#ComapanyList").append(`<div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="media skeleton-media" style="cursor: pointer;">
+                                <div class="media-left skeleton-media-left"></div>
+                                <div class="media-body Scmedia-body skeleton-media-body">
+                                    <div class="skeleton-heading"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="media skeleton-media" style="cursor: pointer;">
+                                <div class="media-left skeleton-media-left"></div>
+                                <div class="media-body Scmedia-body skeleton-media-body">
+                                    <div class="skeleton-heading"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="media skeleton-media" style="cursor: pointer;">
+                                <div class="media-left skeleton-media-left"></div>
+                                <div class="media-body Scmedia-body skeleton-media-body">
+                                    <div class="skeleton-heading"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="media skeleton-media" style="cursor: pointer;">
+                                <div class="media-left skeleton-media-left"></div>
+                                <div class="media-body Scmedia-body skeleton-media-body">
+                                    <div class="skeleton-heading"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="media skeleton-media" style="cursor: pointer;">
+                                <div class="media-left skeleton-media-left"></div>
+                                <div class="media-body Scmedia-body skeleton-media-body">
+                                    <div class="skeleton-heading"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="media skeleton-media" style="cursor: pointer;">
+                                <div class="media-left skeleton-media-left"></div>
+                                <div class="media-body Scmedia-body skeleton-media-body">
+                                    <div class="skeleton-heading"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                </div>
+                            </div>
+                        </div>`);
+
+}
+
+
 
 
 //function setCalendarSubCategoryWise(showFilterQuery = false, requestFromButton = false) {

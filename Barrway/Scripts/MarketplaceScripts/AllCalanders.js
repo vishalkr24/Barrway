@@ -136,6 +136,7 @@ function SetAllCalanders(pageNumber, Short) {
                         //if (itemCount == 1) {
                         //    RowHead = '</div>';
                         //}
+                        
 
                         $("#Content-row").append(`<div class="col-md-6 col-sm-6 col-xs-6">
                                 <div class="media" style="cursor:pointer;" onclick="window.location.href ='/company/calander/${response.data[i].PAGE_URL ? response.data[i].PAGE_URL : response.data[i].COMPANY_CODE}/${response.data[i].CALENDAR_CODE}'">
@@ -194,110 +195,78 @@ function SetAllCalanders(pageNumber, Short) {
 function scaltonLoader() {
    
     $("#Content-row").empty();
-    $("#Content-row").append(`<div class="col-md-6"><div class="half">
-                                <div class="animated-background">
-                                    <div class="background-masker header-top"></div>
-                                    <div class="background-masker header-left"></div>
-                                    <div class="background-masker header-right"></div>
-                                    <div class="background-masker header-bottom"></div>
-                                    <div class="background-masker subheader-left"></div>
-                                    <div class="background-masker subheader-right"></div>
-                                    <div class="background-masker subheader-bottom"></div>
-                                    <div class="background-masker content-top"></div>
-                                    <div class="background-masker content-first-end"></div>
-                                    <div class="background-masker content-second-line"></div>
-                                    <div class="background-masker content-second-end"></div>
-                                    <div class="background-masker content-third-line"></div>
-                                    <div class="background-masker content-third-end"></div>
+    $("#Content-row").append(` <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="media skeleton-media" style="cursor: pointer;">
+                                <div class="media-left skeleton-media-left"></div>
+                                <div class="media-body Scmedia-body skeleton-media-body">
+                                    <div class="skeleton-heading"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
                                 </div>
                             </div>
-                            <div class="half">
-                                <div class="animated-background">
-                                    <div class="background-masker header-top"></div>
-                                    <div class="background-masker header-left"></div>
-                                    <div class="background-masker header-right"></div>
-                                    <div class="background-masker header-bottom"></div>
-                                    <div class="background-masker subheader-left"></div>
-                                    <div class="background-masker subheader-right"></div>
-                                    <div class="background-masker subheader-bottom"></div>
-                                    <div class="background-masker content-top"></div>
-                                    <div class="background-masker content-first-end"></div>
-                                    <div class="background-masker content-second-line"></div>
-                                    <div class="background-masker content-second-end"></div>
-                                    <div class="background-masker content-third-line"></div>
-                                    <div class="background-masker content-third-end"></div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="media skeleton-media" style="cursor: pointer;">
+                                <div class="media-left skeleton-media-left"></div>
+                                <div class="media-body Scmedia-body skeleton-media-body">
+                                    <div class="skeleton-heading"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
                                 </div>
                             </div>
-                            <div class="half">
-                                <div class="animated-background">
-                                    <div class="background-masker header-top"></div>
-                                    <div class="background-masker header-left"></div>
-                                    <div class="background-masker header-right"></div>
-                                    <div class="background-masker header-bottom"></div>
-                                    <div class="background-masker subheader-left"></div>
-                                    <div class="background-masker subheader-right"></div>
-                                    <div class="background-masker subheader-bottom"></div>
-                                    <div class="background-masker content-top"></div>
-                                    <div class="background-masker content-first-end"></div>
-                                    <div class="background-masker content-second-line"></div>
-                                    <div class="background-masker content-second-end"></div>
-                                    <div class="background-masker content-third-line"></div>
-                                    <div class="background-masker content-third-end"></div>
-                                </div>
-                            </div></div>
-                        <div class="col-md-6">
-                            <div class="half">
-                                <div class="animated-background">
-                                    <div class="background-masker header-top"></div>
-                                    <div class="background-masker header-left"></div>
-                                    <div class="background-masker header-right"></div>
-                                    <div class="background-masker header-bottom"></div>
-                                    <div class="background-masker subheader-left"></div>
-                                    <div class="background-masker subheader-right"></div>
-                                    <div class="background-masker subheader-bottom"></div>
-                                    <div class="background-masker content-top"></div>
-                                    <div class="background-masker content-first-end"></div>
-                                    <div class="background-masker content-second-line"></div>
-                                    <div class="background-masker content-second-end"></div>
-                                    <div class="background-masker content-third-line"></div>
-                                    <div class="background-masker content-third-end"></div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="media skeleton-media" style="cursor: pointer;">
+                                <div class="media-left skeleton-media-left"></div>
+                                <div class="media-body Scmedia-body skeleton-media-body">
+                                    <div class="skeleton-heading"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
                                 </div>
                             </div>
-                            <div class="half">
-                                <div class="animated-background">
-                                    <div class="background-masker header-top"></div>
-                                    <div class="background-masker header-left"></div>
-                                    <div class="background-masker header-right"></div>
-                                    <div class="background-masker header-bottom"></div>
-                                    <div class="background-masker subheader-left"></div>
-                                    <div class="background-masker subheader-right"></div>
-                                    <div class="background-masker subheader-bottom"></div>
-                                    <div class="background-masker content-top"></div>
-                                    <div class="background-masker content-first-end"></div>
-                                    <div class="background-masker content-second-line"></div>
-                                    <div class="background-masker content-second-end"></div>
-                                    <div class="background-masker content-third-line"></div>
-                                    <div class="background-masker content-third-end"></div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="media skeleton-media" style="cursor: pointer;">
+                                <div class="media-left skeleton-media-left"></div>
+                                <div class="media-body Scmedia-body skeleton-media-body">
+                                    <div class="skeleton-heading"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
                                 </div>
                             </div>
-                            <div class="half">
-                                <div class="animated-background">
-                                    <div class="background-masker header-top"></div>
-                                    <div class="background-masker header-left"></div>
-                                    <div class="background-masker header-right"></div>
-                                    <div class="background-masker header-bottom"></div>
-                                    <div class="background-masker subheader-left"></div>
-                                    <div class="background-masker subheader-right"></div>
-                                    <div class="background-masker subheader-bottom"></div>
-                                    <div class="background-masker content-top"></div>
-                                    <div class="background-masker content-first-end"></div>
-                                    <div class="background-masker content-second-line"></div>
-                                    <div class="background-masker content-second-end"></div>
-                                    <div class="background-masker content-third-line"></div>
-                                    <div class="background-masker content-third-end"></div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="media skeleton-media" style="cursor: pointer;">
+                                <div class="media-left skeleton-media-left"></div>
+                                <div class="media-body Scmedia-body skeleton-media-body">
+                                    <div class="skeleton-heading"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
                                 </div>
                             </div>
-                         </div>`);
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="media skeleton-media" style="cursor: pointer;">
+                                <div class="media-left skeleton-media-left"></div>
+                                <div class="media-body Scmedia-body skeleton-media-body">
+                                    <div class="skeleton-heading"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                    <div class="skeleton-text"></div>
+                                </div>
+                            </div>
+                        </div>`);
     
 }
 

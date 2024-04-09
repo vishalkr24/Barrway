@@ -171,6 +171,9 @@ function setCalendarSubCategoryWise(showFilterQuery = false, requestFromButton =
         console.log(categories, "categories");
 
         $("#company-category-wise-area").empty();
+        $("#company-category-wise-area").append(`<div class="col-md-12" id="company-category-wise-area">
+            </div>`);
+
         for (var i = 0; i < categories.length; i++) {
 
             var calendars = data.Data[i];

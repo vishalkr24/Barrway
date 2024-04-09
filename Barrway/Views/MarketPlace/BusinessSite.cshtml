@@ -4,6 +4,67 @@
     Layout = "~/Views/Shared/_LayoutMarketPlace.cshtml";
 }
 
+<style>
+    .skeleton-loader {
+        margin-top: 20px;
+    }
+
+    .skeleton-media {
+        margin-bottom: 20px;
+    }
+
+    .skeleton-media-left {
+        width: 351px; /* Adjust width of image placeholder */
+        height: 95px; /* Adjust height of image placeholder */
+        background-color: #f0f0f0; /* Background color for image placeholder */
+        margin-right: 10px;
+        border-radius: 10px;
+    }
+
+    .skeleton-media-body {
+        flex: 1;
+    }
+
+    .skeleton-heading {
+        width: 60%;
+        height: 20px; /* Adjust height of heading placeholder */
+        background-color: #f0f0f0; /* Background color for heading placeholder */
+        margin-bottom: 10px;
+        margin-left: 23px;
+    }
+
+
+    .skeleton-text {
+        height: 13px; /* Adjust height of text line */
+        width: 60%; /* Adjust width of text line */
+        background-color: #e9e9e9; /* Background color for text placeholder */
+        margin-bottom: 8px;
+        margin-left: 23px;
+    }
+
+    .Scmedia-body {
+        width: 601px !important;
+    }
+
+    .skeleton-media {
+        margin-bottom: 20px;
+        animation: skeleton-animation 1.5s infinite ease-in-out; /* Apply animation to media container */
+    }
+
+    @@keyframes skeleton-animation {
+        0% {
+            opacity: 0.5;
+        }
+
+        50% {
+            opacity: 1;
+        }
+
+        100% {
+            opacity: 0.5;
+        }
+    }
+</style>
 <!-- heading -->
 <section class="heading">
     <div class="container">
@@ -38,115 +99,9 @@
 
         <div class="row">
             <div class="col-md-12">
-                <div class="inner-content">
-                    <div class="row">
-                        <div class="col-md-6" id="row1">
-                            <div class="half">
-                                <div class="animated-background">
-                                    <div class="background-masker header-top"></div>
-                                    <div class="background-masker header-left"></div>
-                                    <div class="background-masker header-right"></div>
-                                    <div class="background-masker header-bottom"></div>
-                                    <div class="background-masker subheader-left"></div>
-                                    <div class="background-masker subheader-right"></div>
-                                    <div class="background-masker subheader-bottom"></div>
-                                    <div class="background-masker content-top"></div>
-                                    <div class="background-masker content-first-end"></div>
-                                    <div class="background-masker content-second-line"></div>
-                                    <div class="background-masker content-second-end"></div>
-                                    <div class="background-masker content-third-line"></div>
-                                    <div class="background-masker content-third-end"></div>
-                                </div>
-                            </div>
-                            <div class="half">
-                                <div class="animated-background">
-                                    <div class="background-masker header-top"></div>
-                                    <div class="background-masker header-left"></div>
-                                    <div class="background-masker header-right"></div>
-                                    <div class="background-masker header-bottom"></div>
-                                    <div class="background-masker subheader-left"></div>
-                                    <div class="background-masker subheader-right"></div>
-                                    <div class="background-masker subheader-bottom"></div>
-                                    <div class="background-masker content-top"></div>
-                                    <div class="background-masker content-first-end"></div>
-                                    <div class="background-masker content-second-line"></div>
-                                    <div class="background-masker content-second-end"></div>
-                                    <div class="background-masker content-third-line"></div>
-                                    <div class="background-masker content-third-end"></div>
-                                </div>
-                            </div>
-                            <div class="half">
-                                <div class="animated-background">
-                                    <div class="background-masker header-top"></div>
-                                    <div class="background-masker header-left"></div>
-                                    <div class="background-masker header-right"></div>
-                                    <div class="background-masker header-bottom"></div>
-                                    <div class="background-masker subheader-left"></div>
-                                    <div class="background-masker subheader-right"></div>
-                                    <div class="background-masker subheader-bottom"></div>
-                                    <div class="background-masker content-top"></div>
-                                    <div class="background-masker content-first-end"></div>
-                                    <div class="background-masker content-second-line"></div>
-                                    <div class="background-masker content-second-end"></div>
-                                    <div class="background-masker content-third-line"></div>
-                                    <div class="background-masker content-third-end"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6" id="row2">
-                            <div class="half">
-                                <div class="animated-background">
-                                    <div class="background-masker header-top"></div>
-                                    <div class="background-masker header-left"></div>
-                                    <div class="background-masker header-right"></div>
-                                    <div class="background-masker header-bottom"></div>
-                                    <div class="background-masker subheader-left"></div>
-                                    <div class="background-masker subheader-right"></div>
-                                    <div class="background-masker subheader-bottom"></div>
-                                    <div class="background-masker content-top"></div>
-                                    <div class="background-masker content-first-end"></div>
-                                    <div class="background-masker content-second-line"></div>
-                                    <div class="background-masker content-second-end"></div>
-                                    <div class="background-masker content-third-line"></div>
-                                    <div class="background-masker content-third-end"></div>
-                                </div>
-                            </div>
-                            <div class="half">
-                                <div class="animated-background">
-                                    <div class="background-masker header-top"></div>
-                                    <div class="background-masker header-left"></div>
-                                    <div class="background-masker header-right"></div>
-                                    <div class="background-masker header-bottom"></div>
-                                    <div class="background-masker subheader-left"></div>
-                                    <div class="background-masker subheader-right"></div>
-                                    <div class="background-masker subheader-bottom"></div>
-                                    <div class="background-masker content-top"></div>
-                                    <div class="background-masker content-first-end"></div>
-                                    <div class="background-masker content-second-line"></div>
-                                    <div class="background-masker content-second-end"></div>
-                                    <div class="background-masker content-third-line"></div>
-                                    <div class="background-masker content-third-end"></div>
-                                </div>
-                            </div>
-                            <div class="half">
-                                <div class="animated-background">
-                                    <div class="background-masker header-top"></div>
-                                    <div class="background-masker header-left"></div>
-                                    <div class="background-masker header-right"></div>
-                                    <div class="background-masker header-bottom"></div>
-                                    <div class="background-masker subheader-left"></div>
-                                    <div class="background-masker subheader-right"></div>
-                                    <div class="background-masker subheader-bottom"></div>
-                                    <div class="background-masker content-top"></div>
-                                    <div class="background-masker content-first-end"></div>
-                                    <div class="background-masker content-second-line"></div>
-                                    <div class="background-masker content-second-end"></div>
-                                    <div class="background-masker content-third-line"></div>
-                                    <div class="background-masker content-third-end"></div>
-                                </div>
-                            </div>
-
-                        </div>
+                <div class="inner-content company-content">                    
+                    <div class="row" id="ComapanyList">
+                        
 
                     </div>
                 </div>
