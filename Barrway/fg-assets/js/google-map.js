@@ -4,7 +4,7 @@ var initMap = function (mapDiv, mapLatLng, mapLatitude, mapLongitude) {
     if (mapLatitude !== "" && mapLongitude !== "") {
         var mapProp = {
             center: new google.maps.LatLng(mapLatitude, mapLongitude),
-            zoom: 6,
+            zoom: 12,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             fullscreenControl: true
         };

@@ -67,7 +67,7 @@
     }, 500);
     setCountryData();
     setCompanyCategory();
-    
+  
 
     SetCompanyDetails(companyId);
 

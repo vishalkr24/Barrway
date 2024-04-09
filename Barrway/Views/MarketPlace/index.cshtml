@@ -22,6 +22,48 @@
         }
     } 
 </style>
+<style>
+.skeleton-loader {
+    width: 100%;
+   
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.skeleton-heading {
+    width: 60%;
+    height: 30px;
+    margin-bottom: 20px;
+    background-color: #f0f0f0; /* Change background color here */
+    animation: pulse 1s infinite alternate;
+}
+
+.skeleton-carousel {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+.skeleton-item {
+    flex: 0 0 200px; /* Adjust width as needed */
+    height: 200px; /* Adjust height as needed */
+    margin-right: 20px;
+    background-color: #f0f0f0; /* Change background color here */
+    animation: pulse 1s infinite alternate;
+}
+
+@@keyframes pulse {
+    0% {
+        opacity: 0.6;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+
+
+</style>
 <!-- banner -->
 <section class="top-banner">
     <div class="container">
@@ -75,104 +117,111 @@
     </div>
 </section>
 
+<!--<section class="subcatageory" id="common">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12" id="lblFilterLabel" style="display:none;">@Resource.Showing_results_for  <b><span id="lblSelectedSubCategory"></span></b> & <b><span id="lblSelectedDistrict"></span></b></div>
+            <div class="col-md-12">
+                <div class="skeleton-loader">
+                    <div class="skeleton-heading"></div>
+                    <div class="skeleton-carousel">
+                        <div class="skeleton-item"></div>
+                        <div class="skeleton-item"></div>
+                        <div class="skeleton-item"></div>
+                        <div class="skeleton-item"></div>
+                        <div class="skeleton-item"></div>-->
+                        <!-- Add more skeleton items as needed -->
+                    <!--</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12" id="lblFilterLabel" style="display:none;">@Resource.Showing_results_for  <b><span id="lblSelectedSubCategory"></span></b> & <b><span id="lblSelectedDistrict"></span></b></div>
+            <div class="col-md-12">
+                <div class="skeleton-loader">
+                    <div class="skeleton-heading"></div>
+                    <div class="skeleton-carousel">
+                        <div class="skeleton-item"></div>
+                        <div class="skeleton-item"></div>
+                        <div class="skeleton-item"></div>
+                        <div class="skeleton-item"></div>
+                        <div class="skeleton-item"></div>-->
+                        <!-- Add more skeleton items as needed -->
+                    <!--</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12" id="lblFilterLabel" style="display:none;">@Resource.Showing_results_for  <b><span id="lblSelectedSubCategory"></span></b> & <b><span id="lblSelectedDistrict"></span></b></div>
+            <div class="col-md-12">
+                <div class="skeleton-loader">
+                    <div class="skeleton-heading"></div>
+                    <div class="skeleton-carousel">
+                        <div class="skeleton-item"></div>
+                        <div class="skeleton-item"></div>
+                        <div class="skeleton-item"></div>
+                        <div class="skeleton-item"></div>
+                        <div class="skeleton-item"></div>-->
+                        <!-- Add more skeleton items as needed -->
+                    <!--</div>
+                </div>
+            </div>
+        </div>
+     </div>
+</section>-->
+
+
+
+
+
 <!-- sliders -->
 <section class="subcatageory" id="common">
     <div class="container">
         <div class="row">
             <div class="col-md-12" id="lblFilterLabel" style="display:none;">@Resource.Showing_results_for  <b><span id="lblSelectedSubCategory"></span></b> & <b><span id="lblSelectedDistrict"></span></b></div>
-            <div class="col-md-12" id="company-category-wise-area">
-                @*<div class="my-slide one">
-                    <div class="heading-cata">
-                        <h3>Service subcategory 1 </h3>
+            <div id="company-category-wise-area">
+                <div class="col-md-12">
+                    <div class="skeleton-loader">
+                        <div class="skeleton-heading"></div>
+                        <div class="skeleton-carousel">
+                            <div class="skeleton-item"></div>
+                            <div class="skeleton-item"></div>
+                            <div class="skeleton-item"></div>
+                            <div class="skeleton-item"></div>
+                            <div class="skeleton-item"></div>
+                            <!-- Add more skeleton items as needed -->
+                        </div>
                     </div>
-                    
                 </div>
-                <div class="my-slide two">
-                    <div class="heading-cata">
-                        <h3>Service subcategory 2 </h3>
-                    </div>
-                    <div id="owl-demo2" class="owl-carousel owl-theme">
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="javascript:void(0)"> Tag1</a>, <a href="javascript:void(0)"> Tag2</a>, <a href="javascript:void(0)"> Tag3</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="javascript:void(0)"> Tag1</a>, <a href="javascript:void(0)"> Tag2</a>, <a href="javascript:void(0)"> Tag3</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="javascript:void(0)"> Tag1</a>, <a href="javascript:void(0)"> Tag2</a>, <a href="javascript:void(0)"> Tag3</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="javascript:void(0)"> Tag1</a>, <a href="javascript:void(0)"> Tag2</a>, <a href="javascript:void(0)"> Tag3</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="javascript:void(0)"> Tag1</a>, <a href="javascript:void(0)"> Tag2</a>, <a href="javascript:void(0)"> Tag3</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/pro.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="p1"><b>ABC Company</b></p>
-                                    <p class="p2">Yoga and health class</p>
-                                    <p class="p3">Tsim Sha Tsui</p>
-                                    <p class="p4"><a href="javascript:void(0)"> Tag1</a>, <a href="javascript:void(0)"> Tag2</a>, <a href="javascript:void(0)"> Tag3</a></p>
-                                </div>
-                            </div>
+                <div class="col-md-12">
+                    <div class="skeleton-loader">
+                        <div class="skeleton-heading"></div>
+                        <div class="skeleton-carousel">
+                            <div class="skeleton-item"></div>
+                            <div class="skeleton-item"></div>
+                            <div class="skeleton-item"></div>
+                            <div class="skeleton-item"></div>
+                            <div class="skeleton-item"></div>
+                            <!-- Add more skeleton items as needed -->
                         </div>
                     </div>
-                </div>*@
+                </div>
+                <div class="col-md-12">
+                    <div class="skeleton-loader">
+                        <div class="skeleton-heading"></div>
+                        <div class="skeleton-carousel">
+                            <div class="skeleton-item"></div>
+                            <div class="skeleton-item"></div>
+                            <div class="skeleton-item"></div>
+                            <div class="skeleton-item"></div>
+                            <div class="skeleton-item"></div>
+                            <!-- Add more skeleton items as needed -->
+                        </div>
+                    </div>
+                </div>
             </div>
+            
+            
         </div>
     </div>
 </section>
