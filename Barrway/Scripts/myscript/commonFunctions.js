@@ -1575,7 +1575,14 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
     function assignEvents(eventsData) {
         window["CalendarEventList"] = angular.copy(eventsData);
     }
-
+    var calendarDetails = angular.copy($scopeVar.calendarMaster);
+    let slotDuration = "00:15:00";
+    if (!isNaN(calendarDetails.INTERVAL_TIME)) {
+        slotDuration = "00:" + calendarDetails.INTERVAL_TIME + ":00";
+        calendarDetails.INTERVAL_TIME = slotDuration;
+    } else {
+        calendarDetails.INTERVAL_TIME = slotDuration;
+    }
     var dragresourceId;
     var defaultOptions = {
         schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
@@ -1583,7 +1590,7 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
         themeSystem: 'jquery-ui',
         //  themeSystem:'bootstrap4',
         nowIndicator: true,
-        slotDuration: '00:15:00',
+        slotDuration: slotDuration,
         // defaultTimedEventDuration: defaultDuration,
         //aspectRatio: 1.5,
         defaultDate: new Date(),
@@ -3356,7 +3363,7 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
     var calendarOptions = $.extend({}, defaultOptions, myOptions);
     $('#agenda-view div.calendar').fullCalendar(calendarOptions);
     
-    var calendarDetails = angular.copy($scopeVar.calendarMaster);
+    
     if ($scopeVar != undefined)
         if ($scopeVar.ySelection != 0) {
             if ($scopeVar.formDetailsDataInfo != null)

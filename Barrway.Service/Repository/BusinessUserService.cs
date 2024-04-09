@@ -15,6 +15,7 @@ using Barrway.Utility.Common;
 using Newtonsoft.Json;
 using System.Security.Cryptography;
 using Barrway.DTO.MarketplaceModels;
+using System.Runtime.InteropServices;
 
 namespace Barrway.Service.Repository
 {
@@ -2346,6 +2347,7 @@ namespace Barrway.Service.Repository
                                       ,[DEFAULT_CALENDAR_VIEW] = '{model.DEFAULT_CALENDAR_VIEW}'
                                       ,[REQUIRED_CALENDAR_VIEWS] = '{model.REQUIRED_CALENDAR_VIEWS}'
                                       ,[COMPANY_CODE] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_CODE)}'
+                                      ,[INTERVAL_TIME]='{model.INTERVAL_TIME}'
                                  WHERE Id = '{model.Id}'
                                  ";
 
@@ -3307,12 +3309,36 @@ namespace Barrway.Service.Repository
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
             }
         }
-
         public async Task<AddUpdateDelete> updateCalendarUploadFiles(int eventId, string downloadable_attachment, string download_file_list)
         {
             try
             {
                 string sqlString = $@"update CALENDAR_FORM_1935 set DOWNLOAD_FILE_LIST=N'{download_file_list}',DOWNLOADABLE_ATTACHMENT=N'{downloadable_attachment}' where Id=" + eventId;
+
+
+                var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
+                if (result > 0)
+                {
+
+                    return new AddUpdateDelete() { Data = result, Message = AppMessage.Success, Status = true };
+
+                }
+
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
+        
+
+        public async Task<AddUpdateDelete> updateAssesstmentUploadFiles(int transactionId, string downloadable_attachment, string download_file_list)
+        {
+            try
+            {
+                string sqlString = $@"update TRANSACTION_MASTER_1942 set ASSESSMENT_FILES_LIST=N'{download_file_list}',ASSESSMENT_FILES=N'{downloadable_attachment}' where Id=" + transactionId;
 
 
                 var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
@@ -3380,5 +3406,25 @@ namespace Barrway.Service.Repository
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
             }
         }
+
+
+        public async Task<AddUpdateDelete> GetEnrollUserDetails(int eventId, string email) {
+
+            string sqlString = $@"select clr.*,pr.STUDENT_NAME,pr.STUDENT_ID,pr.EMAIL,trm.ATTENDANCE,trm.ASSESSMENT_FILES,trm.ASSESSMENT_FILES_LIST,trm.ID TRANSACTION_ID
+                                  from CALENDAR_FORM_1935 clr
+                                  join TRANSACTION_MASTER_1942  trm on clr.formGroupKey=trm.formGroupKey
+                                  join PARTICIPANT_MASTER_1940 pr on pr.Id=trm.STUDENT
+                                  where clr.Id={eventId} and pr.EMAIL='{email}'";
+
+            var result=await sqlFunction.ExecuteSqlQuery(sqlString);
+            if (result.Count() > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success,Data=result.FirstOrDefault() };
+            }
+            else {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
     }
 }

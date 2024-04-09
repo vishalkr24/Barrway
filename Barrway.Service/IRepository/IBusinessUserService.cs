@@ -149,5 +149,7 @@ namespace Barrway.Service.IRepository
         //Task<AddUpdateDelete> GetBlogsTags();
         Task<Resultdata> GetAllBlogsTags();
         Task<AddUpdateDelete> GetBlogbyId(string Id);
+        Task<AddUpdateDelete> GetEnrollUserDetails(int eventId, string email);
+        Task<AddUpdateDelete> updateAssesstmentUploadFiles(int transactionId, string downloadable_attachment, string download_file_list);
     }
 }

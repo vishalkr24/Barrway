@@ -933,11 +933,11 @@
                                 <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
                                     <div style="display:block" class="titleContainer">
                                         @*<p class="title1" style="font-size:16px;font-weight:600">
-                                                {{d.dropdownListData.title}}
-                                                <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
-                                                <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
-                                                <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
-                                            </p>*@
+                                {{d.dropdownListData.title}}
+                                <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
+                                <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
+                                <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
+                            </p>*@
                                         <p class="title1" style="font-weight:bold; font-size: 16px;"> {{d.formTitle}}</p>
                                     </div>
                                 </div>
@@ -985,6 +985,32 @@
                         </ul>
 
                     </div>
+                    <div class="form-group mt-2 p-0" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IS_UPLOAD_REQUIRED=='Y'
+                         && (selectEventDetails.UPLOAD_TIME=='ANYTIME' || selectEventDetails.UPLOAD_TIME=='AFTER')">
+                        <div class="form-group mt-2 p-0">
+                            <label for="SELECT_DOWNLOADABLE_ATTACHMENT">Upload Attachments</label>
+                            <input type="file" name="SELECT_DOWNLOADABLE_ATTACHMENT" class="form-control" onchange="angular.element(this).scope().validateForm('SELECT_DOWNLOADABLE_ATTACHMENT',false)" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx" multiple id="SELECT_DOWNLOADABLE_ATTACHMENT" />
+                            <span id="fileError2" style="color:red" class="error-message"></span><br>
+                            <span id="fileSuccess" class="text-success"></span>
+                        </div>
+                        <input type="hidden" ng-model="selectEventDetails.ASSESSMENT_FILES" value="" id="DOWNLOADABLE_ATTACHMENT_FILES" />
+                        <input type="hidden" ng-model="selectEventDetails.ASSESSMENT_FILES_LIST" value="" id="DOWNLOAD_FILE_LIST" />
+
+                        <div class="form-group mt-2 p-0">
+                            <button type="button" onclick="angular.element(this).scope().uploadFiles(true)" id="EventUploadBtn2" class="btn btn-primary disable" disabled>Upload</button>
+                        </div>
+
+                        <ul>
+                            <li style="font-weight:600" ng-repeat="item in selectEventDetails.ASSESSMENT_FILES_LIST_DATA">
+                                <a ng-href="{{item.url}}" target="_blank">{{item.name}}</a>
+                                <button class="btn btn-link" ng-click="selectedEventRemoveFiles($index)"><i class="fa fa-times-circle"></i></button>
+                            </li>
+                        </ul>
+
+                    </div>
+                    
+
+
                     <div class="div-flex div-list">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary public-primary" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'N'" ng-click="enrollPublicUser()">Enroll</button>
@@ -1212,6 +1238,8 @@
             //};
 
             $scope.enrollPublicUser = function () {
+
+
                 console.log($scope.selectEventDetails);
                 showLoader();
                 $.ajax({
@@ -1271,6 +1299,11 @@
                                             }
 
                                         }).then(function (response) {
+                                            
+                                            //if (eventData.IS_UPLOAD_REQUIRED == 'Y') {
+
+                                            //}
+
                                             if (response) {
                                                 showLoader();
 
@@ -1862,6 +1895,142 @@
 
             }
 
+
+            $scope.validateForm = function (_fileInput, isrequired = false) {
+                $('#fileSuccess').html('');
+                var fileInput = document.getElementById(_fileInput);
+                var fileError = document.getElementById("fileError2");
+                var EventUploadBtn = $("#EventUploadBtn2");
+                var allowedExtensions = ['image/jpeg', 'image/png', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+                var maxSize = 5 * 1024 * 1024; // 5MB
+                if (fileInput.files.length === 0 && isrequired) {
+                    fileError.textContent = 'Please select a file.';
+                    EventUploadBtn.attr("disabled", "disabled");
+                    EventUploadBtn.addClass("disabled");
+                    return false;
+                }
+
+                for (var i = 0; i < fileInput.files.length; i++) {
+                    if (!allowedExtensions.includes(fileInput.files[i].type)) {
+                        fileError.textContent = 'Invalid file type. Allowed types are: image, PDF, Word document, Excel.';
+                        EventUploadBtn.attr("disabled", "disabled");
+                        EventUploadBtn.addClass("disabled");
+                        return false;
+                    }
+
+                    var fileSize = fileInput.files[i].size; // in bytes
+
+
+                    if (fileSize > maxSize) {
+                        fileError.textContent = 'File size exceeds the maximum limit of 5MB.';
+                        return;
+                    }
+                }
+
+                EventUploadBtn.removeAttr("disabled");
+                EventUploadBtn.removeClass("disabled");
+                fileError.textContent = '';
+                return true;
+            }
+
+
+            $scope.uploadFiles = function () {
+
+                let inputfileName = "SELECT_DOWNLOADABLE_ATTACHMENT";
+
+                var fileInput = $('#' + inputfileName)[0].files;
+
+
+                
+
+                if ($scope.validateForm(inputfileName, true)) {
+                    var formData = new FormData();
+                    $.each(fileInput, function (key, value) {
+                        formData.append('files', value);
+                    });
+
+                    // You can add additional form fields here if needed
+                    formData.append('clrcode', localStorage.getItem("CALENDAR_CODE"));
+                    formData.append('eventid', $scope.selectEventDetails.Id);
+
+
+                    // AJAX post request
+                    $.ajax({
+                        url: BASE_URL + 'UserAdmin/UploadAssestementAttachment',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            if (response.Status) {
+                                $('#fileSuccess').html('File Uploaded Successfully');
+                                $scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA = response.Data;
+                                $rootScope.safeApply();
+                                let filepaths = response.Data.map(x => x.path).join(",");
+                                $scope.selectEventDetails.ASSESSMENT_FILES = filepaths;
+                                $scope.selectEventDetails.ASSESSMENT_FILES_LIST = JSON.stringify(response.Data);
+                                $('#' + inputfileName).val(null);
+                                var EventUploadBtn = $('#EventUploadBtn,#EventUploadBtn2');
+                                EventUploadBtn.attr("disabled", "disabled");
+                                EventUploadBtn.addClass("disabled");
+                            } else {
+                                alert(response.Message);
+                            }
+                            // Handle successful upload
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Upload failed: ' + error);
+                            // Handle upload failure
+                        }
+                    });
+                }
+            }
+
+
+            $scope.selectedEventRemoveFiles = function (index) {
+
+                if (!confirm("Are you sure delete this file?")) {
+                    return;
+                }
+                if ($scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA.length > index) {
+                    let filepath = $scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA[index].path;
+                    $scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA.splice(index, 1);
+                    $scope.selectEventDetails.ASSESSMENT_FILES_LIST = JSON.stringify($scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA);
+                    $scope.selectEventDetails.ASSESSMENT_FILES = $scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA.map(x => x.path).join(",");
+                    let eventId = $scope.selectEventDetails.Id;
+                    let transactionid = $scope.selectEventDetails.TRANSACTION_ID;
+                    uploadfilesDelete(filepath, transactionid, $scope.selectEventDetails.ASSESSMENT_FILES, JSON.stringify($scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA));
+                }
+            }
+            function uploadfilesDelete(filePath, transactionid = '', downloadable_attachment = '', download_file_list = '') {
+                var formData = new FormData();
+                formData.append("filePath", filePath);
+                formData.append("transactionid", transactionid);
+                formData.append("downloadable_attachment", downloadable_attachment);
+                formData.append("download_file_list", download_file_list);
+
+                $.ajax({
+                    url: BASE_URL + 'UserAdmin/DeleteAssestementUploadFiles',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.Status) {
+                            $(".calendar").fullCalendar('refetchEvents');
+                            $('#fileSuccess').html('File Deleted Successfully');
+                        } else {
+                            alert(response.Message);
+                        }
+                        // Handle successful upload
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('delete failed: ' + error);
+                        // Handle upload failure
+                    }
+                });
+
+            }
 
         }).filter('safeHtml', function ($sce) {
             return function (val) {
