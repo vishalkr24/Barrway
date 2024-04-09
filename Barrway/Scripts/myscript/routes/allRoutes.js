@@ -2052,13 +2052,13 @@
                     parent: 'home'
                 }
             })
-            .state('my_attendance', {
-                url: '/myattendance/:formId',
-                onEnter: function ($window) { $window.document.title = "My Attendance"; },
+            .state('my_bookings', {
+                url: '/mybookings/:formId',
+                onEnter: function ($window) { $window.document.title = "My Bookings"; },
                 views: {
                     'content': {
-                        templateUrl: '/Templates/user-admin/my-attendance.html?token=' + uuid,
-                        controller: 'UserAttendanceController'
+                        templateUrl: '/Templates/user-admin/my-booking.html?token=' + uuid,
+                        controller: 'UserBookingsController'
                     }
                 },
                 ncyBreadcrumb: {

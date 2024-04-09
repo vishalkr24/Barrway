@@ -13,12 +13,16 @@ namespace Barrway
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.MapMvcAttributeRoutes();
+            //routes.MapRoute(
+            //    name: "Default",
+            //    url: "{controller}/{action}/{id}/{Cid}",
+            //    defaults: new { controller = "Marketplace", action = "ComingSoon", id = UrlParameter.Optional, Cid = UrlParameter.Optional }
+            //);
             routes.MapRoute(
-                name: "Default",
-                url: "{controller}/{action}/{id}/{Cid}",
-                defaults: new { controller = "Marketplace", action = "Index", id = UrlParameter.Optional, Cid = UrlParameter.Optional }
-            );
-           
+             name: "CatchAll",
+             url: "{*url}",
+             defaults: new { controller = "Marketplace", action = "ComingSoon" } // Controller and action to which all requests will be routed
+         );
         }
     }
 }

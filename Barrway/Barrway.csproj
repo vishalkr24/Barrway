@@ -3203,7 +3203,7 @@
     <Content Include="Templates\user-admin\blogs.html" />
     <Content Include="Templates\user-admin\my-payment-history.html" />
     <Content Include="Templates\user-admin\my-calendar.html" />
-    <Content Include="Templates\user-admin\my-attendance.html" />
+    <Content Include="Templates\user-admin\my-booking.html" />
     <Content Include="Templates\user-admin\my-favorite.html" />
     <Content Include="Templates\user-admin\my-profile.html" />
     <Content Include="Web.config" />
@@ -3302,6 +3302,7 @@
     <Content Include="Views\MarketPlace\AllCalanders.cshtml" />
     <Content Include="Views\Shared\SessionReview.cshtml" />
     <Content Include="Views\MarketPlace\ReviewSessionDesign.cshtml" />
+    <Content Include="Views\MarketPlace\ComingSoon.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -27,6 +27,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> UpdatePublicUserProfileData(PublicUserProfileModel model, bool updatePassword = false);
         Task<AddUpdateDelete> EnrollPublicUserForCalendar(CalendarEnrollModel model);
         Task<AddUpdateDelete> CancelPublicUserBooking(CalendarEnrollModel model);
+        Task<AddUpdateDelete> AddSessionReview(SessionReviewModel model, string UserEmail);
         Task<AddUpdateDelete> EnrollParticipantForCalendar(CalendarFormModel model, string UserId, string UserEmail);
         Task<AddUpdateDelete> AddFavoriteCalendar(FavoriteCalendarModel model);
         Task<AddUpdateDelete> RemoveFavoriteCalendar(FavoriteCalendarModel model);

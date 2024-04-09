@@ -17354,19 +17354,30 @@
     });
 
 
-
-    FormGeneratorApp.controller('UserAttendanceController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
+    FormGeneratorApp.controller('UserBookingsController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
         checkLogin();
-        $("#user-nav-myattendance").addClass("active")
+        $("#user-nav-mybookings").addClass("active")
 
 
-        $scope.CalendarMasterList = function () {
+        $scope.BindMyBookings = function (type) {
+            // type 1 is for upcoming and 2 for past bookings
+            $('.form-builder-loader').show();
+            if (type == 1) {
+                
+                $("#nav-link-upcoming").addClass("active");
+                $("#nav-link-past").removeClass("active");
+            } else {
+               
+                $("#nav-link-upcoming").removeClass("active");
+                $("#nav-link-past").addClass("active");
+            }
+            
             var columns = [
-                { title: 'Company', field: 'COMPANY_NAME_ENGLISH', headerFilter: "input" },
-                { title: 'Calendar', field: 'CALENDAR_NAME', headerFilter: "input" },
-                { title: 'Service Name', field: 'ACTIVITY_NAME', headerFilter: "input" },
-                { title: 'Service Provider', field: 'RESOURCE_DATA', headerFilter: "input" },
-                { title: 'Location', field: 'LOCATION_CODE', headerFilter: "input" },
+                { title: 'Company Name', field: 'COMPANY_NAME_ENGLISH', headerFilter: "input" },
+                { title: 'Calendar Name', field: 'CALENDAR_NAME', headerFilter: "input" },
+                { title: 'Service Name', field: 'SERVICE_TITLE', headerFilter: "input" },
+                { title: 'Service Provider', field: 'SERVICE_PROVIDER_TITLE', headerFilter: "input" },
+                { title: 'Location', field: 'LOCATION_TITLE', headerFilter: "input" },
 
                 {
                     title: 'From time', field: 'FROM_TIME', headerFilter: "input", formatter: function (cell, formatter) {
@@ -17388,97 +17399,54 @@
                         return cell.getValue();
                     },
                     height: "530px",
-                    layout: "fitColumns",
+                    layout: "fitData",
                     responsiveLayout: false,
                     initialSort: [
                         { column: "created_at", dir: "desc" }
                     ],
-                    persistenceID: "persisrecords",
-                    persistenceMode: true,
-                    persistentLayout: true,
-                    persistence: {
-                        sort: false, //persist column sorting
-                        filter: false, //persist filter sorting
-                        columns: false, //persist columns
-                    },
-                    persistenceWriterFunc: function (id, type, data) {
-                        localStorage.setItem(id + "-" + type, JSON.stringify(data));
-                    },
-                    persistenceReaderFunc: function (id, type) {
-                        var data = localStorage.getItem(id + "-" + type);
-                        var dataParse = JSON.parse(data);
-                        if (!DataService.isEmpty(data) && type == "columns") {
-                            _.each(headers, function (item) {
-                                var exists = _.findWhere(dataParse, {
-                                    field: item.field
-                                });
-                                if (!DataService.isEmpty(exists)) {
-                                    exists.visible = item.visible;
-                                }
-                            })
-                        }
-                        else if (type == "page") {
-                            if (!DataService.isEmpty(data) && $scope.paginationSizeFormRecords != 0)
-                                dataParse.paginationSize = $scope.paginationSizeFormRecords;
-                        }
-                        return data ? dataParse : false;
-                    },
                     columns: columns,
                     footerElement: "<div style='text-align:left' id='no-of-forms'></div>",
                     dataLoaded: function (data) {
-                        //data - all data loaded into the table                        
-                        var count = 0;
-                        if (data.length > 0)
-                            count = data[0].total_records;
-                        $('#form-records .tabulator-footer #no-of-forms').text("Total: " + count + " Entries");
-                    },
-                    /// pagination: "local",              
-                    ajaxFiltering: true,
-                    ajaxSorting: true,
-                    ajaxLoader: true,
-                    ajaxURL: "/UserAdmin/GetMyAttendanceList",
-                    ajaxConfig: "POST", //ajax HTTP request type
-                    ajaxContentType: "json",
-                    ajaxParams: {
+                        var count = data.length;
+                        $('#' + ((type == 1) ? 'form-records' : 'form-records-2') + ' .tabulator-footer #no-of-forms').text("Total: " + count + " Entries");
 
-                    },
-                    ajaxProgressiveLoad: "scroll",
-                    ajaxProgressiveLoadScrollMargin: 75,
-                    ajaxRequesting: function (url, params) {
-
-                        var called = true;
-                        if (params.sorters.length == 0) {
-                            params.sorters.push({ field: "created_at", dir: "desc" });
+                        if (type == 1) {
+                            $("#upcomingBookings").show();
+                            $("#pastBookings").hide();
+                        } else {
+                            $("#upcomingBookings").hide();
+                            $("#pastBookings").show();
                         }
-                        //if (called)
-                        //$('#form-records').block({ message: '<h4>Getting Form Records...</h4>' });
-                        return called; //abort ajax request
+
+                        $('.form-builder-loader').hide();
+
+                    },
+                    pagination: "local",              
+                    ajaxURL: "/UserAdmin/GetMyBookings",
+                    ajaxConfig: "POST",
+                    ajaxFiltering: false,
+                    ajaxSorting: false,
+                    ajaxLoader: false,
+                    ajaxParams: {
+                        Type: type
                     },
                     ajaxResponse: function (url, params, response) {
-                        //url - the URL of the request
-                        //params - the parameters passed with the request
-                        //response - the JSON object returned in the body of the response.
-                        //$('#form-records').unblock();
-                        //$.unblockUI();
-                        if (response.data) {
-                            return response;
-                        }
-                        else {
-                            return response;
-                        }
-
+                        return response;
                     },
-                    paginationSize: 50,
-
+                    ajaxRequesting: function (url, params) {
+                        var called = true;
+                        
+                        return called; //abort ajax request
+                    },
+                    paginationSize: 50
                 };
-                var tabulator = initTabulator('form-records', options);
-                $('.form-builder-loader').hide();
+                var tabulator = initTabulator(((type == 1) ? 'form-records' : 'form-records-2'), options);
+                
             }, 150);
 
         };
 
-        $scope.CalendarMasterList();
-
+        $scope.BindMyBookings(1);
     })
 
     FormGeneratorApp.controller('UserBCoinController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
