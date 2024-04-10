@@ -988,7 +988,8 @@
                     <div class="div-flex div-list">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary public-primary" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'N'" ng-click="enrollPublicUser()">Enroll</button>
-                        <button type="button" class="btn btn-primary public-primary" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y'" ng-click="cancelPublicUserBooking()">Cancel Booking</button>
+                        <button type="button" class="btn btn-primary public-primary" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IsReviewable == 'N'" ng-click="cancelPublicUserBooking()">Cancel Booking</button>
+                        <button type="button" class="btn btn-primary public-primary" ng-if="!selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IsReviewable == 'Y'" ng-click="reviewSession()">Review Session</button>
                     </div>
                 </div>
                 @*<div class="modal-footer">
@@ -1342,7 +1343,7 @@
                                                                             icon: "success",
                                                                             button: "Okay"
                                                                         }).then(function (boolValue) {
-                                                                            window.location.reload();
+                                                                            window.location.reload(); 
                                                                         });
 
                                                                     }
@@ -1452,6 +1453,30 @@
                     }
                 });
 
+
+            }
+
+            $scope.reviewSession = function () {
+                var eventData = $scope.selectEventDetails;
+
+                $.ajax({
+                    url: "/UserAdmin/GetSingleEventDetails",
+                    type: "GET",
+                    data: {
+                        EventId: eventData.Id,
+                        Type: 2
+                    },
+                    success: function (response) {
+                        debugger;
+                        $("#customEventDetailsModelPopUp").modal("hide");
+                        $("#customEventDetailsServiceModelPopUp").modal("hide");
+                        $("#ViewBookingModal .modal-body").html(response);
+                        $("#ViewBookingModal").modal("show");
+                    },
+                    error: function (error) {
+
+                    }
+                });
 
             }
 
