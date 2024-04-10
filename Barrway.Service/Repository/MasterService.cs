@@ -1689,7 +1689,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
             string query = $@"";
             if (!string.IsNullOrEmpty(data.CategoryId))
             {
-                query += "select Id,CALENDAR_CATEGORY_NAME AS Heading from CALENDAR_CATEGORY_MASTER_1929 WHERE Id=" + data.CategoryId + "";
+                query += "select Id,CMN_CATEGORY_NAME AS Heading from CALENDAR_COMMON_CATEGORY_1978 WHERE Id=" + data.CategoryId + "";
             }
             if (!string.IsNullOrEmpty(data.SubCategoryId))
             {
