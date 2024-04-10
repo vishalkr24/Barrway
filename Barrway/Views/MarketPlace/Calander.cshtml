@@ -963,6 +963,7 @@
                                 <label>Attachment Files</label>
                                 <ul style="list-style-type:none;margin:0;padding:0;margin-top:10px;">
                                     <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='public'"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
+                                    <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='user' && selectEventDetails.IsAlreadyBooked == 'Y'"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
                                 </ul>
                             </div>
 
@@ -1975,7 +1976,7 @@
                     });
 
                     // You can add additional form fields here if needed
-                    formData.append('clrcode', localStorage.getItem("CALENDAR_CODE"));
+                    formData.append('clrcode', CALENDAR_CODE);
                     formData.append('eventid', $scope.selectEventDetails.Id);
 
 

@@ -15568,6 +15568,7 @@ function addNewColumns(formid, columns) {
         case 2312: {
 
             var $scope = angular.element($("#transaction-controller-div")).scope();
+            //columns = columns.fil
             columns.unshift({
                 title: "ATTENDANCE", formatter: function (cell, formatter) {
 
