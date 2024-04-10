@@ -31,7 +31,10 @@ namespace Barrway.DTO.MarketplaceModels
         public string TWITTER_URL { get; set; } = String.Empty;
         public string INSTAGRAM_URL { get; set; } = String.Empty;
         public string PAGE_URL { get; set; } = String.Empty;
+        public string Latitude { get; set; } = String.Empty;
+        public string Longitude { get; set; } = String.Empty;
         public string TAGS { get; set; } = String.Empty;
+        public List<TagsObject> TAGs { get; set; }
         public string IS_SEARCHABLE_IN_MARKETPLACE { get; set; } = String.Empty;
         public string COMPANY_SERVICE { get; set; } = String.Empty;
         public string COMPANY_DESCRIPTION { get; set; } = String.Empty;

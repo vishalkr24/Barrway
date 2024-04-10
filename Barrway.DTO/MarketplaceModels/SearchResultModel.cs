@@ -21,6 +21,7 @@ namespace Barrway.DTO.MarketplaceModels
         public string CALENDAR_PHOTO_NAME { get; set; }
         public string CALENDAR_PHOTO_PATH { get; set; }
         public string COMPANY_CODE { get; set; }
+        public string CALENDAR_CODE { get; set; }
         public string TAGS { get; set; }
         public List<TagsObject> TAGs { get; set; }
         public string COMPANY_NAME_ENGLISH { get; set; }

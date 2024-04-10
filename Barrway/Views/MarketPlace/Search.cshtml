@@ -90,7 +90,7 @@
                                             
                                     <div class="col-md-12">
                                         @*<div class="media" onclick="window.location.href = '/company/calander/@item.CompanyCode/@item.CalendarCode'">*@
-                                        <div class="media" onclick="window.location.href = '/company/calander/@item.COMPANY_CODE/@item.COMPANY_CODE'">
+                                        <div class="media" onclick="window.location.href = '/company/calander/@item.COMPANY_CODE/@item.CALENDAR_CODE'">
                                             <div class="media-left" style="">
                                                 <img src="@item.CALENDAR_PHOTO_PATH.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px; height: 100px;">
                                             </div>
@@ -149,7 +149,7 @@
                                         
                                             <div class="col-md-12">
                                                 <div class="media">
-                                                    <div class="media-left" style="">
+                                                    <div class="media-left" style="" onclick="window.location.href = '/company/@item.COMPANY_CODE'">
                                                         <img src="@item.COMPANY_BANNER_PATH.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px; height: 100px;">
                                                     </div>
                                                     <div class="media-body">
@@ -206,11 +206,12 @@
                                         
                                             <div class="col-md-12">
                                                 <div class="media">
-                                                    <div class="media-left" style="">
+                                                    <div class="media-left" style="" onclick="window.location.href = '/MarketPlace/BlogDetails/@item.Id'">
                                                         <img src="@item.IMAGE.Replace("~", "..")" onerror="this.src='../assets/marketplace/image/pro.png'" class="media-object" style="width:150px; height: 100px;">
                                                     </div>
                                                     <div class="media-body">
-                                                        <h4 class="media-heading">@item.BLOG_TITLE</h4>
+                                                        <a href="/MarketPlace/BlogDetails/@item.Id"><h4 class="media-heading">@item.BLOG_TITLE</h4></a>
+                                                        
                                                         @*<div class="tags">@item.TAG</div>*@
                                                     <p class="tag">
                                                         @if (item.TAGs != null)
