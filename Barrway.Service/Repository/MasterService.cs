@@ -1278,6 +1278,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
 
 
                 string sqlQuery = $@"select f.Id,f.CALENDAR_NAME,f.CALENDAR_PHOTO_NAME,f.CALENDAR_PHOTO_PATH,f.COMPANY_CODE,f.TAGS,cmp.COMPANY_NAME_ENGLISH from BUSINESS_CALENDAR_MASTER_1925 f join BUSINESS_COMPANY_MASTER_1924 cmp on cmp.COMPANY_CODE = f.COMPANY_CODE where cmp.IS_TEMPLATE = 'N' and f.[STATUS]='PUBLISH' and (f.CALENDAR_NAME like '%{keyword}%' OR f.TAGS like '%{keyword}%') ";
+
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
                 return new AddUpdateDelete() { Status = true, Data = result };
@@ -1691,7 +1692,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
             string query = $@"";
             if (!string.IsNullOrEmpty(data.CategoryId))
             {
-                query += "select Id,CALENDAR_CATEGORY_NAME AS Heading from CALENDAR_CATEGORY_MASTER_1929 WHERE Id=" + data.CategoryId + "";
+                query += "select Id,CMN_CATEGORY_NAME AS Heading from CALENDAR_COMMON_CATEGORY_1978 WHERE Id=" + data.CategoryId + "";
             }
             if (!string.IsNullOrEmpty(data.SubCategoryId))
             {

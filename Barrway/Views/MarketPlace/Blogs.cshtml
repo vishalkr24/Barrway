@@ -120,6 +120,63 @@
     .pro-im img {
         border-radius: 10px;
     }
+
+    /* Skeleton loader styles */
+
+
+    /* Skeleton loader styles */
+    .skeleton {
+    background-color: #f2f2f2;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.skeleton-image {
+    width: 100%;
+    height: 200px; /* Adjust height as needed */
+    background-color: #ddd;
+    border-radius: 5px;
+}
+
+.skeleton-text {
+    width: 100%;
+    height: 20px;
+    background-color: #ddd;
+    margin-bottom: 10px;
+}
+
+/* Loading animation */
+@@keyframes loading {
+    0% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.5;
+    }
+}
+
+    .skeleton .hot::before {
+        content: "";
+        display: inline-block;
+        width: 30px;
+        height: 20px;
+        /*background-color: #ddd;*/
+        /*border-radius: 5px;*/
+        /*animation: loading 1.5s infinite ease-in-out;*/
+
+        background: rgba(130, 130, 130, 0.2);
+        background: -webkit-gradient(linear, left top, right top, color-stop(8%, rgba(130, 130, 130, 0.2)), color-stop(18%, rgba(130, 130, 130, 0.3)), color-stop(33%, rgba(130, 130, 130, 0.2)));
+        background: linear-gradient(to right, rgba(130, 130, 130, 0.2) 8%, rgba(130, 130, 130, 0.3) 18%, rgba(130, 130, 130, 0.2) 33%);
+        background-size: 800px 100px;
+        animation: wave-squares 2s infinite ease-out;
+    }
+
+
+
 </style>
 <div id="list-view">
     <!-- bredcrum -->
@@ -216,48 +273,7 @@
                                 }
 
                             }
-
-
-                            @*<div class="item">
-                                    <div class="item-inner">
-                                        <button>Blog Tag 1</button>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="item-inner">
-                                        <button>Blog Tag 1</button>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="item-inner">
-                                        <button>Blog Tag 1</button>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="item-inner">
-                                        <button>Blog Tag 1</button>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="item-inner">
-                                        <button>Blog Tag 1</button>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="item-inner">
-                                        <button>Blog Tag 1</button>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="item-inner">
-                                        <button>Blog Tag 1</button>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="item-inner">
-                                        <button>Blog Tag 1</button>
-                                    </div>
-                                </div>*@
+                           
                         </div>
 
                     </div>
@@ -273,45 +289,10 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <div class="inner-content blogslist" style="height:540px;">
-                        @*<div class="row">
+                    <div class="inner-content blogslist" style="min-height:540px;"> 
+                        <div class="row" id="blogrow">
+                            
 
-                            @if (Model.BlogList != null)
-                            {
-
-                                foreach (var item in Model.BlogList)
-                                {
-                                    <div class="col-md-4">
-                                        <div class="blog-post-vew">
-                                            <div class="hot"><span>Hot</span></div>
-                                            <div class="pro-im">
-                                                <a href="/MarketPlace/BlogDetails/@item.Id"><img src="@item.IMAGE" onerror="this.src='../assets/marketplace/image/pro.png'"></a>
-                                            </div>
-                                            <div class="pro-text">
-                                                <p class="p1"><b>@item.BLOG_TITLE</b></p>
-                                                <p class="date">@item.created_at.ToString("yyyy-MM-dd HH:mm")</p>
-                                                <p class="tag">
-                                                    @if (item.TAGs != null)
-                                                    {
-                                                        foreach (var Tagitem in item.TAGs)
-                                                        {
-                                                            <a href="javascript:void(0)"> @Tagitem.value</a>
-                                                        }
-                                                    }
-
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                            }
-
-                        </div>*@
-
-
-                        <div class="row" id="blogrow">                          
-                                    
-                                
 
                         </div>
 
