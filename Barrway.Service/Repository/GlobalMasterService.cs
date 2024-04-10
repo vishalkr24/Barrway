@@ -157,6 +157,7 @@ namespace Barrway.Service.Repository
                     if (category[i]["Id"].ToString() == companyResult[j]["CALENDAR_COMMON_CATEGORY_ID"].ToString())
                     {
                         IDictionary<string, object> tempData = companyResult[j];
+                        tempData.Add("NumberOfCalendar", category[i]["NumberOfCalanders"]);
                         tempList.Add(tempData);
                     }
                 }
@@ -268,7 +269,8 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetCalendarCommonCategoryMaster()
         {
-            string query = "SELECT *  FROM [dbo].[CALENDAR_COMMON_CATEGORY_1978] ORDER BY SEQUENCE ASC";
+            //string query = "SELECT *  FROM [dbo].[CALENDAR_COMMON_CATEGORY_1978] ORDER BY SEQUENCE ASC";
+            string query = "SELECT Cl.*,Cl.CMN_CATEGORY_NAME,(select count(Id)  from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_COMMON_CATEGORY_ID=Cl.Id and [STATUS] = 'PUBLISH' and CALENDAR_USE_TYPE = 'PUBLIC') as NumberOfCalanders    FROM [dbo].[CALENDAR_COMMON_CATEGORY_1978] Cl ORDER BY SEQUENCE ASC";
 
             List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
