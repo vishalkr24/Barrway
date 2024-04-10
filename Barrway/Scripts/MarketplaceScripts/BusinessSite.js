@@ -71,7 +71,7 @@ function setCompanyData(pageNumber, SearchText) {
             $("#ComapanyList").empty();
 
             for (var i = 0; i < response.data.length; i++) {
-
+                debugger;
                 var tagQuery = "";  
                 if (response.data[i].TAGS != '') {
                     var tags = JSON.parse(response.data[i].TAGS);
@@ -83,7 +83,7 @@ function setCompanyData(pageNumber, SearchText) {
                     }
                 }
                 $("#ComapanyList").append(`<div class="col-md-6 col-sm-6 col-xs-6">
-                    <div class="media" style="cursor:pointer;" onclick="window.location.href = '/Marketplace/CompanyDetail?CompanyCode=${response.data[i].COMPANY_CODE}&CalendarCode=null'">
+                    <div class="media" style="cursor:pointer;" onclick="window.location.href = '/company/${response.data[i].COMPANY_CODE}'">
                                 <div class="media-left">
                                     <img src="${response.data[i].COMPANY_LOGO_PATH.replace("~", "..")}" onerror="this.src='../assets/marketplace/image/alogo2.png'" class="media-object" style="width:150px">
                                 </div>

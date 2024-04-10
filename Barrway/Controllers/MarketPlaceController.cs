@@ -379,6 +379,10 @@ namespace Barrway.Controllers
                 MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
                 companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
                 companyModel.PAGE_URL = id;
+                if (!string.IsNullOrEmpty(companyModel.TAGS))
+                {
+                    companyModel.TAGs = JsonConvert.DeserializeObject<List<TagsObject>>(companyModel.TAGS);
+                }
 
                 ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
 

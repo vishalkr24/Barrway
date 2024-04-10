@@ -1716,3 +1716,9 @@ p.tag a {
 .filter-tags{
     padding-top:3px;
 }
+
+.owl-theme .owl-nav [class*=owl-]:hover {
+    background: #dbdbdb;
+    color: #FFF;
+    text-decoration: none;
+}
