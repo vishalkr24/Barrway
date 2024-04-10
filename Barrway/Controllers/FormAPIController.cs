@@ -407,13 +407,22 @@ namespace Barrway.Controllers
                         {
                             foreach (var item in result.events)
                             {
-                                if (alreadyEnrolledEvents.Any(x=> x["Id"]?.ToString() == item["Id"]?.ToString()))
+                                if (alreadyEnrolledEvents.Any(x => x["Id"]?.ToString() == item["Id"]?.ToString()))
                                 {
                                     item.Add("IsAlreadyBooked", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["IsAlreadyBooked"]);
+                                    if (DateTime.Now > Convert.ToDateTime(alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["end"]?.ToString()) && alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["SESSION_REVIEWED"]?.ToString() == "N")
+                                    {
+                                        item.Add("IsReviewable", 'Y');
+                                    }
+                                    else
+                                    {
+                                        item.Add("IsReviewable", 'N');
+                                    }
                                 }
                                 else
                                 {
                                     item.Add("IsAlreadyBooked", 'N');
+                                    item.Add("IsReviewable", 'N');
                                 }
                             }
                         }

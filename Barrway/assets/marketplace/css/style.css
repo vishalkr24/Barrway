@@ -1717,8 +1717,13 @@ p.tag a {
     padding-top:3px;
 }
 
+
 .owl-theme .owl-nav [class*=owl-]:hover {
     background: #dbdbdb;
     color: #FFF;
     text-decoration: none;
+}
+div#blogrow .col-md-4:nth-child(4) {
+    clear: both;
+
 }
