@@ -1277,7 +1277,8 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
             {
 
 
-                string sqlQuery = $@"select f.Id,f.CALENDAR_NAME,F.CALENDAR_CODE,f.CALENDAR_PHOTO_NAME,f.CALENDAR_PHOTO_PATH,f.COMPANY_CODE,f.TAGS,cmp.COMPANY_NAME_ENGLISH from BUSINESS_CALENDAR_MASTER_1925 f join BUSINESS_COMPANY_MASTER_1924 cmp on cmp.COMPANY_CODE = f.COMPANY_CODE where cmp.IS_TEMPLATE = 'N' and f.CALENDAR_NAME like '%{keyword}%' OR f.TAGS like '%{keyword}%' ";
+                string sqlQuery = $@"select f.Id,f.CALENDAR_NAME,f.CALENDAR_PHOTO_NAME,f.CALENDAR_PHOTO_PATH,f.COMPANY_CODE,f.TAGS,cmp.COMPANY_NAME_ENGLISH from BUSINESS_CALENDAR_MASTER_1925 f join BUSINESS_COMPANY_MASTER_1924 cmp on cmp.COMPANY_CODE = f.COMPANY_CODE where cmp.IS_TEMPLATE = 'N' and f.[STATUS]='PUBLISH' and (f.CALENDAR_NAME like '%{keyword}%' OR f.TAGS like '%{keyword}%') ";
+
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
                 return new AddUpdateDelete() { Status = true, Data = result };
@@ -1296,7 +1297,8 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
             {
 
 
-                string sqlQuery = $@"select * from BUSINESS_COMPANY_MASTER_1924 f where f.IS_TEMPLATE = 'N' and f.COMPANY_NAME_ENGLISH like '%{keyword}%' or f.COMPANY_NAME_ENGLISH like '%{keyword}%' OR TAGS LIKE '%{keyword}%'";
+                string sqlQuery = $@"select * from BUSINESS_COMPANY_MASTER_1924 f where f.IS_TEMPLATE = 'N' and 
+                                     (f.COMPANY_NAME_ENGLISH like '%{keyword}%' or f.COMPANY_NAME_ENGLISH like '%{keyword}%' OR TAGS LIKE '%{keyword}%')";
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
                 return new AddUpdateDelete() { Status = true, Data = result };
@@ -1312,7 +1314,8 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
         {
             try
             {
-                string sqlQuery = $@"select B.Id,B.BLOG_TITLE,B.IMAGE,B.TAG,BC.BLOG_CATEGORY from BLOG_1980 B inner join BLOG_CATEGORY_1981 BC on   B.BLOG_CATEGORY=BC.Id where B.BLOG_TITLE like '%{keyword}%' or B.TAG like '%{keyword}%'";
+                string sqlQuery = $@"select B.Id,B.BLOG_TITLE,B.IMAGE,B.TAG,BC.BLOG_CATEGORY from BLOG_1980 B inner join BLOG_CATEGORY_1981 BC on   
+                                     B.BLOG_CATEGORY=BC.Id where (B.BLOG_TITLE like '%{keyword}%' or B.TAG like '%{keyword}%')";
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 return new AddUpdateDelete() { Status = true, Data = result };
 
@@ -1619,7 +1622,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 {
                     if (data.Short == "All")
                     {
-                        Short += "ORDER BY case when [PRIORITY] is null then 1 else 0 end ,[PRIORITY] desc, case when ([SEQUENCE] is null OR [SEQUENCE]=0) then 1 else 0 end ,[SEQUENCE]";
+                        Short += "ORDER BY [SEQUENCE]";
                     }
 
                     if (data.Short == "Featured")
@@ -1632,7 +1635,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 }
                 else
                 {
-                    Short += "ORDER BY case when [PRIORITY] is null then 1 else 0 end ,[PRIORITY] desc, case when ([SEQUENCE] is null OR [SEQUENCE]=0) then 1 else 0 end ,[SEQUENCE]";
+                    Short += "ORDER BY [SEQUENCE]";
                 }
 
 

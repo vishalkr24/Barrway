@@ -169,7 +169,7 @@ namespace Barrway.Service.Repository
 
         }
 
-        public async Task<AddUpdateDelete> EnrollPublicUserForCalendar(CalendarEnrollModel model)
+        public async Task<AddUpdateDelete> EnrollPublicUserForCalendar(CalendarEnrollModel model,bool isServiceType=false)
         {
             var user = await authService.GetUser(model.USER_ID, FormRole.GENERAL_USER);
 
@@ -224,32 +224,32 @@ namespace Barrway.Service.Repository
 
 
             // check if the user limit is crossed or not
-
-            List<IDictionary<string, object>> totalUsersEnrolled = await sqlFunction.ExecuteSqlQuery($@"select COUNT(*) as 'COUNT' from TRANSACTION_MASTER_1942 transaction_m
+            if (!isServiceType) {
+                List<IDictionary<string, object>> totalUsersEnrolled = await sqlFunction.ExecuteSqlQuery($@"select COUNT(*) as 'COUNT' from TRANSACTION_MASTER_1942 transaction_m
                                                                                                         join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
                                                                                                         where ACTIVITY = '{model.transaction.ACTIVITY.ToString()}'");
 
-            List<IDictionary<string, object>> currentLimit = await sqlFunction.ExecuteSqlQuery($@"select MAXIMUM_NO_OF_PARTICIPANTS from SERVICE_MASTER_1933 where Id = '{model.transaction.ACTIVITY.ToString()}'");
+                List<IDictionary<string, object>> currentLimit = await sqlFunction.ExecuteSqlQuery($@"select MAXIMUM_NO_OF_PARTICIPANTS from SERVICE_MASTER_1933 where Id = '{model.transaction.ACTIVITY.ToString()}'");
 
-            try
-            {
-                if (!string.IsNullOrEmpty(currentLimit[0]["MAXIMUM_NO_OF_PARTICIPANTS"].ToString()))
+                try
                 {
-                    if (Convert.ToInt32(currentLimit[0]["MAXIMUM_NO_OF_PARTICIPANTS"].ToString()) > 0)
+                    if (!string.IsNullOrEmpty(currentLimit[0]["MAXIMUM_NO_OF_PARTICIPANTS"].ToString()))
                     {
-                        if (Convert.ToInt32(totalUsersEnrolled[0]["COUNT"].ToString()) >= Convert.ToInt32(currentLimit[0]["MAXIMUM_NO_OF_PARTICIPANTS"].ToString()))
+                        if (Convert.ToInt32(currentLimit[0]["MAXIMUM_NO_OF_PARTICIPANTS"].ToString()) > 0)
                         {
-                            return new AddUpdateDelete() { Message = "LIMIT-ERROR", Status = false };
+                            if (Convert.ToInt32(totalUsersEnrolled[0]["COUNT"].ToString()) >= Convert.ToInt32(currentLimit[0]["MAXIMUM_NO_OF_PARTICIPANTS"].ToString()))
+                            {
+                                return new AddUpdateDelete() { Message = "LIMIT-ERROR", Status = false };
+                            }
                         }
                     }
+
                 }
+                catch (Exception ex)
+                {
 
+                }
             }
-            catch (Exception ex)
-            {
-
-            }
-
 
 
             // Check if the user already exist in the participant master
@@ -260,18 +260,13 @@ namespace Barrway.Service.Repository
             if (participantCheckResult.Count > 0)
             {
                 // Participant already exist so no need to check if it is enrolled with the selected activity and resource
-
-                List<IDictionary<string, object>> transactionCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from TRANSACTION_MASTER_1942 where COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE}' and RESOURCE = '{model.transaction.RESOURCE}' and ACTIVITY = '{model.transaction.ACTIVITY}' and SLOT='{model.transaction.SLOT}'");
+                StudentId = participantCheckResult.FirstOrDefault()["Id"].ToString();
+                List<IDictionary<string, object>> transactionCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from TRANSACTION_MASTER_1942 where COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE}' and RESOURCE = '{model.transaction.RESOURCE}' and ACTIVITY = '{model.transaction.ACTIVITY}' and SLOT='{model.transaction.SLOT}' and student='{StudentId}'");
 
                 if (transactionCheckResult.Count > 0)
                 {
                     // user is already enrolled in the activity and resource
                     return new AddUpdateDelete() { Message = "ALREADY-ENROLLED", Status = false };
-                }
-                else
-                {
-                    // User is not enrolled for the selected activity and resource
-                    StudentId = participantCheckResult.FirstOrDefault()["Id"].ToString();
                 }
 
             }
@@ -299,7 +294,11 @@ namespace Barrway.Service.Repository
                 model.participant.ADDRESS = "";
                 model.participant.GENDER = publicUser.Data["GENDER"].ToString();
                 model.participant.IS_ACTIVE = "Y";
-                model.participant.STUDENT_NAME = publicUser.Data["FIRST_NAME"].ToString() + " " + publicUser.Data["LAST_NAME"].ToString();
+                string fullName = publicUser.Data["FIRST_NAME"].ToString() + " " + publicUser.Data["LAST_NAME"].ToString();
+                if (string.IsNullOrEmpty(fullName.Trim())) {
+                    fullName = publicUser.Data["USER_EMAIL"].ToString();
+                }
+                model.participant.STUDENT_NAME = fullName;
 
                 Form_DataTable data = new Form_DataTable();
                 data.action = (int)FormAction.Save;

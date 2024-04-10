@@ -115,7 +115,7 @@ function SetAllCalanders(pageNumber, Short) {
                         var RowEnd = '';
                         var ResponceData = response.data;
                         console.log(ResponceData, "ResponceData");
-                        if (response.data[i].TAGS != '') {
+                        if (response.data[i].TAGS != '' && IsJsonString(response.data[i].TAGS)) {
                             var tags = JSON.parse(response.data[i].TAGS);
                             for (var k = 0; k < tags.length; k++) {
                                 if (k > 0) {
@@ -271,3 +271,11 @@ function scaltonLoader() {
 }
 
 
+function IsJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
