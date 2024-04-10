@@ -1619,7 +1619,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 {
                     if (data.Short == "All")
                     {
-                        Short += "ORDER BY  [SEQUENCE] asc";
+                        Short += "ORDER BY case when [PRIORITY] is null then 1 else 0 end ,[PRIORITY] desc, case when ([SEQUENCE] is null OR [SEQUENCE]=0) then 1 else 0 end ,[SEQUENCE]";
                     }
 
                     if (data.Short == "Featured")
@@ -1632,7 +1632,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 }
                 else
                 {
-                    Short += "ORDER BY  [SEQUENCE] asc";
+                    Short += "ORDER BY case when [PRIORITY] is null then 1 else 0 end ,[PRIORITY] desc, case when ([SEQUENCE] is null OR [SEQUENCE]=0) then 1 else 0 end ,[SEQUENCE]";
                 }
 
 
@@ -1656,13 +1656,13 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                               ,[COMPANY_BANNER_PATH]
 							  ,[IS_SEARCHABLE_IN_MARKETPLACE]
                               ,company.PAGE_URL
-                              ,calendar.IS_FEATURED,calendar.[SEQUENCE]
+                              ,calendar.IS_FEATURED,calendar.[SEQUENCE],calendar.[PRIORITY]
                          FROM[dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                         join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendar.CALENDAR_SUB_CATEGORY_ID
                          join CALENDAR_COMMON_CATEGORY_1978 category on category.Id = calendar.CALENDAR_COMMON_CATEGORY_ID
                          join DISTRICT_MASTER_1928 district on district.Id = calendar.DISTRICT_ID
                          join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
-                         where company.IS_SEARCHABLE_IN_MARKETPLACE = 'Y' and company.IS_ACTIVE = 'Y' and company.IS_TEMPLATE = 'N' and calendar.CALENDAR_USE_TYPE = 'PUBLIC' {(!string.IsNullOrEmpty(filter) ? filter : "")}  
+                         where company.IS_SEARCHABLE_IN_MARKETPLACE = 'Y' and company.IS_ACTIVE = 'Y' and company.IS_TEMPLATE = 'N' and calendar.CALENDAR_USE_TYPE = 'PUBLIC' and [STATUS]='PUBLISH' {(!string.IsNullOrEmpty(filter) ? filter : "")}  
                                 )Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  {Short} OFFSET  @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
 
                 List<IDictionary<string, object>> companySubCategoryResult = await sqlFunction.ExecuteSqlQuery(query);
