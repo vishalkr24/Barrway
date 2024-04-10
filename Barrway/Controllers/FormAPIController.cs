@@ -410,7 +410,7 @@ namespace Barrway.Controllers
                                 if (alreadyEnrolledEvents.Any(x => x["Id"]?.ToString() == item["Id"]?.ToString()))
                                 {
                                     item.Add("IsAlreadyBooked", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["IsAlreadyBooked"]);
-                                    if (DateTime.Now > Convert.ToDateTime(alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["end"]?.ToString()) && alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["SESSION_REVIEWED"]?.ToString() == "N")
+                                    if (DateTimeUtility.Now() > Convert.ToDateTime(alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["end"]?.ToString()) && alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["SESSION_REVIEWED"]?.ToString() == "N")
                                     {
                                         item.Add("IsReviewable", 'Y');
                                     }
@@ -550,7 +550,7 @@ namespace Barrway.Controllers
 
                     foreach (var resource in resourceList)
                     {
-                        DateTime startDate = (Convert.ToDateTime(data.startDate).Year > DateTime.Now.Year)? Convert.ToDateTime(data.startDate) : DateTime.Now;
+                        DateTime startDate = (Convert.ToDateTime(data.startDate).Year > DateTimeUtility.Now().Year)? Convert.ToDateTime(data.startDate) : DateTimeUtility.Now();
                         DateTime endDate = Convert.ToDateTime(data.endDate).AddDays(-1);
 
                         var events = result.events.Where(x => x["resources"]?.ToString() == resource["Id"]?.ToString()).ToList();

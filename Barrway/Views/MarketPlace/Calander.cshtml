@@ -671,16 +671,16 @@
             min-width: 120px;
             border-radius: 100px;
         }
-        .info-select{
-            font-size:16px;
+
+        .info-select {
+            font-size: 16px;
         }
         /*div#vertical-resource-view .calendar .fc-event {
             right: calc(3% - 0px) !important;
         }*/
         div#vertical-resource-view .fc-time-grid .fc-event, .fc-time-grid .fc-bgevent {
-            margin-top:1px;
+            margin-top: 1px;
         }
-
     </style>
 }
 
@@ -850,18 +850,9 @@
                         </div>
 
                         <div class="col-md-12">
-                            <div class="favr">
+                            <div class="favr" id="favr">
 
-                                @if (!ViewBag.IsUserFavorite)
-                                {
-                                    <button id="btn-mark" onclick="markAsFavorite('@Model.COMPANY_CODE')"><img src="~/assets/marketplace/image/star.png"> @Resource.Mark_as_favorite</button>
 
-                                }
-                                else
-                                {
-                                    <button id="btn-mark-fav"><img src="~/assets/marketplace/image/starg.png">Favorite</button>
-                                    @*<button id="btn-unmark" onclick="removeAsFavorite('@Model.COMPANY_CODE')"><img src="~/assets/marketplace/image/star.png"> @Resource.Remove_as_favorite</button>*@
-                                }
                             </div>
                         </div>
                     </div>
@@ -933,11 +924,11 @@
                                 <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
                                     <div style="display:block" class="titleContainer">
                                         @*<p class="title1" style="font-size:16px;font-weight:600">
-                                {{d.dropdownListData.title}}
-                                <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
-                                <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
-                                <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
-                            </p>*@
+                                                {{d.dropdownListData.title}}
+                                                <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
+                                                <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
+                                                <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
+                                            </p>*@
                                         <p class="title1" style="font-weight:bold; font-size: 16px;"> {{d.formTitle}}</p>
                                     </div>
                                 </div>
@@ -1008,7 +999,7 @@
                         </ul>
 
                     </div>
-                    
+
 
 
                     <div class="div-flex div-list">
@@ -1203,7 +1194,7 @@
 @section scripts{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.min.js" integrity="sha512-mh+AjlD3nxImTUGisMpHXW03gE6F4WdQyvuFRkjecwuWLwD2yCijw4tKA3NsEFpA1C3neiKhGXPSIGSfCYPMlQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.css" integrity="sha512-gp+RQIipEa1X7Sq1vYXnuOW96C4704yI1n0YB9T/KqdvqaEgL6nAuTSrKufUX3VBONq/TPuKiXGLVgBKicZ0KA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="~/Scripts/MarketplaceScripts/CompanySchedule.js?@DateTime.Now.ToString("yyyyMmddHHMMssffff")"></script>
+    <script src="~/Scripts/MarketplaceScripts/CompanySchedule.js?@DateTimeUtility.Now().ToString("yyyyMmddHHMMssffff")"></script>
 
     <script>
         var dataModelList = [];
@@ -1281,15 +1272,15 @@
                                         debugger;
                                         const wrapper = document.createElement('div');
                                         wrapper.innerHTML = `<div>
-                                                                                                                                                ${eventData.customDate}
-                                                                                                                                            </div>
-                                                                                                                                            <div>
-                                                                                                                                                ${eventData.customTime}
-                                                                                                                                            </div>
-                                                                                                                                            <div>${eventData.customTitleSplit[2]}</div><br />
-                                                                                                                                            <div>${eventData.customTitleSplit[1]}</div>
-                                                                                                                                            <div>${eventData.customTitleSplit[0]}</div><br />
-                                                                                                                                            <h4 style="color:red">${response.Message}</h4>`;
+                                                                                                                                                            ${eventData.customDate}
+                                                                                                                                                        </div>
+                                                                                                                                                        <div>
+                                                                                                                                                            ${eventData.customTime}
+                                                                                                                                                        </div>
+                                                                                                                                                        <div>${eventData.customTitleSplit[2]}</div><br />
+                                                                                                                                                        <div>${eventData.customTitleSplit[1]}</div>
+                                                                                                                                                        <div>${eventData.customTitleSplit[0]}</div><br />
+                                                                                                                                                        <h4 style="color:red">${response.Message}</h4>`;
 
                                         swal({
                                             title: "You are going to book",
@@ -1300,7 +1291,7 @@
                                             }
 
                                         }).then(function (response) {
-                                            
+
                                             //if (eventData.IS_UPLOAD_REQUIRED == 'Y') {
 
                                             //}
@@ -1376,7 +1367,7 @@
                                                                             icon: "success",
                                                                             button: "Okay"
                                                                         }).then(function (boolValue) {
-                                                                            window.location.reload(); 
+                                                                            window.location.reload();
                                                                         });
 
                                                                     }
@@ -1481,7 +1472,7 @@
                                 swal({ type: 'error', showCloseButton: true, html: "something went wrong!" });
                             }
                         })
-                    }else{
+                    } else {
                         hideLoader();
                     }
                 });
@@ -1966,7 +1957,7 @@
                 var fileInput = $('#' + inputfileName)[0].files;
 
 
-                
+
 
                 if ($scope.validateForm(inputfileName, true)) {
                     var formData = new FormData();
@@ -2206,18 +2197,18 @@
             switch (modelItem.type) {
                 case "text":
                     value = `
-                                <label for="${modelItem.name}${id}">${modelItem.label} ${((modelItem.required == true) ? "*" : "")} ${((modelItem.description != undefined && modelItem.description != "") ? `<i class='fa fa-info-circle' aria-hidden='true' title='${modelItem.description}'></i>` : "")} </label>
-                                <input class="form-control ${additionalClass}" type="text" name="${modelItem.name}${id}" data-input-id="${id}" ${((modelItem.required == true) ? "required" : "")}/>`;
+                                            <label for="${modelItem.name}${id}">${modelItem.label} ${((modelItem.required == true) ? "*" : "")} ${((modelItem.description != undefined && modelItem.description != "") ? `<i class='fa fa-info-circle' aria-hidden='true' title='${modelItem.description}'></i>` : "")} </label>
+                                            <input class="form-control ${additionalClass}" type="text" name="${modelItem.name}${id}" data-input-id="${id}" ${((modelItem.required == true) ? "required" : "")}/>`;
                     break;
                 case "number":
                     value = `
-                                <label for="${modelItem.name}${id}">${modelItem.label}${((modelItem.required == true) ? "*" : "")} ${((modelItem.description != undefined && modelItem.description != "") ? `<i class='fa fa-info-circle' aria-hidden='true' title='${modelItem.description}'></i>` : "")} </label>
-                                <input class="form-control ${additionalClass}" type="number" name="${modelItem.name}${id}" data-input-id="${id}" ${((modelItem.required == true) ? "required" : "")}/>`;
+                                            <label for="${modelItem.name}${id}">${modelItem.label}${((modelItem.required == true) ? "*" : "")} ${((modelItem.description != undefined && modelItem.description != "") ? `<i class='fa fa-info-circle' aria-hidden='true' title='${modelItem.description}'></i>` : "")} </label>
+                                            <input class="form-control ${additionalClass}" type="number" name="${modelItem.name}${id}" data-input-id="${id}" ${((modelItem.required == true) ? "required" : "")}/>`;
                     break;
                 case "date":
                     value = `
-                                <label for="${modelItem.name}${id}">${modelItem.label}${((modelItem.required == true) ? "*" : "")} ${((modelItem.description != undefined && modelItem.description != "") ? `<i class='fa fa-info-circle' aria-hidden='true' title='${modelItem.description}'></i>` : "")} </label>
-                                <input class="form-control ${additionalClass}" type="date" name="${modelItem.name}${id}" data-input-id="${id}" ${((modelItem.required == true) ? "required" : "")}/>`;
+                                            <label for="${modelItem.name}${id}">${modelItem.label}${((modelItem.required == true) ? "*" : "")} ${((modelItem.description != undefined && modelItem.description != "") ? `<i class='fa fa-info-circle' aria-hidden='true' title='${modelItem.description}'></i>` : "")} </label>
+                                            <input class="form-control ${additionalClass}" type="date" name="${modelItem.name}${id}" data-input-id="${id}" ${((modelItem.required == true) ? "required" : "")}/>`;
                     break;
                 case "radio-group":
                     if (modelItem.values != null) {
@@ -2225,11 +2216,11 @@
 
                         modelItem.values.forEach(x => {
                             value += `
-                                        <div style="float:left;">
-                                            <input type="radio" ${(x.selected == true) ? "checked" : ""} ${((modelItem.required == true) ? "required" : "")} class="" id="${modelItem.name}${x.value}${id}" name="${modelItem.name}${id}" value="${x.value}" data-input-id="${id}">
-                                            <label class="form-check-label" for="${modelItem.name}${x.value}${id}">${x.label}</label>
-                                        </div>
-                                        `
+                                                    <div style="float:left;">
+                                                        <input type="radio" ${(x.selected == true) ? "checked" : ""} ${((modelItem.required == true) ? "required" : "")} class="" id="${modelItem.name}${x.value}${id}" name="${modelItem.name}${id}" value="${x.value}" data-input-id="${id}">
+                                                        <label class="form-check-label" for="${modelItem.name}${x.value}${id}">${x.label}</label>
+                                                    </div>
+                                                    `
                         });
                     }
                     break;
@@ -2238,11 +2229,11 @@
                         value += `<label for="${modelItem.name}${id}">${modelItem.label} ${((modelItem.required == true) ? "*" : "")} ${((modelItem.description != undefined && modelItem.description != "") ? `<i class='fa fa-info-circle' aria-hidden='true' title='${modelItem.description}'></i>` : "")} </label> <br />`;
                         modelItem.values.forEach(x => {
                             value += `
-                                        <div style="float:left;">
-                                            <input type="checkbox" class="" id="${modelItem.name}${x.value}${id}" name="${modelItem.name}${id}" ${((modelItem.required == true) ? "required" : "")} value="${x.value}" data-input-id="${id}">
-                                            <label class="form-check-label" for="${modelItem.name}${x.value}${id}">${x.label}</label>
-                                        </div>
-                                        `
+                                                    <div style="float:left;">
+                                                        <input type="checkbox" class="" id="${modelItem.name}${x.value}${id}" name="${modelItem.name}${id}" ${((modelItem.required == true) ? "required" : "")} value="${x.value}" data-input-id="${id}">
+                                                        <label class="form-check-label" for="${modelItem.name}${x.value}${id}">${x.label}</label>
+                                                    </div>
+                                                    `
                         });
                     }
                     break;
@@ -2251,8 +2242,8 @@
                         value += `<label for="${modelItem.name}${id}">${modelItem.label} ${((modelItem.required == true) ? "*" : "")} ${((modelItem.description != undefined && modelItem.description != "") ? `<i class='fa fa-info-circle' aria-hidden='true' title='${modelItem.description}'></i>` : "")} </label> <br /><select class="form-control" name="${modelItem.name}${id}" data-input-id="${id}" ${((modelItem.required != undefined && modelItem.required != '' && modelItem.required != 'N') ? "required" : "")}>`;
                         modelItem.values.forEach(x => {
                             value += `
-                                        <option value="${x.value}">${x.label}</option>
-                                        `
+                                                    <option value="${x.value}">${x.label}</option>
+                                                    `
                         });
                         value += "</select>";
                     }
@@ -2262,6 +2253,41 @@
             }
 
             return value;
+        }
+
+        $(document).ready(function () {
+            checkFavoriteCalendar();
+        })
+
+        function checkFavoriteCalendar() {
+            var CalendarCode = $("#calendar-selector option:selected").val();
+
+            $.ajax({
+                url: "/Marketplace/CheckSingleFavoriteCalendar",
+                type: "GET",
+                data: {
+                    CalendarCode: CalendarCode
+                },
+                success: function (response) {
+
+                    if (response.Status) {
+                        $("#favr").empty();
+                        setTimeout(function () {
+                            $("#favr").append(`<button id="btn-mark-fav" onclick="removeAsFavorite('@Model.COMPANY_CODE')"><img src="/assets/marketplace/image/starg.png">Favorite</button>`);
+                        }, 500)
+
+                    } else {
+                        $("#favr").empty();
+                        setTimeout(function () {
+                            $("#favr").append(`<button id="btn-mark" onclick="markAsFavorite('@Model.COMPANY_CODE')"><img src="/assets/marketplace/image/star.png"> @Resource.Mark_as_favorite</button>`)
+                        }, 500)
+
+                    }
+
+
+                }
+            });
+
         }
 
         function markAsFavorite(CompanyCode) {
@@ -2308,7 +2334,8 @@
                                         icon: "success",
                                         button: "Okay"
                                     }).then(function (boolValue) {
-                                        window.location.reload();
+                                        $("#favr").empty();
+                                        $("#favr").append(`<button id="btn-mark-fav" onclick="removeAsFavorite('@Model.COMPANY_CODE')"><img src="/assets/marketplace/image/starg.png">Favorite</button>`);
                                     });
 
 
@@ -2375,7 +2402,8 @@
                                         icon: "success",
                                         button: "Okay"
                                     }).then(function (boolValue) {
-                                        window.location.reload();
+                                        $("#favr").empty();
+                                        $("#favr").append(`<button id="btn-mark" onclick="markAsFavorite('@Model.COMPANY_CODE')"><img src="/assets/marketplace/image/star.png"> @Resource.Mark_as_favorite</button>`)
                                     });
 
 

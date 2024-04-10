@@ -110,7 +110,7 @@
         <div class="col-md-12">
             <div class="session-review mt-0">
                 <div class="session-review-inner">
-                    <p><b>@((DateTime.Now > Model.TO_TIME) ? "You have finished this session": "Your upcoming event")</b></p>
+                    <p><b>@((DateTimeUtility.Now() > Model.TO_TIME) ? "You have finished this session": "Your upcoming event")</b></p>
                     <p>
                         <b>
                             @Model.SERVICE_NAME
@@ -132,7 +132,7 @@
                     <p>@Model.LOCATION_NAME<br /> @Model.SERVICE_PROVIDER_NAME </p>
                     <div class="session-button">
 
-                        @if (!Model.SESSION_REVIEWED && DateTime.Now > Model.TO_TIME)
+                        @if (!Model.SESSION_REVIEWED && DateTimeUtility.Now() > Model.TO_TIME)
                         {
                             <button class="pink" onclick="renderReviewForm()">Leave a comment</button>
                         }

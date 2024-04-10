@@ -9,7 +9,7 @@
 
     var baseUrl = System.Web.Configuration.WebConfigurationManager.AppSettings["baseURL"].ToString();
     var webapibaseurl = System.Web.Configuration.WebConfigurationManager.AppSettings["webapibaseurl"].ToString();
-    string token = DateTime.Now.ToString("ddMMyyyyHHmmssffffff");
+    string token = DateTimeUtility.Now().ToString("ddMMyyyyHHmmssffffff");
 }
 @section styles{
 
@@ -817,7 +817,7 @@
                                                 <div style="padding:1.5rem; padding-top:0px;">
                                                     <h2 style="padding-bottom:8px;"><b>({{queue.QUEUE_PREFIX}}) {{queue.QUEUE_NAME}}</b></h2>
                                                     <h4 class="pink" style="margin-bottom:4px;"><span>Current</span> <b>{{queue.CurrentTicket}}</b></h4>
-                                                    <span>@DateTime.Now.ToString("hh:mm tt")</span>
+                                                    <span>@DateTimeUtility.Now().ToString("hh:mm tt")</span>
                                                 </div>
 
 

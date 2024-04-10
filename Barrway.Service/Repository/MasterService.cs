@@ -703,7 +703,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                                     join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
 									left join SESSION_REVIEWS_1983 review on review.EVENT_ID = transaction_m.SLOT and review.USER_EMAIL = participant_m.EMAIL
                                     where 
-                                    {((Type == "1") ? $@"'{DateTime.Now.ToString("yyyy-MM-dd HH:mm")}' <= cast(f.[start] as datetime)" : $@"'{DateTime.Now.ToString("yyyy-MM-dd HH:mm")}' > cast(f.[end] as datetime)")}
+                                    {((Type == "1") ? $@"'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' <= cast(f.[start] as datetime)" : $@"'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' > cast(f.[end] as datetime)")}
                                     and f.formid=2305 and participant_m.EMAIL = '{email}' and transaction_m.SLOT = f.Id {((!string.IsNullOrEmpty(EventId) ? $@" and f.Id = '{EventId}'" : ""))}
                                     ) ,
                                     cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
@@ -989,7 +989,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 DateTime startTime = Convert.ToDateTime(meetingDetails.Data[0]["start"]);
                 DateTime endTime = Convert.ToDateTime(meetingDetails.Data[0]["end"]);
                 str.AppendLine(string.Format("DTSTART:{0:yyyyMMddTHHmmssZ}", startTime.ToString("yyyyMMddTHHmmss")));
-                str.AppendLine(string.Format("DTSTAMP:{0:yyyyMMddTHHmmssZ}", DateTime.Now));
+                str.AppendLine(string.Format("DTSTAMP:{0:yyyyMMddTHHmmssZ}", DateTimeUtility.Now()));
                 str.AppendLine(string.Format("DTEND:{0:yyyyMMddTHHmmssZ}", endTime.ToString("yyyyMMddTHHmmss")));
 
                 Array customForms = meetingDetails.Data[0]["customForms"].ToString().Split(',');

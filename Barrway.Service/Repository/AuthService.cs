@@ -618,7 +618,7 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
         {
             try
             {
-                string sqlString = $@" update [USER_TOKEN_1923] set VERIFICATION_TIME='{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}',[IS_ACTIVE]='N',updated_at=getdate()  where [TOKEN]='{token}' and [USER_ID]='{userID}'";
+                string sqlString = $@" update [USER_TOKEN_1923] set VERIFICATION_TIME='{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm:ss")}',[IS_ACTIVE]='N',updated_at=getdate()  where [TOKEN]='{token}' and [USER_ID]='{userID}'";
 
                 var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
                 if (result > 0)
@@ -679,7 +679,7 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
         {
             try
             {
-                string sqlString = $@" update [USER_TOKEN_1950] set VERIFICATION_TIME='{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}',[IS_ACTIVE]='NO',updated_at=getdate()  where [TOKEN]='{token}'";
+                string sqlString = $@" update [USER_TOKEN_1950] set VERIFICATION_TIME='{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm:ss")}',[IS_ACTIVE]='NO',updated_at=getdate()  where [TOKEN]='{token}'";
 
                 var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
                 if (result > 0)
@@ -834,7 +834,7 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
                 EMAIL = Email,
                 USER_ID = userID,
                 TOKEN = Guid.NewGuid().ToString(),
-                TOKEN_TIME = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                TOKEN_TIME = DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm:ss"),
                 IS_ACTIVE = "Y"
             };
             var userTokeDic = userToken.ToDictionary();
@@ -867,7 +867,7 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
                 EMAIL = Email,
                 USER_ID = userID,
                 TOKEN = Guid.NewGuid().ToString(),
-                TOKEN_TIME = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                TOKEN_TIME = DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm:ss"),
                 IS_ACTIVE = "Y"
             };
             var userTokeDic = userToken.ToDictionary();
@@ -901,7 +901,7 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
                 EMAIL = Email,
                 USER_ID = UserName,
                 TOKEN = Guid.NewGuid().ToString(),
-                TOKEN_TIME = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                TOKEN_TIME = DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm:ss"),
                 IS_ACTIVE = "YES"
             };
             var userTokeDic = userToken.ToDictionary();

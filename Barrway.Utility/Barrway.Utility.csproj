@@ -142,6 +142,7 @@
     <Compile Include="Common\CustomErrorModel.cs" />
     <Compile Include="Common\CustomMethods.cs" />
     <Compile Include="Common\DateTimeHelper.cs" />
+    <Compile Include="Common\DateTimeUtility.cs" />
     <Compile Include="Common\DictionaryToClass.cs" />
     <Compile Include="Common\DictionaryToDataTable.cs" />
     <Compile Include="Common\EmailNotification.cs" />
