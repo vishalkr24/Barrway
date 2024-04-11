@@ -2968,6 +2968,7 @@ async function rendarPopupCalendar(assignDate) {
                 } else if (eventData.EVENT_TYPE == "BOOKING" && !eventData.IS_PUBLIC_USER_EVENT) {
                     element.addClass("booking-fc-bgevent");
                 } else {
+                    element.addClass("my-booking-fc-bgevent");
                     element.append(_mainTempHtml);
                     element.attr('title', rowTooltipTitleDisplay + "  " + rowTooltipDisplay);
                     element.attr('data-html', 'true');
