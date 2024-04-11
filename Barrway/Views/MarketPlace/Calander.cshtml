@@ -444,6 +444,12 @@
         .tooltip {
             z-index: 100000000;
         }
+        .my-booking-fc-bgevent {
+            background: #3FBFC7!important;
+        }
+        .my-booking-fc-bgevent .time{
+            color: #fff !important;
+        }
     </style>
     <style>
         .swal-footer {
@@ -1034,13 +1040,13 @@
                                 </label>
                                 <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
                                     <div style="display:block" class="titleContainer">
-                                        <p class="title1" style="font-size:16px;font-weight:600">
+                                        @*<p class="title1" style="font-size:16px;font-weight:600">
                                             {{d.dropdownListData.title}}
                                             <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
                                             <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
                                             <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
-                                        </p>
-                                        <p class="title1"> {{d.formTitle}}</p>
+                                        </p>*@
+                                        <p class="title1" style="font-weight:bold; font-size: 16px;"> {{d.formTitle}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -1075,6 +1081,9 @@
                         <label id="labelWaiting"></label>
                         <ul id="newtabuListUlWaiting">
                         </ul>
+                    </div>
+                    <div class="div-flex">
+                        <p style="font-weight:600">The white area is the available time. Please click on the available time to book.</p>
                     </div>
 
                     <div id="agenda-view2">
