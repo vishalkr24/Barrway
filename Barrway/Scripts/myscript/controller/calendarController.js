@@ -10500,12 +10500,10 @@
                             }
                             else {
                                 swal({
-                                    icon: "Error",
+                                    icon: "error",
                                     title: "Error",
                                     text: exists.Message
                                 });
-                                //notifierService.notifyMessage('error', 'FormEntry', exists.Message);
-
                             }
                         }
                     }
@@ -10515,7 +10513,6 @@
                     console.log("some error occured." + err);
                 });
             // $rootScope.$emit("HideLoading");
-
         }
 
         $scope.updateCalenderReferrence = function (param) {
@@ -16645,6 +16642,100 @@
         }, function (err) {
 
         });
+
+        $scope.cancelPublicUserBooking = function () {
+            var eventData = $scope.selectEventDetails;
+
+            swal({
+                title: "Are you sure to cancel the selected booking?",
+                buttons: {
+                    cancel: "No",
+                    confirm: "Yes"
+                }
+
+            }).then(function (response) {
+                debugger;
+                if (response) {
+                    showLoader();
+
+                    var obj = {
+                        USER_ID: "",
+                        RESOURCE_NAME: eventData.customTitleSplit[0],
+                        ACTIVITY_NAME: eventData.customTitleSplit[1],
+                        FormGroupKey: $scope.selectEventDetails.formGroupKey,
+                        participant: {
+                            DESCRIPTION: String(eventData.description),
+                            COMPANY_CODE: eventData.COMPANY_CODE,
+                            CALENDAR_CODE: eventData.CALENDAR_CODE
+                        },
+                        transaction: {
+                            SLOT: eventData.Id,
+                            RESOURCE: eventData.resourceId,
+                            ACTIVITY: eventData.activities,
+                            STUDENT: "",
+                            REMARKS: "",
+                            FEES: "",
+                            ATTENDANCE: "NOT-MARKED",
+                            COMPANY_CODE: eventData.COMPANY_CODE,
+                            CALENDAR_CODE: eventData.CALENDAR_CODE
+                        }
+                    }
+
+                    $.ajax({
+                        url: "/UserAdmin/CancelPublicUserBooking",
+                        type: "POST",
+                        data: obj,
+                        success: function (data) {
+                            hideLoader();
+
+                            swal({
+                                title: (data.Status) ? "Success" : "Error",
+                                text: data.Message,
+                                icon: (data.Status) ? "success" : "error",
+                                button: "Okay"
+                            }).then(function () {
+                                if (data.Status) {
+                                    window.location.reload();
+                                }
+                            });
+
+                        },
+                        error: function () {
+                            hideLoader();
+                            swal({ type: 'error', showCloseButton: true, html: "something went wrong!" });
+                        }
+                    })
+                } else {
+                    hideLoader();
+                }
+            });
+
+
+        }
+
+        $scope.reviewSession = function () {
+            var eventData = $scope.selectEventDetails;
+
+            $.ajax({
+                url: "/UserAdmin/GetSingleEventDetails",
+                type: "GET",
+                data: {
+                    EventId: eventData.Id,
+                    Type: 2
+                },
+                success: function (response) {
+                    debugger;
+                    $("#customEventDetailsModelPopUp").modal("hide");
+                    $("#customEventDetailsServiceModelPopUp").modal("hide");
+                    $("#ViewBookingModal .modal-body").html(response);
+                    $("#ViewBookingModal").modal("show");
+                },
+                error: function (error) {
+
+                }
+            });
+
+        }
 
         //$scope.getCalendarData = function () {
 

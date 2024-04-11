@@ -15481,6 +15481,10 @@ function removeColumns(formid,columns) {
         columns = columns.filter(x => !removeColumnName.find(y => x.title && x.title.split('|').find(z => z == y)));
     }
 
+    if (formid == 2326) {
+        columns.find(x => x.title == "B COIN PURCHASE").title = "CREDIT PURCHASE";
+    }
+
     var removeColumnsFormid = [2240, 2242, 2267, 2311, 2326];
     var removeColumnName = ['Edit'];
     var excludeColumAllTable = ['Move Row'];
@@ -15488,18 +15492,7 @@ function removeColumns(formid,columns) {
     if (removeColumnsFormid.find(x => x == formid)) {
         return columns.filter(x => !removeColumnName.find(y => x.title && x.title.split('|').find(z => z == y)));
     }
-
-    //var removeColumnsFormid = [2295];
-    //var removeColumnName = ['BUSINESS ACCOUNT ID'];
-    debugger;
-    if (formid == 2295) {
-        columns.find(x => x.title == "BUSINESS ACCOUNT").title = "BUSINESS USER NAME";
-        //columns = columns.filter(x => !excludeColumAllTable.find(y => x.title && x.title.split('|').find(z => z == y)))
-        //if (removeColumnsFormid.find(x => x == formid)) {
-        //    return columns.filter(x => !removeColumnName.find(y => x.title && x.title.split('|').find(z => z == y)));
-        //}
-    }
-
+    
     if (formid == 2296 || formid == 2322) {
         columns.find(x => x.title == "COMPANY CODE").title = "COMPANY";
         columns.find(x => x.title == "CALENDAR CODE").title = "CALENDAR";
@@ -15595,6 +15588,13 @@ function addNewColumns(formid, columns) {
         
 
     }
+
+    if (formid == 2326) {
+        columns.find(x => x.field == "CREDIT_EXPIRE_DATE").formatter = function (cell, formatter) {
+            return moment(cell.getData().CREDIT_EXPIRE_DATE, 'YYYY-MM-DD').format("DD-MM-YYYY");
+        }
+    }
+
 
     if (formidList.find(x => x == formid) != null) {
         columns.unshift({

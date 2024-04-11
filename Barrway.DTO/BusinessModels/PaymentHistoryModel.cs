@@ -18,6 +18,7 @@ namespace Barrway.DTO.BusinessModels
         public string METHOD { get; set; }
         public double CLIENT_PAID_HKD { get; set; }
         public string STATUS { get; set; }
+        public DateTime CREDIT_EXPIRE_DATE { get; set; }
         public string USER_ID { get; set; }
     }
 }

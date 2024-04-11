@@ -2057,7 +2057,7 @@ namespace Barrway.Service.Repository
                                             f.created_at,
 											f.CALENDAR_NAME, 
 											csd.ASSIGNED_SESSIONS,
-											(select count(*) from CALENDAR_FORM_1935 where CALENDAR_CODE = f.CALENDAR_CODE and f.created_at >= @StartDate and f.created_at <= @EndDate) as 'SESSIONS_CREATED'
+											(select count(*) from CALENDAR_FORM_1935 where CALENDAR_CODE = f.CALENDAR_CODE and created_at >= @StartDate and created_at <= @EndDate) as 'SESSIONS_CREATED'
 											from BUSINESS_CALENDAR_MASTER_1925 f
 											JOIN BUSINESS_COMPANY_MASTER_1924 CMP ON CMP.COMPANY_CODE = F.COMPANY_CODE
 											left Join (select * from COMPANY_SUBSCRIPTION_DETAILS_1939 where IS_ACTIVE = 'Y') csd on csd.COMPANY_ID = CMP.Id
