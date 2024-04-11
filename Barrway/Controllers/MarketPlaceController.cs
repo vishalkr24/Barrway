@@ -162,12 +162,14 @@ namespace Barrway.Controllers
                 var transactionData = await masterService.AllCalandersByCategory(data);
                 var transactionList = transactionData.Data;
                 double last_page = 0;
+                double Pagination = 0;
                 if (transactionList != null && transactionList.Count > 0)
                 {
                     var singData = transactionList[0];
                     var total_records = Convert.ToInt32(singData["total_records"].ToString());
                     var size = Convert.ToInt32(singData["size"].ToString());
                     double paging = (double)total_records / size;
+                    Pagination = Math.Ceiling(paging);///Math.Floor(paging);
 
                     if (total_records == size)
                     {
@@ -178,7 +180,7 @@ namespace Barrway.Controllers
                         last_page = Math.Floor(paging) + 1;
                     }
                 }
-                return Json(new { data = transactionList, last_page, Heading }, JsonRequestBehavior.AllowGet);
+                return Json(new { data = transactionList, last_page, Pagination, Heading }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -911,16 +913,27 @@ namespace Barrway.Controllers
                 var transactionData = await masterService.GetAllBlog(data);
                 var transactionList = transactionData.Data;
                 double last_page = 0;
+                double Pagination = 0;
                 if (transactionList != null && transactionList.Count > 0)
                 {
                     var singData = transactionList[0];
                     var total_records = Convert.ToInt32(singData["total_records"].ToString());
                     var size = Convert.ToInt32(singData["size"].ToString());
                     double paging = (double)total_records / size;
-                    last_page = Math.Floor(paging) + 1;
+                    Pagination = Math.Ceiling(paging);
+                    if (total_records == size)
+                    {
+                        last_page = Math.Floor(paging);
+                    }
+                    else
+                    {
+                        last_page = Math.Floor(paging) + 1;
+                    }
+
+                    //last_page = Math.Floor(paging) + 1;
                 }
 
-                return Json(new { data = transactionList, last_page }, JsonRequestBehavior.AllowGet);
+                return Json(new { data = transactionList, last_page, Pagination }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -938,12 +951,14 @@ namespace Barrway.Controllers
                 var transactionData = await masterService.GetAllFeaturedCompany(data);
                 var transactionList = transactionData.Data;
                 double last_page = 0;
+                double Pagination = 0;
                 if (transactionList != null && transactionList.Count > 0)
                 {
                     var singData = transactionList[0];
                     var total_records = Convert.ToInt32(singData["total_records"].ToString());
                     var size = Convert.ToInt32(singData["size"].ToString());
                     double paging = (double)total_records / size;
+                    Pagination = Math.Ceiling(paging);///Math.Floor(paging);
 
                     if (total_records == size)
                     {
@@ -955,7 +970,7 @@ namespace Barrway.Controllers
                     }
                 }
 
-                return Json(new { data = transactionList, last_page }, JsonRequestBehavior.AllowGet);
+                return Json(new { data = transactionList, last_page, Pagination }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

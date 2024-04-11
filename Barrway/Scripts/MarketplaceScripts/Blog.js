@@ -26,7 +26,8 @@ function GetBlogs(pageNumber, blog_tag) {
             } else {
                 nextPage = pageNumber + 1;
             }
-            var hardBindLimit = (response.last_page < 5) ? response.last_page : 5;
+            //var hardBindLimit = (response.last_page < 5) ? response.last_page : 5;
+            var hardBindLimit = response.Pagination;
             $(".pagination").empty();
             $(".pagination").append(`<button class="btn" onclick="setCompanyData(1)"><img src="../assets/marketplace/image/p1.png" /></button>`);
             $(".pagination").append(`<button class="btn" id="next-page-nav" onclick="GetBlogs(${(pageNumber <= 1) ? 1 : (pageNumber - 1)},'')"><img src="../assets/marketplace/image/p12.png" /></button>`);

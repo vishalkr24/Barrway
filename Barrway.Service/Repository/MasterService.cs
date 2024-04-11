@@ -1277,7 +1277,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
             {
 
 
-                string sqlQuery = $@"select f.Id,f.CALENDAR_NAME,f.CALENDAR_PHOTO_NAME,f.CALENDAR_PHOTO_PATH,f.COMPANY_CODE,f.TAGS,cmp.COMPANY_NAME_ENGLISH from BUSINESS_CALENDAR_MASTER_1925 f join BUSINESS_COMPANY_MASTER_1924 cmp on cmp.COMPANY_CODE = f.COMPANY_CODE where cmp.IS_TEMPLATE = 'N' and f.[STATUS]='PUBLISH' and (f.CALENDAR_NAME like '%{keyword}%' OR f.TAGS like '%{keyword}%') ";
+                string sqlQuery = $@"select f.Id,f.CALENDAR_NAME,f.CALENDAR_CODE,f.CALENDAR_PHOTO_NAME,f.CALENDAR_PHOTO_PATH,f.COMPANY_CODE,f.TAGS,cmp.COMPANY_NAME_ENGLISH from BUSINESS_CALENDAR_MASTER_1925 f join BUSINESS_COMPANY_MASTER_1924 cmp on cmp.COMPANY_CODE = f.COMPANY_CODE where cmp.IS_TEMPLATE = 'N' and f.[STATUS]='PUBLISH' and (f.CALENDAR_NAME like '%{keyword}%' OR f.TAGS like '%{keyword}%') ";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 

@@ -47,7 +47,8 @@ function setCompanyData(pageNumber, SearchText) {
                 nextPage = pageNumber + 1;
             }
 
-            var hardBindLimit = (response.last_page < 5) ? response.last_page : 5;
+            //var hardBindLimit = (response.last_page < 5) ? response.last_page : 5;
+            var hardBindLimit = response.Pagination;
 
             $(".pagination").empty();
             $(".pagination").append(`<button class="btn" onclick="setCompanyData(1,'')"><img src="../assets/marketplace/image/p1.png" /></button>`);
