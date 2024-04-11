@@ -104,8 +104,8 @@ namespace Barrway.Service.Repository
         {
             return $@" and 
                                     (
-	                                    Convert({((ByDate) ? "datetime" : "time")}, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert({((ByDate) ? "datetime" : "time")}, ses.SESSION_START_TIME, 105) and 
-	                                    Convert({((ByDate) ? "datetime" : "time")}, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) < Convert({((ByDate) ? "datetime" : "time")}, ses.SESSION_END_TIME, 105)
+	                                    Convert({((ByDate) ? "datetime" : "time")}, '{DateTimeUtility.Now().ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert({((ByDate) ? "datetime" : "time")}, ses.SESSION_START_TIME, 105) and 
+	                                    Convert({((ByDate) ? "datetime" : "time")}, '{DateTimeUtility.Now().ToString("dd-MM-yyyy HH:mm:ss")}', 105) < Convert({((ByDate) ? "datetime" : "time")}, ses.SESSION_END_TIME, 105)
                                     )";
         }
 
@@ -217,7 +217,7 @@ namespace Barrway.Service.Repository
                                     join BUSINESS_CALENDAR_MASTER_1925 cal on cal.CALENDAR_CODE = ses.CALENDAR_CODE
                                     where map.QUEUE_ID = '{model.QUEUE_ID}'  {getCommonDateConditionString(ByDate)} and 
                                     (
-	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.QUEUE_OPEN_TIME, 105)
+	                                    Convert(datetime, '{DateTimeUtility.Now().ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.QUEUE_OPEN_TIME, 105)
                                     ) order by cast(ses.QUEUE_OPEN_TIME as time) desc";
 
                 var result = await sqlFunction.ExecuteSqlQuery(query);
@@ -281,13 +281,13 @@ namespace Barrway.Service.Repository
                                    ,0
                                    ,0
                                    ,null
-                                   ,(select dbo.GenerateQueueTicketNumber('{model.QUEUE_ID}','{DateTime.Now.ToString("dd-MM-yyyy HH:mm")}','{model.SESSION_ID}'))
+                                   ,(select dbo.GenerateQueueTicketNumber('{model.QUEUE_ID}','{DateTimeUtility.Now().ToString("dd-MM-yyyy HH:mm")}','{model.SESSION_ID}'))
                                    ,'{model.SESSION_ID}'
                                    ,'{model.QUEUE_ID}'
                                    ,'{model.USER_ID}'
                                    ,'{model.STATUS}'
-                                   ,'{DateTime.Now.ToString("yyyy-MM-dd HH:mm")}'
-                                   ,'{DateTime.Now.ToString("yyyy-MM-dd HH:mm")}'
+                                   ,'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'
+                                   ,'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'
                                    ,null
                                    ,null
                                    ,0)";
@@ -331,7 +331,7 @@ namespace Barrway.Service.Repository
                                     join BUSINESS_CALENDAR_MASTER_1925 cal on cal.CALENDAR_CODE = ses.CALENDAR_CODE
                                     where map.QUEUE_ID = '{model.QUEUE_ID}'  {getCommonDateConditionString(ByDate)} and 
                                     (
-	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.QUEUE_OPEN_TIME, 105)
+	                                    Convert(datetime, '{DateTimeUtility.Now().ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.QUEUE_OPEN_TIME, 105)
                                     ) order by cast(ses.QUEUE_OPEN_TIME as time) desc)
                                 DECLARE @Counter INT = 0;
                                 DECLARE @QueuePrefix varchar = (select QUEUE_PREFIX from QUEUE_MASTER_1973 where Id = '{model.QUEUE_ID}');
@@ -368,7 +368,7 @@ namespace Barrway.Service.Repository
                                     join BUSINESS_CALENDAR_MASTER_1925 cal on cal.CALENDAR_CODE = ses.CALENDAR_CODE
                                     where ses.CALENDAR_CODE = '{CalendarCode}' and ses.COMPANY_CODE = '{CompanyCode}' q_m.QUEUE_USAGE = 'TICKET' and {getCommonDateConditionString(ByDate)} and 
                                     (
-	                                    Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.QUEUE_OPEN_TIME, 105)
+	                                    Convert(datetime, '{DateTimeUtility.Now().ToString("dd-MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.QUEUE_OPEN_TIME, 105)
                                     ) order by cast(ses.QUEUE_OPEN_TIME as time) desc";
 
                 var result = await sqlFunction.ExecuteSqlQuery(query);

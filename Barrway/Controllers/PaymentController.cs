@@ -139,7 +139,7 @@ namespace Barrway.Controllers
                 {
                     ORDER_NO = OrderNo,
                     PAYMENT_REQUEST_JSON = JsonConvert.SerializeObject(options),
-                    REQUEST_TIME = DateTime.Now,
+                    REQUEST_TIME = DateTimeUtility.Now(),
                     PAYMENT_RESPONSE_JSON = ""
                 };
 
@@ -176,7 +176,7 @@ namespace Barrway.Controllers
                 {
                     ORDER_NO = PackageData["OrderNo"].ToString(),
                     PAYMENT_REQUEST_JSON = "",
-                    RESPONSE_TIME = DateTime.Now,
+                    RESPONSE_TIME = DateTimeUtility.Now(),
                     PAYMENT_RESPONSE_JSON = session.StripeResponse.Content
                 };
 
@@ -189,7 +189,7 @@ namespace Barrway.Controllers
                     CALENDAR_CODE = PackageData["CALENDAR_CODE"].ToString(),
                     COMPANY_CODE = PackageData["COMPANY_CODE"].ToString(),
                     CLIENT_PAID_HKD = Convert.ToDouble(PackageData["PACKAGE_PRICE"]),
-                    PAID_DATE = DateTime.Now,
+                    PAID_DATE = DateTimeUtility.Now(),
                     METHOD = "Card",
                     PAYMENT_ID = PackageData["OrderNo"].ToString(),
                     PLAN_ID = (PackageData["Id"]).ToString(),
@@ -239,7 +239,7 @@ namespace Barrway.Controllers
                 {
                     ORDER_NO = PackageData["OrderNo"].ToString(),
                     PAYMENT_REQUEST_JSON = "",
-                    RESPONSE_TIME = DateTime.Now,
+                    RESPONSE_TIME = DateTimeUtility.Now(),
                     PAYMENT_RESPONSE_JSON = session.StripeResponse.Content
                 };
 
@@ -251,7 +251,7 @@ namespace Barrway.Controllers
                     CALENDAR_CODE = PackageData["CALENDAR_CODE"].ToString(),
                     COMPANY_CODE = PackageData["COMPANY_CODE"].ToString(),
                     CLIENT_PAID_HKD = Convert.ToDouble(PackageData["PACKAGE_PRICE"]),
-                    PAID_DATE = DateTime.Now,
+                    PAID_DATE = DateTimeUtility.Now(),
                     METHOD = "Card",
                     PAYMENT_ID = session.PaymentIntentId,
                     PLAN_ID = (PackageData["Id"]).ToString(),
@@ -290,7 +290,7 @@ namespace Barrway.Controllers
                     PLAN_NAME = PackageData.Data["PLAN_NAME"]?.ToString(),
                     SESSION_MONTH_COMPANY = PackageData.Data["VALID_SESSIONS"]?.ToString(),
                     VALIDITY_DAYS = (isMonthly) ? 30 : 365,
-                    VALID_TILL = (isMonthly) ? DateTime.Now.AddMonths(1).ToString("yyyy-MM-dd HH:mm") : DateTime.Now.AddYears(1).ToString("yyyy-MM-dd HH:mm"),
+                    VALID_TILL = (isMonthly) ? DateTimeUtility.Now().AddMonths(1).ToString("yyyy-MM-dd HH:mm") : DateTimeUtility.Now().AddYears(1).ToString("yyyy-MM-dd HH:mm"),
                     ORDER_PRICE = (isMonthly) ? Convert.ToDouble(PackageData.Data["PLAN_PRICE"]?.ToString()) : Convert.ToDouble(PackageData.Data["YEARA_PRICE"]?.ToString()),
                     ORDER_QTY = 1,
                     USER_ID = User.Identity.Name,
@@ -393,7 +393,7 @@ namespace Barrway.Controllers
                 {
                     ORDER_NO = OrderNo,
                     PAYMENT_REQUEST_JSON = JsonConvert.SerializeObject(options),
-                    REQUEST_TIME = DateTime.Now,
+                    REQUEST_TIME = DateTimeUtility.Now(),
                     PAYMENT_RESPONSE_JSON = ""
                 };
 
@@ -432,7 +432,7 @@ namespace Barrway.Controllers
                     {
                         ORDER_NO = PackageData["OrderNo"].ToString(),
                         PAYMENT_REQUEST_JSON = "",
-                        RESPONSE_TIME = DateTime.Now,
+                        RESPONSE_TIME = DateTimeUtility.Now(),
                         PAYMENT_RESPONSE_JSON = session.StripeResponse.Content
                     };
 
@@ -447,7 +447,7 @@ namespace Barrway.Controllers
                         PAYMENT_STATUS = session.Status,
                         PAYMENT_METHOD = "Card",
                         PAYMENT_DESCRIPTION = PackageData["PLAN_NAME"]?.ToString() + "/" + PackageData["PLAN_DESC"]?.ToString(),
-                        PAYMENT_DATE = DateTime.Now,
+                        PAYMENT_DATE = DateTimeUtility.Now(),
                         ORDER_ID = PackageData["OrderNo"].ToString()
                     };
 
@@ -499,7 +499,7 @@ namespace Barrway.Controllers
                 {
                     ORDER_NO = PackageData["OrderNo"].ToString(),
                     PAYMENT_REQUEST_JSON = "",
-                    RESPONSE_TIME = DateTime.Now,
+                    RESPONSE_TIME = DateTimeUtility.Now(),
                     PAYMENT_RESPONSE_JSON = session.StripeResponse.Content
                 };
 
@@ -514,7 +514,7 @@ namespace Barrway.Controllers
                     PAYMENT_STATUS = session.Status,
                     PAYMENT_METHOD = "Card",
                     PAYMENT_DESCRIPTION = PackageData["PLAN_NAME"]?.ToString() + "/" + PackageData["PLAN_DESCRIPTION"]?.ToString(),
-                    PAYMENT_DATE = DateTime.Now,
+                    PAYMENT_DATE = DateTimeUtility.Now(),
                     ORDER_ID = PackageData["OrderNo"].ToString()
                 };
 

@@ -933,7 +933,7 @@ namespace Barrway.Controllers
                 if (DateTime.TryParse(_createdTime, out createdTime))
                 {
 
-                    if (DateTime.Now.Subtract(createdTime).TotalHours > 24)
+                    if (DateTimeUtility.Now().Subtract(createdTime).TotalHours > 24)
                     {
                         TempData["failed"] = "Email Activation Link Expired!";
                         return View();
@@ -996,7 +996,7 @@ namespace Barrway.Controllers
                 if (DateTime.TryParse(_createdTime, out createdTime))
                 {
 
-                    if (DateTime.Now.Subtract(createdTime).TotalHours > 24)
+                    if (DateTimeUtility.Now().Subtract(createdTime).TotalHours > 24)
                     {
                         TempData["failed"] = "Reset Password Link Expired!";
                         return View();
@@ -1034,7 +1034,7 @@ namespace Barrway.Controllers
                 if (DateTime.TryParse(_createdTime, out createdTime))
                 {
 
-                    if (DateTime.Now.Subtract(createdTime).TotalHours > 24)
+                    if (DateTimeUtility.Now().Subtract(createdTime).TotalHours > 24)
                     {
                         ModelState.AddModelError("", "Reset Password Link Expired!");
                         return View();
@@ -1262,7 +1262,7 @@ namespace Barrway.Controllers
                 if (DateTime.TryParse(_createdTime, out createdTime))
                 {
 
-                    if (DateTime.Now.Subtract(createdTime).TotalHours > 24)
+                    if (DateTimeUtility.Now().Subtract(createdTime).TotalHours > 24)
                     {
                         TempData["failed"] = "Email Activation Link Expired!";
                         return View();

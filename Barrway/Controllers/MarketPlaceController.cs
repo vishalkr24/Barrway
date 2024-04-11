@@ -30,7 +30,7 @@ namespace Barrway.Controllers
         private readonly IFormAPIRepository formAPIRepository;
         private readonly ICalendarService calendarService;
 
-        public MarketPlaceController(IBusinessUserService businessUserService, IGlobalMasterService globalMasterService, IMasterService masterService, IPublicUserService publicUserService, IAuthService authService, IFormAPIRepository formAPIRepository,ICalendarService calendarService)
+        public MarketPlaceController(IBusinessUserService businessUserService, IGlobalMasterService globalMasterService, IMasterService masterService, IPublicUserService publicUserService, IAuthService authService, IFormAPIRepository formAPIRepository, ICalendarService calendarService)
         {
             this.businessUserService = businessUserService;
             this.globalMasterService = globalMasterService;
@@ -116,7 +116,7 @@ namespace Barrway.Controllers
             return View();
         }
 
-        
+
 
         public async Task<ActionResult> PrivacyPolicy()
         {
@@ -159,7 +159,7 @@ namespace Barrway.Controllers
             try
             {
                 var Heading = await masterService.GetHeaderDetails(data);
-                var transactionData = await masterService.AllCalandersByCategory(data);                
+                var transactionData = await masterService.AllCalandersByCategory(data);
                 var transactionList = transactionData.Data;
                 double last_page = 0;
                 if (transactionList != null && transactionList.Count > 0)
@@ -178,7 +178,7 @@ namespace Barrway.Controllers
                         last_page = Math.Floor(paging) + 1;
                     }
                 }
-                return Json(new { data = transactionList, last_page , Heading }, JsonRequestBehavior.AllowGet);
+                return Json(new { data = transactionList, last_page, Heading }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -200,7 +200,7 @@ namespace Barrway.Controllers
         {
             try
             {
-                var transactionData = await masterService.GetAllSubcategory(); 
+                var transactionData = await masterService.GetAllSubcategory();
                 return Json(new { data = transactionData }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -313,26 +313,26 @@ namespace Barrway.Controllers
 
             if (!string.IsNullOrEmpty(id))
             {
-                
+
                 var blogResult = await businessUserService.GetBlogbyId(id);
                 if (blogResult.Status)
                 {
                     model.Blog = JsonConvert.DeserializeObject<Blog>(JsonConvert.SerializeObject(blogResult.Data));
 
-                    
+
                     if (!string.IsNullOrEmpty(model.Blog.TAG))
                     {
                         model.Blog.TAGs = JsonConvert.DeserializeObject<List<TagsObject>>(model.Blog.TAG);
                     }
                 }
 
-              
+
                 var featuredBlogsResult = await businessUserService.GetFeaturedBlogs();
                 if (featuredBlogsResult.Status)
                 {
                     model.FeaturedBlogs = JsonConvert.DeserializeObject<List<Blog>>(JsonConvert.SerializeObject(featuredBlogsResult.Data));
 
-                    
+
                     foreach (var featuredBlog in model.FeaturedBlogs)
                     {
                         if (!string.IsNullOrEmpty(featuredBlog.TAG))
@@ -345,7 +345,7 @@ namespace Barrway.Controllers
 
             return View(model);
         }
-        
+
 
 
         public async Task<ActionResult> BusinessPost()
@@ -407,7 +407,7 @@ namespace Barrway.Controllers
             try
             {
                 string CompanyCode = id;
-                string CalendarCode = Cid;               
+                string CalendarCode = Cid;
 
                 var Compay = await businessUserService.GetCompanyCodeByPageUrl(id);
                 if (Compay.Status == true)
@@ -457,7 +457,7 @@ namespace Barrway.Controllers
             {
 
                 string CompanyCode = id;
-                string CalendarCode = Cid;  
+                string CalendarCode = Cid;
                 var Compay = await businessUserService.GetCompanyCodeByPageUrl(id);
                 if (Compay.Status == true)
                 {
@@ -492,16 +492,29 @@ namespace Barrway.Controllers
             }
         }
 
+        public async Task<ActionResult> CheckSingleFavoriteCalendar(string CalendarCode)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var calendarFavCheck = await publicUserService.CheckSingleMyFavoriteCalendar(User.Identity.Name, CalendarCode);
+                return Json(calendarFavCheck, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = "Kindly login to see favorite calendar." }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
 
         [Route("company/calander/{id}/{Cid?}")]
-        public async Task<ActionResult> Calander(string id = null,string Cid = null)
+        public async Task<ActionResult> Calander(string id = null, string Cid = null)
         {
             try
             {
 
-               string PageUrl = id;
-               string CompanyCode = id;
-               string CalendarCode = Cid;                
+                string PageUrl = id;
+                string CompanyCode = id;
+                string CalendarCode = Cid;
 
                 var Compay = await businessUserService.GetCompanyCodeByPageUrl(id);
                 if (Compay.Status == true)
@@ -518,18 +531,18 @@ namespace Barrway.Controllers
 
                 var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
                 AddUpdateDelete calendarData = await businessUserService.GetMarcketPlaceCompanyCalendarByCompanyId(companyData.Data["Id"].ToString());
-                
-                
-                
-                
+
+
+
+
                 //var servilces=await businessUserService.GetServiceList(CalendarCode, CompanyCode);
                 //var serviceData = await globalMasterService.GetCompanyCategoryMaster();
                 if (calendarData.Status)
                 {
-                    
+
                     var data = JsonConvert.SerializeObject(companyData.Data);
                     var calendarEncrypted = JsonConvert.SerializeObject(calendarData.Data);
-                    
+
                     //var serviceEncrypted = JsonConvert.SerializeObject(serviceData.Data);
 
                     MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
@@ -537,7 +550,7 @@ namespace Barrway.Controllers
                     companyModel.calendars = JsonConvert.DeserializeObject<List<BusinessCalendarModel>>(calendarEncrypted);
                     companyModel.PAGE_URL = PageUrl;
 
-                    if (!companyModel.calendars.Any(x=> x.CALENDAR_CODE == CalendarCode && x.STATUS == "PUBLISH"))
+                    if (!companyModel.calendars.Any(x => x.CALENDAR_CODE == CalendarCode && x.STATUS == "PUBLISH"))
                     {
                         return RedirectToAction("Index", "Marketplace");
                     }
@@ -554,8 +567,8 @@ namespace Barrway.Controllers
                         {
                             //company/Queue/{id}/{Cid
                             //return RedirectToAction("CompanyQueueSchedule", new { CompanyCode = CompanyCode, CalendarCode = CalendarCode });
-                            return Redirect("/company/Queue/"+ CompanyCode+"/"+ CalendarCode);
-                           // return Redirect("/ControllerName/ActionName");
+                            return Redirect("/company/Queue/" + CompanyCode + "/" + CalendarCode);
+                            // return Redirect("/ControllerName/ActionName");
                         }
                     }
 
@@ -568,7 +581,7 @@ namespace Barrway.Controllers
 
                     if (User.Identity.IsAuthenticated)
                     {
-                        if (UserIdentity.Role == "PUBLIC_USER" || UserIdentity.Role== "GENERAL_USER")
+                        if (UserIdentity.Role == "PUBLIC_USER" || UserIdentity.Role == "GENERAL_USER")
                         {
                             // check if calendar is a favorite
                             var calendarFavCheck = await publicUserService.CheckSingleMyFavoriteCalendar(User.Identity.Name, CalendarCode);
@@ -596,7 +609,7 @@ namespace Barrway.Controllers
                 {
                     return RedirectToAction("Index", "Marketplace");
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -716,13 +729,13 @@ namespace Barrway.Controllers
 
 
         [Route("company/Queue/{id}/{Cid?}")]
-        public async Task<ActionResult> CompanyQueueSchedule(string id,string Cid)
+        public async Task<ActionResult> CompanyQueueSchedule(string id, string Cid)
         {
 
             string CompanyCode = id;
             string CalendarCode = Cid;
 
-            
+
 
             var Compay = await businessUserService.GetCompanyCodeByPageUrl(id);
             if (Compay.Status == true)
@@ -787,7 +800,7 @@ namespace Barrway.Controllers
                 string CompanyCode = id;
                 string CalendarCode = Cid;
 
-               
+
                 var Compay = await businessUserService.GetCompanyCodeByPageUrl(id);
                 if (Compay.Status == true)
                 {
@@ -834,8 +847,9 @@ namespace Barrway.Controllers
         public async Task<ActionResult> GetCalendarDetails(string id)
         {
             var calendarDetails = await businessUserService.GetCalendarDetails(id);
-            if (calendarDetails.Status) { 
-            var calendarDetails_data=calendarDetails.Data as IDictionary<string,object>;
+            if (calendarDetails.Status)
+            {
+                var calendarDetails_data = calendarDetails.Data as IDictionary<string, object>;
                 using (StreamReader sr = new StreamReader(Server.MapPath("~/CalendarSetupMatrix/CalendarSetupMatrix.json")))
                 {
                     var json = sr.ReadToEnd();
@@ -915,7 +929,7 @@ namespace Barrway.Controllers
         }
 
 
-        
+
 
         public async Task<ActionResult> GetAllFeaturedCompany(GenerateDynamicFormData data)
         {
@@ -949,7 +963,7 @@ namespace Barrway.Controllers
             }
         }
 
-        
+
 
         public async Task<ActionResult> GetCompanyCalendarPackages(string CompanyCode)
         {
@@ -998,7 +1012,7 @@ namespace Barrway.Controllers
 
                 languageCookie.Value = lang;
 
-                languageCookie.Expires = DateTime.Now.AddDays(10);
+                languageCookie.Expires = DateTimeUtility.Now().AddDays(10);
 
                 Response.SetCookie(languageCookie);
 
@@ -1101,7 +1115,7 @@ namespace Barrway.Controllers
             finalResult.keyword = keyword;
 
             return View(finalResult);
-            
+
         }
 
 

@@ -448,7 +448,7 @@ namespace Barrway.Service.Repository
                     }
                 }
 
-                if (DateTime.Now < Convert.ToDateTime(result[0]["start"]?.ToString()).AddMinutes(-(cancellationMinutes)))
+                if (DateTimeUtility.Now() < Convert.ToDateTime(result[0]["start"]?.ToString()).AddMinutes(-(cancellationMinutes)))
                 {
                     query = $@"delete from TRANSACTION_MASTER_1942 where Id = '{result[0]["Id"]?.ToString()}'";
                     var result2 = await sqlFunction.ExecuteSqlCommandQuery(query);
@@ -934,14 +934,14 @@ namespace Barrway.Service.Repository
                     }
                     else
                     {
-                        if (DateTime.Now <= Convert.ToDateTime(result[0]["end"]?.ToString()) && DateTime.Now >= Convert.ToDateTime(result[0]["start"]?.ToString()).AddMinutes(-30))
+                        if (DateTimeUtility.Now() <= Convert.ToDateTime(result[0]["end"]?.ToString()) && DateTimeUtility.Now() >= Convert.ToDateTime(result[0]["start"]?.ToString()).AddMinutes(-30))
                         {
                             query = $@"update TRANSACTION_MASTER_1942 set ATTENDANCE = 'PRESENT' where Id = '{result[0]["Id"].ToString()}'";
                             var result2 = await sqlFunction.ExecuteSqlCommandQuery(query);
 
                             if (result2 > 0)
                             {
-                                return new AddUpdateDelete() { Status = false, Message = "Attendance marked successfully!" };
+                                return new AddUpdateDelete() { Status = true, Message = "Attendance marked successfully!" };
                             }
                             else
                             {
@@ -1892,7 +1892,7 @@ namespace Barrway.Service.Repository
                                     , (dbo.[GetSubQueryCalender](f.formGroupKey)) customTitle,   (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceFormId) from form_calenderreferrence f2     
                                     where f2.formgroupkey = f.formGroupKey  FOR XML PATH('')), 1, 1, '')   ) customForms  , (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceId) 
                                     from form_calenderreferrence f2    where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) customFormIds,  '' referrences_1,  '' referrences_2,  '' referrences_3 
-                                    , (select case when (cast(getdate() as datetime) >= cast((DATEADD(minute, -30, f.[start])) as datetime) and cast(getdate() as datetime) <= cast(f.[end] as datetime) ) then 'Y' else 'N' end) as 'ATTEND'
+                                    , (select case when (cast('{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' as datetime) >= cast((DATEADD(minute, -30, f.[start])) as datetime) and cast('{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' as datetime) <= cast(f.[end] as datetime) ) then 'Y' else 'N' end) as 'ATTEND'
                                     from CALENDAR_FORM_1935 f 
                                     join TRANSACTION_MASTER_1942 transaction_m on transaction_m.CALENDAR_CODE = f.CALENDAR_CODE
                                     join PARTICIPANT_MASTER_1940 participant_m on participant_m.Id = transaction_m.STUDENT
@@ -1939,12 +1939,12 @@ namespace Barrway.Service.Repository
                                     , (dbo.[GetSubQueryCalender](f.formGroupKey)) customTitle,   (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceFormId) from form_calenderreferrence f2     
                                     where f2.formgroupkey = f.formGroupKey  FOR XML PATH('')), 1, 1, '')   ) customForms  , (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceId) 
                                     from form_calenderreferrence f2    where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) customFormIds,  '' referrences_1,  '' referrences_2,  '' referrences_3 
-                                    , (select case when (cast(getdate() as datetime) >= cast((DATEADD(minute, -30, f.[start])) as datetime) and cast(getdate() as datetime) <= cast(f.[end] as datetime) ) then 'Y' else 'N' end) as 'ATTEND'
+                                    , (select case when (cast('{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' as datetime) >= cast((DATEADD(minute, -30, f.[start])) as datetime) and cast('{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' as datetime) <= cast(f.[end] as datetime) ) then 'Y' else 'N' end) as 'ATTEND'
                                     from CALENDAR_FORM_1935 f 
                                     join TRANSACTION_MASTER_1942 transaction_m on transaction_m.CALENDAR_CODE = f.CALENDAR_CODE
                                     join PARTICIPANT_MASTER_1940 participant_m on participant_m.Id = transaction_m.STUDENT
                                     join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
-                                    where f.formid=2305 and participant_m.EMAIL = '{UserEmail}' and transaction_m.SLOT = f.Id and cast(f.[start] as datetime) > cast('{DateTime.Now.ToString("yyyy-MM-dd HH:mm")}' as datetime)
+                                    where f.formid=2305 and participant_m.EMAIL = '{UserEmail}' and transaction_m.SLOT = f.Id and cast(f.[end] as datetime) > cast('{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' as datetime)
                                     order by cast(f.[start] as datetime)
                                     ) ,
                                     cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 

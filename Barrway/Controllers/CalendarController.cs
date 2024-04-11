@@ -722,8 +722,8 @@ namespace Barrway.Controllers
                     {
                         if (queues.FirstOrDefault().QUEUE_TYPE == "RESTAURANT")
                         {
-                            session.SESSION_START_TIME = DateTime.Now.ToString("dd-MM-yyyy") + " " + session.SESSION_START_TIME;
-                            session.SESSION_END_TIME = DateTime.Now.ToString("dd-MM-yyyy") + " " + session.SESSION_END_TIME;
+                            session.SESSION_START_TIME = DateTimeUtility.Now().ToString("dd-MM-yyyy") + " " + session.SESSION_START_TIME;
+                            session.SESSION_END_TIME = DateTimeUtility.Now().ToString("dd-MM-yyyy") + " " + session.SESSION_END_TIME;
                         }
 
                     });
@@ -936,8 +936,8 @@ namespace Barrway.Controllers
 
 
                                 string SchedularFormId = Id;
-                                DateTime SlotStartTime = DateTime.Now;
-                                DateTime SlotEndTime = DateTime.Now;
+                                DateTime SlotStartTime = DateTimeUtility.Now();
+                                DateTime SlotEndTime = DateTimeUtility.Now();
 
                                 List<CommonTimeObject> dictionaryDataList = JsonConvert.DeserializeObject<List<CommonTimeObject>>(JsonConvert.SerializeObject(sessionRaw[dateTracker.DayOfWeek.ToString().Substring(0, 3)]));
 
@@ -1054,8 +1054,8 @@ namespace Barrway.Controllers
                                 }
 
                                 string SchedularFormId = Id;
-                                DateTime SlotStartTime = DateTime.Now;
-                                DateTime SlotEndTime = DateTime.Now;
+                                DateTime SlotStartTime = DateTimeUtility.Now();
+                                DateTime SlotEndTime = DateTimeUtility.Now();
 
                                 var dictionaryDataList = JsonConvert.DeserializeObject<Dictionary<string, List<Dictionary<string, string>>>>(data.SCH_SCHEDULE_TABLE);
 

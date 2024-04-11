@@ -3,7 +3,7 @@
 
 @{
     var baseUrl = System.Web.Configuration.WebConfigurationManager.AppSettings["baseURL"].ToString();
-    string token = DateTime.Now.ToString("ddMMyyyyHHmmssffffff");
+    string token = DateTimeUtility.Now().ToString("ddMMyyyyHHmmssffffff");
 
     HttpCookie languageCookie = System.Web.HttpContext.Current.Request.Cookies["Language"];
     string language = "";

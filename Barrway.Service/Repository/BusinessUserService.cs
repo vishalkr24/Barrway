@@ -1560,7 +1560,7 @@ namespace Barrway.Service.Repository
 
                         if (website.Data["COMPANY_PROFILE_STATUS"].ToString() == "N")
                         {
-                            query = "update USER_MASTER_1915 set COMPANY_PROFILE_STATUS = 'Y', updated_at = '" + DateTime.Now.ToString("yyyy-MM-dd") + "' where USER_ID = '" + UserName + "'";
+                            query = "update USER_MASTER_1915 set COMPANY_PROFILE_STATUS = 'Y', updated_at = '" + DateTimeUtility.Now().ToString("yyyy-MM-dd") + "' where USER_ID = '" + UserName + "'";
                             saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                         }
 
@@ -1568,12 +1568,12 @@ namespace Barrway.Service.Repository
                         {
                             if (website.Data["CURRENT_STEP"].ToString() == "COMPANY PROFILE")
                             {
-                                query = "update USER_MASTER_1915 set CURRENT_STEP = 'CALENDAR', updated_at = '" + DateTime.Now.ToString("yyyy-MM-dd") + "'  where USER_ID = '" + UserName + "'";
+                                query = "update USER_MASTER_1915 set CURRENT_STEP = 'CALENDAR', updated_at = '" + DateTimeUtility.Now().ToString("yyyy-MM-dd") + "'  where USER_ID = '" + UserName + "'";
                                 saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                             }
                             else if (website.Data["CURRENT_STEP"].ToString() == "COMPANY WEBSITE")
                             {
-                                query = "update USER_MASTER_1915 set CURRENT_STEP = 'COMPLETED', updated_at = '" + DateTime.Now.ToString("yyyy-MM-dd") + "'  where USER_ID = '" + UserName + "'";
+                                query = "update USER_MASTER_1915 set CURRENT_STEP = 'COMPLETED', updated_at = '" + DateTimeUtility.Now().ToString("yyyy-MM-dd") + "'  where USER_ID = '" + UserName + "'";
                                 saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
 
                                 // registration and 3 steps are completed here and now activate free plan of user
@@ -1611,7 +1611,7 @@ namespace Barrway.Service.Repository
                                             PLAN_NAME = freeSubscriptionPackage.Data["PLAN_NAME"]?.ToString(),
                                             SESSION_MONTH_COMPANY = freeSubscriptionPackage.Data["VALID_SESSIONS"]?.ToString(),
                                             VALIDITY_DAYS = 30,
-                                            VALID_TILL = DateTime.Now.AddMonths(1).ToString("yyyy-MM-dd HH:mm"),
+                                            VALID_TILL = DateTimeUtility.Now().AddMonths(1).ToString("yyyy-MM-dd HH:mm"),
                                             ORDER_PRICE = 0,
                                             USER_ID = UserId,
                                             ORDER_QTY = 1,
@@ -1759,7 +1759,7 @@ namespace Barrway.Service.Repository
                                         PLAN_NAME = freeSubscription.Data["PLAN_NAME"]?.ToString(),
                                         SESSION_MONTH_COMPANY = freeSubscription.Data["SESSION_MONTH_COMPANY"]?.ToString(),
                                         VALIDITY_DAYS = 30,
-                                        VALID_TILL = DateTime.Now.AddMonths(1).ToString("yyyy-MM-dd HH:mm"),
+                                        VALID_TILL = DateTimeUtility.Now().AddMonths(1).ToString("yyyy-MM-dd HH:mm"),
                                         ORDER_PRICE = 0,
                                         USER_ID = UserId,
                                         ORDER_QTY = 1,
@@ -1929,7 +1929,7 @@ namespace Barrway.Service.Repository
                 try
                 {
                     var validTill = Convert.ToDateTime(result[0]["VALID_TILL"]?.ToString());
-                    if (validTill < DateTime.Now)
+                    if (validTill < DateTimeUtility.Now())
                     {
                         return new AddUpdateDelete() { Status = false, Message = "Your Subscription Plan is Expired" };
                     }
@@ -2608,8 +2608,8 @@ namespace Barrway.Service.Repository
                 data.userId = (int)FormSetting.CreatedUser;
                 data.created_by = (int)FormSetting.CreatedUser;
                 data.updated_by = (int)FormSetting.CreatedUser;
-                data.created_at = DateTime.Now.ToString();
-                data.updated_at = DateTime.Now.ToString();
+                data.created_at = DateTimeUtility.Now().ToString();
+                data.updated_at = DateTimeUtility.Now().ToString();
                 data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(a);
                 data.formGroupKey = formGroupKey;
 
@@ -2829,9 +2829,9 @@ namespace Barrway.Service.Repository
 
                 query = $@"select * from QUEUE_SESSION_MASTER_1974 ses where CALENDAR_CODE = '{CalendarCode}' and COMPANY_CODE = '{CompanyCode}'  and 
                                     (
-	                                    Convert(datetime, '{DateTime.Now.ToString("dd -MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.SESSION_START_TIME, 105) and 
+	                                    Convert(datetime, '{DateTimeUtility.Now().ToString("dd -MM-yyyy HH:mm:ss")}', 105) > Convert(datetime, ses.SESSION_START_TIME, 105) and 
 
-                                        Convert(datetime, '{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}', 105) < Convert(datetime, ses.SESSION_END_TIME, 105)
+                                        Convert(datetime, '{DateTimeUtility.Now().ToString("dd-MM-yyyy HH:mm:ss")}', 105) < Convert(datetime, ses.SESSION_END_TIME, 105)
                                     )";
 
                 List<IDictionary<string, object>> Result2 = await sqlFunction.ExecuteSqlQuery(query);
@@ -3005,8 +3005,8 @@ namespace Barrway.Service.Repository
             data.userId = (int)FormSetting.CreatedUser;
             data.created_by = (int)FormSetting.CreatedUser;
             data.updated_by = (int)FormSetting.CreatedUser;
-            data.created_at = DateTime.Now.ToString();
-            data.updated_at = DateTime.Now.ToString();
+            data.created_at = DateTimeUtility.Now().ToString();
+            data.updated_at = DateTimeUtility.Now().ToString();
             data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.ToDictionary());
             data.formGroupKey = formGroupKey;
 

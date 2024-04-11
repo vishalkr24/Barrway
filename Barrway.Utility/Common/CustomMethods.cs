@@ -24,7 +24,7 @@ namespace Barrway.Utility.Common
         }
         public static string CreateUUID()
         {
-            long dt = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+            long dt = DateTimeUtility.Now().Ticks / TimeSpan.TicksPerMillisecond;
             string uuid = "xxxxxxxxyxxx";
 
             Random random = new Random();
