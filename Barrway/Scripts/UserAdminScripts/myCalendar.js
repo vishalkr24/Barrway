@@ -877,6 +877,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 }), $resize);
         },
         eventClick: async function (calEvent, jsEvent, view) {
+            debugger;
             if (Check_IS_SERVICE_TYPE(calendarDetails)) {
                 //customEventDetailsServiceModelPopUp.modal('show');
                 //customEventDetailsServiceModelPopUp.css({ "z-index": "9999" });
@@ -886,8 +887,15 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 customEventDetailsModelPopUp.css({ "z-index": "9999" });
             }
 
+            
+
             var $scope = angular.element($("#calendar")).scope();
             $scope.selectEventDetails = calEvent;
+            if (!(moment().local().diff(calEvent.start.format(), 'minute') <= 0)) {
+                $scope.selectEventDetails.isEnroll = false;
+            } else {
+                $scope.selectEventDetails.isEnroll = true;
+            }
             if (calEvent.formID == undefined) {
                 $scope.selectEventDetails.formID = CalendarFormId;
             }
@@ -1938,7 +1946,7 @@ async function getCalendarDetails(id) {
 
 
 async function rendarPopupCalendar(assignDate) {
-    var customEventDetailsServiceModelPopUp = angular.element("#customEventDetailsServiceModelPopUp");
+    var customEventDetailsServiceModelPopUp = angular.element("#customEventDetailsModelPopUp");
     var defaultOptions2 = {
         schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
         theme: true,

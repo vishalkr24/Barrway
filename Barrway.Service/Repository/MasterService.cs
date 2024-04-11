@@ -1913,6 +1913,7 @@ DECLARE @retval nvarchar(max);
                                   ,[PACKAGE_SEQUENCE]
                                   ,[PACKAGE_DESCRIPTION]
                                   ,[IS_ACTIVE]
+                                  ,[CREDIT_EXPIRE_DATE]
                               FROM [dbo].[CALENDAR_PACKAGE_MASTER_1952] where Id = '{PackageId}'";
                 var result = await sqlFunction.ExecuteSqlQuery(query);
 

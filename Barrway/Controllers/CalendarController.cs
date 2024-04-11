@@ -1047,7 +1047,7 @@ namespace Barrway.Controllers
                             while (dateTracker <= end)
                             {
 
-                                if (Convert.ToInt32(calendarCountCheckData.Data["AVAILABLE_SESSIONS"]?.ToString()) < eventCounter)
+                                if (Convert.ToInt32(calendarCountCheckData.Data["AVAILABLE_SESSIONS"]?.ToString()) <= eventCounter)
                                 {
                                     caseBreak = true;
                                     break;

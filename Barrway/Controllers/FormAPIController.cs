@@ -183,7 +183,7 @@ namespace Barrway.Controllers
                                 return Json(new AddUpdateDelete() { Status = false, Message = "Can not create event after the package expiry date." });
                             }
 
-                            if (Convert.ToInt32(checkResult.Data["ASSIGNED_SESSIONS"]?.ToString()) == 0)
+                            if (Convert.ToInt32(checkResult.Data["AVAILABLE_SESSIONS"]?.ToString()) == 0)
                             {
                                 return Json(new AddUpdateDelete() { Status = false, Message = "You have reached the maximum limit of creating Session for this month. Upgrade your Plan to create Sessions." });
                             }
@@ -359,7 +359,13 @@ namespace Barrway.Controllers
                             {
                                 if (enrolledData.Data[i]["Id"].ToString() == result.events[j]["Id"].ToString())
                                 {
-                                    finalResult.events.Add(result.events[j]);
+                                    result.events[j].Add("CALENDAR_NAME", enrolledData.Data[i]["CALENDAR_NAME"].ToString());
+                                    result.events[j].Add("COMPANY_NAME_ENGLISH", enrolledData.Data[i]["COMPANY_NAME_ENGLISH"].ToString());
+                                    if (!finalResult.events.Any(x=> x["Id"]?.ToString() == result.events[j]["Id"].ToString()))
+                                    {
+                                        finalResult.events.Add(result.events[j]);
+                                    }
+                                    
                                 }
                             }
 
@@ -368,7 +374,11 @@ namespace Barrway.Controllers
                             {
                                 if (enrolledData.Data[i]["Id"].ToString() == result.activityEvents[j]["Id"].ToString())
                                 {
-                                    finalResult.activityEvents.Add(result.activityEvents[j]);
+                                    if (!finalResult.activityEvents.Any(x => x["Id"]?.ToString() == result.activityEvents[j]["Id"].ToString()))
+                                    {
+                                        finalResult.activityEvents.Add(result.activityEvents[j]);
+                                    }
+                                    
                                 }
                             }
 
@@ -379,7 +389,11 @@ namespace Barrway.Controllers
                                 {
                                     if ((enrolledData.Data[i]["customForms"]).Contains(result.resourceDetails[j].title))
                                     {
-                                        finalResult.resourceDetails.Add(result.resourceDetails[j]);
+                                        if (!finalResult.resourceDetails.Any(x => x.Id?.ToString() == result.resourceDetails[j].Id.ToString()))
+                                        {
+                                            finalResult.resourceDetails.Add(result.resourceDetails[j]);
+                                        }
+                                        
                                     }
                                 }
                             }
@@ -396,7 +410,7 @@ namespace Barrway.Controllers
 
                 }
             }
-
+            
             {
                 var alreadyEnrolledEvents = (await publicUserService.GetAlreadyEnrolledEvents(data.COMPANY_CODE, UserIdentity.UserEmail, data.filter.value)).Data as List<IDictionary<string, object>>;
                 if (alreadyEnrolledEvents!= null)
@@ -479,7 +493,7 @@ namespace Barrway.Controllers
                 }
             }
 
-            return Json(result.ToDictionary(), JsonRequestBehavior.AllowGet);
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
 

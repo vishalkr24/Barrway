@@ -38,7 +38,7 @@ function setDashboardData() {
             let tr = "";
 
             if (sessionData.length > 0) {
-                let len = (sessionData.length > 10) ? 10 : sessionData.length;
+                let len = sessionData.length;
 
                 for (var i = 0; i < len; i++) {
                     if (((parseInt(sessionData[i].ASSIGNED_SESSIONS) * 20) / 100) <= sessionData[i].SESSIONS_CREATED) {

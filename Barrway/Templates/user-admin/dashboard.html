@@ -348,6 +348,9 @@
                                         icon: "success",
                                         title: "Success",
                                         text: "Attendance marked"
+                                    }).then(function () {
+                                        $('#WebCamModal').modal("hide");
+                                        angular.element($("#WebCamModal")).scope().getMyUpcomingBookings();
                                     });
                                 } else {
                                     swal({
