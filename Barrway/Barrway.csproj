@@ -3121,6 +3121,7 @@
     <Content Include="Scripts\myscript\controller\formPreviewModule.js" />
     <Content Include="Scripts\myscript\controller\FormRecordsController.js" />
     <Content Include="Scripts\myscript\controller\GoogleMapController.js" />
+    <Content Include="Scripts\myscript\controller\StudentRegisterFormMasterController.js" />
     <Content Include="Scripts\myscript\controller\SuperAdminController.js" />
     <Content Include="Scripts\myscript\controller\IndexController.js" />
     <Content Include="Scripts\myscript\controller\mainModule.js" />
@@ -3159,6 +3160,7 @@
     <Content Include="Templates\calendar-master\calendar.html" />
     <Content Include="Templates\calendar-master\business-user-master.html" />
     <Content Include="Templates\calendar-master\calendar-package-master.html" />
+    <Content Include="Templates\calendar-master\additional-form-master.html" />
     <Content Include="Templates\calendar-master\session-schedular-form.html" />
     <Content Include="Templates\calendar-master\schedular-form.html" />
     <Content Include="Templates\calendar-master\transaction-master.html" />

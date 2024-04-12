@@ -1982,6 +1982,20 @@
                     parent: 'home'
                 }
             })
+            .state('student_register_form_master', {
+                url: '/student-register-form-master/',
+                onEnter: function ($window) { $window.document.title = "Student Register Master"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/calendar-master/additional-form-master.html?token=' + uuid,
+                        controller: 'StudentRegisterFormMasterController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
             .state('calendar_view', {
                 url: '/calender/:formId',
                 onEnter: function ($window) { $window.document.title = "Calendar"; },

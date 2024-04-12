@@ -182,7 +182,6 @@ namespace Barrway.Controllers
 
                 var result = await masterService.CreatePaymentTracker(tracker);
 
-
                 PaymentHistoryModel paymentHistoryModel = new PaymentHistoryModel()
                 {
                     B_COIN_PURCHASE = Convert.ToDouble(PackageData["PACKAGE_COIN"]),

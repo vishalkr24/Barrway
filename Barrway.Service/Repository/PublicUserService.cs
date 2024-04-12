@@ -1162,7 +1162,17 @@ namespace Barrway.Service.Repository
 								  for xml path('')), 1, 1, '')
 
 								  select top 4
-									  (select ( case when (SUM(ledger.CREDIT_COIN) - SUM(ledger.DEBIT_COIN)) is null then 0 else (SUM(ledger.CREDIT_COIN) - SUM(ledger.DEBIT_COIN)) end) FROM LEDGER_MASTER_1957 ledger where ledger.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and USER_ID = '{userId}') as 'COIN_BALANCE'
+									  (select 
+	case when (
+		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+	) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
+	then
+		0
+	else
+		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+	end
+FROM LEDGER_MASTER_1957 led 
+where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) as 'COIN_BALANCE'
 									  ,company.Id as 'CompanyId'
                                       ,calendarDetails.*
 	                                  ,company.COMPANY_NAME_ENGLISH
@@ -1233,7 +1243,7 @@ namespace Barrway.Service.Repository
 
                 if (!string.IsNullOrEmpty(CompanyCode))
                 {
-                    CompanyLogic = " and COMPANY_CODE = '" + CompanyCode + "'";
+                    CompanyLogic = " and calendarDetails.COMPANY_CODE = '" + CompanyCode + "'";
                 }
 
                 string query0 = $@"SELECT [Id]
@@ -1245,7 +1255,7 @@ namespace Barrway.Service.Repository
                                           ,[CALENDAR_CODE]
                                           ,[USER_ID]
                                           ,[IS_PUBIC_USER]
-                                      FROM [dbo].[FAVORITE_CALENDAR_MASTER_1949] where USER_ID = '{userId}' {CompanyLogic} ";
+                                      FROM [dbo].[FAVORITE_CALENDAR_MASTER_1949] calendarDetails where USER_ID = '{userId}' {CompanyLogic} ";
 
                 List<IDictionary<string, object>> result0 = await sqlFunction.ExecuteSqlQuery(query0);
 
@@ -1287,7 +1297,12 @@ namespace Barrway.Service.Repository
                 int PageSize = data.size > 0 ? data.size : 20;
                 int PageNumber = data.page > 0 ? data.page : 1;
 
-                string query = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+                string query = $@"declare @CalendarCodes varchar(max) = (select stuff((select distinct ',' + CALENDAR_CODE  from PAYMENT_HISTORY_MASTER_1956 payment 
+											  where payment.STATUS = 'complete' and payment.USER_ID = '{userId}' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd")}' < payment.CREDIT_EXPIRE_DATE
+											  for xml path('')), 1, 1, '')) 
+                                  declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+                                              
+
                                               SELECT distinct calendarDetails.[COMPANY_CODE]
                                                   ,calendarDetails.[CALENDAR_CODE]
 	                                              ,calendarDetails.[Id] 
@@ -1302,20 +1317,62 @@ namespace Barrway.Service.Repository
 	                                              ,company.COMPANY_NAME_ENGLISH
                                                   ,company.COMPANY_LOGO_PATH
                                                   ,subCategory.CALENDAR_SUB_CATEGORY_NAME
+												  ,(select 
+														case when (
+															(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+														) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
+														then
+															0
+														else
+															(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+														end
+													FROM LEDGER_MASTER_1957 led 
+													where led.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and USER_ID = '{userId}' ) as 'COIN_BALANCE', 'Y' as 'PURCHASED'
                                               FROM [dbo].BUSINESS_CALENDAR_MASTER_1925 calendarDetails
                                               join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
 								              join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendarDetails.CALENDAR_SUB_CATEGORY_ID
-                                              where {((string.IsNullOrEmpty(calendarCodes)) ? "calendarDetails.CALENDAR_CODE = ''" : "calendarDetails.CALENDAR_CODE in ({calendarCodes})")} 
+											  where calendarDetails.CALENDAR_CODE in (select cast(item as varchar) from dbo.SplitString(@CalendarCodes, ',')) {CompanyLogic}
+                                              Union all
+                                              SELECT distinct calendarDetails.[COMPANY_CODE]
+                                                  ,calendarDetails.[CALENDAR_CODE]
+	                                              ,calendarDetails.[Id] 
+                                                  ,calendarDetails.[created_at] 
+                                                  ,company.Id as 'CompanyId'
+                                                  ,calendarDetails.[CALENDAR_NAME]
+                                                  ,calendarDetails.[CALENDAR_PHOTO_NAME]
+                                                  ,calendarDetails.[CALENDAR_PHOTO_PATH]
+                                                  ,calendarDetails.[CALENDAR_CATEGORY_ID]
+                                                  ,calendarDetails.[CALENDAR_SUB_CATEGORY_ID]
+                                                  ,calendarDetails.[TAGS]
+	                                              ,company.COMPANY_NAME_ENGLISH
+                                                  ,company.COMPANY_LOGO_PATH
+                                                  ,subCategory.CALENDAR_SUB_CATEGORY_NAME
+                                                  ,0 as 'COIN_BALANCE'
+                                                  ,'N' as 'PURCHASED'
+                                              FROM [dbo].BUSINESS_CALENDAR_MASTER_1925 calendarDetails
+                                              join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
+								              join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendarDetails.CALENDAR_SUB_CATEGORY_ID
+                                              where {((string.IsNullOrEmpty(calendarCodes)) ? "calendarDetails.CALENDAR_CODE = ''" : $@"calendarDetails.CALENDAR_CODE in ({calendarCodes})")} and calendarDetails.CALENDAR_CODE not in (select cast(item as varchar) from dbo.SplitString(@CalendarCodes, ',')) 
                                       )
-                                  Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY created_at desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+                                  Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY PURCHASED desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
 
                 List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
-                string query2 = $@"SELECT distinct company.[COMPANY_CODE],company.[Id]
+                string query2 = $@"declare @CompanyCodes varchar(max) = (select stuff((select distinct ',' + COMPANY_CODE  from PAYMENT_HISTORY_MASTER_1956 payment 
+											  where payment.STATUS = 'complete' and payment.USER_ID = '{userId}' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd")}' < payment.CREDIT_EXPIRE_DATE
+											  for xml path('')), 1, 1, '')) 
+
+											  SELECT distinct company.[COMPANY_CODE],company.[Id]
+												,[COMPANY_NAME_ENGLISH]
+												FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company
+												where company.COMPANY_CODE in (select cast(item as varchar) from dbo.SplitString(@CompanyCodes, ','))
+                                            Union all
+									  SELECT distinct company.[COMPANY_CODE],company.[Id]
                                           ,[COMPANY_NAME_ENGLISH]
                                       FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company
                                       join FAVORITE_CALENDAR_MASTER_1949 favorite on favorite.COMPANY_CODE = company.COMPANY_CODE
-                                      where favorite.USER_ID = '{userId}'
+                                      where favorite.USER_ID = '{userId}' and company.COMPANY_CODE not in (select cast(item as varchar) from dbo.SplitString(@CompanyCodes, ','))
+
                                       ";
 
                 List<IDictionary<string, object>> result2 = await sqlFunction.ExecuteSqlQuery(query2);
@@ -1514,7 +1571,17 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string query = $@"SELECT ( case when (SUM(ledger.CREDIT_COIN) - SUM(ledger.DEBIT_COIN)) is null then 0 else (SUM(ledger.CREDIT_COIN) - SUM(ledger.DEBIT_COIN)) end) as 'COIN_BALANCE' FROM LEDGER_MASTER_1957 ledger where USER_ID = '{UserId}'";
+                string query = $@"(select 
+	case when (
+		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+	) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where {DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")} < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
+	then
+		0
+	else
+		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where {DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")} < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+	end
+FROM LEDGER_MASTER_1957 led 
+where USER_ID = '{UserId}' ) as 'COIN_BALANCE'";
 
                 List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -1545,7 +1612,17 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string query = $@"SELECT ( case when (SUM(ledger.CREDIT_COIN) - SUM(ledger.DEBIT_COIN)) = null then 0 else (SUM(ledger.CREDIT_COIN) - SUM(ledger.DEBIT_COIN)) end) as 'COIN_BALANCE' FROM LEDGER_MASTER_1957 ledger where USER_ID = '{UserId}' and COMPANY_CODE = '{CompanyCode}' and CALENDAR_CODE = '{CalendarCode}'";
+                string query = $@"select 
+	                                case when (
+		                                (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where CALENDAR_CODE = '{CalendarCode}' and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+	                                ) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where CALENDAR_CODE = '{CalendarCode}' and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
+	                                then
+		                                0
+	                                else
+		                                (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where CALENDAR_CODE = '{CalendarCode}' and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+	                                end as 'COIN_BALANCE'
+                                FROM LEDGER_MASTER_1957 led 
+                                where USER_ID = '{UserId}' and COMPANY_CODE = '{CompanyCode}' and CALENDAR_CODE = '{CalendarCode}'";
 
                 List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
