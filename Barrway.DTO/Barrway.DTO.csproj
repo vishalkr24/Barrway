@@ -127,6 +127,7 @@
     <Compile Include="MarketplaceModels\BlogViewModel.cs" />
     <Compile Include="MarketplaceModels\BlogDetailsViewModel.cs" />
     <Compile Include="MarketplaceModels\FavoriteCalendarModel.cs" />
+    <Compile Include="MarketplaceModels\FeaturedCompanyList.cs" />
     <Compile Include="MarketplaceModels\MarketplaceCompanyGalleryModel.cs" />
     <Compile Include="MarketplaceModels\MarketplaceCompanyModel.cs" />
     <Compile Include="MarketplaceModels\RequestEventViewModel.cs" />

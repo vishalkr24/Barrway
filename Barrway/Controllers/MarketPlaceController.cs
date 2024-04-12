@@ -98,7 +98,21 @@ namespace Barrway.Controllers
 
         public async Task<ActionResult> Index()
         {
-            return View();
+
+            FeaturedCompanyList featuredCompany = new FeaturedCompanyList();
+            var transactionData = await masterService.GetAllFeaturedCompany();
+            var FCompanys = JsonConvert.SerializeObject(transactionData.Data);
+            featuredCompany.FeaturedCompanys = JsonConvert.DeserializeObject<List<FeaturedCompany>>(FCompanys);
+            featuredCompany.FeaturedCompanys.ForEach(company =>
+            {
+                var JsonTags = company.TAGS;
+                if (JsonTags != null)
+                {
+                    List<TagsObject> Tagobjects = JsonConvert.DeserializeObject<List<TagsObject>>(JsonTags);
+                    company.TAGs = Tagobjects;
+                }
+            });
+            return View(featuredCompany);
         }
 
         public async Task<ActionResult> ComingSoon()

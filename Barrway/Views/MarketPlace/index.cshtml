@@ -1,4 +1,4 @@
-﻿
+﻿@model Barrway.DTO.MarketplaceModels.FeaturedCompanyList
 @{
     ViewBag.Title = "Market Place";
     Layout = "~/Views/Shared/_LayoutMarketPlace.cshtml";
@@ -13,56 +13,59 @@
         color: white;
         font-size: 12px;
     }
+
     .fields {
         display: flex;
     }
-    @@media screen and (max-width:767px){
+
+    @@media screen and (max-width:767px) {
         .fields {
-         display:block;
+            display: block;
         }
-    } 
+    }
 </style>
 <style>
-.skeleton-loader {
-    width: 100%;
-   
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.skeleton-heading {
-    width: 60%;
-    height: 30px;
-    margin-bottom: 20px;
-    background-color: #f0f0f0; /* Change background color here */
-    animation: pulse 1s infinite alternate;
-}
-
-.skeleton-carousel {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-}
-
-.skeleton-item {
-    flex: 0 0 200px; /* Adjust width as needed */
-    height: 200px; /* Adjust height as needed */
-    margin-right: 20px;
-    background-color: #f0f0f0; /* Change background color here */
-    animation: pulse 1s infinite alternate;
-}
-
-@@keyframes pulse {
-    0% {
-        opacity: 0.6;
+    .skeleton-loader {
+        width: 100%;
+        margin: 0 auto;
+        padding: 20px;
     }
-    100% {
-        opacity: 1;
+
+    .skeleton-heading {
+        width: 60%;
+        height: 30px;
+        margin-bottom: 20px;
+        background-color: #f0f0f0; /* Change background color here */
+        animation: pulse 1s infinite alternate;
     }
-}
 
+    .skeleton-carousel {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
 
+    .skeleton-item {
+        flex: 0 0 200px; /* Adjust width as needed */
+        height: 200px; /* Adjust height as needed */
+        margin-right: 20px;
+        background-color: #f0f0f0; /* Change background color here */
+        animation: pulse 1s infinite alternate;
+    }
 
+    @@keyframes pulse {
+        0% {
+            opacity: 0.6;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    .owl-carousel {
+        display: ruby-text;
+    }
 </style>
 <!-- banner -->
 <section class="top-banner">
@@ -93,7 +96,7 @@
                                     <option>4</option>
                                 </select>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="sel1">@Resource.District</label>
                                 <select class="form-control" id="filter-district-master">
@@ -130,50 +133,45 @@
                         <div class="skeleton-item"></div>
                         <div class="skeleton-item"></div>
                         <div class="skeleton-item"></div>-->
-                        <!-- Add more skeleton items as needed -->
-                    <!--</div>
-                </div>
-            </div>
+<!-- Add more skeleton items as needed -->
+<!--</div>
         </div>
-        <div class="row">
-            <div class="col-md-12" id="lblFilterLabel" style="display:none;">@Resource.Showing_results_for  <b><span id="lblSelectedSubCategory"></span></b> & <b><span id="lblSelectedDistrict"></span></b></div>
-            <div class="col-md-12">
-                <div class="skeleton-loader">
-                    <div class="skeleton-heading"></div>
-                    <div class="skeleton-carousel">
-                        <div class="skeleton-item"></div>
-                        <div class="skeleton-item"></div>
-                        <div class="skeleton-item"></div>
-                        <div class="skeleton-item"></div>
-                        <div class="skeleton-item"></div>-->
-                        <!-- Add more skeleton items as needed -->
-                    <!--</div>
-                </div>
-            </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12" id="lblFilterLabel" style="display:none;">@Resource.Showing_results_for  <b><span id="lblSelectedSubCategory"></span></b> & <b><span id="lblSelectedDistrict"></span></b></div>
+    <div class="col-md-12">
+        <div class="skeleton-loader">
+            <div class="skeleton-heading"></div>
+            <div class="skeleton-carousel">
+                <div class="skeleton-item"></div>
+                <div class="skeleton-item"></div>
+                <div class="skeleton-item"></div>
+                <div class="skeleton-item"></div>
+                <div class="skeleton-item"></div>-->
+<!-- Add more skeleton items as needed -->
+<!--</div>
         </div>
-        <div class="row">
-            <div class="col-md-12" id="lblFilterLabel" style="display:none;">@Resource.Showing_results_for  <b><span id="lblSelectedSubCategory"></span></b> & <b><span id="lblSelectedDistrict"></span></b></div>
-            <div class="col-md-12">
-                <div class="skeleton-loader">
-                    <div class="skeleton-heading"></div>
-                    <div class="skeleton-carousel">
-                        <div class="skeleton-item"></div>
-                        <div class="skeleton-item"></div>
-                        <div class="skeleton-item"></div>
-                        <div class="skeleton-item"></div>
-                        <div class="skeleton-item"></div>-->
-                        <!-- Add more skeleton items as needed -->
-                    <!--</div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12" id="lblFilterLabel" style="display:none;">@Resource.Showing_results_for  <b><span id="lblSelectedSubCategory"></span></b> & <b><span id="lblSelectedDistrict"></span></b></div>
+    <div class="col-md-12">
+        <div class="skeleton-loader">
+            <div class="skeleton-heading"></div>
+            <div class="skeleton-carousel">
+                <div class="skeleton-item"></div>
+                <div class="skeleton-item"></div>
+                <div class="skeleton-item"></div>
+                <div class="skeleton-item"></div>
+                <div class="skeleton-item"></div>-->
+<!-- Add more skeleton items as needed -->
+<!--</div>
                 </div>
             </div>
         </div>
      </div>
 </section>-->
-
-
-
-
-
 <!-- sliders -->
 <section class="subcatageory" id="common">
     <div class="container">
@@ -220,8 +218,8 @@
                     </div>
                 </div>
             </div>
-            
-            
+
+
         </div>
     </div>
 </section>
@@ -325,6 +323,10 @@
     </div>
 </section>
 
+
+
+
+
 <!-- sliders compnay -->
 <section class="subcatageory" id="logo">
     <div class="container">
@@ -335,105 +337,33 @@
                         <h3>@Resource.Featured @Resource.Company</h3>
                     </div>
                     <div id="owl-demo5" class="owl-carousel owl-theme">
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/alogo.png">
+                        @if (Model.FeaturedCompanys != null)
+                        {
+                            foreach (var item in Model.FeaturedCompanys)
+                            {
+                                <div class="item">
+                                    <div class="item-inner">
+                                        <div class="pro-im">
+                                            <img src="@item.COMPANY_LOGO_PATH.Replace("~", "")" onerror="this.src='../assets/marketplace/image/alogo2.png'"> 
+                                        </div>
+                                        <div class="pro-text">
+                                            <p class="f1"><b>@item.COMPANY_NAME_ENGLISH</b></p>
+                                            <p class="f2">
+                                                @if (item.TAGs != null)
+                                                {
+                                                    foreach (var Titem in item.TAGs)
+                                                    {
+                                                        <a href="javascript:void(0)">@Titem.value</a>
+                                                    }
+                                                }
+
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="pro-text">
-                                    <p class="f1"><b>Company Name</b></p>
-                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/slogan.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="f1"><b>Company Name</b></p>
-                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/alogo2.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="f1"><b>Company Name</b></p>
-                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/alogo.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="f1"><b>Company Name</b></p>
-                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/slogan.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="f1"><b>Company Name</b></p>
-                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/alogo2.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="f1"><b>Company Name</b></p>
-                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/alogo.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="f1"><b>Company Name</b></p>
-                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/slogan.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="f1"><b>Company Name</b></p>
-                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="item-inner">
-                                <div class="pro-im">
-                                    <img src="~/assets/marketplace/image/alogo2.png">
-                                </div>
-                                <div class="pro-text">
-                                    <p class="f1"><b>Company Name</b></p>
-                                    <p class="f2"><a href="javascript:void(0)"> Tag1</a></p>
-                                </div>
-                            </div>
-                        </div>
+                            }
+                        }
+
 
                     </div>
                 </div>
