@@ -17443,7 +17443,7 @@
 
         }
     });
-
+        
 
     FormGeneratorApp.controller('UserBookingsController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
         checkLogin();
@@ -17969,7 +17969,7 @@
                     for (var i = 0; i < response.data[0].length; i++) {
                         response.data[0][i].CALENDAR_PHOTO_PATH = response.data[0][i].CALENDAR_PHOTO_PATH.replace('~', '..')
                     }
-
+                    debugger;
                     for (var i = 0; i < response.data[0].length; i++) {
 
                         var tagQuery = "";
@@ -17996,28 +17996,26 @@
 
                         if (i < 4) {
                             $("#row1").append(`<div class="wrap">
-                                                    <div class="wrap-im">
-                                                        <img src="${company.CALENDAR_PHOTO_PATH}" style="max-height:120px;" onerror="this.src = '../assets/marketplace/image/pro.png'">
+                                                    <div class="wrap-im" style="padding-right: 20px; width: fit-content; min-width: 220px; text-align:center;">
+                                                        <img src="${company.CALENDAR_PHOTO_PATH}" style="max-height:120px; padding-right: 0px; width: auto; max-width: 200px; border-radius: 12px;" onerror="this.src = '../assets/marketplace/image/pro.png'">
                                                     </div>
 
                                                     <div class="wrap-con">
                                                         <p><b>${company.COMPANY_NAME_ENGLISH}</b></p>
                                                         <P class="font-2">${company.CALENDAR_NAME}</P>
-                                                        <p>Service ${company.CALENDAR_SUB_CATEGORY_NAME}</p>
-                                                        /*<p><button class="book" onclick="location.href='/Marketplace/CompanySchedule?CompanyCode=${company.COMPANY_CODE}&CalendarCode=${company.CALENDAR_CODE}'">Book</button></p>*/
+                                                        ${((company.PURCHASED == 'Y') ? `<p>Balance: ${company.COIN_BALANCE} credits</p>`: "")}
                                                         <p><button class="book" onclick="location.href='/Marketplace/Calander/${company.COMPANY_CODE}'">Book</button></p>
                                                     </div>
                                                 </div>`);
                         } else {
                             $("#row2").append(`<div class="wrap">
-                                                    <div class="wrap-im">
-                                                        <img src="${company.CALENDAR_PHOTO_PATH}" style="max-height:120px;" onerror="this.src = '../assets/marketplace/image/pro.png'">
+                                                    <div class="wrap-im" style="padding-right: 20px; width: fit-content; min-width: 220px; text-align:center;">
+                                                        <img src="${company.CALENDAR_PHOTO_PATH}" style="max-height:120px; padding-right: 0px; width: auto; max-width: 200px; border-radius: 12px;" onerror="this.src = '../assets/marketplace/image/pro.png'">
                                                     </div>
                                                     <div class="wrap-con">
                                                         <p><b>${company.COMPANY_NAME_ENGLISH}</b></p>
                                                         <P class="font-2">${company.CALENDAR_NAME}</P>
-                                                        <p>Service ${company.CALENDAR_SUB_CATEGORY_NAME}</p>
-                                                        /*<p><button class="book" onclick="location.href='/Marketplace/CompanySchedule?CompanyCode=${company.COMPANY_CODE}&CalendarCode=${company.CALENDAR_CODE}'">Book</button></p>*/
+                                                        ${((company.PURCHASED == 'Y') ? `<p>Balance: ${company.COIN_BALANCE} credits</p>` : "")}
                                                         <p><button class="book" onclick="location.href='/Marketplace/Calander/${company.COMPANY_CODE}'">Book</button></p>
                                                     </div>
                                                 </div>`);

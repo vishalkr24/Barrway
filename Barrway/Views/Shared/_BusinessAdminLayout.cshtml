@@ -211,7 +211,7 @@
     @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.2.2/css/tom-select.bootstrap5.min.css" integrity="sha512-mNN7o87hQqtNCCGWxFVdlVdaKF6d4S1wVMi3+ftJYnW572YIo0KPjK1Cns5SPlyCtKGp1Nu+z26MJUNXmpbjKA==" crossorigin="anonymous" referrerpolicy="no-referrer" />*@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.2.2/esm/tom-select.complete.min.js" integrity="sha512-Mq5sbsECkh++vpFvzKegopkWOHTuj2D3503BOVdaH8tTczPn74LEOkMK1Sd0BHbjwGEgVYDKM6CYSYeXJ5FaLA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
 
@@ -810,7 +810,18 @@
 
                             </a>
                         </li>
+                        <li class="nav-item hide-for-superadmin" id="nav-register-form-master-parent" style="display:none;">
+                            <a class="nav-link " id="nav-register-form-master" href="/calendar/index#/student-register-form-master/">
+                                <div class="button-body">
+                                    <button class="cus-button">
+                                        <img src="/assets/marketplace/image/trans.png" alt="" class="hns" />
+                                        <img src="/assets/marketplace/image/trans1.png" alt="" class="hs" />
+                                        <span class="button_title">Student register form</span>
+                                    </button>
+                                </div>
 
+                            </a>
+                        </li>
                         @*<li class="nav-item hide-for-superadmin">
                                 <a class="nav-link " href="javascript:void(0)" data-placement="left">
                                     @Resource.Notifications
@@ -1127,6 +1138,7 @@
     <script src="Scripts/myscript/controller/FormEntryController.js?token=@token"></script>
     <script src="Scripts/myscript/controller/calendarController.js?token=@token"></script>
     <script src="Scripts/myscript/controller/NewSchedularFormController.js?token=@token"></script>
+    <script src="~/Scripts/myscript/controller/StudentRegisterFormMasterController.js"></script>
 
 
     <script src="Scripts/myscript/routes/allRoutes.js?token=@token"></script>

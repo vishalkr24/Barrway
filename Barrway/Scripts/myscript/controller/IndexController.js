@@ -360,6 +360,7 @@
                 localStorage.setItem("CALENDAR_FUNCTION_TYPE", $scope.calendarList.find(x => x.CALENDAR_CODE == localStorage.getItem("CALENDAR_CODE")).CALENDAR_FUNCTION_TYPE);
                 localStorage.setItem("CALENDAR_TYPE", $scope.calendarList.find(x => x.CALENDAR_CODE == localStorage.getItem("CALENDAR_CODE")).CALENDAR_TYPE);
                 localStorage.setItem("CALENDAR_STATUS", $scope.calendarList.find(x => x.CALENDAR_CODE == localStorage.getItem("CALENDAR_CODE")).STATUS);
+                localStorage.setItem("ADDITIONAL_FORM_ID", $scope.calendarList.find(x => x.CALENDAR_CODE == localStorage.getItem("CALENDAR_CODE")).ADDITIONAL_FORM_ID);
 
                 if (localStorage.getItem("CALENDAR_STATUS") == 'PUBLISH') {
                     $scope.calendarPublishable = false;
@@ -376,6 +377,11 @@
                 }else {
                     showElementById("nav-schedular-form-parent");
                 }
+
+                if (localStorage.getItem("ADDITIONAL_FORM_ID") != "" && localStorage.getItem("ADDITIONAL_FORM_ID") != null && localStorage.getItem("ADDITIONAL_FORM_ID") != "0" && localStorage.getItem("ADDITIONAL_FORM_ID") != "null") {
+                    showElementById("nav-register-form-master-parent");
+                }
+
 
                 $(".lbl-company-name").text(localStorage.getItem("COMPANY_NAME_ENGLISH"));
                 $(".lbl-calendar-name").text($("#ddlMasterCalendar option:selected").text());
