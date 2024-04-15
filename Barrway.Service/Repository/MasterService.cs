@@ -721,7 +721,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 var modified_data = modifiedDataUpcommingEvent(result);
                 return new AddUpdateDelete() { Status = true, Data = modified_data };
             }
-            return new AddUpdateDelete() { Status = false };
+            return new AddUpdateDelete() { Status = false, Data = result };
         }
 
 
@@ -1913,7 +1913,7 @@ DECLARE @retval nvarchar(max);
                                   ,[PACKAGE_SEQUENCE]
                                   ,[PACKAGE_DESCRIPTION]
                                   ,[IS_ACTIVE]
-                                  ,[CREDIT_EXPIRE_DATE]
+                                  ,[VALIDITY_IN_MONTHS]
                               FROM [dbo].[CALENDAR_PACKAGE_MASTER_1952] where Id = '{PackageId}'";
                 var result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -1970,7 +1970,7 @@ DECLARE @retval nvarchar(max);
                 if (formResult.res == 1)
                 {
                     string OrderNo = "ORD" + formResult.Id.ToString().PadLeft(5, '0');
-                    var query = $@"update ORDER_MASTER_1953 set ORDER_NO = '{OrderNo}' where Id = '{formResult.Id.ToString()}'";
+                    var query = $@"update ORDER_MASTER_1969 set ORDER_NO = '{OrderNo}' where Id = '{formResult.Id.ToString()}'";
                     var result = await sqlFunction.ExecuteSqlCommandQuery(query);
 
                     return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = OrderNo };

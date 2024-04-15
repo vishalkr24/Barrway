@@ -1,15 +1,58 @@
-﻿$(document).ready(function () {
+﻿var packagesList = {};
+
+$(document).ready(function () {
     $("#nv-company-package").addClass("active");
-    setCompanyPackageDetails();
+    setCalendarsList(true);
 });
 
-function setCompanyPackageDetails() {
-    let CompanyCode = $("#txtCurrentCompanyCode").val();
-    
-    var data = getCompanyCalendarPackages(CompanyCode);
-    console.log(data);
+function setCalendarsList(firstCall = false) {
 
-    var calendarDetails = data.packageData.Data[0];
+    $("#calendars-list-area").empty();
+    $("#btn-back").hide();
+
+    let CompanyCode = $("#txtCurrentCompanyCode").val();
+    if (firstCall) {
+        packagesList = getCompanyCalendarPackages(CompanyCode);
+    }
+    
+    var calendarDetails = packagesList.packageData.Data[0];
+
+    $("#calendars-list-area").show();
+    $("#calendars-area").hide();
+
+    for (var i = 0; i < calendarDetails.length; i++) {
+        $("#calendars-list-area").append(`<div class="card-pakage" onclick="setCompanyPackageDetails('${calendarDetails[i].CALENDAR_CODE}')">
+                    <div class="card-top-detail">
+                        <div class="media">
+                            <div class="media-left">
+                                <img src="${calendarDetails[i].CALENDAR_PHOTO_PATH.replace("~", "..")}" onerror="this.src='/assets/marketplace/image/pro.png'" class="media-object" style="width:195px; max-height: 120px">
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading" id="lblCalendarName">${calendarDetails[i].CALENDAR_NAME}</h4>
+                                <p><span class="location" id="lblCalendarLocation"></span></p>
+                                <p>
+                                    <span id="lblSubCategory">${calendarDetails[i].CALENDAR_SUB_CATEGORY_NAME} </span>
+                                    </br>
+                                    <span id="lblServiceName">${calendarDetails[i].ActivityName}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>`);
+    }
+
+
+}
+
+function setCompanyPackageDetails(calendarCode) {
+    var data = packagesList;
+    
+    $("#calendars-list-area").hide();
+    $("#calendars-area").show();
+    $("#calendars-area").empty();
+    $("#btn-back").show();
+
+    var calendarDetails = data.packageData.Data[0].filter(x=> x.CALENDAR_CODE == calendarCode);
     var packageDetails = data.packageData.Data[1];
 
     for (var i = 0; i < calendarDetails.length; i++) {

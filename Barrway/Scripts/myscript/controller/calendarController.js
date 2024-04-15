@@ -17577,156 +17577,129 @@
     FormGeneratorApp.controller('UserBCoinController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
         checkLogin();
 
-        $scope.CalendarMasterList = function (groupBy) {
+        $scope.setWalletData = function (pageNumber, IsInnitial = false) {
+            //debugger;
+            var CompanyCode = null;
 
-            var columns = [
-                {
-                    title: 'Date', field: 'created_at', headerFilter: "input", formatter: function (cell, formatter) {
-                        return moment(cell.getData().created_at).format("YYYY-MM-DD")
-                    }
+            if ($("#company-filter-selector option:selected").val() != "-1") {
+                CompanyCode = $("#company-filter-selector option:selected").val();
+            }
+
+            $.ajax({
+                url: "/UserAdmin/GetUserBCoinMaster",
+                type: "GET",
+                data: {
+                    page: pageNumber,
+                    size: 8,
+                    page_records: 0,
+                    res: 0,
+                    COMPANY_CODE: CompanyCode
                 },
-                { title: 'Company Name', field: 'COMPANY_NAME_ENGLISH', headerFilter: "input" },
-                { title: 'Calendar', field: 'CALENDAR_NAME', headerFilter: "input" },
-                {
-                    title: 'Coin', field: 'COIN', headerFilter: "input", formatter: function (cell, formatter) {
+                success: function (response) {
 
-                        if (cell.getData().CREDIT_COIN == 0 || cell.getData().CREDIT_COIN == "0" || cell.getData().CREDIT_COIN == "") {
-                            return `<span style="color:#e2476c;">-${cell.getData().DEBIT_COIN}</span>`;
+                    if (IsInnitial) {
+                        $scope.CompanyListFilter = response.data[1];
+
+                        $("#company-filter-selector").empty();
+                        $("#company-filter-selector").append(`<option selected value="-1">All Companies</option>`);
+
+                        for (var i = 0; i < $scope.CompanyListFilter.length; i++) {
+                            var company = $scope.CompanyListFilter[i];
+                            $("#company-filter-selector").append(`<option value="${company.COMPANY_CODE}">${company.COMPANY_NAME_ENGLISH}</option>`);
+                        }
+                    }
+
+
+                    var nextPage = 0;
+
+                    if (pageNumber == response.last_page) {
+                        nextPage = response.last_page;
+                    } else {
+                        nextPage = pageNumber + 1;
+                    }
+
+                    var hardBindLimit = (response.last_page < 5) ? response.last_page : 5;
+
+                    $(".pagination").empty();
+                    $(".pagination").append(`<button class="btn" onclick="setFavoritesData(1)"><img src="../assets/marketplace/image/p1.png" /></button>`);
+                    $(".pagination").append(`<button class="btn" id="next-page-nav" onclick="setWalletData(${(pageNumber <= 1) ? 1 : (pageNumber - 1)})"><img src="../assets/marketplace/image/p12.png" /></button>`);
+
+                    for (var i = 1; i <= hardBindLimit; i++) {
+                        if (i == pageNumber) {
+                            $(".pagination").append(`<a href="javascript:void(0)" style="line-height:1.3;" onclick="setWalletData(${i})" class="page-link page-link--current">${i}</a>`);
                         } else {
-                            return `<span style="color:green;">+${cell.getData().CREDIT_COIN}</span>`;
+                            $(".pagination").append(`<a href="javascript:void(0)" style="line-height:1.3;" onclick="setWalletData(${i})" class="page-link">${i}</a>`);
                         }
 
                     }
-                },
-                { title: 'Type', field: 'TRANSACTION_TYPE', headerFilter: "input" }
-            ];
 
-            setTimeout(function () {
-                var options = {
-                    placeholder: "No Data.",
-                    tooltips: function (cell) {
-                        return cell.getValue();
-                    },
-                    height: "530px",
-                    layout: "fitColumns",
-                    responsiveLayout: false,
-                    initialSort: [
-                        { column: "created_at", dir: "desc" }
-                    ],
-                    persistenceID: "persisrecords",
-                    persistenceMode: true,
-                    persistentLayout: true,
-                    persistence: {
-                        sort: false, //persist column sorting
-                        filter: false, //persist filter sorting
-                        columns: false, //persist columns
-                    },
+                    $(".pagination").append(`<button class="btn" id="next-page-nav" onclick="setWalletData(${nextPage})"><img src="../assets/marketplace/image/p11.png" /></button>`);
+                    $(".pagination").append(`<button class="btn" id="last-page-nav" onclick="setWalletData(${response.last_page})"><img src="../assets/marketplace/image/p2.png" /></button>`);
 
-                    persistenceWriterFunc: function (id, type, data) {
-                        localStorage.setItem(id + "-" + type, JSON.stringify(data));
-                    },
-                    persistenceReaderFunc: function (id, type) {
-                        var data = localStorage.getItem(id + "-" + type);
-                        var dataParse = JSON.parse(data);
-                        if (!DataService.isEmpty(data) && type == "columns") {
-                            _.each(headers, function (item) {
-                                var exists = _.findWhere(dataParse, {
-                                    field: item.field
-                                });
-                                if (!DataService.isEmpty(exists)) {
-                                    exists.visible = item.visible;
+                    $("#row1").empty();
+                    $("#row2").empty();
+
+
+
+                    for (var i = 0; i < response.data[0].length; i++) {
+                        response.data[0][i].CALENDAR_PHOTO_PATH = response.data[0][i].CALENDAR_PHOTO_PATH.replace('~', '..')
+                    }
+                    debugger;
+                    for (var i = 0; i < response.data[0].length; i++) {
+
+                        var tagQuery = "";
+                        if (response.data[0][i].TAGS != null) {
+                            if (response.data[0][i].TAGS.includes(",")) {
+                                var tempTagData = response.data[0][i].TAGS.split(',');
+
+                                for (var j = 0; j < tempTagData.length; j++) {
+                                    if (j == tempTagData.length - 1) {
+                                        tagQuery += `<a href="/Marketplace/Tag?tag=${tempTagData[j]}">${tempTagData[j]}</a>`
+                                    } else {
+                                        tagQuery += `<a href="/Marketplace/Tag?tag=${tempTagData[j]}">${tempTagData[j]}, </a>`
+                                    }
+
                                 }
-                            })
-                        }
-                        else if (type == "page") {
-                            if (!DataService.isEmpty(data) && $scope.paginationSizeFormRecords != 0)
-                                dataParse.paginationSize = $scope.paginationSizeFormRecords;
-                        }
-                        return data ? dataParse : false;
-                    },
-                    columns: columns,
-                    groupBy: groupBy,
-                    groupHeader: function (value, count, data, group) {
-                        //value - the value all members of this group share
-                        //count - the number of rows in this group
-                        //data - an array of all the row data objects in this group
-                        //group - the group component for the group
-                        //debugger;
-                        var creditValue = 0;
-                        var debitValue = 0;
-                        for (var i = 0; i < data.length; i++) {
-                            creditValue += parseInt(data[i].CREDIT_COIN);
-                            debitValue += parseInt(data[i].DEBIT_COIN)
+
+                            } else {
+                                tagQuery += `<a href="/Marketplace/Tag?tag=${response.data[0][i].TAGS}">${response.data[0][i].TAGS}</a>`
+                            }
                         }
 
-                        return value + `<span style='margin-left:10px;'>(${count} transactions)</span>` + "<span style='margin-left:24px;'>Balance B$" + (creditValue - debitValue).toFixed(2) + "</span>";
-                    },
-                    footerElement: "<div style='text-align:left' id='no-of-forms'></div>",
-                    dataLoaded: function (data) {
-                        //data - all data loaded into the table                        
-                        var count = 0;
-                        if (data.length > 0)
-                            count = data[0].total_records;
-                        $('#form-records .tabulator-footer #no-of-forms').text("Total: " + count + " Entries");
-                    },
-                    /// pagination: "local",              
-                    ajaxFiltering: true,
-                    ajaxSorting: true,
-                    ajaxLoader: true,
-                    ajaxURL: "/UserAdmin/GetUserBCoinMaster",
-                    ajaxConfig: "POST", //ajax HTTP request type
-                    ajaxContentType: "json",
-                    ajaxParams: {},
-                    ajaxProgressiveLoad: "scroll",
-                    ajaxProgressiveLoadScrollMargin: 75,
-                    ajaxRequesting: function (url, params) {
 
-                        var called = true;
-                        if (params.sorters.length == 0) {
-                            params.sorters.push({ field: "created_at", dir: "desc" });
+                        var company = response.data[0][i];
+
+                        var creditDetails = JSON.parse(company.PackageInfo);
+                        var txtCreditDetails = ``;
+                        for (var j = 0; j < creditDetails.length; j++) {
+                            txtCreditDetails += `<p class="text-danger">${creditDetails[j].Balance} credits expiring on ${moment(creditDetails[j].CREDIT_EXPIRE_DATE.substring(0, 10), "YYYY-MM-DD").format("DD/MM/YYYY")}</p>`;
                         }
-                        //if (called)
-                        //$('#form-records').block({ message: '<h4>Getting Form Records...</h4>' });
-                        return called; //abort ajax request
-                    },
-                    ajaxResponse: function (url, params, response) {
-                        if (response.data) {
-                            return response;
-                        }
-                        else {
-                            return response;
-                        }
-                    },
-                    paginationSize: 500000,
+                        
 
-                };
-                var tabulator = initTabulator('form-records', options);
-                $('.form-builder-loader').hide();
-            }, 50);
+                        $("#row1").append(`<div class="wrap">
+                                                    <div class="wrap-im">
+                                                        <img src="${company.CALENDAR_PHOTO_PATH}" onerror="this.src = '../assets/marketplace/image/pro.png'">
+                                                    </div>
 
-        };
+                                                    <div class="wrap-text">
+                                                        <p><b>${company.COMPANY_NAME_ENGLISH}</b></p>
+                                                        <P class="font-2">${company.CALENDAR_NAME}</P>
+                                                        <p class="font-weight-bold">Balance: ${company.COIN_BALANCE} credits</p>
+                                                        ${txtCreditDetails}
+                                                    </div>
+                                                </div>`);
 
-        $scope.CalendarMasterList('COMPANY_NAME_ENGLISH');
+                    }
 
-        var tempArr = [];
+                },
+                error: function (errorResponse) {
+                    alert();
+                }
+            })
 
-        tempArr.push({
-            field: "CALENDAR_NAME",
-            title: "Calendar Name",
-            selected: false
-        })
+        }
 
-        tempArr.push({
-            field: "COMPANY_NAME_ENGLISH",
-            title: "Company Name",
-            selected: true
-        })
-
-        $scope.filterFieldsList = tempArr;
-
-        $(document).on("change", "#grouping-field", function () {
-            $scope.CalendarMasterList($(this).val());
-        })
+        $scope.setWalletData(1, true);
 
     })
 
@@ -18038,4 +18011,8 @@
 
 function setFavoritesData(pageId) {
     angular.element("#company-filter-selector").scope().setFavoritesData(pageId);
+}
+
+function setWalletData(pageId) {
+    angular.element("#company-filter-selector").scope().setWalletData(pageId);
 }

@@ -388,10 +388,16 @@ namespace Barrway.Service.Repository
 
             var upcomingResult = await sqlFunction.ExecuteSqlCommandQuery(upcomingBookingQuery);
 
-            string orderNoQuery = $@"select PAYMENT_ID from PAYMENT_HISTORY_MASTER_1956 where COMPANY_CODE = '{model.transaction.COMPANY_CODE}' and CALENDAR_CODE = '{model.transaction.CALENDAR_CODE}' and STATUS = 'complete'
-                                order by created_at desc";
+            string orderNoQuery = $@"select *,
+                                                    (
+                                                    select case when (sum(CREDIT_COIN) - sum(DEBIT_COIN) <= 0) then 0 else sum(CREDIT_COIN) - sum(DEBIT_COIN) end from LEDGER_MASTER_1957 where ORDER_NO = PAYMENT_ID
+                                                    ) as 'Balance'
+                                                    from PAYMENT_HISTORY_MASTER_1956 where COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE.ToString()}' and STATUS = 'complete' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE and USER_ID = '{model.USER_ID}'
+                                                    order by cast(created_at as datetime)";
 
             var orderNoResult = await sqlFunction.ExecuteSqlQuery(orderNoQuery);
+
+            string paymentId = orderNoResult.FirstOrDefault(x => Convert.ToInt32(x["Balance"]) > 0)["PAYMENT_ID"]?.ToString();
 
             // add entry in ledger
             try
@@ -403,7 +409,7 @@ namespace Barrway.Service.Repository
                     DEBIT_COIN = Convert.ToDouble(model.transaction.transaction_fees),
                     USER_ID = model.USER_ID,
                     CREDIT_COIN = 0,
-                    ORDER_NO = (model.transaction.transaction_fees == "0") ? "" : orderNoResult[0]["PAYMENT_ID"].ToString(),
+                    ORDER_NO = (model.transaction.transaction_fees == "0") ? "" : paymentId,
                     TRANSACTION_TYPE = "Booking"
                 };
                 var ledgerResult = await masterService.CreateLedgerEntry(ledger);
@@ -584,7 +590,7 @@ namespace Barrway.Service.Repository
 
         }
 
-        public async Task<AddUpdateDelete> BookingServiceEvent(RequestEventViewModel eventModal, string userName)
+        public async Task<AddUpdateDelete> BookingServiceEvent(RequestEventViewModel eventModal, string userName, string UserId)
         {
             if (eventModal != null)
             {
@@ -820,12 +826,16 @@ namespace Barrway.Service.Repository
 
                             var upcommingBookingResult = await UpCommingBookingAdd(upCommingBooking);
 
-
-                            string orderNoQuery = $@"select PAYMENT_ID from PAYMENT_HISTORY_MASTER_1956 where COMPANY_CODE = '{eventModal.companyCode.ToString()}' and CALENDAR_CODE = '{eventModal.calendarCode.ToString()}' and STATUS = 'complete'
-                                order by created_at desc";
+                            string orderNoQuery = $@"select *,
+                                                    (
+                                                    select case when (sum(CREDIT_COIN) - sum(DEBIT_COIN) <= 0) then 0 else sum(CREDIT_COIN) - sum(DEBIT_COIN) end from LEDGER_MASTER_1957 where ORDER_NO = PAYMENT_ID
+                                                    ) as 'Balance'
+                                                    from PAYMENT_HISTORY_MASTER_1956 where COMPANY_CODE = '{eventModal.companyCode.ToString()}' and CALENDAR_CODE = '{eventModal.calendarCode.ToString()}' and STATUS = 'complete' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE and USER_ID = '{UserId}'
+                                                    order by cast(created_at as datetime)";
 
                             var orderNoResult = await sqlFunction.ExecuteSqlQuery(orderNoQuery);
 
+                            string paymentId = orderNoResult.FirstOrDefault(x=> Convert.ToInt32(x["Balance"]) > 0)["PAYMENT_ID"]?.ToString();
 
                             // add entry in ledger
                             LedgerModel ledger = new LedgerModel()
@@ -835,7 +845,7 @@ namespace Barrway.Service.Repository
                                 DEBIT_COIN = Convert.ToDouble(ServiceFees),
                                 USER_ID = userName,
                                 CREDIT_COIN = 0,
-                                ORDER_NO = orderNoResult[0]["PAYMENT_ID"].ToString(),
+                                ORDER_NO = paymentId,
                                 TRANSACTION_TYPE = "Booking"
                             };
 
@@ -1164,12 +1174,12 @@ namespace Barrway.Service.Repository
 								  select top 4
 									  (select 
 	case when (
-		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
-	) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
+		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+	) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
 	then
 		0
 	else
-		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
 	end
 FROM LEDGER_MASTER_1957 led 
 where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) as 'COIN_BALANCE'
@@ -1319,12 +1329,12 @@ where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) a
                                                   ,subCategory.CALENDAR_SUB_CATEGORY_NAME
 												  ,(select 
 														case when (
-															(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
-														) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
+															(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+														) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
 														then
 															0
 														else
-															(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+															(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
 														end
 													FROM LEDGER_MASTER_1957 led 
 													where led.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and USER_ID = '{userId}' ) as 'COIN_BALANCE', 'Y' as 'PURCHASED'
@@ -1398,17 +1408,17 @@ where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) a
             }
         }
 
-        public async Task<AddUpdateDelete> GetUserBCoinMaster(GenerateDynamicFormData data, string userId)
+        public async Task<AddUpdateDelete> GetUserBCoinMaster(GenerateDynamicFormData data, string userName, string userEmail)
         {
             try
             {
-                Dictionary<string, string> filters = new Dictionary<string, string>() {
-                    { "ORDER_NO","f.ORDER_NO"},
-                    { "COIN","f.CREDIT_COIN"},
-                    { "COMPANY_NAME_ENGLISH","cmp.COMPANY_NAME_ENGLISH"},
-                    { "CALENDAR_NAME","cal.CALENDAR_NAME"},
-                    { "TRANSACTION_TYPE","f.TRANSACTION_TYPE"},
-                };
+                string CompanyCode = data.COMPANY_CODE;
+                string CompanyLogic = "";
+
+                if (!string.IsNullOrEmpty(CompanyCode))
+                {
+                    CompanyLogic = " and calendarDetails.COMPANY_CODE = '" + CompanyCode + "'";
+                }
 
                 string column = "", dir = "";
                 if (data.sorters != null && data.sorters.Count() > 0)
@@ -1422,89 +1432,82 @@ where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) a
                     dir = "desc";
                 }
 
-
-
-                List<string> applyFilter = new List<string>();
-
-                if (data.filter != null)
-                {
-                    if (!string.IsNullOrEmpty(data.filter.value))
-                        if (data.filter.type == "like")
-                        {
-                            applyFilter.Add("f.[" + data.filter.field + "]  " + data.filter.type + " '%" + data.filter.value + "%'");
-                        }
-                        else
-                            applyFilter.Add("f.[" + data.filter.field + "] " + data.filter.type + " '" + data.filter.value + "'");
-                }
-
-
-                if (data.filters != null && data.filters.Count() > 0)
-                {
-                    foreach (var item in data.filters)
-                    {
-                        if (!string.IsNullOrEmpty(item.value))
-                        {
-                            if (item.field == "created_at" || item.field == "updated_at")
-                            {
-                                string filter = await sqlFunction.GetDateFilter(item);
-                                applyFilter.Add(filter);
-                            }
-                            else
-                            {
-                                string filter = "";
-                                if (item.field == "COIN")
-                                {
-                                    filter += "(CREDIT_COIN like N'%" + item.value + "%' or DEBIT_COIN like N'%" + item.value + "%' )";
-                                }
-                                else
-                                {
-                                    filter = item.field + " like N'%" + item.value + "%'";
-                                }
-
-                                applyFilter.Add(filter);
-                            }
-                        }
-                    }
-                }
-
-                string applyFilterQuery = string.Join(" and ", applyFilter);
-                applyFilterQuery = applyFilterQuery.TrimEnd("and ".ToCharArray());
-
                 int PageSize = data.size > 0 ? data.size : 20;
                 int PageNumber = data.page > 0 ? data.page : 1;
 
-                string strSql = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
-                                    SELECT f.[Id]
-                                          ,f.[created_at]
-                                          ,f.[updated_at]
-                                          ,f.[created_by]
-                                          ,f.[updated_by]
-                                          ,[ORDER_NO]
-                                          ,[CREDIT_COIN]
-                                          ,[DEBIT_COIN]
-                                          ,[USER_ID]
-                                          ,[TRANSACTION_TYPE]
-	                                      ,cmp.COMPANY_NAME_ENGLISH
-	                                      ,cal.CALENDAR_NAME
-                                      FROM [dbo].[LEDGER_MASTER_1957] f
-                                      join BUSINESS_COMPANY_MASTER_1924 cmp on cmp.COMPANY_CODE = f.COMPANY_CODE
-                                      join BUSINESS_CALENDAR_MASTER_1925 cal on cal.CALENDAR_CODE = f.CALENDAR_CODE
-                                      where f.USER_ID = '{userId}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
-                                    )
-                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+                string query = $@"declare @UserId varchar(max) = '{userName}'
+                                  declare @currentDate varchar(100) = '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'
+                                  declare @Ids varchar(max) = stuff((select distinct ',' + phm.CALENDAR_CODE
 
-                var listresult = await sqlFunction.ExecuteSqlQuery(strSql);
-                if (listresult.Count() > 0)
+								  from PAYMENT_HISTORY_MASTER_1956 phm
+								  where phm.USER_ID = @UserId and cast(@currentDate as datetime) <= cast(phm.CREDIT_EXPIRE_DATE as datetime) and phm.STATUS = 'complete'
+								  for xml path('')), 1, 1, '')
+			  
+                                  declare @PageSize int=10 ,  @PageNumber int=1 ; with formdata as (
+                                              select
+									  (select 
+											case when (
+												(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = @UserId and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and cast(@currentDate as datetime) < cast(substring(CREDIT_EXPIRE_DATE, 1, 16) as datetime)) - SUM(led.DEBIT_COIN)
+											) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = @UserId and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and cast(@currentDate as datetime) < cast(substring(CREDIT_EXPIRE_DATE, 1, 16) as datetime)) - SUM(led.DEBIT_COIN) <= 0
+											then
+												0
+											else
+												(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = @UserId and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and cast(@currentDate as datetime) < cast(substring(CREDIT_EXPIRE_DATE, 1, 16) as datetime)) - SUM(led.DEBIT_COIN)
+											end
+										FROM LEDGER_MASTER_1957 led 
+										where USER_ID = @UserId and CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) as 'COIN_BALANCE'
+									  ,(select CREDIT_EXPIRE_DATE,
+										(
+										select case when (sum(CREDIT_COIN) - sum(DEBIT_COIN) <= 0) then 0 else cast(sum(CREDIT_COIN) - sum(DEBIT_COIN) as varchar) end from LEDGER_MASTER_1957 where ORDER_NO = PAYMENT_ID
+										) as 'Balance'
+										from PAYMENT_HISTORY_MASTER_1956 where CALENDAR_CODE = calendarDetails.CALENDAR_CODE and USER_ID = @UserId and STATUS = 'complete' and cast(@currentDate as datetime) < cast(substring(CREDIT_EXPIRE_DATE, 1, 16) as datetime)
+									   for json auto) as 'PackageInfo'
+									  ,company.Id as 'CompanyId'
+                                      ,calendarDetails.*
+	                                  ,company.COMPANY_NAME_ENGLISH
+                                      ,company.COMPANY_LOGO_PATH
+                                      ,subCategory.CALENDAR_SUB_CATEGORY_NAME
+									  ,stuff( (select distinct ',' + ACTIVITY_NAME from SERVICE_MASTER_1933 service_m where service_m.CALENDAR_CODE = calendarDetails.CALENDAR_CODE for xml path('')), 1, 1, '') as 'ServiceList'
+									  FROM BUSINESS_CALENDAR_MASTER_1925 calendarDetails
+                                  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
+								  join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendarDetails.CALENDAR_SUB_CATEGORY_ID
+                                  where calendarDetails.CALENDAR_CODE in (select cast(item as varchar(max)) from dbo.SplitString(@Ids, ',')) {CompanyLogic}
+								  )
+                                  Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY created_at desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+
+                List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+
+                string query2 = $@"declare @UserId varchar(max) = '{userName}'
+                                  declare @currentDate varchar(100) = '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'
+                                  declare @Ids varchar(max) = stuff((select distinct ',' + phm.COMPANY_CODE
+
+								  from PAYMENT_HISTORY_MASTER_1956 phm
+								  where phm.USER_ID = @UserId and cast(@currentDate as datetime) <= cast(phm.CREDIT_EXPIRE_DATE as datetime) and phm.STATUS = 'complete'
+								  for xml path('')), 1, 1, '')
+								  
+								  select * from BUSINESS_COMPANY_MASTER_1924 where COMPANY_CODE in (select cast(item as varchar) from dbo.SplitString(@Ids, ','))
+                                      ";
+
+                List<IDictionary<string, object>> result2 = await sqlFunction.ExecuteSqlQuery(query2);
+
+
+                List<List<IDictionary<string, object>>> finalResult = new List<List<IDictionary<string, object>>>();
+
+                finalResult.Add(result);
+                finalResult.Add(result2);
+
+                if (finalResult.Count > 0)
                 {
-                    return new AddUpdateDelete() { Status = true, Data = listresult };
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = finalResult };
                 }
-
-                return new AddUpdateDelete() { Status = false };
-
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
             }
             catch (Exception ex)
             {
-                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
             }
         }
 
@@ -1571,17 +1574,17 @@ where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) a
         {
             try
             {
-                string query = $@"(select 
-	case when (
-		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
-	) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where {DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")} < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
-	then
-		0
-	else
-		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where {DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")} < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
-	end
-FROM LEDGER_MASTER_1957 led 
-where USER_ID = '{UserId}' ) as 'COIN_BALANCE'";
+                string query = $@"select 
+	                                case when (
+		                                (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+	                                ) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
+	                                then
+		                                0
+	                                else
+		                                (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+	                                end as 'COIN_BALANCE'
+                                FROM LEDGER_MASTER_1957 led 
+                                where USER_ID = '{UserId}'";
 
                 List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -1593,7 +1596,7 @@ where USER_ID = '{UserId}' ) as 'COIN_BALANCE'";
                     }
                     else
                     {
-                        return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result[0]["COIN_BALANCE"] };
+                        return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = Convert.ToDouble(result[0]["COIN_BALANCE"]).ToString("n0") };
                     }
 
                 }
