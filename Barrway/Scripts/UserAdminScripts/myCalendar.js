@@ -1078,7 +1078,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         // List View
         myOptions = {
             header: {
-                left: 'prev,next today',
+                left: 'prev,next today datePickerButton3',
                 center: 'title',
                 right: 'listDay,listWeek,listMonth,listYear'
             },
@@ -1089,6 +1089,38 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 listWeek: { buttonText: 'week' },
                 listMonth: { buttonText: 'month' },
                 listYear: { buttonText: 'year' }
+            },
+            customButtons: {
+                datePickerButton3: {
+                    themeIcon: 'custom-datepicker',
+                    click: function () {
+
+                        var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+                        var $btnCustom = $('.fc-datePickerButton3-button'); // name of custom  button in the generated code
+                        $btnCustom.after('<input type="hidden" id="hiddenDate3" class="datepicker"/>');
+
+                        $("#hiddenDate3").datepicker({
+                            showOn: "button",
+                            dateFormat: "yy-mm-dd",
+                            onSelect: function (dateText, inst) {
+                                $("#" + current_tab + " .calendar").fullCalendar('gotoDate', dateText);
+                                //$('.calendar').fullCalendar('gotoDate', dateText);
+                            },
+                            defaultDate: $("#" + current_tab + " .calendar").fullCalendar('getDate').format("YYYY-MM-DD"),
+                            changeMonth: true,
+                            changeYear: true
+                        });
+
+                        var $btnDatepicker = $(".ui-datepicker-trigger"); // name of the generated datepicker UI 
+                        //Below are required for manipulating dynamically created datepicker on custom button click
+                        $("#hiddenDate3").show().focus().hide();
+                        $btnDatepicker.trigger("click"); //dynamically generated button for datepicker when clicked on input textbox
+                        $btnDatepicker.hide();
+                        $btnDatepicker.remove();
+                        $("input.datepicker").not("#hiddenDate3").remove();//dynamically appended every time on custom button click
+
+                    }
+                }
             },
             defaultView: 'listDay',
             defaultDate: new Date(),
@@ -1154,9 +1186,41 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
     // Agenda View
     myOptions = {
         header: {
-            left: 'prev,next today',
+            left: 'prev,next today datePickerButton3',
             center: 'title',
             right: 'month'
+        },
+        customButtons: {
+            datePickerButton3: {
+                themeIcon: 'custom-datepicker',
+                click: function () {
+
+                    var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+                    var $btnCustom = $('.fc-datePickerButton3-button'); // name of custom  button in the generated code
+                    $btnCustom.after('<input type="hidden" id="hiddenDate3" class="datepicker"/>');
+
+                    $("#hiddenDate3").datepicker({
+                        showOn: "button",
+                        dateFormat: "yy-mm-dd",
+                        onSelect: function (dateText, inst) {
+                            $("#" + current_tab + " .calendar").fullCalendar('gotoDate', dateText);
+                            //$('.calendar').fullCalendar('gotoDate', dateText);
+                        },
+                        defaultDate: $("#" + current_tab + " .calendar").fullCalendar('getDate').format("YYYY-MM-DD"),
+                        changeMonth: true,
+                        changeYear: true
+                    });
+
+                    var $btnDatepicker = $(".ui-datepicker-trigger"); // name of the generated datepicker UI 
+                    //Below are required for manipulating dynamically created datepicker on custom button click
+                    $("#hiddenDate3").show().focus().hide();
+                    $btnDatepicker.trigger("click"); //dynamically generated button for datepicker when clicked on input textbox
+                    $btnDatepicker.hide();
+                    $btnDatepicker.remove();
+                    $("input.datepicker").not("#hiddenDate3").remove();//dynamically appended every time on custom button click
+
+                }
+            }
         },
         defaultView: 'month',
         //events: [],  
@@ -1347,28 +1411,39 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         //defaultDate: '2017-12-07',
         scrollTime: '00:00', // undo default 6am scrollTime
         header: {
-            left: 'myCustomButton prev,next today',
+            left: 'myCustomButton prev,next today datePickerButton3',
             center: 'title',
             right: 'timelineDay,timelineMonth'
         },
         customButtons: {
-            myCustomButton: {
-                text: "Export To Excel",
+            datePickerButton3: {
+                themeIcon: 'custom-datepicker',
                 click: function () {
-                    alert('Export To Excel')
-                    var resourceFormId = window["ySelected"];
-                    var formId = CalendarFormId;
-                    var userId = userDetail.Id;
-                    var typeView = 0;
-                    var current_subtab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').find('.ui-state-active').attr('class');
-                    if (current_subtab.contains('fc-timelineMonth-button'))
-                        typeView = 1;
-                    else if (current_subtab.contains('fc-timelineYear-button'))
-                        typeView = 2;
-                    var dates = GetCalendarDateRange();
-                    var currentDate = moment(dates.start).format("YYYY-MM-DD");
-                    var newpath = $scope.EndPointUrl + '/downloadCalenderExcel?formId=' + formId + '&resourceFormId=' + resourceFormId + '&userId=' + userId + '&typeView=' + typeView + '&currentDate=' + currentDate + '';
-                    window.location.href = $scope.EndPointUrl + '/downloadCalenderExcel?formId=' + formId + '&resourceFormId=' + resourceFormId + '&userId=' + userId + '&typeView=' + typeView + '&currentDate=' + currentDate + '';
+
+                    var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+                    var $btnCustom = $('.fc-datePickerButton3-button'); // name of custom  button in the generated code
+                    $btnCustom.after('<input type="hidden" id="hiddenDate3" class="datepicker"/>');
+
+                    $("#hiddenDate3").datepicker({
+                        showOn: "button",
+                        dateFormat: "yy-mm-dd",
+                        onSelect: function (dateText, inst) {
+                            $("#" + current_tab + " .calendar").fullCalendar('gotoDate', dateText);
+                            //$('.calendar').fullCalendar('gotoDate', dateText);
+                        },
+                        defaultDate: $("#" + current_tab + " .calendar").fullCalendar('getDate').format("YYYY-MM-DD"),
+                        changeMonth: true,
+                        changeYear: true
+                    });
+
+                    var $btnDatepicker = $(".ui-datepicker-trigger"); // name of the generated datepicker UI 
+                    //Below are required for manipulating dynamically created datepicker on custom button click
+                    $("#hiddenDate3").show().focus().hide();
+                    $btnDatepicker.trigger("click"); //dynamically generated button for datepicker when clicked on input textbox
+                    $btnDatepicker.hide();
+                    $btnDatepicker.remove();
+                    $("input.datepicker").not("#hiddenDate3").remove();//dynamically appended every time on custom button click
+
                 }
             }
         },
@@ -1523,9 +1598,41 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         //defaultDate: '2017-12-07',
         scrollTime: '00:00', // undo default 6am scrollTime    
         header: {
-            left: 'myCustomButton prev,next today',
+            left: 'myCustomButton prev,next today datePickerButton3',
             center: 'title',
             right: 'agendaDay,agendaTwoDays,agendaThreeDays,agendaWeek'
+        },
+        customButtons: {
+            datePickerButton3: {
+                themeIcon: 'custom-datepicker',
+                click: function () {
+
+                    var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+                    var $btnCustom = $('.fc-datePickerButton3-button'); // name of custom  button in the generated code
+                    $btnCustom.after('<input type="hidden" id="hiddenDate3" class="datepicker"/>');
+
+                    $("#hiddenDate3").datepicker({
+                        showOn: "button",
+                        dateFormat: "yy-mm-dd",
+                        onSelect: function (dateText, inst) {
+                            $("#" + current_tab + " .calendar").fullCalendar('gotoDate', dateText);
+                            //$('.calendar').fullCalendar('gotoDate', dateText);
+                        },
+                        defaultDate: $("#" + current_tab + " .calendar").fullCalendar('getDate').format("YYYY-MM-DD"),
+                        changeMonth: true,
+                        changeYear: true
+                    });
+
+                    var $btnDatepicker = $(".ui-datepicker-trigger"); // name of the generated datepicker UI 
+                    //Below are required for manipulating dynamically created datepicker on custom button click
+                    $("#hiddenDate3").show().focus().hide();
+                    $btnDatepicker.trigger("click"); //dynamically generated button for datepicker when clicked on input textbox
+                    $btnDatepicker.hide();
+                    $btnDatepicker.remove();
+                    $("input.datepicker").not("#hiddenDate3").remove();//dynamically appended every time on custom button click
+
+                }
+            }
         },
         views: {
             agendaTwoDays: {
@@ -1606,11 +1713,6 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         allDaySlot: true,
         selectable: false,
         select: function (startDate, endDate, jsEvent, view, resource) {
-
-
-
-
-
         }
     };
     if (formDetailsDataInfo.calenderSettingsList?.length > 0) {
@@ -2324,9 +2426,41 @@ async function rendarPopupCalendar(assignDate) {
     var myOptions2 = {
         allDaySlot: false,
         header: {
-            left: 'prev,next,today',
+            left: 'prev,next,today datePickerButton3',
             center: 'title',
             right: 'agendaWeek'
+        },
+        customButtons: {
+            datePickerButton3: {
+                themeIcon: 'custom-datepicker',
+                click: function () {
+
+                    var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+                    var $btnCustom = $('.fc-datePickerButton3-button'); // name of custom button in the generated code
+                    $btnCustom.after('<input type="hidden" id="hiddenDate3" class="datepicker"/>');
+
+                    $("#hiddenDate3").datepicker({
+                        showOn: "button",
+                        dateFormat: "yy-mm-dd",
+                        onSelect: function (dateText, inst) {
+                            $("#" + current_tab + " .calendar").fullCalendar('gotoDate', dateText);
+                            //$('.calendar').fullCalendar('gotoDate', dateText);
+                        },
+                        defaultDate: $("#" + current_tab + " .calendar").fullCalendar('getDate').format("YYYY-MM-DD"),
+                        changeMonth: true,
+                        changeYear: true
+                    });
+
+                    var $btnDatepicker = $(".ui-datepicker-trigger"); // name of the generated datepicker UI 
+                    //Below are required for manipulating dynamically created datepicker on custom button click
+                    $("#hiddenDate3").show().focus().hide();
+                    $btnDatepicker.trigger("click"); //dynamically generated button for datepicker when clicked on input textbox
+                    $btnDatepicker.hide();
+                    $btnDatepicker.remove();
+                    $("input.datepicker").not("#hiddenDate3").remove();//dynamically appended every time on custom button click
+
+                }
+            }
         },
         defaultView: 'agendaWeek',
         views: {

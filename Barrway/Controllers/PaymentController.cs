@@ -193,7 +193,7 @@ namespace Barrway.Controllers
                     PAYMENT_ID = PackageData["OrderNo"].ToString(),
                     PLAN_ID = (PackageData["Id"]).ToString(),
                     STATUS = session.Status,
-                    CREDIT_EXPIRE_DATE = DateTimeUtility.Now().AddMonths(Convert.ToInt32(PackageData["VALIDIT_IN_MONTHS"])),
+                    CREDIT_EXPIRE_DATE = DateTimeUtility.Now().AddMonths(Convert.ToInt32(PackageData["VALIDITY_IN_MONTHS"])).ToString("yyyy-MM-dd HH:mm"),
                     USER_ID = User.Identity.Name
                 };
 
@@ -255,7 +255,7 @@ namespace Barrway.Controllers
                     METHOD = "Card",
                     PAYMENT_ID = session.PaymentIntentId,
                     PLAN_ID = (PackageData["Id"]).ToString(),
-                    CREDIT_EXPIRE_DATE = DateTimeUtility.Now(),
+                    CREDIT_EXPIRE_DATE = DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm"),
                     STATUS = session.Status
                 };
 

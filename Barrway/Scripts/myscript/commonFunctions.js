@@ -15718,10 +15718,10 @@ function NewformEntryfunctionality(formid, isEdit) {
 
     if (formid == 2322) {
         $('div.border-header_1683116492931').hide();
-        $('input#COMPANY_CODE').attr("readonly", true);
-        $('input#COMPANY_CODE').val(localStorage.getItem("COMPANY_CODE"));
-        $('input#CALENDAR_CODE').attr("readonly", true);
-        $('input#CALENDAR_CODE').val(localStorage.getItem("CALENDAR_CODE"));
+        $('#COMPANY_CODE').attr("readonly", true);
+        $('#COMPANY_CODE').val(localStorage.getItem("COMPANY_CODE"));
+        $('#CALENDAR_CODE').attr("readonly", true);
+        $('#CALENDAR_CODE').val(localStorage.getItem("CALENDAR_CODE"));
         if ($('a.breadcrumb-link').length > 1) {
             var ele = $('a.breadcrumb-link')[1]
             $(ele).attr("href", window.location.href.split('#')[0] + "#/calendar/calendar-package/2322");

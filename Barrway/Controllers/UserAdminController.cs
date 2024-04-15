@@ -395,7 +395,7 @@ namespace Barrway.Controllers
         {
             try
             {
-                var result = await publicUserService.BookingServiceEvent(model, User.Identity.Name);
+                var result = await publicUserService.BookingServiceEvent(model, User.Identity.Name, UserIdentity.UserID);
 
                 if (result.Status)
                 {
@@ -515,13 +515,12 @@ namespace Barrway.Controllers
             }
         }
 
-        [HttpPost]
         public async Task<ActionResult> GetUserBCoinMaster(GenerateDynamicFormData data)
         {
             try
             {
-                var transactionData = await publicUserService.GetUserBCoinMaster(data, User.Identity.Name);
-                var transactionList = transactionData.Data;
+                var transactionData = await publicUserService.GetUserBCoinMaster(data, UserIdentity.UserName, UserIdentity.UserEmail);
+                var transactionList = transactionData.Data[0];
                 double last_page = 0;
                 if (transactionList != null && transactionList.Count > 0)
                 {

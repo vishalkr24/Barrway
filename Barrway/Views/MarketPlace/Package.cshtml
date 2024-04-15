@@ -8,7 +8,7 @@
     ViewBag.CALENDAR_ID = Model.DEFAULT_CALENDAR_ID;
     ViewBag.COMPANY_LOGO_PATH = Model.COMPANY_LOGO_PATH.Replace("~", "");
 }
-<input id="txtCurrentCompanyCode" value="@ViewBag.COMPANY_CODE" readonly style="display:none;"/>
+<input id="txtCurrentCompanyCode" value="@ViewBag.COMPANY_CODE" readonly style="display:none;" />
 <input id="txtCurrentCalendarCode" value="@ViewBag.CALENDAR_ID" readonly style="display:none;" />
 
 <!-- heading -->
@@ -16,24 +16,45 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <div class="head">
-                    <h2>@Model.COMPANY_NAME_ENGLISH (@Model.COMPANY_NAME_CHINESE)</h2>
+                <div class="bred-nav mt-2">
+                    <span><a href="/Marketplace/Index">Barrway Marketplace</a> / <span> <a href="#">@Model.COMPANY_NAME_ENGLISH</a> </span> / <span> <a href="#">@Resource.Price @Resource.Package</a> </span></span>
+                </div>
+                <div class="head" style="display:flex;">
+                    <h2><i class="fa fa-arrow-left" onclick="setCalendarsList()" id="btn-back" style="margin-right: 12px; display:none;" aria-hidden="true"></i> @Resource.Price @Resource.Package</h2>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<style>
+    #calendars-list-area .card-pakage {
+        margin-right: 20px;
+        width: calc(50% - 20px);
+    }
+
+    @@media screen and (max-width: 600px) {
+        #calendars-list-area .card-pakage {
+            margin-right: 20px;
+            width: 100%;
+        }
+    }
+</style>
+
 <!-- heading -->
 <section class="company-detail-main mihi-71">
     <div class="container">
         <div class="row">
-            <div class="col-md-12" id="calendars-area">
-                
+            <div class="col-md-12" id="calendars-list-area" style="display:flex; flex-wrap: wrap;">
+
+            </div>
+            <div class="col-md-12" id="calendars-area" style="display:none;">
+
             </div>
         </div>
     </div>
 
-    <form action="/Payment/OrderDetails" method="post" id="paymentForm" style="display:none;"><input id="txtPackageName" name="Id"/></form>
+    <form action="/Payment/OrderDetails" method="post" id="paymentForm" style="display:none;"><input id="txtPackageName" name="Id" /></form>
 </section>
 
 
