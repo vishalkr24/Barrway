@@ -4277,6 +4277,16 @@
             $timeout(function () {
                 if (!DataService.isEmpty(data))
 
+                    var customFilter = []
+
+                if ($scope.currentFormId == 2326) {
+                    customFilter = [{ "FieldName": "USER_ID", "Value": "" }]
+                } else {
+                    customFilter = [{ "FieldName": "COMPANY_CODE", "Value": localStorage.getItem("COMPANY_CODE") },
+                    { "FieldName": "CALENDAR_CODE", "Value": localStorage.getItem("CALENDAR_CODE") }
+                    ]
+                }
+
                     tabulator = initTabulator('form-records', {
                         placeholder: "No Data.",
                         groupBy: (!DataService.isEmpty($scope.filterBy.groupByRecord)) ? $scope.filterBy.groupByRecord : null,
@@ -4516,9 +4526,7 @@
                             currentFormType: $scope.formDetailsDataInfo.currentFormType,
                             companyCode: localStorage.getItem("COMPANY_CODE"), calendarCode: localStorage.getItem("CALENDAR_CODE"),
                             "IsCustomFilter": true,
-                            "CustomFilters": [{ "FieldName": "COMPANY_CODE", "Value": localStorage.getItem("COMPANY_CODE") },
-                            { "FieldName": "CALENDAR_CODE", "Value": localStorage.getItem("CALENDAR_CODE") }
-                            ]
+                            "CustomFilters": customFilter
                         }, //ajax parameters
                         ajaxProgressiveLoad: "scroll",
                         ajaxProgressiveLoadScrollMargin: 75,

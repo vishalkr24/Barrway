@@ -62,6 +62,37 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> GetSingleEventDetails(string EventId)
+        {
+            string query = $@"DECLARE @retval nvarchar(max);       DECLARE @sQuery nvarchar(max); DECLARE @ParmDefinition nvarchar(max);                        
+                            DECLARE @customTitleQuery nvarchar(max);                          
+                            IF OBJECT_ID(N'tempdb..#temptable') IS NOT NULL  BEGIN DROP TABLE #temptable END   ;with cte1 as( select distinct  f.*,f.resources 'resourceId'  ,  STUFF((SELECT ',' +  PARTICIPANT_MASTER_1940.[STUDENT_NAME]  
+                            from TRANSACTION_MASTER_1942 inner join PARTICIPANT_MASTER_1940 on TRANSACTION_MASTER_1942.STUDENT = PARTICIPANT_MASTER_1940.Id where TRANSACTION_MASTER_1942.formGroupKey = f.formGroupKey         FOR XML PATH('')), 1, 1, '') customFourthTitle
+                            , (dbo.[GetSubQueryCalender](f.formGroupKey)) customTitle,   (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceFormId) from form_calenderreferrence f2     
+                            where f2.formgroupkey = f.formGroupKey  FOR XML PATH('')), 1, 1, '')   ) customForms  , (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceId) from form_calenderreferrence f2    
+                            where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) customFormIds,  '' referrences_1,  '' referrences_2,  '' referrences_3 , service_m.fees_1
+                            from CALENDAR_FORM_1935 f   
+                            join SERVICE_MASTER_1933 service_m on service_m.Id = f.activities
+                            where f.Id = {EventId} and f.formid=2305   ) ,
+                            cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
+                            select* into #temptable from cte2  where len(customtitle)>0;    declare @counter int= 0, @c int= 1;   
+                            select @counter = (select count(1) from #temptable)	while @c <= @counter    begin    select @customTitleQuery = customTitle from #temptable where ROWNUMBER=@c;	SET @sQuery= ' select @retvalOUT = (' + @customTitleQuery + ')'  
+                            SET @ParmDefinition = N'@retvalOUT nvarchar(max) OUTPUT';   
+                            EXEC sp_executesql @sQuery, @ParmDefinition, @retvalOUT = @retval OUTPUT;    update #temptable set customTitle=@retval where ROWNUMBER=@c;	set @c = @c + 1;  end  select* from #temptable";
+
+            var result = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (result.Count > 0)
+            {
+                return new AddUpdateDelete() { Data = result.FirstOrDefault(), Message = AppMessage.Success, Status = true };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false };
+            }
+
+        }
+
         public async Task<AddUpdateDelete> GetSinglePublicUserAccount(string UserId)
         {
             string query = $@"SELECT publicUser.[Id]
@@ -169,9 +200,10 @@ namespace Barrway.Service.Repository
 
         }
 
-        public async Task<AddUpdateDelete> EnrollPublicUserForCalendar(CalendarEnrollModel model,bool isServiceType=false)
+        public async Task<AddUpdateDelete> EnrollPublicUserForCalendar(CalendarEnrollModel model, bool isServiceType = false, string PaymentId = null )
         {
             var user = await authService.GetUser(model.USER_ID, FormRole.GENERAL_USER);
+
 
             // check for sufficient B$ Balance
             var balance = await GetUserCoinBalance(model.USER_ID, model.participant.COMPANY_CODE, model.participant.CALENDAR_CODE);
@@ -205,7 +237,7 @@ namespace Barrway.Service.Repository
                 {
                     if (Convert.ToInt32(balance.Data) < Convert.ToInt32(service[0]["fees_1"]))
                     {
-                        return new AddUpdateDelete() { Status = false, Message = "You don't have enough B$ Coin of this calendar to book this slot." };
+                        return new AddUpdateDelete() { Status = false, Message = "You don't have enough credits of this calendar to book this slot." };
                     }
                     else
                     {
@@ -214,7 +246,7 @@ namespace Barrway.Service.Repository
                 }
                 else
                 {
-                    return new AddUpdateDelete() { Status = false, Message = "You don't have enough B$ Coin of this calendar to book this slot." };
+                    return new AddUpdateDelete() { Status = false, Message = "You don't have enough credits of this calendar to book this slot." };
                 }
             }
             else
@@ -224,7 +256,8 @@ namespace Barrway.Service.Repository
 
 
             // check if the user limit is crossed or not
-            if (!isServiceType) {
+            if (!isServiceType)
+            {
                 List<IDictionary<string, object>> totalUsersEnrolled = await sqlFunction.ExecuteSqlQuery($@"select COUNT(*) as 'COUNT' from TRANSACTION_MASTER_1942 transaction_m
                                                                                                         join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
                                                                                                         where ACTIVITY = '{model.transaction.ACTIVITY.ToString()}'");
@@ -250,7 +283,6 @@ namespace Barrway.Service.Repository
 
                 }
             }
-
 
             // Check if the user already exist in the participant master
 
@@ -295,7 +327,8 @@ namespace Barrway.Service.Repository
                 model.participant.GENDER = publicUser.Data["GENDER"].ToString();
                 model.participant.IS_ACTIVE = "Y";
                 string fullName = publicUser.Data["FIRST_NAME"].ToString() + " " + publicUser.Data["LAST_NAME"].ToString();
-                if (string.IsNullOrEmpty(fullName.Trim())) {
+                if (string.IsNullOrEmpty(fullName.Trim()))
+                {
                     fullName = publicUser.Data["USER_EMAIL"].ToString();
                 }
                 model.participant.STUDENT_NAME = fullName;
@@ -388,16 +421,21 @@ namespace Barrway.Service.Repository
 
             var upcomingResult = await sqlFunction.ExecuteSqlCommandQuery(upcomingBookingQuery);
 
-            string orderNoQuery = $@"select *,
+            string paymentId = PaymentId;
+
+            if (string.IsNullOrEmpty(paymentId))
+            {
+                string orderNoQuery = $@"select *,
                                                     (
                                                     select case when (sum(CREDIT_COIN) - sum(DEBIT_COIN) <= 0) then 0 else sum(CREDIT_COIN) - sum(DEBIT_COIN) end from LEDGER_MASTER_1957 where ORDER_NO = PAYMENT_ID
                                                     ) as 'Balance'
                                                     from PAYMENT_HISTORY_MASTER_1956 where COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE.ToString()}' and STATUS = 'complete' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE and USER_ID = '{model.USER_ID}'
                                                     order by cast(created_at as datetime)";
 
-            var orderNoResult = await sqlFunction.ExecuteSqlQuery(orderNoQuery);
+                var orderNoResult = await sqlFunction.ExecuteSqlQuery(orderNoQuery);
 
-            string paymentId = orderNoResult.FirstOrDefault(x => Convert.ToInt32(x["Balance"]) > 0)["PAYMENT_ID"]?.ToString();
+                paymentId = orderNoResult.FirstOrDefault(x => Convert.ToInt32(x["Balance"]) > 0)["PAYMENT_ID"]?.ToString();
+            }
 
             // add entry in ledger
             try
@@ -590,7 +628,7 @@ namespace Barrway.Service.Repository
 
         }
 
-        public async Task<AddUpdateDelete> BookingServiceEvent(RequestEventViewModel eventModal, string userName, string UserId)
+        public async Task<AddUpdateDelete> BookingServiceEvent(RequestEventViewModel eventModal, string userName, string UserId, string PaymentId = null)
         {
             if (eventModal != null)
             {
@@ -630,12 +668,12 @@ namespace Barrway.Service.Repository
                         {
                             if (Convert.ToInt32(balance.Data) < Convert.ToInt32(service[0]["fees_1"]))
                             {
-                                return new AddUpdateDelete() { Status = false, Message = "You don't have enough B$ Coin of this calendar to book this slot." };
+                                return new AddUpdateDelete() { Status = false, Message = "You don't have enough credits of this calendar to book this slot." };
                             }
                         }
                         else
                         {
-                            return new AddUpdateDelete() { Status = false, Message = "You don't have enough B$ Coin of this calendar to book this slot." };
+                            return new AddUpdateDelete() { Status = false, Message = "You don't have enough credits of this calendar to book this slot." };
                         }
                     }
 
@@ -704,7 +742,6 @@ namespace Barrway.Service.Repository
                                 var _eventData = _result.FirstOrDefault();
                                 formGroupKey = _eventData["formGroupKey"].ToString();
 
-
                                 List<int> customForms = new List<int>();
                                 List<int> customFormIds = new List<int>();
                                 customForms.Add(eventModal.resourceFormId);
@@ -727,6 +764,7 @@ namespace Barrway.Service.Repository
                                     created_by = (int)FormSetting.CreatedUser,
                                     updated_by = (int)FormSetting.CreatedUser
                                 };
+
                                 await formAPIRepository.ManageCalenderReferrenceNew(request2);
                                 eventId = eventModal.eventId;
                                 _sqlstring = @"update CALENDAR_FORM_1935 set EVENT_TYPE='BOOKING' where Id=" + eventId;
@@ -826,16 +864,22 @@ namespace Barrway.Service.Repository
 
                             var upcommingBookingResult = await UpCommingBookingAdd(upCommingBooking);
 
-                            string orderNoQuery = $@"select *,
+                            string paymentId = PaymentId;
+
+                            if (string.IsNullOrEmpty(paymentId))
+                            {
+                                string orderNoQuery = $@"select *,
                                                     (
                                                     select case when (sum(CREDIT_COIN) - sum(DEBIT_COIN) <= 0) then 0 else sum(CREDIT_COIN) - sum(DEBIT_COIN) end from LEDGER_MASTER_1957 where ORDER_NO = PAYMENT_ID
                                                     ) as 'Balance'
-                                                    from PAYMENT_HISTORY_MASTER_1956 where COMPANY_CODE = '{eventModal.companyCode.ToString()}' and CALENDAR_CODE = '{eventModal.calendarCode.ToString()}' and STATUS = 'complete' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE and USER_ID = '{UserId}'
+                                                    from PAYMENT_HISTORY_MASTER_1956 where COMPANY_CODE = '{eventModal.companyCode.ToString()}' and CALENDAR_CODE = '{eventModal.calendarCode.ToString()}' and STATUS = 'complete' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE and USER_ID = '{userName}'
                                                     order by cast(created_at as datetime)";
 
-                            var orderNoResult = await sqlFunction.ExecuteSqlQuery(orderNoQuery);
+                                var orderNoResult = await sqlFunction.ExecuteSqlQuery(orderNoQuery);
 
-                            string paymentId = orderNoResult.FirstOrDefault(x=> Convert.ToInt32(x["Balance"]) > 0)["PAYMENT_ID"]?.ToString();
+                                paymentId = orderNoResult.FirstOrDefault(x => Convert.ToInt32(x["Balance"]) > 0)["PAYMENT_ID"]?.ToString();
+                            }
+                            
 
                             // add entry in ledger
                             LedgerModel ledger = new LedgerModel()
@@ -1617,12 +1661,12 @@ where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) a
             {
                 string query = $@"select 
 	                                case when (
-		                                (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where CALENDAR_CODE = '{CalendarCode}' and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
-	                                ) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where CALENDAR_CODE = '{CalendarCode}' and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
+		                                (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{UserId}' and CALENDAR_CODE = '{CalendarCode}' and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+	                                ) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{UserId}' and CALENDAR_CODE = '{CalendarCode}' and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
 	                                then
 		                                0
 	                                else
-		                                (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where CALENDAR_CODE = '{CalendarCode}' and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+		                                (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{UserId}' and CALENDAR_CODE = '{CalendarCode}' and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
 	                                end as 'COIN_BALANCE'
                                 FROM LEDGER_MASTER_1957 led 
                                 where USER_ID = '{UserId}' and COMPANY_CODE = '{CompanyCode}' and CALENDAR_CODE = '{CalendarCode}'";
@@ -1709,25 +1753,20 @@ where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) a
                     {
                         if (Convert.ToInt32(balance.Data) < ServiceFees)
                         {
-                            return new AddUpdateDelete() { Status = false, Message = "You don't have enough B$ Coin of this calendar to book this slot." };
+                            return new AddUpdateDelete() { Status = false, Message = $"You have {balance.Data} credits, not enough to book this slot." , Data = ServiceFees.ToString() };
                         }
                     }
                     else
                     {
-                        return new AddUpdateDelete() { Status = false, Message = "You don't have enough B$ Coin of this calendar to book this slot." };
+                        return new AddUpdateDelete() { Status = false, Message = $"You have {balance.Data} credits, not enough to book this slot.", Data = ServiceFees.ToString() };
                     }
 
-                    return new AddUpdateDelete() { Status = true, Message = "B$" + ServiceFees.ToString() + " will be deducted from your " + calendar[0]["CALENDAR_NAME"].ToString() + " Calendar package.<br />(Balance after purchase B$" + (Convert.ToInt32(balance.Data) - ServiceFees).ToString() + ")" };
+                    return new AddUpdateDelete() { Status = true, Message = "" + ServiceFees.ToString() + " credits will be deducted from your " + calendar[0]["CALENDAR_NAME"].ToString() + " Calendar package.<br />(Balance after purchase " + (Convert.ToInt32(balance.Data) - ServiceFees).ToString() + " credits).", Data = ServiceFees.ToString() };
                 }
                 else
                 {
                     return new AddUpdateDelete() { Status = true, Message = "Are you sure to book this event?" };
                 }
-
-
-
-
-
             }
             catch (Exception ex)
             {
@@ -1920,6 +1959,9 @@ where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) a
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
             }
         }
+
+
+
         public async Task<AddUpdateDelete> GetAlreadyEnrolledEvents(string CompanyCode, string UserEmail, string FilterDate)
         {
             try

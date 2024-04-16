@@ -667,6 +667,23 @@
             border-radius: 100px;
         }
 
+        .swal-button--individualButton {
+            border: 1px solid #E2476C;
+            background: white;
+            color: #E2476C;
+            cursor: pointer;
+            min-width: 120px;
+            border-radius: 100px;
+        }
+
+            .swal-button--individualButton:hover {
+                background: #E2476C;
+                color: white;
+                cursor: pointer;
+                min-width: 120px;
+                border-radius: 100px;
+            }
+
         .swal-button:not([disabled]):hover {
             background-color: #E2476C;
         }
@@ -688,6 +705,11 @@
         }*/
         div#vertical-resource-view .fc-time-grid .fc-event, .fc-time-grid .fc-bgevent {
             margin-top: 1px;
+        }
+
+        .swal-modal {
+            width: 100%;
+            max-width: 500px;
         }
     </style>
 }
@@ -1201,7 +1223,7 @@
     </div>
 
 </section>
-
+<form action="/Payment/EventOrderDetails" method="post" id="paymentForm" style="display:none;"><input id="txtPackageName" name="Id" /><input id="txtEventType" name="EventType" /><input id="txtStart" name="start" /><input id="txtEnd" name="end" /></form>
 
 @section scripts{
 
@@ -1279,12 +1301,11 @@
                                 },
                                 async: false,
                                 success: function (response) {
-                                    if (response.Status) {
-                                        // code to call the service
 
-                                        debugger;
-                                        const wrapper = document.createElement('div');
-                                        wrapper.innerHTML = `<div>
+
+                                    debugger;
+                                    const wrapper = document.createElement('div');
+                                    wrapper.innerHTML = `<div>
                                                                                                                                                             ${eventData.customDate}
                                                                                                                                                         </div>
                                                                                                                                                         <div>
@@ -1292,26 +1313,27 @@
                                                                                                                                                         </div>
                                                                                                                                                         <div>${eventData.customTitleSplit[2]}</div><br />
                                                                                                                                                         <div>${eventData.customTitleSplit[1]}</div>
-                                                                                                                                                        <div>${eventData.customTitleSplit[0]}</div><br />
+                                                                                                                                                        <div>${eventData.customTitleSplit[0]}</div>
+                                                                                                                                                        ${((response.Data != null) ? `<div>${response.Data} credits</div>` : "")}<br />
                                                                                                                                                         <h4 style="color:red">${response.Message}</h4>`;
 
-                                        swal({
-                                            title: "You are going to book",
-                                            content: wrapper,
-                                            buttons: {
-                                                cancel: "Cancel",
-                                                confirm: "Confirm"
-                                            }
+                                    swal({
+                                        title: "You are going to book",
+                                        content: wrapper,
+                                        buttons: {
+                                            cancel: "Cancel",
+                                            individualButton: {
+                                                text: "Buy Individually",
+                                                value: "other"
+                                            },
+                                            confirm: (response.Status) ? "Use Credits" : "Buy Package"
+                                        }
 
-                                        }).then(function (response) {
+                                    }).then(function (check) {
 
-                                            //if (eventData.IS_UPLOAD_REQUIRED == 'Y') {
-
-                                            //}
-
-                                            if (response) {
-                                                showLoader();
-
+                                        if (check == true) {
+                                            showLoader();
+                                            if (response.Status) {
                                                 $.ajax({
                                                     url: "/UserAdmin/CheckAdditionalFormDetails",
                                                     method: "GET",
@@ -1398,18 +1420,15 @@
                                                         console.error(error);
                                                     }
                                                 });
+                                            } else {
+                                                window.location.replace("/")
                                             }
-                                        });
-                                    } else {
-                                        swal({
-                                            icon: "error",
-                                            title: "Warning!",
-                                            text: response.Message,
-                                            buttons: {
-                                                confirm: "Okay"
-                                            }
-                                        })
-                                    }
+
+                                        } else if (check === "other")  {
+                                            buyEvent(eventData.Id)
+                                        }
+                                    });
+
                                 }
                             })
                         }
@@ -2442,6 +2461,69 @@
             });
 
         }
+
+        function buyEvent(EventId) {
+
+            $.ajax({
+                url: "/Account/CheckPublicUserLogin",
+                type: "POST",
+                success: function (response) {
+
+                    if (!response.Status) {
+
+                        swal({
+                            title: "Login Required",
+                            text: "Kindly login into your account and then you can buy this event individually.",
+                            icon: "info",
+                            buttons: {
+                                confirm: "Login",
+                                cancel: "Leave it"
+                            }
+                        }).then(function (value) {
+                            if (value) {
+                                window.location.href = '/Account/Login?returnUrl=/Marketplace/CompanyPackage?' + window.location.href.split('?')[1].replace('&', '$') + '';
+                            }
+                        });
+
+
+                    } else {
+                        //var customTitleSplit = bgevent.customTitle.split(',');
+
+                        //const wrapper = document.createElement('div');
+                        //wrapper.innerHTML = `<div>
+                        //                        ${moment(start.format()).format("DD-MM-YYYY")}
+                        //                    </div>
+                        //                    <div>
+                        //                        ${moment(start.format()).format("hh:mm a")} to ${moment(start.format()).add("minute", 60).format("hh:mm a")}
+                        //                    </div>
+                        //                    <div>${customTitleSplit[2]}</div><br />
+                        //                    <div>${customTitleSplit[1]}</div>
+                        //                    <div>${customTitleSplit[0]}</div><br />
+                        //                    <h2>Are you sure?</h2>`;
+
+                        swal({
+                            icon: "info",
+                            title: "Confirm Payment!",
+                            text: "Are you sure you want to buy this event individually?",
+                            buttons: {
+                                confirm: "Yes",
+                                cancel: "No"
+                            }
+                        }).then(function (confirm) {
+                            if (confirm) {
+                                $("#txtPackageName").val(EventId);
+                                $("#txtEventType").val("1");
+                                $("#paymentForm").submit();
+                            }
+                        })
+
+                    }
+                }
+            });
+
+
+        }
+
 
     </script>
 

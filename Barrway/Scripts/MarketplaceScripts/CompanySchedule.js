@@ -3212,11 +3212,10 @@ async function rendarPopupCalendar(assignDate) {
                             async: false,
                             success: function (response) {
 
-                                if (response.Status) {
-                                    var customTitleSplit = bgevent.customTitle.split(',');
+                                var customTitleSplit = bgevent.customTitle.split(',');
 
-                                    const wrapper = document.createElement('div');
-                                    wrapper.innerHTML = `<div>
+                                const wrapper = document.createElement('div');
+                                wrapper.innerHTML = `<div>
                                         ${moment(start).format("DD-MM-YYYY")}
                                     </div>
                                     <div>
@@ -3224,35 +3223,33 @@ async function rendarPopupCalendar(assignDate) {
                                     </div>
                                     ${(customTitleSplit.length > 2) ? `<div>${customTitleSplit[2]}</div><br />` : ''}
                                     <div>${customTitleSplit[1]}</div>
-                                    <div>${customTitleSplit[0]}</div><br />
+                                    <div>${customTitleSplit[0]}</div>
+                                    ${((response.Data != null) ? `<div>${response.Data} credits</div>` : "")}<br />
                                     <h4 style="color:red">${response.Message}</h4>`;
 
-                                    swal({
-                                        title: "You are going to book",
-                                        content: wrapper,
-                                        buttons: {
-                                            cancel: "Cancel",
-                                            confirm: "Confirm"
-                                        }
-                                    }).then(function (response) {
-                                        if (response) {
+                                swal({
+                                    title: "You are going to book",
+                                    content: wrapper,
+                                    buttons: {
+                                        cancel: "Cancel",
+                                        individualButton: {
+                                            text: "Buy Individually",
+                                            value: "other"
+                                        },
+                                        confirm: (response.Status) ? "Use Credits" : "Buy Package"
+                                    }
+                                }).then(function (check) {
+                                    if (check == true) {
+                                        if (response.Status) {
                                             bookingService(start, end, bgevent);
                                         } else {
-
-                                        }
-                                    });
-                                } else {
-                                    swal({
-                                        icon: "error",
-                                        title: "Warning!",
-                                        text: response.Message,
-                                        buttons: {
-                                            confirm: "Okay"
+                                            window.location.replace("/")
                                         }
 
-                                    })
-                                }
-
+                                    } else if (check === "other") {
+                                        buyEventDynamic(eventData.Id, start, end);
+                                    }
+                                });
 
                             }
                         });
@@ -3367,6 +3364,70 @@ function invokeBookingService(star, end, bgevent) {
         $('#agenda-view2 div.calendar').fullCalendar('removeEvents');
         $('#agenda-view2 div.calendar').fullCalendar('refetchEvents');
     })
+}
+
+function buyEventDynamic(EventId, start, end) {
+
+    $.ajax({
+        url: "/Account/CheckPublicUserLogin",
+        type: "POST",
+        success: function (response) {
+
+            if (!response.Status) {
+
+                swal({
+                    title: "Login Required",
+                    text: "Kindly login into your account and then you can buy this event individually.",
+                    icon: "info",
+                    buttons: {
+                        confirm: "Login",
+                        cancel: "Leave it"
+                    }
+                }).then(function (value) {
+                    if (value) {
+                        window.location.href = '/Account/Login?returnUrl=/Marketplace/CompanyPackage?' + window.location.href.split('?')[1].replace('&', '$') + '';
+                    }
+                });
+
+
+            } else {
+                //var customTitleSplit = bgevent.customTitle.split(',');
+
+                //const wrapper = document.createElement('div');
+                //wrapper.innerHTML = `<div>
+                //                        ${moment(start.format()).format("DD-MM-YYYY")}
+                //                    </div>
+                //                    <div>
+                //                        ${moment(start.format()).format("hh:mm a")} to ${moment(start.format()).add("minute", 60).format("hh:mm a")}
+                //                    </div>
+                //                    <div>${customTitleSplit[2]}</div><br />
+                //                    <div>${customTitleSplit[1]}</div>
+                //                    <div>${customTitleSplit[0]}</div><br />
+                //                    <h2>Are you sure?</h2>`;
+
+                swal({
+                    icon: "info",
+                    title: "Confirm Payment!",
+                    text: "Are you sure you want to buy this event individually?",
+                    buttons: {
+                        confirm: "Yes",
+                        cancel: "No"
+                    }
+                }).then(function (confirm) {
+                    if (confirm) {
+                        $("#txtPackageName").val(EventId);
+                        $("#txtEventType").val("2");
+                        $("#txtStart").val(moment(start).format("YYYY-MM-DD HH:mm"))
+                        $("#txtEnd").val(moment(end).format("YYYY-MM-DD HH:mm"))
+                        $("#paymentForm").submit();
+                    }
+                })
+
+            }
+        }
+    });
+
+
 }
 
 

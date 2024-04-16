@@ -82,7 +82,7 @@ function setCompanyPackageDetails(calendarCode) {
             if (calendarDetails[i].CALENDAR_CODE == packageDetails[j].CALENDAR_CODE) {
                 $(`#packages-area-${calendarDetails[i].CALENDAR_CODE}`).append(`<div class="bpgd">
                                         <h4>${packageDetails[j].PACKAGE_NAME}</h4>
-                                        <h4>HK$${packageDetails[j].PACKAGE_PRICE} = B$${packageDetails[j].PACKAGE_COIN}</h4>
+                                        <h4>HK$${packageDetails[j].PACKAGE_PRICE} = ${packageDetails[j].PACKAGE_COIN} credits</h4>
                                         <p>Description:</p>
                                         <p style="min-height: 40px; max-height: 120px">${packageDetails[j].PACKAGE_DESCRIPTION}</p>
                                         <p class="mt-10"><button onclick="buyPackage(${packageDetails[j].Id})">BUY</button></p>

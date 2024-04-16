@@ -10,5 +10,7 @@ namespace Barrway.DTO.BusinessModels
     {
         public OrderModel Order { get; set; }
         public CalendarPackageModel CalendarPackageModel { get; set; }
+        public string start { get; set; }
+        public string end { get; set; }
     }
 }

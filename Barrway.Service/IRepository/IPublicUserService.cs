@@ -18,10 +18,11 @@ namespace Barrway.Service.IRepository
     public interface IPublicUserService
     {
         Task<AddUpdateDelete> CreatePublicUserAccount(PublicAccountModel model);
+        Task<AddUpdateDelete> GetSingleEventDetails(string EventId);
         Task<AddUpdateDelete> GetSinglePublicUserAccount(string UserId);
         Task<AddUpdateDelete> UpdatePublicUserProfilePic(PublicAccountModel model);
         Task<AddUpdateDelete> UpdatePublicUserProfileData(PublicUserProfileModel model, bool updatePassword = false);
-        Task<AddUpdateDelete> EnrollPublicUserForCalendar(CalendarEnrollModel model,bool isServiceType=false);
+        Task<AddUpdateDelete> EnrollPublicUserForCalendar(CalendarEnrollModel model, bool isServiceType = false, string PaymentId = null);
         Task<AddUpdateDelete> CancelPublicUserBooking(CalendarEnrollModel model);
         Task<AddUpdateDelete> AddSessionReview(SessionReviewModel model);
         Task<AddUpdateDelete> EnrollParticipantForCalendar(CalendarFormModel model, string UserId, string UserEmail);
@@ -41,9 +42,9 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetAlreadyEnrolledEvents(string CompanyCode, string UserEmail, string filterDate);
         Task<AddUpdateDelete> GetFullCalendarEvents(string StartDate, string EndDate, string UserEmail);
         Task<AddUpdateDelete> GetMyUpcomingBookings(string UserEmail);
-        Task<AddUpdateDelete> BookingServiceEvent(RequestEventViewModel eventModal, string userName, string UserId);
+        Task<AddUpdateDelete> BookingServiceEvent(RequestEventViewModel eventModal, string userName, string UserId, string PaymentId = null);
         Task<AddUpdateDelete> CreateDynamicFormEntry(List<IDictionary<string, string>> data, string formId, string UserId, string CalendarCode);
         Task<AddUpdateDelete> MarkPresent(string EventId, string UserEmail);
-        Task<AddUpdateDelete> MarkPresentByCompany(string TransactionId, string EventId); 
+        Task<AddUpdateDelete> MarkPresentByCompany(string TransactionId, string EventId);
     }
 }

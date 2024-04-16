@@ -13,6 +13,7 @@ namespace Barrway.DTO.BusinessModels
         public string ORDER_TYPE { get; set; }
         public string USER_ID { get; set; }
         public string PACKAGE_ID { get; set; }
+        public string SLOT_ID { get; set; }
         public double ORDER_PRICE { get; set; }
         public double ORDER_COIN { get; set; }
         public string PAYMENT_ID { get; set; }
