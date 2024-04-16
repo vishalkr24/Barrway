@@ -1194,24 +1194,25 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 int PageNumber = data.page > 0 ? data.page : 1;
 
                 string strSql = "";
+
                 if (data.SearchText == null)
                 {
                     strSql = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
-                                     select  distinct  a_0.[BLOG_CATEGORY] [BLOG_CATEGORY] , a_0.[Id] [BLOG_CATEGORY_Id] ,f.Id,f.formGroupKey,f.formID,f.userID,f.Current_Status,f.cycle,f.MasterFormID,f.MasterFormRow,f.formRecordOrder,
-                                        f.formRecordStatus,f.ApprovalStatus ,f.created_at,f.updated_at ,f.[BLOG_TITLE],f.[IMAGE],f.[BLOG_CONTENT],f.[TAG],f.[YOUTUBE_LINK],f.[MARKED_AS_HOT] from  BLOG_1980   f   left join  BLOG_CATEGORY_1981  a_0  on f.[BLOG_CATEGORY] = a_0.[Id]
+                                     select  distinct  a_0.[BLOG_CATEGORY] [BLOG_CATEGORY] , a_0.[Id] [BLOG_CATEGORY_Id] ,f.Id,f.formGroupKey,f.formID,f.userID,f.Current_Status,f.cycle,f.MasterFormID,f.MasterFormRow,f.formRecordOrder,f.IS_HOT,
+                                        f.formRecordStatus,f.ApprovalStatus ,f.created_at,f.updated_at ,f.[BLOG_TITLE],f.[IMAGE],f.[BLOG_CONTENT],f.[TAG],f.[YOUTUBE_LINK] from  BLOG_1980   f   left join  BLOG_CATEGORY_1981  a_0  on f.[BLOG_CATEGORY] = a_0.[Id]
                                       
                                     )
-                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY [formRecordOrder] desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY [created_at] desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
 
                 }
                 else
                 {
                     strSql = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
-                                     select  distinct  a_0.[BLOG_CATEGORY] [BLOG_CATEGORY] , a_0.[Id] [BLOG_CATEGORY_Id] ,f.Id,f.formGroupKey,f.formID,f.userID,f.Current_Status,f.cycle,f.MasterFormID,f.MasterFormRow,f.formRecordOrder,
-                                        f.formRecordStatus,f.ApprovalStatus ,f.created_at,f.updated_at ,f.[BLOG_TITLE],f.[IMAGE],f.[BLOG_CONTENT],f.[TAG],f.[YOUTUBE_LINK],f.[MARKED_AS_HOT] from  BLOG_1980   f   left join  BLOG_CATEGORY_1981  a_0  on f.[BLOG_CATEGORY] = a_0.[Id]
+                                     select  distinct  a_0.[BLOG_CATEGORY] [BLOG_CATEGORY] , a_0.[Id] [BLOG_CATEGORY_Id] ,f.Id,f.formGroupKey,f.formID,f.userID,f.Current_Status,f.cycle,f.MasterFormID,f.MasterFormRow,f.formRecordOrder,f.IS_HOT,
+                                        f.formRecordStatus,f.ApprovalStatus ,f.created_at,f.updated_at ,f.[BLOG_TITLE],f.[IMAGE],f.[BLOG_CONTENT],f.[TAG],f.[YOUTUBE_LINK] from  BLOG_1980   f   left join  BLOG_CATEGORY_1981  a_0  on f.[BLOG_CATEGORY] = a_0.[Id]
                                         where f.[TAG] like '%{data.SearchText}%'
                                     )
-                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY [formRecordOrder] desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY [created_at] desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
 
                 }
 
@@ -1230,6 +1231,40 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
             }
         }
 
+
+        public async Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetallHotblogs(Pagination data)
+        {
+            try
+            {
+
+                int PageSize = data.size > 0 ? data.size : 20;
+                int PageNumber = data.page > 0 ? data.page : 1;
+
+                string strSql = "";
+
+
+                strSql = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+                                      select  distinct  a_0.[BLOG_CATEGORY] [BLOG_CATEGORY] , a_0.[Id] [BLOG_CATEGORY_Id] ,f.Id,f.formGroupKey,f.formID,f.userID,f.Current_Status,f.cycle,f.MasterFormID,f.MasterFormRow,f.formRecordOrder,case when f.IS_HOT is null then 'NO' else  f.IS_HOT end as IS_HOT,
+                                        f.formRecordStatus,f.ApprovalStatus ,f.created_at,f.updated_at ,f.[BLOG_TITLE],f.[IMAGE],f.[BLOG_CONTENT],f.[TAG],f.[YOUTUBE_LINK] from  BLOG_1980   f   left join  BLOG_CATEGORY_1981  a_0  on f.[BLOG_CATEGORY] = a_0.[Id]
+                                    )
+                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY [IS_HOT] desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+
+
+
+                var listresult = await sqlFunction.ExecuteSqlQuery(strSql);
+                if (listresult.Count() > 0)
+                {
+                    return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = true, Data = listresult };
+                }
+
+                return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = false };
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete<List<IDictionary<string, object>>>() { Status = false, Message = ex.Message };
+            }
+        }
 
         public async Task<AddUpdateDelete> GetMasterSearchResult(string keyword)
         {

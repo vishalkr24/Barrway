@@ -1806,7 +1806,7 @@ namespace Barrway.Service.Repository
         public async Task<AddUpdateDelete> UpdateCompanyService(BusinessCompanyModel model)
         {
 
-            string query = $@"UPDATE BUSINESS_COMPANY_MASTER_1924 SET COMPANY_SERVICE = '{model.COMPANY_SERVICE.Replace("'", "''")}' WHERE Id = '{model.Id}'";
+            string query = $@"UPDATE BUSINESS_COMPANY_MASTER_1924 SET COMPANY_SERVICE = N'{model.COMPANY_SERVICE.Replace("'", "''")}' WHERE Id = '{model.Id}'";
 
             int result = await sqlFunction.ExecuteSqlCommandQuery(query);
 
@@ -3195,7 +3195,7 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string sqlString = $@"SELECT Id,BLOG_CATEGORY,BLOG_TITLE,IMAGE,BLOG_CONTENT,MARKED_AS_HOT,TAG,created_at FROM BLOG_1980 WHERE MARKED_AS_HOT='YES'";
+                string sqlString = $@"SELECT Id,BLOG_CATEGORY,BLOG_TITLE,IMAGE,BLOG_CONTENT,IS_HOT,TAG,created_at FROM BLOG_1980 WHERE IS_FEATURED='YES'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlString);
 
@@ -3222,7 +3222,7 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string sqlString = $@"SELECT Id,BLOG_CATEGORY,BLOG_TITLE,IMAGE,BLOG_CONTENT,MARKED_AS_HOT,TAG,created_at FROM BLOG_1980 WHERE Id='{Id}'";
+                string sqlString = $@"SELECT Id,BLOG_CATEGORY,BLOG_TITLE,IMAGE,BLOG_CONTENT,IS_HOT,TAG,created_at FROM BLOG_1980 WHERE Id='{Id}'";
 
 
                 var result = (await sqlFunction.ExecuteSqlQuery(sqlString)).FirstOrDefault();

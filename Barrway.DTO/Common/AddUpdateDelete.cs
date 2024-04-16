@@ -45,7 +45,9 @@ namespace Barrway.DTO.Common
         public int page { get; set; }
         public int size { get; set; }
         public int res { get; set; }
+        public int Hot { get; set; }
         public string SearchText { get; set; }
+
     }
 
 

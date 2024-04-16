@@ -218,7 +218,7 @@
                                                 <div class="col-md-8">
                                                     <div class="blogimg">
                                                         @*<img src="~/assets/marketplace/image/alogo.png">*@
-                                                        <a href="/MarketPlace/BlogDetails/@item.Id"><img src="@item.IMAGE"></a>
+                                                        <a href="/MarketPlace/BlogDetails/@item.Id"><img src="@item.IMAGE" onerror="this.src='../assets/marketplace/image/dummy.jpg'"></a>
 
 
                                                     </div>
@@ -282,7 +282,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="filter fl-l">
-                        <button class="filter-btn"><img src="~/assets/marketplace/image/filter.png" /> @Resource.Featured </button>
+                        <button class="filter-btn" onclick="GetHotBlogs()"><img src="~/assets/marketplace/image/filter.png" /> Hot </button>
                     </div>
                 </div>
             </div>

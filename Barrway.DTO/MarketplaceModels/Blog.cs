@@ -13,7 +13,7 @@ namespace Barrway.DTO.MarketplaceModels
         public string BLOG_TITLE { get; set; }
         public string IMAGE { get; set; }
         public string BLOG_CONTENT { get; set; }
-        public string MARKED_AS_HOT { get; set; }
+        public string IS_HOT { get; set; }
         public string TAG { get; set; }
         public List<TagsObject> TAGs { get; set; }
         public DateTime created_at { get; set; }

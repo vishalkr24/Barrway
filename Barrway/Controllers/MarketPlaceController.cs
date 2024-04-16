@@ -279,20 +279,20 @@ namespace Barrway.Controllers
                     }
                 });
             }
-            var blogResult = await businessUserService.GetBlogs();
-            blogs.BlogList = JsonConvert.DeserializeObject<List<Blog>>(JsonConvert.SerializeObject(blogResult.Data));
-            if (blogs.BlogList.Count > 0)
-            {
-                blogs.BlogList.ForEach(blog =>
-                {
-                    var JsonTags = blog.TAG;
-                    if (JsonTags != null)
-                    {
-                        List<TagsObject> Tagobjects = JsonConvert.DeserializeObject<List<TagsObject>>(JsonTags);
-                        blog.TAGs = Tagobjects;
-                    }
-                });
-            }
+            //var blogResult = await businessUserService.GetBlogs();
+            //blogs.BlogList = JsonConvert.DeserializeObject<List<Blog>>(JsonConvert.SerializeObject(blogResult.Data));
+            //if (blogs.BlogList.Count > 0)
+            //{
+            //    blogs.BlogList.ForEach(blog =>
+            //    {
+            //        var JsonTags = blog.TAG;
+            //        if (JsonTags != null)
+            //        {
+            //            List<TagsObject> Tagobjects = JsonConvert.DeserializeObject<List<TagsObject>>(JsonTags);
+            //            blog.TAGs = Tagobjects;
+            //        }
+            //    });
+            //}
 
             var Tagresult = await businessUserService.GetAllBlogsTags();
             var TagList = Tagresult.Data;
@@ -924,7 +924,16 @@ namespace Barrway.Controllers
         {
             try
             {
-                var transactionData = await masterService.GetAllBlog(data);
+                dynamic transactionData ;
+                if (data.Hot > 0)
+                {
+                    transactionData = await masterService.GetallHotblogs(data); //GetAllBlog
+                }
+                else
+                {
+                    transactionData = await masterService.GetAllBlog(data);
+                }
+                
                 var transactionList = transactionData.Data;
                 double last_page = 0;
                 double Pagination = 0;

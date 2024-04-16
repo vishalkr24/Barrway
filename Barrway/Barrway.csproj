@@ -604,6 +604,7 @@
     <Content Include="assets\marketplace\image\Business_Icons_white.png" />
     <Content Include="assets\marketplace\image\chat.png" />
     <Content Include="assets\marketplace\image\counter-service-logo.png" />
+    <Content Include="assets\marketplace\image\dummy.jpg" />
     <Content Include="assets\marketplace\image\facebook.png" />
     <Content Include="assets\marketplace\image\filter.png" />
     <Content Include="assets\marketplace\image\glo.png" />

@@ -51,5 +51,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetCompanyListt(string keyword);
         Task<AddUpdateDelete> GetBloagListt(string keyword);
 
+        Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetallHotblogs(Pagination data);
+
     }
 }

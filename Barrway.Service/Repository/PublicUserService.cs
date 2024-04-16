@@ -147,7 +147,7 @@ namespace Barrway.Service.Repository
                     subQuery = "USER_PASSWORD = '" + model.USER_PASSWORD + "'";
                 }
 
-                string query = $@"update PUBLIC_USER_ACCOUNT_1943 set FIRST_NAME = '{model.FIRST_NAME}', LAST_NAME = '{model.LAST_NAME}', CHINESE_NAME = N'{model.CHINESE_NAME}', NICK_NAME = '{model.NICK_NAME}', GENDER = '{model.GENDER}', DATE_OF_BIRTH = '{model.DATE_OF_BIRTH.ToString("yyyy-MM-ddTHH:mm:ss")}' where USER_ID = '{model.USER_ID}'
+                string query = $@"update PUBLIC_USER_ACCOUNT_1943 set FIRST_NAME = N'{model.FIRST_NAME}', LAST_NAME = N'{model.LAST_NAME}', CHINESE_NAME = N'{model.CHINESE_NAME}', NICK_NAME = N'{model.NICK_NAME}', GENDER = '{model.GENDER}', DATE_OF_BIRTH = '{model.DATE_OF_BIRTH.ToString("yyyy-MM-ddTHH:mm:ss")}' where USER_ID = '{model.USER_ID}'
                               update USER_MASTER_1915 set {subQuery}  USER_PHONE = '{model.USER_PHONE}',Country_Code='{model.Country_Code}' where USER_ID = '{model.USER_ID}' ";
 
                 int result = await sqlFunction.ExecuteSqlCommandQuery(query);
@@ -379,11 +379,11 @@ namespace Barrway.Service.Repository
                                                    ,'{model.transaction.COMPANY_CODE}'
                                                    ,'{model.transaction.CALENDAR_CODE}'
                                                    ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = '{model.transaction.SLOT}')                                                                                                                                                                                                     
-                                                   ,'{model.ACTIVITY_NAME}'
-                                                   ,'{model.RESOURCE_NAME}'
-                                                   ,'{model.participant.STUDENT_NAME}'
-                                                   ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = '{model.transaction.SLOT}') 
-                                                   ,(select calendar.[end] from  CALENDAR_FORM_1935 calendar where Id = '{model.transaction.SLOT}') )";
+                                                   ,N'{model.ACTIVITY_NAME}'
+                                                   ,N'{model.RESOURCE_NAME}'
+                                                   ,N'{model.participant.STUDENT_NAME}'
+                                                   ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = N'{model.transaction.SLOT}') 
+                                                   ,(select calendar.[end] from  CALENDAR_FORM_1935 calendar where Id = N'{model.transaction.SLOT}') )";
 
 
             var upcomingResult = await sqlFunction.ExecuteSqlCommandQuery(upcomingBookingQuery);
@@ -1063,9 +1063,9 @@ namespace Barrway.Service.Repository
                                                    ,'{data["COMPANY_CODE"]}'
                                                    ,'{data["CALENDAR_CODE"]}'
                                                    , (select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = {data["SLOT"]})                                                                                                                                                                                                     
-                                                   , '{data["ACTIVITY_NAME"]}'
-                                                   , '{data["RESOURCE_NAME"]}'
-                                                   , '{data["STUDENT_NAME"]}'
+                                                   , N'{data["ACTIVITY_NAME"]}'
+                                                   , N'{data["RESOURCE_NAME"]}'
+                                                   , N'{data["STUDENT_NAME"]}'
                                                    , (select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = {data["SLOT"]}) 
                                                    , (select calendar.[end] from  CALENDAR_FORM_1935 calendar where Id = {data["SLOT"]}) )";
 
