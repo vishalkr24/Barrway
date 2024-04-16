@@ -1727,3 +1727,15 @@ div#blogrow .col-md-4:nth-child(4) {
     clear: both;
 
 }
+
+.hotBlog {
+    position: absolute;
+    top: 6px;
+    left: 8px;
+    color: wheat;
+    font-weight: 600;
+    background-color: #E2476C;
+    width: 49px;
+    padding: 4px 11px 3px;
+    border-radius: 5px;
+}

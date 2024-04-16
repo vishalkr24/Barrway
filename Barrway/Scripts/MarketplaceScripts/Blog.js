@@ -1,10 +1,22 @@
-﻿$(document).ready(function () {
+﻿var Hot = 0;
+$(document).ready(function () {
     $("#nv-news").addClass("active");
-    GetBlogs(1,'');
+    GetBlogs(1, '', Hot);
 });
 
 
-function GetBlogs(pageNumber, blog_tag) {
+function GetHotBlogs() {
+    if (Hot == 0) {
+        Hot = 1;
+    }
+    else {
+        Hot = 0;
+    }
+
+    GetBlogs(1, '', Hot);
+}
+
+function GetBlogs(pageNumber, blog_tag, Hot) {
     $("#blogrow").empty();
     Scaltonloader();
     $.ajax({
@@ -15,7 +27,8 @@ function GetBlogs(pageNumber, blog_tag) {
             size: 6,
             page_records: 0,
             res: 0,
-            SearchText: blog_tag
+            SearchText: blog_tag,
+            Hot: Hot
         },
         async: true,
         success: function (response) {
@@ -30,32 +43,36 @@ function GetBlogs(pageNumber, blog_tag) {
             var hardBindLimit = response.Pagination;
             $(".pagination").empty();
             $(".pagination").append(`<button class="btn" onclick="setCompanyData(1)"><img src="../assets/marketplace/image/p1.png" /></button>`);
-            $(".pagination").append(`<button class="btn" id="next-page-nav" onclick="GetBlogs(${(pageNumber <= 1) ? 1 : (pageNumber - 1)},'')"><img src="../assets/marketplace/image/p12.png" /></button>`);
+            $(".pagination").append(`<button class="btn" id="next-page-nav" onclick="GetBlogs(${(pageNumber <= 1) ? 1 : (pageNumber - 1)},'',${Hot})"><img src="../assets/marketplace/image/p12.png" /></button>`);
 
             for (var i = 1; i <= hardBindLimit; i++) {
                 if (i == pageNumber) {
-                    $(".pagination").append(`<a href="#" onclick="GetBlogs(${i},'')" class="page-link page-link--current">${i}</a>`);
+                    $(".pagination").append(`<a href="#" onclick="GetBlogs(${i},'',${Hot})" class="page-link page-link--current">${i}</a>`);
                 } else {
-                    $(".pagination").append(`<a href="#" onclick="GetBlogs(${i},'')" class="page-link">${i}</a>`);
+                    $(".pagination").append(`<a href="#" onclick="GetBlogs(${i},'',${Hot})" class="page-link">${i}</a>`);
                 }
 
             }
 
-            $(".pagination").append(`<button class="btn" id="next-page-nav" onclick="GetBlogs(${nextPage},'')"><img src="../assets/marketplace/image/p11.png" /></button>`);
-            $(".pagination").append(`<button class="btn" id="last-page-nav" onclick="GetBlogs(${response.last_page},'')"><img src="../assets/marketplace/image/p2.png" /></button>`);
+            $(".pagination").append(`<button class="btn" id="next-page-nav" onclick="GetBlogs(${nextPage},'',${Hot})"><img src="../assets/marketplace/image/p11.png" /></button>`);
+            $(".pagination").append(`<button class="btn" id="last-page-nav" onclick="GetBlogs(${response.last_page},'',${Hot})"><img src="../assets/marketplace/image/p2.png" /></button>`);
 
 
             $("#blogrow").empty();          
 
             var html = '';
+
+            console.log(response.data,"gfhghgh");
             for (var i = 0; i < response.data.length; i++) {
                 console.log(response.data[i], "Result_data");
                 var formattedDate = moment(parseInt(response.data[i].created_at.substr(6))).format("YYYY-MM-DD HH:mm");
                 html += '<div class="col-md-4">';
                 html += '    <div class="blog-post-vew">';
-                html += '        <div class="hot"><span>Hot</span></div>';
+                if (response.data[i].IS_HOT == 'YES') {
+                    html += '        <div class="hotBlog"><span>Hot</span></div>';
+                }    
                 html += '        <div class="pro-im">';
-                html += '            <a href="/MarketPlace/BlogDetails/' + response.data[i].Id + '"><img src="' + response.data[i].IMAGE + '"></a>';
+                html += '            <a href="/MarketPlace/BlogDetails/' + response.data[i].Id + '"><img src="' + response.data[i].IMAGE + '" onerror=this.src="../assets/marketplace/image/dummy.jpg" ></a>';
                 html += '                            </div>';
                 html += '            <div class="pro-text">';
                 html += '                <p class="p1"><b>' + response.data[i].BLOG_TITLE + '</b></p>';
