@@ -23,12 +23,14 @@ namespace Barrway.Controllers
         private readonly IMasterService masterService;
         private readonly ISqlFunction sqlFunction;
         private readonly IBusinessUserService businessUserService;
+        private readonly IPublicUserService publicUserService;
 
-        public PaymentController(IMasterService masterService, ISqlFunction sqlFunction, IBusinessUserService businessUserService)
+        public PaymentController(IMasterService masterService, ISqlFunction sqlFunction, IBusinessUserService businessUserService, IPublicUserService publicUserService)
         {
             this.masterService = masterService;
             this.sqlFunction = sqlFunction;
             this.businessUserService = businessUserService;
+            this.publicUserService = publicUserService;
         }
 
         // GET: Payment
@@ -36,6 +38,328 @@ namespace Barrway.Controllers
         {
             return View();
         }
+
+        #region Single Slot Purchase
+
+        [HttpPost]
+        public async Task<ActionResult> EventOrderDetails(string Id, int EventType, string start, string end)
+        {
+            var EventData = await publicUserService.GetSingleEventDetails(Id);
+
+            OrderModel order = new OrderModel()
+            {
+                ORDER_COIN = 0,
+                CALENDAR_CODE = EventData.Data["CALENDAR_CODE"].ToString(),
+                PAYMENT_TYPE = "STRIPE",
+                ORDER_PRICE = Convert.ToDouble(EventData.Data["fees_1"]),
+                ORDER_QTY = 1,
+                SLOT_ID = Id,
+                ORDER_TYPE = (EventType == 1) ? "SLOT1" : "SLOT2",
+                USER_ID = User.Identity.Name,
+                PAYMENT_ID = "",
+                PAYMENT_STATUS = ""
+            };
+
+            var result = await masterService.CreateOrder(order);
+
+            order.ORDER_NO = result.Data;
+
+            if (EventType == 1)
+            {
+                start = EventData.Data["start"]?.ToString();
+                end = EventData.Data["end"]?.ToString();
+            }
+
+            OrderDetailsViewModel orderDetailsViewModel = new OrderDetailsViewModel()
+            {
+                Order = order,
+                CalendarPackageModel = new CalendarPackageModel()
+                {
+                    CALENDAR_CODE = order.CALENDAR_CODE,
+                    COMPANY_CODE = EventData.Data["COMPANY_CODE"].ToString(),
+                    PACKAGE_COIN = 0,
+                    PACKAGE_DESCRIPTION = "Single Event Purchase",
+                    PACKAGE_NAME = "Event : " + Convert.ToDateTime(start).ToString("dd-MM-yyyy HH:mm") + " to " + Convert.ToDateTime(end).ToString("dd-MM-yyyy HH:mm"),
+                    PACKAGE_PRICE = Convert.ToDouble(EventData.Data["fees_1"]),
+                    PACKAGE_SEQUENCE = 1
+                }
+                , start = start, end = end
+            };
+
+            if (result.Status)
+            {
+                return View(orderDetailsViewModel);
+                //OrderNo = result.Data;
+            }
+            else
+            {
+                return RedirectToAction("OrderFailed");
+            }
+
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EventCheckoutSession(OrderDetailsViewModel data)
+        {
+            OrderModel model = data.Order;
+            string UserId = User.Identity.Name;
+            string OrderNo = model.ORDER_NO;
+
+            var EventData = await publicUserService.GetSingleEventDetails(model.SLOT_ID);
+
+            EventData.Data.Add("OrderNo", OrderNo);
+            EventData.Data.Add("OrderType", model.ORDER_TYPE);
+            EventData.Data["start"] = data.start;
+            EventData.Data["end"] = data.end;
+
+            var EventDataFinal = new Dictionary<string, object>();
+
+            List<string> KeyList = new List<string>()
+            {
+                "OrderNo", "COMPANY_CODE", "CALENDAR_CODE", "fees_1", "end", "formGroupKey", "resources", "activities", "Id", "OrderType", "start"
+            };
+
+            foreach (var key in EventData.Data.Keys)
+            {
+                if (KeyList.Contains(key))
+                    EventDataFinal.Add(key, EventData.Data[key]);
+            }
+
+            try
+            {
+                var temp = JsonConvert.SerializeObject(EventDataFinal);
+
+                Dictionary<string, string> metaData = new Dictionary<string, string>();
+
+                metaData.Add("Data", temp.ToString());
+
+                var options = new SessionCreateOptions
+                {
+                    LineItems = new List<SessionLineItemOptions>
+                    {
+                      new SessionLineItemOptions
+                      {
+                            PriceData = new SessionLineItemPriceDataOptions
+                            {
+                               UnitAmount = Convert.ToInt32(EventData.Data["fees_1"])*100,
+                               Currency = "hkd",
+                               ProductData = new SessionLineItemPriceDataProductDataOptions
+                               {
+                                   Name = "Event Purchase",
+                                   Description = "Single Event Purchase"
+                               }
+
+                            },
+                            Quantity = 1
+                      }
+                    },
+                    Mode = "payment",
+                    Metadata = metaData,
+                    SuccessUrl = ConfigurationManager.AppSettings["baseurl"] + "Payment/EventSuccess?SessionId={CHECKOUT_SESSION_ID}",
+                    CancelUrl = ConfigurationManager.AppSettings["baseurl"] + "Payment/EventCancel?SessionId={CHECKOUT_SESSION_ID}"
+                };
+
+                var service = new SessionService();
+                Session session = service.Create(options);
+
+                PaymentTrackerModel tracker = new PaymentTrackerModel()
+                {
+                    ORDER_NO = OrderNo,
+                    PAYMENT_REQUEST_JSON = JsonConvert.SerializeObject(options),
+                    REQUEST_TIME = DateTimeUtility.Now(),
+                    PAYMENT_RESPONSE_JSON = ""
+                };
+
+                var resultTracker = await masterService.CreatePaymentTracker(tracker);
+
+                Response.Headers.Add("Location", session.Url);
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return new HttpStatusCodeResult(303);
+        }
+
+        public async Task<ActionResult> EventSuccess(string SessionId)
+        {
+            if (SessionId != null)
+            {
+                var service = new SessionService();
+                var session = service.Get(SessionId);
+                var eventData = JsonConvert.DeserializeObject<IDictionary<string, object>>(session.Metadata["Data"]);
+                var PackageData = (await publicUserService.GetSingleEventDetails(eventData["Id"]?.ToString())).Data;
+                
+                var calendarDetails = await businessUserService.GetCalendarDetails(PackageData["CALENDAR_CODE"].ToString());
+
+                string query = $@"update ORDER_MASTER_1969 set PAYMENT_STATUS = '{session.Status}', PAYMENT_ID = '{session.PaymentIntentId}' where ORDER_NO = '{eventData["OrderNo"].ToString()}' ";
+                var updateResult = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                PaymentTrackerModel tracker = new PaymentTrackerModel()
+                {
+                    ORDER_NO = eventData["OrderNo"].ToString(),
+                    PAYMENT_REQUEST_JSON = "",
+                    RESPONSE_TIME = DateTimeUtility.Now(),
+                    PAYMENT_RESPONSE_JSON = session.StripeResponse.Content
+                };
+
+                var result = await masterService.CreatePaymentTracker(tracker);
+
+                PaymentHistoryModel paymentHistoryModel = new PaymentHistoryModel()
+                {
+                    B_COIN_PURCHASE = Convert.ToDouble(PackageData["fees_1"]),
+                    CALENDAR_CODE = PackageData["CALENDAR_CODE"].ToString(),
+                    COMPANY_CODE = PackageData["COMPANY_CODE"].ToString(),
+                    CLIENT_PAID_HKD = Convert.ToDouble(PackageData["fees_1"]),
+                    PAID_DATE = DateTimeUtility.Now(),
+                    METHOD = "Card",
+                    PAYMENT_ID = eventData["OrderNo"].ToString(),
+                    PLAN_ID = "0",
+                    STATUS = session.Status,
+                    CREDIT_EXPIRE_DATE = Convert.ToDateTime(eventData["end"].ToString()).ToString("yyyy-MM-dd HH:mm"),
+                    USER_ID = User.Identity.Name
+                };
+
+                var resultPaymentHistory = await masterService.CreatePaymentHistory(paymentHistoryModel);
+
+                LedgerModel ledgerModel = new LedgerModel()
+                {
+                    CALENDAR_CODE = PackageData["CALENDAR_CODE"].ToString(),
+                    COMPANY_CODE = PackageData["COMPANY_CODE"].ToString(),
+                    CREDIT_COIN = Convert.ToDouble(PackageData["fees_1"]),
+                    DEBIT_COIN = 0,
+                    ORDER_NO = tracker.ORDER_NO,
+                    USER_ID = User.Identity.Name,
+                    TRANSACTION_TYPE = "Purchase"
+                };
+
+                var resultLedger = await masterService.CreateLedgerEntry(ledgerModel);
+
+                if (eventData["OrderType"].ToString() == "SLOT1")
+                {
+                    var EnrollResult = await publicUserService.EnrollPublicUserForCalendar(new DTO.UserAdminModels.CalendarEnrollModel()
+                    {
+                        ACTIVITY_NAME = "",
+                        RESOURCE_NAME = "",
+                        USER_EMAIL = UserIdentity.UserEmail,
+                        FormGroupKey = PackageData["formGroupKey"].ToString(),
+                        USER_ID = UserIdentity.UserName,
+                        participant = new DTO.PublicModels.CalendarParticipantModel()
+                        {
+                            COMPANY_CODE = paymentHistoryModel.COMPANY_CODE,
+                            CALENDAR_CODE = paymentHistoryModel.CALENDAR_CODE,
+                            DESCRIPTION = ""
+                        },
+                        transaction = new DTO.PublicModels.TransactionMasterModel()
+                        {
+                            SLOT = PackageData["Id"].ToString(),
+                            RESOURCE = PackageData["resources"].ToString(),
+                            ACTIVITY = PackageData["activities"].ToString(),
+                            STUDENT = "",
+                            REMARKS = "",
+                            FEES = "",
+                            ATTENDANCE = "NOT-MARKED",
+                            COMPANY_CODE = PackageData["COMPANY_CODE"].ToString(),
+                            CALENDAR_CODE = PackageData["CALENDAR_CODE"].ToString()
+                        }
+                    });
+                }
+                else if (eventData["OrderType"].ToString() == "SLOT2")
+                {
+                    var customFormSplit = PackageData["customForms"].ToString().Split(',');
+                    var customTitleSplit = PackageData["customTitle"].ToString().Split(',');
+                    var customFormIdSplit = PackageData["customFormIds"].ToString().Split(',');
+
+                    List<int> indexes = new List<int>() { 0, 1, 2 };
+
+                    int resourceIndex = Array.IndexOf(customFormIdSplit, PackageData["resources"].ToString());
+                    int activityIndex = Array.IndexOf(customFormIdSplit, PackageData["activities"].ToString());
+                    int otherFormIndex = indexes.FirstOrDefault(x => x != resourceIndex && x != activityIndex);
+
+                    var EnrollResult = await publicUserService.BookingServiceEvent(new DTO.MarketplaceModels.RequestEventViewModel()
+                    {
+                        start = Convert.ToDateTime(eventData["start"].ToString()).ToString("yyyy-MM-dd HH:mm"),
+                        end = Convert.ToDateTime(eventData["end"].ToString()).ToString("yyyy-MM-dd HH:mm"),
+
+                        resourceId = Convert.ToInt32(PackageData["resources"].ToString()),
+                        resourceFormId = Convert.ToInt32(customFormSplit[resourceIndex]),
+                        resourceTitle = customTitleSplit[resourceIndex].ToString(),
+
+                        activityTitle = customTitleSplit[activityIndex].ToString(),
+                        activityId = Convert.ToInt32(PackageData["activities"].ToString()),
+                        activityFormId = Convert.ToInt32(customFormSplit[activityIndex]),
+
+                        otherActivityformId = Convert.ToInt32(customFormSplit[otherFormIndex]),
+                        otherActivityId = Convert.ToInt32(customFormIdSplit[otherFormIndex]),
+
+                        calendarCode = PackageData["CALENDAR_CODE"].ToString(),
+                        companyCode = PackageData["COMPANY_CODE"].ToString(),
+                        eventId = Convert.ToInt32(PackageData["Id"].ToString()),
+                        isSlotBooking = (calendarDetails.Data["CALENDAR_TYPE"]?.ToString() == "1") ? true : false
+                    }, User.Identity.Name, UserIdentity.UserID);
+                }
+
+                ViewBag.PaymentId = eventData["OrderNo"].ToString();
+                return View("success");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Marketplace");
+            }
+
+
+        }
+
+        public async Task<ActionResult> EventCancel(string SessionId)
+        {
+            if (SessionId != null)
+            {
+                var service = new SessionService();
+                var session = service.Get(SessionId);
+                var PackageData = JsonConvert.DeserializeObject<IDictionary<string, object>>(session.Metadata["Data"]);
+
+                string query = $@"update ORDER_MASTER_1969 set PAYMENT_STATUS = '{session.Status}',PAYMENT_ID = '{session.PaymentIntentId}' where ORDER_NO = '{PackageData["OrderNo"].ToString()}' ";
+                var updateResult = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                PaymentTrackerModel tracker = new PaymentTrackerModel()
+                {
+                    ORDER_NO = PackageData["OrderNo"].ToString(),
+                    PAYMENT_REQUEST_JSON = "",
+                    RESPONSE_TIME = DateTimeUtility.Now(),
+                    PAYMENT_RESPONSE_JSON = session.StripeResponse.Content
+                };
+
+                var data = await masterService.CreatePaymentTracker(tracker);
+
+                PaymentHistoryModel paymentHistoryModel = new PaymentHistoryModel()
+                {
+                    B_COIN_PURCHASE = Convert.ToDouble(PackageData["fees_1"]),
+                    CALENDAR_CODE = PackageData["CALENDAR_CODE"].ToString(),
+                    COMPANY_CODE = PackageData["COMPANY_CODE"].ToString(),
+                    CLIENT_PAID_HKD = Convert.ToDouble(PackageData["fees_1"]),
+                    PAID_DATE = DateTimeUtility.Now(),
+                    METHOD = "Card",
+                    PAYMENT_ID = PackageData["OrderNo"].ToString(),
+                    PLAN_ID = "0",
+                    STATUS = session.Status,
+                    CREDIT_EXPIRE_DATE = DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm"),
+                    USER_ID = User.Identity.Name
+                };
+
+                var resultPaymentHistory = await masterService.CreatePaymentHistory(paymentHistoryModel);
+                ViewBag.PaymentId = PackageData["OrderNo"].ToString();
+                return View("cancel");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Marketplace");
+            }
+        }
+
+        #endregion
 
         #region Public User Payment
         [HttpPost]
@@ -89,6 +413,7 @@ namespace Barrway.Controllers
 
         }
 
+
         [HttpPost]
         public async Task<ActionResult> CreateCheckoutSession(OrderModel model)
         {
@@ -115,7 +440,7 @@ namespace Barrway.Controllers
                             PriceData = new SessionLineItemPriceDataOptions
                             {
                                UnitAmount = Convert.ToInt32(PackageData.Data["PACKAGE_PRICE"])*100,
-                               Currency = "inr",
+                               Currency = "hkd",
                                ProductData = new SessionLineItemPriceDataProductDataOptions
                                {
                                    Name = PackageData.Data["PACKAGE_NAME"]?.ToString(),
@@ -169,7 +494,7 @@ namespace Barrway.Controllers
                 var session = service.Get(SessionId);
                 var PackageData = JsonConvert.DeserializeObject<IDictionary<string, object>>(session.Metadata["Data"]);
 
-                string query = $@"update ORDER_MASTER_1953 set PAYMENT_STATUS = '{session.Status}',PAYMENT_ID = '{session.PaymentIntentId}' where ORDER_NO = '{PackageData["OrderNo"].ToString()}' ";
+                string query = $@"update ORDER_MASTER_1969 set PAYMENT_STATUS = '{session.Status}',PAYMENT_ID = '{session.PaymentIntentId}' where ORDER_NO = '{PackageData["OrderNo"].ToString()}' ";
                 var updateResult = await sqlFunction.ExecuteSqlCommandQuery(query);
 
                 PaymentTrackerModel tracker = new PaymentTrackerModel()
@@ -232,7 +557,7 @@ namespace Barrway.Controllers
                 var session = service.Get(SessionId);
                 var PackageData = JsonConvert.DeserializeObject<IDictionary<string, object>>(session.Metadata["Data"]);
 
-                string query = $@"update ORDER_MASTER_1953 set PAYMENT_STATUS = '{session.Status}',PAYMENT_ID = '{session.PaymentIntentId}' where ORDER_NO = '{PackageData["OrderNo"].ToString()}' ";
+                string query = $@"update ORDER_MASTER_1969 set PAYMENT_STATUS = '{session.Status}',PAYMENT_ID = '{session.PaymentIntentId}' where ORDER_NO = '{PackageData["OrderNo"].ToString()}' ";
                 var updateResult = await sqlFunction.ExecuteSqlCommandQuery(query);
 
                 PaymentTrackerModel tracker = new PaymentTrackerModel()
@@ -276,7 +601,7 @@ namespace Barrway.Controllers
         public async Task<ActionResult> BusinessOrderDetails(string Id, bool isMonthly, string companyId)
         {
             var PackageData = await masterService.GetSingleCompanyPackage(Id);
-            
+
             if (!string.IsNullOrEmpty(companyId))
             {
                 BusinessOrderModel order = new BusinessOrderModel()
@@ -467,7 +792,7 @@ namespace Barrway.Controllers
                     };
 
                     var result2 = await businessUserService.AddCompanySubscriptionDetails(details);
-                    
+
                     ViewBag.PaymentId = PackageData["OrderNo"].ToString();
                 }
                 catch (Exception ex)

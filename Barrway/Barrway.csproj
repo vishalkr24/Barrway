@@ -3306,6 +3306,7 @@
     <Content Include="Views\UserAdmin\GetSingleEventDetails.cshtml" />
     <Content Include="Views\MarketPlace\ComingSoon.cshtml" />
     <Content Include="Views\UserAdmin\GetMyBookings.cshtml" />
+    <Content Include="Views\Payment\EventOrderDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

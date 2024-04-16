@@ -112,9 +112,9 @@
                 min-height: unset;
             }
 
-        .order-details-card .primary-order-details-table tbody td {
-            font-size: 13px;
-        }
+            .order-details-card .primary-order-details-table tbody td {
+                font-size: 13px;
+            }
 
             .order-details-card .primary-order-details-table thead td {
                 font-size: 13px;
@@ -145,10 +145,10 @@
                                             <thead>
                                                 <tr>
                                                     <td width="50%">
-                                                        <span style="font-weight: 500">@Resource.Package_Details</span>
+                                                        <span style="font-weight: 500">@Resource.Event_Details</span>
                                                     </td>
                                                     <td>
-                                                        <span style="font-weight: 500">@Resource.Coin</span>
+                                                        <span style="font-weight: 500">Total Events</span>
                                                     </td>
                                                     <td class="text-right">
                                                         <span style="font-weight: 500">@Resource.Price</span>
@@ -162,7 +162,7 @@
                                                         <span style="color:grey;">@Model.CalendarPackageModel.PACKAGE_DESCRIPTION</span>
                                                     </td>
                                                     <td>
-                                                        <span>@Model.CalendarPackageModel.PACKAGE_COIN.ToString("n2") credits</span>
+                                                        <span>1</span>
                                                     </td>
                                                     <td class="text-right">
                                                         <span><b>$@Model.CalendarPackageModel.PACKAGE_PRICE.ToString("n2") HKD</b></span>
@@ -175,7 +175,7 @@
                                 </div>
 
                             </p>
-                            
+
                             <p style="padding-top: 8px;">
                                 <div class="order-heading" style="margin-bottom: 12px;">
                                     @Resource.Payment_method
@@ -194,8 +194,8 @@
                             <table width="100%" class="payment-details-table">
                                 <tr style="border-bottom:1px solid lightgrey;">
                                     <td width="50%" style="height:100px">
-                                       @Resource.Package_Details<br />
-                                        <span style="font-size:smaller">1 x @Model.CalendarPackageModel.PACKAGE_NAME</span>
+                                        @Resource.Event_Details<br />
+                                        <span style="font-size:smaller">@Model.CalendarPackageModel.PACKAGE_NAME</span>
                                     </td>
                                     <td class="text-right">
                                         $@Model.CalendarPackageModel.PACKAGE_PRICE.ToString("n2") HKD
@@ -221,12 +221,15 @@
                                 </tr>
                             </table>
                             <br />
-                            <form action="/Payment/CreateCheckoutSession" method="post">
-                                <input name="PACKAGE_ID" style="display:none;" readonly value="@Model.Order.PACKAGE_ID" />
-                                <input name="ORDER_NO" style="display:none;" readonly value="@Model.Order.ORDER_NO" />
+                            <form action="/Payment/EventCheckoutSession" method="post">
+                                <input name="Order.SLOT_ID" style="display:none;" readonly value="@Model.Order.SLOT_ID" />
+                                <input name="Order.ORDER_NO" style="display:none;" readonly value="@Model.Order.ORDER_NO" />
+                                <input name="Order.ORDER_TYPE" style="display:none;" readonly value="@Model.Order.ORDER_TYPE" />
+                                <input name="start" style="display:none;" readonly value="@Model.start" />
+                                <input name="end" style="display:none;" readonly value="@Model.end" />
                                 <button type="submit" class="btn btn-primary" style="width: 100%;">Proceed to pay <i class="bi bi-lock-fill"></i></button>
                             </form>
-                            
+
                         </div>
 
                         @*<div style="padding-top: 1px; padding-left:30px;">
