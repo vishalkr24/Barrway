@@ -16713,6 +16713,143 @@
 
         }
 
+        $scope.validateForm = function (_fileInput, isrequired = false) {
+            $('#fileSuccess').html('');
+            var fileInput = document.getElementById(_fileInput);
+            var fileError = document.getElementById("fileError2");
+            var EventUploadBtn = $("#EventUploadBtn2");
+            var allowedExtensions = ['image/jpeg', 'image/png', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+            var maxSize = 5 * 1024 * 1024; // 5MB
+            if (fileInput.files.length === 0 && isrequired) {
+                fileError.textContent = 'Please select a file.';
+                EventUploadBtn.attr("disabled", "disabled");
+                EventUploadBtn.addClass("disabled");
+                return false;
+            }
+
+            for (var i = 0; i < fileInput.files.length; i++) {
+                if (!allowedExtensions.includes(fileInput.files[i].type)) {
+                    fileError.textContent = 'Invalid file type. Allowed types are: image, PDF, Word document, Excel.';
+                    EventUploadBtn.attr("disabled", "disabled");
+                    EventUploadBtn.addClass("disabled");
+                    return false;
+                }
+
+                var fileSize = fileInput.files[i].size; // in bytes
+
+
+                if (fileSize > maxSize) {
+                    fileError.textContent = 'File size exceeds the maximum limit of 5MB.';
+                    return;
+                }
+            }
+
+            EventUploadBtn.removeAttr("disabled");
+            EventUploadBtn.removeClass("disabled");
+            fileError.textContent = '';
+            return true;
+        }
+
+
+        $scope.uploadFiles = function () {
+
+            let inputfileName = "SELECT_DOWNLOADABLE_ATTACHMENT";
+
+            var fileInput = $('#' + inputfileName)[0].files;
+
+
+
+
+            if ($scope.validateForm(inputfileName, true)) {
+                var formData = new FormData();
+                $.each(fileInput, function (key, value) {
+                    formData.append('files', value);
+                });
+
+                // You can add additional form fields here if needed
+                formData.append('clrcode', CALENDAR_CODE);
+                formData.append('eventid', $scope.selectEventDetails.Id);
+
+
+                // AJAX post request
+                $.ajax({
+                    url: BASE_URL + 'UserAdmin/UploadAssestementAttachment',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.Status) {
+                            $('#fileSuccess').html('File Uploaded Successfully');
+                            $scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA = response.Data;
+                            $rootScope.safeApply();
+                            let filepaths = response.Data.map(x => x.path).join(",");
+                            $scope.selectEventDetails.ASSESSMENT_FILES = filepaths;
+                            $scope.selectEventDetails.ASSESSMENT_FILES_LIST = JSON.stringify(response.Data);
+                            $('#' + inputfileName).val(null);
+                            var EventUploadBtn = $('#EventUploadBtn,#EventUploadBtn2');
+                            EventUploadBtn.attr("disabled", "disabled");
+                            EventUploadBtn.addClass("disabled");
+                        } else {
+                            alert(response.Message);
+                        }
+                        // Handle successful upload
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Upload failed: ' + error);
+                        // Handle upload failure
+                    }
+                });
+            }
+        }
+
+
+        $scope.selectedEventRemoveFiles = function (index) {
+
+            if (!confirm("Are you sure delete this file?")) {
+                return;
+            }
+            if ($scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA.length > index) {
+                let filepath = $scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA[index].path;
+                $scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA.splice(index, 1);
+                $scope.selectEventDetails.ASSESSMENT_FILES_LIST = JSON.stringify($scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA);
+                $scope.selectEventDetails.ASSESSMENT_FILES = $scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA.map(x => x.path).join(",");
+                let eventId = $scope.selectEventDetails.Id;
+                let transactionid = $scope.selectEventDetails.TRANSACTION_ID;
+                uploadfilesDelete(filepath, transactionid, $scope.selectEventDetails.ASSESSMENT_FILES, JSON.stringify($scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA));
+            }
+        }
+
+        function uploadfilesDelete(filePath, transactionid = '', downloadable_attachment = '', download_file_list = '') {
+            var formData = new FormData();
+            formData.append("filePath", filePath);
+            formData.append("transactionid", transactionid);
+            formData.append("downloadable_attachment", downloadable_attachment);
+            formData.append("download_file_list", download_file_list);
+
+            $.ajax({
+                url: BASE_URL + 'UserAdmin/DeleteAssestementUploadFiles',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.Status) {
+                        $(".calendar").fullCalendar('refetchEvents');
+                        $('#fileSuccess').html('File Deleted Successfully');
+                    } else {
+                        alert(response.Message);
+                    }
+                    // Handle successful upload
+                },
+                error: function (xhr, status, error) {
+                    console.error('delete failed: ' + error);
+                    // Handle upload failure
+                }
+            });
+
+        }
+
         $scope.reviewSession = function () {
             var eventData = $scope.selectEventDetails;
 
@@ -17443,22 +17580,295 @@
 
         }
     });
-        
-
+    
     FormGeneratorApp.controller('UserBookingsController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
         checkLogin();
         $("#user-nav-mybookings").addClass("active")
+        $scope.selectEventDetails = {};
 
-        $scope.ViewEvent = function (eventId, type) {
+        $scope.ViewEvent = function (eventId, type, CompanyCode) {
+            showLoader();
+            var param = {};
+            param.action = 1;
+            param.formId = 2305;
+
+            param.isCalender = 1;
+            param.isEvent = 1;
+
+            param.ActivityFormId = "2303";
+            param.ResourceFormId = "2306";
+            param.filter = {};
+            param.IsPublicUser = true;
+            param.COMPANY_CODE = CompanyCode;
+            param.IsCustomFilter = true;
+            param.filter = {
+                field: "start",
+                value: "(cast([start] as date) < getdate() or cast([start] as date) > getdate()) and (f.Id = '" + eventId + "') "
+            }
+            param.IsCustomInFilter = false;
+            param.CustomFilters = [{ "FieldName": "COMPANY_CODE", "Value": CompanyCode }];
+
+            var calenderSettings = getCalenderSettingsLocal(CompanyCode);
+            if (calenderSettings[0].formDataList.length > 0) {
+                var calendarDetails = (getCalendarDetailsLocal(calenderSettings[0].formDataList[0].CALENDAR_CODE)).Data;
+            }
+
+            var xaxisFormList = [];
+            angular.forEach(calenderSettings, function (dataRow, position) {
+                //console.log(dataRow);
+                if (dataRow.activitiesForm !== 0)
+                    xaxisFormList.push(dataRow);
+            });
+
+            //showLoader();
+            $.ajax({
+                method: 'POST',
+                url: BASE_URL + "/FormAPI/getReferralFormFields",
+                dataType: 'json',
+                contentType: "application/json",
+                data: JSON.stringify(param),
+                success: function (response) {
+                    debugger;
+                    $scope.selectEventDetails = response.events[0];
+                    $scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES = ($scope.selectEventDetails.DOWNLOAD_FILE_LIST != null && $scope.selectEventDetails.DOWNLOAD_FILE_LIST != '' && $scope.selectEventDetails.DOWNLOAD_FILE_LIST != undefined) ? JSON.parse($scope.selectEventDetails.DOWNLOAD_FILE_LIST): null;
+                    $scope.selectEventDetails.DisplayType = type;
+
+                    var enrollUser = getUserEnrollDetails($scope.selectEventDetails.Id);
+
+                    let is_enroll = false;
+                    let enrolled_data = {};
+                    if (enrollUser.Status) {
+                        is_enroll = true;
+                        enrolled_data = enrollUser.Data;
+                        $scope.selectEventDetails.TRANSACTION_ID = enrolled_data.TRANSACTION_ID;
+                        $scope.selectEventDetails.ASSESSMENT_FILES = enrolled_data.ASSESSMENT_FILES;
+                        $scope.selectEventDetails.ASSESSMENT_FILES_LIST = enrolled_data.ASSESSMENT_FILES_LIST;
+                        if (IsJsonString(enrolled_data.ASSESSMENT_FILES_LIST)) {
+                            $scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA = JSON.parse(enrolled_data.ASSESSMENT_FILES_LIST);
+                        }
+                    }
+
+                    if (!(moment().local().diff($scope.selectEventDetails.start, 'minute') <= 0)) {
+                        $scope.selectEventDetails.isEnroll = false;
+                    } else {
+                        $scope.selectEventDetails.isEnroll = true;
+                    }
+
+                    if ($scope.selectEventDetails.formID == undefined) {
+                        $scope.selectEventDetails.formID = 2305;
+                    }
+                    $scope.selectEventDetails.resourceFormId = 2306;
+                    $scope.selectEventDetails.ActivityFormId = 2303;
+                    $scope.selectEventDetails.start = $scope.selectEventDetails.start != null && $scope.selectEventDetails.start != undefined && $scope.selectEventDetails.start != '' ? customDate($scope.selectEventDetails.start) : ''
+                    $scope.selectEventDetails.end = $scope.selectEventDetails.end != null && $scope.selectEventDetails.end != undefined && $scope.selectEventDetails.end != '' ? customDate($scope.selectEventDetails.end) : ''
+                    $scope.selectEventDetails.customDate = DateWithDayName($scope.selectEventDetails, true);
+                    if (!$scope.selectEventDetails.allDay) {
+                        $scope.selectEventDetails.customTime = TimeFormatCalender($scope.selectEventDetails, true);
+                    }
+                    else {
+                        $scope.selectEventDetails.customDate = moment($scope.selectEventDetails.start).format("YYYY-MM-DD");
+                    }
+                    $scope.selectEventDetails.customFormIdsSplit = $scope.selectEventDetails.customFormIds.split(',');
+                    $scope.selectEventDetails.customFormsSplit = $scope.selectEventDetails.customForms.split(',');
+                    $scope.selectEventDetails.customTitleSplit = $scope.selectEventDetails.customTitle.split(',');
+
+                    var listFormDropdown = _.filter($scope.selectEventDetails.customFormsSplit, function (item) { return item != "2306" });
+                    if (listFormDropdown.length > 0) {
+                        //var listActivities = _.filter(xaxisFormList, function (item) { return item.activitiesForm != ySelection; });
+                        var listActivities = xaxisFormList;
+                        $scope.selectEventDetails.dropdownList = [];
+                        _.each(listActivities, function (item, key) {
+                            var tempDrop = {};
+                            var indexForm = _.findIndex($scope.selectEventDetails.customFormsSplit, function (itemForm) { return itemForm.trim() == item.activitiesForm.toString() });
+                            if (indexForm != -1) {
+                                tempDrop.formId = item.activitiesForm.toString();
+                                tempDrop.Id = $scope.selectEventDetails.customFormIdsSplit[indexForm];
+                                tempDrop.formTitle = $scope.selectEventDetails.customTitleSplit[indexForm];
+                                tempDrop.dropdownListData = item;
+                                tempDrop.customClass = "false";
+
+                            } else {
+                                tempDrop.formId = item.activitiesForm.toString();
+                                tempDrop.Id = "0";
+                                tempDrop.formTitle = item.title;
+                                tempDrop.dropdownListData = item;
+                                tempDrop.customClass = "true";
+                            }
+                            $scope.selectEventDetails.dropdownList.push(tempDrop);
+                        });
+                    }
+
+                    console.log($scope.selectEventDetails);
+                    $scope.safeApply();
+                    $("#customEventDetailsModelPopUp").modal("show");
+                    hideLoader();
+                    $rootScope.$emit("HideLoading");
+                }
+            });
+        }
+
+        $scope.safeApply = function (fn) {
+            var phase = this.$root.$$phase;
+            if (phase == '$apply' || phase == '$digest') {
+                if (fn && (typeof (fn) === 'function')) {
+                    fn();
+                }
+            } else {
+                this.$apply(fn);
+            }
+        };
+
+        $scope.validateForm = function (_fileInput, isrequired = false) {
+            $('#fileSuccess').html('');
+            var fileInput = document.getElementById(_fileInput);
+            var fileError = document.getElementById("fileError2");
+            var EventUploadBtn = $("#EventUploadBtn2");
+            var allowedExtensions = ['image/jpeg', 'image/png', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+            var maxSize = 5 * 1024 * 1024; // 5MB
+            if (fileInput.files.length === 0 && isrequired) {
+                fileError.textContent = 'Please select a file.';
+                EventUploadBtn.attr("disabled", "disabled");
+                EventUploadBtn.addClass("disabled");
+                return false;
+            }
+
+            for (var i = 0; i < fileInput.files.length; i++) {
+                if (!allowedExtensions.includes(fileInput.files[i].type)) {
+                    fileError.textContent = 'Invalid file type. Allowed types are: image, PDF, Word document, Excel.';
+                    EventUploadBtn.attr("disabled", "disabled");
+                    EventUploadBtn.addClass("disabled");
+                    return false;
+                }
+
+                var fileSize = fileInput.files[i].size; // in bytes
+
+
+                if (fileSize > maxSize) {
+                    fileError.textContent = 'File size exceeds the maximum limit of 5MB.';
+                    return;
+                }
+            }
+
+            EventUploadBtn.removeAttr("disabled");
+            EventUploadBtn.removeClass("disabled");
+            fileError.textContent = '';
+            return true;
+        }
+
+
+        $scope.uploadFiles = function () {
+
+            let inputfileName = "SELECT_DOWNLOADABLE_ATTACHMENT";
+
+            var fileInput = $('#' + inputfileName)[0].files;
+
+
+
+
+            if ($scope.validateForm(inputfileName, true)) {
+                var formData = new FormData();
+                $.each(fileInput, function (key, value) {
+                    formData.append('files', value);
+                });
+
+                // You can add additional form fields here if needed
+                formData.append('clrcode', CALENDAR_CODE);
+                formData.append('eventid', $scope.selectEventDetails.Id);
+
+
+                // AJAX post request
+                $.ajax({
+                    url: BASE_URL + 'UserAdmin/UploadAssestementAttachment',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.Status) {
+                            $('#fileSuccess').html('File Uploaded Successfully');
+                            $scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA = response.Data;
+                            $rootScope.safeApply();
+                            let filepaths = response.Data.map(x => x.path).join(",");
+                            $scope.selectEventDetails.ASSESSMENT_FILES = filepaths;
+                            $scope.selectEventDetails.ASSESSMENT_FILES_LIST = JSON.stringify(response.Data);
+                            $('#' + inputfileName).val(null);
+                            var EventUploadBtn = $('#EventUploadBtn,#EventUploadBtn2');
+                            EventUploadBtn.attr("disabled", "disabled");
+                            EventUploadBtn.addClass("disabled");
+                        } else {
+                            alert(response.Message);
+                        }
+                        // Handle successful upload
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Upload failed: ' + error);
+                        // Handle upload failure
+                    }
+                });
+            }
+        }
+
+
+        $scope.selectedEventRemoveFiles = function (index) {
+
+            if (!confirm("Are you sure delete this file?")) {
+                return;
+            }
+            if ($scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA.length > index) {
+                let filepath = $scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA[index].path;
+                $scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA.splice(index, 1);
+                $scope.selectEventDetails.ASSESSMENT_FILES_LIST = JSON.stringify($scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA);
+                $scope.selectEventDetails.ASSESSMENT_FILES = $scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA.map(x => x.path).join(",");
+                let eventId = $scope.selectEventDetails.Id;
+                let transactionid = $scope.selectEventDetails.TRANSACTION_ID;
+                uploadfilesDelete(filepath, transactionid, $scope.selectEventDetails.ASSESSMENT_FILES, JSON.stringify($scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA));
+            }
+        }
+
+        function uploadfilesDelete(filePath, transactionid = '', downloadable_attachment = '', download_file_list = '') {
+            var formData = new FormData();
+            formData.append("filePath", filePath);
+            formData.append("transactionid", transactionid);
+            formData.append("downloadable_attachment", downloadable_attachment);
+            formData.append("download_file_list", download_file_list);
+
+            $.ajax({
+                url: BASE_URL + 'UserAdmin/DeleteAssestementUploadFiles',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.Status) {
+                        $(".calendar").fullCalendar('refetchEvents');
+                        $('#fileSuccess').html('File Deleted Successfully');
+                    } else {
+                        alert(response.Message);
+                    }
+                    // Handle successful upload
+                },
+                error: function (xhr, status, error) {
+                    console.error('delete failed: ' + error);
+                    // Handle upload failure
+                }
+            });
+
+        }
+
+        $scope.reviewSession = function () {
+            var eventData = $scope.selectEventDetails;
+
             $.ajax({
                 url: "/UserAdmin/GetSingleEventDetails",
                 type: "GET",
                 data: {
-                    EventId: eventId,
-                    Type: type
+                    EventId: eventData.Id,
+                    Type: eventData.DisplayType
                 },
                 success: function (response) {
                     debugger;
+                    $("#customEventDetailsModelPopUp").modal("hide");
+                    $("#customEventDetailsServiceModelPopUp").modal("hide");
                     $("#ViewBookingModal .modal-body").html(response);
                     $("#ViewBookingModal").modal("show");
                 },
@@ -17466,6 +17876,7 @@
 
                 }
             });
+
         }
 
         $scope.BindMyBookings = function (type) {
@@ -17489,12 +17900,12 @@
                 {
                     title: 'Action', field: '', headerFilter: "input", formatter: function (cell, formatter) {
                         if (type == 1) {
-                            return `<button onclick="angular.element(this).scope().ViewEvent(${cell.getData().Id}, ${type})" class="btn btn-primary" style="border-radius: 50px;">View Event</button>`;
+                            return `<button onclick="angular.element(this).scope().ViewEvent(${cell.getData().Id}, ${type}, '${cell.getData().COMPANY_CODE}')" class="btn btn-primary" style="border-radius: 50px;">View Event</button>`;
                         } else {
                             if (cell.getData().SESSION_REVIEWED == "N") {
-                                return `<button onclick="angular.element(this).scope().ViewEvent(${cell.getData().Id}, ${type})" class="btn btn-danger" style="border-radius: 50px;">Rate Event</button>`;
+                                return `<button onclick="angular.element(this).scope().ViewEvent(${cell.getData().Id}, ${type}, '${cell.getData().COMPANY_CODE}')" class="btn btn-danger" style="border-radius: 50px;">View Event</button>`;
                             } else {
-                                return `<button onclick="angular.element(this).scope().ViewEvent(${cell.getData().Id}, ${type})" class="btn btn-danger" style="border-radius: 50px;">View Rating</button>`;
+                                return `<button onclick="angular.element(this).scope().ViewEvent(${cell.getData().Id}, ${type}, '${cell.getData().COMPANY_CODE}')" class="btn btn-danger" style="border-radius: 50px;">View Event</button>`;
                             }
                             
                         }
@@ -17570,6 +17981,8 @@
             }, 150);
 
         };
+
+        
 
         $scope.BindMyBookings(1);
     })
@@ -17702,7 +18115,6 @@
         $scope.setWalletData(1, true);
 
     })
-
 
     FormGeneratorApp.controller('UserProfileController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
         checkLogin();
@@ -17967,32 +18379,18 @@
 
                         var company = response.data[0][i];
 
-                        if (i < 4) {
-                            $("#row1").append(`<div class="wrap">
-                                                    <div class="wrap-im" style="padding-right: 20px; width: fit-content; min-width: 220px; text-align:center;">
-                                                        <img src="${company.CALENDAR_PHOTO_PATH}" style="max-height:120px; padding-right: 0px; width: auto; max-width: 200px; border-radius: 12px;" onerror="this.src = '../assets/marketplace/image/pro.png'">
+                        $("#row1").append(`<div class="wrap">
+                                                    <div class="wrap-im">
+                                                        <img src="${company.CALENDAR_PHOTO_PATH}" onerror="this.src = '../assets/marketplace/image/pro.png'">
                                                     </div>
 
-                                                    <div class="wrap-con">
-                                                        <p><b>${company.COMPANY_NAME_ENGLISH}</b></p>
-                                                        <P class="font-2">${company.CALENDAR_NAME}</P>
-                                                        ${((company.PURCHASED == 'Y') ? `<p>Balance: ${company.COIN_BALANCE} credits</p>`: "")}
-                                                        <p><button class="book" onclick="location.href='/Marketplace/Calander/${company.COMPANY_CODE}'">Book</button></p>
-                                                    </div>
-                                                </div>`);
-                        } else {
-                            $("#row2").append(`<div class="wrap">
-                                                    <div class="wrap-im" style="padding-right: 20px; width: fit-content; min-width: 220px; text-align:center;">
-                                                        <img src="${company.CALENDAR_PHOTO_PATH}" style="max-height:120px; padding-right: 0px; width: auto; max-width: 200px; border-radius: 12px;" onerror="this.src = '../assets/marketplace/image/pro.png'">
-                                                    </div>
-                                                    <div class="wrap-con">
+                                                    <div class="wrap-con wrap-text">
                                                         <p><b>${company.COMPANY_NAME_ENGLISH}</b></p>
                                                         <P class="font-2">${company.CALENDAR_NAME}</P>
                                                         ${((company.PURCHASED == 'Y') ? `<p>Balance: ${company.COIN_BALANCE} credits</p>` : "")}
-                                                        <p><button class="book" onclick="location.href='/Marketplace/Calander/${company.COMPANY_CODE}'">Book</button></p>
+                                                        <p><button class="book" onclick="location.href='/company/calander/${company.COMPANY_CODE}/${company.CALENDAR_CODE}'">Book</button></p>
                                                     </div>
                                                 </div>`);
-                        }
 
                     }
 
@@ -18015,4 +18413,190 @@ function setFavoritesData(pageId) {
 
 function setWalletData(pageId) {
     angular.element("#company-filter-selector").scope().setWalletData(pageId);
+}
+
+function getCalenderSettingsLocal(companyCode) {
+    var data = null;
+    $.ajax({
+        type: "POST",
+        url: BASE_URL + "FormAPI/getCalenderSettingsFormData",
+        data: JSON.stringify({ "action": 4, "IsPublicUser": true, "formId": 2305, "IsCustomFilter": true, IsCustomInFilter: false, "CustomFilters": [{ "FieldName": "COMPANY_CODE", "Value": companyCode }] }),
+        contentType: "application/json",
+        async: false,
+        success: function (response) {
+            
+            data = response;
+
+        }
+    });
+    return data;
+}
+
+function getCalendarDetailsLocal(id) {
+    var data = null;
+    $.ajax({
+        type: "POST",
+        url: BASE_URL + "MarketPlace/GetCalendarDetails/" + id,
+        contentType: "application/json",
+        async: false,
+        success: function (response) {
+            data = response;
+        }
+    });
+    return data;
+}
+
+function validateDynamicForm() {
+    let finalResult = true;
+
+    requiredList = dataModelList.filter(x => x.required);
+    if (requiredList != null) {
+        if (requiredList.length > 0) {
+            requiredList.forEach(x => {
+                if (dataList[0][x.name] == "") {
+                    finalResult = false;
+                    $("#service-div input[name=" + x.name + "]").addClass("error")
+                } else {
+                    $("#service-div input[name=" + x.name + "]").removeClass("error");
+                }
+            })
+
+        }
+    }
+
+    if (!finalResult) {
+        swal({
+            icon: "warning",
+            title: "Alert",
+            text: "Please fill the mandatory fields of form to proceed."
+        }).then(function (res) {
+            var element = document.querySelector('#service-div');
+            element.scrollTop = element.scrollHeight;
+        });
+    }
+
+    return finalResult;
+}
+
+function getSingleFile(id, uploaderType) {
+    //$('#' + id).parents('.form-group').find('.attachments span.file-attachments').remove();
+    var oFReader = new FileReader();
+    var files = document.getElementById(id).files[0];
+    oFReader.readAsDataURL(files);
+    if (files.type.match('image.*')) {
+        oFReader.onload = function (oFREvent) {
+            if (uploaderType == "multi") {
+                getMultipleFiles(id);
+            }
+            else {
+                document.getElementById("uploadPreview_" + id).src = oFREvent.target.result;
+                $("#uploadPreview_" + id).parent().removeClass("hidden");
+                $("#uploadPreview_" + id).parent().find('.file-title').html(files.name);
+            }
+
+        };
+    } else {
+        if (uploaderType == "multi") {
+            getMultipleFiles(id);
+        }
+        else {
+            $('#uploadPreview_' + id).removeAttr('src'); $('#uploadPreview_' + id).parent().addClass('hidden');
+            var fileAttachments = $('#' + id).parents('.form-group').find('.attachments .file-attachments');
+            fileAttachments.find('p').append(files.name);
+            fileAttachments.removeClass("hidden");
+        }
+
+
+    }
+}
+
+function getMultipleFiles(id) {
+    var files = document.querySelector('#' + id).files;
+    function readAndPreview(file) {
+        var div = $('<div />', { class: 'figure' });
+        div.appendTo($('#shw_profile_' + id + ' > div.fileData'));
+        if (/\.(jpe?g|png|gif)$/i.test(file.name)) {
+            var reader = new FileReader();
+            reader.addEventListener("load", function () {
+                var img = $('<img />', {
+                    class: 'scaled',
+                    height: '100',
+                    src: this.result,
+                    alt: file.name
+                });
+                img.appendTo(div);
+
+                var p = $('<p />').html(file.name);
+                p.appendTo(div);
+
+                var span = $('<span />').attr('class', 'img-wrapclose img-close multiple-files').html('×');
+                span.appendTo(div);
+            }, false);
+            reader.readAsDataURL(file);
+        } else {
+            div.append('<i class="far fa-file-alt fa-2x"></i>');
+
+            var p = $('<p />').attr('class', 'file-attachments').html(file.name);
+            p.appendTo(div);
+
+            div.append('<span class="img-wrapclose file-close multiple-files">×</span>');
+        }
+    }
+    if (files) {
+        [].forEach.call(files, readAndPreview);
+    }
+}
+
+function setHiddenField(uploaderId, url) {
+    var value = $("input:hidden[name=" + uploaderId + "]").val();
+
+    if (value == 'null' || value == "" || typeof value === "undefined") {
+        // alert('isnull');
+        $("input:hidden[name=" + uploaderId + "]").attr('value', url);
+
+    }
+    else {
+
+        var Arr = url.split(',');
+
+        angular.forEach(Arr, function (item, key) {
+            if (value.indexOf(item) > -1) {
+
+            }
+            else {
+                value += ',' + item;
+            }
+
+        });
+
+
+        $("input:hidden[name=" + uploaderId + "]").attr('value', value);
+
+
+    }
+
+
+
+    //$("input:hidden[name=" + id + "]").attr('value', "");
+
+
+}
+
+function getUserEnrollDetails(id) {
+    var data = null;
+    $.ajax({
+        type: "GET",
+        url: BASE_URL + "UserAdmin/GetEnrollUserDetails/" + id,
+        contentType: "application/json",
+        async: false,
+        beforeSend: function () {
+            showLoader();
+        },
+        success: function (response) {
+            hideLoader();
+            data = response;
+            
+        }
+    });
+    return data;
 }

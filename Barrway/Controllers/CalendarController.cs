@@ -34,9 +34,10 @@ namespace Barrway.Controllers
         private readonly IBusinessUserService businessUserService;
         private readonly IAuthService authService;
         private readonly IQueueService queueService;
+        private readonly IPublicUserService publicUserService;
 
         // GET: Calendar
-        public CalendarController(IMasterService masterService, IFormAPIRepository formAPIRepository, ISqlFunction sqlFunction, IBusinessUserService businessUserService, IAuthService authService, IQueueService queueService)
+        public CalendarController(IMasterService masterService, IFormAPIRepository formAPIRepository, ISqlFunction sqlFunction, IBusinessUserService businessUserService, IAuthService authService, IQueueService queueService, IPublicUserService publicUserService)
         {
             this.masterService = masterService;
             this.formAPIRepository = formAPIRepository;
@@ -44,6 +45,7 @@ namespace Barrway.Controllers
             this.businessUserService = businessUserService;
             this.authService = authService;
             this.queueService = queueService;
+            this.publicUserService = publicUserService;
         }
 
         public ActionResult Index()
@@ -138,6 +140,23 @@ namespace Barrway.Controllers
             }
 
             return Json(new { data = locationList, last_page });
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetSingleEventDetails(string EventId)
+        {
+            try
+            {
+                SessionReviewViewModel model = new SessionReviewViewModel();
+                var result = await publicUserService.GetSingleEventDetails(EventId);
+
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return View(new SessionReviewViewModel());
+            }
+
         }
 
         [HttpPost]
@@ -1046,7 +1065,6 @@ namespace Barrway.Controllers
 
                             while (dateTracker <= end)
                             {
-
                                 if (Convert.ToInt32(calendarCountCheckData.Data["AVAILABLE_SESSIONS"]?.ToString()) <= eventCounter)
                                 {
                                     caseBreak = true;

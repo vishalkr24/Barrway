@@ -286,7 +286,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div><label>Course / {{translation.Service}}</label></div>
-                            <select class="form-control" id="SCH_ACTIVITY" onchange="angular.element(this).scope().GetSingleService()">
+                            <select class="form-control" id="SCH_ACTIVITY" onchange="angular.element(this).scope().BindSessionsByService()">
                                 <option selected value="-1">Select Service</option>
                                 <option value="{{l.Id}}" ng-repeat="l in serviceList">{{l.ACTIVITY_NAME}}</option>
                             </select>
@@ -425,7 +425,7 @@
                                     </div>
 
                                     <div class="schedular-element add-element">
-                                        <button class="btn btn-primary" ng-click="addFormElement('Mon')">+ ADD MORE</button>
+                                        <button class="btn btn-primary" ng-click="createSessions('Mon')">+ ADD MORE</button>
                                     </div>
                                 </div>
                                 <div class="schedular-row">
@@ -438,7 +438,7 @@
 
 
                                     <div class="schedular-element add-element">
-                                        <button class="btn btn-primary" ng-click="addFormElement('Tue')">+ ADD MORE</button>
+                                        <button class="btn btn-primary" ng-click="createSessions('Tue')">+ ADD MORE</button>
                                     </div>
                                 </div>
                                 <div class="schedular-row">
@@ -451,7 +451,7 @@
 
 
                                     <div class="schedular-element add-element">
-                                        <button class="btn btn-primary" ng-click="addFormElement('Wed')">+ ADD MORE</button>
+                                        <button class="btn btn-primary" ng-click="createSessions('Wed')">+ ADD MORE</button>
                                     </div>
                                 </div>
                                 <div class="schedular-row">
@@ -464,7 +464,7 @@
 
 
                                     <div class="schedular-element add-element">
-                                        <button class="btn btn-primary" ng-click="addFormElement('Thu')">+ ADD MORE</button>
+                                        <button class="btn btn-primary" ng-click="createSessions('Thu')">+ ADD MORE</button>
                                     </div>
                                 </div>
                                 <div class="schedular-row">
@@ -477,7 +477,7 @@
 
 
                                     <div class="schedular-element add-element">
-                                        <button class="btn btn-primary" ng-click="addFormElement('Fri')">+ ADD MORE</button>
+                                        <button class="btn btn-primary" ng-click="createSessions('Fri')">+ ADD MORE</button>
                                     </div>
                                 </div>
                                 <div class="schedular-row">
@@ -489,7 +489,7 @@
                                     </div>
 
                                     <div class="schedular-element add-element">
-                                        <button class="btn btn-primary" ng-click="addFormElement('Sat')">+ ADD MORE</button>
+                                        <button class="btn btn-primary" ng-click="createSessions('Sat')">+ ADD MORE</button>
                                     </div>
                                 </div>
                                 <div class="schedular-row">
@@ -501,7 +501,7 @@
                                     </div>
 
                                     <div class="schedular-element add-element">
-                                        <button class="btn btn-primary" ng-click="addFormElement('Sun')">+ ADD MORE</button>
+                                        <button class="btn btn-primary" ng-click="createSessions('Sun')">+ ADD MORE</button>
                                     </div>
                                 </div>
                             </div>
