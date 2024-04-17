@@ -405,8 +405,8 @@ namespace Barrway.Service.Repository
                                                    ,0
                                                    ,(select ISNULL(Max(formRecordOrder), 0) from COMPANY_UPCOMING_BOOKINGS_1945)
                                                    ,0
-                                                   ,getdate()
-                                                   ,getdate()
+                                                   ,'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'
+                                                   ,'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'
                                                    ,null
                                                    ,null
                                                    ,'{model.transaction.COMPANY_CODE}'
@@ -1100,8 +1100,8 @@ namespace Barrway.Service.Repository
                                                    ,0
                                                    ,(select ISNULL(Max(formRecordOrder), 0) from COMPANY_UPCOMING_BOOKINGS_1945)
                                                    ,0
-                                                   ,getdate()
-                                                   ,getdate()
+                                                   ,'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'
+                                                   ,'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'
                                                    ,null
                                                    ,null
                                                    ,'{data["COMPANY_CODE"]}'
@@ -1218,15 +1218,16 @@ namespace Barrway.Service.Repository
 								  select top 4
 									  (select 
 	case when (
-		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
-	) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
+		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = '{userId}' and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+	) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = '{userId}' and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
 	then
 		0
 	else
-		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = '{userId}' and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
 	end
 FROM LEDGER_MASTER_1957 led 
-where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) as 'COIN_BALANCE'
+join ORDER_MASTER_1969 ord on ord.ORDER_NO = led.ORDER_NO
+where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) as 'COIN_BALANCE'
 									  ,company.Id as 'CompanyId'
                                       ,calendarDetails.*
 	                                  ,company.COMPANY_NAME_ENGLISH
@@ -1372,16 +1373,17 @@ where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) a
                                                   ,company.COMPANY_LOGO_PATH
                                                   ,subCategory.CALENDAR_SUB_CATEGORY_NAME
 												  ,(select 
-														case when (
-															(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
-														) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
-														then
-															0
-														else
-															(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
-														end
-													FROM LEDGER_MASTER_1957 led 
-													where led.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and USER_ID = '{userId}' ) as 'COIN_BALANCE', 'Y' as 'PURCHASED'
+	case when (
+		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = '{userId}' and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+	) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = '{userId}' and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
+	then
+		0
+	else
+		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = '{userId}' and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE)
+	end
+FROM LEDGER_MASTER_1957 led 
+join ORDER_MASTER_1969 ord on ord.ORDER_NO = led.ORDER_NO
+where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) as 'COIN_BALANCE', 'Y' as 'PURCHASED'
                                               FROM [dbo].BUSINESS_CALENDAR_MASTER_1925 calendarDetails
                                               join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
 								              join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendarDetails.CALENDAR_SUB_CATEGORY_ID
@@ -1484,27 +1486,34 @@ where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) a
                                   declare @Ids varchar(max) = stuff((select distinct ',' + phm.CALENDAR_CODE
 
 								  from PAYMENT_HISTORY_MASTER_1956 phm
+								  join ORDER_MASTER_1969 ord on ord.ORDER_NO = phm.PAYMENT_ID
 								  where phm.USER_ID = @UserId and cast(@currentDate as datetime) <= cast(phm.CREDIT_EXPIRE_DATE as datetime) and phm.STATUS = 'complete'
+								  and ord.ORDER_TYPE = 'PACKAGE'
 								  for xml path('')), 1, 1, '')
 			  
                                   declare @PageSize int=10 ,  @PageNumber int=1 ; with formdata as (
                                               select
 									  (select 
 											case when (
-												(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = @UserId and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and cast(@currentDate as datetime) < cast(substring(CREDIT_EXPIRE_DATE, 1, 16) as datetime)) - SUM(led.DEBIT_COIN)
-											) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = @UserId and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and cast(@currentDate as datetime) < cast(substring(CREDIT_EXPIRE_DATE, 1, 16) as datetime)) - SUM(led.DEBIT_COIN) <= 0
+												(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = @UserId and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and cast(@currentDate as datetime) < cast(substring(CREDIT_EXPIRE_DATE, 1, 16) as datetime)) - SUM(led.DEBIT_COIN) - SUM(led.DEBIT_COIN)
+											) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = @UserId and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and cast(@currentDate as datetime) < cast(substring(CREDIT_EXPIRE_DATE, 1, 16) as datetime)) - SUM(led.DEBIT_COIN) - SUM(led.DEBIT_COIN) <= 0
 											then
 												0
 											else
-												(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = @UserId and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and cast(@currentDate as datetime) < cast(substring(CREDIT_EXPIRE_DATE, 1, 16) as datetime)) - SUM(led.DEBIT_COIN)
+												(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = @UserId and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and cast(@currentDate as datetime) < cast(substring(CREDIT_EXPIRE_DATE, 1, 16) as datetime)) - SUM(led.DEBIT_COIN)
 											end
 										FROM LEDGER_MASTER_1957 led 
-										where USER_ID = @UserId and CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) as 'COIN_BALANCE'
+										join ORDER_MASTER_1969 ord on ord.ORDER_NO = led.ORDER_NO
+										where led.USER_ID = @UserId and led.CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) as 'COIN_BALANCE'
+									  
+									  
 									  ,(select CREDIT_EXPIRE_DATE,
 										(
-										select case when (sum(CREDIT_COIN) - sum(DEBIT_COIN) <= 0) then 0 else cast(sum(CREDIT_COIN) - sum(DEBIT_COIN) as varchar) end from LEDGER_MASTER_1957 where ORDER_NO = PAYMENT_ID
+										select case when (sum(CREDIT_COIN) - sum(DEBIT_COIN) <= 0) then 0 else cast(sum(CREDIT_COIN) - sum(DEBIT_COIN) as varchar) end from LEDGER_MASTER_1957 where ORDER_NO = pay.PAYMENT_ID
 										) as 'Balance'
-										from PAYMENT_HISTORY_MASTER_1956 where CALENDAR_CODE = calendarDetails.CALENDAR_CODE and USER_ID = @UserId and STATUS = 'complete' and cast(@currentDate as datetime) < cast(substring(CREDIT_EXPIRE_DATE, 1, 16) as datetime)
+										from PAYMENT_HISTORY_MASTER_1956 pay
+										join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID
+										where ord.ORDER_TYPE = 'PACKAGE' and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and pay.USER_ID = @UserId and pay.STATUS = 'complete' and cast(@currentDate as datetime) < cast(substring(CREDIT_EXPIRE_DATE, 1, 16) as datetime)
 									   for json auto) as 'PackageInfo'
 									  ,company.Id as 'CompanyId'
                                       ,calendarDetails.*
@@ -1515,7 +1524,7 @@ where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) a
 									  FROM BUSINESS_CALENDAR_MASTER_1925 calendarDetails
                                   join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
 								  join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendarDetails.CALENDAR_SUB_CATEGORY_ID
-                                  where calendarDetails.CALENDAR_CODE in (select cast(item as varchar(max)) from dbo.SplitString(@Ids, ',')) {CompanyLogic}
+                                  where calendarDetails.CALENDAR_CODE in (select cast(item as varchar(max)) from dbo.SplitString(@Ids, ','))  {CompanyLogic}
 								  )
                                   Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY created_at desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
 
@@ -1526,7 +1535,8 @@ where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) a
                                   declare @Ids varchar(max) = stuff((select distinct ',' + phm.COMPANY_CODE
 
 								  from PAYMENT_HISTORY_MASTER_1956 phm
-								  where phm.USER_ID = @UserId and cast(@currentDate as datetime) <= cast(phm.CREDIT_EXPIRE_DATE as datetime) and phm.STATUS = 'complete'
+                                  join ORDER_MASTER_1969 ord on ord.ORDER_NO = phm.PAYMENT_ID
+								  where phm.USER_ID = @UserId and cast(@currentDate as datetime) <= cast(phm.CREDIT_EXPIRE_DATE as datetime) and phm.STATUS = 'complete' and ord.ORDER_TYPE = 'PACKAGE'
 								  for xml path('')), 1, 1, '')
 								  
 								  select * from BUSINESS_COMPANY_MASTER_1924 where COMPANY_CODE in (select cast(item as varchar) from dbo.SplitString(@Ids, ','))
@@ -1620,15 +1630,16 @@ where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) a
             {
                 string query = $@"select 
 	                                case when (
-		                                (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
-	                                ) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
+		                                (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 f join ORDER_MASTER_1969 ord on ord.ORDER_NO = f.PAYMENT_ID where '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE and ord.ORDER_TYPE = 'PACKAGE') - SUM(led.DEBIT_COIN)
+	                                ) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 f join ORDER_MASTER_1969 ord on ord.ORDER_NO = f.PAYMENT_ID where '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE and ord.ORDER_TYPE = 'PACKAGE') - SUM(led.DEBIT_COIN) <= 0
 	                                then
 		                                0
 	                                else
-		                                (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+		                                (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 f join ORDER_MASTER_1969 ord on ord.ORDER_NO = f.PAYMENT_ID where '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE and ord.ORDER_TYPE = 'PACKAGE') - SUM(led.DEBIT_COIN)
 	                                end as 'COIN_BALANCE'
                                 FROM LEDGER_MASTER_1957 led 
-                                where USER_ID = '{UserId}'";
+                                join ORDER_MASTER_1969 ord on ord.ORDER_NO = led.ORDER_NO
+                                where led.USER_ID = '{UserId}' and ord.ORDER_TYPE = 'PACKAGE'";
 
                 List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -1661,15 +1672,16 @@ where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) a
             {
                 string query = $@"select 
 	                                case when (
-		                                (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{UserId}' and CALENDAR_CODE = '{CalendarCode}' and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
-	                                ) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{UserId}' and CALENDAR_CODE = '{CalendarCode}' and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
+		                                (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 f join ORDER_MASTER_1969 ord on ord.ORDER_NO = f.PAYMENT_ID where f.USER_ID = '{UserId}' and f.CALENDAR_CODE = '{CalendarCode}' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE and ord.ORDER_TYPE = 'PACKAGE') - SUM(led.DEBIT_COIN)
+	                                ) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 f join ORDER_MASTER_1969 ord on ord.ORDER_NO = f.PAYMENT_ID where f.USER_ID = '{UserId}' and f.CALENDAR_CODE = '{CalendarCode}' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE and ord.ORDER_TYPE = 'PACKAGE') - SUM(led.DEBIT_COIN) <= 0
 	                                then
 		                                0
 	                                else
-		                                (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{UserId}' and CALENDAR_CODE = '{CalendarCode}' and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+		                                (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 f join ORDER_MASTER_1969 ord on ord.ORDER_NO = f.PAYMENT_ID where  f.USER_ID = '{UserId}' and f.CALENDAR_CODE = '{CalendarCode}' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE and ord.ORDER_TYPE = 'PACKAGE') - SUM(led.DEBIT_COIN)
 	                                end as 'COIN_BALANCE'
                                 FROM LEDGER_MASTER_1957 led 
-                                where USER_ID = '{UserId}' and COMPANY_CODE = '{CompanyCode}' and CALENDAR_CODE = '{CalendarCode}'";
+                                join ORDER_MASTER_1969 ord on ord.ORDER_NO = led.ORDER_NO
+                                where led.USER_ID = '{UserId}' and ord.ORDER_TYPE = 'PACKAGE'  and led.COMPANY_CODE = '{CompanyCode}' and led.CALENDAR_CODE = '{CalendarCode}'";
 
                 List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
