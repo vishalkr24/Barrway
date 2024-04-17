@@ -25416,14 +25416,22 @@ div#navbarVerticalMenu .nav-item:hover > .nav-link {
     transition: 0.3s;
 }
 
-    .navbar-dropdown-account-wrapper:focus,
+    /*.navbar-dropdown-account-wrapper:focus,
     .navbar-dropdown-account-wrapper:hover {
         background-color: rgba(55, 125, 255, 0.1);
+    }*/
+    .navbar-dropdown-account-wrapper:focus, .navbar-dropdown-account-wrapper:hover {
+        background-color: rgb(55 125 255 / 0%);
     }
-
-.navbar-card-list-group {
-    margin: 0.5rem 0 0.5rem 0.5rem;
-}
+    .lag-select {
+        width: 100%;
+        float: left;
+        text-align: center;
+        padding: 5px 0px;
+    }
+    .navbar-card-list-group {
+        margin: 0.5rem 0 0.5rem 0.5rem;
+    }
 
     .navbar-card-list-group .list-group-item {
         padding-top: 1rem;
@@ -34385,7 +34393,9 @@ button#backtomarketplace {
             font-size: 13px;
             margin-bottom: 3px;
         }
-
+            .wrap .wrap-con p:nth-child(3) {
+                display: none;
+            }
             .wrap .wrap-con p:nth-child(3) {
                 font-weight: 400;
             }
