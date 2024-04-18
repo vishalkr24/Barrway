@@ -35901,3 +35901,63 @@ input:checked + .switch {
     border-color: #72328a;
 }
 
+.my-notification {
+    padding: 0px;
+}
+
+    .my-notification i.bi-bell {
+        font-size: 25px;
+    }
+    .my-notification.show i.bi-bell, .navbar-dropdown-account-wrapper.show .bi-grid-3x3-gap-fill {
+        color: #3fbfc7;
+    }
+
+.notification-count {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    color: #fff;
+    text-align: center;
+    padding: 0px;
+    justify-content: center;
+    right: -21px;
+    font-size: 10px;
+}
+
+/*open close*/
+.navbar-vertical-aside-show-xl.navbar-vertical-aside-mini-mode .navbar-vertical-aside button.create-company span {
+    display: none;
+}
+
+.navbar-vertical-aside-show-xl.navbar-vertical-aside-mini-mode .navbar-vertical-aside button.create-company {
+    padding: 0px 6px;
+    font-size: 18px;
+}
+.navbar-vertical-aside-show-xl.navbar-vertical-aside-mini-mode .navbar-vertical-aside .added-company span:nth-child(2) {
+    display: none;
+}
+/*open close end*/
+@media screen and (min-width:991px) {
+    .d-m-show {
+    display:none;
+    }
+}
+    @media screen and (min-width:769px) {
+        .desktop-none {
+            display: none;
+        }
+
+        
+    }
+
+    @media screen and (max-width:767px) {
+        .mobile-none {
+            display: none;
+        }
+        .notification-count {
+            width: 24px;
+            height: 24px;
+            right: 0px;
+            font-size: 9px;
+        }
+    }
