@@ -906,11 +906,21 @@ namespace Barrway.Controllers
             {
                 var schedule = await businessUserService.GetSchedule(Id, User.Identity.Name);
 
+                bool chopIntoSessions = false;
+
                 if (schedule.Status)
                 {
                     if (schedule.Data != null)
                     {
                         var rawData = (schedule.Data as List<IDictionary<string, object>>).FirstOrDefault();
+
+                        var calendar = await businessUserService.GetCalendarDetails(rawData["CALENDAR_CODE"]?.ToString());
+                        
+                        if (calendar.Data["CALENDAR_TYPE"]?.ToString() == "1" && calendar.Data["CALENDAR_CATEGORY_ID"]?.ToString() == "2")
+                        {
+                            chopIntoSessions = true;
+                        }
+
 
                         SchedularFormModel data = JsonConvert.DeserializeObject<SchedularFormModel>(JsonConvert.SerializeObject(rawData));
 
@@ -1091,39 +1101,124 @@ namespace Barrway.Controllers
                                         SlotEndTime = Convert.ToDateTime(dateTracker.ToShortDateString() + " " + x.end.ToString());
                                     }
 
-                                    CalendarFormModel eventData = new CalendarFormModel()
+                                    if (chopIntoSessions)
                                     {
-                                        end = SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss"),
-                                        resources = data.SCH_RESOURCE,
-                                        activities = data.SCH_ACTIVITY,
-                                        start = SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss"),
-                                        title = "Slot " + slotCounter++
-                                    };
-                                    formGroupKey = Guid.NewGuid().ToString();
-                                    string referenceResourceEntry = "";
+                                        int ChopSlotCounter = 1;
+                                        int Duration = Convert.ToInt32(rawData["DURATION_FIELD"]?.ToString());
+                                        int RestPeriod = Convert.ToInt32(rawData["REST_PERIOD_BETWEEN_SESSION"]?.ToString());
+                                        var tempStartTime = SlotStartTime;
+                                        var tempEndTime = SlotStartTime.AddMinutes(Duration);
+                                        while (tempEndTime <= SlotEndTime)
+                                        {
+                                            if (Convert.ToInt32(calendarCountCheckData.Data["AVAILABLE_SESSIONS"]?.ToString()) <= eventCounter)
+                                            {
+                                                caseBreak = true;
+                                                break;
+                                            }
 
-                                    if (!string.IsNullOrEmpty(data.SCH_RESOURCE))
-                                    {
-                                        referenceResourceEntry = $@"
+                                            // Code to insert the slot
+                                            CalendarFormModel eventData = new CalendarFormModel()
+                                            {
+                                                end = tempStartTime.ToString("yyyy-MM-ddTHH:mm:ss"),
+                                                resources = data.SCH_RESOURCE,
+                                                activities = data.SCH_ACTIVITY,
+                                                start = tempEndTime.ToString("yyyy-MM-ddTHH:mm:ss"),
+                                                title = "Slot " + slotCounter++
+                                            };
+
+                                            formGroupKey = Guid.NewGuid().ToString();
+                                            string referenceResourceEntry = "";
+
+                                            if (!string.IsNullOrEmpty(data.SCH_RESOURCE))
+                                            {
+                                                referenceResourceEntry = $@"
                                                             insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
                                                             values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_PROVIDER_MASTER}, '{data.SCH_RESOURCE}', 'SERVICE_PROVIDER_MASTER_1934', 'FIRST_NAME', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_RESOURCE}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
                                                             ";
-                                    }
+                                            }
 
-                                    string referenceActivityEntry = "";
+                                            string referenceActivityEntry = "";
 
-                                    if (!string.IsNullOrEmpty(data.SCH_ACTIVITY) && data.SCH_ACTIVITY != "-1")
-                                    {
-                                        referenceActivityEntry = $@"
+                                            if (!string.IsNullOrEmpty(data.SCH_ACTIVITY) && data.SCH_ACTIVITY != "-1")
+                                            {
+                                                referenceActivityEntry = $@"
                                                             insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
                                                             values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_MASTER}, '{data.SCH_ACTIVITY}', 'SERVICE_MASTER_1933', 'ACTIVITY_NAME', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_ACTIVITY}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
                                                             ";
+                                            }
+
+                                            eventCounter++;
+                                            script += $@"insert into CALENDAR_FORM_1935(
+                                                               [SCHEDULAR_FORM_ID]
+                                                              ,[formGroupKey]
+                                                              ,[formID]
+                                                              ,[userID]
+                                                              ,[Current_Status]
+                                                              ,[cycle]
+                                                              ,[MasterFormID]
+                                                              ,[MasterFormRow]
+                                                              ,[formRecordOrder]
+                                                              ,[formRecordStatus]
+                                                              ,[COMPANY_CODE]
+                                                              ,[CALENDAR_CODE]
+                                                              ,[title]
+                                                              ,[start]
+                                                              ,[end]
+                                                              ,[allDay]
+                                                              ,[resources]
+                                                              ,[activities]
+                                                              ,[COMPANY_SUBSCRIPTION_ID]
+                                                              ,[description]
+                                                              ,[created_at], [updated_at],[EVENT_TYPE])
+	                                                          values('{SchedularFormId}', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter}', '{tempStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{tempEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{data.SCH_RESOURCE}', '{data.SCH_ACTIVITY}', '{package.Data["SUBS_ID"]?.ToString()}', '{data.SCH_DESCRIPTION}', getDate(), getDate(),'SCHEDULE');
+
+                                                            {referenceResourceEntry}                                                                    
+
+                                                            {referenceActivityEntry}
+                                                            
+                                                            insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{data.SCH_LOCATION}', 'LOCATION_MASTER_1936', 'LOCATION_ADDRESS', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_LOCATION}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                                                            ";
+
+                                            tempStartTime = tempEndTime.AddMinutes(RestPeriod);
+                                            tempEndTime = tempStartTime.AddMinutes(Duration);
+                                        } // end of while
+                                        
                                     }
+                                    else
+                                    {
+                                        CalendarFormModel eventData = new CalendarFormModel()
+                                        {
+                                            end = SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss"),
+                                            resources = data.SCH_RESOURCE,
+                                            activities = data.SCH_ACTIVITY,
+                                            start = SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss"),
+                                            title = "Slot " + slotCounter++
+                                        };
 
+                                        formGroupKey = Guid.NewGuid().ToString();
+                                        string referenceResourceEntry = "";
 
+                                        if (!string.IsNullOrEmpty(data.SCH_RESOURCE))
+                                        {
+                                            referenceResourceEntry = $@"
+                                                            insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_PROVIDER_MASTER}, '{data.SCH_RESOURCE}', 'SERVICE_PROVIDER_MASTER_1934', 'FIRST_NAME', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_RESOURCE}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                                                            ";
+                                        }
 
-                                    eventCounter++;
-                                    script += $@"insert into CALENDAR_FORM_1935(
+                                        string referenceActivityEntry = "";
+
+                                        if (!string.IsNullOrEmpty(data.SCH_ACTIVITY) && data.SCH_ACTIVITY != "-1")
+                                        {
+                                            referenceActivityEntry = $@"
+                                                            insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_MASTER}, '{data.SCH_ACTIVITY}', 'SERVICE_MASTER_1933', 'ACTIVITY_NAME', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_ACTIVITY}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                                                            ";
+                                        }
+
+                                        eventCounter++;
+                                        script += $@"insert into CALENDAR_FORM_1935(
                                                                [SCHEDULAR_FORM_ID]
                                                               ,[formGroupKey]
                                                               ,[formID]
@@ -1154,6 +1249,7 @@ namespace Barrway.Controllers
                                                             insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
                                                             values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{data.SCH_LOCATION}', 'LOCATION_MASTER_1936', 'LOCATION_ADDRESS', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_LOCATION}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
                                                             ";
+                                    }
 
                                 }
 

@@ -1326,6 +1326,7 @@ namespace Barrway.Service.Repository
                                       ,[SCH_DESCRIPTION]
                                       ,[SCH_FROM_DATE]
                                       ,[SCH_TO_DATE]
+                                      ,[DURATION_FIELD],[REST_PERIOD_BETWEEN_SESSION]
                                       ,[SCH_ALTERNATIVE_WEEK]
                                       ,[hidden_1683715521753]
                                       ,[hidden_1683715524413]
@@ -3170,7 +3171,7 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string sqlString = $@"select COMPANY_CODE,CALENDAR_CODE,ACTIVITY_CODE,ACTIVITY_NAME,PHOTO,CATEGORY,SUB_CATEGORY,START_DATETIME,END_DATETIME from SERVICE_MASTER_1933  where CALENDAR_CODE='{calendarCode}' AND COMPANY_CODE='{CompanyCode}'";
+                string sqlString = $@"select * from SERVICE_MASTER_1933  where CALENDAR_CODE='{calendarCode}' AND COMPANY_CODE='{CompanyCode}'";
 
 
                 var result = (await sqlFunction.ExecuteSqlQuery(sqlString)).ToList();

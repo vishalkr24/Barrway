@@ -10,7 +10,7 @@
         var createdCompanyCode = localStorage.getItem("COMPANY_CODE");
         $scope.SchedularId = null;
         $scope.isQueue = -1;
-        
+
         $rootScope.safeApply = function (fn) {
             var phase = this.$root.$$phase;
             if (phase == '$apply' || phase == '$digest') {
@@ -33,16 +33,7 @@
                 "Sat": [],
                 "Sun": []
             };
-
             $scope.serviceDetails = null;
-
-            $scope.addFormElement("Mon");
-            $scope.addFormElement("Tue");
-            $scope.addFormElement("Wed");
-            $scope.addFormElement("Thu");
-            $scope.addFormElement("Sat");
-            $scope.addFormElement("Sun");
-            $scope.addFormElement("Fri");
 
             adminService.postAsync('/Calendar/GetLocationMasterList/', { companyCode: localStorage.getItem("COMPANY_CODE"), filters: [{ field: "CALENDAR_CODE", type: "=", value: localStorage.getItem("CALENDAR_CODE") }] }).then(function (res) {
 
@@ -71,15 +62,59 @@
                 $scope.CalendarData = getSingleCalendar(localStorage.getItem("CALENDAR_CODE"));
                 $scope.ConfigData = JSON.parse(getScheduleTypeJson());
                 $scope.BindView();
-            }, 500);
 
-            if (localStorage.getItem("CALENDAR_CATEGORY_ID") == "2" && localStorage.getItem("CALENDAR_TYPE") == "1") {
-                $("#SCH_SESSION_DURATION").removeClass("disabled")
-                $("#SCH_SESSION_DURATION").removeAttr("disabled")
+                if (localStorage.getItem("CALENDAR_CATEGORY_ID") == "2" && localStorage.getItem("CALENDAR_TYPE") == "1") {
+                    $("#SCH_SESSION_DURATION").removeClass("disabled")
+                    $("#SCH_SESSION_DURATION").removeAttr("disabled")
 
-                $("#SCH_REST_PERIOD").removeClass("disabled")
-                $("#SCH_REST_PERIOD").removeAttr("disabled")
-            }
+                    $("#SCH_REST_PERIOD").removeClass("disabled")
+                    $("#SCH_REST_PERIOD").removeAttr("disabled")
+                }
+
+                $scope.isEdit = false;
+                debugger;
+                if ($stateParams.Id != null && $stateParams.Id != "" && $stateParams.Id != 0) {
+                    try {
+                        $scope.SchedularId = parseInt($stateParams.Id);
+                        $scope.isEdit = true;
+                    } catch (ex) {
+                        $scope.SchedularId = 0;
+                        $scope.isEdit = false;
+                    }
+                }
+
+
+                if ($scope.isEdit) {
+                    adminService.postAsync('/Calendar/GetSchedule/', { ScheduleId: $scope.SchedularId }).then(function (response) {
+
+                        $scope.ScheduleData = response.data.data[0];
+                        $scope.scheduleList = JSON.parse($scope.ScheduleData.SCH_SCHEDULE_TABLE);
+                        $scope.executeScheduleList();
+
+                        $("#SCH_LOCATION").val($scope.ScheduleData.SCH_LOCATION)
+                        $("#SCH_ACTIVITY").val($scope.ScheduleData.SCH_ACTIVITY)
+                        $("#SCH_RESOURCE").val($scope.ScheduleData.SCH_RESOURCE)
+
+                        $("#SCH_FROM_DATE").val($scope.ScheduleData.SCH_FROM_DATE)
+                        $("#SCH_TO_DATE").val($scope.ScheduleData.SCH_TO_DATE)
+
+                        $("#SCH_SESSION_DURATION").val($scope.ScheduleData.DURATION_FIELD)
+                        $("#SCH_REST_PERIOD").val($scope.ScheduleData.REST_PERIOD_BETWEEN_SESSION)
+
+                        $("input[name='alternate-week'][value='" + $scope.ScheduleData.SCH_ALTERNATIVE_WEEK + "']").attr("checked", true)
+
+                    })
+                } else {
+                    $scope.addFormElement("Mon");
+                    $scope.addFormElement("Tue");
+                    $scope.addFormElement("Wed");
+                    $scope.addFormElement("Thu");
+                    $scope.addFormElement("Sat");
+                    $scope.addFormElement("Sun");
+                    $scope.addFormElement("Fri");
+                }
+
+            }, 1000);
 
         };
 
@@ -170,6 +205,33 @@
                                             <button class="btn btn-primary" onclick="angular.element(this).scope().deleteFormElement('${abbr}', ${id})"><i class="fa fa-times" aria-hidden="true"></i></button>
                                         </div>
                                     </div>`);
+        }
+
+        $scope.executeScheduleList = function () {
+
+            let dayList = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+            dayList.forEach(abbr => {
+                $scope.scheduleList[abbr].forEach(evt => {
+                    $("#elements-row-" + abbr).append(`<div class="schedular-element form-element"  data-element-id="SCH_${evt.Id}">
+                                        <div>
+                                            ${(abbr == "Mon") ? "<b>From</b>" : ""}
+                                            <input type="time" class="form-control" name="form-time-input" data-input-day="${abbr}" value="${evt.start}" data-input-type="start" data-input-id="${evt.Id}" />
+                                        </div>
+                                        <div> <b>--</b> </div>
+                                        <div>
+                                            ${(abbr == "Mon") ? "<b>To</b>" : ""}
+                                            <input type="time" class="form-control" name="form-time-input" data-input-day="${abbr}" value="${evt.end}" data-input-type="end" data-input-id="${evt.Id}" />
+                                        </div>
+                                        <div class="delete-element">
+                                            <button class="btn btn-primary" onclick="angular.element(this).scope().deleteFormElement('${abbr}', ${evt.Id})"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                        </div>
+                                    </div>`);
+                })
+
+            })
+
+
         }
 
         $scope.deleteFormElement = function (abbr, id) {
@@ -694,7 +756,7 @@
 
         $scope.createSessions = function (day = null) {
 
-            if ($scope.serviceDetails != null && (localStorage.getItem("CALENDAR_CATEGORY_ID") == "2" && localStorage.getItem("CALENDAR_TYPE") == "3") && (localStorage.getItem("CALENDAR_CATEGORY_ID") == "2" && localStorage.getItem("CALENDAR_TYPE") == "1")) {
+            if ($scope.serviceDetails != null && !(localStorage.getItem("CALENDAR_CATEGORY_ID") == "2" && localStorage.getItem("CALENDAR_TYPE") == "3") && !(localStorage.getItem("CALENDAR_CATEGORY_ID") == "2" && localStorage.getItem("CALENDAR_TYPE") == "1")) {
                 let tempList = $scope.scheduleList[day];
 
                 if (tempList[tempList.length - 1].start != "" && tempList[tempList.length - 1].end != "") {
@@ -713,9 +775,9 @@
             } else {
                 $scope.addFormElement(day);
             }
-            
 
-            
+
+
         }
 
         /* copy slots */

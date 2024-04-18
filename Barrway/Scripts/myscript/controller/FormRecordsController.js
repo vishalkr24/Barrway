@@ -4213,7 +4213,7 @@
 
             if ($stateParams.formId == 2322) {
                 $scope.filterBy.groupByRecord = "CALENDAR_CODE";
-            } else if ($stateParams.formId == 2305 || $stateParams.formId == 2312 || $stateParams.formId == 2326 || $stateParams.formId == 2304) {
+            } else if ($stateParams.formId == 2305 || $stateParams.formId == 2312 || $stateParams.formId == 2326 || $stateParams.formId == 2304 || $stateParams.formId == 2311) {
                 $scope.filterBy.groupByRecord = "";
             } else {
                 $scope.filterBy.groupByRecord = "CALENDAR_NAME";
