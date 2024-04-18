@@ -325,18 +325,37 @@
 
         @@Media screen and (max-width:767px) {
             .mobile-new ul.navbar-nav {
-                left: 0;
+                /*left: 0;
                 position: absolute;
                 width: 100%;
                 background-color: #fff;
+                box-shadow: 0px 4px 4px 0px #ddd;*/
+                right: 30px;
+                position: absolute;
+                width: auto;
+                background-color: #fff;
                 box-shadow: 0px 4px 4px 0px #ddd;
+                padding:10px 0px;
             }
 
                 .mobile-new ul.navbar-nav li {
-                    padding: 7px 0px !important;
-                    text-align: right;
+                    padding: 7px 7px !important;
+                    text-align: left;
                     width: 100% !important;
+                    margin: 0px 0px;
                 }
+                .mobile-chat-noti .dropdown {
+                    width: 50%;
+                    text-align: center;
+                    float: left;
+                }
+                    .mobile-chat-noti .dropdown .bi-chat-left-text {
+                    font-size:20px;
+                    }
+            .navbar-nav-wrap-content-end {
+            margin-left:0px !important;
+            }
+            
         }
     </style>
     <!-- Owl Stylesheets -->
@@ -463,8 +482,8 @@
         <nav class="navbar-nav-wrap mje new-custome">
             <!-- Navbar Vertical Toggle -->
             <button type="button" class="js-navbar-vertical-aside-toggle-invoker navbar-aside-toggler" style="margin-right: 10px;">
-                <i class="bi bi-justify navbar-toggler-short-align" data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>' data-bs-toggle="tooltip" data-bs-placement="right" title="Collapse"></i>
-                <i class="bi bi-x-lg navbar-toggler-full-align" data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>' data-bs-toggle="tooltip" data-bs-placement="right" title="Expand"></i>
+                <i class="bi bi-x-lg navbar-toggler-short-align" data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>' data-bs-toggle="tooltip" data-bs-placement="right" title="Collapse"></i>
+                <i class="bi bi-list navbar-toggler-full-align" data-bs-template='<div class="tooltip d-none d-md-block" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>' data-bs-toggle="tooltip" data-bs-placement="right" title="Expand"></i>
             </button>
 
             <!-- End Navbar Vertical Toggle -->
@@ -477,40 +496,121 @@
             <!-- Toggler -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContainerNavDropdown" aria-controls="navbarContainerNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-default">
-                    <i class="bi-list"></i>
+                    <i class="bi bi-grid-3x3-gap-fill"></i>
                 </span>
                 <span class="navbar-toggler-toggled">
-                    <i class="bi-x"></i>
+                    <i class="bi bi-grid-3x3-gap-fill"></i>
                 </span>
             </button>
+
+            <div class="navbar-nav-wrap-content-end desktop-none">
+                <!-- Navbar -->
+                <ul class="navbar-nav">
+
+                    <li class="nav-item">
+                        <!-- Account -->
+                        <div class="dropdown">
+                            <a class="navbar-dropdown-account-wrapper" href="javascript:;" id="accountNavbarDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" data-bs-dropdown-animation="">
+                                <div class="avatar avatar-sm avatar-circle">
+                                    <img class="avatar-img layout-user-image" onerror="this.src='assets/img/160x160/img6.jpg'" alt="TL">
+                                    <span class="avatar-status avatar-sm-status avatar-status-success"></span>
+                                </div>
+                            </a>
+
+                            <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-account" aria-labelledby="accountNavbarDropdown" style="width: auto;">
+                                <div class="dropdown-item-text">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar avatar-sm avatar-circle">
+                                            <img class="avatar-img layout-user-image" style="min-width:40px;" onerror="this.src='assets/img/160x160/img6.jpg'" alt="TL">
+                                        </div>
+                                        <div class="flex-grow-1 ms-3" style="overflow-wrap: break-word;">
+                                            <h5 class="mb-0"><span class="layout-first-name"></span> <span class="layout-last-name"></span></h5>
+                                            <p class="card-text text-body layout-email">mark@site.com</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="dropdown-divider"></div>
+
+                                <a class="dropdown-item" href="javascript:void(0)" ui-sref="my_profile()">@Resource.Profile &amp; @Resource.Account</a>
+                               
+
+                                <div class="dropdown-divider"></div>
+                               
+
+                                <form id="mySignOutForm" name="mySignOutForm" method="post" action="@Url.Action("LogoutPublicUser","Account")">
+                                    <a class="dropdown-item" href="javascript:void(0)" onclick="Logout()">@Resource.Sign_out</a>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- End Account -->
+                    </li>
+                </ul>
+                <!-- End Navbar -->
+            </div>
             <!-- End Toggler -->
             <!-- Collapse -->
             <div class="collapse navbar-collapse mobile-new" id="navbarContainerNavDropdown">
                 <ul class="navbar-nav">
                     <!-- Dashboards -->
                     <select id="navbar-company-selector" onchange="changeCompany()" style="display:none;" class="select-company"></select>
-                   @* <li class="hs-has-sub-menu nav-item">
-                        <span class="lang">
-                            <img src="~/assets/marketplace/image/glo.png" />
-                            <form action="/Marketplace/ChangeLanguage" method="post" id="langForm" style="display:inline;">
-                                <select style="border:none; outline:none;" onchange="changeLanguage()" name="langId">
-                                    <option value="1" @(language == "en" ? "selected" : "")>English</option>
-                                    <option value="2" @(language == "zh-Hant" ? "selected" : "")>Chinese</option>
-                                </select>
-                            </form>
-                        </span>
-                    </li>*@
-                    @*<li class="nav-item">
-                        <div class="">
-                            <button onclick="location.href = '@Url.Action("Index","Marketplace")'" style="box-sizing: border-box; color: #3FBFC7; padding:6px 18px; background: #FFFFFF; border: 1px solid #3FBFC7; border-radius: 30px; "> Go To Marketplace</button>
-                        </div>
-                    </li>*@
-                    <li class="nav-item" style="width: 70px; text-align:right;">
+                    @* <li class="hs-has-sub-menu nav-item">
+                            <span class="lang">
+                                <img src="~/assets/marketplace/image/glo.png" />
+                                <form action="/Marketplace/ChangeLanguage" method="post" id="langForm" style="display:inline;">
+                                    <select style="border:none; outline:none;" onchange="changeLanguage()" name="langId">
+                                        <option value="1" @(language == "en" ? "selected" : "")>English</option>
+                                        <option value="2" @(language == "zh-Hant" ? "selected" : "")>Chinese</option>
+                                    </select>
+                                </form>
+                            </span>
+                        </li>*@
+                                    @*<li class="nav-item">
+                            <div class="">
+                                <button onclick="location.href = '@Url.Action("Index","Marketplace")'" style="box-sizing: border-box; color: #3FBFC7; padding:6px 18px; background: #FFFFFF; border: 1px solid #3FBFC7; border-radius: 30px; "> Go To Marketplace</button>
+                            </div>
+                        </li>*@
+                    <li class="nav-item d-none d-sm-inline-block" style="width: 70px; text-align:right;">
                         <a class="" style="font-style: normal; font-weight: 700; font-size: 18px; line-height: 21px; color: #000000; ">
                             B$<span class="user-total-coin-balance">00</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    @**@
+                    <li class="nav-item d-none d-sm-inline-block">
+                        <!-- Notification -->
+                        <div class="dropdown">
+                            <button type="button" class="btn my-notification" id="">
+                                <i class="bi bi-chat-left-text" style="font-size:25px;"></i>
+                                <span class="btn-status btn-sm-status btn-status-primary notification-count">23+</span>
+                            </button>
+
+
+                        </div>
+                        <!-- End Notification -->
+                    </li>
+                    <li class="nav-item d-none d-sm-inline-block">
+                        <!-- Notification -->
+                        <div class="dropdown">
+                            <button type="button" class="btn my-notification" id="navbarNotificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" data-bs-dropdown-animation="">
+                                <i class="bi-bell"></i>
+                                <span class="btn-status btn-sm-status btn-status-primary notification-count">23+</span>
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-end dropdown-card navbar-dropdown-menu navbar-dropdown-menu-borderless" aria-labelledby="navbarNotificationsDropdown" style="width: 25rem; opacity: 1;">
+                                <div class="card">
+                                    <div class="card-header card-header-content-between">
+                                        <h4 class="card-title mb-0">Notifications</h4>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Notification -->
+                    </li>
+                    @**@
+                    <li class="nav-item d-none d-sm-inline-block">
                         <!-- Account -->
                         <div class="dropdown">
                             <a class="navbar-dropdown-account-wrapper" href="javascript:;" id="accountNavbarDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" data-bs-dropdown-animation="">
@@ -524,8 +624,8 @@
 
                                 <div class="dropdown-divider"></div>
                                 <div class="dropdown-item">
-                                     <a onclick="location.href = '@Url.Action("Index","Marketplace")'">Barrway Business</a>
-                                    
+                                    <a onclick="location.href = '@Url.Action("Index","Marketplace")'">Barrway Business</a>
+
                                 </div>
 
 
@@ -546,7 +646,7 @@
                         </div>
                         <!-- End Account -->
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item d-none d-sm-inline-block">
                         <!-- Account -->
                         <div class="dropdown">
                             <a class="navbar-dropdown-account-wrapper" href="javascript:;" id="accountNavbarDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" data-bs-dropdown-animation="">
@@ -573,24 +673,24 @@
 
                                 <!-- Dropdown -->
                                 @*<div class="dropdown">
-                        <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown1" data-bs-toggle="dropdown" aria-expanded="false">Set status</a>
+                                    <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown1" data-bs-toggle="dropdown" aria-expanded="false">Set status</a>
 
-                        <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown1">
-                            <a class="dropdown-item" href="javascript:void(0)">
-                                <span class="legend-indicator bg-success me-1"></span> Available
-                            </a>
-                            <a class="dropdown-item" href="javascript:void(0)">
-                                <span class="legend-indicator bg-danger me-1"></span> Busy
-                            </a>
-                            <a class="dropdown-item" href="javascript:void(0)">
-                                <span class="legend-indicator bg-warning me-1"></span> Away
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="javascript:void(0)">
-                                Reset status
-                            </a>
-                        </div>
-                    </div>*@
+                                    <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown1">
+                                        <a class="dropdown-item" href="javascript:void(0)">
+                                            <span class="legend-indicator bg-success me-1"></span> Available
+                                        </a>
+                                        <a class="dropdown-item" href="javascript:void(0)">
+                                            <span class="legend-indicator bg-danger me-1"></span> Busy
+                                        </a>
+                                        <a class="dropdown-item" href="javascript:void(0)">
+                                            <span class="legend-indicator bg-warning me-1"></span> Away
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="javascript:void(0)">
+                                            Reset status
+                                        </a>
+                                    </div>
+                                </div>*@
                                 <!-- End Dropdown -->
 
                                 <a class="dropdown-item" href="javascript:void(0)" ui-sref="my_profile()">@Resource.Profile &amp; @Resource.Account</a>
@@ -600,22 +700,22 @@
 
                                 <!-- Dropdown -->
                                 @*<div class="dropdown">
-                        <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown2" data-bs-toggle="dropdown" aria-expanded="false">Customization</a>
+                                    <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown2" data-bs-toggle="dropdown" aria-expanded="false">Customization</a>
 
-                        <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown2">
-                            <a class="dropdown-item" href="javascript:void(0)">
-                                Invite people
-                            </a>
-                            <a class="dropdown-item" href="javascript:void(0)">
-                                Analytics
-                                <i class="bi-box-arrow-in-up-right"></i>
-                            </a>
-                            <a class="dropdown-item" href="javascript:void(0)">
-                                Customize Front
-                                <i class="bi-box-arrow-in-up-right"></i>
-                            </a>
-                        </div>
-                    </div>*@
+                                    <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown2">
+                                        <a class="dropdown-item" href="javascript:void(0)">
+                                            Invite people
+                                        </a>
+                                        <a class="dropdown-item" href="javascript:void(0)">
+                                            Analytics
+                                            <i class="bi-box-arrow-in-up-right"></i>
+                                        </a>
+                                        <a class="dropdown-item" href="javascript:void(0)">
+                                            Customize Front
+                                            <i class="bi-box-arrow-in-up-right"></i>
+                                        </a>
+                                    </div>
+                                </div>*@
                                 <!-- End Dropdown -->
                                 @*<a class="dropdown-item" href="javascript:void(0)">Manage team</a>*@
 
@@ -626,7 +726,54 @@
                         </div>
                         <!-- End Account -->
                     </li>
+                    
+                    <!--   only for mobile      -->
+                    <li class="nav-item d-m-show">
+                        <div class="">
+                            <a onclick="location.href = '@Url.Action("Index","Marketplace")'">Marketplace</a>
+                        </div>
+                    </li>
+                    <li class="nav-item d-m-show">
+                        <div class="">
+                            <a onclick="location.href = '@Url.Action("Index","Marketplace")'">Barrway Business</a>
 
+                        </div>
+                    </li>
+                    <li class="nav-item d-m-show">
+                        <div class="lag-select">
+                            <span class="lang">
+                                <img src="~/assets/marketplace/image/glo.png" />
+                                <form action="/Marketplace/ChangeLanguage" method="post" id="langForm" style="display:inline;">
+                                    <select style="border:none; outline:none;" onchange="changeLanguage()" name="langId">
+                                        <option value="1" @(language == "en" ? "selected" : "")>English</option>
+                                        <option value="2" @(language == "zh-Hant" ? "selected" : "")>Chinese</option>
+                                    </select>
+                                </form>
+                            </span>
+                        </div>
+                    </li>
+                    <li class="nav-item d-m-show" style="width: 70px;">
+                        <a class="" style="font-style: normal; font-weight: 700; font-size: 18px; line-height: 21px; color: #000000; ">
+                            B$<span class="user-total-coin-balance">00</span>
+                        </a>
+                    </li>
+                    <li class="nav-item d-m-show">
+                        <div class="mobile-chat-noti">
+                            <div class="dropdown">
+                                <button type="button" class="btn my-notification" id="">
+                                    <i class="bi bi-chat-left-text"></i>
+                                    <span class="btn-status btn-sm-status btn-status-primary notification-count">23+</span>
+                                </button>
+                            </div>
+                            <div class="dropdown">
+                                <button type="button" class="btn my-notification" id="navbarNotificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" data-bs-dropdown-animation="">
+                                    <i class="bi-bell"></i>
+                                    <span class="btn-status btn-sm-status btn-status-primary notification-count">23+</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                    </li>
 
                 </ul>
 
@@ -717,7 +864,7 @@
 
                         <div class="mycompany">
                             <p><b>My company</b></p>
-                            <button class="create-company" onclick="window.location.href = '/BusinessAdmin/CompanyMaster'"> + create a company</button>
+                            <button class="create-company" onclick="window.location.href = '/BusinessAdmin/CompanyMaster'"> + <span>create a company</span></button>
                             <div class="all-company" id="user-admin-layout-all-company">
 
                             </div>
