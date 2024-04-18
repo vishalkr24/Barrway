@@ -3128,7 +3128,7 @@ async function rendarPopupCalendar(assignDate) {
         },
         selectable: true,
         select: function (start, end, cell) {
-            //////debugger;
+            debugger;
 
             var $scope = angular.element($("#calendar")).scope();
             $scope.BookingService = {};
@@ -3243,7 +3243,7 @@ async function rendarPopupCalendar(assignDate) {
                                         if (response.Status) {
                                             bookingService(start, end, bgevent);
                                         } else {
-                                            window.location.replace("/")
+                                            window.location.replace("/company/package/" + localStorage.getItem("COMPANY_CODE") + "/" + localStorage.getItem("CALENDAR_CODE"));
                                         }
 
                                     } else if (check === "other") {

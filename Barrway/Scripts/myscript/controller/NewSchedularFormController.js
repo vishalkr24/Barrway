@@ -11,6 +11,17 @@
         $scope.SchedularId = null;
         $scope.isQueue = -1;
 
+        $rootScope.safeApply = function (fn) {
+            var phase = this.$root.$$phase;
+            if (phase == '$apply' || phase == '$digest') {
+                if (fn && (typeof (fn) === 'function')) {
+                    fn();
+                }
+            } else {
+                this.$apply(fn);
+            }
+        };
+
         $scope.init = function () {
 
             $scope.scheduleList = {
@@ -22,19 +33,7 @@
                 "Sat": [],
                 "Sun": []
             };
-
-            $scope.serviceDetails = {
-                DURATION_FIELD: 60,
-                REST_PERIOD_BETWEEN_SESSION: 10
-            };
-
-            $scope.addFormElement("Mon");
-            $scope.addFormElement("Tue");
-            $scope.addFormElement("Wed");
-            $scope.addFormElement("Thu");
-            $scope.addFormElement("Sat");
-            $scope.addFormElement("Sun");
-            $scope.addFormElement("Fri");
+            $scope.serviceDetails = null;
 
             adminService.postAsync('/Calendar/GetLocationMasterList/', { companyCode: localStorage.getItem("COMPANY_CODE"), filters: [{ field: "CALENDAR_CODE", type: "=", value: localStorage.getItem("CALENDAR_CODE") }] }).then(function (res) {
 
@@ -62,9 +61,60 @@
             setTimeout(function () {
                 $scope.CalendarData = getSingleCalendar(localStorage.getItem("CALENDAR_CODE"));
                 $scope.ConfigData = JSON.parse(getScheduleTypeJson());
-
                 $scope.BindView();
-            }, 500);
+
+                if (localStorage.getItem("CALENDAR_CATEGORY_ID") == "2" && localStorage.getItem("CALENDAR_TYPE") == "1") {
+                    $("#SCH_SESSION_DURATION").removeClass("disabled")
+                    $("#SCH_SESSION_DURATION").removeAttr("disabled")
+
+                    $("#SCH_REST_PERIOD").removeClass("disabled")
+                    $("#SCH_REST_PERIOD").removeAttr("disabled")
+                }
+
+                $scope.isEdit = false;
+                debugger;
+                if ($stateParams.Id != null && $stateParams.Id != "" && $stateParams.Id != 0) {
+                    try {
+                        $scope.SchedularId = parseInt($stateParams.Id);
+                        $scope.isEdit = true;
+                    } catch (ex) {
+                        $scope.SchedularId = 0;
+                        $scope.isEdit = false;
+                    }
+                }
+
+
+                if ($scope.isEdit) {
+                    adminService.postAsync('/Calendar/GetSchedule/', { ScheduleId: $scope.SchedularId }).then(function (response) {
+
+                        $scope.ScheduleData = response.data.data[0];
+                        $scope.scheduleList = JSON.parse($scope.ScheduleData.SCH_SCHEDULE_TABLE);
+                        $scope.executeScheduleList();
+
+                        $("#SCH_LOCATION").val($scope.ScheduleData.SCH_LOCATION)
+                        $("#SCH_ACTIVITY").val($scope.ScheduleData.SCH_ACTIVITY)
+                        $("#SCH_RESOURCE").val($scope.ScheduleData.SCH_RESOURCE)
+
+                        $("#SCH_FROM_DATE").val($scope.ScheduleData.SCH_FROM_DATE)
+                        $("#SCH_TO_DATE").val($scope.ScheduleData.SCH_TO_DATE)
+
+                        $("#SCH_SESSION_DURATION").val($scope.ScheduleData.DURATION_FIELD)
+                        $("#SCH_REST_PERIOD").val($scope.ScheduleData.REST_PERIOD_BETWEEN_SESSION)
+
+                        $("input[name='alternate-week'][value='" + $scope.ScheduleData.SCH_ALTERNATIVE_WEEK + "']").attr("checked", true)
+
+                    })
+                } else {
+                    $scope.addFormElement("Mon");
+                    $scope.addFormElement("Tue");
+                    $scope.addFormElement("Wed");
+                    $scope.addFormElement("Thu");
+                    $scope.addFormElement("Sat");
+                    $scope.addFormElement("Sun");
+                    $scope.addFormElement("Fri");
+                }
+
+            }, 1000);
 
         };
 
@@ -129,25 +179,7 @@
 
         }
 
-        $scope.GetSingleService = function () {
-
-            let serviceId = $("#SCH_ACTIVITY option:selected").val()
-
-            if (serviceId == 0) {
-                alert("Please select a Course/Service");
-                return;
-            }
-
-            adminService.postAsync('/Calendar/GetServiceMasterList/', { companyCode: localStorage.getItem("COMPANY_CODE"), filters: [{ field: "CALENDAR_CODE", type: "=", value: localStorage.getItem("CALENDAR_CODE") }, { field: "Id", type: "=", value: serviceId }] }).then(function (res) {
-                debugger;
-                $scope.serviceDetails = res.data.data[0];
-            }, function (err) {
-
-            });
-
-        }
-
-        $scope.addFormElement = function (abbr) {
+        $scope.addFormElement = function (abbr, startTime = "", endTime = "") {
             debugger;
             let id = getMaxId(abbr);
             console.log($scope.scheduleList[abbr]);
@@ -157,22 +189,49 @@
                 return false;
             }
 
-            $scope.scheduleList[abbr].push({ "Id": id, "start": "", "end": "" });
+            $scope.scheduleList[abbr].push({ "Id": id, "start": startTime, "end": endTime });
 
             $("#elements-row-" + abbr).append(`<div class="schedular-element form-element"  data-element-id="SCH_${id}">
                                         <div>
                                             ${(abbr == "Mon") ? "<b>From</b>" : ""}
-                                            <input type="time" class="form-control" name="form-time-input" data-input-day="${abbr}" data-input-type="start" data-input-id="${id}" />
+                                            <input type="time" class="form-control" name="form-time-input" data-input-day="${abbr}" value="${startTime}" data-input-type="start" data-input-id="${id}" />
                                         </div>
                                         <div> <b>--</b> </div>
                                         <div>
                                             ${(abbr == "Mon") ? "<b>To</b>" : ""}
-                                            <input type="time" class="form-control" name="form-time-input" data-input-day="${abbr}" data-input-type="end" data-input-id="${id}" />
+                                            <input type="time" class="form-control" name="form-time-input" data-input-day="${abbr}" value="${endTime}" data-input-type="end" data-input-id="${id}" />
                                         </div>
                                         <div class="delete-element">
                                             <button class="btn btn-primary" onclick="angular.element(this).scope().deleteFormElement('${abbr}', ${id})"><i class="fa fa-times" aria-hidden="true"></i></button>
                                         </div>
                                     </div>`);
+        }
+
+        $scope.executeScheduleList = function () {
+
+            let dayList = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+            dayList.forEach(abbr => {
+                $scope.scheduleList[abbr].forEach(evt => {
+                    $("#elements-row-" + abbr).append(`<div class="schedular-element form-element"  data-element-id="SCH_${evt.Id}">
+                                        <div>
+                                            ${(abbr == "Mon") ? "<b>From</b>" : ""}
+                                            <input type="time" class="form-control" name="form-time-input" data-input-day="${abbr}" value="${evt.start}" data-input-type="start" data-input-id="${evt.Id}" />
+                                        </div>
+                                        <div> <b>--</b> </div>
+                                        <div>
+                                            ${(abbr == "Mon") ? "<b>To</b>" : ""}
+                                            <input type="time" class="form-control" name="form-time-input" data-input-day="${abbr}" value="${evt.end}" data-input-type="end" data-input-id="${evt.Id}" />
+                                        </div>
+                                        <div class="delete-element">
+                                            <button class="btn btn-primary" onclick="angular.element(this).scope().deleteFormElement('${abbr}', ${evt.Id})"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                        </div>
+                                    </div>`);
+                })
+
+            })
+
+
         }
 
         $scope.deleteFormElement = function (abbr, id) {
@@ -212,7 +271,7 @@
                 } else {
                     $("#SCH_ACTIVITY_ERROR").hide();
                 }
-            }            
+            }
 
             let arr = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -426,9 +485,9 @@
                             "QueueList": queueList,
                             "SessionList": sessionList
                         },
-                        ScheduleId: null                        
+                        ScheduleId: null
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (!response.Status) {
                             swal({
                                 icon: "error",
@@ -446,7 +505,7 @@
                         }
                     }
                 })
-                
+
 
             }
         }
@@ -685,7 +744,41 @@
             $("#booking-session-table tbody").append(binderString);
         }
 
+        $scope.BindSessionsByService = function () {
+            let serviceId = $("#SCH_ACTIVITY option:selected").val();
+            if (serviceId == "-1") {
+                $scope.serviceDetails = null;
+            } else {
+                $scope.serviceDetails = $scope.serviceList.find(x => x.Id == serviceId);
+            }
+            $rootScope.safeApply();
+        }
 
+        $scope.createSessions = function (day = null) {
+
+            if ($scope.serviceDetails != null && !(localStorage.getItem("CALENDAR_CATEGORY_ID") == "2" && localStorage.getItem("CALENDAR_TYPE") == "3") && !(localStorage.getItem("CALENDAR_CATEGORY_ID") == "2" && localStorage.getItem("CALENDAR_TYPE") == "1")) {
+                let tempList = $scope.scheduleList[day];
+
+                if (tempList[tempList.length - 1].start != "" && tempList[tempList.length - 1].end != "") {
+                    if (tempList.length < 5) {
+                        let startTime = moment(tempList[tempList.length - 1].end, "HH:mm").add($scope.serviceDetails.REST_PERIOD_BETWEEN_SESSION, 'minutes').format("HH:mm");
+                        let endTime = moment(startTime, "HH:mm").add($scope.serviceDetails.DURATION_FIELD, 'minutes').format("HH:mm");
+                        $scope.addFormElement(day, startTime, endTime);
+                    } else {
+                        notifierService.notifyMessage("error", "Limit Reached!", "Can not add more than 5 slots.")
+                        return false;
+                    }
+                } else {
+                    notifierService.notifyMessage("error", "Warning", "Add start and end time of previous slot.")
+                    return false;
+                }
+            } else {
+                $scope.addFormElement(day);
+            }
+
+
+
+        }
 
         /* copy slots */
 
@@ -704,7 +797,7 @@
 
                 $.each($scope.scheduleList, function (value) {
                     if (value != "Mon") {
-                        start.forEach((x,index) => {
+                        start.forEach((x, index) => {
                             if ($(`[data-input-day="${value}"][data-input-type="start"][data-input-id="${x.index}"]`).length == 0) {
                                 $scope.addFormElement(value);
                             }
