@@ -855,4 +855,8 @@ div#com-nav, div#secondry-nav {
 /*end*/
 
 
-
+.tom-select-custom .ts-dropdown {
+    border: 2px solid #493a76 !important;      
+    box-shadow: rgb(155 155 155) 0px 4px 4px 0px !important;
+    z-index: 9;
+}

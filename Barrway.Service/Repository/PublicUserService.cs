@@ -1204,6 +1204,44 @@ namespace Barrway.Service.Repository
         {
             try
             {
+                //                string query = $@"declare @Ids varchar(max) = stuff((SELECT distinct ',' + cast(calendarDetails.Id as varchar)
+                //                                  FROM [dbo].[CALENDAR_FORM_1935] calendar
+                //                                  join TRANSACTION_MASTER_1942 transaction_m on calendar.CALENDAR_CODE = transaction_m.CALENDAR_CODE
+                //                                  join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
+                //								  join SERVICE_MASTER_1933 service_m on service_m.Id = transaction_m.ACTIVITY
+                //                                  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
+                //								  join BUSINESS_CALENDAR_MASTER_1925 calendarDetails on calendarDetails.CALENDAR_CODE = calendar.CALENDAR_CODE
+                //								  join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendarDetails.CALENDAR_SUB_CATEGORY_ID
+                //                                  where EMAIL = '{userEmail}' and calendar.Id = transaction_m.SLOT
+                //								  for xml path('')), 1, 1, '')
+
+                //								  select top 4
+                //									  (select 
+                //	case when (
+                //		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+                //	) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
+                //	then
+                //		0
+                //	else
+                //		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+                //	end
+                //FROM LEDGER_MASTER_1957 led 
+                //where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) as 'COIN_BALANCE'
+                //									  ,company.Id as 'CompanyId'
+                //                                      ,calendarDetails.*
+                //	                                  ,company.COMPANY_NAME_ENGLISH
+                //									  , calendarDetails.CALENDAR_NAME
+                //                                      ,company.COMPANY_LOGO_PATH
+                //                                      ,subCategory.CALENDAR_SUB_CATEGORY_NAME
+                //									  ,stuff( (select distinct ',' + ACTIVITY_NAME from SERVICE_MASTER_1933 service_m where service_m.CALENDAR_CODE = calendarDetails.CALENDAR_CODE for xml path('')), 1, 1, '') as 'ServiceList'
+                //									  FROM BUSINESS_CALENDAR_MASTER_1925 calendarDetails
+                //                                  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
+                //								  join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendarDetails.CALENDAR_SUB_CATEGORY_ID
+                //                                  where calendarDetails.Id in (select cast(item as integer) from dbo.SplitString(@Ids, ','))";
+
+
+
+
                 string query = $@"declare @Ids varchar(max) = stuff((SELECT distinct ',' + cast(calendarDetails.Id as varchar)
                                   FROM [dbo].[CALENDAR_FORM_1935] calendar
                                   join TRANSACTION_MASTER_1942 transaction_m on calendar.CALENDAR_CODE = transaction_m.CALENDAR_CODE
@@ -1211,7 +1249,7 @@ namespace Barrway.Service.Repository
 								  join SERVICE_MASTER_1933 service_m on service_m.Id = transaction_m.ACTIVITY
                                   join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
 								  join BUSINESS_CALENDAR_MASTER_1925 calendarDetails on calendarDetails.CALENDAR_CODE = calendar.CALENDAR_CODE
-								  join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendarDetails.CALENDAR_SUB_CATEGORY_ID
+								  join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory   ON ',' + calendarDetails.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
                                   where EMAIL = '{userEmail}' and calendar.Id = transaction_m.SLOT
 								  for xml path('')), 1, 1, '')
 
@@ -1237,8 +1275,13 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
 									  ,stuff( (select distinct ',' + ACTIVITY_NAME from SERVICE_MASTER_1933 service_m where service_m.CALENDAR_CODE = calendarDetails.CALENDAR_CODE for xml path('')), 1, 1, '') as 'ServiceList'
 									  FROM BUSINESS_CALENDAR_MASTER_1925 calendarDetails
                                   join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
-								  join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendarDetails.CALENDAR_SUB_CATEGORY_ID
+								  join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory  ON ',' + calendarDetails.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
                                   where calendarDetails.Id in (select cast(item as integer) from dbo.SplitString(@Ids, ','))";
+
+
+
+
+
 
                 List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -1352,6 +1395,67 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
                 int PageSize = data.size > 0 ? data.size : 20;
                 int PageNumber = data.page > 0 ? data.page : 1;
 
+                //   string query = $@"declare @CalendarCodes varchar(max) = (select stuff((select distinct ',' + CALENDAR_CODE  from PAYMENT_HISTORY_MASTER_1956 payment 
+                //where payment.STATUS = 'complete' and payment.USER_ID = '{userId}' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd")}' < payment.CREDIT_EXPIRE_DATE
+                //for xml path('')), 1, 1, '')) 
+                //                     declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+
+
+                //                                 SELECT distinct calendarDetails.[COMPANY_CODE]
+                //                                     ,calendarDetails.[CALENDAR_CODE]
+                //                                  ,calendarDetails.[Id] 
+                //                                     ,calendarDetails.[created_at] 
+                //                                     ,company.Id as 'CompanyId'
+                //                                     ,calendarDetails.[CALENDAR_NAME]
+                //                                     ,calendarDetails.[CALENDAR_PHOTO_NAME]
+                //                                     ,calendarDetails.[CALENDAR_PHOTO_PATH]
+                //                                     ,calendarDetails.[CALENDAR_CATEGORY_ID]
+                //                                     ,calendarDetails.[CALENDAR_SUB_CATEGORY_ID]
+                //                                     ,calendarDetails.[TAGS]
+                //                                  ,company.COMPANY_NAME_ENGLISH
+                //                                     ,company.COMPANY_LOGO_PATH
+                //                                     ,subCategory.CALENDAR_SUB_CATEGORY_NAME
+                // ,(select 
+                //	case when (
+                //		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+                //	) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
+                //	then
+                //		0
+                //	else
+                //		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = '{userId}' and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and getdate() < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+                //	end
+                //FROM LEDGER_MASTER_1957 led 
+                //where led.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and USER_ID = '{userId}' ) as 'COIN_BALANCE', 'Y' as 'PURCHASED'
+                //                                 FROM [dbo].BUSINESS_CALENDAR_MASTER_1925 calendarDetails
+                //                                 join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
+                //         join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendarDetails.CALENDAR_SUB_CATEGORY_ID
+                //where calendarDetails.CALENDAR_CODE in (select cast(item as varchar) from dbo.SplitString(@CalendarCodes, ',')) {CompanyLogic}
+                //                                 Union all
+                //                                 SELECT distinct calendarDetails.[COMPANY_CODE]
+                //                                     ,calendarDetails.[CALENDAR_CODE]
+                //                                  ,calendarDetails.[Id] 
+                //                                     ,calendarDetails.[created_at] 
+                //                                     ,company.Id as 'CompanyId'
+                //                                     ,calendarDetails.[CALENDAR_NAME]
+                //                                     ,calendarDetails.[CALENDAR_PHOTO_NAME]
+                //                                     ,calendarDetails.[CALENDAR_PHOTO_PATH]
+                //                                     ,calendarDetails.[CALENDAR_CATEGORY_ID]
+                //                                     ,calendarDetails.[CALENDAR_SUB_CATEGORY_ID]
+                //                                     ,calendarDetails.[TAGS]
+                //                                  ,company.COMPANY_NAME_ENGLISH
+                //                                     ,company.COMPANY_LOGO_PATH
+                //                                     ,subCategory.CALENDAR_SUB_CATEGORY_NAME
+                //                                     ,0 as 'COIN_BALANCE'
+                //                                     ,'N' as 'PURCHASED'
+                //                                 FROM [dbo].BUSINESS_CALENDAR_MASTER_1925 calendarDetails
+                //                                 join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
+                //         join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendarDetails.CALENDAR_SUB_CATEGORY_ID
+                //                                 where {((string.IsNullOrEmpty(calendarCodes)) ? "calendarDetails.CALENDAR_CODE = ''" : $@"calendarDetails.CALENDAR_CODE in ({calendarCodes})")} and calendarDetails.CALENDAR_CODE not in (select cast(item as varchar) from dbo.SplitString(@CalendarCodes, ',')) 
+                //                         )
+                //                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY PURCHASED desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+
+
+
                 string query = $@"declare @CalendarCodes varchar(max) = (select stuff((select distinct ',' + CALENDAR_CODE  from PAYMENT_HISTORY_MASTER_1956 payment 
 											  where payment.STATUS = 'complete' and payment.USER_ID = '{userId}' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd")}' < payment.CREDIT_EXPIRE_DATE
 											  for xml path('')), 1, 1, '')) 
@@ -1386,7 +1490,7 @@ join ORDER_MASTER_1969 ord on ord.ORDER_NO = led.ORDER_NO
 where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) as 'COIN_BALANCE', 'Y' as 'PURCHASED'
                                               FROM [dbo].BUSINESS_CALENDAR_MASTER_1925 calendarDetails
                                               join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
-								              join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendarDetails.CALENDAR_SUB_CATEGORY_ID
+								              join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory ON ',' + calendarDetails.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
 											  where calendarDetails.CALENDAR_CODE in (select cast(item as varchar) from dbo.SplitString(@CalendarCodes, ',')) {CompanyLogic}
                                               Union all
                                               SELECT distinct calendarDetails.[COMPANY_CODE]
@@ -1407,10 +1511,12 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
                                                   ,'N' as 'PURCHASED'
                                               FROM [dbo].BUSINESS_CALENDAR_MASTER_1925 calendarDetails
                                               join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
-								              join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendarDetails.CALENDAR_SUB_CATEGORY_ID
+								              join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory ON ',' + calendarDetails.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
                                               where {((string.IsNullOrEmpty(calendarCodes)) ? "calendarDetails.CALENDAR_CODE = ''" : $@"calendarDetails.CALENDAR_CODE in ({calendarCodes})")} and calendarDetails.CALENDAR_CODE not in (select cast(item as varchar) from dbo.SplitString(@CalendarCodes, ',')) 
                                       )
                                   Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY PURCHASED desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+
+
 
                 List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -1481,6 +1587,47 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
                 int PageSize = data.size > 0 ? data.size : 20;
                 int PageNumber = data.page > 0 ? data.page : 1;
 
+                //      string query = $@"declare @UserId varchar(max) = '{userName}'
+                //                        declare @currentDate varchar(100) = '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'
+                //                        declare @Ids varchar(max) = stuff((select distinct ',' + phm.CALENDAR_CODE
+
+                //from PAYMENT_HISTORY_MASTER_1956 phm
+                //where phm.USER_ID = @UserId and cast(@currentDate as datetime) <= cast(phm.CREDIT_EXPIRE_DATE as datetime) and phm.STATUS = 'complete'
+                //for xml path('')), 1, 1, '')
+
+                //                        declare @PageSize int=10 ,  @PageNumber int=1 ; with formdata as (
+                //                                    select
+                // (select 
+                //	case when (
+                //		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = @UserId and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and cast(@currentDate as datetime) < cast(substring(CREDIT_EXPIRE_DATE, 1, 16) as datetime)) - SUM(led.DEBIT_COIN)
+                //	) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = @UserId and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and cast(@currentDate as datetime) < cast(substring(CREDIT_EXPIRE_DATE, 1, 16) as datetime)) - SUM(led.DEBIT_COIN) <= 0
+                //	then
+                //		0
+                //	else
+                //		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 where USER_ID = @UserId and CALENDAR_CODE = calendarDetails.CALENDAR_CODE and cast(@currentDate as datetime) < cast(substring(CREDIT_EXPIRE_DATE, 1, 16) as datetime)) - SUM(led.DEBIT_COIN)
+                //	end
+                //FROM LEDGER_MASTER_1957 led 
+                //where USER_ID = @UserId and CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) as 'COIN_BALANCE'
+                // ,(select CREDIT_EXPIRE_DATE,
+                //(
+                //select case when (sum(CREDIT_COIN) - sum(DEBIT_COIN) <= 0) then 0 else cast(sum(CREDIT_COIN) - sum(DEBIT_COIN) as varchar) end from LEDGER_MASTER_1957 where ORDER_NO = PAYMENT_ID
+                //) as 'Balance'
+                //from PAYMENT_HISTORY_MASTER_1956 where CALENDAR_CODE = calendarDetails.CALENDAR_CODE and USER_ID = @UserId and STATUS = 'complete' and cast(@currentDate as datetime) < cast(substring(CREDIT_EXPIRE_DATE, 1, 16) as datetime)
+                //  for json auto) as 'PackageInfo'
+                // ,company.Id as 'CompanyId'
+                //                            ,calendarDetails.*
+                //                         ,company.COMPANY_NAME_ENGLISH
+                //                            ,company.COMPANY_LOGO_PATH
+                //                            ,subCategory.CALENDAR_SUB_CATEGORY_NAME
+                // ,stuff( (select distinct ',' + ACTIVITY_NAME from SERVICE_MASTER_1933 service_m where service_m.CALENDAR_CODE = calendarDetails.CALENDAR_CODE for xml path('')), 1, 1, '') as 'ServiceList'
+                // FROM BUSINESS_CALENDAR_MASTER_1925 calendarDetails
+                //                        join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
+                //join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendarDetails.CALENDAR_SUB_CATEGORY_ID
+                //                        where calendarDetails.CALENDAR_CODE in (select cast(item as varchar(max)) from dbo.SplitString(@Ids, ',')) {CompanyLogic}
+                //)
+                //                        Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY created_at desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+
+
                 string query = $@"declare @UserId varchar(max) = '{userName}'
                                   declare @currentDate varchar(100) = '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'
                                   declare @Ids varchar(max) = stuff((select distinct ',' + phm.CALENDAR_CODE
@@ -1523,10 +1670,15 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
 									  ,stuff( (select distinct ',' + ACTIVITY_NAME from SERVICE_MASTER_1933 service_m where service_m.CALENDAR_CODE = calendarDetails.CALENDAR_CODE for xml path('')), 1, 1, '') as 'ServiceList'
 									  FROM BUSINESS_CALENDAR_MASTER_1925 calendarDetails
                                   join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
-								  join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendarDetails.CALENDAR_SUB_CATEGORY_ID
-                                  where calendarDetails.CALENDAR_CODE in (select cast(item as varchar(max)) from dbo.SplitString(@Ids, ','))  {CompanyLogic}
+
+								  join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory ON ',' + calendarDetails.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
+                                  where calendarDetails.CALENDAR_CODE in (select cast(item as varchar(max)) from dbo.SplitString(@Ids, ',')) {CompanyLogic}
+
 								  )
                                   Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY created_at desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+
+
+
 
                 List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 

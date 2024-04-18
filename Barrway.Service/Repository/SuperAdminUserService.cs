@@ -252,6 +252,37 @@ namespace Barrway.Service.Repository
                 int PageSize = data.size > 0 ? data.size : 20;
                 int PageNumber = data.page > 0 ? data.page : 1;
 
+                //string strSql = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+                //                          select 
+                //                          f.Id,
+                //                          f.formGroupKey,
+                //                          [CALENDAR_NAME]
+                //                          ,cal.Id as 'CalendarId'
+                //                          ,cal.formGroupKey as 'CalendarFormGroupKey'
+                //                          ,cal.created_at
+                //                          ,cal.updated_at
+                //                              ,[CALENDAR_PHOTO_NAME]
+                //                              ,[CALENDAR_PHOTO_PATH]
+                //                              ,[IS_VISIBLE]
+                //                              ,f.[COUNTRY_ID]
+                //                              ,f.[CITY_ID]
+                //                              ,f.[DISTRICT_ID]
+                //                              ,[CALENDAR_CATEGORY_NAME]
+                //                              ,[CALENDAR_SUB_CATEGORY_NAME]
+                //                              ,[COMPANY_NAME_ENGLISH]
+                //                              ,[CALENDAR_CODE]
+                //                              ,f.[TAGS]
+                //                              ,[SLOT_DURATION_IN_MINS]
+                //                           ,BUSINESS_ACCOUNT_ID
+                //                          from BUSINESS_COMPANY_MASTER_1924 f
+
+                //                          left join BUSINESS_CALENDAR_MASTER_1925 cal on cal.COMPANY_CODE = f.COMPANY_CODE
+                //                          left join CALENDAR_CATEGORY_MASTER_1929 cat on cat.Id = cal.CALENDAR_CATEGORY_ID
+                //                          left join CALENDAR_SUB_CATEGORY_MASTER_1930 subCat on subCat.Id = cal.CALENDAR_SUB_CATEGORY_ID
+                //                          where BUSINESS_ACCOUNT_ID = (select Id from BUSINESS_ACCOUNT_WEBSITE_1918 where USER_ID = '{UserId}') {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+                //                    )
+                //                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+
                 string strSql = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
                                           select 
                                           f.Id,
@@ -278,10 +309,14 @@ namespace Barrway.Service.Repository
   
                                           left join BUSINESS_CALENDAR_MASTER_1925 cal on cal.COMPANY_CODE = f.COMPANY_CODE
                                           left join CALENDAR_CATEGORY_MASTER_1929 cat on cat.Id = cal.CALENDAR_CATEGORY_ID
-                                          left join CALENDAR_SUB_CATEGORY_MASTER_1930 subCat on subCat.Id = cal.CALENDAR_SUB_CATEGORY_ID
+                                          left join CALENDAR_SUB_CATEGORY_MASTER_1930 subCat ON ',' + cal.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCat.Id AS NVARCHAR(MAX)) + ',%'
                                           where BUSINESS_ACCOUNT_ID = (select Id from BUSINESS_ACCOUNT_WEBSITE_1918 where USER_ID = '{UserId}') {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
                                     )
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+
+
+
+
 
                 var listresult = await sqlFunction.ExecuteSqlQuery(strSql);
                 if (listresult.Count() > 0)

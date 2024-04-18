@@ -40,7 +40,7 @@ $(document).ready(function () {
         
         let requireTabs = $("#REQUIRED_CALENDAR_VIEWS").val();
         let defaultTab = $("#DEFAULT_CALENDAR_VIEW option:selected").val();
-        debugger;
+       
         if (requireTabs.find(x => x == defaultTab) == null) {
             swal({
                 icon: "warning",
@@ -65,7 +65,7 @@ $(document).ready(function () {
     })
 
 });
-
+var tomselect = {};
 function readyPage() {
 
     setCalendarCategory();
@@ -73,8 +73,6 @@ function readyPage() {
 
     checkRegistrationStep();
     setCountryData();
-    
-
     if ($("#createCalendarCheck").val() == false || $("#createCalendarCheck").val() == "false") {
 
         $("#content").hide();
@@ -86,7 +84,7 @@ function readyPage() {
 
         var obj = { 'create': true, 'placeholder': 'Add tags...', maxItems: 15 };
         $("#TAGS").attr("data-hs-tom-select-options", JSON.stringify(obj));
-        HSCore.components.HSTomSelect.init('.js-select')
+        HSCore.components.HSTomSelect.init('.js-select');
     } else {
         $("#CALENDAR_SUB_CATEGORY_ID").attr("disabled", true);
         var obj = { 'create': true, 'placeholder': 'Add tags...', maxItems: 15 };
@@ -109,7 +107,7 @@ function setCurrentCalendarData() {
 
     var data = getSingleCalendar($("#calendarCodeInput").val());
 
-    console.log(data);
+  
     if (data.Status == "true" || data.Status == true) {
 
         $("#COUNTRY_ID").val(data.Data.COUNTRY_ID);
@@ -126,10 +124,15 @@ function setCurrentCalendarData() {
         $("#CALENDAR_COMMON_CATEGORY_ID").val(data.Data.CALENDAR_COMMON_CATEGORY_ID);
         $("#CALENDAR_COMMON_CATEGORY_ID option[value=" + data.Data.CALENDAR_COMMON_CATEGORY_ID + "]").attr("selected", true);
 
-        bindCalendarSubCategoryData(data.Data.CALENDAR_COMMON_CATEGORY_ID);
+        SetbindCalendarSubCategoryData(data.Data.CALENDAR_COMMON_CATEGORY_ID, data.Data.CALENDAR_SUB_CATEGORY_ID);
         $("#CALENDAR_SUB_CATEGORY_ID").val(data.Data.CALENDAR_SUB_CATEGORY_ID);
-        $("#CALENDAR_SUB_CATEGORY_ID option[value=" + data.Data.CALENDAR_SUB_CATEGORY_ID + "]").attr("selected", true);
+        //$("#CALENDAR_SUB_CATEGORY_ID option[value=" + data.Data.CALENDAR_SUB_CATEGORY_ID + "]").attr("selected", true);
 
+       
+
+       
+
+       
         if (data.Data.TAGS != null && data.Data.TAGS != "" && data.Data.TAGS != "null") {
 
             if (data.Data.TAGS.includes(",")) {
@@ -145,9 +148,16 @@ function setCurrentCalendarData() {
 
         $("#CALENDAR_USE_TYPE").val(data.Data.CALENDAR_USE_TYPE);
         $("#DEFAULT_RESOURCE").val(data.Data.DEFAULT_RESOURCE);
-        $("#NEED_ADDITIONAL_FORM[value=" + data.Data.NEED_ADDITIONAL_FORM + "]").prop("checked", true);
-        $("#DEFAULT_CALENDAR_VIEW").val(data.Data.DEFAULT_CALENDAR_VIEW);
+        if (data.Data.NEED_ADDITIONAL_FORM != null && data.Data.NEED_ADDITIONAL_FORM != "") {
+            $("#NEED_ADDITIONAL_FORM[value=" + data.Data.NEED_ADDITIONAL_FORM + "]").prop("checked", true);
+        }
+       
+        $("#DEFAULT_CALENDAR_VIEW").val(data.Data.DEFAULT_CALENDAR_VIEW);  
         $("#REQUIRED_CALENDAR_VIEWS").val(((data.Data.REQUIRED_CALENDAR_VIEWS.includes(',')) ? data.Data.REQUIRED_CALENDAR_VIEWS.split(',') : data.Data.REQUIRED_CALENDAR_VIEWS));
+
+
+        //console.log(((data.Data.CALENDAR_SUB_CATEGORY_ID.includes(',')) ? data.Data.CALENDAR_SUB_CATEGORY_ID.split(',') : data.Data.CALENDAR_SUB_CATEGORY_ID), "hjhkjhkj");
+        //$("#CALENDAR_SUB_CATEGORY").val(((data.Data.CALENDAR_SUB_CATEGORY_ID.includes(',')) ? data.Data.CALENDAR_SUB_CATEGORY_ID.split(',') : data.Data.CALENDAR_SUB_CATEGORY_ID));
     }
 
 }
@@ -315,20 +325,86 @@ function bindDistrictData(cityId) {
 
 function bindCalendarSubCategoryData(id) {
     var data = getCalendarSubCategory(id);
+    console.log(data.Data,"datasubcategory");
 
-    console.log(data);
+    if (data.Data != null) {
+        var dynamic_Class = "js_select_" + uuidv4();
+        $("#Su_category").empty();
+        $("#Su_category").append(`<select class="${dynamic_Class} form-select" id="CALENDAR_SUB_CATEGORY" multiple name="CALENDAR_SUB_CATEGORY" placeholder="Select Calendar Sub Category" required>
+                                </select>`);
 
-    $("#CALENDAR_SUB_CATEGORY_ID").attr("disabled", false);
+        $("#CALENDAR_SUB_CATEGORY").attr("disabled", false);
+        $("#CALENDAR_SUB_CATEGORY").empty();
 
-    $("#CALENDAR_SUB_CATEGORY_ID").empty();
-    $("#CALENDAR_SUB_CATEGORY_ID").append(`<option value="-1" selected disabled>Select a sub Category</option>`);
-
-    if (data.Status == "true" || data.Status == true) {
-        for (var i = 0; i < data.Data.length; i++) {
-            $("#CALENDAR_SUB_CATEGORY_ID").append(`<option value="${data.Data[i].Id}">${data.Data[i].CALENDAR_SUB_CATEGORY_NAME}</option>`);
+        if (data.Status == "true" || data.Status == true) {
+            for (var i = 0; i < data.Data.length; i++) {
+                $("#CALENDAR_SUB_CATEGORY").append(`<option value="${data.Data[i].Id}">${data.Data[i].CALENDAR_SUB_CATEGORY_NAME}</option>`);
+            }
         }
+        HSCore.components.HSTomSelect.init("." + dynamic_Class);
     }
+    else {
+        var dynamic_Class = "js_select_" + uuidv4();
+        $("#Su_category").empty();
+        $("#Su_category").append(`<select class="${dynamic_Class} form-select" id="CALENDAR_CATEGORY" multiple name="CALENDAR_SUB_CATEGORY" placeholder="Select Calendar Sub Category" required>
+                                </select>`);
+        $("#CALENDAR_SUB_CATEGORY").attr("disabled", false);
+        $("#CALENDAR_SUB_CATEGORY").empty();
+        $("#CALENDAR_SUB_CATEGORY").append(`<option value="-1">Select subcategory</option>`);
+        HSCore.components.HSTomSelect.init("." + dynamic_Class);
+    }
+
+    
+
 }
+
+
+function SetbindCalendarSubCategoryData(id, CALENDAR_SUB_CATEGORY_ID) {
+    var data = getCalendarSubCategory(id);
+    console.log(data.Data, "SetbindCalendarSubCategoryDatadatasubcategory");
+   
+    var valuesArray = CALENDAR_SUB_CATEGORY_ID.split(',');
+   
+    if (data.Data != null) {
+        var dynamic_Class = "js_select_" + uuidv4();
+        $("#Su_category").empty();
+        $("#Su_category").append(`<select class="${dynamic_Class} form-select" id="CALENDAR_SUB_CATEGORY" multiple name="CALENDAR_SUB_CATEGORY" placeholder="Select Calendar Sub Category" required>
+                                </select>`);
+
+        $("#CALENDAR_SUB_CATEGORY").attr("disabled", false);
+        $("#CALENDAR_SUB_CATEGORY").empty();
+
+        if (data.Status == "true" || data.Status == true) {
+            for (var i = 0; i < data.Data.length; i++) {
+                
+                var exists = CALENDAR_SUB_CATEGORY_ID.includes(data.Data[i].Id);
+                if (exists) {
+                    $("#CALENDAR_SUB_CATEGORY").append(`<option value="${data.Data[i].Id}" Selected>${data.Data[i].CALENDAR_SUB_CATEGORY_NAME}</option>`);
+                } else {
+                    $("#CALENDAR_SUB_CATEGORY").append(`<option value="${data.Data[i].Id}">${data.Data[i].CALENDAR_SUB_CATEGORY_NAME}</option>`);
+                }
+
+                
+            }
+        }
+        HSCore.components.HSTomSelect.init("." + dynamic_Class);
+    }
+    else {
+        var dynamic_Class = "js_select_" + uuidv4();
+        $("#Su_category").empty();
+        $("#Su_category").append(`<select class="${dynamic_Class} form-select" id="CALENDAR_CATEGORY" multiple name="CALENDAR_SUB_CATEGORY" placeholder="Select Calendar Sub Category" required>
+                                </select>`);
+        $("#CALENDAR_SUB_CATEGORY").attr("disabled", false);
+        $("#CALENDAR_SUB_CATEGORY").empty();
+        $("#CALENDAR_SUB_CATEGORY").append(`<option value="-1">Select subcategory</option>`);
+        HSCore.components.HSTomSelect.init("." + dynamic_Class);
+    }
+
+
+
+}
+
+
 
 function lockCalendarSetup() {
     $("#error-div").show();

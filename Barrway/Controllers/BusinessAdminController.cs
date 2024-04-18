@@ -212,6 +212,7 @@ namespace Barrway.Controllers
                         calendarModel.CALENDAR_COMMON_CATEGORY_ID = calendarModel2.CALENDAR_COMMON_CATEGORY_ID;
                         calendarModel.CALENDAR_PHOTO_NAME = calendarModel2.CALENDAR_PHOTO_NAME;
                         calendarModel.CALENDAR_SUB_CATEGORY_ID = calendarModel2.CALENDAR_SUB_CATEGORY_ID;
+                        calendarModel.CALENDAR_SUB_CATEGORY = calendarModel2.CALENDAR_SUB_CATEGORY_ID.Contains(",") ? calendarModel2.CALENDAR_SUB_CATEGORY_ID.Split(',').ToList() : new List<string>() { calendarModel2.CALENDAR_SUB_CATEGORY_ID };
                         calendarModel.CITY_ID = calendarModel2.CITY_ID;
                         calendarModel.COMPANY_CODE = calendarModel2.COMPANY_CODE;
                         calendarModel.CALENDAR_CODE = calendarModel2.CALENDAR_CODE;
@@ -1438,7 +1439,8 @@ namespace Barrway.Controllers
                                 CALENDAR_COMMON_CATEGORY_ID = model.CALENDAR_COMMON_CATEGORY_ID,
                                 CALENDAR_CATEGORY_ID = model.CALENDAR_CATEGORY_ID.ToString(),
                                 CALENDAR_NAME = model.CALENDAR_NAME.ToString(),
-                                CALENDAR_SUB_CATEGORY_ID = model.CALENDAR_SUB_CATEGORY_ID.ToString(),
+                                //CALENDAR_SUB_CATEGORY_ID = model.CALENDAR_SUB_CATEGORY_ID.ToString(),
+                                CALENDAR_SUB_CATEGORY_ID = string.Join(",", model.CALENDAR_SUB_CATEGORY),
                                 CALENDAR_PHOTO_NAME = fileName,
                                 CALENDAR_PHOTO_PATH = path,
                                 SLOT_DURATION_IN_MINS = model.SLOT_DURATION_IN_MINS,
