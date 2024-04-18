@@ -446,16 +446,18 @@
 
                                             <div class="form-group">
                                                 <label for="cala">Calendar category *</label>
-
-                                                @Html.DropDownListFor(model => model.CALENDAR_COMMON_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select Calendar Category", @required = "true" })
+                                                @*class="js-select form-select" multiple="true"*@
+                                                @Html.DropDownListFor(model => model.CALENDAR_COMMON_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-select", @placeholder = "Select Calendar Category", @required = "true" })
                                                 @Html.ValidationMessageFor(model => model.CALENDAR_COMMON_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="sub">@Resource.Subcategory *</label>
-
-                                                @Html.DropDownListFor(model => model.CALENDAR_SUB_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "form-control", @placeholder = "Select Calendar Sub Category", @required = "true" })
-                                                @Html.ValidationMessageFor(model => model.CALENDAR_SUB_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
+                                                <div id="Su_category">
+                                                    @Html.DropDownListFor(model => model.CALENDAR_SUB_CATEGORY, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "js-select form-select", @placeholder = "Select Calendar Sub Category", @required = "true", @multiple = "true" })
+                                                </div>
+                                                
+                                                @Html.ValidationMessageFor(model => model.CALENDAR_SUB_CATEGORY, "", new { @class = "invalid-feedback-2" })
                                             </div>
 
                                             <div class="form-group" style="display:none;">
@@ -563,7 +565,7 @@
                                                 <div class="form-group">
                                                     <label for="sub">Required Calendar Views</label>
 
-                                                    <select required id="REQUIRED_CALENDAR_VIEWS" name="REQUIRED_CALENDAR_VIEWS" class="js-select form-select" multiple="true" placeholder="Select Required Views" value="@Model.REQUIRED_CALENDAR_VIEWS">
+                                                    <select required id="REQUIRED_CALENDAR_VIEWS" name="REQUIRED_CALENDAR_VIEWS" class="js-select form-select" multiple placeholder="Select Required Views" value="@Model.REQUIRED_CALENDAR_VIEWS">
                                                         <option value="LIST VIEW" selected>
                                                             List View
                                                         </option>

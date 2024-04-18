@@ -939,6 +939,8 @@
     <Content Include="assets\svg\logos\logo-white.svg" />
     <Content Include="assets\svg\logos\logo.png" />
     <Content Include="assets\svg\logos\logo.svg" />
+    <Content Include="assets\tom_select\tom-select.complete.min.js" />
+    <Content Include="assets\tom_select\tom-select.css" />
     <Content Include="assets\vendor\chartjs-plugin-datalabels\dist\chartjs-plugin-datalabels.min.js" />
     <Content Include="assets\vendor\flag-icon-css\flags\1x1\ad.svg" />
     <Content Include="assets\vendor\flag-icon-css\flags\1x1\ae.svg" />

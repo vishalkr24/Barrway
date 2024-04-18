@@ -47,13 +47,17 @@ namespace Barrway.DTO.BusinessModels
         [Required(ErrorMessage = "Please select a calendar category")]
         [ValidDropdownValue(ErrorMessage = "Please select a calendar category")]
         public string CALENDAR_CATEGORY_ID { get; set; }
+       
 
         public string CALENDAR_COMMON_CATEGORY_ID { get; set; }
 
-        [Required(ErrorMessage = "Please select a sub category")]
-        [ValidDropdownValue(ErrorMessage = "Please select a sub category")]
+        //[Required(ErrorMessage = "Please select a sub category")]
+        //[ValidDropdownValue(ErrorMessage = "Please select a sub category")]
         public string CALENDAR_SUB_CATEGORY_ID { get; set; }
-        
+        //[Required(ErrorMessage = "Please select a sub category")]
+        //[ValidDropdownValue(ErrorMessage = "Please select a sub category")]
+        public List<string> CALENDAR_SUB_CATEGORY { get; set; }
+
         [Required(ErrorMessage = "Please select interval time")]
         public string INTERVAL_TIME { get; set; }
         public List<string> TAGS { get; set; }
