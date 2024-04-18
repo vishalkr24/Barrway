@@ -3128,7 +3128,7 @@ async function rendarPopupCalendar(assignDate) {
         },
         selectable: true,
         select: function (start, end, cell) {
-            //////debugger;
+            debugger;
 
             var $scope = angular.element($("#calendar")).scope();
             $scope.BookingService = {};

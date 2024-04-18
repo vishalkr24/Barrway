@@ -2775,63 +2775,64 @@
         
 
         $scope.EditSchedularForm = function (schedularId) {
+            window.location.replace("/calendar/index#/calendar/schedular-form/" + schedularId);
 
-            adminService.postAsync('/Calendar/GetSchedule/', { ScheduleId: schedularId }).then(function (res) {
+            //adminService.postAsync('/Calendar/GetSchedule/', { ScheduleId: schedularId }).then(function (res) {
 
-                console.log(res.data)
+            //    console.log(res.data)
 
-                $("#SCH_LOCATION option:selected").val(res.data.data[0].SCH_LOCATION)
-                $("#SCH_ACTIVITY option:selected").val(res.data.data[0].SCH_ACTIVITY)
-                $("#SCH_RESOURCE option:selected").val(res.data.data[0].SCH_RESOURCE)
+            //    $("#SCH_LOCATION option:selected").val(res.data.data[0].SCH_LOCATION)
+            //    $("#SCH_ACTIVITY option:selected").val(res.data.data[0].SCH_ACTIVITY)
+            //    $("#SCH_RESOURCE option:selected").val(res.data.data[0].SCH_RESOURCE)
 
-                if (getUserRole() != "SUPERADMIN_USER") {
-                    var tempDate = res.data.data[0].SCH_FROM_DATE.split('-')
-                    res.data.data[0].SCH_FROM_DATE = tempDate[2] + "/" + tempDate[1] + "/" + tempDate[0];
-                    tempDate = res.data.data[0].SCH_TO_DATE.split('-')
-                    res.data.data[0].SCH_TO_DATE = tempDate[2] + "/" + tempDate[1] + "/" + tempDate[0];
+            //    if (getUserRole() != "SUPERADMIN_USER") {
+            //        var tempDate = res.data.data[0].SCH_FROM_DATE.split('-')
+            //        res.data.data[0].SCH_FROM_DATE = tempDate[2] + "/" + tempDate[1] + "/" + tempDate[0];
+            //        tempDate = res.data.data[0].SCH_TO_DATE.split('-')
+            //        res.data.data[0].SCH_TO_DATE = tempDate[2] + "/" + tempDate[1] + "/" + tempDate[0];
 
-                    $("#SCH_FROM_DATE").val(res.data.data[0].SCH_FROM_DATE)
-                    $("#SCH_TO_DATE").val(res.data.data[0].SCH_TO_DATE)
-                } else {
-                    $("#SCH_DAYS").val(res.data.data[0].SCH_DAYS)
-                }
+            //        $("#SCH_FROM_DATE").val(res.data.data[0].SCH_FROM_DATE)
+            //        $("#SCH_TO_DATE").val(res.data.data[0].SCH_TO_DATE)
+            //    } else {
+            //        $("#SCH_DAYS").val(res.data.data[0].SCH_DAYS)
+            //    }
                 
-                $("input[name='alternate-week'][value='" + res.data.data[0].SCH_ALTERNATIVE_WEEK + "']").attr("checked", true)
+            //    $("input[name='alternate-week'][value='" + res.data.data[0].SCH_ALTERNATIVE_WEEK + "']").attr("checked", true)
 
-                var table = JSON.parse(res.data.data[0].SCH_SCHEDULE_TABLE);
+            //    var table = JSON.parse(res.data.data[0].SCH_SCHEDULE_TABLE);
 
-                $("#Monday_Start_Time").val(table.Monday.Start)
-                $("#Monday_End_Time").val(table.Monday.End)
+            //    $("#Monday_Start_Time").val(table.Monday.Start)
+            //    $("#Monday_End_Time").val(table.Monday.End)
 
-                $("#Tuesday_Start_Time").val(table.Tuesday.Start)
-                $("#Tuesday_End_Time").val(table.Tuesday.End)
+            //    $("#Tuesday_Start_Time").val(table.Tuesday.Start)
+            //    $("#Tuesday_End_Time").val(table.Tuesday.End)
 
-                $("#Wednesday_Start_Time").val(table.Wednesday.Start)
-                $("#Wednesday_End_Time").val(table.Wednesday.End)
+            //    $("#Wednesday_Start_Time").val(table.Wednesday.Start)
+            //    $("#Wednesday_End_Time").val(table.Wednesday.End)
 
-                $("#Thursday_Start_Time").val(table.Thursday.Start)
-                $("#Thursday_End_Time").val(table.Thursday.End)
+            //    $("#Thursday_Start_Time").val(table.Thursday.Start)
+            //    $("#Thursday_End_Time").val(table.Thursday.End)
 
-                $("#Friday_Start_Time").val(table.Friday.Start)
-                $("#Friday_End_Time").val(table.Friday.End)
+            //    $("#Friday_Start_Time").val(table.Friday.Start)
+            //    $("#Friday_End_Time").val(table.Friday.End)
 
-                $("#Saturday_Start_Time").val(table.Saturday.Start)
-                $("#Saturday_End_Time").val(table.Saturday.End)
+            //    $("#Saturday_Start_Time").val(table.Saturday.Start)
+            //    $("#Saturday_End_Time").val(table.Saturday.End)
 
-                $("#Sunday_Start_Time").val(table.Sunday.Start)
-                $("#Sunday_End_Time").val(table.Sunday.End)
+            //    $("#Sunday_Start_Time").val(table.Sunday.Start)
+            //    $("#Sunday_End_Time").val(table.Sunday.End)
 
 
-            }, function (err) {
-                alert("something went wrong!!");
-            });
+            //}, function (err) {
+            //    alert("something went wrong!!");
+            //});
 
-            $("#final-submit-button").hide();
-            $("#final-save-button").show();
+            //$("#final-submit-button").hide();
+            //$("#final-save-button").show();
 
-            $scope.SchedularId = schedularId;
+            //$scope.SchedularId = schedularId;
 
-            $scope.showSchedularFormModal(false);
+            //$scope.showSchedularFormModal(false);
         }
 
         
