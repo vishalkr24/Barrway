@@ -2,12 +2,14 @@ using AutoMapper;
 using Barrway.Mapping;
 using Barrway.Service.IRepository;
 using Barrway.Service.Repository;
-using NLog;
 using System;
-
+using System.Web.Http;
+using System.Web.Mvc;
 using Unity;
 using Unity.Injection;
 using Unity.Lifetime;
+using Unity.WebApi;
+using NLog;
 
 namespace Barrway
 {
@@ -67,6 +69,8 @@ namespace Barrway
             container.RegisterType<IQueueService, QueueService>();
             container.RegisterType<IMessageRepository, MessageRepository>();
             container.RegisterSingleton<IQueueService, QueueService>();
+
+            GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
 
         }
     }
