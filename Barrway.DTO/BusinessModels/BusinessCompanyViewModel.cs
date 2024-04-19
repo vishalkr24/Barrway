@@ -54,11 +54,11 @@ namespace Barrway.DTO.BusinessModels
         public string COMPANY_DESCRIPTION { get; set; } = String.Empty;
         public float TOTAL_WEBSITE_VISITS { get; set; } = 0;
 
-        [ValidDropdownValue(ErrorMessage = "Please select your company category")]
-        public string COMPANY_CATEGORY_ID { get; set; } = String.Empty;
+        //[ValidDropdownValue(ErrorMessage = "Please select your company category")]
+        //public string COMPANY_CATEGORY_ID { get; set; } = String.Empty;
 
-        [ValidDropdownValue(ErrorMessage = "Please select your sub category")]
-        public string COMPANY_SUB_CATEGORY_ID { get; set; } = String.Empty;
+        //[ValidDropdownValue(ErrorMessage = "Please select your sub category")]
+        //public string COMPANY_SUB_CATEGORY_ID { get; set; } = String.Empty;
 
         [ValidDropdownValue(ErrorMessage = "Please select your country")]
         public string COUNTRY_ID { get; set; } = String.Empty;
