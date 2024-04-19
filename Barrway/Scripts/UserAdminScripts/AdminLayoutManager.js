@@ -29,10 +29,10 @@ function setCompanyDetails() {
             } else {
 
             }
-
+            let logopath = data[i].COMPANY_LOGO_PATH?.replace("~/", "/");
             $("#user-admin-layout-all-company").append(`<div class="added-company" onclick="openCompanyDashboard(${data[i].Id})">
                                     <span class="img-container">
-                                        <img src="${data[i].COMPANY_LOGO_PATH}" onerror="this.src='assets/svg/logos/logo.png'" />
+                                        <img src="${logopath}" onerror="this.src='assets/svg/logos/logo.png'" />
                                     </span>
                                     <span>${data[i].COMPANY_NAME_ENGLISH} [${data[i].COMPANY_CODE}]</span>
                                 </div>`);

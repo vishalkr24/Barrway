@@ -361,6 +361,7 @@
         .pr-3 {
             padding-right: 1.5rem;
         }
+
         .businessadmin-toggler {
             margin-left: 0px !important;
             margin-right: 10px;
@@ -368,6 +369,7 @@
             color: #e2476c;
             padding: 0px;
         }
+
         .businessadmin-toggler-s {
             margin-right: 10px;
             font-size: 28px;
@@ -375,16 +377,18 @@
             padding: 0px;
             margin-left: 20px !important;
         }
-        .choose-calander {
+        /* .choose-calander {
             display: none;
-        }
+        }*/
         .b_a_dashbord .navbar-dropdown-account-wrapper.show .bi-grid-3x3-gap-fill {
             color: #e2476c;
         }
+
         @@Media screen and (max-width:767px) {
             .pl-3 {
                 padding-left: 1.2rem;
             }
+
             .sec-head {
                 width: 100%;
                 float: left;
@@ -397,12 +401,13 @@
                 margin-right: 15px;
                 display: block;
             }
+
                 .choose-calander .dropdown-me .dropdown-toggle {
-                    
                     margin-bottom: 0;
                 }
+
             .m-none {
-            display:none;
+                display: none;
             }
         }
     </style>
@@ -434,31 +439,31 @@
                         <!-- Navbar -->
                         <ul class="navbar-nav">
                             @*<li class="hs-has-sub-menu nav-item">
-                                <span class="lang">
-                                    <img src="~/assets/marketplace/image/glo.png" />
-                                    <form action="/Marketplace/ChangeLanguage" method="post" id="langForm" style="display:inline;">
-                                        <select style="border:none; outline:none;" onchange="changeLanguage()" name="langId">
-                                            <option value="1" @(language == "en" ? "selected" : "")>English</option>
-                                            <option value="2" @(language == "zh-Hant" ? "selected" : "")>Chinese</option>
-                                        </select>
-                                    </form>
-                                </span>
-                            </li>*@
+                                    <span class="lang">
+                                        <img src="~/assets/marketplace/image/glo.png" />
+                                        <form action="/Marketplace/ChangeLanguage" method="post" id="langForm" style="display:inline;">
+                                            <select style="border:none; outline:none;" onchange="changeLanguage()" name="langId">
+                                                <option value="1" @(language == "en" ? "selected" : "")>English</option>
+                                                <option value="2" @(language == "zh-Hant" ? "selected" : "")>Chinese</option>
+                                            </select>
+                                        </form>
+                                    </span>
+                                </li>*@
                             @*<li class="nav-item">*@
-                                <!-- Account -->
-                                <!--<div class="dropdown">
-                                    <a class="navbar-dropdown-account-wrapper" href="javascript:;" id="accountNavbarDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" data-bs-dropdown-animation>
-                                        <div class="notification">
-                                            <img class="" src="/assets/marketplace/image/bell.png" alt="notification">
-                                            <span class="notification-num">99+</span>-->
-                                            @*<span class="avatar-status avatar-sm-status avatar-status-success"></span>*@
-                                        <!--</div>
-                                    </a>
+                            <!-- Account -->
+                            <!--<div class="dropdown">
+                                <a class="navbar-dropdown-account-wrapper" href="javascript:;" id="accountNavbarDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" data-bs-dropdown-animation>
+                                    <div class="notification">
+                                        <img class="" src="/assets/marketplace/image/bell.png" alt="notification">
+                                        <span class="notification-num">99+</span>-->
+                            @*<span class="avatar-status avatar-sm-status avatar-status-success"></span>*@
+                            <!--</div>
+                                </a>
 
-                                    <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-account" aria-labelledby="accountNavbarDropdown" style="width: 16rem;">
-                                    </div>
-                                </div>-->
-                                <!-- End Account -->
+                                <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-account" aria-labelledby="accountNavbarDropdown" style="width: 16rem;">
+                                </div>
+                            </div>-->
+                            <!-- End Account -->
                             @*</li>*@
                             <!-- grid-->
                             <li class="nav-item d-sm-inline-block b_a_dashbord">
@@ -473,7 +478,7 @@
                                             <a onclick="location.href = '/Marketplace/Index'">Marketplace</a>
                                         </div>
 
-                                        
+
                                         <div class="dropdown-item">
                                             <a onclick="location.href = '/Marketplace/Index'">Barrway Business</a>
 
@@ -544,22 +549,22 @@
 
                                         <!-- Dropdown -->
                                         @*<div class="dropdown">
-                        <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown2" data-bs-toggle="dropdown" aria-expanded="false">Customization</a>
+                                                <a class="navbar-dropdown-submenu-item dropdown-item dropdown-toggle" href="javascript:;" id="navSubmenuPagesAccountDropdown2" data-bs-toggle="dropdown" aria-expanded="false">Customization</a>
 
-                        <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown2">
-                            <a class="dropdown-item" href="javascript:void(0)">
-                                Invite people
-                            </a>
-                            <a class="dropdown-item" href="javascript:void(0)">
-                                Analytics
-                                <i class="bi-box-arrow-in-up-right"></i>
-                            </a>
-                            <a class="dropdown-item" href="javascript:void(0)">
-                                Customize Front
-                                <i class="bi-box-arrow-in-up-right"></i>
-                            </a>
-                        </div>
-                    </div>*@
+                                                <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-sub-menu" aria-labelledby="navSubmenuPagesAccountDropdown2">
+                                                    <a class="dropdown-item" href="javascript:void(0)">
+                                                        Invite people
+                                                    </a>
+                                                    <a class="dropdown-item" href="javascript:void(0)">
+                                                        Analytics
+                                                        <i class="bi-box-arrow-in-up-right"></i>
+                                                    </a>
+                                                    <a class="dropdown-item" href="javascript:void(0)">
+                                                        Customize Front
+                                                        <i class="bi-box-arrow-in-up-right"></i>
+                                                    </a>
+                                                </div>
+                                            </div>*@
                                         <!-- End Dropdown -->
                                         @*<a class="dropdown-item" href="javascript:void(0)">Manage team</a>*@
 
@@ -752,34 +757,34 @@
                             </li>
                             <!-- End Apps -->
                             @*<li class="nav-item hide-for-superadmin">
-                    <a class="nav-link " href="javascript:void(0)">
-                        <div class="button-body-wrap">
-                            <div class="button-body">
-                                <button class="cus-button">
-                                    <img src="/assets/marketplace/image/spwr.png" alt="" class="hns" />
-                                    <img src="/assets/marketplace/image/spwr1.png" alt="" class="hs" />
-                                    <span class="button_title">@Resource.Service_provider_work_record </span>
-                                </button>
-                            </div>
-                        </div>
+                                    <a class="nav-link " href="javascript:void(0)">
+                                        <div class="button-body-wrap">
+                                            <div class="button-body">
+                                                <button class="cus-button">
+                                                    <img src="/assets/marketplace/image/spwr.png" alt="" class="hns" />
+                                                    <img src="/assets/marketplace/image/spwr1.png" alt="" class="hs" />
+                                                    <span class="button_title">@Resource.Service_provider_work_record </span>
+                                                </button>
+                                            </div>
+                                        </div>
 
-                    </a>
-                </li>
+                                    </a>
+                                </li>
 
-                <li class="nav-item hide-for-superadmin">
-                    <a class="nav-link " id="nav-client-payment-history" href="/calendar/index#/calendar/client-payment-history/" data-placement="left">
-                        <div class="button-body-wrap">
-                            <div class="button-body">
-                                <button class="cus-button">
-                                    <img src="/assets/marketplace/image/cph.png" alt="" class="hns" />
-                                    <img src="/assets/marketplace/image/cph1.png" alt="" class="hs" />
-                                    <span class="button_title"> @Resource.Client_payment_history </span>
-                                </button>
-                            </div>
-                        </div>
+                                <li class="nav-item hide-for-superadmin">
+                                    <a class="nav-link " id="nav-client-payment-history" href="/calendar/index#/calendar/client-payment-history/" data-placement="left">
+                                        <div class="button-body-wrap">
+                                            <div class="button-body">
+                                                <button class="cus-button">
+                                                    <img src="/assets/marketplace/image/cph.png" alt="" class="hns" />
+                                                    <img src="/assets/marketplace/image/cph1.png" alt="" class="hs" />
+                                                    <span class="button_title"> @Resource.Client_payment_history </span>
+                                                </button>
+                                            </div>
+                                        </div>
 
-                    </a>
-                </li>*@
+                                    </a>
+                                </li>*@
 
                         </ul>
 
@@ -824,26 +829,25 @@
                 <div class="collapse navbar-collapse" id="navbarDoubleLineContainerNavDropdown">
                     <ul class="navbar-nav">
                         <!-- Dashboards -->
-
-                        <li class="nav-item overflow_v dropdown-me m-none">
-                            <select class="calendar-name dropdown-toggle" style="text-overflow:ellipsis; display:none;" ng-model="selectedCalendarCode" ng-change="ChangeCalendarDropDown()" id="ddlMasterCalendar">
-                                <option value=""></option>
-                                <option value="{{calendar.CALENDAR_CODE}}" ng-repeat="calendar in calendarList">{{calendar.CALENDAR_NAME}} [{{calendar.CALENDAR_CODE}}]</option>
-                            </select>
-                            <div class="dropdown-me dropdown-me-2" onclick="toggleDropdown2()">
-                                <div class="dropdown-toggle">
-                                    <i class="fa fa-calendar" aria-hidden="true" style="padding-right:8px; font-size: 16px;"></i> <span class="lbl-calendar-name">Select Calendar</span>
-                                </div>
-                                <div class="dropdown-men" id="disp-navbar-calendar-selector">
-                                    <a ng-repeat="calendar in calendarList" href="javascript:void(0)" style="padding-right: 8px;" data-id="CLR_SEL_{{calendar.CALENDAR_CODE}}" class="selectable-calendar-item" onclick="selectItem2(this)">{{calendar.CALENDAR_NAME}} [{{calendar.CALENDAR_CODE}}]</a>
-                                    <div class="add-company">
-                                        <a href="/BusinessAdmin/CalendarMaster">
-                                            <button>+ Add new calendar</button>
-                                        </a>
+                        @*<li class="nav-item overflow_v dropdown-me m-none">
+                                <select class="calendar-name dropdown-toggle" style="text-overflow:ellipsis; display:none;" ng-model="selectedCalendarCode" ng-change="ChangeCalendarDropDown()" id="ddlMasterCalendar">
+                                    <option value=""></option>
+                                    <option value="{{calendar.CALENDAR_CODE}}" ng-repeat="calendar in calendarList">{{calendar.CALENDAR_NAME}} [{{calendar.CALENDAR_CODE}}]</option>
+                                </select>
+                                <div class="dropdown-me dropdown-me-2" onclick="toggleDropdown2()">
+                                    <div class="dropdown-toggle">
+                                        <i class="fa fa-calendar" aria-hidden="true" style="padding-right:8px; font-size: 16px;"></i> <span class="lbl-calendar-name">Select Calendar</span>
+                                    </div>
+                                    <div class="dropdown-men" id="disp-navbar-calendar-selector">
+                                        <a ng-repeat="calendar in calendarList" href="javascript:void(0)" style="padding-right: 8px;" data-id="CLR_SEL_{{calendar.CALENDAR_CODE}}" class="selectable-calendar-item" onclick="selectItem2(this)">{{calendar.CALENDAR_NAME}} [{{calendar.CALENDAR_CODE}}]</a>
+                                        <div class="add-company">
+                                            <a href="/BusinessAdmin/CalendarMaster">
+                                                <button>+ Add new calendar</button>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </li>
+                            </li>*@
                         <li class="nav-item">
                             <a id="nav-calendar-dashboard" href="/calendar/index#/home" class="nav-link" role="button">
                                 <div class="button-body-wrap">
