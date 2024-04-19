@@ -1,6 +1,6 @@
 ﻿var CalendarFormId = "2305", ySelection = "", xSelection = "", COMPANY_CODE, CALENDAR_CODE, formDetailsDataInfo, counterLoader, xaxisFormList, formAllDatafields, listTabulator, calendarDetails, is5CType = false, tempEndDate, calenderSettings;
 $(document).ready(async function () {
-
+    $("#txtCommonCurrentCompanyCode").val($("#txtCurrentCompanyCode").val());
     $("#startListViewDate").datepicker({
         dateFormat: 'dd/mm/yy'
     });

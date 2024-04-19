@@ -16891,8 +16891,6 @@
             //debugger;
             if (localStorage.getItem("publicUserSelectedCompany") != null && localStorage.getItem("publicUserSelectedCompany") != undefined && localStorage.getItem("publicUserSelectedCompany") != "null") {
                 $("#company-filter-selector").val(localStorage.getItem("publicUserSelectedCompany"));
-            } else {
-                $("#company-filter-selector").val("-1");
             }
         }
 

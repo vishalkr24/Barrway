@@ -3,7 +3,7 @@ var calendarObject = {};
 $(document).ready(async function () {
 
     $("#nv-company-schedule").addClass("active");
-
+    $("#txtCommonCurrentCompanyCode").val($("#txtCurrentCompanyCode").val());
 
     getLOCDataByCalendar();
 

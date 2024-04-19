@@ -6,15 +6,15 @@
     //ViewBag.COMPANY_ID = Model.COMPANY_CODE.ToString();
     ViewBag.COMPANY_ID = Model.PAGE_URL.ToString();
     ViewBag.CALENDAR_ID = Model.DEFAULT_CALENDAR_ID;
-
-
-
+    ViewBag.COMPANY_CODE = Model.COMPANY_CODE;
 }
 
 <script>
     var COMPANY_CODE = '@ViewBag.CompanyCode';
     var CALENDAR_CODE = '@ViewBag.CalendarCode';
 </script>
+
+<input id="txtCurrentCompanyCode" value="@ViewBag.COMPANY_CODE" readonly style="display:none;" />
 
 @section styles{
 

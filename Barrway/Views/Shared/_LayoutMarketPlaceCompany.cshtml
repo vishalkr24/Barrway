@@ -70,7 +70,7 @@
                             <a class="" href="/company/service/@ViewBag.COMPANY_ID/@ViewBag.CALENDAR_ID">@Resource.Service</a>
                         </li>
                         @*<li id="nv-company-package"><a href="/Marketplace/CompanyPackage?CompanyCode=@ViewBag.COMPANY_ID&CalendarCode=@ViewBag.CALENDAR_ID">@Resource.Package</a></li>*@
-                        <li id="nv-company-package"><a href="/company/package/@ViewBag.COMPANY_ID/@ViewBag.CALENDAR_ID">@Resource.Package</a></li>
+                        <li id="nv-company-package" style="display:none;"><a href="/company/package/@ViewBag.COMPANY_ID/@ViewBag.CALENDAR_ID">@Resource.Package</a></li>
                         @*<li id="nv-company-schedule"><a href="/Marketplace/CompanySchedule?CompanyCode=@ViewBag.COMPANY_ID&CalendarCode=@ViewBag.CALENDAR_ID">@Resource.Schedule</a></li>*@
                         <li id="nv-company-schedule"><a href="/company/calander/@ViewBag.COMPANY_ID/@ViewBag.CALENDAR_ID">@Resource.Schedule</a></li>
 
@@ -83,6 +83,7 @@
         </nav>
     </section>
 
+    <input id="txtCommonCurrentCompanyCode" value="" readonly style="display:none;" />
 
     <div>
         @RenderBody()
@@ -265,6 +266,18 @@
     <script>
         $(document).ready(function () {
             $.fn.bstooltip = $.fn.tooltip.noConflict(true);
+            let CompanyCode = '@ViewBag.COMPANY_CODE'
+            var companyPackageData = getCompanyCalendarPackages(CompanyCode).packageData;
+            debugger;
+            if (companyPackageData.Status) {
+                $("#nv-company-package").show();
+            } else {
+                $("#nv-company-package").hide();
+                if (window.location.href.includes("/company/package")) {
+                    window.location.replace("/company/" + CompanyCode);
+                }
+            }
+
         });
     </script>
 </body>

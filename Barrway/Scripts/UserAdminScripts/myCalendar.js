@@ -10,8 +10,6 @@ $(document).on("change", "#company-filter-selector", function () {
     usercalendarLoad();
 })
 
-debugger;
-
 async function usercalendarLoad() {
 
     COMPANY_CODE = $("#company-filter-selector option:selected").val();
@@ -257,7 +255,7 @@ async function usercalendarLoad() {
 
     }
 
-
+    updateCalendarIcon();
 };
 
 
@@ -1199,6 +1197,8 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         };
     var calendarOptions = $.extend({}, defaultOptions, myOptions);
     $('#list-view div.calendar').fullCalendar(calendarOptions);
+    
+    
 
     // Agenda View
     myOptions = {
@@ -1571,6 +1571,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
     countLoader = 0;
     calendarOptions = $.extend({}, defaultOptions, resourceOptions, myOptions1);
     $('#timeline-resource-view div.calendar').fullCalendar(calendarOptions);
+    
 
     if (ySelection != 0) {
         if (formDetailsDataInfo != null)
@@ -1609,159 +1610,13 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
             });
             resourceData = tempFormData;
         }
-    /// vertical resource view.
 
-    var myOptions2 = {
-        //defaultDate: '2017-12-07',
-        scrollTime: '00:00', // undo default 6am scrollTime    
-        header: {
-            left: 'myCustomButton prev,next today datePickerButton3',
-            center: 'title',
-            right: 'agendaDay,agendaTwoDays,agendaThreeDays,agendaWeek'
-        },
-        customButtons: {
-            datePickerButton3: {
-                themeIcon: 'custom-datepicker',
-                click: function () {
+}
 
-                    var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
-                    var $btnCustom = $('.fc-datePickerButton3-button'); // name of custom  button in the generated code
-                    $btnCustom.after('<input type="hidden" id="hiddenDate3" class="datepicker"/>');
-
-                    $("#hiddenDate3").datepicker({
-                        showOn: "button",
-                        dateFormat: "yy-mm-dd",
-                        onSelect: function (dateText, inst) {
-                            $("#" + current_tab + " .calendar").fullCalendar('gotoDate', dateText);
-                            //$('.calendar').fullCalendar('gotoDate', dateText);
-                        },
-                        defaultDate: $("#" + current_tab + " .calendar").fullCalendar('getDate').format("YYYY-MM-DD"),
-                        changeMonth: true,
-                        changeYear: true
-                    });
-
-                    var $btnDatepicker = $(".ui-datepicker-trigger"); // name of the generated datepicker UI 
-                    //Below are required for manipulating dynamically created datepicker on custom button click
-                    $("#hiddenDate3").show().focus().hide();
-                    $btnDatepicker.trigger("click"); //dynamically generated button for datepicker when clicked on input textbox
-                    $btnDatepicker.hide();
-                    $btnDatepicker.remove();
-                    $("input.datepicker").not("#hiddenDate3").remove();//dynamically appended every time on custom button click
-
-                }
-            }
-        },
-        views: {
-            agendaTwoDays: {
-                type: 'agenda',
-                duration: { days: 2 },
-                // views that are more than a day will NOT do this behavior by default
-                // so, we need to explicitly enable it
-                groupByResource: true,
-
-                // uncomment this line to group by day FIRST with resources underneath
-                //groupByDateAndResource: true
-            },
-            agendaThreeDays: {
-                type: 'agenda',
-                duration: { days: 3 },
-                groupByResource: true,
-            },
-            agendaWeek: {
-                type: 'agenda',
-                duration: { days: 7 },
-                groupByResource: true,
-            }
-        },
-        dayMinWidth: 150, // will cause horizontal scrollbars      
-        defaultView: 'agendaDay',
-        //events: [],
-        aspectRation: 1.35,
-        events: function (start, end, timezone, callback) {
-            var $scope = angular.element($("#calendar")).scope();
-            var param = {};
-            param.action = 1;
-            param.formId = CalendarFormId;
-            param.isCalender = 1;
-            param.isEvent = 1;
-            param.resourceFormId = ySelection;
-            param.ActivityFormId = xSelection;
-            var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
-            var view = $('#vertical-resource-view div.calendar').fullCalendar('getView');
-            param.filter = {};
-            param.filter = changeStateOfCalender(view, start, end);
-            param.filter.field = "start";
-            param.COMPANY_CODE = COMPANY_CODE;
-            param.IsCustomFilter = IsCustomFilter;
-            param.IsCustomInFilter = IsCustomInFilter;
-            param.CustomFilters = [{ "FieldName": "COMPANY_CODE", "Value": COMPANY_CODE }];
-            param.IsPublicUser = true;
-            $.ajax({
-                method: 'POST',
-                url: BASE_URL + "/FormAPI/getReferralFormFields",
-                dataType: 'json',
-                contentType: "application/json",
-                data: JSON.stringify(param),
-                success: function (response) {
-                    //$.unblockUI();
-                    var calenderData = changeResourceIDByYSelection((response.events != undefined) ? response.events : response.events);
-                    if (calenderData != undefined) {
-                        if (formDetailsDataInfo.searchByDate != undefined) {
-                            $('#vertical-resource-view div.calendar').fullCalendar('removeEvents');
-                        }
-                        assignEvents(calenderData);
-                        callback(calenderData);
-                    }
-                    else
-                        callback([]);
-                },
-                beforeSend: function () {
-                    //showLoader();
-                },
-                complete: function () {
-                    var _ScrollOffset = window["scrollOffset"];
-                    window.scrollTo(0, _ScrollOffset);
-                    $.unblockUI();
-                    // $("#" + current_tab + " div.calendar").unblock();
-                }
-            });
-        },
-        resources: resourceData,
-        allDaySlot: true,
-        selectable: false,
-        select: function (startDate, endDate, jsEvent, view, resource) {
-        }
-    };
-    if (formDetailsDataInfo.calenderSettingsList?.length > 0) {
-        var exists = _.findWhere(formDetailsDataInfo.calenderSettingsList, { resourceForm: ySelection });
-        if (exists != undefined) {
-            if (exists.minTime != "" && exists.minTime != null && exists.minTime != undefined && exists.maxTime != null && exists.maxTime != undefined && exists.maxTime != "") {
-                var minTime = exists.minTime.trim().replace(' ', ':');
-                var maxTime = exists.maxTime.trim().replace(' ', ':');
-
-
-                //if (calendarDetails.controlSheet.DISPLAY_START_TIME != "" && calendarDetails.controlSheet.DISPLAY_START_TIME != "null" && calendarDetails.controlSheet.DISPLAY_START_TIME != null) {
-                //    minTime = calendarDetails.controlSheet.DISPLAY_START_TIME;
-                //}
-
-                //if (calendarDetails.controlSheet.DISPLAY_END_TIME != "" && calendarDetails.controlSheet.DISPLAY_END_TIME != "null" && calendarDetails.controlSheet.DISPLAY_END_TIME != null) {
-                //    maxTime = calendarDetails.controlSheet.DISPLAY_END_TIME;
-                //}
-
-                //myOptions2.minTime = minTime + ":00";
-               // myOptions2.maxTime = maxTime + ":00";
-            }
-        }
-    }
-    countLoader = 0;
-    calendarOptions = $.extend({}, defaultOptions, resourceOptions, myOptions2);
-    $('#vertical-resource-view div.calendar').fullCalendar(calendarOptions);
-    setTimeout(function () {
-        $.unblockUI();
-    }, 500);
-
-
-    //tabsActive();
+function updateCalendarIcon() {
+    debugger;
+    $(".ui-icon-custom-datepicker").addClass("fa fa-calendar");
+    $(".ui-icon-custom-datepicker").removeClass("ui-icon")
 }
 
 function getQueryParamValue(parameterName) {
