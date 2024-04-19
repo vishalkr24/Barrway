@@ -311,37 +311,37 @@
                 outline: none;
             }
 
-        .login_with .a {
-            border: none;
-            background-color: #3F71BE;
-            color: #fff;
-            font-size: 13px;
-            font-weight: 700;
-            padding: 9px 15px;
-            border-radius: 40px;
-            float: left;
-        }
+            .login_with .a {
+                border: none;
+                background-color: #3F71BE;
+                color: #fff;
+                font-size: 13px;
+                font-weight: 700;
+                padding: 9px 15px;
+                border-radius: 40px;
+                float: left;
+            }
 
             .login_with .a:last-child {
                 float: right;
             }
 
-        .login_with {
-            width: 100%;
-            float: left;
-            margin-bottom: 16px;
-        }
+            .login_with {
+                width: 100%;
+                float: left;
+                margin-bottom: 16px;
+            }
 
-        .register {
-            width: 100%;
-            float: left;
-        }
+            .register {
+                width: 100%;
+                float: left;
+            }
 
-        .back {
-            position: absolute;
-            width: 80%;
-            top: 14%;
-        }
+            .back {
+                position: absolute;
+                width: 80%;
+                top: 14%;
+            }
 
             .back h1 {
                 font-family: 'Poppins';
@@ -362,9 +362,20 @@
             padding-left: 8px;
             margin-left: 8px;
         }
-
+        .pr-5 {
+            padding-right: 5px;
+        }
+        .pl-5 {
+            padding-left: 5px;
+        }
         @@media screen and (max-width:768px) {
+            .pr-5 {
+                padding-right: 15px;
+            }
 
+            .pl-5 {
+                padding-left: 15px;
+            }
             .logo .business-label {
                 border-left: 0px solid #777777;
                 position: relative;
@@ -399,9 +410,12 @@
                 float: left;
             }
 
-                .signUp .left, .signUp .right {
+            .signUp .left {
+                display:none;
+            }
+                .signUp .right {
                     width: 100%;
-                    padding: 80px 60px;
+                    padding: 80px 15px;
                     float: left;
                     border-top-right-radius: 0px;
                     border-bottom-right-radius: 0px;
@@ -597,7 +611,7 @@
                                             <label for="email">@Resource.Phone</label>
                                             <div class="mobileNumberDiv">
                                                 <div class="row">
-                                                    <div class="col-md-6" style="padding-right: 5px;">
+                                                    <div class="col-md-6 pr-5">
                                                         <select class="form-control valid" id="Country_Code" name="Country_Code" style="width: 100%" aria-invalid="false">
                                                             <option data-countryCode="CN" value="86">China (+86)</option>
                                                             <option data-countryCode="HK" value="852">Hong Kong (+852)</option>
@@ -817,7 +831,7 @@
                                                             </optgroup>
                                                         </select>
                                                     </div>
-                                                    <div class="col-md-6" style="padding-left: 5px;">
+                                                    <div class="col-md-6 pl-5">
                                                         @Html.TextBoxFor(model => model.USER_PHONE, new { @class = "form-control", @placeholder = "Phone", @required = "true" })
                                                         @Html.ValidationMessageFor(model => model.USER_PHONE, "", new { @class = "invalid-feedback-2" })
                                                      </div>
