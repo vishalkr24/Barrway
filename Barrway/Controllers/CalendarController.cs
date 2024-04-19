@@ -429,7 +429,7 @@ namespace Barrway.Controllers
 
                                 foreach (var key in x.Keys.Where(y => y != "Is_New" && y != "Id" && y != "COMPANY_CODE" && y != "CALENDAR_CODE"))
                                 {
-                                    columns.Add($@"{key?.ToString()} = '{x[key]}'");
+                                    columns.Add($@"{key?.ToString()} = N'{x[key]}'");
                                 }
 
                                 string combine = string.Join(",", columns);
@@ -503,7 +503,7 @@ namespace Barrway.Controllers
 
                                 foreach (var key in x.Keys.Where(y => y != "Is_New" && y != "Id" && y != "COMPANY_CODE" && y != "CALENDAR_CODE"))
                                 {
-                                    columns.Add($@"{key?.ToString()} = '{x[key]}'");
+                                    columns.Add($@"{key?.ToString()} = N'{x[key]}'");
                                 }
 
                                 string combine = string.Join(",", columns);
@@ -584,7 +584,7 @@ namespace Barrway.Controllers
 
                                 foreach (var key in x.Keys.Where(y => y != "Is_New" && y != "Id" && y != "COMPANY_CODE" && y != "CALENDAR_CODE"))
                                 {
-                                    columns.Add($@"{key?.ToString()} = '{x[key]}'");
+                                    columns.Add($@"{key?.ToString()} = N'{x[key]}'");
                                 }
 
                                 string combine = string.Join(",", columns);

@@ -1727,7 +1727,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
 
                 if (!string.IsNullOrEmpty(data.SubCategoryId))
                 {
-                    filter += "and calendar.CALENDAR_SUB_CATEGORY_ID = '" + data.SubCategoryId + "'";
+                    filter += "and calendar.CALENDAR_SUB_CATEGORY_ID like '%" + data.SubCategoryId + "%'";
                 }
 
                 if (!string.IsNullOrEmpty(data.Short))
