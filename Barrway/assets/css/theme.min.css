@@ -34393,12 +34393,12 @@ button#backtomarketplace {
             font-size: 13px;
             margin-bottom: 3px;
         }
-            .wrap .wrap-con p:nth-child(3) {
+            /*.wrap .wrap-con p:nth-child(3) {
                 display: none;
             }
             .wrap .wrap-con p:nth-child(3) {
                 font-weight: 400;
-            }
+            }*/
 
         .wrap .wrap-con .font-2 {
             font-size: 14px;

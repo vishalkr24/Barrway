@@ -231,7 +231,7 @@ namespace Barrway.Service.Repository
                 ServiceFees = 0;
             }
 
-            if (IsServicePaid)
+            if (IsServicePaid && string.IsNullOrEmpty(PaymentId))
             {
                 if (balance.Data > 0)
                 {
@@ -662,7 +662,7 @@ namespace Barrway.Service.Repository
                         ServiceFees = 0;
                     }
 
-                    if (IsServicePaid)
+                    if (IsServicePaid && string.IsNullOrEmpty(PaymentId))
                     {
                         if (balance.Data > 0)
                         {

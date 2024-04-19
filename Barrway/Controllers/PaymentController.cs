@@ -265,7 +265,7 @@ namespace Barrway.Controllers
                             COMPANY_CODE = PackageData["COMPANY_CODE"].ToString(),
                             CALENDAR_CODE = PackageData["CALENDAR_CODE"].ToString()
                         }
-                    });
+                    }, false, tracker.ORDER_NO);
                 }
                 else if (eventData["OrderType"].ToString() == "SLOT2")
                 {
@@ -299,7 +299,7 @@ namespace Barrway.Controllers
                         companyCode = PackageData["COMPANY_CODE"].ToString(),
                         eventId = Convert.ToInt32(PackageData["Id"].ToString()),
                         isSlotBooking = (calendarDetails.Data["CALENDAR_TYPE"]?.ToString() == "1") ? true : false
-                    }, User.Identity.Name, UserIdentity.UserID);
+                    }, User.Identity.Name, UserIdentity.UserID, tracker.ORDER_NO);
                 }
 
                 ViewBag.PaymentId = eventData["OrderNo"].ToString();

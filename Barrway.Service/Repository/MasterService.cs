@@ -2011,7 +2011,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 finalResult.Add(result);
                 finalResult.Add(packageResult);
 
-                return new AddUpdateDelete() { Status = true, Message = "Success", Data = finalResult };
+                return new AddUpdateDelete() { Status = (packageResult.Count > 0) ? true : false, Message = "Success", Data = finalResult };
 
             }
             catch (Exception ex)
