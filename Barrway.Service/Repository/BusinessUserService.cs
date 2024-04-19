@@ -1711,14 +1711,14 @@ namespace Barrway.Service.Repository
 
                 if (!string.IsNullOrEmpty(model.COMPANY_LOGO_PATH))
                 {
-                    LogoUpdateQuery = $@"N,[COMPANY_LOGO_NAME] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_LOGO_NAME)}'
-                                            N,[COMPANY_LOGO_PATH] = '{model.COMPANY_LOGO_PATH}'";
+                    LogoUpdateQuery = $@",[COMPANY_LOGO_NAME] = N'{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_LOGO_NAME)}'
+                                            ,[COMPANY_LOGO_PATH] = N'{model.COMPANY_LOGO_PATH}'";
                 }
 
                 if (!string.IsNullOrEmpty(model.COMPANY_BANNER_PATH))
                 {
-                    BannerUpdateQuery = $@"N,[COMPANY_BANNER_NAME] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_BANNER_NAME)}'
-                                            N,[COMPANY_BANNER_PATH] = '{model.COMPANY_BANNER_PATH}'";
+                    BannerUpdateQuery = $@",[COMPANY_BANNER_NAME] = N'{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_BANNER_NAME)}'
+                                            ,[COMPANY_BANNER_PATH] = N'{model.COMPANY_BANNER_PATH}'";
                 }
 
                 string query = $@"UPDATE [dbo].[BUSINESS_COMPANY_MASTER_1924] SET 
