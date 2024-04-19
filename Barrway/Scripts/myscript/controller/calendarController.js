@@ -18391,7 +18391,7 @@
                                                     <div class="wrap-con wrap-text">
                                                         <p><b>${company.COMPANY_NAME_ENGLISH}</b></p>
                                                         <P class="font-2">${company.CALENDAR_NAME}</P>
-                                                        ${((company.PURCHASED == 'Y') ? `<p>Balance: ${company.COIN_BALANCE} credits</p>` : "")}
+                                                        ${((company.PURCHASED == "Y") ? `<p>Balance: ${company.COIN_BALANCE} credits</p>` : "")}
                                                         <p><button class="book" onclick="location.href='/company/calander/${company.COMPANY_CODE}/${company.CALENDAR_CODE}'">Book</button></p>
                                                     </div>
                                                 </div>`);
