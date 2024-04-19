@@ -2397,7 +2397,8 @@
                                 var existsCon = _.findWhere($scope.formFieldsAll, { name: key });
                                 if (!DataService.isEmpty(existsCon)) {
                                     if (!DataService.isEmpty(existsCon.Referral_Form_Fields_Value)) {
-                                        $("#customFormNew :input[name=" + key + "]").val(tempDataForEdit[existsCon.name + "_" + existsCon.Referral_Form_Fields_Value]);
+                                        //$("#customFormNew :input[name=" + key + "]").val(tempDataForEdit[existsCon.name + "_" + existsCon.Referral_Form_Fields_Value]);
+                                        $("#customFormNew :input[name=" + key + "]").val(tempDataForEdit[existsCon.name + "_Id"]);
                                     }
                                 }
                             }
