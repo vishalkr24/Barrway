@@ -34398,10 +34398,12 @@ button#backtomarketplace {
             }*/
             .wrap .wrap-con p:nth-child(3) {
                 font-weight: 400;
+
             }
 li.nav-item .dropdown a:hover .bi-grid-3x3-gap-fill {
     color: #e2476c;
 }
+
 
         .wrap .wrap-con .font-2 {
             font-size: 14px;

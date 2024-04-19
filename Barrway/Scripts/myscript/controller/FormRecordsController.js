@@ -2725,8 +2725,18 @@
                     return "" + t_data[$scope.c_field] + "";
                 }
             };
+
             var finalArray = [];
             var isTabulator = {};
+
+            if ($stateParams.formId == 2322) {
+
+            } else if ($stateParams.formId == 2305 || $stateParams.formId == 2312 || $stateParams.formId == 2326 || $stateParams.formId == 2304 || $stateParams.formId == 2311) {
+
+            } else {
+                $scope.filterFieldsList.push({ title: $scope.translation.Calendar + " " + $scope.translation.Name, field: "CALENDAR_NAME", headerFilter: "input" });
+            }
+
             angular.forEach(formDetails, function (pageData, pageKey) {
                 angular.forEach(pageData, function (item, key) {
                     // 
@@ -3010,6 +3020,8 @@
 
                 isTabulator = _.findWhere(pageData, { type: "tabulator" });
             });
+
+            
 
             if ($scope.formDetailsDataInfo.currentFormType == 1) {
                 var temp = _.filter($scope.formDetailsDataInfo.calenderSettingsList, function (item) {

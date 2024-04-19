@@ -1727,7 +1727,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
 
                 if (!string.IsNullOrEmpty(data.SubCategoryId))
                 {
-                    filter += "and calendar.CALENDAR_SUB_CATEGORY_ID = '" + data.SubCategoryId + "'";
+                    filter += "and calendar.CALENDAR_SUB_CATEGORY_ID like '%" + data.SubCategoryId + "%'";
                 }
 
                 if (!string.IsNullOrEmpty(data.Short))
@@ -1971,81 +1971,11 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                                                                 where f2.COMPANY_CODE = '{CompanyCode}'   FOR XML PATH('')), 1, 1, '') as 'CalendarCodes'";
                 var calendarCodesResult = await sqlFunction.ExecuteSqlQuery(query);
 
-                //                query = $@"
-
-                //DECLARE @retval nvarchar(max);
-                //                                DECLARE @sQuery nvarchar(max); 
-                //                                DECLARE @ParmDefinition nvarchar(max);                        
-                //                                DECLARE @customTitleQuery nvarchar(max);                          
-                //                                IF OBJECT_ID(N'tempdb..#temptable') IS NOT NULL  BEGIN DROP TABLE #temptable END;
-                //                                with cte1 as( 
-                //	                                select distinct  f.*,
-                //	                                f.resources 'resourceId', 
-                //	                                STUFF((SELECT ',' +  PARTICIPANT_MASTER_1940.[STUDENT_NAME]  
-                //                                                                from TRANSACTION_MASTER_1942 inner join PARTICIPANT_MASTER_1940 on TRANSACTION_MASTER_1942.STUDENT = PARTICIPANT_MASTER_1940.Id where TRANSACTION_MASTER_1942.formGroupKey = f.formGroupKey         FOR XML PATH('')), 1, 1, '') customFourthTitle,
-                //	                                (dbo.[GetSubQueryCalender](f.formGroupKey)) customTitle,
-                //	                                (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceFormId) from form_calenderreferrence f2     
-                //                                                                where f2.formgroupkey = f.formGroupKey  FOR XML PATH('')), 1, 1, '')   ) 
-                //	                                customForms, 
-                //	                                (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceId) from form_calenderreferrence f2    
-                //                                                                where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) 
-                //	                                customFormIds,
-                //	                                '' referrences_1,
-                //	                                '' referrences_2,
-                //	                                '' referrences_3,
-                //	                                bcm.CALENDAR_NAME,
-                //	                                subCategory.CALENDAR_SUB_CATEGORY_NAME,
-                //									bcm.CALENDAR_PHOTO_PATH
-                //	                                from CALENDAR_FORM_1935 f  
-                //	                                join BUSINESS_CALENDAR_MASTER_1925 bcm on bcm.CALENDAR_CODE = f.CALENDAR_CODE
-                //	                                join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = bcm.CALENDAR_SUB_CATEGORY_ID
-                //	                                where   f.formid=2305 and f.CALENDAR_CODE {(!string.IsNullOrEmpty(calendarCodesResult[0]["CalendarCodes"].ToString()) ? " in (" + calendarCodesResult[0]["CalendarCodes"].ToString() + ")" : "= ''")}
-                //                                ),
-                //                                cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
-                //                                select* into #temptable from cte2  where len(customtitle)>0;    declare @counter int= 0, @c int= 1;   
-                //                                select @counter = (select count(1) from #temptable)	while @c <= @counter    begin    select @customTitleQuery = customTitle from #temptable where ROWNUMBER=@c;	SET @sQuery= ' select @retvalOUT = (' + @customTitleQuery + ')'  
-                //                                SET @ParmDefinition = N'@retvalOUT nvarchar(max) OUTPUT';   
-                //                                EXEC sp_executesql @sQuery, @ParmDefinition, @retvalOUT = @retval OUTPUT;    update #temptable set customTitle=@retval where ROWNUMBER=@c;	set @c = @c + 1;  end 
-
-                //								select
-                //								distinct cf.CALENDAR_SUB_CATEGORY_NAME,
-                //								cf.CALENDAR_NAME,
-                //								cf.CALENDAR_CODE, 
-                //								cf.CALENDAR_PHOTO_PATH,
-                //								STUFF((SELECT ', ' + R.ACTIVITY_NAME FROM SERVICE_MASTER_1933 AS R WHERE Id in (SELECT CAST(Item AS INTEGER) as Ids
-                //                                        FROM dbo.SplitString(
-
-                //										(STUFF((SELECT distinct ','+ f.activities from CALENDAR_FORM_1935 f
-                //                                                                where f.formid=2305 and f.CALENDAR_CODE = cf.CALENDAR_CODE   FOR XML PATH('')), 1, 1, ''))
-
-
-                //										, ',')  ) FOR XML PATH('') ) ,1,1,'') as ActivityName
-
-                //								from #temptable cf
-                //                                ";
-
                 query = $@"
-                                
-                                DECLARE @retval nvarchar(max);
-                                DECLARE @sQuery nvarchar(max); 
-                                DECLARE @ParmDefinition nvarchar(max);                        
-                                DECLARE @customTitleQuery nvarchar(max);                          
                                 IF OBJECT_ID(N'tempdb..#temptable') IS NOT NULL  BEGIN DROP TABLE #temptable END;
-                                with cte1 as( 
-	                                select distinct  f.*,
-	                                f.resources 'resourceId', 
-	                                STUFF((SELECT ',' +  PARTICIPANT_MASTER_1940.[STUDENT_NAME]  
-                                                                from TRANSACTION_MASTER_1942 inner join PARTICIPANT_MASTER_1940 on TRANSACTION_MASTER_1942.STUDENT = PARTICIPANT_MASTER_1940.Id where TRANSACTION_MASTER_1942.formGroupKey = f.formGroupKey         FOR XML PATH('')), 1, 1, '') customFourthTitle,
-	                                (dbo.[GetSubQueryCalender](f.formGroupKey)) customTitle,
-	                                (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceFormId) from form_calenderreferrence f2     
-                                                                where f2.formgroupkey = f.formGroupKey  FOR XML PATH('')), 1, 1, '')   ) 
-	                                customForms, 
-	                                (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceId) from form_calenderreferrence f2    
-                                                                where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) 
-	                                customFormIds,
-	                                '' referrences_1,
-	                                '' referrences_2,
-	                                '' referrences_3,
+                                with cte2 as (
+                                 select distinct  f.*,
+	                                f.resources 'resourceId',
 	                                bcm.CALENDAR_NAME,
 	                                subCategory.CALENDAR_SUB_CATEGORY_NAME,
 									bcm.CALENDAR_PHOTO_PATH
@@ -2053,13 +1983,9 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
 	                                join BUSINESS_CALENDAR_MASTER_1925 bcm on bcm.CALENDAR_CODE = f.CALENDAR_CODE
 	                                join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory   ON ',' +  bcm.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
 	                                where   f.formid=2305 and f.CALENDAR_CODE {(!string.IsNullOrEmpty(calendarCodesResult[0]["CalendarCodes"].ToString()) ? " in (" + calendarCodesResult[0]["CalendarCodes"].ToString() + ")" : "= ''")}
-                                ),
-                                cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
-                                select* into #temptable from cte2  where len(customtitle)>0;    declare @counter int= 0, @c int= 1;   
-                                select @counter = (select count(1) from #temptable)	while @c <= @counter    begin    select @customTitleQuery = customTitle from #temptable where ROWNUMBER=@c;	SET @sQuery= ' select @retvalOUT = (' + @customTitleQuery + ')'  
-                                SET @ParmDefinition = N'@retvalOUT nvarchar(max) OUTPUT';   
-                                EXEC sp_executesql @sQuery, @ParmDefinition, @retvalOUT = @retval OUTPUT;    update #temptable set customTitle=@retval where ROWNUMBER=@c;	set @c = @c + 1;  end 
-								
+                                )
+                                select* into #temptable from cte2
+                               
 								select
 								distinct cf.CALENDAR_SUB_CATEGORY_NAME,
 								cf.CALENDAR_NAME,
@@ -2074,8 +2000,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
 										
 										, ',')  ) FOR XML PATH('') ) ,1,1,'') as ActivityName
 								
-								from #temptable cf
-                                ";
+								from #temptable cf";
 
                 var result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -2086,7 +2011,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 finalResult.Add(result);
                 finalResult.Add(packageResult);
 
-                return new AddUpdateDelete() { Status = true, Message = "Success", Data = finalResult };
+                return new AddUpdateDelete() { Status = (packageResult.Count > 0) ? true : false, Message = "Success", Data = finalResult };
 
             }
             catch (Exception ex)

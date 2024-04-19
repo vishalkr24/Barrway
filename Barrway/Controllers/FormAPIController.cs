@@ -1,5 +1,6 @@
 ﻿using Barrway.DTO.Common;
 using Barrway.DTO.FormAPI;
+using Barrway.Resources;
 using Barrway.Security;
 using Barrway.Service.IRepository;
 using Barrway.Service.Repository;
@@ -670,6 +671,9 @@ namespace Barrway.Controllers
 
             if (result != null && result.events != null && result.events.Count > 0)
             {
+                if (data.resourceId != 0) { 
+                result.events=result.events.Where(x=>x.ContainsKey("resourceId") && x["resourceId"]!=null && x["resourceId"].ToString()== data.resourceId.ToString()).ToList();
+                }
                 var markSchedule = result.events.Where(x => x["EVENT_TYPE"]?.ToString() == "SCHEDULE").ToList();
 
                 markSchedule.ForEach(x => x.Add("rendering", "background"));

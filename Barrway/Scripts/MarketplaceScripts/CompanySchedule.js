@@ -1,6 +1,6 @@
 ﻿var CalendarFormId = "2305", ySelection = "", xSelection = "", COMPANY_CODE, CALENDAR_CODE, formDetailsDataInfo, counterLoader, xaxisFormList, formAllDatafields, listTabulator, calendarDetails, is5CType = false, tempEndDate, calenderSettings;
 $(document).ready(async function () {
-
+    $("#txtCommonCurrentCompanyCode").val($("#txtCurrentCompanyCode").val());
     $("#startListViewDate").datepicker({
         dateFormat: 'dd/mm/yy'
     });
@@ -3039,8 +3039,7 @@ async function rendarPopupCalendar(assignDate) {
         },
         //events: [],  
         events: function (start, end, timezone, callback) {
-
-            //var $scopeVar = angular.element($("#calendar")).scope();
+            let $scopeVar = angular.element($("#calendar")).scope();
             var param = {};
             param.action = 1;
             param.formId = CalendarFormId;
@@ -3058,6 +3057,9 @@ async function rendarPopupCalendar(assignDate) {
             param.endDate = moment(end.format()).format("YYYY-MM-DD HH:mm:ss");
             param.COMPANY_CODE = COMPANY_CODE;
             param.CALENDAR_CODE = CALENDAR_CODE;
+            param.resourceId = $scopeVar.selectEventDetails.resourceId;
+
+
 
 
             var postUrl = BASE_URL + "/FormAPI/getReferralFormFieldsService";
@@ -3072,55 +3074,53 @@ async function rendarPopupCalendar(assignDate) {
                         x["rendering"] = "";
                     }
                 });
-                let $scopeVar = angular.element($("#calendar")).scope();
-                var selectResourceId = $scopeVar.selectEventDetails.resourceId;
-                var _calenderData = [];
-                calenderData.forEach(x => {
+              
+                //var selectResourceId = $scopeVar.selectEventDetails.resourceId;
+                //var _calenderData = [];
+                //calenderData.forEach(x => {
+                //    if (x.resourceId && x.resourceId != 0 && x.resourceId != null && x.resourceId != "" && selectResourceId == x.resourceId) {
+                //        _calenderData.push(x);
+                //    } else if (x.id == 0 || x.Id==0) {
+                //        _calenderData.push(x);
+                //    } else if (x.Id != 0 && x.customForms) {
+                //        ////debugger;
+                //        let customFormsIds = x.customForms.split(',');
+                //        let index = customFormsIds.findIndex(y => y == "2306");
+                //        if (index != - 1) {
+                //            let splitcustomFormIds = x.customFormIds.split(',');
+                //            if (splitcustomFormIds.length > index) {
+                //                if (selectResourceId == splitcustomFormIds[index]) {
+                //                    _calenderData.push(x);
+                //                } else {
+                //                    _calenderData.push({
+                //                        "id": 0,
+                //                        "start": x.start,
+                //                        "end": x.end,
+                //                        "title": "",
+                //                        "rendering": "background",
+                //                        "color": "#ddd",
+                //                        "customForms": "2306",
+                //                        "customTitle": "Barrway",
+                //                        "customFormIds": "1"
+                //                    });
+                //                }
+                //            }
+                //        }
+                //    } else {
+                //        _calenderData.push(x);
+                //    }
 
-
-                    if (x.resourceId && x.resourceId != 0 && x.resourceId != null && x.resourceId != "" && selectResourceId == x.resourceId) {
-                        _calenderData.push(x);
-                    } else if (x.id == 0) {
-                        _calenderData.push(x);
-                    } else if (x.id != 0 && x.customForms) {
-                        ////debugger;
-                        let customFormsIds = x.customForms.split(',');
-                        let index = customFormsIds.findIndex(y => y == "2306");
-                        if (index != - 1) {
-                            let splitcustomFormIds = x.customFormIds.split(',');
-                            if (splitcustomFormIds.length > index) {
-                                if (selectResourceId == splitcustomFormIds[index]) {
-                                    _calenderData.push(x);
-                                } else {
-                                    _calenderData.push({
-                                        "id": 0,
-                                        "start": x.start,
-                                        "end": x.end,
-                                        "title": "",
-                                        "rendering": "background",
-                                        "color": "#ddd",
-                                        "customForms": "2306",
-                                        "customTitle": "Barrway",
-                                        "customFormIds": "1"
-                                    });
-                                }
-                            }
-                        }
-                    } else {
-                        _calenderData.push(x);
-                    }
-
-                });
+                //});
 
                 //calenderData = calenderData.filter(x => $scopeVar.selectEventDetails.resourceId == x.resourceId || x.id==0);
 
 
-                if (_calenderData != undefined) {
+                if (calenderData != undefined) {
                     if (formDetailsDataInfo.searchByDate != undefined) {
                         $('#vertical-resource-view div.calendar').fullCalendar('removeEvents');
                     }
-                    window["eventListTemp2"] = _calenderData;
-                    callback(_calenderData);
+                    window["eventListTemp2"] = calenderData;
+                    callback(calenderData);
                 }
                 else
                     callback([]);

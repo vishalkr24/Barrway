@@ -2,6 +2,7 @@
 
 $(document).ready(function () {
     $("#nv-company-package").addClass("active");
+    $("#txtCommonCurrentCompanyCode").val($("#txtCurrentCompanyCode").val());
     setCalendarsList(true);
 });
 
