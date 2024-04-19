@@ -67,6 +67,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="APIModels\Account\LoginViewModel.cs" />
     <Compile Include="AuthViewModel\EmailSignUpViewModel.cs" />
     <Compile Include="AuthViewModel\BusinessExternalEmailLogiViewModel.cs" />
     <Compile Include="AuthViewModel\BarrwayViewModel.cs" />
