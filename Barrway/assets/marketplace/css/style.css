@@ -935,8 +935,24 @@ button.blogtag_num {
 .sidebar .media-body p {
     margin-bottom: 0px;
 }
-
+section.bottom-nav {
+    position: sticky;
+    bottom: 0px;
+    z-index: 99;
+    background: white;
+    border-top: 1px solid #ebebeb;
+}
 @media screen and (max-width:767px) {
+    div#calendar div#tabs div#vertical-resource-view {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    section.bottom-nav {
+        position: static;
+    }
+    .subcatageory .featured-company .heading-cata h2 {
+        font-size: 20px;
+    }
     .secondry-nav, .com-nav-btn {
         top: 10px !important;
         right: 0 !important;

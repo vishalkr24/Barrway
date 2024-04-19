@@ -358,6 +358,44 @@
         background-color: #72328A;
         border-color: #72328A;
     }
+    .title span.titleContainer > span {
+        text-transform: lowercase;
+        font-size: 16px;
+        font-weight: 500;
+         color: #000; 
+    }
+    .event-detail .title .temp .chosen-container-single .chosen-single {
+        height: 32px;
+        background-color: #fff;
+        background: transparent;
+        box-shadow: none;
+        color: #000;
+        line-height: 29px;
+        margin-top: 5px;
+    }
+    .event-detail .title .temp {
+        margin-bottom: 15px;
+    }
+    div#createCustomEventDetailsModelPopUp {
+        color: #000;
+    }
+    span.title1:first-letter {
+        text-transform: capitalize;
+    }
+    .custome-event-create .modal-body {
+        padding-top: 5px;
+        border-top: 1px solid #ddd;
+        margin-top: 14px;
+    }
+    @media screen and (max-width:767px) {
+
+        .custome-event-create  .event-detail-modal-inner {
+            height: 355px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            overflow-x: hidden;
+        }
+        }
 </style>
 
 <div class="row m-2" style="margin-left:-1.5rem;" id="calendar_view">
@@ -1091,7 +1129,7 @@
 </script>
 
 
-<div class="modal fade right" id="createCustomEventDetailsModelPopUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel4" aria-hidden="true">
+<div class="modal fade right custome-event-create" id="createCustomEventDetailsModelPopUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel4" aria-hidden="true">
     <div class="modal-dialog modal-dialog-slideout" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -1100,7 +1138,7 @@
             </div>
             <div class="modal-body">
                 <div class="event-detail div-flex">
-                    <div class="div-flex">
+                    <div class="div-flex event-detail-modal-inner">
                         <div class="title" ng-show="IS_EXIST_PRE_DEFINED_ACTIVITIES">
 
                             <div class="temp" ng-repeat="d in createEventDetails.dropdownList">
