@@ -1,7 +1,7 @@
 ﻿var Id, SubCategoryId, Short;
 
 $(document).ready(function () {
-    $("#nv-business").addClass("active");
+    $(".dropdown").addClass("active");
     scaltonLoader();
     remove_hash_from_url();
     Id = getUrlVars()["Category"];

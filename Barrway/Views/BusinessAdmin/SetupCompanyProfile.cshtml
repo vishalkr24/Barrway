@@ -32,7 +32,7 @@
                                     @Html.ValidationMessageFor(model => model.COMPANY_NAME_CHINESE, "", new { @class = "invalid-feedback-2" })
 
                                 </div>
-                                <div class="form-group">
+                                @*<div class="form-group">
                                     <label for="pwd">@Resource.Company_category *</label>
 
                                     @Html.DropDownListFor(model => model.COMPANY_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(CompanyCategory))), "Select Company Category", new { @class = "form-control", @required = "true" })
@@ -43,7 +43,7 @@
                                     <label for="pwd">@Resource.Company @Resource.Subcategory *</label>
                                     @Html.DropDownListFor(model => model.COMPANY_SUB_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(CompanyCategory))), "Select Company Sub Category", new { @class = "form-control", @required = "true" })
                                     @Html.ValidationMessageFor(model => model.COMPANY_SUB_CATEGORY_ID, "", new { @class = "invalid-feedback-2" })
-                                </div>
+                                </div>*@
                                 <button type="submit" class="btn btn-primary">Save</button>
                                 <button type="button" id="companyProfileSkipButton" class="skip hide-for-superadmin" onclick="location.href = '@Url.Action("SetupCompanyCalendar", "BusinessAdmin")'">Skip for now</button>
                             </form>

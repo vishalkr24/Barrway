@@ -1141,14 +1141,14 @@ namespace Barrway.Service.Repository
             int PageSize = data.size > 0 ? data.size : 20;
             int PageNumber = data.page > 0 ? data.page : 1;
 
-         //   string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
-         //                           SELECT calendar.[Id], company.IS_ACTIVE      ,calendar.[created_at]      ,calendar.[updated_at]      ,calendar.[created_by], company.[COMPANY_NAME_ENGLISH] , company.Id as 'COMPANY_ID'     ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,calendar.[CALENDAR_CATEGORY_ID], category.CMN_CATEGORY_NAME as 'CALENDAR_CATEGORY_NAME', subCategory.CALENDAR_SUB_CATEGORY_NAME      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
-         //                           join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE 
-         //                           join CALENDAR_COMMON_CATEGORY_1978 category on category.Id = calendar.CALENDAR_COMMON_CATEGORY_ID
-									//join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendar.CALENDAR_SUB_CATEGORY_ID
-									//where company.IS_ACTIVE = 'Y' and company.Id = '{CompanyId}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
-         //                           )
-         //                           Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+            //   string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
+            //                           SELECT calendar.[Id], company.IS_ACTIVE      ,calendar.[created_at]      ,calendar.[updated_at]      ,calendar.[created_by], company.[COMPANY_NAME_ENGLISH] , company.Id as 'COMPANY_ID'     ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,calendar.[CALENDAR_CATEGORY_ID], category.CMN_CATEGORY_NAME as 'CALENDAR_CATEGORY_NAME', subCategory.CALENDAR_SUB_CATEGORY_NAME      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
+            //                           join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE 
+            //                           join CALENDAR_COMMON_CATEGORY_1978 category on category.Id = calendar.CALENDAR_COMMON_CATEGORY_ID
+            //join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendar.CALENDAR_SUB_CATEGORY_ID
+            //where company.IS_ACTIVE = 'Y' and company.Id = '{CompanyId}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+            //                           )
+            //                           Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
 
 
             string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
@@ -1245,7 +1245,7 @@ namespace Barrway.Service.Repository
                                        Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
 
 
-            
+
 
 
 
@@ -1736,15 +1736,15 @@ namespace Barrway.Service.Repository
                               ,[PAGE_URL] = N'{SQLUtility.TreatSingleQuoteForQuery(model.PAGE_URL)}'
                               ,[COMPANY_DESCRIPTION] = N'{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_DESCRIPTION)}'
                               ,[TAGS] = N'{SQLUtility.TreatSingleQuoteForQuery(model.TAGS)}'
-                              ,[IS_SEARCHABLE_IN_MARKETPLACE] = '{model.IS_SEARCHABLE_IN_MARKETPLACE}'
-                              ,[COMPANY_CATEGORY_ID] = '{model.COMPANY_CATEGORY_ID}'
-                              ,[COMPANY_SUB_CATEGORY_ID] = '{model.COMPANY_SUB_CATEGORY_ID}'
+                              ,[IS_SEARCHABLE_IN_MARKETPLACE] = '{model.IS_SEARCHABLE_IN_MARKETPLACE}'                              
                               ,[COUNTRY_ID] = '{model.COUNTRY_ID}'
                               ,[CITY_ID] = '{model.CITY_ID}'
                               ,[DISTRICT_ID] = '{model.DISTRICT_ID}'
                               ,[Latitude] = '{model.Latitude}'
                               ,[Longitude] = '{model.Longitude}'
                               WHERE Id = '{model.Id}'";
+                            //,[COMPANY_CATEGORY_ID] = '{model.COMPANY_CATEGORY_ID}'
+                            // ,[COMPANY_SUB_CATEGORY_ID] = '{model.COMPANY_SUB_CATEGORY_ID}'
 
                 int saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
 
@@ -3275,7 +3275,7 @@ namespace Barrway.Service.Repository
         }
 
 
-       
+
         public async Task<AddUpdateDelete> GetBlogs()
         {
             try
@@ -3298,7 +3298,7 @@ namespace Barrway.Service.Repository
         }
 
 
-       
+
         public async Task<Resultdata> GetAllBlogsTags()
         {
             try
@@ -3364,7 +3364,7 @@ namespace Barrway.Service.Repository
             }
         }
 
-        
+
 
         public async Task<AddUpdateDelete> updateAssesstmentUploadFiles(int transactionId, string downloadable_attachment, string download_file_list)
         {
@@ -3389,7 +3389,7 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> updateCalendarOtherField(int eventId, Dictionary<string,object> data)
+        public async Task<AddUpdateDelete> updateCalendarOtherField(int eventId, Dictionary<string, object> data)
         {
             try
             {
@@ -3440,7 +3440,8 @@ namespace Barrway.Service.Repository
         }
 
 
-        public async Task<AddUpdateDelete> GetEnrollUserDetails(int eventId, string email) {
+        public async Task<AddUpdateDelete> GetEnrollUserDetails(int eventId, string email)
+        {
 
             string sqlString = $@"select clr.*,pr.STUDENT_NAME,pr.STUDENT_ID,pr.EMAIL,trm.ATTENDANCE,trm.ASSESSMENT_FILES,trm.ASSESSMENT_FILES_LIST,trm.ID TRANSACTION_ID
                                   from CALENDAR_FORM_1935 clr
@@ -3448,12 +3449,13 @@ namespace Barrway.Service.Repository
                                   join PARTICIPANT_MASTER_1940 pr on pr.Id=trm.STUDENT
                                   where clr.Id={eventId} and pr.EMAIL='{email}'";
 
-            var result=await sqlFunction.ExecuteSqlQuery(sqlString);
+            var result = await sqlFunction.ExecuteSqlQuery(sqlString);
             if (result.Count() > 0)
             {
-                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success,Data=result.FirstOrDefault() };
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result.FirstOrDefault() };
             }
-            else {
+            else
+            {
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
             }
         }

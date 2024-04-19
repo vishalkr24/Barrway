@@ -331,7 +331,7 @@ namespace Barrway.Controllers
                             COMPANY_BANNER_NAME = company.Data["COMPANY_BANNER_NAME"].ToString(),
 
                             CITY_ID = company.Data["CITY_ID"].ToString(),
-                            COMPANY_CATEGORY_ID = company.Data["COMPANY_CATEGORY_ID"].ToString(),
+                            //COMPANY_CATEGORY_ID = company.Data["COMPANY_CATEGORY_ID"].ToString(),
                             COMPANY_CODE = company.Data["COMPANY_CODE"].ToString(),
                             COMPANY_DESCRIPTION = company.Data["COMPANY_DESCRIPTION"].ToString(),
                             COMPANY_LOGO_NAME = company.Data["COMPANY_LOGO_NAME"].ToString(),
@@ -341,7 +341,7 @@ namespace Barrway.Controllers
                             COMPANY_NAME_ENGLISH = company.Data["COMPANY_NAME_ENGLISH"].ToString(),
                             COMPANY_PHONE = company.Data["COMPANY_PHONE"].ToString(),
                             COMPANY_SERVICE = company.Data["COMPANY_SERVICE"].ToString(),
-                            COMPANY_SUB_CATEGORY_ID = company.Data["COMPANY_SUB_CATEGORY_ID"].ToString(),
+                            //COMPANY_SUB_CATEGORY_ID = company.Data["COMPANY_SUB_CATEGORY_ID"].ToString(),
                             FACEBOOK_URL = company.Data["FACEBOOK_URL"].ToString(),
                             INSTAGRAM_URL = company.Data["INSTAGRAM_URL"].ToString(),
                             IS_DEFAULT = company.Data["IS_DEFAULT"].ToString(),
@@ -847,8 +847,8 @@ namespace Barrway.Controllers
                     COMPANY_NAME_CHINESE = model.COMPANY_NAME_CHINESE,
                     Id = model.Id,
                     IS_ACTIVE = "Y",
-                    COMPANY_CATEGORY_ID = model.COMPANY_CATEGORY_ID,
-                    COMPANY_SUB_CATEGORY_ID = model.COMPANY_SUB_CATEGORY_ID,
+                    //COMPANY_CATEGORY_ID = model.COMPANY_CATEGORY_ID,
+                    //COMPANY_SUB_CATEGORY_ID = model.COMPANY_SUB_CATEGORY_ID,
                     IS_TEMPLATE = (UserIdentity.Role == "SUPERADMIN_USER") ? "Y" : "N"
                 };
 
@@ -1200,7 +1200,7 @@ namespace Barrway.Controllers
                     CITY_ID = model.CITY_ID,
                     COMPANY_ADDRESS = model.COMPANY_ADDRESS,
                     COMPANY_BANNER_NAME = model.COMPANY_BANNER_NAME,
-                    COMPANY_CATEGORY_ID = model.COMPANY_CATEGORY_ID,
+                    //COMPANY_CATEGORY_ID = model.COMPANY_CATEGORY_ID,
                     COMPANY_DESCRIPTION = model.COMPANY_DESCRIPTION,
                     COMPANY_EMAIL = model.COMPANY_EMAIL,
                     COMPANY_LOGO_NAME = model.COMPANY_LOGO_NAME,
@@ -1209,7 +1209,7 @@ namespace Barrway.Controllers
                     COMPANY_NAME_CHINESE = model.COMPANY_NAME_CHINESE,
                     COMPANY_NAME_ENGLISH = model.COMPANY_NAME_ENGLISH,
                     COMPANY_PHONE = model.COMPANY_PHONE,
-                    COMPANY_SUB_CATEGORY_ID = model.COMPANY_SUB_CATEGORY_ID,
+                    //COMPANY_SUB_CATEGORY_ID = model.COMPANY_SUB_CATEGORY_ID,
                     COUNTRY_ID = model.COUNTRY_ID,
                     DISTRICT_ID = model.DISTRICT_ID,
                     FACEBOOK_URL = model.FACEBOOK_URL,

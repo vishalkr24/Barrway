@@ -37,8 +37,8 @@ namespace Barrway.DTO.BusinessModels
         public string COMPANY_SERVICE { get; set; } = String.Empty;
         public string COMPANY_DESCRIPTION { get; set; } = String.Empty;
         public float TOTAL_WEBSITE_VISITS { get; set; } = 0;
-        public string COMPANY_CATEGORY_ID { get; set; } = String.Empty;
-        public string COMPANY_SUB_CATEGORY_ID { get; set; } = String.Empty;
+        //public string COMPANY_CATEGORY_ID { get; set; } = String.Empty;
+        //public string COMPANY_SUB_CATEGORY_ID { get; set; } = String.Empty;
         public string COUNTRY_ID { get; set; } = String.Empty;
         public string CITY_ID { get; set; } = String.Empty;
         public string DISTRICT_ID { get; set; } = String.Empty;
