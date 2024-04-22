@@ -83,6 +83,8 @@ namespace Barrway.Service.IRepository
 
         Task<AddUpdateDelete> AddSchedularForm(SchedularFormModel model, string formGroupKey);
 
+        Task<AddUpdateDelete> DeleteSchedule(int ScheduleId, bool deleteForm);
+
         Task<AddUpdateDelete> AddQueueSession(List<QueueMasterModel> queues, List<SessionMasterModel> sessions, string ScheduleId);
         Task<AddUpdateDelete> UpdateQueueDetails(List<QueueMasterModel> queues);
 

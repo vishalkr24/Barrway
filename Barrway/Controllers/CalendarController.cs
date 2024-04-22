@@ -296,9 +296,6 @@ namespace Barrway.Controllers
             {
                 return Json(new AddUpdateDelete() { Status = false, Message = "Not Found" }, JsonRequestBehavior.AllowGet);
             }
-
-
-
         }
 
         [HttpPost]
@@ -900,6 +897,55 @@ namespace Barrway.Controllers
         }
 
         [HttpPost]
+        public async Task<ActionResult> DeleteSchedule(int ScheduleId)
+        {
+            try
+            {
+                var result = await businessUserService.DeleteSchedule(ScheduleId, true);
+
+                return Json(result, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CopyToNewSchedule(List<SchedularFormModel> dataList)
+        {
+            try
+            {
+                SchedularFormModel model = dataList.FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(model.Id))
+                {
+                    var result = await businessUserService.DeleteSchedule(Convert.ToInt32(model.Id), false);
+
+                    if (result.Status)
+                    {
+                        model.Id = null;
+                        var result2 = await AddSchedule(new List<SchedularFormModel>() { model });
+                        return result2;
+                    }
+
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new AddUpdateDelete() { Status = false, Message = "Can not copy this schedule" });
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
         public async Task<ActionResult> ExecuteSchedularForm(string Id, string formGroupKey = null)
         {
             try
@@ -915,7 +961,7 @@ namespace Barrway.Controllers
                         var rawData = (schedule.Data as List<IDictionary<string, object>>).FirstOrDefault();
 
                         var calendar = await businessUserService.GetCalendarDetails(rawData["CALENDAR_CODE"]?.ToString());
-                        
+
                         if (calendar.Data["CALENDAR_TYPE"]?.ToString() == "1" && calendar.Data["CALENDAR_CATEGORY_ID"]?.ToString() == "2")
                         {
                             chopIntoSessions = true;
@@ -1183,7 +1229,7 @@ namespace Barrway.Controllers
                                             tempStartTime = tempEndTime.AddMinutes(RestPeriod);
                                             tempEndTime = tempStartTime.AddMinutes(Duration);
                                         } // end of while
-                                        
+
                                     }
                                     else
                                     {
@@ -1300,7 +1346,7 @@ namespace Barrway.Controllers
                                         }
                                         else
                                         {
-                                            return Json(new AddUpdateDelete() { Status = false, Message = "Only " + eventCounter + " Sessions Created. Session limit reached as per your plan. Upgrade your plan to create more sessions." }, JsonRequestBehavior.AllowGet);
+                                            return Json(new AddUpdateDelete() { Status = true, Message = eventCounter + " Sessions Created. Session limit reached as per your plan. Upgrade your plan to create more sessions." }, JsonRequestBehavior.AllowGet);
                                         }
                                     }
                                     else

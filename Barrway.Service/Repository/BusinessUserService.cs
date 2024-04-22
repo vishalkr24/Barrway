@@ -2693,6 +2693,58 @@ namespace Barrway.Service.Repository
 
         }
 
+        public async Task<AddUpdateDelete> DeleteSchedule(int ScheduleId, bool deleteForm)
+        {
+            try
+            {
+                string query = $@"declare @scheduleId int = {ScheduleId}
+
+                                    declare @Ids varchar(max) = stuff((select ',' + cast(cf.Id as varchar(20)) from CALENDAR_FORM_1935 cf 
+                                    left join TRANSACTION_MASTER_1942 t on t.SLOT = cf.Id
+                                    where cf.SCHEDULAR_FORM_ID = @scheduleId and t.Id is null for xml path('')), 1, 1, '');
+
+                                    declare @TotalRecords int = (select count(cf.Id) from CALENDAR_FORM_1935 cf 
+                                    where cf.SCHEDULAR_FORM_ID = @scheduleId)
+
+                                    declare @DeletableCount int = (select count(cf.Id) from CALENDAR_FORM_1935 cf 
+                                    left join TRANSACTION_MASTER_1942 t on t.SLOT = cf.Id
+                                    where cf.SCHEDULAR_FORM_ID = @scheduleId and t.Id is null)
+
+                                    if(@DeletableCount >= @TotalRecords and 1 = {((deleteForm) ? "1" : "0")})
+                                    begin
+	                                    delete from SCHEDULAR_FORM_1941 where Id = @scheduleId
+                                    end
+
+                                    delete from CALENDAR_FORM_1935 where Id in (select cast(item as integer) from dbo.SplitString(@Ids, ','));
+
+                                    select @TotalRecords as 'TotalRecords', @DeletableCount as 'DeletableRecords';";
+
+                var result = await sqlFunction.ExecuteSqlQuery(query);
+
+                if (result.Count > 0)
+                {
+                    if (Convert.ToInt32(result[0]["DeletableRecords"]?.ToString()) >= Convert.ToInt32(result[0]["TotalRecords"]))
+                    {
+                        return new AddUpdateDelete() { Status = true, Message = "Schedule Deleted Successfully", Data = result };
+                    }
+                    else
+                    {
+                        return new AddUpdateDelete() { Status = true, Message = (result[0]["DeletableRecords"]?.ToString() + " slots deleted because all other slots are already having booking.\n Cancel the bookings and try again if you want to delete those slots."), Data = result };
+                    }
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "Everything went wrong" };
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = "Failed to delete" };
+            }
+        }
+
         public async Task<AddUpdateDelete> AddQueueSession(List<QueueMasterModel> queues, List<SessionMasterModel> sessions, string ScheduleId)
         {
             try
