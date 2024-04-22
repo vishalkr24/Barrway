@@ -33,6 +33,7 @@
                 "Sat": [],
                 "Sun": []
             };
+
             $scope.serviceDetails = null;
 
             adminService.postAsync('/Calendar/GetLocationMasterList/', { companyCode: localStorage.getItem("COMPANY_CODE"), filters: [{ field: "CALENDAR_CODE", type: "=", value: localStorage.getItem("CALENDAR_CODE") }] }).then(function (res) {
@@ -54,6 +55,7 @@
             adminService.postAsync('/Calendar/GetServiceProviderMasterList/', { companyCode: localStorage.getItem("COMPANY_CODE") }).then(function (res) {
 
                 $scope.serviceProviderList = res.data.data;
+
             }, function (err) {
 
             });
@@ -325,7 +327,7 @@
 
         })
 
-        $scope.saveSchedularForm = function () {
+        $scope.saveSchedularForm = function (isCopy = false) {
 
             var data = {
                 Id: $scope.SchedularId,
@@ -368,7 +370,7 @@
                     data.SCHEDULAR_TYPE = "CALENDAR";
                 }
 
-                adminService.postAsync('/Calendar/AddSchedule/', { dataList: [data] }).then(function (res) {
+                adminService.postAsync(((isCopy) ? '/Calendar/CopyToNewSchedule' : '/Calendar/AddSchedule/' ), { dataList: [data] }).then(function (res) {
                     if (!res.data.Status) {
                         swal({
                             icon: "error",
@@ -394,8 +396,15 @@
                         });
 
                     } else {
-                        $scope.SchedularId = 0;
-                        window.location.replace("/calendar/index#/calender/2305");
+                        swal({
+                            icon: "success",
+                            title: "Success",
+                            text: res.data.Message
+                        }).then(function (check) {
+                            $scope.SchedularId = 0;
+                            window.location.replace("/calendar/index#/calender/2305");
+                        })
+                        
                         //window.location.reload();
                     }
 
@@ -409,6 +418,63 @@
 
         }
 
+        $scope.deleteSchedule = function () {
+            swal({
+                icon: "warning",
+                title: "Comfirm delete!",
+                text: "Deleting the schedule will also delete all the slots which have 0 bookings.\nAre you sure to delete the schedule?",
+                buttons: {
+                    confirm: "Yes",
+                    cancel: "No"
+                }
+            }).then(function (check) {
+                if (check) {
+                    adminService.postAsync('/Calendar/DeleteSchedule/', { ScheduleId: $scope.SchedularId }).then(function (res) {
+                        if (!res.data.Status) {
+                            swal({
+                                icon: "error",
+                                title: "Error",
+                                text: res.data.Message
+                            }).then(function () {
+                                
+                            });
+
+                        } else {
+                            swal({
+                                icon: "success",
+                                title: "Deleted Sucessfully",
+                                text: res.data.Message
+                            }).then(function () {
+                                window.location.replace("/calendar/index#/calendar/schedular-form-table/2311");
+                            });
+                        }
+
+                    }, function (err) {
+                        alert("something went wrong!!");
+                    });
+                }
+            })
+
+            
+        }
+
+        $scope.copyToNewSchedule = function () {
+            swal({
+                icon: "warning",
+                title: "Comfirm Copy?",
+                text: "Copying the schedule will also delete all the slots which have 0 bookings.\nAre you sure to delete the slots and create a new copy?",
+                buttons: {
+                    confirm: "Yes",
+                    cancel: "No"
+                }
+            }).then(function (check) {
+                if (check) {
+                    $scope.saveSchedularForm(true);
+                }
+            })
+
+
+        }
 
         $(document).on("change", "#exampleFormControlSelect1", function () {
             addQueueRow();

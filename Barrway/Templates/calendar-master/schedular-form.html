@@ -555,9 +555,9 @@
 
                         <div class="col-md-12 mt-5 mb-5">
                             <button class="btn btn-default" onclick="window.location.href = '/calendar/index#/calendar/schedular-form-table/2311'">{{translation.Cancel}}</button>
-                            <button class="btn btn-default" ng-if="isEdit">Copy to new</button>
+                            <button class="btn btn-default" ng-if="isEdit" ng-click="copyToNewSchedule()">Copy to new</button>
                             <button class="btn btn-primary" id="final-submit-button" ng-click="saveSchedularForm()" ng-if="!isEdit">Execute</button>
-                            <button class="btn btn-danger" id="delete-records-button" ng-click="" ng-if="isEdit">Delete Records</button>
+                            <button class="btn btn-danger" id="delete-records-button" ng-click="deleteSchedule()" ng-if="isEdit">Delete Records</button>
                         </div>
                     </div>
                 </form>
