@@ -16,11 +16,11 @@ namespace Barrway.DTO.BusinessModels
 
         public string COMPANY_NAME_CHINESE { get; set; }
 
-        [Required(ErrorMessage = "Please select a company category")]
-        public string COMPANY_CATEGORY_ID { get; set; }
+        //[Required(ErrorMessage = "Please select a company category")]
+        //public string COMPANY_CATEGORY_ID { get; set; }
 
-        [Required(ErrorMessage = "Please select a company sub-category")]
-        public string COMPANY_SUB_CATEGORY_ID { get; set; }
+        //[Required(ErrorMessage = "Please select a company sub-category")]
+        //public string COMPANY_SUB_CATEGORY_ID { get; set; }
 
     }
 

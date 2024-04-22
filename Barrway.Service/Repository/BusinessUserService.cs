@@ -1736,15 +1736,15 @@ namespace Barrway.Service.Repository
                               ,[PAGE_URL] = N'{SQLUtility.TreatSingleQuoteForQuery(model.PAGE_URL)}'
                               ,[COMPANY_DESCRIPTION] = N'{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_DESCRIPTION)}'
                               ,[TAGS] = N'{SQLUtility.TreatSingleQuoteForQuery(model.TAGS)}'
-                              ,[IS_SEARCHABLE_IN_MARKETPLACE] = '{model.IS_SEARCHABLE_IN_MARKETPLACE}'
-                              ,[COMPANY_CATEGORY_ID] = '{model.COMPANY_CATEGORY_ID}'
-                              ,[COMPANY_SUB_CATEGORY_ID] = '{model.COMPANY_SUB_CATEGORY_ID}'
+                              ,[IS_SEARCHABLE_IN_MARKETPLACE] = '{model.IS_SEARCHABLE_IN_MARKETPLACE}'                              
                               ,[COUNTRY_ID] = '{model.COUNTRY_ID}'
                               ,[CITY_ID] = '{model.CITY_ID}'
                               ,[DISTRICT_ID] = '{model.DISTRICT_ID}'
                               ,[Latitude] = '{model.Latitude}'
                               ,[Longitude] = '{model.Longitude}'
                               WHERE Id = '{model.Id}'";
+                            //,[COMPANY_CATEGORY_ID] = '{model.COMPANY_CATEGORY_ID}'
+                            // ,[COMPANY_SUB_CATEGORY_ID] = '{model.COMPANY_SUB_CATEGORY_ID}'
 
                 int saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
 

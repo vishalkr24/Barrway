@@ -865,3 +865,13 @@ div#com-nav, div#secondry-nav {
 .form-top label {
     min-width: 75px !important;
 }
+
+
+.sec-head,.navbar-bordered {
+    background-color: #e1caca !important;
+}
+
+.dropdown-toggle {
+    border: 1px solid #72328a !important;
+    color: #72328a !important;
+}

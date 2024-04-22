@@ -254,6 +254,32 @@
         font-weight: bold;
         margin-bottom: -12px;
     }
+    form#myForm label {
+        color: #000;
+    }
+    form#myForm .schedular-table .schedular-element.header {
+        color: #000;
+    }
+    .gp-buttons .btn-gray {
+        background-color: #EBEBEB;
+        color: #777777;
+    }
+    .gp-buttons .btn-purple {
+         color: #fff;
+        background-color: purple;
+    }
+    .gp-buttons .btn-red {
+        color: #fff;
+        background-color: #B60019;
+    }
+    /*.gp-buttons .btn-grey {
+        color: #fff;
+        background-color: #B60019;
+    }*/
+    
+    form#myForm .gp-buttons button {
+        border-radius: 40px;
+    }
 </style>
 <div class="container-fluid">
     <div class="page-header mt-2">
@@ -366,7 +392,7 @@
                                 <span id="fileError" style="color:red" class="error-message"></span><br>
                             </div>
                             <div class="form-group mt-2 p-0">
-                                <button type="button" onclick="angular.element(this).scope().uploadFiles()" id="EventUploadBtn" class="btn btn-primary disable" disabled>Upload</button>
+                                <button type="button btn-purple" onclick="angular.element(this).scope().uploadFiles()" id="EventUploadBtn" class="btn btn-primary disable" disabled>Upload</button>
                             </div>
                             <input type="hidden" ng-model="DOWNLOADABLE_ATTACHMENT" value="" id="DOWNLOADABLE_ATTACHMENT_FILES" />
                             <input type="hidden" ng-model="DOWNLOAD_FILE_LIST" value="" id="DOWNLOAD_FILE_LIST" />
@@ -554,10 +580,11 @@
                         </div>
 
                         <div class="col-md-12 mt-5 mb-5">
-                            <button class="btn btn-default" onclick="window.location.href = '/calendar/index#/calendar/schedular-form-table/2311'">{{translation.Cancel}}</button>
-                            <button class="btn btn-default" ng-if="isEdit" ng-click="copyToNewSchedule()">Copy to new</button>
-                            <button class="btn btn-primary" id="final-submit-button" ng-click="saveSchedularForm()" ng-if="!isEdit">Execute</button>
-                            <button class="btn btn-danger" id="delete-records-button" ng-click="deleteSchedule()" ng-if="isEdit">Delete Records</button>
+                            <button class="btn btn-gray" onclick="window.location.href = '/calendar/index#/calendar/schedular-form-table/2311'">{{translation.Cancel}}</button>
+                            <button class="btn btn-gray" ng-if="isEdit" ng-click="copyToNewSchedule()">Copy to new</button>
+                            <button class="btn btn-purple" id="final-submit-button" ng-click="saveSchedularForm()" ng-if="!isEdit">Execute</button>
+                            <button class="btn btn-red" id="delete-records-button" ng-click="deleteSchedule()" ng-if="isEdit">Delete Records</button>
+
                         </div>
                     </div>
                 </form>

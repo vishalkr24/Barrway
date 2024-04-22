@@ -29,7 +29,7 @@ namespace Barrway.Security
             {
                 Subject = new ClaimsIdentity(new[]
                         {
-                            new Claim(ClaimTypes.Name, user["USER_NAME"].ToString()),
+                            new Claim(ClaimTypes.Name, user["USER_ID"].ToString()),
                             new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString())
                         }),
 
