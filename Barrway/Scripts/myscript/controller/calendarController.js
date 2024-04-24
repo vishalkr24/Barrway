@@ -10398,6 +10398,7 @@
                                 //            console.log('success');
                                 //        }
                                 //    });
+
                                 $scope.currentDateTime = new Date();
                                 if ($scope.formDetailsDataInfo.currentFormType != 2) {
 
@@ -10661,7 +10662,7 @@
                 .then(function (response) {
                     if (response.data != null && angular.isDefined(response.data)) {
                         response.data.forEach(x => {
-                            if (x.formDataList && x.formDataList.length > 0 && x.resourceForm != "2304" && x.activitiesForm!="2304") {
+                            if (x.formDataList && x.formDataList.length > 0 && x.resourceForm != "2304" && x.activitiesForm != "2304") {
                                 x.formDataList = x.formDataList.filter(y => y.CALENDAR_CODE == localStorage.getItem("CALENDAR_CODE"));
                             }
                         });
@@ -15372,8 +15373,8 @@
         function changeViewStateOfCalender(view, data) {
             var temp = {};
             temp.field = "start";
-
-            if (data.type == "selectedDate") {
+            debugger;
+             if (data.type == "selectedDate") {
                 $('#list-view div.calendar').fullCalendar('gotoDate', $scope.formDetailsDataInfo.searchByDate);
                 $('#agenda-view div.calendar').fullCalendar('gotoDate', $scope.formDetailsDataInfo.searchByDate);
                 $('#timeline-resource-view div.calendar').fullCalendar('gotoDate', $scope.formDetailsDataInfo.searchByDate);
@@ -17584,7 +17585,7 @@
 
         }
     });
-    
+
     FormGeneratorApp.controller('UserBookingsController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
         checkLogin();
         $("#user-nav-mybookings").addClass("active")
@@ -17634,7 +17635,7 @@
                 success: function (response) {
                     debugger;
                     $scope.selectEventDetails = response.events[0];
-                    $scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES = ($scope.selectEventDetails.DOWNLOAD_FILE_LIST != null && $scope.selectEventDetails.DOWNLOAD_FILE_LIST != '' && $scope.selectEventDetails.DOWNLOAD_FILE_LIST != undefined) ? JSON.parse($scope.selectEventDetails.DOWNLOAD_FILE_LIST): null;
+                    $scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES = ($scope.selectEventDetails.DOWNLOAD_FILE_LIST != null && $scope.selectEventDetails.DOWNLOAD_FILE_LIST != '' && $scope.selectEventDetails.DOWNLOAD_FILE_LIST != undefined) ? JSON.parse($scope.selectEventDetails.DOWNLOAD_FILE_LIST) : null;
                     $scope.selectEventDetails.DisplayType = type;
 
                     var enrollUser = getUserEnrollDetails($scope.selectEventDetails.Id);
@@ -17911,7 +17912,7 @@
                             } else {
                                 return `<button onclick="angular.element(this).scope().ViewEvent(${cell.getData().Id}, ${type}, '${cell.getData().COMPANY_CODE}')" class="btn btn-danger" style="border-radius: 50px;">View Event</button>`;
                             }
-                            
+
                         }
                     }
                 },
@@ -17986,7 +17987,7 @@
 
         };
 
-        
+
 
         $scope.BindMyBookings(1);
     })
@@ -18091,7 +18092,7 @@
                         for (var j = 0; j < creditDetails.length; j++) {
                             txtCreditDetails += `<p class="text-danger">${creditDetails[j].Balance} credits expiring on ${moment(creditDetails[j].CREDIT_EXPIRE_DATE.substring(0, 10), "YYYY-MM-DD").format("DD/MM/YYYY")}</p>`;
                         }
-                        
+
 
                         $("#row1").append(`<div class="wrap">
                                                     <div class="wrap-im">
@@ -18428,7 +18429,7 @@ function getCalenderSettingsLocal(companyCode) {
         contentType: "application/json",
         async: false,
         success: function (response) {
-            
+
             data = response;
 
         }
@@ -18599,7 +18600,7 @@ function getUserEnrollDetails(id) {
         success: function (response) {
             hideLoader();
             data = response;
-            
+
         }
     });
     return data;

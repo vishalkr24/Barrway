@@ -636,7 +636,7 @@ function showCalendar(companyCode) {
         slotDuration: slotDuration,
         // defaultTimedEventDuration: defaultDuration,
         //aspectRatio: 1.5,
-        defaultDate: new Date(),
+        defaultDate: ((calendarDetails.DEFAULT_DATE == null || calendarDetails.DEFAULT_DATE == "") ? new Date() : new Date(calendarDetails.DEFAULT_DATE)),
         eventMouseover: function (event, jsEvent, view) {
             if (view.name !== 'agendaDay') {
                 ////console.log(event);
@@ -1387,7 +1387,7 @@ function showCalendar(companyCode) {
         },
         views: listViewViews,
         defaultView: (is5CType) ? 'listYear' : 'listWeek',
-        defaultDate: new Date(),
+        defaultDate: ((calendarDetails.DEFAULT_DATE == null || calendarDetails.DEFAULT_DATE == "") ? new Date() : new Date(calendarDetails.DEFAULT_DATE)),
         events: function (start, end, timezone, callback) {
 
             var $scope = angular.element($("#calendar")).scope();
@@ -3686,12 +3686,22 @@ function GetAdvancaePopupForMasterData(formid,title) {
 
                     let formDataList = calenderSettings.find(x => x.resourceForm == formid).formDataList;
                     let modalContent = '';
+
                     formDataList.forEach(x => {
                         modalContent += '<div>';
                         fields.forEach(y => {
                             if (!excludeFields.find(z => z.formid == formid && z.fields.find(f => f == y.name))) {
-                                if ((x[y.name] != undefined && x[y.name] != '' && x[y.name] != 'null') || x[y.name]=="0")
-                                modalContent += `<p><b>${y.label}:</b>  ${x[y.name]}</p>`;
+                                if ((x[y.name] != undefined && x[y.name] != '' && x[y.name] != 'null') || x[y.name] == "0") {
+                                    debugger;
+                                    if (y.name.includes("BUILDING_NAME")) {
+                                        modalContent += `<p>${x[y.name]} </p>`;
+                                    } else if (y.name.includes("NAME") || y.name.includes("LOCATION_ADDRESS")) {
+                                        modalContent += `<p><b>${x[y.name]}</b></p>`;
+                                    } else {
+                                        modalContent += `<p>${x[y.name]} </p>`;
+                                    }
+                                }
+                                
                             }
                         });
                         modalContent += '</div><hr/>';

@@ -254,20 +254,25 @@
         font-weight: bold;
         margin-bottom: -12px;
     }
+
     form#myForm label {
         color: #000;
     }
+
     form#myForm .schedular-table .schedular-element.header {
         color: #000;
     }
+
     .gp-buttons .btn-gray {
         background-color: #EBEBEB;
         color: #777777;
     }
+
     .gp-buttons .btn-purple {
-         color: #fff;
+        color: #fff;
         background-color: purple;
     }
+
     .gp-buttons .btn-red {
         color: #fff;
         background-color: #B60019;
@@ -276,7 +281,7 @@
         color: #fff;
         background-color: #B60019;
     }*/
-    
+
     form#myForm .gp-buttons button {
         border-radius: 40px;
     }
@@ -383,10 +388,57 @@
                         </div>
 
 
-                       
+                        <style>
+                            .already-uploaded-ul {
+                                display: flex;
+                                flex-wrap: wrap;
+                            }
+
+                                .already-uploaded-ul li {
+                                    margin-right: 12px;
+                                    margin-top: 12px;
+                                    list-style: none;
+                                    width: min-content;
+                                    max-width: 142px;
+                                    border-radius: 4px;
+                                    border: 1px solid lightgrey;
+                                }
+
+                                    .already-uploaded-ul li select {
+                                        border: none !important;
+                                        border-top: 1px solid lightgrey !important;
+                                        border-radius: 0px !important;
+                                        outline: none;
+                                        width: 100%;
+                                    }
+
+                                    .already-uploaded-ul li img {
+                                        width: 140px;
+                                        height: auto;
+                                        max-height:122px;
+                                    }
+
+                                    .already-uploaded-ul li button {
+                                        position: absolute;
+                                        padding: 0px;
+                                        font-size: 18px;
+                                        margin-left: 120px;
+                                        margin-top: -3px;
+                                    }
+
+                                    .already-uploaded-ul li .attachment-name {
+                                        text-overflow: ellipsis;
+                                        text-align: center;
+                                        font-size: smaller;
+                                        color: grey;
+                                        white-space: nowrap;
+                                        overflow: hidden;
+                                        max-width: 100%;
+                                    }
+                        </style>
 
                         <div class="col-md-4">
-                            <div class="form-group mt-2 p-0">
+                            <div class="form-group p-0">
                                 <label for="DOWNLOADABLE_ATTACHMENT">Upload Attachments</label>
                                 <input type="file" name="DOWNLOADABLE_ATTACHMENT" class="form-control" onchange="angular.element(this).scope().validateForm('DOWNLOADABLE_ATTACHMENT')" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx" multiple id="DOWNLOADABLE_ATTACHMENT" />
                                 <span id="fileError" style="color:red" class="error-message"></span><br>
@@ -394,33 +446,28 @@
                             <div class="form-group mt-2 p-0">
                                 <button type="button btn-purple" onclick="angular.element(this).scope().uploadFiles()" id="EventUploadBtn" class="btn btn-primary disable" disabled>Upload</button>
                             </div>
+
+
+
                             <input type="hidden" ng-model="DOWNLOADABLE_ATTACHMENT" value="" id="DOWNLOADABLE_ATTACHMENT_FILES" />
                             <input type="hidden" ng-model="DOWNLOAD_FILE_LIST" value="" id="DOWNLOAD_FILE_LIST" />
-                            <ul style="padding:0">
-                                <li ng-repeat="item in DOWNLOADABLE_ATTACHMENT_FILES">
-                                    <a ng-href="{{item.url}}" target="_blank">{{item.name}}</a>
-                                    <select ng-model="item.type" class="form-control-sm" ng-change="changeUploadFileType(false)">
-                                        <option value="public">Public</option>
-                                        <option value="user">User</option>
-                                    </select>
-                                    <button class="btn btn-link" ng-click="removeFiles($index)"><i class="fa fa-times-circle"></i></button>
-                                </li>
-                            </ul>
                         </div>
+
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="IS_UPLOAD_REQUIRED">IS UPLOAD REQUIRED</label>
-                                <br/>
-                                <div class="form-check-inline"> 
-                                <label class="form-check-label" for="IS_UPLOAD_REQUIRED0"> 
-                                    <input type="radio" class="form-check-input" id="IS_UPLOAD_REQUIRED0" ng-model="IS_UPLOAD_REQUIRED" name="IS_UPLOAD_REQUIRED" value="Y">  Y</label></div>
-                                <div class="form-check-inline"> 
-                                <label class="form-check-label" for="IS_UPLOAD_REQUIRED1">
-                                    <input ng-model="IS_UPLOAD_REQUIRED" type="radio" class="form-check-input" id="IS_UPLOAD_REQUIRED1" name="IS_UPLOAD_REQUIRED" value="N" checked>   N</label>
+                                <br />
+                                <div class="form-check-inline">
+                                    <label class="form-check-label" for="IS_UPLOAD_REQUIRED0">
+                                        <input type="radio" class="form-check-input" id="IS_UPLOAD_REQUIRED0" ng-model="IS_UPLOAD_REQUIRED" name="IS_UPLOAD_REQUIRED" value="Y">  Y
+                                    </label>
+                                </div>
+                                <div class="form-check-inline">
+                                    <label class="form-check-label" for="IS_UPLOAD_REQUIRED1">
+                                        <input ng-model="IS_UPLOAD_REQUIRED" type="radio" class="form-check-input" id="IS_UPLOAD_REQUIRED1" name="IS_UPLOAD_REQUIRED" value="N" checked>  N
+                                    </label>
                                 </div>
                             </div>
-
-                            
                         </div>
 
                         <div class="col-md-4">
@@ -429,6 +476,20 @@
                             </div>
                         </div>
 
+                        <div class="col-md-12">
+                            <ul style="padding:0" class="already-uploaded-ul">
+                                <li ng-repeat="item in DOWNLOADABLE_ATTACHMENT_FILES">
+                                    <button class="btn btn-link" ng-click="removeFiles($index)"><i class="fa fa-times-circle"></i></button>
+                                    <a ng-href="{{item.url}}" target="_blank" title="{{item.name}}"><img src="{{((item.name.includes('jpg') || item.name.includes('png') || item.name.includes('jpeg')) ? item.url : '../../assets/css/images/attachment-img.PNG    ')}}" /></a>
+                                    <div title="{{item.name}}" class="attachment-name">{{item.name}}</div>
+                                    <select ng-model="item.type" class="form-control-sm" ng-change="changeUploadFileType(false)">
+                                        <option value="public">Public</option>
+                                        <option value="user">User</option>
+                                    </select>
+
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">

@@ -773,7 +773,6 @@ namespace Barrway.Service.Repository
                         }
                         else
                         {
-
                             Form_DataTable request = new Form_DataTable();
 
                             request.currentFormType = 1;
@@ -840,8 +839,6 @@ namespace Barrway.Service.Repository
                             transaction["ATTENDANCE"] = "YES";
                             transaction["COMPANY_CODE"] = eventModal.companyCode;
                             transaction["CALENDAR_CODE"] = eventModal.calendarCode;
-
-
 
                             Form_DataTable transaction_req = new Form_DataTable();
                             transaction_req.action = (int)FormAction.Save;
