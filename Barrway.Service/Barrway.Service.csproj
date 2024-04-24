@@ -131,11 +131,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IRepository\IMessageRepository.cs" />
+    <Compile Include="IRepository\IMobileAPIService.cs" />
     <Compile Include="IRepository\IQueueService.cs" />
     <Compile Include="IRepository\ISuperAdminUserService.cs" />
     <Compile Include="IRepository\IPublicUserService.cs" />
     <Compile Include="IRepository\ICalendarService.cs" />
     <Compile Include="Repository\MessageRepository.cs" />
+    <Compile Include="Repository\MobileAPIService.cs" />
     <Compile Include="Repository\QueueService.cs" />
     <Compile Include="Repository\SuperAdminUserService.cs" />
     <Compile Include="Repository\PublicUserService.cs" />

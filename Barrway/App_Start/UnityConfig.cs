@@ -69,6 +69,7 @@ namespace Barrway
             container.RegisterType<IQueueService, QueueService>();
             container.RegisterType<IMessageRepository, MessageRepository>();
             container.RegisterSingleton<IQueueService, QueueService>();
+            container.RegisterSingleton<IMobileAPIService, MobileAPIService>();
 
             GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
 

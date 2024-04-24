@@ -342,6 +342,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\API\v1\AccountController.cs" />
+    <Compile Include="Controllers\API\v1\DashboardController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BusinessMarketplaceController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
@@ -375,8 +376,12 @@
       <DependentUpon>Resource.zh-Hant.resx</DependentUpon>
     </Compile>
     <Compile Include="Security\AddAuthorizationHeaderParameterOperationFilter.cs" />
+    <Compile Include="Security\AddChallengeOnUnauthorizedResult.cs" />
     <Compile Include="Security\ApiKeyAuthorizationFilterAttribute.cs" />
     <Compile Include="Security\ApplicationAuthProvider.cs" />
+    <Compile Include="Security\AuthenticationFailureResult.cs" />
+    <Compile Include="Security\HttpAuthenticationChallengeContextExtensions.cs" />
+    <Compile Include="Security\JwtAuthenticationAttribute.cs" />
     <Compile Include="Security\NotImplExceptionFilterAttribute.cs" />
     <Compile Include="Security\SuperBusinessUserAuthorizeAttribute.cs" />
     <Compile Include="Security\SuperAdminAuthorizeAttribute.cs" />

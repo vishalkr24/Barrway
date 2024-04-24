@@ -199,7 +199,7 @@ function setCalendarSubCategoryWise(showFilterQuery = false, requestFromButton =
                     var tagString = "";
 
                     
-                    if (calendars[j].TAGS != null && calendars[j].TAGS != "") {
+                    if (calendars[j].TAGS != null && calendars[j].TAGS != "" && IsJsonString(calendars[j].TAGS)) {
                         var tags = JSON.parse(calendars[j].TAGS);
                         for (var k = 0; k < tags.length; k++) {
 
@@ -265,4 +265,13 @@ function setCalendarSubCategoryWise(showFilterQuery = false, requestFromButton =
 
     }
 
+}
+
+function IsJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
 }

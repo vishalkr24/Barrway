@@ -67,7 +67,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="APIModels\Account\APIEmailSignUpModel.cs" />
     <Compile Include="APIModels\Account\LoginViewModel.cs" />
+    <Compile Include="APIModels\Account\UserClaimViewModel.cs" />
+    <Compile Include="APIModels\Dashboard\CalendarModel.cs" />
+    <Compile Include="APIModels\Dashboard\DashboardModel.cs" />
+    <Compile Include="APIModels\Dashboard\FeatureBlogModel.cs" />
+    <Compile Include="APIModels\Dashboard\FeatureCompanyModel.cs" />
+    <Compile Include="APIModels\Dashboard\SearchFilterModel.cs" />
     <Compile Include="AuthViewModel\EmailSignUpViewModel.cs" />
     <Compile Include="AuthViewModel\BusinessExternalEmailLogiViewModel.cs" />
     <Compile Include="AuthViewModel\BarrwayViewModel.cs" />
