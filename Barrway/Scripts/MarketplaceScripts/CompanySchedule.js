@@ -1,4 +1,4 @@
-﻿var CalendarFormId = "2305", ySelection = "", xSelection = "", COMPANY_CODE, CALENDAR_CODE, formDetailsDataInfo, counterLoader, xaxisFormList, formAllDatafields, listTabulator, calendarDetails, is5CType = false, tempEndDate, calenderSettings;
+﻿var CalendarFormId = "2305", ySelection = "", xSelection = "", COMPANY_CODE, CALENDAR_CODE, formDetailsDataInfo, counterLoader, xaxisFormList, formAllDatafields, listTabulator, calendarDetails, is5CType = false, tempEndDate, calenderSettings, resourceFormId;
 $(document).ready(async function () {
     $("#txtCommonCurrentCompanyCode").val($("#txtCurrentCompanyCode").val());
     $("#startListViewDate").datepicker({
@@ -110,7 +110,7 @@ $(document).ready(async function () {
         /*$("#tabs li[data-value='External Events'] a").trigger("click");*/
     }
     var resourceKey = { "LOCATION": "2306", "SERVICE PROVIDER": "2304" };
-    var resourceFormId = "2306";
+    resourceFormId = "2306";
     let DEFAULT_RESOURCE = calendarDetails["DEFAULT_RESOURCE"];
     if (DEFAULT_RESOURCE && DEFAULT_RESOURCE != "" && DEFAULT_RESOURCE != "null" && resourceKey[DEFAULT_RESOURCE]) {
         resourceFormId = resourceKey[DEFAULT_RESOURCE];
@@ -3058,6 +3058,7 @@ async function rendarPopupCalendar(assignDate) {
             param.COMPANY_CODE = COMPANY_CODE;
             param.CALENDAR_CODE = CALENDAR_CODE;
             param.resourceId = $scopeVar.selectEventDetails.resourceId;
+            param.resourceFormId = resourceFormId;
 
 
 
