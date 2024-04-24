@@ -1344,34 +1344,7 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetSchedule(string ScheduleId, string UserId)
         {
-            string sqlQuery = $@"SELECT schedular.[Id]
-                                      ,schedular.[created_at]
-                                      ,schedular.[updated_at]
-                                      ,schedular.[created_by]
-                                      ,schedular.[updated_by]
-                                      ,[SCH__NAME]
-                                      ,[SCH_LOCATION]
-                                      ,[SCH_ACTIVITY]
-                                      ,[SCH_RESOURCE]
-                                      ,[SCH_MEDIUM]
-                                      ,[SCH_DESCRIPTION]
-                                      ,[SCH_FROM_DATE]
-                                      ,[SCH_TO_DATE]
-                                      ,[DURATION_FIELD],[REST_PERIOD_BETWEEN_SESSION]
-                                      ,[SCH_ALTERNATIVE_WEEK]
-                                      ,[hidden_1683715521753]
-                                      ,[hidden_1683715524413]
-                                      ,[SCH_START]
-                                      ,[SCH_END]
-                                      ,[SCH_COLOR]
-                                      ,[SCH_ALL_DAY]
-                                      ,[IF_SLOT_EXIST]
-                                      ,[IF_SLOT_DOES_NOT_EXIST]
-                                      ,[SCH_STUDENT_TABLE]
-									  ,[SCHEDULAR_TYPE]
-                                      ,[SCH_SCHEDULE_TABLE]
-                                      ,schedular.[COMPANY_CODE]
-                                      ,schedular.[CALENDAR_CODE]
+            string sqlQuery = $@"SELECT schedular.*
                                   FROM [dbo].[SCHEDULAR_FORM_1941] schedular
 								  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = schedular.COMPANY_CODE
 								  join BUSINESS_ASSIGNED_USERS_1964 bau on bau.COMPANY_ID = company.Id
@@ -1392,33 +1365,7 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetSchedule(string CompanyCode, string CalendarCode, string UserId)
         {
-            string sqlQuery = $@"SELECT top 1  schedular.[Id]
-                                      ,schedular.[created_at]
-                                      ,schedular.[updated_at]
-                                      ,schedular.[created_by]
-                                      ,schedular.[updated_by]
-                                      ,[SCH__NAME]
-                                      ,[SCH_LOCATION]
-                                      ,[SCH_ACTIVITY]
-                                      ,[SCH_RESOURCE]
-                                      ,[SCH_MEDIUM]
-                                      ,[SCH_DESCRIPTION]
-                                      ,[SCH_FROM_DATE]
-                                      ,[SCH_TO_DATE]
-                                      ,[SCH_ALTERNATIVE_WEEK]
-                                      ,[hidden_1683715521753]
-                                      ,[hidden_1683715524413]
-                                      ,[SCH_START]
-                                      ,[SCH_END]
-                                      ,[SCH_COLOR]
-                                      ,[SCH_ALL_DAY]
-                                      ,[IF_SLOT_EXIST]
-                                      ,[IF_SLOT_DOES_NOT_EXIST]
-                                      ,[SCH_STUDENT_TABLE]
-									  ,[SCHEDULAR_TYPE]
-                                      ,[SCH_SCHEDULE_TABLE]
-                                      ,schedular.[COMPANY_CODE]
-                                      ,schedular.[CALENDAR_CODE]
+            string sqlQuery = $@"SELECT top 1  schedular.*
                                   FROM [dbo].[SCHEDULAR_FORM_1941] schedular
 								  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = schedular.COMPANY_CODE
 								  join BUSINESS_ASSIGNED_USERS_1964 bau on bau.COMPANY_ID = company.Id
@@ -2375,6 +2322,7 @@ namespace Barrway.Service.Repository
                                       ,[DISPLAY_MIN_TIME] = '{model.DISPLAY_MIN_TIME}'
                                       ,[DISPLAY_MAX_TIME] = '{model.DISPLAY_MAX_TIME}'
                                       ,[DEFAULT_RESOURCE] = '{model.DEFAULT_RESOURCE}'
+                                      ,[DEFAULT_DATE] = '{model.DEFAULT_DATE}'
                                       ,[NEED_ADDITIONAL_FORM] = '{model.NEED_ADDITIONAL_FORM}'
                                       ,[DEFAULT_CALENDAR_VIEW] = '{model.DEFAULT_CALENDAR_VIEW}'
                                       ,[REQUIRED_CALENDAR_VIEWS] = '{model.REQUIRED_CALENDAR_VIEWS}'
