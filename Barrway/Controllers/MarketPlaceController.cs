@@ -387,7 +387,12 @@ namespace Barrway.Controllers
                     return RedirectToAction("Error404", "Marketplace");
                 }
                 var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
+                if (companyData.Data == null)
+                {
+                    return RedirectToAction("Index", "Marketplace");
+                }
                 var data = JsonConvert.SerializeObject(companyData.Data);
+                
                 MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
                 companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
                 companyModel.PAGE_URL = id;

@@ -343,7 +343,7 @@
                         {
                             foreach (var item in Model.FeaturedCompanys)
                             {
-                                <div class="item">
+                                <div class="item" onclick="window.location.href = '/company/@item.COMPANY_CODE'">
                                     <div class="item-inner">
                                         <div class="pro-im">
                                             <img src="@item.COMPANY_LOGO_PATH.Replace("~", "")" onerror="this.src='../assets/marketplace/image/alogo2.png'"> 
