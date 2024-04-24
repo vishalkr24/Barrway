@@ -93,6 +93,8 @@ namespace FormGeneratorDTOs.DTOs
         public List<CustomFilter> CustomFilters { get; set; }
         
         public string SearchText { get; set; }
+        public string Featured { get; set; }
+
     }
 
 
