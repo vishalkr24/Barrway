@@ -65,13 +65,38 @@
             <div class="col-md-12">
                 <div class="detail">
                     <p class="pink"><b>@Resource.Company_category</b></p>
-                    <p>@(string.IsNullOrEmpty(Model.COMPANY_CATEGORY_NAME) ? "Category not mentioned": Model.COMPANY_CATEGORY_NAME)</p>
+                    @if (Model.CALENDAR_CATEGORY_NAME_List != null)
+                    {
+
+                        foreach (var item in Model.CALENDAR_CATEGORY_NAME_List)
+                        {
+                            <p>@item.CALENDAR_CATEGORY_NAME</p>
+                        }
+                    }
+                    else
+                    {
+                        <p>Sub-Category not mentioned</p>
+                    }
+                    @*<p>@(string.IsNullOrEmpty(Model.COMPANY_CATEGORY_NAME) ? "Category not mentioned": Model.COMPANY_CATEGORY_NAME)</p>*@
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="detail">
                     <p class="pink"><b>@Resource.Company_sub_category</b></p>
-                    <p>@(string.IsNullOrEmpty(Model.COMPANY_SUB_CATEGORY_NAME) ? "Sub-Category not mentioned": Model.COMPANY_SUB_CATEGORY_NAME)</p>
+                    @if (Model.CALENDAR_SUB_CATEGORY_NAME_List != null)
+                    {
+
+                        foreach (var item in Model.CALENDAR_SUB_CATEGORY_NAME_List)
+                        {
+                            <p>@item.CALENDAR_SUB_CATEGORY_NAME</p>
+                        }
+                    }
+                    else
+                    {
+                        <p>Sub-Category not mentioned</p>
+                    }
+
+                    @*<p>@(string.IsNullOrEmpty(Model.COMPANY_SUB_CATEGORY_NAME) ? "Sub-Category not mentioned": Model.COMPANY_SUB_CATEGORY_NAME)</p>*@
                 </div>
             </div>
             <div class="col-md-12">

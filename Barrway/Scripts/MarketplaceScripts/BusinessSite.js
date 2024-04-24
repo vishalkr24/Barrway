@@ -72,7 +72,7 @@ function setCompanyData(pageNumber, SearchText) {
             $("#ComapanyList").empty();
 
             for (var i = 0; i < response.data.length; i++) {
-                debugger;
+                console.log(response.data[i],"gjhg");
                 var tagQuery = "";  
                 if (response.data[i].TAGS != '') {
                     var tags = JSON.parse(response.data[i].TAGS);
@@ -83,18 +83,24 @@ function setCompanyData(pageNumber, SearchText) {
                         tagQuery += `&nbsp;<a href='/Marketplace/Search?keyword=${tags[k].value}'>${tags[k].value}</a>`;
                     }
                 }
+
+                var feturedHtml = '';
+
+                if (response.data[i].IS_FEATURED == 'Y') {
+                    feturedHtml = '<h4 class="media-heading">Featured company</h4>';
+                }
+
                 $("#ComapanyList").append(`<div class="col-md-6 col-sm-6 col-xs-6">
                     <div class="media" style="cursor:pointer;" onclick="window.location.href = '/company/${response.data[i].COMPANY_CODE}'">
                                 <div class="media-left">
                                     <img src="${response.data[i].COMPANY_LOGO_PATH.replace("~", "..")}" onerror="this.src='../assets/marketplace/image/alogo2.png'" class="media-object" style="width:150px">
                                 </div>
                                 <div class="media-body">
-                                    <h4 class="media-heading">Featured company</h4>
+                                    ${feturedHtml}
                                     <p><b>${response.data[i].COMPANY_NAME_ENGLISH}</b></p>
                                     <p style="height: 48px; overflow: hidden;">${response.data[i].COMPANY_DESCRIPTION}</p>
                                     <p>${tagQuery}</p>
                                 </div>
-
                 </div>`);
 
                 //<div class="col-md-6 col-sm-6 col-xs-6">

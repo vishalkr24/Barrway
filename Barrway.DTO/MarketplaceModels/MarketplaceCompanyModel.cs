@@ -51,14 +51,27 @@ namespace Barrway.DTO.MarketplaceModels
         public string COMPANY_CITY_NAME { get; set; } = String.Empty;
         public string COMPANY_COUNTRY_NAME { get; set; } = String.Empty;
         public string COMPANY_DISTRICT_NAME { get; set; } = String.Empty;
-        public List<string> CALENDAR_SUB_CATEGORY_NAME_List { get; set; }
-        public List<string> CALENDAR_CATEGORY_NAME_List { get; set; }       
+        public List<CALENDAR_SUB_CATEGORY> CALENDAR_SUB_CATEGORY_NAME_List { get; set; }
+        public List<CALENDAR_CATEGORY> CALENDAR_CATEGORY_NAME_List { get; set; }       
 
         public List<BusinessCalendarModel> calendars { get; set; }
         public List<ServicesList> ServicesList { get; set; }
         public string DEFAULT_CALENDAR_ID { get; set; }
         public List<BusinessCompanyCategoryModel> services { get; set; }
 
+    }
+
+
+    public class CALENDAR_SUB_CATEGORY
+    {
+        public int Id { get; set; }
+        public string CALENDAR_SUB_CATEGORY_NAME { get; set; }
+    }
+
+    public class CALENDAR_CATEGORY
+    {
+        public int Id { get; set; }
+        public string CALENDAR_CATEGORY_NAME { get; set; }
     }
 
 }

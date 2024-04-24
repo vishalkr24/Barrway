@@ -391,6 +391,23 @@ namespace Barrway.Controllers
                 MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
                 companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
                 companyModel.PAGE_URL = id;
+
+                var ClanderSubCategory = await businessUserService.GetCalanderSubCategoryNameList(CompanyCode);  
+                if(ClanderSubCategory.Data != null)
+                {
+                    
+                    companyModel.CALENDAR_SUB_CATEGORY_NAME_List = JsonConvert.DeserializeObject<List<CALENDAR_SUB_CATEGORY>>(JsonConvert.SerializeObject(ClanderSubCategory.Data));
+                }
+                
+
+                var ClanderCategory = await businessUserService.GetCalanderCategoryNameList(CompanyCode);
+                if(ClanderCategory.Data != null)
+                {
+                    companyModel.CALENDAR_CATEGORY_NAME_List = JsonConvert.DeserializeObject<List<CALENDAR_CATEGORY>>(JsonConvert.SerializeObject(ClanderCategory.Data));
+                }
+                
+
+
                 if (!string.IsNullOrEmpty(companyModel.TAGS))
                 {
                     companyModel.TAGs = JsonConvert.DeserializeObject<List<TagsObject>>(companyModel.TAGS);
