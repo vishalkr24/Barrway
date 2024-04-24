@@ -301,10 +301,14 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> UpdateInvitationStatus(string Token, string Status)
+        public async Task<AddUpdateDelete> UpdateInvitationStatus(string Token, string Status, string UserId)
         {
+            string query = $@"update USER_MASTER_1915 set COMPANY_PROFILE_STATUS = 'Y', COMPANY_CALENDAR_STATUS = 'Y', CURRENT_STEP = 'COMPLETED', PROFILE_STATUS = 'COMPLETED' where USER_ID = '{UserId}'";
+
+            var updateResult = await sqlFunction.ExecuteSqlCommandQuery(query);
+
             string sqlQuery = $@"update BUSINESS_USER_INVITATION_MANAGER_1965 set STATUS = '{Status}'
-                                 where REQUEST_TOKEN = '{Token}'";
+                                 where REQUEST_TOKEN = '{Token}' and STATUS in ('Pending', 'OPENED')";
             var validationResult = await sqlFunction.ExecuteSqlCommandQuery(sqlQuery);
             if (validationResult > 0)
             {
@@ -312,7 +316,7 @@ namespace Barrway.Service.Repository
             }
             else
             {
-                return new AddUpdateDelete() { Status = false, Message = "Invitation Not Upadated" };
+                return new AddUpdateDelete() { Status = false, Message = "Invitation link expired" };
             }
         }
 

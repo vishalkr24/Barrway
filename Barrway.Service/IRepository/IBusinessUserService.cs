@@ -25,7 +25,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetSuperAssignedBusinessList(string UserId);
         Task<AddUpdateDelete> SendEmailInvite(BusinessUserInvitationModel inviteModel);
         Task<AddUpdateDelete> ValidateInvitationTokenAndUser(string Token, string UserId);
-        Task<AddUpdateDelete> UpdateInvitationStatus(string Token, string status);
+        Task<AddUpdateDelete> UpdateInvitationStatus(string Token, string status, string UserId);
         Task<AddUpdateDelete> GetAllRecentInvites(GenerateDynamicFormData data, string UserId);
         
         #endregion
