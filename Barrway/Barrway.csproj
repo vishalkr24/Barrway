@@ -391,6 +391,7 @@
   <ItemGroup>
     <Content Include="assets\css\custom-styles.css" />
     <Content Include="assets\css\docs.css" />
+    <Content Include="assets\css\images\attachment-img.PNG" />
     <Content Include="assets\css\images\layers-2x.html" />
     <Content Include="assets\css\images\layers.html" />
     <Content Include="assets\css\images\marker-icon.html" />

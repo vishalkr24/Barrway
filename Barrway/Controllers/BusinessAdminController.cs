@@ -220,6 +220,7 @@ namespace Barrway.Controllers
                         calendarModel.DISPLAY_MIN_TIME = calendarModel2.DISPLAY_MIN_TIME;
                         calendarModel.DISPLAY_MAX_TIME = calendarModel2.DISPLAY_MAX_TIME;
                         calendarModel.DEFAULT_RESOURCE = calendarModel2.DEFAULT_RESOURCE;
+                        calendarModel.DEFAULT_DATE = (!string.IsNullOrEmpty(calendarModel2.DEFAULT_DATE)) ? Convert.ToDateTime(calendarModel2.DEFAULT_DATE).ToString("dd/MM/yyyy") : null;
                         calendarModel.DISTRICT_ID = calendarModel2.DISTRICT_ID;
                         calendarModel.ADDITIONAL_FORM_ID = calendarModel2.ADDITIONAL_FORM_ID;
                         calendarModel.NEED_ADDITIONAL_FORM = calendarModel2.NEED_ADDITIONAL_FORM;
@@ -1446,6 +1447,7 @@ namespace Barrway.Controllers
                                 SLOT_DURATION_IN_MINS = model.SLOT_DURATION_IN_MINS,
                                 CALENDAR_TEMPLATE_ID = (UserIdentity.Role != "SUPERADMIN_USER") ? ((string.IsNullOrEmpty(model.CALENDAR_TEMPLATE_ID?.ToString())) ? "" : model.CALENDAR_TEMPLATE_ID?.ToString()) : "0",
                                 IS_VISIBLE = "Y",
+                                DEFAULT_DATE = (!string.IsNullOrEmpty(model.DEFAULT_DATE)) ? Convert.ToDateTime(model.DEFAULT_DATE).ToString("yyyy-MM-dd") : null,
                                 STATUS = "DRAFT",
                                 CALENDAR_USE_TYPE = model.CALENDAR_USE_TYPE,
                                 Id = model.Id,

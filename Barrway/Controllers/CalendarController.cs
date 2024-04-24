@@ -921,23 +921,14 @@ namespace Barrway.Controllers
 
                 if (!string.IsNullOrEmpty(model.Id))
                 {
-                    var result = await businessUserService.DeleteSchedule(Convert.ToInt32(model.Id), false);
-
-                    if (result.Status)
-                    {
-                        model.Id = null;
-                        var result2 = await AddSchedule(new List<SchedularFormModel>() { model });
-                        return result2;
-                    }
-
-                    return Json(result, JsonRequestBehavior.AllowGet);
+                    model.Id = null;
+                    var result2 = await AddSchedule(new List<SchedularFormModel>() { model });
+                    return result2;
                 }
                 else
                 {
                     return Json(new AddUpdateDelete() { Status = false, Message = "Can not copy this schedule" });
                 }
-
-
             }
             catch (Exception ex)
             {

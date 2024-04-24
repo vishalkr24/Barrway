@@ -104,7 +104,21 @@
                         $("#SCH_REST_PERIOD").val($scope.ScheduleData.REST_PERIOD_BETWEEN_SESSION)
 
                         $("input[name='alternate-week'][value='" + $scope.ScheduleData.SCH_ALTERNATIVE_WEEK + "']").attr("checked", true)
+                        debugger;
+                        if ($scope.ScheduleData.IS_UPLOAD_REQUIRED == "Y" || $scope.ScheduleData.IS_UPLOAD_REQUIRED == "N") {
+                            $("input[name='IS_UPLOAD_REQUIRED'][value='" + $scope.ScheduleData.IS_UPLOAD_REQUIRED + "']").prop("checked", true)
+                            $("input[name='IS_UPLOAD_REQUIRED']").trigger("change");
 
+                            if ($scope.ScheduleData.IS_UPLOAD_REQUIRED == "Y") {
+                                $("#UPLOAD_TIME").val($scope.ScheduleData.UPLOAD_TIME);
+                            }
+                        }
+
+                        $scope.DOWNLOADABLE_ATTACHMENT_FILES = JSON.parse($scope.ScheduleData.DOWNLOAD_FILE_LIST);
+                        $rootScope.safeApply();
+                        $scope.DOWNLOADABLE_ATTACHMENT = $scope.ScheduleData.DOWNLOADABLE_ATTACHMENT;
+                        $scope.DOWNLOAD_FILE_LIST = $scope.ScheduleData.DOWNLOAD_FILE_LIST;
+                        $scope.UPLOAD_TIME = $scope.ScheduleData.UPLOAD_TIME;
                     })
                 } else {
                     $scope.addFormElement("Mon");
@@ -462,7 +476,7 @@
             swal({
                 icon: "warning",
                 title: "Comfirm Copy?",
-                text: "Copying the schedule will also delete all the slots which have 0 bookings.\nAre you sure to delete the slots and create a new copy?",
+                text: "Are you sure to create a copy schedule?",
                 buttons: {
                     confirm: "Yes",
                     cancel: "No"

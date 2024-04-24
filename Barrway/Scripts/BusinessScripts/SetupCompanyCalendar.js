@@ -32,6 +32,8 @@ $(document).ready(function () {
         format: "hh:mm A"
     });
 
+    $("#DEFAULT_DATE").datepicker();
+
     $("#DISPLAY_MAX_TIME").datetimepicker({
         format: "hh:mm A"
     });
