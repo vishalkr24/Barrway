@@ -89,6 +89,7 @@ function readyPage() {
         HSCore.components.HSTomSelect.init('.js-select');
     } else {
         $("#CALENDAR_SUB_CATEGORY_ID").attr("disabled", true);
+
         var obj = { 'create': true, 'placeholder': 'Add tags...', maxItems: 15 };
 
         if ($("#stepIndicatorInput").val() == "Y") {
