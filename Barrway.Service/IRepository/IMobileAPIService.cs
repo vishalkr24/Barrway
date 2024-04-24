@@ -1,4 +1,5 @@
 ﻿using Barrway.DTO.APIModels.Dashboard;
+using Barrway.DTO.APIModels.SearchAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,10 @@ namespace Barrway.Service.IRepository
         Task<SearchFilterModel> GetSearchFilter();
         Task<List<CategoryModel>> GetCategoryList();
         Task<List<RootCalendarModel>> GetDashboardCalendarList();
-        Task<List<FeatureCompanyModel>> GetFeatureCompanies();
-        Task<List<FeatureBlogModel>> GetFeatureBlogs();
+        Task<List<CompanyModel>> GetFeatureCompanies();
+        Task<List<BlogModel>> GetFeatureBlogs();
+        Task<List<CalendarModel>> GetCalendarsSearchResult(SearchAPIModel data);
+        Task<List<CompanyModel>> GetCompaniesSearchResult(SearchAPIModel data);
+        Task<List<BlogModel>> GetBlogsSearchResult(SearchAPIModel data);
     }
 }

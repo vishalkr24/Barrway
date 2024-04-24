@@ -10,12 +10,12 @@ namespace Barrway.DTO.APIModels.Dashboard
         public DashboardInfoData()
         {
             calendars = new List<RootCalendarModel>();
-            feature_blogs = new List<FeatureBlogModel>();
-            feature_companies = new List<FeatureCompanyModel>();
+            feature_blogs = new List<BlogModel>();
+            feature_companies = new List<CompanyModel>();
         }
         public List<RootCalendarModel> calendars { get; set; }
-        public List<FeatureCompanyModel> feature_companies { get; set; }
-        public List<FeatureBlogModel> feature_blogs { get; set; }
+        public List<CompanyModel> feature_companies { get; set; }
+        public List<BlogModel> feature_blogs { get; set; }
     }
     public class RootCalendarModel
     {
@@ -46,5 +46,8 @@ namespace Barrway.DTO.APIModels.Dashboard
         public string COMPANY_BANNER_PATH { get; set; }
         public string PAGE_URL { get; set; }
         public string IS_FEATURED { get; set; }
+        public int total_records { get; set; }
+        public int page { get; set; }
+        public int size { get; set; }
     }
 }
