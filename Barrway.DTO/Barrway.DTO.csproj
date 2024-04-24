@@ -75,6 +75,9 @@
     <Compile Include="APIModels\Dashboard\FeatureBlogModel.cs" />
     <Compile Include="APIModels\Dashboard\FeatureCompanyModel.cs" />
     <Compile Include="APIModels\Dashboard\SearchFilterModel.cs" />
+    <Compile Include="APIModels\SearchAPI\SearchAPIModel.cs" />
+    <Compile Include="APIModels\SearchAPI\SearchResponseModel.cs" />
+    <Compile Include="APIModels\SearchAPI\SearchResultAPIModel.cs" />
     <Compile Include="AuthViewModel\EmailSignUpViewModel.cs" />
     <Compile Include="AuthViewModel\BusinessExternalEmailLogiViewModel.cs" />
     <Compile Include="AuthViewModel\BarrwayViewModel.cs" />

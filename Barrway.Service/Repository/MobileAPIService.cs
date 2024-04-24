@@ -1,4 +1,5 @@
 ﻿using Barrway.DTO.APIModels.Dashboard;
+using Barrway.DTO.APIModels.SearchAPI;
 using Barrway.Service.IRepository;
 using Barrway.Utility.Common;
 using Newtonsoft.Json;
@@ -96,22 +97,81 @@ namespace Barrway.Service.Repository
 
             return groupData;
         }
-        public async Task<List<FeatureCompanyModel>> GetFeatureCompanies() {
+        public async Task<List<CompanyModel>> GetFeatureCompanies() {
             string sqlString = $@"select Id,COMPANY_NAME_ENGLISH +'|'+COMPANY_NAME_CHINESE AS COMPANY_NAME,COMPANY_NAME_ENGLISH,COMPANY_BANNER_PATH,COMPANY_LOGO_PATH,COMPANY_BANNER_NAME,TAGS  from BUSINESS_COMPANY_MASTER_1924 WHERE IS_FEATURED='Y'";
-            var featureCompanies = (await sqlFunction.ExecuteSqlQuery<FeatureCompanyModel>(sqlString)).ToList();
+            var featureCompanies = (await sqlFunction.ExecuteSqlQuery<CompanyModel>(sqlString)).ToList();
             featureCompanies.ForEach(x => { x.TAGS = formatTagsString(x.TAGS);x.COMPANY_LOGO_PATH = GetFilepath(x.COMPANY_LOGO_PATH, "COMPANY"); });
             return featureCompanies;
         }
 
-        public async Task<List<FeatureBlogModel>> GetFeatureBlogs()
+        public async Task<List<BlogModel>> GetFeatureBlogs()
         {
             string sqlString = $@"select blog.Id, blog.created_at, blog.BLOG_TITLE,blog.[IMAGE],blog.YOUTUBE_LINK,blog.TAG,blog_c.BLOG_CATEGORY,blog.BLOG_CATEGORY BLOG_CATEGORY_ID from BLOG_1980 blog
                                   join BLOG_CATEGORY_1981 blog_c on blog.BLOG_CATEGORY=blog_c.Id
                                   where blog.IS_HOT='YES'";
-            var featureBlogs = (await sqlFunction.ExecuteSqlQuery<FeatureBlogModel>(sqlString)).ToList();
+            var featureBlogs = (await sqlFunction.ExecuteSqlQuery<BlogModel>(sqlString)).ToList();
             featureBlogs.ForEach(x => x.TAG = formatTagsString(x.TAG));
             return featureBlogs;
         }
+
+        public async Task<List<CalendarModel>> GetCalendarsSearchResult(SearchAPIModel data) { 
+        
+            data.page=data.page==0?1:data.page;
+            data.size = data.size == 0 ? 10 : data.size;
+            string sqlString = $@"declare @PageSize int= {data.size}, 
+                                  @PageNumber int= {data.page}; with formdata as 
+                                  (SELECT 
+                                  calendar.[Id],calendar.[created_at],calendar.[CALENDAR_NAME],calendar.[CALENDAR_PHOTO_NAME],calendar.[CALENDAR_PHOTO_PATH],category.Id AS [CALENDAR_CATEGORY_ID],calendar.[CALENDAR_SUB_CATEGORY_ID],
+                                  calendar.[COMPANY_CODE],calendar.[CALENDAR_CODE],STRING_AGG(subCategory.[CALENDAR_SUB_CATEGORY_NAME],', ') as CALENDAR_SUB_CATEGORY_NAME,category.[CMN_CATEGORY_NAME] CATEGORY_NAME,district.[DISTRICT_NAME],calendar.[TAGS],
+                                  company.[COMPANY_NAME_ENGLISH],company.[COMPANY_NAME_CHINESE],company.[COMPANY_LOGO_NAME],company.[COMPANY_LOGO_PATH],company.[COMPANY_BANNER_NAME],company.[COMPANY_BANNER_PATH],
+                                  company.[PAGE_URL], calendar.[IS_FEATURED],calendar.[SEQUENCE]              
+                                  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
+                                  JOIN CALENDAR_COMMON_CATEGORY_1978 category ON category.Id = calendar.CALENDAR_COMMON_CATEGORY_ID
+                                  left JOIN DISTRICT_MASTER_1928 district ON district.Id = calendar.DISTRICT_ID
+                                  JOIN BUSINESS_COMPANY_MASTER_1924 company ON company.COMPANY_CODE = calendar.COMPANY_CODE
+								  CROSS APPLY STRING_SPLIT(calendar.CALENDAR_SUB_CATEGORY_ID, ',') s
+                                  join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory  ON subCategory.Id=TRY_CAST(s.value AS INT)
+                                  WHERE  calendar.STATUS = 'PUBLISH' AND company.IS_ACTIVE = 'Y' AND company.IS_TEMPLATE = 'N' AND calendar.CALENDAR_USE_TYPE = 'PUBLIC' 
+                                  group by calendar.[Id],calendar.[created_at],calendar.[CALENDAR_NAME],calendar.[CALENDAR_PHOTO_NAME],calendar.[CALENDAR_PHOTO_PATH],category.Id,calendar.[CALENDAR_SUB_CATEGORY_ID],
+                                  calendar.[COMPANY_CODE],calendar.[CALENDAR_CODE],category.[CMN_CATEGORY_NAME],district.[DISTRICT_NAME],calendar.[TAGS],
+                                  company.[COMPANY_NAME_ENGLISH],company.[COMPANY_NAME_CHINESE],company.[COMPANY_LOGO_NAME],company.[COMPANY_LOGO_PATH],company.[COMPANY_BANNER_NAME],company.[COMPANY_BANNER_PATH],
+                                  company.[PAGE_URL], calendar.[IS_FEATURED],calendar.[SEQUENCE]
+								  ) Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata ORDER BY [SEQUENCE] OFFSET @PageSize * (@PageNumber - 1) ROWS 
+                                  FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+            var calendars = (await sqlFunction.ExecuteSqlQuery<CalendarModel>(sqlString)).ToList();
+            calendars.ForEach(x => x.TAGS = formatTagsString(x.TAGS));
+            return calendars;
+        }
+
+        public async Task<List<CompanyModel>> GetCompaniesSearchResult(SearchAPIModel data)
+        {
+            data.page = data.page == 0 ? 1 : data.page;
+            data.size = data.size == 0 ? 10 : data.size;
+            string sqlString = $@"declare @PageSize int= {data.size}, 
+                                  @PageNumber int= {data.page}; with formdata as 
+                                  (select Id,COMPANY_NAME_ENGLISH +'|'+COMPANY_NAME_CHINESE AS COMPANY_NAME,COMPANY_NAME_ENGLISH,COMPANY_BANNER_PATH,COMPANY_LOGO_PATH,COMPANY_BANNER_NAME,TAGS  from BUSINESS_COMPANY_MASTER_1924
+                                  ) Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata ORDER BY Id OFFSET @PageSize * (@PageNumber - 1) ROWS 
+                                  FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+            var companies = (await sqlFunction.ExecuteSqlQuery<CompanyModel>(sqlString)).ToList();
+            companies.ForEach(x => { x.TAGS = formatTagsString(x.TAGS); x.COMPANY_LOGO_PATH = GetFilepath(x.COMPANY_LOGO_PATH, "COMPANY"); });
+            return companies;
+        }
+
+        public async Task<List<BlogModel>> GetBlogsSearchResult(SearchAPIModel data)
+        {
+            data.page = data.page == 0 ? 1 : data.page;
+            data.size = data.size == 0 ? 10 : data.size;
+            string sqlString = $@"declare @PageSize int= {data.size}, 
+                                  @PageNumber int= {data.page}; with formdata as 
+                                  (select blog.Id, blog.created_at, blog.BLOG_TITLE,blog.[IMAGE],blog.YOUTUBE_LINK,blog.TAG,blog_c.BLOG_CATEGORY,blog.BLOG_CATEGORY BLOG_CATEGORY_ID from BLOG_1980 blog
+                                  join BLOG_CATEGORY_1981 blog_c on blog.BLOG_CATEGORY=blog_c.Id
+                                  ) Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata ORDER BY Id OFFSET @PageSize * (@PageNumber - 1) ROWS 
+                                  FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+            var blogs = (await sqlFunction.ExecuteSqlQuery<BlogModel>(sqlString)).ToList();
+            blogs.ForEach(x => x.TAG = formatTagsString(x.TAG));
+            return blogs;
+        }
+
 
         private string formatTagsString(string json) {
 

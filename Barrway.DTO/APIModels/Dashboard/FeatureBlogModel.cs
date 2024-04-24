@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Barrway.DTO.APIModels.Dashboard
 {
-    public class FeatureBlogModel
+    public class BlogModel
     {
         public int Id { get; set; }
         public DateTime created_at { get; set; }
@@ -16,5 +16,8 @@ namespace Barrway.DTO.APIModels.Dashboard
         public string TAG { get; set; }
         public string BLOG_CATEGORY { get; set; }
         public string BLOG_CATEGORY_ID { get; set; }
+        public int total_records { get; set; }
+        public int page { get; set; }
+        public int size { get; set; }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Barrway.DTO.APIModels.Dashboard
 {
-    public class FeatureCompanyModel
+    public class CompanyModel
     {
         public int Id { get; set; }
         public string COMPANY_NAME { get; set; }
@@ -15,5 +15,8 @@ namespace Barrway.DTO.APIModels.Dashboard
         public string COMPANY_LOGO_PATH { get; set; }
         public string COMPANY_BANNER_NAME { get; set; }
         public string TAGS { get; set; }
+        public int total_records { get; set; }
+        public int page { get; set; }
+        public int size { get; set; }
     }
 }
