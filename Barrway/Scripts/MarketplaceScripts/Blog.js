@@ -8,9 +8,11 @@ $(document).ready(function () {
 function GetHotBlogs() {
     if (Hot == 0) {
         Hot = 1;
+        $('.filter-btn img').attr('src', '/assets/img/filter_down.png');
     }
     else {
         Hot = 0;
+        $('.filter-btn img').attr('src', '/assets/img/filter_up.png');
     }
 
     GetBlogs(1, '', Hot);

@@ -1531,12 +1531,22 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 applyFilterQuery = applyFilterQuery.TrimEnd("and ".ToCharArray());
 
                 string SerrchFilter = "";
+                string isFeatured = "";
+
+                if (data.Featured =="Y")
+                {
+                    isFeatured = "desc";
+                }
+                else
+                {
+                    isFeatured = "asc";
+                }
+
 
                 if (!string.IsNullOrEmpty(data.SearchText))
                 {
                     SerrchFilter = " and COMPANY_NAME_ENGLISH like '%" + data.SearchText + "%'";
                 }
-
 
 
                 int PageSize = data.size > 0 ? data.size : 20;
@@ -1578,8 +1588,8 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                                           ,[IS_ACTIVE],
                                             CASE WHEN  IS_FEATURED IS NULL THEN 'N' ELSE IS_FEATURED END AS IS_FEATURED
                                       FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] where IS_ACTIVE = 'Y' and IS_SEARCHABLE_IN_MARKETPLACE = 'Y' {SerrchFilter}
-                                    )
-                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY created_at desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+                                    )                                    
+                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY IS_FEATURED {isFeatured} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
 
                 var listresult = await sqlFunction.ExecuteSqlQuery(strSql);
                 if (listresult.Count() > 0)
