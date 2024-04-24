@@ -54,6 +54,14 @@ function setCompanyDetails() {
         $("#admin-master-nav").hide();
     }
 
+    if (localStorage.getItem("COMPANY_ROLE") == "SUPERUSER") {
+        $("#subscription-master-nav").show();
+    } else {
+        $("#subscription-master-nav").hide();
+    }
+
+    
+
     $("#disp-navbar-company-selector").append(`<div class="add-company">
                                             <a href="/BusinessAdmin/CompanyMaster"><button>+ Add new company</button></a>
                                         </div>`);

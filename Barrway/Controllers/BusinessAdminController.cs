@@ -938,7 +938,6 @@ namespace Barrway.Controllers
                     REQUEST_TOKEN = Token,
                     Id = validationResult.Data["COMPANY_ID"]?.ToString(),
                 };
-                var updateResult = await businessUserService.UpdateInvitationStatus(Token, "OPENED");
             }
 
             return View(model);
@@ -949,7 +948,7 @@ namespace Barrway.Controllers
         {
             try
             {
-                var result = await businessUserService.UpdateInvitationStatus(model.REQUEST_TOKEN, model.STATUS);
+                var result = await businessUserService.UpdateInvitationStatus(model.REQUEST_TOKEN, model.STATUS, User.Identity.Name);
                 if (result.Status)
                 {
                     if (model.STATUS.ToUpper() == "ACCEPT")
@@ -970,7 +969,7 @@ namespace Barrway.Controllers
                 }
                 else
                 {
-                    ViewBag.ErrorMessage = "Some error occured!";
+                    ViewBag.ErrorMessage = result.Message;
                     return View(model);
                 }
             }
