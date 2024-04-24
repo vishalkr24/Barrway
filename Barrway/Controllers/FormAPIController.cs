@@ -6,6 +6,7 @@ using Barrway.Service.IRepository;
 using Barrway.Service.Repository;
 using Barrway.Utility.Common;
 using FormGeneratorDTOs.DTOs;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -671,8 +672,27 @@ namespace Barrway.Controllers
 
             if (result != null && result.events != null && result.events.Count > 0)
             {
-                if (data.resourceId != 0) { 
-                result.events=result.events.Where(x=>x.ContainsKey("resourceId") && x["resourceId"]!=null && x["resourceId"].ToString()== data.resourceId.ToString()).ToList();
+                if (data.resourceId != 0) {
+
+                    List<IDictionary<string, object>> _events = new List<IDictionary<string, object>>();
+                    result.events.ForEach(x =>
+                    {
+                        string resourceFormId= data.resourceFormId.ToString();
+                        if (x.ContainsKey("customForms") && x.ContainsKey("customFormIds") && !string.IsNullOrEmpty(x["customFormIds"]?.ToString()) && !string.IsNullOrEmpty(x["customForms"]?.ToString())
+                        && x["customForms"].ToString().Split(',').Contains(resourceFormId) && x["customFormIds"].ToString().Split(',').Length>0) {
+                            var customFormsSplit = x["customForms"].ToString().Split(',').ToList();
+                            var cucustomFormIdsSplit = x["customFormIds"].ToString().Split(',').ToList();
+                           int index= customFormsSplit.FindIndex(y=>y== resourceFormId);
+                            if (index > -1 && cucustomFormIdsSplit.Count()>index) {
+                                if (cucustomFormIdsSplit[index] == data.resourceId.ToString()) {
+                                    _events.Add(x);
+                                }
+                            }
+                        }
+                    });
+
+                    result.events = _events;
+                //result.events=result.events.Where(x=>x.ContainsKey("resourceId") && x["resourceId"]!=null && x["resourceId"].ToString()== data.resourceId.ToString()).ToList();
                 }
                 var markSchedule = result.events.Where(x => x["EVENT_TYPE"]?.ToString() == "SCHEDULE").ToList();
 
