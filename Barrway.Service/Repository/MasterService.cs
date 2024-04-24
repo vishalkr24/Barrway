@@ -1575,7 +1575,8 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                                           ,[TOTAL_WEBSITE_VISITS]
                                           ,[IS_DEFAULT]
                                           ,[COMPANY_EMAIL]
-                                          ,[IS_ACTIVE]
+                                          ,[IS_ACTIVE],
+                                            CASE WHEN  IS_FEATURED IS NULL THEN 'N' ELSE IS_FEATURED END AS IS_FEATURED
                                       FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] where IS_ACTIVE = 'Y' and IS_SEARCHABLE_IN_MARKETPLACE = 'Y' {SerrchFilter}
                                     )
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY created_at desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";

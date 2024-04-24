@@ -1433,6 +1433,53 @@ namespace Barrway.Service.Repository
             }
         }
 
+
+        public async Task<AddUpdateDelete> GetCalanderCategoryNameList(string CompanyCode)
+        {
+            string query = $@"SELECT clcd.Id,clcd.CALENDAR_CATEGORY_NAME from CALENDAR_CATEGORY_MASTER_1929 clcd 
+                        INNER JOIN BUSINESS_CALENDAR_MASTER_1925 bcl ON  bcl.CALENDAR_CATEGORY_ID=clcd.Id WHERE bcl.COMPANY_CODE= '{CompanyCode}'";
+
+            List<IDictionary<string, object>> CalanderCategoryNameList = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (CalanderCategoryNameList.Count > 0)
+            {
+                List<IDictionary<string, object>> distinctResult = RemoveDuplicates(CalanderCategoryNameList, "Id");
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = distinctResult };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetCalanderSubCategoryNameList(string CompanyCode)
+        {
+            string query = $@"SELECT DISTINCT CSM.Id, CSM.CALENDAR_SUB_CATEGORY_NAME
+                            FROM CALENDAR_SUB_CATEGORY_MASTER_1930 AS CSM
+                            JOIN BUSINESS_CALENDAR_MASTER_1925 AS BCM ON CHARINDEX(',' + CAST(CSM.Id AS NVARCHAR(MAX)) + ',', ',' + BCM.CALENDAR_SUB_CATEGORY_ID + ',') > 0
+                            where BCM.COMPANY_CODE= '{CompanyCode}'";
+
+            List<IDictionary<string, object>> CalanderSubCategoryNameList = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (CalanderSubCategoryNameList.Count > 0)
+            {
+                List<IDictionary<string, object>> distinctResult = RemoveDuplicates(CalanderSubCategoryNameList, "Id");
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = distinctResult };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
+        public static List<IDictionary<string, object>> RemoveDuplicates(List<IDictionary<string, object>> list, string key)
+        {
+
+            HashSet<object> hashSet = new HashSet<object>();
+            return list.Where(dict => { var value = dict[key]; return hashSet.Add(value); }).ToList();
+        }
+
+
         public async Task<AddUpdateDelete> UpdateBusinessCompanyProfileStatusByBusinessId(string businessId, bool isActive)
         {
             string isActiveString = "N";
