@@ -329,7 +329,7 @@ namespace Barrway.Service.Repository
                 string fullName = publicUser.Data["FIRST_NAME"].ToString() + " " + publicUser.Data["LAST_NAME"].ToString();
                 if (string.IsNullOrEmpty(fullName.Trim()))
                 {
-                    fullName = publicUser.Data["USER_EMAIL"].ToString();
+                    fullName = "Tweety";
                 }
                 model.participant.STUDENT_NAME = fullName;
 
@@ -339,7 +339,7 @@ namespace Barrway.Service.Repository
                 data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.participant.ToDictionary());
                 data.formGroupKey = Guid.NewGuid().ToString();
                 var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
-
+                
                 if (formResult.res == 1)
                 {
                     StudentId = formResult.Id.ToString();
@@ -421,36 +421,48 @@ namespace Barrway.Service.Repository
 
             var upcomingResult = await sqlFunction.ExecuteSqlCommandQuery(upcomingBookingQuery);
 
-            string paymentId = PaymentId;
-
-            if (string.IsNullOrEmpty(paymentId))
+            if (Convert.ToInt32(model.transaction.transaction_fees) > 0)
             {
-                string orderNoQuery = $@"select *,
+                string paymentId = PaymentId;
+
+                if (string.IsNullOrEmpty(paymentId))
+                {
+                    string orderNoQuery = $@"select *,
                                                     (
                                                     select case when (sum(CREDIT_COIN) - sum(DEBIT_COIN) <= 0) then 0 else sum(CREDIT_COIN) - sum(DEBIT_COIN) end from LEDGER_MASTER_1957 where ORDER_NO = PAYMENT_ID
                                                     ) as 'Balance'
                                                     from PAYMENT_HISTORY_MASTER_1956 where COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE.ToString()}' and STATUS = 'complete' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE and USER_ID = '{model.USER_ID}'
                                                     order by cast(created_at as datetime)";
 
-                var orderNoResult = await sqlFunction.ExecuteSqlQuery(orderNoQuery);
+                    var orderNoResult = await sqlFunction.ExecuteSqlQuery(orderNoQuery);
 
-                paymentId = orderNoResult.FirstOrDefault(x => Convert.ToInt32(x["Balance"]) > 0)["PAYMENT_ID"]?.ToString();
+                    paymentId = orderNoResult.FirstOrDefault(x => Convert.ToInt32(x["Balance"]) > 0)["PAYMENT_ID"]?.ToString();
+                }
+
+                // add entry in ledger
+                try
+                {
+                    LedgerModel ledger = new LedgerModel()
+                    {
+                        CALENDAR_CODE = model.transaction.CALENDAR_CODE,
+                        COMPANY_CODE = model.transaction.COMPANY_CODE,
+                        DEBIT_COIN = Convert.ToDouble(model.transaction.transaction_fees),
+                        USER_ID = model.USER_ID,
+                        CREDIT_COIN = 0,
+                        ORDER_NO = (model.transaction.transaction_fees == "0") ? "" : paymentId,
+                        TRANSACTION_TYPE = "Booking"
+                    };
+                    var ledgerResult = await masterService.CreateLedgerEntry(ledger);
+
+                }
+                catch (Exception ex)
+                {
+                    return new AddUpdateDelete() { Message = "Failed to enroll on calendar", Status = false };
+                }
             }
 
-            // add entry in ledger
             try
             {
-                LedgerModel ledger = new LedgerModel()
-                {
-                    CALENDAR_CODE = model.transaction.CALENDAR_CODE,
-                    COMPANY_CODE = model.transaction.COMPANY_CODE,
-                    DEBIT_COIN = Convert.ToDouble(model.transaction.transaction_fees),
-                    USER_ID = model.USER_ID,
-                    CREDIT_COIN = 0,
-                    ORDER_NO = (model.transaction.transaction_fees == "0") ? "" : paymentId,
-                    TRANSACTION_TYPE = "Booking"
-                };
-                var ledgerResult = await masterService.CreateLedgerEntry(ledger);
 
                 if (formResult2.res == 1)
                 {
@@ -465,6 +477,7 @@ namespace Barrway.Service.Repository
             {
                 return new AddUpdateDelete() { Message = "Failed to enroll on calendar", Status = false };
             }
+
         }
 
         public async Task<AddUpdateDelete> CancelPublicUserBooking(CalendarEnrollModel model)
@@ -861,36 +874,40 @@ namespace Barrway.Service.Repository
 
                             var upcommingBookingResult = await UpCommingBookingAdd(upCommingBooking);
 
-                            string paymentId = PaymentId;
-
-                            if (string.IsNullOrEmpty(paymentId))
+                            if (ServiceFees > 0)
                             {
-                                string orderNoQuery = $@"select *,
+                                string paymentId = PaymentId;
+
+                                if (string.IsNullOrEmpty(paymentId))
+                                {
+                                    string orderNoQuery = $@"select *,
                                                     (
                                                     select case when (sum(CREDIT_COIN) - sum(DEBIT_COIN) <= 0) then 0 else sum(CREDIT_COIN) - sum(DEBIT_COIN) end from LEDGER_MASTER_1957 where ORDER_NO = PAYMENT_ID
                                                     ) as 'Balance'
                                                     from PAYMENT_HISTORY_MASTER_1956 where COMPANY_CODE = '{eventModal.companyCode.ToString()}' and CALENDAR_CODE = '{eventModal.calendarCode.ToString()}' and STATUS = 'complete' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE and USER_ID = '{userName}'
                                                     order by cast(created_at as datetime)";
 
-                                var orderNoResult = await sqlFunction.ExecuteSqlQuery(orderNoQuery);
+                                    var orderNoResult = await sqlFunction.ExecuteSqlQuery(orderNoQuery);
 
-                                paymentId = orderNoResult.FirstOrDefault(x => Convert.ToInt32(x["Balance"]) > 0)["PAYMENT_ID"]?.ToString();
+                                    paymentId = orderNoResult.FirstOrDefault(x => Convert.ToInt32(x["Balance"]) > 0)["PAYMENT_ID"]?.ToString();
+                                }
+
+
+                                // add entry in ledger
+                                LedgerModel ledger = new LedgerModel()
+                                {
+                                    CALENDAR_CODE = eventModal.calendarCode.ToString(),
+                                    COMPANY_CODE = eventModal.companyCode.ToString(),
+                                    DEBIT_COIN = Convert.ToDouble(ServiceFees),
+                                    USER_ID = userName,
+                                    CREDIT_COIN = 0,
+                                    ORDER_NO = paymentId,
+                                    TRANSACTION_TYPE = "Booking"
+                                };
+
+                                var ledgerResult = await masterService.CreateLedgerEntry(ledger);
                             }
                             
-
-                            // add entry in ledger
-                            LedgerModel ledger = new LedgerModel()
-                            {
-                                CALENDAR_CODE = eventModal.calendarCode.ToString(),
-                                COMPANY_CODE = eventModal.companyCode.ToString(),
-                                DEBIT_COIN = Convert.ToDouble(ServiceFees),
-                                USER_ID = userName,
-                                CREDIT_COIN = 0,
-                                ORDER_NO = paymentId,
-                                TRANSACTION_TYPE = "Booking"
-                            };
-
-                            var ledgerResult = await masterService.CreateLedgerEntry(ledger);
 
                             return new AddUpdateDelete() { Status = true, Message = "Success", Data = formResult2.Id };
                         }
@@ -1926,7 +1943,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
                 }
                 else
                 {
-                    return new AddUpdateDelete() { Status = true, Message = "Are you sure to book this event?" };
+                    return new AddUpdateDelete() { Status = true, Message = "Are you sure to book this event?", Data = ServiceFees.ToString() };
                 }
             }
             catch (Exception ex)

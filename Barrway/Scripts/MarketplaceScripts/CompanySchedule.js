@@ -1159,7 +1159,7 @@ function showCalendar(companyCode) {
             }
 
            
-            if (calEvent.DOWNLOAD_FILE_LIST && calEvent.DOWNLOAD_FILE_LIST != '' && calEvent.DOWNLOAD_FILE_LIST != 'null' && IsJsonString(calEvent.DOWNLOAD_FILE_LIST)) {
+            if (calEvent.DOWNLOAD_FILE_LIST && calEvent.DOWNLOAD_FILE_LIST != '' && calEvent.DOWNLOAD_FILE_LIST != ' ' && calEvent.DOWNLOAD_FILE_LIST != 'null' && IsJsonString(calEvent.DOWNLOAD_FILE_LIST)) {
                 calEvent.DOWNLOADABLE_ATTACHMENT_FILES = JSON.parse(calEvent.DOWNLOAD_FILE_LIST);
             }
             $scope.selectEventDetails = calEvent;
@@ -3228,17 +3228,27 @@ async function rendarPopupCalendar(assignDate) {
                                     ${((response.Data != null) ? `<div>${response.Data} credits</div>` : "")}<br />
                                     <h4 style="color:red">${response.Message}</h4>`;
 
+                                let buttonsWrap = {
+                                    cancel: "Cancel",
+                                    individualButton: {
+                                        text: "Buy Individually",
+                                        value: "other"
+                                    },
+                                    confirm: (response.Status) ? "Use Credits" : "Buy Package"
+                                }
+
+                                if (response.Data == 0) {
+                                    buttonsWrap = {
+                                        cancel: "Cancel",
+                                        confirm: "Yes"
+                                    }
+                                }
+
                                 swal({
                                     title: "You are going to book",
                                     content: wrapper,
-                                    buttons: {
-                                        cancel: "Cancel",
-                                        individualButton: {
-                                            text: "Buy Individually",
-                                            value: "other"
-                                        },
-                                        confirm: (response.Status) ? "Use Credits" : "Buy Package"
-                                    }
+                                    buttons: buttonsWrap
+
                                 }).then(function (check) {
                                     if (check == true) {
                                         if (response.Status) {

@@ -1318,17 +1318,26 @@
                                                                                                                                                         ${((response.Data != null) ? `<div>${response.Data} credits</div>` : "")}<br />
                                                                                                                                                         <h4 style="color:red">${response.Message}</h4>`;
 
+                                    let buttonsWrap = {
+                                        cancel: "Cancel",
+                                        individualButton: {
+                                            text: "Buy Individually",
+                                            value: "other"
+                                        },
+                                        confirm: (response.Status) ? "Use Credits" : "Buy Package"
+                                    }
+
+                                    if (response.Data == 0) {
+                                        buttonsWrap = {
+                                            cancel: "Cancel",
+                                            confirm: "Yes"
+                                        }
+                                    }
+
                                     swal({
                                         title: "You are going to book",
                                         content: wrapper,
-                                        buttons: {
-                                            cancel: "Cancel",
-                                            individualButton: {
-                                                text: "Buy Individually",
-                                                value: "other"
-                                            },
-                                            confirm: (response.Status) ? "Use Credits" : "Buy Package"
-                                        }
+                                        buttons: buttonsWrap
 
                                     }).then(function (check) {
 
