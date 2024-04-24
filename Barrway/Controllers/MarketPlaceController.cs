@@ -377,7 +377,6 @@ namespace Barrway.Controllers
 
                 string CompanyCode = id;
                 string CalendarCode = Cid;
-
                 var Compay = await businessUserService.GetCompanyCodeByPageUrl(id);
                 if (Compay.Status == true)
                 {
@@ -387,11 +386,8 @@ namespace Barrway.Controllers
                 {
                     return RedirectToAction("Error404", "Marketplace");
                 }
-
                 var companyData = await businessUserService.GetSingleCompanyByCompanyCode(CompanyCode);
-
                 var data = JsonConvert.SerializeObject(companyData.Data);
-
                 MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
                 companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
                 companyModel.PAGE_URL = id;
@@ -399,9 +395,7 @@ namespace Barrway.Controllers
                 {
                     companyModel.TAGs = JsonConvert.DeserializeObject<List<TagsObject>>(companyModel.TAGS);
                 }
-
                 ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
-
                 if (!string.IsNullOrEmpty(companyModel.IS_TEMPLATE))
                 {
                     if (companyModel.IS_TEMPLATE == "Y")

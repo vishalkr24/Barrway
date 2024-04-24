@@ -1782,39 +1782,47 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
 
 
                 string query = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
-                                SELECT calendar.[Id], calendar.[created_at],calendar.[updated_at],calendar.[created_by],calendar.[updated_by]
-                              ,[CALENDAR_NAME],[CALENDAR_PHOTO_NAME],[CALENDAR_PHOTO_PATH],[IS_VISIBLE],calendar.[COUNTRY_ID],calendar.[CITY_ID]
-                              ,calendar.[DISTRICT_ID],calendar.[CALENDAR_CATEGORY_ID],calendar.[CALENDAR_COMMON_CATEGORY_ID]
-                              ,calendar.[CALENDAR_SUB_CATEGORY_ID]
-                              ,calendar.[CALENDAR_TYPE]
-                              ,calendar.[COMPANY_CODE]
-                              ,calendar.[CALENDAR_CODE]
-	                          ,[CALENDAR_SUB_CATEGORY_NAME]
-	                          ,[CMN_CATEGORY_NAME]
-	                          ,[DISTRICT_NAME]
-	                          ,calendar.TAGS
-	                          ,[COMPANY_NAME_ENGLISH]
-                              ,[COMPANY_NAME_CHINESE]
-                              ,[COMPANY_LOGO_NAME]
-                              ,[COMPANY_LOGO_PATH]
-                              ,[COMPANY_BANNER_NAME]
-                              ,[COMPANY_BANNER_PATH]
-							  ,[IS_SEARCHABLE_IN_MARKETPLACE]
-                              ,company.PAGE_URL
-                              ,calendar.IS_FEATURED,calendar.[SEQUENCE],calendar.[PRIORITY]
-                         FROM[dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
-                        join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory  ON ',' + calendar.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
-                         join CALENDAR_COMMON_CATEGORY_1978 category on category.Id = calendar.CALENDAR_COMMON_CATEGORY_ID
-                         join DISTRICT_MASTER_1928 district on district.Id = calendar.DISTRICT_ID
-                         join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
-                         where company.IS_SEARCHABLE_IN_MARKETPLACE = 'Y' and company.IS_ACTIVE = 'Y' and company.IS_TEMPLATE = 'N' and calendar.CALENDAR_USE_TYPE = 'PUBLIC' and [STATUS]='PUBLISH' {(!string.IsNullOrEmpty(filter) ? filter : "")}  
-                                )Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  {Short} OFFSET  @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+                                       SELECT calendar.[Id], calendar.[created_at],calendar.[updated_at],calendar.[created_by],calendar.[updated_by]
+                                     ,[CALENDAR_NAME],[CALENDAR_PHOTO_NAME],[CALENDAR_PHOTO_PATH],[IS_VISIBLE],calendar.[COUNTRY_ID],calendar.[CITY_ID]
+                                     ,calendar.[DISTRICT_ID],calendar.[CALENDAR_CATEGORY_ID],calendar.[CALENDAR_COMMON_CATEGORY_ID]
+                                     ,calendar.[CALENDAR_SUB_CATEGORY_ID]
+                                     ,calendar.[CALENDAR_TYPE]
+                                     ,calendar.[COMPANY_CODE]
+                                     ,calendar.[CALENDAR_CODE]
+                                  ,[CALENDAR_SUB_CATEGORY_NAME]
+                                  ,[CMN_CATEGORY_NAME]
+                                  ,[DISTRICT_NAME]
+                                  ,calendar.TAGS
+                                  ,[COMPANY_NAME_ENGLISH]
+                                     ,[COMPANY_NAME_CHINESE]
+                                     ,[COMPANY_LOGO_NAME]
+                                     ,[COMPANY_LOGO_PATH]
+                                     ,[COMPANY_BANNER_NAME]
+                                     ,[COMPANY_BANNER_PATH]
+                                    ,[IS_SEARCHABLE_IN_MARKETPLACE]
+                                     ,company.PAGE_URL
+                                     ,calendar.IS_FEATURED,calendar.[SEQUENCE],calendar.[PRIORITY],
+                                    ROW_NUMBER() OVER(PARTITION BY calendar.[Id] ORDER BY calendar.[Id]) AS RowNum
+                                FROM[dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
+                               join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory  ON ',' + calendar.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
+                                join CALENDAR_COMMON_CATEGORY_1978 category on category.Id = calendar.CALENDAR_COMMON_CATEGORY_ID
+                                join DISTRICT_MASTER_1928 district on district.Id = calendar.DISTRICT_ID
+                                join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
+                                where company.IS_SEARCHABLE_IN_MARKETPLACE = 'Y' and company.IS_ACTIVE = 'Y' and company.IS_TEMPLATE = 'N' and calendar.CALENDAR_USE_TYPE = 'PUBLIC' and [STATUS]='PUBLISH' {(!string.IsNullOrEmpty(filter) ? filter : "")}  
+                                       )Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata where  RowNum = 1  {Short} OFFSET  @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+
+
+
+
+
 
 
                 List<IDictionary<string, object>> companySubCategoryResult = await sqlFunction.ExecuteSqlQuery(query);
 
                 if (companySubCategoryResult.Count > 0)
                 {
+                    //List<IDictionary<string, object>> distinctCompanySubCategoryResult = RemoveDuplicates(companySubCategoryResult, "Id");
+
                     return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = companySubCategoryResult.ToList() };
                 }
                 else
@@ -1827,6 +1835,14 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
             }
 
+        }
+
+
+        public static List<IDictionary<string, object>> RemoveDuplicates(List<IDictionary<string, object>> list, string key)
+        {
+            
+            HashSet<object> hashSet = new HashSet<object>();
+            return list.Where(dict =>{var value = dict[key];return hashSet.Add(value);}).ToList();
         }
 
 
