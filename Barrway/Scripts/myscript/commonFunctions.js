@@ -2662,7 +2662,7 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
             customEventDetailsModelPopUp.modal('show');
             customEventDetailsModelPopUp.css({ "z-index": "9999" });
             var $scope = angular.element($("#calendar")).scope();
-            if (calEvent.DOWNLOAD_FILE_LIST && calEvent.DOWNLOAD_FILE_LIST != '' && calEvent.DOWNLOAD_FILE_LIST != 'null' && IsJsonString(calEvent.DOWNLOAD_FILE_LIST)) {
+            if (calEvent.DOWNLOAD_FILE_LIST && calEvent.DOWNLOAD_FILE_LIST != '' && calEvent.DOWNLOAD_FILE_LIST != ' ' && calEvent.DOWNLOAD_FILE_LIST != 'null' && IsJsonString(calEvent.DOWNLOAD_FILE_LIST)) {
                 calEvent.DOWNLOADABLE_ATTACHMENT_FILES = JSON.parse(calEvent.DOWNLOAD_FILE_LIST);
             }
             $scope.selectEventDetails = calEvent; 

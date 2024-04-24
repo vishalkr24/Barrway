@@ -17635,7 +17635,7 @@
                 success: function (response) {
                     debugger;
                     $scope.selectEventDetails = response.events[0];
-                    $scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES = ($scope.selectEventDetails.DOWNLOAD_FILE_LIST != null && $scope.selectEventDetails.DOWNLOAD_FILE_LIST != '' && $scope.selectEventDetails.DOWNLOAD_FILE_LIST != undefined) ? JSON.parse($scope.selectEventDetails.DOWNLOAD_FILE_LIST) : null;
+                    $scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES = ($scope.selectEventDetails.DOWNLOAD_FILE_LIST != null && $scope.selectEventDetails.DOWNLOAD_FILE_LIST != '' && $scope.selectEventDetails.DOWNLOAD_FILE_LIST != ' ' && $scope.selectEventDetails.DOWNLOAD_FILE_LIST != undefined) ? JSON.parse($scope.selectEventDetails.DOWNLOAD_FILE_LIST) : null;
                     $scope.selectEventDetails.DisplayType = type;
 
                     var enrollUser = getUserEnrollDetails($scope.selectEventDetails.Id);
