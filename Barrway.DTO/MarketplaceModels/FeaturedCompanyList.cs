@@ -22,6 +22,10 @@ namespace Barrway.DTO.MarketplaceModels
         public string COMPANY_BANNER_NAME { get; set; }
         public string TAGS { get; set; }
         public List<TagsObject> TAGs { get; set; }
+        public string COMPANY_CODE { get; set; }
+        public string PAGE_URL { get; set; }
+
+        
     }
 
    

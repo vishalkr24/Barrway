@@ -1463,7 +1463,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
         {
             try
             {
-                string sqlQuery = $@"select Id,COMPANY_NAME_ENGLISH +'|'+COMPANY_NAME_CHINESE AS COMPANY_NAME,COMPANY_NAME_ENGLISH,COMPANY_BANNER_PATH,COMPANY_LOGO_PATH,COMPANY_BANNER_NAME,TAGS  from BUSINESS_COMPANY_MASTER_1924 WHERE IS_FEATURED='Y'";
+                string sqlQuery = $@"select Id,COMPANY_NAME_ENGLISH +'|'+COMPANY_NAME_CHINESE AS COMPANY_NAME,COMPANY_NAME_ENGLISH,COMPANY_BANNER_PATH,COMPANY_LOGO_PATH,COMPANY_BANNER_NAME,TAGS,COMPANY_CODE,PAGE_URL  from BUSINESS_COMPANY_MASTER_1924 WHERE IS_FEATURED='Y'";
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 return new AddUpdateDelete() { Status = true, Data = result };
             }
