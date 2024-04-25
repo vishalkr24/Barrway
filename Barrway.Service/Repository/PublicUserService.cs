@@ -196,8 +196,6 @@ namespace Barrway.Service.Repository
             {
                 return new AddUpdateDelete() { Status = false, Message = ex.Message };
             }
-
-
         }
 
         public async Task<AddUpdateDelete> EnrollPublicUserForCalendar(CalendarEnrollModel model, bool isServiceType = false, string PaymentId = null )
@@ -478,6 +476,302 @@ namespace Barrway.Service.Repository
                 return new AddUpdateDelete() { Message = "Failed to enroll on calendar", Status = false };
             }
 
+        }
+
+        public async Task<AddUpdateDelete> EnrollCourse(CalendarEnrollModel model, bool isServiceType = false, string PaymentId = null)
+        {
+            var user = await authService.GetUser(model.USER_ID, FormRole.GENERAL_USER);
+
+            // check for sufficient B$ Balance
+            var balance = await GetUserCoinBalance(model.USER_ID, model.participant.COMPANY_CODE, model.participant.CALENDAR_CODE);
+            var service = await sqlFunction.ExecuteSqlQuery("select fees_1 from SERVICE_MASTER_1933 where Id = " + model.transaction.ACTIVITY);
+
+            bool IsServicePaid = false;
+            int ServiceFees = 0;
+
+            if (!string.IsNullOrEmpty(service[0]["fees_1"]?.ToString()))
+            {
+                if (Convert.ToInt32(service[0]["fees_1"]) > 0)
+                {
+                    IsServicePaid = true;
+                    ServiceFees = Convert.ToInt32(service[0]["fees_1"]);
+                }
+                else
+                {
+                    IsServicePaid = false;
+                    ServiceFees = 0;
+                }
+            }
+            else
+            {
+                IsServicePaid = false;
+                ServiceFees = 0;
+            }
+
+            if (IsServicePaid && string.IsNullOrEmpty(PaymentId))
+            {
+                if (balance.Data > 0)
+                {
+                    if (Convert.ToInt32(balance.Data) < Convert.ToInt32(service[0]["fees_1"]))
+                    {
+                        return new AddUpdateDelete() { Status = false, Message = "You don't have enough credits of this calendar to book this slot." };
+                    }
+                    else
+                    {
+                        model.transaction.transaction_fees = ServiceFees.ToString();
+                    }
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "You don't have enough credits of this calendar to book this slot." };
+                }
+            }
+            else
+            {
+                model.transaction.transaction_fees = ServiceFees.ToString();
+            }
+
+
+            // check if the user limit is crossed or not
+            if (!isServiceType)
+            {
+                List<IDictionary<string, object>> totalUsersEnrolled = await sqlFunction.ExecuteSqlQuery($@"select COUNT(*) as 'COUNT' from TRANSACTION_MASTER_1942 transaction_m
+                                                                                                        join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
+                                                                                                        where ACTIVITY = '{model.transaction.ACTIVITY.ToString()}'");
+
+                List<IDictionary<string, object>> currentLimit = await sqlFunction.ExecuteSqlQuery($@"select MAXIMUM_NO_OF_PARTICIPANTS from SERVICE_MASTER_1933 where Id = '{model.transaction.ACTIVITY.ToString()}'");
+
+                try
+                {
+                    if (!string.IsNullOrEmpty(currentLimit[0]["MAXIMUM_NO_OF_PARTICIPANTS"].ToString()))
+                    {
+                        if (Convert.ToInt32(currentLimit[0]["MAXIMUM_NO_OF_PARTICIPANTS"].ToString()) > 0)
+                        {
+                            if (Convert.ToInt32(totalUsersEnrolled[0]["COUNT"].ToString()) >= Convert.ToInt32(currentLimit[0]["MAXIMUM_NO_OF_PARTICIPANTS"].ToString()))
+                            {
+                                return new AddUpdateDelete() { Message = "LIMIT-ERROR", Status = false };
+                            }
+                        }
+                    }
+
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+
+            // Check if the user already exist in the participant master
+
+            List<IDictionary<string, object>> participantCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from PARTICIPANT_MASTER_1940 where EMAIL = '{user.Data["USER_EMAIL"]}' and COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE}'");
+
+            string StudentId = "";
+            if (participantCheckResult.Count > 0)
+            {
+                // Participant already exist so no need to check if it is enrolled with the selected activity and resource
+                StudentId = participantCheckResult.FirstOrDefault()["Id"].ToString();
+                List<IDictionary<string, object>> transactionCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from TRANSACTION_MASTER_1942 where COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE}' and RESOURCE = '{model.transaction.RESOURCE}' and ACTIVITY = '{model.transaction.ACTIVITY}' and SLOT='{model.transaction.SLOT}' and student='{StudentId}'");
+
+                if (transactionCheckResult.Count > 0)
+                {
+                    // user is already enrolled in the activity and resource
+                    return new AddUpdateDelete() { Message = "ALREADY-ENROLLED", Status = false };
+                }
+
+            }
+            else
+            {
+                var bookingsCheckData = await businessUserService.GetBookingsForThisMonth(model.participant.COMPANY_CODE, model.transaction.SLOT);
+                if (bookingsCheckData.Status)
+                {
+                    if (Convert.ToInt32(bookingsCheckData.Data["AVAILABLE_BOOKINGS"]?.ToString()) == 0)
+                    {
+                        return new AddUpdateDelete() { Status = false, Message = "Unable to book this event" };
+                    }
+                }
+                else
+                {
+                    return bookingsCheckData;
+                }
+
+                // add entry in participant master table
+                var publicUser = await GetSinglePublicUserAccount(model.USER_ID);
+
+                model.participant.NICKNAME = publicUser.Data["NICK_NAME"].ToString();
+                model.participant.EMAIL = user.Data["USER_EMAIL"].ToString();
+
+                model.participant.ADDRESS = "";
+                model.participant.GENDER = publicUser.Data["GENDER"].ToString();
+                model.participant.IS_ACTIVE = "Y";
+                string fullName = publicUser.Data["FIRST_NAME"].ToString() + " " + publicUser.Data["LAST_NAME"].ToString();
+                if (string.IsNullOrEmpty(fullName.Trim()))
+                {
+                    fullName = user.Data["USER_EMAIL"].ToString();
+                }
+                model.participant.STUDENT_NAME = fullName;
+
+                Form_DataTable data = new Form_DataTable();
+                data.action = (int)FormAction.Save;
+                data.formId = (int)FormSetting.PARTICIPANT_MASTER;
+                data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.participant.ToDictionary());
+                data.formGroupKey = Guid.NewGuid().ToString();
+                var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+                if (formResult.res == 1)
+                {
+                    StudentId = formResult.Id.ToString();
+
+                    string ParticipantCode = "PC" + formResult.Id.ToString().PadLeft(5, '0');
+
+                    string query = $@"UPDATE [dbo].[PARTICIPANT_MASTER_1940]
+                                   SET [PARTICIPANT_CODE] = '{ParticipantCode}'
+                                 WHERE Id = '{formResult.Id.ToString()}'";
+
+                    int saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Message = "Failed to add participant", Status = false };
+                }
+
+            }
+
+            // send Entry into transaction master
+            var formResult2 = new GenerateDynamicFormData();
+
+            string sqlQuery = $@"select 
+                                    case when (t.Id is not null and p.Id is not null) then 'Y' else 'N' end as 'IsBooked'
+                                    ,f.* from CALENDAR_FORM_1935 f 
+                                    left join TRANSACTION_MASTER_1942 t on f.Id = t.SLOT
+                                    left join (select * from PARTICIPANT_MASTER_1940 where EMAIL = '{model.participant.EMAIL}') p on p.Id = t.STUDENT
+                                    where f.IS_COURSE_EVENT = 'Y' and f.activities = '{model.transaction.ACTIVITY}' and f.[start] >= '{DateTimeUtility.Now().ToString("yyyy-MM-dd")}'";
+
+            var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+            for (int i = 0; i < result.Count; i++)
+            {
+                var eventDetails = result[i];
+                model.transaction.SLOT = eventDetails["Id"]?.ToString();
+                model.transaction.STUDENT = StudentId;
+                Form_DataTable data2 = new Form_DataTable();
+                data2.action = (int)FormAction.Save;
+                data2.formId = (int)FormSetting.TRANSACTION_MASTER;
+
+                data2.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.transaction.ToDictionary());
+                data2.formGroupKey = model.FormGroupKey;
+                formResult2 = (await formAPIRepository.GeneratedFormData(data2)).Data;
+
+                // Send Entry into Upcoming Bookings
+
+                string upcomingBookingQuery = $@"INSERT INTO [dbo].[COMPANY_UPCOMING_BOOKINGS_1945]
+                                                   ([formGroupKey]
+                                                   ,[formID]
+                                                   ,[userID]
+                                                   ,[Current_Status]
+                                                   ,[cycle]
+                                                   ,[MasterFormID]
+                                                   ,[MasterFormRow]
+                                                   ,[formRecordOrder]
+                                                   ,[formRecordStatus]
+                                                   ,[ApprovalStatus]
+                                                   ,[created_at]
+                                                   ,[updated_at]
+                                                   ,[created_by]
+                                                   ,[updated_by]
+                                                   ,[COMPANY_CODE]
+                                                   ,[CALENDAR_CODE]
+                                                   ,[BOOKING_DATE]
+                                                   ,[SERVICE_NAME]
+                                                   ,[SERVICE_PROVIDER]
+                                                   ,[CLIENT_NAME]
+                                                   ,[FROM_TIME]
+                                                   ,[TO_TIME])
+                                             VALUES
+                                                   ('{Guid.NewGuid().ToString()}'
+                                                   ,2315
+                                                   ,30314
+                                                   ,0
+                                                   ,0
+                                                   ,0
+                                                   ,0
+                                                   ,0
+                                                   ,(select ISNULL(Max(formRecordOrder), 0) from COMPANY_UPCOMING_BOOKINGS_1945)
+                                                   ,0
+                                                   ,'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'
+                                                   ,'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'
+                                                   ,null
+                                                   ,null
+                                                   ,'{model.transaction.COMPANY_CODE}'
+                                                   ,'{model.transaction.CALENDAR_CODE}'
+                                                   ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = '{model.transaction.SLOT}')                                                                                                                                                                                                     
+                                                   ,N'{model.ACTIVITY_NAME}'
+                                                   ,N'{model.RESOURCE_NAME}'
+                                                   ,N'{model.participant.STUDENT_NAME}'
+                                                   ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = N'{model.transaction.SLOT}') 
+                                                   ,(select calendar.[end] from  CALENDAR_FORM_1935 calendar where Id = N'{model.transaction.SLOT}') )";
+
+
+                var upcomingResult = await sqlFunction.ExecuteSqlCommandQuery(upcomingBookingQuery);
+
+            }
+
+
+            if (Convert.ToInt32(model.transaction.transaction_fees) > 0)
+            {
+                string paymentId = PaymentId;
+
+                if (string.IsNullOrEmpty(paymentId))
+                {
+                    string orderNoQuery = $@"select *,
+                                                    (
+                                                    select case when (sum(CREDIT_COIN) - sum(DEBIT_COIN) <= 0) then 0 else sum(CREDIT_COIN) - sum(DEBIT_COIN) end from LEDGER_MASTER_1957 where ORDER_NO = PAYMENT_ID
+                                                    ) as 'Balance'
+                                                    from PAYMENT_HISTORY_MASTER_1956 where COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE.ToString()}' and STATUS = 'complete' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE and USER_ID = '{model.USER_ID}'
+                                                    order by cast(created_at as datetime)";
+
+                    var orderNoResult = await sqlFunction.ExecuteSqlQuery(orderNoQuery);
+
+                    paymentId = orderNoResult.FirstOrDefault(x => Convert.ToInt32(x["Balance"]) > 0)["PAYMENT_ID"]?.ToString();
+                }
+
+                // add entry in ledger
+                try
+                {
+                    LedgerModel ledger = new LedgerModel()
+                    {
+                        CALENDAR_CODE = model.transaction.CALENDAR_CODE,
+                        COMPANY_CODE = model.transaction.COMPANY_CODE,
+                        DEBIT_COIN = Convert.ToDouble(model.transaction.transaction_fees),
+                        USER_ID = model.USER_ID,
+                        CREDIT_COIN = 0,
+                        ORDER_NO = (model.transaction.transaction_fees == "0") ? "" : paymentId,
+                        TRANSACTION_TYPE = "Booking"
+                    };
+                    var ledgerResult = await masterService.CreateLedgerEntry(ledger);
+
+                }
+                catch (Exception ex)
+                {
+                    return new AddUpdateDelete() { Message = "Failed to enroll on calendar", Status = false };
+                }
+            }
+
+            try
+            {
+
+                if (formResult2.res == 1)
+                {
+                    return new AddUpdateDelete() { Message = "Success", Status = true, Data = formResult2.Id };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Message = "Failed to enroll on calendar", Status = false };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Message = "Failed to enroll on calendar", Status = false };
+            }
         }
 
         public async Task<AddUpdateDelete> CancelPublicUserBooking(CalendarEnrollModel model)

@@ -204,6 +204,23 @@ namespace Barrway.Controllers
             }
         }
 
+        public async Task<ActionResult> EnrollCourse(CalendarEnrollModel model)
+        {
+            try
+            {
+                model.USER_ID = User.Identity.Name;
+
+                var result = await publicUserService.EnrollCourse(model);
+
+                return Json(result, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = "Failed" }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         public async Task<ActionResult> CancelPublicUserBooking(CalendarEnrollModel model)
         {
             try

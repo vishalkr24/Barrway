@@ -1392,6 +1392,56 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> GetCourseEvents(string ServiceId, string UserEmail)
+        {
+            string sqlQuery = $@"select 
+                                    case when (t.Id is not null and p.Id is not null) then 'Y' else 'N' end as 'IsBooked'
+                                    ,f.* from CALENDAR_FORM_1935 f 
+                                    left join TRANSACTION_MASTER_1942 t on f.Id = t.SLOT
+                                    left join (select * from PARTICIPANT_MASTER_1940 where EMAIL = '{UserEmail}') p on p.Id = t.STUDENT
+                                    where f.IS_COURSE_EVENT = 'Y' and f.activities = '{ServiceId}' and f.[start] >= '{DateTimeUtility.Now().ToString("yyyy-MM-dd")}'";
+
+            var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+            sqlQuery = $@"select distinct substring(f.[start], 1, 10) as 'start' from CALENDAR_FORM_1935 f 
+                                    left join TRANSACTION_MASTER_1942 t on f.Id = t.SLOT
+                                    left join (select * from PARTICIPANT_MASTER_1940 where EMAIL = '{UserEmail}') p on p.Id = t.STUDENT
+                                    where f.IS_COURSE_EVENT = 'Y' and f.activities = '{ServiceId}' and f.[start] >= '{DateTimeUtility.Now().ToString("yyyy-MM-dd")}'";
+
+            var Dates = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+            Dictionary<string, List<IDictionary<string, object>>> finalData = new Dictionary<string, List<IDictionary<string, object>>>();
+
+            Dates.ForEach(date =>
+            {
+                finalData.Add(Convert.ToDateTime(date["start"]?.ToString()).ToString("dddd - dd MMMM yyyy"), new List<IDictionary<string, object>>());
+            });
+            try
+            {
+                foreach (var element in Dates)
+                {
+                    var key = Convert.ToDateTime(element["start"]?.ToString()).ToString("dddd - dd MMMM yyyy");
+                    var data = result.Where(x => Convert.ToDateTime(x["start"]?.ToString()).ToString("dddd - dd MMMM yyyy") == key).ToList();
+
+                    finalData[key] = data;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            
+
+            if (result.Count > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = finalData.ToList() };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
         public async Task<AddUpdateDelete> GetDefaultCompanyByUserId(string UserId)
         {
 
@@ -1741,8 +1791,8 @@ namespace Barrway.Service.Repository
                               ,[Latitude] = '{model.Latitude}'
                               ,[Longitude] = '{model.Longitude}'
                               WHERE Id = '{model.Id}'";
-                            //,[COMPANY_CATEGORY_ID] = '{model.COMPANY_CATEGORY_ID}'
-                            // ,[COMPANY_SUB_CATEGORY_ID] = '{model.COMPANY_SUB_CATEGORY_ID}'
+                //,[COMPANY_CATEGORY_ID] = '{model.COMPANY_CATEGORY_ID}'
+                // ,[COMPANY_SUB_CATEGORY_ID] = '{model.COMPANY_SUB_CATEGORY_ID}'
 
                 int saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
 

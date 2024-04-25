@@ -806,69 +806,6 @@
 
 <section class="mihi-71" ng-controller="myCtrl">
     <div class="container">
-        @*<section class="" id="logo">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="my-slide featured-company">
-                                <div class="heading-cata">
-                                    <h3 style="color:#1a1919;"><h2>@Model.COMPANY_NAME_ENGLISH (@Model.COMPANY_NAME_CHINESE)</h2></h3>
-                                </div>
-                                <div id="owl-demo5" class="owl-carousel owl-theme owl-loaded owl-drag">
-                                    <div class="owl-stage-outer">
-                                        <div class="owl-stage" id="Servises_Owl" style="transform: translate3d(-1159px, 0px, 0px); transition: all 0s ease 0s; width: 4060px;">
-
-                                            @foreach (var item in Model.ServicesList)
-                                            {
-                                                <div class="owl-item" style="width: 314.333px !important; margin-right: 20px; border: 1px solid #3fbfc7; border-radius: 10px; padding: 10px 13px 10px; ">
-                                                    <div class="item">
-                                                        <div class="item-inner">
-                                                            <div class="pro-text">
-                                                                <p class="f1"><b>@item.ACTIVITY_NAME</b></p>
-                                                            </div>
-                                                            <div id="full-stars-example">
-                                                                <div class="rating-group">
-                                                                    <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                                    <input class="rating__input" name="rating" id="rating-1" value="1" type="radio">
-                                                                    <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                                    <input class="rating__input" name="rating" id="rating-2" value="2" type="radio">
-                                                                    <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                                    <input class="rating__input" name="rating" id="rating-3" value="3" type="radio" checked="">
-                                                                    <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                                    <input class="rating__input" name="rating" id="rating-4" value="4" type="radio">
-                                                                    <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                                    <input class="rating__input" name="rating" id="rating-5" value="5" type="radio">
-                                                                </div>
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                            }
-
-
-
-
-
-
-                                        </div>
-                                    </div>
-                                    <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><span aria-label="Previous">‹</span></button><button type="button" role="presentation" class="owl-next"><span aria-label="Next">›</span></button></div>
-
-                                    <div class="owl-dots disabled">
-
-                                    </div>
-                                </div>
-
-
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>*@
-
         <div class="row">
             <div class="col-md-12">
                 <div class="schdule-inner-sm">
@@ -1159,6 +1096,253 @@
                         <button type="button" class="btn btn-primary public-primary" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'N'" ng-click="enrollPublicUser()">Enroll</button>
                         <button type="button" class="btn btn-primary public-primary" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IsReviewable == 'N'" ng-click="cancelPublicUserBooking()">Cancel Booking</button>
                         <button type="button" class="btn btn-primary public-primary" ng-if="!selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IsReviewable == 'Y'" ng-click="reviewSession()">Review Session</button>
+                    </div>
+                </div>
+                @*<div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>*@
+            </div>
+
+        </div>
+    </div>
+
+    <style>
+        .already-uploaded-ul {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+            .already-uploaded-ul li {
+                margin-right: 12px;
+                margin-top: 12px;
+                list-style: none;
+                width: min-content;
+                max-width: 142px;
+                border-radius: 4px;
+                border: 1px solid lightgrey;
+            }
+
+                .already-uploaded-ul li select {
+                    border: none !important;
+                    border-top: 1px solid lightgrey !important;
+                    border-radius: 0px !important;
+                    outline: none;
+                    width: 100%;
+                }
+
+                .already-uploaded-ul li img {
+                    width: 140px;
+                    height: auto;
+                    max-height: 122px;
+                }
+
+                .already-uploaded-ul li button {
+                    position: absolute;
+                    padding: 0px;
+                    font-size: 18px;
+                    margin-left: 120px;
+                    margin-top: -3px;
+                }
+
+                .already-uploaded-ul li .attachment-name {
+                    text-overflow: ellipsis;
+                    text-align: center;
+                    font-size: smaller;
+                    color: grey;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    max-width: 100%;
+                }
+
+        .pt-0 {
+            padding-top: 0px;
+        }
+
+        .events-list-container {
+            height: 100%;
+            max-height: 485px;
+            overflow: hidden;
+            overflow-y: auto;
+        }
+
+        .events-list-block {
+            display: flex;
+        }
+
+            .events-list-block .event-detail {
+                display: block;
+            }
+
+            .events-list-block label {
+                font-weight: 500;
+                padding-top: 12px;
+            }
+
+            .events-list-block .event-tracker {
+                padding: 12px;
+                padding-left: 2px;
+                color: #72328A;
+                display: block;
+            }
+
+            .events-list-block .event-tracker-line div {
+                border-left: 2px dashed #72328A;
+                transform: translate(-19px, 34px);
+                height: calc(100% - 34px);
+            }
+
+            .events-list-block ul {
+                display: flex;
+                flex-wrap: wrap;
+                padding-left: 0px;
+            }
+
+                .events-list-block ul li {
+                    list-style: none;
+                    padding: 8px;
+                    border-radius: 3px;
+                    border: 1px solid #72328A;
+                    margin: 12px 12px 0 0;
+                    font-size: 13px;
+                    width: 160px;
+                    text-align: center;
+                }
+
+        #CourseDetailsModal .modal-dialog {
+            width: 100%;
+        }
+
+        .lbl-already-booked {
+            font-weight: 500;
+            background: crimson;
+            color: white;
+            padding: 6px 8px;
+            font-size: 12px;
+            margin-bottom: 16px;
+            border-radius: 4px;
+        }
+    </style>
+
+
+
+    <div class="modal fade right" id="CourseDetailsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-slideout" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" style="color: #72328A; font-weight: 700;" id="exampleModalLabel">Course Details</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-0">
+                    <div>
+                        <label class="lbl-already-booked" ng-if="courseEventsList[0].Value[0].IsBooked == 'Y'">You have already booked this course!</label>
+                    </div>
+                    <div class="event-detail div-flex">
+                        <div class="div-flex">
+                            <div class="title">
+
+                                <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
+                                    <div style="display:block" class="titleContainer">
+                                        @*<p class="title1" style="font-size:16px;font-weight:600">
+                                                {{d.dropdownListData.title}}
+                                                <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
+                                                <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
+                                                <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
+                                            </p>*@
+                                        <p class="title1" style="font-weight:bold; font-size: 16px;"> {{d.formTitle}}</p>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="div-flex div-list" ng-if="selectEventDetails.description != '' && selectEventDetails.description != null && selectEventDetails.description != ' ' && selectEventDetails.description != undefined">
+                                <label style="font-weight:bold; font-size: 16px;">Description</label>
+
+                                <label class="pr-2" style="margin-top: 20px; font-weight: 400;" ng-bind-html="selectEventDetails.description | safeHtml">
+                                </label>
+                            </div>
+
+                            <hr />
+
+                            <div class="form-group mt-2 p-0">
+
+                                <label style="font-size: 16px;">Events:</label>
+                                <br />
+                                <div class="events-list-container">
+                                    <div class="events-list-block" ng-repeat="item in courseEventsList">
+                                        <div class="event-tracker">
+                                            <i class="fa fa-circle-o" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="event-tracker-line"><div></div></div>
+                                        <div class="event-detail">
+                                            <label>{{item.Key}}</label>
+                                            <ul>
+                                                <li ng-repeat="event in item.Value">
+                                                    {{event.start}} - {{event.end}}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <hr />
+                            <div class="form-group mt-2 p-0" ng-if="selectEventDetails.DOWNLOADABLE_ATTACHMENT && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='null'">
+
+                                <label>Attachment Files</label>
+
+                                <ul style="padding:0" class="already-uploaded-ul">
+                                    <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='public'">
+                                        <a ng-href="{{item.url}}" target="_blank" title="{{item.name}}"><img src="{{((item.name.includes('jpg') || item.name.includes('png') || item.name.includes('jpeg')) ? item.url : '../../../assets/css/images/attachment-img.PNG    ')}}" /></a>
+                                        <div title="{{item.name}}" class="attachment-name">{{item.name}}</div>
+                                    </li>
+
+                                    <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='user' && selectEventDetails.IsAlreadyBooked == 'Y'">
+                                        <a ng-href="{{item.url}}" target="_blank" title="{{item.name}}"><img src="{{((item.name.includes('jpg') || item.name.includes('png') || item.name.includes('jpeg')) ? item.url : '../../../assets/css/images/attachment-img.PNG    ')}}" /></a>
+                                        <div title="{{item.name}}" class="attachment-name">{{item.name}}</div>
+                                    </li>
+                                </ul>
+
+                                @*<ul style="list-style-type:none;margin:0;padding:0;margin-top:10px;">
+                                        <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='public'"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
+                                        <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='user' && selectEventDetails.IsAlreadyBooked == 'Y'"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
+                                    </ul>*@
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="div-flex div-list-bar"></div>
+
+                    <div class="form-group mt-2 p-0" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IS_UPLOAD_REQUIRED=='Y'
+                         && (selectEventDetails.UPLOAD_TIME=='ANYTIME' || selectEventDetails.UPLOAD_TIME=='AFTER')">
+                        <div class="form-group mt-2 p-0">
+                            <label for="SELECT_DOWNLOADABLE_ATTACHMENT">Upload Attachments</label>
+                            <input type="file" name="SELECT_DOWNLOADABLE_ATTACHMENT" class="form-control" onchange="angular.element(this).scope().validateForm('SELECT_DOWNLOADABLE_ATTACHMENT',false)" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx" multiple id="SELECT_DOWNLOADABLE_ATTACHMENT" />
+                            <span id="fileError2" style="color:red" class="error-message"></span><br>
+                            <span id="fileSuccess" class="text-success"></span>
+                        </div>
+                        <input type="hidden" ng-model="selectEventDetails.ASSESSMENT_FILES" value="" id="DOWNLOADABLE_ATTACHMENT_FILES" />
+                        <input type="hidden" ng-model="selectEventDetails.ASSESSMENT_FILES_LIST" value="" id="DOWNLOAD_FILE_LIST" />
+
+                        <div class="form-group mt-2 p-0">
+                            <button type="button" onclick="angular.element(this).scope().uploadFiles(true)" id="EventUploadBtn2" class="btn btn-primary disable" disabled>Upload</button>
+                        </div>
+
+                        <ul>
+                            <li style="font-weight:600" ng-repeat="item in selectEventDetails.ASSESSMENT_FILES_LIST_DATA">
+                                <a ng-href="{{item.url}}" target="_blank">{{item.name}}</a>
+                                <button class="btn btn-link" ng-click="selectedEventRemoveFiles($index)"><i class="fa fa-times-circle"></i></button>
+                            </li>
+                        </ul>
+
+                    </div>
+
+
+                    <br />
+                    <div class="div-flex div-list">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary public-primary" ng-if="courseEventsList[0].Value[0].IsBooked == 'N'" ng-click="enrollCourse()">Buy Course</button>
                     </div>
                 </div>
                 @*<div class="modal-footer">
@@ -1570,6 +1754,183 @@
                 })
 
 
+            }
+
+            $scope.enrollCourse = function () {
+                showLoader();
+                $.ajax({
+                    url: "/Account/CheckPublicUserLogin",
+                    type: "POST",
+                    success: function (response) {
+                        hideLoader();
+                        if (!response.Status) {
+
+                            swal({
+                                title: "Login Required",
+                                text: "Kindly login into your account and then you can enroll yourself into this calendar.",
+                                icon: "info",
+                                buttons: {
+                                    cancel: "Leave it",
+                                    confirm: "Login"
+                                }
+                            }).then(function (value) {
+                                if (value) {
+                                    window.location.href = '/Account/BusinessLogin?returnUrl=' + window.location.href + '';
+                                }
+                            });
+                        } else {
+                            var eventData = $scope.selectEventDetails;
+                            $.ajax({
+                                url: "/Useradmin/GetCurrentPackageDetails",
+                                type: "GET",
+                                data: {
+                                    CompanyCode: eventData.COMPANY_CODE,
+                                    CalendarCode: eventData.CALENDAR_CODE,
+                                    ServiceId: eventData.activities
+                                },
+                                async: false,
+                                success: function (response) {
+
+
+                                    debugger;
+                                    const wrapper = document.createElement('div');
+                                    wrapper.innerHTML = `
+                                                                                                                                                        <div>${eventData.customTitleSplit[2]}</div><br />
+                                                                                                                                                        <div>${eventData.customTitleSplit[1]}</div>
+                                                                                                                                                        <div>${eventData.customTitleSplit[0]}</div>
+                                                                                                                                                        ${((response.Data != null) ? `<div>${response.Data} credits</div>` : "")}<br />
+                                                                                                                                                        <h4 style="color:red">${response.Message}</h4>`;
+
+                                    let buttonsWrap = {
+                                        cancel: "Cancel",
+                                        individualButton: {
+                                            text: "Buy Individually",
+                                            value: "other"
+                                        },
+                                        confirm: (response.Status) ? "Use Credits" : "Buy Package"
+                                    }
+
+                                    if (response.Data == 0) {
+                                        buttonsWrap = {
+                                            cancel: "Cancel",
+                                            confirm: "Yes"
+                                        }
+                                    }
+
+                                    swal({
+                                        title: "You are going to book",
+                                        content: wrapper,
+                                        buttons: buttonsWrap
+
+                                    }).then(function (check) {
+
+                                        if (check == true) {
+                                            showLoader();
+                                            if (response.Status) {
+                                                $.ajax({
+                                                    url: "/UserAdmin/CheckAdditionalFormDetails",
+                                                    method: "GET",
+                                                    data: {
+                                                        CalendarCode: eventData.CALENDAR_CODE
+                                                    },
+                                                    success: function (response) {
+                                                        if (response.Status) {
+                                                            var obj = {
+                                                                USER_ID: "",
+                                                                RESOURCE_NAME: eventData.customTitleSplit[0],
+                                                                ACTIVITY_NAME: eventData.customTitleSplit[1],
+                                                                FormGroupKey: $scope.selectEventDetails.formGroupKey,
+                                                                participant: {
+                                                                    DESCRIPTION: String(eventData.description),
+                                                                    COMPANY_CODE: eventData.COMPANY_CODE,
+                                                                    CALENDAR_CODE: eventData.CALENDAR_CODE
+                                                                },
+                                                                transaction: {
+                                                                    SLOT: eventData.Id,
+                                                                    RESOURCE: eventData.resourceId,
+                                                                    ACTIVITY: eventData.activities,
+                                                                    STUDENT: "",
+                                                                    REMARKS: "",
+                                                                    FEES: "",
+                                                                    ATTENDANCE: "NOT-MARKED",
+                                                                    COMPANY_CODE: eventData.COMPANY_CODE,
+                                                                    CALENDAR_CODE: eventData.CALENDAR_CODE
+                                                                }
+                                                            }
+
+                                                            $.ajax({
+                                                                url: "/UserAdmin/EnrollCourse",
+                                                                type: "POST",
+                                                                data: obj,
+                                                                success: function (data) {
+                                                                    hideLoader();
+                                                                    if (!data.Status) {
+                                                                        if (data.Message == "ALREADY-ENROLLED") {
+                                                                            swal({
+                                                                                title: "Can't Enroll Again!",
+                                                                                text: "You are already enrolled in this course.",
+                                                                                icon: "error",
+                                                                                button: "Okay"
+                                                                            });
+                                                                            //swal({ type: 'error', showCloseButton: true, html: "You are already enrolled in this calendar." });
+                                                                        } else if (data.Message == "LIMIT-ERROR") {
+                                                                            swal({
+                                                                                title: "Failed to Enroll!",
+                                                                                text: "Maximum no. of participants already enrolled in this course.",
+                                                                                icon: "error",
+                                                                                button: "Okay"
+                                                                            });
+                                                                        } else {
+                                                                            swal({
+                                                                                title: "Warning!",
+                                                                                text: data.Message,
+                                                                                icon: "error",
+                                                                                button: "Okay"
+                                                                            });
+                                                                        }
+                                                                    } else {
+                                                                        swal({
+                                                                            title: "Congratulations!",
+                                                                            text: "Enrolled Successfully!",
+                                                                            icon: "success",
+                                                                            button: "Okay"
+                                                                        }).then(function (boolValue) {
+                                                                            window.location.reload();
+                                                                        });
+
+                                                                    }
+
+                                                                },
+                                                                error: function () {
+                                                                    swal({ type: 'error', showCloseButton: true, html: "something went wrong!" });
+                                                                }
+                                                            })
+                                                        } else {
+                                                            $scope.renderAdditionalDetailsForm();
+                                                        }
+                                                    },
+                                                    error: function (error) {
+                                                        console.error(error);
+                                                    }
+                                                });
+                                            } else {
+                                                window.location.replace("/company/package/" + localStorage.getItem("COMPANY_CODE") + "/" + localStorage.getItem("CALENDAR_CODE"));
+                                            }
+
+                                        } else if (check === "other") {
+                                            buyCourseEvent(eventData.Id)
+                                        }
+                                    });
+
+                                }
+                            })
+                        }
+
+                    },
+                    error: function () {
+
+                    }
+                })
             }
 
             $scope.cancelPublicUserBooking = function () {
@@ -2230,7 +2591,6 @@
                             $("#service-div input[name=" + x.name + "]").removeClass("error");
                         }
                     })
-
                 }
             }
 
@@ -2434,14 +2794,18 @@
 
                     if (response.Status) {
                         $("#favr").empty();
+                        $("#favr-sm").empty();
                         setTimeout(function () {
                             $("#favr").append(`<button id="btn-mark-fav" onclick="removeAsFavorite('@Model.COMPANY_CODE')"><img src="/assets/marketplace/image/starg.png">Favorite</button>`);
+                            $("#favr-sm").append(`<button id="btn-mark-fav" onclick="removeAsFavorite('@Model.COMPANY_CODE')"><img src="/assets/marketplace/image/starg.png">Favorite</button>`);
                         }, 500)
 
                     } else {
                         $("#favr").empty();
+                        $("#favr-sm").empty();
                         setTimeout(function () {
                             $("#favr").append(`<button id="btn-mark" onclick="markAsFavorite('@Model.COMPANY_CODE')"><img src="/assets/marketplace/image/star.png"> @Resource.Mark_as_favorite</button>`)
+                            $("#favr-sm").append(`<button id="btn-mark" onclick="markAsFavorite('@Model.COMPANY_CODE')"><img src="/assets/marketplace/image/star.png"> @Resource.Mark_as_favorite</button>`)
                         }, 500)
 
                     }
