@@ -197,6 +197,31 @@ namespace Barrway.Controllers
 
                             var package = await businessUserService.GetCompanyActiveSubscriptionDetails(companyCode, true);
 
+                            string serviceId = deserData.FirstOrDefault(x => x["name"]?.ToString() == "SCH_ACTIVITY")["value"]?.ToString();
+
+                            if (!string.IsNullOrEmpty(serviceId) && serviceId != "-1")
+                            {
+                                List<IDictionary<string, object>> serviceList = (await businessUserService.GetServiceList(calendarCode, companyCode)).Data;
+
+                                var serviceData = serviceList.FirstOrDefault(x => x["Id"]?.ToString() == serviceId);
+
+                                var companyIdDic2 = new Dictionary<string, object>();
+
+                                companyIdDic2.Add("name", "IS_COURSE_EVENT");
+                                companyIdDic2.Add("value", ((!string.IsNullOrEmpty(serviceData["SERVICE_PAY_PER"]?.ToString()) && serviceData["SERVICE_PAY_PER"]?.ToString() == "COURSE") ? "Y" : "N"));
+
+                                deserData.Add(companyIdDic2);
+                            }
+                            else
+                            {
+                                var companyIdDic2 = new Dictionary<string, object>();
+
+                                companyIdDic2.Add("name", "IS_COURSE_EVENT");
+                                companyIdDic2.Add("value", "N");
+
+                                deserData.Add(companyIdDic2);
+                            }
+                            
                             var companyIdDic = new Dictionary<string, object>();
 
                             companyIdDic.Add("name", "COMPANY_SUBSCRIPTION_ID");
