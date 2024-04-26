@@ -307,9 +307,6 @@ namespace Barrway.Service.Repository
             blogs.ForEach(x => x.TAG = formatTagsString(x.TAG));
             return blogs;
         }
-
-
-
         public async Task<List<BlogModel>> GetSerachCompanyDetails(int Id)
         {
             string sqlString = $@"";
@@ -317,8 +314,6 @@ namespace Barrway.Service.Repository
             blogs.ForEach(x => x.TAG = formatTagsString(x.TAG));
             return blogs;
         }
-
-
 
         private string formatTagsString(string json)
         {
