@@ -1,5 +1,8 @@
 ﻿var CalendarFormId = "2305", ySelection = "", xSelection = "", COMPANY_CODE, CALENDAR_CODE, formDetailsDataInfo, counterLoader, xaxisFormList, formAllDatafields, listTabulator, calendarDetails, is5CType = false, tempEndDate, calenderSettings, resourceFormId;
 $(document).ready(async function () {
+
+    /*$(".calendar-selector").change(function () { $('.calendar-selector').val($(this).val()); });*/
+
     $("#txtCommonCurrentCompanyCode").val($("#txtCurrentCompanyCode").val());
     $("#startListViewDate").datepicker({
         dateFormat: 'dd/mm/yy'
@@ -17,7 +20,7 @@ $(document).ready(async function () {
     console.log(CALENDAR_CODE, "CALENDAR_CODE");
 
    
-    ////debugger;
+    ////////debugger;
 
     //getServiceList(COMPANY_CODE, CALENDAR_CODE);
 
@@ -54,10 +57,6 @@ $(document).ready(async function () {
     calenderSettings = await getCalenderSettings();
     
     calendarDetails = (await getCalendarDetails(CALENDAR_CODE)).Data;
-
-    getServiceProviderData();
-
-    getLocationMaster();
     
 
     var SelectedCalendarViews = (calendarDetails["REQUIRED_CALENDAR_VIEWS"].includes(",")) ? calendarDetails["REQUIRED_CALENDAR_VIEWS"].split(',') : [calendarDetails["REQUIRED_CALENDAR_VIEWS"]];
@@ -163,93 +162,8 @@ $(document).ready(async function () {
                 xaxisFormList.push(dataRow);
         });
 
-        //formDataList
+        //debugger;
         activityResults = activityConfig.formDataList;
-
-
-        var serviceSelect = $('#calendar-service');
-        serviceSelect.empty();
-        serviceSelect.append($('<option>', {
-            value: "",
-            text: "All service"
-        }));
-        if(activityResults.length > 0) {
-            $("#div-calendar-service").show();
-        }
-
-        $.each(activityResults, function (index, item) {
-            serviceSelect.append($('<option>', {
-                value: item.id,
-                text: item[activityConfig.activities]
-            }));
-        });
-
-
-        $('#calendar-service').change(async function () {
-            if ($(this).val() != '') {
-                var searchSrevice = $('#calendar-service option:selected').text();
-                var param = { "action": 29, "formTableColumnData": `   (   (   SERVICE_MASTER_1933.ACTIVITY_NAME like N'${searchSrevice}'    )        )   `, "formTableColumnName": "    left join SERVICE_MASTER_1933 on SERVICE_MASTER_1933.formId=f1.referrenceFormId and SERVICE_MASTER_1933.Id=f1.referrenceId  ", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 }
-                console.log(param, "param");
-                var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
-                var view = $('#' + current_tab + ' div.calendar').fullCalendar('getView');
-                param.filter = changeStateOfCalenderController(view);
-                var filterredFormDataTemp = await reBindCalender(param);
-                var eventBasicData = window["EventBasicDetail"];
-                var eventData = filterredFormDataTemp.data;
-                refreshEventResourcesActivityNew('deleteEvent', eventData, eventBasicData.resourceData, eventBasicData.resColumns, eventBasicData.activityData, eventBasicData.activityColumn, eventData);
-
-
-            } else {
-                var param = { "action": 29, "formTableColumnData": "", "formTableColumnName": "", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 };
-                var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
-                var view = $('#' + current_tab + ' div.calendar').fullCalendar('getView');
-                param.filter = changeStateOfCalenderController(view);
-                var filterredFormDataTemp = await reBindCalender(param);
-                var eventBasicData = window["EventBasicDetail"];
-                var eventData = filterredFormDataTemp.data;
-                refreshEventResourcesActivityNew('deleteEvent', eventData, eventBasicData.resourceData, eventBasicData.resColumns, eventBasicData.activityData, eventBasicData.activityColumn, eventData);
-
-            };
-        });
-
-        $('#calendar-service-Location').change(async function () {
-            $("#list-view div.calendar").fullCalendar('refetchEvents');
-            $("#timeline-resource-view div.calendar").fullCalendar('refetchEvents');
-            $("#agenda-view div.calendar").fullCalendar('refetchEvents');
-        });
-
-
-
-
-        $('#calendar-service-Provider').change(async function () {
-            if ($(this).val() != '') {
-                var searchSrevice = $('#calendar-service-Provider option:selected').val();
-                var param = { "action": 29, "formTableColumnData": `   (   (   SERVICE_PROVIDER_MASTER_1934.FIRST_NAME like N'${searchSrevice}'    )        )   `, "formTableColumnName": "    left join SERVICE_PROVIDER_MASTER_1934 on SERVICE_PROVIDER_MASTER_1934.formId=f1.referrenceFormId and SERVICE_PROVIDER_MASTER_1934.Id=f1.referrenceId  ", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 }
-                console.log(param, "param");
-                var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
-                var view = $('#' + current_tab + ' div.calendar').fullCalendar('getView');
-                param.filter = changeStateOfCalenderController(view);
-                var filterredFormDataTemp = await reBindCalender(param);
-                var eventBasicData = window["EventBasicDetail"];
-                var eventData = filterredFormDataTemp.data;
-                refreshEventResourcesActivityNew('deleteEvent', eventData, eventBasicData.resourceData, eventBasicData.resColumns, eventBasicData.activityData, eventBasicData.activityColumn, eventData);
-
-
-            } else {
-                var param = { "action": 29, "formTableColumnData": "", "formTableColumnName": "", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 };
-                var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
-                var view = $('#' + current_tab + ' div.calendar').fullCalendar('getView');
-                param.filter = changeStateOfCalenderController(view);
-                var filterredFormDataTemp = await reBindCalender(param);
-                var eventBasicData = window["EventBasicDetail"];
-                var eventData = filterredFormDataTemp.data;
-                refreshEventResourcesActivityNew('deleteEvent', eventData, eventBasicData.resourceData, eventBasicData.resColumns, eventBasicData.activityData, eventBasicData.activityColumn, eventData);
-
-            };
-        });
-
-
-
         if (activityResults.length) {
             _.each(activityResults, function (item, key) {
                 var ac_column = "";
@@ -298,6 +212,15 @@ $(document).ready(async function () {
                 }
             })
         }
+
+        //calendar service bind
+        getServiceMaster(activityConfig);
+        //calendar location bind
+        getLocationMaster(calenderSettings);
+        //calendar service provider bind
+        getServiceProviderData(calenderSettings);
+        //calendar bind change event bind
+        calendarDropDwnEvent();
 
         var eventBasicData = window["EventBasicDetail"];
 
@@ -405,7 +328,7 @@ function tabsActive(param = 0) {
             //console.info(ui.tab.data('value'))
         },
         activate: function (event, ui) {
-            ////debugger;
+            ////////debugger;
             //console.info($(ui.newTab).find('a').attr('href'));//ui.oldTab.data('value')
             var target = $(ui.newTab).find('a').attr('href');
             // $(target + ' div.calendar').fullCalendar('render');
@@ -511,13 +434,7 @@ var manageWindowParams = function () {
     return data;
 }
 
-function showCalendar(companyCode) {
 
-    var calendarId = $("#calendar-selector option:selected").val();
-
-    /* window.location.replace("/Marketplace/CompanySchedule?CompanyCode=" + companyCode + "&CalendarCode=" + calendarId);*/
-    window.location.replace("/Company/Calander/" + companyCode + "/" + calendarId);
-}
 
 
  function marcketplaceCalendar(calenderType, calenderData, resourceData, resColumns, activityFormData, activityColumn, activityEvents) {
@@ -619,7 +536,7 @@ function showCalendar(companyCode) {
         window["CalendarEventList"] = angular.copy(eventsData);
     }
      let slotDuration = "00:15:00";
-     debugger;
+     ////debugger;
      if (calendarDetails.INTERVAL_TIME && !isNaN(calendarDetails.INTERVAL_TIME)) {
         slotDuration = "00:" + calendarDetails.INTERVAL_TIME + ":00";
         calendarDetails.INTERVAL_TIME=slotDuration;
@@ -670,7 +587,14 @@ function showCalendar(companyCode) {
                 showLoader(".calendar .fc-view-container");
             }
             else {
+                
                 $(".calendar .fc-view-container").unblock();
+            }
+
+            if ($('#timeline-resource-view div.calendar .fc-toolbar').length > 0) {
+                if (window.innerWidth <= 576) {
+                    switchToDropdown(calendar);
+                }
             }
             //$('#loading').toggle(bool);
         },
@@ -1140,7 +1064,7 @@ function showCalendar(companyCode) {
             $('#fileSuccess').html('');
             $('#fileError2').html('');
             var $scope = angular.element($("#calendar")).scope();
-            ////debugger;
+            ////////debugger;
             if (calendarDetails.CALENDAR_CATEGORY_ID == "4" && calendarDetails.CALENDAR_TYPE == "3") {
                 return;
             }
@@ -1210,7 +1134,7 @@ function showCalendar(companyCode) {
             var listFormDropdown = _.filter($scope.selectEventDetails.customFormsSplit, function (item) { return item != ySelection.toString(); });
 
             if (listFormDropdown.length > 0) {
-                ////debugger;
+                ////////debugger;
                 //var listActivities = _.filter(xaxisFormList, function (item) { return item.activitiesForm != ySelection; });
                 var listActivities = xaxisFormList;
                 $scope.selectEventDetails.dropdownList = [];
@@ -1407,12 +1331,12 @@ function showCalendar(companyCode) {
             param.filter.field = "start";
             param.COMPANY_CODE = COMPANY_CODE;
             param.CALENDAR_CODE = CALENDAR_CODE;
-            ////debugger;
+            ////////debugger;
             if (is5CType) {
                 param.IsListView = true;
                 param.startDate = moment(start).format("YYYY-MM-DD");
                 param.endDate = moment(end).format("YYYY-MM-DD");
-                param.resourceId = $("#calendar-service-Location option:selected").val();
+                param.resourceId = $(".calendar-service-Location option:selected").val();
             }
 
             $.ajax({
@@ -1452,7 +1376,7 @@ function showCalendar(companyCode) {
         },
 
         eventAfterAllRender: function (view) {
-            ////debugger;
+            ////////debugger;
             if (is5CType) {
                 let eventsList = window["CalendarListViewEventList"];
                 var eventHTML = `<div class="event-list-5C">
@@ -1527,7 +1451,7 @@ function showCalendar(companyCode) {
         defaultView: 'month',
         //events: [],  
         events: function (start, end, timezone, callback) {
-            //debugger;
+            //////debugger;
             var $scope = angular.element($("#calendar")).scope();
             var param = {};
             param.action = 1;
@@ -1535,7 +1459,7 @@ function showCalendar(companyCode) {
 
             param.isCalender = 1;
             param.isEvent = 1;
-            ////////debugger;
+            ////////////debugger;
             param.resourceFormId = ySelection;
             param.ActivityFormId = xSelection;
             var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
@@ -1546,8 +1470,8 @@ function showCalendar(companyCode) {
             param.filter.field = "start";
             param.COMPANY_CODE = COMPANY_CODE;
             param.CALENDAR_CODE = CALENDAR_CODE;
-            if ($("#calendar-service-Location option:selected").val() != "" && $("#calendar-service-Location option:selected").val() != "0") {
-                param.filter.value += " and resources = '" + $("#calendar-service-Location option:selected").val() + "' ";
+            if ($(".calendar-service-Location option:selected").val() != "" && $(".calendar-service-Location option:selected").val() != "0") {
+                param.filter.value += " and resources = '" + $(".calendar-service-Location option:selected").val() + "' ";
             }
             console.log(param.filter);
             $.ajax({
@@ -1599,7 +1523,7 @@ function showCalendar(companyCode) {
     $('#agenda-view div.calendar').fullCalendar(calendarOptions);
 
     if (ySelection != 0) {
-        //////debugger
+        //////////debugger
         if (formDetailsDataInfo != null)
             if (formDetailsDataInfo.calenderSettingsList != null)
                 if (formDetailsDataInfo.calenderSettingsList.length > 0) {
@@ -1776,8 +1700,8 @@ function showCalendar(companyCode) {
             param.filter.field = "start";
             param.COMPANY_CODE = COMPANY_CODE;
             param.CALENDAR_CODE = CALENDAR_CODE;
-            if ($("#calendar-service-Location option:selected").val() != "" && $("#calendar-service-Location option:selected").val() != "0") {
-                param.filter.value += " and resources = '" + $("#calendar-service-Location option:selected").val() + "' ";
+            if ($(".calendar-service-Location option:selected").val() != "" && $(".calendar-service-Location option:selected").val() != "0") {
+                param.filter.value += " and resources = '" + $(".calendar-service-Location option:selected").val() + "' ";
             }
             $.ajax({
                 method: 'POST',
@@ -1786,7 +1710,7 @@ function showCalendar(companyCode) {
                 contentType: "application/json",
                 data: JSON.stringify(param),
                 success: function (response) {
-                    //debugger;
+                    //////debugger;
                     var calenderData = changeResourceIDByYSelection((response.events != undefined) ? response.events : response.events);
                     if (calenderData != undefined) {
                         if (formDetailsDataInfo.searchByDate != undefined) {
@@ -1836,7 +1760,7 @@ function showCalendar(companyCode) {
         selectable: (calendarDetails.CALENDAR_TYPE == "3" && calendarDetails.CALENDAR_CATEGORY_ID == "4") ? true : false,
         select: function (startDate, endDate, jsEvent, view, resource) {
 
-            //debugger;
+            //////debugger;
             var selectedStartDate = startDate;
             var selectedEndDate = endDate || startDate; // If end date is not provided (e.g., single day selection), use start date
 
@@ -2127,7 +2051,7 @@ function showCalendar(companyCode) {
                     $btnDatepicker.trigger("click"); //dynamically generated button for datepicker when clicked on input textbox
                     $btnDatepicker.hide();
                     $btnDatepicker.remove();
-                    //debugger;
+                    //////debugger;
                     $("input.datepicker").not("#hiddenDate2").remove();//dynamically appended every time on custom button click
 
                 }
@@ -2160,15 +2084,90 @@ function showCalendar(companyCode) {
      console.log(JSON.stringify(calendarOptions));
      $('#vertical-resource-view div.calendar').fullCalendar(calendarOptions);
      
-    
     setTimeout(function () {
         $.unblockUI();
     }, 500);
     //tabsActive();
 }
 
+window.addEventListener('resize', function () {
+    if (window.innerWidth <= 576) { // Change this breakpoint according to your needs
+        switchToDropdown();
+    } else {
+        switchToButtons();
+    }
+});
+
+
+function switchToDropdown() {
+    let listoptions = (is5CType) ? [{ label: 'Year', value: 'listYear' }] : [{ label: 'Day', value: 'listDay' }, { label: 'Week', value: 'listWeek' }, { label: 'Month', value: 'listMonth' }, { label: 'Year', value: 'listYear' }];
+    
+    var calendars = [{ name: "timeline-resource-view", options: [{ label: 'Day', value: 'timelineDay' }, { label: 'Week', value: 'timelineWeek' }, { label: 'Month', value: 'timelineMonth' }, { label: 'Year', value: 'timelineYear' }], select_id: "select-timeline" },
+        { name: "list-view", options: listoptions, select_id: "select-list-view" },
+        { name: "vertical-resource-view", options: [{ label: 'Day', value: 'agendaDay' }, { label: '2 Days', value: 'agendaTwoDays' }, { label: '3 Days', value: 'agendaThreeDays' }, { label: 'Week', value: 'agendaWeek' }], select_id: "select-vertical-resource-view" }    ];
+
+    calendars.forEach(calendar => {
+        let name = calendar.name;
+        let select_name = calendar.select_id;
+        $('#'+name+' div.calendar .fc-right').hide();
+        // Create a dropdown
+        if ($('#' + select_name).length == 0) {
+            var select = document.createElement('select');
+            select.id = select_name;
+            let innerHtml = '';
+
+            calendar.options.forEach(x => {
+                innerHtml += ` <option value="${x.value}">${x.label}</option>`;
+            });
+            select.innerHTML = innerHtml;
+            select.value = $('#'+name+' div.calendar').fullCalendar('getView').type;
+            $(select).addClass("form-control");
+            select.style = "width:auto";
+            select.addEventListener('change', function () {
+                $('#' + name + ' div.calendar').fullCalendar('changeView', this.value);
+                //calendar.changeView(this.value);
+            });
+
+            // Add dropdown to the page
+            var header = document.querySelector('#'+name+' div.calendar .fc-toolbar .fc-left');
+            header.appendChild(select);
+        }
+
+
+    });
+   
+}
+
+
+//function createSelectOption() {
+//}
+
+function switchToButtons() {
+
+    var calendars = [{ name: "timeline-resource-view", select_id: "select-timeline" },
+    { name: "list-view", select_id: "select-list-view" },
+        { name: "vertical-resource-view", select_id: "select-vertical-resource-view" }];
+    //debugger;
+    // Remove the dropdown
+
+    calendars.forEach(calendar => {
+
+        let name = calendar.name;
+        let select_name = calendar.select_id;
+        var select = document.querySelector('#' + select_name);
+        if (select) {
+            select.parentNode.removeChild(select);
+        }
+
+        // Restore default buttons
+        $('#'+name+' div.calendar .fc-right').show();
+
+    });
+}
+
+
 function calculateDate(startDate, counter, type) {
-    ////debugger;
+    ////////debugger;
     let temp = new Date(startDate);
     let dateObject = moment(moment(temp).format("YYYY-MM-DD"))
 
@@ -2192,7 +2191,7 @@ function calculateDate(startDate, counter, type) {
 
 
 function bookListViewSlot(startDate, endDate, resource, title) {
-    ////debugger;
+    ////////debugger;
 
     $("#dateRangePickerModel").modal("show");
 
@@ -2204,7 +2203,7 @@ function bookListViewSlot(startDate, endDate, resource, title) {
 
 
     $("#date-counter").on("change paste keyup click", function () {
-        ////debugger;
+        ////////debugger;
         tempEndDate = calculateDate(startDate, this.value, $("input[name=date-calc-type]:checked").val());
 
         $scope.selectEventDetails.end = moment(tempEndDate).format("YYYY-MM-DD").toString();
@@ -2504,7 +2503,7 @@ async function loadEventRecordDetails(paramTemp) {
         $("#newtabuListUl").empty();
         $("#newtabuListUlWaiting").empty();
 
-        ////debugger;
+        ////////debugger;
         if (param.parentID != param.formId && checkAllowParticipantsCount()) {
             if ($scope.eventDataWithoutGroupBy) {
                 if ($scope.eventDataWithoutGroupBy.length > 0) {
@@ -2580,7 +2579,7 @@ async function GetFormList() {
 }
 
 async function getCalendarDetails(id) {
-    //////debugger;
+    //////////debugger;
     return new Promise(resolve => {
         $.ajax({
             type: "POST",
@@ -2804,7 +2803,7 @@ async function rendarPopupCalendar(assignDate) {
                     }
                     rowRecord += "<div class='" + moment(eventData.start).format("YYYY-MM-DD") + "'>" + moment(eventData.start).format("MMMM D, YYYY (dddd)") + "</div>";
                 }
-                //////debugger;
+                //////////debugger;
                 //var newLabelList = _.filter(_associatedFormIDsTemp, function (item) { return item != $scope.ySelection.toString() });
                 listids = event.customFormIds.split(',');
                 var currentId = 0;
@@ -3084,7 +3083,7 @@ async function rendarPopupCalendar(assignDate) {
                 //    } else if (x.id == 0 || x.Id==0) {
                 //        _calenderData.push(x);
                 //    } else if (x.Id != 0 && x.customForms) {
-                //        ////debugger;
+                //        ////////debugger;
                 //        let customFormsIds = x.customForms.split(',');
                 //        let index = customFormsIds.findIndex(y => y == "2306");
                 //        if (index != - 1) {
@@ -3129,13 +3128,13 @@ async function rendarPopupCalendar(assignDate) {
         },
         selectable: true,
         select: function (start, end, cell) {
-            debugger;
+            ////debugger;
 
             var $scope = angular.element($("#calendar")).scope();
             $scope.BookingService = {};
             $scope.BookingService.start = start;
             $scope.BookingService.end = end;
-            ////debugger;
+            ////////debugger;
             var events = window["eventListTemp2"];
 
             var exist = events.filter(x => moment(start.format()).local() >= moment(x.start).local() && moment(end.format()).local() <= moment(x.end).local() && x.EVENT_TYPE == "SCHEDULE");
@@ -3356,7 +3355,7 @@ function invokeBookingService(star, end, bgevent) {
         "eventId": bgevent.Id,
         "isSlotBooking": checkFixedSessionCalendar()
     };
-    //////debugger;
+    //////////debugger;
     showLoader();
     postAsync(BASE_URL + "UserAdmin/BookingService", data).then(function (response) {
         hideLoader();
@@ -3546,126 +3545,6 @@ function postAsync(url, data) {
     });
 }
 
-
-function getServiceProviderData() {
-    //$.ajax({
-    //    url: "/Marketplace/GetServiceProviderMasterList/",
-    //    async: false,
-    //    type: "POST",
-    //    data: {
-    //        data: {},
-    //        companyCode: COMPANY_CODE,
-    //        calendarCode: CALENDAR_CODE
-    //    },
-    //    success: function (response) {
-    //        Service_ProviderList = response.data;
-    //        var serviceProvider = $("#calendar-service-Provider").empty();
-    //        serviceProvider.append($('<option>', {
-    //            value: "",
-    //            text: "All Service provider"
-    //        }));
-    //        if (Service_ProviderList.length > 0) {
-    //            $("#div-calendar-service-Provider").show();
-    //        }
-
-    //        $.each(Service_ProviderList, function (index, item) {
-    //            serviceProvider.append($('<option>', {
-    //                value: item.FIRST_NAME,
-    //                text: item.FIRST_NAME + " " + item.LAST_NAME
-    //            }));
-    //        });
-
-
-
-    //    },
-    //    error: function (errorResponse) {
-    //        data = null;
-    //    }
-    //});
-
-    Service_ProviderList = calenderSettings.find(x => x.resourceForm == 2304).formDataList;;
-    var serviceProvider = $("#calendar-service-Provider").empty();
-    serviceProvider.append($('<option>', {
-        value: "",
-        text: "All Service provider"
-    }));
-    if (Service_ProviderList.length > 0) {
-        $("#div-calendar-service-Provider").show();
-    }
-
-    $.each(Service_ProviderList, function (index, item) {
-        serviceProvider.append($('<option>', {
-            value: item.FIRST_NAME,
-            text: item.FIRST_NAME + " " + item.LAST_NAME
-        }));
-    });
-
-}
-
-function getLocationMaster() {
-    //////debugger;
-    //$.ajax({
-    //    url: "/Marketplace/GetLocationMasterList/",
-    //    async: false,
-    //    type: "POST",
-    //    data: {
-    //        data: {
-    //            filters: [{
-    //                field: "CALENDAR_CODE",
-    //                type: "=",
-    //                value: CALENDAR_CODE
-    //            }]
-    //        },
-    //        companyCode: COMPANY_CODE
-    //    },
-    //    success: function (response) {
-    //        data = response;
-    //        ////debugger;
-    //        console.log(data, "data data data");
-
-
-    //        Service_Location_List = response.data;
-
-    //        if (Service_Location_List.length > 0) {
-    //            $("#div-calendar-service-Location").show();
-    //        }
-
-    //        var Location = $("#calendar-service-Location").empty();
-    //        Location.append($('<option>', {
-    //            value: "",
-    //            text: "All location"
-    //        }));
-
-    //        $.each(Service_Location_List, function (index, item) {
-    //            Location.append($(`<option value="${item.Id}">${item.LOCATION_ADDRESS}</option>`));
-    //        });
-
-
-
-    //    },
-    //    error: function (errorResponse) {
-    //        data = null;
-    //    }
-    //});
-    //return data;
-
-    Service_Location_List = calenderSettings.find(x => x.resourceForm == 2306).formDataList;;
-
-    if (Service_Location_List.length > 0) {
-        $("#div-calendar-service-Location").show();
-    }
-
-    var Location = $("#calendar-service-Location").empty();
-    Location.append($('<option>', {
-        value: "",
-        text: "All location"
-    }));
-
-    $.each(Service_Location_List, function (index, item) {
-        Location.append($(`<option value="${item.Id}">${item.LOCATION_ADDRESS}</option>`));
-    });
-}
-
 function GetAdvancaePopupForMasterData(formid,title) {
 
     var data = { action: 7, formid: formid };
@@ -3703,7 +3582,7 @@ function GetAdvancaePopupForMasterData(formid,title) {
                         fields.forEach(y => {
                             if (!excludeFields.find(z => z.formid == formid && z.fields.find(f => f == y.name))) {
                                 if ((x[y.name] != undefined && x[y.name] != '' && x[y.name] != 'null') || x[y.name] == "0") {
-                                    debugger;
+                                    ////debugger;
                                     if (y.name.includes("BUILDING_NAME")) {
                                         modalContent += `<p>${x[y.name]} </p>`;
                                     } else if (y.name.includes("NAME") || y.name.includes("LOCATION_ADDRESS")) {

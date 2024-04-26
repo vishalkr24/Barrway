@@ -877,7 +877,7 @@
                             <div class="form-group">
                                 <label for="calendar">@Resource.Calendar</label>
 
-                                <select class="form-control" id="calendar-selector" onchange="showCalendar('@Model.COMPANY_CODE')">
+                                <select class="form-control calendar-selector" onchange="showCalendar('@Model.COMPANY_CODE',this)">
                                     <option value="-1" disabled>@Resource.select_a_calendar</option>
                                     @foreach (var item in Model.calendars)
                                     {
@@ -908,7 +908,7 @@
                                                 <div class="form-group">
                                                     <label for="service">@Resource.Service <span class="info-select" title="Service info" onclick="GetAdvancaePopupForMasterData(2303,'Service Master')"><i class="fa fa-info-circle"></i></span></label>
 
-                                                    <select class="form-control" id="calendar-service">
+                                                    <select class="form-control calendar-service">
                                                     </select>
                                                 </div>
                                             </div>
@@ -918,7 +918,7 @@
                                                 <div class="form-group">
                                                     <label for="service">@Resource.Service_Provider_Master <span class="info-select" title="Service info" onclick="GetAdvancaePopupForMasterData(2304,'Service Provider Master')"><i class="fa fa-info-circle"></i></span></label>
 
-                                                    <select class="form-control" id="calendar-service-Provider">
+                                                    <select class="form-control calendar-service-Provider">
                                                     </select>
                                                 </div>
                                             </div>
@@ -928,7 +928,7 @@
                                                 <div class="form-group">
                                                     <label for="service">@Resource.Location_Master <span class="info-select" title="Service info" onclick="GetAdvancaePopupForMasterData(2306,'Location Master')"><i class="fa fa-info-circle"></i></span></label>
 
-                                                    <select class="form-control" id="calendar-service-Location">
+                                                    <select class="form-control calendar-service-Location">
                                                     </select>
                                                 </div>
                                             </div>
@@ -956,7 +956,7 @@
                                 <div class="form-group">
                                     <label for="calendar">@Resource.Calendar</label>
 
-                                    <select class="form-control" id="calendar-selector" onchange="showCalendar('@Model.COMPANY_CODE')">
+                                    <select class="form-control calendar-selector" onchange="showCalendar('@Model.COMPANY_CODE',this)">
                                         <option value="-1" disabled>@Resource.select_a_calendar</option>
                                         @foreach (var item in Model.calendars)
                                         {
@@ -967,34 +967,33 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3" id="div-calendar-service" style="display:none">
+                        <div class="col-md-3 div-calendar-service" style="display:none">
                             <div class="schedule-drop">
                                 <div class="form-group">
                                     <label for="service">@Resource.Service <span class="info-select" title="Service info" onclick="GetAdvancaePopupForMasterData(2303,'Service Master')"><i class="fa fa-info-circle"></i></span></label>
 
-                                    <select class="form-control" id="calendar-service">
+                                    <select class="form-control calendar-service">
                                     </select>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-md-3" id="div-calendar-service-Provider" style="display:none">
+                        <div class="col-md-3 div-calendar-service-Provider" style="display:none">
                             <div class="schedule-drop">
                                 <div class="form-group">
                                     <label for="service">@Resource.Service_Provider_Master <span class="info-select" title="Service info" onclick="GetAdvancaePopupForMasterData(2304,'Service Provider Master')"><i class="fa fa-info-circle"></i></span></label>
-
-                                    <select class="form-control" id="calendar-service-Provider">
+                                    <select class="form-control calendar-service-Provider">
                                     </select>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-md-3" id="div-calendar-service-Location" style="display:none">
+                        <div class="col-md-3 div-calendar-service-Location" style="display:none">
                             <div class="schedule-drop">
                                 <div class="form-group">
                                     <label for="service">@Resource.Location_Master <span class="info-select" title="Service info" onclick="GetAdvancaePopupForMasterData(2306,'Location Master')"><i class="fa fa-info-circle"></i></span></label>
 
-                                    <select class="form-control" id="calendar-service-Location">
+                                    <select class="form-control calendar-service-Location">
                                     </select>
                                 </div>
                             </div>
@@ -1350,6 +1349,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.min.js" integrity="sha512-mh+AjlD3nxImTUGisMpHXW03gE6F4WdQyvuFRkjecwuWLwD2yCijw4tKA3NsEFpA1C3neiKhGXPSIGSfCYPMlQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.css" integrity="sha512-gp+RQIipEa1X7Sq1vYXnuOW96C4704yI1n0YB9T/KqdvqaEgL6nAuTSrKufUX3VBONq/TPuKiXGLVgBKicZ0KA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="~/Scripts/MarketplaceScripts/marcket-palce--dropdwn-calendar.js"></script>
     <script src="~/Scripts/MarketplaceScripts/CompanySchedule.js?@DateTimeUtility.Now().ToString("yyyyMmddHHMMssffff")"></script>
 
     <script>
@@ -2422,7 +2422,7 @@
         })
 
         function checkFavoriteCalendar() {
-            var CalendarCode = $("#calendar-selector option:selected").val();
+            var CalendarCode = $(".calendar-selector option:selected").val();
 
             $.ajax({
                 url: "/Marketplace/CheckSingleFavoriteCalendar",
@@ -2454,7 +2454,7 @@
 
         function markAsFavorite(CompanyCode) {
 
-            var CalendarCode = $("#calendar-selector option:selected").val();
+            var CalendarCode = $(".calendar-selector option:selected").val();
 
             $.ajax({
                 url: "/Account/CheckPublicUserLogin",
@@ -2524,7 +2524,7 @@
 
         function removeAsFavorite(CompanyCode) {
 
-            var CalendarCode = $("#calendar-selector option:selected").val();
+            var CalendarCode = $(".calendar-selector option:selected").val();
 
             $.ajax({
                 url: "/Account/CheckPublicUserLogin",

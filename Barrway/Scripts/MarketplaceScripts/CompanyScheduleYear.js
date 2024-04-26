@@ -5,8 +5,6 @@ $(document).ready(async function () {
     $("#nv-company-schedule").addClass("active");
     $("#txtCommonCurrentCompanyCode").val($("#txtCurrentCompanyCode").val());
 
-    getLOCDataByCalendar();
-
     var formdetail = await getFormDetails();
     formDetailsDataInfo = formdetail[0];
     
@@ -88,24 +86,7 @@ $(document).ready(async function () {
                 xaxisFormList.push(dataRow);
         });
 
-        //formDataList
         activityResults = activityConfig.formDataList;
-
-        //$('#calendar-service-Location').change(async function () {
-        //    var param = { "action": 29, "formTableColumnData": "", "formTableColumnName": "", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 };
-        //    var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
-        //    var view = calendarObject.getView();
-        //    param.filter = changeStateOfCalenderYearView(view);
-        //    param.filter.value += " and f.resources = " + $("#calendar-service-Location option:selected").val() + " ";
-        //    var filterredFormDataTemp = await reBindCalender(param);
-        //    var eventBasicData = window["EventBasicDetail"];
-        //    var eventData = filterredFormDataTemp.data;
-        //    refreshEventResourcesActivityNew('deleteEvent', eventData, eventBasicData.resourceData, eventBasicData.resColumns, eventBasicData.activityData, eventBasicData.activityColumn, eventData);
-
-        //});
-
-
-
         if (activityResults.length) {
             _.each(activityResults, function (item, key) {
                 var ac_column = "";
@@ -135,6 +116,7 @@ $(document).ready(async function () {
 
             })
         }
+
         resResults = resourceConfig.formDataList;
         if (resResults.length) {
             _.each(resResults, function (item, key) {
@@ -154,6 +136,9 @@ $(document).ready(async function () {
                 }
             })
         }
+
+        //calendar location bind
+        getLocationMaster(calenderSettings);
 
         var eventBasicData = window["EventBasicDetail"];
 
@@ -197,13 +182,10 @@ $(document).ready(async function () {
         }
 
 
+        $('.calendar-service-Location').change(function () {
+            calendarObject.refetchEvents();
+        });
     }
-
-
-    $('#calendar-service-Location').change(function () {
-        calendarObject.refetchEvents();
-    });
-
 
 });
 function changeStateOfCalenderController(view) {
@@ -246,7 +228,6 @@ async function reBindCalender(param) {
 }
 
 function tabsActive() {
-    debugger;
     $("#tabs").tabs({
         create: function (event, ui) {
             //console.info(ui.tab.data('value'))
@@ -347,14 +328,6 @@ var manageWindowParams = function () {
     data.activityData = [];
     data.activityColumn = [];
     return data;
-}
-
-function showCalendar(companyCode) {
-
-    var calendarId = $("#calendar-selector option:selected").val();
-
-    /* window.location.replace("/Marketplace/CompanySchedule?CompanyCode=" + companyCode + "&CalendarCode=" + calendarId);*/
-    window.location.replace("/Company/Calander/" + companyCode + "/" + calendarId);
 }
 
 function marcketplaceCalendar(calenderType, calenderData, resourceData, resColumns, activityFormData, activityColumn, activityEvents) {
@@ -474,7 +447,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
             param.filter = {};
             param.filter = changeStateOfCalenderYearView(cal_obj, cal_obj.start, cal_obj.end);
             //param.filter.field = "start";
-            //param.filter.value += " and f.resources = " + $("#calendar-service-Location option:selected").val() + " ";
+            //param.filter.value += " and f.resources = " + $(".calendar-service-Location option:selected").val() + " ";
             param = addParamsforLocationfilter(param);
             param.COMPANY_CODE = COMPANY_CODE;
             param.CALENDAR_CODE = CALENDAR_CODE;
@@ -552,11 +525,11 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 $scope.selectEventDetails = {};
 
                 $scope.selectEventDetails.start = moment(startDate).format("YYYY-MM-DD").toString();
-                $scope.selectEventDetails.resources = $("#calendar-service-Location option:selected").val();
+                $scope.selectEventDetails.resources = $(".calendar-service-Location option:selected").val();
                 $scope.selectEventDetails.COMPANY_CODE = calendarDetails.COMPANY_CODE;
                 $scope.selectEventDetails.CALENDAR_CODE = calendarDetails.CALENDAR_CODE;
 
-                $("#selectedLocationName").text($("#calendar-service-Location option:selected").text());
+                $("#selectedLocationName").text($(".calendar-service-Location option:selected").text());
 
                 $("#startEndDate").text("");
 
@@ -681,229 +654,6 @@ var DataService = {
     }
 };
 
-var getTabulatorListFromEvents = async function (param) {
-
-    var userDetail = GetUserDetails();
-    var $scope = angular.element($("#calendar")).scope();
-    var newParam = {};
-    newParam.action = 11;
-    newParam.formTableColumnNameList = "";
-    newParam.formTableColumnData = "";
-    if (listTabulator.length > 0) {
-        var temp = listTabulator[0];
-        newParam.searchTextData = temp.searchTextData;
-        newParam.fieldLabel = temp.label;
-        newParam.title = temp.label;
-        newParam.fieldName = temp.name;
-        newParam.formId = temp.reference_form;
-        newParam.otherreference_form = temp.otherreference_form;
-    }
-    if (param.selectedId != "") {
-        var list = window["EventBasicDetail"];
-        var eventlist = window["CalendarEventList"];
-        var rowId = parseInt(param.selectedId);
-        var exists = _.findWhere(eventlist, {
-            Id: rowId
-        });
-        if (!DataService.isEmpty(exists)) {
-            //  if (newParam.formId == exists.resFormID) {
-            newParam.formGroupKey = exists.formGroupKey;
-            var rowResource = _.findWhere(list.resourceData, {
-                id: exists.resources
-            });
-            if (!DataService.isEmpty(rowResource)) {
-                _.each(rowResource, function (item, key) {
-                    if (key != "id" && key != "title") {
-                        newParam.formTableColumnNameList += key + ","
-                        newParam.formTableColumnData += key + " like '" + item + "' and ";
-                    }
-                });
-            }
-            //}
-        }
-        newParam.selectedId = param.selectedId;
-    }
-    if (listTabulator.length > 0) {
-        newParam.formTableColumnName = listTabulator[0].searchTextData;
-
-    }
-
-    newParam.formTableColumnData = newParam.formTableColumnData.substring(0, newParam.formTableColumnData.length - 4);
-    newParam.formTableColumnNameList = newParam.formTableColumnNameList.substring(0, newParam.formTableColumnNameList.length - 1);
-
-    //$rootScope.$emit("ShowLoading");
-    newParam.created_by = userDetail.Id;
-    newParam.update_by = userDetail.Id;
-    $scope.tabuListLink = newParam;
-    $scope.selectedTabulatorList = [];
-
-    $("#strongFormName").remove();
-
-
-    /* get Student List from one to many controls based*/
-    var paramTemp = {};
-    paramTemp.action = 4;
-    $scope.formGroupKey = $scope.selectEventDetails.formGroupKey;
-    if (!DataService.isEmpty($scope.tabuListLink.formId))
-        paramTemp.formId = $scope.tabuListLink.formId;
-    else
-        paramTemp.formId = formDetailsDataInfo.otherformid;
-    paramTemp.Id = param.selectedId;
-    paramTemp.formGroupKey = $scope.formGroupKey;
-    if (paramTemp.formId == "0" || paramTemp.formId == 0 || paramTemp.formId == "" || paramTemp.formId == undefined || paramTemp.formId == null) {
-        paramTemp.formId = 0;
-        //return false;
-    }
-    await loadEventRecordDetails(paramTemp);
-    // $scope.manageOneToManyControl(paramTemp);
-
-
-    //$rootScope.safeApply();
-
-};
-async function getReferralFormFieldsAndData(param) {
-
-    return new Promise(resolve => {
-        $.ajax({
-            type: "POST",
-            url: BASE_URL + "FormAPI/getReferralFormFieldsAndData",
-            data: JSON.stringify(param),
-            contentType: "application/json",
-            success: function (response) {
-
-                hideLoader();
-                resolve(response);
-            }, error: function (err) {
-
-
-            },
-        });
-
-    });
-}
-
-async function loadEventRecordDetails(paramTemp) {
-
-    showLoader();
-    $("#tabuListUl").empty();
-    var $scope = angular.element($("#calendar")).scope();
-    if (!DataService.isEmpty(paramTemp.formId) || paramTemp.formId == 0) {
-        var param = {};
-        param = paramTemp;
-        param.action = 10;
-        param.formId = (paramTemp.formId == 0 ? CalendarFormId : paramTemp.formId).toString();
-        param.parentID = CalendarFormId;
-        param.fieldName = "";
-        var response = await getReferralFormFieldsAndData(param);
-
-        console.log(response, "response");
-        $scope.eventData = response;
-        console.log('Transaction table', $scope.eventData)
-        if (!DataService.isEmpty($scope.otherformDetails)) {
-            if (!DataService.isEmpty($scope.otherformDetails.formId)) {
-                var exist = _.findWhere($scope.eventData.formDataHeaders, { "Referral_Forms": $scope.otherformDetails.formId.toString() });
-                if (!DataService.isEmpty(exist)) {
-                    var exist1 = _.findWhere($scope.eventData.formDataHeaders, { "columnType": "text" });
-                    if (!DataService.isEmpty(exist1)) {
-                        $scope.selectedKeyFieldSecond = exist1.field;
-                    }
-                    $scope.selectedKeyField = exist.field;
-                }
-            }
-            else {
-
-            }
-        }
-        //else {
-        //    $scope.selectedKeyField = $scope.formDetailsDataInfo.otherFormFieldName;
-        //}
-
-        $scope.eventDataWithoutGroupBy = $scope.eventData.formDataListNew;
-
-        $scope.eventDataWithoutGroupByMinRecord = [];
-        $scope.eventDataWithoutGroupByMinRecordForWaiting = [];
-
-        var courseExists = _.findWhere(xaxisFormList, { resourceActivityForm: $scope.courseFormId });
-        if (!DataService.isEmpty(courseExists)) {
-
-            var courseFormEntry = _.findWhere($scope.eventData.currentEventCalenderReferrenceList, { referrenceFormId: $scope.courseFormId });
-            if (!DataService.isEmpty(courseFormEntry)) {
-                var courseFormEntryExists = _.findWhere(courseExists.formDataList, { id: courseFormEntry.referrenceId });
-                if (!DataService.isEmpty(courseFormEntryExists)) {
-
-                    $scope.selectEventDetails.DESCRIPTION = courseFormEntryExists.DESCRIPTION;
-                    var maxrecordList = 0;
-                    var maxrecordWaitingList = 0;
-                    _.each(courseFormEntryExists, function (item, keyItem) {
-                        if (keyItem.contains("MAXIMUM_NO_OF_PARTICIPANTS")) {
-                            maxrecordList = item;
-                        }
-                        if (keyItem.contains("maxwaitingstudent")) {
-                            maxrecordWaitingList = item;
-                        }
-                    });
-                    if (DataService.isEmpty(maxrecordList)) {
-                        $scope.eventDataWithoutGroupByMinRecord = $scope.eventDataWithoutGroupBy;
-                        $scope.eventDataWithoutGroupByMinRecordForWaiting = [];
-                    }
-                    if (DataService.isEmpty(maxrecordWaitingList)) {
-                        $scope.eventDataWithoutGroupByMinRecordForWaiting = [];
-                    }
-                    $("#labelWaiting").empty();
-                    if (!DataService.isEmpty(maxrecordList) && !DataService.isEmpty(maxrecordWaitingList)) {
-                        $scope.eventDataWithoutGroupByMinRecord = $scope.eventDataWithoutGroupBy.slice(0, maxrecordList);
-                        $scope.eventDataWithoutGroupByMinRecordForWaiting = $scope.eventDataWithoutGroupBy.slice(maxrecordList, (maxrecordList + maxrecordWaitingList));
-                        if ($scope.eventDataWithoutGroupByMinRecordForWaiting.length > 0)
-                            $("#labelWaiting").append('<strong> Wait list</strong>');
-                    }
-                }
-
-            }
-            else {
-                $scope.eventDataWithoutGroupByMinRecord = $scope.eventDataWithoutGroupBy;
-                $("#labelWaiting").empty();
-            }
-        }
-        $("#tabuListUl").empty();
-        $("#newtabuListUl").empty();
-        $("#newtabuListUlWaiting").empty();
-
-        if (param.parentID != param.formId && checkAllowParticipantsCount()) {
-            if ($scope.eventDataWithoutGroupBy) {
-                if ($scope.eventDataWithoutGroupBy.length > 0) {
-                    $("#tabuList").empty();
-                    $("#newtabuList").empty();
-                    $("#tabuList").append('<strong id="strongFormName">' + $scope.eventDataWithoutGroupBy.length + (maxrecordList > 0 ? '/' + maxrecordList : "") + ' ' + $scope.otherformDetails.title + ' in this Slot</strong>');
-                    $("#newtabuList").append('<strong id="strongFormName">' + $scope.eventDataWithoutGroupBy.length + (maxrecordList > 0 ? '/' + maxrecordList : "") + ' ' + $scope.otherformDetails.title + ' in this Slot</strong>');
-                }
-                else {
-                    $("#tabuList").empty();
-                    $("#newtabuList").empty();
-                    if (!DataService.isEmpty($scope.otherformDetails)) {
-                        if (!DataService.isEmpty($scope.otherformDetails.title)) {
-                            $("#tabuList").append('<strong id="strongFormName"> 0 ' + (maxrecordList > 0 ? '/' + maxrecordList : '') + ' ' + $scope.otherformDetails.title + ' in this Slot </strong>');
-                            $("#newtabuList").append('<strong id="strongFormName"> 0 ' + (maxrecordList > 0 ? '/' + maxrecordList : '') + ' ' + $scope.otherformDetails.title + ' in this Slot </strong>');
-                        }
-                    }
-                }
-            } else {
-                $("#labelWaiting").empty();
-            }
-        }
-        else {
-            $("#addTransactionRecord").remove();
-            $("#newaddTransactionRecord").remove();
-            $('#newtabuList').hide();
-        }
-        // $("#tabuListLink");
-        $scope.rootScopeSafe();
-        removeTitleNew();
-        hideLoader();
-
-
-
-    }
-};
 
 async function ManageFormApp(otherFormId) {
     var otherRefParam = {};
@@ -1092,91 +842,24 @@ function postAsync(url, data) {
 }
 
 
-function getServiceProviderData() {
-    $.ajax({
-        url: "/Calendar/GetServiceProviderMasterList/",
-        async: false,
-        type: "POST",
-        data: {
-            data: {},
-            companyCode: COMPANY_CODE,
-            calendarCode: CALENDAR_CODE
-        },
-        success: function (response) {
-            Service_ProviderList = response.data;
-            var serviceProvider = $("#calendar-service-Provider").empty();
-            serviceProvider.append($('<option>', {
-                value: "",
-                text: "All Service provider"
-            }));
-
-            $.each(Service_ProviderList, function (index, item) {
-                serviceProvider.append($('<option>', {
-                    value: item.FIRST_NAME,
-                    text: item.FIRST_NAME + " " + item.LAST_NAME
-                }));
-            });
-
-
-
-        },
-        error: function (errorResponse) {
-            data = null;
-        }
-    });
-
-}
-
-function getLOCDataByCalendar() {
-
-    $.ajax({
-        url: "/Marketplace/GetLocationMasterList",
-        async: false,
-        type: "POST",
-        data: {
-            data: {
-                filters: [{
-                    field: "CALENDAR_CODE",
-                    type: "=",
-                    value: CALENDAR_CODE
-                }]
-            },
-            companyCode: COMPANY_CODE
-        },
-        success: function (response) {
-            data = response;
-
-            console.log(data, "data data data");
-
-
-            Service_Location_List = response.data;
-            var Location = $("#calendar-service-Location").empty();
-
-
-            $.each(Service_Location_List, function (index, item) {
-                Location.append(`<option value="${item.Id}">${item.LOCATION_ADDRESS}</option>`);
-            });
-
-
-
-        },
-        error: function (errorResponse) {
-            data = null;
-        }
-    });
-    return data;
-}
-
-
 
 function addParamsforLocationfilter(params) {
     var newparam = {};
     newparam.action = 29;
-    let selected_location = $('#calendar-service-Location option:selected').val();
-    newparam.formTableColumnData = `(   (   LOCATION_MASTER_1936.Id = '${selected_location}'    )        ) `;
+    let selected_location = $('.calendar-service-Location option:selected').val();
+    if (selected_location != '') {
+        newparam.formTableColumnData = `(   (   LOCATION_MASTER_1936.Id = '${selected_location}'    )        ) `;
+    } else {
+        var optionValues = $('.calendar-service-Location option').map(function () {
+            return $(this).val();
+        }).get().filter(function (value) {
+            return value !== '';
+        }).join(",");
+        newparam.formTableColumnData = `(   (   LOCATION_MASTER_1936.Id in (${optionValues})    )        ) `;
+    }
     newparam.formTableColumnName = ` left join LOCATION_MASTER_1936 on LOCATION_MASTER_1936.formId=f1.referrenceFormId and LOCATION_MASTER_1936.Id=f1.referrenceId `;
-    newparam.formId = 2305;
     newparam.formTableName = "CALENDAR_FORM_1935";
+    newparam.formId = 2305;
     newparam.created_by = 30314;
     newparam.update_by = 30314;
     newparam.filter = params.filter;
