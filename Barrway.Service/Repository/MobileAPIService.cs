@@ -97,10 +97,11 @@ namespace Barrway.Service.Repository
 
             return groupData;
         }
-        public async Task<List<CompanyModel>> GetFeatureCompanies() {
+        public async Task<List<CompanyModel>> GetFeatureCompanies()
+        {
             string sqlString = $@"select Id,COMPANY_NAME_ENGLISH +'|'+COMPANY_NAME_CHINESE AS COMPANY_NAME,COMPANY_NAME_ENGLISH,COMPANY_BANNER_PATH,COMPANY_LOGO_PATH,COMPANY_BANNER_NAME,TAGS  from BUSINESS_COMPANY_MASTER_1924 WHERE IS_FEATURED='Y'";
             var featureCompanies = (await sqlFunction.ExecuteSqlQuery<CompanyModel>(sqlString)).ToList();
-            featureCompanies.ForEach(x => { x.TAGS = formatTagsString(x.TAGS);x.COMPANY_LOGO_PATH = GetFilepath(x.COMPANY_LOGO_PATH, "COMPANY"); });
+            featureCompanies.ForEach(x => { x.TAGS = formatTagsString(x.TAGS); x.COMPANY_LOGO_PATH = GetFilepath(x.COMPANY_LOGO_PATH, "COMPANY"); });
             return featureCompanies;
         }
 
@@ -114,10 +115,73 @@ namespace Barrway.Service.Repository
             return featureBlogs;
         }
 
-        public async Task<List<CalendarModel>> GetCalendarsSearchResult(SearchAPIModel data) { 
-        
-            data.page=data.page==0?1:data.page;
+        public async Task<List<CalendarModel>> GetCalendarsSearchResult(SearchAPIModel data)
+        {
+
+            data.page = data.page == 0 ? 1 : data.page;
             data.size = data.size == 0 ? 10 : data.size;
+
+            string FilterString = "";
+
+            if (data.CategoryId > 0)
+            {
+                FilterString += "AND category.Id=" + data.CategoryId + "";
+            }
+
+            if (data.districtIds != null && data.districtIds[0] != 0)
+            {
+
+                string commaSeparatedIds = string.Join(",", data.districtIds);
+                FilterString += " AND calendar.CITY_ID in (" + commaSeparatedIds + ")";
+
+            }
+
+            if (data.subcatIds != null && data.subcatIds[0] != 0)
+            {
+                
+
+                    string subcategoryString = " AND(calendar.[CALENDAR_SUB_CATEGORY_ID] like ";
+                    for (int i = 0; i < data.subcatIds.Count(); i++)
+                    {
+                        if (i == 0)
+                        {
+
+                            subcategoryString += "'%" + data.subcatIds[i] + "%'";
+                        }
+                        else
+                        {
+                            subcategoryString += " or calendar.[CALENDAR_SUB_CATEGORY_ID] like '%" + data.subcatIds[i] + "%'";
+                        }
+                    }
+                    subcategoryString += ")";
+                    FilterString += subcategoryString;
+
+                
+            }
+
+            if (data.tags != null && data.tags[0] != "" && data.tags[0] != "string")
+            {
+                
+                    string subcategoryString = " AND(calendar.[TAGS] like ";
+                    for (int i = 0; i < data.tags.Count(); i++)
+                    {
+
+                        if (i == 0)
+                        {
+                            subcategoryString += "'%" + data.tags[i] + "%'";
+                        }
+                        else
+                        {
+                            subcategoryString += " or calendar.[TAGS] like '%" + data.tags[i] + "%'";
+                        }
+                    }
+                    subcategoryString += ")";
+                    FilterString += subcategoryString;
+                
+            }
+
+
+
             string sqlString = $@"declare @PageSize int= {data.size}, 
                                   @PageNumber int= {data.page}; with formdata as 
                                   (SELECT 
@@ -131,7 +195,7 @@ namespace Barrway.Service.Repository
                                   JOIN BUSINESS_COMPANY_MASTER_1924 company ON company.COMPANY_CODE = calendar.COMPANY_CODE
 								  CROSS APPLY STRING_SPLIT(calendar.CALENDAR_SUB_CATEGORY_ID, ',') s
                                   join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory  ON subCategory.Id=TRY_CAST(s.value AS INT)
-                                  WHERE  calendar.STATUS = 'PUBLISH' AND company.IS_ACTIVE = 'Y' AND company.IS_TEMPLATE = 'N' AND calendar.CALENDAR_USE_TYPE = 'PUBLIC' 
+                                  WHERE  calendar.STATUS = 'PUBLISH' AND company.IS_ACTIVE = 'Y' AND company.IS_TEMPLATE = 'N' AND calendar.CALENDAR_USE_TYPE = 'PUBLIC' {FilterString}
                                   group by calendar.[Id],calendar.[created_at],calendar.[CALENDAR_NAME],calendar.[CALENDAR_PHOTO_NAME],calendar.[CALENDAR_PHOTO_PATH],category.Id,calendar.[CALENDAR_SUB_CATEGORY_ID],
                                   calendar.[COMPANY_CODE],calendar.[CALENDAR_CODE],category.[CMN_CATEGORY_NAME],district.[DISTRICT_NAME],calendar.[TAGS],
                                   company.[COMPANY_NAME_ENGLISH],company.[COMPANY_NAME_CHINESE],company.[COMPANY_LOGO_NAME],company.[COMPANY_LOGO_PATH],company.[COMPANY_BANNER_NAME],company.[COMPANY_BANNER_PATH],
@@ -143,13 +207,67 @@ namespace Barrway.Service.Repository
             return calendars;
         }
 
-        public async Task<List<CompanyModel>> GetCompaniesSearchResult(SearchAPIModel data)
+        public async Task<List<CompanyModel>> GetCompaniesSearchResult(Bussiness_company data)
         {
             data.page = data.page == 0 ? 1 : data.page;
             data.size = data.size == 0 ? 10 : data.size;
+
+            string FilterString = "";
+
+
+
+            if (data.districtIds != null && data.districtIds[0] != 0)
+            {
+                string commaSeparatedIds = string.Join(",", data.districtIds);
+                FilterString += " where DISTRICT_ID in (" + commaSeparatedIds + ")";
+            }
+
+            else if (data.CityIds != null && data.CityIds[0] != 0)
+            {
+
+                string commaSeparatedIds = string.Join(",", data.CityIds);
+
+                FilterString += " where CITY_ID in (" + commaSeparatedIds + ")";
+
+
+            }
+
+            else if (data.CountryIds != null && data.CountryIds[0] != 0)
+            {
+
+                string commaSeparatedIds = string.Join(",", data.CountryIds);
+                FilterString += " where COUNTRY_ID in (" + commaSeparatedIds + ")";
+            }
+
+            else if (data.tags != null && data.tags[0] != "" && data.tags[0] != "string")
+            {
+
+                string subcategoryString = " AND([TAGS] like ";
+                for (int i = 0; i < data.tags.Count(); i++)
+                {
+                    if (i == 0)
+                    {
+                        subcategoryString += "'%" + data.tags[i] + "%'";
+                    }
+                    else
+                    {
+                        subcategoryString += " or [TAGS] like '%" + data.tags[i] + "%'";
+                    }
+                }
+                subcategoryString += ")";
+                FilterString += subcategoryString;
+
+            }
+
+            else if (data.CompanyName != "" && data.CompanyName != "string")
+            {
+
+                FilterString += " where ([COMPANY_NAME_ENGLISH] like '%" + data.CompanyName + "%'  or [COMPANY_NAME_CHINESE] like '%" + data.CompanyName + "%')"; ;
+            }
+
             string sqlString = $@"declare @PageSize int= {data.size}, 
                                   @PageNumber int= {data.page}; with formdata as 
-                                  (select Id,COMPANY_NAME_ENGLISH +'|'+COMPANY_NAME_CHINESE AS COMPANY_NAME,COMPANY_NAME_ENGLISH,COMPANY_BANNER_PATH,COMPANY_LOGO_PATH,COMPANY_BANNER_NAME,TAGS  from BUSINESS_COMPANY_MASTER_1924
+                                  (select Id,COMPANY_NAME_ENGLISH +'|'+COMPANY_NAME_CHINESE AS COMPANY_NAME,COMPANY_NAME_ENGLISH,COMPANY_BANNER_PATH,COMPANY_LOGO_PATH,COMPANY_BANNER_NAME,TAGS  from BUSINESS_COMPANY_MASTER_1924  {FilterString}
                                   ) Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata ORDER BY Id OFFSET @PageSize * (@PageNumber - 1) ROWS 
                                   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
             var companies = (await sqlFunction.ExecuteSqlQuery<CompanyModel>(sqlString)).ToList();
@@ -157,14 +275,47 @@ namespace Barrway.Service.Repository
             return companies;
         }
 
-        public async Task<List<BlogModel>> GetBlogsSearchResult(SearchAPIModel data)
+        public async Task<List<BlogModel>> GetBlogsSearchResult(BlogSearchAPIModel data)
         {
             data.page = data.page == 0 ? 1 : data.page;
             data.size = data.size == 0 ? 10 : data.size;
+            string FilterString = "";
+            if (data.IsFetured > 0)
+            {
+
+                FilterString += " where IS_FEATURED ='YES'";
+            }
+
+            if (data.IsHot > 0)
+            {
+                FilterString += " where IS_HOT ='YES'";
+            }
+
+            else if (data.tags.Count() > 0 && data.tags[0] != "" && data.tags[0] != "string")
+            {
+                string subcategoryString = " where  ([TAG] like ";
+                for (int i = 0; i < data.tags.Count(); i++)
+                {
+                    if (i == 0)
+                    {
+                        subcategoryString += "'%" + data.tags[i] + "%'";
+                    }
+                    else
+                    {
+                        subcategoryString += " or [TAG] like '%" + data.tags[i] + "%'";
+                    }
+                }
+                subcategoryString += ")";
+                FilterString += subcategoryString;
+            }
+
+
+
+
             string sqlString = $@"declare @PageSize int= {data.size}, 
                                   @PageNumber int= {data.page}; with formdata as 
                                   (select blog.Id, blog.created_at, blog.BLOG_TITLE,blog.[IMAGE],blog.YOUTUBE_LINK,blog.TAG,blog_c.BLOG_CATEGORY,blog.BLOG_CATEGORY BLOG_CATEGORY_ID from BLOG_1980 blog
-                                  join BLOG_CATEGORY_1981 blog_c on blog.BLOG_CATEGORY=blog_c.Id
+                                  join BLOG_CATEGORY_1981 blog_c on blog.BLOG_CATEGORY=blog_c.Id  {FilterString}
                                   ) Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata ORDER BY Id OFFSET @PageSize * (@PageNumber - 1) ROWS 
                                   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
             var blogs = (await sqlFunction.ExecuteSqlQuery<BlogModel>(sqlString)).ToList();
@@ -173,9 +324,11 @@ namespace Barrway.Service.Repository
         }
 
 
-        private string formatTagsString(string json) {
+        private string formatTagsString(string json)
+        {
 
-            if (!string.IsNullOrEmpty(json) && isJsonString(json)) {
+            if (!string.IsNullOrEmpty(json) && isJsonString(json))
+            {
                 JArray jsonArray = JArray.Parse(json);
                 // Extract "value" properties and join them into a comma-separated string
                 string result = string.Join(",", jsonArray
@@ -199,16 +352,18 @@ namespace Barrway.Service.Repository
             }
 
         }
-        private string GetFilepath(string path,string type) {
+        private string GetFilepath(string path, string type)
+        {
 
             if (!string.IsNullOrEmpty(path) && path.Contains("/"))
             {
                 path = path.Replace("~", "");
-                path=baseUrl+ path;
+                path = baseUrl + path;
                 return path;
             }
-            else {
-                return type=="COMPANY"?AppSettings.default_company_logopath:AppSettings.default_calernar_path;
+            else
+            {
+                return type == "COMPANY" ? AppSettings.default_company_logopath : AppSettings.default_calernar_path;
             }
         }
     }

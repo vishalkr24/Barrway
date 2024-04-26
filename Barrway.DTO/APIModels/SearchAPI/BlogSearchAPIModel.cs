@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Barrway.DTO.APIModels.SearchAPI
 {
-    public class SearchAPIModel
+    public class BlogSearchAPIModel
     {
-        public List<int> districtIds { get; set; }
-        public List<int> subcatIds { get; set; }
+        
         public List<string> tags { get; set; }
-        public int CategoryId { get; set; }
+        public int IsFetured { get; set; }
+        public int IsHot { get; set; }
         public int size { get; set; }
         public int page { get; set; }
     }
