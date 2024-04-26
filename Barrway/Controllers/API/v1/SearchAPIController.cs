@@ -84,5 +84,29 @@ namespace Barrway.Controllers.API.v1
             }
             return new SearchResponseModel<List<BlogModel>> { last_page = last_page, data = result, searchType = "blog" };
         }
+
+
+        [Route("api/search/CompanyDetails")]
+        [HttpPost]
+        public async Task<SearchResponseModel<List<BlogModel>>> GetSerachCompanyDetails(int Id)
+        {
+            var result = await mobileAPIService.GetSerachCompanyDetails(Id);
+
+            double last_page = 0;
+            if (result != null && result.Count() > 0)
+            {
+                var first_data = result.FirstOrDefault();
+                if (first_data.total_records == 0 && first_data.size == 0)
+                {
+                    last_page = 0;
+                }
+                else
+                {
+                    double paging = (double)first_data.total_records / first_data.size;
+                    last_page = Math.Floor(paging) + 1;
+                }
+            }
+            return new SearchResponseModel<List<BlogModel>> { last_page = last_page, data = result, searchType = "blog" };
+        }
     }
 }
