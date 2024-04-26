@@ -1352,7 +1352,7 @@ function generateInputBox(modelItem, id, additionalClass) {
                 modelItem.values.forEach(x => {
                     value += `
                             <div style="float:left;">
-                                <input type="radio" ${(x.selected == true) ? "checked" : ""} class="" id="${modelItem.name}${x.value}${id}" name="${modelItem.name}${id}" value="${x.value}" data-input-id="${id}">
+                                <input type="radio" class="" id="${modelItem.name}${x.value}${id}" name="${modelItem.name}${id}" value="${x.value}" data-input-value="${x.value}" data-input-id="${id}">
                                 <label class="form-check-label" for="${modelItem.name}${x.value}${id}">${x.label}</label>
                             </div>
                             `
@@ -1418,8 +1418,16 @@ function addMoreRow(dataItem, isRemovable, isNew) {
     setTimeout(function () {
         dataModelList.forEach(x => {
             $(`input[name^=${x.name}]`).bind("keyup change paste", function () {
+
                 let inputId = $(this).attr("data-input-id");
-                dataList.find(y => y.Id == inputId)[x.name] = this.value;
+                debugger;
+                if (x.type == "radio-group") {
+                    dataList.find(y => y.Id == inputId)[x.name] = this.attributes["data-input-value"].value;
+                } else {
+                    dataList.find(y => y.Id == inputId)[x.name] = this.value;
+                }
+                
+                
             })
         });
     }, 500);
@@ -1439,8 +1447,22 @@ function removeRow(Id) {
     }
 }
 
+function validateDynamicForm() {
+    let check = true;
+
+    dataList.forEach(x => {
+        for (const key in x) {
+            if (x[key] === "" || x[key] === null) {
+                check = false;
+            }
+        }
+    })
+
+    return check;
+}
+
 function createMasterData() {
-    if (true) {
+    if (validateDynamicForm()) {
 
         $.ajax({
             url: "/Calendar/AddMasterData",

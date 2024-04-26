@@ -717,6 +717,13 @@ namespace Barrway.Controllers
             return Json(schedularData);
         }
 
+        public async Task<ActionResult> GetCourseEvents(string ServiceId)
+        {
+            var EventsData = await businessUserService.GetCourseEvents(ServiceId, UserIdentity.UserEmail);
+
+            return Json(EventsData, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public async Task<ActionResult> AddQueueSession(Dictionary<string, List<Dictionary<string, string>>> data, string ScheduleId)
         {
@@ -958,7 +965,6 @@ namespace Barrway.Controllers
                             chopIntoSessions = true;
                         }
 
-
                         SchedularFormModel data = JsonConvert.DeserializeObject<SchedularFormModel>(JsonConvert.SerializeObject(rawData));
 
                         if (data.SCHEDULAR_TYPE == "QUEUE_1")
@@ -1099,6 +1105,16 @@ namespace Barrway.Controllers
                             var calendarCountCheckData = await businessUserService.GetSessionsForThisMonth(data.COMPANY_CODE, data.CALENDAR_CODE);
                             var package = await businessUserService.GetCompanyActiveSubscriptionDetails(data.COMPANY_CODE, true);
 
+                            List<IDictionary<string, object>> serviceListRaw = (await businessUserService.GetServiceList(data.CALENDAR_CODE, data.COMPANY_CODE)).Data;
+
+                            var serviceData = serviceListRaw.FirstOrDefault(x => x["Id"]?.ToString() == data.SCH_ACTIVITY);
+                            string IsCourseEvent = "N";
+
+                            if (!string.IsNullOrEmpty(data.SCH_ACTIVITY) && data.SCH_ACTIVITY != "-1")
+                            {
+                                IsCourseEvent = ((!string.IsNullOrEmpty(serviceData["SERVICE_PAY_PER"]?.ToString()) && serviceData["SERVICE_PAY_PER"]?.ToString() == "COURSE") ? "Y" : "N");
+                            }
+
                             string script = "";
                             int eventCounter = 0;
                             bool caseBreak = false;
@@ -1185,8 +1201,8 @@ namespace Barrway.Controllers
                                             }
 
                                             eventCounter++;
-                                            script += $@"insert into CALENDAR_FORM_1935(
-                                                               [SCHEDULAR_FORM_ID]
+                                            script += $@"insert into CALENDAR_FORM_1935([IS_COURSE_EVENT]
+                                                              ,[SCHEDULAR_FORM_ID]
                                                               ,[formGroupKey]
                                                               ,[formID]
                                                               ,[userID]
@@ -1207,7 +1223,7 @@ namespace Barrway.Controllers
                                                               ,[COMPANY_SUBSCRIPTION_ID]
                                                               ,[description]
                                                               ,[created_at], [updated_at],[EVENT_TYPE])
-	                                                          values('{SchedularFormId}', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter}', '{tempStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{tempEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{data.SCH_RESOURCE}', '{data.SCH_ACTIVITY}', '{package.Data["SUBS_ID"]?.ToString()}', '{data.SCH_DESCRIPTION}', getDate(), getDate(),'SCHEDULE');
+	                                                          values('{IsCourseEvent}', '{SchedularFormId}', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter}', '{tempStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{tempEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{data.SCH_RESOURCE}', '{data.SCH_ACTIVITY}', '{package.Data["SUBS_ID"]?.ToString()}', '{data.SCH_DESCRIPTION}', getDate(), getDate(),'SCHEDULE');
 
                                                             {referenceResourceEntry}                                                                    
 
@@ -1255,8 +1271,8 @@ namespace Barrway.Controllers
                                         }
 
                                         eventCounter++;
-                                        script += $@"insert into CALENDAR_FORM_1935(
-                                                               [SCHEDULAR_FORM_ID]
+                                        script += $@"insert into CALENDAR_FORM_1935([IS_COURSE_EVENT]
+                                                              ,[SCHEDULAR_FORM_ID]
                                                               ,[formGroupKey]
                                                               ,[formID]
                                                               ,[userID]
@@ -1277,7 +1293,7 @@ namespace Barrway.Controllers
                                                               ,[COMPANY_SUBSCRIPTION_ID]
                                                               ,[description]
                                                               ,[created_at], [updated_at],[EVENT_TYPE])
-	                                                          values('{SchedularFormId}', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter}', '{SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{data.SCH_RESOURCE}', '{data.SCH_ACTIVITY}', '{package.Data["SUBS_ID"]?.ToString()}', '{data.SCH_DESCRIPTION}', getDate(), getDate(),'SCHEDULE');
+	                                                          values('{IsCourseEvent}', '{SchedularFormId}', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter}', '{SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{data.SCH_RESOURCE}', '{data.SCH_ACTIVITY}', '{package.Data["SUBS_ID"]?.ToString()}', '{data.SCH_DESCRIPTION}', getDate(), getDate(),'SCHEDULE');
 
                                                             {referenceResourceEntry}                                                                    
 

@@ -528,7 +528,8 @@ var manageWindowParams = function () {
     resColumns = _ColumnResults;
 
 
-    var customEventDetailsModelPopUp = angular.element("#customEventDetailsModelPopUp");
+     var customEventDetailsModelPopUp = angular.element("#customEventDetailsModelPopUp");
+     var CourseDetailsModal = angular.element("#CourseDetailsModal");
     var customEventDetailsServiceModelPopUp = angular.element("#customEventDetailsServiceModelPopUp");
     var createCustomEventDetailsModelPopUp = angular.element("#createCustomEventDetailsModelPopUp");
 
@@ -1060,7 +1061,7 @@ var manageWindowParams = function () {
         },
         eventClick: async function (calEvent, jsEvent, view) {
 
-
+            
             $('#fileSuccess').html('');
             $('#fileError2').html('');
             var $scope = angular.element($("#calendar")).scope();
@@ -1069,17 +1070,53 @@ var manageWindowParams = function () {
                 return;
             }
 
-            
-
-
             if (Check_IS_SERVICE_TYPE(calendarDetails)) {
                 //customEventDetailsServiceModelPopUp.modal('show');
                 //customEventDetailsServiceModelPopUp.css({ "z-index": "9999" });
                 await rendarPopupCalendar(calEvent.start);
 
             } else {
-                customEventDetailsModelPopUp.modal('show');
-                customEventDetailsModelPopUp.css({ "z-index": "9999" });
+
+                if (calEvent.IS_COURSE_EVENT == 'Y') {
+
+                    $.ajax({
+                        url: "/Calendar/GetCourseEvents",
+                        type: "GET",
+                        data: {
+                            ServiceId: calEvent.activities
+                        },
+                        success: function (response) {
+                            if (response.Status) {
+                                debugger;
+
+                                response.Data.forEach(x => {
+                                    x.Value.forEach(y => {
+                                        y.start = moment(y.start).format("hh:mm a")
+                                        y.end = moment(y.end).format("hh:mm a")
+                                    });
+                                });
+
+                                $scope.courseEventsList = response.Data;
+
+                                CourseDetailsModal.modal('show');
+                                CourseDetailsModal.css({ "z-index": "9999" });
+                            } else {
+
+                            }
+                        },
+                        error: function (error) {
+
+                        }
+                    })
+
+                    
+
+                } else {
+                    customEventDetailsModelPopUp.modal('show');
+                    customEventDetailsModelPopUp.css({ "z-index": "9999" });
+                }
+
+                
             }
 
            
@@ -1102,12 +1139,6 @@ var manageWindowParams = function () {
                     $scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA = JSON.parse(enrolled_data.ASSESSMENT_FILES_LIST);
                 }
             }
-
-            //$scope.selectEventDetails.user_enroll = is_enroll;
-
-            //if (calEvent.DOWNLOADABLE_ATTACHMENT && calEvent.DOWNLOADABLE_ATTACHMENT != '' && calEvent.DOWNLOADABLE_ATTACHMENT != 'null') {
-            //    $scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES = calEvent.DOWNLOADABLE_ATTACHMENT.split(',');
-            //}
 
             if (!(moment().local().diff(calEvent.start.format(), 'minute') <= 0)) {
                 $scope.selectEventDetails.isEnroll = false;
@@ -1473,7 +1504,9 @@ var manageWindowParams = function () {
             if ($(".calendar-service-Location option:selected").val() != "" && $(".calendar-service-Location option:selected").val() != "0") {
                 param.filter.value += " and resources = '" + $(".calendar-service-Location option:selected").val() + "' ";
             }
+
             console.log(param.filter);
+
             $.ajax({
                 method: 'POST',
                 url: BASE_URL + "/FormAPI/getReferralFormFields",
