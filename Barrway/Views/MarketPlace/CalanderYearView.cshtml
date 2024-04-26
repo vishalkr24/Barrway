@@ -640,6 +640,7 @@
         #agenda-view .fc-event-container .fc-day-grid-event .fc-content .fc-title {
             font-size: 10px;
         }
+
         .fc-event {
             background-color: #3FBFC7
         }
@@ -774,7 +775,7 @@
                                 <div class="form-group">
                                     <label for="calendar">@Resource.Calendar</label>
 
-                                    <select class="form-control" id="calendar-selector" onchange="showCalendar('@Model.COMPANY_CODE')">
+                                    <select class="form-control calendar-selector" onchange="showCalendar('@Model.COMPANY_CODE',this)">
                                         <option value="-1" disabled>@Resource.select_a_calendar</option>
                                         @foreach (var item in Model.calendars)
                                         {
@@ -791,7 +792,7 @@
                                 <div class="form-group">
                                     <label for="service">@Resource.Location_Master</label>
 
-                                    <select class="form-control" id="calendar-service-Location">
+                                    <select class="form-control calendar-service-Location">
                                     </select>
                                 </div>
                             </div>
@@ -799,24 +800,24 @@
 
                         <div class="col-md-3">
                             @*<div class="schedule-drop">
-                                <div class="form-group">
-                                    <label for="service">@Resource.Service</label>
+                                    <div class="form-group">
+                                        <label for="service">@Resource.Service</label>
 
-                                    <select class="form-control" id="calendar-service">
-                                    </select>
-                                </div>
-                            </div>*@
+                                        <select class="form-control" id="calendar-service">
+                                        </select>
+                                    </div>
+                                </div>*@
                         </div>
 
                         <div class="col-md-3">
                             @*<div class="schedule-drop">
-                                <div class="form-group">
-                                    <label for="service">@Resource.Service_Provider_Master</label>
+                                    <div class="form-group">
+                                        <label for="service">@Resource.Service_Provider_Master</label>
 
-                                    <select class="form-control" id="calendar-service-Provider">
-                                    </select>
-                                </div>
-                            </div>*@
+                                        <select class="form-control" id="calendar-service-Provider">
+                                        </select>
+                                    </div>
+                                </div>*@
                         </div>
 
 
@@ -1077,10 +1078,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.css" integrity="sha512-gp+RQIipEa1X7Sq1vYXnuOW96C4704yI1n0YB9T/KqdvqaEgL6nAuTSrKufUX3VBONq/TPuKiXGLVgBKicZ0KA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+    <script src="~/Scripts/MarketplaceScripts/marcket-palce--dropdwn-calendar.js"></script>
     <script src="~/Scripts/MarketplaceScripts/CompanyScheduleYear.js?@DateTimeUtility.Now().ToString("yyyyMmddHHMMssffff")"></script>
 
     <script>
-        
+
         FormGeneratorApp.controller('myCtrl', function ($scope, $rootScope) {
             $scope.rootScopeSafe = function () {
                 $rootScope.safeApply();
@@ -1192,7 +1194,7 @@
 
         function markAsFavorite(CompanyCode) {
 
-            var CalendarCode = $("#calendar-selector option:selected").val();
+            var CalendarCode = $(".calendar-selector option:selected").val();
 
             $.ajax({
                 url: "/Account/CheckPublicUserLogin",
@@ -1261,7 +1263,7 @@
 
         function removeAsFavorite(CompanyCode) {
 
-            var CalendarCode = $("#calendar-selector option:selected").val();
+            var CalendarCode = $(".calendar-selector option:selected").val();
 
             $.ajax({
                 url: "/Account/CheckPublicUserLogin",
