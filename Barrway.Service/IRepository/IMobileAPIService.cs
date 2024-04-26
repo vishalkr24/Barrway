@@ -17,8 +17,8 @@ namespace Barrway.Service.IRepository
         Task<List<BlogModel>> GetFeatureBlogs();
         Task<List<CalendarModel>> GetCalendarsSearchResult(SearchAPIModel data);
 
-        Task<List<CompanyModel>> GetCompaniesSearchResult(Bussiness_company data);
-        Task<List<BlogModel>> GetBlogsSearchResult(BlogSearchAPIModel data);
+        Task<List<CompanyModel>> GetCompaniesSearchResult(SearchAPIModel data);
+        Task<List<BlogModel>> GetBlogsSearchResult(SearchAPIModel data);
         Task<List<BlogModel>> GetSerachCompanyDetails(int Id);
 
 
