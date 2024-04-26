@@ -75,7 +75,6 @@ function getServiceProviderData(calenderSettings) {
     if (Service_ProviderList.length > 0) {
         $(".div-calendar-service-Provider").show();
     }
-    debugger;
     $.each(Service_ProviderList, function (index, item) {
         serviceProvider.append($('<option>', {
             value: item.id,

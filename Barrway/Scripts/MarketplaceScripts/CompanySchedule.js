@@ -19,9 +19,6 @@ $(document).ready(async function () {
     console.log(COMPANY_CODE, "COMPANY_CODE");
     console.log(CALENDAR_CODE, "CALENDAR_CODE");
 
-   
-    ////////debugger;
-
     //getServiceList(COMPANY_CODE, CALENDAR_CODE);
 
     /* $('#calendar-selector').val(CALENDAR_CODE);*/
@@ -161,8 +158,6 @@ $(document).ready(async function () {
             if (dataRow.activitiesForm !== 0)
                 xaxisFormList.push(dataRow);
         });
-
-        //debugger;
         activityResults = activityConfig.formDataList;
         if (activityResults.length) {
             _.each(activityResults, function (item, key) {
@@ -328,7 +323,6 @@ function tabsActive(param = 0) {
             //console.info(ui.tab.data('value'))
         },
         activate: function (event, ui) {
-            ////////debugger;
             //console.info($(ui.newTab).find('a').attr('href'));//ui.oldTab.data('value')
             var target = $(ui.newTab).find('a').attr('href');
             // $(target + ' div.calendar').fullCalendar('render');
@@ -537,7 +531,6 @@ var manageWindowParams = function () {
         window["CalendarEventList"] = angular.copy(eventsData);
     }
      let slotDuration = "00:15:00";
-     ////debugger;
      if (calendarDetails.INTERVAL_TIME && !isNaN(calendarDetails.INTERVAL_TIME)) {
         slotDuration = "00:" + calendarDetails.INTERVAL_TIME + ":00";
         calendarDetails.INTERVAL_TIME=slotDuration;
@@ -1065,7 +1058,6 @@ var manageWindowParams = function () {
             $('#fileSuccess').html('');
             $('#fileError2').html('');
             var $scope = angular.element($("#calendar")).scope();
-            ////////debugger;
             if (calendarDetails.CALENDAR_CATEGORY_ID == "4" && calendarDetails.CALENDAR_TYPE == "3") {
                 return;
             }
@@ -1087,8 +1079,6 @@ var manageWindowParams = function () {
                         },
                         success: function (response) {
                             if (response.Status) {
-                                debugger;
-
                                 response.Data.forEach(x => {
                                     x.Value.forEach(y => {
                                         y.start = moment(y.start).format("hh:mm a")
@@ -1165,7 +1155,6 @@ var manageWindowParams = function () {
             var listFormDropdown = _.filter($scope.selectEventDetails.customFormsSplit, function (item) { return item != ySelection.toString(); });
 
             if (listFormDropdown.length > 0) {
-                ////////debugger;
                 //var listActivities = _.filter(xaxisFormList, function (item) { return item.activitiesForm != ySelection; });
                 var listActivities = xaxisFormList;
                 $scope.selectEventDetails.dropdownList = [];
@@ -1362,7 +1351,6 @@ var manageWindowParams = function () {
             param.filter.field = "start";
             param.COMPANY_CODE = COMPANY_CODE;
             param.CALENDAR_CODE = CALENDAR_CODE;
-            ////////debugger;
             if (is5CType) {
                 param.IsListView = true;
                 param.startDate = moment(start).format("YYYY-MM-DD");
@@ -1407,7 +1395,6 @@ var manageWindowParams = function () {
         },
 
         eventAfterAllRender: function (view) {
-            ////////debugger;
             if (is5CType) {
                 let eventsList = window["CalendarListViewEventList"];
                 var eventHTML = `<div class="event-list-5C">
@@ -1482,7 +1469,6 @@ var manageWindowParams = function () {
         defaultView: 'month',
         //events: [],  
         events: function (start, end, timezone, callback) {
-            //////debugger;
             var $scope = angular.element($("#calendar")).scope();
             var param = {};
             param.action = 1;
@@ -1490,7 +1476,6 @@ var manageWindowParams = function () {
 
             param.isCalender = 1;
             param.isEvent = 1;
-            ////////////debugger;
             param.resourceFormId = ySelection;
             param.ActivityFormId = xSelection;
             var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
@@ -1556,7 +1541,6 @@ var manageWindowParams = function () {
     $('#agenda-view div.calendar').fullCalendar(calendarOptions);
 
     if (ySelection != 0) {
-        //////////debugger
         if (formDetailsDataInfo != null)
             if (formDetailsDataInfo.calenderSettingsList != null)
                 if (formDetailsDataInfo.calenderSettingsList.length > 0) {
@@ -1743,7 +1727,6 @@ var manageWindowParams = function () {
                 contentType: "application/json",
                 data: JSON.stringify(param),
                 success: function (response) {
-                    //////debugger;
                     var calenderData = changeResourceIDByYSelection((response.events != undefined) ? response.events : response.events);
                     if (calenderData != undefined) {
                         if (formDetailsDataInfo.searchByDate != undefined) {
@@ -1792,8 +1775,6 @@ var manageWindowParams = function () {
         },
         selectable: (calendarDetails.CALENDAR_TYPE == "3" && calendarDetails.CALENDAR_CATEGORY_ID == "4") ? true : false,
         select: function (startDate, endDate, jsEvent, view, resource) {
-
-            //////debugger;
             var selectedStartDate = startDate;
             var selectedEndDate = endDate || startDate; // If end date is not provided (e.g., single day selection), use start date
 
@@ -2084,7 +2065,6 @@ var manageWindowParams = function () {
                     $btnDatepicker.trigger("click"); //dynamically generated button for datepicker when clicked on input textbox
                     $btnDatepicker.hide();
                     $btnDatepicker.remove();
-                    //////debugger;
                     $("input.datepicker").not("#hiddenDate2").remove();//dynamically appended every time on custom button click
 
                 }
@@ -2134,10 +2114,10 @@ window.addEventListener('resize', function () {
 
 function switchToDropdown() {
     let listoptions = (is5CType) ? [{ label: 'Year', value: 'listYear' }] : [{ label: 'Day', value: 'listDay' }, { label: 'Week', value: 'listWeek' }, { label: 'Month', value: 'listMonth' }, { label: 'Year', value: 'listYear' }];
-    
-    var calendars = [{ name: "timeline-resource-view", options: [{ label: 'Day', value: 'timelineDay' }, { label: 'Week', value: 'timelineWeek' }, { label: 'Month', value: 'timelineMonth' }, { label: 'Year', value: 'timelineYear' }], select_id: "select-timeline" },
-        { name: "list-view", options: listoptions, select_id: "select-list-view" },
-        { name: "vertical-resource-view", options: [{ label: 'Day', value: 'agendaDay' }, { label: '2 Days', value: 'agendaTwoDays' }, { label: '3 Days', value: 'agendaThreeDays' }, { label: 'Week', value: 'agendaWeek' }], select_id: "select-vertical-resource-view" }    ];
+
+    var calendars = [{ name: "timeline-resource-view", options: [{ label: 'Day', value: 'timelineDay' }, { label: 'Week', value: 'timelineWeek' }, { label: 'Month', value: 'timelineMonth' }, { label: 'Year', value: 'timelineYear' }], select_id: "select-timeline", style: "width: auto;display: inline;" },
+        { name: "list-view", options: listoptions, select_id: "select-list-view", style:"width:auto;display: inline;" },
+        { name: "vertical-resource-view", options: [{ label: 'Day', value: 'agendaDay' }, { label: '2 Days', value: 'agendaTwoDays' }, { label: '3 Days', value: 'agendaThreeDays' }, { label: 'Week', value: 'agendaWeek' }], select_id: "select-vertical-resource-view", style:"width: auto;display: inline;" }];
 
     calendars.forEach(calendar => {
         let name = calendar.name;
@@ -2155,15 +2135,18 @@ function switchToDropdown() {
             select.innerHTML = innerHtml;
             select.value = $('#'+name+' div.calendar').fullCalendar('getView').type;
             $(select).addClass("form-control");
-            select.style = "width:auto";
+            select.style = calendar.style;
             select.addEventListener('change', function () {
                 $('#' + name + ' div.calendar').fullCalendar('changeView', this.value);
                 //calendar.changeView(this.value);
             });
 
             // Add dropdown to the page
-            var header = document.querySelector('#'+name+' div.calendar .fc-toolbar .fc-left');
-            header.appendChild(select);
+            var header = document.querySelector('#' + name + ' div.calendar .fc-toolbar .fc-left');
+            if ($('#' + name + ' div.calendar .fc-toolbar .fc-left').length > 0) {
+                $('#' + name + ' div.calendar .fc-toolbar .fc-left').after(select);
+                //header.appendChild(select);
+            }
         }
 
 
@@ -2180,7 +2163,6 @@ function switchToButtons() {
     var calendars = [{ name: "timeline-resource-view", select_id: "select-timeline" },
     { name: "list-view", select_id: "select-list-view" },
         { name: "vertical-resource-view", select_id: "select-vertical-resource-view" }];
-    //debugger;
     // Remove the dropdown
 
     calendars.forEach(calendar => {
@@ -2200,7 +2182,6 @@ function switchToButtons() {
 
 
 function calculateDate(startDate, counter, type) {
-    ////////debugger;
     let temp = new Date(startDate);
     let dateObject = moment(moment(temp).format("YYYY-MM-DD"))
 
@@ -2224,7 +2205,6 @@ function calculateDate(startDate, counter, type) {
 
 
 function bookListViewSlot(startDate, endDate, resource, title) {
-    ////////debugger;
 
     $("#dateRangePickerModel").modal("show");
 
@@ -2236,7 +2216,6 @@ function bookListViewSlot(startDate, endDate, resource, title) {
 
 
     $("#date-counter").on("change paste keyup click", function () {
-        ////////debugger;
         tempEndDate = calculateDate(startDate, this.value, $("input[name=date-calc-type]:checked").val());
 
         $scope.selectEventDetails.end = moment(tempEndDate).format("YYYY-MM-DD").toString();
@@ -2535,8 +2514,6 @@ async function loadEventRecordDetails(paramTemp) {
         $("#tabuListUl").empty();
         $("#newtabuListUl").empty();
         $("#newtabuListUlWaiting").empty();
-
-        ////////debugger;
         if (param.parentID != param.formId && checkAllowParticipantsCount()) {
             if ($scope.eventDataWithoutGroupBy) {
                 if ($scope.eventDataWithoutGroupBy.length > 0) {
@@ -2612,7 +2589,6 @@ async function GetFormList() {
 }
 
 async function getCalendarDetails(id) {
-    //////////debugger;
     return new Promise(resolve => {
         $.ajax({
             type: "POST",
@@ -2687,7 +2663,7 @@ async function rendarPopupCalendar(assignDate) {
         },
         eventRender: function (event, element) {
 
-
+           
 
             var $scope = angular.element($("#calendar")).scope();
             var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
@@ -2836,7 +2812,6 @@ async function rendarPopupCalendar(assignDate) {
                     }
                     rowRecord += "<div class='" + moment(eventData.start).format("YYYY-MM-DD") + "'>" + moment(eventData.start).format("MMMM D, YYYY (dddd)") + "</div>";
                 }
-                //////////debugger;
                 //var newLabelList = _.filter(_associatedFormIDsTemp, function (item) { return item != $scope.ySelection.toString() });
                 listids = event.customFormIds.split(',');
                 var currentId = 0;
@@ -3116,7 +3091,6 @@ async function rendarPopupCalendar(assignDate) {
                 //    } else if (x.id == 0 || x.Id==0) {
                 //        _calenderData.push(x);
                 //    } else if (x.Id != 0 && x.customForms) {
-                //        ////////debugger;
                 //        let customFormsIds = x.customForms.split(',');
                 //        let index = customFormsIds.findIndex(y => y == "2306");
                 //        if (index != - 1) {
@@ -3161,13 +3135,10 @@ async function rendarPopupCalendar(assignDate) {
         },
         selectable: true,
         select: function (start, end, cell) {
-            ////debugger;
-
             var $scope = angular.element($("#calendar")).scope();
             $scope.BookingService = {};
             $scope.BookingService.start = start;
             $scope.BookingService.end = end;
-            ////////debugger;
             var events = window["eventListTemp2"];
 
             var exist = events.filter(x => moment(start.format()).local() >= moment(x.start).local() && moment(end.format()).local() <= moment(x.end).local() && x.EVENT_TYPE == "SCHEDULE");
@@ -3388,7 +3359,6 @@ function invokeBookingService(star, end, bgevent) {
         "eventId": bgevent.Id,
         "isSlotBooking": checkFixedSessionCalendar()
     };
-    //////////debugger;
     showLoader();
     postAsync(BASE_URL + "UserAdmin/BookingService", data).then(function (response) {
         hideLoader();
@@ -3615,7 +3585,6 @@ function GetAdvancaePopupForMasterData(formid,title) {
                         fields.forEach(y => {
                             if (!excludeFields.find(z => z.formid == formid && z.fields.find(f => f == y.name))) {
                                 if ((x[y.name] != undefined && x[y.name] != '' && x[y.name] != 'null') || x[y.name] == "0") {
-                                    ////debugger;
                                     if (y.name.includes("BUILDING_NAME")) {
                                         modalContent += `<p>${x[y.name]} </p>`;
                                     } else if (y.name.includes("NAME") || y.name.includes("LOCATION_ADDRESS")) {
