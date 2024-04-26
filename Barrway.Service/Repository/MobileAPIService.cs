@@ -213,8 +213,10 @@ namespace Barrway.Service.Repository
             data.page = data.page == 0 ? 1 : data.page;
             data.size = data.size == 0 ? 10 : data.size;
 
+
             List<string> filterQueryList = new List<string>();
             if (data.districtIds != null && data.districtIds.Count()>0)
+
             {
                 string commaSeparatedIds = string.Join(",", data.districtIds);
                 filterQueryList.Add(" (DISTRICT_ID in (" + commaSeparatedIds + ") ) ");
@@ -305,6 +307,17 @@ namespace Barrway.Service.Repository
             blogs.ForEach(x => x.TAG = formatTagsString(x.TAG));
             return blogs;
         }
+
+
+
+        public async Task<List<BlogModel>> GetSerachCompanyDetails(int Id)
+        {
+            string sqlString = $@"";
+            var blogs = (await sqlFunction.ExecuteSqlQuery<BlogModel>(sqlString)).ToList();
+            blogs.ForEach(x => x.TAG = formatTagsString(x.TAG));
+            return blogs;
+        }
+
 
 
         private string formatTagsString(string json)
