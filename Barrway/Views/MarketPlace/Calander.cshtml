@@ -691,6 +691,10 @@
             justify-content: space-between;
             display:none;
         }
+        .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover {
+            border: 1px solid #3fbfc7;
+            background: #3fbfc7;
+        }
         div#calendar div#tabs .ui-state-active a .blck {
             display: none;
         }
@@ -753,6 +757,12 @@
                         }
             span.n_sm {
                 display: none;
+            }
+            .heading-cata {
+                white-space: wrap;
+            }
+            .ui-tabs .ui-tabs-panel {
+                padding: 1em 0.5em;
             }
         }
         
@@ -2796,7 +2806,7 @@
                         $("#favr").empty();
                         $("#favr-sm").empty();
                         setTimeout(function () {
-                            $("#favr").append(`<button id="btn-mark-fav" onclick="removeAsFavorite('@Model.COMPANY_CODE')"><img src="/assets/marketplace/image/starg.png">Favorite</button>`);
+                            $("#favr").append(`<button id="btn-mark-fav" onclick="removeAsFavorite('@Model.COMPANY_CODE')"><img src="/assets/marketplace/image/starg.png">@Resource.Mark_as_favorite</button>`);
                             $("#favr-sm").append(`<button id="btn-mark-fav" onclick="removeAsFavorite('@Model.COMPANY_CODE')"><img src="/assets/marketplace/image/starg.png">Favorite</button>`);
                         }, 500)
 
@@ -2805,7 +2815,7 @@
                         $("#favr-sm").empty();
                         setTimeout(function () {
                             $("#favr").append(`<button id="btn-mark" onclick="markAsFavorite('@Model.COMPANY_CODE')"><img src="/assets/marketplace/image/star.png"> @Resource.Mark_as_favorite</button>`)
-                            $("#favr-sm").append(`<button id="btn-mark" onclick="markAsFavorite('@Model.COMPANY_CODE')"><img src="/assets/marketplace/image/star.png"> @Resource.Mark_as_favorite</button>`)
+                            $("#favr-sm").append(`<button id="btn-mark" onclick="markAsFavorite('@Model.COMPANY_CODE')"><img src="/assets/marketplace/image/star.png"> Favorite</button>`)
                         }, 500)
 
                     }

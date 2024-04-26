@@ -644,6 +644,97 @@
         .fc-event {
             background-color: #3FBFC7
         }
+
+        .schdule-inner-sm {
+            width: 100%;
+            float: left;
+            display: flex;
+            vertical-align: middle;
+            justify-content: space-between;
+            display: none;
+        }
+        .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover {
+            border: 1px solid #3fbfc7;
+            background: #3fbfc7;
+        }
+        div#calendar div#tabs .ui-state-active a .blck {
+            display: none;
+        }
+
+        div#calendar div#tabs .ui-state-default a .white {
+            display: none;
+        }
+
+        div#calendar div#tabs .ui-state-active a .white {
+            display: inline;
+        }
+
+        @@media (max-width:767px) {
+            .schdule-inner-sm {
+                display: flex;
+                width: 100%;
+                float: left;
+            }
+
+            .schdule-inner {
+                width: 100%;
+                float: left;
+                display: none;
+            }
+
+            .favr-sm button {
+                border: 2px solid #3FBFC7;
+                border-radius: 30px;
+                color: #3FBFC7;
+                background-color: #fff;
+                padding: 6px 7px;
+                width: auto;
+                min-width: 100px;
+                font-size: 15px;
+            }
+
+                .favr-sm button img {
+                    width: 14px;
+                }
+
+            .schdule-inner-sm .drop-mobile .navbar-nav-filter ul.navbar-nav {
+                margin: 0px;
+                padding-left: 0px;
+            }
+
+                .schdule-inner-sm .drop-mobile .navbar-nav-filter ul.navbar-nav li {
+                    list-style-type: none;
+                }
+
+                    .schdule-inner-sm .drop-mobile .navbar-nav-filter ul.navbar-nav li .dropdown {
+                        border: 2px solid #3fbfc7;
+                        min-width: 82px;
+                        text-align: center;
+                        margin-top: 28px;
+                        border-radius: 40px;
+                        padding: 6px 0px;
+                    }
+
+                        .schdule-inner-sm .drop-mobile .navbar-nav-filter ul.navbar-nav li .dropdown a {
+                            color: #3fbfc7;
+                        }
+
+                        .schdule-inner-sm .drop-mobile .navbar-nav-filter ul.navbar-nav li .dropdown .dropdown-menu {
+                            width: 206px;
+                            left: -25px !important;
+                            padding: 5px 8px;
+                        }
+
+            span.n_sm {
+                display: none;
+            }
+            .heading-cata {
+                white-space: break-spaces;
+            }
+            .ui-tabs .ui-tabs-panel {
+                padding: 1em 0.5em;
+            }
+        }
     </style>
 }
 
@@ -766,7 +857,62 @@
 
         <div class="row">
             <div class="col-md-12">
+                <div class="schdule-inner-sm">
+                    <div class="cal-mobile">
+                        <div class="schedule-drop">
+                            <div class="form-group">
+                                <label for="calendar">@Resource.Calendar</label>
 
+                                <select class="form-control calendar-selector" onchange="showCalendar('@Model.COMPANY_CODE',this)">
+                                    <option value="-1" disabled>@Resource.select_a_calendar</option>
+                                    @foreach (var item in Model.calendars)
+                                    {
+
+                                        <option value="@item.CALENDAR_CODE" @((item.CALENDAR_CODE == Model.DEFAULT_CALENDAR_ID) ? "selected" : "")>@item.CALENDAR_NAME</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="drop-mobile">
+                        <!-- Secondary Content -->
+                        <div class="navbar-nav-filter">
+                            <!-- Navbar -->
+                            <ul class="navbar-nav">
+
+                                <!-- grid-->
+                                <li class="nav-item d-sm-inline-block b_a_dashbord">
+                                    <!-- Account -->
+                                    <div class="dropdown">
+                                        <a class="navbar-dropdown-account-wrapper" href="javascript:;" id="accountNavbarDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" data-bs-dropdown-animation="">
+                                            <img src="~/assets/img/filter_mob.png" /> Filter
+                                        </a>
+
+                                        <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-account" aria-labelledby="accountNavbarDropdown">
+                                             <div class="schedule-drop">
+                                                <div class="form-group">
+                                                    <label for="service">@Resource.Location_Master <span class="info-select" title="Service info" onclick="GetAdvancaePopupForMasterData(2306,'Location Master')"><i class="fa fa-info-circle"></i></span></label>
+
+                                                    <select class="form-control calendar-service-Location">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Account -->
+                                </li>
+
+                            </ul>
+                            <!-- End Navbar -->
+                        </div>
+                        <!-- Secondary Content -->
+                    </div>
+                    <div class="fav-mobile">
+                        <div class="favr favr-sm" id="favr-sm">
+                            <button id="btn-mark-sm" onclick="markAsFavorite('CMP00084')"><img src="/assets/marketplace/image/star.png"> Favorite</button>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="schdule-inner">
                     <div class="row">
@@ -800,30 +946,30 @@
 
                         <div class="col-md-3">
                             @*<div class="schedule-drop">
-                                    <div class="form-group">
-                                        <label for="service">@Resource.Service</label>
+                        <div class="form-group">
+                            <label for="service">@Resource.Service</label>
 
-                                        <select class="form-control" id="calendar-service">
-                                        </select>
-                                    </div>
-                                </div>*@
+                            <select class="form-control" id="calendar-service">
+                            </select>
+                        </div>
+                    </div>*@
                         </div>
 
                         <div class="col-md-3">
                             @*<div class="schedule-drop">
-                                    <div class="form-group">
-                                        <label for="service">@Resource.Service_Provider_Master</label>
+                        <div class="form-group">
+                            <label for="service">@Resource.Service_Provider_Master</label>
 
-                                        <select class="form-control" id="calendar-service-Provider">
-                                        </select>
-                                    </div>
-                                </div>*@
+                            <select class="form-control" id="calendar-service-Provider">
+                            </select>
+                        </div>
+                    </div>*@
                         </div>
 
 
 
                         <div class="col-md-12">
-                            <div class="favr">
+                            <div class="favr ">
                                 @if (!ViewBag.IsUserFavorite)
                                 {
                                     <button id="btn-mark" onclick="markAsFavorite('@Model.COMPANY_CODE')"><img src="~/assets/marketplace/image/star.png"> @Resource.Mark_as_favorite</button>
@@ -851,16 +997,16 @@
                                     <a href="#year-view">Year View</a>
                                 </li>
                                 <li data-value="List view">
-                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@(ViewBag.CompanyCode+"/"+@ViewBag.CalendarCode)#list-view'">@Resource.List_View</a>
+                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@(ViewBag.CompanyCode+"/"+@ViewBag.CalendarCode)#list-view'"><span class="blck"><img src="~/assets/img/listbar.svg" /></span> <span class="white"><img src="~/assets/img/white-listbars.svg" /></span> <span class="n_sm">@Resource.List_View</span></a>
                                 </li>
                                 <li data-value="External Events">
-                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@(ViewBag.CompanyCode+"/"+@ViewBag.CalendarCode)#agenda-view'">@Resource.Agenda_View</a>
+                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@(ViewBag.CompanyCode+"/"+@ViewBag.CalendarCode)#agenda-view'"><span class="blck"><img src="~/assets/img/blocks.svg" /></span> <span class="white"><img src="~/assets/img/white_blocks.svg" /></span> <span class="n_sm">@Resource.Agenda_View</span></a>
                                 </li>
                                 <li data-value="Timeline resource view">
-                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@(ViewBag.CompanyCode+"/"+@ViewBag.CalendarCode)#timeline-resource-view'">@Resource.Timeline_Resource_View</a>
+                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@(ViewBag.CompanyCode+"/"+@ViewBag.CalendarCode)#timeline-resource-view'"><span class="blck"><img src="~/assets/img/calender.svg" /></span> <span class="white"><img src="~/assets/img/white_cal.svg" /></span> <span class="n_sm">@Resource.Timeline_Resource_View</span></a>
                                 </li>
                                 <li data-value="Vertical resource view">
-                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@(ViewBag.CompanyCode+"/"+@ViewBag.CalendarCode)#vertical-resource-view'">@Resource.Vertical_Resource_View</a>
+                                    <a href="javascript:void(0)" onclick="window.location.href = '/company/calander/@(ViewBag.CompanyCode+"/"+@ViewBag.CalendarCode)#vertical-resource-view'"><span class="blck"><img src="~/assets/img/v_bars.svg" /></span> <span class="white"><img src="~/assets/img/white_vbars.svg" /></span> <span class="n_sm">@Resource.Vertical_Resource_View</span></a>
                                 </li>
                             </ul>
                             <div id="year-view">
@@ -1333,4 +1479,3 @@
     </script>
 
 }
-zz

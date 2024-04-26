@@ -120,8 +120,18 @@
     .main-menu  div#myNavbar ul li {
         width: 100%;
         float: left;
-        padding: 6px 25px 0px 0px;
+        padding: 6px 10px 0px 0px;
         border-bottom:1px solid #ddd;
+
+    }
+    div#myNavbar .navbar-nav li a {
+        font-size: 14px !important;
+    }
+    /*div#myNavbar .navbar-nav li.active a {
+        font-size: 16px;
+    }*/
+    li.rl a {
+        text-align: center;
     }
   div#myNavbar .navbar-nav li.rl a {
     border-radius: 10px 10px 10px 10px;
