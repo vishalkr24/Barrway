@@ -180,6 +180,10 @@ namespace Barrway.Service.Repository
                 
             }
 
+            if (data.CALENDAR_NAME !="" && data.CALENDAR_NAME != "string")
+            {
+                FilterString += " AND calendar.[CALENDAR_NAME] like '%" + data.CALENDAR_NAME + "%'";
+            }
 
 
             string sqlString = $@"declare @PageSize int= {data.size}, 
@@ -309,6 +313,12 @@ namespace Barrway.Service.Repository
                 FilterString += subcategoryString;
             }
 
+
+            else if (data.BLOG_TITLE != "" && data.BLOG_TITLE != "string")
+            {
+
+                FilterString += " where blog.BLOG_TITLE like '%" + data.BLOG_TITLE + "%'"; ;
+            }
 
 
 
