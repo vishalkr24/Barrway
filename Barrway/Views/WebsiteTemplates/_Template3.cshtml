@@ -1,5 +1,14 @@
 ﻿@model Barrway.DTO.MarketplaceModels.MarketplaceCompanyModel
-
+<style>
+    .main-banner-inner-content {
+        background-size: 100% 100%;
+    }
+    @@media screen and (max-width:767px) {
+        .main-banner-inner-content {
+            background-size: cover;
+        }
+    }
+</style>
 <!-- heading -->
 <section class="heading company-detail-hed">
     <div class="container">
@@ -16,7 +25,7 @@
 <section class="company-detail-main templet-three">
     <div class="main-banner">
         <div class="main-banner-inner">
-            <div class="main-banner-inner-content" style="background-image: url('@Model.COMPANY_BANNER_PATH.Replace("~", "")'); background-size: 100%; background-repeat: no-repeat; background-position: center center;">
+            <div class="main-banner-inner-content" style="background-image: url('@Model.COMPANY_BANNER_PATH.Replace("~", "")');  background-repeat: no-repeat; background-position: center center;">
                 <p class="banner-text-content">@Model.COMPANY_NAME_ENGLISH (@Model.COMPANY_NAME_CHINESE)</p>
                 <button class="banner-button">Book Now</button>
             </div>

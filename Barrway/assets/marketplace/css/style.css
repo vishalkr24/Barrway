@@ -285,10 +285,11 @@ div#myNavbar .navbar-nav li.rl ul a {
 
 .fields p a {
     background-color: #e3476c;
-    padding: 15px;
+    padding: 15px 17px;
     border-radius: 50px;
     position: relative;
-    top: 40px;
+    top: 60px;
+    float: left;
 }
 
 .fields p {
