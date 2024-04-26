@@ -43,7 +43,7 @@ namespace Barrway.Controllers.API.v1
         }
         [Route("api/search/companies")]
         [HttpPost]
-        public async Task<SearchResponseModel<List<CompanyModel>>> GetSerachResultCompany(Bussiness_company data)
+        public async Task<SearchResponseModel<List<CompanyModel>>> GetSerachResultCompany(SearchAPIModel data)
         {
             var result = await mobileAPIService.GetCompaniesSearchResult(data);
             double last_page = 0;
@@ -65,7 +65,7 @@ namespace Barrway.Controllers.API.v1
 
         [Route("api/search/blogs")]
         [HttpPost]
-        public async Task<SearchResponseModel<List<BlogModel>>> GetSerachResultBlog(BlogSearchAPIModel data)
+        public async Task<SearchResponseModel<List<BlogModel>>> GetSerachResultBlog(SearchAPIModel data)
         {
             var result = await mobileAPIService.GetBlogsSearchResult(data);
             double last_page = 0;
