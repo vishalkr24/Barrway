@@ -96,16 +96,36 @@
                             <div class="container-fluid">
                                 <div class="navbar-header">
                                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
+                                        <div class="bars-inner">
+                                            <span class="icon-bar"></span>
+                                            <span class="icon-bar"></span>
+                                            <span class="icon-bar"></span>
+                                        </div>
+                                        <img src="/assets/img/cross.png">
                                     </button>
                                 </div>
-                                <div class="collapse navbar-collapse" id="myNavbar">
+                                <div class="collapse navbar-collapse my-navbr-mob" id="myNavbar">
                                     <ul class="nav navbar-nav">
                                         <li id="nav-home"><a href="/BusinessMarketplace/Index">@Resource.Home</a></li>
                                         <li id="nav-features"><a href="/BusinessMarketplace/Features">@Resource.Features</a></li>
                                         <li id="nav-pricing"><a href="/BusinessMarketplace/Pricing">@Resource.Pricing</a></li>
+                                        <li class="ds-none">
+                                            <span class="pyb" style="cursor:pointer;" onclick="window.location.href = '@Url.Action("Index", "MarketPlace")'">@Resource.Market_Place</span>
+                                        </li>
+                                        <li class="ds-none">
+                                            <span class="lang">
+                                                <img src="~/assets/img/glo.png" />
+                                                <form action="/Marketplace/ChangeLanguage" method="post" id="langForm" style="display:inline;">
+                                                    <select style="border:none; outline:none;" onchange="changeLanguage()" name="langId">
+                                                        <option value="1" @(language == "en" ? "selected" : "")>English</option>
+                                                        <option value="2" @(language == "zh-Hant" ? "selected" : "")>Chinese</option>
+                                                    </select>
+                                                </form>
+                                            </span>
+                                        </li>
+                                        <li class="ds-none">
+                                            <span class="location" id="location"><img src="~/assets/img/lo.png" /> </span>
+                                        </li>
                                     </ul>
 
                                     @if (User.Identity.IsAuthenticated)
@@ -150,6 +170,7 @@
                             </div>
                         </nav>
                     </div>
+
                 </div>
             </div>
         </div>
