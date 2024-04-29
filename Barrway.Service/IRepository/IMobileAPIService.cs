@@ -1,5 +1,7 @@
-﻿using Barrway.DTO.APIModels.Dashboard;
+﻿using Barrway.DTO.APIModels.Company;
+using Barrway.DTO.APIModels.Dashboard;
 using Barrway.DTO.APIModels.SearchAPI;
+using Barrway.DTO.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +19,17 @@ namespace Barrway.Service.IRepository
         Task<List<BlogModel>> GetFeatureBlogs();
         Task<List<CalendarModel>> GetCalendarsSearchResult(SearchAPIModel data);
 
-        Task<List<CompanyModel>> GetCompaniesSearchResult(Bussiness_company data);
-        Task<List<BlogModel>> GetBlogsSearchResult(BlogSearchAPIModel data);
-        Task<List<BlogModel>> GetSerachCompanyDetails(int Id);
+        //Task<List<CompanyModel>> GetCompaniesSearchResult(Bussiness_company data);
+        //Task<List<BlogModel>> GetBlogsSearchResult(BlogSearchAPIModel data);
+
+        Task<List<CompanyModel>> GetCompaniesSearchResult(SearchAPIModel data);
+        Task<List<BlogModel>> GetBlogsSearchResult(SearchAPIModel data);
+
+        Task<Company> GetCompany(string CompanyCode);
+        Task<AddUpdateDelete> GetCalanderSubCategoryNameList(string CompanyCode);
+        Task<AddUpdateDelete> GetCalanderCategoryNameList(string CompanyCode);
+
+        Task<AddUpdateDelete> GetCompanyCalendarPackages(string CompanyCode);
 
 
     }
