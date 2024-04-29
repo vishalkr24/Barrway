@@ -197,7 +197,9 @@ namespace Barrway.Controllers
 
                             var package = await businessUserService.GetCompanyActiveSubscriptionDetails(companyCode, true);
 
-                            string serviceId = deserData.FirstOrDefault(x => x["name"]?.ToString() == "activities")["value"]?.ToString();
+                            string serviceId = "";
+                            if(deserData.Any(x => x["name"]?.ToString() == "activities"))
+                            serviceId = deserData.FirstOrDefault(x => x["name"]?.ToString() == "activities")["value"]?.ToString();
 
                             if (!string.IsNullOrEmpty(serviceId) && serviceId != "-1")
                             {

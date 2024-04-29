@@ -9,6 +9,7 @@ namespace Barrway.Utility.Common
     public class AppSettings
     {
         public static string default_company_logopath = "http://20.204.74.222:85/assets/marketplace/image/alogo2.png";
+        public static string default_company_bannerpath = "http://20.204.74.222:85/assets/marketplace/image/banner-back.jpg";
         public static string default_calernar_path = "http://20.204.74.222:85/assets/marketplace/image/pro.png";
         public static string title = "GeliGulu";
         public static string telephone = "1234567890";

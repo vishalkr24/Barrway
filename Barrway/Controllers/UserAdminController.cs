@@ -786,18 +786,15 @@ namespace Barrway.Controllers
                     if (result != null && result.Count() > 0)
                     {
                         //[DOWNLOADABLE_ATTACHMENT],[DOWNLOAD_FILE_LIST]
-                        if (result.ContainsKey("DOWNLOAD_FILE_LIST") && !string.IsNullOrEmpty(result["DOWNLOAD_FILE_LIST"]?.ToString()))
+                        if (result.ContainsKey("DOWNLOAD_FILE_LIST") && !string.IsNullOrEmpty(result["DOWNLOAD_FILE_LIST"]?.ToString()) && isJsonString(result["DOWNLOAD_FILE_LIST"].ToString()))
                         {
                             string DOWNLOAD_FILE_LIST = result["DOWNLOAD_FILE_LIST"].ToString();
-                            if (isJsonString(DOWNLOAD_FILE_LIST))
-                            {
-                                var parse_json = JsonConvert.DeserializeObject<List<IDictionary<string, object>>>(DOWNLOAD_FILE_LIST);
-                                parse_json.AddRange(filePaths);
-                                filePaths = parse_json;
-                                string DOWNLOADABLE_ATTACHMENT = string.Join(",", filePaths.Select(x => x["path"].ToString()).ToList());
-                                DOWNLOAD_FILE_LIST = JsonConvert.SerializeObject(filePaths);
-                                await businessUserService.updateCalendarUploadFiles(_eventId, DOWNLOADABLE_ATTACHMENT, DOWNLOAD_FILE_LIST);
-                            }
+                            var parse_json = JsonConvert.DeserializeObject<List<IDictionary<string, object>>>(DOWNLOAD_FILE_LIST);
+                            parse_json.AddRange(filePaths);
+                            filePaths = parse_json;
+                            string DOWNLOADABLE_ATTACHMENT = string.Join(",", filePaths.Select(x => x["path"].ToString()).ToList());
+                            DOWNLOAD_FILE_LIST = JsonConvert.SerializeObject(filePaths);
+                            await businessUserService.updateCalendarUploadFiles(_eventId, DOWNLOADABLE_ATTACHMENT, DOWNLOAD_FILE_LIST);
                         }
                         else
                         {
@@ -954,18 +951,15 @@ namespace Barrway.Controllers
                     {
                         var result = upload_result;
                         int transaction_id = Convert.ToInt32(result["TRANSACTION_ID"]);
-                        if (result.ContainsKey("ASSESSMENT_FILES") && !string.IsNullOrEmpty(result["ASSESSMENT_FILES_LIST"]?.ToString()))
+                        if (result.ContainsKey("ASSESSMENT_FILES") && !string.IsNullOrEmpty(result["ASSESSMENT_FILES_LIST"]?.ToString()) && isJsonString(result["ASSESSMENT_FILES_LIST"].ToString()))
                         {
                             string ASSESSMENT_FILES_LIST = result["ASSESSMENT_FILES_LIST"].ToString();
-                            if (isJsonString(ASSESSMENT_FILES_LIST))
-                            {
-                                var parse_json = JsonConvert.DeserializeObject<List<IDictionary<string, object>>>(ASSESSMENT_FILES_LIST);
-                                parse_json.AddRange(filePaths);
-                                filePaths = parse_json;
-                                string ASSESSMENT_FILES = string.Join(",", filePaths.Select(x => x["path"].ToString()).ToList());
-                                ASSESSMENT_FILES_LIST = JsonConvert.SerializeObject(filePaths);
-                                await businessUserService.updateAssesstmentUploadFiles(transaction_id, ASSESSMENT_FILES, ASSESSMENT_FILES_LIST);
-                            }
+                            var parse_json = JsonConvert.DeserializeObject<List<IDictionary<string, object>>>(ASSESSMENT_FILES_LIST);
+                            parse_json.AddRange(filePaths);
+                            filePaths = parse_json;
+                            string ASSESSMENT_FILES = string.Join(",", filePaths.Select(x => x["path"].ToString()).ToList());
+                            ASSESSMENT_FILES_LIST = JsonConvert.SerializeObject(filePaths);
+                            await businessUserService.updateAssesstmentUploadFiles(transaction_id, ASSESSMENT_FILES, ASSESSMENT_FILES_LIST);
                         }
                         else
                         {
@@ -1030,6 +1024,9 @@ namespace Barrway.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(json?.Trim())) {
+                    return false;
+                }
                 var parse_json = JsonConvert.DeserializeObject<List<IDictionary<string, object>>>(json);
                 return true;
             }

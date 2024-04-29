@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Barrway.DTO.APIModels.Dashboard;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,17 +12,17 @@ namespace Barrway.DTO.APIModels.Company
     public class Company
     {
         public int Id { get; set; }
-        public bool IS_TEMPLATE { get; set; }
-        public int TEMPLATE_ID { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
-        public int PALETTE_ID { get; set; }
+        public string IS_TEMPLATE { get; set; }
+        public string TEMPLATE_ID { get; set; }
+        public string Latitude { get; set; }
+        public string Longitude { get; set; }
+        public string PALETTE_ID { get; set; }
         public string COMPANY_COUNTRY_NAME { get; set; }
         public string COMPANY_CITY_NAME { get; set; }
         public string COMPANY_DISTRICT_NAME { get; set; }
         public DateTime created_at { get; set; }
         public DateTime updated_at { get; set; }
-        public int BUSINESS_ACCOUNT_ID { get; set; }
+        public string BUSINESS_ACCOUNT_ID { get; set; }
         public string COMPANY_CODE { get; set; }
         public string COMPANY_NAME_ENGLISH { get; set; }
         public string COMPANY_NAME_CHINESE { get; set; }
@@ -39,17 +40,16 @@ namespace Barrway.DTO.APIModels.Company
         public string COMPANY_DESCRIPTION { get; set; }
         public string COMPANY_SERVICE { get; set; }
         public string TAGS { get; set; }
-        public bool IS_SEARCHABLE_IN_MARKETPLACE { get; set; }
-        public int COMPANY_CATEGORY_ID { get; set; }
-        public int COMPANY_SUB_CATEGORY_ID { get; set; }
+        public string IS_SEARCHABLE_IN_MARKETPLACE { get; set; }
         public string COMPANY_EMAIL { get; set; }
-        public int COUNTRY_ID { get; set; }
-        public int CITY_ID { get; set; }
-        public int DISTRICT_ID { get; set; }
-        public int TOTAL_WEBSITE_VISITS { get; set; }
-        public bool IS_DEFAULT { get; set; }
-        public bool IS_ACTIVE { get; set; }
-
+        public string COUNTRY_ID { get; set; }
+        public string CITY_ID { get; set; }
+        public string DISTRICT_ID { get; set; }
+        public string TOTAL_WEBSITE_VISITS { get; set; }
+        public string IS_DEFAULT { get; set; }
+        public string IS_ACTIVE { get; set; }
+        public List<string> CATEGORIES { get; set; }
+        public List<string> SUB_CATEGORIES { get; set; }
     }
 
     public class TagsObject

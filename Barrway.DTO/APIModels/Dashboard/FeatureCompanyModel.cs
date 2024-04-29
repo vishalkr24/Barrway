@@ -10,6 +10,7 @@ namespace Barrway.DTO.APIModels.Dashboard
     {
         public int Id { get; set; }
         public string COMPANY_NAME { get; set; }
+        public string COMPANY_CODE { get; set; }
         public string COMPANY_NAME_ENGLISH { get; set; }
         public string COMPANY_BANNER_PATH { get; set; }
         public string COMPANY_LOGO_PATH { get; set; }
