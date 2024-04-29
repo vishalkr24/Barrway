@@ -342,6 +342,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\API\v1\AccountController.cs" />
+    <Compile Include="Controllers\API\v1\CompanyController.cs" />
     <Compile Include="Controllers\API\v1\DashboardController.cs" />
     <Compile Include="Controllers\API\v1\SearchAPIController.cs" />
     <Compile Include="Controllers\BaseController.cs" />

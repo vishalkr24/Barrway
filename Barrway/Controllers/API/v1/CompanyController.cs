@@ -1,0 +1,84 @@
+﻿using Barrway.DTO.APIModels.Company;
+using Barrway.Security;
+using Barrway.Service.IRepository;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web.Http;
+using System.Web.Http.Description;
+
+namespace Barrway.Controllers.API.v1
+{
+    [JwtAuthentication]
+    public class CompanyController : ApiController
+    {
+        private readonly IMobileAPIService mobileAPIService;
+
+        public CompanyController(IMobileAPIService mobileAPIService)
+        {
+            this.mobileAPIService = mobileAPIService;
+        }
+
+
+        [Route("api/company/{code?}")]
+        [HttpGet]
+        [ResponseType(typeof(Company))] // Specify the response type
+        public async Task<IHttpActionResult> GetCompany(string code)
+        {
+            try
+            {
+                var company = await mobileAPIService.GetCompany(code);
+
+                if (company == null)
+                {
+                    return NotFound(); // Return 404 status code
+                }
+
+                return Ok(company); // Return 200 status code with the company data
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
+
+        //[Route("api/search/GetCompanyServices")]
+        //[HttpPost]
+        //public async Task<ComapnyInformationApi<List<Company>>> GetCompanyServices(string CompanyCode)
+        //{
+        //    try
+        //    {
+        //        var companyData = await mobileAPIService.GetCompany(CompanyCode);
+        //        Company companyModel = JsonConvert.DeserializeObject<Company>(JsonConvert.SerializeObject(companyData.Data));
+        //        var ClanderSubCategory = await mobileAPIService.GetCalanderSubCategoryNameList(CompanyCode);
+
+
+        //        return new ComapnyInformationApi<List<Company>> { Data = companyModel, Status = true, Message = "Success" };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new ComapnyInformationApi<List<Company>> { Data = null, Status = false, Message = "Error" };
+        //    }
+        //}
+
+        //[Route("api/search/GetCompanyPackages")]
+        //[HttpPost]
+        //public async Task<ComapnyInformationApi<List<Company>>> GetCompanyPackages(string CompanyCode)
+        //{
+        //    try
+        //    {
+        //        var Data = await mobileAPIService.GetCompanyCalendarPackages(CompanyCode);  
+
+        //        return new ComapnyInformationApi<List<Company>> { Data = Data, Status = true, Message = "Success" };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new ComapnyInformationApi<List<Company>> { Data = null, Status = false, Message = "Error" };
+        //    }
+        //}
+    }
+}

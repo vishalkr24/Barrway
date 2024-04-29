@@ -1,5 +1,7 @@
-﻿using Barrway.DTO.APIModels.Dashboard;
+﻿using Barrway.DTO.APIModels.Company;
+using Barrway.DTO.APIModels.Dashboard;
 using Barrway.DTO.APIModels.SearchAPI;
+using Barrway.DTO.Common;
 using Barrway.Service.IRepository;
 using Barrway.Utility.Common;
 using Newtonsoft.Json;
@@ -307,13 +309,150 @@ namespace Barrway.Service.Repository
             blogs.ForEach(x => x.TAG = formatTagsString(x.TAG));
             return blogs;
         }
-        public async Task<List<BlogModel>> GetSerachCompanyDetails(int Id)
+        public async Task<Company> GetCompany(string CompanyCode)
         {
-            string sqlString = $@"";
-            var blogs = (await sqlFunction.ExecuteSqlQuery<BlogModel>(sqlString)).ToList();
-            blogs.ForEach(x => x.TAG = formatTagsString(x.TAG));
-            return blogs;
+            string query = $@"SELECT company.[Id], company.[IS_TEMPLATE], company.TEMPLATE_ID,company.Latitude,company.Longitude, company.PALETTE_ID, 
+                                country.COUNTRY_NAME as 'COMPANY_COUNTRY_NAME', city.CITY_NAME as 'COMPANY_CITY_NAME', district.DISTRICT_NAME as 'COMPANY_DISTRICT_NAME'     ,
+                                company.[created_at]      ,company.[updated_at]     ,[BUSINESS_ACCOUNT_ID]      ,[COMPANY_CODE]      ,[COMPANY_NAME_ENGLISH]      ,
+                                [COMPANY_NAME_CHINESE]      ,[COMPANY_LOGO_NAME]      ,[COMPANY_LOGO_PATH]      ,[COMPANY_BANNER_NAME]      ,[COMPANY_BANNER_PATH]      ,[COMPANY_PHONE]      ,[COMPANY_ADDRESS]      ,
+                                [FACEBOOK_URL]      ,[INSTAGRAM_URL]      ,[WECHAT_URL]      ,[TWITTER_URL]      ,[PAGE_URL]      ,[COMPANY_DESCRIPTION]      ,[COMPANY_SERVICE]      ,[TAGS]      ,[IS_SEARCHABLE_IN_MARKETPLACE]      ,
+                                company.[COMPANY_CATEGORY_ID]      ,[COMPANY_SUB_CATEGORY_ID],     [COMPANY_EMAIL]      ,company.[COUNTRY_ID]      ,company.[CITY_ID]      ,[DISTRICT_ID]      ,[TOTAL_WEBSITE_VISITS]      ,[IS_DEFAULT],[IS_ACTIVE]  
+                                FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company
+                                left join COUNTRY_MASTER_1926 country on country.Id = company.COUNTRY_ID
+                                left join CITY_MASTER_1927 city on city.Id = company.CITY_ID
+                                left join DISTRICT_MASTER_1928 district on district.Id = company.DISTRICT_ID
+                                where IS_ACTIVE = 'Y' and  COMPANY_CODE = '{CompanyCode}'";
+
+            var BusinessCompanyResult = (await sqlFunction.ExecuteSqlQuery<Company>(query)).ToList();
+
+            if (BusinessCompanyResult.Count > 0)
+            {
+                return BusinessCompanyResult.FirstOrDefault();
+            }
+            else
+            {
+                return null;
+            }
         }
+
+
+
+
+
+        public async Task<AddUpdateDelete> GetCalanderSubCategoryNameList(string CompanyCode)
+        {
+            string query = $@"SELECT DISTINCT CSM.Id, CSM.CALENDAR_SUB_CATEGORY_NAME
+                            FROM CALENDAR_SUB_CATEGORY_MASTER_1930 AS CSM
+                            JOIN BUSINESS_CALENDAR_MASTER_1925 AS BCM ON CHARINDEX(',' + CAST(CSM.Id AS NVARCHAR(MAX)) + ',', ',' + BCM.CALENDAR_SUB_CATEGORY_ID + ',') > 0
+                            where BCM.COMPANY_CODE= '{CompanyCode}'";
+
+            List<IDictionary<string, object>> CalanderSubCategoryNameList = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (CalanderSubCategoryNameList.Count > 0)
+            {
+                List<IDictionary<string, object>> distinctResult = RemoveDuplicates(CalanderSubCategoryNameList, "Id");
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = distinctResult };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
+
+        public async Task<AddUpdateDelete> GetCalanderCategoryNameList(string CompanyCode)
+        {
+            string query = $@"SELECT clcd.Id,clcd.CALENDAR_CATEGORY_NAME from CALENDAR_CATEGORY_MASTER_1929 clcd 
+                        INNER JOIN BUSINESS_CALENDAR_MASTER_1925 bcl ON  bcl.CALENDAR_CATEGORY_ID=clcd.Id WHERE bcl.COMPANY_CODE= '{CompanyCode}'";
+
+            List<IDictionary<string, object>> CalanderCategoryNameList = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (CalanderCategoryNameList.Count > 0)
+            {
+                List<IDictionary<string, object>> distinctResult = RemoveDuplicates(CalanderCategoryNameList, "Id");
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = distinctResult };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
+
+
+
+        public async Task<AddUpdateDelete> GetCompanyCalendarPackages(string CompanyCode)
+        {
+            try
+            {
+
+                string query = $@"select * from CALENDAR_PACKAGE_MASTER_1952 
+                            where COMPANY_CODE = '{CompanyCode}' and IS_ACTIVE = 'Y'
+                            order by PACKAGE_SEQUENCE, created_at";
+                var packageResult = await sqlFunction.ExecuteSqlQuery(query);
+
+                query = $@"select STUFF((SELECT ',' + '''' + convert(nvarchar, f2.CALENDAR_CODE) + '''' from CALENDAR_PACKAGE_MASTER_1952 f2    
+                                                                where f2.COMPANY_CODE = '{CompanyCode}'   FOR XML PATH('')), 1, 1, '') as 'CalendarCodes'";
+                var calendarCodesResult = await sqlFunction.ExecuteSqlQuery(query);
+
+                query = $@"
+                                IF OBJECT_ID(N'tempdb..#temptable') IS NOT NULL  BEGIN DROP TABLE #temptable END;
+                                with cte2 as (
+                                 select distinct  f.*,
+	                                f.resources 'resourceId',
+	                                bcm.CALENDAR_NAME,
+	                                subCategory.CALENDAR_SUB_CATEGORY_NAME,
+									bcm.CALENDAR_PHOTO_PATH
+	                                from CALENDAR_FORM_1935 f  
+	                                join BUSINESS_CALENDAR_MASTER_1925 bcm on bcm.CALENDAR_CODE = f.CALENDAR_CODE
+	                                join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory   ON ',' +  bcm.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
+	                                where   f.formid=2305 and f.CALENDAR_CODE {(!string.IsNullOrEmpty(calendarCodesResult[0]["CalendarCodes"].ToString()) ? " in (" + calendarCodesResult[0]["CalendarCodes"].ToString() + ")" : "= ''")}
+                                )
+                                select* into #temptable from cte2
+                               
+								select
+								distinct cf.CALENDAR_SUB_CATEGORY_NAME,
+								cf.CALENDAR_NAME,
+								cf.CALENDAR_CODE, 
+								cf.CALENDAR_PHOTO_PATH,
+								STUFF((SELECT ', ' + R.ACTIVITY_NAME FROM SERVICE_MASTER_1933 AS R WHERE Id in (SELECT CAST(Item AS INTEGER) as Ids
+                                        FROM dbo.SplitString(
+										
+										(STUFF((SELECT distinct ','+ f.activities from CALENDAR_FORM_1935 f
+                                                                where f.formid=2305 and f.CALENDAR_CODE = cf.CALENDAR_CODE   FOR XML PATH('')), 1, 1, ''))
+										
+										
+										, ',')  ) FOR XML PATH('') ) ,1,1,'') as ActivityName
+								
+								from #temptable cf";
+
+                var result = await sqlFunction.ExecuteSqlQuery(query);
+
+
+
+                List<List<IDictionary<string, object>>> finalResult = new List<List<IDictionary<string, object>>>();
+
+                finalResult.Add(result);
+                finalResult.Add(packageResult);
+
+                return new AddUpdateDelete() { Status = (packageResult.Count > 0) ? true : false, Message = "Success", Data = finalResult };
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message.ToString() };
+            }
+        }
+
+
+
+        public static List<IDictionary<string, object>> RemoveDuplicates(List<IDictionary<string, object>> list, string key)
+        {
+
+            HashSet<object> hashSet = new HashSet<object>();
+            return list.Where(dict => { var value = dict[key]; return hashSet.Add(value); }).ToList();
+        }
+
 
         private string formatTagsString(string json)
         {
@@ -357,5 +496,7 @@ namespace Barrway.Service.Repository
                 return type == "COMPANY" ? AppSettings.default_company_logopath : AppSettings.default_calernar_path;
             }
         }
+
+        
     }
 }
