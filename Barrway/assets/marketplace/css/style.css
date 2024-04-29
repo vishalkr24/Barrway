@@ -1457,9 +1457,9 @@ section.bottom-nav .com-det {
         display: block !important;
         justify-content: right;
     }*/
-    div#owl-demo5 {
+    /*div#owl-demo5 {
         padding-left: 12px;
-    }
+    }*/
     div#owl-demo5 .owl-prev, div#owl-demo5 .owl-next {
         margin: -30px -5px 10px;
         font-size: 31px !important;

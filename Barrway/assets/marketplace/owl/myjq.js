@@ -97,7 +97,30 @@ $(document).ready(function () {
     });
 
     /*demo five*/
+    
     $('#owl-demo5').owlCarousel({
+        loop: false,
+        margin: 10,
+        responsiveClass: true,
+        responsive: {
+            0: {
+                items: 1,
+                nav: true
+            },
+            600: {
+                items: 3,
+                nav: false
+            },
+            1000: {
+                items: 5,
+                nav: true,
+                loop: false,
+                dots: true
+            }
+        }
+    })
+
+    $('#owl-demo-featured').owlCarousel({
         loop: false,
         margin: 10,
         responsiveClass: true,
