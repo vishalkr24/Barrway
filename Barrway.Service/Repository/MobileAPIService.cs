@@ -309,11 +309,6 @@ namespace Barrway.Service.Repository
             blogs.ForEach(x => x.TAG = formatTagsString(x.TAG));
             return blogs;
         }
-
-
-        
-
-
         public async Task<Company> GetCompany(string CompanyCode)
         {
             string query = $@"SELECT company.[Id], company.[IS_TEMPLATE], company.TEMPLATE_ID,company.Latitude,company.Longitude, company.PALETTE_ID, 
@@ -457,6 +452,7 @@ namespace Barrway.Service.Repository
             HashSet<object> hashSet = new HashSet<object>();
             return list.Where(dict => { var value = dict[key]; return hashSet.Add(value); }).ToList();
         }
+
 
         private string formatTagsString(string json)
         {
