@@ -197,7 +197,7 @@ namespace Barrway.Controllers
 
                             var package = await businessUserService.GetCompanyActiveSubscriptionDetails(companyCode, true);
 
-                            string serviceId = deserData.FirstOrDefault(x => x["name"]?.ToString() == "SCH_ACTIVITY")["value"]?.ToString();
+                            string serviceId = deserData.FirstOrDefault(x => x["name"]?.ToString() == "activities")["value"]?.ToString();
 
                             if (!string.IsNullOrEmpty(serviceId) && serviceId != "-1")
                             {
@@ -248,7 +248,9 @@ namespace Barrway.Controllers
                 }
             }
 
-            return Json((await formAPIRepository.GeneratedFormData(data)).Data);
+            var result = Json((await formAPIRepository.GeneratedFormData(data)).Data);
+
+            return result;
         }
 
         [HttpPost]
