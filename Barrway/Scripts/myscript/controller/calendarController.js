@@ -10655,18 +10655,19 @@
             param.IsCustomFilter = true;
             var cusTomFilter = [];
             cusTomFilter.push({ "FieldName": "COMPANY_CODE", "Value": localStorage.getItem("COMPANY_CODE") });
-            //cusTomFilter.push({ "FieldName": "CALENDAR_CODE", "Value": localStorage.getItem("CALENDAR_CODE") });
+            cusTomFilter.push({ "FieldName": "CALENDAR_CODE", "Value": localStorage.getItem("CALENDAR_CODE") });
             param.CustomFilters = cusTomFilter;
+            param.excludeFilters = [
+                {
+                    "field": "CALENDAR_CODE",
+                    "formid": 2304
+                }
+            ];
             $rootScope.$emit("ShowLoading");
             mainService.getCalenderSettingsFormData("getCalenderSettingsFormData", param)
                 .then(function (response) {
+                    debugger;
                     if (response.data != null && angular.isDefined(response.data)) {
-                        response.data.forEach(x => {
-                            if (x.formDataList && x.formDataList.length > 0 && x.resourceForm != "2304" && x.activitiesForm != "2304") {
-                                x.formDataList = x.formDataList.filter(y => y.CALENDAR_CODE == localStorage.getItem("CALENDAR_CODE"));
-                            }
-                        });
-
                         $scope.calenderSettingsFormDetailsDataList = response.data;
                         //loadcssjsfile("Content/sidebar/js/sidebar-script.js", "js", "sidebarform");
                         $scope.multiDcalendar = false;
@@ -10766,6 +10767,7 @@
             }
         };
         function loadLeftSideMenu(param) {
+
             $scope.yaxisFormList = angular.copy($scope.calenderSettingsFormDetailsDataList);
             $scope.yaxisFormList = _.filter($scope.yaxisFormList, function (item) { return item.resourceForm != 0 });
             $scope.yaxisFormListCopy = angular.copy($scope.yaxisFormList);

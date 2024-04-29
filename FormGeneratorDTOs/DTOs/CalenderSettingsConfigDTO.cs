@@ -78,6 +78,8 @@ namespace FormGeneratorDTOs.DTOs
         public bool IsCustomInFilter { get; set; }
         public bool IsPublicUser { get; set; } = false;
         public List<CustomFilter> CustomFilters { get; set; }
+        public List<ExcludeFilter> excludeFilters { get; set; }
+
 
     }
     public class CustomFilter
@@ -85,6 +87,12 @@ namespace FormGeneratorDTOs.DTOs
         public string FieldName { get; set; }
         public string Value { get; set; }
     }
+    public class ExcludeFilter
+    {
+        public int formid { get; set; }
+        public string field { get; set; }
+    }
+
     public class JsonTreeModel
     {
         public int root { get; set; }

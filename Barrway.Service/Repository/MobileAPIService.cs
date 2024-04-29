@@ -101,7 +101,7 @@ namespace Barrway.Service.Repository
         }
         public async Task<List<CompanyModel>> GetFeatureCompanies()
         {
-            string sqlString = $@"select Id,COMPANY_NAME_ENGLISH +'|'+COMPANY_NAME_CHINESE AS COMPANY_NAME,COMPANY_NAME_ENGLISH,COMPANY_BANNER_PATH,COMPANY_LOGO_PATH,COMPANY_BANNER_NAME,TAGS  from BUSINESS_COMPANY_MASTER_1924 WHERE IS_FEATURED='Y'";
+            string sqlString = $@"select Id,COMPANY_NAME_ENGLISH +'|'+COMPANY_NAME_CHINESE AS COMPANY_NAME,COMPANY_CODE,COMPANY_NAME_ENGLISH,COMPANY_BANNER_PATH,COMPANY_LOGO_PATH,COMPANY_BANNER_NAME,TAGS  from BUSINESS_COMPANY_MASTER_1924 WHERE IS_FEATURED='Y'";
             var featureCompanies = (await sqlFunction.ExecuteSqlQuery<CompanyModel>(sqlString)).ToList();
             featureCompanies.ForEach(x => { x.TAGS = formatTagsString(x.TAGS); x.COMPANY_LOGO_PATH = GetFilepath(x.COMPANY_LOGO_PATH, "COMPANY"); });
             return featureCompanies;
@@ -117,13 +117,13 @@ namespace Barrway.Service.Repository
             return featureBlogs;
         }
 
-        public async Task<List<CalendarModel>> GetCalendarsSearchResult(SearchAPIModel data)
+        public async Task<List<CalendarModel>> GetCalendarsSearchResult(SearchAPIModel data, List<string> filters=null)
         {
 
             data.page = data.page == 0 ? 1 : data.page;
             data.size = data.size == 0 ? 10 : data.size;
 
-            List<string> filterQueryList = new List<string>();
+            List<string> filterQueryList = filters==null? new List<string>():filters;
 
             if (data.categoryId > 0)
             {
@@ -178,6 +178,10 @@ namespace Barrway.Service.Repository
             if (!string.IsNullOrEmpty(data.keyword))
             {
                 filterQueryList.Add(" ( calendar.[CALENDAR_NAME] like N'%" + data.keyword + "%') ");
+            }
+
+            if (!string.IsNullOrEmpty(data.company_code)) {
+                filterQueryList.Add($" (company.COMPANY_CODE='{data.company_code}')");
             }
 
             string filterQuery = "";
@@ -256,7 +260,7 @@ namespace Barrway.Service.Repository
 
             string sqlString = $@"declare @PageSize int= {data.size}, 
                                   @PageNumber int= {data.page}; with formdata as 
-                                  (select Id,COMPANY_NAME_ENGLISH +'|'+COMPANY_NAME_CHINESE AS COMPANY_NAME,COMPANY_NAME_ENGLISH,COMPANY_BANNER_PATH,COMPANY_LOGO_PATH,COMPANY_BANNER_NAME,TAGS  from BUSINESS_COMPANY_MASTER_1924  {filterQuery}
+                                  (select Id,COMPANY_NAME_ENGLISH +'|'+COMPANY_NAME_CHINESE AS COMPANY_NAME,COMPANY_CODE,COMPANY_NAME_ENGLISH,COMPANY_BANNER_PATH,COMPANY_LOGO_PATH,COMPANY_BANNER_NAME,TAGS  from BUSINESS_COMPANY_MASTER_1924  {filterQuery}
                                   ) Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata ORDER BY Id OFFSET @PageSize * (@PageNumber - 1) ROWS 
                                   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
             var companies = (await sqlFunction.ExecuteSqlQuery<CompanyModel>(sqlString)).ToList();
@@ -309,24 +313,43 @@ namespace Barrway.Service.Repository
             blogs.ForEach(x => x.TAG = formatTagsString(x.TAG));
             return blogs;
         }
-        public async Task<Company> GetCompany(string CompanyCode)
+        public async Task<Company> GetCompany(string companyCode)
         {
             string query = $@"SELECT company.[Id], company.[IS_TEMPLATE], company.TEMPLATE_ID,company.Latitude,company.Longitude, company.PALETTE_ID, 
                                 country.COUNTRY_NAME as 'COMPANY_COUNTRY_NAME', city.CITY_NAME as 'COMPANY_CITY_NAME', district.DISTRICT_NAME as 'COMPANY_DISTRICT_NAME'     ,
                                 company.[created_at]      ,company.[updated_at]     ,[BUSINESS_ACCOUNT_ID]      ,[COMPANY_CODE]      ,[COMPANY_NAME_ENGLISH]      ,
                                 [COMPANY_NAME_CHINESE]      ,[COMPANY_LOGO_NAME]      ,[COMPANY_LOGO_PATH]      ,[COMPANY_BANNER_NAME]      ,[COMPANY_BANNER_PATH]      ,[COMPANY_PHONE]      ,[COMPANY_ADDRESS]      ,
                                 [FACEBOOK_URL]      ,[INSTAGRAM_URL]      ,[WECHAT_URL]      ,[TWITTER_URL]      ,[PAGE_URL]      ,[COMPANY_DESCRIPTION]      ,[COMPANY_SERVICE]      ,[TAGS]      ,[IS_SEARCHABLE_IN_MARKETPLACE]      ,
-                                company.[COMPANY_CATEGORY_ID]      ,[COMPANY_SUB_CATEGORY_ID],     [COMPANY_EMAIL]      ,company.[COUNTRY_ID]      ,company.[CITY_ID]      ,[DISTRICT_ID]      ,[TOTAL_WEBSITE_VISITS]      ,[IS_DEFAULT],[IS_ACTIVE]  
+                                [COMPANY_EMAIL]      ,company.[COUNTRY_ID]      ,company.[CITY_ID]      ,[DISTRICT_ID]      ,[TOTAL_WEBSITE_VISITS]      ,[IS_DEFAULT],[IS_ACTIVE]  
                                 FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company
                                 left join COUNTRY_MASTER_1926 country on country.Id = company.COUNTRY_ID
                                 left join CITY_MASTER_1927 city on city.Id = company.CITY_ID
                                 left join DISTRICT_MASTER_1928 district on district.Id = company.DISTRICT_ID
-                                where IS_ACTIVE = 'Y' and  COMPANY_CODE = '{CompanyCode}'";
+                                where IS_ACTIVE = 'Y' and  COMPANY_CODE = '{companyCode}'";
 
             var BusinessCompanyResult = (await sqlFunction.ExecuteSqlQuery<Company>(query)).ToList();
 
             if (BusinessCompanyResult.Count > 0)
             {
+                var company = BusinessCompanyResult.FirstOrDefault();
+
+                string filter = $" (company.COMPANY_CODE='{companyCode}')";
+                var calendars = await GetCalendarsSearchResult(new SearchAPIModel() { size=100}, new List<string>() { filter });
+
+                List<string> subCategories = new List<string>();
+                List<string> categories = new List<string>();
+                calendars.ForEach(calendar =>
+                {
+                    if (calendar.CATEGORY_NAME != null) categories.Add(calendar.CATEGORY_NAME);
+
+                    if (calendar.CALENDAR_SUB_CATEGORY_NAME != null) subCategories.AddRange(calendar.CALENDAR_SUB_CATEGORY_NAME.Split(',').Select(x=>x.Trim()).ToList());
+                });
+
+                company.CATEGORIES = categories.Distinct().ToList();
+                company.SUB_CATEGORIES = subCategories.Distinct().ToList();
+                company.TAGS= formatTagsString(company.TAGS);
+                company.COMPANY_LOGO_PATH = GetFilepath(company.COMPANY_LOGO_PATH, "COMPANY");
+                company.COMPANY_BANNER_PATH = GetFilepath(company.COMPANY_BANNER_PATH, "COMPANY_BANNER");
                 return BusinessCompanyResult.FirstOrDefault();
             }
             else
@@ -334,52 +357,6 @@ namespace Barrway.Service.Repository
                 return null;
             }
         }
-
-
-
-
-
-        public async Task<AddUpdateDelete> GetCalanderSubCategoryNameList(string CompanyCode)
-        {
-            string query = $@"SELECT DISTINCT CSM.Id, CSM.CALENDAR_SUB_CATEGORY_NAME
-                            FROM CALENDAR_SUB_CATEGORY_MASTER_1930 AS CSM
-                            JOIN BUSINESS_CALENDAR_MASTER_1925 AS BCM ON CHARINDEX(',' + CAST(CSM.Id AS NVARCHAR(MAX)) + ',', ',' + BCM.CALENDAR_SUB_CATEGORY_ID + ',') > 0
-                            where BCM.COMPANY_CODE= '{CompanyCode}'";
-
-            List<IDictionary<string, object>> CalanderSubCategoryNameList = await sqlFunction.ExecuteSqlQuery(query);
-
-            if (CalanderSubCategoryNameList.Count > 0)
-            {
-                List<IDictionary<string, object>> distinctResult = RemoveDuplicates(CalanderSubCategoryNameList, "Id");
-                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = distinctResult };
-            }
-            else
-            {
-                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
-            }
-        }
-
-
-        public async Task<AddUpdateDelete> GetCalanderCategoryNameList(string CompanyCode)
-        {
-            string query = $@"SELECT clcd.Id,clcd.CALENDAR_CATEGORY_NAME from CALENDAR_CATEGORY_MASTER_1929 clcd 
-                        INNER JOIN BUSINESS_CALENDAR_MASTER_1925 bcl ON  bcl.CALENDAR_CATEGORY_ID=clcd.Id WHERE bcl.COMPANY_CODE= '{CompanyCode}'";
-
-            List<IDictionary<string, object>> CalanderCategoryNameList = await sqlFunction.ExecuteSqlQuery(query);
-
-            if (CalanderCategoryNameList.Count > 0)
-            {
-                List<IDictionary<string, object>> distinctResult = RemoveDuplicates(CalanderCategoryNameList, "Id");
-                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = distinctResult };
-            }
-            else
-            {
-                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
-            }
-        }
-
-
-
 
         public async Task<AddUpdateDelete> GetCompanyCalendarPackages(string CompanyCode)
         {
@@ -493,7 +470,15 @@ namespace Barrway.Service.Repository
             }
             else
             {
-                return type == "COMPANY" ? AppSettings.default_company_logopath : AppSettings.default_calernar_path;
+               
+                switch (type) {
+
+                    case "COMPANY": path = AppSettings.default_company_logopath; break;
+                    case "COMPANY_BANNER": path = AppSettings.default_company_bannerpath; break;
+                    case "CALENDAR": path = AppSettings.default_calernar_path; break;
+                    default: break;
+                }
+                return path;
             }
         }
 

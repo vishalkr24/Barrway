@@ -11,6 +11,7 @@ namespace Barrway.DTO.APIModels.SearchAPI
         public List<int> districtIds { get; set; }
         public List<int> subcatIds { get; set; }
         public List<string> tags { get; set; }
+        public string company_code { get; set; }
         public string keyword { get; set; }
         public int categoryId { get; set; }
         public int size { get; set; }
