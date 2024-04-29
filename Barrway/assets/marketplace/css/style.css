@@ -258,6 +258,14 @@ div#myNavbar .navbar-nav li.rl ul a {
     font-size: 15px;
 }
 
+.banner-form .form-inner p {
+    margin-bottom: 0px;
+}
+
+.banner-form .form-inner .fields {
+    margin-top: 0px;
+}
+
 .fields .form-group {
     width: 42%;
     float: left;
@@ -345,11 +353,11 @@ section.subcatageory {
     top: 45%;
 }
 
-    .my-slide button.owl-prev span, .my-slide button.owl-next span {
-        color: #3FBFC7;
-        display: block;
-        line-height: 12px;
-    }
+.my-slide button.owl-prev span, .my-slide button.owl-next span {
+    color: #3FBFC7;
+    display: block;
+    line-height: 12px;
+}
 
 .owl-carousel .owl-nav button.owl-next, .owl-carousel .owl-nav button.owl-prev {
     position: absolute;
@@ -943,7 +951,25 @@ section.bottom-nav {
     background: white;
     border-top: 1px solid #ebebeb;
 }
+.address-inner, .main-inner-third {
+    width: 100%;
+    float: left;
+    margin-bottom:30px;
+}
 @media screen and (max-width:767px) {
+    .my-navbr-mob.collapse.in {
+        display: grid;
+    }
+        div#myNavbar ul:first-child {
+            order: 2;
+        }
+
+        div#myNavbar ul:last-child {
+            div #myNavbar ul: first-child;
+            order: 1;
+        }
+
+    
     div#calendar div#tabs div#vertical-resource-view {
         padding-left: 5px;
         padding-right: 5px;
@@ -1457,9 +1483,9 @@ section.bottom-nav .com-det {
         display: block !important;
         justify-content: right;
     }*/
-    div#owl-demo5 {
+    /*div#owl-demo5 {
         padding-left: 12px;
-    }
+    }*/
     div#owl-demo5 .owl-prev, div#owl-demo5 .owl-next {
         margin: -30px -5px 10px;
         font-size: 31px !important;

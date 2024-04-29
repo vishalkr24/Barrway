@@ -1007,7 +1007,7 @@
     </div>
 
     <div class="modal fade right" id="customEventDetailsModelPopUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-slideout" role="document">
+        <div class="modal-dialog modal-dialog-slideout" role="document" style="max-width:100%">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="exampleModalLabel">@Resource.Event_Details</h4>
@@ -1078,7 +1078,7 @@
                          && (selectEventDetails.UPLOAD_TIME=='ANYTIME' || selectEventDetails.UPLOAD_TIME=='AFTER')">
                         <div class="form-group mt-2 p-0">
                             <label for="SELECT_DOWNLOADABLE_ATTACHMENT">Upload Attachments</label>
-                            <input type="file" name="SELECT_DOWNLOADABLE_ATTACHMENT" class="form-control" onchange="angular.element(this).scope().validateForm('SELECT_DOWNLOADABLE_ATTACHMENT',false)" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx" multiple id="SELECT_DOWNLOADABLE_ATTACHMENT" />
+                            <input type="file" style="width: 100%; max-width: 100%;" name="SELECT_DOWNLOADABLE_ATTACHMENT" class="form-control" onchange="angular.element(this).scope().validateForm('SELECT_DOWNLOADABLE_ATTACHMENT',false)" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx" multiple id="SELECT_DOWNLOADABLE_ATTACHMENT" />
                             <span id="fileError2" style="color:red" class="error-message"></span><br>
                             <span id="fileSuccess" class="text-success"></span>
                         </div>
@@ -1236,7 +1236,7 @@
 
 
     <div class="modal fade right" id="CourseDetailsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-slideout" role="document">
+        <div class="modal-dialog modal-dialog-slideout" role="document" style="max-width:100%">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title" style="color: #72328A; font-weight: 700;" id="exampleModalLabel">Course Details</h3>
@@ -1364,7 +1364,7 @@
     </div>
 
     <div class="modal fade right" id="customEventDetailsServiceModelPopUp" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-slideout modal-service-type" role="document">
+        <div class="modal-dialog modal-dialog-slideout modal-service-type" role="document" style="max-width:100%">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="exampleModalLabel">@Resource.Event_Details</h4>
@@ -2121,6 +2121,14 @@
                                             $(`#service-div input[name^=${x.name}]`).bind("keyup change paste", function () {
                                                 dataList[0][x.name] = this.value;
                                             })
+
+                                            $(`#service-div select[name^=${x.name}]`).bind("keyup change paste", function () {
+                                                dataList[0][x.name] = this.value;
+                                            })
+
+                                            $(`#service-div textarea[name^=${x.name}]`).bind("keyup change paste", function () {
+                                                dataList[0][x.name] = this.value;
+                                            })
                                         }
 
                                     });
@@ -2589,7 +2597,7 @@
 
         function validateDynamicForm() {
             let finalResult = true;
-
+            debugger
             requiredList = dataModelList.filter(x => x.required);
             if (requiredList != null) {
                 if (requiredList.length > 0) {

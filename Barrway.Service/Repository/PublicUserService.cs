@@ -2038,7 +2038,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
 
                     if (result[0]["Result"]?.ToString() == "false")
                     {
-                        query = $@"select t.topicTitle + '_' + cast(f.topicID as varchar(6)) as TableName from form f
+                        query = $@"select replace(t.topicTitle, ' ', '_') + '_' + cast(f.topicID as varchar(6)) as TableName from form f
                                     join topic t on t.topicID = f.topicID
                                     where f.formID = (select ADDITIONAL_FORM_ID from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE = '{CalendarCode}')";
                         var TableNameRaw = await sqlFunction.ExecuteSqlQuery(query);

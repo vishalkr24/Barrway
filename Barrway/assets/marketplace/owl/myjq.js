@@ -97,7 +97,30 @@ $(document).ready(function () {
     });
 
     /*demo five*/
+    
     $('#owl-demo5').owlCarousel({
+        loop: false,
+        margin: 10,
+        responsiveClass: true,
+        responsive: {
+            0: {
+                items: 1,
+                nav: true
+            },
+            600: {
+                items: 2,
+                nav: false
+            },
+            1000: {
+                items: 5,
+                nav: true,
+                loop: false,
+                dots: true
+            }
+        }
+    });
+
+    $('#owl-demo-featured').owlCarousel({
         loop: false,
         margin: 10,
         responsiveClass: true,
@@ -125,7 +148,7 @@ $(document).ready(function () {
         dots: true,
         loop: false,
         margin: 10,
-        responsiveClass: true,        
+        responsiveClass: true,
         responsive: {
             0: {
                 items: 1
@@ -137,7 +160,7 @@ $(document).ready(function () {
                 items: 1
             }
         }
-    })
+    });
 
     /*demo demo-button-slide*/
     $('#owl-demo-button-slide').owlCarousel({
@@ -148,7 +171,7 @@ $(document).ready(function () {
         responsiveClass: true,
         responsive: {
             0: {
-                items:2
+                items: 2
             },
             600: {
                 items: 4
@@ -157,7 +180,7 @@ $(document).ready(function () {
                 items: 5
             }
         }
-    })
+    });
 });
 
 

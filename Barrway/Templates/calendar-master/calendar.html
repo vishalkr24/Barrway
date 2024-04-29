@@ -390,7 +390,7 @@
     @media screen and (max-width:767px) {
 
         .custome-event-create  .event-detail-modal-inner {
-            height: 355px;
+            /*height: 355px;*/
             overflow-y: auto;
             margin-bottom: 10px;
             overflow-x: hidden;
@@ -1136,7 +1136,7 @@
                 <h5 class="modal-title" id="exampleModalLabel">{{translation.Create_New_Event}}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="padding-bottom: 0px;">
                 <div class="event-detail div-flex">
                     <div class="div-flex event-detail-modal-inner">
                         <div class="title" ng-show="IS_EXIST_PRE_DEFINED_ACTIVITIES">
@@ -1178,7 +1178,7 @@
 
                         <div class="{{createEventDetails.customDate}}">{{createEventDetails.customDate}}</div>
                         <!--<div>{{createEventDetails.customTime}}</div>-->
-                    <div>{{createEventDetails.startTimeFormat}} - {{createEventDetails.endTimeFormat}}</div>
+                        <div>{{createEventDetails.startTimeFormat}} - {{createEventDetails.endTimeFormat}}</div>
 
                         <div class="row">
                             <div class="col-6">
@@ -1202,13 +1202,12 @@
                         </label>
 
                         <!--<input id="newtag-inputnew" type="text" value="{{createEventDetails.tags}}" placeholder="Add tags">-->
-                        g-
 
                         <div ng-repeat="tag in totalSelectListTagify">
                             <input value="{{createEventDetails[tag.name]}}" id="createnewtag-inputHidden{{tag.name}}" type="hidden">
                             <input id="createnewtag-input{{tag.name}}" type="text" value="{{createEventDetails[tag.name]}}" placeholder="Add tags">
                         </div>
-                        <input type="text" class="form-control" ng-model="createEventDetails.description" placeholder="Description" />
+                        <textarea type="text" class="form-control" ng-model="createEventDetails.description" placeholder="Description"></textarea>
 
 
                         <div>
@@ -1235,32 +1234,33 @@
 
 
                             <div class="form-group borderSet col-sm-6 border-IS_UPLOAD_REQUIRED" style="padding:0!important">
-                                <div class="col-sm-12"><label style="display: block;text-align: left!important" class="pull-left" for="IS_UPLOAD_REQUIRED">IS UPLOAD REQUIRED</label><br /><div class="form-check"> <label class="form-check-label" for="IS_UPLOAD_REQUIRED0"> <input type="radio" class="form-check-input" id="IS_UPLOAD_REQUIRED0" ng-model="createEventDetails.IS_UPLOAD_REQUIRED" name="IS_UPLOAD_REQUIRED" value="Y">  Y</label></div><div class="form-check"> <label class="form-check-label" for="IS_UPLOAD_REQUIRED1"><input ng-model="createEventDetails.IS_UPLOAD_REQUIRED" type="radio" class="form-check-input" id="IS_UPLOAD_REQUIRED1" name="IS_UPLOAD_REQUIRED" value="N" checked>   N</label></div></div>
+                                <div class="col-sm-12"><label style="display: block;text-align: left!important" class="pull-left" for="IS_UPLOAD_REQUIRED">Does participant require to upload file(s)?</label><br /><div class="form-check"> <label class="form-check-label" for="IS_UPLOAD_REQUIRED0"> <input type="radio" class="form-check-input" id="IS_UPLOAD_REQUIRED0" ng-model="createEventDetails.IS_UPLOAD_REQUIRED" name="IS_UPLOAD_REQUIRED" value="Y">  Y</label></div><div class="form-check"> <label class="form-check-label" for="IS_UPLOAD_REQUIRED1"><input ng-model="createEventDetails.IS_UPLOAD_REQUIRED" type="radio" class="form-check-input" id="IS_UPLOAD_REQUIRED1" name="IS_UPLOAD_REQUIRED" value="N" checked>   N</label></div></div>
                             </div>
 
                             <div class="form-group borderSet col-sm-6 border-UPLOAD_TIME" ng-if="createEventDetails.IS_UPLOAD_REQUIRED=='Y'" style="padding:0!important">
-                                <div class="col-sm-12"><label style="display: block;text-align: left!important" class="pull-left" for="UPLOAD_TIME">UPLOAD TIME</label><select name="UPLOAD_TIME" ng-model="createEventDetails.UPLOAD_TIME" id="UPLOAD_TIME" class="form-control inputClass form-control "><option value="ANYTIME" selected="">ANYTIME</option><option value="BEFORE">BEFORE</option><option value="AFTER">AFTER</option></select></div>
+                                <div class="col-sm-12"><label style="display: block;text-align: left!important" class="pull-left" for="UPLOAD_TIME">Participants upload file time</label><select name="UPLOAD_TIME" ng-model="createEventDetails.UPLOAD_TIME" id="UPLOAD_TIME" class="form-control inputClass form-control "><option value="ANYTIME" selected="">Anytime</option><option value="BEFORE">Before event</option><option value="AFTER">After event</option></select></div>
                             </div>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-primary" ng-click="createNewEvent()" ng-show="IS_EXIST_PRE_DEFINED_ACTIVITIES">Create Event</button>
-                    <button type="button" class="btn btn-primary" ng-click="createNewEventWithoutPredefinedActivity()" ng-show="!IS_EXIST_PRE_DEFINED_ACTIVITIES">Create Event</button>
                 </div>
-
+                <div style=" position: sticky; bottom: 0px; margin-left: -2rem; width: calc(100% + 4rem); background: white; padding: 12px; box-shadow: 0px -13px 21px -10px #cdcdcd;">
+                    <button type="button" class="btn btn-primary" style="width: 100%;" ng-click="createNewEvent()" ng-show="IS_EXIST_PRE_DEFINED_ACTIVITIES">Create Event</button>
+                    <button type="button" class="btn btn-primary" style="width: 100%;" ng-click="createNewEventWithoutPredefinedActivity()" ng-show="!IS_EXIST_PRE_DEFINED_ACTIVITIES">Create Event</button>
+                </div>
                 <!--<div class="div-flex div-list-bar"></div>-->
                 <!--<div class="div-flex div-list">
-                    <div class="d-flex justify-content-between align-items-center p-0">
-                        <h5 class="list-title mb-0" id="newtabuList"><strong id="strongFormName">0 Student in this Slot</strong></h5>
-                        <div class="d-block">
-                            <div id="newaddTransactionRecord" class="edit-event-student cursor-pointer d-inline-block"><i class="fa fa-plus"></i></div> <div id="newtabuListLink" class="edit-event-student mr-0 ml-1 cursor-pointer d-inline-block" title="Edit"><i class="fa fa-pencil"></i></div>
-                        </div>
-                    </div>
-                    <ul id="newtabuListUl">
-                    </ul>
-                    <label id="labelWaiting"></label>
-                    <ul id="newtabuListUlWaiting">
-                    </ul>
-                </div>-->
+        <div class="d-flex justify-content-between align-items-center p-0">
+            <h5 class="list-title mb-0" id="newtabuList"><strong id="strongFormName">0 Student in this Slot</strong></h5>
+            <div class="d-block">
+                <div id="newaddTransactionRecord" class="edit-event-student cursor-pointer d-inline-block"><i class="fa fa-plus"></i></div> <div id="newtabuListLink" class="edit-event-student mr-0 ml-1 cursor-pointer d-inline-block" title="Edit"><i class="fa fa-pencil"></i></div>
+            </div>
+        </div>
+        <ul id="newtabuListUl">
+        </ul>
+        <label id="labelWaiting"></label>
+        <ul id="newtabuListUlWaiting">
+        </ul>
+    </div>-->
             </div>
         </div>
     </div>
