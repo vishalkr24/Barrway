@@ -826,6 +826,9 @@ button.blogtag_num {
 /*============================  media ====================================*/
 
 @media screen and (max-width:767px){
+    .banner-image img {
+        width: 100%;
+    }
 .secondry-nav, .com-nav-btn {
     top: 10px !important;
     right: 0 !important;

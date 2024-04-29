@@ -107,7 +107,7 @@ $(document).ready(function () {
                 nav: true
             },
             600: {
-                items: 3,
+                items: 2,
                 nav: false
             },
             1000: {
@@ -117,7 +117,7 @@ $(document).ready(function () {
                 dots: true
             }
         }
-    })
+    });
 
     /*demo demo-blog*/
     $('#owl-demo-blog').owlCarousel({
@@ -125,7 +125,7 @@ $(document).ready(function () {
         dots: true,
         loop: false,
         margin: 10,
-        responsiveClass: true,        
+        responsiveClass: true,
         responsive: {
             0: {
                 items: 1
@@ -137,7 +137,7 @@ $(document).ready(function () {
                 items: 1
             }
         }
-    })
+    });
 
     /*demo demo-button-slide*/
     $('#owl-demo-button-slide').owlCarousel({
@@ -148,7 +148,7 @@ $(document).ready(function () {
         responsiveClass: true,
         responsive: {
             0: {
-                items:2
+                items: 2
             },
             600: {
                 items: 4
@@ -157,7 +157,7 @@ $(document).ready(function () {
                 items: 5
             }
         }
-    })
+    });
 });
 
 
