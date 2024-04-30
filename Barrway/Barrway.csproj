@@ -3344,6 +3344,7 @@
     <Content Include="Views\MarketPlace\ComingSoon.cshtml" />
     <Content Include="Views\UserAdmin\GetMyBookings.cshtml" />
     <Content Include="Views\Payment\EventOrderDetails.cshtml" />
+    <Content Include="Views\Shared\_QRFunctionPartialView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -458,7 +458,10 @@ namespace Barrway.Controllers
                                 if (alreadyEnrolledEvents.Any(x => x["Id"]?.ToString() == item["Id"]?.ToString()))
                                 {
                                     item.Add("IsAlreadyBooked", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["IsAlreadyBooked"]);
-                                    if (DateTimeUtility.Now() > Convert.ToDateTime(alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["end"]?.ToString()) && alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["SESSION_REVIEWED"]?.ToString() == "N")
+                                    item.Add("ATTEND", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["ATTEND"]);
+                                    item.Add("TransactionId", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["TransactionId"]);
+                                    //if (DateTimeUtility.Now() > Convert.ToDateTime(alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["end"]?.ToString()) && alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["SESSION_REVIEWED"]?.ToString() == "N")
+                                    if (DateTimeUtility.Now() > Convert.ToDateTime(alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["end"]?.ToString()))
                                     {
                                         item.Add("IsReviewable", 'Y');
                                     }
@@ -471,6 +474,8 @@ namespace Barrway.Controllers
                                 {
                                     item.Add("IsAlreadyBooked", 'N');
                                     item.Add("IsReviewable", 'N');
+                                    item.Add("ATTEND", 'N');
+                                    item.Add("TransactionId", "N");
                                 }
                             }
                         }

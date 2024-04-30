@@ -319,6 +319,7 @@
 </head>
 
 <body class="has-navbar-vertical-aside navbar-vertical-aside-show-xl navbar-vertical-aside-compact-mini-mode navbar-vertical-aside-compact-mode" ng-app="FormGeneratorApp" ng-controller="IndexController">
+    @RenderPage("~/Views/Shared/_QRFunctionPartialView.cshtml", null)
     <style>
         /*#header {
             display: none;
@@ -339,6 +340,7 @@
         .pr-3 {
             padding-right: 1.5rem;
         }
+
         .layoutcalander-toggler {
             margin-left: 0px !important;
             margin-right: 10px;
@@ -346,30 +348,36 @@
             color: #e2476c;
             padding: 0px;
         }
-            .layoutcalander-toggler-s {
-                margin-right: 10px;
-                font-size: 28px;
-                padding: 0px;
-                margin-left: 20px !important;
-            }
+
+        .layoutcalander-toggler-s {
+            margin-right: 10px;
+            font-size: 28px;
+            padding: 0px;
+            margin-left: 20px !important;
+        }
+
         @@Media screen and (max-width:767px) {
             .pl-3 {
                 padding-left: 1.2rem;
             }
+
             .choose-calander {
                 width: calc(88% - 40px);
                 float: left;
                 margin-right: 15px;
                 display: block;
             }
+
                 .choose-calander .dropdown-me .dropdown-toggle {
                     margin-bottom: 0;
                 }
+
             .sec-head {
                 width: 100%;
                 float: left;
                 padding: 5px 0px !important;
             }
+
             div#navbarDoubleLineContainerNavDropdown ul li {
                 margin-right: 0px;
             }
@@ -475,7 +483,7 @@
             </form>
         </div>
     </script>
-    
+
     <!--end Formgenerator Common component-->
     <!-- ========== HEADER ========== -->
     <header id="header" class="navbar navbar-expand-lg navbar-bordered navbar-spacer-y-0 flex-lg-column grey-back">
@@ -656,17 +664,17 @@
                             color: black;
                         }
 
-                        .selectable-company-item.selected {
+                            .selectable-company-item.selected {
                                 color: crimson !important;
-                        }
+                            }
 
                         .selectable-calendar-item {
                             color: black;
                         }
 
-                        .selectable-calendar-item.selected {
+                            .selectable-calendar-item.selected {
                                 color: crimson !important;
-                        }
+                            }
                     </style>
                     <div class="collapse navbar-collapse" id="navbarContainerNavDropdown">
                         <ul class="navbar-nav">
@@ -947,10 +955,10 @@
                         </li>
 
                         @*<li class="nav-item hide-for-superadmin">
-                    <a class="nav-link " href="javascript:void(0)" data-placement="left">
-                        @Resource.Notifications
-                    </a>
-                </li>*@
+                                <a class="nav-link " href="javascript:void(0)" data-placement="left">
+                                    @Resource.Notifications
+                                </a>
+                            </li>*@
                     </ul>
 
                 </div>
@@ -1550,7 +1558,7 @@
     <script src="../../signalr/hubs"></script>
     <script src="Scripts/myscript/controller/queueController.js?token=@token"></script>
 
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.4/html5-qrcode.min.js" integrity="sha512-k/KAe4Yff9EUdYI5/IAHlwUswqeipP+Cp5qnrsUjTPCgl51La2/JhyyjNciztD7mWNKLSXci48m7cctATKfLlQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script src="Scripts/myscript/routes/allRoutes.js?token=@token"></script>
     <script src="Scripts/myscript/services/services.js?token=@token"></script>

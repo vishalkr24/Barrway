@@ -1021,11 +1021,11 @@
                                 <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
                                     <div style="display:block" class="titleContainer">
                                         @*<p class="title1" style="font-size:16px;font-weight:600">
-                                                {{d.dropdownListData.title}}
-                                                <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
-                                                <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
-                                                <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
-                                            </p>*@
+                                {{d.dropdownListData.title}}
+                                <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
+                                <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
+                                <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
+                            </p>*@
                                         <p class="title1" style="font-weight:bold; font-size: 16px;"> {{d.formTitle}}</p>
                                     </div>
                                 </div>
@@ -1098,13 +1098,13 @@
 
                     </div>
 
-
-
                     <div class="div-flex div-list">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary public-primary" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'N'" ng-click="enrollPublicUser()">Enroll</button>
-                        <button type="button" class="btn btn-primary public-primary" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IsReviewable == 'N'" ng-click="cancelPublicUserBooking()">Cancel Booking</button>
-                        <button type="button" class="btn btn-primary public-primary" ng-if="!selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IsReviewable == 'Y'" ng-click="reviewSession()">Review Session</button>
+                        <button type="button" class="btn btn-secondary"  style="margin-top: 12px;" data-bs-dismiss="modal" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary public-primary"  style="margin-top: 12px;" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'N'" ng-click="enrollPublicUser()">Enroll</button>
+                        <button type="button" class="btn btn-primary public-primary"  style="margin-top: 12px;" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IsReviewable == 'N'" ng-click="cancelPublicUserBooking()">Cancel Booking</button>
+                        <button type="button" class="btn btn-primary public-primary"  style="margin-top: 12px;" ng-if="!selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IsReviewable == 'Y'" ng-click="reviewSession()">Review Session</button>
+                        <button class="btn btn-danger public-primary" ng-if="selectEventDetails.ATTEND == 'Y'" style="margin-top: 12px;" ng-click="AttendSession(selectEventDetails.Id, 'NORMAL')">Attend</button>
+                        <img src="~/assets/img/QR_CODE_LOGO.png" ng-if="selectEventDetails.ATTEND == 'Y'" ng-click="AttendSession(selectEventDetails.Id, 'QR')" style="height: 40px; width: 40px; margin-top: 12px;" />
                     </div>
                 </div>
                 @*<div class="modal-footer">
@@ -1578,6 +1578,127 @@
             //        this.$apply(fn);
             //    }
             //};
+
+            $scope.AttendSession = function (eventId, type) {
+                debugger;
+                $("#customEventDetailsModelPopUp").modal("hide")
+                if (type == "QR") {
+                    $scope.generateQRCode($scope.selectEventDetails.TransactionId);
+                } else {
+                    openWebCam($scope.selectEventDetails.Id);
+                }
+
+            }
+
+            $scope.generateQRCode = function (TId) {
+                $.ajax({
+                    url: "/Useradmin/GenerateAttendanceQR?TransactionId=" + TId,
+                    type: "Get",
+                    success: function (response) {
+                        debugger;
+                        if (response != null) {
+                            if (response.Status) {
+                                $("#GeneratedQRCodeModal img").attr("src", response.Data.QRImageURL.replace("~", ".."));
+                                $("#GeneratedQRCodeModal").modal("show");
+                            } else {
+                                alert("Failed to generate QR Code");
+                            }
+                        }
+                        $rootScope.$emit("HideLoading");
+                    }
+                })
+
+            }
+
+            function openWebCam(eventId) {
+
+                const scannerUser = new Html5QrcodeScanner("qr-scanner", {
+                    qrbox: {
+                        width: 250,
+                        height: 250,
+                    },
+                    fps: 20,
+                });
+                scannerUser.render(successUser, errorUser);
+
+                $("#html5-qrcode-button-camera-permission").addClass("btn btn-primary");
+                $("#html5-qrcode-anchor-scan-type-change").addClass("btn btn-danger");
+                $("#html5-qrcode-anchor-scan-type-change").empty();
+                $("#html5-qrcode-anchor-scan-type-change").append(`Upload image to scan`);
+                setTimeout(function () {
+                    $("#html5-qrcode-button-camera-start").addClass("btn btn-primary");
+                }, 1000);
+
+                $("#html5-qrcode-button-camera-start").on("click", function () {
+                    setTimeout(function () {
+                        $("#html5-qrcode-button-camera-stop").addClass("btn btn-danger");
+                    }, 500);
+                })
+
+                $("#html5-qrcode-button-camera-stop").on("click", function () {
+                    setTimeout(function () {
+                        $("#html5-qrcode-button-camera-start").addClass("btn btn-primary");
+                    }, 500);
+                })
+
+                $('#WebCamModal').on('hidden.bs.modal', function () {
+                    scannerUser.clear();
+                });
+
+                function successUser(result) {
+
+                    if (result.includes("Public/MarkPresent")) {
+                        if (eventId == result.split('=')[1]) {
+                            $.ajax({
+                                url: result,
+                                type: "get",
+                                success: function (response) {
+                                    debugger;
+                                    if (response.Status) {
+                                        swal({
+                                            icon: "success",
+                                            title: "Success",
+                                            text: "Attendance marked"
+                                        }).then(function () {
+                                            $('#WebCamModal').modal("hide");
+                                            window.location.reload();
+                                        });
+                                    } else {
+                                        swal({
+                                            icon: "error",
+                                            title: "Error",
+                                            text: response.Message
+                                        });
+                                    }
+                                },
+                                error: function (err) {
+                                    alert("Request not allowed");
+                                }
+                            })
+                        } else {
+                            swal({
+                                icon: "error",
+                                title: "Invalid QR",
+                                text: "QR Code does not belong to the event selected. Please scan or select the right QR Code."
+                            });
+                        }
+
+                    } else {
+                        swal({
+                            icon: "error",
+                            title: "Invalid QR",
+                            text: "Please scan or select a valid QR Code"
+                        });
+                    }
+                    $("#html5-qrcode-button-camera-stop").trigger("click");
+                }
+
+                function errorUser(err) {
+
+                }
+
+                $("#WebCamModal").modal("show");
+            };
 
             $scope.enrollPublicUser = function () {
 

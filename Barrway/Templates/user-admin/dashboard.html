@@ -52,85 +52,18 @@
     }
 </style>
 
-
-    <!-- Content -->
-
-
-
         <div class="row">
             <div class="col-lg-5 col-xl-5">
                 <div class="main-left custom-main">
                     <div class="bred-nav">
                         <span><a href="#" ui-sref="home()">{{translation.User}}</a> / <span> <a href="#" ui-sref="home()">{{translation.Dashboard}}</a> </span></span>
                     </div>
-                    <!--<div class="carusal-ticket">
-                        <div id="owl-demo-ticket" class="owl-carousel owl-theme owl-demo-ticket">
-                            <div class="item">
-                                <div class="item-inner">
-                                    <div class="ticket-content">
-                                        <h1>A13</h1>
-                                        <p>Your turn</p>
-                                    </div>
-                                    <div class="ticket-logo">
-                                        <div class="ticket-logo-img">
-                                            <img src="/assets/marketplace/image/alogo.png">
-                                        </div>
-                                        <span class="">Comapany Name</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="item-inner">
-                                    <div class="ticket-content">
-                                        <h1>A13</h1>
-                                        <p>Your turn</p>
-                                    </div>
-                                    <div class="ticket-logo">
-                                        <div class="ticket-logo-img">
-                                            <img src="/assets/marketplace/image/alogo.png">
-                                        </div>
-                                        <span class="">Comapany Name</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="item-inner">
-                                    <div class="ticket-content">
-                                        <h1>A13</h1>
-                                        <p>Your turn</p>
-                                    </div>
-                                    <div class="ticket-logo">
-                                        <div class="ticket-logo-img">
-                                            <img src="/assets/marketplace/image/alogo.png">
-                                        </div>
-                                        <span class="">Comapany Name</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="item-inner">
-                                    <div class="ticket-content">
-                                        <h1>A13</h1>
-                                        <p>Your turn</p>
-                                    </div>
-                                    <div class="ticket-logo">
-                                        <div class="ticket-logo-img">
-                                            <img src="/assets/marketplace/image/alogo.png">
-                                        </div>
-                                        <span class="">Comapany Name</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>-->
                     <div class="ml-content">
                         <h2>My Recently Booked Calendar</h2>
                         <div class="mob-scroll">
                             <div class="wrap" ng-repeat="calendar in CalendarCompanyList">
                                 <div class="wrap-im">
                                     <img src="{{calendar.CALENDAR_PHOTO_PATH.replace('~', '')}}">
-
                                 </div>
                                 <div class="wrap-con">
                                     <p><b>{{calendar.COMPANY_NAME_ENGLISH}}</b></p>
@@ -202,77 +135,6 @@
             </div>
         </div>
 
-   <!-- </div>-->
-
-    <div class="modal fade" id="WebCamModal" style="z-index: 2000;" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel5" aria-hidden="true">
-        <div class="modal-dialog" style="width: 100%;" role="document">
-            <div class="modal-content">
-                <div class="scanner-title">
-                    Scan Company's QR Code using your webcam <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="qr-container">
-                    <div class="qr-scanner" id="qr-scanner">
-
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="modal fade" id="GeneratedQRCodeModal" style="z-index: 2000;" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel5" aria-hidden="true">
-        <div class="modal-dialog" style="width: 100%;" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <img src="" style="height: auto; width:100%; max-height: 400px;" />
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <style>
-
-        .scanner-title {
-            font-weight: bold;
-            font-size: 15px;
-            text-align: center;
-            padding: 20px 0px;
-        }
-
-        #qr-scanner {
-        }
-
-            #qr-scanner #qr-scanner__scan_region {
-                background: rgb(243 243 243);
-            }
-
-                #qr-scanner #qr-scanner__scan_region img {
-                    opacity: 0.3 !important;
-                }
-
-            #qr-scanner img[alt='Info icon'] {
-                display: none;
-            }
-
-        #qr-scanner__dashboard_section {
-            width: 100%;
-            padding: 16px 0px !important;
-            text-align: left;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #html5-qrcode-anchor-scan-type-change {
-            text-decoration: none !important;
-            margin-left: 20px;
-        }
-
-        #qr-scanner__header_message {
-            border-radius: 10px;
-        }
-    </style>
     <script>
         $('.owl-demo-ticket').owlCarousel({
             loop: true,

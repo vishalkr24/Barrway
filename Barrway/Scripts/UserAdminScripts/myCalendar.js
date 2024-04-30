@@ -1242,7 +1242,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         defaultView: 'month',
         //events: [],  
         events: function (start, end, timezone, callback) {
-
+            debugger;
             var $scope = angular.element($("#calendar")).scope();
             var param = {};
             param.action = 1;
@@ -1256,7 +1256,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
             var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
             var view = $('#agenda-view div.calendar').fullCalendar('getView');
             param.filter = {};
-            start = $('#agenda-view div.calendar').fullCalendar('getDate');
+            //start = $('#agenda-view div.calendar').fullCalendar('getDate');
             param.filter = changeStateOfCalender(view, start, end);
             param.filter.field = "start";
             param.COMPANY_CODE = COMPANY_CODE;

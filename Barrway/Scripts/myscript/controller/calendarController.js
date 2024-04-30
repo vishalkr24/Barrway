@@ -9867,10 +9867,10 @@
                     debugger;
                     if (response != null) {
                         if (response.Status) {
-                            $("#GeneratedQRCodeModal img").attr("src", response.Data.QRImageURL.replace("~", ".."));
-                            $("#GeneratedQRCodeModal #btn-print-qr").attr("href", response.Data.QRImageURL.replace("~", ".."));
+                            $("#GeneratedQRCodeModalAdmin img").attr("src", response.Data.QRImageURL.replace("~", ".."));
+                            $("#GeneratedQRCodeModalAdmin #btn-print-qr").attr("href", response.Data.QRImageURL.replace("~", ".."));
                             $("#customEventDetailsModelPopUp").modal("hide");
-                            $("#GeneratedQRCodeModal").modal("show");
+                            $("#GeneratedQRCodeModalAdmin").modal("show");
                         } else {
                             alert("Failed to generate QR Code");
                         }
