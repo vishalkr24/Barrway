@@ -360,7 +360,7 @@ namespace Barrway.Service.Repository
 
         public async Task<List<ServiceList>> GetCompanyServiceList(string code)
         {
-            string query = $@"select Id,ACTIVITY_NAME,DESCRIPTION,(select isnull(ROUND(AVG(REVIEW_SCORE), 2),0) from SESSION_REVIEWS_1983 where CALENDAR_CODE=Sm.CALENDAR_CODE) as REVIEW_SCORE from SERVICE_MASTER_1933  where COMPANY_CODE='{code}'";
+            string query = $@"select Id,ACTIVITY_NAME,DESCRIPTION,(select isnull(ROUND(AVG(REVIEW_SCORE), 2),0) from SESSION_REVIEWS_1983 where CALENDAR_CODE=sm.CALENDAR_CODE) as REVIEW_SCORE from SERVICE_MASTER_1933 sm  where COMPANY_CODE='{code}'";
             var serviceList = (await sqlFunction.ExecuteSqlQuery<ServiceList>(query)).ToList();
             return serviceList;
         }
