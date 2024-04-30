@@ -323,6 +323,7 @@
 
 </head>
 <body ng-app="FormGeneratorApp" ng-controller="IndexController">
+    @RenderPage("~/Views/Shared/_QRFunctionPartialView.cshtml", null)
     <script>
         function changeLanguage() {
             localStorage.setItem("globalLang", $("select[name=langId] option:selected").val())
@@ -409,9 +410,11 @@
             .m-none {
                 display: none;
             }
+
             div#navbarDoubleLineContainerNavDropdown ul li {
                 margin-right: 0px;
             }
+
             div#navbarDoubleLineContainerNavDropdown button.cus-button:hover {
                 background-color: transparent;
             }
@@ -1251,7 +1254,7 @@
     <script src="Scripts/myscript/controller/NewSchedularFormController.js?token=@token"></script>
     <script src="~/Scripts/myscript/controller/StudentRegisterFormMasterController.js"></script>
 
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.4/html5-qrcode.min.js" integrity="sha512-k/KAe4Yff9EUdYI5/IAHlwUswqeipP+Cp5qnrsUjTPCgl51La2/JhyyjNciztD7mWNKLSXci48m7cctATKfLlQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="Scripts/myscript/routes/allRoutes.js?token=@token"></script>
     <script src="Scripts/myscript/services/services.js?token=@token"></script>
     <script src="Scripts/myscript/directives/directives.js?token=@token"></script>

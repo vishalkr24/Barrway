@@ -1,0 +1,71 @@
+﻿<style>
+
+    .scanner-title {
+        font-weight: bold;
+        font-size: 15px;
+        text-align: center;
+        padding: 20px 0px;
+    }
+
+    #qr-scanner {
+    }
+
+        #qr-scanner #qr-scanner__scan_region {
+            background: rgb(243 243 243);
+        }
+
+            #qr-scanner #qr-scanner__scan_region img {
+                opacity: 0.3 !important;
+            }
+
+        #qr-scanner img[alt='Info icon'] {
+            display: none;
+        }
+
+    #qr-scanner__dashboard_section {
+        width: 100%;
+        padding: 16px 0px !important;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #html5-qrcode-anchor-scan-type-change {
+        text-decoration: none !important;
+        margin-left: 20px;
+    }
+
+    #qr-scanner__header_message {
+        border-radius: 10px;
+    }
+</style>
+
+<div class="modal fade" id="WebCamModal" style="z-index: 2000;" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel5" aria-hidden="true">
+    <div class="modal-dialog" style="width: 100%;" role="document">
+        <div class="modal-content">
+            <div class="scanner-title">
+                Scan Company's QR Code using your webcam <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="qr-container">
+                <div class="qr-scanner" id="qr-scanner">
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="GeneratedQRCodeModal" style="z-index: 2000;" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel5" aria-hidden="true">
+    <div class="modal-dialog" style="width: 100%;" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img src="" style="height: auto; width:100%; max-height: 400px;" />
+            </div>
+        </div>
+
+    </div>
+</div>
+
+

@@ -1351,7 +1351,7 @@ namespace Barrway.Service.Repository
 
                         if (result2 > 0)
                         {
-                            return new AddUpdateDelete() { Status = false, Message = "Attendance marked successfully!" };
+                            return new AddUpdateDelete() { Status = true, Message = "Attendance marked successfully!" };
                         }
                         else
                         {
@@ -2447,13 +2447,15 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
                                 where f2.formgroupkey = f.formGroupKey  FOR XML PATH('')), 1, 1, '')   ) customForms  , (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceId) from form_calenderreferrence f2    
                                 where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) customFormIds,  '' referrences_1,  '' referrences_2,  '' referrences_3   
                                 , case when (transaction_m.SLOT is not null and participant.EMAIL = '{UserEmail}') then 'Y' else 'N' end as 'IsAlreadyBooked'
+                                , (select case when ((cast('{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' as datetime) >= cast((DATEADD(minute, -30, f.[start])) as datetime) and cast('{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' as datetime) <= cast(f.[end] as datetime) ) and transaction_m.ATTENDANCE != 'PRESENT') then 'Y' else 'N' end) as 'ATTEND'
                                 , case when review.Id is not null then 'Y' else 'N' end as 'SESSION_REVIEWED'
+                                , transaction_m.Id as 'TransactionId'
                                 from CALENDAR_FORM_1935 f  
                                   join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
                                   left join TRANSACTION_MASTER_1942 transaction_m on f.Id = transaction_m.SLOT
                                   left join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
                                   left join SESSION_REVIEWS_1983 review on review.EVENT_ID = f.Id and review.USER_EMAIL = participant.EMAIL
-                                where 
+                                where
                                 f.formid=2305 and
                                 {FilterDate} ),
                                 cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
