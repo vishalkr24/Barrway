@@ -10,6 +10,9 @@
     display: none !important;
 }
 @media screen and (max-width:767px){
+    .lmp {
+        top: -45px;
+    }
     .pro-im img, .pro-im {
         min-height: 200px;
         max-height: 200px;
@@ -36,6 +39,9 @@
     .main-menu .navbar-nav li.rl.ds-none {
         margin-bottom: 25px;
         border-bottom: none !important;
+    }
+    .pyb button.navbar-toggle {
+        border: none;
     }
     /*.main-menu div#myNavbar {
         display: flex;
@@ -87,11 +93,7 @@
     margin-bottom: 0px;
   }
   button.navbar-toggle {
-    /*border: 1px solid #e2476c;*/
     padding:0px;
-    position: absolute;
-    top: -45px;
-    right: -1px;
   }
     button.navbar-toggle.collapsed img {
         display: none;
@@ -134,7 +136,7 @@
         text-align: center;
     }
   div#myNavbar .navbar-nav li.rl a {
-    border-radius: 10px 10px 10px 10px;
+    border-radius: 10px 10px 10px 10px !important;
   }
   div#myNavbar .navbar-nav li.rl ul a {
     background-color: transparent;
