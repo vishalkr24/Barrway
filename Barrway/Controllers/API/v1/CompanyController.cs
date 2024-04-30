@@ -72,17 +72,17 @@ namespace Barrway.Controllers.API.v1
 
         [Route("api/GetCompanyPackages/{CompanyCode?}")]
         [HttpPost]
-        public async Task<ComapnyInformationApi<List<Company>>> GetCompanyPackages(string CompanyCode)
+        public async Task<ComapnyInformationApi<List<object>>> GetCompanyPackages(string CompanyCode)
         {
             try
             {
                 var Data = await mobileAPIService.GetCompanyCalendarPackages(CompanyCode);
 
-                return new ComapnyInformationApi<List<Company>> { Data = Data, Status = true, Message = "Success" };
+                return new ComapnyInformationApi<List<object>> { Data = Data, Status = true, Message = "Success" };
             }
             catch (Exception ex)
             {
-                return new ComapnyInformationApi<List<Company>> { Data = null, Status = false, Message = "Error" };
+                return new ComapnyInformationApi<List<object>> { Data = null, Status = false, Message = "Error" };
             }
         }
 
@@ -91,17 +91,17 @@ namespace Barrway.Controllers.API.v1
 
         [Route("api/GetCompanyPhotoGallery/{CompanyCode?}")]
         [HttpPost]
-        public async Task<ComapnyInformationApi<List<Company>>> GetCompanyPhotoGallery(string CompanyCode)
+        public async Task<ComapnyInformationApi<List<object>>> GetCompanyPhotoGallery(string CompanyCode)
         {
             try
             {
                 var Data = await mobileAPIService.GetCompanyPhotoGallery(CompanyCode);
 
-                return new ComapnyInformationApi<List<Company>> { Data = Data, Status = true, Message = "Success" };
+                return new ComapnyInformationApi<List<object>> { Data = Data, Status = true, Message = "Success" };
             }
             catch (Exception ex)
             {
-                return new ComapnyInformationApi<List<Company>> { Data = null, Status = false, Message = "Error" };
+                return new ComapnyInformationApi<List<object>> { Data = null, Status = false, Message = "Error" };
             }
         }
     }
