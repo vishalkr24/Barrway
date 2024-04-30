@@ -1047,11 +1047,9 @@
         };
 
         $scope.bindFormDynamically = function (type) {
-            debugger;
             $("#main-html").fadeOut();
 
             setTimeout(function () {
-                debugger;
                 if (type == 2) {
 
                     $("#barrwayFormType").text(" - Advanced");
@@ -2022,7 +2020,6 @@
                                 if (isVarified == true && $scope.QRstring == false) {
 
                                     if (isSubscriptionVarified) {
-                                        debugger;
                                         // area of interest
                                         $scope.param = param;
                                         $scope.htmlContentData = $scope.importFormSettings.formContentHTMLTemp;
@@ -2031,7 +2028,6 @@
                                         temp.push({});
 
                                         if (param.formId == '2303' || param.formId == '2304' || param.formId == '2306') {
-                                            debugger;
                                             $scope.bindFormDynamically($scope.barrwayFormTypeSwitch, $scope.isEdit);
                                         } else {
                                             $scope.barrwayFormTypeSwitch
@@ -6148,7 +6144,6 @@
             } else {
 
             }
-            debugger;
             if ($scope.currentFormId == "2304") {
 
                 let createEntry = true;
@@ -6173,8 +6168,6 @@
                         companyCode: localStorage.getItem("COMPANY_CODE")
                     },
                     success: function (response) {
-                        debugger;
-                        
                         if (response.data != null) {
                             if (response.data.length > 0) {
                                 swal({

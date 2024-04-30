@@ -185,7 +185,7 @@
                                             </div>
 
                                             <a ng-click="showAdvancedSearch()"
-                                               class="btn btn-primary mt-3 mt-lg-0 ml-2"
+                                               class="btn btn-primary cursor-pointer"
                                                data-toggle="tooltip"
                                                title="Advanced search">
                                                 <span class="action-name">{{translation.Advanced_search}}</span>
@@ -294,7 +294,7 @@
                                 <div class="row mt-3" ng-if="isShowAdvanceSearch">
                                     <div class="col-xl-12">
                                         <form class="form-inline mb-3">
-                                            <div class="form-group me-1">
+                                            <div class="form-group me-1 mt-2">
                                                 <label class="pe-2" for="filter-field">
                                                     {{translation.Field}}:
                                                 </label>
@@ -310,7 +310,7 @@
                                                     </option>
                                                 </select>
                                             </div>
-                                            <div class="form-group me-1">
+                                            <div class="form-group me-1 mt-2">
                                                 <label for="filter-type" class="pe-2">
                                                     {{translation.Type}}:
                                                 </label>
@@ -349,7 +349,7 @@
                                                     </option>
                                                 </select>
                                             </div>
-                                            <div class="form-group me-1">
+                                            <div class="form-group me-1 mt-2">
                                                 <label for="filter-value" class="pe-2">
                                                     {{translation.Value}}:
                                                 </label>
@@ -359,7 +359,7 @@
                                                        ng-model="filterBy.filterByValue"
                                                        placeholder="{{translation.Value_to_filter}}" />
                                             </div>
-                                            <div class="form-group me-1">
+                                            <div class="form-group me-1 mt-2">
                                                 <button type="button"
                                                         id="filter-clear"
                                                         class="btn btn-primary"

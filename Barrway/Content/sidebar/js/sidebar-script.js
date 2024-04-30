@@ -90,7 +90,7 @@ $(function () {
             $(this).toggleClass('bottom');
         })
 
-        $('.sidebar-toggle').on('click', function () {
+    $('.sidebar-toggle').on('click', function () {
             //console.log($('.sidebar').is('.open'))
             if ($('.sidebar').is('.open')) {
                 $('.sidebar').removeClass('open');

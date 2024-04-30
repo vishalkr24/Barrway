@@ -9787,7 +9787,6 @@
             window["formGroupKeyList"] = null;
 
             bootbox.hideAll();
-            //debugger;
             var formId = $stateParams.formId;
             $scope.id = $stateParams.formId;
             $scope.currentFormId = $stateParams.formId;
@@ -9864,7 +9863,6 @@
                     eventId: eventId
                 },
                 success: function (response) {
-                    debugger;
                     if (response != null) {
                         if (response.Status) {
                             $("#GeneratedQRCodeModal img").attr("src", response.Data.QRImageURL.replace("~", ".."));
@@ -9882,7 +9880,6 @@
         }
 
         $scope.ScanStudentQR = function () {
-            debugger;
             $scope.selectEventDetails;
 
             const scanner = new Html5QrcodeScanner("qr-scanner", {
@@ -10548,7 +10545,6 @@
         };
 
         $scope.createNewEvent = function () {
-            //debugger;
             //console.log($scope.createEventDetails);
             if ($scope.currentUserFormRole == 0 || $scope.currentUserFormRole == 1) {
                 swal({
@@ -10572,8 +10568,6 @@
                 return;
             }
             var activityForm = $scope.allFormsList.find(x => x.formTag?.toLowerCase().contains("#course"));
-            //debugger;
-
             var param = {};
             param.action = 1;
             param.IsMaxOneRecordPerUser = false;
@@ -10666,7 +10660,6 @@
             $rootScope.$emit("ShowLoading");
             mainService.getCalenderSettingsFormData("getCalenderSettingsFormData", param)
                 .then(function (response) {
-                    debugger;
                     if (response.data != null && angular.isDefined(response.data)) {
                         $scope.calenderSettingsFormDetailsDataList = response.data;
                         //loadcssjsfile("Content/sidebar/js/sidebar-script.js", "js", "sidebarform");
@@ -11023,14 +11016,12 @@
                                                             }
                                                             gindx++;
                                                         });
-                                                        debugger;
                                                         if (data.length > listSettings.limitVal) {
                                                             listSettings.generateUniqueModel = generateUniqueNumber();
                                                             listJson.push({ children: false, class: "no_checkbox", id: 'more-button-' + listSettings.generateUniqueModel + '', 'data-formId': listSettings.resourceForm, text: '<a class="morebutton"  id="more-button-' + listSettings.generateUniqueModel + '" data-formId="' + listSettings.resourceForm + '"  ><i class="fa fa-plus"></i> ' + (data.length - listSettings.limitVal) + ' more</a>' });
                                                             $timeout(function () {
                                                                 $("#treeIndex").val(setKey)
                                                                 listSettings.lastNodeDataList = [];
-                                                                debugger;
                                                                 _.each(listSettings.lastNodeData, function (itemList, keyl) {
                                                                     var fieldKeyData = itemList[grbp];
                                                                     var que = grbp + " like '" + fieldKeyData + "' ";
@@ -11051,7 +11042,6 @@
                                                                         selectFormId = $(event.currentTarget).find('.morebutton').data().formid;
                                                                     listSettings.selectFormId = selectFormId;
                                                                     $scope.nodechildModelSearch = "";
-                                                                    debugger;
                                                                     $scope.getSelectedModelPopData(listSettings);
                                                                 });
 
@@ -13486,7 +13476,6 @@
             return queryText;
         };
         function reBindCalender() {
-            //debugger;
             $scope.basicViewCalenderDataTemp.newFilteredEventList = [];
             var whereClouse = " ";
             var joinClouse = "";
@@ -13871,7 +13860,6 @@
         };
         $scope.ySelectionChange = function (formId) {
             try {
-                //debugger;
                 // alert(formId);
                 showLoader();
                 if ($scope.xSelection == formId) {
@@ -15375,7 +15363,6 @@
         function changeViewStateOfCalender(view, data) {
             var temp = {};
             temp.field = "start";
-            debugger;
              if (data.type == "selectedDate") {
                 $('#list-view div.calendar').fullCalendar('gotoDate', $scope.formDetailsDataInfo.searchByDate);
                 $('#agenda-view div.calendar').fullCalendar('gotoDate', $scope.formDetailsDataInfo.searchByDate);
@@ -16276,7 +16263,6 @@
                     param.formGroupKey = $scope.selectEventDetails.formGroupKey;
                     param.parentID = $scope.currentFormId;
                     setTimeout(function () {
-                        debugger;
                         $.ajax({
                             method: 'POST',
                             url: BASE_URL + "FormAPI/EditEventData",
@@ -16663,7 +16649,6 @@
                 }
 
             }).then(function (response) {
-                debugger;
                 if (response) {
                     showLoader();
 
@@ -16870,7 +16855,6 @@
                     Type: 2
                 },
                 success: function (response) {
-                    debugger;
                     $("#customEventDetailsModelPopUp").modal("hide");
                     $("#customEventDetailsServiceModelPopUp").modal("hide");
                     $("#ViewBookingModal .modal-body").html(response);
@@ -16897,7 +16881,6 @@
         //}
 
         $scope.manageSelectedCompany = function () {
-            //debugger;
             if (localStorage.getItem("publicUserSelectedCompany") != null && localStorage.getItem("publicUserSelectedCompany") != undefined && localStorage.getItem("publicUserSelectedCompany") != "null") {
                 $("#company-filter-selector").val(localStorage.getItem("publicUserSelectedCompany"));
             }
@@ -16987,7 +16970,6 @@
         $scope.getMyUpcomingBookings();
 
         $scope.AttendSession = function (eventId, type) {
-            debugger;
             $scope.currentTransaction = $scope.bookingEventData.find(x => x.Id == eventId);
 
             if (type == "QR") {
@@ -17003,7 +16985,6 @@
                 url: "/Useradmin/GenerateAttendanceQR?TransactionId=" + TId,
                 type: "Get",
                 success: function (response) {
-                    debugger;
                     if (response != null) {
                         if (response.Status) {
                             $("#GeneratedQRCodeModal img").attr("src", response.Data.QRImageURL.replace("~", ".."));
@@ -17347,7 +17328,6 @@
                 { title: 'Method', field: 'METHOD', headerFilter: "input" },
                 {
                     title: 'Client Paid', field: 'AMOUNT', headerFilter: "input", formatter: function (cell, formatter) {
-                        //debugger;
                         if (cell.getData().TRANSACTION_TYPE == "Purchase") {
                             var amount = cell.getData().AMOUNT;
                             return "HK$" + amount;
@@ -17478,7 +17458,6 @@
         //$scope.CalendarMasterList();
 
         $scope.updateAttendanceRecord = function (recordId, IsPresent = false) {
-            //debugger;
             for (var i = 0; i < $scope.AttendanceRecord.length; i++) {
                 if ($scope.AttendanceRecord[i].Id == recordId) {
                     $scope.AttendanceRecord[i].Attendance = (IsPresent) ? "Present" : "Absent";
@@ -17504,8 +17483,6 @@
         }
 
         $scope.SubmitBulkAttendance = function () {
-
-            //debugger;
             adminService.postAsync('/Calendar/UpdateBulkTransactionAttendance/', { AttendanceJsonString: JSON.stringify($scope.AttendanceRecord) }).then(function (res) {
 
                 if (res.data.Status) {
@@ -17516,7 +17493,6 @@
                         icon: "success",
                         confirmButtonText: 'Okay'
                     }).then((result) => {
-                        //debugger;
                         $scope.CancelBulkAttendance();
                     });
 
@@ -17635,7 +17611,6 @@
                 contentType: "application/json",
                 data: JSON.stringify(param),
                 success: function (response) {
-                    debugger;
                     $scope.selectEventDetails = response.events[0];
                     $scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES = ($scope.selectEventDetails.DOWNLOAD_FILE_LIST != null && $scope.selectEventDetails.DOWNLOAD_FILE_LIST != '' && $scope.selectEventDetails.DOWNLOAD_FILE_LIST != ' ' && $scope.selectEventDetails.DOWNLOAD_FILE_LIST != undefined) ? JSON.parse($scope.selectEventDetails.DOWNLOAD_FILE_LIST) : null;
                     $scope.selectEventDetails.DisplayType = type;
@@ -17873,7 +17848,6 @@
                     Type: eventData.DisplayType
                 },
                 success: function (response) {
-                    debugger;
                     $("#customEventDetailsModelPopUp").modal("hide");
                     $("#customEventDetailsServiceModelPopUp").modal("hide");
                     $("#ViewBookingModal .modal-body").html(response);
@@ -17998,7 +17972,6 @@
         checkLogin();
 
         $scope.setWalletData = function (pageNumber, IsInnitial = false) {
-            //debugger;
             var CompanyCode = null;
 
             if ($("#company-filter-selector option:selected").val() != "-1") {
@@ -18064,7 +18037,6 @@
                     for (var i = 0; i < response.data[0].length; i++) {
                         response.data[0][i].CALENDAR_PHOTO_PATH = response.data[0][i].CALENDAR_PHOTO_PATH.replace('~', '..')
                     }
-                    debugger;
                     for (var i = 0; i < response.data[0].length; i++) {
 
                         var tagQuery = "";
@@ -18136,7 +18108,6 @@
         adminService.postAsync('/UserAdmin/GetSingleUserByUserId/', { UserId: $("#userIdHidden").val() }).then(function (res) {
 
             if (res.data.data.Status) {
-                //debugger;
                 res.data.data.Data.PROFILE_PHOTO_PATH = res.data.data.Data.PROFILE_PHOTO_PATH.replace("~", "..");
 
                 const dateStr = res.data.data.Data.DATE_OF_BIRTH;
@@ -18295,7 +18266,6 @@
         $("#user-nav-myfavorite").addClass("active")
 
         $scope.setFavoritesData = function (pageNumber, IsInnitial = false) {
-            //debugger;
             var CompanyCode = null;
 
             if ($("#company-filter-selector option:selected").val() != "-1") {
@@ -18361,7 +18331,6 @@
                     for (var i = 0; i < response.data[0].length; i++) {
                         response.data[0][i].CALENDAR_PHOTO_PATH = response.data[0][i].CALENDAR_PHOTO_PATH.replace('~', '..')
                     }
-                    debugger;
                     for (var i = 0; i < response.data[0].length; i++) {
 
                         var tagQuery = "";

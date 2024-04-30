@@ -369,7 +369,6 @@
                 }
 
                 localStorage.setItem("CALENDAR_CATEGORY_ID", $scope.calendarList.find(x => x.CALENDAR_CODE == localStorage.getItem("CALENDAR_CODE")).CALENDAR_CATEGORY_ID);
-                debugger;
                 if ((localStorage.getItem("CALENDAR_TYPE") == "3" && localStorage.getItem("CALENDAR_CATEGORY_ID") == "4") || (localStorage.getItem("CALENDAR_TYPE") == "4" && localStorage.getItem("CALENDAR_CATEGORY_ID") == "2")) {
                     hideElementById("nav-schedular-form-parent");
                 } else if (localStorage.getItem("CALENDAR_CATEGORY_ID") == 6) {
