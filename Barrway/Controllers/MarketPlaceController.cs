@@ -461,7 +461,7 @@ namespace Barrway.Controllers
                 companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
                 companyModel.PAGE_URL = id;
 
-                var servilces = await businessUserService.GetServiceList(CalendarCode, CompanyCode);
+                var servilces = await businessUserService.GetCompanyServiceList(CompanyCode);
                 var servilcesEncrypted = JsonConvert.SerializeObject(servilces.Data);
                 companyModel.ServicesList = JsonConvert.DeserializeObject<List<ServicesList>>(servilcesEncrypted);
 

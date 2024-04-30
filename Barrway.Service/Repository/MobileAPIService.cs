@@ -358,6 +358,71 @@ namespace Barrway.Service.Repository
             }
         }
 
+
+
+        public async Task<AddUpdateDelete> GetCompanyServiceDescription(string CompanyCode)
+        {
+            try
+            {
+
+                string query = $@"select COMPANY_SERVICE from BUSINESS_COMPANY_MASTER_1924 where COMPANY_CODE='{CompanyCode}'";                
+                var calendarCodesResult = await sqlFunction.ExecuteSqlQuery(query);              
+
+                return new AddUpdateDelete() { Status = (calendarCodesResult.Count > 0) ? true : false, Message = "Success", Data = calendarCodesResult.FirstOrDefault() };
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message.ToString() };
+            }
+        }
+
+        public async Task<AddUpdateDelete> GetCompanyServiceList(string CompanyCode)
+        {
+            try
+            {
+
+                string query = $@"select Id,ACTIVITY_NAME,DESCRIPTION from SERVICE_MASTER_1933  where COMPANY_CODE='{CompanyCode}'";
+                var calendarCodesResult = await sqlFunction.ExecuteSqlQuery(query);
+
+                return new AddUpdateDelete() { Status = (calendarCodesResult.Count > 0) ? true : false, Message = "Success", Data = calendarCodesResult };
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message.ToString() };
+            }
+        }
+
+
+        public async Task<AddUpdateDelete> GetCompanyPhotoGallery(string CompanyCode)
+        {
+            try
+            {
+
+                string query = $@"SELECT [Id]
+                              ,[ALBUM_PHOTO_NAME]
+                              ,[ALBUM_PHOTO_PATH]
+                              ,[IS_VISIBLE]
+	                          ,[COMPANY_ID]
+                              ,[created_at]
+                              ,[updated_at]
+                              ,[created_by]
+                              ,[updated_by]
+                          FROM [dbo].[BUSINESS_PHOTO_ALBUM_1922] where COMPANY_ID =(select top 1 Id from [dbo].[BUSINESS_COMPANY_MASTER_1924] where COMPANY_CODE='{CompanyCode}')   Order by Id desc";
+                var Photos = await sqlFunction.ExecuteSqlQuery(query);
+
+                return new AddUpdateDelete() { Status = (Photos.Count > 0) ? true : false, Message = "Success", Data = Photos };
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message.ToString() };
+            }
+        }
+
+
+
         public async Task<AddUpdateDelete> GetCompanyCalendarPackages(string CompanyCode)
         {
             try
@@ -366,7 +431,7 @@ namespace Barrway.Service.Repository
                 string query = $@"select * from CALENDAR_PACKAGE_MASTER_1952 
                             where COMPANY_CODE = '{CompanyCode}' and IS_ACTIVE = 'Y'
                             order by PACKAGE_SEQUENCE, created_at";
-                var packageResult = await sqlFunction.ExecuteSqlQuery(query);
+                List<IDictionary<string, object>> packageResult = await sqlFunction.ExecuteSqlQuery(query);
 
                 query = $@"select STUFF((SELECT ',' + '''' + convert(nvarchar, f2.CALENDAR_CODE) + '''' from CALENDAR_PACKAGE_MASTER_1952 f2    
                                                                 where f2.COMPANY_CODE = '{CompanyCode}'   FOR XML PATH('')), 1, 1, '') as 'CalendarCodes'";
@@ -403,14 +468,11 @@ namespace Barrway.Service.Repository
 								
 								from #temptable cf";
 
-                var result = await sqlFunction.ExecuteSqlQuery(query);
-
-
-
-                List<List<IDictionary<string, object>>> finalResult = new List<List<IDictionary<string, object>>>();
-
-                finalResult.Add(result);
-                finalResult.Add(packageResult);
+                
+                List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+                Dictionary<string, List<IDictionary<string, object>>> finalResult = new Dictionary<string, List<IDictionary<string, object>>>();
+                finalResult.Add("calendarList", result);
+                finalResult.Add("PackageList",packageResult);
 
                 return new AddUpdateDelete() { Status = (packageResult.Count > 0) ? true : false, Message = "Success", Data = finalResult };
 

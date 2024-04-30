@@ -74,4 +74,9 @@ namespace Barrway.DTO.APIModels.Company
         public int Id { get; set; }
         public string CALENDAR_CATEGORY_NAME { get; set; }
     }
+
+    public class CopmanyServiceDescription
+    {       
+        public string COMPANY_SERVICE { get; set; }
+    }
 }

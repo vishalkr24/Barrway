@@ -46,39 +46,63 @@ namespace Barrway.Controllers.API.v1
             }
         }
 
-        //[Route("api/search/GetCompanyServices")]
-        //[HttpPost]
-        //public async Task<ComapnyInformationApi<List<Company>>> GetCompanyServices(string CompanyCode)
-        //{
-        //    try
-        //    {
-        //        var companyData = await mobileAPIService.GetCompany(CompanyCode);
-        //        Company companyModel = JsonConvert.DeserializeObject<Company>(JsonConvert.SerializeObject(companyData.Data));
-        //        var ClanderSubCategory = await mobileAPIService.GetCalanderSubCategoryNameList(CompanyCode);
+        [Route("api/GetCompanyServices/{CompanyCode?}")]
+        [HttpPost]
+        public async Task<ComapnyInformationApi<CompanyServiceDetails>> GetCompanyServices(string CompanyCode)
+        {
+            try
+            {
+                CompanyServiceDetails Data = new CompanyServiceDetails();
+                var companyServiceDescription = await mobileAPIService.GetCompanyServiceDescription(CompanyCode);   
+                if(companyServiceDescription.Data != null)
+                {                                      
+                    Data.ServiceDescription = companyServiceDescription.Data["COMPANY_SERVICE"];
+                }                
+             
+                var ComapServiceList = await mobileAPIService.GetCompanyServiceList(CompanyCode);
+                Data.ServiceList = JsonConvert.DeserializeObject<List<ServiceList>>(JsonConvert.SerializeObject(ComapServiceList.Data));
+                return new ComapnyInformationApi<CompanyServiceDetails> { Data = Data, Status = true, Message = "Success" };
+            }
+            catch (Exception ex)
+            {
+                return new ComapnyInformationApi<CompanyServiceDetails> { Data = null, Status = false, Message = "Error" };
+            }
+        }
 
 
-        //        return new ComapnyInformationApi<List<Company>> { Data = companyModel, Status = true, Message = "Success" };
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return new ComapnyInformationApi<List<Company>> { Data = null, Status = false, Message = "Error" };
-        //    }
-        //}
+        [Route("api/GetCompanyPackages/{CompanyCode?}")]
+        [HttpPost]
+        public async Task<ComapnyInformationApi<List<Company>>> GetCompanyPackages(string CompanyCode)
+        {
+            try
+            {
+                var Data = await mobileAPIService.GetCompanyCalendarPackages(CompanyCode);
 
-        //[Route("api/search/GetCompanyPackages")]
-        //[HttpPost]
-        //public async Task<ComapnyInformationApi<List<Company>>> GetCompanyPackages(string CompanyCode)
-        //{
-        //    try
-        //    {
-        //        var Data = await mobileAPIService.GetCompanyCalendarPackages(CompanyCode);  
+                return new ComapnyInformationApi<List<Company>> { Data = Data, Status = true, Message = "Success" };
+            }
+            catch (Exception ex)
+            {
+                return new ComapnyInformationApi<List<Company>> { Data = null, Status = false, Message = "Error" };
+            }
+        }
 
-        //        return new ComapnyInformationApi<List<Company>> { Data = Data, Status = true, Message = "Success" };
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return new ComapnyInformationApi<List<Company>> { Data = null, Status = false, Message = "Error" };
-        //    }
-        //}
+
+
+
+        [Route("api/GetCompanyPhotoGallery/{CompanyCode?}")]
+        [HttpPost]
+        public async Task<ComapnyInformationApi<List<Company>>> GetCompanyPhotoGallery(string CompanyCode)
+        {
+            try
+            {
+                var Data = await mobileAPIService.GetCompanyPhotoGallery(CompanyCode);
+
+                return new ComapnyInformationApi<List<Company>> { Data = Data, Status = true, Message = "Success" };
+            }
+            catch (Exception ex)
+            {
+                return new ComapnyInformationApi<List<Company>> { Data = null, Status = false, Message = "Error" };
+            }
+        }
     }
 }
