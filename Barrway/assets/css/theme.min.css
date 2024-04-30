@@ -27181,9 +27181,20 @@ div#navbarVerticalMenu .nav-item:hover > .nav-link {
 }
 
 @media (max-width: 991.98px) {
-    .navbar-expand-lg .navbar-nav-wrap-secondary-content {
-        margin-left: auto;
+    .dropdown-me-2 span.lbl-calendar-name {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
     }
+    div#navbarContainerNavDropdown ul.navbar-nav {
+        padding: 1rem 0px;
+    }
+        div#navbarContainerNavDropdown ul.navbar-nav li {
+            margin-right: 0px;
+        }
+        .navbar-expand-lg .navbar-nav-wrap-secondary-content {
+            margin-left: auto;
+        }
 
         .navbar-expand-lg .navbar-nav-wrap-secondary-content ~ .navbar-toggler {
             margin-left: 0.5rem;

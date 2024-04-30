@@ -332,10 +332,10 @@
                 box-shadow: 0px 4px 4px 0px #ddd;*/
                 right: 30px;
                 position: absolute;
-                width: auto;
+                width: 180px;
                 background-color: #fff;
                 box-shadow: 0px 4px 4px 0px #ddd;
-                padding:10px 0px;
+                padding:10px 10px;
             }
 
                 .mobile-new ul.navbar-nav li {
@@ -344,11 +344,21 @@
                     width: 100% !important;
                     margin: 0px 0px;
                 }
-                .mobile-chat-noti .dropdown {
+               /* .mobile-chat-noti .dropdown {
                     width: 50%;
                     text-align: center;
                     float: left;
-                }
+                }*/
+            .mobile-chat-noti {
+                width: 100%;
+                float: left;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+            }
+            .mobile-chat-noti .dropdown {
+                width: 40px;
+            }
                     .mobile-chat-noti .dropdown .bi-chat-left-text {
                     font-size:20px;
                     }
@@ -728,7 +738,7 @@
                     </li>
                     
                     <!--   only for mobile      -->
-                    <li class="nav-item d-m-show">
+                    <li class="nav-item d-m-show" style="border-bottom:none;">
                         <div class="">
                             <a onclick="location.href = '@Url.Action("Index","Marketplace")'">Marketplace</a>
                         </div>
@@ -752,7 +762,7 @@
                             </span>
                         </div>
                     </li>
-                    <li class="nav-item d-m-show" style="width: 70px;">
+                    <li class="nav-item d-m-show" style="text-align:center;">
                         <a class="" style="font-style: normal; font-weight: 700; font-size: 18px; line-height: 21px; color: #000000; ">
                             B$<span class="user-total-coin-balance">00</span>
                         </a>

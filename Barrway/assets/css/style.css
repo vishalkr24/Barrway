@@ -824,10 +824,29 @@ button.blogtag_num {
     margin-left: 0px;
 }
 /*============================  media ====================================*/
-
-@media screen and (max-width:767px){
+.bmp-logo a img {
+    height: 42px;
+    width: 230px;
+}
+@media screen and (max-width:767px) {
+    .bmp-logo a img {
+        height: 39px;
+        width: 180px;
+    }
     .banner-image img {
         width: 100%;
+    }
+    .mw-auto {
+        width: auto;
+    }
+    .mw-auto span {
+        top: 0;
+    }
+    .pyb {
+        top: 54px;
+    }
+    .pb-15 {
+        padding-bottom: 15px;
     }
 .secondry-nav, .com-nav-btn {
     top: 10px !important;
