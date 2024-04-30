@@ -10,6 +10,15 @@ FormGeneratorApp.run(function ($rootScope, $templateCache, notifierService, $q, 
     var canceller = $q.defer();
 
     $transitions.onStart({}, function (transition) {
+        if ($('.businessadmin-toggler').attr("aria-expanded")=="true") {
+            $('.businessadmin-toggler').click();
+        }
+        if ($('.layoutcalander-toggler').attr("aria-expanded") == "true") {
+            $('.layoutcalander-toggler').click();
+        }
+        if ($('.layoutcalander-toggler-s').attr("aria-expanded") == "true") {
+            $('.layoutcalander-toggler-s').click();
+        }  
         if (transition.from().name == "queue_view") {
             $.connection.hub.stop();
         }

@@ -4447,7 +4447,6 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
             $scopeVar.createEventDetails.ActivityFormId = $scopeVar.xSelection;
             $scopeVar.createEventDetails.start = customDate(startDate.format());
             $scopeVar.createEventDetails.end = customDate(endDate.format());
-            //debugger;
             $scopeVar.createEventDetails.startTimeFormat = moment(startDate.format()).format("hh:mm A");
             $scopeVar.createEventDetails.endTimeFormat = moment(endDate.format()).format("hh:mm A");
             $scopeVar.createEventDetails.startTime = moment(startDate.format()).format("HH:mm");
@@ -4692,7 +4691,6 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
             $scopeVar.createEventDetails.start = customDate(startDate.format());
             $scopeVar.createEventDetails.end = customDate(endDate.format());
 
-            //debugger;
             $scopeVar.createEventDetails.startTimeFormat = moment(startDate.format()).format("hh:mm A");
             $scopeVar.createEventDetails.endTimeFormat = moment(endDate.format()).format("hh:mm A");
             $scopeVar.createEventDetails.startTime = moment(startDate.format()).format("HH:mm");
@@ -5941,7 +5939,6 @@ function loadCalendarWithOutEventFunction(calenderType, calenderData, resourceDa
 
         },
         eventClick: function (calEvent, jsEvent, view) {
-            debugger;
             var $scope = angular.element($("#calendar")).scope();
 
 
@@ -15511,7 +15508,6 @@ function removeColumns(formid,columns) {
 function addNewColumns(formid, columns) {
     formid = parseInt(formid);
     formidList = [2295, 2296, 2303, 2304, 2306, 2305, 2311];
-    //debugger;
     //columns.find(x => x.title == "Edit").frozen = true;
 
     switch (formid) {
@@ -15763,8 +15759,6 @@ function GetGeneratedFormDataUrl(formid, isEdit) {
 
 
 function GetFormRecordsUrl(formid) {
-    debugger;
-    
     if (formid == 2303) {
         return BASE_URL + "Calendar/GetServiceMasterList";
     }

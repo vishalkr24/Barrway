@@ -76,7 +76,6 @@ function setUserDetails() {
     var user = getSingleUserDetailsByUserId().data;
     var coinBalance = getUserCoinBalance();
     $(".user-total-coin-balance").text(coinBalance.Data);
-    debugger;
     if (user.Status) {
 
         var data = user.Data;

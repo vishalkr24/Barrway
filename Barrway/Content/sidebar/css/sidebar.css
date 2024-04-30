@@ -9,7 +9,20 @@
     z-index: 8;
     background-color: #e9e7ee;
 }
+@media screen and (max-width:767px) {
+    .sidebar {
+        max-width: 230px;
+        width: 100%;
+        position: fixed;
+        padding-top: 0px;
+        height: 100vh;
+        z-index: 8;
+        background-color: #e9e7ee;
+        top: 100px;
+        left: -235px;
+    }
 
+}
     .sidebar .mainlink-children {
         display: none;
     }
@@ -19,25 +32,25 @@
         padding: 15px;
     }
 
-    .sidebar .form-top:first-child {
-        margin-bottom: 5px;
-        /*margin-bottom: 15px;*/
-    }
+.sidebar .form-top:first-child {
+    margin-bottom: 5px;
+    /*margin-bottom: 15px;*/
+}
 
-    .sidebar .form-top label {
-        padding-right: 5px;
-    }
+.sidebar .form-top label {
+    padding-right: 5px;
+}
 
-    .sidebar .form-top label, .sidebar .form-top select {
-        display: inline-block;
-        vertical-align: middle;
-        width: auto;
-    }
+.sidebar .form-top label, .sidebar .form-top select {
+    display: inline-block;
+    vertical-align: middle;
+    width: auto;
+}
 
-    .sidebar .form-top select {
-        max-width: 196px;
-        width: 100%;
-    }
+.sidebar .form-top select {
+    max-width: 196px;
+    width: 100%;
+}
 
     .sidebar .sedebar__inner ul {
         padding: 0;
@@ -120,6 +133,13 @@ input:focus, select:focus {
     .sidebar:not(.open) .sidebar-toggle {
         right: -48px;
     }
+@media screen and (max-width:767px) {
+
+        .sidebar:not(.open) .sidebar-toggle {
+            right: -35px;
+        }
+}
+
 
 .sidebar-toggle {
     background: #bcb3cc;
@@ -150,12 +170,13 @@ input:focus, select:focus {
 
 .sidebar {
     transition: all ease-in-out .3s;
-    /*transform: translateX(-215px);*/
+    *transform: translateX(0px);
 }
-
+@media screen and (max-width:767px) {
     .sidebar.open {
-        transform: translateX(0px)
+        transform: translateX(235px)
     }
+}
 
     /*end Sidebar*/
 

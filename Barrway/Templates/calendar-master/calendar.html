@@ -396,6 +396,12 @@
             overflow-x: hidden;
         }
         }
+    @media screen and (max-width:767px) {
+        .control-m-2 {
+            margin-top: 5px !important;
+            padding-left: 0px !important;
+        }
+    }
 </style>
 
 <div class="row m-2" style="margin-left:-1.5rem;" id="calendar_view">
@@ -429,9 +435,9 @@
                 </div>
             </div>
             <div class="sedebar__inner">
-                <!--<div class="sidebar-toggle">
+                <div class="sidebar-toggle">
                     <i class="fa fa-chevron-left"></i>
-                </div>-->
+                </div>
                 <div class="scrollbar">
                     <div class="card card-default" ng-if="otherformDetails.title.length>0">
                         <div class="from-group search-filter text-center"></div>
@@ -463,10 +469,6 @@
                                 </div>
                             </div>
                         </div>
-
-
-
-
                     </div>
                     <div class="card card-default"
                          ng-repeat="(key, list) in calenderSettingsFormDetailsDataList track by $index"
@@ -506,7 +508,6 @@
     </div>
 
     <style>
-
         .sidebar .jstree-default ul li.jstree-node {
             display: flex;
         }
@@ -616,14 +617,14 @@
                                    aria-hidden="true"
                                    disabled></i>Setting
                             </a>
-                            <a ng-click="showAdvanced()" ng-show="IS_EXIST_PRE_DEFINED_ACTIVITIES" class="btn btn-primary mt-3 mt-lg-0 ml-2" data-toggle="tooltip" title="Advanced ">
+                            <a ng-click="showAdvanced()" ng-show="IS_EXIST_PRE_DEFINED_ACTIVITIES" class="btn btn-primary cursor-pointer" data-toggle="tooltip" title="Advanced ">
                                 <span class="action-name"> </span>
                                 <i class="fa fa-chevron-down" ng-class="{'fa-chevron-down':!isShowAdvance,'fa-chevron-up':isShowAdvance}"></i>
                             </a>
                             <div class="form-group d-flex justify-content-end flex-fill"></div>
 
                             <div data-theme-system="jquery-ui"
-                                 class="selector form-group"
+                                 class="selector form-group control-m-2"
                                  style="display: none;">
                                 {{translation.Theme}}
                                 <select class="form-control" style="margin-left: 5px;">
@@ -655,7 +656,7 @@
                                 </select>
                             </div>
 
-                            <div class="input-group">
+                            <div class="input-group control-m-2">
                                 <label class="control-label text-right" style="padding: 6px;"> {{translation.Filter_By_Selected_Date}}</label>
                                 <input type="text"
                                        id="datecontrol"
@@ -1589,21 +1590,21 @@
         });
     });
 
-    //function HideSiseMenu() {
+    function HideSiseMenu() {
 
-    //    if ($('.sidebar').is(":hidden")) {
-    //        $(".sidebar").show();
-    //        $("#sidebarStrip_menu").show();
-    //        $('.showSection').removeClass('Hideleftmenu').addClass('contentsection');
-    //        $('#Hide_menu_Icon').removeClass('fa-arrow-right').addClass('fa-arrow-left');
-    //    }
-    //    else {
-    //        $(".sidebar").hide();
-    //        $("#sidebarStrip_menu").hide();
-    //        $('.showSection').removeClass('contentsection').addClass('Hideleftmenu');
-    //        $('#Hide_menu_Icon').removeClass('fa-arrow-left').addClass('fa-arrow-right');
-    //    }
-    //}
+        if ($('.sidebar').is(":hidden")) {
+            $(".sidebar").show();
+            $("#sidebarStrip_menu").show();
+            $('.showSection').removeClass('Hideleftmenu').addClass('contentsection');
+            $('#Hide_menu_Icon').removeClass('fa-arrow-right').addClass('fa-arrow-left');
+        }
+        else {
+            $(".sidebar").hide();
+            $("#sidebarStrip_menu").hide();
+            $('.showSection').removeClass('contentsection').addClass('Hideleftmenu');
+            $('#Hide_menu_Icon').removeClass('fa-arrow-left').addClass('fa-arrow-right');
+        }
+    }
 </script>
 
 <script>
@@ -1611,3 +1612,4 @@
     $("#nav-calendar-master").addClass("active");
 
 </script>
+<script src="Content/sidebar/js/sidebar-script.js"></script>

@@ -1016,8 +1016,6 @@
             param.currentstage = 0;
             $scope.allowViewSumm = "";
 
-            debugger;
-
             mainService.manageForm("ManageForm", param)
                 .then(function (response) {
                     if (response.data != null && angular.isDefined(response.data)) {
@@ -4208,7 +4206,6 @@
                 });
         };
         function bindtabulatorOnly(type, data) {
-            debugger;
             var details = JSON.parse(localStorage.getItem("detail"));
             var languageIdForm = localStorage.getItem("globalLangForm");
             var languageId = localStorage.getItem("globalLang");
@@ -4282,7 +4279,6 @@
 
 
 
-            debugger;
             headers = removeColumns($scope.currentFormId, headers);
             headers = addNewColumns($scope.currentFormId, headers);
 
@@ -4596,7 +4592,6 @@
                             //url - the URL of the request
                             //params - the parameters passed with the request
                             //response - the JSON object returned in the body of the response.
-                            debugger;
                             $('#form-records').unblock();
                             $.unblockUI();
                             var result = angular.copy(response.data);

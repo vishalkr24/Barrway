@@ -125,18 +125,22 @@
                                 </div>
                                 <div class="collapse navbar-collapse" id="myNavbar">
                                     <ul class="nav navbar-nav">
+                                        @if (!User.Identity.IsAuthenticated)
+                                        {
                                         <li class="rl ds-none">
                                             <a class="dropdown-toggle" href="/Account/BusinessLogin">@Resource.Register / @Resource.Login </a>
                                         </li>
+                                        }
+
                                         <li id="nv-home"><a href="/Marketplace">@Resource.Home</a></li>
                                         @*<li class="dropdown">
-                                      <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">Page 1 <span class="caret"></span></a>
-                                      <ul class="dropdown-menu">
-                                        <li><a href="javascript:void(0)">Page 1-1</a></li>
-                                        <li><a href="javascript:void(0)">Page 1-2</a></li>
-                                        <li><a href="javascript:void(0)">Page 1-3</a></li>
-                                      </ul>
-                                    </li>*@
+          <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">Page 1 <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="javascript:void(0)">Page 1-1</a></li>
+            <li><a href="javascript:void(0)">Page 1-2</a></li>
+            <li><a href="javascript:void(0)">Page 1-3</a></li>
+          </ul>
+        </li>*@
                                         <li id="nv-business"><a href="/Marketplace/BusinessSite">@Resource.Business</a></li>
                                         @*<li id="nv-Pricing"><a href="/Marketplace/Subcategory">@Resource.Subcategory</a></li>*@
 
@@ -166,7 +170,7 @@
                                         <li class="ds-none">
                                             <span class="location" id="location2"><img src="~/assets/marketplace/image/lo.png" /> </span>
                                         </li>
-                                        
+
                                     </ul>
 
                                     @if (User.Identity.IsAuthenticated)
