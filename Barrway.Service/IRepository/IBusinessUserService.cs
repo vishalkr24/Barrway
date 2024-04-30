@@ -157,5 +157,7 @@ namespace Barrway.Service.IRepository
 
         Task<AddUpdateDelete> GetCalanderSubCategoryNameList(string CompanyCode);
         Task<AddUpdateDelete> GetCalanderCategoryNameList(string CompanyCode);
+
+        Task<AddUpdateDelete> GetCompanyServiceList(string CompanyCode);
     }
 }

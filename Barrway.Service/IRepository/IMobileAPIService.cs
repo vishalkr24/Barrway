@@ -25,6 +25,10 @@ namespace Barrway.Service.IRepository
         Task<Company> GetCompany(string CompanyCode);
 
         Task<AddUpdateDelete> GetCompanyCalendarPackages(string CompanyCode);
+        
+        Task<AddUpdateDelete> GetCompanyServiceDescription(string CompanyCode);
+        Task<AddUpdateDelete> GetCompanyServiceList(string CompanyCode);
+        Task<AddUpdateDelete> GetCompanyPhotoGallery(string CompanyCode);
 
 
 
