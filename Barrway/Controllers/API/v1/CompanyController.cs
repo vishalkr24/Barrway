@@ -1,4 +1,4 @@
-﻿using Barrway.DTO.APIModels.Company;
+using Barrway.DTO.APIModels.Company;
 using Barrway.Security;
 using Barrway.Service.IRepository;
 using Newtonsoft.Json;

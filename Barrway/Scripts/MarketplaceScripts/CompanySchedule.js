@@ -1072,7 +1072,7 @@ var manageWindowParams = function () {
                 if (calEvent.IS_COURSE_EVENT == 'Y') {
 
                     $.ajax({
-                        url: "/Calendar/GetCourseEvents",
+                        url: "/Marketplace/GetCourseEvents",
                         type: "GET",
                         data: {
                             ServiceId: calEvent.activities
@@ -1088,6 +1088,11 @@ var manageWindowParams = function () {
 
                                 $scope.courseEventsList = response.Data;
 
+                                setTimeout(function () {
+                                    let height = document.getElementById("event_N").scrollHeight;
+                                    document.getElementById("events-list-container").scrollTop = height + 300;
+                                }, 500);
+
                                 CourseDetailsModal.modal('show');
                                 CourseDetailsModal.css({ "z-index": "9999" });
                             } else {
@@ -1095,7 +1100,7 @@ var manageWindowParams = function () {
                             }
                         },
                         error: function (error) {
-
+                            
                         }
                     })
 
@@ -1109,7 +1114,7 @@ var manageWindowParams = function () {
                 
             }
 
-           
+            debugger;
             if (calEvent.DOWNLOAD_FILE_LIST && calEvent.DOWNLOAD_FILE_LIST != '' && calEvent.DOWNLOAD_FILE_LIST != ' ' && calEvent.DOWNLOAD_FILE_LIST != 'null' && IsJsonString(calEvent.DOWNLOAD_FILE_LIST)) {
                 calEvent.DOWNLOADABLE_ATTACHMENT_FILES = JSON.parse(calEvent.DOWNLOAD_FILE_LIST);
             }

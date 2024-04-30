@@ -96,6 +96,13 @@ namespace Barrway.Controllers
             return Json(new { data = locationList, last_page });
         }
 
+        public async Task<ActionResult> GetCourseEvents(string ServiceId)
+        {
+            var EventsData = await businessUserService.GetCourseEvents(ServiceId, (User.Identity.IsAuthenticated) ? UserIdentity.UserEmail : "");
+
+            return Json(EventsData, JsonRequestBehavior.AllowGet);
+        }
+
         public async Task<ActionResult> Index()
         {
 

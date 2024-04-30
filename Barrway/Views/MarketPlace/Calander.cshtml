@@ -510,105 +510,105 @@
             color: red;
         }
 
-            #half-stars-example .rating-group {
-                display: inline-flex;
-            }
+        #half-stars-example .rating-group {
+            display: inline-flex;
+        }
 
-            #half-stars-example .rating__icon {
-                pointer-events: none;
-            }
+        #half-stars-example .rating__icon {
+            pointer-events: none;
+        }
 
-            #half-stars-example .rating__input {
-                position: absolute !important;
-                left: -9999px !important;
-            }
+        #half-stars-example .rating__input {
+            position: absolute !important;
+            left: -9999px !important;
+        }
 
-            #half-stars-example .rating__label {
-                cursor: pointer;
-                /* if you change the left/right padding, update the margin-right property of .rating__label--half as well. */
-                padding: 0 0.1em;
-                font-size: 2rem;
-            }
+        #half-stars-example .rating__label {
+            cursor: pointer;
+            /* if you change the left/right padding, update the margin-right property of .rating__label--half as well. */
+            padding: 0 0.1em;
+            font-size: 2rem;
+        }
 
-            #half-stars-example .rating__label--half {
-                padding-right: 0;
-                margin-right: -0.6em;
-                z-index: 2;
-            }
+        #half-stars-example .rating__label--half {
+            padding-right: 0;
+            margin-right: -0.6em;
+            z-index: 2;
+        }
 
-            #half-stars-example .rating__icon--star {
-                color: orange;
-            }
+        #half-stars-example .rating__icon--star {
+            color: orange;
+        }
 
-            #half-stars-example .rating__icon--none {
-                color: #eee;
-            }
+        #half-stars-example .rating__icon--none {
+            color: #eee;
+        }
 
-            #half-stars-example .rating__input--none:checked + .rating__label .rating__icon--none {
-                color: red;
-            }
+        #half-stars-example .rating__input--none:checked + .rating__label .rating__icon--none {
+            color: red;
+        }
 
-            #half-stars-example .rating__input:checked ~ .rating__label .rating__icon--star {
-                color: #ddd;
-            }
+        #half-stars-example .rating__input:checked ~ .rating__label .rating__icon--star {
+            color: #ddd;
+        }
 
-            #half-stars-example .rating-group:hover .rating__label .rating__icon--star,
-            #half-stars-example .rating-group:hover .rating__label--half .rating__icon--star {
-                color: orange;
-            }
+        #half-stars-example .rating-group:hover .rating__label .rating__icon--star,
+        #half-stars-example .rating-group:hover .rating__label--half .rating__icon--star {
+            color: orange;
+        }
 
-            #half-stars-example .rating__input:hover ~ .rating__label .rating__icon--star,
-            #half-stars-example .rating__input:hover ~ .rating__label--half .rating__icon--star {
-                color: #ddd;
-            }
+        #half-stars-example .rating__input:hover ~ .rating__label .rating__icon--star,
+        #half-stars-example .rating__input:hover ~ .rating__label--half .rating__icon--star {
+            color: #ddd;
+        }
 
-            #half-stars-example .rating-group:hover .rating__input--none:not(:hover) + .rating__label .rating__icon--none {
-                color: #eee;
-            }
+        #half-stars-example .rating-group:hover .rating__input--none:not(:hover) + .rating__label .rating__icon--none {
+            color: #eee;
+        }
 
-            #half-stars-example .rating__input--none:hover + .rating__label .rating__icon--none {
-                color: red;
-            }
+        #half-stars-example .rating__input--none:hover + .rating__label .rating__icon--none {
+            color: red;
+        }
 
 
-            #full-stars-example-two .rating-group {
-                display: inline-flex;
-            }
+        #full-stars-example-two .rating-group {
+            display: inline-flex;
+        }
 
-            #full-stars-example-two .rating__icon {
-                pointer-events: none;
-            }
+        #full-stars-example-two .rating__icon {
+            pointer-events: none;
+        }
 
-            #full-stars-example-two .rating__input {
-                position: absolute !important;
-                left: -9999px !important;
-            }
+        #full-stars-example-two .rating__input {
+            position: absolute !important;
+            left: -9999px !important;
+        }
 
-            #full-stars-example-two .rating__input--none {
-                display: none;
-            }
+        #full-stars-example-two .rating__input--none {
+            display: none;
+        }
 
-            #full-stars-example-two .rating__label {
-                cursor: pointer;
-                padding: 0 0.1em;
-                font-size: 2rem;
-            }
+        #full-stars-example-two .rating__label {
+            cursor: pointer;
+            padding: 0 0.1em;
+            font-size: 2rem;
+        }
 
-            #full-stars-example-two .rating__icon--star {
-                color: orange;
-            }
+        #full-stars-example-two .rating__icon--star {
+            color: orange;
+        }
 
-            #full-stars-example-two .rating__input:checked ~ .rating__label .rating__icon--star {
-                color: #ddd;
-            }
+        #full-stars-example-two .rating__input:checked ~ .rating__label .rating__icon--star {
+            color: #ddd;
+        }
 
-            #full-stars-example-two .rating-group:hover .rating__label .rating__icon--star {
-                color: orange;
-            }
+        #full-stars-example-two .rating-group:hover .rating__label .rating__icon--star {
+            color: orange;
+        }
 
-            #full-stars-example-two .rating__input:hover ~ .rating__label .rating__icon--star {
-                color: #ddd;
-            }
+        #full-stars-example-two .rating__input:hover ~ .rating__label .rating__icon--star {
+            color: #ddd;
+        }
 
         .rating__input {
             display: none;
@@ -683,18 +683,21 @@
             width: 100%;
             max-width: 500px;
         }
+
         .schdule-inner-sm {
             width: 100%;
             float: left;
             display: flex;
             vertical-align: middle;
             justify-content: space-between;
-            display:none;
+            display: none;
         }
+
         .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover {
             border: 1px solid #3fbfc7;
             background: #3fbfc7;
         }
+
         div#calendar div#tabs .ui-state-active a .blck {
             display: none;
         }
@@ -706,17 +709,20 @@
         div#calendar div#tabs .ui-state-active a .white {
             display: inline;
         }
+
         @@media (max-width:767px) {
             .schdule-inner-sm {
                 display: flex;
                 width: 100%;
                 float: left;
             }
+
             .schdule-inner {
                 width: 100%;
                 float: left;
                 display: none;
             }
+
             .favr-sm button {
                 border: 2px solid #3FBFC7;
                 border-radius: 30px;
@@ -727,9 +733,11 @@
                 min-width: 100px;
                 font-size: 15px;
             }
-            .favr-sm button img {
-                width: 14px;
-            }
+
+                .favr-sm button img {
+                    width: 14px;
+                }
+
             .schdule-inner-sm .drop-mobile .navbar-nav-filter ul.navbar-nav {
                 margin: 0px;
                 padding-left: 0px;
@@ -747,27 +755,31 @@
                         border-radius: 40px;
                         padding: 6px 0px;
                     }
+
                         .schdule-inner-sm .drop-mobile .navbar-nav-filter ul.navbar-nav li .dropdown a {
                             color: #3fbfc7;
                         }
+
                         .schdule-inner-sm .drop-mobile .navbar-nav-filter ul.navbar-nav li .dropdown .dropdown-menu {
                             width: 206px;
                             left: -25px !important;
                             padding: 5px 8px;
                         }
+
             span.n_sm {
                 display: none;
             }
+
             .heading-cata {
                 white-space: wrap;
             }
+
             .ui-tabs .ui-tabs-panel {
                 padding: 1em 0.5em;
             }
         }
-        
     </style>
-    }
+}
 
 <!-- sliders compnay -->
 <section class="subcatageory" id="logo" style="margin-top: 0px !important;">
@@ -1021,11 +1033,11 @@
                                 <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
                                     <div style="display:block" class="titleContainer">
                                         @*<p class="title1" style="font-size:16px;font-weight:600">
-                                {{d.dropdownListData.title}}
-                                <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
-                                <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
-                                <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
-                            </p>*@
+                                                {{d.dropdownListData.title}}
+                                                <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
+                                                <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
+                                                <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
+                                            </p>*@
                                         <p class="title1" style="font-weight:bold; font-size: 16px;"> {{d.formTitle}}</p>
                                     </div>
                                 </div>
@@ -1099,12 +1111,12 @@
                     </div>
 
                     <div class="div-flex div-list">
-                        <button type="button" class="btn btn-secondary"  style="margin-top: 12px;" data-bs-dismiss="modal" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary public-primary"  style="margin-top: 12px;" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'N'" ng-click="enrollPublicUser()">Enroll</button>
-                        <button type="button" class="btn btn-primary public-primary"  style="margin-top: 12px;" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IsReviewable == 'N'" ng-click="cancelPublicUserBooking()">Cancel Booking</button>
-                        <button type="button" class="btn btn-primary public-primary"  style="margin-top: 12px;" ng-if="!selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IsReviewable == 'Y'" ng-click="reviewSession()">Review Session</button>
+                        <button type="button" class="btn btn-secondary" style="margin-top: 12px;" data-bs-dismiss="modal" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary public-primary" style="margin-top: 12px;" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'N'" ng-click="enrollPublicUser()">Enroll</button>
+                        <button type="button" class="btn btn-primary public-primary" style="margin-top: 12px;" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IsReviewable == 'N'" ng-click="cancelPublicUserBooking()">Cancel Booking</button>
+                        <button type="button" class="btn btn-primary public-primary" style="margin-top: 12px;" ng-if="!selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IsReviewable == 'Y'" ng-click="reviewSession()">Review Session</button>
                         <button class="btn btn-danger public-primary" ng-if="selectEventDetails.ATTEND == 'Y'" style="margin-top: 12px;" ng-click="AttendSession(selectEventDetails.Id, 'NORMAL')">Attend</button>
-                        <img src="~/assets/img/QR_CODE_LOGO.png" ng-if="selectEventDetails.ATTEND == 'Y'" ng-click="AttendSession(selectEventDetails.Id, 'QR')" style="height: 40px; width: 40px; margin-top: 12px;" />
+                        <img src="~/assets/img/QR_CODE_LOGO.png" ng-if="selectEventDetails.ATTEND == 'Y'" ng-click="AttendSession(selectEventDetails.TransactionId, 'QR')" style="height: 40px; width: 40px; margin-top: 12px;" />
                     </div>
                 </div>
                 @*<div class="modal-footer">
@@ -1201,6 +1213,12 @@
                 height: calc(100% - 34px);
             }
 
+            .events-list-block.old-session .event-tracker-line div {
+                border-left: 2px dashed grey;
+                transform: translate(-19px, 34px);
+                height: calc(100% - 34px);
+            }
+
             .events-list-block ul {
                 display: flex;
                 flex-wrap: wrap;
@@ -1217,6 +1235,11 @@
                     width: 160px;
                     text-align: center;
                 }
+
+            .events-list-block.old-session ul li {
+                border: 1px solid grey;
+                color: grey;
+            }
 
         #CourseDetailsModal .modal-dialog {
             width: 100%;
@@ -1236,7 +1259,7 @@
 
 
     <div class="modal fade right" id="CourseDetailsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-slideout" role="document" style="max-width:100%">
+        <div class="modal-dialog modal-dialog-slideout" role="document" style="width:100%">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title" style="color: #72328A; font-weight: 700;" id="exampleModalLabel">Course Details</h3>
@@ -1277,23 +1300,27 @@
 
                                 <label style="font-size: 16px;">Events:</label>
                                 <br />
-                                <div class="events-list-container">
-                                    <div class="events-list-block" ng-repeat="item in courseEventsList">
+                                <div class="events-list-container" id="events-list-container">
+                                    <div class="events-list-block" ng-repeat="item in courseEventsList track by $index" ng-class="{'old-session': item.Value[0].IsPreviousSession == 'Y'}" id="{{'event_' + (item.Value[0].IsPreviousSession)}}">
                                         <div class="event-tracker">
-                                            <i class="fa fa-circle-o" aria-hidden="true"></i>
+                                            <i ng-if="item.Value[0].IsPreviousSession == 'N'" class="fa fa-circle-o" aria-hidden="true"></i>
+                                            <i ng-if="item.Value[0].IsPreviousSession == 'Y'" style="color:grey;" class="fa fa-circle-o" aria-hidden="true"></i>
                                         </div>
                                         <div class="event-tracker-line"><div></div></div>
                                         <div class="event-detail">
                                             <label>{{item.Key}}</label>
                                             <ul>
                                                 <li ng-repeat="event in item.Value">
-                                                    {{event.start}} - {{event.end}}
+                                                    <div>{{event.start}} - {{event.end}}</div>
+                                                    <div style="margin-top: 12px; text-align:left;">
+                                                        <button class="btn btn-primary public-primary" style="border-radius: 50px;" ng-if="event.ATTEND == 'Y'" ng-click="AttendSession(event.Id, 'NORMAL')">Attend</button>
+                                                        <img src="~/assets/img/QR_CODE_LOGO.png" ng-if="event.ATTEND == 'Y'" ng-click="AttendSession(event.TransactionId, 'QR')" style="height: 32px; width: 32px;" />
+                                                    </div>
                                                 </li>
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
 
                             <hr />
@@ -1303,12 +1330,12 @@
 
                                 <ul style="padding:0" class="already-uploaded-ul">
                                     <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='public'">
-                                        <a ng-href="{{item.url}}" target="_blank" title="{{item.name}}"><img src="{{((item.name.includes('jpg') || item.name.includes('png') || item.name.includes('jpeg')) ? item.url : '../../../assets/css/images/attachment-img.PNG    ')}}" /></a>
+                                        <a ng-href="{{item.url}}" target="_blank" title="{{item.name}}"><img src="~/assets/css/images/attachment-img.PNG" /></a>
                                         <div title="{{item.name}}" class="attachment-name">{{item.name}}</div>
                                     </li>
 
                                     <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='user' && selectEventDetails.IsAlreadyBooked == 'Y'">
-                                        <a ng-href="{{item.url}}" target="_blank" title="{{item.name}}"><img src="{{((item.name.includes('jpg') || item.name.includes('png') || item.name.includes('jpeg')) ? item.url : '../../../assets/css/images/attachment-img.PNG    ')}}" /></a>
+                                        <a ng-href="{{item.url}}" target="_blank" title="{{item.name}}"><img src="~/assets/css/images/attachment-img.PNG" /></a>
                                         <div title="{{item.name}}" class="attachment-name">{{item.name}}</div>
                                     </li>
                                 </ul>
@@ -1583,9 +1610,9 @@
                 debugger;
                 $("#customEventDetailsModelPopUp").modal("hide")
                 if (type == "QR") {
-                    $scope.generateQRCode($scope.selectEventDetails.TransactionId);
+                    $scope.generateQRCode(eventId);
                 } else {
-                    openWebCam($scope.selectEventDetails.Id);
+                    openWebCam(eventId);
                 }
 
             }
@@ -1954,7 +1981,7 @@
                                         buttons: buttonsWrap
 
                                     }).then(function (check) {
-
+                                        debugger;
                                         if (check == true) {
                                             showLoader();
                                             if (response.Status) {
@@ -2238,7 +2265,7 @@
                                     dataModelList.forEach(x => {
                                         if (x.type == "file") {
 
-                                        } else {
+                                        }else {
                                             $(`#service-div input[name^=${x.name}]`).bind("keyup change paste", function () {
                                                 dataList[0][x.name] = this.value;
                                             })
@@ -2250,6 +2277,10 @@
                                             $(`#service-div textarea[name^=${x.name}]`).bind("keyup change paste", function () {
                                                 dataList[0][x.name] = this.value;
                                             })
+                                        }
+
+                                        if (x.type == "select") {
+                                            dataList[0][x.name] = this.value;
                                         }
 
                                     });
