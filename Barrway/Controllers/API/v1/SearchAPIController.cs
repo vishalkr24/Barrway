@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 
 namespace Barrway.Controllers.API.v1
 {
@@ -23,71 +24,91 @@ namespace Barrway.Controllers.API.v1
         {
             this.mobileAPIService = mobileAPIService;
         }
+
         [Route("api/search/calendars")]
         [HttpPost]
-        public async Task<SearchResponseModel<List<CalendarModel>>> GetSerachResultCalendar(SearchAPIModel data) {
-            var result = await mobileAPIService.GetCalendarsSearchResult(data);
-            double last_page = 0;
-            if (result != null && result.Count() > 0)
+        [ResponseType(typeof(SearchResponseModel<List<CalendarModel>>))]
+        public async Task<IHttpActionResult> GetSerachResultCalendar(SearchAPIModel data) {
+            try
             {
-                var first_data = result.FirstOrDefault();
-                if (first_data.total_records == 0 && first_data.size == 0)
+                var result = await mobileAPIService.GetCalendarsSearchResult(data);
+                double last_page = 0;
+                if (result != null && result.Count() > 0)
                 {
-                    last_page = 0;
+                    var first_data = result.FirstOrDefault();
+                    if (first_data.total_records == 0 && first_data.size == 0)
+                    {
+                        last_page = 0;
+                    }
+                    else
+                    {
+                        double paging = (double)first_data.total_records / first_data.size;
+                        last_page = Math.Floor(paging) + 1;
+                    }
                 }
-                else
-                {
-                    double paging = (double)first_data.total_records / first_data.size;
-                    last_page = Math.Floor(paging) + 1;
-                }
+                return Ok(new SearchResponseModel<List<CalendarModel>> { last_page = last_page, data = result, searchType = "calendar" });
             }
-          return new SearchResponseModel<List<CalendarModel>> { last_page=last_page,data= result,searchType="calendar" };
+            catch (Exception ex) {
+                return InternalServerError();
+            }
         }
+
         [Route("api/search/companies")]
         [HttpPost]
-        public async Task<SearchResponseModel<List<CompanyModel>>> GetSerachResultCompany(SearchAPIModel data)
+        [ResponseType(typeof(SearchResponseModel<List<CompanyModel>>))]
+        public async Task<IHttpActionResult> GetSerachResultCompany(SearchAPIModel data)
         {
-            var result = await mobileAPIService.GetCompaniesSearchResult(data);
-            double last_page = 0;
-            if (result != null && result.Count() > 0)
+            try
             {
-                var first_data = result.FirstOrDefault();
-                if (first_data.total_records == 0 && first_data.size == 0)
+                var result = await mobileAPIService.GetCompaniesSearchResult(data);
+                double last_page = 0;
+                if (result != null && result.Count() > 0)
                 {
-                    last_page = 0;
+                    var first_data = result.FirstOrDefault();
+                    if (first_data.total_records == 0 && first_data.size == 0)
+                    {
+                        last_page = 0;
+                    }
+                    else
+                    {
+                        double paging = (double)first_data.total_records / first_data.size;
+                        last_page = Math.Floor(paging) + 1;
+                    }
                 }
-                else
-                {
-                    double paging = (double)first_data.total_records / first_data.size;
-                    last_page = Math.Floor(paging) + 1;
-                }
+                return Ok(new SearchResponseModel<List<CompanyModel>> { last_page = last_page, data = result, searchType = "company" });
             }
-            return new SearchResponseModel<List<CompanyModel>> { last_page = last_page, data = result, searchType = "company" };
+            catch (Exception ex) {
+                return InternalServerError();
+            }
         }
 
         [Route("api/search/blogs")]
         [HttpPost]
-        public async Task<SearchResponseModel<List<BlogModel>>> GetSerachResultBlog(SearchAPIModel data)
+        [ResponseType(typeof(SearchResponseModel<List<BlogModel>>))]
+        public async Task<IHttpActionResult> GetSerachResultBlog(SearchAPIModel data)
         {
-            var result = await mobileAPIService.GetBlogsSearchResult(data);
-            double last_page = 0;
-            if (result != null && result.Count() > 0)
+            try
             {
-                var first_data = result.FirstOrDefault();
-                if (first_data.total_records == 0 && first_data.size == 0)
+                var result = await mobileAPIService.GetBlogsSearchResult(data);
+                double last_page = 0;
+                if (result != null && result.Count() > 0)
                 {
-                    last_page = 0;
+                    var first_data = result.FirstOrDefault();
+                    if (first_data.total_records == 0 && first_data.size == 0)
+                    {
+                        last_page = 0;
+                    }
+                    else
+                    {
+                        double paging = (double)first_data.total_records / first_data.size;
+                        last_page = Math.Floor(paging) + 1;
+                    }
                 }
-                else
-                {
-                    double paging = (double)first_data.total_records / first_data.size;
-                    last_page = Math.Floor(paging) + 1;
-                }
+                return Ok(new SearchResponseModel<List<BlogModel>> { last_page = last_page, data = result, searchType = "blog" });
             }
-            return new SearchResponseModel<List<BlogModel>> { last_page = last_page, data = result, searchType = "blog" };
+            catch (Exception ex) {
+                return InternalServerError();
+            }
         }
-
-
-        
     }
 }

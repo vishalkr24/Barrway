@@ -1,11 +1,7 @@
 ﻿using Barrway.DTO.APIModels.Company;
 using Barrway.DTO.APIModels.Dashboard;
 using Barrway.DTO.APIModels.SearchAPI;
-using Barrway.DTO.Common;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Barrway.Service.IRepository
@@ -24,11 +20,9 @@ namespace Barrway.Service.IRepository
 
         Task<Company> GetCompany(string CompanyCode);
 
-        Task<AddUpdateDelete> GetCompanyCalendarPackages(string CompanyCode);
-        
-        Task<AddUpdateDelete> GetCompanyServiceDescription(string CompanyCode);
-        Task<AddUpdateDelete> GetCompanyServiceList(string CompanyCode);
-        Task<AddUpdateDelete> GetCompanyPhotoGallery(string CompanyCode);
+        Task<Dictionary<string, List<IDictionary<string, object>>>> GetCompanyCalendarPackages(string code);
+        Task<List<ServiceList>> GetCompanyServiceList(string code);
+        Task<List<PhotoGalleryModel>> GetCompanyPhotoGallery(string code);
 
 
 

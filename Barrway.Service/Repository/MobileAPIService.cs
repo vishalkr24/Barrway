@@ -133,7 +133,7 @@ namespace Barrway.Service.Repository
             if (data.districtIds != null && data.districtIds.Count()>0)
             {
                 string commaSeparatedIds = string.Join(",", data.districtIds);
-                filterQueryList.Add(" (calendar.CITY_ID in (" + commaSeparatedIds + ") ) ");
+                filterQueryList.Add(" (calendar.DISTRICT_ID in (" + commaSeparatedIds + ") ) ");
             }
 
             if (data.subcatIds != null && data.subcatIds.Count()>0)
@@ -358,86 +358,39 @@ namespace Barrway.Service.Repository
             }
         }
 
-
-
-        public async Task<AddUpdateDelete> GetCompanyServiceDescription(string CompanyCode)
+        public async Task<List<ServiceList>> GetCompanyServiceList(string code)
         {
-            try
-            {
-
-                string query = $@"select COMPANY_SERVICE from BUSINESS_COMPANY_MASTER_1924 where COMPANY_CODE='{CompanyCode}'";                
-                var calendarCodesResult = await sqlFunction.ExecuteSqlQuery(query);              
-
-                return new AddUpdateDelete() { Status = (calendarCodesResult.Count > 0) ? true : false, Message = "Success", Data = calendarCodesResult.FirstOrDefault() };
-
-            }
-            catch (Exception ex)
-            {
-                return new AddUpdateDelete() { Status = false, Message = ex.Message.ToString() };
-            }
-        }
-
-        public async Task<AddUpdateDelete> GetCompanyServiceList(string CompanyCode)
-        {
-            try
-            {
-
-                string query = $@"select Id,ACTIVITY_NAME,DESCRIPTION from SERVICE_MASTER_1933  where COMPANY_CODE='{CompanyCode}'";
-                var calendarCodesResult = await sqlFunction.ExecuteSqlQuery(query);
-
-                return new AddUpdateDelete() { Status = (calendarCodesResult.Count > 0) ? true : false, Message = "Success", Data = calendarCodesResult };
-
-            }
-            catch (Exception ex)
-            {
-                return new AddUpdateDelete() { Status = false, Message = ex.Message.ToString() };
-            }
+            string query = $@"select Id,ACTIVITY_NAME,DESCRIPTION from SERVICE_MASTER_1933  where COMPANY_CODE='{code}'";
+            var serviceList = (await sqlFunction.ExecuteSqlQuery<ServiceList>(query)).ToList();
+            return serviceList;
         }
 
 
-        public async Task<AddUpdateDelete> GetCompanyPhotoGallery(string CompanyCode)
+        public async Task<List<PhotoGalleryModel>> GetCompanyPhotoGallery(string code)
         {
-            try
-            {
-
-                string query = $@"SELECT [Id]
-                              ,[ALBUM_PHOTO_NAME]
-                              ,[ALBUM_PHOTO_PATH]
-                              ,[IS_VISIBLE]
-	                          ,[COMPANY_ID]
-                              ,[created_at]
-                              ,[updated_at]
-                              ,[created_by]
-                              ,[updated_by]
-                          FROM [dbo].[BUSINESS_PHOTO_ALBUM_1922] where COMPANY_ID =(select top 1 Id from [dbo].[BUSINESS_COMPANY_MASTER_1924] where COMPANY_CODE='{CompanyCode}')   Order by Id desc";
-                var Photos = await sqlFunction.ExecuteSqlQuery(query);
-
-                return new AddUpdateDelete() { Status = (Photos.Count > 0) ? true : false, Message = "Success", Data = Photos };
-
-            }
-            catch (Exception ex)
-            {
-                return new AddUpdateDelete() { Status = false, Message = ex.Message.ToString() };
-            }
+            string query = $@"SELECT cmp.[Id],[ALBUM_PHOTO_NAME],[ALBUM_PHOTO_PATH]
+							FROM [dbo].[BUSINESS_PHOTO_ALBUM_1922] ph 
+							join [dbo].[BUSINESS_COMPANY_MASTER_1924] cmp on cmp.Id=ph.COMPANY_ID 
+							where cmp.COMPANY_CODE ='CMP00084' and ph.IS_VISIBLE='Y'";
+            var result = (await sqlFunction.ExecuteSqlQuery<PhotoGalleryModel>(query)).ToList();
+            result.ForEach(x => x.ALBUM_PHOTO_PATH = GetFilepath(x.ALBUM_PHOTO_PATH));
+            return result;
         }
 
 
 
-        public async Task<AddUpdateDelete> GetCompanyCalendarPackages(string CompanyCode)
+        public async Task<Dictionary<string, List<IDictionary<string, object>>>> GetCompanyCalendarPackages(string code)
         {
-            try
-            {
-
-                string query = $@"select * from CALENDAR_PACKAGE_MASTER_1952 
-                            where COMPANY_CODE = '{CompanyCode}' and IS_ACTIVE = 'Y'
+            string query = $@"select * from CALENDAR_PACKAGE_MASTER_1952 
+                            where COMPANY_CODE = '{code}' and IS_ACTIVE = 'Y'
                             order by PACKAGE_SEQUENCE, created_at";
-                List<IDictionary<string, object>> packageResult = await sqlFunction.ExecuteSqlQuery(query);
+            List<IDictionary<string, object>> packageResult = await sqlFunction.ExecuteSqlQuery(query);
 
-                query = $@"select STUFF((SELECT ',' + '''' + convert(nvarchar, f2.CALENDAR_CODE) + '''' from CALENDAR_PACKAGE_MASTER_1952 f2    
-                                                                where f2.COMPANY_CODE = '{CompanyCode}'   FOR XML PATH('')), 1, 1, '') as 'CalendarCodes'";
-                var calendarCodesResult = await sqlFunction.ExecuteSqlQuery(query);
+            query = $@"select STUFF((SELECT ',' + '''' + convert(nvarchar, f2.CALENDAR_CODE) + '''' from CALENDAR_PACKAGE_MASTER_1952 f2    
+                                                                where f2.COMPANY_CODE = '{code}'   FOR XML PATH('')), 1, 1, '') as 'CalendarCodes'";
+            var calendarCodesResult = await sqlFunction.ExecuteSqlQuery(query);
 
-                query = $@"
+            query = $@"
                                 IF OBJECT_ID(N'tempdb..#temptable') IS NOT NULL  BEGIN DROP TABLE #temptable END;
                                 with cte2 as (
                                  select distinct  f.*,
@@ -468,19 +421,11 @@ namespace Barrway.Service.Repository
 								
 								from #temptable cf";
 
-                
-                List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
-                Dictionary<string, List<IDictionary<string, object>>> finalResult = new Dictionary<string, List<IDictionary<string, object>>>();
-                finalResult.Add("calendarList", result);
-                finalResult.Add("PackageList",packageResult);
 
-                return new AddUpdateDelete() { Status = (packageResult.Count > 0) ? true : false, Message = "Success", Data = finalResult };
-
-            }
-            catch (Exception ex)
-            {
-                return new AddUpdateDelete() { Status = false, Message = ex.Message.ToString() };
-            }
+            List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+            Dictionary<string, List<IDictionary<string, object>>> response = new Dictionary<string, List<IDictionary<string, object>>>() {
+                                                                             { "calendarList",result},{ "packageList",packageResult } };
+            return response;
         }
 
 
@@ -521,7 +466,7 @@ namespace Barrway.Service.Repository
             }
 
         }
-        private string GetFilepath(string path, string type)
+        private string GetFilepath(string path, string type="")
         {
 
             if (!string.IsNullOrEmpty(path) && path.Contains("/"))
