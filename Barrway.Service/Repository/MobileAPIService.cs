@@ -381,8 +381,7 @@ namespace Barrway.Service.Repository
         {
             try
             {
-
-                string query = $@"select Id,ACTIVITY_NAME,DESCRIPTION from SERVICE_MASTER_1933  where COMPANY_CODE='{CompanyCode}'";
+                string query = $@"select Sm.Id,Sm.ACTIVITY_NAME,Sm.DESCRIPTION,(select isnull(ROUND(AVG(REVIEW_SCORE), 2),0) from SESSION_REVIEWS_1983 where CALENDAR_CODE=Sm.CALENDAR_CODE) as REVIEW_SCORE  from SERVICE_MASTER_1933 Sm   where Sm.COMPANY_CODE='{CompanyCode}'";
                 var calendarCodesResult = await sqlFunction.ExecuteSqlQuery(query);
 
                 return new AddUpdateDelete() { Status = (calendarCodesResult.Count > 0) ? true : false, Message = "Success", Data = calendarCodesResult };
