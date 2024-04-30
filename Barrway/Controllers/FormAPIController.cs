@@ -461,23 +461,15 @@ namespace Barrway.Controllers
                                 {
                                     item.Add("IsAlreadyBooked", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["IsAlreadyBooked"]);
                                     item.Add("ATTEND", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["ATTEND"]);
+                                    item.Add("IsReviewable", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["IsReviewable"]);
                                     item.Add("TransactionId", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["TransactionId"]);
-                                    //if (DateTimeUtility.Now() > Convert.ToDateTime(alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["end"]?.ToString()) && alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["SESSION_REVIEWED"]?.ToString() == "N")
-                                    if (DateTimeUtility.Now() > Convert.ToDateTime(alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["end"]?.ToString()))
-                                    {
-                                        item.Add("IsReviewable", 'Y');
-                                    }
-                                    else
-                                    {
-                                        item.Add("IsReviewable", 'N');
-                                    }
                                 }
                                 else
                                 {
                                     item.Add("IsAlreadyBooked", 'N');
                                     item.Add("IsReviewable", 'N');
                                     item.Add("ATTEND", 'N');
-                                    item.Add("TransactionId", "N");
+                                    item.Add("TransactionId", '0');
                                 }
                             }
                         }

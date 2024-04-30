@@ -717,12 +717,7 @@ namespace Barrway.Controllers
             return Json(schedularData);
         }
 
-        public async Task<ActionResult> GetCourseEvents(string ServiceId)
-        {
-            var EventsData = await businessUserService.GetCourseEvents(ServiceId, UserIdentity.UserEmail);
-
-            return Json(EventsData, JsonRequestBehavior.AllowGet);
-        }
+        
 
         [HttpPost]
         public async Task<ActionResult> AddQueueSession(Dictionary<string, List<Dictionary<string, string>>> data, string ScheduleId)
