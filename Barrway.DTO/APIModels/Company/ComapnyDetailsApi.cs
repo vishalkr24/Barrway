@@ -31,6 +31,7 @@ namespace Barrway.DTO.APIModels.Company
         public int Id { get; set; }
         public string ACTIVITY_NAME { get; set; }
         public string DESCRIPTION { get; set; }
+        public decimal REVIEW_SCORE { get; set; }
     }
 
     public class ServiceString
