@@ -204,6 +204,8 @@ namespace Barrway.Controllers
             }
         }
 
+        [ValidateInput(false)]
+        [HttpPost]
         public async Task<ActionResult> EnrollCourse(CalendarEnrollModel model)
         {
             try
@@ -701,6 +703,7 @@ namespace Barrway.Controllers
             }
         }
 
+
         /// <summary>
         /// It will generate a QR of attendee booking for company to scan it
         /// </summary>
@@ -888,12 +891,14 @@ namespace Barrway.Controllers
         }
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult> GetEnrollUserDetails(int id) {
+        public async Task<ActionResult> GetEnrollUserDetails(int id)
+        {
 
-            if (!User.Identity.IsAuthenticated) {
-                return Json(new AddUpdateDelete() {Status=false,Message=AppMessage.NotFound }, JsonRequestBehavior.AllowGet);
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound }, JsonRequestBehavior.AllowGet);
             }
-            return Json(await businessUserService.GetEnrollUserDetails(id, UserIdentity.UserEmail),JsonRequestBehavior.AllowGet);
+            return Json(await businessUserService.GetEnrollUserDetails(id, UserIdentity.UserEmail), JsonRequestBehavior.AllowGet);
         }
 
 
@@ -946,7 +951,7 @@ namespace Barrway.Controllers
                 if (int.TryParse(eventid, out _eventId))
                 {
 
-                    var upload_result = (await businessUserService.GetEnrollUserDetails(_eventId,UserIdentity.UserEmail)).Data as IDictionary<string, object>;
+                    var upload_result = (await businessUserService.GetEnrollUserDetails(_eventId, UserIdentity.UserEmail)).Data as IDictionary<string, object>;
                     if (upload_result != null)
                     {
                         var result = upload_result;
@@ -980,7 +985,7 @@ namespace Barrway.Controllers
 
         }
 
-        
+
 
 
         [HttpPost]
@@ -1024,7 +1029,8 @@ namespace Barrway.Controllers
         {
             try
             {
-                if (string.IsNullOrEmpty(json?.Trim())) {
+                if (string.IsNullOrEmpty(json?.Trim()))
+                {
                     return false;
                 }
                 var parse_json = JsonConvert.DeserializeObject<List<IDictionary<string, object>>>(json);

@@ -198,7 +198,7 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> EnrollPublicUserForCalendar(CalendarEnrollModel model, bool isServiceType = false, string PaymentId = null )
+        public async Task<AddUpdateDelete> EnrollPublicUserForCalendar(CalendarEnrollModel model, bool isServiceType = false, string PaymentId = null)
         {
             var user = await authService.GetUser(model.USER_ID, FormRole.GENERAL_USER);
 
@@ -337,7 +337,7 @@ namespace Barrway.Service.Repository
                 data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.participant.ToDictionary());
                 data.formGroupKey = Guid.NewGuid().ToString();
                 var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
-                
+
                 if (formResult.res == 1)
                 {
                     StudentId = formResult.Id.ToString();
@@ -1201,7 +1201,7 @@ namespace Barrway.Service.Repository
 
                                 var ledgerResult = await masterService.CreateLedgerEntry(ledger);
                             }
-                            
+
 
                             return new AddUpdateDelete() { Status = true, Message = "Success", Data = formResult2.Id };
                         }
@@ -2225,7 +2225,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
                     {
                         if (Convert.ToInt32(balance.Data) < ServiceFees)
                         {
-                            return new AddUpdateDelete() { Status = false, Message = $"You have {balance.Data} credits, not enough to book this slot." , Data = ServiceFees.ToString() };
+                            return new AddUpdateDelete() { Status = false, Message = $"You have {balance.Data} credits, not enough to book this slot.", Data = ServiceFees.ToString() };
                         }
                     }
                     else
@@ -2446,15 +2446,9 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
                                 , (dbo.[GetSubQueryCalender](f.formGroupKey)) customTitle,   (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceFormId) from form_calenderreferrence f2     
                                 where f2.formgroupkey = f.formGroupKey  FOR XML PATH('')), 1, 1, '')   ) customForms  , (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceId) from form_calenderreferrence f2    
                                 where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) customFormIds,  '' referrences_1,  '' referrences_2,  '' referrences_3   
-                                , case when (transaction_m.SLOT is not null and participant.EMAIL = '{UserEmail}') then 'Y' else 'N' end as 'IsAlreadyBooked'
-                                , (select case when ((cast('{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' as datetime) >= cast((DATEADD(minute, -30, f.[start])) as datetime) and cast('{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' as datetime) <= cast(f.[end] as datetime) ) and transaction_m.ATTENDANCE != 'PRESENT') then 'Y' else 'N' end) as 'ATTEND'
-                                , case when review.Id is not null then 'Y' else 'N' end as 'SESSION_REVIEWED'
-                                , transaction_m.Id as 'TransactionId'
+                                
                                 from CALENDAR_FORM_1935 f  
                                   join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
-                                  left join TRANSACTION_MASTER_1942 transaction_m on f.Id = transaction_m.SLOT
-                                  left join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
-                                  left join SESSION_REVIEWS_1983 review on review.EVENT_ID = f.Id and review.USER_EMAIL = participant.EMAIL
                                 where
                                 f.formid=2305 and
                                 {FilterDate} ),
@@ -2462,12 +2456,62 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
                                 select* into #temptable from cte2  where len(customtitle)>0;    declare @counter int= 0, @c int= 1;   
                                 select @counter = (select count(1) from #temptable)	while @c <= @counter    begin    select @customTitleQuery = customTitle from #temptable where ROWNUMBER=@c;	SET @sQuery= ' select @retvalOUT = (' + @customTitleQuery + ')'  
                                 SET @ParmDefinition = N'@retvalOUT nvarchar(max) OUTPUT';
-                                EXEC sp_executesql @sQuery, @ParmDefinition, @retvalOUT = @retval OUTPUT;    update #temptable set customTitle=@retval where ROWNUMBER=@c;	set @c = @c + 1;  end  select* from #temptable
+                                EXEC sp_executesql @sQuery, @ParmDefinition, @retvalOUT = @retval OUTPUT;    update #temptable set customTitle=@retval where ROWNUMBER=@c;	set @c = @c + 1;  end  select *, 'N' as 'IsAlreadyBooked', 'N' as 'ATTEND', '0' as 'TransactionId', 'N' as 'IsReviewable' from #temptable
                                 ";
 
                 List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
+                query = $@"select transaction_m.* 
+                        , 'Y' as 'IsAlreadyBooked'
+                        , (select case when ((cast('{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' as datetime) >= cast((DATEADD(minute, -30, f.[start])) as datetime) and cast('{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' as datetime) <= cast(f.[end] as datetime) ) and transaction_m.ATTENDANCE != 'PRESENT') then 'Y' else 'N' end) as 'ATTEND'
+                        , case when review.Id is not null then 'Y' else 'N' end as 'SESSION_REVIEWED'
+                        from TRANSACTION_MASTER_1942 transaction_m 
+                        join CALENDAR_FORM_1935 f on f.Id = transaction_m.SLOT
+                        join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
+                        left join SESSION_REVIEWS_1983 review on review.EVENT_ID = transaction_m.SLOT and review.USER_EMAIL = participant.EMAIL
+                        where participant.EMAIL = '{UserEmail}' and transaction_m.COMPANY_CODE = '{CompanyCode}'";
+
+                var alreadyEnrolledEvents = await sqlFunction.ExecuteSqlQuery(query);
+
+                if (alreadyEnrolledEvents != null)
+                {
+                    if (alreadyEnrolledEvents.Count > 0)
+                    {
+                        if (result != null)
+                        {
+                            foreach (var item in result)
+                            {
+                                if (alreadyEnrolledEvents.Any(x => x["SLOT"]?.ToString() == item["Id"]?.ToString()))
+                                {
+                                    item["IsAlreadyBooked"] = 'Y';
+                                    item["ATTEND"] = alreadyEnrolledEvents.FirstOrDefault(x => x["SLOT"]?.ToString() == item["Id"]?.ToString())["ATTEND"];
+                                    item["TransactionId"] = alreadyEnrolledEvents.FirstOrDefault(x => x["SLOT"]?.ToString() == item["Id"]?.ToString())["Id"];
+                                    //if (DateTimeUtility.Now() > Convert.ToDateTime(alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["end"]?.ToString()) && alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["SESSION_REVIEWED"]?.ToString() == "N")
+                                    if (DateTimeUtility.Now() > Convert.ToDateTime(item["start"]?.ToString()))
+                                    {
+                                        item["IsReviewable"]='Y';
+                                    }
+                                    else
+                                    {
+                                        item["IsReviewable"]= 'N';
+                                    }
+                                }
+                                else
+                                {
+                                    item["IsAlreadyBooked"] = 'N';
+                                    item["IsReviewable"] = 'N';
+                                    item["ATTEND"] = 'N';
+                                    item["TransactionId"] = '0';
+                                }
+                            }
+                        }
+                    }
+                }
+
                 return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
+
+
+
             }
             catch (Exception ex)
             {

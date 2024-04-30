@@ -1396,17 +1396,19 @@ namespace Barrway.Service.Repository
         {
             string sqlQuery = $@"select 
                                     case when (t.Id is not null and p.Id is not null) then 'Y' else 'N' end as 'IsBooked'
+                                    , (select case when ((cast('{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' as datetime) >= cast((DATEADD(minute, -30, f.[start])) as datetime) and cast('{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' as datetime) <= cast(f.[end] as datetime) ) and t.ATTENDANCE != 'PRESENT' and (t.Id is not null and p.Id is not null)) then 'Y' else 'N' end) as 'ATTEND'
+                                    ,(select case when (f.[start] < '{DateTimeUtility.Now().ToString("yyyy-MM-dd")}') then 'Y' else 'N' end) as 'IsPreviousSession'                              
                                     ,f.* from CALENDAR_FORM_1935 f 
                                     left join TRANSACTION_MASTER_1942 t on f.Id = t.SLOT
                                     left join (select * from PARTICIPANT_MASTER_1940 where EMAIL = '{UserEmail}') p on p.Id = t.STUDENT
-                                    where f.IS_COURSE_EVENT = 'Y' and f.activities = '{ServiceId}' and f.[start] >= '{DateTimeUtility.Now().ToString("yyyy-MM-dd")}'";
+                                    where f.IS_COURSE_EVENT = 'Y' and f.activities = '{ServiceId}'";
 
             var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
             sqlQuery = $@"select distinct substring(f.[start], 1, 10) as 'start' from CALENDAR_FORM_1935 f 
                                     left join TRANSACTION_MASTER_1942 t on f.Id = t.SLOT
                                     left join (select * from PARTICIPANT_MASTER_1940 where EMAIL = '{UserEmail}') p on p.Id = t.STUDENT
-                                    where f.IS_COURSE_EVENT = 'Y' and f.activities = '{ServiceId}' and f.[start] >= '{DateTimeUtility.Now().ToString("yyyy-MM-dd")}'";
+                                    where f.IS_COURSE_EVENT = 'Y' and f.activities = '{ServiceId}'";
 
             var Dates = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
