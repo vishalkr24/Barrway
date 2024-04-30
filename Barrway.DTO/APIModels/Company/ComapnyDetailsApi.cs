@@ -16,9 +16,13 @@ namespace Barrway.DTO.APIModels.Company
 
     public class CompanyServiceDetails
     {
-        public String ServiceDescription { get; set; }
+        public CompanyServiceDetails()
+        {
+            SERVICE_LIST = new List<ServiceList>();
+        }
+        public string SERVICE_DESC { get; set; }
 
-        public List<ServiceList> ServiceList { get; set; }
+        public List<ServiceList> SERVICE_LIST { get; set; }
     }
 
 

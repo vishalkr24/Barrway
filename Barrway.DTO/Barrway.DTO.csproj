@@ -72,6 +72,7 @@
     <Compile Include="APIModels\Account\UserClaimViewModel.cs" />
     <Compile Include="APIModels\Company\ComapnyDetailsApi.cs" />
     <Compile Include="APIModels\Company\Company.cs" />
+    <Compile Include="APIModels\Company\PhotoGalleryModel.cs" />
     <Compile Include="APIModels\Dashboard\CalendarModel.cs" />
     <Compile Include="APIModels\Dashboard\DashboardModel.cs" />
     <Compile Include="APIModels\Dashboard\FeatureBlogModel.cs" />

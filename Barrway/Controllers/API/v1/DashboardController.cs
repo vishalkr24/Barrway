@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 
 namespace Barrway.Controllers.API.v1
 {
@@ -20,27 +21,50 @@ namespace Barrway.Controllers.API.v1
         {
             this.mobileAPIService = mobileAPIService;
         }
+
         [HttpGet]
         [Route("api/dashboard/filters")]
-        public async Task<SearchFilterModel> GetSearchFilters() { 
-        return await mobileAPIService.GetSearchFilter();
+        [ResponseType(typeof(SearchFilterModel))]
+        public async Task<IHttpActionResult> GetSearchFilters()
+        {
+            try
+            {
+                return Ok(await mobileAPIService.GetSearchFilter());
+            }
+            catch(Exception ex){
+                return InternalServerError();
+            }
         }
+
         [HttpGet]
         [Route("api/dashboard/categories")]
-        public async Task<List<CategoryModel>> GetCategoryList()
+        [ResponseType(typeof(List<CategoryModel>))]
+        public async Task<IHttpActionResult> GetCategoryList()
         {
-            return await mobileAPIService.GetCategoryList();
+            try
+            {
+                return Ok(await mobileAPIService.GetCategoryList());
+            }
+            catch(Exception ex){
+                return InternalServerError();
+            }
         }
 
         [HttpGet]
         [Route("api/dashboard/info")]
-        public async Task<DashboardInfoData> GetDashboardData()
+        [ResponseType(typeof(DashboardInfoData))]
+        public async Task<IHttpActionResult> GetDashboardData()
         {
-            DashboardInfoData dashboardInfo = new DashboardInfoData();
-            dashboardInfo.calendars = await mobileAPIService.GetDashboardCalendarList();
-            dashboardInfo.feature_blogs = await mobileAPIService.GetFeatureBlogs();
-            dashboardInfo.feature_companies=await mobileAPIService.GetFeatureCompanies();
-            return dashboardInfo;
+            try
+            {
+                DashboardInfoData dashboardInfo = new DashboardInfoData();
+                dashboardInfo.calendars = await mobileAPIService.GetDashboardCalendarList();
+                dashboardInfo.feature_blogs = await mobileAPIService.GetFeatureBlogs();
+                dashboardInfo.feature_companies = await mobileAPIService.GetFeatureCompanies();
+                return Ok(dashboardInfo);
+            } catch(Exception ex) {
+                return InternalServerError();
+            }
         }
     }
 }

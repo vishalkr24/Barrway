@@ -1,4 +1,4 @@
-﻿using Barrway.DTO.APIModels.Company;
+using Barrway.DTO.APIModels.Company;
 using Barrway.Security;
 using Barrway.Service.IRepository;
 using Newtonsoft.Json;
@@ -46,62 +46,67 @@ namespace Barrway.Controllers.API.v1
             }
         }
 
-        [Route("api/GetCompanyServices/{CompanyCode?}")]
-        [HttpPost]
-        public async Task<ComapnyInformationApi<CompanyServiceDetails>> GetCompanyServices(string CompanyCode)
+        [Route("api/company/{code?}/service")]
+        [HttpGet]
+        [ResponseType(typeof(CompanyServiceDetails))]
+        public async Task<IHttpActionResult> GetCompanyServices(string code)
         {
             try
             {
-                CompanyServiceDetails Data = new CompanyServiceDetails();
-                var companyServiceDescription = await mobileAPIService.GetCompanyServiceDescription(CompanyCode);   
-                if(companyServiceDescription.Data != null)
-                {                                      
-                    Data.ServiceDescription = companyServiceDescription.Data["COMPANY_SERVICE"];
-                }                
-             
-                var ComapServiceList = await mobileAPIService.GetCompanyServiceList(CompanyCode);
-                Data.ServiceList = JsonConvert.DeserializeObject<List<ServiceList>>(JsonConvert.SerializeObject(ComapServiceList.Data));
-                return new ComapnyInformationApi<CompanyServiceDetails> { Data = Data, Status = true, Message = "Success" };
+                var company = await mobileAPIService.GetCompany(code);
+
+                if (company == null)
+                {
+                    return NotFound(); // Return 404 status code
+                }
+                CompanyServiceDetails response = new CompanyServiceDetails() { SERVICE_DESC=company.COMPANY_SERVICE};
+                response.SERVICE_LIST = await mobileAPIService.GetCompanyServiceList(code);
+                return Ok(response);
             }
             catch (Exception ex)
             {
-                return new ComapnyInformationApi<CompanyServiceDetails> { Data = null, Status = false, Message = "Error" };
+                return InternalServerError();
             }
         }
 
 
-        [Route("api/GetCompanyPackages/{CompanyCode?}")]
-        [HttpPost]
-        public async Task<ComapnyInformationApi<List<object>>> GetCompanyPackages(string CompanyCode)
+        [Route("api/company/{code?}/package")]
+        [HttpGet]
+        [ResponseType(typeof(Dictionary<string, List<IDictionary<string, object>>>))]
+        public async Task<IHttpActionResult> GetCompanyPackages(string code)
         {
             try
             {
-                var Data = await mobileAPIService.GetCompanyCalendarPackages(CompanyCode);
+                var company = await mobileAPIService.GetCompany(code);
 
-                return new ComapnyInformationApi<List<object>> { Data = Data, Status = true, Message = "Success" };
+                if (company == null)
+                {
+                    return NotFound(); // Return 404 status code
+                }
+
+                return Ok(await mobileAPIService.GetCompanyCalendarPackages(code));
             }
             catch (Exception ex)
             {
-                return new ComapnyInformationApi<List<object>> { Data = null, Status = false, Message = "Error" };
+                return InternalServerError();
             }
         }
 
 
 
 
-        [Route("api/GetCompanyPhotoGallery/{CompanyCode?}")]
-        [HttpPost]
-        public async Task<ComapnyInformationApi<List<object>>> GetCompanyPhotoGallery(string CompanyCode)
+        [Route("api/company/{code?}/photos")]
+        [HttpGet]
+        [ResponseType(typeof(List<PhotoGalleryModel>))]
+        public async Task<IHttpActionResult> GetCompanyPhotoGallery(string code)
         {
             try
             {
-                var Data = await mobileAPIService.GetCompanyPhotoGallery(CompanyCode);
-
-                return new ComapnyInformationApi<List<object>> { Data = Data, Status = true, Message = "Success" };
+               return Ok(await mobileAPIService.GetCompanyPhotoGallery(code));
             }
             catch (Exception ex)
             {
-                return new ComapnyInformationApi<List<object>> { Data = null, Status = false, Message = "Error" };
+                return InternalServerError();
             }
         }
     }
