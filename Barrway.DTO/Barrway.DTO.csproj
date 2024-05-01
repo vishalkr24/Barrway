@@ -70,6 +70,7 @@
     <Compile Include="APIModels\Account\APIEmailSignUpModel.cs" />
     <Compile Include="APIModels\Account\LoginViewModel.cs" />
     <Compile Include="APIModels\Account\UserClaimViewModel.cs" />
+    <Compile Include="APIModels\Booking\MyBooking.cs" />
     <Compile Include="APIModels\Company\ComapnyDetailsApi.cs" />
     <Compile Include="APIModels\Company\Company.cs" />
     <Compile Include="APIModels\Company\PhotoGalleryModel.cs" />
