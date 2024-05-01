@@ -20,7 +20,8 @@ namespace Barrway.Service.IRepository
 
         Task<Company> GetCompany(string CompanyCode);
 
-        Task<Dictionary<string, List<IDictionary<string, object>>>> GetCompanyCalendarPackages(string code);
+        //Task<Dictionary<string, List<IDictionary<string, object>>>> GetCompanyCalendarPackages(string code);
+        Task<companyPackage> GetCompanyCalendarPackages(string code);
         Task<List<ServiceList>> GetCompanyServiceList(string code);
         Task<List<PhotoGalleryModel>> GetCompanyPhotoGallery(string code);
 

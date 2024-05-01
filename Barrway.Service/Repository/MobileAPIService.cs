@@ -380,52 +380,39 @@ namespace Barrway.Service.Repository
 
 
 
-        public async Task<Dictionary<string, List<IDictionary<string, object>>>> GetCompanyCalendarPackages(string code)
+        public async Task<companyPackage> GetCompanyCalendarPackages(string code)
         {
-            string query = $@"select * from CALENDAR_PACKAGE_MASTER_1952 
-                            where COMPANY_CODE = '{code}' and IS_ACTIVE = 'Y'
-                            order by PACKAGE_SEQUENCE, created_at";
-            List<IDictionary<string, object>> packageResult = await sqlFunction.ExecuteSqlQuery(query);
 
-            query = $@"select STUFF((SELECT ',' + '''' + convert(nvarchar, f2.CALENDAR_CODE) + '''' from CALENDAR_PACKAGE_MASTER_1952 f2    
-                                                                where f2.COMPANY_CODE = '{code}'   FOR XML PATH('')), 1, 1, '') as 'CalendarCodes'";
+            
+            string query = $@"SELECT * FROM CALENDAR_PACKAGE_MASTER_1952 
+                  WHERE COMPANY_CODE = '{code}' AND IS_ACTIVE = 'Y'
+                  ORDER BY PACKAGE_SEQUENCE, created_at";
+            var packageResult = await sqlFunction.ExecuteSqlQuery<Packagemaster>(query);
+
+
+
+            query = $@"select STUFF((SELECT ',' + '''' + convert(nvarchar, f2.CALENDAR_CODE) + '''' from CALENDAR_PACKAGE_MASTER_1952 f2 where f2.COMPANY_CODE = '{code}'   FOR XML PATH('')), 1, 1, '') as 'CalendarCodes'";
             var calendarCodesResult = await sqlFunction.ExecuteSqlQuery(query);
 
-            query = $@"
-                                IF OBJECT_ID(N'tempdb..#temptable') IS NOT NULL  BEGIN DROP TABLE #temptable END;
-                                with cte2 as (
-                                 select distinct  f.*,
-	                                f.resources 'resourceId',
-	                                bcm.CALENDAR_NAME,
-	                                subCategory.CALENDAR_SUB_CATEGORY_NAME,
-									bcm.CALENDAR_PHOTO_PATH
-	                                from CALENDAR_FORM_1935 f  
-	                                join BUSINESS_CALENDAR_MASTER_1925 bcm on bcm.CALENDAR_CODE = f.CALENDAR_CODE
+            query = $@" IF OBJECT_ID(N'tempdb..#temptable') IS NOT NULL  BEGIN DROP TABLE #temptable END;
+                                with cte2 as (select distinct  f.*,f.resources 'resourceId',bcm.CALENDAR_NAME,subCategory.CALENDAR_SUB_CATEGORY_NAME,bcm.CALENDAR_PHOTO_PATH
+	                                from CALENDAR_FORM_1935 f join BUSINESS_CALENDAR_MASTER_1925 bcm on bcm.CALENDAR_CODE = f.CALENDAR_CODE
 	                                join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory   ON ',' +  bcm.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
 	                                where   f.formid=2305 and f.CALENDAR_CODE {(!string.IsNullOrEmpty(calendarCodesResult[0]["CalendarCodes"].ToString()) ? " in (" + calendarCodesResult[0]["CalendarCodes"].ToString() + ")" : "= ''")}
                                 )
-                                select* into #temptable from cte2
-                               
-								select
-								distinct cf.CALENDAR_SUB_CATEGORY_NAME,
-								cf.CALENDAR_NAME,
-								cf.CALENDAR_CODE, 
-								cf.CALENDAR_PHOTO_PATH,
+                                select* into #temptable from cte2                               
+								select distinct cf.CALENDAR_SUB_CATEGORY_NAME, cf.CALENDAR_NAME, cf.CALENDAR_CODE, cf.CALENDAR_PHOTO_PATH,
 								STUFF((SELECT ', ' + R.ACTIVITY_NAME FROM SERVICE_MASTER_1933 AS R WHERE Id in (SELECT CAST(Item AS INTEGER) as Ids
-                                        FROM dbo.SplitString(
-										
-										(STUFF((SELECT distinct ','+ f.activities from CALENDAR_FORM_1935 f
-                                                                where f.formid=2305 and f.CALENDAR_CODE = cf.CALENDAR_CODE   FOR XML PATH('')), 1, 1, ''))
-										
-										
-										, ',')  ) FOR XML PATH('') ) ,1,1,'') as ActivityName
-								
+                                        FROM dbo.SplitString((STUFF((SELECT distinct ','+ f.activities from CALENDAR_FORM_1935 f  where f.formid=2305 and f.CALENDAR_CODE = cf.CALENDAR_CODE   FOR XML PATH('')), 1, 1, '')) , ',')  ) FOR XML PATH('') ) ,1,1,'') as ActivityName 					
 								from #temptable cf";
+           var result = await sqlFunction.ExecuteSqlQuery<CalanderService>(query);          
 
-
-            List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
-            Dictionary<string, List<IDictionary<string, object>>> response = new Dictionary<string, List<IDictionary<string, object>>>() {
-                                                                             { "calendarList",result},{ "packageList",packageResult } };
+            var response = new companyPackage
+            {
+                PackageList = (List<Packagemaster>)packageResult,
+                SERVICE_LIST = (List<CalanderService>)result
+            };
+            response.SERVICE_LIST.ForEach(x => x.CALENDAR_PHOTO_PATH = GetFilepath(x.CALENDAR_PHOTO_PATH));
             return response;
         }
 
