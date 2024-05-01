@@ -55,10 +55,13 @@
         <nav class="navbar no-mar-bott">
             <div class="container">
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle secondry-nav" data-toggle="collapse" data-target="#secondry-nav">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
+                    <button type="button" class="navbar-toggle secondry-nav collapsed" data-toggle="collapse" data-target="#secondry-nav">
+                        <div class="bars-inner">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </div>
+                        <img src="~/assets/img/cross.png" />
                     </button>
                     <a class="navbar-brand" href="javascript:void(0)" style="padding: 6px 15px"><img style="max-height: 48px; max-width: 400px;" src="@ViewBag.COMPANY_LOGO_PATH" onerror="this.src='/assets/marketplace/image/alogo22.png'"></a>
                 </div>
@@ -106,6 +109,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
+                       
                     </button>
                     <a class="navbar-brand" href="/Marketplace/Index"><img src="~/assets/marketplace/image/logo.png"></a>
                 </div>
