@@ -30,7 +30,8 @@ namespace Barrway.Security
                 Subject = new ClaimsIdentity(new[]
                         {
                             new Claim(ClaimTypes.Name, user["USER_ID"].ToString()),
-                            new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString())
+                            new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
+                             new Claim(ClaimTypes.Email, user["USER_EMAIL"].ToString())
                         }),
 
                 Expires = now.AddMinutes(Convert.ToInt32(AppSettings.token_expire_time)),

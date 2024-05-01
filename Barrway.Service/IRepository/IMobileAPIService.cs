@@ -1,6 +1,8 @@
-﻿using Barrway.DTO.APIModels.Company;
+﻿using Barrway.DTO.APIModels.Booking;
+using Barrway.DTO.APIModels.Company;
 using Barrway.DTO.APIModels.Dashboard;
 using Barrway.DTO.APIModels.SearchAPI;
+using Barrway.DTO.Common;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -24,6 +26,8 @@ namespace Barrway.Service.IRepository
         Task<companyPackage> GetCompanyCalendarPackages(string code);
         Task<List<ServiceList>> GetCompanyServiceList(string code);
         Task<List<PhotoGalleryModel>> GetCompanyPhotoGallery(string code);
+        
+        Task<List<ModifiedMyBooking>> GetMyBookings(string email, string Type, string EventId = null);
 
 
 
