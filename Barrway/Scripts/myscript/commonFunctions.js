@@ -15470,6 +15470,7 @@ function IsJsonString(str) {
 }
 
 function removeColumns(formid,columns) {
+
     removeActionButtion(formid);
 
     var removeColumnName = ['COMPANY CODE', 'CALENDAR CODE', 'COMPANY_CODE', 'CALENDAR_CODE'];
@@ -15485,7 +15486,9 @@ function removeColumns(formid,columns) {
     var removeColumnsFormid = [2240, 2242, 2267, 2311, 2326];
     var removeColumnName = ['Edit'];
     var excludeColumAllTable = ['Move Row'];
+
     columns = columns.filter(x => !excludeColumAllTable.find(y => x.title && x.title.split('|').find(z => z == y)))
+
     if (removeColumnsFormid.find(x => x == formid)) {
         return columns.filter(x => !removeColumnName.find(y => x.title && x.title.split('|').find(z => z == y)));
     }
@@ -15501,6 +15504,9 @@ function removeColumns(formid,columns) {
         columns = columns.filter(x => !removeColumnName.find(y => x.title && x.title.split('|').find(z => z == y)));
     }
 
+    if (formid == 2312) {
+        columns = columns.filter(x => x.field != 'referrences_2310' && x.field != "RESOURCE" && x.field != "ACTIVITY" && x.field != "USERTOKEN");
+    }
 
     return columns;
 }
@@ -15567,13 +15573,13 @@ function addNewColumns(formid, columns) {
 
                         $scope.AttendanceRecord.push({
                             Id: cell.getRow().getData().Id,
-                            Attendance: (cell.getRow().getData().ATTENDANCE == "Yes") ? "Present" : (cell.getRow().getData().ATTENDANCE == "No") ? "Absent" : "Unmarked",
+                            Attendance: cell.getRow().getData().ATTENDANCE,
                             IsUpdated: false,
                             CompanyCode: cell.getRow().getData().COMPANY_CODE
                         });
 
-                        return `<div><input type="radio" style="display:none;"  name="bulk_radio_${cell.getRow().getData().Id}" ${(cell.getRow().getData().ATTENDANCE == "Yes") ? "checked" : ""} id="bulk_radio_${cell.getRow().getData().Id}_p" value="Present" /> <label onclick="angular.element('#transaction-controller-div').scope().updateAttendanceRecord(${cell.getRow().getData().Id}, true)" for="bulk_radio_${cell.getRow().getData().Id}_p">Present</label></div>
-                                    <div><input type="radio" style="display:none;"  name="bulk_radio_${cell.getRow().getData().Id}" ${(cell.getRow().getData().ATTENDANCE == "No") ? "checked" : ""} id="bulk_radio_${cell.getRow().getData().Id}_a" value="Absent" /> <label onclick="angular.element('#transaction-controller-div').scope().updateAttendanceRecord(${cell.getRow().getData().Id}, false)" for="bulk_radio_${cell.getRow().getData().Id}_a">Absent</label></div>`
+                        return `<div><input type="radio" style="display:none;"  name="bulk_radio_${cell.getRow().getData().Id}" ${(cell.getRow().getData().ATTENDANCE == "PRESENT") ? "checked" : ""} id="bulk_radio_${cell.getRow().getData().Id}_p" value="PRESENT" /> <label onclick="angular.element('#transaction-controller-div').scope().updateAttendanceRecord(${cell.getRow().getData().Id}, true)" for="bulk_radio_${cell.getRow().getData().Id}_p">Present</label></div>
+                                    <div><input type="radio" style="display:none;"  name="bulk_radio_${cell.getRow().getData().Id}" ${(cell.getRow().getData().ATTENDANCE == "ABSENT") ? "checked" : ""} id="bulk_radio_${cell.getRow().getData().Id}_a" value="ABSENT" /> <label onclick="angular.element('#transaction-controller-div').scope().updateAttendanceRecord(${cell.getRow().getData().Id}, false)" for="bulk_radio_${cell.getRow().getData().Id}_a">Absent</label></div>`
                     }
 
 
@@ -15592,7 +15598,7 @@ function addNewColumns(formid, columns) {
     }
 
 
-    if (formidList.find(x => x == formid) != null) {
+    if (formidList.find(x => x == formid && x != 2305) != null) {
         columns.unshift({
             title: "COMPANY NAME", formatter: function (cell, formatter) {
                 return cell.getData().COMPANY_NAME_ENGLISH

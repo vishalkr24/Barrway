@@ -829,6 +829,7 @@ button.blogtag_num {
     width: 230px;
 }
 @media screen and (max-width:767px) {
+    
     .bmp-logo a img {
         height: 39px;
         width: 180px;

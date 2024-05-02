@@ -1,7 +1,12 @@
+
 ﻿using Barrway.DTO.APIModels.Calendar;
+
+﻿using Barrway.DTO.APIModels.Booking;
+
 using Barrway.DTO.APIModels.Company;
 using Barrway.DTO.APIModels.Dashboard;
 using Barrway.DTO.APIModels.SearchAPI;
+using Barrway.DTO.Common;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -21,10 +26,17 @@ namespace Barrway.Service.IRepository
 
         Task<Company> GetCompany(string CompanyCode);
 
-        Task<Dictionary<string, List<IDictionary<string, object>>>> GetCompanyCalendarPackages(string code);
+        //Task<Dictionary<string, List<IDictionary<string, object>>>> GetCompanyCalendarPackages(string code);
+        Task<companyPackage> GetCompanyCalendarPackages(string code);
         Task<List<ServiceList>> GetCompanyServiceList(string code);
         Task<List<PhotoGalleryModel>> GetCompanyPhotoGallery(string code);
+
         Task<List<IDictionary<string, object>>> GetEvents(CalendarRequestModel calendarRequest);
+
+        
+        Task<List<ModifiedMyBooking>> GetMyBookings(string email, string Type, string EventId = null);
+
+
 
 
     }

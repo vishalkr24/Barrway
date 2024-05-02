@@ -50,4 +50,4 @@ namespace Barrway.DTO.APIModels.Dashboard
         public int page { get; set; }
         public int size { get; set; }
     }
-}
+    }

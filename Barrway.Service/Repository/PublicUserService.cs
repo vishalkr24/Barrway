@@ -2173,39 +2173,54 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
             try
             {
                 var balance = await GetUserCoinBalance(UserId, CompanyCode, CalendarCode);
-                var service = await sqlFunction.ExecuteSqlQuery("select fees_1 from SERVICE_MASTER_1933 where Id = " + ServiceId);
+                var service = await sqlFunction.ExecuteSqlQuery("select fees_1, IS_SERVICE_PAID from SERVICE_MASTER_1933 where Id = " + ServiceId);
                 var calendar = await sqlFunction.ExecuteSqlQuery($@"select * from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE = '{CalendarCode}'");
 
                 bool IsServicePaid = false;
                 double ServiceFees = 0;
-
-                if (!string.IsNullOrEmpty(service[0]["fees_1"]?.ToString()))
+                if (!string.IsNullOrEmpty(service[0]["IS_SERVICE_PAID"]?.ToString()))
                 {
-                    if (Convert.ToInt32(service[0]["fees_1"]) > 0)
+                    if (service[0]["IS_SERVICE_PAID"] ==  "Y")
                     {
-                        IsServicePaid = true;
-
-                        if (calendar.FirstOrDefault()["CALENDAR_CATEGORY_ID"]?.ToString() == "4" && calendar.FirstOrDefault()["CALENDAR_TYPE"]?.ToString() == "2")
+                        if (!string.IsNullOrEmpty(service[0]["fees_1"]?.ToString()))
                         {
-                            ServiceFees = Convert.ToDouble(service[0]["fees_1"]);
-
-                            if (TimeRange != null)
+                            if (Convert.ToInt32(service[0]["fees_1"]) > 0)
                             {
-                                if (!string.IsNullOrEmpty(TimeRange.start) && !string.IsNullOrEmpty(TimeRange.end))
-                                {
-                                    TimeSpan timeDifference = Convert.ToDateTime(TimeRange.end) - Convert.ToDateTime(TimeRange.start);
-                                    double hoursDifference = timeDifference.TotalHours;
+                                IsServicePaid = true;
 
-                                    ServiceFees = ServiceFees * hoursDifference;
+                                if (calendar.FirstOrDefault()["CALENDAR_CATEGORY_ID"]?.ToString() == "4" && calendar.FirstOrDefault()["CALENDAR_TYPE"]?.ToString() == "2")
+                                {
+                                    ServiceFees = Convert.ToDouble(service[0]["fees_1"]);
+
+                                    if (TimeRange != null)
+                                    {
+                                        if (!string.IsNullOrEmpty(TimeRange.start) && !string.IsNullOrEmpty(TimeRange.end))
+                                        {
+                                            TimeSpan timeDifference = Convert.ToDateTime(TimeRange.end) - Convert.ToDateTime(TimeRange.start);
+                                            double hoursDifference = timeDifference.TotalHours;
+
+                                            ServiceFees = ServiceFees * hoursDifference;
+                                        }
+                                    }
                                 }
+                                else
+                                {
+                                    ServiceFees = Convert.ToInt32(service[0]["fees_1"]);
+                                }
+
+
+                            }
+                            else
+                            {
+                                IsServicePaid = false;
+                                ServiceFees = 0;
                             }
                         }
                         else
                         {
-                            ServiceFees = Convert.ToInt32(service[0]["fees_1"]);
+                            IsServicePaid = false;
+                            ServiceFees = 0;
                         }
-
-
                     }
                     else
                     {
@@ -2239,6 +2254,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
                 {
                     return new AddUpdateDelete() { Status = true, Message = "Are you sure to book this event?", Data = ServiceFees.ToString() };
                 }
+
             }
             catch (Exception ex)
             {
@@ -2489,11 +2505,11 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
                                     //if (DateTimeUtility.Now() > Convert.ToDateTime(alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["end"]?.ToString()) && alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["SESSION_REVIEWED"]?.ToString() == "N")
                                     if (DateTimeUtility.Now() > Convert.ToDateTime(item["start"]?.ToString()))
                                     {
-                                        item["IsReviewable"]='Y';
+                                        item["IsReviewable"] = 'Y';
                                     }
                                     else
                                     {
-                                        item["IsReviewable"]= 'N';
+                                        item["IsReviewable"] = 'N';
                                     }
                                 }
                                 else

@@ -71,8 +71,8 @@ namespace Barrway.Controllers.API.v1
 
 
         [Route("api/company/{code?}/package")]
-        [HttpGet]
-        [ResponseType(typeof(Dictionary<string, List<IDictionary<string, object>>>))]
+        [HttpGet]      
+        [ResponseType(typeof(companyPackage))]        
         public async Task<IHttpActionResult> GetCompanyPackages(string code)
         {
             try
@@ -81,7 +81,7 @@ namespace Barrway.Controllers.API.v1
 
                 if (company == null)
                 {
-                    return NotFound(); // Return 404 status code
+                    return NotFound(); 
                 }
 
                 return Ok(await mobileAPIService.GetCompanyCalendarPackages(code));
@@ -99,7 +99,14 @@ namespace Barrway.Controllers.API.v1
         {
             try
             {
-               return Ok(await mobileAPIService.GetCompanyPhotoGallery(code));
+                var company = await mobileAPIService.GetCompany(code);
+
+                if (company == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(await mobileAPIService.GetCompanyPhotoGallery(code));
             }
             catch (Exception ex)
             {

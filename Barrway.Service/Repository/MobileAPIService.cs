@@ -1,5 +1,7 @@
+
 ﻿using AutoMapper;
 using Barrway.DTO.APIModels.Calendar;
+﻿using Barrway.DTO.APIModels.Booking;
 using Barrway.DTO.APIModels.Company;
 using Barrway.DTO.APIModels.Dashboard;
 using Barrway.DTO.APIModels.SearchAPI;
@@ -391,53 +393,243 @@ namespace Barrway.Service.Repository
 
 
 
-        public async Task<Dictionary<string, List<IDictionary<string, object>>>> GetCompanyCalendarPackages(string code)
+        public async Task<companyPackage> GetCompanyCalendarPackages(string code)
         {
-            string query = $@"select * from CALENDAR_PACKAGE_MASTER_1952 
-                            where COMPANY_CODE = '{code}' and IS_ACTIVE = 'Y'
-                            order by PACKAGE_SEQUENCE, created_at";
-            List<IDictionary<string, object>> packageResult = await sqlFunction.ExecuteSqlQuery(query);
 
-            query = $@"select STUFF((SELECT ',' + '''' + convert(nvarchar, f2.CALENDAR_CODE) + '''' from CALENDAR_PACKAGE_MASTER_1952 f2    
-                                                                where f2.COMPANY_CODE = '{code}'   FOR XML PATH('')), 1, 1, '') as 'CalendarCodes'";
+            string query = $@"SELECT * FROM CALENDAR_PACKAGE_MASTER_1952 
+                  WHERE COMPANY_CODE = '{code}' AND IS_ACTIVE = 'Y'
+                  ORDER BY PACKAGE_SEQUENCE, created_at";
+            var packageResult = await sqlFunction.ExecuteSqlQuery<Packagemaster>(query);
+
+            query = $@"select STUFF((SELECT ',' + '''' + convert(nvarchar, f2.CALENDAR_CODE) + '''' from CALENDAR_PACKAGE_MASTER_1952 f2 where f2.COMPANY_CODE = '{code}'   FOR XML PATH('')), 1, 1, '') as 'CalendarCodes'";
             var calendarCodesResult = await sqlFunction.ExecuteSqlQuery(query);
 
-            query = $@"
-                                IF OBJECT_ID(N'tempdb..#temptable') IS NOT NULL  BEGIN DROP TABLE #temptable END;
-                                with cte2 as (
-                                 select distinct  f.*,
-	                                f.resources 'resourceId',
-	                                bcm.CALENDAR_NAME,
-	                                subCategory.CALENDAR_SUB_CATEGORY_NAME,
-									bcm.CALENDAR_PHOTO_PATH
-	                                from CALENDAR_FORM_1935 f  
-	                                join BUSINESS_CALENDAR_MASTER_1925 bcm on bcm.CALENDAR_CODE = f.CALENDAR_CODE
+            query = $@" IF OBJECT_ID(N'tempdb..#temptable') IS NOT NULL  BEGIN DROP TABLE #temptable END;
+                                with cte2 as (select distinct  f.*,f.resources 'resourceId',bcm.CALENDAR_NAME,subCategory.CALENDAR_SUB_CATEGORY_NAME,bcm.CALENDAR_PHOTO_PATH
+	                                from CALENDAR_FORM_1935 f join BUSINESS_CALENDAR_MASTER_1925 bcm on bcm.CALENDAR_CODE = f.CALENDAR_CODE
 	                                join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory   ON ',' +  bcm.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
 	                                where   f.formid=2305 and f.CALENDAR_CODE {(!string.IsNullOrEmpty(calendarCodesResult[0]["CalendarCodes"].ToString()) ? " in (" + calendarCodesResult[0]["CalendarCodes"].ToString() + ")" : "= ''")}
                                 )
-                                select* into #temptable from cte2
-                               
-								select
-								distinct cf.CALENDAR_SUB_CATEGORY_NAME,
-								cf.CALENDAR_NAME,
-								cf.CALENDAR_CODE, 
-								cf.CALENDAR_PHOTO_PATH,
+                                select* into #temptable from cte2                               
+								select distinct cf.CALENDAR_SUB_CATEGORY_NAME, cf.CALENDAR_NAME, cf.CALENDAR_CODE, cf.CALENDAR_PHOTO_PATH,
 								STUFF((SELECT ', ' + R.ACTIVITY_NAME FROM SERVICE_MASTER_1933 AS R WHERE Id in (SELECT CAST(Item AS INTEGER) as Ids
-                                        FROM dbo.SplitString(
-										
-										(STUFF((SELECT distinct ','+ f.activities from CALENDAR_FORM_1935 f
-                                                                where f.formid=2305 and f.CALENDAR_CODE = cf.CALENDAR_CODE   FOR XML PATH('')), 1, 1, ''))
-										
-										
-										, ',')  ) FOR XML PATH('') ) ,1,1,'') as ActivityName
-								
+                                        FROM dbo.SplitString((STUFF((SELECT distinct ','+ f.activities from CALENDAR_FORM_1935 f  where f.formid=2305 and f.CALENDAR_CODE = cf.CALENDAR_CODE   FOR XML PATH('')), 1, 1, '')) , ',')  ) FOR XML PATH('') ) ,1,1,'') as ActivityName 					
 								from #temptable cf";
+            var result = await sqlFunction.ExecuteSqlQuery<CalanderService>(query);
 
-
-            List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
-            Dictionary<string, List<IDictionary<string, object>>> response = new Dictionary<string, List<IDictionary<string, object>>>() {
-                                                                             { "calendarList",result},{ "packageList",packageResult } };
+            var response = new companyPackage
+            {
+                PackageList = (List<Packagemaster>)packageResult,
+                SERVICE_LIST = (List<CalanderService>)result
+            };
+            response.SERVICE_LIST.ForEach(x => x.CALENDAR_PHOTO_PATH = GetFilepath(x.CALENDAR_PHOTO_PATH));
             return response;
+        }
+
+
+
+
+
+
+
+        public async Task<List<ModifiedMyBooking>> GetMyBookings(string email, string Type, string EventId = null)
+        {
+
+            string sqlString = $@"DECLARE @retval nvarchar(max);       DECLARE @sQuery nvarchar(max); DECLARE @ParmDefinition nvarchar(max);                        
+                                    DECLARE @customTitleQuery nvarchar(max);           
+
+                                    IF OBJECT_ID(N'tempdb..#temptable') IS NOT NULL  BEGIN DROP TABLE #temptable END 
+                                    ;with cte1 as( select distinct  f.*,f.resources 'resourceId', transaction_m.Id as 'TransactionId', company.COMPANY_LOGO_PATH, company.Id as 'COMPANY_ID', company.COMPANY_NAME_ENGLISH ,  STUFF((SELECT ',' +  PARTICIPANT_MASTER_1940.[STUDENT_NAME]  
+                                    from TRANSACTION_MASTER_1942 inner join PARTICIPANT_MASTER_1940 on TRANSACTION_MASTER_1942.STUDENT = PARTICIPANT_MASTER_1940.Id where TRANSACTION_MASTER_1942.formGroupKey = f.formGroupKey         FOR XML PATH('')), 1, 1, '') customFourthTitle
+                                    , (dbo.[GetSubQueryCalender](f.formGroupKey)) customTitle,   (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceFormId) from form_calenderreferrence f2     
+                                    where f2.formgroupkey = f.formGroupKey  FOR XML PATH('')), 1, 1, '')   ) customForms  , (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceId) 
+                                    from form_calenderreferrence f2    where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) customFormIds,  '' referrences_1,  '' referrences_2,  '' referrences_3 
+                                    , (select case when (cast(getdate() as datetime) >= cast((DATEADD(minute, -30, f.[start])) as datetime) and cast(getdate() as datetime) <= cast(f.[end] as datetime) ) then 'Y' else 'N' end) as 'ATTEND'
+                                    , case when review.Id is null then 'N' else 'Y' end as 'SESSION_REVIEWED'
+									, review.REVIEW_SCORE
+									, review.REVIEW_COMMENT
+									, transaction_m.ATTENDANCE
+									, calendar.CALENDAR_NAME
+									from CALENDAR_FORM_1935 f 
+                                    join TRANSACTION_MASTER_1942 transaction_m on transaction_m.CALENDAR_CODE = f.CALENDAR_CODE
+                                    join PARTICIPANT_MASTER_1940 participant_m on participant_m.Id = transaction_m.STUDENT
+									join BUSINESS_CALENDAR_MASTER_1925 calendar on calendar.CALENDAR_CODE = f.CALENDAR_CODE
+                                    join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
+									left join SESSION_REVIEWS_1983 review on review.EVENT_ID = transaction_m.SLOT and review.USER_EMAIL = participant_m.EMAIL
+                                    where 
+                                    {((Type == "1") ? $@"'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' <= cast(f.[start] as datetime)" : $@"'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' > cast(f.[end] as datetime)")}
+                                    and f.formid=2305 and participant_m.EMAIL = '{email}' and transaction_m.SLOT = f.Id {((!string.IsNullOrEmpty(EventId) ? $@" and f.Id = '{EventId}'" : ""))}
+                                    ) ,
+                                    cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
+
+
+                                    select* into #temptable from cte2  where len(customtitle)>0;    declare @counter int= 0, @c int= 1;   
+                                    select @counter = (select count(1) from #temptable)	while @c <= @counter    begin    select @customTitleQuery = customTitle from #temptable where ROWNUMBER=@c;	SET @sQuery= ' select @retvalOUT = (' + @customTitleQuery + ')'  
+                                    SET @ParmDefinition = N'@retvalOUT nvarchar(max) OUTPUT';   
+                                    EXEC sp_executesql @sQuery, @ParmDefinition, @retvalOUT = @retval OUTPUT; update #temptable set customTitle=@retval where ROWNUMBER=@c;	set @c = @c + 1;  end  select* from #temptable order by cast([start] as datetime) desc";
+
+            var MyBooking = (await sqlFunction.ExecuteSqlQuery<MyBooking>(sqlString)).ToList();
+            if (MyBooking.Any())
+            {
+                var modifiedData = modifiedDataUpcomingEvent(MyBooking);
+                modifiedData.ForEach(x =>
+                {
+
+                      x.COMPANY_LOGO_PATH = GetFilepath(x.COMPANY_LOGO_PATH);
+                    if (x.DOWNLOAD_FILE_LIST != null && x.DOWNLOAD_FILE_LIST is string downloadFileListString)
+                    {
+                        x.DOWNLOAD_FILE_LIST = JsonConvert.DeserializeObject<dynamic[]>(x.DOWNLOAD_FILE_LIST.ToString());
+                        //x.DOWNLOAD_FILE_LIST = JsonConvert.DeserializeObject<DownloadFile>(x.DOWNLOAD_FILE_LIST.ToString());
+                       // x.DOWNLOAD_FILE_LIST = JsonConvert.DeserializeObject<List<DownloadFile>>(JsonConvert.SerializeObject(x.DOWNLOAD_FILE_LIST));
+                    }
+                    else
+                    {
+                        x.DOWNLOAD_FILE_LIST = new List<DownloadFile>();
+                    }
+                });
+
+               
+                return modifiedData;
+            }
+            else
+            {
+                return new List<ModifiedMyBooking>(); ;
+            }
+
+        }
+
+
+        private List<ModifiedMyBooking> modifiedDataUpcomingEvent(List<MyBooking> data)
+        {
+            List<ModifiedMyBooking> modifiedData = new List<ModifiedMyBooking>();
+            data.ForEach(x => modifiedData.Add(ModifiedMasterData(x)));
+            return modifiedData;
+        }
+
+        private ModifiedMyBooking ModifiedMasterData(MyBooking booking)
+        {
+            ModifiedMyBooking modifiedBooking = new ModifiedMyBooking
+            {
+                ROWNUMBER = booking.ROWNUMBER,
+                Id = booking.Id,
+                formGroupKey = booking.formGroupKey,
+                formID = booking.formID,
+                userID = booking.userID,
+                Current_Status = booking.Current_Status,
+                cycle = booking.cycle,
+                MasterFormID = booking.MasterFormID,
+                MasterFormRow = booking.MasterFormRow,
+                formRecordOrder = booking.formRecordOrder,
+                formRecordStatus = booking.formRecordStatus,
+                ApprovalStatus = booking.ApprovalStatus,
+                COMPANY_CODE = booking.COMPANY_CODE,
+                CALENDAR_CODE = booking.CALENDAR_CODE,
+                hidden_fullcalendar = booking.hidden_fullcalendar,
+                schedulerformgroupkey = booking.schedulerformgroupkey,
+                title = booking.title,
+                start = booking.start,
+                end = booking.end,
+                allDay = booking.allDay,
+                resources = booking.resources,
+                activities = booking.activities,
+                description = booking.description,
+                color = booking.color,
+                created_at = booking.created_at,
+                updated_at = booking.updated_at,
+                created_by = booking.created_by,
+                updated_by = booking.updated_by,
+                resForm_2304 = booking.updated_by,
+                actFormID = booking.updated_by,
+                parentID = booking.updated_by,
+                seperatedFormIDs = booking.updated_by,
+                seperatedTitles = booking.updated_by,
+                seperatedIds = booking.updated_by,
+                seperatedResFormIDs = booking.updated_by,
+                seperatedResEntryIDs = booking.updated_by,
+                seperatedResColValues = booking.updated_by,
+                seperatedColorValues = booking.updated_by,
+                tabulator_1683726769059 = booking.updated_by,
+                tabulator_1683785383381 = booking.updated_by,
+                SCHEDULAR_FORM_ID = booking.SCHEDULAR_FORM_ID,
+                CREATION_TYPE = booking.CREATION_TYPE,
+                SLOT_DURATION_IN_MINS = booking.SLOT_DURATION_IN_MINS,
+                EVENT_TYPE = booking.EVENT_TYPE,
+                COMPANY_SUBSCRIPTION_ID = booking.COMPANY_SUBSCRIPTION_ID,
+                IS_UPLOAD_REQUIRED = booking.IS_UPLOAD_REQUIRED,
+                UPLOAD_TIME = booking.UPLOAD_TIME,
+                DOWNLOADABLE_ATTACHMENT = booking.DOWNLOADABLE_ATTACHMENT,
+                DOWNLOAD_FILE_LIST = booking.DOWNLOAD_FILE_LIST,
+                IS_COURSE_EVENT = booking.IS_COURSE_EVENT,
+                resourceId = booking.resourceId,
+                TransactionId = booking.TransactionId,
+                COMPANY_LOGO_PATH = booking.COMPANY_LOGO_PATH,
+                COMPANY_ID = booking.COMPANY_ID,
+                COMPANY_NAME_ENGLISH = booking.COMPANY_NAME_ENGLISH,
+                customFourthTitle = booking.customFourthTitle,
+                customTitle = booking.customTitle,
+                customForms = booking.customForms,
+                customFormIds = booking.customFormIds,
+                referrences_1 = booking.referrences_1,
+                referrences_2 = booking.referrences_2,
+                referrences_3 = booking.referrences_3,
+                ATTEND = booking.ATTEND,
+                SESSION_REVIEWED = booking.SESSION_REVIEWED,
+                REVIEW_SCORE = booking.REVIEW_SCORE,
+                REVIEW_COMMENT = booking.REVIEW_COMMENT,
+                ATTENDANCE = booking.ATTENDANCE,
+                CALENDAR_NAME = booking.CALENDAR_NAME,
+                SERVICE_PROVIDER_TITLE = booking.SERVICE_PROVIDER_TITLE,
+                SERVICE_PROVIDER_ID = booking.SERVICE_PROVIDER_ID,
+                SERVICE_PROVIDER_FORMID = booking.SERVICE_PROVIDER_FORMID,
+                SERVICE_TITLE = booking.SERVICE_TITLE,
+                SERVICE_ID = booking.SERVICE_ID,
+                SERVICE_FORMID = booking.SERVICE_FORMID,
+                LOCATION_TITLE = booking.LOCATION_TITLE,
+                LOCATION_ID = booking.LOCATION_ID,
+                LOCATION_FORMID = booking.LOCATION_FORMID
+            };
+
+            string customForms = booking.customForms;
+            string customFormIds = booking.customFormIds;
+            string customTitle = booking.customTitle;
+
+            if (string.IsNullOrEmpty(customForms) || string.IsNullOrEmpty(customFormIds) || string.IsNullOrEmpty(customTitle))
+            {
+                return modifiedBooking;
+            }
+
+
+
+
+            string[] customFormsSplit = customForms.Split(',');
+            string[] customFormIdsSplit = customFormIds.Split(',');
+            string[] customTitleSplit = customTitle.Split(',');
+
+            for (int i = 0; i < customFormsSplit.Length; i++)
+            {
+                switch (customFormsSplit[i])
+                {
+                    case "2303":
+                        modifiedBooking.SERVICE_TITLE = customTitleSplit[i];
+                        modifiedBooking.SERVICE_ID = customFormIdsSplit[i];
+                        modifiedBooking.SERVICE_FORMID = customFormsSplit[i];
+                        break;
+                    case "2304":
+                        modifiedBooking.SERVICE_PROVIDER_TITLE = customTitleSplit[i];
+                        modifiedBooking.SERVICE_PROVIDER_ID = customFormIdsSplit[i];
+                        modifiedBooking.SERVICE_PROVIDER_FORMID = customFormsSplit[i];
+                        break;
+                    case "2306":
+                        modifiedBooking.LOCATION_TITLE = customTitleSplit[i];
+                        modifiedBooking.LOCATION_ID = customFormIdsSplit[i];
+                        modifiedBooking.LOCATION_FORMID = customFormsSplit[i];
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            return modifiedBooking;
         }
 
 
@@ -448,7 +640,6 @@ namespace Barrway.Service.Repository
             HashSet<object> hashSet = new HashSet<object>();
             return list.Where(dict => { var value = dict[key]; return hashSet.Add(value); }).ToList();
         }
-
 
         private string formatTagsString(string json)
         {
@@ -504,6 +695,7 @@ namespace Barrway.Service.Repository
 
 
 
+
         #region calendar service
         public async Task<List<IDictionary<string, object>>> GetEvents(CalendarRequestModel calendarRequest) {
 
@@ -528,6 +720,7 @@ namespace Barrway.Service.Repository
 										(cast([start] as date) <= '{_start}' and cast([end] as date) >= '{_end}'))";
         }
         #endregion
+
 
     }
 }

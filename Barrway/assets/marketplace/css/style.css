@@ -1455,6 +1455,12 @@ section.bottom-nav .com-det {
     display: flex;
     white-space: nowrap;
 }
+@media screen and (max-width:767px) {
+    .heading-cata {
+        white-space: pre-wrap;
+    }
+
+}
 /**/
 @media screen and (max-width:1920px) {
     .my-slide button.owl-prev {
