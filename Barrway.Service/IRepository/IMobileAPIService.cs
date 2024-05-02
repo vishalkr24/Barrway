@@ -36,6 +36,8 @@ namespace Barrway.Service.IRepository
         
         Task<List<ModifiedMyBooking>> GetMyBookings(string email, string Type, string EventId = null);
 
+        Task<List<FavouriteCalendar>> GetMyFavoriteCalendars(FavouriteClanderData data, string userId);
+
 
 
 
