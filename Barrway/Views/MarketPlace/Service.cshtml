@@ -38,7 +38,7 @@
     }
 
     #full-stars-example .rating__icon--none {
-        color: #eee;
+        color: #bbb8b8;
     }
 
     #full-stars-example .rating__input--none:checked + .rating__label .rating__icon--none {
@@ -227,29 +227,161 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <div class="my-slide featured-company">                   
+                <div class="my-slide featured-company">
                     <div id="owl-demo5" class="owl-carousel owl-theme">
 
                         @foreach (var item in Model.ServicesList)
                         {
-
+                             
                             <div class="item" style="margin-right: 20px; border: 1px solid #3fbfc7; border-radius: 10px; padding: 10px 13px 10px; min-width: 188px;">
                                 <div class="item-inner">
                                     <div class="pro-text">
                                         <p class="f1"><b>@item.ACTIVITY_NAME</b></p>
                                         <div id="full-stars-example">
-                                            <div class="rating-group">
-                                                <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                <input class="rating__input" name="rating" id="rating-1" value="1" type="radio">
-                                                <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                <input class="rating__input" name="rating" id="rating-2" value="2" type="radio">
-                                                <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                <input class="rating__input" name="rating" id="rating-3" value="3" type="radio" checked="">
-                                                <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                <input class="rating__input" name="rating" id="rating-4" value="4" type="radio">
-                                                <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
-                                                <input class="rating__input" name="rating" id="rating-5" value="5" type="radio">
-                                            </div>
+
+
+
+                                            @if (item.REVIEW_SCORE == 0)
+                                            {
+                                                <div class="rating-group">
+                                                    <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon--none fa fa-star"></i></label>
+                                                    <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon--none fa fa-star"></i></label>
+                                                    <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon--none fa fa-star"></i></label>
+                                                    <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon--none fa fa-star"></i></label>
+                                                    <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon--none fa fa-star"></i></label>
+                                                </div>
+                                            }
+
+                                            else if (item.REVIEW_SCORE > 0 && item.REVIEW_SCORE < 1)
+                                            {
+                                                <div class="rating-group">
+                                                    <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star-half-o"></i></label>
+                                                    <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon--none fa fa-star"></i></label>
+                                                    <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon--none fa fa-star"></i></label>
+                                                    <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon--none fa fa-star"></i></label>
+                                                    <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon--none fa fa-star"></i></label>
+                                                </div>
+                                            }
+
+                                            else if (item.REVIEW_SCORE == 1)
+                                            {
+                                                <div class="rating-group">
+                                                    <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon--none fa fa-star"></i></label>
+                                                    <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon--none fa fa-star"></i></label>
+                                                    <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon--none fa fa-star"></i></label>
+                                                    <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon--none fa fa-star"></i></label>
+                                                </div>
+                                            }
+
+                                            else if (item.REVIEW_SCORE > 1 && item.REVIEW_SCORE < 2)
+                                            {
+                                                <div class="rating-group">
+                                                    <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star-half-o"></i></label>
+                                                    <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon--none fa fa-star"></i></label>
+                                                    <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon--none fa fa-star"></i></label>
+                                                    <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon--none fa fa-star"></i></label>
+                                                </div>
+                                            }
+
+                                            else if (item.REVIEW_SCORE == 2)
+                                            {
+                                                <div class="rating-group">
+                                                    <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon--none fa fa-star"></i></label>
+                                                    <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon--none fa fa-star"></i></label>
+                                                    <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon--none fa fa-star"></i></label>
+                                                </div>
+                                            }
+
+                                            else if (item.REVIEW_SCORE > 2 && item.REVIEW_SCORE < 3)
+                                            {
+                                                <div class="rating-group">
+                                                    <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon rating__icon--star fa fa-star-half-o"></i></label>
+                                                    <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon--none fa fa-star"></i></label>
+                                                    <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon--none fa fa-star"></i></label>
+                                                </div>
+                                            }
+
+                                            else if (item.REVIEW_SCORE == 3)
+                                            {
+                                                <div class="rating-group">
+                                                    <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon--none fa fa-star"></i></label>
+                                                    <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon--none fa fa-star"></i></label>
+                                                </div>
+                                            }
+
+                                            else if (item.REVIEW_SCORE >= 3 && item.REVIEW_SCORE < 4)
+                                            {
+                                                <div class="rating-group">
+                                                    <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon rating__icon--star fa fa-star-half-o"></i></label>
+                                                    <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon--none fa fa-star"></i></label>
+                                                </div>
+                                            }
+
+                                            else if (item.REVIEW_SCORE == 4)
+                                            {
+                                                <div class="rating-group">
+                                                    <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon--none fa fa-star"></i></label>
+                                                </div>
+                                            }
+
+
+                                            else if (item.REVIEW_SCORE > 4 && item.REVIEW_SCORE < 5)
+                                            {
+                                                <div class="rating-group">
+                                                    <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon rating__icon--star fa fa-star-half-o"></i></label>
+                                                </div>
+                                            }
+
+                                            else if (item.REVIEW_SCORE >= 5 && item.REVIEW_SCORE < 6)
+                                            {
+                                                <div class="rating-group">
+                                                    <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                    <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                </div>
+                                            }
+
+
+
+
+                                            @*<div class="rating-group">
+            <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+            <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+            <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+            <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+            <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon--none fa fa-star"></i></label>
+        </div>*@
+
+
+                                            @*<div class="rating-group">
+            <label aria-label="1 star" class="rating__label" for="rating-1"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+            <label aria-label="2 stars" class="rating__label" for="rating-2"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+            <label aria-label="3 stars" class="rating__label" for="rating-3"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+            <label aria-label="4 stars" class="rating__label" for="rating-4"><i class="rating__icon rating__icon--star fa fa-star"></i></label>
+            <label aria-label="5 stars" class="rating__label" for="rating-5"><i class="rating__icon--none fa fa-star"></i></label>
+        </div>*@
 
                                         </div>
                                     </div>
@@ -279,7 +411,7 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
 </section>
 
