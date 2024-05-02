@@ -1,10 +1,15 @@
+
+﻿using AutoMapper;
+using Barrway.DTO.APIModels.Calendar;
 ﻿using Barrway.DTO.APIModels.Booking;
 using Barrway.DTO.APIModels.Company;
 using Barrway.DTO.APIModels.Dashboard;
 using Barrway.DTO.APIModels.SearchAPI;
 using Barrway.DTO.Common;
+using Barrway.DTO.FormAPI;
 using Barrway.Service.IRepository;
 using Barrway.Utility.Common;
+using FormGeneratorDTOs.DTOs;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -13,17 +18,22 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Twilio.TwiML.Voice;
 
 namespace Barrway.Service.Repository
 {
     public class MobileAPIService : IMobileAPIService
     {
         private readonly ISqlFunction sqlFunction;
+        private readonly IFormAPIRepository formAPIRepository;
+        private readonly IMapper mapper;
         private readonly string baseUrl = ConfigurationManager.AppSettings["baseurl"];
 
-        public MobileAPIService(ISqlFunction sqlFunction)
+        public MobileAPIService(ISqlFunction sqlFunction, IFormAPIRepository formAPIRepository,IMapper mapper)
         {
             this.sqlFunction = sqlFunction;
+            this.formAPIRepository = formAPIRepository;
+            this.mapper = mapper;
         }
 
         public async Task<SearchFilterModel> GetSearchFilter()
@@ -683,8 +693,34 @@ namespace Barrway.Service.Repository
             }
         }
 
-        
 
-        
+
+
+        #region calendar service
+        public async Task<List<IDictionary<string, object>>> GetEvents(CalendarRequestModel calendarRequest) {
+
+            Form_DataTable data = mapper.Map<Form_DataTable>(calendarRequest);
+            string filterQuery = GetDateQuery(calendarRequest.start, calendarRequest.end);
+            data.filter = new FilterDTO() {field= "start", value=filterQuery+ " and F.COMPANY_CODE=N'" + calendarRequest.COMPANY_CODE + "' and F.CALENDAR_CODE=N'" + calendarRequest.CALENDAR_CODE + "'" };
+
+            ReferalFormDataResponseModel result = await formAPIRepository.getReferralFormFields(data);
+
+            if (result != null && result.events != null) { 
+            return result.events;
+            }
+            return new List<IDictionary<string, object>>();
+        }
+
+        private string GetDateQuery(DateTime start, DateTime end) {
+            string _start = start.ToString("yyyy-MM-dd");
+            string _end = end.ToString("yyyy-MM-dd");
+            return $@"((cast([start] as date) <= '{_start}' and (cast([end] as date) <= '{_end}' and cast([end] as date) >= '{_start}')) or
+										((cast([start] as date) >= '{_start}' and cast([start] as date) <= '{_end}') and (cast([end] as date) <= '{_end}' and cast([end] as date) >= '{_start}')) or
+										((cast([start] as date) <= '{_end}' and cast([start] as date) >= '{_start}') and cast([end] as date) >= '{_end}') or
+										(cast([start] as date) <= '{_start}' and cast([end] as date) >= '{_end}'))";
+        }
+        #endregion
+
+
     }
 }

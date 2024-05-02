@@ -92,8 +92,6 @@ namespace Barrway.Controllers.API.v1
             }
         }
 
-
-
         [Route("api/company/{code?}/photos")]
         [HttpGet]
         [ResponseType(typeof(List<PhotoGalleryModel>))]
