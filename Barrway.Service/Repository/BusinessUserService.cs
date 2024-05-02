@@ -3176,7 +3176,7 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> UpdateTransactionAttendance(string TransactionId, bool IsPresent = false)
         {
-            var attendance = (IsPresent) ? "Yes" : "No";
+            var attendance = (IsPresent) ? "PRESENT" : "ABSENT";
             string query = $@"update TRANSACTION_MASTER_1942 set ATTENDANCE='{attendance}' where Id='{TransactionId}'";
 
             int result = await sqlFunction.ExecuteSqlCommandQuery(query);
@@ -3222,7 +3222,7 @@ namespace Barrway.Service.Repository
 
                 for (int i = 0; i < FinalAttendance.Count; i++)
                 {
-                    var attendance = (FinalAttendance[i].Attendance == "Present") ? "Yes" : (FinalAttendance[i].Attendance == "Absent") ? "No" : "NOT-MARKED";
+                    var attendance = FinalAttendance[i].Attendance;
                     query += $@"update TRANSACTION_MASTER_1942 set ATTENDANCE='{attendance}' where Id='{FinalAttendance[i].Id}'";
                 }
 

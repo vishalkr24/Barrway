@@ -162,6 +162,36 @@ namespace Barrway.Controllers
                     });
                 }
             }
+
+            if (data.formId == (int)FormSetting.TRANSACTION_MASTER)
+            {
+                if (result.data != null && result.data.Count() > 0)
+                {
+                    result.data.ForEach(e =>
+                    {
+                        if (e.ContainsKey("SLOT") && e["SLOT"] != null)
+                        {
+                            if (e["SLOT"].ToString().Contains("#"))
+                            {
+                                try
+                                {
+                                    var slots = e["SLOT"].ToString().Split('#');
+                                    if (slots.Count() >= 3)
+                                    {
+                                        e["SLOT"] = Convert.ToDateTime(slots[0]).ToString("dd MMMM yyyy (hh:mm tt)") + " - " + Convert.ToDateTime(slots[2]).ToString("dd MMMM yyyy (hh:mm tt)");
+                                    }
+                                }catch (Exception)
+                                {
+
+                                }
+                                
+                            }
+                        }
+                        
+                    });
+                }
+            }
+
             return Json(result);
         }
 
@@ -169,6 +199,9 @@ namespace Barrway.Controllers
         public async Task<ActionResult> GeneratedFormData(Form_DataTable data)
         {
             // Validation Check for Session Count
+            string IsCourseEvent = "N";
+            string serviceId = "";
+
             if (data.formId == (int)FormSetting.CALENDAR_FORM)
             {
                 try
@@ -197,7 +230,7 @@ namespace Barrway.Controllers
 
                             var package = await businessUserService.GetCompanyActiveSubscriptionDetails(companyCode, true);
 
-                            string serviceId = "";
+                            
                             if(deserData.Any(x => x["name"]?.ToString() == "activities"))
                             serviceId = deserData.FirstOrDefault(x => x["name"]?.ToString() == "activities")["value"]?.ToString();
 
@@ -211,8 +244,10 @@ namespace Barrway.Controllers
 
                                 companyIdDic2.Add("name", "IS_COURSE_EVENT");
                                 companyIdDic2.Add("value", ((!string.IsNullOrEmpty(serviceData["SERVICE_PAY_PER"]?.ToString()) && serviceData["SERVICE_PAY_PER"]?.ToString() == "COURSE") ? "Y" : "N"));
-
+                                
                                 deserData.Add(companyIdDic2);
+
+                                IsCourseEvent = serviceData["SERVICE_PAY_PER"]?.ToString();
                             }
                             else
                             {
@@ -222,6 +257,8 @@ namespace Barrway.Controllers
                                 companyIdDic2.Add("value", "N");
 
                                 deserData.Add(companyIdDic2);
+
+                                IsCourseEvent = "N";
                             }
                             
                             var companyIdDic = new Dictionary<string, object>();
@@ -242,7 +279,6 @@ namespace Barrway.Controllers
                         return Json(new AddUpdateDelete() { Status = false, Message = "Event not created." });
                     }
 
-
                 }
                 catch (Exception ex)
                 {
@@ -251,6 +287,11 @@ namespace Barrway.Controllers
             }
 
             var result = Json((await formAPIRepository.GeneratedFormData(data)).Data);
+
+            if (IsCourseEvent == "Y")
+            {
+
+            }
 
             return result;
         }
@@ -401,7 +442,6 @@ namespace Barrway.Controllers
                                     {
                                         finalResult.events.Add(result.events[j]);
                                     }
-                                    
                                 }
                             }
 
@@ -414,7 +454,6 @@ namespace Barrway.Controllers
                                     {
                                         finalResult.activityEvents.Add(result.activityEvents[j]);
                                     }
-                                    
                                 }
                             }
 
@@ -429,7 +468,6 @@ namespace Barrway.Controllers
                                         {
                                             finalResult.resourceDetails.Add(result.resourceDetails[j]);
                                         }
-                                        
                                     }
                                 }
                             }
