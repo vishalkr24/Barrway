@@ -17460,7 +17460,7 @@
         $scope.updateAttendanceRecord = function (recordId, IsPresent = false) {
             for (var i = 0; i < $scope.AttendanceRecord.length; i++) {
                 if ($scope.AttendanceRecord[i].Id == recordId) {
-                    $scope.AttendanceRecord[i].Attendance = (IsPresent) ? "Present" : "Absent";
+                    $scope.AttendanceRecord[i].Attendance = (IsPresent) ? "PRESENT" : "ABSENT";
                     $scope.AttendanceRecord[i].IsUpdated = true;
                     break;
                 }
@@ -17519,7 +17519,7 @@
 
                 $scope.currentTransaction = res.data.data[0];
 
-                $scope.currentTransactionAttendance = (res.data.data[0].ATTENDANCE == "Yes") ? "Present" : (res.data.data[0].ATTENDANCE == "No") ? "Absent" : "Unmarked";
+                $scope.currentTransactionAttendance = res.data.data[0].ATTENDANCE;
 
                 $scope.currentTransactionDate = slotSplit[0].split('T')[0]
 
