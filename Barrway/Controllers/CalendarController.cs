@@ -1195,8 +1195,11 @@ namespace Barrway.Controllers
                                                             ";
                                             }
 
+                                            string serviceId = data.SCH_ACTIVITY;
+                                            string resourceId = data.SCH_RESOURCE;
+
                                             eventCounter++;
-                                            script += $@"insert into CALENDAR_FORM_1935([IS_COURSE_EVENT]
+                                            script += $@"declare @insertedEventId{slotCounter} int;  insert into CALENDAR_FORM_1935([IS_COURSE_EVENT]
                                                               ,[SCHEDULAR_FORM_ID]
                                                               ,[formGroupKey]
                                                               ,[formID]
@@ -1220,13 +1223,118 @@ namespace Barrway.Controllers
                                                               ,[created_at], [updated_at],[EVENT_TYPE])
 	                                                          values('{IsCourseEvent}', '{SchedularFormId}', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter}', '{tempStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{tempEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{data.SCH_RESOURCE}', '{data.SCH_ACTIVITY}', '{package.Data["SUBS_ID"]?.ToString()}', '{data.SCH_DESCRIPTION}', getDate(), getDate(),'SCHEDULE');
 
+                                                            SET @insertedEventId{slotCounter} = SCOPE_IDENTITY();
+
                                                             {referenceResourceEntry}                                                                    
 
                                                             {referenceActivityEntry}
                                                             
                                                             insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
                                                             values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{data.SCH_LOCATION}', 'LOCATION_MASTER_1936', 'LOCATION_ADDRESS', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_LOCATION}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
-                                                            ";
+                                                            
+
+                                                            declare @SlotId{slotCounter} int = (select top 1 cf.Id from CALENDAR_FORM_1935 cf
+                                                                join TRANSACTION_MASTER_1942 t on t.SLOT = cf.Id
+                                                                where cf.IS_COURSE_EVENT = 'Y' and activities = '{serviceId}'
+                                                                order by cf.created_at desc);
+
+                                                            if (@SlotId{slotCounter} is not null and @SlotId{slotCounter} != '')
+                                                            begin
+                                                                INSERT INTO [dbo].[TRANSACTION_MASTER_1942]
+                                                                           ([formGroupKey]
+                                                                           ,[formID]
+                                                                           ,[userID]
+                                                                           ,[Current_Status]
+                                                                           ,[cycle]
+                                                                           ,[MasterFormID]
+                                                                           ,[MasterFormRow]
+                                                                           ,[formRecordOrder]
+                                                                           ,[formRecordStatus]
+                                                                           ,[ApprovalStatus]
+                                                                           ,[text_1683717657815]
+                                                                           ,[created_at]
+                                                                           ,[updated_at]
+                                                                           ,[created_by]
+                                                                           ,[updated_by]
+                                                                           ,[SLOT]
+                                                                           ,[RESOURCE]
+                                                                           ,[ACTIVITY]
+                                                                           ,[STUDENT]
+                                                                           ,[REMARKS]
+                                                                           ,[FEES]
+                                                                           ,[FEES_1]
+                                                                           ,[FEES_2]
+                                                                           ,[FEES_LIST]
+                                                                           ,[ATTENDANCE]
+                                                                           ,[hidden_1683717028956]
+                                                                           ,[COMPANY_CODE]
+                                                                           ,[CALENDAR_CODE]
+                                                                           ,[resForm_2304]
+                                                                           ,[actFormID]
+                                                                           ,[parentID]
+                                                                           ,[seperatedFormIDs]
+                                                                           ,[seperatedTitles]
+                                                                           ,[seperatedIds]
+                                                                           ,[seperatedResFormIDs]
+                                                                           ,[seperatedResEntryIDs]
+                                                                           ,[seperatedResColValues]
+                                                                           ,[seperatedColorValues]
+                                                                           ,[USERTOKEN]
+                                                                           ,[ATTACHMENT_FROM_PARTICIPANTS]
+                                                                           ,[COMMENTS_FROM_PARTICIPANT]
+                                                                           ,[ATTACHMENT_FROM_STAFF]
+                                                                           ,[COMMENTS_FROM_STAFF]
+                                                                           ,[transaction_fees]
+                                                                           ,[ASSESSMENT_FILES]
+                                                                           ,[ASSESSMENT_FILES_LIST])
+                                                                     select '{formGroupKey}'
+                                                                      ,[formID]
+                                                                      ,[userID]
+                                                                      ,[Current_Status]
+                                                                      ,[cycle]
+                                                                      ,[MasterFormID]
+                                                                      ,[MasterFormRow]
+                                                                      ,[formRecordOrder]
+                                                                      ,[formRecordStatus]
+                                                                      ,[ApprovalStatus]
+                                                                      ,[text_1683717657815]
+                                                                      ,'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'
+                                                                      ,'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'
+                                                                      ,[created_by]
+                                                                      ,[updated_by]
+                                                                      ,(select @insertedEventId{slotCounter})
+                                                                      ,'{resourceId}'
+                                                                      ,[ACTIVITY]
+                                                                      ,[STUDENT]
+                                                                      ,[REMARKS]
+                                                                      ,[FEES]
+                                                                      ,[FEES_1]
+                                                                      ,[FEES_2]
+                                                                      ,[FEES_LIST]
+                                                                      ,'NOT-MARKED'
+                                                                      ,[hidden_1683717028956]
+                                                                      ,[COMPANY_CODE]
+                                                                      ,[CALENDAR_CODE]
+                                                                      ,[resForm_2304]
+                                                                      ,[actFormID]
+                                                                      ,[parentID]
+                                                                      ,[seperatedFormIDs]
+                                                                      ,[seperatedTitles]
+                                                                      ,[seperatedIds]
+                                                                      ,[seperatedResFormIDs]
+                                                                      ,[seperatedResEntryIDs]
+                                                                      ,[seperatedResColValues]
+                                                                      ,[seperatedColorValues]
+                                                                      ,[USERTOKEN]
+                                                                      ,[ATTACHMENT_FROM_PARTICIPANTS]
+                                                                      ,[COMMENTS_FROM_PARTICIPANT]
+                                                                      ,[ATTACHMENT_FROM_STAFF]
+                                                                      ,[COMMENTS_FROM_STAFF]
+                                                                      ,[transaction_fees]
+                                                                      ,[ASSESSMENT_FILES]
+                                                                      ,[ASSESSMENT_FILES_LIST]
+                                                                  FROM [dbo].[TRANSACTION_MASTER_1942] t where t.ACTIVITY = '{serviceId}' and t.SLOT = @SlotId{slotCounter};
+                                                            end";
 
                                             tempStartTime = tempEndTime.AddMinutes(RestPeriod);
                                             tempEndTime = tempStartTime.AddMinutes(Duration);
@@ -1265,8 +1373,11 @@ namespace Barrway.Controllers
                                                             ";
                                         }
 
+                                        string serviceId = data.SCH_ACTIVITY;
+                                        string resourceId = data.SCH_RESOURCE;
+
                                         eventCounter++;
-                                        script += $@"insert into CALENDAR_FORM_1935([IS_COURSE_EVENT]
+                                        script += $@"declare @insertedEventId{slotCounter} int;  insert into CALENDAR_FORM_1935([IS_COURSE_EVENT]
                                                               ,[SCHEDULAR_FORM_ID]
                                                               ,[formGroupKey]
                                                               ,[formID]
@@ -1287,8 +1398,10 @@ namespace Barrway.Controllers
                                                               ,[activities]
                                                               ,[COMPANY_SUBSCRIPTION_ID]
                                                               ,[description]
-                                                              ,[created_at], [updated_at],[EVENT_TYPE])
+                                                              ,[created_at], [updated_at],[EVENT_TYPE]) 
 	                                                          values('{IsCourseEvent}', '{SchedularFormId}', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter}', '{SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{data.SCH_RESOURCE}', '{data.SCH_ACTIVITY}', '{package.Data["SUBS_ID"]?.ToString()}', '{data.SCH_DESCRIPTION}', getDate(), getDate(),'SCHEDULE');
+
+                                                            SET @insertedEventId{slotCounter} = SCOPE_IDENTITY();
 
                                                             {referenceResourceEntry}                                                                    
 
@@ -1296,7 +1409,111 @@ namespace Barrway.Controllers
                                                             
                                                             insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
                                                             values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{data.SCH_LOCATION}', 'LOCATION_MASTER_1936', 'LOCATION_ADDRESS', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_LOCATION}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
-                                                            ";
+
+
+                                                            declare @SlotId{slotCounter} int = (select top 1 cf.Id from CALENDAR_FORM_1935 cf
+                                                                join TRANSACTION_MASTER_1942 t on t.SLOT = cf.Id
+                                                                where cf.IS_COURSE_EVENT = 'Y' and activities = '{serviceId}'
+                                                                order by cf.created_at desc);
+
+                                                            if (@SlotId{slotCounter} is not null and @SlotId{slotCounter} != '')
+                                                            begin
+                                                                INSERT INTO [dbo].[TRANSACTION_MASTER_1942]
+                                                                           ([formGroupKey]
+                                                                           ,[formID]
+                                                                           ,[userID]
+                                                                           ,[Current_Status]
+                                                                           ,[cycle]
+                                                                           ,[MasterFormID]
+                                                                           ,[MasterFormRow]
+                                                                           ,[formRecordOrder]
+                                                                           ,[formRecordStatus]
+                                                                           ,[ApprovalStatus]
+                                                                           ,[text_1683717657815]
+                                                                           ,[created_at]
+                                                                           ,[updated_at]
+                                                                           ,[created_by]
+                                                                           ,[updated_by]
+                                                                           ,[SLOT]
+                                                                           ,[RESOURCE]
+                                                                           ,[ACTIVITY]
+                                                                           ,[STUDENT]
+                                                                           ,[REMARKS]
+                                                                           ,[FEES]
+                                                                           ,[FEES_1]
+                                                                           ,[FEES_2]
+                                                                           ,[FEES_LIST]
+                                                                           ,[ATTENDANCE]
+                                                                           ,[hidden_1683717028956]
+                                                                           ,[COMPANY_CODE]
+                                                                           ,[CALENDAR_CODE]
+                                                                           ,[resForm_2304]
+                                                                           ,[actFormID]
+                                                                           ,[parentID]
+                                                                           ,[seperatedFormIDs]
+                                                                           ,[seperatedTitles]
+                                                                           ,[seperatedIds]
+                                                                           ,[seperatedResFormIDs]
+                                                                           ,[seperatedResEntryIDs]
+                                                                           ,[seperatedResColValues]
+                                                                           ,[seperatedColorValues]
+                                                                           ,[USERTOKEN]
+                                                                           ,[ATTACHMENT_FROM_PARTICIPANTS]
+                                                                           ,[COMMENTS_FROM_PARTICIPANT]
+                                                                           ,[ATTACHMENT_FROM_STAFF]
+                                                                           ,[COMMENTS_FROM_STAFF]
+                                                                           ,[transaction_fees]
+                                                                           ,[ASSESSMENT_FILES]
+                                                                           ,[ASSESSMENT_FILES_LIST])
+                                                                     select '{formGroupKey}'
+                                                                      ,[formID]
+                                                                      ,[userID]
+                                                                      ,[Current_Status]
+                                                                      ,[cycle]
+                                                                      ,[MasterFormID]
+                                                                      ,[MasterFormRow]
+                                                                      ,[formRecordOrder]
+                                                                      ,[formRecordStatus]
+                                                                      ,[ApprovalStatus]
+                                                                      ,[text_1683717657815]
+                                                                      ,'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'
+                                                                      ,'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'
+                                                                      ,[created_by]
+                                                                      ,[updated_by]
+                                                                      ,(select @insertedEventId{slotCounter})
+                                                                      ,'{resourceId}'
+                                                                      ,[ACTIVITY]
+                                                                      ,[STUDENT]
+                                                                      ,[REMARKS]
+                                                                      ,[FEES]
+                                                                      ,[FEES_1]
+                                                                      ,[FEES_2]
+                                                                      ,[FEES_LIST]
+                                                                      ,'NOT-MARKED'
+                                                                      ,[hidden_1683717028956]
+                                                                      ,[COMPANY_CODE]
+                                                                      ,[CALENDAR_CODE]
+                                                                      ,[resForm_2304]
+                                                                      ,[actFormID]
+                                                                      ,[parentID]
+                                                                      ,[seperatedFormIDs]
+                                                                      ,[seperatedTitles]
+                                                                      ,[seperatedIds]
+                                                                      ,[seperatedResFormIDs]
+                                                                      ,[seperatedResEntryIDs]
+                                                                      ,[seperatedResColValues]
+                                                                      ,[seperatedColorValues]
+                                                                      ,[USERTOKEN]
+                                                                      ,[ATTACHMENT_FROM_PARTICIPANTS]
+                                                                      ,[COMMENTS_FROM_PARTICIPANT]
+                                                                      ,[ATTACHMENT_FROM_STAFF]
+                                                                      ,[COMMENTS_FROM_STAFF]
+                                                                      ,[transaction_fees]
+                                                                      ,[ASSESSMENT_FILES]
+                                                                      ,[ASSESSMENT_FILES_LIST]
+                                                                  FROM [dbo].[TRANSACTION_MASTER_1942] t where t.ACTIVITY = '{serviceId}' and t.SLOT = @SlotId{slotCounter};
+                                                            end                                                            
+";
                                     }
 
                                 }

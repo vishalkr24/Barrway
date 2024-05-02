@@ -577,7 +577,6 @@ namespace Barrway.Service.Repository
                     // user is already enrolled in the activity and resource
                     return new AddUpdateDelete() { Message = "ALREADY-ENROLLED", Status = false };
                 }
-
             }
             else
             {
@@ -658,7 +657,7 @@ namespace Barrway.Service.Repository
                 data2.formId = (int)FormSetting.TRANSACTION_MASTER;
 
                 data2.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.transaction.ToDictionary());
-                data2.formGroupKey = model.FormGroupKey;
+                data2.formGroupKey = eventDetails["formGroupKey"]?.ToString();
                 formResult2 = (await formAPIRepository.GeneratedFormData(data2)).Data;
 
                 // Send Entry into Upcoming Bookings
@@ -2180,7 +2179,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
                 double ServiceFees = 0;
                 if (!string.IsNullOrEmpty(service[0]["IS_SERVICE_PAID"]?.ToString()))
                 {
-                    if (service[0]["IS_SERVICE_PAID"] ==  "Y")
+                    if (service[0]["IS_SERVICE_PAID"]?.ToString() ==  "Y")
                     {
                         if (!string.IsNullOrEmpty(service[0]["fees_1"]?.ToString()))
                         {
@@ -2207,8 +2206,6 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
                                 {
                                     ServiceFees = Convert.ToInt32(service[0]["fees_1"]);
                                 }
-
-
                             }
                             else
                             {
