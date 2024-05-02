@@ -1,4 +1,5 @@
 ﻿using Barrway.DTO.APIModels.Calendar;
+using Barrway.DTO.APIModels.SearchAPI;
 using Barrway.Security;
 using Barrway.Service.IRepository;
 using System;
@@ -31,6 +32,33 @@ namespace Barrway.Controllers.API.v1
             {
                 return Ok(await mobileAPIService.GetEvents(data));
             } catch(Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
+
+
+        [Route("api/calendar/MyFavoriteCalander")]
+        [HttpPost]
+        [ResponseType(typeof(FavouriteCalendar))]
+        public async Task<IHttpActionResult> MyFavoriteCalanders(FavouriteClanderData data)
+        {
+            try
+            {
+                if (User.Identity.IsAuthenticated)
+                {
+                    var userId = "";
+                    var rr = UserIdentity.UserEmail;
+                    return Ok(await mobileAPIService.GetMyFavoriteCalendars(data, UserIdentity.UserName));                    
+                }
+                else
+                {
+                    return NotFound();
+                }
+                                
+                
+            }
+            catch (Exception ex)
             {
                 return InternalServerError();
             }
