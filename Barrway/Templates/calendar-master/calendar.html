@@ -387,6 +387,17 @@
         border-top: 1px solid #ddd;
         margin-top: 14px;
     }
+    button.btn.btn-grey {
+        background-color: #ddd;
+        border: 1px solid #a5a5a5;
+        border-radius: 40px;
+    }
+    .create_event_btns .btn-primary {
+        border-radius: 40px;
+    }
+    .create_event_btns {
+        display: flex;
+    }
     @media screen and (max-width:767px) {
 
         .custome-event-create  .event-detail-modal-inner {
@@ -1244,8 +1255,10 @@
                         </div>
                     </div>
                 </div>
-                <div style=" position: sticky; bottom: 0px; margin-left: -2rem; width: calc(100% + 4rem); background: white; padding: 12px; box-shadow: 0px -13px 21px -10px #cdcdcd;">
+                <div class="create_event_btns" style=" position: sticky; bottom: 0px; margin-left: -2rem; width: calc(100% + 4rem); background: white; padding: 12px; box-shadow: 0px -13px 21px -10px #cdcdcd;">
+                    <button type="button" class="btn btn-grey" style="margin-right:5px"  data-bs-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-primary" style="width: 100%;" ng-click="createNewEvent()" ng-show="IS_EXIST_PRE_DEFINED_ACTIVITIES">Create Event</button>
+
                     <button type="button" class="btn btn-primary" style="width: 100%;" ng-click="createNewEventWithoutPredefinedActivity()" ng-show="!IS_EXIST_PRE_DEFINED_ACTIVITIES">Create Event</button>
                 </div>
                 <!--<div class="div-flex div-list-bar"></div>-->
