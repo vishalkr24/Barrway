@@ -3329,9 +3329,8 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string sqlString = $@"select * from SERVICE_MASTER_1933  where  COMPANY_CODE='{CompanyCode}'";
-
-
+                //string sqlString = $@"select * from SERVICE_MASTER_1933  where  COMPANY_CODE='{CompanyCode}'";
+                string sqlString = $@"select Id,ACTIVITY_NAME,DESCRIPTION,(select isnull(ROUND(AVG(REVIEW_SCORE), 2),0) from SESSION_REVIEWS_1983 where CALENDAR_CODE=sm.CALENDAR_CODE) as REVIEW_SCORE from SERVICE_MASTER_1933 sm  where COMPANY_CODE='{CompanyCode}'";
                 var result = (await sqlFunction.ExecuteSqlQuery(sqlString)).ToList();
                 if (result != null)
                 {

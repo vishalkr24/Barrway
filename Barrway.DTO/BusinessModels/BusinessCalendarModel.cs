@@ -70,6 +70,7 @@ namespace Barrway.DTO.BusinessModels
         public string PHOTO { get; set; }
         public string CATEGORY { get; set; }
         public string SUB_CATEGORY { get; set; }
+        public decimal REVIEW_SCORE { get; set; }
         public string START_DATETIME { get; set; }
         public string END_DATETIME { get; set; }
     }
