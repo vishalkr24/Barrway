@@ -1,9 +1,13 @@
-﻿using Barrway.DTO.APIModels.Company;
+﻿using AutoMapper;
+using Barrway.DTO.APIModels.Calendar;
+using Barrway.DTO.APIModels.Company;
 using Barrway.DTO.APIModels.Dashboard;
 using Barrway.DTO.APIModels.SearchAPI;
 using Barrway.DTO.Common;
+using Barrway.DTO.FormAPI;
 using Barrway.Service.IRepository;
 using Barrway.Utility.Common;
+using FormGeneratorDTOs.DTOs;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -12,17 +16,22 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Twilio.TwiML.Voice;
 
 namespace Barrway.Service.Repository
 {
     public class MobileAPIService : IMobileAPIService
     {
         private readonly ISqlFunction sqlFunction;
+        private readonly IFormAPIRepository formAPIRepository;
+        private readonly IMapper mapper;
         private readonly string baseUrl = ConfigurationManager.AppSettings["baseurl"];
 
-        public MobileAPIService(ISqlFunction sqlFunction)
+        public MobileAPIService(ISqlFunction sqlFunction, IFormAPIRepository formAPIRepository,IMapper mapper)
         {
             this.sqlFunction = sqlFunction;
+            this.formAPIRepository = formAPIRepository;
+            this.mapper = mapper;
         }
 
         public async Task<SearchFilterModel> GetSearchFilter()
@@ -117,62 +126,62 @@ namespace Barrway.Service.Repository
             return featureBlogs;
         }
 
-        public async Task<List<CalendarModel>> GetCalendarsSearchResult(SearchAPIModel data, List<string> filters=null)
+        public async Task<List<CalendarModel>> GetCalendarsSearchResult(SearchAPIModel data, List<string> filters = null)
         {
 
             data.page = data.page == 0 ? 1 : data.page;
             data.size = data.size == 0 ? 10 : data.size;
 
-            List<string> filterQueryList = filters==null? new List<string>():filters;
+            List<string> filterQueryList = filters == null ? new List<string>() : filters;
 
             if (data.categoryId > 0)
             {
-                filterQueryList.Add(" (category.Id=" + data.categoryId+") ");
+                filterQueryList.Add(" (category.Id=" + data.categoryId + ") ");
             }
 
-            if (data.districtIds != null && data.districtIds.Count()>0)
+            if (data.districtIds != null && data.districtIds.Count() > 0)
             {
                 string commaSeparatedIds = string.Join(",", data.districtIds);
                 filterQueryList.Add(" (calendar.DISTRICT_ID in (" + commaSeparatedIds + ") ) ");
             }
 
-            if (data.subcatIds != null && data.subcatIds.Count()>0)
+            if (data.subcatIds != null && data.subcatIds.Count() > 0)
             {
-                    string subcategoryString = " (calendar.[CALENDAR_SUB_CATEGORY_ID] like ";
-                    for (int i = 0; i < data.subcatIds.Count(); i++)
+                string subcategoryString = " (calendar.[CALENDAR_SUB_CATEGORY_ID] like ";
+                for (int i = 0; i < data.subcatIds.Count(); i++)
+                {
+                    if (i == 0)
                     {
-                        if (i == 0)
-                        {
-                            subcategoryString += "N'%" + data.subcatIds[i] + "%'";
-                        }
-                        else
-                        {
-                            subcategoryString += " or calendar.[CALENDAR_SUB_CATEGORY_ID] like N'%" + data.subcatIds[i] + "%'";
-                        }
+                        subcategoryString += "N'%" + data.subcatIds[i] + "%'";
                     }
-                    subcategoryString += ") ";
-                    filterQueryList.Add(subcategoryString);
+                    else
+                    {
+                        subcategoryString += " or calendar.[CALENDAR_SUB_CATEGORY_ID] like N'%" + data.subcatIds[i] + "%'";
+                    }
+                }
+                subcategoryString += ") ";
+                filterQueryList.Add(subcategoryString);
 
-                
+
             }
 
-            if (data.tags != null && data.tags.Count()>0)
+            if (data.tags != null && data.tags.Count() > 0)
             {
-                
-                    string subcategoryString = " (calendar.[TAGS] like ";
-                    for (int i = 0; i < data.tags.Count(); i++)
+
+                string subcategoryString = " (calendar.[TAGS] like ";
+                for (int i = 0; i < data.tags.Count(); i++)
+                {
+                    if (i == 0)
                     {
-                        if (i == 0)
-                        {
-                            subcategoryString += "N'%" + data.tags[i] + "%'";
-                        }
-                        else
-                        {
-                            subcategoryString += " or calendar.[TAGS] like N'%" + data.tags[i] + "%'";
-                        }
+                        subcategoryString += "N'%" + data.tags[i] + "%'";
                     }
-                    subcategoryString += ") ";
-                    filterQueryList.Add(subcategoryString);
+                    else
+                    {
+                        subcategoryString += " or calendar.[TAGS] like N'%" + data.tags[i] + "%'";
+                    }
+                }
+                subcategoryString += ") ";
+                filterQueryList.Add(subcategoryString);
             }
 
             if (!string.IsNullOrEmpty(data.keyword))
@@ -180,13 +189,15 @@ namespace Barrway.Service.Repository
                 filterQueryList.Add(" ( calendar.[CALENDAR_NAME] like N'%" + data.keyword + "%') ");
             }
 
-            if (!string.IsNullOrEmpty(data.company_code)) {
+            if (!string.IsNullOrEmpty(data.company_code))
+            {
                 filterQueryList.Add($" (company.COMPANY_CODE='{data.company_code}')");
             }
 
             string filterQuery = "";
-            if (filterQueryList.Count() > 0) { 
-            filterQuery= " AND ("+ string.Join(" OR ", filterQueryList)+")";
+            if (filterQueryList.Count() > 0)
+            {
+                filterQuery = " AND (" + string.Join(" OR ", filterQueryList) + ")";
             }
 
             string sqlString = $@"declare @PageSize int= {data.size}, 
@@ -221,14 +232,14 @@ namespace Barrway.Service.Repository
 
 
             List<string> filterQueryList = new List<string>();
-            if (data.districtIds != null && data.districtIds.Count()>0)
+            if (data.districtIds != null && data.districtIds.Count() > 0)
 
             {
                 string commaSeparatedIds = string.Join(",", data.districtIds);
                 filterQueryList.Add(" (DISTRICT_ID in (" + commaSeparatedIds + ") ) ");
             }
 
-            if (data.tags != null && data.tags.Count()>0)
+            if (data.tags != null && data.tags.Count() > 0)
             {
                 string subcategoryString = " ([TAGS] like ";
                 for (int i = 0; i < data.tags.Count(); i++)
@@ -334,7 +345,7 @@ namespace Barrway.Service.Repository
                 var company = BusinessCompanyResult.FirstOrDefault();
 
                 string filter = $" (company.COMPANY_CODE='{companyCode}')";
-                var calendars = await GetCalendarsSearchResult(new SearchAPIModel() { size=100}, new List<string>() { filter });
+                var calendars = await GetCalendarsSearchResult(new SearchAPIModel() { size = 100 }, new List<string>() { filter });
 
                 List<string> subCategories = new List<string>();
                 List<string> categories = new List<string>();
@@ -342,12 +353,12 @@ namespace Barrway.Service.Repository
                 {
                     if (calendar.CATEGORY_NAME != null) categories.Add(calendar.CATEGORY_NAME);
 
-                    if (calendar.CALENDAR_SUB_CATEGORY_NAME != null) subCategories.AddRange(calendar.CALENDAR_SUB_CATEGORY_NAME.Split(',').Select(x=>x.Trim()).ToList());
+                    if (calendar.CALENDAR_SUB_CATEGORY_NAME != null) subCategories.AddRange(calendar.CALENDAR_SUB_CATEGORY_NAME.Split(',').Select(x => x.Trim()).ToList());
                 });
 
                 company.CATEGORIES = categories.Distinct().ToList();
                 company.SUB_CATEGORIES = subCategories.Distinct().ToList();
-                company.TAGS= formatTagsString(company.TAGS);
+                company.TAGS = formatTagsString(company.TAGS);
                 company.COMPANY_LOGO_PATH = GetFilepath(company.COMPANY_LOGO_PATH, "COMPANY");
                 company.COMPANY_BANNER_PATH = GetFilepath(company.COMPANY_BANNER_PATH, "COMPANY_BANNER");
                 return BusinessCompanyResult.FirstOrDefault();
@@ -467,7 +478,7 @@ namespace Barrway.Service.Repository
             }
 
         }
-        private string GetFilepath(string path, string type="")
+        private string GetFilepath(string path, string type = "")
         {
 
             if (!string.IsNullOrEmpty(path) && path.Contains("/"))
@@ -478,8 +489,9 @@ namespace Barrway.Service.Repository
             }
             else
             {
-               
-                switch (type) {
+
+                switch (type)
+                {
 
                     case "COMPANY": path = AppSettings.default_company_logopath; break;
                     case "COMPANY_BANNER": path = AppSettings.default_company_bannerpath; break;
@@ -490,6 +502,32 @@ namespace Barrway.Service.Repository
             }
         }
 
-        
+
+
+        #region calendar service
+        public async Task<List<IDictionary<string, object>>> GetEvents(CalendarRequestModel calendarRequest) {
+
+            Form_DataTable data = mapper.Map<Form_DataTable>(calendarRequest);
+            string filterQuery = GetDateQuery(calendarRequest.start, calendarRequest.end);
+            data.filter = new FilterDTO() {field= "start", value=filterQuery+ " and F.COMPANY_CODE=N'" + calendarRequest.COMPANY_CODE + "' and F.CALENDAR_CODE=N'" + calendarRequest.CALENDAR_CODE + "'" };
+
+            ReferalFormDataResponseModel result = await formAPIRepository.getReferralFormFields(data);
+
+            if (result != null && result.events != null) { 
+            return result.events;
+            }
+            return new List<IDictionary<string, object>>();
+        }
+
+        private string GetDateQuery(DateTime start, DateTime end) {
+            string _start = start.ToString("yyyy-MM-dd");
+            string _end = end.ToString("yyyy-MM-dd");
+            return $@"((cast([start] as date) <= '{_start}' and (cast([end] as date) <= '{_end}' and cast([end] as date) >= '{_start}')) or
+										((cast([start] as date) >= '{_start}' and cast([start] as date) <= '{_end}') and (cast([end] as date) <= '{_end}' and cast([end] as date) >= '{_start}')) or
+										((cast([start] as date) <= '{_end}' and cast([start] as date) >= '{_start}') and cast([end] as date) >= '{_end}') or
+										(cast([start] as date) <= '{_start}' and cast([end] as date) >= '{_end}'))";
+        }
+        #endregion
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using Barrway.DTO.APIModels.Company;
+﻿using Barrway.DTO.APIModels.Calendar;
+using Barrway.DTO.APIModels.Company;
 using Barrway.DTO.APIModels.Dashboard;
 using Barrway.DTO.APIModels.SearchAPI;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace Barrway.Service.IRepository
         Task<Dictionary<string, List<IDictionary<string, object>>>> GetCompanyCalendarPackages(string code);
         Task<List<ServiceList>> GetCompanyServiceList(string code);
         Task<List<PhotoGalleryModel>> GetCompanyPhotoGallery(string code);
-
+        Task<List<IDictionary<string, object>>> GetEvents(CalendarRequestModel calendarRequest);
 
 
     }

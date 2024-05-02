@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Barrway.DTO.APIModels.Calendar;
+using FormGeneratorDTOs.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +13,8 @@ namespace Barrway.Mapping
         public ViewModelMappingProfile()
         {
             // CreateMap<ProductMaster, BankGridMasterViewModel>();   
+            CreateMap<CalendarRequestModel, Form_DataTable>();
+
         }
     }
 }
