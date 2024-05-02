@@ -3718,7 +3718,7 @@ textarea.form-control-lg {
     box-shadow: var(--bs-btn-focus-box-shadow);
 }
 
-.btn-check:checked + .btn,
+/*.btn-check:checked + .btn,
 .btn.active,
 .btn.show,
 .btn:first-child:active,
@@ -3726,6 +3726,12 @@ textarea.form-control-lg {
     color: var(--bs-btn-active-color);
     background-color: var(--bs-btn-active-bg);
     border-color: var(--bs-btn-active-border-color);
+}*/
+
+.btn-check:checked + .btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check) + .btn:active {
+    color: var(--bs-btn-active-color);
+    background-color: #9c27b0;
+    border-color: #9c27b0;
 }
 
     .btn-check:checked + .btn:focus-visible,
@@ -6603,15 +6609,22 @@ fieldset:disabled .btn {
     border-top-right-radius: var(--bs-modal-inner-border-radius);
 }
 
-    .modal-header .btn-close {
-        padding: calc(var(--bs-modal-header-padding-y) * 0.5) calc(var(--bs-modal-header-padding-x) * 0.5);
-        margin: calc(-0.5 * var(--bs-modal-header-padding-y)) calc(-0.5 * var(--bs-modal-header-padding-x)) calc(-0.5 * var(--bs-modal-header-padding-y)) auto;
-    }
+.modal-header .btn-close {
+    padding: calc(var(--bs-modal-header-padding-y) * 0.5) calc(var(--bs-modal-header-padding-x) * 0.5);
+    margin: calc(-0.5 * var(--bs-modal-header-padding-y)) calc(-0.5 * var(--bs-modal-header-padding-x)) calc(-0.5 * var(--bs-modal-header-padding-y)) auto;
+}
 
 .modal-title {
     margin-bottom: 0;
     line-height: var(--bs-modal-title-line-height);
 }
+
+h5#exampleModalLabel {
+    color: #72328a;
+    font-size: 15px;
+    margin: 0px;
+}
+
 
 .modal-body {
     position: relative;

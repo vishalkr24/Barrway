@@ -13,8 +13,52 @@
         background-color: lightblue;
         color: white;
     }
+    .upcoming-event-wrap {
+        width: 100%;
+        float: left;
+        padding: 5px 15px;
+    }
+
+        .upcoming-event-wrap .upe-text {
+            width: 70%;
+            float: left;
+        }
+
+        .upcoming-event-wrap .upe-profile-imae {
+            text-align: center;
+            width: 30%;
+            float: left;
+        }
+        .upcoming-event-wrap .upe-profile-imae img {
+            height: 70px;
+            width: 70px;
+            border-radius: 100px;
+            border: 1px solid grey;
+            margin-top: 18px;
+        }
 
     @media screen and (max-width:767px) {
+        .upcoming-event-wrap .upe-profile-imae img {
+            height: 55px;
+            width: 55px;
+            margin-top: 5px;
+        }
+        .upcoming-event-wrap .upe-profile-imae img {
+            height:55px;
+            width: 55px;
+        }
+        .upcoming-event-wrap .upe-text {
+            width: 65%;
+        }
+        .main-right {
+            padding: 5px;
+        }
+        .upcoming-event-wrap .upe-profile-imae {
+            width: 35%;
+        }
+        .upe-profile_company-name {
+           font-size:14px;
+        }
         .main-left {
             max-height: 100%;
         }
@@ -99,25 +143,55 @@
                             <div class="col-md-12 mb-3" ng-repeat="event in bookingEventData">
                                 <div style="border-radius: 8px; cursor:pointer; background: #ECFAFB; min-height: 107px; ">
 
+                                    <!-- <div class="row" ng-click="GoToCalendar(event.COMPANY_CODE, '', 2)">
+                                         <div class="col-md-9" style="padding:16px 31px">
+                                             <h3>{{event.customTitleSplit[1]}}</h3>
+                                             <div>
+                                                 {{event.customTitleSplit[0]}}
+                                             </div>
+                                             <div>
+                                                 {{event.customTitleSplit[2]}}
+                                             </div>
+                                             <div>
+                                                 {{event.start}}
+                                             </div>
+                                         </div>
+                                         <div class="col-md-3 text-center">
+                                             <img src="{{event.COMPANY_LOGO_PATH}}" style="height:70px; width:70px; border-radius: 100px; border: 1px solid grey; margin-top:18px;" />
+                                             <div>
+                                                 {{event.COMPANY_NAME_ENGLISH}}
+                                             </div>
+                                         </div>
+                                     </div>-->
                                     <div class="row" ng-click="GoToCalendar(event.COMPANY_CODE, '', 2)">
-                                        <div class="col-md-9" style="padding:16px 31px">
-                                            <h3>{{event.customTitleSplit[1]}}</h3>
-                                            <div>
-                                                {{event.customTitleSplit[0]}}
+                                        <div class="col-md-12">
+                                            <div class="upcoming-event-wrap">
+                                                <div class="upe-text">
+                                                    <h3>{{event.customTitleSplit[1]}}</h3>
+                                                    <div>
+                                                        {{event.customTitleSplit[0]}}
+                                                    </div>
+                                                    <div>
+                                                        {{event.customTitleSplit[2]}}
+                                                    </div>
+                                                    <div>
+                                                        {{event.start}}
+                                                    </div>
+                                                </div>
+                                                <div class="upe-profile-imae">
+                                                    <img src="{{event.COMPANY_LOGO_PATH}}" />
+                                                    <div class="upe-profile_company-name">
+                                                        {{event.COMPANY_NAME_ENGLISH}}
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div>
-                                                {{event.customTitleSplit[2]}}
-                                            </div>
-                                            <div>
-                                                {{event.start}}
-                                            </div>
+                                        </div>
+                                        <!--<div class="col-md-9" style="padding:16px 31px">
+                                            
                                         </div>
                                         <div class="col-md-3 text-center">
-                                            <img src="{{event.COMPANY_LOGO_PATH}}" style="height:70px; width:70px; border-radius: 100px; border: 1px solid grey; margin-top:18px;" />
-                                            <div>
-                                                {{event.COMPANY_NAME_ENGLISH}}
-                                            </div>
-                                        </div>
+                                           
+                                        </div>-->
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12" style="padding:0px 31px; padding-bottom: 16px;">
