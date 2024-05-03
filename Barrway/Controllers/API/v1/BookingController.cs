@@ -1,5 +1,6 @@
 ﻿using Barrway.DTO.APIModels.Booking;
 using Barrway.DTO.APIModels.Dashboard;
+using Barrway.DTO.APIModels.SearchAPI;
 using Barrway.Security;
 using Barrway.Service.IRepository;
 using System;
@@ -24,14 +25,14 @@ namespace Barrway.Controllers.API.v1
             this.mobileAPIService = mobileAPIService;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("api/user/upcommingbooking")]
         [ResponseType(typeof(List<ModifiedMyBooking>))]
-        public async Task<IHttpActionResult> UpcommingBooking()
+        public async Task<IHttpActionResult> UpcommingBooking(MyBookingApiModel model)
         {
             try
             {
-                var result = await mobileAPIService.GetMyBookings(APIUserIdentity.UserEmail, "1");
+                var result = await mobileAPIService.GetMyBookings(model,APIUserIdentity.UserEmail, "1");
                 return Ok(result);
             }
             catch (Exception ex)
@@ -40,14 +41,14 @@ namespace Barrway.Controllers.API.v1
             }
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("api/user/pastbooking")]
         [ResponseType(typeof(List<ModifiedMyBooking>))]
-        public async Task<IHttpActionResult> PastBooking()
+        public async Task<IHttpActionResult> PastBooking(MyBookingApiModel model)
         {
             try
             {
-                var result = await mobileAPIService.GetMyBookings(APIUserIdentity.UserEmail, "2");
+                var result = await mobileAPIService.GetMyBookings(model, APIUserIdentity.UserEmail, "2");
                 return Ok(result);
             }
             catch (Exception ex)

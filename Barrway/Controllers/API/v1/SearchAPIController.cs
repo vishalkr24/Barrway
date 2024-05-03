@@ -24,7 +24,7 @@ namespace Barrway.Controllers.API.v1
         {
             this.mobileAPIService = mobileAPIService;
         }
-
+            
         [Route("api/search/calendars")]
         [HttpPost]
         [ResponseType(typeof(SearchResponseModel<List<CalendarModel>>))]

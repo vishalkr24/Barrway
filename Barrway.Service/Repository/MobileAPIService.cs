@@ -432,11 +432,15 @@ namespace Barrway.Service.Repository
 
 
 
-        public async Task<List<ModifiedMyBooking>> GetMyBookings(string email, string Type, string EventId = null)
+        public async Task<List<ModifiedMyBooking>> GetMyBookings(MyBookingApiModel modelstring, string email, string Type, string EventId = null)
         {
 
+            modelstring.page = modelstring.page == 0 ? 1 : modelstring.page;
+            modelstring.size = modelstring.size == 0 ? 10 : modelstring.size;
             string sqlString = $@"DECLARE @retval nvarchar(max);       DECLARE @sQuery nvarchar(max); DECLARE @ParmDefinition nvarchar(max);                        
-                                    DECLARE @customTitleQuery nvarchar(max);           
+                                    DECLARE @customTitleQuery nvarchar(max);
+                                    declare @PageSize int={modelstring.size};
+                                    declare @PageNumber int={modelstring.page};
 
                                     IF OBJECT_ID(N'tempdb..#temptable') IS NOT NULL  BEGIN DROP TABLE #temptable END 
                                     ;with cte1 as( select distinct  f.*,f.resources 'resourceId', transaction_m.Id as 'TransactionId', company.COMPANY_LOGO_PATH, company.Id as 'COMPANY_ID', company.COMPANY_NAME_ENGLISH ,  STUFF((SELECT ',' +  PARTICIPANT_MASTER_1940.[STUDENT_NAME]  
@@ -460,11 +464,12 @@ namespace Barrway.Service.Repository
                                     {((Type == "1") ? $@"'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' <= cast(f.[start] as datetime)" : $@"'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' > cast(f.[end] as datetime)")}
                                     and f.formid=2305 and participant_m.EMAIL = '{email}' and transaction_m.SLOT = f.Id {((!string.IsNullOrEmpty(EventId) ? $@" and f.Id = '{EventId}'" : ""))}
                                     ) ,
-                                    cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
+                                    
+                                     cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER ,COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page', * from cte1	 where len(customtitle)>0  ORDER BY Id OFFSET @PageSize * (@PageNumber - 1) ROWS FETCH NEXT @PageSize ROWS ONLY)
+                                    
 
-
-                                    select* into #temptable from cte2  where len(customtitle)>0;    declare @counter int= 0, @c int= 1;   
-                                    select @counter = (select count(1) from #temptable)	while @c <= @counter    begin    select @customTitleQuery = customTitle from #temptable where ROWNUMBER=@c;	SET @sQuery= ' select @retvalOUT = (' + @customTitleQuery + ')'  
+                                    select* into #temptable from cte2  where len(customtitle)>0;    declare @counter int= 0, @c int= (select min(ROWNUMBER) from #temptable);   
+                                    select @counter = (select max(ROWNUMBER) from #temptable)	while @c <= @counter    begin    select @customTitleQuery = customTitle from #temptable where ROWNUMBER=@c;	SET @sQuery= ' select @retvalOUT = (' + @customTitleQuery + ')'  
                                     SET @ParmDefinition = N'@retvalOUT nvarchar(max) OUTPUT';   
                                     EXEC sp_executesql @sQuery, @ParmDefinition, @retvalOUT = @retval OUTPUT; update #temptable set customTitle=@retval where ROWNUMBER=@c;	set @c = @c + 1;  end  select* from #temptable order by cast([start] as datetime) desc";
 
@@ -510,7 +515,12 @@ namespace Barrway.Service.Repository
         {
             ModifiedMyBooking modifiedBooking = new ModifiedMyBooking
             {
+               
+
                 ROWNUMBER = booking.ROWNUMBER,
+                total_records = booking.total_records,
+                size = booking.size,
+                page = booking.page,
                 Id = booking.Id,
                 formGroupKey = booking.formGroupKey,
                 formID = booking.formID,
