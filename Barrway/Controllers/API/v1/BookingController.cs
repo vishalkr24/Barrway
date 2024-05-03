@@ -25,25 +25,14 @@ namespace Barrway.Controllers.API.v1
         }
 
         [HttpGet]
-        [Route("api/dashboard/UpcommingBooking")]
+        [Route("api/user/upcommingbooking")]
         [ResponseType(typeof(ModifiedMyBooking))]
         public async Task<IHttpActionResult> UpcommingBooking()
         {
             try
             {
-                if (User.Identity.IsAuthenticated)
-                {
-                    var Type = "1";
-                    var rr = UserIdentity.UserEmail;
-                    var result = await mobileAPIService.GetMyBookings("rohanchaurasia171@gmail.com", Type);
-
-                    return Ok(result);
-                }
-                else
-                {
-                    return NotFound();
-                }
-
+                var result = await mobileAPIService.GetMyBookings(APIUserIdentity.UserEmail, "1");
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -52,25 +41,14 @@ namespace Barrway.Controllers.API.v1
         }
 
         [HttpGet]
-        [Route("api/dashboard/PastBooking")]
+        [Route("api/user/pastbooking")]
         [ResponseType(typeof(ModifiedMyBooking))]
         public async Task<IHttpActionResult> PastBooking()
         {
             try
             {
-                if (User.Identity.IsAuthenticated)
-                {
-                    var Type = "2";
-                    var rr = UserIdentity.UserEmail;
-                    var result = await mobileAPIService.GetMyBookings("rohanchaurasia171@gmail.com", Type);
-
-                    return Ok(result);
-                }
-                else
-                {
-                    return NotFound();
-                }
-
+                var result = await mobileAPIService.GetMyBookings(APIUserIdentity.UserEmail, "2");
+                return Ok(result);
             }
             catch (Exception ex)
             {

@@ -2178,9 +2178,9 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
 
                 bool IsServicePaid = false;
                 double ServiceFees = 0;
-                if (!string.IsNullOrEmpty(service[0]["IS_SERVICE_PAID"]?.ToString()))
+                if (service.Count()>0 && !string.IsNullOrEmpty(service[0]["IS_SERVICE_PAID"]?.ToString()))
                 {
-                    if (service[0]["IS_SERVICE_PAID"] ==  "Y")
+                    if (service[0]["IS_SERVICE_PAID"]?.ToString() ==  "Y")
                     {
                         if (!string.IsNullOrEmpty(service[0]["fees_1"]?.ToString()))
                         {
