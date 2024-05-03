@@ -274,7 +274,7 @@ namespace Barrway.Controllers
             List<Tag> FinalTagList = new List<Tag>();
             var featuredResult = await businessUserService.GetFeaturedBlogs();
             blogs.FeaturedBlogs = JsonConvert.DeserializeObject<List<Blog>>(JsonConvert.SerializeObject(featuredResult.Data));
-            if (blogs.FeaturedBlogs.Count() > 0)
+            if (blogs.FeaturedBlogs!=null && blogs.FeaturedBlogs.Count() > 0)
             {
                 blogs.FeaturedBlogs.ForEach(blog =>
                 {

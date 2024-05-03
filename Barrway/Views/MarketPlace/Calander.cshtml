@@ -814,12 +814,30 @@
             .agenda-min-e div {
                 left: 22%;
             }
+            .fc-toolbar .fc-center {
+                display: grid;
+            }
         }
 
-        @@media only screen and (max-width: 500px) {
+        @@media only screen and (min-width:400px) and (max-width:500px) {
             .agenda-min-e div {
                 left: 28%;
             }
+        }
+        @@media only screen and (max-width:400px) {
+            .agenda-min-e div {
+                left: 32%;
+            }
+        }
+        .form-control-sm {
+            height: 30px; /* Adjust the height as needed */
+            padding: .25rem .5rem; /* Adjust padding as needed */
+            font-size: 0.875rem; /* Adjust font size as needed */
+            line-height: 1.5; /* Adjust line height as needed */
+            border-radius: 0.2rem; /* Adjust border radius as needed */
+            border: 1px solid #ced4da; /* Adjust border color as needed */
+            background-color: #fff; /* Adjust background color as needed */
+            color: #495057; /* Adjust text color as needed */
         }
 
     </style>
