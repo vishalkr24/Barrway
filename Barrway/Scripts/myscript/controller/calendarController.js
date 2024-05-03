@@ -16897,16 +16897,11 @@
         $("#user-nav-dashboard").addClass("active")
 
         adminService.postAsync('/UserAdmin/GetRecentlyBookedCalendars/').then(function (res) {
-
-            console.log(res.data.data.Data)
-
-            for (var i = 0; i < res.data.data.Data.length; i++) {
-                res.data.data.Data[i].SlotCreated = moment(res.data.data.Data[i].SlotCreated).format("YYYY-MM-DD HH:mm");
-                res.data.data.Data[i].COMPANY_LOGO_PATH = res.data.data.Data[i].COMPANY_LOGO_PATH.replace('~', '..')
+            for (var i = 0; i < res.data.Data.length; i++) {
+                res.data.Data[i].SlotCreated = moment(res.data.Data[i].SlotCreated).format("YYYY-MM-DD HH:mm");
+                res.data.Data[i].COMPANY_LOGO_PATH = res.data.Data[i].COMPANY_LOGO_PATH.replace('~', '..')
             }
-
-            $scope.CalendarCompanyList = res.data.data.Data;
-
+            $scope.CalendarCompanyList = res.data.Data;
         }, function (err) {
 
         });
