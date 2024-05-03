@@ -29,15 +29,17 @@ namespace Barrway.Controllers
         private readonly IPublicUserService publicUserService;
         private readonly IBusinessUserService businessUserService;
         private readonly IMasterService masterService;
+        private readonly ISqlFunction sqlFunction;
 
         // GET: FormAPI
-        public FormAPIController(IFormAPIRepository formAPIRepository, ICalendarService calendarService, IPublicUserService publicUserService, IBusinessUserService businessUserService, IMasterService masterService)
+        public FormAPIController(IFormAPIRepository formAPIRepository, ICalendarService calendarService, IPublicUserService publicUserService, IBusinessUserService businessUserService, IMasterService masterService, ISqlFunction sqlFunction)
         {
             this.formAPIRepository = formAPIRepository;
             this.calendarService = calendarService;
             this.publicUserService = publicUserService;
             this.businessUserService = businessUserService;
             this.masterService = masterService;
+            this.sqlFunction = sqlFunction;
         }
 
         [HttpPost]
@@ -201,6 +203,7 @@ namespace Barrway.Controllers
             // Validation Check for Session Count
             string IsCourseEvent = "N";
             string serviceId = "";
+            string resourceId = "";
 
             if (data.formId == (int)FormSetting.CALENDAR_FORM)
             {
@@ -233,6 +236,7 @@ namespace Barrway.Controllers
                             
                             if(deserData.Any(x => x["name"]?.ToString() == "activities"))
                             serviceId = deserData.FirstOrDefault(x => x["name"]?.ToString() == "activities")["value"]?.ToString();
+                            resourceId = deserData.FirstOrDefault(x => x["name"]?.ToString() == "resources")["value"]?.ToString();
 
                             if (!string.IsNullOrEmpty(serviceId) && serviceId != "-1")
                             {
@@ -286,14 +290,128 @@ namespace Barrway.Controllers
                 }
             }
 
-            var result = Json((await formAPIRepository.GeneratedFormData(data)).Data);
+            var result = (await formAPIRepository.GeneratedFormData(data)).Data;
 
-            if (IsCourseEvent == "Y")
+            if (IsCourseEvent == "COURSE")
             {
+                try
+                {
+                    // Enroll already enrolled students to newly created single session
+                    string query = $@"
+                    declare @SlotId int = (select top 1 cf.Id from CALENDAR_FORM_1935 cf
+                    join TRANSACTION_MASTER_1942 t on t.SLOT = cf.Id
+                    where cf.IS_COURSE_EVENT = 'Y' and activities = '{serviceId}'
+                    order by cf.created_at desc);
 
+                    if (@SlotId is not null and @SlotId != '')
+                    begin
+                        INSERT INTO [dbo].[TRANSACTION_MASTER_1942]
+                                   ([formGroupKey]
+                                   ,[formID]
+                                   ,[userID]
+                                   ,[Current_Status]
+                                   ,[cycle]
+                                   ,[MasterFormID]
+                                   ,[MasterFormRow]
+                                   ,[formRecordOrder]
+                                   ,[formRecordStatus]
+                                   ,[ApprovalStatus]
+                                   ,[text_1683717657815]
+                                   ,[created_at]
+                                   ,[updated_at]
+                                   ,[created_by]
+                                   ,[updated_by]
+                                   ,[SLOT]
+                                   ,[RESOURCE]
+                                   ,[ACTIVITY]
+                                   ,[STUDENT]
+                                   ,[REMARKS]
+                                   ,[FEES]
+                                   ,[FEES_1]
+                                   ,[FEES_2]
+                                   ,[FEES_LIST]
+                                   ,[ATTENDANCE]
+                                   ,[hidden_1683717028956]
+                                   ,[COMPANY_CODE]
+                                   ,[CALENDAR_CODE]
+                                   ,[resForm_2304]
+                                   ,[actFormID]
+                                   ,[parentID]
+                                   ,[seperatedFormIDs]
+                                   ,[seperatedTitles]
+                                   ,[seperatedIds]
+                                   ,[seperatedResFormIDs]
+                                   ,[seperatedResEntryIDs]
+                                   ,[seperatedResColValues]
+                                   ,[seperatedColorValues]
+                                   ,[USERTOKEN]
+                                   ,[ATTACHMENT_FROM_PARTICIPANTS]
+                                   ,[COMMENTS_FROM_PARTICIPANT]
+                                   ,[ATTACHMENT_FROM_STAFF]
+                                   ,[COMMENTS_FROM_STAFF]
+                                   ,[transaction_fees]
+                                   ,[ASSESSMENT_FILES]
+                                   ,[ASSESSMENT_FILES_LIST])
+                             select (select top 1 formGroupKey from CALENDAR_FORM_1935 where Id = '{result.Id}')
+                              ,[formID]
+                              ,[userID]
+                              ,[Current_Status]
+                              ,[cycle]
+                              ,[MasterFormID]
+                              ,[MasterFormRow]
+                              ,[formRecordOrder]
+                              ,[formRecordStatus]
+                              ,[ApprovalStatus]
+                              ,[text_1683717657815]
+                              ,'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'
+                              ,'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'
+                              ,[created_by]
+                              ,[updated_by]
+                              ,'{result.Id}'
+                              ,'{resourceId}'
+                              ,[ACTIVITY]
+                              ,[STUDENT]
+                              ,[REMARKS]
+                              ,[FEES]
+                              ,[FEES_1]
+                              ,[FEES_2]
+                              ,[FEES_LIST]
+                              ,'NOT-MARKED'
+                              ,[hidden_1683717028956]
+                              ,[COMPANY_CODE]
+                              ,[CALENDAR_CODE]
+                              ,[resForm_2304]
+                              ,[actFormID]
+                              ,[parentID]
+                              ,[seperatedFormIDs]
+                              ,[seperatedTitles]
+                              ,[seperatedIds]
+                              ,[seperatedResFormIDs]
+                              ,[seperatedResEntryIDs]
+                              ,[seperatedResColValues]
+                              ,[seperatedColorValues]
+                              ,[USERTOKEN]
+                              ,[ATTACHMENT_FROM_PARTICIPANTS]
+                              ,[COMMENTS_FROM_PARTICIPANT]
+                              ,[ATTACHMENT_FROM_STAFF]
+                              ,[COMMENTS_FROM_STAFF]
+                              ,[transaction_fees]
+                              ,[ASSESSMENT_FILES]
+                              ,[ASSESSMENT_FILES_LIST]
+                          FROM [dbo].[TRANSACTION_MASTER_1942] t where t.ACTIVITY = '{serviceId}' and t.SLOT = @SlotId;
+                    end";
+
+                    var result2 = await sqlFunction.ExecuteSqlCommandQuery(query);
+                }
+                catch (Exception ex)
+                {
+
+                }
+                
+               
             }
 
-            return result;
+            return Json(result);
         }
 
         [HttpPost]
