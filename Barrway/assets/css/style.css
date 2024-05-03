@@ -159,6 +159,10 @@ section.top-banner {
     color: #fff;
     margin-bottom: 25px;
 }
+
+.fz_47 {
+    font-size: 47px !important;
+}
 .banner-form {
     width: 100%;
     float: left;
@@ -234,6 +238,22 @@ section.top-banner {
     float: left;
 }
 
+.bs-paragraph {
+    font-size: 18px;
+    font-weight: 400;
+    text-align: center;
+    line-height: 26px;
+    margin-top: 30px;
+}
+.hdiw-cont {
+    max-width: 80%;
+    margin: 0 auto;
+}
+
+    .hdiw-cont img {
+        min-height: 194px;
+    }
+
 /*sliders*/
 
 .pro-text p {
@@ -305,6 +325,14 @@ section.subcatageory {
     align-items: center;
     color: #E2476C;
 }
+.booking-text2 h2 {
+    font-size: 32px;
+}
+
+.bg2.feature {
+    background-image: url("../img/feature.png");
+}
+
 .booking-text p {
     font-weight: 400;
     font-size: 15px;
@@ -320,6 +348,10 @@ section.subcatageory {
     float: left;
 }
 
+.bo-ra {
+    border: 2px solid #3fbfc7;
+    border-radius: 9px;
+}
 
 /*===================================== how does it work ==========================================*/
 .mt-60{
@@ -337,6 +369,67 @@ section.subcatageory {
     font-weight: 700;
 }
 
+.new_hdiw_inner {
+    max-width: 70%;
+    margin: 0 auto;
+}
+
+@media screen and (max-width:767px) {
+    .new_hdiw_inner {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+        .new_hdiw_inner h2, .booking-text h2, .hdiw-inner h2 {
+            font-size: 30px;
+        }
+     
+    .hdiw-cont {
+        max-width: 100%;
+    }
+        .hdiw-cont img {
+            min-height: auto;
+        }
+    .feature .banner-form h1 {
+        margin: 0px;
+    }
+
+    .feature .banner-form {
+        padding: 30px 0px 50px;
+    }
+    .feature .banner-image img {
+        position: absolute;
+        top: 6px;
+        right: 20px;
+        width: 15%;
+    }
+    .prt {
+        position: relative;
+        top: 0px !important;
+    }
+    .tin-inner .booking-text {
+        max-width: 100% !important;
+        margin: 0 auto;
+    }
+    .bg .banner-form {
+        padding-top: 15px;
+    }
+    .fz_47 {
+        font-size: 25px !important;
+    }
+    .banner-form h1 {
+        margin-bottom: 0px;
+    }
+}
+@media screen and (max-width:320px) {
+    
+    .new_hdiw_inner h2, .booking-text h2, .hdiw-inner h2 {
+        font-size: 25px;
+    }
+    .feature .banner-image img {
+        width: 23%;
+    }
+}
+
 .im img {
     width: 100%;
     margin-bottom: 15px;
@@ -350,12 +443,31 @@ section.subcatageory {
     font-size: 18px;
     color: #E2476C;
 }
+
+.hdiw-cont .txt h3 {
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 30px;
+    text-align: center;
+    color: #72328A;
+    margin-top: 15px;
+}
+
+.hdiw-cont .txt p {
+    font-weight: 400;
+    font-size: 14px;
+    color: #222;
+    text-align: center;
+}
+
 .txt p {
     font-weight: 400;
     font-size: 14px;
     color: #222;
 }
-
+.txt h3 span {
+    display: block;
+}
 
 button.learn-more {
     padding: 0;
@@ -822,6 +934,9 @@ button.blogtag_num {
     position: relative;
     top: 7px;
     margin-left: 0px;
+}
+.bmarketplace-image img{
+    top:0px;
 }
 /*============================  media ====================================*/
 .bmp-logo a img {
