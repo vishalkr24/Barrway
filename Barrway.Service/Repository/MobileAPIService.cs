@@ -1,7 +1,7 @@
 
-﻿using AutoMapper;
+using AutoMapper;
 using Barrway.DTO.APIModels.Calendar;
-﻿using Barrway.DTO.APIModels.Booking;
+using Barrway.DTO.APIModels.Booking;
 using Barrway.DTO.APIModels.Company;
 using Barrway.DTO.APIModels.Dashboard;
 using Barrway.DTO.APIModels.SearchAPI;
@@ -29,7 +29,7 @@ namespace Barrway.Service.Repository
         private readonly IMapper mapper;
         private readonly string baseUrl = ConfigurationManager.AppSettings["baseurl"];
 
-        public MobileAPIService(ISqlFunction sqlFunction, IFormAPIRepository formAPIRepository,IMapper mapper)
+        public MobileAPIService(ISqlFunction sqlFunction, IFormAPIRepository formAPIRepository, IMapper mapper)
         {
             this.sqlFunction = sqlFunction;
             this.formAPIRepository = formAPIRepository;
@@ -475,12 +475,12 @@ namespace Barrway.Service.Repository
                 modifiedData.ForEach(x =>
                 {
 
-                      x.COMPANY_LOGO_PATH = GetFilepath(x.COMPANY_LOGO_PATH);
+                    x.COMPANY_LOGO_PATH = GetFilepath(x.COMPANY_LOGO_PATH);
                     if (x.DOWNLOAD_FILE_LIST != null && x.DOWNLOAD_FILE_LIST is string downloadFileListString)
                     {
                         x.DOWNLOAD_FILE_LIST = JsonConvert.DeserializeObject<dynamic[]>(x.DOWNLOAD_FILE_LIST.ToString());
                         //x.DOWNLOAD_FILE_LIST = JsonConvert.DeserializeObject<DownloadFile>(x.DOWNLOAD_FILE_LIST.ToString());
-                       // x.DOWNLOAD_FILE_LIST = JsonConvert.DeserializeObject<List<DownloadFile>>(JsonConvert.SerializeObject(x.DOWNLOAD_FILE_LIST));
+                        // x.DOWNLOAD_FILE_LIST = JsonConvert.DeserializeObject<List<DownloadFile>>(JsonConvert.SerializeObject(x.DOWNLOAD_FILE_LIST));
                     }
                     else
                     {
@@ -488,12 +488,12 @@ namespace Barrway.Service.Repository
                     }
                 });
 
-               
+
                 return modifiedData;
             }
             else
             {
-                return new List<ModifiedMyBooking>(); 
+                return new List<ModifiedMyBooking>();
             }
 
         }
@@ -697,7 +697,8 @@ namespace Barrway.Service.Repository
 
 
         #region calendar service
-        public async Task<List<IDictionary<string, object>>> GetEvents(CalendarRequestModel calendarRequest) {
+        public async Task<List<IDictionary<string, object>>> GetEvents(CalendarRequestModel calendarRequest)
+        {
 
             Form_DataTable data = mapper.Map<Form_DataTable>(calendarRequest);
             data.action = 1;
@@ -707,23 +708,24 @@ namespace Barrway.Service.Repository
             data.isCalender = 1;
             data.formId = (int)FormSetting.CALENDAR_FORM;
             string filterQuery = GetDateQuery(calendarRequest.start, calendarRequest.end);
-            data.filter = new FilterDTO() {field= "start", value=filterQuery+ " and F.COMPANY_CODE=N'" + calendarRequest.COMPANY_CODE + "' and F.CALENDAR_CODE=N'" + calendarRequest.CALENDAR_CODE + "'" };
+            data.filter = new FilterDTO() { field = "start", value = filterQuery + " and F.COMPANY_CODE=N'" + calendarRequest.COMPANY_CODE + "' and F.CALENDAR_CODE=N'" + calendarRequest.CALENDAR_CODE + "'" };
 
             ReferalFormDataResponseModel result = await formAPIRepository.getReferralFormFields(data);
 
-            if (result != null && result.events != null) { 
-            return result.events;
+            if (result != null && result.events != null)
+            {
+                return result.events;
             }
             return new List<IDictionary<string, object>>();
         }
 
 
 
-        public async Task<List<FavouriteCalendar>> GetMyFavoriteCalendars(FavouriteClanderData data ,string userId)
+        public async Task<List<FavouriteCalendar>> GetMyFavoriteCalendars(FavouriteClanderData data, string userId)
         {
             try
             {
-               
+
                 string CompanyLogic = "";
 
                 string Fev_query = $@"SELECT [Id],[created_at],[updated_at],[created_by],[updated_by],[COMPANY_CODE],[CALENDAR_CODE],[USER_ID],[IS_PUBIC_USER] FROM [dbo].[FAVORITE_CALENDAR_MASTER_1949] calendarDetails where USER_ID = '{userId}' {CompanyLogic} ";
@@ -752,21 +754,8 @@ namespace Barrway.Service.Repository
                     calendarCodes = (data.CalendarCode.Contains("'")) ? data.CalendarCode : "'" + data.CalendarCode + "'";
                 }
 
-
-                string column = "", dir = "";
-                if (data.sorters != null && data.sorters.Count() > 0)
-                {
-                    column = data.sorters.FirstOrDefault().field;
-                    dir = data.sorters.FirstOrDefault().dir;
-                }
-                else
-                {
-                    column = "created_at";
-                    dir = "desc";
-                }
-
                 int PageSize = data.size > 0 ? data.size : 20;
-                int PageNumber = data.page > 0 ? data.page : 1;                
+                int PageNumber = data.page > 0 ? data.page : 1;
 
                 string query = $@"declare @CalendarCodes varchar(max) = (select stuff((select distinct ',' + CALENDAR_CODE  from PAYMENT_HISTORY_MASTER_1956 payment 
 											  where payment.STATUS = 'complete' and payment.USER_ID = '{userId}' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd")}' < payment.CREDIT_EXPIRE_DATE
@@ -831,9 +820,14 @@ namespace Barrway.Service.Repository
                 var result = (await sqlFunction.ExecuteSqlQuery<FavouriteCalendar>(query)).ToList();
                 if (result.Any())
                 {
+                    result.ForEach(x =>
+                    {
+                        x.COMPANY_LOGO_PATH = GetFilepath(x.COMPANY_LOGO_PATH);
+                        x.CALENDAR_PHOTO_PATH = GetFilepath(x.CALENDAR_PHOTO_PATH);
+                    });
                     return result;
 
-                } 
+                }
                 else
                 {
                     return new List<FavouriteCalendar>();
@@ -848,7 +842,8 @@ namespace Barrway.Service.Repository
 
 
 
-        private string GetDateQuery(DateTime start, DateTime end) {
+        private string GetDateQuery(DateTime start, DateTime end)
+        {
             string _start = start.ToString("yyyy-MM-dd");
             string _end = end.ToString("yyyy-MM-dd");
             return $@"((cast([start] as date) <= '{_start}' and (cast([end] as date) <= '{_end}' and cast([end] as date) >= '{_start}')) or

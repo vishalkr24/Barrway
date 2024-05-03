@@ -31,11 +31,9 @@ namespace Barrway.DTO.APIModels.SearchAPI
 
     public class FavouriteClanderData
     {
-        public Filter filter { get; set; }
-        public List<Sort> sorters { get; set; }
-        public int page { get; set; }
-        public int size { get; set; }
-        public int total_records { get; set; }
+
+        public int page { get; set; } 
+        public int size { get; set; } 
         public int last_page { get; set; }
         public int page_records { get; set; }      
         public string CalendarCode { get; set; }

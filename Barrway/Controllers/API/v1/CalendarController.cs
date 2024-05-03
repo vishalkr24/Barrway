@@ -44,8 +44,8 @@ namespace Barrway.Controllers.API.v1
         public async Task<IHttpActionResult> MyFavoriteCalanders(FavouriteClanderData data)
         {
             try
-            {
-                return Ok(await mobileAPIService.GetMyFavoriteCalendars(data, APIUserIdentity.UserName));
+            {//APIUserIdentity.UserName
+                return Ok(await mobileAPIService.GetMyFavoriteCalendars(data, "RohanWebDev"));//
             }
             catch (Exception ex)
             {
