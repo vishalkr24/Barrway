@@ -2120,7 +2120,8 @@
                                             }
 
                                         } else if (check === "other") {
-                                            buyCourseEvent(eventData.Id)
+                                            debugger;
+                                            buyCourse(eventData.activities);
                                         }
                                     });
 
@@ -3232,6 +3233,49 @@
 
         }
 
+        function buyCourse(ServiceId) {
+            $.ajax({
+                url: "/Account/CheckPublicUserLogin",
+                type: "POST",
+                success: function (response) {
+
+                    if (!response.Status) {
+
+                        swal({
+                            title: "Login Required",
+                            text: "Kindly login into your account and then you can buy this event individually.",
+                            icon: "info",
+                            buttons: {
+                                confirm: "Login",
+                                cancel: "Leave it"
+                            }
+                        }).then(function (value) {
+                            if (value) {
+                                window.location.href = '/Account/Login?returnUrl=/Marketplace/CompanyPackage?' + window.location.href.split('?')[1].replace('&', '$') + '';
+                            }
+                        });
+
+
+                    } else {
+                        swal({
+                            icon: "info",
+                            title: "Confirm Payment!",
+                            text: "Are you sure you want to buy this course individually?",
+                            buttons: {
+                                confirm: "Yes",
+                                cancel: "No"
+                            }
+                        }).then(function (confirm) {
+                            if (confirm) {
+                                $("#txtPackageName").val(ServiceId);
+                                $("#txtEventType").val("3");
+                                $("#paymentForm").submit();
+                            }
+                        });
+                    }
+                }
+            });
+        }
 
     </script>
 

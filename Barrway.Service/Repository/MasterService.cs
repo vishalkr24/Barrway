@@ -63,7 +63,7 @@ namespace Barrway.Service.Repository
                 {
                     foreach (var item in data.filters)
                     {
-                        if (!string.IsNullOrEmpty(item.value))
+                        if (!string.IsNullOrEmpty(item.value) && item.value != " ")
                         {
                             if (item.field == "created_at" || item.field == "updated_at")
                             {
@@ -145,7 +145,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 {
                     foreach (var item in data.filters)
                     {
-                        if (!string.IsNullOrEmpty(item.value))
+                        if (!string.IsNullOrEmpty(item.value) && item.value != " ")
                         {
                             if (item.field == "created_at" || item.field == "updated_at")
                             {
@@ -229,7 +229,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 {
                     foreach (var item in data.filters)
                     {
-                        if (!string.IsNullOrEmpty(item.value))
+                        if (!string.IsNullOrEmpty(item.value) && item.value != " ")
                         {
                             if (item.field == "created_at" || item.field == "updated_at")
                             {
@@ -312,7 +312,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 {
                     foreach (var item in data.filters)
                     {
-                        if (!string.IsNullOrEmpty(item.value))
+                        if (!string.IsNullOrEmpty(item.value) && item.value != " ")
                         {
                             if (item.field == "created_at" || item.field == "updated_at")
                             {
@@ -394,7 +394,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 {
                     foreach (var item in data.filters)
                     {
-                        if (!string.IsNullOrEmpty(item.value))
+                        if (!string.IsNullOrEmpty(item.value) && item.value != " ")
                         {
                             if (item.field == "created_at" || item.field == "updated_at")
                             {
@@ -490,7 +490,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 {
                     foreach (var item in data.filters)
                     {
-                        if (!string.IsNullOrEmpty(item.value))
+                        if (!string.IsNullOrEmpty(item.value) && item.value != " ")
                         {
                             if (item.field == "created_at" || item.field == "updated_at" || item.field == "FROM_TIME" || item.field == "TO_TIME")
                             {
@@ -617,7 +617,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 {
                     foreach (var item in data.filters)
                     {
-                        if (!string.IsNullOrEmpty(item.value))
+                        if (!string.IsNullOrEmpty(item.value) && item.value != " ")
                         {
                             if (item.field == "created_at" || item.field == "updated_at")
                             {
@@ -1202,7 +1202,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 {
                     foreach (var item in data.filters)
                     {
-                        if (!string.IsNullOrEmpty(item.value))
+                        if (!string.IsNullOrEmpty(item.value) && item.value != " ")
                         {
                             if (item.field == "created_at" || item.field == "updated_at")
                             {
@@ -1510,7 +1510,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 {
                     foreach (var item in data.filters)
                     {
-                        if (!string.IsNullOrEmpty(item.value))
+                        if (!string.IsNullOrEmpty(item.value) && item.value != " ")
                         {
                             if (item.field == "created_at" || item.field == "updated_at")
                             {

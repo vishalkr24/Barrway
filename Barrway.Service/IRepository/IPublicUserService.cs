@@ -19,6 +19,7 @@ namespace Barrway.Service.IRepository
     {
         Task<AddUpdateDelete> CreatePublicUserAccount(PublicAccountModel model);
         Task<AddUpdateDelete> GetSingleEventDetails(string EventId);
+        Task<AddUpdateDelete> GetSingleServiceDetails(string EventId);
         Task<AddUpdateDelete> GetSinglePublicUserAccount(string UserId);
         Task<AddUpdateDelete> UpdatePublicUserProfilePic(PublicAccountModel model);
         Task<AddUpdateDelete> UpdatePublicUserProfileData(PublicUserProfileModel model, bool updatePassword = false);

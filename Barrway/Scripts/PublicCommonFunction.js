@@ -94,6 +94,19 @@ function getUserRole() {
     return role;
 }
 
+function getLoggedSingleUser() {
+    var user = null;
+    $.ajax({
+        url: "/Useradmin/GetSingleUserByUserId",
+        type: "POST",
+        async: false,
+        success: function (response) {
+            user = response;
+        }
+    })
+    return user;
+}
+
 function getCompanyCalendarPackages(companyCode) {
     var data;
     $.ajax({
