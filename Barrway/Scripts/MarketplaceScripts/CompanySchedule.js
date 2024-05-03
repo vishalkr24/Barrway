@@ -1,4 +1,5 @@
 ﻿var CalendarFormId = "2305", ySelection = "", xSelection = "", COMPANY_CODE, CALENDAR_CODE, formDetailsDataInfo, counterLoader, xaxisFormList, formAllDatafields, listTabulator, calendarDetails, is5CType = false, tempEndDate, calenderSettings, resourceFormId;
+var agendaGroupEvents = [];
 $(document).ready(async function () {
 
     /*$(".calendar-selector").change(function () { $('.calendar-selector').val($(this).val()); });*/
@@ -330,6 +331,9 @@ function tabsActive(param = 0) {
             $('body .popover').remove();
             $.cookie("calendar-activeView", $('a[href="' + target + '"]').parent().index(), { expires: 365, path: '/' });
             window.location.href = target;
+            if (target == '#agenda-view') {
+                agendaGroupEvents = [];
+            }
             $(target + ' div.calendar').fullCalendar('rerenderEvents');
         }
     });
@@ -588,6 +592,8 @@ var manageWindowParams = function () {
             if ($('#timeline-resource-view div.calendar .fc-toolbar').length > 0) {
                 if (window.innerWidth <= 576) {
                     switchToDropdown(calendar);
+                    $('#agenda-view div.calendar').fullCalendar('rerenderEvents');
+                    agendaGroupEvents = [];
                 }
             }
             //$('#loading').toggle(bool);
@@ -1019,14 +1025,28 @@ var manageWindowParams = function () {
 
 
             } else {
+                
                 element.append(_mainTempHtml);
+                if (current_tab == "agenda-view") {
+                    if (window.innerWidth <= 576) {
+                        if (!agendaGroupEvents.find(x => moment(x.start.format()).format("YYYY-MM-DD") == moment(event.start.format()).format("YYYY-MM-DD"))) {
+                            agendaGroupEvents.push(event);
+                            element.addClass("agenda-min-e");
+                            element.find(".fc-content").remove();
+                            element.append("<div class='fc-content'></div><div class='fc-content'>•</div>");
+                        } else {
+                            element.addClass("agenda-min-e");
+                            element.find(".fc-content").remove();
+                        }
+                    }
+                }
                 tableTempHtml = "<div class='event-detail div-flex'><div class='div-flex'>" + rowRecord + "</div><div class='btn-box'>" + actionRow + "</div><div class='div-flex div-list-bar'></div>" + tempHtmlTable + "</div>";
                 let $fcContent = element.find(".fc-content").detach();
                 //$resize = element.find(".fc-resizer").detach();
                 element.attr('title', rowTooltipTitleDisplay + "  " + rowTooltipDisplay);
                 element.attr('data-html', 'true');
                 element.css({
-                    background: (serviceColor && serviceColor != "" ? serviceColor : "rgb(255, 255, 255)"),
+                    background: current_tab == "agenda-view" && window.innerWidth <= 576 ?"none!important":(serviceColor && serviceColor != "" ? serviceColor : "rgb(255, 255, 255)"),
                     /*borderColor: "#aaa",*/
                     padding: 0,
                     border: "none",
@@ -1054,6 +1074,18 @@ var manageWindowParams = function () {
         },
         eventClick: async function (calEvent, jsEvent, view) {
 
+            //mobile agenda view click open list view day
+            if (window.innerWidth <= 576) {
+                var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+                if (current_tab == "agenda-view") {
+                    tabsActive($('a[href="#list-view"]').parent().index());
+                    let start_day = moment(calEvent.start.format()).format("YYYY-MM-DD");
+                    $('#list-view div.calendar').fullCalendar('gotoDate', start_day);
+                    $('#list-view div.calendar').fullCalendar('changeView', "listDay");
+                    return;
+                }
+            }
+            
             
             $('#fileSuccess').html('');
             $('#fileError2').html('');
@@ -1114,7 +1146,6 @@ var manageWindowParams = function () {
                 
             }
 
-            debugger;
             if (calEvent.DOWNLOAD_FILE_LIST && calEvent.DOWNLOAD_FILE_LIST != '' && calEvent.DOWNLOAD_FILE_LIST != ' ' && calEvent.DOWNLOAD_FILE_LIST != 'null' && IsJsonString(calEvent.DOWNLOAD_FILE_LIST)) {
                 calEvent.DOWNLOADABLE_ATTACHMENT_FILES = JSON.parse(calEvent.DOWNLOAD_FILE_LIST);
             }
@@ -1535,10 +1566,18 @@ var manageWindowParams = function () {
         scrollTime: '00:00',
 
         allDaySlot: true,
-        selectable: false,
+        selectable: true,
         selectHelper: true,
         select: function (start, end) {
-
+            //agenda view click open list view day
+            var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+            if (current_tab == "agenda-view") {
+                tabsActive($('a[href="#list-view"]').parent().index());
+                let start_day = moment(start.format()).format("YYYY-MM-DD");
+                $('#list-view div.calendar').fullCalendar('gotoDate', start_day);
+                $('#list-view div.calendar').fullCalendar('changeView', "listDay");
+                return;
+            }
         },
         droppable: false, // this allows things to be dropped onto the calendar
     };
@@ -2113,6 +2152,13 @@ window.addEventListener('resize', function () {
         switchToDropdown();
     } else {
         switchToButtons();
+    }
+    if (window.innerWidth <= 576) {
+        $('#agenda-view div.calendar').fullCalendar('rerenderEvents');
+        agendaGroupEvents = [];
+    } else {
+        $('#agenda-view div.calendar').fullCalendar('rerenderEvents');
+        agendaGroupEvents=[];
     }
 });
 

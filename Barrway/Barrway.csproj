@@ -342,9 +342,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\API\v1\AccountController.cs" />
-
     <Compile Include="Controllers\API\v1\CalendarController.cs" />
-
     <Compile Include="Controllers\API\v1\BookingController.cs" />
     <Compile Include="Controllers\API\v1\CompanyController.cs" />
     <Compile Include="Controllers\API\v1\DashboardController.cs" />
@@ -394,6 +392,7 @@
     <Compile Include="Security\PublicAuthorizeAttribute.cs" />
     <Compile Include="Security\BusinessAuthorizeAttribute.cs" />
     <Compile Include="Security\TokenManager.cs" />
+    <Compile Include="Security\APIUserIdentity.cs" />
     <Compile Include="Security\UserIdentity.cs" />
     <Compile Include="Security\ValidateModelAttribute.cs" />
     <Compile Include="Startup.cs" />

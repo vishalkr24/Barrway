@@ -778,6 +778,50 @@
                 padding: 1em 0.5em;
             }
         }
+        .agenda-min-e{
+            background-color:none!important;
+            background:none!important;
+            text-align:center;
+        }
+            .agenda-min-e div {
+                font-size: 28px;
+                color: black !important;
+                position: relative !important;
+                left: 30%;
+                margin: 0px !important;
+                padding: 0px !important;
+                padding-right: 0px;
+                /*top: -5px;*/
+            }
+            @@media only screen and (max-width: 570px) {
+  /* Center the day number and make it bold */
+                #agenda-view div.calendar .fc-day-number {
+                    text-align: center;
+                     font-weight: 400;
+                    font-size: 18px !important;
+                    float: none !important;
+                }
+               #agenda-view div.calendar .fc-day-top {
+                    text-align: center;
+                    position: relative;
+                    top: 15px;
+                }
+                #agenda-view div.calendar .fc-day-grid-container {
+                    height: auto !important;
+                }
+    }
+        @@media only screen and (max-width: 570px){
+            .agenda-min-e div {
+                left: 22%;
+            }
+        }
+
+        @@media only screen and (max-width: 500px) {
+            .agenda-min-e div {
+                left: 28%;
+            }
+        }
+
     </style>
 }
 

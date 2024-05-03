@@ -700,6 +700,12 @@ namespace Barrway.Service.Repository
         public async Task<List<IDictionary<string, object>>> GetEvents(CalendarRequestModel calendarRequest) {
 
             Form_DataTable data = mapper.Map<Form_DataTable>(calendarRequest);
+            data.action = 1;
+            data.ActivityFormId = (int)FormSetting.SERVICE_MASTER;
+            data.resourceFormId = (int)FormSetting.LOCATION_MASTER;
+            data.isEvent = 1;
+            data.isCalender = 1;
+            data.formId = (int)FormSetting.CALENDAR_FORM;
             string filterQuery = GetDateQuery(calendarRequest.start, calendarRequest.end);
             data.filter = new FilterDTO() {field= "start", value=filterQuery+ " and F.COMPANY_CODE=N'" + calendarRequest.COMPANY_CODE + "' and F.CALENDAR_CODE=N'" + calendarRequest.CALENDAR_CODE + "'" };
 

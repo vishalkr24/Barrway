@@ -53,7 +53,7 @@ namespace Barrway.Security
         }
 
         private static bool ValidateToken(string token, ref UserClaimViewModel userClaim)
-        {
+            {
             userClaim = null;
 
             var simplePrinciple = TokenManager.GetPrincipal(token);
@@ -67,14 +67,16 @@ namespace Barrway.Security
 
             var usernameClaim = identity.FindFirst(ClaimTypes.Name);
             var roleClaim = identity.FindFirst(ClaimTypes.Role);
+            var emailClaim = identity.FindFirst(ClaimTypes.Email);
 
             userClaim = new UserClaimViewModel()
             {
                 username = usernameClaim.Value,
-                role = roleClaim.Value
+                role = roleClaim.Value,
+                email=emailClaim.Value
             };
 
-            if (string.IsNullOrEmpty(userClaim.username) || string.IsNullOrEmpty(userClaim.role))
+            if (string.IsNullOrEmpty(userClaim.username) || string.IsNullOrEmpty(userClaim.role) || string.IsNullOrEmpty(userClaim.email))
                 return false;
 
             // More validate to check whether username exists in system
@@ -91,7 +93,8 @@ namespace Barrway.Security
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, userClaim.username),
-                    new Claim(ClaimTypes.Role, userClaim.role)
+                    new Claim(ClaimTypes.Role, userClaim.role),
+                    new Claim(ClaimTypes.Email, userClaim.email)
                     // Add more claims if needed: Roles, ...
                 };
 
