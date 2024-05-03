@@ -51,9 +51,9 @@ namespace Barrway.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> GetSingleUserByUserId(string UserId)
+        public async Task<ActionResult> GetSingleUserByUserId()
         {
-            var userData = await publicUserService.GetSinglePublicUserAccount(UserId);
+            var userData = await publicUserService.GetSinglePublicUserAccount(User.Identity.Name);
 
             return Json(new { data = userData });
         }

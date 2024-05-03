@@ -1,4 +1,5 @@
 ﻿using Barrway.DTO.BusinessModels;
+using Barrway.DTO.Common;
 using Barrway.Security;
 using Barrway.Service.IRepository;
 using Barrway.Utility.Common;
@@ -44,7 +45,16 @@ namespace Barrway.Controllers
         [HttpPost]
         public async Task<ActionResult> EventOrderDetails(string Id, int EventType, string start, string end)
         {
-            var EventData = await publicUserService.GetSingleEventDetails(Id);
+            AddUpdateDelete EventData;
+
+            if (EventType == 3)
+            {
+                EventData = await publicUserService.GetSingleServiceDetails(Id);
+            }
+            else
+            {
+                EventData = await publicUserService.GetSingleEventDetails(Id);
+            }
 
             OrderModel order = new OrderModel()
             {
@@ -53,12 +63,13 @@ namespace Barrway.Controllers
                 PAYMENT_TYPE = "STRIPE",
                 ORDER_PRICE = Convert.ToDouble(EventData.Data["fees_1"]),
                 ORDER_QTY = 1,
-                SLOT_ID = Id,
-                ORDER_TYPE = (EventType == 1) ? "SLOT1" : "SLOT2",
+                SERVICE_ID = Id,
+                ORDER_TYPE = (EventType == 1) ? "SLOT1" : (EventType == 2) ? "SLOT2" : "COURSE",
                 USER_ID = User.Identity.Name,
                 PAYMENT_ID = "",
                 PAYMENT_STATUS = ""
             };
+
 
             var result = await masterService.CreateOrder(order);
 
@@ -70,21 +81,46 @@ namespace Barrway.Controllers
                 end = EventData.Data["end"]?.ToString();
             }
 
-            OrderDetailsViewModel orderDetailsViewModel = new OrderDetailsViewModel()
+            OrderDetailsViewModel orderDetailsViewModel;
+            if (EventType == 3)
             {
-                Order = order,
-                CalendarPackageModel = new CalendarPackageModel()
+                orderDetailsViewModel = new OrderDetailsViewModel()
                 {
-                    CALENDAR_CODE = order.CALENDAR_CODE,
-                    COMPANY_CODE = EventData.Data["COMPANY_CODE"].ToString(),
-                    PACKAGE_COIN = 0,
-                    PACKAGE_DESCRIPTION = "Single Event Purchase",
-                    PACKAGE_NAME = "Event : " + Convert.ToDateTime(start).ToString("dd-MM-yyyy HH:mm") + " to " + Convert.ToDateTime(end).ToString("dd-MM-yyyy HH:mm"),
-                    PACKAGE_PRICE = Convert.ToDouble(EventData.Data["fees_1"]),
-                    PACKAGE_SEQUENCE = 1
-                }
-                , start = start, end = end
-            };
+                    Order = order,
+                    CalendarPackageModel = new CalendarPackageModel()
+                    {
+                        CALENDAR_CODE = order.CALENDAR_CODE,
+                        COMPANY_CODE = EventData.Data["COMPANY_CODE"].ToString(),
+                        PACKAGE_COIN = 0,
+                        PACKAGE_DESCRIPTION = "Single Course Purchase",
+                        PACKAGE_NAME = EventData.Data["ACTIVITY_NAME"].ToString(),
+                        PACKAGE_PRICE = Convert.ToDouble(EventData.Data["fees_1"]),
+                        PACKAGE_SEQUENCE = 1
+                    },
+                    start = start,
+                    end = end
+                };
+            }
+            else
+            {
+                orderDetailsViewModel = new OrderDetailsViewModel()
+                {
+                    Order = order,
+                    CalendarPackageModel = new CalendarPackageModel()
+                    {
+                        CALENDAR_CODE = order.CALENDAR_CODE,
+                        COMPANY_CODE = EventData.Data["COMPANY_CODE"].ToString(),
+                        PACKAGE_COIN = 0,
+                        PACKAGE_DESCRIPTION = "Single Event Purchase",
+                        PACKAGE_NAME = "Event : " + Convert.ToDateTime(start).ToString("dd-MM-yyyy HH:mm") + " to " + Convert.ToDateTime(end).ToString("dd-MM-yyyy HH:mm"),
+                        PACKAGE_PRICE = Convert.ToDouble(EventData.Data["fees_1"]),
+                        PACKAGE_SEQUENCE = 1
+                    },
+                    start = start,
+                    end = end
+                };
+            }
+
 
             if (result.Status)
             {
@@ -106,7 +142,17 @@ namespace Barrway.Controllers
             string UserId = User.Identity.Name;
             string OrderNo = model.ORDER_NO;
 
-            var EventData = await publicUserService.GetSingleEventDetails(model.SLOT_ID);
+            AddUpdateDelete EventData;
+
+            if (data.Order.ORDER_TYPE == "COURSE")
+            {
+                EventData = await publicUserService.GetSingleServiceDetails(model.SERVICE_ID);
+            }
+            else
+            {
+                EventData = await publicUserService.GetSingleEventDetails(model.SLOT_ID);
+            }
+
 
             EventData.Data.Add("OrderNo", OrderNo);
             EventData.Data.Add("OrderType", model.ORDER_TYPE);
@@ -117,7 +163,7 @@ namespace Barrway.Controllers
 
             List<string> KeyList = new List<string>()
             {
-                "OrderNo", "COMPANY_CODE", "CALENDAR_CODE", "fees_1", "end", "formGroupKey", "resources", "activities", "Id", "OrderType", "start"
+                "OrderNo", "COMPANY_CODE", "CALENDAR_CODE", "fees_1", "end", "formGroupKey", "resources", "activities", "Id", "start", "OrderType"
             };
 
             foreach (var key in EventData.Data.Keys)
@@ -146,8 +192,8 @@ namespace Barrway.Controllers
                                Currency = "hkd",
                                ProductData = new SessionLineItemPriceDataProductDataOptions
                                {
-                                   Name = "Event Purchase",
-                                   Description = "Single Event Purchase"
+                                   Name = (data.Order.ORDER_TYPE == "COURSE")? "Course Purchase" : "Event Purchase",
+                                   Description = (data.Order.ORDER_TYPE == "COURSE")? "Single Course Purchase":"Single Event Purchase"
                                }
 
                             },
@@ -190,9 +236,21 @@ namespace Barrway.Controllers
             {
                 var service = new SessionService();
                 var session = service.Get(SessionId);
-                var eventData = JsonConvert.DeserializeObject<IDictionary<string, object>>(session.Metadata["Data"]);
-                var PackageData = (await publicUserService.GetSingleEventDetails(eventData["Id"]?.ToString())).Data;
-                
+                IDictionary<string, object> eventData;
+
+                eventData = JsonConvert.DeserializeObject<IDictionary<string, object>>(session.Metadata["Data"]);
+
+                dynamic PackageData;
+                if (eventData["OrderType"].ToString() == "COURSE")
+                {
+                    PackageData = (await publicUserService.GetSingleServiceDetails(eventData["Id"]?.ToString())).Data;
+                }
+                else
+                {
+                    PackageData = (await publicUserService.GetSingleEventDetails(eventData["Id"]?.ToString())).Data;
+                }
+
+
                 var calendarDetails = await businessUserService.GetCalendarDetails(PackageData["CALENDAR_CODE"].ToString());
 
                 string query = $@"update ORDER_MASTER_1969 set PAYMENT_STATUS = '{session.Status}', PAYMENT_ID = '{session.PaymentIntentId}' where ORDER_NO = '{eventData["OrderNo"].ToString()}' ";
@@ -219,7 +277,7 @@ namespace Barrway.Controllers
                     PAYMENT_ID = eventData["OrderNo"].ToString(),
                     PLAN_ID = "0",
                     STATUS = session.Status,
-                    CREDIT_EXPIRE_DATE = Convert.ToDateTime(eventData["end"].ToString()).ToString("yyyy-MM-dd HH:mm"),
+                    CREDIT_EXPIRE_DATE = (eventData["OrderType"].ToString() == "COURSE") ? DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm") : Convert.ToDateTime(eventData["end"].ToString()).ToString("yyyy-MM-dd HH:mm"),
                     USER_ID = User.Identity.Name
                 };
 
@@ -300,6 +358,35 @@ namespace Barrway.Controllers
                         eventId = Convert.ToInt32(PackageData["Id"].ToString()),
                         isSlotBooking = (calendarDetails.Data["CALENDAR_TYPE"]?.ToString() == "1") ? true : false
                     }, User.Identity.Name, UserIdentity.UserID, tracker.ORDER_NO);
+                }
+                else if (eventData["OrderType"].ToString() == "COURSE")
+                {
+                    var EnrollResult = await publicUserService.EnrollCourse(new DTO.UserAdminModels.CalendarEnrollModel()
+                    {
+                        ACTIVITY_NAME = "",
+                        RESOURCE_NAME = "",
+                        USER_EMAIL = UserIdentity.UserEmail,
+                        FormGroupKey = Guid.NewGuid().ToString(),
+                        USER_ID = UserIdentity.UserName,
+                        participant = new DTO.PublicModels.CalendarParticipantModel()
+                        {
+                            COMPANY_CODE = paymentHistoryModel.COMPANY_CODE,
+                            CALENDAR_CODE = paymentHistoryModel.CALENDAR_CODE,
+                            DESCRIPTION = ""
+                        },
+                        transaction = new DTO.PublicModels.TransactionMasterModel()
+                        {
+                            SLOT = "",
+                            RESOURCE = "",
+                            ACTIVITY = PackageData["Id"].ToString(),
+                            STUDENT = "",
+                            REMARKS = "",
+                            FEES = "",
+                            ATTENDANCE = "NOT-MARKED",
+                            COMPANY_CODE = PackageData["COMPANY_CODE"].ToString(),
+                            CALENDAR_CODE = PackageData["CALENDAR_CODE"].ToString()
+                        }
+                    }, false, tracker.ORDER_NO);
                 }
 
                 ViewBag.PaymentId = eventData["OrderNo"].ToString();

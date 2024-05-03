@@ -60,7 +60,11 @@
             color: #fff !important;
             font-weight: 600 !important;
             font-size: 17px !important;
-            padding: 10px 12px !important;
+            padding: 10px 0px !important;
+            text-transform: uppercase;
+            height: 40px;
+            text-align: center;
+            width: 40px;
         }
     .dsk-none {
         display:none;
@@ -144,11 +148,7 @@
                         @*<li id="nv-company-photo-album"><a href="/Marketplace/CompanyPhotoAlbum?CompanyCode=@ViewBag.COMPANY_ID&CalendarCode=@ViewBag.CALENDAR_ID">@Resource.Photo_album</a></li>*@
                         <li id="nv-company-photo-album"><a href="/company/gallery/@ViewBag.COMPANY_ID/@ViewBag.CALENDAR_ID">@Resource.Photo_album</a></li>
                         <li class="no-mar-bott-rl m-none d-view">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">TL</a>
-                            <ul class="dropdown-menu">
-                                <li><a href="/Account/BusinessSignup">@Resource.Register</a></li>
-                                <li><a href="/Account/BusinessLogin">@Resource.Login</a></li>
-                            </ul>
+                            <a href="" id="nav-user-icon" style="text-transform:uppercase;">B</a>
                         </li>
                     </ul>
 
@@ -343,6 +343,25 @@
             $.fn.bstooltip = $.fn.tooltip.noConflict(true);
             let CompanyCode = '@ViewBag.COMPANY_CODE'
             var companyPackageData = getCompanyCalendarPackages(CompanyCode).packageData;
+            var logUserDetails = getLoggedSingleUser();
+            debugger;
+            if (logUserDetails == null) {
+                $("#nav-user-icon").attr("href", "/Account/BusinessLogin");
+                $("#nav-user-icon").text("B");
+            } else {
+                $("#nav-user-icon").attr("href", "/Useradmin#/myProfile");
+                let userabbr = '';
+                
+                if (logUserDetails.data.Data.FIRST_NAME != null && logUserDetails.data.Data.FIRST_NAME != '') {
+                    userabbr = logUserDetails.data.Data.FIRST_NAME[0];
+                    if (logUserDetails.data.Data.LAST_NAME != null && logUserDetails.data.Data.LAST_NAME != '') {
+                        userabbr += logUserDetails.data.Data.LAST_NAME[0];
+                    }
+                } else {
+                    userabbr = logUserDetails.data.Data.USER_ID[0];
+                }
+                $("#nav-user-icon").text(userabbr);
+            }
             //debugger;
             if (companyPackageData.Status) {
                 $("#nv-company-package").show();

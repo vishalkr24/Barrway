@@ -20,6 +20,7 @@ namespace Barrway.DTO.BusinessModels
         public string PAYMENT_STATUS { get; set; }
         public string PAYMENT_TYPE { get; set; } = "STRIPE";
         public double ORDER_QTY { get; set; }
+        public string SERVICE_ID { get; set; }
         public DateTime PAYMENT_DATE { get; set; }
     }
 }
