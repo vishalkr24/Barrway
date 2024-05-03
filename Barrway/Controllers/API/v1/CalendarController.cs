@@ -38,25 +38,14 @@ namespace Barrway.Controllers.API.v1
         }
 
 
-        [Route("api/calendar/MyFavoriteCalander")]
+        [Route("api/calendar/myfavorite")]
         [HttpPost]
-        [ResponseType(typeof(FavouriteCalendar))]
+        [ResponseType(typeof(List<FavouriteCalendar>))]
         public async Task<IHttpActionResult> MyFavoriteCalanders(FavouriteClanderData data)
         {
             try
             {
-                if (User.Identity.IsAuthenticated)
-                {
-                    var userId = "";
-                    var rr = UserIdentity.UserEmail;
-                    return Ok(await mobileAPIService.GetMyFavoriteCalendars(data, UserIdentity.UserName));                    
-                }
-                else
-                {
-                    return NotFound();
-                }
-                                
-                
+                return Ok(await mobileAPIService.GetMyFavoriteCalendars(data, APIUserIdentity.UserName));
             }
             catch (Exception ex)
             {

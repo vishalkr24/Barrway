@@ -26,7 +26,7 @@ namespace Barrway.Controllers.API.v1
 
         [HttpGet]
         [Route("api/user/upcommingbooking")]
-        [ResponseType(typeof(ModifiedMyBooking))]
+        [ResponseType(typeof(List<ModifiedMyBooking>))]
         public async Task<IHttpActionResult> UpcommingBooking()
         {
             try
@@ -42,7 +42,7 @@ namespace Barrway.Controllers.API.v1
 
         [HttpGet]
         [Route("api/user/pastbooking")]
-        [ResponseType(typeof(ModifiedMyBooking))]
+        [ResponseType(typeof(List<ModifiedMyBooking>))]
         public async Task<IHttpActionResult> PastBooking()
         {
             try
