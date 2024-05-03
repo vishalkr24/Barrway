@@ -45,7 +45,7 @@ namespace Barrway.Controllers.API.v1
         {
             try
             {//APIUserIdentity.UserName
-                return Ok(await mobileAPIService.GetMyFavoriteCalendars(data, "RohanWebDev"));//
+                return Ok(await mobileAPIService.GetMyFavoriteCalendars(data, APIUserIdentity.UserName));
             }
             catch (Exception ex)
             {

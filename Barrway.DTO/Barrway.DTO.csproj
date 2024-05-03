@@ -83,6 +83,7 @@
     <Compile Include="APIModels\SearchAPI\Bussiness_company.cs" />
     <Compile Include="APIModels\SearchAPI\BlogSearchAPIModel.cs" />
     <Compile Include="APIModels\SearchAPI\FavouriteCalendar.cs" />
+    <Compile Include="APIModels\SearchAPI\MyBookingApiModel.cs" />
     <Compile Include="APIModels\SearchAPI\SearchAPIModel.cs" />
     <Compile Include="APIModels\SearchAPI\SearchResponseModel.cs" />
     <Compile Include="APIModels\SearchAPI\SearchResultAPIModel.cs" />

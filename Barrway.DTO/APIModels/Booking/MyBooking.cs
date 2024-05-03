@@ -10,6 +10,9 @@ namespace Barrway.DTO.APIModels.Booking
     public class MyBooking
     {
         public int ROWNUMBER { get; set; }
+        public long total_records { get; set; }
+        public int size { get; set; }
+        public int page { get; set; }
         public int Id { get; set; }
         public string formGroupKey { get; set; }
         public int formID { get; set; }
