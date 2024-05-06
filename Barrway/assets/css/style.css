@@ -939,15 +939,24 @@ button.blogtag_num {
     top:0px;
 }
 /*============================  media ====================================*/
+/* main-logo
 .bmp-logo a img {
     height: 42px;
     width: 230px;
+}*/
+.bmp-logo a img {
+    height: auto;
+    width: 400px;
 }
 @media screen and (max-width:767px) {
-    
+    /* main-logo
     .bmp-logo a img {
         height: 39px;
         width: 180px;
+    }*/
+    .bmp-logo a img {
+        height: auto;
+        width: 290px;
     }
     .banner-image img {
         width: 100%;
