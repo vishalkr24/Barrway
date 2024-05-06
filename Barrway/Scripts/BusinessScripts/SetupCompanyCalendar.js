@@ -8,16 +8,14 @@ $(document).on("change", "#CITY_ID", function () {
     bindDistrictData($("#CITY_ID option:selected").val());
 })
 
-
 $(document).on("change", "#CALENDAR_COMMON_CATEGORY_ID", function () {
     bindCalendarSubCategoryData($("#CALENDAR_COMMON_CATEGORY_ID option:selected").val())
 });
 
-
-
 $(document).ready(function () {
 
     readyPage();
+    $("#createCalendarButton").prop("disabled", false)
     setTimeout(function () {
         $("#calendarsMegaMenu").addClass("active");
     }, 500);
@@ -56,13 +54,17 @@ $(document).ready(function () {
                 if (check) {
                     requireTabs.push(defaultTab);
                     $("#REQUIRED_CALENDAR_VIEWS").val(requireTabs);
+                    
                     $("#basic-calendar-form").submit();
+                    $("#createCalendarButton").prop("disabled", true)
                 } else {
                     evt.preventDefault();
                 }
             });
             evt.preventDefault();
         }
+
+        $("#createCalendarButton").prop("disabled", true)
 
     })
 

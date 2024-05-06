@@ -44,8 +44,9 @@ namespace Barrway.Service.Repository
             try
             {
 
-                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
-join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME, pua.FIRST_NAME, pua.LAST_NAME from USER_MASTER_1915 user_m
+                                     join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                                     join PUBLIC_USER_ACCOUNT_1943 pua on pua.USER_ID = user_m.USER_ID
                                      where user_m.USER_EMAIL = '{email}'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
@@ -90,8 +91,9 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
         {
             try
             {
-                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
+                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME, pua.FIRST_NAME, pua.LAST_NAME from USER_MASTER_1915 user_m
                                      join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                                     join PUBLIC_USER_ACCOUNT_1943 pua on pua.USER_ID = user_m.USER_ID
                                      where user_m.USER_EMAIL = '{email}'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
@@ -170,8 +172,9 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
         {
             try
             {
-                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
-join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME, pua.FIRST_NAME, pua.LAST_NAME from USER_MASTER_1915 user_m
+                                     join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                                     join PUBLIC_USER_ACCOUNT_1943 pua on pua.USER_ID = user_m.USER_ID
                                      where user_m.USER_PHONE = '{Phone}' and Country_Code='{countrycode}' ";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
@@ -274,8 +277,9 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
         {
             try
             {
-                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
-join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME, pua.FIRST_NAME, pua.LAST_NAME from USER_MASTER_1915 user_m
+                                     join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                                     join PUBLIC_USER_ACCOUNT_1943 pua on pua.USER_ID = user_m.USER_ID
                                 where user_m.[USER_EMAIL]='{email}'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
@@ -321,8 +325,9 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
         {
             try
             {
-                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
-join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME, pua.FIRST_NAME, pua.LAST_NAME from USER_MASTER_1915 user_m
+                                     join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                                     join PUBLIC_USER_ACCOUNT_1943 pua on pua.USER_ID = user_m.USER_ID
                                 where user_m.[USER_PHONE]='{phone}'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
@@ -406,8 +411,9 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
         {
             try
             {
-                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
-join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME, pua.FIRST_NAME, pua.LAST_NAME from USER_MASTER_1915 user_m
+                                     join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                                     join PUBLIC_USER_ACCOUNT_1943 pua on pua.USER_ID = user_m.USER_ID
                                     where user_m.[USER_ID]='{userID}'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
@@ -476,8 +482,9 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
         {
             try
             {
-                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
-join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME, pua.FIRST_NAME, pua.LAST_NAME from USER_MASTER_1915 user_m
+                                     join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                                     join PUBLIC_USER_ACCOUNT_1943 pua on pua.USER_ID = user_m.USER_ID
                                     where user_m.USER_EMAIL = '{email}'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
@@ -517,8 +524,9 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
                 }
                 else
                 {
-                    sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
-join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                    sqlQuery = $@"select user_m.*, role_m.ROLE_NAME, pua.FIRST_NAME, pua.LAST_NAME from USER_MASTER_1915 user_m
+                                     join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                                     join PUBLIC_USER_ACCOUNT_1943 pua on pua.USER_ID = user_m.USER_ID
                                     where user_m.USER_EMAIL = '{email}' and user_m.ROLE_ID = '{Role_Id.ToString()}'";
                 }
 
@@ -560,8 +568,9 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
                 }
                 else
                 {
-                    sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
-join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                    sqlQuery = $@"select user_m.*, role_m.ROLE_NAME, pua.FIRST_NAME, pua.LAST_NAME from USER_MASTER_1915 user_m
+                                     join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                                     join PUBLIC_USER_ACCOUNT_1943 pua on pua.USER_ID = user_m.USER_ID
                                     where user_m.USER_PHONE = '{phone}' and user_m.ROLE_ID = '{Role_Id.ToString()}'";
                 }
 
@@ -586,8 +595,9 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
         {
             try
             {
-                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME from USER_MASTER_1915 user_m
-                        join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME, pua.FIRST_NAME, pua.LAST_NAME from USER_MASTER_1915 user_m
+                                     join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                                     join PUBLIC_USER_ACCOUNT_1943 pua on pua.USER_ID = user_m.USER_ID
                                                             where user_m.USER_PHONE = '{phone}'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);

@@ -61,6 +61,107 @@ function goToCompanyAdminMaster() {
     
 }
 
+function GenerateEventQR(eventId) {
+    $.ajax({
+        url: "/Calendar/GenerateEventQR",
+        type: "Get",
+        data: {
+            eventId: eventId
+        },
+        success: function (response) {
+            if (response != null) {
+                if (response.Status) {
+                    $("#GeneratedQRCodeModalAdmin img").attr("src", response.Data.QRImageURL.replace("~", ".."));
+                    $("#GeneratedQRCodeModalAdmin #btn-print-qr").attr("href", response.Data.QRImageURL.replace("~", ".."));
+                    $("#GeneratedQRCodeModalAdmin").modal("show");
+                } else {
+                    alert("Failed to generate QR Code");
+                }
+            }
+        }
+    })
+
+}
+
+function ScanStudentQR(eventId) {
+
+    const scanner = new Html5QrcodeScanner("qr-scanner", {
+        qrbox: {
+            width: 250,
+            height: 250,
+        },
+        fps: 20,
+    });
+    scanner.render(success, error);
+
+    $("#customEventDetailsModelPopUp").modal("hide");
+    $("#html5-qrcode-button-camera-permission").addClass("btn btn-primary");
+    $("#html5-qrcode-anchor-scan-type-change").addClass("btn btn-danger");
+    $("#html5-qrcode-anchor-scan-type-change").empty();
+    $("#html5-qrcode-anchor-scan-type-change").append(`Upload image to scan`);
+    setTimeout(function () {
+        $("#html5-qrcode-button-camera-start").addClass("btn btn-primary");
+    }, 1000);
+
+    $("#html5-qrcode-button-camera-start").on("click", function () {
+        setTimeout(function () {
+            $("#html5-qrcode-button-camera-stop").addClass("btn btn-danger");
+        }, 500);
+    })
+
+    $("#html5-qrcode-button-camera-stop").on("click", function () {
+        setTimeout(function () {
+            $("#html5-qrcode-button-camera-start").addClass("btn btn-primary");
+        }, 500);
+    });
+
+    $('#WebCamModal').on('hidden.bs.modal', function () {
+        scanner.clear();
+    });
+
+    function success(result) {
+
+        if (result.includes("Public/MarkPresentByCompany")) {
+            $.ajax({
+                url: result,
+                type: "get",
+                data: {
+                    EventId: eventId
+                },
+                success: function (response) {
+                    if (response.Status) {
+                        swal({
+                            icon: "success",
+                            title: "Success",
+                            text: "Attendance marked!"
+                        });
+                    } else {
+                        swal({
+                            icon: "error",
+                            title: "Error",
+                            text: response.Message
+                        });
+                    }
+                },
+                error: function (err) {
+                    alert("Request not allowed");
+                }
+            })
+
+            $("#html5-qrcode-button-camera-stop").trigger("click");
+
+        }
+
+    }
+
+    function error(err) {
+
+    }
+
+    $("#WebCamModal").modal("show");
+
+}
+
 function setCalendarDashboardData() {
     var response = getCompanyCalendarDashboardData(localStorage.getItem('COMPANY_CODE'), localStorage.getItem('CALENDAR_CODE'))
 
@@ -80,11 +181,14 @@ function setCalendarDashboardData() {
 
     var CalendarMasterList = function () {
         var columns = [
-            //{
-            //    title: '', field: 'ACTION', formatter: function (cell, formatter) {
-            //        return `<a href='#' onclick="GoToCalendarLayout(${cell.getRow().getData().Id}, '${cell.getRow().getData().CALENDAR_CODE}')" class="btn btn-warning text-light" style="border-radius:300px; background:#E2476C;">Calendar</a>`;
-            //    }, headerSort: false
-            //},
+            {
+                title: 'Attendance', field: 'ACTION', formatter: function (cell, formatter) {
+                    
+                    return `<div class="login_primary"><a href='javascript:void(0)' onclick="ScanStudentQR('${cell.getData().EVENT_ID}')" class="btn btn-primary text-light" style="border-radius: 40px;">Scan QR mark attendance</a>
+        
+                            <a href='javascript:void(0)' onclick="GenerateEventQR('${cell.getData().EVENT_ID}')"><img src="../../assets/img/QR_CODE_LOGO.png" style="height: 40px; width: 40px;" /></a></div>`;
+                }, headerSort: false
+            },
             {
                 title: 'Date', field: 'BOOKING_DATE', headerFilter: "input", formatter: function (cell, formatter) {
                     return moment(cell.getData().BOOKING_DATE).format("DD-MM-YYYY")
@@ -112,7 +216,7 @@ function setCalendarDashboardData() {
                     return cell.getValue();
                 },
                 height: "75vh",
-                layout: "fitColumns",
+                layout: "fitDataFill",
                 responsiveLayout: false,
                 initialSort: [
                     { column: "created_at", dir: "desc" }
@@ -354,6 +458,10 @@ function setCompanyDetails() {
 
                 $(".company-name").text(data[i].COMPANY_NAME_ENGLISH);
                 $(".company-image").attr("src", data[i].COMPANY_LOGO_PATH.replace("~", ".."));
+                
+                let logopath = (data[i].COMPANY_LOGO_PATH != null && data[i].COMPANY_LOGO_PATH != "") ? data[i].COMPANY_LOGO_PATH?.replace("~", "..") : "../assets/svg/logos/favicon.png";
+                $(".company-image-brand").attr("src", logopath);
+
                 $(".company-email").text(data[i].COMPANY_EMAIL);
 
                 $(".user-name").text(user.Data.USER_ID);
