@@ -664,6 +664,7 @@ namespace Barrway.Service.Repository
 
                 // send Entry into transaction master
                 var formResult2 = new GenerateDynamicFormData();
+                string upcomingBookingQuery = "";
 
                 for (int i = 0; i < result.Count; i++)
                 {
@@ -681,7 +682,7 @@ namespace Barrway.Service.Repository
 
                     // Send Entry into Upcoming Bookings
 
-                    string upcomingBookingQuery = $@"INSERT INTO [dbo].[COMPANY_UPCOMING_BOOKINGS_1945]
+                    upcomingBookingQuery += $@"INSERT INTO [dbo].[COMPANY_UPCOMING_BOOKINGS_1945]
                                                    ([formGroupKey]
                                                    ,[formID]
                                                    ,[userID]
@@ -727,11 +728,9 @@ namespace Barrway.Service.Repository
                                                    ,N'{model.participant.STUDENT_NAME}'
                                                    ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = N'{model.transaction.SLOT}') 
                                                    ,(select calendar.[end] from  CALENDAR_FORM_1935 calendar where Id = N'{model.transaction.SLOT}') )";
-
-
-                    var upcomingResult = await sqlFunction.ExecuteSqlCommandQuery(upcomingBookingQuery);
-
                 }
+
+                var upcomingResult = await sqlFunction.ExecuteSqlCommandQuery(upcomingBookingQuery);
 
                 if (Convert.ToInt32(model.transaction.transaction_fees) > 0)
                 {

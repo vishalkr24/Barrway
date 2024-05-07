@@ -526,7 +526,7 @@ namespace Barrway.Controllers
             {
                 var result = await publicUserService.GetRecentlyBookedCalendars(UserIdentity.UserEmail.ToString(), UserIdentity.UserName);
 
-                return Json(new { data = result });
+                return Json(result);
             }
             catch (Exception ex)
             {

@@ -385,7 +385,7 @@ function BindDynamicFormTemplate() {
                 data.forEach(x => {
                     addMoreRow(x, false, false);
                 });
-
+                
                 if (data.length == 0) {
                     addMoreRow(null, false, true);
                 }
@@ -393,6 +393,13 @@ function BindDynamicFormTemplate() {
             } else {
                 addMoreRow(null, false, true);
             }
+
+            setTimeout(function () {
+                if (formId == 2303) {
+                    $("input[name^='SERVICE_PAY_PER']").attr("disabled", "true");
+
+                }
+            }, 500);
 
         },
         error: function (er) {
@@ -1410,8 +1417,25 @@ function addMoreRow(dataItem, isRemovable, isNew) {
                                                 ${generateInputBox(x, dataModel.Id, "")}
                                             </div>
                                         </div>`);
+        
+        if (x.name == "SERVICE_PAY_PER") {
+            if (CalendarData.Data.CALENDAR_TYPE == "1" && CalendarData.Data.CALENDAR_CATEGORY_ID == "1") {
+                dataModel[x.name] = "COURSE";
+            } else {
+                dataModel[x.name] = "CLASS";
+            }
+        }
 
-        $(`input[name=${x.name}${dataModel.Id}]`).val(dataModel[x.name]);
+        if (x.type == "radio-group") {
+            if (dataModel[x.name] != null && dataModel[x.name] != "") {
+                $(`input[name=${x.name}${dataModel.Id}][data-input-value=${dataModel[x.name]}]`).prop("checked", true);
+            }
+            
+        } else {
+            $(`input[name=${x.name}${dataModel.Id}]`).val(dataModel[x.name]);
+        }
+
+        
     });
 
     dataList.push(dataModel);
@@ -1420,7 +1444,6 @@ function addMoreRow(dataItem, isRemovable, isNew) {
             $(`input[name^=${x.name}]`).bind("keyup change paste", function () {
 
                 let inputId = $(this).attr("data-input-id");
-                debugger;
                 if (x.type == "radio-group") {
                     dataList.find(y => y.Id == inputId)[x.name] = this.attributes["data-input-value"].value;
                 } else {
