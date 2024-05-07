@@ -25,20 +25,40 @@ namespace Barrway.Controllers.API.v1
 
         [Route("api/calendar/events")]
         [HttpPost]
-        [ResponseType(typeof(List<IDictionary<string,object>>))]
+        [ResponseType(typeof(List<IDictionary<string, object>>))]
         public async Task<IHttpActionResult> GetEvents(CalendarRequestModel data)
         {
             try
             {
                 return Ok(await mobileAPIService.GetEvents(data));
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return InternalServerError();
             }
         }
 
 
-        [Route("api/calendar/myfavorite")]
+
+        [Route("api/calendar/MyfavoriteCompanys")]
+        [HttpGet]
+        [ResponseType(typeof(List<MyFavouriteCompany>))]
+        public async Task<IHttpActionResult> MyfavoriteCompanysList()
+        {
+            try
+            {
+                return Ok(await mobileAPIService.GetMyfavoriteCompanyList(APIUserIdentity.UserName));
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
+
+
+
+
+        [Route("api/calendar/myfavoriteCalendars")]
         [HttpPost]
         [ResponseType(typeof(List<FavouriteCalendar>))]
         public async Task<IHttpActionResult> MyFavoriteCalanders(FavouriteClanderData data)
@@ -52,5 +72,38 @@ namespace Barrway.Controllers.API.v1
                 return InternalServerError();
             }
         }
+
+
+        [Route("api/calendar/MywalletCompanys")]
+        [HttpGet]
+        [ResponseType(typeof(List<MyWalletCalander>))]
+        public async Task<IHttpActionResult> GetMyWalletCompanyList()
+        {
+            try
+            {//APIUserIdentity.UserName
+                return Ok(await mobileAPIService.GetMyWalletCompanyList(APIUserIdentity.UserName));
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
+
+
+        [Route("api/calendar/MywalletCalanders")]
+        [HttpPost]
+        [ResponseType(typeof(List<MyWalletCalander>))]
+        public async Task<IHttpActionResult> GetMyWalletCalendars(MyWalletClanderApiModel data)
+        {
+            try
+            {//APIUserIdentity.UserName
+                return Ok(await mobileAPIService.GetMyWalletCalendars(data, APIUserIdentity.UserName));
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
+
     }
 }

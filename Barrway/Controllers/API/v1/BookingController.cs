@@ -1,4 +1,5 @@
 ﻿using Barrway.DTO.APIModels.Booking;
+using Barrway.DTO.APIModels.Calendar;
 using Barrway.DTO.APIModels.Dashboard;
 using Barrway.DTO.APIModels.SearchAPI;
 using Barrway.Security;
@@ -49,6 +50,23 @@ namespace Barrway.Controllers.API.v1
             try
             {
                 var result = await mobileAPIService.GetMyBookings(model, APIUserIdentity.UserEmail, "2");
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
+
+
+        [HttpPost]
+        [Route("api/user/PaymentHistory")]
+        [ResponseType(typeof(List<PaymentHistoryApiModel>))]
+        public async Task<IHttpActionResult> PaymentHistory(PaymentHistorySearchApiModel data)
+        {
+            try
+            {
+                var result = await mobileAPIService.PaymentHistory(data, APIUserIdentity.UserName);
                 return Ok(result);
             }
             catch (Exception ex)

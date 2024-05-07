@@ -56,7 +56,7 @@ namespace Barrway.Controllers.API.v1
         [Route("api/search/companies")]
         [HttpPost]
         [ResponseType(typeof(SearchResponseModel<List<CompanyModel>>))]
-        public async Task<IHttpActionResult> GetSerachResultCompany(SearchAPIModel data)
+        public async Task<IHttpActionResult> GetSerachResultCompany(CompanySearchApiModel data)
         {
             try
             {
@@ -85,7 +85,7 @@ namespace Barrway.Controllers.API.v1
         [Route("api/search/blogs")]
         [HttpPost]
         [ResponseType(typeof(SearchResponseModel<List<BlogModel>>))]
-        public async Task<IHttpActionResult> GetSerachResultBlog(SearchAPIModel data)
+        public async Task<IHttpActionResult> GetSerachResultBlog(BlogSearchAPIModel data)
         {
             try
             {

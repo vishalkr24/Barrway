@@ -70,8 +70,10 @@
     <Compile Include="APIModels\Account\APIEmailSignUpModel.cs" />
     <Compile Include="APIModels\Account\LoginViewModel.cs" />
     <Compile Include="APIModels\Account\UserClaimViewModel.cs" />
+    <Compile Include="APIModels\Booking\PaymentHistoryApiModel.cs" />
     <Compile Include="APIModels\Calendar\CalendarRequestModel.cs" />
     <Compile Include="APIModels\Booking\MyBooking.cs" />
+    <Compile Include="APIModels\Calendar\MyWalletClanderApiModel.cs" />
     <Compile Include="APIModels\Company\ComapnyDetailsApi.cs" />
     <Compile Include="APIModels\Company\Company.cs" />
     <Compile Include="APIModels\Company\PhotoGalleryModel.cs" />
@@ -80,7 +82,7 @@
     <Compile Include="APIModels\Dashboard\FeatureBlogModel.cs" />
     <Compile Include="APIModels\Dashboard\FeatureCompanyModel.cs" />
     <Compile Include="APIModels\Dashboard\SearchFilterModel.cs" />
-    <Compile Include="APIModels\SearchAPI\Bussiness_company.cs" />
+    <Compile Include="APIModels\SearchAPI\CompanySearchApiModel.cs" />
     <Compile Include="APIModels\SearchAPI\BlogSearchAPIModel.cs" />
     <Compile Include="APIModels\SearchAPI\FavouriteCalendar.cs" />
     <Compile Include="APIModels\SearchAPI\MyBookingApiModel.cs" />

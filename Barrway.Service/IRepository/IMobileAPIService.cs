@@ -21,8 +21,8 @@ namespace Barrway.Service.IRepository
         Task<List<BlogModel>> GetFeatureBlogs();
         Task<List<CalendarModel>> GetCalendarsSearchResult(SearchAPIModel data, List<string> filters = null);
 
-        Task<List<CompanyModel>> GetCompaniesSearchResult(SearchAPIModel data);
-        Task<List<BlogModel>> GetBlogsSearchResult(SearchAPIModel data);
+        Task<List<CompanyModel>> GetCompaniesSearchResult(CompanySearchApiModel data);
+        Task<List<BlogModel>> GetBlogsSearchResult(BlogSearchAPIModel data);
 
         Task<Company> GetCompany(string CompanyCode);
 
@@ -37,6 +37,14 @@ namespace Barrway.Service.IRepository
         Task<List<ModifiedMyBooking>> GetMyBookings(MyBookingApiModel model,string email, string Type, string EventId = null);
 
         Task<List<FavouriteCalendar>> GetMyFavoriteCalendars(FavouriteClanderData data, string userId);
+
+        Task<List<MyWalletCalander>> GetMyWalletCalendars(MyWalletClanderApiModel data, string userName);
+
+        Task<List<MyWalletCompany>> GetMyWalletCompanyList(string userName);
+
+        Task<List<PaymentHistoryApiModel>> PaymentHistory(PaymentHistorySearchApiModel data, string userName);
+
+        Task<List<MyFavouriteCompany>> GetMyfavoriteCompanyList(string userName);
 
 
 

@@ -39,6 +39,17 @@ namespace Barrway.DTO.APIModels.SearchAPI
         public string CalendarCode { get; set; }
     }
 
+    public class MyFavouriteCompany
+    {
+        public int Id { get; set; }
+        public string COMPANY_CODE { get; set; }
+        public string COMPANY_NAME_ENGLISH { get; set; }
+        public string COMPANY_NAME_CHINESE { get; set; }
+
+    }
+
+
+
     public class Filter
     {
         public string field { get; set; }
