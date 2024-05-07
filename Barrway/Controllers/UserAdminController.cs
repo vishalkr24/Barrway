@@ -143,6 +143,8 @@ namespace Barrway.Controllers
                 else
                 {
                     var result = await publicUserService.UpdatePublicUserProfileData(model, UpdatePassword);
+                    UserIdentity.UpdateClaim("FirstName", model.FIRST_NAME);
+                    UserIdentity.UpdateClaim("LastName", model.LAST_NAME);
                 }
 
 

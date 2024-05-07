@@ -53,6 +53,36 @@ namespace Barrway.Security
             }
         }
 
+        public static string UserFirstName
+        {
+            get
+            {
+                if (HttpContext.Current != null && HttpContext.Current.User != null && HttpContext.Current.User.Identity != null && !string.IsNullOrEmpty(HttpContext.Current.User.Identity.Name))
+                {
+                    var identity = (System.Security.Claims.ClaimsIdentity)HttpContext.Current.User.Identity;
+                    IEnumerable<System.Security.Claims.Claim> claims = identity.Claims;
+                    string UID = claims.Where(x => x.Type == "FirstName").FirstOrDefault()?.Value;
+                    return UID;
+                }
+                return "";
+            }
+        }
+
+        public static string UserLastName
+        {
+            get
+            {
+                if (HttpContext.Current != null && HttpContext.Current.User != null && HttpContext.Current.User.Identity != null && !string.IsNullOrEmpty(HttpContext.Current.User.Identity.Name))
+                {
+                    var identity = (System.Security.Claims.ClaimsIdentity)HttpContext.Current.User.Identity;
+                    IEnumerable<System.Security.Claims.Claim> claims = identity.Claims;
+                    string UID = claims.Where(x => x.Type == "LastName").FirstOrDefault()?.Value;
+                    return UID;
+                }
+                return "";
+            }
+        }
+
 
         public static string UpdateClaim(string ClaimType, string newValue)
         {

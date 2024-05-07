@@ -438,7 +438,7 @@
                     <!-- Logo -->
 
                     <a class="navbar-brand" href="/Marketplace/Index" aria-label="Front">
-                        <img class="business-logo" src="../assets/svg/logos/favicon.png" alt="Logo" data-hs-theme-appearance="default">
+                        <img class="business-logo company-image-brand" src="../assets/svg/logos/favicon.png"  style="height:42px; width:42px;" alt="Logo" data-hs-theme-appearance="default">
                         @*<span class="bui">@Resource.Business</span>*@
                     </a>
 
@@ -484,15 +484,16 @@
 
                                     <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-account" aria-labelledby="accountNavbarDropdown" style="width: auto;">
                                         <div class="dropdown-item">
-                                            <a onclick="location.href = '/Marketplace/Index'">Marketplace</a>
+                                            <a href="/UserAdmin#/userdashboard">My Dashboard</a>
                                         </div>
-
+                                        
+                                        <div class="dropdown-item">
+                                            <a href="@Url.Action("Index", "Marketplace")">Marketplace</a>
+                                        </div>
 
                                         <div class="dropdown-item">
-                                            <a onclick="location.href = '/Marketplace/Index'">Barrway Business</a>
-
+                                            <a href="@Url.Action("Index", "BusinessMarketplace")">Barrway Business</a>
                                         </div>
-
 
                                         <div class="dropdown-divider"></div>
                                         <div class="lag-select">
