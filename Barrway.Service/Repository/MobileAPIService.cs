@@ -5,6 +5,7 @@ using Barrway.DTO.APIModels.Booking;
 using Barrway.DTO.APIModels.Company;
 using Barrway.DTO.APIModels.Dashboard;
 using Barrway.DTO.APIModels.SearchAPI;
+
 using Barrway.DTO.Common;
 using Barrway.DTO.FormAPI;
 using Barrway.Service.IRepository;
@@ -227,7 +228,7 @@ namespace Barrway.Service.Repository
             return calendars;
         }
 
-        public async Task<List<CompanyModel>> GetCompaniesSearchResult(SearchAPIModel data)
+        public async Task<List<CompanyModel>> GetCompaniesSearchResult(CompanySearchApiModel data)
         {
             data.page = data.page == 0 ? 1 : data.page;
             data.size = data.size == 0 ? 10 : data.size;
@@ -281,13 +282,13 @@ namespace Barrway.Service.Repository
             return companies;
         }
 
-        public async Task<List<BlogModel>> GetBlogsSearchResult(SearchAPIModel data)
+        public async Task<List<BlogModel>> GetBlogsSearchResult(BlogSearchAPIModel data)
         {
             data.page = data.page == 0 ? 1 : data.page;
             data.size = data.size == 0 ? 10 : data.size;
             List<string> filterQueryList = new List<string>();
 
-            if (data.tags.Count() > 0 && data.tags[0] != "" && data.tags[0] != "string")
+            if (data.tags != null && data.tags.Count() > 0)
             {
                 string subcategoryString = " ([TAG] like ";
                 for (int i = 0; i < data.tags.Count(); i++)
@@ -515,7 +516,7 @@ namespace Barrway.Service.Repository
         {
             ModifiedMyBooking modifiedBooking = new ModifiedMyBooking
             {
-               
+
 
                 ROWNUMBER = booking.ROWNUMBER,
                 total_records = booking.total_records,
@@ -730,6 +731,44 @@ namespace Barrway.Service.Repository
         }
 
 
+        public async Task<List<MyFavouriteCompany>> GetMyfavoriteCompanyList(string userName)
+        {
+            try
+            {
+
+                string query = $@"declare @CompanyCodes varchar(max) = (select stuff((select distinct ',' + COMPANY_CODE  from PAYMENT_HISTORY_MASTER_1956 payment 
+											  where payment.STATUS = 'complete' and payment.USER_ID = '{userName}' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd")}' < payment.CREDIT_EXPIRE_DATE
+											  for xml path('')), 1, 1, '')) 
+
+											  SELECT distinct company.[COMPANY_CODE],company.[Id]
+												,[COMPANY_NAME_ENGLISH],company.[COMPANY_NAME_CHINESE]
+												FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company
+												where company.COMPANY_CODE in (select cast(item as varchar) from dbo.SplitString(@CompanyCodes, ','))
+                                            Union all
+									  SELECT distinct company.[COMPANY_CODE],company.[Id]
+                                          ,[COMPANY_NAME_ENGLISH],company.[COMPANY_NAME_CHINESE]
+                                      FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company
+                                      join FAVORITE_CALENDAR_MASTER_1949 favorite on favorite.COMPANY_CODE = company.COMPANY_CODE
+                                      where favorite.USER_ID = '{userName}' and company.COMPANY_CODE not in (select cast(item as varchar) from dbo.SplitString(@CompanyCodes, ','))";
+
+                var result = (await sqlFunction.ExecuteSqlQuery<MyFavouriteCompany>(query)).ToList();
+                if (result.Any())
+                {
+                    return result;
+                }
+                else
+                {
+                    return new List<MyFavouriteCompany>();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new List<MyFavouriteCompany>();
+            }
+        }
+
+
 
         public async Task<List<FavouriteCalendar>> GetMyFavoriteCalendars(FavouriteClanderData data, string userId)
         {
@@ -849,6 +888,201 @@ namespace Barrway.Service.Repository
             }
         }
 
+
+
+        public async Task<List<MyWalletCalander>> GetMyWalletCalendars(MyWalletClanderApiModel data, string userName)
+        {
+
+
+            try
+            {
+                string CompanyCode = data.COMPANY_CODE;
+                string CompanyLogic = "";
+
+                if (!string.IsNullOrEmpty(CompanyCode))
+                {
+                    CompanyLogic = " and calendarDetails.COMPANY_CODE = '" + CompanyCode + "'";
+                }
+
+                int PageSize = data.size > 0 ? data.size : 20;
+                int PageNumber = data.page > 0 ? data.page : 1;
+
+
+                string query = $@"declare @UserId varchar(max) = '{userName}'
+                                  declare @currentDate varchar(100) = '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'
+                                  declare @Ids varchar(max) = stuff((select distinct ',' + phm.CALENDAR_CODE
+
+								  from PAYMENT_HISTORY_MASTER_1956 phm
+								  join ORDER_MASTER_1969 ord on ord.ORDER_NO = phm.PAYMENT_ID
+								  where phm.USER_ID = @UserId and cast(@currentDate as datetime) <= cast(phm.CREDIT_EXPIRE_DATE as datetime) and phm.STATUS = 'complete'
+								  and ord.ORDER_TYPE = 'PACKAGE'
+								  for xml path('')), 1, 1, '')
+			  
+                                  declare @PageSize int=10 ,  @PageNumber int=1 ; with formdata as (
+                                              select
+									  (select 
+											case when (
+												(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = @UserId and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and cast(@currentDate as datetime) < cast(substring(CREDIT_EXPIRE_DATE, 1, 16) as datetime)) - SUM(led.DEBIT_COIN) - SUM(led.DEBIT_COIN)
+											) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = @UserId and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and cast(@currentDate as datetime) < cast(substring(CREDIT_EXPIRE_DATE, 1, 16) as datetime)) - SUM(led.DEBIT_COIN) - SUM(led.DEBIT_COIN) <= 0
+											then
+												0
+											else
+												(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = @UserId and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and cast(@currentDate as datetime) < cast(substring(CREDIT_EXPIRE_DATE, 1, 16) as datetime)) - SUM(led.DEBIT_COIN)
+											end
+										FROM LEDGER_MASTER_1957 led 
+										join ORDER_MASTER_1969 ord on ord.ORDER_NO = led.ORDER_NO
+										where led.USER_ID = @UserId and led.CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) as 'COIN_BALANCE'
+									  
+									  
+									  ,(select CREDIT_EXPIRE_DATE,
+										(
+										select case when (sum(CREDIT_COIN) - sum(DEBIT_COIN) <= 0) then 0 else cast(sum(CREDIT_COIN) - sum(DEBIT_COIN) as varchar) end from LEDGER_MASTER_1957 where ORDER_NO = pay.PAYMENT_ID
+										) as 'Balance'
+										from PAYMENT_HISTORY_MASTER_1956 pay
+										join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID
+										where ord.ORDER_TYPE = 'PACKAGE' and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and pay.USER_ID = @UserId and pay.STATUS = 'complete' and cast(@currentDate as datetime) < cast(substring(CREDIT_EXPIRE_DATE, 1, 16) as datetime)
+									   for json auto) as 'PackageInfo'
+									  ,company.Id as 'CompanyId'
+                                      ,calendarDetails.*
+	                                  ,company.COMPANY_NAME_ENGLISH
+                                      ,company.COMPANY_LOGO_PATH
+                                      ,subCategory.CALENDAR_SUB_CATEGORY_NAME
+									  ,stuff( (select distinct ',' + ACTIVITY_NAME from SERVICE_MASTER_1933 service_m where service_m.CALENDAR_CODE = calendarDetails.CALENDAR_CODE for xml path('')), 1, 1, '') as 'ServiceList'
+									  FROM BUSINESS_CALENDAR_MASTER_1925 calendarDetails
+                                  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
+
+								  join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory ON ',' + calendarDetails.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
+                                  where calendarDetails.CALENDAR_CODE in (select cast(item as varchar(max)) from dbo.SplitString(@Ids, ',')) {CompanyLogic}
+
+								  )
+                                  Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY created_at desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+
+
+                var result = (await sqlFunction.ExecuteSqlQuery<MyWalletCalander>(query)).ToList();
+                if (result.Any())
+                {
+                    result.ForEach(x =>
+                    {
+                        if (x.PackageInfo != null && x.PackageInfo is string PackageInfoString)
+                        {
+
+
+                            x.PackageInfo = JsonConvert.DeserializeObject<dynamic>(x.PackageInfo.ToString());
+
+                        }
+                        else
+                        {
+                            x.PackageInfo = "";
+                        }
+
+
+                        x.COMPANY_LOGO_PATH = GetFilepath(x.COMPANY_LOGO_PATH);
+                        x.CALENDAR_PHOTO_PATH = GetFilepath(x.CALENDAR_PHOTO_PATH);
+                    });
+
+
+
+
+                    return result;
+
+                }
+                else
+                {
+                    return new List<MyWalletCalander>();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new List<MyWalletCalander>();
+            }
+        }
+
+        public async Task<List<MyWalletCompany>> GetMyWalletCompanyList(string userName)
+        {
+            try
+            {
+
+                string query = $@"declare @UserId varchar(max) = '{userName}'
+                                        declare @currentDate varchar(100) = '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'
+                                        declare @Ids varchar(max) = stuff((select distinct ',' + phm.COMPANY_CODE
+                                        from PAYMENT_HISTORY_MASTER_1956 phm
+                                        join ORDER_MASTER_1969 ord on ord.ORDER_NO = phm.PAYMENT_ID
+                                        where phm.USER_ID = @UserId and cast(@currentDate as datetime) <= cast(phm.CREDIT_EXPIRE_DATE as datetime) 
+                                        and phm.STATUS = 'complete' and ord.ORDER_TYPE = 'PACKAGE'
+                                        for xml path('')), 1, 1, '')
+                                select Id,COMPANY_CODE,COMPANY_NAME_ENGLISH,COMPANY_NAME_CHINESE from BUSINESS_COMPANY_MASTER_1924 where COMPANY_CODE in (select cast(item as varchar) from dbo.SplitString(@Ids, ',')) ";
+
+                var result = (await sqlFunction.ExecuteSqlQuery<MyWalletCompany>(query)).ToList();
+                if (result.Any())
+                {
+                    return result;
+                }
+                else
+                {
+                    return new List<MyWalletCompany>();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new List<MyWalletCompany>();
+            }
+        }
+
+
+
+        public async Task<List<PaymentHistoryApiModel>> PaymentHistory(PaymentHistorySearchApiModel data, string userName)
+        {
+            try
+            {
+
+                int PageSize = data.size > 0 ? data.size : 20;
+                int PageNumber = data.page > 0 ? data.page : 1;
+
+                string query = $@"DECLARE @PageSize INT={PageSize} ,
+                                @PageNumber INT= {PageNumber} ;WITH formdata AS
+                            (
+                                            SELECT DISTINCT a_0.[PACKAGE_NAME] [PLAN_ID] ,
+                                                            a_0.[Id] [PLAN_ID_Id] ,
+                                                            f.id,                                
+                                                            f.formrecordorder,
+                                                            f.created_at,
+                                                            f.updated_at ,
+                                                            f.[PAYMENT_ID],
+                                                            f.[COMPANY_CODE],
+                                                            f.[CALENDAR_CODE],
+                                                            f.[B_COIN_PURCHASE],
+                                                            f.[PAID_DATE],
+                                                            f.[METHOD],
+                                                            f.[CLIENT_PAID_HKD],
+                                                            f.[STATUS],
+                                                            f.[USER_ID],
+                                                            f.[CREDIT_EXPIRE_DATE]
+                                            FROM            payment_history_master_1956 f
+                                            LEFT JOIN       calendar_package_master_1952 a_0
+                                            ON              f.[PLAN_ID] = a_0.[Id]
+                                            WHERE           f.id!=0  and USER_ID='{userName}')
+                            SELECT   Count(*) OVER() total_records,@PageSize  size,@PageNumber     AS 'page',* FROM     formdata ORDER BY [formRecordOrder] ASC offset @PageSize * (@PageNumber - 1) rows FETCH next @PageSize rows only OPTION(recompile);";
+
+
+                var result = (await sqlFunction.ExecuteSqlQuery<PaymentHistoryApiModel>(query)).ToList();
+                if (result.Any())
+                {
+
+                    return result;
+                }
+                else
+                {
+                    return new List<PaymentHistoryApiModel>();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new List<PaymentHistoryApiModel>();
+            }
+        }
 
 
 

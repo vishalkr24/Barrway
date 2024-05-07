@@ -8,11 +8,8 @@ namespace Barrway.DTO.APIModels.SearchAPI
 {
     public class BlogSearchAPIModel
     {
-        
         public List<string> tags { get; set; }
-        public string BLOG_TITLE { get; set; }
-        public int IsFetured { get; set; }
-        public int IsHot { get; set; }
+        public string keyword { get; set; }
         public int size { get; set; }
         public int page { get; set; }
     }
