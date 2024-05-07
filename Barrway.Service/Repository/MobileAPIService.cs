@@ -741,12 +741,12 @@ namespace Barrway.Service.Repository
 											  for xml path('')), 1, 1, '')) 
 
 											  SELECT distinct company.[COMPANY_CODE],company.[Id]
-												,[COMPANY_NAME_ENGLISH],company.[COMPANY_NAME_CHINESE]
+												,[COMPANY_NAME_ENGLISH] as COMPANY_NAME
 												FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company
 												where company.COMPANY_CODE in (select cast(item as varchar) from dbo.SplitString(@CompanyCodes, ','))
                                             Union all
 									  SELECT distinct company.[COMPANY_CODE],company.[Id]
-                                          ,[COMPANY_NAME_ENGLISH],company.[COMPANY_NAME_CHINESE]
+                                          ,[COMPANY_NAME_ENGLISH] as COMPANY_NAME
                                       FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company
                                       join FAVORITE_CALENDAR_MASTER_1949 favorite on favorite.COMPANY_CODE = company.COMPANY_CODE
                                       where favorite.USER_ID = '{userName}' and company.COMPANY_CODE not in (select cast(item as varchar) from dbo.SplitString(@CompanyCodes, ','))";
@@ -1011,7 +1011,7 @@ namespace Barrway.Service.Repository
                                         where phm.USER_ID = @UserId and cast(@currentDate as datetime) <= cast(phm.CREDIT_EXPIRE_DATE as datetime) 
                                         and phm.STATUS = 'complete' and ord.ORDER_TYPE = 'PACKAGE'
                                         for xml path('')), 1, 1, '')
-                                select Id,COMPANY_CODE,COMPANY_NAME_ENGLISH,COMPANY_NAME_CHINESE from BUSINESS_COMPANY_MASTER_1924 where COMPANY_CODE in (select cast(item as varchar) from dbo.SplitString(@Ids, ',')) ";
+                                select Id,COMPANY_CODE,COMPANY_NAME_ENGLISH as COMPANY_NAME from BUSINESS_COMPANY_MASTER_1924 where COMPANY_CODE in (select cast(item as varchar) from dbo.SplitString(@Ids, ',')) ";
 
                 var result = (await sqlFunction.ExecuteSqlQuery<MyWalletCompany>(query)).ToList();
                 if (result.Any())
