@@ -200,12 +200,27 @@ namespace Barrway.Controllers
 
                 //var assignedData = JsonConvert.DeserializeObject<Dictionary<string, object>>(loginresult.Data["AssignedData"].ToString());
 
+                string firstName = "";
+                string lastName = "";
+
+                if (!string.IsNullOrEmpty(user["FIRST_NAME"]?.ToString()))
+                {
+                    firstName = user["FIRST_NAME"]?.ToString();
+                }
+
+                if (!string.IsNullOrEmpty(user["LAST_NAME"]?.ToString()))
+                {
+                    lastName = user["LAST_NAME"]?.ToString();
+                }
+
                 var claims = new ClaimsIdentity(new[] {
                                                     new Claim(ClaimTypes.NameIdentifier,user["USER_ID"].ToString()),
                                                     new Claim(ClaimTypes.Name,user["USER_ID"].ToString()),
                                                     new Claim(ClaimTypes.Email, user["USER_EMAIL"].ToString()),
                                                     new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
                                                     new Claim(ClaimTypes.Sid, user["Id"].ToString()),
+                                                    new Claim("FirstName", firstName),
+                                                    new Claim("LastName", lastName),
                                                     //new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
                                                     }, CookieAuthenticationDefaults.AuthenticationType);
 

@@ -407,7 +407,7 @@ namespace Barrway.Service.Repository
                                                    ,[SERVICE_PROVIDER]
                                                    ,[CLIENT_NAME]
                                                    ,[FROM_TIME]
-                                                   ,[TO_TIME])
+                                                   ,[TO_TIME],[EVENT_ID])
                                              VALUES
                                                    ('{Guid.NewGuid().ToString()}'
                                                    ,2315
@@ -430,7 +430,8 @@ namespace Barrway.Service.Repository
                                                    ,N'{model.RESOURCE_NAME}'
                                                    ,N'{model.participant.STUDENT_NAME}'
                                                    ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = N'{model.transaction.SLOT}') 
-                                                   ,(select calendar.[end] from  CALENDAR_FORM_1935 calendar where Id = N'{model.transaction.SLOT}') )";
+                                                   ,(select calendar.[end] from  CALENDAR_FORM_1935 calendar where Id = N'{model.transaction.SLOT}')
+                                                   , '{model.transaction.SLOT}')";
 
 
             var upcomingResult = await sqlFunction.ExecuteSqlCommandQuery(upcomingBookingQuery);
@@ -703,7 +704,7 @@ namespace Barrway.Service.Repository
                                                    ,[SERVICE_PROVIDER]
                                                    ,[CLIENT_NAME]
                                                    ,[FROM_TIME]
-                                                   ,[TO_TIME])
+                                                   ,[TO_TIME],[EVENT_ID])
                                              VALUES
                                                    ('{Guid.NewGuid().ToString()}'
                                                    ,2315
@@ -726,7 +727,8 @@ namespace Barrway.Service.Repository
                                                    ,N'{model.RESOURCE_NAME}'
                                                    ,N'{model.participant.STUDENT_NAME}'
                                                    ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = N'{model.transaction.SLOT}') 
-                                                   ,(select calendar.[end] from  CALENDAR_FORM_1935 calendar where Id = N'{model.transaction.SLOT}') )";
+                                                   ,(select calendar.[end] from  CALENDAR_FORM_1935 calendar where Id = N'{model.transaction.SLOT}')
+                                                   , '{model.transaction.SLOT}')";
 
 
                     var upcomingResult = await sqlFunction.ExecuteSqlCommandQuery(upcomingBookingQuery);
@@ -961,8 +963,6 @@ namespace Barrway.Service.Repository
             }
 
             return new AddUpdateDelete() { Status = true, Message = "Success", Data = model };
-
-
         }
 
         public async Task<AddUpdateDelete> BookingServiceEvent(RequestEventViewModel eventModal, string userName, string UserId, string PaymentId = null)
@@ -1190,7 +1190,7 @@ namespace Barrway.Service.Repository
 
                             upCommingBooking["COMPANY_CODE"] = eventModal.companyCode.ToString();
                             upCommingBooking["CALENDAR_CODE"] = eventModal.calendarCode.ToString();
-                            upCommingBooking["SLOT"] = eventModal.eventId.ToString();
+                            upCommingBooking["EVENT_ID"] = eventModal.eventId.ToString();
 
                             upCommingBooking["ACTIVITY_NAME"] = eventModal.activityTitle;
                             upCommingBooking["RESOURCE_NAME"] = eventModal.resourceTitle;
@@ -1426,7 +1426,7 @@ namespace Barrway.Service.Repository
                                                    ,[SERVICE_PROVIDER]
                                                    ,[CLIENT_NAME]
                                                    ,[FROM_TIME]
-                                                   ,[TO_TIME])
+                                                   ,[TO_TIME],[EVENT_ID])
                                              VALUES
                                                    ('{Guid.NewGuid().ToString()}'
                                                    ,2315
@@ -1449,7 +1449,8 @@ namespace Barrway.Service.Repository
                                                    , N'{data["RESOURCE_NAME"]}'
                                                    , N'{data["STUDENT_NAME"]}'
                                                    , (select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = {data["SLOT"]}) 
-                                                   , (select calendar.[end] from  CALENDAR_FORM_1935 calendar where Id = {data["SLOT"]}) )";
+                                                   , (select calendar.[end] from  CALENDAR_FORM_1935 calendar where Id = {data["SLOT"]})
+                                                   , '{data["SLOT"]}')";
 
 
             return await sqlFunction.ExecuteSqlCommandQuery(upcomingBookingQuery);

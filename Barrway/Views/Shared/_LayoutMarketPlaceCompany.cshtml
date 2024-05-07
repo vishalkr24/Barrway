@@ -44,63 +44,72 @@
     <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/style.css">
     <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/media.css">
     @RenderSection("styles", false)
-<style>
-    .no-mar-bott-rl {
-        background-color: #e2476c;
-        border: 0px;
-        border-radius: 61px;
-        top: 4px;
-    }
-        .no-mar-bott-rl ul li a {
-            background-color: transparent;
-            font-weight: 400 !important;
-            color: #222222 !important;
+    <style>
+        .no-mar-bott-rl {
+            background-color: #e2476c;
+            border: 0px;
+            border-radius: 61px;
+            top: 4px;
         }
-        .no-mar-bott-rl > a {
-            color: #fff !important;
-            font-weight: 600 !important;
-            font-size: 17px !important;
-            padding: 10px 0px !important;
-            text-transform: uppercase;
-            height: 40px;
-            text-align: center;
-            width: 40px;
+
+            .no-mar-bott-rl ul li a {
+                background-color: transparent;
+                font-weight: 400 !important;
+                color: #222222 !important;
+            }
+
+            .no-mar-bott-rl > a {
+                color: #fff !important;
+                font-weight: 600 !important;
+                font-size: 17px !important;
+                padding: 10px 0px !important;
+                text-transform: uppercase;
+                height: 40px;
+                text-align: center;
+                width: 40px;
+            }
+
+        .dsk-none {
+            display: none;
         }
-    .dsk-none {
-        display:none;
-    }
-    .d-view {
-        display: block;
-    }
-    .mob-view .open > a, .mob-view .open > a:focus, .mob-view .open > a:hover {
-        
-        border-radius: 50px;
-        border: none;
-        background-color: #e2476c;
-    }
-    @@media screen and (max-width: 767px) {
-        .no-mar-bott .secondry-nav {
+
+        .d-view {
+            display: block;
+        }
+
+        .mob-view .open > a, .mob-view .open > a:focus, .mob-view .open > a:hover {
+            border-radius: 50px;
+            border: none;
+            background-color: #e2476c;
+        }
+
+        @@media screen and (max-width: 767px) {
+            .no-mar-bott .secondry-nav {
                 top: 0px !important;
             }
-        .nmbrm {
-            top: 2px !important;
-        }
-        .mob-view {
-            display: block;
-            float: right;
-            margin-right: 10px;
-            top: 4px;
-            position: relative;
-        }
+
+            .nmbrm {
+                top: 2px !important;
             }
-            .m-none {
-                display: none;
+
+            .mob-view {
+                display: block;
+                float: right;
+                margin-right: 10px;
+                top: 4px;
+                position: relative;
             }
-    .nmbrm li .dropdown-menu {
-        left: -116px;
-    }
-    }
-</style>
+        }
+
+        .m-none {
+            display: none;
+        }
+
+        .nmbrm li .dropdown-menu {
+            left: -116px;
+        }
+        }
+    </style>
 </head>
 <body ng-app="FormGeneratorApp">
     @RenderPage("~/Views/Shared/_QRFunctionPartialView.cshtml", null)
@@ -148,7 +157,32 @@
                         @*<li id="nv-company-photo-album"><a href="/Marketplace/CompanyPhotoAlbum?CompanyCode=@ViewBag.COMPANY_ID&CalendarCode=@ViewBag.CALENDAR_ID">@Resource.Photo_album</a></li>*@
                         <li id="nv-company-photo-album"><a href="/company/gallery/@ViewBag.COMPANY_ID/@ViewBag.CALENDAR_ID">@Resource.Photo_album</a></li>
                         <li class="no-mar-bott-rl m-none d-view">
-                            <a href="" id="nav-user-icon" style="text-transform:uppercase;">B</a>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                {
+                                    string userabbr = "";
+                                    if (!string.IsNullOrEmpty(UserIdentity.UserFirstName))
+                                    {
+                                        userabbr = UserIdentity.UserFirstName[0].ToString();
+                                        if (!string.IsNullOrEmpty(UserIdentity.UserLastName))
+                                        {
+                                            userabbr += UserIdentity.UserLastName[0];
+                                        }
+                                    }
+                                    else
+                                    {
+                                        userabbr = UserIdentity.UserName[0].ToString();
+                                    }
+
+                                    <a href="/Useradmin#/myprofile" id="nav-user-icon" style="text-transform:uppercase;">@userabbr </a>
+                                }
+
+                            }
+                            else
+                            {
+                                <a href="/Account/BusinessLogin" id="nav-user-icon" style="text-transform:uppercase;">B</a>
+                            }
+
                         </li>
                     </ul>
 
@@ -179,7 +213,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
-                       
+
                     </button>
                     <a class="navbar-brand" href="/Marketplace/Index"><img src="~/assets/marketplace/image/logo.png"></a>
                 </div>
@@ -336,32 +370,34 @@
     <script src="~/fg-assets/js/app.js"></script>
     <script src="~/fg-assets/js/jquery.cookie.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.4/html5-qrcode.min.js" integrity="sha512-k/KAe4Yff9EUdYI5/IAHlwUswqeipP+Cp5qnrsUjTPCgl51La2/JhyyjNciztD7mWNKLSXci48m7cctATKfLlQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     @RenderSection("scripts", false)
+
     @* Momentum based scroll behaviour *@
+
     <script>
         $(document).ready(function () {
             $.fn.bstooltip = $.fn.tooltip.noConflict(true);
             let CompanyCode = '@ViewBag.COMPANY_CODE'
             var companyPackageData = getCompanyCalendarPackages(CompanyCode).packageData;
-            var logUserDetails = getLoggedSingleUser();
-            debugger;
-            if (logUserDetails == null) {
-                $("#nav-user-icon").attr("href", "/Account/BusinessLogin");
-                $("#nav-user-icon").text("B");
-            } else {
-                $("#nav-user-icon").attr("href", "/Useradmin#/myProfile");
-                let userabbr = '';
-                
-                if (logUserDetails.data.Data.FIRST_NAME != null && logUserDetails.data.Data.FIRST_NAME != '') {
-                    userabbr = logUserDetails.data.Data.FIRST_NAME[0];
-                    if (logUserDetails.data.Data.LAST_NAME != null && logUserDetails.data.Data.LAST_NAME != '') {
-                        userabbr += logUserDetails.data.Data.LAST_NAME[0];
-                    }
-                } else {
-                    userabbr = logUserDetails.data.Data.USER_ID[0];
-                }
-                $("#nav-user-icon").text(userabbr);
-            }
+            //var logUserDetails = getLoggedSingleUser();
+            //debugger;
+            //if (logUserDetails == null) {
+            //    $("#nav-user-icon").attr("href", "/Account/BusinessLogin");
+            //    $("#nav-user-icon").text("B");
+            //} else {
+            //    $("#nav-user-icon").attr("href", "");
+            //    let userabbr = '';
+            //    if (logUserDetails.data.Data.FIRST_NAME != null && logUserDetails.data.Data.FIRST_NAME != '') {
+            //        userabbr = logUserDetails.data.Data.FIRST_NAME[0];
+            //        if (logUserDetails.data.Data.LAST_NAME != null && logUserDetails.data.Data.LAST_NAME != '') {
+            //            userabbr += logUserDetails.data.Data.LAST_NAME[0];
+            //        }
+            //    } else {
+            //        userabbr = logUserDetails.data.Data.USER_ID[0];
+            //    }
+            //    $("#nav-user-icon").text(userabbr);
+            //}
             //debugger;
             if (companyPackageData.Status) {
                 $("#nv-company-package").show();

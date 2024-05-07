@@ -480,9 +480,9 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> getCompanyCalendarDashboardData(string CompanyCode, string CalendarCode)
         {
-            string query1 = $@"select COUNT(*) as 'BookingsToday' from TRANSACTION_MASTER_1942 where COMPANY_CODE = '{CompanyCode}' and (created_at < getDate() and created_at > DATEADD(d,0,DATEDIFF(d,0,GETDATE())))";
+            string query1 = $@"select COUNT(*) as 'BookingsToday' from TRANSACTION_MASTER_1942 where CALENDAR_CODE = '{CalendarCode}' and (created_at < getDate() and created_at > DATEADD(d,0,DATEDIFF(d,0,GETDATE())))";
 
-            string query2 = $@"select COUNT(*) as 'BookingsThisWeek' from TRANSACTION_MASTER_1942 where COMPANY_CODE = '{CompanyCode}' 
+            string query2 = $@"select COUNT(*) as 'BookingsThisWeek' from TRANSACTION_MASTER_1942 where CALENDAR_CODE = '{CalendarCode}' 
                                 and (created_at >=  dateadd(day, 1-datepart(dw, getdate()), CONVERT(date,getdate())) 
                                 and created_at < getdate())";
 
@@ -1331,6 +1331,7 @@ namespace Barrway.Service.Repository
                                           ,[CLIENT_NAME]
                                           ,[FROM_TIME]
                                           ,[TO_TIME]
+                                          ,[EVENT_ID]
                                       FROM [dbo].[COMPANY_UPCOMING_BOOKINGS_1945] booking where COMPANY_CODE = '{CompanyCode}' and CALENDAR_CODE = '{CalendarCode}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
                                     )
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
