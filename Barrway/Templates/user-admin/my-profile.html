@@ -19,9 +19,9 @@
         margin-top: 0px;
     }
 
-    .select2-container--default .select2-selection--single {
+    /*.select2-container--default .select2-selection--single {
         border: 1px solid #3fbfc7 !important;
-    }
+    }*/
 </style>
 <script src="/fg-assets/select2/select2.js"></script>
 <link href="/fg-assets/select2/select2.css" rel="stylesheet" />
@@ -158,7 +158,7 @@
                                     <label>{{translation.Phone}}</label>
                                 </div>
                                 <div class="mobileNumberDiv">
-                                    <select class="form-control valid" id="countryCode" style="width: 30%; margin-right: 10px;" name="CountryCode" style="width: 45%" aria-invalid="false">
+                                    <select class="form-control valid" id="countryCode" style="width: 40%; margin-right: 10px;" name="CountryCode" style="width: 45%" aria-invalid="false">
                                         <option data-countryCode="CN" value="86">China (+86)</option>
                                         <option data-countryCode="HK" value="852">Hong Kong (+852)</option>
                                         <optgroup label="Other countries">
@@ -376,7 +376,7 @@
                                             <option data-countryCode="ZW" value="263">Zimbabwe (+263)</option>
                                         </optgroup>
                                     </select>
-                                    <input type="text" class="form-control" id="USER_PHONE" style="width: 70%;" placeholder="phone" value="{{userData.USER_PHONE}}" />
+                                    <input type="text" class="form-control" id="USER_PHONE" style="width: 60%;" placeholder="phone" value="{{userData.USER_PHONE}}" />
                                     <div class="invalid-feedback-2" id="USER_PHONE_ERROR">Enter a valid phone number</div>
                                 </div>
                             </div>
