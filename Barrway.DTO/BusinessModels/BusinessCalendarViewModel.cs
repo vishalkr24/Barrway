@@ -49,8 +49,9 @@ namespace Barrway.DTO.BusinessModels
         [ValidDropdownValue(ErrorMessage = "Please select a calendar category")]
         public string CALENDAR_CATEGORY_ID { get; set; }
        
-
         public string CALENDAR_COMMON_CATEGORY_ID { get; set; }
+
+        public string SERVICE_CHARGE_BY { get; set; } = "CLASS";
 
         //[Required(ErrorMessage = "Please select a sub category")]
         //[ValidDropdownValue(ErrorMessage = "Please select a sub category")]

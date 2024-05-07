@@ -1454,6 +1454,7 @@ namespace Barrway.Controllers
                                 SCHEDULAR_ID = (string.IsNullOrEmpty(model.SCHEDULAR_ID)) ? "" : model.SCHEDULAR_ID,
                                 DISTRICT_ID = model.DISTRICT_ID.ToString(),
                                 CITY_ID = model.CITY_ID.ToString(),
+                                SERVICE_CHARGE_BY = "CLASS",
                                 DISPLAY_MAX_TIME = model.DISPLAY_MAX_TIME,
                                 DISPLAY_MIN_TIME = model.DISPLAY_MIN_TIME,
                                 DEFAULT_RESOURCE = model.DEFAULT_RESOURCE,
@@ -1488,7 +1489,6 @@ namespace Barrway.Controllers
 
                                     return RedirectToAction("CalendarMaster");
                                 }
-
                             }
                             else
                             {

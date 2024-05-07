@@ -581,7 +581,10 @@ namespace Barrway.Controllers
                             request.formGroupKeyListTemp = formGroupKeyListTemp.ToArray();
                             var formResult = (await formAPIRepository.BulkGeneratedFormData(request)).Data;
 
-                            string query = $@"update SERVICE_MASTER_1933 set ACTIVITY_CODE = (SELECT FORMAT(CONVERT(INT,Id), 'AC00000')) where ACTIVITY_CODE is null";
+                            string query = $@"update SERVICE_MASTER_1933 
+                                              set ACTIVITY_CODE = (SELECT FORMAT(CONVERT(INT,Id), 'AC00000')),
+                                              SERVICE_PAY_PER = (select SERVICE_CHARGE_BY from BUSINESS_CALENDAR_MASTER_1925 bcm where bcm.CALENDAR_CODE = SERVICE_MASTER_1933.CALENDAR_CODE)
+                                              where ACTIVITY_CODE is null";
                             var sqlResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                         }
 

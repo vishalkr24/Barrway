@@ -72,7 +72,6 @@ $(document).ready(function () {
 var tomselect = {};
 function readyPage() {
 
-    setCalendarCategory();
     setCalendarCommonCategory();
 
     checkRegistrationStep();
@@ -169,7 +168,7 @@ function setCurrentCalendarData() {
 
 function renderForm(CategoryId) {
     $("#CALENDAR_CATEGORY_ID").val(CategoryId);
-    $("#CALENDAR_CATEGORY_ID option[value=" + CategoryId + "]").attr("selected", true);
+    //$("#CALENDAR_CATEGORY_ID option[value=" + CategoryId + "]").attr("selected", true);
     /*$("#CALENDAR_CATEGORY_ID").attr("disabled", true);*/
 
     $("#content").hide();
@@ -263,21 +262,6 @@ function setCalendarCommonCategory() {
     if (data.Status == "true" || data.Status == true) {
         for (var i = 0; i < data.Data.length; i++) {
             $("#CALENDAR_COMMON_CATEGORY_ID").append(`<option value="${data.Data[i].Id}">${data.Data[i].CMN_CATEGORY_NAME}</option>`);
-        }
-    }
-}
-
-function setCalendarCategory() {
-    var data = getCalendarCategory();
-
-    console.log(data);
-
-    $("#CALENDAR_COMMON_CATEGORY_ID").empty();
-    
-    if (data.Status == "true" || data.Status == true) {
-        for (var i = 0; i < data.Data.length; i++) {
-
-            $("#CALENDAR_CATEGORY_ID").append(`<option value="${data.Data[i].Id}">${data.Data[i].CALENDAR_CATEGORY_NAME}</option>`);
         }
     }
 }

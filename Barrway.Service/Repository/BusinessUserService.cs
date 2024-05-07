@@ -900,6 +900,15 @@ namespace Barrway.Service.Repository
                     additionalUpdate = " CALENDAR_FUNCTION_TYPE = 'CALENDAR',";
                 }
 
+                if (checkResult.FirstOrDefault()["CALENDAR_CATEGORY_ID"]?.ToString() == "1" && CalendarType == "1")
+                {
+                    additionalUpdate += " SERVICE_CHARGE_BY = 'COURSE',";
+                }
+                else
+                {
+                    additionalUpdate += " SERVICE_CHARGE_BY = 'CLASS',";
+                }
+
                 string query = $@"update BUSINESS_CALENDAR_MASTER_1925 set {additionalUpdate} CALENDAR_TYPE = '{CalendarType}' where CALENDAR_CODE = '{CalendarCode}'";
                 var result = await sqlFunction.ExecuteSqlCommandQuery(query);
 

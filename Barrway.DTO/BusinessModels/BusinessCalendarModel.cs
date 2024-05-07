@@ -30,6 +30,8 @@ namespace Barrway.DTO.BusinessModels
 
         public string CALENDAR_CODE { get; set; }
 
+        public string SERVICE_CHARGE_BY { get; set; } = "CLASS";
+
         public string CALENDAR_NAME { get; set; }
         
         public string COUNTRY_ID { get; set; }

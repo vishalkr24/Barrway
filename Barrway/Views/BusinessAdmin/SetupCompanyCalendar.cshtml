@@ -399,7 +399,7 @@
                                             @Html.TextBoxFor(model => model.CALENDAR_CODE, new { @style = "display:none" })
                                             @Html.TextBoxFor(model => model.CALENDAR_TEMPLATE_ID, new { @style = "display:none" })
                                             @Html.TextBoxFor(model => model.SCHEDULAR_ID, new { @style = "display:none" })
-                                            @Html.DropDownListFor(model => model.CALENDAR_CATEGORY_ID, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @style = "display:none" })
+                                            @Html.TextBoxFor(model => model.CALENDAR_CATEGORY_ID, new { @style = "display:none" })
                                             <div class="form-group">
                                                 <label for="calendarname">@Resource.Calendar_Name *</label>
 
