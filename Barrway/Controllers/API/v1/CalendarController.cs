@@ -40,7 +40,7 @@ namespace Barrway.Controllers.API.v1
 
 
 
-        [Route("api/calendar/MyfavoriteCompanys")]
+        [Route("api/calendar/myfavorite/companys")]
         [HttpGet]
         [ResponseType(typeof(List<MyFavouriteCompany>))]
         public async Task<IHttpActionResult> MyfavoriteCompanysList()
@@ -58,13 +58,13 @@ namespace Barrway.Controllers.API.v1
 
 
 
-        [Route("api/calendar/myfavoriteCalendars")]
+        [Route("api/calendar/myfavorite/calendars")]
         [HttpPost]
         [ResponseType(typeof(List<FavouriteCalendar>))]
         public async Task<IHttpActionResult> MyFavoriteCalanders(FavouriteClanderData data)
         {
             try
-            {//APIUserIdentity.UserName
+            {
                 return Ok(await mobileAPIService.GetMyFavoriteCalendars(data, APIUserIdentity.UserName));
             }
             catch (Exception ex)
@@ -74,13 +74,13 @@ namespace Barrway.Controllers.API.v1
         }
 
 
-        [Route("api/calendar/MywalletCompanys")]
+        [Route("api/calendar/mywallet/companys")]
         [HttpGet]
         [ResponseType(typeof(List<MyWalletCalander>))]
         public async Task<IHttpActionResult> GetMyWalletCompanyList()
         {
             try
-            {//APIUserIdentity.UserName
+            {
                 return Ok(await mobileAPIService.GetMyWalletCompanyList(APIUserIdentity.UserName));
             }
             catch (Exception ex)
@@ -90,13 +90,13 @@ namespace Barrway.Controllers.API.v1
         }
 
 
-        [Route("api/calendar/MywalletCalanders")]
+        [Route("api/calendar/mywallet/calanders")]
         [HttpPost]
         [ResponseType(typeof(List<MyWalletCalander>))]
         public async Task<IHttpActionResult> GetMyWalletCalendars(MyWalletClanderApiModel data)
         {
             try
-            {//APIUserIdentity.UserName
+            {
                 return Ok(await mobileAPIService.GetMyWalletCalendars(data, APIUserIdentity.UserName));
             }
             catch (Exception ex)
