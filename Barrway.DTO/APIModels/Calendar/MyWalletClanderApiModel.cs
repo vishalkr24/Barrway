@@ -90,8 +90,8 @@ namespace Barrway.DTO.APIModels.Calendar
     {
         public int Id { get; set; }
         public string COMPANY_CODE { get; set; }
-        public string COMPANY_NAME_ENGLISH { get; set; }
-        public string COMPANY_NAME_CHINESE { get; set; }
+        public string COMPANY_NAME { get; set; }
+    
         
     }
 
