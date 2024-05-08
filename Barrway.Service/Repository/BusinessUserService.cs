@@ -1782,13 +1782,13 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                 if (!string.IsNullOrEmpty(model.COMPANY_LOGO_PATH))
                 {
                     LogoUpdateQuery = $@",[COMPANY_LOGO_NAME] = N'{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_LOGO_NAME)}'
-                                            ,[COMPANY_LOGO_PATH] = N'{model.COMPANY_LOGO_PATH}'";
+                                            ,[COMPANY_LOGO_PATH] = N'{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_LOGO_PATH)}'";
                 }
 
                 if (!string.IsNullOrEmpty(model.COMPANY_BANNER_PATH))
                 {
                     BannerUpdateQuery = $@",[COMPANY_BANNER_NAME] = N'{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_BANNER_NAME)}'
-                                            ,[COMPANY_BANNER_PATH] = N'{model.COMPANY_BANNER_PATH}'";
+                                            ,[COMPANY_BANNER_PATH] = N'{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_BANNER_PATH)}'";
                 }
 
                 string query = $@"UPDATE [dbo].[BUSINESS_COMPANY_MASTER_1924] SET 
@@ -1908,7 +1908,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
         public async Task<AddUpdateDelete> UpdateCompanyService(BusinessCompanyModel model)
         {
 
-            string query = $@"UPDATE BUSINESS_COMPANY_MASTER_1924 SET COMPANY_SERVICE = N'{model.COMPANY_SERVICE.Replace("'", "''")}' WHERE Id = '{model.Id}'";
+            string query = $@"UPDATE BUSINESS_COMPANY_MASTER_1924 SET COMPANY_SERVICE = N'{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_SERVICE)}' WHERE Id = '{model.Id}'";
 
             int result = await sqlFunction.ExecuteSqlCommandQuery(query);
 
@@ -2739,7 +2739,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                 string query = $@"UPDATE [dbo].[SCHEDULAR_FORM_1941] 
                                   SET 
                                            [updated_at] = getdate()
-                                          ,[SCH__NAME] = '{model.SCH__NAME}'
+                                          ,[SCH__NAME] = '{SQLUtility.TreatSingleQuoteForQuery(model.SCH__NAME)}'
                                           ,[SCH_LOCATION] = '{model.SCH_LOCATION}'
                                           ,[SCH_ACTIVITY] = '{model.SCH_ACTIVITY}'
                                           ,[SCH_RESOURCE] = '{model.SCH_RESOURCE}'
@@ -2912,7 +2912,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                     query += $@"UPDATE [dbo].[QUEUE_MASTER_1973]
                                    SET [QUEUE_BY] = N'{model[i].QUEUE_BY}'
                                       ,[QUEUE_RESOURCE_ID] = '{model[i].QUEUE_RESOURCE_ID}'
-                                      ,[QUEUE_NAME] = N'{model[i].QUEUE_NAME}'
+                                      ,[QUEUE_NAME] = N'{SQLUtility.TreatSingleQuoteForQuery(model[i].QUEUE_NAME)}'
                                       ,[QUEUE_USAGE] = N'{model[i].QUEUE_USAGE}'
                                       ,[QUEUE_PREFIX] = N'{model[i].QUEUE_PREFIX}'
                                       ,[ACCEPT_TICKET] = N'{model[i].ACCEPT_TICKET}'
@@ -2948,7 +2948,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                 for (int i = 0; i < model.Count; i++)
                 {
                     query += $@"UPDATE [dbo].[QUEUE_MASTER_1973]
-                                   SET [SESSION_NAME] = {model[i].SESSION_NAME}
+                                   SET [SESSION_NAME] = {SQLUtility.TreatSingleQuoteForQuery(model[i].SESSION_NAME)}
                                   ,[SESSION_START_TIME] ={model[i].SESSION_START_TIME}
                                   ,[SESSION_END_TIME] = {model[i].SESSION_END_TIME}
                                   ,[TICKETING_TYPE] = {model[i].TICKETING_TYPE}
@@ -3491,7 +3491,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
         {
             try
             {
-                string sqlString = $@"update CALENDAR_FORM_1935 set DOWNLOAD_FILE_LIST=N'{download_file_list}',DOWNLOADABLE_ATTACHMENT=N'{downloadable_attachment}' where Id=" + eventId;
+                string sqlString = $@"update CALENDAR_FORM_1935 set DOWNLOAD_FILE_LIST=N'{SQLUtility.TreatSingleQuoteForQuery(download_file_list)}',DOWNLOADABLE_ATTACHMENT=N'{SQLUtility.TreatSingleQuoteForQuery(downloadable_attachment)}' where Id=" + eventId;
 
 
                 var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
@@ -3516,7 +3516,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
         {
             try
             {
-                string sqlString = $@"update TRANSACTION_MASTER_1942 set ASSESSMENT_FILES_LIST=N'{download_file_list}',ASSESSMENT_FILES=N'{downloadable_attachment}' where Id=" + transactionId;
+                string sqlString = $@"update TRANSACTION_MASTER_1942 set ASSESSMENT_FILES_LIST=N'{SQLUtility.TreatSingleQuoteForQuery(download_file_list)}',ASSESSMENT_FILES=N'{SQLUtility.TreatSingleQuoteForQuery(downloadable_attachment)}' where Id=" + transactionId;
 
 
                 var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
@@ -3542,7 +3542,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                 string updateKeys = "";
                 data.Keys.ToList().ForEach(key =>
                 {
-                    updateKeys += $" [{key}]=N'{data[key]}', ";
+                    updateKeys += $" [{key}]=N'{SQLUtility.TreatSingleQuoteForQuery(data[key]?.ToString())}', ";
                 });
                 updateKeys = updateKeys.TrimEnd(", ".ToCharArray());
                 string sqlString = $@"update CALENDAR_FORM_1935 set {updateKeys} where Id=" + eventId;
@@ -3566,8 +3566,8 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
         {
             try
             {
-                string sqlString = $@"update CALENDAR_FORM_1935 set DOWNLOADABLE_ATTACHMENT=N'{schedularForm.DOWNLOADABLE_ATTACHMENT}',
-                                    DOWNLOAD_FILE_LIST=N'{schedularForm.DOWNLOAD_FILE_LIST}',IS_UPLOAD_REQUIRED=N'{schedularForm.IS_UPLOAD_REQUIRED}',
+                string sqlString = $@"update CALENDAR_FORM_1935 set DOWNLOADABLE_ATTACHMENT=N'{SQLUtility.TreatSingleQuoteForQuery(schedularForm.DOWNLOADABLE_ATTACHMENT)}',
+                                    DOWNLOAD_FILE_LIST=N'{SQLUtility.TreatSingleQuoteForQuery(schedularForm.DOWNLOAD_FILE_LIST)}',IS_UPLOAD_REQUIRED=N'{schedularForm.IS_UPLOAD_REQUIRED}',
                                     UPLOAD_TIME=N'{schedularForm.UPLOAD_TIME}' where SCHEDULAR_FORM_ID='{schedularId}'";
 
 
