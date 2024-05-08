@@ -1611,11 +1611,11 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
 	                                  ,company.COMPANY_NAME_ENGLISH
 									  , calendarDetails.CALENDAR_NAME
                                       ,company.COMPANY_LOGO_PATH
-                                      ,subCategory.CALENDAR_SUB_CATEGORY_NAME
+                                  
 									  ,stuff( (select distinct ',' + ACTIVITY_NAME from SERVICE_MASTER_1933 service_m where service_m.CALENDAR_CODE = calendarDetails.CALENDAR_CODE for xml path('')), 1, 1, '') as 'ServiceList'
 									  FROM BUSINESS_CALENDAR_MASTER_1925 calendarDetails
                                   join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
-								  join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory  ON ',' + calendarDetails.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
+								  
                                   where calendarDetails.Id in (select cast(item as integer) from dbo.SplitString(@Ids, ','))";
 
 

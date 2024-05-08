@@ -266,6 +266,8 @@ $(document).ready(async function () {
                 tabsActive();
             }
 
+            
+
 
             marcketplaceCalendar("", [], resResults, resColumns, activityResults, activityColumns, []);
 
@@ -452,8 +454,17 @@ var manageWindowParams = function () {
     }
     calenderData = changeResourceIDByYSelection((calenderData.data != undefined) ? calenderData.data : calenderData);
     window["eventListTemp"] = calenderData;
-    var $scope = angular.element($("#calendar")).scope();
+     var $scope = angular.element($("#calendar")).scope();
 
+
+     if (resourceData.length > 0) {
+         if ($scope.ySelection == "2304") {
+             resourceData = _.sortBy(resourceData, "FIRST_NAME");
+         }
+         if ($scope.ySelection == "2306") {
+             resourceData = _.sortBy(resourceData, "SEQ");
+         }
+     }
 
 
     var basicDetails = window["EventBasicDetail"];

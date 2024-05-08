@@ -10841,7 +10841,7 @@
                                 },
                                 'data': function (node, cb, data) {
 
-
+                                    debugger;
                                     var urlTemp = "";
                                     if (node.id === '#') {
                                         var newFilter = "&companyCode=" + localStorage.getItem("COMPANY_CODE") + "&calendarCode=" + localStorage.getItem("CALENDAR_CODE");
@@ -10977,7 +10977,9 @@
                                                 //var count = 0; _.each(listSettings.formDataList[0], function (t) { count++; });
                                                 // for (var i = 0; i < count; i++) 
                                                 //{                                                                 //}
-
+                                                if (listSettings.resourceActivityForm == "2306") {
+                                                    listSettings.formDataList = _.sortBy(listSettings.formDataList, "SEQ");
+                                                }
 
                                                 if (node.id == "#") {
                                                     // var index = node.id.split('_');

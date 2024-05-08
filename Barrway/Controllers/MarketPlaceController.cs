@@ -417,12 +417,15 @@ namespace Barrway.Controllers
                 {
                     companyModel.CALENDAR_CATEGORY_NAME_List = JsonConvert.DeserializeObject<List<CALENDAR_CATEGORY>>(JsonConvert.SerializeObject(ClanderCategory.Data));
                 }
-                
 
 
-                if (!string.IsNullOrEmpty(companyModel.TAGS))
+
+                if (!string.IsNullOrEmpty(companyModel.TAGS) && isJsonString(companyModel.TAGS))
                 {
                     companyModel.TAGs = JsonConvert.DeserializeObject<List<TagsObject>>(companyModel.TAGS);
+                }
+                else if (!string.IsNullOrEmpty(companyModel.TAGS)) {
+                    companyModel.TAGs= new List<TagsObject>() { new TagsObject() { value = companyModel.TAGS } };
                 }
                 ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
                 if (!string.IsNullOrEmpty(companyModel.IS_TEMPLATE))
@@ -589,16 +592,18 @@ namespace Barrway.Controllers
                     companyModel.calendars = JsonConvert.DeserializeObject<List<BusinessCalendarModel>>(calendarEncrypted);
                     companyModel.PAGE_URL = PageUrl;
 
+                    if (CalendarCode == null && companyModel.calendars!=null && companyModel.calendars.Count()>0)
+                    {
+                        CalendarCode = companyModel.calendars[0].CALENDAR_CODE;
+                    }
+
                     if (!companyModel.calendars.Any(x => x.CALENDAR_CODE == CalendarCode && x.STATUS == "PUBLISH"))
                     {
                         return RedirectToAction("Index", "Marketplace");
                     }
 
 
-                    if (CalendarCode == null)
-                    {
-                        CalendarCode = companyModel.calendars[0].CALENDAR_CODE;
-                    }
+                    
 
                     if (!string.IsNullOrEmpty(CalendarCode))
                     {
@@ -1194,5 +1199,24 @@ namespace Barrway.Controllers
 
         //    return Json(new );
         //}
+
+        private bool isJsonString(string json)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(json?.Trim()))
+                {
+                    return false;
+                }
+                var parse_json = JsonConvert.DeserializeObject<List<IDictionary<string, object>>>(json);
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+            }
+
+        }
     }
 }
