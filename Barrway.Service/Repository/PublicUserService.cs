@@ -1228,7 +1228,7 @@ namespace Barrway.Service.Repository
                             upCommingBooking["COMPANY_CODE"] = eventModal.companyCode.ToString();
                             upCommingBooking["CALENDAR_CODE"] = eventModal.calendarCode.ToString();
                             upCommingBooking["EVENT_ID"] = eventModal.eventId.ToString();
-                            upCommingBooking["USER_ID"] = UserId;
+                            upCommingBooking["USER_ID"] = userName;
                             upCommingBooking["ACTIVITY_NAME"] = eventModal.activityTitle;
                             upCommingBooking["RESOURCE_NAME"] = eventModal.resourceTitle;
                             upCommingBooking["STUDENT_NAME"] = userData["FIRST_NAME"]?.ToString() ?? "";
