@@ -1482,6 +1482,7 @@ function removeTitleNew() {
 }
 
 function loadCalendarWithEventFunction(calenderType, calenderData, resourceData, resColumns, activityFormData, activityColumn, activityEvents) {
+   
     try {
         if (calenderData.length > 0)
             showLoader();
@@ -1495,6 +1496,17 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
     window["eventListTemp"] = calenderData;
   
     var $scopeVar = angular.element($("#calendar")).scope();
+
+
+    if (resourceData.length > 0) {
+        if ($scopeVar.ySelection == "2304") {
+            resourceData = _.sortBy(resourceData, "FIRST_NAME");
+        }
+        if ($scopeVar.ySelection == "2306") {
+            resourceData = _.sortBy(resourceData, "SEQ");
+        }
+    }
+
     var basicDetails = window["EventBasicDetail"];
 
     var GroupingData = window["colGrouping"];

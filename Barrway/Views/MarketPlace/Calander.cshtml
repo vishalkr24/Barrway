@@ -1121,7 +1121,7 @@
                             </div>
 
 
-                            <div class="form-group mt-2 p-0" ng-if="selectEventDetails.DOWNLOADABLE_ATTACHMENT && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='null'">
+                            <div class="form-group mt-2 p-0" ng-if="selectEventDetails.DOWNLOADABLE_ATTACHMENT && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='null' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!=' '">
                                 <label>Attachment Files</label>
                                 <ul style="list-style-type:none;margin:0;padding:0;margin-top:10px;">
                                     <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='public'"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
@@ -1386,7 +1386,7 @@
                             </div>
 
                             <hr />
-                            <div class="form-group mt-2 p-0" ng-if="selectEventDetails.DOWNLOADABLE_ATTACHMENT && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='null'">
+                            <div class="form-group mt-2 p-0" ng-if="selectEventDetails.DOWNLOADABLE_ATTACHMENT && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='null' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!=' '">
 
                                 <label>Attachment Files</label>
 
@@ -1489,7 +1489,7 @@
                                 <input id="newtag-input{{tag.name}}" type="text" value="{{selectEventDetails[tag.name]}}" placeholder="Add tags">
                             </div>
 
-                            <div class="form-group mt-2 p-0" ng-if="selectEventDetails.DOWNLOADABLE_ATTACHMENT && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='null'">
+                            <div class="form-group mt-2 p-0" ng-if="selectEventDetails.DOWNLOADABLE_ATTACHMENT && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='null' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!=' '">
                                 <ul style="list-style-type:none;margin:0;padding:0;margin-top:10px;">
                                     <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='public'"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
                                 </ul>

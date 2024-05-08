@@ -85,6 +85,7 @@ function getServiceProviderData(calenderSettings) {
 
 function getLocationMaster(calenderSettings) {
     Service_Location_List = calenderSettings.find(x => x.resourceForm == 2306).formDataList;;
+    Service_Location_List = _.sortBy(Service_Location_List, "SEQ");
     if (Service_Location_List.length > 0) {
         $(".div-calendar-service-Location").show();
     }

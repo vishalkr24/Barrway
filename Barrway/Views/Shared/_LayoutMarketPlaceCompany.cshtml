@@ -123,7 +123,33 @@
                 <div class="navbar-header">
                     <ul class="nav mob-view dsk-none nmbrm">
                         <li class="no-mar-bott-rl">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">TL</a>
+
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                
+                                    string userabbr = "";
+                                    if (!string.IsNullOrEmpty(UserIdentity.UserFirstName))
+                                    {
+                                        userabbr = UserIdentity.UserFirstName[0].ToString();
+                                        if (!string.IsNullOrEmpty(UserIdentity.UserLastName))
+                                        {
+                                            userabbr += UserIdentity.UserLastName[0];
+                                        }
+                                    }
+                                    else
+                                    {
+                                        userabbr = UserIdentity.UserName[0].ToString();
+                                    }
+
+                                    @*<a href="/Useradmin#/myprofile" id="nav-user-icon" style="text-transform:uppercase;">@userabbr </a>*@
+                                   <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">@userabbr</a>
+                            }
+                            else
+                            {
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="/Account/BusinessLogin">B</a>
+                            }
+
+
                             <ul class="dropdown-menu">
                                 <li><a href="/Account/BusinessSignup">@Resource.Register</a></li>
                                 <li><a href="/Account/BusinessLogin">@Resource.Login</a></li>
@@ -159,7 +185,6 @@
                         <li class="no-mar-bott-rl m-none d-view">
                             @if (User.Identity.IsAuthenticated)
                             {
-                                {
                                     string userabbr = "";
                                     if (!string.IsNullOrEmpty(UserIdentity.UserFirstName))
                                     {
@@ -173,10 +198,7 @@
                                     {
                                         userabbr = UserIdentity.UserName[0].ToString();
                                     }
-
                                     <a href="/Useradmin#/myprofile" id="nav-user-icon" style="text-transform:uppercase;">@userabbr </a>
-                                }
-
                             }
                             else
                             {

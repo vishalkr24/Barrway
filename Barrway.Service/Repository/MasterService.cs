@@ -872,10 +872,10 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
 	                                '' referrences_2,
 	                                '' referrences_3,
 	                                bcm.CALENDAR_NAME,
-	                                subCategory.CALENDAR_SUB_CATEGORY_NAME
+	                                (STUFF((SELECT ',' + CONVERT(NVARCHAR(MAX), d.[CALENDAR_SUB_CATEGORY_NAME]) FROM CALENDAR_SUB_CATEGORY_MASTER_1930 AS d INNER JOIN BUSINESS_CALENDAR_MASTER_1925 AS ei ON ',' + CONVERT(VARCHAR(12), ei.[CALENDAR_SUB_CATEGORY_ID]) + ',' LIKE '%,' + CONVERT(VARCHAR(12), d.[Id]) + ',%' WHERE ei.[Id] = f.[Id] ORDER BY d.[CALENDAR_SUB_CATEGORY_NAME] FOR XML PATH('')), 1, 1, N'')) as CALENDAR_SUB_CATEGORY_NAME,
 	                                from CALENDAR_FORM_1935 f  
 	                                join BUSINESS_CALENDAR_MASTER_1925 bcm on bcm.CALENDAR_CODE = f.CALENDAR_CODE
-	                                join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory   ON ',' + bcm.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
+	                                left join  CALENDAR_SUB_CATEGORY_MASTER_1930  subCategory on EXISTS(SELECT * FROM split_string(f.[CALENDAR_SUB_CATEGORY_ID] , ',') where tuple=subCategory.[Id]) 
 	                                where   f.formid=2305  and bcm.CALENDAR_CODE = '{paymentHistory[0]["CALENDAR_CODE"].ToString()}' and bcm.COMPANY_CODE = '{paymentHistory[0]["COMPANY_CODE"].ToString()}'
                                 ),
                                 cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
@@ -1013,13 +1013,13 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
 	                                '' referrences_3,
 	                                bcm.CALENDAR_NAME,
                                     company.COMPANY_NAME_ENGLISH,
-	                                subCategory.CALENDAR_SUB_CATEGORY_NAME,
+	                                (STUFF((SELECT ',' + CONVERT(NVARCHAR(MAX), d.[CALENDAR_SUB_CATEGORY_NAME]) FROM CALENDAR_SUB_CATEGORY_MASTER_1930 AS d INNER JOIN BUSINESS_CALENDAR_MASTER_1925 AS ei ON ',' + CONVERT(VARCHAR(12), ei.[CALENDAR_SUB_CATEGORY_ID]) + ',' LIKE '%,' + CONVERT(VARCHAR(12), d.[Id]) + ',%' WHERE ei.[Id] = f.[Id] ORDER BY d.[CALENDAR_SUB_CATEGORY_NAME] FOR XML PATH('')), 1, 1, N'')) as CALENDAR_SUB_CATEGORY_NAME,
                                     company.COMPANY_DESCRIPTION,
 									company.COMPANY_EMAIL
 	                                from CALENDAR_FORM_1935 f  
 	                                join BUSINESS_CALENDAR_MASTER_1925 bcm on bcm.CALENDAR_CODE = f.CALENDAR_CODE
                                     join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
-	                                join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory   ON ',' + bcm.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
+	                                left join  CALENDAR_SUB_CATEGORY_MASTER_1930  subCategory on EXISTS(SELECT * FROM split_string(f.[CALENDAR_SUB_CATEGORY_ID] , ',') where tuple=subCategory.[Id]) 
 	                                where   f.formid=2305  and f.Id = (select tm.SLOT from TRANSACTION_MASTER_1942 tm where tm.Id='{TransactionId}')
                                 ),
                                 cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
@@ -1793,14 +1793,14 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
 
 
                 string query = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
-                                       SELECT calendar.[Id], calendar.[created_at],calendar.[updated_at],calendar.[created_by],calendar.[updated_by]
+                                       SELECT distinct calendar.[Id], calendar.[created_at],calendar.[updated_at],calendar.[created_by],calendar.[updated_by]
                                      ,[CALENDAR_NAME],[CALENDAR_PHOTO_NAME],[CALENDAR_PHOTO_PATH],[IS_VISIBLE],calendar.[COUNTRY_ID],calendar.[CITY_ID]
                                      ,calendar.[DISTRICT_ID],calendar.[CALENDAR_CATEGORY_ID],calendar.[CALENDAR_COMMON_CATEGORY_ID]
                                      ,calendar.[CALENDAR_SUB_CATEGORY_ID]
                                      ,calendar.[CALENDAR_TYPE]
                                      ,calendar.[COMPANY_CODE]
                                      ,calendar.[CALENDAR_CODE]
-                                  ,[CALENDAR_SUB_CATEGORY_NAME]
+                                  ,(STUFF((SELECT ',' + CONVERT(NVARCHAR(MAX), d.[CALENDAR_SUB_CATEGORY_NAME]) FROM CALENDAR_SUB_CATEGORY_MASTER_1930 AS d INNER JOIN BUSINESS_CALENDAR_MASTER_1925 AS ei ON ',' + CONVERT(VARCHAR(12), ei.[CALENDAR_SUB_CATEGORY_ID]) + ',' LIKE '%,' + CONVERT(VARCHAR(12), d.[Id]) + ',%' WHERE ei.[Id] = calendar.[Id] ORDER BY d.[CALENDAR_SUB_CATEGORY_NAME] FOR XML PATH('')), 1, 1, N'')) as CALENDAR_SUB_CATEGORY_NAME
                                   ,[CMN_CATEGORY_NAME]
                                   ,[DISTRICT_NAME]
                                   ,calendar.TAGS
@@ -1815,7 +1815,7 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                                      ,calendar.IS_FEATURED,calendar.[SEQUENCE],calendar.[PRIORITY],
                                     ROW_NUMBER() OVER(PARTITION BY calendar.[Id] ORDER BY calendar.[Id]) AS RowNum
                                 FROM[dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
-                               join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory  ON ',' + calendar.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
+                               left join  CALENDAR_SUB_CATEGORY_MASTER_1930  subCategory on EXISTS(SELECT * FROM split_string(calendar.[CALENDAR_SUB_CATEGORY_ID] , ',') where tuple=subCategory.[Id]) 
                                 join CALENDAR_COMMON_CATEGORY_1978 category on category.Id = calendar.CALENDAR_COMMON_CATEGORY_ID
                                 join DISTRICT_MASTER_1928 district on district.Id = calendar.DISTRICT_ID
                                 join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
@@ -2004,11 +2004,11 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                                  select distinct  f.*,
 	                                f.resources 'resourceId',
 	                                bcm.CALENDAR_NAME,
-	                                subCategory.CALENDAR_SUB_CATEGORY_NAME,
+	                                (STUFF((SELECT ',' + CONVERT(NVARCHAR(MAX), d.[CALENDAR_SUB_CATEGORY_NAME]) FROM CALENDAR_SUB_CATEGORY_MASTER_1930 AS d INNER JOIN BUSINESS_CALENDAR_MASTER_1925 AS ei ON ',' + CONVERT(VARCHAR(12), ei.[CALENDAR_SUB_CATEGORY_ID]) + ',' LIKE '%,' + CONVERT(VARCHAR(12), d.[Id]) + ',%' WHERE ei.[Id] = f.[Id] ORDER BY d.[CALENDAR_SUB_CATEGORY_NAME] FOR XML PATH('')), 1, 1, N'')) as CALENDAR_SUB_CATEGORY_NAME,
 									bcm.CALENDAR_PHOTO_PATH
 	                                from CALENDAR_FORM_1935 f  
 	                                join BUSINESS_CALENDAR_MASTER_1925 bcm on bcm.CALENDAR_CODE = f.CALENDAR_CODE
-	                                join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory   ON ',' +  bcm.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
+	                                left join  CALENDAR_SUB_CATEGORY_MASTER_1930  subCategory on EXISTS(SELECT * FROM split_string(f.[CALENDAR_SUB_CATEGORY_ID] , ',') where tuple=subCategory.[Id])
 	                                where   f.formid=2305 and f.CALENDAR_CODE {(!string.IsNullOrEmpty(calendarCodesResult[0]["CalendarCodes"].ToString()) ? " in (" + calendarCodesResult[0]["CalendarCodes"].ToString() + ")" : "= ''")}
                                 )
                                 select* into #temptable from cte2

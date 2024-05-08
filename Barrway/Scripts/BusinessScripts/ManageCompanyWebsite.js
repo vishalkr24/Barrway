@@ -66,7 +66,7 @@
         });
     }, 500);
     setCountryData();
-    setCompanyCategory();
+    /*setCompanyCategory();*/
   
 
     SetCompanyDetails(companyId);
@@ -186,10 +186,6 @@ $(document).on("change", "#CITY_ID", function () {
     bindDistrictData($("#CITY_ID option:selected").val());
 })
 
-$(document).on("change", "#COMPANY_CATEGORY_ID", function () {
-    BindCompanySubCategory($("#COMPANY_CATEGORY_ID option:selected").val());
-})
-
 
 function setCompanyCategory() {
     var response = getCalendarCommonCategory();
@@ -246,20 +242,6 @@ function bindDistrictData(cityId) {
         for (var i = 0; i < data.Data.length; i++) {
             $("#DISTRICT_ID").append(`<option value="${data.Data[i].Id}">${data.Data[i].DISTRICT_NAME}</option>`);
         }
-    }
-}
-
-function BindCompanySubCategory(id) {
-    $("#COMPANY_SUB_CATEGORY_ID").attr("disabled", false);
-
-    var response = getCalendarSubCategory(id);
-
-    $("#COMPANY_SUB_CATEGORY_ID").empty();
-
-    $("#COMPANY_SUB_CATEGORY_ID").append(`<option disabled value="-1">Select Company Sub Category</option>`);
-
-    for (var i = 0; i < response.Data.length; i++) {
-        $("#COMPANY_SUB_CATEGORY_ID").append(`<option value="${response.Data[i].Id}">${response.Data[i].CALENDAR_SUB_CATEGORY_NAME}</option>`);
     }
 }
 
@@ -344,11 +326,11 @@ function SetCompanyDetails(companyId) {
     $("#COMPANY_NAME_ENGLISH").val(data.Data.COMPANY_NAME_ENGLISH);
     $("#COMPANY_NAME_CHINESE").val(data.Data.COMPANY_NAME_CHINESE);
 
-    $("#COMPANY_CATEGORY_ID").val(data.Data.COMPANY_CATEGORY_ID);
-    $("#COMPANY_CATEGORY_ID option[value=" + data.Data.COMPANY_CATEGORY_ID + "]").attr("selected", true);
-    BindCompanySubCategory(data.Data.COMPANY_CATEGORY_ID);
-    $("#COMPANY_SUB_CATEGORY_ID").val(data.Data.COMPANY_SUB_CATEGORY_ID);
-    $("#COMPANY_SUB_CATEGORY_ID option[value=" + data.Data.COMPANY_SUB_CATEGORY_ID + "]").attr("selected", true);
+    //$("#COMPANY_CATEGORY_ID").val(data.Data.COMPANY_CATEGORY_ID);
+    //$("#COMPANY_CATEGORY_ID option[value=" + data.Data.COMPANY_CATEGORY_ID + "]").attr("selected", true);
+    //BindCompanySubCategory(data.Data.COMPANY_CATEGORY_ID);
+    //$("#COMPANY_SUB_CATEGORY_ID").val(data.Data.COMPANY_SUB_CATEGORY_ID);
+    //$("#COMPANY_SUB_CATEGORY_ID option[value=" + data.Data.COMPANY_SUB_CATEGORY_ID + "]").attr("selected", true);
     $("#COUNTRY_ID").val(data.Data.COUNTRY_ID);
     $("#COUNTRY_ID option[value=" + data.Data.COUNTRY_ID + "]").attr("selected", true);
     bindCityData(data.Data.COUNTRY_ID);

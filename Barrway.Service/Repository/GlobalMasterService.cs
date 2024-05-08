@@ -142,7 +142,7 @@ namespace Barrway.Service.Repository
 
 
 
-            string query = $@"SELECT calendar.[Id]
+            string query = $@"select *from(SELECT calendar.[Id]
                               ,calendar.[created_at]
                               ,calendar.[updated_at]
                               ,calendar.[created_by]
@@ -160,7 +160,7 @@ namespace Barrway.Service.Repository
                               ,calendar.[CALENDAR_TYPE]
                               ,calendar.[COMPANY_CODE]
                               ,calendar.[CALENDAR_CODE]
-	                          ,[CALENDAR_SUB_CATEGORY_NAME]
+                              ,(STUFF((SELECT ',' + CONVERT(NVARCHAR(MAX), d.[CALENDAR_SUB_CATEGORY_NAME]) FROM CALENDAR_SUB_CATEGORY_MASTER_1930 AS d INNER JOIN BUSINESS_CALENDAR_MASTER_1925 AS ei ON ',' + CONVERT(VARCHAR(12), ei.[CALENDAR_SUB_CATEGORY_ID]) + ',' LIKE '%,' + CONVERT(VARCHAR(12), d.[Id]) + ',%' WHERE ei.[Id] = calendar.[Id] ORDER BY d.[CALENDAR_SUB_CATEGORY_NAME] FOR XML PATH('')), 1, 1, N'')) as CALENDAR_SUB_CATEGORY_NAME
 	                          ,[CMN_CATEGORY_NAME]
 	                          ,[DISTRICT_NAME]
 	                          ,calendar.TAGS
@@ -173,14 +173,15 @@ namespace Barrway.Service.Repository
 							  ,[IS_SEARCHABLE_IN_MARKETPLACE]
                               ,company.PAGE_URL
                               ,calendar.IS_FEATURED
-                              ,category.Id AS  CategoryId                    
+                              ,category.Id AS  CategoryId      
+                              ,calendar.[PRIORITY],calendar.[SEQUENCE]
                          FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
-                         join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory  ON ',' + calendar.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
+                         left join  CALENDAR_SUB_CATEGORY_MASTER_1930  subCategory on EXISTS(SELECT * FROM split_string(calendar.[CALENDAR_SUB_CATEGORY_ID] , ',') where tuple=subCategory.[Id]) 
                          join CALENDAR_COMMON_CATEGORY_1978 category on category.Id = calendar.CALENDAR_COMMON_CATEGORY_ID
                          join DISTRICT_MASTER_1928 district on district.Id = calendar.DISTRICT_ID
                          join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
 
-                         where calendar.STATUS = 'PUBLISH' and company.IS_SEARCHABLE_IN_MARKETPLACE = 'Y' and company.IS_ACTIVE = 'Y' and company.IS_TEMPLATE = 'N' and calendar.CALENDAR_USE_TYPE = 'PUBLIC' and calendar.IS_VISIBLE_ON_MARKETPLACE_HOME='Y'  {(!string.IsNullOrEmpty(filter) ? filter : "")} ORDER BY  calendar.[PRIORITY] DESC , calendar.[SEQUENCE] asc";
+                         where calendar.STATUS = 'PUBLISH' and company.IS_SEARCHABLE_IN_MARKETPLACE = 'Y' and company.IS_ACTIVE = 'Y' and company.IS_TEMPLATE = 'N' and calendar.CALENDAR_USE_TYPE = 'PUBLIC' and calendar.IS_VISIBLE_ON_MARKETPLACE_HOME='Y'  {(!string.IsNullOrEmpty(filter) ? filter : "")}) as t ORDER BY  t.[PRIORITY] DESC , t.[SEQUENCE] asc";
 
 
 
