@@ -225,6 +225,7 @@ namespace Barrway.Controllers
             }
         }
 
+        [ValidateInput(false)]
         public async Task<ActionResult> CancelPublicUserBooking(CalendarEnrollModel model)
         {
             try
