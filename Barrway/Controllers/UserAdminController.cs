@@ -230,6 +230,7 @@ namespace Barrway.Controllers
             try
             {
                 model.USER_EMAIL = UserIdentity.UserEmail;
+                model.USER_ID = UserIdentity.UserName;
 
                 var result = await publicUserService.CancelPublicUserBooking(model);
 

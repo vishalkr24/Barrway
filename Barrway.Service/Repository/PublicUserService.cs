@@ -444,7 +444,7 @@ namespace Barrway.Service.Repository
                                                    ,'{model.transaction.COMPANY_CODE}'
                                                    ,'{model.transaction.CALENDAR_CODE}'
                                                    ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = '{model.transaction.SLOT}')                                                                                                                                                                                                     
-                                                   ,N'{model.ACTIVITY_NAME}'
+                                                   ,N'{SQLUtility.TreatSingleQuoteForQuery(model.ACTIVITY_NAME)}'
                                                    ,N'{model.RESOURCE_NAME}'
                                                    ,N'{model.participant.STUDENT_NAME}'
                                                    ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = N'{model.transaction.SLOT}') 
@@ -850,7 +850,7 @@ namespace Barrway.Service.Repository
                     }
                     else
                     {
-                        query = $@"delete from TRANSACTION_MASTER_1942 where Id = '{result[0]["Id"]?.ToString()}'";
+                        query = $@"delete from COMPANY_UPCOMING_BOOKINGS_1945 where USER_ID = '{model.USER_ID}' and EVENT_ID = (select top 1 SLOT from TRANSACTION_MASTER_1942 where Id = '{result[0]["Id"]?.ToString()}'); delete from TRANSACTION_MASTER_1942 where Id = '{result[0]["Id"]?.ToString()}';";
                     }
                     
                     var result2 = await sqlFunction.ExecuteSqlCommandQuery(query);
