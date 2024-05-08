@@ -425,7 +425,7 @@ namespace Barrway.Service.Repository
                                                    ,[SERVICE_PROVIDER]
                                                    ,[CLIENT_NAME]
                                                    ,[FROM_TIME]
-                                                   ,[TO_TIME],[EVENT_ID])
+                                                   ,[TO_TIME],[EVENT_ID],[USER_ID])
                                              VALUES
                                                    ('{Guid.NewGuid().ToString()}'
                                                    ,2315
@@ -449,7 +449,7 @@ namespace Barrway.Service.Repository
                                                    ,N'{SQLUtility.TreatSingleQuoteForQuery(model.participant.STUDENT_NAME)}'
                                                    ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = N'{model.transaction.SLOT}') 
                                                    ,(select calendar.[end] from  CALENDAR_FORM_1935 calendar where Id = N'{model.transaction.SLOT}')
-                                                   , '{model.transaction.SLOT}')";
+                                                   , '{model.transaction.SLOT}', '{model.USER_ID}')";
 
 
             var upcomingResult = await sqlFunction.ExecuteSqlCommandQuery(upcomingBookingQuery);
@@ -723,7 +723,7 @@ namespace Barrway.Service.Repository
                                                    ,[SERVICE_PROVIDER]
                                                    ,[CLIENT_NAME]
                                                    ,[FROM_TIME]
-                                                   ,[TO_TIME],[EVENT_ID])
+                                                   ,[TO_TIME],[EVENT_ID],[USER_ID])
                                              VALUES
                                                    ('{Guid.NewGuid().ToString()}'
                                                    ,2315
@@ -747,7 +747,7 @@ namespace Barrway.Service.Repository
                                                    ,N'{SQLUtility.TreatSingleQuoteForQuery(model.participant.STUDENT_NAME)}'
                                                    ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = N'{model.transaction.SLOT}') 
                                                    ,(select calendar.[end] from  CALENDAR_FORM_1935 calendar where Id = N'{model.transaction.SLOT}')
-                                                   , '{model.transaction.SLOT}')";
+                                                   , '{model.transaction.SLOT}', '{model.USER_ID}')";
 
 
                 }
@@ -1228,7 +1228,7 @@ namespace Barrway.Service.Repository
                             upCommingBooking["COMPANY_CODE"] = eventModal.companyCode.ToString();
                             upCommingBooking["CALENDAR_CODE"] = eventModal.calendarCode.ToString();
                             upCommingBooking["EVENT_ID"] = eventModal.eventId.ToString();
-
+                            upCommingBooking["USER_ID"] = UserId;
                             upCommingBooking["ACTIVITY_NAME"] = eventModal.activityTitle;
                             upCommingBooking["RESOURCE_NAME"] = eventModal.resourceTitle;
                             upCommingBooking["STUDENT_NAME"] = userData["FIRST_NAME"]?.ToString() ?? "";
@@ -1463,7 +1463,7 @@ namespace Barrway.Service.Repository
                                                    ,[SERVICE_PROVIDER]
                                                    ,[CLIENT_NAME]
                                                    ,[FROM_TIME]
-                                                   ,[TO_TIME],[EVENT_ID])
+                                                   ,[TO_TIME],[EVENT_ID],[USER_ID])
                                              VALUES
                                                    ('{Guid.NewGuid().ToString()}'
                                                    ,2315
@@ -1487,7 +1487,7 @@ namespace Barrway.Service.Repository
                                                    , N'{SQLUtility.TreatSingleQuoteForQuery(data["STUDENT_NAME"])}'
                                                    , (select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = {data["SLOT"]}) 
                                                    , (select calendar.[end] from  CALENDAR_FORM_1935 calendar where Id = {data["SLOT"]})
-                                                   , '{data["SLOT"]}')";
+                                                   , '{data["SLOT"]}', '{data["USER_ID"]}')";
 
 
             return await sqlFunction.ExecuteSqlCommandQuery(upcomingBookingQuery);
