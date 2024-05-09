@@ -213,6 +213,7 @@ namespace Barrway.Controllers
             try
             {
                 model.USER_ID = User.Identity.Name;
+                model.USER_EMAIL = UserIdentity.UserEmail;
 
                 var result = await publicUserService.EnrollCourse(model);
 
