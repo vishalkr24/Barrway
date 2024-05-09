@@ -115,6 +115,7 @@ namespace Barrway.Service.Repository
             string query = $@"SELECT publicUser.[Id]
                               ,publicUser.[USER_ID]
                               ,publicUser.[USER_EMAIL]
+                              ,publicUser.[USER_PASSWORD]
                               ,publicUser.[Country_Code]
                               ,publicUser.[USER_PHONE]
                               ,publicUser.[IS_EXTERNAL_SIGNUP]
@@ -221,23 +222,40 @@ namespace Barrway.Service.Repository
 
             // check for sufficient B$ Balance
             var balance = await GetUserCoinBalance(model.USER_ID, model.participant.COMPANY_CODE, model.participant.CALENDAR_CODE);
-            var service = await sqlFunction.ExecuteSqlQuery("select fees_1 from SERVICE_MASTER_1933 where Id = " + model.transaction.ACTIVITY);
+            var service = await sqlFunction.ExecuteSqlQuery("select fees_1, IS_SERVICE_PAID from SERVICE_MASTER_1933 where Id = " + model.transaction.ACTIVITY);
 
             bool IsServicePaid = false;
             int ServiceFees = 0;
 
-            if (!string.IsNullOrEmpty(service[0]["fees_1"]?.ToString()))
+            if (!string.IsNullOrEmpty(service[0]["IS_SERVICE_PAID"]?.ToString()))
             {
-                if (Convert.ToInt32(service[0]["fees_1"]) > 0)
+                if (service[0]["IS_SERVICE_PAID"]?.ToString() == "Y")
                 {
-                    IsServicePaid = true;
-                    ServiceFees = Convert.ToInt32(service[0]["fees_1"]);
+                    if (!string.IsNullOrEmpty(service[0]["fees_1"]?.ToString()))
+                    {
+                        if (Convert.ToInt32(service[0]["fees_1"]) > 0)
+                        {
+                            IsServicePaid = true;
+                            ServiceFees = Convert.ToInt32(service[0]["fees_1"]);
+                        }
+                        else
+                        {
+                            IsServicePaid = false;
+                            ServiceFees = 0;
+                        }
+                    }
+                    else
+                    {
+                        IsServicePaid = false;
+                        ServiceFees = 0;
+                    }
                 }
                 else
                 {
                     IsServicePaid = false;
                     ServiceFees = 0;
                 }
+
             }
             else
             {
@@ -426,7 +444,7 @@ namespace Barrway.Service.Repository
                                                    ,'{model.transaction.COMPANY_CODE}'
                                                    ,'{model.transaction.CALENDAR_CODE}'
                                                    ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = '{model.transaction.SLOT}')                                                                                                                                                                                                     
-                                                   ,N'{model.ACTIVITY_NAME}'
+                                                   ,N'{SQLUtility.TreatSingleQuoteForQuery(model.ACTIVITY_NAME)}'
                                                    ,N'{model.RESOURCE_NAME}'
                                                    ,N'{model.participant.STUDENT_NAME}'
                                                    ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = N'{model.transaction.SLOT}') 
@@ -832,7 +850,7 @@ namespace Barrway.Service.Repository
                     }
                     else
                     {
-                        query = $@"delete from TRANSACTION_MASTER_1942 where Id = '{result[0]["Id"]?.ToString()}'";
+                        query = $@"delete from COMPANY_UPCOMING_BOOKINGS_1945 where USER_ID = '{model.USER_ID}' and EVENT_ID = (select top 1 SLOT from TRANSACTION_MASTER_1942 where Id = '{result[0]["Id"]?.ToString()}'); delete from TRANSACTION_MASTER_1942 where Id = '{result[0]["Id"]?.ToString()}';";
                     }
                     
                     var result2 = await sqlFunction.ExecuteSqlCommandQuery(query);
@@ -976,29 +994,47 @@ namespace Barrway.Service.Repository
 
                     // check for sufficient B$ Balance
                     var balance = await GetUserCoinBalance(userName, eventModal.companyCode, eventModal.calendarCode);
-                    var service = await sqlFunction.ExecuteSqlQuery("select fees_1 from SERVICE_MASTER_1933 where Id = " + eventModal.activityId);
+                    var service = await sqlFunction.ExecuteSqlQuery("select fees_1, IS_SERVICE_PAID from SERVICE_MASTER_1933 where Id = " + eventModal.activityId);
 
                     bool IsServicePaid = false;
                     int ServiceFees = 0;
 
-                    if (!string.IsNullOrEmpty(service[0]["fees_1"]?.ToString()))
+                    if (!string.IsNullOrEmpty(service[0]["IS_SERVICE_PAID"]?.ToString()))
                     {
-                        if (Convert.ToInt32(service[0]["fees_1"]) > 0)
+                        if (service[0]["IS_SERVICE_PAID"]?.ToString() == "Y")
                         {
-                            IsServicePaid = true;
-                            ServiceFees = Convert.ToInt32(service[0]["fees_1"]);
+                            if (!string.IsNullOrEmpty(service[0]["fees_1"]?.ToString()))
+                            {
+                                if (Convert.ToInt32(service[0]["fees_1"]) > 0)
+                                {
+                                    IsServicePaid = true;
+                                    ServiceFees = Convert.ToInt32(service[0]["fees_1"]);
+                                }
+                                else
+                                {
+                                    IsServicePaid = false;
+                                    ServiceFees = 0;
+                                }
+                            }
+                            else
+                            {
+                                IsServicePaid = false;
+                                ServiceFees = 0;
+                            }
                         }
                         else
                         {
                             IsServicePaid = false;
                             ServiceFees = 0;
                         }
+                        
                     }
                     else
                     {
                         IsServicePaid = false;
                         ServiceFees = 0;
                     }
+                    
 
                     if (IsServicePaid && string.IsNullOrEmpty(PaymentId))
                     {
