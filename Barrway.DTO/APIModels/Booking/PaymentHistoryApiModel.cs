@@ -35,5 +35,7 @@ namespace Barrway.DTO.APIModels.Booking
         public int size { get; set; }
         public int last_page { get; set; }
         public int page_records { get; set; }
+        public String COMPANY_CODE { get; set; }
+        public String Year { get; set; }
     }
 }

@@ -1031,14 +1031,80 @@ namespace Barrway.Service.Repository
         }
 
 
+        public async Task<List<MyFavouriteCompany>> GetPaymentCompanyList(string userName)
+        {
+            try
+            {
+
+                string query = $@"SELECT BC.Id,Ph.COMPANY_CODE, BC.COMPANY_NAME_ENGLISH as COMPANY_NAME
+                                    FROM payment_history_master_1956 Ph
+                                    INNER JOIN BUSINESS_COMPANY_MASTER_1924 BC ON BC.COMPANY_CODE = PH.COMPANY_CODE
+                                    WHERE USER_ID = '{userName}' 
+                                    GROUP BY Ph.COMPANY_CODE, BC.COMPANY_NAME_ENGLISH ,BC.Id";
+
+                var result = (await sqlFunction.ExecuteSqlQuery<MyFavouriteCompany>(query)).ToList();
+                if (result.Any())
+                {
+                    return result;
+                }
+                else
+                {
+                    return new List<MyFavouriteCompany>();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new List<MyFavouriteCompany>();
+            }
+        }
+
+        public async Task<List<object>> GetPaymentYearList(string userName)
+        {
+            try
+            {
+
+                string query = $@"SELECT  DISTINCT YEAR(Ph.PAID_DATE) AS PAYMENTYEAR
+                                FROM payment_history_master_1956  Ph
+                                WHERE USER_ID='{userName}' ";
+
+                var result = (await sqlFunction.ExecuteSqlQuery<object>(query)).ToList();
+                if (result.Any())
+                {
+                    return result;
+                }
+                else
+                {
+                    return new List<object>();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new List<object>();
+            }
+        }
+
+
 
         public async Task<List<PaymentHistoryApiModel>> PaymentHistory(PaymentHistorySearchApiModel data, string userName)
         {
             try
             {
-
+                string searchFilter = "";
                 int PageSize = data.size > 0 ? data.size : 20;
                 int PageNumber = data.page > 0 ? data.page : 1;
+
+                if (data.COMPANY_CODE !="")
+                {
+                    searchFilter += " and f.COMPANY_CODE ='" + data.COMPANY_CODE + "'";
+                }
+
+                if (data.Year != "")
+                {
+                    searchFilter += " and YEAR(f.PAID_DATE) ='" + data.Year + "'";
+                }
+
 
                 string query = $@"DECLARE @PageSize INT={PageSize} ,
                                 @PageNumber INT= {PageNumber} ;WITH formdata AS
@@ -1062,7 +1128,7 @@ namespace Barrway.Service.Repository
                                             FROM            payment_history_master_1956 f
                                             LEFT JOIN       calendar_package_master_1952 a_0
                                             ON              f.[PLAN_ID] = a_0.[Id]
-                                            WHERE           f.id!=0  and USER_ID='{userName}')
+                                            WHERE           f.id!=0  and USER_ID='{userName}' {searchFilter}   )
                             SELECT   Count(*) OVER() total_records,@PageSize  size,@PageNumber     AS 'page',* FROM     formdata ORDER BY [formRecordOrder] ASC offset @PageSize * (@PageNumber - 1) rows FETCH next @PageSize rows only OPTION(recompile);";
 
 

@@ -75,5 +75,38 @@ namespace Barrway.Controllers.API.v1
             }
         }
 
+
+        [HttpGet]
+        [Route("api/user/PaymentCompanyList")]
+        [ResponseType(typeof(List<MyFavouriteCompany>))]
+        public async Task<IHttpActionResult> PaymentCompanyList()
+        {
+            try
+            {
+                var result = await mobileAPIService.GetPaymentCompanyList(APIUserIdentity.UserName);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
+
+        [HttpGet]
+        [Route("api/user/PaymentYearList")]
+        [ResponseType(typeof(List<MyFavouriteCompany>))]
+        public async Task<IHttpActionResult> PaymentYearList()
+        {
+            try
+            {
+                var result = await mobileAPIService.GetPaymentYearList(APIUserIdentity.UserName);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
+
     }
 }
