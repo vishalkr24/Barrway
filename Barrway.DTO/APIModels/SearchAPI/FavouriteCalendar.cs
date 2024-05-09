@@ -37,6 +37,8 @@ namespace Barrway.DTO.APIModels.SearchAPI
         public int last_page { get; set; }
         public int page_records { get; set; }      
         public string CalendarCode { get; set; }
+        public string COMPANY_CODE { get; set; }
+
     }
 
     public class MyFavouriteCompany
