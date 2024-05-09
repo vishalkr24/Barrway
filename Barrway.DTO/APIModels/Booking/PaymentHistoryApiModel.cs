@@ -20,6 +20,8 @@ namespace Barrway.DTO.APIModels.Booking
         public string PAYMENT_ID { get; set; }
         public string COMPANY_CODE { get; set; }
         public string CALENDAR_CODE { get; set; }
+        public string COMPANY_NAME { get; set; }
+        public string CALENDAR_NAME { get; set; }
         public int B_COIN_PURCHASE { get; set; }
         public DateTime PAID_DATE { get; set; }
         public string METHOD { get; set; }
@@ -35,5 +37,7 @@ namespace Barrway.DTO.APIModels.Booking
         public int size { get; set; }
         public int last_page { get; set; }
         public int page_records { get; set; }
+        public String COMPANY_CODE { get; set; }
+        public String Year { get; set; }
     }
 }

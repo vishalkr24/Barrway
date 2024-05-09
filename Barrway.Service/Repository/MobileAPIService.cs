@@ -783,6 +783,8 @@ namespace Barrway.Service.Repository
 
                 string calendarCodes = "";
 
+                string CompanyCodestring = "";
+
                 if (Fev_result.Count > 0)
                 {
                     for (int i = 0; i < Fev_result.Count; i++)
@@ -801,6 +803,12 @@ namespace Barrway.Service.Repository
                 if (!string.IsNullOrEmpty(data.CalendarCode))
                 {
                     calendarCodes = (data.CalendarCode.Contains("'")) ? data.CalendarCode : "'" + data.CalendarCode + "'";
+                }
+
+
+                if (!string.IsNullOrEmpty(data.COMPANY_CODE))
+                {
+                    CompanyCodestring = " and calendarDetails.[COMPANY_CODE]='"+ data.COMPANY_CODE + "'";
                 }
 
                 int PageSize = data.size > 0 ? data.size : 20;
@@ -861,7 +869,7 @@ namespace Barrway.Service.Repository
                                               FROM [dbo].BUSINESS_CALENDAR_MASTER_1925 calendarDetails
                                               join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
 								              join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory ON ',' + calendarDetails.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
-                                              where {((string.IsNullOrEmpty(calendarCodes)) ? "calendarDetails.CALENDAR_CODE = ''" : $@"calendarDetails.CALENDAR_CODE in ({calendarCodes})")} and calendarDetails.CALENDAR_CODE not in (select cast(item as varchar) from dbo.SplitString(@CalendarCodes, ',')) 
+                                              where {((string.IsNullOrEmpty(calendarCodes)) ? "calendarDetails.CALENDAR_CODE = ''" : $@"calendarDetails.CALENDAR_CODE in ({calendarCodes})")} and calendarDetails.CALENDAR_CODE not in (select cast(item as varchar) from dbo.SplitString(@CalendarCodes, ','))  {CompanyCodestring}
                                       )
                                   Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY PURCHASED desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
 
@@ -1031,14 +1039,80 @@ namespace Barrway.Service.Repository
         }
 
 
+        public async Task<List<MyFavouriteCompany>> GetPaymentCompanyList(string userName)
+        {
+            try
+            {
+
+                string query = $@"SELECT BC.Id,Ph.COMPANY_CODE, BC.COMPANY_NAME_ENGLISH as COMPANY_NAME
+                                    FROM payment_history_master_1956 Ph
+                                    INNER JOIN BUSINESS_COMPANY_MASTER_1924 BC ON BC.COMPANY_CODE = PH.COMPANY_CODE
+                                    WHERE USER_ID = '{userName}' 
+                                    GROUP BY Ph.COMPANY_CODE, BC.COMPANY_NAME_ENGLISH ,BC.Id";
+
+                var result = (await sqlFunction.ExecuteSqlQuery<MyFavouriteCompany>(query)).ToList();
+                if (result.Any())
+                {
+                    return result;
+                }
+                else
+                {
+                    return new List<MyFavouriteCompany>();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new List<MyFavouriteCompany>();
+            }
+        }
+
+        public async Task<List<object>> GetPaymentYearList(string userName)
+        {
+            try
+            {
+
+                string query = $@"SELECT  DISTINCT YEAR(Ph.PAID_DATE) AS PAYMENTYEAR
+                                FROM payment_history_master_1956  Ph
+                                WHERE USER_ID='{userName}' ";
+
+                var result = (await sqlFunction.ExecuteSqlQuery<object>(query)).ToList();
+                if (result.Any())
+                {
+                    return result;
+                }
+                else
+                {
+                    return new List<object>();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new List<object>();
+            }
+        }
+
+
 
         public async Task<List<PaymentHistoryApiModel>> PaymentHistory(PaymentHistorySearchApiModel data, string userName)
         {
             try
             {
-
+                string searchFilter = "";
                 int PageSize = data.size > 0 ? data.size : 20;
                 int PageNumber = data.page > 0 ? data.page : 1;
+
+                if (data.COMPANY_CODE !="")
+                {
+                    searchFilter += " and f.COMPANY_CODE ='" + data.COMPANY_CODE + "'";
+                }
+
+                if (data.Year != "")
+                {
+                    searchFilter += " and YEAR(f.PAID_DATE) ='" + data.Year + "'";
+                }
+
 
                 string query = $@"DECLARE @PageSize INT={PageSize} ,
                                 @PageNumber INT= {PageNumber} ;WITH formdata AS
@@ -1050,7 +1124,7 @@ namespace Barrway.Service.Repository
                                                             f.created_at,
                                                             f.updated_at ,
                                                             f.[PAYMENT_ID],
-                                                            f.[COMPANY_CODE],
+                                                            f.[COMPANY_CODE],BC.COMPANY_NAME_ENGLISH as  COMPANY_NAME,Bcl.CALENDAR_NAME,
                                                             f.[CALENDAR_CODE],
                                                             f.[B_COIN_PURCHASE],
                                                             f.[PAID_DATE],
@@ -1062,7 +1136,9 @@ namespace Barrway.Service.Repository
                                             FROM            payment_history_master_1956 f
                                             LEFT JOIN       calendar_package_master_1952 a_0
                                             ON              f.[PLAN_ID] = a_0.[Id]
-                                            WHERE           f.id!=0  and USER_ID='{userName}')
+                                            inner join      BUSINESS_COMPANY_MASTER_1924 BC on BC.COMPANY_CODE=f.COMPANY_CODE
+	                                        inner join      BUSINESS_CALENDAR_MASTER_1925   Bcl on Bcl.CALENDAR_CODE=f.CALENDAR_CODE
+                                            WHERE           f.id!=0  and USER_ID='{userName}' {searchFilter}   )
                             SELECT   Count(*) OVER() total_records,@PageSize  size,@PageNumber     AS 'page',* FROM     formdata ORDER BY [formRecordOrder] ASC offset @PageSize * (@PageNumber - 1) rows FETCH next @PageSize rows only OPTION(recompile);";
 
 
