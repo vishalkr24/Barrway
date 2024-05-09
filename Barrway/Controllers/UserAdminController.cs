@@ -225,6 +225,7 @@ namespace Barrway.Controllers
             }
         }
 
+        [ValidateInput(false)]
         public async Task<ActionResult> CancelPublicUserBooking(CalendarEnrollModel model)
         {
             try
@@ -296,7 +297,7 @@ namespace Barrway.Controllers
 
                     string referenceActivityEntry = $@"
                                                             insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
-                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.PARTICIPANT_MASTER}, '{model.activities}', 'PARTICIPANT_MASTER_1940', 'STUDENT_NAME', {(int)FormSetting.PARTICIPANT_MASTER}, '{model.activities}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.PARTICIPANT_MASTER}, '{SQLUtility.TreatSingleQuoteForQuery(model.activities)}', 'PARTICIPANT_MASTER_1940', 'STUDENT_NAME', {(int)FormSetting.PARTICIPANT_MASTER}, '{SQLUtility.TreatSingleQuoteForQuery(model.activities)}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
                                                             ";
 
                     string script = $@"insert into CALENDAR_FORM_1935(
@@ -321,10 +322,10 @@ namespace Barrway.Controllers
                                                               ,[COMPANY_SUBSCRIPTION_ID]
                                                               ,[description]
                                                               ,[created_at], [updated_at],[EVENT_TYPE])
-	                                                          values('0', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{model.COMPANY_CODE}', '{model.CALENDAR_CODE}', '{eventData.title}', '{Convert.ToDateTime(model.start).ToString("yyyy-MM-ddTHH:mm:ss")}', '{Convert.ToDateTime(model.end).ToString("yyyy-MM-ddT23:59:59")}', 'false', '{model.resources}', '{model.activities}', '0', '{model.description}', getDate(), getDate(),'BOOKING');
+	                                                          values('0', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{model.COMPANY_CODE}', '{model.CALENDAR_CODE}', '{SQLUtility.TreatSingleQuoteForQuery(eventData.title)}', '{Convert.ToDateTime(model.start).ToString("yyyy-MM-ddTHH:mm:ss")}', '{Convert.ToDateTime(model.end).ToString("yyyy-MM-ddT23:59:59")}', 'false', '{SQLUtility.TreatSingleQuoteForQuery(model.resources)}', '{SQLUtility.TreatSingleQuoteForQuery(model.activities)}', '0', '{SQLUtility.TreatSingleQuoteForQuery(model.description)}', getDate(), getDate(),'BOOKING');
 
                                                             insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
-                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{model.resources}', 'LOCATION_MASTER_1936', 'LOCATION_ADDRESS', {(int)FormSetting.LOCATION_MASTER}, '{model.resources}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{SQLUtility.TreatSingleQuoteForQuery(model.resources)}', 'LOCATION_MASTER_1936', 'LOCATION_ADDRESS', {(int)FormSetting.LOCATION_MASTER}, '{SQLUtility.TreatSingleQuoteForQuery(model.resources)}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
                                                             
                                                             {referenceActivityEntry}
                                                             ";
