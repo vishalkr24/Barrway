@@ -179,15 +179,17 @@ namespace Barrway.Service.Repository
                     return new AddUpdateDelete() { Status = false, Message = "This email addres is already in use with diffrent user" };
                 }
 
+                if (!string.IsNullOrEmpty(model.USER_PHONE)) {
+                    ChQuery = $@"select USER_PHONE from USER_MASTER_1915 where USER_PHONE='{model.USER_PHONE}' and USER_ID !='{model.USER_ID}'";
 
-                ChQuery = $@"select USER_PHONE from USER_MASTER_1915 where USER_PHONE='{model.USER_PHONE}' and USER_ID !='{model.USER_ID}'";
+                    List<IDictionary<string, object>> Mobile = await sqlFunction.ExecuteSqlQuery(ChQuery);
 
-                List<IDictionary<string, object>> Mobile = await sqlFunction.ExecuteSqlQuery(ChQuery);
-
-                if (Mobile.Count > 0)
-                {
-                    return new AddUpdateDelete() { Status = false, Message = "This Phone number is already in use with diffrent user" };
+                    if (Mobile.Count > 0)
+                    {
+                        return new AddUpdateDelete() { Status = false, Message = "This Phone number is already in use with diffrent user" };
+                    }
                 }
+                
 
 
                 if (updatePassword)
