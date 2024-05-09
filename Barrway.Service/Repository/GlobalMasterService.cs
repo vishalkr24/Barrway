@@ -142,7 +142,7 @@ namespace Barrway.Service.Repository
 
 
 
-            string query = $@"select *from(SELECT calendar.[Id]
+            string query = $@"select *from(SELECT distinct calendar.[Id]
                               ,calendar.[created_at]
                               ,calendar.[updated_at]
                               ,calendar.[created_by]
