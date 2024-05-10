@@ -139,13 +139,13 @@ namespace Barrway.Service.Repository
 
             if (data.categoryId > 0)
             {
-                filterQueryList.Add(" (category.Id=" + data.categoryId + ") ");
+                filterQueryList.Add(" category.Id=" + data.categoryId);
             }
 
             if (data.districtIds != null && data.districtIds.Count() > 0)
             {
                 string commaSeparatedIds = string.Join(",", data.districtIds);
-                filterQueryList.Add(" (calendar.DISTRICT_ID in (" + commaSeparatedIds + ") ) ");
+                filterQueryList.Add(" calendar.DISTRICT_ID in (" + commaSeparatedIds + ")");
             }
 
             if (data.subcatIds != null && data.subcatIds.Count() > 0)
@@ -189,7 +189,7 @@ namespace Barrway.Service.Repository
 
             if (!string.IsNullOrEmpty(data.keyword))
             {
-                filterQueryList.Add(" ( calendar.[CALENDAR_NAME] like N'%" + data.keyword + "%') ");
+                filterQueryList.Add(" calendar.[CALENDAR_NAME] like N'%" + data.keyword + "%' ");
             }
 
             if (!string.IsNullOrEmpty(data.company_code))
@@ -200,7 +200,9 @@ namespace Barrway.Service.Repository
             string filterQuery = "";
             if (filterQueryList.Count() > 0)
             {
-                filterQuery = " AND (" + string.Join(" OR ", filterQueryList) + ")";
+                
+                filterQuery = " AND (" + string.Join(" and ", filterQueryList) + ")";
+                //filterQuery = " AND (" + string.Join(" OR ", filterQueryList) + ")";
             }
 
             string sqlString = $@"declare @PageSize int= {data.size}, 
@@ -274,7 +276,7 @@ namespace Barrway.Service.Repository
 
             string sqlString = $@"declare @PageSize int= {data.size}, 
                                   @PageNumber int= {data.page}; with formdata as 
-                                  (select Id,COMPANY_NAME_ENGLISH +'|'+COMPANY_NAME_CHINESE AS COMPANY_NAME,COMPANY_CODE,COMPANY_NAME_ENGLISH,COMPANY_BANNER_PATH,COMPANY_LOGO_PATH,COMPANY_BANNER_NAME,TAGS  from BUSINESS_COMPANY_MASTER_1924  {filterQuery}
+                                  (select Id,COMPANY_NAME_ENGLISH +'|'+COMPANY_NAME_CHINESE AS COMPANY_NAME,COMPANY_CODE,COMPANY_NAME_ENGLISH,COMPANY_BANNER_PATH,COMPANY_LOGO_PATH,COMPANY_BANNER_NAME,TAGS,isnull(IS_FEATURED,'N') as IS_FEATURED  from BUSINESS_COMPANY_MASTER_1924  {filterQuery}
                                   ) Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata ORDER BY Id OFFSET @PageSize * (@PageNumber - 1) ROWS 
                                   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
             var companies = (await sqlFunction.ExecuteSqlQuery<CompanyModel>(sqlString)).ToList();
@@ -319,7 +321,7 @@ namespace Barrway.Service.Repository
 
             string sqlString = $@"declare @PageSize int= {data.size}, 
                                   @PageNumber int= {data.page}; with formdata as 
-                                  (select blog.Id, blog.created_at, blog.BLOG_TITLE,blog.[IMAGE],blog.YOUTUBE_LINK,blog.TAG,blog_c.BLOG_CATEGORY,blog.BLOG_CATEGORY BLOG_CATEGORY_ID from BLOG_1980 blog
+                                  (select blog.Id, blog.created_at, blog.BLOG_TITLE,blog.[IMAGE],blog.YOUTUBE_LINK,blog.TAG,blog_c.BLOG_CATEGORY,blog.BLOG_CATEGORY BLOG_CATEGORY_ID ,isnull(blog.IS_FEATURED,'NO')as IS_FEATURED,isnull(blog.IS_HOT,'No') as IS_HOT  from BLOG_1980 blog
                                   join BLOG_CATEGORY_1981 blog_c on blog.BLOG_CATEGORY=blog_c.Id  {filterQuery}
                                   ) Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata ORDER BY Id OFFSET @PageSize * (@PageNumber - 1) ROWS 
                                   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
@@ -782,6 +784,7 @@ namespace Barrway.Service.Repository
                 List<IDictionary<string, object>> Fev_result = await sqlFunction.ExecuteSqlQuery(Fev_query);
 
                 string calendarCodes = "";
+                string FilterString = "";
 
                 string CompanyCodestring = "";
 
@@ -800,16 +803,23 @@ namespace Barrway.Service.Repository
                     }
                 }
 
-                if (!string.IsNullOrEmpty(data.CalendarCode))
+               
+
+                if (!string.IsNullOrEmpty(data.CalendarCode) && !string.IsNullOrEmpty(data.COMPANY_CODE))
                 {
-                    calendarCodes = (data.CalendarCode.Contains("'")) ? data.CalendarCode : "'" + data.CalendarCode + "'";
+                    FilterString = " WHERE  COMPANY_CODE='" + data.COMPANY_CODE + "' AND CALENDAR_CODE='"+ data.CalendarCode + "'";
+                }
+                else if (!string.IsNullOrEmpty(data.CalendarCode))
+                {
+                    FilterString = " WHERE  CALENDAR_CODE='" + data.CalendarCode + "'";
+                }
+                else if (!string.IsNullOrEmpty(data.COMPANY_CODE))
+                {
+                    FilterString = " WHERE  COMPANY_CODE='" + data.COMPANY_CODE + "'";
                 }
 
 
-                if (!string.IsNullOrEmpty(data.COMPANY_CODE))
-                {
-                    CompanyCodestring = " and calendarDetails.[COMPANY_CODE]='"+ data.COMPANY_CODE + "'";
-                }
+                
 
                 int PageSize = data.size > 0 ? data.size : 20;
                 int PageNumber = data.page > 0 ? data.page : 1;
@@ -869,9 +879,9 @@ namespace Barrway.Service.Repository
                                               FROM [dbo].BUSINESS_CALENDAR_MASTER_1925 calendarDetails
                                               join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
 								              join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory ON ',' + calendarDetails.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
-                                              where {((string.IsNullOrEmpty(calendarCodes)) ? "calendarDetails.CALENDAR_CODE = ''" : $@"calendarDetails.CALENDAR_CODE in ({calendarCodes})")} and calendarDetails.CALENDAR_CODE not in (select cast(item as varchar) from dbo.SplitString(@CalendarCodes, ','))  {CompanyCodestring}
+                                              where {((string.IsNullOrEmpty(calendarCodes)) ? "calendarDetails.CALENDAR_CODE = ''" : $@"calendarDetails.CALENDAR_CODE in ({calendarCodes})")} and calendarDetails.CALENDAR_CODE not in (select cast(item as varchar) from dbo.SplitString(@CalendarCodes, ','))
                                       )
-                                  Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY PURCHASED desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+                                  Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata {FilterString}  ORDER BY PURCHASED desc OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
 
 
                 var result = (await sqlFunction.ExecuteSqlQuery<FavouriteCalendar>(query)).ToList();
