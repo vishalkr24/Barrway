@@ -2597,12 +2597,12 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
                             }
                             else
                             {
-                                item.Add("OverlapBookingFlag", "N");
+                                item.Add("OverlapBookingFlag", "Y");
                             }
                         }
                         else
                         {
-                            item.Add("OverlapBookingFlag", "N");
+                            item.Add("OverlapBookingFlag", "Y");
                         }
                     }
                 }
