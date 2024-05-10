@@ -21,4 +21,13 @@ namespace Barrway.DTO.APIModels.Calendar
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime end{ get; set; }
     }
+
+    public class FavoriteCalendarModel
+    {
+
+        public string COMPANY_CODE { get; set; }
+        public string CALENDAR_CODE { get; set; }
+     
+
+    }
 }

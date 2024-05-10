@@ -14,6 +14,15 @@ namespace Barrway.DTO.Common
         public dynamic Data { get; set; }
     }
 
+    public class AddUpdateDeleteAPI
+    {
+        public string Message { get; set; }
+        public bool Status { get; set; }        
+    }
+
+
+
+
     public class Resultdata
     {
         public string Message { get; set; }

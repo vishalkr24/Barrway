@@ -1448,6 +1448,7 @@ namespace Barrway.Controllers
                                 IS_VISIBLE = "Y",
                                 DEFAULT_DATE = (!string.IsNullOrEmpty(model.DEFAULT_DATE)) ? Convert.ToDateTime(model.DEFAULT_DATE).ToString("yyyy-MM-dd") : null,
                                 STATUS = "DRAFT",
+                                ALLOW_OVERLAP = model.ALLOW_OVERLAP,
                                 CALENDAR_USE_TYPE = model.CALENDAR_USE_TYPE,
                                 Id = model.Id,
                                 CALENDAR_FUNCTION_TYPE = (model.CALENDAR_CATEGORY_ID == "6") ? "QUEUE": "CALENDAR",

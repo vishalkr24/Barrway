@@ -16,6 +16,8 @@ namespace Barrway.DTO.APIModels.Dashboard
         public string TAG { get; set; }
         public string BLOG_CATEGORY { get; set; }
         public string BLOG_CATEGORY_ID { get; set; }
+        public string IS_HOT { get; set; }
+        public string IS_FEATURED { get; set; }
         public int total_records { get; set; }
         public int page { get; set; }
         public int size { get; set; }

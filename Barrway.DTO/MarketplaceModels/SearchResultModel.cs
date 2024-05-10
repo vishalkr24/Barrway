@@ -74,7 +74,8 @@ namespace Barrway.DTO.MarketplaceModels
         public string TEMPLATE_ID { get; set; }
         public string PALETTE_ID { get; set; }
         public string IS_FEATURED { get; set; }
-       
+        public string IS_ACTIVE { get; set; }
+
 
 
     }

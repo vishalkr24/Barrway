@@ -1127,6 +1127,8 @@ namespace Barrway.Controllers
                     finalResult.CompanyLIst = JsonConvert.DeserializeObject<List<Company>>(JsonConvert.SerializeObject(company.Data));
                     finalResult.BlogLIst = JsonConvert.DeserializeObject<List<blog>>(JsonConvert.SerializeObject(Blog.Data));
 
+                    finalResult.CompanyLIst = finalResult.CompanyLIst.Where(x => x.IS_ACTIVE == "Y").ToList();
+
                     if (finalResult.ServiceList.Count > 0)
                     {
                         finalResult.ServiceList.ForEach(service =>
