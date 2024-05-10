@@ -1161,6 +1161,35 @@ namespace Barrway.Service.Repository
         }
 
 
+        public async Task<AddUpdateDeleteAPI> AddToFavoriteCalendar(FavoriteCalendarModel model,string UserId)
+        {
+            string query = $@"select * from FAVORITE_CALENDAR_MASTER_1949 where USER_ID = '{UserId}' and CALENDAR_CODE = '{model.CALENDAR_CODE}' and COMPANY_CODE = '{model.COMPANY_CODE}'";
+
+            var result = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (result.Count > 0)
+            {
+                return new AddUpdateDeleteAPI() { Message = AppMessage.Success, Status = true };
+            }
+
+            Form_DataTable data = new Form_DataTable();
+            data.action = (int)FormAction.Save;
+            data.formId = (int)FormSetting.FAVORITE_CALENDAR_MASTER;
+
+            data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.ToDictionary());
+            data.formGroupKey = Guid.NewGuid().ToString();
+            var Result = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+            if (Result.res == 1)
+            {
+                return new AddUpdateDeleteAPI() { Message = AppMessage.Success, Status = true };//Data = formResult.Id.ToString()
+            }
+            else
+            {
+                return new AddUpdateDeleteAPI() { Message = Result.Message, Status = false };
+            }
+        }
+
 
         private string GetDateQuery(DateTime start, DateTime end)
         {
