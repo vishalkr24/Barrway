@@ -456,7 +456,7 @@
                                                 <div id="Su_category">
                                                     @Html.DropDownListFor(model => model.CALENDAR_SUB_CATEGORY, new SelectList(Enum.GetValues(typeof(DropdownDefault))), new { @class = "js-select form-select", @placeholder = "Select Calendar Sub Category", @required = "true", @multiple = "true" })
                                                 </div>
-                                                
+
                                                 @Html.ValidationMessageFor(model => model.CALENDAR_SUB_CATEGORY, "", new { @class = "invalid-feedback-2" })
                                             </div>
 
@@ -553,9 +553,9 @@
                                                     </div>
                                                 </div>
 
-                                                
 
-                                                
+
+
 
                                                 <div class="form-group">
                                                     <label for="sub">Default Calendar View</label>
@@ -609,25 +609,31 @@
                                                     <div class="form-group">
                                                         <label for="sub">Do you require additional form? <i class="fa fa-info-circle" aria-hidden="true" title="Participant will need to fill this form before booking."></i></label>
                                                         <input type="radio" name="NEED_ADDITIONAL_FORM" id="NEED_ADDITIONAL_FORM" value="Y" /> Yes
-                                                        <input type="radio" name="NEED_ADDITIONAL_FORM" id="NEED_ADDITIONAL_FORM" value="N" /> NO
+                                                        <input type="radio" name="NEED_ADDITIONAL_FORM" id="NEED_ADDITIONAL_FORM" value="N" /> No
                                                         @Html.ValidationMessageFor(model => model.NEED_ADDITIONAL_FORM, "", new { @class = "invalid-feedback-2" })
                                                     </div>
                                                 }
 
                                             </div>
 
+                                            <div class="form-group">
+                                                <label for="sub">Allow user to book overlapping slots? <i class="fa fa-info-circle" aria-hidden="true" title="This option will restrict the user to book overlapping slots"></i></label>
+                                                <input type="radio" name="ALLOW_OVERLAP" id="ALLOW_OVERLAP" value="Y" /> Yes
+                                                <input type="radio" name="ALLOW_OVERLAP" id="ALLOW_OVERLAP" value="N" checked /> No
+                                                @Html.ValidationMessageFor(model => model.ALLOW_OVERLAP, "", new { @class = "invalid-feedback-2" })
+                                            </div>
 
                                             <div class="form-group">
                                                 <label for="sub">Interval Time</label>
 
                                                 <select required id="INTERVAL_TIME" name="INTERVAL_TIME" class="form-control">
-                                                    <option value="15" @(string.IsNullOrEmpty(Model.INTERVAL_TIME) || Model.INTERVAL_TIME=="15"?"selected":"")>
+                                                    <option value="15" @(string.IsNullOrEmpty(Model.INTERVAL_TIME) || Model.INTERVAL_TIME == "15" ? "selected" : "")>
                                                         15 min
                                                     </option>
-                                                    <option value="30" @(Model.INTERVAL_TIME=="30"?"selected":"")>
+                                                    <option value="30" @(Model.INTERVAL_TIME == "30" ? "selected" : "")>
                                                         30 min
                                                     </option>
-                                                    <option value="60" @(Model.INTERVAL_TIME=="60"?"selected":"")>
+                                                    <option value="60" @(Model.INTERVAL_TIME == "60" ? "selected" : "")>
                                                         60 min
                                                     </option>
                                                 </select>
