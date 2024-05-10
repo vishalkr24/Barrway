@@ -207,6 +207,10 @@ namespace FormGeneratorDTOs.DTOs
         public string customForms { get; set; }
         public string customFormIds { get; set; }
         public object Ref_formsData { get; set; }
+        public bool IsCustomFilter { get; set; }
+        public bool IsCustomInFilter { get; set; }
+        public List<ExcludeFilter> excludeFilters { get; set; }
+        public List<CustomFilter> CustomFilters { get; set; }
 
     }
 

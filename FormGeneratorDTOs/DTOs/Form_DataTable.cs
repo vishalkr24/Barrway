@@ -108,6 +108,7 @@ namespace FormGeneratorDTOs.DTOs
         public bool IsPublicUser { get; set; } = false;
         public bool IsCustomFilter { get; set; }
         public bool IsCustomInFilter { get; set; }
+        public bool NotIncludeOtherForm { get; set; }
         public List<CustomFilter> CustomFilters { get; set; }
         //public string Query { get; set; }
 

@@ -1128,6 +1128,11 @@
             param.created_by = $scope.userDetail.Id;
             param.update_by = $scope.userDetail.Id;
             param.urlroute = window.location.href;
+            //"IsCustomFilter": true, "CustomFilters": [{ "FieldName": "COMPANY_CODE", "Value": "CMP00084" }, { "FieldName": "CALENDAR_CODE", "Value": "CLR00111" }],
+            //    "excludeFilters": [{ "formid": "2304", "field": "CALENDAR_CODE" }]
+            param.IsCustomFilter = true;
+            param.CustomFilters = [{ "FieldName": "COMPANY_CODE", "Value": localStorage.getItem("COMPANY_CODE") }, { "FieldName": "CALENDAR_CODE", "Value": localStorage.getItem("CALENDAR_CODE") }];
+            param.excludeFilters = [{ "formid": "2304", "field": "CALENDAR_CODE" }];
             $rootScope.isEntryNotAllow = false;
             $rootScope.$emit("ShowLoading");
             mainService.manageForm("ManageForm", param)
@@ -1521,8 +1526,8 @@
                                 if ($("#" + key + "_pad").length)
                                     $("#" + key + "_pad").signature('draw', item);
                             }
-                            else if (controlExists.type == "tinyMCE-content") {
-                                tinymce.get("editor_" + key).setContent(item);
+                            else if (controlExists.type == "tinyMCE-content" || controlExists.subtype == "tinymce") {
+                                tinymce.get("" + key).setContent(item);
                             }
                             else if (controlExists.type == "table") {
                                 if (!DataService.isEmpty(item)) {
@@ -4097,6 +4102,7 @@
             //console.log(dataParam,'dataParam');
             //return false;
             dataParam.resourceFormId = $scope.ySelection;
+            dataParam.updated_at = moment(dataParam.updated_at).format("YYYY-MM-DD HH:mm:ss");
             mainService.manageGeneratedFormData("GeneratedFormData", dataParam)
                 .then(function (response) {
                     if (response.data != null && angular.isDefined(response.data)) {
@@ -10840,8 +10846,6 @@
                                     "dots": false,
                                 },
                                 'data': function (node, cb, data) {
-
-                                    debugger;
                                     var urlTemp = "";
                                     if (node.id === '#') {
                                         var newFilter = "&companyCode=" + localStorage.getItem("COMPANY_CODE") + "&calendarCode=" + localStorage.getItem("CALENDAR_CODE");

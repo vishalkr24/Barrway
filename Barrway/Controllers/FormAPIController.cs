@@ -233,11 +233,16 @@ namespace Barrway.Controllers
 
                             var package = await businessUserService.GetCompanyActiveSubscriptionDetails(companyCode, true);
 
-                            
-                            if(deserData.Any(x => x["name"]?.ToString() == "activities"))
-                            serviceId = deserData.FirstOrDefault(x => x["name"]?.ToString() == "activities")["value"]?.ToString();
-                            resourceId = deserData.FirstOrDefault(x => x["name"]?.ToString() == "resources")["value"]?.ToString();
-
+                            if (data.action == 1)
+                            {
+                                serviceId = deserData.Any(x => x["name"]?.ToString() == "activities")? deserData.FirstOrDefault(x => x["name"]?.ToString() == "activities")["value"]?.ToString():"";
+                                resourceId = deserData.Any(x => x["name"]?.ToString() == "resources") ? deserData.FirstOrDefault(x => x["name"]?.ToString() == "resources")["value"]?.ToString() : "";
+                            }
+                            if (data.action == 2)
+                            {
+                                serviceId = deserData.Any(x => x["name"]?.ToString() == "activities_" + (int)FormSetting.SERVICE_MASTER) ? deserData.FirstOrDefault(x => x["name"]?.ToString() == "activities_" + (int)FormSetting.SERVICE_MASTER)["value"]?.ToString() : "";
+                                resourceId = deserData.Any(x => x["name"]?.ToString() == "resources_" + (int)FormSetting.LOCATION_MASTER) ? deserData.FirstOrDefault(x => x["name"]?.ToString() == "resources_" + (int)FormSetting.LOCATION_MASTER)["value"]?.ToString() : "";
+                            }
                             if (!string.IsNullOrEmpty(serviceId) && serviceId != "-1")
                             {
                                 List<IDictionary<string, object>> serviceList = (await businessUserService.GetServiceList(calendarCode, companyCode)).Data;
@@ -248,8 +253,15 @@ namespace Barrway.Controllers
 
                                 companyIdDic2.Add("name", "IS_COURSE_EVENT");
                                 companyIdDic2.Add("value", ((!string.IsNullOrEmpty(serviceData["SERVICE_PAY_PER"]?.ToString()) && serviceData["SERVICE_PAY_PER"]?.ToString() == "COURSE") ? "Y" : "N"));
-                                
-                                deserData.Add(companyIdDic2);
+                                if (deserData.Any(x => x["name"]?.ToString() == "IS_COURSE_EVENT"))
+                                {
+                                    int index = deserData.FindIndex(x => x["name"]?.ToString() == "IS_COURSE_EVENT");
+                                    deserData[index] = companyIdDic2;
+                                }
+                                else
+                                {
+                                    deserData.Add(companyIdDic2);
+                                }
 
                                 IsCourseEvent = serviceData["SERVICE_PAY_PER"]?.ToString();
                             }
@@ -259,9 +271,14 @@ namespace Barrway.Controllers
 
                                 companyIdDic2.Add("name", "IS_COURSE_EVENT");
                                 companyIdDic2.Add("value", "N");
-
-                                deserData.Add(companyIdDic2);
-
+                                if (deserData.Any(x => x["name"]?.ToString() == "IS_COURSE_EVENT"))
+                                {
+                                    int index = deserData.FindIndex(x => x["name"]?.ToString() == "IS_COURSE_EVENT");
+                                    deserData[index] = companyIdDic2;
+                                }
+                                else {
+                                    deserData.Add(companyIdDic2);
+                                }
                                 IsCourseEvent = "N";
                             }
                             
@@ -269,8 +286,15 @@ namespace Barrway.Controllers
 
                             companyIdDic.Add("name", "COMPANY_SUBSCRIPTION_ID");
                             companyIdDic.Add("value", package.Data["SUBS_ID"]?.ToString());
-
-                            deserData.Add(companyIdDic);
+                            if (deserData.Any(x => x["name"]?.ToString() == "COMPANY_SUBSCRIPTION_ID"))
+                            {
+                                int index = deserData.FindIndex(x => x["name"]?.ToString() == "COMPANY_SUBSCRIPTION_ID");
+                                deserData[index] = companyIdDic;
+                            }
+                            else
+                            {
+                                deserData.Add(companyIdDic);
+                            }
                             data.formfieldDataListTemp = JsonConvert.SerializeObject(deserData);
                         }
                         else
@@ -292,7 +316,7 @@ namespace Barrway.Controllers
 
             var result = (await formAPIRepository.GeneratedFormData(data)).Data;
 
-            if (IsCourseEvent == "COURSE")
+            if (IsCourseEvent == "COURSE" && data.action==1)
             {
                 try
                 {
@@ -503,12 +527,15 @@ namespace Barrway.Controllers
                     }
                     else
                     {
-                        data.filter.value = data.filter.value + " and F.COMPANY_CODE=N'" + data.COMPANY_CODE + "' and F.CALENDAR_CODE=N'" + data.CALENDAR_CODE + "'";
+                        data.filter.value = " F.COMPANY_CODE=N'" + data.COMPANY_CODE + "' and F.CALENDAR_CODE=N'" + data.CALENDAR_CODE + "' and "+ data.filter.value;
                     }
 
                 }
             }
             ReferalFormDataResponseModel result = await formAPIRepository.getReferralFormFields(data);
+
+            //ReferalFormDataResponseModel result = new ReferalFormDataResponseModel();
+            //result.events=await calendarService.GetEvents(data);
 
             ReferalFormDataResponseModel finalResult = new ReferalFormDataResponseModel();
 
