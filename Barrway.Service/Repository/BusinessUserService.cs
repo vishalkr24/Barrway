@@ -2447,6 +2447,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                                       ,[DEFAULT_RESOURCE] = '{model.DEFAULT_RESOURCE}'
                                       ,[DEFAULT_DATE] = '{model.DEFAULT_DATE}'
                                       ,[NEED_ADDITIONAL_FORM] = '{model.NEED_ADDITIONAL_FORM}'
+                                      ,[ALLOW_OVERLAP] = '{model.ALLOW_OVERLAP}'
                                       ,[DEFAULT_CALENDAR_VIEW] = '{model.DEFAULT_CALENDAR_VIEW}'
                                       ,[REQUIRED_CALENDAR_VIEWS] = '{model.REQUIRED_CALENDAR_VIEWS}'
                                       ,[COMPANY_CODE] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_CODE)}'
@@ -3124,7 +3125,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
             timeB.end = Convert.ToDateTime(timeB.end).ToShortTimeString();
 
             // case 1
-            if (Convert.ToDateTime(timeA.start) <= Convert.ToDateTime(timeB.start) && Convert.ToDateTime(timeA.end) <= Convert.ToDateTime(timeB.end))
+            if (Convert.ToDateTime(timeA.start) <= Convert.ToDateTime(timeB.start) && (Convert.ToDateTime(timeA.end) <= Convert.ToDateTime(timeB.end) && Convert.ToDateTime(timeA.end) >= Convert.ToDateTime(timeB.start)))
             {
                 testResult = false;
             }
@@ -3136,7 +3137,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
             }
 
             // case 3
-            if (Convert.ToDateTime(timeA.start) <= Convert.ToDateTime(timeB.end) && Convert.ToDateTime(timeA.end) >= Convert.ToDateTime(timeB.end))
+            if ((Convert.ToDateTime(timeA.start) >= Convert.ToDateTime(timeB.start) && Convert.ToDateTime(timeA.start) <= Convert.ToDateTime(timeB.end)) && Convert.ToDateTime(timeA.end) >= Convert.ToDateTime(timeB.end))
             {
                 testResult = false;
             }

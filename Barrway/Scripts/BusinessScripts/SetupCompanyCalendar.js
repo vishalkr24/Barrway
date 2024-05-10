@@ -155,6 +155,10 @@ function setCurrentCalendarData() {
         if (data.Data.NEED_ADDITIONAL_FORM != null && data.Data.NEED_ADDITIONAL_FORM != "") {
             $("#NEED_ADDITIONAL_FORM[value=" + data.Data.NEED_ADDITIONAL_FORM + "]").prop("checked", true);
         }
+
+        if (data.Data.ALLOW_OVERLAP != null && data.Data.ALLOW_OVERLAP != "") {
+            $("#ALLOW_OVERLAP[value=" + data.Data.ALLOW_OVERLAP + "]").prop("checked", true);
+        }
        
         $("#DEFAULT_CALENDAR_VIEW").val(data.Data.DEFAULT_CALENDAR_VIEW);  
         $("#REQUIRED_CALENDAR_VIEWS").val(((data.Data.REQUIRED_CALENDAR_VIEWS.includes(',')) ? data.Data.REQUIRED_CALENDAR_VIEWS.split(',') : data.Data.REQUIRED_CALENDAR_VIEWS));

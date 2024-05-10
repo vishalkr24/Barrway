@@ -616,6 +616,7 @@ namespace Barrway.Controllers
                                 if (alreadyEnrolledEvents.Any(x => x["Id"]?.ToString() == item["Id"]?.ToString()))
                                 {
                                     item.Add("IsAlreadyBooked", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["IsAlreadyBooked"]);
+                                    item.Add("OverlapBookingFlag", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["OverlapBookingFlag"]);
                                     item.Add("ATTEND", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["ATTEND"]);
                                     item.Add("IsReviewable", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["IsReviewable"]);
                                     item.Add("TransactionId", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["TransactionId"]);
@@ -623,6 +624,7 @@ namespace Barrway.Controllers
                                 else
                                 {
                                     item.Add("IsAlreadyBooked", 'N');
+                                    item.Add("OverlapBookingFlag", 'Y');
                                     item.Add("IsReviewable", 'N');
                                     item.Add("ATTEND", 'N');
                                     item.Add("TransactionId", '0');

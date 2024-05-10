@@ -210,7 +210,8 @@ namespace Barrway.Service.Repository
                     return new AddUpdateDelete() { Status = false, Message = "This email addres is already in use with diffrent user" };
                 }
 
-                if (!string.IsNullOrEmpty(model.USER_PHONE)) {
+                if (!string.IsNullOrEmpty(model.USER_PHONE))
+                {
                     ChQuery = $@"select USER_PHONE from USER_MASTER_1915 where USER_PHONE='{model.USER_PHONE}' and USER_ID !='{model.USER_ID}'";
 
                     List<IDictionary<string, object>> Mobile = await sqlFunction.ExecuteSqlQuery(ChQuery);
@@ -220,7 +221,7 @@ namespace Barrway.Service.Repository
                         return new AddUpdateDelete() { Status = false, Message = "This Phone number is already in use with diffrent user" };
                     }
                 }
-                
+
 
 
                 if (updatePassword)
@@ -572,7 +573,7 @@ namespace Barrway.Service.Repository
                     }
                 }
             }
-            
+
             bool IsServicePaid = false;
             int ServiceFees = 0;
 
@@ -904,7 +905,7 @@ namespace Barrway.Service.Repository
                     {
                         query = $@"delete from COMPANY_UPCOMING_BOOKINGS_1945 where USER_ID = '{model.USER_ID}' and EVENT_ID = (select top 1 SLOT from TRANSACTION_MASTER_1942 where Id = '{result[0]["Id"]?.ToString()}'); delete from TRANSACTION_MASTER_1942 where Id = '{result[0]["Id"]?.ToString()}';";
                     }
-                    
+
                     var result2 = await sqlFunction.ExecuteSqlCommandQuery(query);
 
                     if (result2 > 0)
@@ -1079,14 +1080,14 @@ namespace Barrway.Service.Repository
                             IsServicePaid = false;
                             ServiceFees = 0;
                         }
-                        
+
                     }
                     else
                     {
                         IsServicePaid = false;
                         ServiceFees = 0;
                     }
-                    
+
 
                     if (IsServicePaid && string.IsNullOrEmpty(PaymentId))
                     {
@@ -1821,7 +1822,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
                 }
 
                 int PageSize = data.size > 0 ? data.size : 20;
-                int PageNumber = data.page > 0 ? data.page : 1;               
+                int PageNumber = data.page > 0 ? data.page : 1;
 
                 string query = $@"declare @CalendarCodes varchar(max) = (select stuff((select distinct ',' + CALENDAR_CODE  from PAYMENT_HISTORY_MASTER_1956 payment 
 											  where payment.STATUS = 'complete' and payment.USER_ID = '{userId}' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd")}' < payment.CREDIT_EXPIRE_DATE
@@ -2196,9 +2197,9 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
 
                 bool IsServicePaid = false;
                 double ServiceFees = 0;
-                if (service.Count()>0 && !string.IsNullOrEmpty(service[0]["IS_SERVICE_PAID"]?.ToString()))
+                if (service.Count() > 0 && !string.IsNullOrEmpty(service[0]["IS_SERVICE_PAID"]?.ToString()))
                 {
-                    if (service[0]["IS_SERVICE_PAID"]?.ToString() ==  "Y")
+                    if (service[0]["IS_SERVICE_PAID"]?.ToString() == "Y")
                     {
                         if (!string.IsNullOrEmpty(service[0]["fees_1"]?.ToString()))
                         {
@@ -2477,10 +2478,11 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
                                 from TRANSACTION_MASTER_1942 inner join PARTICIPANT_MASTER_1940 on TRANSACTION_MASTER_1942.STUDENT = PARTICIPANT_MASTER_1940.Id where TRANSACTION_MASTER_1942.formGroupKey = f.formGroupKey         FOR XML PATH('')), 1, 1, '') customFourthTitle
                                 , (dbo.[GetSubQueryCalender](f.formGroupKey)) customTitle,   (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceFormId) from form_calenderreferrence f2     
                                 where f2.formgroupkey = f.formGroupKey  FOR XML PATH('')), 1, 1, '')   ) customForms  , (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceId) from form_calenderreferrence f2    
-                                where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) customFormIds,  '' referrences_1,  '' referrences_2,  '' referrences_3   
+                                where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) customFormIds,  '' referrences_1,  '' referrences_2,  '' referrences_3, calendar.ALLOW_OVERLAP
                                 
                                 from CALENDAR_FORM_1935 f  
                                   join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
+								  join BUSINESS_CALENDAR_MASTER_1925 calendar on calendar.CALENDAR_CODE = f.CALENDAR_CODE
                                 where
                                 f.formid=2305 and
                                 {FilterDate} ),
@@ -2495,6 +2497,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
 
                 query = $@"select transaction_m.* 
                         , 'Y' as 'IsAlreadyBooked'
+                        , f.[start], f.[end]
                         , (select case when ((cast('{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' as datetime) >= cast((DATEADD(minute, -30, f.[start])) as datetime) and cast('{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' as datetime) <= cast(f.[end] as datetime) ) and transaction_m.ATTENDANCE not in ('PRESENT', 'ABSENT')) then 'Y' else 'N' end) as 'ATTEND'
                         , case when review.Id is not null then 'Y' else 'N' end as 'SESSION_REVIEWED'
                         from TRANSACTION_MASTER_1942 transaction_m 
@@ -2513,8 +2516,23 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
                         {
                             foreach (var item in result)
                             {
+                                bool checkOverlapBooking = false;
+                                if (item["ALLOW_OVERLAP"]?.ToString() == "Y")
+                                {
+                                    item.Add("OverlapBookingFlag", "Y");
+                                }
+                                else
+                                {
+                                    checkOverlapBooking = true;
+                                }
+
                                 if (alreadyEnrolledEvents.Any(x => x["SLOT"]?.ToString() == item["Id"]?.ToString()))
                                 {
+                                    if (checkOverlapBooking)
+                                    {
+                                        item.Add("OverlapBookingFlag", "Y");
+                                    }
+
                                     item["IsAlreadyBooked"] = 'Y';
                                     item["ATTEND"] = alreadyEnrolledEvents.FirstOrDefault(x => x["SLOT"]?.ToString() == item["Id"]?.ToString())["ATTEND"];
                                     item["TransactionId"] = alreadyEnrolledEvents.FirstOrDefault(x => x["SLOT"]?.ToString() == item["Id"]?.ToString())["Id"];
@@ -2534,6 +2552,46 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
                                     item["IsReviewable"] = 'N';
                                     item["ATTEND"] = 'N';
                                     item["TransactionId"] = '0';
+                                    
+
+                                    if (checkOverlapBooking)
+                                    {
+                                        bool bookingFlag = true;
+                                        // check list of events which are booked of same day at [item] event
+                                        if (alreadyEnrolledEvents.Any(x => Convert.ToDateTime(item["start"]?.ToString()).Date == Convert.ToDateTime(x["start"]?.ToString()).Date))
+                                        {
+                                            // there are enrolled events of current day
+
+                                            List<IDictionary<string, object>> listOfSameDayEvents = alreadyEnrolledEvents.Where(x => Convert.ToDateTime(item["start"]?.ToString()).Date == Convert.ToDateTime(x["start"]?.ToString()).Date).ToList();
+
+                                            if (listOfSameDayEvents.Any(x => !TimeSlotCompare(
+                                                new CommonTimeObject()
+                                                {
+                                                    start = Convert.ToDateTime(item["start"]?.ToString()).ToString("HH:mm"),
+                                                    end = Convert.ToDateTime(item["end"]?.ToString()).ToString("HH:mm")
+                                                },
+                                                new CommonTimeObject()
+                                                {
+                                                    start = Convert.ToDateTime(x["start"]?.ToString()).ToString("HH:mm"),
+                                                    end = Convert.ToDateTime(x["end"]?.ToString()).ToString("HH:mm")
+                                                }))
+                                            )
+                                            {
+                                                bookingFlag = false;
+                                            }
+                                        }
+
+                                        if (bookingFlag)
+                                        {
+                                            item.Add("OverlapBookingFlag", "Y");
+                                        }
+                                        else
+                                        {
+                                            item.Add("OverlapBookingFlag", "N");
+                                        }
+
+                                    }
+
                                 }
                             }
                         }
@@ -2549,6 +2607,43 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
             {
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
             }
+        }
+
+        private bool TimeSlotCompare(CommonTimeObject timeA, CommonTimeObject timeB)
+        {
+            bool testResult = true;
+
+            timeA.start = Convert.ToDateTime(timeA.start).ToShortTimeString();
+            timeA.end = Convert.ToDateTime(timeA.end).ToShortTimeString();
+
+            timeB.start = Convert.ToDateTime(timeB.start).ToShortTimeString();
+            timeB.end = Convert.ToDateTime(timeB.end).ToShortTimeString();
+
+            // case 1
+            if (Convert.ToDateTime(timeA.start) <= Convert.ToDateTime(timeB.start) && (Convert.ToDateTime(timeA.end) <= Convert.ToDateTime(timeB.end) && Convert.ToDateTime(timeA.end) >= Convert.ToDateTime(timeB.start)))
+            {
+                testResult = false;
+            }
+
+            // case 2
+            if (Convert.ToDateTime(timeA.start) >= Convert.ToDateTime(timeB.start) && Convert.ToDateTime(timeA.end) <= Convert.ToDateTime(timeB.end))
+            {
+                testResult = false;
+            }
+
+            // case 3
+            if ((Convert.ToDateTime(timeA.start) >= Convert.ToDateTime(timeB.start) && Convert.ToDateTime(timeA.start) <= Convert.ToDateTime(timeB.end)) && Convert.ToDateTime(timeA.end) >= Convert.ToDateTime(timeB.end))
+            {
+                testResult = false;
+            }
+
+            // case 4
+            if (Convert.ToDateTime(timeA.start) <= Convert.ToDateTime(timeB.start) && Convert.ToDateTime(timeA.end) >= Convert.ToDateTime(timeB.end))
+            {
+                testResult = false;
+            }
+
+            return testResult;
         }
 
         public async Task<AddUpdateDelete> GetFullCalendarEvents(string StartDate, string EndDate, string UserEmail)

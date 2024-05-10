@@ -27,8 +27,6 @@ $(document).ready(async function () {
     var formdetail = await getFormDetails();
     formDetailsDataInfo = formdetail[0];
 
-
-
     var formFields = [];
     var formData = JSON.parse(formDetailsDataInfo.fields);
     _.map(formData, function (pagesData, key) {
@@ -2775,7 +2773,8 @@ async function rendarPopupCalendar(assignDate) {
                 activityName: event.activityName,
                 formGroupKey: event.formGroupKey,
                 EVENT_TYPE: event.EVENT_TYPE,
-                IS_PUBLIC_USER_EVENT: event.IS_PUBLIC_USER_EVENT
+                IS_PUBLIC_USER_EVENT: event.IS_PUBLIC_USER_EVENT,
+                OverlapBookingFlag: event.OverlapBookingFlag
             };
             eventData.title = _tempTitle;
             eventData.Images = event.files;
@@ -3049,7 +3048,12 @@ async function rendarPopupCalendar(assignDate) {
                 console.log(agendaTempHtml);
             } else {
                 if (eventData.EVENT_TYPE == "SCHEDULE" && !eventData.IS_PUBLIC_USER_EVENT) {
-                    element.addClass("available-fc-bgevent");
+                    if (eventData.OverlapBookingFlag == "Y") {
+                        element.addClass("available-fc-bgevent");
+                    } else {
+                        element.addClass("booking-fc-bgevent");
+                    }
+                    
                 } else if (eventData.EVENT_TYPE == "BOOKING" && !eventData.IS_PUBLIC_USER_EVENT) {
                     element.addClass("booking-fc-bgevent");
                 } else {
