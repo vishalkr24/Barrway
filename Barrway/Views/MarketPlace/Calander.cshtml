@@ -1329,7 +1329,7 @@
                 </div>
                 <div class="modal-body pt-0">
                     <div>
-                        <label class="lbl-already-booked" ng-if="courseEventsList[0].Value[0].IsBooked == 'Y'">You have already booked this course!</label>
+                        <label class="lbl-already-booked" ng-if="courseEventsList[(courseEventsList.length-1)].Value[0].IsBooked == 'Y'">You have already booked this course!</label>
                     </div>
                     <div class="event-detail div-flex">
                         <div class="div-flex">
@@ -1440,7 +1440,7 @@
                     <br />
                     <div class="div-flex div-list">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary public-primary" ng-if="courseEventsList[0].Value[0].IsBooked == 'N'" ng-click="enrollCourse()">Buy Course</button>
+                        <button type="button" class="btn btn-primary public-primary" ng-if="courseEventsList[(courseEventsList.length-1)].Value[0].IsBooked == 'N'" ng-click="enrollCourse()">Buy Course</button>
                     </div>
                 </div>
                 @*<div class="modal-footer">
@@ -2055,6 +2055,7 @@
                                                     },
                                                     success: function (response) {
                                                         if (response.Status) {
+                                                            debugger;
                                                             var obj = {
                                                                 USER_ID: "",
                                                                 RESOURCE_NAME: eventData.customTitleSplit[0],
@@ -2175,7 +2176,6 @@
                             ACTIVITY_NAME: eventData.customTitleSplit[1],
                             FormGroupKey: $scope.selectEventDetails.formGroupKey,
                             participant: {
-                                DESCRIPTION: String(eventData.description),
                                 COMPANY_CODE: eventData.COMPANY_CODE,
                                 CALENDAR_CODE: eventData.CALENDAR_CODE
                             },

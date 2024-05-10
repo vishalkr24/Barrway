@@ -93,6 +93,37 @@ namespace Barrway.Service.Repository
 
         }
 
+        public async Task<AddUpdateDelete> GetLatestEventByServiceId(string ServiceId)
+        {
+            string query = $@"DECLARE @retval nvarchar(max);       DECLARE @sQuery nvarchar(max); DECLARE @ParmDefinition nvarchar(max);                        
+                            DECLARE @customTitleQuery nvarchar(max);                          
+                            IF OBJECT_ID(N'tempdb..#temptable') IS NOT NULL  BEGIN DROP TABLE #temptable END   ;with cte1 as( select top 1  f.*,f.resources 'resourceId'  ,  STUFF((SELECT ',' +  PARTICIPANT_MASTER_1940.[STUDENT_NAME]  
+                            from TRANSACTION_MASTER_1942 inner join PARTICIPANT_MASTER_1940 on TRANSACTION_MASTER_1942.STUDENT = PARTICIPANT_MASTER_1940.Id where TRANSACTION_MASTER_1942.formGroupKey = f.formGroupKey         FOR XML PATH('')), 1, 1, '') customFourthTitle
+                            , (dbo.[GetSubQueryCalender](f.formGroupKey)) customTitle,   (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceFormId) from form_calenderreferrence f2     
+                            where f2.formgroupkey = f.formGroupKey  FOR XML PATH('')), 1, 1, '')   ) customForms  , (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceId) from form_calenderreferrence f2    
+                            where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) customFormIds,  '' referrences_1,  '' referrences_2,  '' referrences_3 , service_m.fees_1
+                            from CALENDAR_FORM_1935 f   
+                            join SERVICE_MASTER_1933 service_m on service_m.Id = f.activities
+                            where f.activities = {ServiceId} and f.formid=2305 order by created_at desc   ) ,
+                            cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
+                            select* into #temptable from cte2  where len(customtitle)>0;    declare @counter int= 0, @c int= 1;   
+                            select @counter = (select count(1) from #temptable)	while @c <= @counter    begin    select @customTitleQuery = customTitle from #temptable where ROWNUMBER=@c;	SET @sQuery= ' select @retvalOUT = (' + @customTitleQuery + ')'  
+                            SET @ParmDefinition = N'@retvalOUT nvarchar(max) OUTPUT';   
+                            EXEC sp_executesql @sQuery, @ParmDefinition, @retvalOUT = @retval OUTPUT;    update #temptable set customTitle=@retval where ROWNUMBER=@c;	set @c = @c + 1;  end  select* from #temptable";
+
+            var result = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (result.Count > 0)
+            {
+                return new AddUpdateDelete() { Data = result.FirstOrDefault(), Message = AppMessage.Success, Status = true };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false };
+            }
+
+        }
+
         public async Task<AddUpdateDelete> GetSingleServiceDetails(string ServiceId)
         {
             string query = $@"select * from SERVICE_MASTER_1933 where Id = '{ServiceId}'";
@@ -115,6 +146,7 @@ namespace Barrway.Service.Repository
             string query = $@"SELECT publicUser.[Id]
                               ,publicUser.[USER_ID]
                               ,publicUser.[USER_EMAIL]
+                              ,publicUser.[USER_PASSWORD]
                               ,publicUser.[Country_Code]
                               ,publicUser.[USER_PHONE]
                               ,publicUser.[IS_EXTERNAL_SIGNUP]
@@ -147,7 +179,7 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> UpdatePublicUserProfilePic(PublicAccountModel model)
         {
-            string query = $@"update PUBLIC_USER_ACCOUNT_1943 set PROFILE_PHOTO_NAME = '{model.PROFILE_PHOTO_NAME}', PROFILE_PHOTO_PATH = '{model.PROFILE_PHOTO_PATH}' where USER_ID = '{model.USER_ID}'";
+            string query = $@"update PUBLIC_USER_ACCOUNT_1943 set PROFILE_PHOTO_NAME = '{SQLUtility.TreatSingleQuoteForQuery(model.PROFILE_PHOTO_NAME)}', PROFILE_PHOTO_PATH = '{SQLUtility.TreatSingleQuoteForQuery(model.PROFILE_PHOTO_PATH)}' where USER_ID = '{model.USER_ID}'";
 
             int result = await sqlFunction.ExecuteSqlCommandQuery(query);
 
@@ -178,15 +210,17 @@ namespace Barrway.Service.Repository
                     return new AddUpdateDelete() { Status = false, Message = "This email addres is already in use with diffrent user" };
                 }
 
+                if (!string.IsNullOrEmpty(model.USER_PHONE)) {
+                    ChQuery = $@"select USER_PHONE from USER_MASTER_1915 where USER_PHONE='{model.USER_PHONE}' and USER_ID !='{model.USER_ID}'";
 
-                ChQuery = $@"select USER_PHONE from USER_MASTER_1915 where USER_PHONE='{model.USER_PHONE}' and USER_ID !='{model.USER_ID}'";
+                    List<IDictionary<string, object>> Mobile = await sqlFunction.ExecuteSqlQuery(ChQuery);
 
-                List<IDictionary<string, object>> Mobile = await sqlFunction.ExecuteSqlQuery(ChQuery);
-
-                if (Mobile.Count > 0)
-                {
-                    return new AddUpdateDelete() { Status = false, Message = "This Phone number is already in use with diffrent user" };
+                    if (Mobile.Count > 0)
+                    {
+                        return new AddUpdateDelete() { Status = false, Message = "This Phone number is already in use with diffrent user" };
+                    }
                 }
+                
 
 
                 if (updatePassword)
@@ -194,7 +228,7 @@ namespace Barrway.Service.Repository
                     subQuery = "USER_PASSWORD = '" + model.USER_PASSWORD + "'";
                 }
 
-                string query = $@"update PUBLIC_USER_ACCOUNT_1943 set FIRST_NAME = N'{model.FIRST_NAME}', LAST_NAME = N'{model.LAST_NAME}', CHINESE_NAME = N'{model.CHINESE_NAME}', NICK_NAME = N'{model.NICK_NAME}', GENDER = '{model.GENDER}', DATE_OF_BIRTH = '{model.DATE_OF_BIRTH.ToString("yyyy-MM-ddTHH:mm:ss")}' where USER_ID = '{model.USER_ID}'
+                string query = $@"update PUBLIC_USER_ACCOUNT_1943 set FIRST_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.FIRST_NAME)}', LAST_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.LAST_NAME)}', CHINESE_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.CHINESE_NAME)}', NICK_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.NICK_NAME)}', GENDER = '{model.GENDER}', DATE_OF_BIRTH = '{model.DATE_OF_BIRTH.ToString("yyyy-MM-ddTHH:mm:ss")}' where USER_ID = '{model.USER_ID}'
                               update USER_MASTER_1915 set {subQuery}  USER_PHONE = '{model.USER_PHONE}',Country_Code='{model.Country_Code}' where USER_ID = '{model.USER_ID}' ";
 
                 int result = await sqlFunction.ExecuteSqlCommandQuery(query);
@@ -221,23 +255,40 @@ namespace Barrway.Service.Repository
 
             // check for sufficient B$ Balance
             var balance = await GetUserCoinBalance(model.USER_ID, model.participant.COMPANY_CODE, model.participant.CALENDAR_CODE);
-            var service = await sqlFunction.ExecuteSqlQuery("select fees_1 from SERVICE_MASTER_1933 where Id = " + model.transaction.ACTIVITY);
+            var service = await sqlFunction.ExecuteSqlQuery("select fees_1, IS_SERVICE_PAID from SERVICE_MASTER_1933 where Id = " + model.transaction.ACTIVITY);
 
             bool IsServicePaid = false;
             int ServiceFees = 0;
 
-            if (!string.IsNullOrEmpty(service[0]["fees_1"]?.ToString()))
+            if (!string.IsNullOrEmpty(service[0]["IS_SERVICE_PAID"]?.ToString()))
             {
-                if (Convert.ToInt32(service[0]["fees_1"]) > 0)
+                if (service[0]["IS_SERVICE_PAID"]?.ToString() == "Y")
                 {
-                    IsServicePaid = true;
-                    ServiceFees = Convert.ToInt32(service[0]["fees_1"]);
+                    if (!string.IsNullOrEmpty(service[0]["fees_1"]?.ToString()))
+                    {
+                        if (Convert.ToInt32(service[0]["fees_1"]) > 0)
+                        {
+                            IsServicePaid = true;
+                            ServiceFees = Convert.ToInt32(service[0]["fees_1"]);
+                        }
+                        else
+                        {
+                            IsServicePaid = false;
+                            ServiceFees = 0;
+                        }
+                    }
+                    else
+                    {
+                        IsServicePaid = false;
+                        ServiceFees = 0;
+                    }
                 }
                 else
                 {
                     IsServicePaid = false;
                     ServiceFees = 0;
                 }
+
             }
             else
             {
@@ -407,7 +458,7 @@ namespace Barrway.Service.Repository
                                                    ,[SERVICE_PROVIDER]
                                                    ,[CLIENT_NAME]
                                                    ,[FROM_TIME]
-                                                   ,[TO_TIME],[EVENT_ID])
+                                                   ,[TO_TIME],[EVENT_ID],[USER_ID])
                                              VALUES
                                                    ('{Guid.NewGuid().ToString()}'
                                                    ,2315
@@ -426,12 +477,12 @@ namespace Barrway.Service.Repository
                                                    ,'{model.transaction.COMPANY_CODE}'
                                                    ,'{model.transaction.CALENDAR_CODE}'
                                                    ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = '{model.transaction.SLOT}')                                                                                                                                                                                                     
-                                                   ,N'{model.ACTIVITY_NAME}'
-                                                   ,N'{model.RESOURCE_NAME}'
-                                                   ,N'{model.participant.STUDENT_NAME}'
+                                                   ,N'{SQLUtility.TreatSingleQuoteForQuery(model.ACTIVITY_NAME)}'
+                                                   ,N'{SQLUtility.TreatSingleQuoteForQuery(model.RESOURCE_NAME)}'
+                                                   ,N'{SQLUtility.TreatSingleQuoteForQuery(model.participant.STUDENT_NAME)}'
                                                    ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = N'{model.transaction.SLOT}') 
                                                    ,(select calendar.[end] from  CALENDAR_FORM_1935 calendar where Id = N'{model.transaction.SLOT}')
-                                                   , '{model.transaction.SLOT}')";
+                                                   , '{model.transaction.SLOT}', '{model.USER_ID}')";
 
 
             var upcomingResult = await sqlFunction.ExecuteSqlCommandQuery(upcomingBookingQuery);
@@ -503,6 +554,25 @@ namespace Barrway.Service.Repository
             var balance = await GetUserCoinBalance(model.USER_ID, model.participant.COMPANY_CODE, model.participant.CALENDAR_CODE);
             var service = await sqlFunction.ExecuteSqlQuery("select fees_1 from SERVICE_MASTER_1933 where Id = " + model.transaction.ACTIVITY);
 
+            var latestEvent = await GetLatestEventByServiceId(model.transaction.ACTIVITY);
+
+            if (string.IsNullOrEmpty(model.ACTIVITY_NAME) || string.IsNullOrEmpty(model.RESOURCE_NAME))
+            {
+                if (latestEvent.Status)
+                {
+                    if (latestEvent.Data != null)
+                    {
+                        IDictionary<string, object> eventData = latestEvent.Data as Dictionary<string, object>;
+
+                        List<string> formIdSplit = eventData["customForms"].ToString().Split(',').ToList();
+                        List<string> titlesSplit = eventData["customTitle"].ToString().Split(',').ToList();
+
+                        model.ACTIVITY_NAME = titlesSplit[Array.IndexOf(formIdSplit.ToArray(), "2303")];
+                        model.RESOURCE_NAME = titlesSplit[Array.IndexOf(formIdSplit.ToArray(), "2304")];
+                    }
+                }
+            }
+            
             bool IsServicePaid = false;
             int ServiceFees = 0;
 
@@ -705,7 +775,7 @@ namespace Barrway.Service.Repository
                                                    ,[SERVICE_PROVIDER]
                                                    ,[CLIENT_NAME]
                                                    ,[FROM_TIME]
-                                                   ,[TO_TIME],[EVENT_ID])
+                                                   ,[TO_TIME],[EVENT_ID],[USER_ID])
                                              VALUES
                                                    ('{Guid.NewGuid().ToString()}'
                                                    ,2315
@@ -724,12 +794,12 @@ namespace Barrway.Service.Repository
                                                    ,'{model.transaction.COMPANY_CODE}'
                                                    ,'{model.transaction.CALENDAR_CODE}'
                                                    ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = '{model.transaction.SLOT}')                                                                                                                                                                                                     
-                                                   ,N'{model.ACTIVITY_NAME}'
-                                                   ,N'{model.RESOURCE_NAME}'
-                                                   ,N'{model.participant.STUDENT_NAME}'
+                                                   ,N'{SQLUtility.TreatSingleQuoteForQuery(model.ACTIVITY_NAME)}'
+                                                   ,N'{SQLUtility.TreatSingleQuoteForQuery(model.RESOURCE_NAME)}'
+                                                   ,N'{SQLUtility.TreatSingleQuoteForQuery(model.participant.STUDENT_NAME)}'
                                                    ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = N'{model.transaction.SLOT}') 
                                                    ,(select calendar.[end] from  CALENDAR_FORM_1935 calendar where Id = N'{model.transaction.SLOT}')
-                                                   , '{model.transaction.SLOT}')";
+                                                   , '{model.transaction.SLOT}', '{model.USER_ID}')";
 
 
                 }
@@ -832,7 +902,7 @@ namespace Barrway.Service.Repository
                     }
                     else
                     {
-                        query = $@"delete from TRANSACTION_MASTER_1942 where Id = '{result[0]["Id"]?.ToString()}'";
+                        query = $@"delete from COMPANY_UPCOMING_BOOKINGS_1945 where USER_ID = '{model.USER_ID}' and EVENT_ID = (select top 1 SLOT from TRANSACTION_MASTER_1942 where Id = '{result[0]["Id"]?.ToString()}'); delete from TRANSACTION_MASTER_1942 where Id = '{result[0]["Id"]?.ToString()}';";
                     }
                     
                     var result2 = await sqlFunction.ExecuteSqlCommandQuery(query);
@@ -976,29 +1046,47 @@ namespace Barrway.Service.Repository
 
                     // check for sufficient B$ Balance
                     var balance = await GetUserCoinBalance(userName, eventModal.companyCode, eventModal.calendarCode);
-                    var service = await sqlFunction.ExecuteSqlQuery("select fees_1 from SERVICE_MASTER_1933 where Id = " + eventModal.activityId);
+                    var service = await sqlFunction.ExecuteSqlQuery("select fees_1, IS_SERVICE_PAID from SERVICE_MASTER_1933 where Id = " + eventModal.activityId);
 
                     bool IsServicePaid = false;
                     int ServiceFees = 0;
 
-                    if (!string.IsNullOrEmpty(service[0]["fees_1"]?.ToString()))
+                    if (!string.IsNullOrEmpty(service[0]["IS_SERVICE_PAID"]?.ToString()))
                     {
-                        if (Convert.ToInt32(service[0]["fees_1"]) > 0)
+                        if (service[0]["IS_SERVICE_PAID"]?.ToString() == "Y")
                         {
-                            IsServicePaid = true;
-                            ServiceFees = Convert.ToInt32(service[0]["fees_1"]);
+                            if (!string.IsNullOrEmpty(service[0]["fees_1"]?.ToString()))
+                            {
+                                if (Convert.ToInt32(service[0]["fees_1"]) > 0)
+                                {
+                                    IsServicePaid = true;
+                                    ServiceFees = Convert.ToInt32(service[0]["fees_1"]);
+                                }
+                                else
+                                {
+                                    IsServicePaid = false;
+                                    ServiceFees = 0;
+                                }
+                            }
+                            else
+                            {
+                                IsServicePaid = false;
+                                ServiceFees = 0;
+                            }
                         }
                         else
                         {
                             IsServicePaid = false;
                             ServiceFees = 0;
                         }
+                        
                     }
                     else
                     {
                         IsServicePaid = false;
                         ServiceFees = 0;
                     }
+                    
 
                     if (IsServicePaid && string.IsNullOrEmpty(PaymentId))
                     {
@@ -1192,7 +1280,7 @@ namespace Barrway.Service.Repository
                             upCommingBooking["COMPANY_CODE"] = eventModal.companyCode.ToString();
                             upCommingBooking["CALENDAR_CODE"] = eventModal.calendarCode.ToString();
                             upCommingBooking["EVENT_ID"] = eventModal.eventId.ToString();
-
+                            upCommingBooking["USER_ID"] = userName;
                             upCommingBooking["ACTIVITY_NAME"] = eventModal.activityTitle;
                             upCommingBooking["RESOURCE_NAME"] = eventModal.resourceTitle;
                             upCommingBooking["STUDENT_NAME"] = userData["FIRST_NAME"]?.ToString() ?? "";
@@ -1427,7 +1515,7 @@ namespace Barrway.Service.Repository
                                                    ,[SERVICE_PROVIDER]
                                                    ,[CLIENT_NAME]
                                                    ,[FROM_TIME]
-                                                   ,[TO_TIME],[EVENT_ID])
+                                                   ,[TO_TIME],[EVENT_ID],[USER_ID])
                                              VALUES
                                                    ('{Guid.NewGuid().ToString()}'
                                                    ,2315
@@ -1446,12 +1534,12 @@ namespace Barrway.Service.Repository
                                                    ,'{data["COMPANY_CODE"]}'
                                                    ,'{data["CALENDAR_CODE"]}'
                                                    , (select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = {data["SLOT"]})                                                                                                                                                                                                     
-                                                   , N'{data["ACTIVITY_NAME"]}'
-                                                   , N'{data["RESOURCE_NAME"]}'
-                                                   , N'{data["STUDENT_NAME"]}'
+                                                   , N'{SQLUtility.TreatSingleQuoteForQuery(data["ACTIVITY_NAME"])}'
+                                                   , N'{SQLUtility.TreatSingleQuoteForQuery(data["RESOURCE_NAME"])}'
+                                                   , N'{SQLUtility.TreatSingleQuoteForQuery(data["STUDENT_NAME"])}'
                                                    , (select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = {data["SLOT"]}) 
                                                    , (select calendar.[end] from  CALENDAR_FORM_1935 calendar where Id = {data["SLOT"]})
-                                                   , '{data["SLOT"]}')";
+                                                   , '{data["SLOT"]}', '{data["USER_ID"]}')";
 
 
             return await sqlFunction.ExecuteSqlCommandQuery(upcomingBookingQuery);

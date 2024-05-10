@@ -76,7 +76,9 @@
         .d-view {
             display: block;
         }
-
+        .m-none {
+            display: block !important;
+        }
         .mob-view .open > a, .mob-view .open > a:focus, .mob-view .open > a:hover {
             border-radius: 50px;
             border: none;
@@ -99,12 +101,13 @@
                 top: 4px;
                 position: relative;
             }
-        }
-
+        
         .m-none {
+            display: none !important;
+        }
+        .d-view {
             display: none;
         }
-
         .nmbrm li .dropdown-menu {
             left: -116px;
         }
@@ -182,7 +185,7 @@
 
                         @*<li id="nv-company-photo-album"><a href="/Marketplace/CompanyPhotoAlbum?CompanyCode=@ViewBag.COMPANY_ID&CalendarCode=@ViewBag.CALENDAR_ID">@Resource.Photo_album</a></li>*@
                         <li id="nv-company-photo-album"><a href="/company/gallery/@ViewBag.COMPANY_ID/@ViewBag.CALENDAR_ID">@Resource.Photo_album</a></li>
-                        <li class="no-mar-bott-rl m-none d-view">
+                        <li class="no-mar-bott-rl m-none">
                             @if (User.Identity.IsAuthenticated)
                             {
                                     string userabbr = "";
