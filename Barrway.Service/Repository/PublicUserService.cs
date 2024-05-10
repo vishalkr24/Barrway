@@ -2629,7 +2629,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
             timeB.end = Convert.ToDateTime(timeB.end).ToShortTimeString();
 
             // case 1
-            if (Convert.ToDateTime(timeA.start) <= Convert.ToDateTime(timeB.start) && (Convert.ToDateTime(timeA.end) <= Convert.ToDateTime(timeB.end) && Convert.ToDateTime(timeA.end) >= Convert.ToDateTime(timeB.start)))
+            if (Convert.ToDateTime(timeA.start) <= Convert.ToDateTime(timeB.start) && (Convert.ToDateTime(timeA.end) <= Convert.ToDateTime(timeB.end) && Convert.ToDateTime(timeA.end) > Convert.ToDateTime(timeB.start)))
             {
                 testResult = false;
             }
@@ -2641,7 +2641,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
             }
 
             // case 3
-            if ((Convert.ToDateTime(timeA.start) >= Convert.ToDateTime(timeB.start) && Convert.ToDateTime(timeA.start) <= Convert.ToDateTime(timeB.end)) && Convert.ToDateTime(timeA.end) >= Convert.ToDateTime(timeB.end))
+            if ((Convert.ToDateTime(timeA.start) >= Convert.ToDateTime(timeB.start) && Convert.ToDateTime(timeA.start) < Convert.ToDateTime(timeB.end)) && Convert.ToDateTime(timeA.end) >= Convert.ToDateTime(timeB.end))
             {
                 testResult = false;
             }
