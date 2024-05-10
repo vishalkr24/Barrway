@@ -651,7 +651,7 @@ namespace Barrway.Controllers
                                 else
                                 {
                                     item.Add("IsAlreadyBooked", 'N');
-                                    item.Add("OverlapBookingFlag", 'Y');
+                                    item.Add("OverlapBookingFlag", 'N');
                                     item.Add("IsReviewable", 'N');
                                     item.Add("ATTEND", 'N');
                                     item.Add("TransactionId", '0');

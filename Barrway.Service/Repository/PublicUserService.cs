@@ -2508,14 +2508,15 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
 
                 var alreadyEnrolledEvents = await sqlFunction.ExecuteSqlQuery(query);
 
-                if (alreadyEnrolledEvents != null)
+                if (result != null)
                 {
-                    if (alreadyEnrolledEvents.Count > 0)
+                    foreach (var item in result)
                     {
-                        if (result != null)
+                        if (alreadyEnrolledEvents != null)
                         {
-                            foreach (var item in result)
+                            if (alreadyEnrolledEvents.Count > 0)
                             {
+
                                 bool checkOverlapBooking = false;
                                 if (item["ALLOW_OVERLAP"]?.ToString() == "Y")
                                 {
@@ -2530,7 +2531,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
                                 {
                                     if (checkOverlapBooking)
                                     {
-                                        item.Add("OverlapBookingFlag", "Y");
+                                        item.Add("OverlapBookingFlag", "N");
                                     }
 
                                     item["IsAlreadyBooked"] = 'Y';
@@ -2552,7 +2553,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
                                     item["IsReviewable"] = 'N';
                                     item["ATTEND"] = 'N';
                                     item["TransactionId"] = '0';
-                                    
+
 
                                     if (checkOverlapBooking)
                                     {
@@ -2594,6 +2595,14 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
 
                                 }
                             }
+                            else
+                            {
+                                item.Add("OverlapBookingFlag", "N");
+                            }
+                        }
+                        else
+                        {
+                            item.Add("OverlapBookingFlag", "N");
                         }
                     }
                 }
