@@ -1409,6 +1409,7 @@ var manageWindowParams = function () {
             param.filter.field = "start";
             param.COMPANY_CODE = COMPANY_CODE;
             param.CALENDAR_CODE = CALENDAR_CODE;
+            param.NotIncludeOtherForm = true;
             if (is5CType) {
                 param.IsListView = true;
                 param.startDate = moment(start).format("YYYY-MM-DD");
@@ -1544,11 +1545,10 @@ var manageWindowParams = function () {
             param.filter.field = "start";
             param.COMPANY_CODE = COMPANY_CODE;
             param.CALENDAR_CODE = CALENDAR_CODE;
+            param.NotIncludeOtherForm = true;
             if ($(".calendar-service-Location option:selected").val() != "" && $(".calendar-service-Location option:selected").val() != "0") {
                 param.filter.value += " and resources = '" + $(".calendar-service-Location option:selected").val() + "' ";
             }
-
-            console.log(param.filter);
 
             $.ajax({
                 method: 'POST',
@@ -1784,6 +1784,7 @@ var manageWindowParams = function () {
             param.filter.field = "start";
             param.COMPANY_CODE = COMPANY_CODE;
             param.CALENDAR_CODE = CALENDAR_CODE;
+            param.NotIncludeOtherForm = true;
             if ($(".calendar-service-Location option:selected").val() != "" && $(".calendar-service-Location option:selected").val() != "0") {
                 param.filter.value += " and resources = '" + $(".calendar-service-Location option:selected").val() + "' ";
             }
@@ -2073,6 +2074,7 @@ var manageWindowParams = function () {
             param.filter.field = "start";
             param.COMPANY_CODE = COMPANY_CODE;
             param.CALENDAR_CODE = CALENDAR_CODE;
+            param.NotIncludeOtherForm = true;
             $.ajax({
                 method: 'POST',
                 url: BASE_URL + "/FormAPI/getReferralFormFields",
@@ -3148,8 +3150,7 @@ async function rendarPopupCalendar(assignDate) {
             param.CALENDAR_CODE = CALENDAR_CODE;
             param.resourceId = $scopeVar.selectEventDetails.resourceId;
             param.resourceFormId = resourceFormId;
-
-
+            param.NotIncludeOtherForm = true;
 
 
             var postUrl = BASE_URL + "/FormAPI/getReferralFormFieldsService";
