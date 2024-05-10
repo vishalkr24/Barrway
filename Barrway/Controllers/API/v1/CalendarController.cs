@@ -1,5 +1,6 @@
 ﻿using Barrway.DTO.APIModels.Calendar;
 using Barrway.DTO.APIModels.SearchAPI;
+using Barrway.DTO.Common;
 using Barrway.Security;
 using Barrway.Service.IRepository;
 using System;
@@ -55,6 +56,23 @@ namespace Barrway.Controllers.API.v1
             }
         }
 
+
+
+        [Route("api/calendar/myfavorite/AddtoFavoriteCalanders")]
+        [HttpPost]
+        [ResponseType(typeof(AddUpdateDeleteAPI))]
+        public async Task<IHttpActionResult> AddtoFavoriteCalanders(FavoriteCalendarModel data)
+        {
+            try
+            {              
+
+                return Ok(await mobileAPIService.AddToFavoriteCalendar(data, APIUserIdentity.UserName));
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
 
 
 
