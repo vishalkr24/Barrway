@@ -622,10 +622,10 @@ RemoteCertificateValidationCallback
                 request.AddBody(jsonTree);
                 request.AddHeader("content-type", "application/json");
                 ServicePointManager.ServerCertificateValidationCallback = new
-RemoteCertificateValidationCallback
-(
-   delegate { return true; }
-);
+                RemoteCertificateValidationCallback
+                (
+                   delegate { return true; }
+                );
                 var response = await _client.ExecuteAsync(request);
                 if (response.Content != null)
                 {

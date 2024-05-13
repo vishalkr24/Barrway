@@ -316,6 +316,9 @@ namespace Barrway.Controllers
         [HttpGet]
         public async Task<ActionResult> GenerateEventQR(string EventId)
         {
+
+            var eventDetails = (await publicUserService.GetSingleEventDetails(EventId)).Data as IDictionary<string, object>;
+
             QRCodeModel model = new QRCodeModel();
             string Url = ConfigurationManager.AppSettings["baseurl"] + "Public/MarkPresent?EventId=" + EventId;
             Payload payload = new Url(Url);
@@ -325,7 +328,68 @@ namespace Barrway.Controllers
             QRCode qrCode = new QRCode(qrCodeData);
             var qrCodeAsBitmap = qrCode.GetGraphic(20);
 
-            string base64String = Convert.ToBase64String(BitmapToByteArray(qrCodeAsBitmap));
+            string description = "";
+
+            if (eventDetails != null)
+            {
+                description += "Date: " + Convert.ToDateTime(eventDetails["start"]?.ToString()).ToString("dd-MM-yyyy (hh:mm tt)") + "\n";
+                var FormIdSplit = eventDetails["customForms"].ToString().Split(',');
+
+                // check and add service provider
+                if (FormIdSplit.Contains("2303"))
+                {
+                    if (!string.IsNullOrEmpty(eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2303")]))
+                    {
+                        description += "Service provider: " + eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2303")] + "\n";
+                    }
+                }
+
+                // check and add service
+                if (FormIdSplit.Contains("2304"))
+                {
+                    if (!string.IsNullOrEmpty(eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2304")]))
+                    {
+                        description += "Service: " + eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2304")] + "\n";
+                    }
+                }
+
+
+                // check and add location
+                if (FormIdSplit.Contains("2306"))
+                {
+                    if (!string.IsNullOrEmpty(eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2306")]))
+                    {
+                        description += "Location: " + eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2306")] + "\n";
+                    }
+                }
+
+            }
+
+            // create a image with qr code height + size of description
+            Bitmap qrCodeAsBitmapWithDescription = new Bitmap(qrCodeAsBitmap.Width, qrCodeAsBitmap.Height + 40);
+
+            // add qr code to new image created
+            using (Graphics graphics = Graphics.FromImage(qrCodeAsBitmapWithDescription))
+            {
+                graphics.Clear(Color.White);
+                graphics.DrawImage(qrCodeAsBitmap, new Point(0, 0));
+            }
+
+            // write description on the image 
+            using (Graphics graphics = Graphics.FromImage(qrCodeAsBitmapWithDescription))
+            {
+                using (Font font = new Font("Arial", 15))
+                {
+                    float x = 80;
+                    float y = qrCodeAsBitmap.Height - 60;
+
+                    // Draw description text
+                    graphics.DrawString(description, font, Brushes.Black, x, y);
+                }
+
+            }
+
+            string base64String = Convert.ToBase64String(BitmapToByteArray(qrCodeAsBitmapWithDescription));
 
 
             string path = "";
@@ -355,6 +419,11 @@ namespace Barrway.Controllers
             }
 
             image.Save(Server.MapPath(path));
+
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Cache.SetExpires(DateTime.Now);
+            Response.Cache.SetNoServerCaching();
+            Response.Cache.SetNoStore();
 
             return Json(new AddUpdateDelete() { Status = true, Data = model }, JsonRequestBehavior.AllowGet);
         }
@@ -720,7 +789,7 @@ namespace Barrway.Controllers
             return Json(schedularData);
         }
 
-        
+
 
         [HttpPost]
         public async Task<ActionResult> AddQueueSession(Dictionary<string, List<Dictionary<string, string>>> data, string ScheduleId)

@@ -6144,52 +6144,7 @@
             } else {
 
             }
-            if ($scope.currentFormId == "2304") {
-
-                let createEntry = true;
-
-                let tempData = $("#customFormNew").serializeArray();
-                let ProviderName = tempData.find(x => x.name == "FIRST_NAME").value;
-
-                $.ajax({
-                    url: "/Calendar/GetServiceProviderMasterList/",
-                    async: false,
-                    type: "POST",
-                    data: {
-                        data: {
-                            filters: [
-                                {
-                                    field: "FIRST_NAME",
-                                    type: "=",
-                                    value: ProviderName
-                                }
-                            ]
-                        },
-                        companyCode: localStorage.getItem("COMPANY_CODE")
-                    },
-                    success: function (response) {
-                        if (response.data != null) {
-                            if (response.data.length > 0) {
-                                swal({
-                                    icon: "warning",
-                                    title: "Alert",
-                                    text: "Service provider already exist with same name."
-                                });
-                                createEntry = false;
-                            }
-                        }
-
-                    },
-                    error: function (errorResponse) {
-                        data = null;
-                    }
-                });
-
-                if (!createEntry) {
-                    return;
-                    $rootScope.$emit("HideLoading");
-                }
-            }
+            
 
             if ($scope.isEdit == true) {
                 if (DataService.isEmpty($scope.formDetailsDataInfo.recordAccessSecurity.own.edit_time) || $scope.formDetailsDataInfo.recordAccessSecurity.own.edit_time == 0 && $scope.formDetailsDataInfo.userID == $scope.userDetail.Id) {
@@ -6230,6 +6185,54 @@
                 }
             }
             else {
+
+                if ($scope.currentFormId == "2304") {
+
+                    let createEntry = true;
+
+                    let tempData = $("#customFormNew").serializeArray();
+                    let ProviderName = tempData.find(x => x.name == "FIRST_NAME").value;
+
+                    $.ajax({
+                        url: "/Calendar/GetServiceProviderMasterList/",
+                        async: false,
+                        type: "POST",
+                        data: {
+                            data: {
+                                filters: [
+                                    {
+                                        field: "FIRST_NAME",
+                                        type: "=",
+                                        value: ProviderName
+                                    }
+                                ]
+                            },
+                            companyCode: localStorage.getItem("COMPANY_CODE")
+                        },
+                        success: function (response) {
+                            if (response.data != null) {
+                                if (response.data.length > 0) {
+                                    swal({
+                                        icon: "warning",
+                                        title: "Alert",
+                                        text: "Service provider already exist with same name."
+                                    });
+                                    createEntry = false;
+                                }
+                            }
+
+                        },
+                        error: function (errorResponse) {
+                            data = null;
+                        }
+                    });
+
+                    if (!createEntry) {
+                        return;
+                        $rootScope.$emit("HideLoading");
+                    }
+                }
+
                 if (!DataService.isEmpty($scope.importFormSettings.scheduler_referrence_formId)) {
                     modifyFormData();
                 } else {
