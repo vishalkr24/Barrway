@@ -1372,7 +1372,17 @@ namespace Barrway.Service.Repository
                 if (formResult.res > 0)
                 {
                     string tableName = (await CheckAdditionalFormDetails(CalendarCode, UserId)).Data;
-                    string query = $@"update {tableName} set created_by = '{UserId}' where Id = '{formResult.Id}'";
+
+                    string recordId = "";
+
+                    if (sd.ContainsKey("COMPANY_CODE"))
+                    {
+                        recordId = sd["COMPANY_CODE"]?.ToString() + "-";
+                    }
+
+                    recordId += formResult.Id.ToString().PadLeft(5, '0');
+
+                    string query = $@"update {tableName} set RECORD_ID = '{recordId}', created_by = '{UserId}' where Id = '{formResult.Id}'";
                     var result = await sqlFunction.ExecuteSqlCommandQuery(query);
 
                     if (result > 0)

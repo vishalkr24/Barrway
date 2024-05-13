@@ -2309,7 +2309,7 @@
                                 })
 
                                 dataModelList.forEach(x => {
-                                    if (x.name == "COMPANY_CODE" || x.name == "CALENDAR_CODE") {
+                                    if (x.name == "COMPANY_CODE" || x.name == "CALENDAR_CODE" || x.name == "RECORD_ID") {
                                         //$("#service-div #service-elem-" + dataModel.Id + " .row ").
                                         $(`#service-div .border-${x.name}`).hide();
                                     } else {
