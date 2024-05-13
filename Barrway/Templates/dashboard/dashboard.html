@@ -1,4 +1,37 @@
-﻿
+﻿<style>
+    .tabulator-section .tabulator-row table {
+        vertical-align: middle;
+        border-collapse: collapse;
+    }
+
+        .tabulator-section .tabulator-row table img {
+            border: 2px solid #ccc;
+        }
+
+        .tabulator-section .tabulator-row table tr td {
+            border: none;
+        }
+
+            .tabulator-section .tabulator-row table tr td:first-of-type {
+                width: 60px;
+            }
+
+            .tabulator-section .tabulator-row table tr td div {
+                padding: 5px;
+            }
+    .searchBar {
+        display: none;
+    }
+
+    @media screen and (max-width:576px) {
+
+        .searchBar {
+            display:block;
+        }
+    }
+</style>
+
+
 <div class="modal fade" id="GeneratedQRCodeModalAdmin" style="z-index: 2000;" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel5" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -147,28 +180,23 @@
                     <div class="">
                         <div class="calendar-dashboard-top" style="height:35px;">
                             <span style="position: relative;top: 2px; font-weight:600; font-size:18px;">{{translation.Upcoming_bookings}}</span>
+                           
                             <span style="float:right;" class="login_primary"><button class="btn btn-primary" ui-sref="calendar_view({formId:2305})" style="border-radius:100px; padding: 8px 16px">{{translation.See_All}}</button></span>
+                        </div>
+
+                        <div class="calendar-dashboard-top searchBar" style="height:35px;">
+
+                            <div class="input-group" style="float:left;width:60%">
+                              <span class="input-group-text" ng-click="toogleSort()"><i ng-class="{'bi bi-sort-down':SortUp,'bi bi-sort-up':!SortUp}"></i></span> 
+                                <input type="text" class="form-control" placeholder="Search" id="searchBar" />
+                            </div>
+
+                           
                         </div>
 
                         <div class="card-body pt-0 mp-0 p-1">
                             <div id="pageActions">
                                 <div class="tabulator-section">
-                                    <div id="page-tabs"
-                                         class="ui-tabs ui-corner-all ui-widget ui-widget-content"
-                                         ng-if="tabList.length>0">
-                                        <ul class="ui-tabs-nav ui-corner-all ui-helper-reset ui-helper-clearfix ui-widget-header">
-                                            <li tabindex="-1"
-                                                class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
-                                                id="tab-{{$index}}"
-                                                ng-repeat="l in tabList track by $index"
-                                                ng-click="selectedTabFilter(l,$index)">
-                                                <a data-target="#{{l.value}}"
-                                                   tabindex="-1"
-                                                   class="ui-tabs-anchor">{{l.label}}</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-
                                     <div class="form-builder-loader text-center">
                                         <div class="loader">
                                             <i class="fa fa-spinner fa-pulse fa-fw"> </i>
