@@ -51,6 +51,10 @@ namespace Barrway.Service.IRepository
         Task<List<object>> GetPaymentYearList(string userName);
         Task<AddUpdateDeleteAPI> AddToFavoriteCalendar(FavoriteCalendarModel model, string UserId);
 
+        Task<AddUpdateDelete> RemoveFavoriteCalendar(FavoriteCalendarModel model, string UserId);
+
+        Task<FavouriteCalendarDetails> CalendarDtails(FavoriteCalendarModel model, string UserId);
+
 
 
 

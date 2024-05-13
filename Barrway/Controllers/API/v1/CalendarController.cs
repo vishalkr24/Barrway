@@ -75,6 +75,41 @@ namespace Barrway.Controllers.API.v1
         }
 
 
+        [Route("api/calendar/myfavorite/RemoveFavoriteCalendar")]
+        [HttpPost]
+        [ResponseType(typeof(AddUpdateDeleteAPI))]
+        public async Task<IHttpActionResult> RemoveFavoriteCalendar(FavoriteCalendarModel data)
+        {
+            try
+            {
+
+                return Ok(await mobileAPIService.RemoveFavoriteCalendar(data, APIUserIdentity.UserName));
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
+
+
+
+        [Route("api/calendar/GetCalendarDetails")]
+        [HttpPost]
+        [ResponseType(typeof(FavouriteCalendarDetails))]
+        public async Task<IHttpActionResult> GetCalendarDetails(FavoriteCalendarModel data)
+        {
+            try
+            {
+
+                return Ok(await mobileAPIService.CalendarDtails(data, APIUserIdentity.UserName));
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
+
+
 
         [Route("api/calendar/myfavorite/calendars")]
         [HttpPost]

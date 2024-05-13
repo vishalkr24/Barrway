@@ -1201,6 +1201,101 @@ namespace Barrway.Service.Repository
         }
 
 
+
+        public async Task<AddUpdateDelete> RemoveFavoriteCalendar(FavoriteCalendarModel model, string UserId)
+        {
+            try
+            {
+
+                string query = $@"delete from FAVORITE_CALENDAR_MASTER_1949 where USER_ID = '{UserId}' and CALENDAR_CODE = '{model.CALENDAR_CODE}' and COMPANY_CODE = '{model.COMPANY_CODE}'";
+
+                int result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                if (result > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
+            }
+        }
+
+
+       
+
+        public async Task<FavouriteCalendarDetails> CalendarDtails(FavoriteCalendarModel model, string UserId)
+        {
+            try
+            {
+
+                string query = $@"select [Id]      
+                                  ,[CALENDAR_NAME]
+                                  ,[CALENDAR_PHOTO_NAME]
+                                  ,[CALENDAR_PHOTO_PATH]
+                                  ,[IS_VISIBLE]
+                                  ,[COUNTRY_ID]
+                                  ,[CITY_ID]
+                                  ,[DISTRICT_ID]
+                                  ,[CALENDAR_CATEGORY_ID]
+                                  ,[CALENDAR_SUB_CATEGORY_ID]
+                                  ,[COMPANY_CODE]
+                                  ,[CALENDAR_CODE]
+                                  ,[TAGS]
+                                  ,[SLOT_DURATION_IN_MINS]
+                                  ,[CAL_CURRENT_STEP]
+                                  ,[CALENDAR_TYPE]
+                                  ,[CALENDAR_FUNCTION_TYPE]
+                                  ,[CALENDAR_USE_TYPE]
+                                  ,[DISPLAY_MIN_TIME]
+                                  ,[DISPLAY_MAX_TIME]
+                                  ,[DEFAULT_RESOURCE]
+                                  ,[ADDITIONAL_FORM_ID]
+                                  ,[NEED_ADDITIONAL_FORM]
+                                  ,[DEFAULT_CALENDAR_VIEW]
+                                  ,[REQUIRED_CALENDAR_VIEWS]
+                                  ,[CALENDAR_COMMON_CATEGORY_ID]
+                                  ,[IS_VISIBLE_ON_MARKETPLACE_HOME]
+                                  ,[PRIORITY]
+                                  ,[IS_FEATURED]
+                                  ,[SEQUENCE]
+                                  ,[STATUS]      
+                                  ,[INTERVAL_TIME]
+                                  ,[DEFAULT_DISPLAY_DATE]
+                                  ,[DEFAULT_DATE]
+                                  ,[SERVICE_CHARGE_BY]
+	                              ,case when  (select top 1 count(Id) from FAVORITE_CALENDAR_MASTER_1949 where COMPANY_CODE='{model.COMPANY_CODE}' and CALENDAR_CODE='{model.CALENDAR_CODE}' and USER_ID='{UserId}')='1' then 'Y' else 'N' end as IsFavourite
+                                  ,[ALLOW_OVERLAP] from BUSINESS_CALENDAR_MASTER_1925  
+	                                where  COMPANY_CODE='{model.COMPANY_CODE}' and  CALENDAR_CODE='{model.CALENDAR_CODE}'";
+
+                var result = (await sqlFunction.ExecuteSqlQuery<FavouriteCalendarDetails>(query)).FirstOrDefault();
+                if (result !=null)
+                {
+
+                    result.CALENDAR_PHOTO_PATH = GetFilepath(result.CALENDAR_PHOTO_PATH);
+                  
+                    return result;
+                }
+                else
+                {
+                    return new FavouriteCalendarDetails();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new FavouriteCalendarDetails();
+            }
+        }
+
+
+
+
         private string GetDateQuery(DateTime start, DateTime end)
         {
             string _start = start.ToString("yyyy-MM-dd");

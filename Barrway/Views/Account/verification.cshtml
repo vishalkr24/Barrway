@@ -37,6 +37,16 @@
         body {
             opacity: 0;
         }
+
+        .btn-default {
+            color: #fff;
+            background-color: #3fbfc7;
+            border-color: #3fbfc7;
+            width: 100%;
+            border-radius: 40px;
+            padding: 12px 0px;
+            margin: 10px 0px;
+        }
     </style>
 
     <script>
@@ -160,8 +170,10 @@
                         @if (TempData["success"] != null)
                         {
                             <h2 class="text-success">@TempData["success"].ToString()</h2>
+                            <a href="/Account/BusinessLogin" style="color: #fff; background-color: #3fbfc7; border-color: #3fbfc7; width: 100%; border-radius: 40px; padding: 12px 0px; margin: 10px 0px; display: block; text-align: center;">login</a>
                         }
                         <!-- End Form -->
+
                     </div>
                 </div>
                 <!-- End Card -->
