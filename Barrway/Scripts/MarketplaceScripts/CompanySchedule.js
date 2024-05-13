@@ -648,7 +648,8 @@ var manageWindowParams = function () {
                 resources: event.resources,
                 activities: event.activities,
                 activityName: event.activityName,
-                formGroupKey: event.formGroupKey
+                formGroupKey: event.formGroupKey,
+                IsAlreadyBooked: event.IsAlreadyBooked
             };
             eventData.title = _tempTitle;
             eventData.Images = event.files;
@@ -1088,6 +1089,12 @@ var manageWindowParams = function () {
                     element.empty().append($fcContent.css({
                         borderRadius: 3,
                     }));
+                }
+                //IsAlreadyBooked
+                //outline: 2px solid #3FBFC7;
+                if (eventData.IsAlreadyBooked && eventData.IsAlreadyBooked == 'Y' && current_tab !='agenda-view') {
+                    element.css({ "outline": "2px solid #3FBFC7", "background": "#3FBFC7" });
+                    element.find(".fc-content").css({"background": "#3FBFC7" });
                 }
                 
             }

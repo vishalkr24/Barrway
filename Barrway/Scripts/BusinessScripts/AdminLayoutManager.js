@@ -178,37 +178,31 @@ function setCalendarDashboardData() {
 
     var companyCode = localStorage.getItem("COMPANY_CODE")
     var calendarCode = localStorage.getItem("CALENDAR_CODE");
+    var columns1 = [
+        {
+            title: 'Attendance', field: 'ACTION', formatter: function (cell, formatter) {
 
-    var CalendarMasterList = function () {
-        var columns = [
-            {
-                title: 'Attendance', field: 'ACTION', formatter: function (cell, formatter) {
-                    
-                    return `<div class="login_primary"><a href='javascript:void(0)' onclick="ScanStudentQR('${cell.getData().EVENT_ID}')" class="btn btn-primary text-light" style="border-radius: 40px;">Scan QR mark attendance</a>
+                return `<div class="login_primary"><a href='javascript:void(0)' onclick="ScanStudentQR('${cell.getData().EVENT_ID}')" class="btn btn-primary text-light" style="border-radius: 40px;">Scan QR mark attendance</a>
         
                             <a href='javascript:void(0)' onclick="GenerateEventQR('${cell.getData().EVENT_ID}')"><img src="../../assets/img/QR_CODE_LOGO.png" style="height: 40px; width: 40px;" /></a></div>`;
-                }, headerSort: false
-            },
-            {
-                title: 'Date', field: 'BOOKING_DATE', headerFilter: "input", formatter: function (cell, formatter) {
-                    return moment(cell.getData().BOOKING_DATE).format("DD-MM-YYYY")
-                }
-            },
-            { title: 'Service Name', field: 'SERVICE_NAME', headerFilter: "input" },
-            { title: 'Service Provider', field: 'SERVICE_PROVIDER', headerFilter: "input" },
-            { title: 'Client Name', field: 'CLIENT_NAME', headerFilter: "input" },
-            {
-                title: 'From Time', field: 'FROM_TIME', headerFilter: "input", formatter: function (cell, formatter) {
-                    return moment(cell.getData().FROM_TIME).format("HH:mm A")
-                }
-            },
-            {
-                title: 'To Time', field: 'TO_TIME', headerFilter: "input", formatter: function (cell, formatter) {
-                    return moment(cell.getData().TO_TIME).format("HH:mm A")
-                }
-            }
-        ];
-
+            }, headerSort: false
+        },
+        {
+            title: 'Date', field: 'BOOKING_DATE', headerFilter: "input"
+        },
+        { title: 'Service', field: 'SERVICE_NAME', headerFilter: "input" },
+        { title: 'Service Provider', field: 'SERVICE_PROVIDER', headerFilter: "input" },
+        { title: 'Client Name', field: 'CLIENT_NAME', headerFilter: "input" },
+        {
+            title: 'From Time', field: 'FROM_TIME', headerFilter: "input"
+        },
+        {
+            title: 'To Time', field: 'TO_TIME', headerFilter: "input"
+        }
+    ];
+    var columns2 = [{ title: 'FROM_TIME', field: 'FROM_TIME', visible: false } ];
+    var CalendarMasterList = function () {
+      
         setTimeout(function () {
             var options = {
                 placeholder: "No Data.",
@@ -219,7 +213,7 @@ function setCalendarDashboardData() {
                 layout: "fitDataFill",
                 responsiveLayout: false,
                 initialSort: [
-                    { column: "created_at", dir: "desc" }
+                    { column: "FROM_TIME", dir: "desc" }
                 ],
                 persistenceID: "persisrecords",
                 persistenceMode: true,
@@ -253,7 +247,7 @@ function setCalendarDashboardData() {
                     }
                     return data ? dataParse : false;
                 },
-                columns: columns,
+                columns: columns1,
                 footerElement: "<div style='text-align:left' id='no-of-forms'></div>",
                 dataLoaded: function (data) {
                     //data - all data loaded into the table                        
@@ -261,9 +255,13 @@ function setCalendarDashboardData() {
                     if (data.length > 0)
                         count = data[0].total_records;
                     $('#form-records .tabulator-footer #no-of-forms').text("Total: " + count + " Entries");
+
+                    if (window.innerWidth <= 576) {
+                        toogleRowFormatter();
+                    }
                 },
                 /// pagination: "local",              
-                ajaxFiltering: true,
+                ajaxFiltering: false,
                 ajaxSorting: true,
                 ajaxLoader: true,
                 ajaxURL: "/Calendar/GetCalendarUpcomingBookingsData",
@@ -279,7 +277,7 @@ function setCalendarDashboardData() {
 
                     var called = true;
                     if (params.sorters.length == 0) {
-                        params.sorters.push({ field: "created_at", dir: "desc" });
+                        //params.sorters.push({ field: "created_at", dir: "desc" });
                     }
                     //if (called)
                     //$('#form-records').block({ message: '<h4>Getting Form Records...</h4>' });
@@ -297,18 +295,93 @@ function setCalendarDashboardData() {
                     else {
                         return response;
                     }
-
                 },
                 paginationSize: 50,
-
             };
+
             var tabulator = initTabulator('form-records', options);
             $('.form-builder-loader').hide();
-        }, 150);
 
+
+
+            const columnFields = columns1.map(column => column.field);
+
+            // OPTIONAL - These columns will not be searched.
+            // If you want to search all columns, set to [].
+            const ignoreColumns = []
+
+            const searchFields = columnFields.filter(field => !ignoreColumns.includes(field))
+
+            const searchBar = document.getElementById("searchBar");
+
+            searchBar.addEventListener("input", function () {
+                // Capitalization does not affect search results, but white space does.
+                var searchValue = searchBar.value.trim();
+
+                // Allows searching in multiple columns at the same time
+                var filterArray = searchFields.map((field) => {
+                    // You can customize the properties here
+                    return { field: field, type: 'like', value: searchValue };
+                });
+                var table = Tabulator.prototype.findTable("#form-records")[0];
+                table.setFilter([filterArray])
+            });
+
+
+          
+        }, 150);
     };
 
     CalendarMasterList();
+
+    function toogleRowFormatter() {
+        var table = Tabulator.prototype.findTable("#form-records")[0];
+        if (window.innerWidth <= 576) { // Change this breakpoint according to your needs
+            table.options.rowFormatter = function (row) {
+                var element = row.getElement(),
+                    data = row.getData(),
+                    width = element.offsetWidth,
+                    rowTable, cellContents;
+
+                //clear current row data
+                while (element.firstChild) element.removeChild(element.firstChild);
+
+                //define a table layout structure and set width of row
+                rowTable = document.createElement("table")
+                rowTable.style.width = (width - 18) + "px";
+
+                rowTabletr = document.createElement("tr");
+
+                //add image on left of row
+                //cellContents = "<td><img src='/sample_data/row_formatter/" + data.image + "'></td>";
+
+                //add row data on right hand side
+                cellContents = `<td class="login_primary"><a href='javascript:void(0)' style='margin-left:5px;' onclick="ScanStudentQR('${data.EVENT_ID}')"><img src="../../assets/img/qr-scan.png" style="height: 40px; width: 40px;" /></a>
+                    <a href='javascript:void(0)' onclick="GenerateEventQR('${data.EVENT_ID}')"><img src="../../assets/img/QR_CODE_LOGO.png" style="height: 40px; width: 40px;" /></a></td>`;
+                cellContents += "<td><div><strong>Date:</strong> " + data.BOOKING_DATE + "</div><div><strong>Service Name:</strong> " + data.SERVICE_NAME + "</div><div><strong>Service Provider:</strong> " + data.SERVICE_PROVIDER + "</div><div><strong>Client Name:</strong> " + data.CLIENT_NAME
+                "</div><div><strong>From Time:</strong> " + data.FROM_TIME + "</div><div><strong>To Time:</strong> " + data.TO_TIME + "</div></td>"
+
+                rowTabletr.innerHTML = cellContents;
+
+                rowTable.appendChild(rowTabletr);
+
+                //append newly formatted contents to the row
+                element.append(rowTable);
+            };
+            table.setColumns(columns2);
+            table.redraw();
+        } else {
+            table.options.rowFormatter = null;
+            table.setColumns(columns1);
+            table.redraw();
+        }
+        
+    }
+    //  var table = Tabulator.prototype.findTable("#form-records")[0];
+    window.addEventListener('resize', function () {
+        toogleRowFormatter();
+    });
+
 
 
 }

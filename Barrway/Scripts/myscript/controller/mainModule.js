@@ -154,6 +154,16 @@ FormGeneratorApp.controller('DashboardController', function ($scope, $http, $tim
             $scope.ManageCalendarMaster();
             setCalendarDashboardData();
         }, 800);
+        $scope.SortUp = true;
+
+        $scope.toogleSort = function () {
+            $scope.SortUp = !$scope.SortUp;
+            var sort = $scope.SortUp ? "desc" : "asc";
+            var table = Tabulator.prototype.findTable("#form-records")[0];
+            table.setSort([
+                { column: "FROM_TIME", dir: sort }
+            ]);
+        }
     }
 
     $scope.publishCalendar = function () {

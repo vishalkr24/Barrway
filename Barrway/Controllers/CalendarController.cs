@@ -1614,7 +1614,7 @@ namespace Barrway.Controllers
             try
             {
                 var transactionData = await businessUserService.GetCalendarUpcomingBookings(data, CompanyCode, CalendarCode);
-                var transactionList = transactionData.Data;
+                var transactionList = transactionData.Data as List<IDictionary<string, object>>;
                 double last_page = 0;
                 if (transactionList != null && transactionList.Count > 0)
                 {
@@ -1624,7 +1624,13 @@ namespace Barrway.Controllers
                     double paging = (double)total_records / size;
                     last_page = Math.Floor(paging) + 1;
                 }
+                transactionList.ForEach(x =>
+                {
+                    x["BOOKING_DATE"] = Convert.ToDateTime(x["BOOKING_DATE"]).ToString("dd-MM-yyyy");
+                    x["FROM_TIME"] = Convert.ToDateTime(x["FROM_TIME"]).ToString("HH:mm tt");
+                    x["TO_TIME"] = Convert.ToDateTime(x["TO_TIME"]).ToString("HH:mm tt");
 
+                });
                 return Json(new { data = transactionList, last_page }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
