@@ -1306,8 +1306,8 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
             }
             else
             {
-                column = "created_at";
-                dir = "desc";
+                column = "cast(BOOKING_DATE as datetime)";
+                dir = "asc";
             }
 
             List<string> applyFilter = new List<string>();
@@ -1332,6 +1332,8 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                 }
             }
 
+            applyFilter.Add($"cast(FROM_TIME as datetime) >= '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'");
+
             string applyFilterQuery = string.Join(" and ", applyFilter);
             applyFilterQuery = applyFilterQuery.TrimEnd("and ".ToCharArray());
 
@@ -1339,23 +1341,27 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
             int PageNumber = data.page > 0 ? data.page : 1;
 
             string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
-                                    SELECT [Id]
-                                          ,[created_at]
-                                          ,[updated_at]
-                                          ,[created_by]
-                                          ,[updated_by]
-                                          ,[COMPANY_CODE]
-                                          ,[CALENDAR_CODE]
+                                    
+                                         SELECT booking.[Id]
+                                          ,booking.[created_at]
+                                          ,booking.[updated_at]
+                                          ,booking.[created_by]
+                                          ,booking.[updated_by]
+                                          ,booking.[COMPANY_CODE]
+                                          ,booking.[CALENDAR_CODE]
+										  , (select SERVICE_NAME from SERVICE_MASTER_1933 where Id = (select t_ref.referrenceId from form_calenderreferrence t_ref where formgroupKey = cf.formGroupKey and t_ref.referrenceFormId = '2303')) as 'SERVICE_NAME'
+										  , (select FIRST_NAME from SERVICE_PROVIDER_MASTER_1934 where Id = (select t_ref.referrenceId from form_calenderreferrence t_ref where formgroupKey = cf.formGroupKey and t_ref.referrenceFormId = '2304')) as 'SERVICE_PROVIDER'
+										  , (select LOCATION_ADDRESS from LOCATION_MASTER_1936 where Id = (select t_ref.referrenceId from form_calenderreferrence t_ref where formgroupKey = cf.formGroupKey and t_ref.referrenceFormId = '2306')) as 'LOCATION_NAME'
                                           ,[BOOKING_DATE]
-                                          ,[SERVICE_NAME]
-                                          ,[SERVICE_PROVIDER]
                                           ,[CLIENT_NAME]
                                           ,[FROM_TIME]
                                           ,[TO_TIME]
                                           ,[EVENT_ID]
-                                      FROM [dbo].[COMPANY_UPCOMING_BOOKINGS_1945] booking where COMPANY_CODE = '{CompanyCode}' and CALENDAR_CODE = '{CalendarCode}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+                                      FROM [dbo].[COMPANY_UPCOMING_BOOKINGS_1945] booking 
+									  join CALENDAR_FORM_1935 cf on cf.Id = booking.EVENT_ID
+									  where booking.COMPANY_CODE = 'CMP00079' and booking.CALENDAR_CODE = 'CLR00101'
                                     )
-                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata {(!string.IsNullOrEmpty(applyFilterQuery) ? " where " + applyFilterQuery : "")} ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
             var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
             if (result.Count > 0)
