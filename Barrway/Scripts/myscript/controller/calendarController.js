@@ -18172,7 +18172,7 @@
                 Country_Code: $("#countryCode").val(),
                 USER_PHONE: $("#USER_PHONE").val(),
                 GENDER: $("input[name=gender-selector]:checked").val(),
-                DATE_OF_BIRTH: $("#DATE_OF_BIRTH").val(),
+                DATE_OF_BIRTH: moment($("#DATE_OF_BIRTH").val(), "DD-MM-YYYY").format("YYYY-MM-DD"),
             }
 
             if (validateMyProfileForm(postData)) {

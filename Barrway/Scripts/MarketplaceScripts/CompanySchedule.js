@@ -3680,7 +3680,14 @@ function GetAdvancaePopupForMasterData(formid,title) {
                                     } else if (y.name.includes("NAME") || y.name.includes("LOCATION_ADDRESS")) {
                                         modalContent += `<p><b>${x[y.name]}</b></p>`;
                                     } else {
-                                        modalContent += `<p>${x[y.name]} </p>`;
+                                        if (y.name == "DURATION_FIELD") {
+                                            modalContent += `<p>Duration: ${x[y.name]} mins</p>`;
+                                        } else if (y.name == "fees_1") {
+                                            modalContent += `<p>Fees: ${x[y.name]} HKD</p>`;
+                                        } else {
+                                            modalContent += `<p>${x[y.name]} </p>`;
+                                        }
+                                        
                                     }
                                 }
                                 

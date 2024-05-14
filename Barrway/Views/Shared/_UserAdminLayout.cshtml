@@ -516,13 +516,34 @@
             <div class="navbar-nav-wrap-content-end desktop-none">
                 <!-- Navbar -->
                 <ul class="navbar-nav">
-
+                    @{
+                        string userabbr = "";
+                        if (!string.IsNullOrEmpty(UserIdentity.UserFirstName))
+                        {
+                            userabbr = UserIdentity.UserFirstName[0].ToString();
+                            if (!string.IsNullOrEmpty(UserIdentity.UserLastName))
+                            {
+                                userabbr += UserIdentity.UserLastName[0];
+                            }
+                        }
+                        else
+                        {
+                            userabbr = UserIdentity.UserName[0].ToString();
+                        }
+                    }
                     <li class="nav-item">
                         <!-- Account -->
                         <div class="dropdown">
                             <a class="navbar-dropdown-account-wrapper" href="javascript:;" id="accountNavbarDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" data-bs-dropdown-animation="">
-                                <div class="avatar avatar-sm avatar-circle">
-                                    <img class="avatar-img layout-user-image" onerror="this.src='assets/img/160x160/img6.jpg'" alt="TL">
+                                <div class="avatar avatar-sm avatar-circle" style="background-color: #ed4c78; color: white; font-size: 18px; font-weight: 600; text-align: center;">
+                                    @if (string.IsNullOrEmpty(ViewBag.ProfilePic))
+                                    {
+                                        <label style="margin-top: 6px;">@userabbr</label>
+                                    }
+                                    else
+                                    {
+                                        <img class="avatar-img layout-user-image" style="min-width:40px;" onerror="$(this).hide()" alt="TL">
+                                    }
                                     <span class="avatar-status avatar-sm-status avatar-status-success"></span>
                                 </div>
                             </a>
@@ -530,8 +551,17 @@
                             <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-account" aria-labelledby="accountNavbarDropdown" style="width: auto;">
                                 <div class="dropdown-item-text">
                                     <div class="d-flex align-items-center">
-                                        <div class="avatar avatar-sm avatar-circle">
-                                            <img class="avatar-img layout-user-image" style="min-width:40px;" onerror="this.src='assets/img/160x160/img6.jpg'" alt="TL">
+                                        <div class="avatar avatar-sm avatar-circle" style="background-color: #ed4c78; color: white; font-size: 18px; font-weight: 600; text-align: center;">
+
+                                            @if (string.IsNullOrEmpty(ViewBag.ProfilePic))
+                                            {
+                                                <label style="margin-top: 6px;">@userabbr</label>
+                                            }
+                                            else
+                                            {
+                                                <img class="avatar-img layout-user-image" style="min-width:40px;" onerror="$(this).hide()" alt="TL">
+                                            }
+
                                         </div>
                                         <div class="flex-grow-1 ms-3" style="overflow-wrap: break-word;">
                                             <h5 class="mb-0"><span class="layout-first-name"></span> <span class="layout-last-name"></span></h5>
@@ -660,8 +690,15 @@
                         <!-- Account -->
                         <div class="dropdown">
                             <a class="navbar-dropdown-account-wrapper" href="javascript:;" id="accountNavbarDropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" data-bs-dropdown-animation="">
-                                <div class="avatar avatar-sm avatar-circle">
-                                    <img class="avatar-img layout-user-image" onerror="this.src='assets/img/160x160/img6.jpg'" alt="TL">
+                                <div class="avatar avatar-sm avatar-circle" style="background-color: #ed4c78; color: white; font-size: 18px; font-weight: 600; text-align: center;">
+                                    @if (string.IsNullOrEmpty(ViewBag.ProfilePic))
+                                    {
+                                        <label style="margin-top: 6px;">@userabbr</label>
+                                    }
+                                    else
+                                    {
+                                        <img class="avatar-img layout-user-image" style="min-width:40px;" onerror="$(this).hide()" alt="TL">
+                                    }
                                     <span class="avatar-status avatar-sm-status avatar-status-success"></span>
                                 </div>
                             </a>
@@ -669,8 +706,15 @@
                             <div class="dropdown-menu dropdown-menu-end navbar-dropdown-menu navbar-dropdown-menu-borderless navbar-dropdown-account" aria-labelledby="accountNavbarDropdown" style="width: auto;">
                                 <div class="dropdown-item-text">
                                     <div class="d-flex align-items-center">
-                                        <div class="avatar avatar-sm avatar-circle">
-                                            <img class="avatar-img layout-user-image" style="min-width:40px;" onerror="this.src='assets/img/160x160/img6.jpg'" alt="TL">
+                                        <div class="avatar avatar-sm avatar-circle" style="background-color: #ed4c78; color: white; font-size: 18px; font-weight: 600; text-align: center;">
+                                            @if (string.IsNullOrEmpty(ViewBag.ProfilePic))
+                                            {
+                                                <label style="margin-top: 6px;">@userabbr</label>
+                                            }
+                                            else
+                                            {
+                                                <img class="avatar-img layout-user-image" style="min-width:40px;" onerror="$(this).hide()" alt="TL">
+                                            }
                                         </div>
                                         <div class="flex-grow-1 ms-3" style="overflow-wrap: break-word;">
                                             <h5 class="mb-0"><span class="layout-first-name"></span> <span class="layout-last-name"></span></h5>

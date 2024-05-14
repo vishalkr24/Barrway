@@ -47,6 +47,13 @@ namespace Barrway.Controllers
         // GET: UserAdmin
         public async Task<ActionResult> Index()
         {
+            var userData = (await publicUserService.GetSinglePublicUserAccount(User.Identity.Name)).Data as IDictionary<string, object>;
+
+            if (userData != null)
+            {
+                ViewBag.ProfilePic = userData["PROFILE_PHOTO_PATH"]?.ToString();
+            }
+
             return View();
         }
 
