@@ -34485,7 +34485,17 @@ li.nav-item .dropdown a:hover .bi-grid-3x3-gap-fill {
                 padding: 10px 30px;
             }
 
-
+@media screen and (max-width:767px) {
+    .main-right .top {
+        width: 100%;
+        float: left;
+        display: flex;
+        justify-content: space-between;
+    }
+    .top span:last-child button {
+        padding: 6px 24px;
+    }
+}
 /*======================================== business profile ==============================================*/
 .form-inner {
     max-width: 50%;
