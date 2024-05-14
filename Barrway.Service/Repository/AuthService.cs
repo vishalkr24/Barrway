@@ -236,7 +236,7 @@ namespace Barrway.Service.Repository
                 }
                 else
                 {
-                    return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Invalid Email" };
+                    return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Invalid Phone number !" };
                 }
             }
             catch (Exception ex)
