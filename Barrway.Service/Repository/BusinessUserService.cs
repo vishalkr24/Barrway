@@ -1290,12 +1290,13 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
         public async Task<AddUpdateDelete> GetCalendarUpcomingBookings(GenerateDynamicFormData data, string CompanyCode, string CalendarCode)
         {
             Dictionary<string, string> filters = new Dictionary<string, string>() {
-                    { "BOOKING_DATE","company.BOOKING_DATE"},
-                    { "SERVICE_NAME","company.SERVICE_NAME"},
-                    { "SERVICE_PROVIDER","calendar.SERVICE_PROVIDER"},
-                    { "CLIENT_NAME","category.CLIENT_NAME"},
-                    { "FROM_TIME","calendar.FROM_TIME"},
-                    { "TO_TIME","calendar.TO_TIME"},
+                    { "BOOKING_DATE","BOOKING_DATE"},
+                    { "SERVICE_NAME","SERVICE_NAME"},
+                    { "SERVICE_PROVIDER","SERVICE_PROVIDER"},
+                    { "LOCATION_NAME","LOCATION_NAME"},
+                    { "CLIENT_NAME","CLIENT_NAME"},
+                    { "FROM_TIME","FROM_TIME"},
+                    { "TO_TIME","TO_TIME"},
             };
 
             string column = "", dir = "";
@@ -1306,8 +1307,8 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
             }
             else
             {
-                column = "created_at";
-                dir = "desc";
+                column = "cast(BOOKING_DATE as datetime)";
+                dir = "asc";
             }
 
             List<string> applyFilter = new List<string>();
@@ -1332,6 +1333,8 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                 }
             }
 
+            applyFilter.Add($"cast(FROM_TIME as datetime) >= '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'");
+
             string applyFilterQuery = string.Join(" and ", applyFilter);
             applyFilterQuery = applyFilterQuery.TrimEnd("and ".ToCharArray());
 
@@ -1339,23 +1342,27 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
             int PageNumber = data.page > 0 ? data.page : 1;
 
             string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
-                                    SELECT [Id]
-                                          ,[created_at]
-                                          ,[updated_at]
-                                          ,[created_by]
-                                          ,[updated_by]
-                                          ,[COMPANY_CODE]
-                                          ,[CALENDAR_CODE]
+                                    
+                                         SELECT booking.[Id]
+                                          ,booking.[created_at]
+                                          ,booking.[updated_at]
+                                          ,booking.[created_by]
+                                          ,booking.[updated_by]
+                                          ,booking.[COMPANY_CODE]
+                                          ,booking.[CALENDAR_CODE]
+										  , (select SERVICE_NAME from SERVICE_MASTER_1933 where Id = (select t_ref.referrenceId from form_calenderreferrence t_ref where formgroupKey = cf.formGroupKey and t_ref.referrenceFormId = '2303')) as 'SERVICE_NAME'
+										  , (select FIRST_NAME from SERVICE_PROVIDER_MASTER_1934 where Id = (select t_ref.referrenceId from form_calenderreferrence t_ref where formgroupKey = cf.formGroupKey and t_ref.referrenceFormId = '2304')) as 'SERVICE_PROVIDER'
+										  , (select LOCATION_ADDRESS from LOCATION_MASTER_1936 where Id = (select t_ref.referrenceId from form_calenderreferrence t_ref where formgroupKey = cf.formGroupKey and t_ref.referrenceFormId = '2306')) as 'LOCATION_NAME'
                                           ,[BOOKING_DATE]
-                                          ,[SERVICE_NAME]
-                                          ,[SERVICE_PROVIDER]
-                                          ,[CLIENT_NAME]
+                                          ,(select p.STUDENT_NAME from PARTICIPANT_MASTER_1940 p where p.Id = cast(booking.CLIENT_NAME as int)) as CLIENT_NAME
                                           ,[FROM_TIME]
                                           ,[TO_TIME]
                                           ,[EVENT_ID]
-                                      FROM [dbo].[COMPANY_UPCOMING_BOOKINGS_1945] booking where COMPANY_CODE = '{CompanyCode}' and CALENDAR_CODE = '{CalendarCode}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+                                      FROM [dbo].[COMPANY_UPCOMING_BOOKINGS_1945] booking 
+									  join CALENDAR_FORM_1935 cf on cf.Id = booking.EVENT_ID
+									  where booking.COMPANY_CODE = 'CMP00079' and booking.CALENDAR_CODE = 'CLR00101'
                                     )
-                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+                                    Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata {(!string.IsNullOrEmpty(applyFilterQuery) ? " where " + applyFilterQuery : "")} ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
             var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
             if (result.Count > 0)
@@ -1782,13 +1789,13 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                 if (!string.IsNullOrEmpty(model.COMPANY_LOGO_PATH))
                 {
                     LogoUpdateQuery = $@",[COMPANY_LOGO_NAME] = N'{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_LOGO_NAME)}'
-                                            ,[COMPANY_LOGO_PATH] = N'{model.COMPANY_LOGO_PATH}'";
+                                            ,[COMPANY_LOGO_PATH] = N'{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_LOGO_PATH)}'";
                 }
 
                 if (!string.IsNullOrEmpty(model.COMPANY_BANNER_PATH))
                 {
                     BannerUpdateQuery = $@",[COMPANY_BANNER_NAME] = N'{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_BANNER_NAME)}'
-                                            ,[COMPANY_BANNER_PATH] = N'{model.COMPANY_BANNER_PATH}'";
+                                            ,[COMPANY_BANNER_PATH] = N'{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_BANNER_PATH)}'";
                 }
 
                 string query = $@"UPDATE [dbo].[BUSINESS_COMPANY_MASTER_1924] SET 
@@ -1908,7 +1915,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
         public async Task<AddUpdateDelete> UpdateCompanyService(BusinessCompanyModel model)
         {
 
-            string query = $@"UPDATE BUSINESS_COMPANY_MASTER_1924 SET COMPANY_SERVICE = N'{model.COMPANY_SERVICE.Replace("'", "''")}' WHERE Id = '{model.Id}'";
+            string query = $@"UPDATE BUSINESS_COMPANY_MASTER_1924 SET COMPANY_SERVICE = N'{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_SERVICE)}' WHERE Id = '{model.Id}'";
 
             int result = await sqlFunction.ExecuteSqlCommandQuery(query);
 
@@ -2447,6 +2454,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                                       ,[DEFAULT_RESOURCE] = '{model.DEFAULT_RESOURCE}'
                                       ,[DEFAULT_DATE] = '{model.DEFAULT_DATE}'
                                       ,[NEED_ADDITIONAL_FORM] = '{model.NEED_ADDITIONAL_FORM}'
+                                      ,[ALLOW_OVERLAP] = '{model.ALLOW_OVERLAP}'
                                       ,[DEFAULT_CALENDAR_VIEW] = '{model.DEFAULT_CALENDAR_VIEW}'
                                       ,[REQUIRED_CALENDAR_VIEWS] = '{model.REQUIRED_CALENDAR_VIEWS}'
                                       ,[COMPANY_CODE] = '{SQLUtility.TreatSingleQuoteForQuery(model.COMPANY_CODE)}'
@@ -2739,7 +2747,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                 string query = $@"UPDATE [dbo].[SCHEDULAR_FORM_1941] 
                                   SET 
                                            [updated_at] = getdate()
-                                          ,[SCH__NAME] = '{model.SCH__NAME}'
+                                          ,[SCH__NAME] = '{SQLUtility.TreatSingleQuoteForQuery(model.SCH__NAME)}'
                                           ,[SCH_LOCATION] = '{model.SCH_LOCATION}'
                                           ,[SCH_ACTIVITY] = '{model.SCH_ACTIVITY}'
                                           ,[SCH_RESOURCE] = '{model.SCH_RESOURCE}'
@@ -2912,7 +2920,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                     query += $@"UPDATE [dbo].[QUEUE_MASTER_1973]
                                    SET [QUEUE_BY] = N'{model[i].QUEUE_BY}'
                                       ,[QUEUE_RESOURCE_ID] = '{model[i].QUEUE_RESOURCE_ID}'
-                                      ,[QUEUE_NAME] = N'{model[i].QUEUE_NAME}'
+                                      ,[QUEUE_NAME] = N'{SQLUtility.TreatSingleQuoteForQuery(model[i].QUEUE_NAME)}'
                                       ,[QUEUE_USAGE] = N'{model[i].QUEUE_USAGE}'
                                       ,[QUEUE_PREFIX] = N'{model[i].QUEUE_PREFIX}'
                                       ,[ACCEPT_TICKET] = N'{model[i].ACCEPT_TICKET}'
@@ -2948,7 +2956,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                 for (int i = 0; i < model.Count; i++)
                 {
                     query += $@"UPDATE [dbo].[QUEUE_MASTER_1973]
-                                   SET [SESSION_NAME] = {model[i].SESSION_NAME}
+                                   SET [SESSION_NAME] = {SQLUtility.TreatSingleQuoteForQuery(model[i].SESSION_NAME)}
                                   ,[SESSION_START_TIME] ={model[i].SESSION_START_TIME}
                                   ,[SESSION_END_TIME] = {model[i].SESSION_END_TIME}
                                   ,[TICKETING_TYPE] = {model[i].TICKETING_TYPE}
@@ -3124,7 +3132,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
             timeB.end = Convert.ToDateTime(timeB.end).ToShortTimeString();
 
             // case 1
-            if (Convert.ToDateTime(timeA.start) <= Convert.ToDateTime(timeB.start) && Convert.ToDateTime(timeA.end) <= Convert.ToDateTime(timeB.end))
+            if (Convert.ToDateTime(timeA.start) <= Convert.ToDateTime(timeB.start) && (Convert.ToDateTime(timeA.end) <= Convert.ToDateTime(timeB.end) && Convert.ToDateTime(timeA.end) >= Convert.ToDateTime(timeB.start)))
             {
                 testResult = false;
             }
@@ -3136,7 +3144,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
             }
 
             // case 3
-            if (Convert.ToDateTime(timeA.start) <= Convert.ToDateTime(timeB.end) && Convert.ToDateTime(timeA.end) >= Convert.ToDateTime(timeB.end))
+            if ((Convert.ToDateTime(timeA.start) >= Convert.ToDateTime(timeB.start) && Convert.ToDateTime(timeA.start) <= Convert.ToDateTime(timeB.end)) && Convert.ToDateTime(timeA.end) >= Convert.ToDateTime(timeB.end))
             {
                 testResult = false;
             }
@@ -3491,7 +3499,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
         {
             try
             {
-                string sqlString = $@"update CALENDAR_FORM_1935 set DOWNLOAD_FILE_LIST=N'{download_file_list}',DOWNLOADABLE_ATTACHMENT=N'{downloadable_attachment}' where Id=" + eventId;
+                string sqlString = $@"update CALENDAR_FORM_1935 set DOWNLOAD_FILE_LIST=N'{SQLUtility.TreatSingleQuoteForQuery(download_file_list)}',DOWNLOADABLE_ATTACHMENT=N'{SQLUtility.TreatSingleQuoteForQuery(downloadable_attachment)}' where Id=" + eventId;
 
 
                 var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
@@ -3516,7 +3524,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
         {
             try
             {
-                string sqlString = $@"update TRANSACTION_MASTER_1942 set ASSESSMENT_FILES_LIST=N'{download_file_list}',ASSESSMENT_FILES=N'{downloadable_attachment}' where Id=" + transactionId;
+                string sqlString = $@"update TRANSACTION_MASTER_1942 set ASSESSMENT_FILES_LIST=N'{SQLUtility.TreatSingleQuoteForQuery(download_file_list)}',ASSESSMENT_FILES=N'{SQLUtility.TreatSingleQuoteForQuery(downloadable_attachment)}' where Id=" + transactionId;
 
 
                 var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
@@ -3542,7 +3550,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                 string updateKeys = "";
                 data.Keys.ToList().ForEach(key =>
                 {
-                    updateKeys += $" [{key}]=N'{data[key]}', ";
+                    updateKeys += $" [{key}]=N'{SQLUtility.TreatSingleQuoteForQuery(data[key]?.ToString())}', ";
                 });
                 updateKeys = updateKeys.TrimEnd(", ".ToCharArray());
                 string sqlString = $@"update CALENDAR_FORM_1935 set {updateKeys} where Id=" + eventId;
@@ -3566,8 +3574,8 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
         {
             try
             {
-                string sqlString = $@"update CALENDAR_FORM_1935 set DOWNLOADABLE_ATTACHMENT=N'{schedularForm.DOWNLOADABLE_ATTACHMENT}',
-                                    DOWNLOAD_FILE_LIST=N'{schedularForm.DOWNLOAD_FILE_LIST}',IS_UPLOAD_REQUIRED=N'{schedularForm.IS_UPLOAD_REQUIRED}',
+                string sqlString = $@"update CALENDAR_FORM_1935 set DOWNLOADABLE_ATTACHMENT=N'{SQLUtility.TreatSingleQuoteForQuery(schedularForm.DOWNLOADABLE_ATTACHMENT)}',
+                                    DOWNLOAD_FILE_LIST=N'{SQLUtility.TreatSingleQuoteForQuery(schedularForm.DOWNLOAD_FILE_LIST)}',IS_UPLOAD_REQUIRED=N'{schedularForm.IS_UPLOAD_REQUIRED}',
                                     UPLOAD_TIME=N'{schedularForm.UPLOAD_TIME}' where SCHEDULAR_FORM_ID='{schedularId}'";
 
 

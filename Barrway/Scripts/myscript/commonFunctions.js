@@ -15614,13 +15614,13 @@ function addNewColumns(formid, columns) {
         columns.unshift({
             title: "COMPANY NAME", formatter: function (cell, formatter) {
                 return cell.getData().COMPANY_NAME_ENGLISH
-            }, frozen: true
+            }, frozen: true, headerSort: false
         });
 
         columns.unshift({
             title: "CALENDAR NAME", formatter: function (cell, formatter) {
                 return cell.getData().CALENDAR_NAME
-            }, frozen: true
+            }, frozen: true, headerSort: false
         });
     }
 

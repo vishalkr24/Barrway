@@ -92,6 +92,7 @@
         #vertical-resource-view .fc-view-container {
             overflow-x: scroll;
         }
+       
         /*   div#agenda-view .fc-view-container {
             height: auto !important;
         }*/
@@ -817,6 +818,9 @@
             .fc-toolbar .fc-center {
                 display: grid;
             }
+            #vertical-resource-view .fc-scroller.fc-time-grid-container {
+                height: auto !important;
+            }
         }
 
         @@media only screen and (min-width:400px) and (max-width:500px) {
@@ -1174,7 +1178,8 @@
 
                     <div class="div-flex div-list">
                         <button type="button" class="btn btn-secondary" style="margin-top: 12px;" data-bs-dismiss="modal" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary public-primary" style="margin-top: 12px;" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'N'" ng-click="enrollPublicUser()">Enroll</button>
+                        <button type="button" class="btn btn-primary public-primary" style="margin-top: 12px;" ng-if="selectEventDetails.OverlapBookingFlag == 'Y' && selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'N'" ng-click="enrollPublicUser()">Enroll</button>
+                        <label class="btn btn-primary public-primary" style="margin-top:12px;" ng-if="selectEventDetails.OverlapBookingFlag == 'N' && selectEventDetails.IsAlreadyBooked == 'N'">You can't book this session</label>
                         <button type="button" class="btn btn-primary public-primary" style="margin-top: 12px;" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IsReviewable == 'N'" ng-click="cancelPublicUserBooking()">Cancel Booking</button>
                         <button type="button" class="btn btn-primary public-primary" style="margin-top: 12px;" ng-if="!selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IsReviewable == 'Y'" ng-click="reviewSession()">Review Session</button>
                         <button class="btn btn-danger public-primary" ng-if="selectEventDetails.ATTEND == 'Y'" style="margin-top: 12px;" ng-click="AttendSession(selectEventDetails.Id, 'NORMAL')">Attend</button>
@@ -1329,7 +1334,7 @@
                 </div>
                 <div class="modal-body pt-0">
                     <div>
-                        <label class="lbl-already-booked" ng-if="courseEventsList[0].Value[0].IsBooked == 'Y'">You have already booked this course!</label>
+                        <label class="lbl-already-booked" ng-if="courseEventsList[(courseEventsList.length-1)].Value[0].IsBooked == 'Y'">You have already booked this course!</label>
                     </div>
                     <div class="event-detail div-flex">
                         <div class="div-flex">
@@ -1440,7 +1445,7 @@
                     <br />
                     <div class="div-flex div-list">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary public-primary" ng-if="courseEventsList[0].Value[0].IsBooked == 'N'" ng-click="enrollCourse()">Buy Course</button>
+                        <button type="button" class="btn btn-primary public-primary" ng-if="courseEventsList[(courseEventsList.length-1)].Value[0].IsBooked == 'N'" ng-click="enrollCourse()">Buy Course</button>
                     </div>
                 </div>
                 @*<div class="modal-footer">
@@ -2055,6 +2060,7 @@
                                                     },
                                                     success: function (response) {
                                                         if (response.Status) {
+                                                            debugger;
                                                             var obj = {
                                                                 USER_ID: "",
                                                                 RESOURCE_NAME: eventData.customTitleSplit[0],
@@ -2175,7 +2181,6 @@
                             ACTIVITY_NAME: eventData.customTitleSplit[1],
                             FormGroupKey: $scope.selectEventDetails.formGroupKey,
                             participant: {
-                                DESCRIPTION: String(eventData.description),
                                 COMPANY_CODE: eventData.COMPANY_CODE,
                                 CALENDAR_CODE: eventData.CALENDAR_CODE
                             },
@@ -2308,7 +2313,7 @@
                                 })
 
                                 dataModelList.forEach(x => {
-                                    if (x.name == "COMPANY_CODE" || x.name == "CALENDAR_CODE") {
+                                    if (x.name == "COMPANY_CODE" || x.name == "CALENDAR_CODE" || x.name == "RECORD_ID") {
                                         //$("#service-div #service-elem-" + dataModel.Id + " .row ").
                                         $(`#service-div .border-${x.name}`).hide();
                                     } else {

@@ -27,8 +27,6 @@ $(document).ready(async function () {
     var formdetail = await getFormDetails();
     formDetailsDataInfo = formdetail[0];
 
-
-
     var formFields = [];
     var formData = JSON.parse(formDetailsDataInfo.fields);
     _.map(formData, function (pagesData, key) {
@@ -650,7 +648,8 @@ var manageWindowParams = function () {
                 resources: event.resources,
                 activities: event.activities,
                 activityName: event.activityName,
-                formGroupKey: event.formGroupKey
+                formGroupKey: event.formGroupKey,
+                IsAlreadyBooked: event.IsAlreadyBooked
             };
             eventData.title = _tempTitle;
             eventData.Images = event.files;
@@ -1091,6 +1090,12 @@ var manageWindowParams = function () {
                         borderRadius: 3,
                     }));
                 }
+                //IsAlreadyBooked
+                //outline: 2px solid #3FBFC7;
+                if (eventData.IsAlreadyBooked && eventData.IsAlreadyBooked == 'Y' && current_tab !='agenda-view') {
+                    element.css({ "outline": "2px solid #3FBFC7", "background": "#3FBFC7" });
+                    element.find(".fc-content").css({"background": "#3FBFC7" });
+                }
                 
             }
 
@@ -1411,6 +1416,7 @@ var manageWindowParams = function () {
             param.filter.field = "start";
             param.COMPANY_CODE = COMPANY_CODE;
             param.CALENDAR_CODE = CALENDAR_CODE;
+            param.NotIncludeOtherForm = true;
             if (is5CType) {
                 param.IsListView = true;
                 param.startDate = moment(start).format("YYYY-MM-DD");
@@ -1546,11 +1552,10 @@ var manageWindowParams = function () {
             param.filter.field = "start";
             param.COMPANY_CODE = COMPANY_CODE;
             param.CALENDAR_CODE = CALENDAR_CODE;
+            param.NotIncludeOtherForm = true;
             if ($(".calendar-service-Location option:selected").val() != "" && $(".calendar-service-Location option:selected").val() != "0") {
                 param.filter.value += " and resources = '" + $(".calendar-service-Location option:selected").val() + "' ";
             }
-
-            console.log(param.filter);
 
             $.ajax({
                 method: 'POST',
@@ -1786,6 +1791,7 @@ var manageWindowParams = function () {
             param.filter.field = "start";
             param.COMPANY_CODE = COMPANY_CODE;
             param.CALENDAR_CODE = CALENDAR_CODE;
+            param.NotIncludeOtherForm = true;
             if ($(".calendar-service-Location option:selected").val() != "" && $(".calendar-service-Location option:selected").val() != "0") {
                 param.filter.value += " and resources = '" + $(".calendar-service-Location option:selected").val() + "' ";
             }
@@ -2075,6 +2081,7 @@ var manageWindowParams = function () {
             param.filter.field = "start";
             param.COMPANY_CODE = COMPANY_CODE;
             param.CALENDAR_CODE = CALENDAR_CODE;
+            param.NotIncludeOtherForm = true;
             $.ajax({
                 method: 'POST',
                 url: BASE_URL + "/FormAPI/getReferralFormFields",
@@ -2775,7 +2782,8 @@ async function rendarPopupCalendar(assignDate) {
                 activityName: event.activityName,
                 formGroupKey: event.formGroupKey,
                 EVENT_TYPE: event.EVENT_TYPE,
-                IS_PUBLIC_USER_EVENT: event.IS_PUBLIC_USER_EVENT
+                IS_PUBLIC_USER_EVENT: event.IS_PUBLIC_USER_EVENT,
+                OverlapBookingFlag: event.OverlapBookingFlag
             };
             eventData.title = _tempTitle;
             eventData.Images = event.files;
@@ -3049,7 +3057,12 @@ async function rendarPopupCalendar(assignDate) {
                 console.log(agendaTempHtml);
             } else {
                 if (eventData.EVENT_TYPE == "SCHEDULE" && !eventData.IS_PUBLIC_USER_EVENT) {
-                    element.addClass("available-fc-bgevent");
+                    if (eventData.OverlapBookingFlag == "Y") {
+                        element.addClass("available-fc-bgevent");
+                    } else {
+                        element.addClass("booking-fc-bgevent");
+                    }
+                    
                 } else if (eventData.EVENT_TYPE == "BOOKING" && !eventData.IS_PUBLIC_USER_EVENT) {
                     element.addClass("booking-fc-bgevent");
                 } else {
@@ -3144,8 +3157,7 @@ async function rendarPopupCalendar(assignDate) {
             param.CALENDAR_CODE = CALENDAR_CODE;
             param.resourceId = $scopeVar.selectEventDetails.resourceId;
             param.resourceFormId = resourceFormId;
-
-
+            param.NotIncludeOtherForm = true;
 
 
             var postUrl = BASE_URL + "/FormAPI/getReferralFormFieldsService";

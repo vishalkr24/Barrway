@@ -77,6 +77,10 @@
             display: block;
         }
 
+        .m-none {
+            display: block !important;
+        }
+
         .mob-view .open > a, .mob-view .open > a:focus, .mob-view .open > a:hover {
             border-radius: 50px;
             border: none;
@@ -99,15 +103,18 @@
                 top: 4px;
                 position: relative;
             }
-        }
 
-        .m-none {
-            display: none;
-        }
+            .m-none {
+                display: none !important;
+            }
 
-        .nmbrm li .dropdown-menu {
-            left: -116px;
-        }
+            .d-view {
+                display: none;
+            }
+
+            .nmbrm li .dropdown-menu {
+                left: -116px;
+            }
         }
     </style>
 </head>
@@ -126,34 +133,38 @@
 
                             @if (User.Identity.IsAuthenticated)
                             {
-                                
-                                    string userabbr = "";
-                                    if (!string.IsNullOrEmpty(UserIdentity.UserFirstName))
-                                    {
-                                        userabbr = UserIdentity.UserFirstName[0].ToString();
-                                        if (!string.IsNullOrEmpty(UserIdentity.UserLastName))
-                                        {
-                                            userabbr += UserIdentity.UserLastName[0];
-                                        }
-                                    }
-                                    else
-                                    {
-                                        userabbr = UserIdentity.UserName[0].ToString();
-                                    }
 
-                                    @*<a href="/Useradmin#/myprofile" id="nav-user-icon" style="text-transform:uppercase;">@userabbr </a>*@
-                                   <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">@userabbr</a>
+                                string userabbr = "";
+                                if (!string.IsNullOrEmpty(UserIdentity.UserFirstName))
+                                {
+                                    userabbr = UserIdentity.UserFirstName[0].ToString();
+                                    if (!string.IsNullOrEmpty(UserIdentity.UserLastName))
+                                    {
+                                        userabbr += UserIdentity.UserLastName[0];
+                                    }
+                                }
+                                else
+                                {
+                                    userabbr = UserIdentity.UserName[0].ToString();
+                                }
+
+
+
+                                @*<a href="/Useradmin#/myprofile" id="nav-user-icon" style="text-transform:uppercase;">@userabbr </a>*@
+                                if (!string.IsNullOrEmpty(ViewBag.ProfilePic))
+                                {
+                                    <img src="@ViewBag.ProfilePic.Replace("~", "")" onclick="window.location.href = '/Useradmin#/myprofile'" onerror="this.src='/assets/img/160x160/img6.jpg'" style="width: 40px; height: 40px; border-radius: 50px;">
+                                }
+                                else
+                                {
+                                    <a class="dropdown-toggle" href="/Useradmin#/myprofile">@userabbr</a>
+                                }
+
                             }
                             else
                             {
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="/Account/BusinessLogin">B</a>
+                                <a class="dropdown-toggle" href="/Account/BusinessLogin">B</a>
                             }
-
-
-                            <ul class="dropdown-menu">
-                                <li><a href="/Account/BusinessSignup">@Resource.Register</a></li>
-                                <li><a href="/Account/BusinessLogin">@Resource.Login</a></li>
-                            </ul>
                         </li>
                     </ul>
                     <button type="button" class="navbar-toggle secondry-nav collapsed" data-toggle="collapse" data-target="#secondry-nav">
@@ -182,23 +193,31 @@
 
                         @*<li id="nv-company-photo-album"><a href="/Marketplace/CompanyPhotoAlbum?CompanyCode=@ViewBag.COMPANY_ID&CalendarCode=@ViewBag.CALENDAR_ID">@Resource.Photo_album</a></li>*@
                         <li id="nv-company-photo-album"><a href="/company/gallery/@ViewBag.COMPANY_ID/@ViewBag.CALENDAR_ID">@Resource.Photo_album</a></li>
-                        <li class="no-mar-bott-rl m-none d-view">
+                        <li class="no-mar-bott-rl m-none">
                             @if (User.Identity.IsAuthenticated)
                             {
-                                    string userabbr = "";
-                                    if (!string.IsNullOrEmpty(UserIdentity.UserFirstName))
+                                string userabbr = "";
+                                if (!string.IsNullOrEmpty(UserIdentity.UserFirstName))
+                                {
+                                    userabbr = UserIdentity.UserFirstName[0].ToString();
+                                    if (!string.IsNullOrEmpty(UserIdentity.UserLastName))
                                     {
-                                        userabbr = UserIdentity.UserFirstName[0].ToString();
-                                        if (!string.IsNullOrEmpty(UserIdentity.UserLastName))
-                                        {
-                                            userabbr += UserIdentity.UserLastName[0];
-                                        }
+                                        userabbr += UserIdentity.UserLastName[0];
                                     }
-                                    else
-                                    {
-                                        userabbr = UserIdentity.UserName[0].ToString();
-                                    }
-                                    <a href="/Useradmin#/myprofile" id="nav-user-icon" style="text-transform:uppercase;">@userabbr </a>
+                                }
+                                else
+                                {
+                                    userabbr = UserIdentity.UserName[0].ToString();
+                                }
+                                if (!string.IsNullOrEmpty(ViewBag.ProfilePic))
+                                {
+                                    <img src="@ViewBag.ProfilePic.Replace("~", "")" onclick="window.location.href = '/Useradmin#/myprofile'" onerror="this.src='/assets/img/160x160/img6.jpg'" style="width: 40px; height: 40px; border-radius: 50px;">
+                                }
+                                else
+                                {
+                                    <a class="dropdown-toggle" href="/Useradmin#/myprofile">@userabbr</a>
+                                }
+
                             }
                             else
                             {

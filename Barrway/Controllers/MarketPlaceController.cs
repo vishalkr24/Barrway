@@ -427,6 +427,13 @@ namespace Barrway.Controllers
                 else if (!string.IsNullOrEmpty(companyModel.TAGS)) {
                     companyModel.TAGs= new List<TagsObject>() { new TagsObject() { value = companyModel.TAGS } };
                 }
+
+                var userData = (await publicUserService.GetSinglePublicUserAccount(User.Identity.Name)).Data as IDictionary<string, object>;
+                if (userData != null)
+                {
+                    ViewBag.ProfilePic = userData["PROFILE_PHOTO_PATH"]?.ToString();
+                }
+
                 ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
                 if (!string.IsNullOrEmpty(companyModel.IS_TEMPLATE))
                 {
@@ -475,6 +482,13 @@ namespace Barrway.Controllers
                 var servilcesEncrypted = JsonConvert.SerializeObject(servilces.Data);
                 companyModel.ServicesList = JsonConvert.DeserializeObject<List<ServicesList>>(servilcesEncrypted);
 
+
+                var userData = (await publicUserService.GetSinglePublicUserAccount(User.Identity.Name)).Data as IDictionary<string, object>;
+                if (userData != null)
+                {
+                    ViewBag.ProfilePic = userData["PROFILE_PHOTO_PATH"]?.ToString();
+                }
+
                 ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
 
                 if (!string.IsNullOrEmpty(companyModel.IS_TEMPLATE))
@@ -517,6 +531,13 @@ namespace Barrway.Controllers
                 MarketplaceCompanyModel companyModel = JsonConvert.DeserializeObject<MarketplaceCompanyModel>(data);
                 companyModel.DEFAULT_CALENDAR_ID = CalendarCode;
                 companyModel.PAGE_URL = id;
+
+
+                var userData = (await publicUserService.GetSinglePublicUserAccount(User.Identity.Name)).Data as IDictionary<string, object>;
+                if (userData != null)
+                {
+                    ViewBag.ProfilePic = userData["PROFILE_PHOTO_PATH"]?.ToString();
+                }
 
                 ViewBag.Title = companyModel.COMPANY_NAME_ENGLISH;
 
@@ -636,6 +657,12 @@ namespace Barrway.Controllers
                         }
                     }
 
+                    var userData = (await publicUserService.GetSinglePublicUserAccount(User.Identity.Name)).Data as IDictionary<string, object>;
+                    if (userData != null)
+                    {
+                        ViewBag.ProfilePic = userData["PROFILE_PHOTO_PATH"]?.ToString();
+                    }
+                    
                     ViewBag.CompanyCode = CompanyCode;
                     ViewBag.PageURl = PageUrl;
                     ViewBag.CalendarCode = CalendarCode;
@@ -1126,6 +1153,8 @@ namespace Barrway.Controllers
                     finalResult.ServiceList = JsonConvert.DeserializeObject<List<CompanyService>>(JsonConvert.SerializeObject(Service.Data));
                     finalResult.CompanyLIst = JsonConvert.DeserializeObject<List<Company>>(JsonConvert.SerializeObject(company.Data));
                     finalResult.BlogLIst = JsonConvert.DeserializeObject<List<blog>>(JsonConvert.SerializeObject(Blog.Data));
+
+                    finalResult.CompanyLIst = finalResult.CompanyLIst.Where(x => x.IS_ACTIVE == "Y").ToList();
 
                     if (finalResult.ServiceList.Count > 0)
                     {

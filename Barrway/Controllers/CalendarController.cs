@@ -316,6 +316,9 @@ namespace Barrway.Controllers
         [HttpGet]
         public async Task<ActionResult> GenerateEventQR(string EventId)
         {
+
+            var eventDetails = (await publicUserService.GetSingleEventDetails(EventId)).Data as IDictionary<string, object>;
+
             QRCodeModel model = new QRCodeModel();
             string Url = ConfigurationManager.AppSettings["baseurl"] + "Public/MarkPresent?EventId=" + EventId;
             Payload payload = new Url(Url);
@@ -325,7 +328,68 @@ namespace Barrway.Controllers
             QRCode qrCode = new QRCode(qrCodeData);
             var qrCodeAsBitmap = qrCode.GetGraphic(20);
 
-            string base64String = Convert.ToBase64String(BitmapToByteArray(qrCodeAsBitmap));
+            string description = "";
+
+            if (eventDetails != null)
+            {
+                description += "Date: " + Convert.ToDateTime(eventDetails["start"]?.ToString()).ToString("dd-MM-yyyy (hh:mm tt)") + "\n";
+                var FormIdSplit = eventDetails["customForms"].ToString().Split(',');
+
+                // check and add service provider
+                if (FormIdSplit.Contains("2304"))
+                {
+                    if (!string.IsNullOrEmpty(eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2304")]))
+                    {
+                        description += "Service provider: " + eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2304")] + "\n";
+                    }
+                }
+
+                // check and add service
+                if (FormIdSplit.Contains("2303"))
+                {
+                    if (!string.IsNullOrEmpty(eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2303")]))
+                    {
+                        description += "Service: " + eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2303")] + "\n";
+                    }
+                }
+
+
+                // check and add location
+                if (FormIdSplit.Contains("2306"))
+                {
+                    if (!string.IsNullOrEmpty(eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2306")]))
+                    {
+                        description += "Location: " + eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2306")] + "\n";
+                    }
+                }
+
+            }
+
+            // create a image with qr code height + size of description
+            Bitmap qrCodeAsBitmapWithDescription = new Bitmap(qrCodeAsBitmap.Width, qrCodeAsBitmap.Height + 40);
+
+            // add qr code to new image created
+            using (Graphics graphics = Graphics.FromImage(qrCodeAsBitmapWithDescription))
+            {
+                graphics.Clear(Color.White);
+                graphics.DrawImage(qrCodeAsBitmap, new Point(0, 0));
+            }
+
+            // write description on the image 
+            using (Graphics graphics = Graphics.FromImage(qrCodeAsBitmapWithDescription))
+            {
+                using (Font font = new Font("Arial", 15))
+                {
+                    float x = 80;
+                    float y = qrCodeAsBitmap.Height - 60;
+
+                    // Draw description text
+                    graphics.DrawString(description, font, Brushes.Black, x, y);
+                }
+
+            }
+
+            string base64String = Convert.ToBase64String(BitmapToByteArray(qrCodeAsBitmapWithDescription));
 
 
             string path = "";
@@ -355,6 +419,11 @@ namespace Barrway.Controllers
             }
 
             image.Save(Server.MapPath(path));
+
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Cache.SetExpires(DateTime.Now);
+            Response.Cache.SetNoServerCaching();
+            Response.Cache.SetNoStore();
 
             return Json(new AddUpdateDelete() { Status = true, Data = model }, JsonRequestBehavior.AllowGet);
         }
@@ -445,7 +514,7 @@ namespace Barrway.Controllers
 
                                 foreach (var key in x.Keys.Where(y => y != "Is_New" && y != "Id" && y != "COMPANY_CODE" && y != "CALENDAR_CODE"))
                                 {
-                                    columns.Add($@"{key?.ToString()} = N'{x[key]}'");
+                                    columns.Add($@"{key?.ToString()} = N'{SQLUtility.TreatSingleQuoteForQuery(x[key])}'");
                                 }
 
                                 string combine = string.Join(",", columns);
@@ -519,7 +588,7 @@ namespace Barrway.Controllers
 
                                 foreach (var key in x.Keys.Where(y => y != "Is_New" && y != "Id" && y != "COMPANY_CODE" && y != "CALENDAR_CODE"))
                                 {
-                                    columns.Add($@"{key?.ToString()} = N'{x[key]}'");
+                                    columns.Add($@"{key?.ToString()} = N'{SQLUtility.TreatSingleQuoteForQuery(x[key])}'");
                                 }
 
                                 string combine = string.Join(",", columns);
@@ -603,7 +672,7 @@ namespace Barrway.Controllers
 
                                 foreach (var key in x.Keys.Where(y => y != "Is_New" && y != "Id" && y != "COMPANY_CODE" && y != "CALENDAR_CODE"))
                                 {
-                                    columns.Add($@"{key?.ToString()} = N'{x[key]}'");
+                                    columns.Add($@"{key?.ToString()} = N'{SQLUtility.TreatSingleQuoteForQuery(x[key])}'");
                                 }
 
                                 string combine = string.Join(",", columns);
@@ -720,7 +789,7 @@ namespace Barrway.Controllers
             return Json(schedularData);
         }
 
-        
+
 
         [HttpPost]
         public async Task<ActionResult> AddQueueSession(Dictionary<string, List<Dictionary<string, string>>> data, string ScheduleId)
@@ -1184,7 +1253,7 @@ namespace Barrway.Controllers
                                             {
                                                 referenceResourceEntry = $@"
                                                             insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
-                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_PROVIDER_MASTER}, '{data.SCH_RESOURCE}', 'SERVICE_PROVIDER_MASTER_1934', 'FIRST_NAME', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_RESOURCE}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_PROVIDER_MASTER}, '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_RESOURCE)}', 'SERVICE_PROVIDER_MASTER_1934', 'FIRST_NAME', {(int)FormSetting.CALENDAR_FORM}, '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_RESOURCE)}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
                                                             ";
                                             }
 
@@ -1194,7 +1263,7 @@ namespace Barrway.Controllers
                                             {
                                                 referenceActivityEntry = $@"
                                                             insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
-                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_MASTER}, '{data.SCH_ACTIVITY}', 'SERVICE_MASTER_1933', 'ACTIVITY_NAME', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_ACTIVITY}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_MASTER}, '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_ACTIVITY)}', 'SERVICE_MASTER_1933', 'ACTIVITY_NAME', {(int)FormSetting.CALENDAR_FORM}, '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_ACTIVITY)}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
                                                             ";
                                             }
 
@@ -1224,7 +1293,7 @@ namespace Barrway.Controllers
                                                               ,[COMPANY_SUBSCRIPTION_ID]
                                                               ,[description]
                                                               ,[created_at], [updated_at],[EVENT_TYPE])
-	                                                          values('{IsCourseEvent}', '{SchedularFormId}', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter}', '{tempStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{tempEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{data.SCH_RESOURCE}', '{data.SCH_ACTIVITY}', '{package.Data["SUBS_ID"]?.ToString()}', '{data.SCH_DESCRIPTION}', getDate(), getDate(),'SCHEDULE');
+	                                                          values('{IsCourseEvent}', '{SchedularFormId}', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter}', '{tempStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{tempEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_RESOURCE)}', '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_ACTIVITY)}', '{package.Data["SUBS_ID"]?.ToString()}', '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_DESCRIPTION)}', getDate(), getDate(),'SCHEDULE');
 
                                                             SET @insertedEventId{slotCounter} = SCOPE_IDENTITY();
 
@@ -1233,7 +1302,7 @@ namespace Barrway.Controllers
                                                             {referenceActivityEntry}
                                                             
                                                             insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
-                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{data.SCH_LOCATION}', 'LOCATION_MASTER_1936', 'LOCATION_ADDRESS', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_LOCATION}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_LOCATION)}', 'LOCATION_MASTER_1936', 'LOCATION_ADDRESS', {(int)FormSetting.CALENDAR_FORM}, '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_LOCATION)}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
                                                             
 
                                                             declare @SlotId{slotCounter} int = (select top 1 cf.Id from CALENDAR_FORM_1935 cf
@@ -1362,7 +1431,7 @@ namespace Barrway.Controllers
                                         {
                                             referenceResourceEntry = $@"
                                                             insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
-                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_PROVIDER_MASTER}, '{data.SCH_RESOURCE}', 'SERVICE_PROVIDER_MASTER_1934', 'FIRST_NAME', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_RESOURCE}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_PROVIDER_MASTER}, '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_RESOURCE)}', 'SERVICE_PROVIDER_MASTER_1934', 'FIRST_NAME', {(int)FormSetting.CALENDAR_FORM}, '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_RESOURCE)}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
                                                             ";
                                         }
 
@@ -1372,7 +1441,7 @@ namespace Barrway.Controllers
                                         {
                                             referenceActivityEntry = $@"
                                                             insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
-                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_MASTER}, '{data.SCH_ACTIVITY}', 'SERVICE_MASTER_1933', 'ACTIVITY_NAME', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_ACTIVITY}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_MASTER}, '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_ACTIVITY)}', 'SERVICE_MASTER_1933', 'ACTIVITY_NAME', {(int)FormSetting.CALENDAR_FORM}, '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_ACTIVITY)}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
                                                             ";
                                         }
 
@@ -1402,7 +1471,7 @@ namespace Barrway.Controllers
                                                               ,[COMPANY_SUBSCRIPTION_ID]
                                                               ,[description]
                                                               ,[created_at], [updated_at],[EVENT_TYPE]) 
-	                                                          values('{IsCourseEvent}', '{SchedularFormId}', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter}', '{SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{data.SCH_RESOURCE}', '{data.SCH_ACTIVITY}', '{package.Data["SUBS_ID"]?.ToString()}', '{data.SCH_DESCRIPTION}', getDate(), getDate(),'SCHEDULE');
+	                                                          values('{IsCourseEvent}', '{SchedularFormId}', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter}', '{SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_RESOURCE)}', '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_ACTIVITY)}', '{package.Data["SUBS_ID"]?.ToString()}', '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_DESCRIPTION)}', getDate(), getDate(),'SCHEDULE');
 
                                                             SET @insertedEventId{slotCounter} = SCOPE_IDENTITY();
 
@@ -1411,7 +1480,7 @@ namespace Barrway.Controllers
                                                             {referenceActivityEntry}
                                                             
                                                             insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
-                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{data.SCH_LOCATION}', 'LOCATION_MASTER_1936', 'LOCATION_ADDRESS', {(int)FormSetting.CALENDAR_FORM}, '{data.SCH_LOCATION}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_LOCATION)}', 'LOCATION_MASTER_1936', 'LOCATION_ADDRESS', {(int)FormSetting.CALENDAR_FORM}, '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_LOCATION)}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
 
 
                                                             declare @SlotId{slotCounter} int = (select top 1 cf.Id from CALENDAR_FORM_1935 cf
@@ -1614,7 +1683,7 @@ namespace Barrway.Controllers
             try
             {
                 var transactionData = await businessUserService.GetCalendarUpcomingBookings(data, CompanyCode, CalendarCode);
-                var transactionList = transactionData.Data;
+                var transactionList = transactionData.Data as List<IDictionary<string, object>>;
                 double last_page = 0;
                 if (transactionList != null && transactionList.Count > 0)
                 {
@@ -1624,7 +1693,13 @@ namespace Barrway.Controllers
                     double paging = (double)total_records / size;
                     last_page = Math.Floor(paging) + 1;
                 }
+                transactionList.ForEach(x =>
+                {
+                    x["BOOKING_DATE"] = Convert.ToDateTime(x["BOOKING_DATE"]).ToString("dd-MM-yyyy");
+                    x["FROM_TIME"] = Convert.ToDateTime(x["FROM_TIME"]).ToString("HH:mm tt");
+                    x["TO_TIME"] = Convert.ToDateTime(x["TO_TIME"]).ToString("HH:mm tt");
 
+                });
                 return Json(new { data = transactionList, last_page }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
