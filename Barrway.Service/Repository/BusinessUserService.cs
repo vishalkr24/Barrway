@@ -1290,12 +1290,13 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
         public async Task<AddUpdateDelete> GetCalendarUpcomingBookings(GenerateDynamicFormData data, string CompanyCode, string CalendarCode)
         {
             Dictionary<string, string> filters = new Dictionary<string, string>() {
-                    { "BOOKING_DATE","company.BOOKING_DATE"},
-                    { "SERVICE_NAME","company.SERVICE_NAME"},
-                    { "SERVICE_PROVIDER","calendar.SERVICE_PROVIDER"},
-                    { "CLIENT_NAME","category.CLIENT_NAME"},
-                    { "FROM_TIME","calendar.FROM_TIME"},
-                    { "TO_TIME","calendar.TO_TIME"},
+                    { "BOOKING_DATE","BOOKING_DATE"},
+                    { "SERVICE_NAME","SERVICE_NAME"},
+                    { "SERVICE_PROVIDER","SERVICE_PROVIDER"},
+                    { "LOCATION_NAME","LOCATION_NAME"},
+                    { "CLIENT_NAME","CLIENT_NAME"},
+                    { "FROM_TIME","FROM_TIME"},
+                    { "TO_TIME","TO_TIME"},
             };
 
             string column = "", dir = "";
@@ -1353,7 +1354,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
 										  , (select FIRST_NAME from SERVICE_PROVIDER_MASTER_1934 where Id = (select t_ref.referrenceId from form_calenderreferrence t_ref where formgroupKey = cf.formGroupKey and t_ref.referrenceFormId = '2304')) as 'SERVICE_PROVIDER'
 										  , (select LOCATION_ADDRESS from LOCATION_MASTER_1936 where Id = (select t_ref.referrenceId from form_calenderreferrence t_ref where formgroupKey = cf.formGroupKey and t_ref.referrenceFormId = '2306')) as 'LOCATION_NAME'
                                           ,[BOOKING_DATE]
-                                          ,[CLIENT_NAME]
+                                          ,(select p.STUDENT_NAME from PARTICIPANT_MASTER_1940 p where p.Id = cast(booking.CLIENT_NAME as int)) as CLIENT_NAME
                                           ,[FROM_TIME]
                                           ,[TO_TIME]
                                           ,[EVENT_ID]
