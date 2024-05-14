@@ -1171,7 +1171,7 @@ namespace Barrway.Service.Repository
         }
 
 
-        public async Task<AddUpdateDeleteAPI> AddToFavoriteCalendar(FavoriteCalendarModel model,string UserId)
+        public async Task<AddUpdateDeleteAPI> AddToFavoriteCalendar(FavoriteCalendarViewModel model,string UserId)
         {
             string query = $@"select * from FAVORITE_CALENDAR_MASTER_1949 where USER_ID = '{UserId}' and CALENDAR_CODE = '{model.CALENDAR_CODE}' and COMPANY_CODE = '{model.COMPANY_CODE}'";
 
@@ -1182,11 +1182,16 @@ namespace Barrway.Service.Repository
                 return new AddUpdateDeleteAPI() { Message = AppMessage.Success, Status = true };
             }
 
+            FavoriteCalendarModel Favmodel = new FavoriteCalendarModel();
+            Favmodel.CALENDAR_CODE = model.CALENDAR_CODE;
+            Favmodel.COMPANY_CODE = model.COMPANY_CODE;
+            Favmodel.USER_ID = UserId;
+            Favmodel.IS_PUBLIC_USER = "Y";
             Form_DataTable data = new Form_DataTable();
             data.action = (int)FormAction.Save;
             data.formId = (int)FormSetting.FAVORITE_CALENDAR_MASTER;
 
-            data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.ToDictionary());
+            data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(Favmodel.ToDictionary());
             data.formGroupKey = Guid.NewGuid().ToString();
             var Result = (await formAPIRepository.GeneratedFormData(data)).Data;
 
@@ -1202,7 +1207,7 @@ namespace Barrway.Service.Repository
 
 
 
-        public async Task<AddUpdateDelete> RemoveFavoriteCalendar(FavoriteCalendarModel model, string UserId)
+        public async Task<AddUpdateDelete> RemoveFavoriteCalendar(FavoriteCalendarViewModel model, string UserId)
         {
             try
             {
@@ -1229,7 +1234,7 @@ namespace Barrway.Service.Repository
 
        
 
-        public async Task<FavouriteCalendarDetails> CalendarDtails(FavoriteCalendarModel model, string UserId)
+        public async Task<FavouriteCalendarDetails> CalendarDtails(FavoriteCalendarViewModel model, string UserId)
         {
             try
             {

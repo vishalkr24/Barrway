@@ -22,12 +22,24 @@ namespace Barrway.DTO.APIModels.Calendar
         public DateTime end{ get; set; }
     }
 
+    public class FavoriteCalendarViewModel
+    {
+     
+        public string COMPANY_CODE { get; set; }
+  
+        public string CALENDAR_CODE { get; set; }
+     
+
+    }
+
+
     public class FavoriteCalendarModel
     {
 
         public string COMPANY_CODE { get; set; }
         public string CALENDAR_CODE { get; set; }
-     
+        public string USER_ID { get; set; }
+        public string IS_PUBLIC_USER { get; set; }
 
     }
 }

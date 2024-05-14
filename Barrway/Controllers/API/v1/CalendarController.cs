@@ -61,10 +61,10 @@ namespace Barrway.Controllers.API.v1
         [Route("api/calendar/myfavorite/AddtoFavoriteCalanders")]
         [HttpPost]
         [ResponseType(typeof(AddUpdateDeleteAPI))]
-        public async Task<IHttpActionResult> AddtoFavoriteCalanders(FavoriteCalendarModel data)
+        public async Task<IHttpActionResult> AddtoFavoriteCalanders(FavoriteCalendarViewModel data)
         {
             try
-            {              
+            {               
 
                 return Ok(await mobileAPIService.AddToFavoriteCalendar(data, APIUserIdentity.UserName));
             }
@@ -78,7 +78,7 @@ namespace Barrway.Controllers.API.v1
         [Route("api/calendar/myfavorite/RemoveFavoriteCalendar")]
         [HttpPost]
         [ResponseType(typeof(AddUpdateDeleteAPI))]
-        public async Task<IHttpActionResult> RemoveFavoriteCalendar(FavoriteCalendarModel data)
+        public async Task<IHttpActionResult> RemoveFavoriteCalendar(FavoriteCalendarViewModel data)
         {
             try
             {
@@ -96,7 +96,7 @@ namespace Barrway.Controllers.API.v1
         [Route("api/calendar/GetCalendarDetails")]
         [HttpPost]
         [ResponseType(typeof(FavouriteCalendarDetails))]
-        public async Task<IHttpActionResult> GetCalendarDetails(FavoriteCalendarModel data)
+        public async Task<IHttpActionResult> GetCalendarDetails(FavoriteCalendarViewModel data)
         {
             try
             {
