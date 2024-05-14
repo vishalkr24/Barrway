@@ -336,20 +336,20 @@ namespace Barrway.Controllers
                 var FormIdSplit = eventDetails["customForms"].ToString().Split(',');
 
                 // check and add service provider
-                if (FormIdSplit.Contains("2303"))
-                {
-                    if (!string.IsNullOrEmpty(eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2303")]))
-                    {
-                        description += "Service provider: " + eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2303")] + "\n";
-                    }
-                }
-
-                // check and add service
                 if (FormIdSplit.Contains("2304"))
                 {
                     if (!string.IsNullOrEmpty(eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2304")]))
                     {
-                        description += "Service: " + eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2304")] + "\n";
+                        description += "Service provider: " + eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2304")] + "\n";
+                    }
+                }
+
+                // check and add service
+                if (FormIdSplit.Contains("2303"))
+                {
+                    if (!string.IsNullOrEmpty(eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2303")]))
+                    {
+                        description += "Service: " + eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2303")] + "\n";
                     }
                 }
 
