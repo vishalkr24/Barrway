@@ -53,7 +53,7 @@ namespace Barrway.Controllers
                 var user = await authService.GetUser(User.Identity.Name, FormRole.GENERAL_USER);
                 if (user.Status)
                 {
-                    Redirect("/UserAdmin#/userdashboard");
+                    return Redirect("/UserAdmin#/userdashboard");
                     //return RedirectToAction("Dashboard", "BusinessAdmin");
                 }
                 else
@@ -89,7 +89,7 @@ namespace Barrway.Controllers
                 var user = await authService.GetUser(User.Identity.Name, FormRole.GENERAL_USER);
                 if (user.Status)
                 {
-                    Redirect("/UserAdmin#/userdashboard");
+                    return Redirect("/UserAdmin#/userdashboard");
                     //return RedirectToAction("Dashboard", "BusinessAdmin");
                 }
                 else
