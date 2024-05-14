@@ -91,6 +91,7 @@ function setUserDetails() {
 
         if (data.PROFILE_PHOTO_PATH != null && data.PROFILE_PHOTO_PATH != "null") {
             $(".layout-user-image").attr("src", data.PROFILE_PHOTO_PATH.replace('~', '..'));
+            $(".layout-user-image").show();
         }
 
         

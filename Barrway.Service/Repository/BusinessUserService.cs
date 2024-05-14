@@ -1358,9 +1358,9 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                                           ,[FROM_TIME]
                                           ,[TO_TIME]
                                           ,[EVENT_ID]
-                                      FROM [dbo].[COMPANY_UPCOMING_BOOKINGS_1945] booking 
+                                      FROM [dbo].[COMPANY_UPCOMING_BOOKINGS_1945] booking
 									  join CALENDAR_FORM_1935 cf on cf.Id = booking.EVENT_ID
-									  where booking.COMPANY_CODE = 'CMP00079' and booking.CALENDAR_CODE = 'CLR00101'
+									  where booking.COMPANY_CODE = '{CompanyCode}' and booking.CALENDAR_CODE = '{CalendarCode}'
                                     )
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata {(!string.IsNullOrEmpty(applyFilterQuery) ? " where " + applyFilterQuery : "")} ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
             var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
