@@ -192,6 +192,7 @@ function setCalendarDashboardData() {
         },
         { title: 'Service', field: 'SERVICE_NAME', headerFilter: "input" },
         { title: 'Service Provider', field: 'SERVICE_PROVIDER', headerFilter: "input" },
+        { title: 'Location', field: 'LOCATION_NAME', headerFilter: "input" },
         { title: 'Client Name', field: 'CLIENT_NAME', headerFilter: "input" },
         {
             title: 'From Time', field: 'FROM_TIME', headerFilter: "input"

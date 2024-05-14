@@ -480,7 +480,7 @@ namespace Barrway.Service.Repository
                                                    ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = '{model.transaction.SLOT}')                                                                                                                                                                                                     
                                                    ,N'{SQLUtility.TreatSingleQuoteForQuery(model.ACTIVITY_NAME)}'
                                                    ,N'{SQLUtility.TreatSingleQuoteForQuery(model.RESOURCE_NAME)}'
-                                                   ,N'{SQLUtility.TreatSingleQuoteForQuery(model.participant.STUDENT_NAME)}'
+                                                   ,N'{SQLUtility.TreatSingleQuoteForQuery(model.transaction.STUDENT)}'
                                                    ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = N'{model.transaction.SLOT}') 
                                                    ,(select calendar.[end] from  CALENDAR_FORM_1935 calendar where Id = N'{model.transaction.SLOT}')
                                                    , '{model.transaction.SLOT}', '{model.USER_ID}')";
@@ -797,7 +797,7 @@ namespace Barrway.Service.Repository
                                                    ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = '{model.transaction.SLOT}')                                                                                                                                                                                                     
                                                    ,N'{SQLUtility.TreatSingleQuoteForQuery(model.ACTIVITY_NAME)}'
                                                    ,N'{SQLUtility.TreatSingleQuoteForQuery(model.RESOURCE_NAME)}'
-                                                   ,N'{SQLUtility.TreatSingleQuoteForQuery(model.participant.STUDENT_NAME)}'
+                                                   ,N'{SQLUtility.TreatSingleQuoteForQuery(model.transaction.STUDENT)}'
                                                    ,(select CALENDAR_FORM_1935.[start] from  CALENDAR_FORM_1935 where Id = N'{model.transaction.SLOT}') 
                                                    ,(select calendar.[end] from  CALENDAR_FORM_1935 calendar where Id = N'{model.transaction.SLOT}')
                                                    , '{model.transaction.SLOT}', '{model.USER_ID}')";
@@ -1284,7 +1284,7 @@ namespace Barrway.Service.Repository
                             upCommingBooking["USER_ID"] = userName;
                             upCommingBooking["ACTIVITY_NAME"] = eventModal.activityTitle;
                             upCommingBooking["RESOURCE_NAME"] = eventModal.resourceTitle;
-                            upCommingBooking["STUDENT_NAME"] = userData["FIRST_NAME"]?.ToString() ?? "";
+                            upCommingBooking["STUDENT_NAME"] = StudentId ?? "";
 
                             var upcommingBookingResult = await UpCommingBookingAdd(upCommingBooking);
 
