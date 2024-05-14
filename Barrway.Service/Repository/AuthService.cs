@@ -175,7 +175,7 @@ namespace Barrway.Service.Repository
                 string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME, pua.FIRST_NAME, pua.LAST_NAME from USER_MASTER_1915 user_m
                                      join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
                                      join PUBLIC_USER_ACCOUNT_1943 pua on pua.USER_ID = user_m.USER_ID
-                                     where user_m.USER_PHONE = '{Phone}' and Country_Code='{countrycode}' ";
+                                     where REPLACE(user_m.USER_PHONE,' ','') = '{Phone}' and Country_Code='{countrycode}' ";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
@@ -236,7 +236,7 @@ namespace Barrway.Service.Repository
                 }
                 else
                 {
-                    return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Invalid Email" };
+                    return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Invalid Phone or Password" };
                 }
             }
             catch (Exception ex)

@@ -182,7 +182,7 @@ function setCalendarDashboardData() {
         {
             title: 'Attendance', field: 'ACTION', formatter: function (cell, formatter) {
 
-                return `<div class="login_primary"><a href='javascript:void(0)' onclick="ScanStudentQR('${cell.getData().EVENT_ID}')" class="btn btn-primary text-light" style="border-radius: 40px;">Scan QR mark attendance</a>
+                return `<div class="login_primary"><a href='javascript:void(0)' onclick="ScanStudentQR('${cell.getData().EVENT_ID}')" class="btn btn-primary text-light" style="border-radius: 40px;">Scan QR</a>
         
                             <a href='javascript:void(0)' onclick="GenerateEventQR('${cell.getData().EVENT_ID}')"><img src="../../assets/img/QR_CODE_LOGO.png" style="height: 40px; width: 40px;" /></a></div>`;
             }, headerSort: false
