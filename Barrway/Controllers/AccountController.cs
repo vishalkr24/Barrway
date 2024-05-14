@@ -288,7 +288,7 @@ namespace Barrway.Controllers
             }
             else
             {
-                ModelState.AddModelError("ERROR_MESSAGE", "Invalied Phone number !");
+                ModelState.AddModelError("ERROR_MESSAGE", loginresult.Message);
             }
 
             return View(model);
