@@ -3227,6 +3227,7 @@
     <Content Include="Scripts\myscript\controller\allController_bk.js" />
     <Content Include="Scripts\myscript\controller\ApplicationListController.js" />
     <Content Include="Scripts\myscript\controller\approvalController.js" />
+    <Content Include="Scripts\myscript\controller\userBookEventController.js" />
     <Content Include="Scripts\myscript\controller\SessionSchedularFormController.js" />
     <Content Include="Scripts\myscript\controller\NewSchedularFormController.js" />
     <Content Include="Scripts\myscript\controller\marketplaceQueueController.js" />
@@ -3325,6 +3326,7 @@
     <Content Include="Templates\user-admin\dashboard.html" />
     <Content Include="Templates\user-admin\my-b-coin-balance.html" />
     <Content Include="Templates\user-admin\blogs.html" />
+    <Content Include="Templates\user-admin\book-event.html" />
     <Content Include="Templates\user-admin\my-payment-history.html" />
     <Content Include="Templates\user-admin\my-calendar.html" />
     <Content Include="Templates\user-admin\my-booking.html" />

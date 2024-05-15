@@ -2138,6 +2138,20 @@
                     parent: 'home'
                 }
             })
+            .state('book_event', {
+                url: '/bookEvent/:Id',
+                onEnter: function ($window) { $window.document.title = "Book Event"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/user-admin/book-event.html?token=' + uuid,
+                        controller: 'UserBookEventController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
             .state('calendar_package', {
                 url: '/calendar/calendar-package/:formId',
                 onEnter: function ($window) { $window.document.title = "Service Package Master"; },

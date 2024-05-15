@@ -2304,12 +2304,14 @@
                                 $("#service-div #service-elem .row").append(response[0].formContentHTMLTemp);
 
                                 $('#service-div #service-elem').on("submit", function (evt) {
-                                    if ($('#service-div #service-elem').valid()) {
-                                        evt.preventDefault();
-                                        $scope.createDynamicFormEntry();
-                                    } else {
-                                        evt.preventDefault();
-                                    }
+                            
+                                        if ($('#service-div #service-elem').valid()) {
+                                            evt.preventDefault();
+                                            $scope.createDynamicFormEntry();
+                                        } else {
+                                            evt.preventDefault();
+                                        }
+                                    
                                 })
 
                                 dataModelList.forEach(x => {
