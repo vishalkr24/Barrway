@@ -1,0 +1,792 @@
+﻿
+<link href="/fg-assets/lightbox/css/lightbox.css" rel="stylesheet" />
+<link href="/fg-assets/fullcalendar/dist/fullcalendar.css" rel="stylesheet" />
+<script src="/fg-assets/fullcalendar/dist/fullcalendar.js"></script>
+<link href="/Content/sidebar/css/mscustom-scroller.min.css" rel="stylesheet" />
+
+<link href="/fg-assets/fullcalendar-scheduler/dist/scheduler.min.css"
+      rel="stylesheet" />
+<link href="/fg-assets/fullcalendar-scheduler/dist/bootstrap-colorpicker.min.css"
+      rel="stylesheet" />
+<link href="/fg-assets/fullcalendar-scheduler/dist/bootstrap-datetimepicker.css"
+      rel="stylesheet" />
+<link href="/fg-assets/css/jquery.jgrowl.min.css" rel="stylesheet" />
+
+<script src="/fg-assets/lightbox/js/lightbox-2.6.min.js"></script>
+
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" id="jquery-ui-change">
+<!--<script src="fg-assets/js/jquery-ui.js"></script>-->
+<script src="/fg-assets/fullcalendar-scheduler/dist/scheduler.js"></script>
+<script src="/fg-assets/fullcalendar-scheduler/dist/bootstrap-datetimepicker.js"></script>
+
+<script src="/fg-assets/js/code/theme-chooser.js"></script>
+
+
+<script src="/fg-assets/js/jquery.jgrowl.min.js"></script>
+<script src="/fg-assets/js/moment.js"></script>
+<link rel="stylesheet" href="/fg-assets/css/bootstrap-colorpicker.min.css">
+<script src="/fg-assets/js/bootstrap-colorpicker.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.js"></script>
+<script type="text/javascript" src="/fg-assets/js/jAutoCalc.js"></script>
+<style>
+    .fc-timeline .fc-body .fc-scroller {
+        height: 500px !important;
+    }
+    /*Agenda & Timeline Source event design*/
+    .fc-event-container .fc-timeline-event .fc-content:nth-of-type(1),
+    .fc-event-container .fc-time-grid-event .fc-content:nth-of-type(1),
+    .fc-event-container .fc-day-grid-event .fc-content:nth-of-type(1) {
+        margin-top: 0px;
+    }
+
+    .fc-event-container .fc-timeline-event .fc-content,
+    .fc-event-container .fc-time-grid-event .fc-content,
+    .fc-event-container .fc-day-grid-event .fc-content {
+        margin-top: 3px;
+        margin-bottom: 0px;
+        padding: 0px 8px;
+    }
+
+        .fc-event-container .fc-timeline-event .fc-content .fc-title,
+        .fc-event-container .fc-time-grid-event .fc-content .fc-title,
+        .fc-event-container .fc-day-grid-event .fc-content .fc-title {
+            font-size: 16px;
+            font-family: Arial;
+        }
+
+        .fc-event-container .fc-timeline-event .fc-content:nth-last-of-type(1),
+        .fc-event-container .fc-time-grid-event .fc-content:nth-last-of-type(1),
+        .fc-event-container .fc-day-grid-event .fc-content:nth-last-of-type(1) {
+            margin-bottom: 0px;
+        }
+
+    .fc th {
+        text-align: center;
+        font-weight: 400;
+        font-family: 'Montserrat-bold';
+        font-size: 80%;
+    }
+
+    .fc button {
+        font-family: 'Montserrat';
+    }
+
+    .ui-widget .ui-widget, .calendar {
+        font-family: 'Montserrat' !important;
+    }
+
+    #vertical-resource-view .fc-view-container {
+        overflow-x: scroll;
+    }
+
+
+    #vertical-resource-view .fc-view.fc-agendaDay-view.fc-agenda-view {
+        width: 100%;
+    }
+    /* **For 2 day view** */
+    #vertical-resource-view .fc-view.fc-agendaTwoDays-view.fc-agenda-view {
+        width: 500%;
+    }
+
+    #vertical-resource-view .fc-view.fc-agendaThreeDays-view.fc-agenda-view {
+        width: 600%;
+    }
+
+    #vertical-resource-view .fc-view.fc-agendaWeek-view.fc-agenda-view {
+        width: 1500%;
+    }
+    /*end*/
+
+    .lightbox {
+        display: none;
+    }
+
+    .popover {
+        z-index: 99;
+    }
+
+    .ui-state-highlight,
+    .ui-widget-content .ui-state-highlight {
+        border: 1px solid #72c3ec !important;
+        background: #e9f3fc url(images/ui-bg_highlight-soft_25_ffef8f_1x100.png) 50% top repeat-x !important;
+    }
+
+    .fa-sm {
+        font-size: 12px;
+    }
+
+    hr{
+        margin: 0.5rem auto;
+    }
+
+    .titleContainer,
+    .popoverSelect {
+        display: flex;
+        align-items: center;
+    }
+
+    .sidebar ul li a {
+        color: #3e246b !important;
+    }
+
+    .customTitle {
+        background: rgb(255, 255, 255);
+        border-color: #aaa;
+        padding: 2px;
+        border-radius: 5px;
+        z-index: 1;
+    }
+
+    .btn.btn-outline-success {
+        color: #3e246b;
+        border: 1px solid #3e246b;
+        background-color: transparent;
+    }
+
+        .btn.btn-outline-success:hover {
+            background-color: #3e246b !important;
+            color: #fff;
+        }
+
+    .btn-group > .btn-group:not(:first-child) > .btn,
+    .btn-group > .btn:not(:first-child) {
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+        margin-right: 0px;
+    }
+
+    .btn-group > .btn-group:not(:last-child) > .btn,
+    .btn-group > .btn:not(:last-child):not(.dropdown-toggle) {
+        border-top-right-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .fc-listYear-view tr.fc-list-item,
+    .fc-listMonth-view tr.fc-list-item,
+    .fc-listWeek-view tr.fc-list-item,
+    .fc-listDay-view tr.fc-list-item {
+        background: #e2e2e2 !important;
+        margin-bottom: 10px;
+        display: flex;
+        margin: 3px;
+    }
+
+    #list-view table.fc-list-table tr .fc-content {
+        margin: 3px;
+        margin-top: 10px;
+        margin-bottom: 4px;
+    }
+
+    .fc-content.fcTime .fc-content {
+        color: #fff;
+        padding: 0px 5px;
+        margin: 3px 3px 3px;
+    }
+
+    .fc-content.fcTime small.time {
+        color: #7b7b7b;
+    }
+
+    .fc-content.fcTime {
+        margin: 7px 0px !important;
+    }
+
+    .breadcrumbUi.row {
+        /*margin-left: -20px !important;*/
+    }
+
+    .custom-br {
+        font-size: 14px;
+        font-style: italic;
+        font-family: Roboto;
+        font-weight: 500;
+        letter-spacing: .2px;
+    }
+
+    .course-click {
+        transition: all linear .3s;
+        cursor: pointer;
+    }
+
+        .course-click.right {
+            transform: rotate(90deg);
+        }
+
+
+
+    .modal-dialog-slideout {
+        min-height: 100%;
+        margin: 0 0 0 auto;
+        background: #fff;
+    }
+
+    .modal.fade {
+        padding-right: 0px !important;
+    }
+
+        .modal.fade .modal-dialog.modal-dialog-slideout {
+            -webkit-transform: translate(100%,0)scale(1);
+            transform: translate(100%,0)scale(1);
+        }
+
+        .modal.fade.show .modal-dialog.modal-dialog-slideout {
+            -webkit-transform: translate(0,0);
+            transform: translate(0,0);
+            display: flex;
+            align-items: stretch;
+            -webkit-box-align: stretch;
+            height: 100%;
+        }
+
+            .modal.fade.show .modal-dialog.modal-dialog-slideout .modal-body {
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+
+    .modal-dialog-slideout .modal-content {
+        border: 0;
+    }
+
+    .modal-dialog-slideout .modal-header, .modal-dialog-slideout .modal-footer {
+        /* height: 69px;
+        display: block;*/
+    }
+
+        .modal-dialog-slideout .modal-header h5 {
+            float: left;
+        }
+
+    .fc-event-container .fc-timeline-event .fc-content:nth-of-type(1), .fc-event-container .fc-time-grid-event .fc-content:nth-of-type(1), .fc-event-container .fc-day-grid-event .fc-content:nth-of-type(1) {
+        display: none;
+    }
+
+    #agenda-view .fc-event-container .fc-timeline-event .fc-content .fc-title, #agenda-view .fc-event-container .fc-time-grid-event .fc-content .fc-title,
+    #agenda-view .fc-event-container .fc-day-grid-event .fc-content .fc-title {
+        font-size: 12px;
+    }
+
+    #agenda-view .fc-event-container .fc-timeline-event .fc-content, #agenda-view .fc-event-container .fc-time-grid-event .fc-content,
+    #agenda-view .fc-event-container .fc-day-grid-event .fc-content {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-right: 30px !important;
+    }
+
+        #agenda-view .fc-event-container .fc-timeline-event .fc-content, #agenda-view .fc-event-container .fc-time-grid-event .fc-content,
+        #agenda-view .fc-event-container .fc-day-grid-event .fc-content .fc-customtime {
+            position: absolute;
+            right: 1px;
+            top: 4px;
+            font-size: 12px;
+        }
+
+    #vertical-resource-view .fc table {
+        table-layout: auto;
+    }
+
+    #vertical-resource-view .fc-view > table {
+        min-width: 0;
+        width: auto;
+    }
+
+    #vertical-resource-view .fc-axis {
+        min-width: 100px; /*the width of times column*/
+        width: 100px; /*the width of times column*/
+    }
+
+    #vertical-resource-view .fc-day, .fc-resource-cell, .fc-content-col {
+        min-width: 350px;
+        width: 100%;
+    }
+
+    div#calendar .fc-timeline .fc-body .fc-scroller {
+        height: auto !important;
+    }
+
+    .modalscrollable {
+        overflow-y: auto;
+        max-height: 500px;
+        min-height: 500px;
+    }
+
+
+
+
+    /* Important part */
+    /*.modal-dialog {
+        overflow-y: initial !important
+    }
+
+    .modal-body {
+        height: 80vh;
+        overflow-y: auto;
+    }*/
+
+    .modalscrollable {
+        overflow-y: auto;
+        max-height: 500px;
+        min-height: 500px;
+    }
+
+
+    /* Important part */
+    /*.modal-dialog {
+        overflow-y: initial !important
+    }
+    .modal-body {
+        height: 80vh;
+        overflow-y: auto;
+    }*/
+    div#calendar .fc-timeline .fc-body .fc-scroller {
+        height: auto !important;
+        min-height: 400px;
+    }
+
+    .menu-icon_box {
+        display: inline-block;
+        height: 25px;
+        position: relative;
+        text-align: left;
+        width: 25px;
+    }
+
+    .Hideleftmenu {
+        padding: 56px 0px 0;
+        margin-left: -20px;
+        position: relative;
+    }
+</style>
+
+<style>
+    .already-uploaded-ul {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+        .already-uploaded-ul li {
+            margin-right: 12px;
+            margin-top: 12px;
+            list-style: none;
+            width: min-content;
+            max-width: 142px;
+            border-radius: 4px;
+            border: 1px solid lightgrey;
+        }
+
+            .already-uploaded-ul li select {
+                border: none !important;
+                border-top: 1px solid lightgrey !important;
+                border-radius: 0px !important;
+                outline: none;
+                width: 100%;
+            }
+
+            .already-uploaded-ul li img {
+                width: 140px;
+                height: auto;
+                max-height: 122px;
+            }
+
+            .already-uploaded-ul li button {
+                position: absolute;
+                padding: 0px;
+                font-size: 18px;
+                margin-left: 120px;
+                margin-top: -3px;
+            }
+
+            .already-uploaded-ul li .attachment-name {
+                text-overflow: ellipsis;
+                text-align: center;
+                font-size: smaller;
+                color: grey;
+                white-space: nowrap;
+                overflow: hidden;
+                max-width: 100%;
+            }
+
+    .pt-0 {
+        padding-top: 0px;
+    }
+
+    .events-list-container {
+        height: 100%;
+        max-height: 485px;
+        overflow: hidden;
+        overflow-y: auto;
+    }
+
+    .events-list-block {
+        display: flex;
+    }
+
+        .events-list-block .event-detail {
+            display: block;
+        }
+
+        .events-list-block label {
+            font-weight: 500;
+            padding-top: 12px;
+        }
+
+        .events-list-block .event-tracker {
+            padding: 12px;
+            padding-left: 2px;
+            color: #72328A;
+            display: block;
+        }
+
+        .events-list-block .event-tracker-line div {
+            border-left: 2px dashed #72328A;
+            transform: translate(-19px, 34px);
+            height: calc(100% - 34px);
+        }
+
+        .events-list-block.old-session .event-tracker-line div {
+            border-left: 2px dashed grey;
+            transform: translate(-19px, 34px);
+            height: calc(100% - 34px);
+        }
+
+        .events-list-block ul {
+            display: flex;
+            flex-wrap: wrap;
+            padding-left: 0px;
+        }
+
+            .events-list-block ul li {
+                list-style: none;
+                padding: 8px;
+                border-radius: 3px;
+                border: 1px solid #72328A;
+                margin: 12px 12px 0 0;
+                font-size: 13px;
+                width: 160px;
+                text-align: center;
+            }
+
+        .events-list-block.old-session ul li {
+            border: 1px solid grey;
+            color: grey;
+        }
+
+    #CourseDetailsModal .modal-dialog {
+        width: 100%;
+    }
+
+    .lbl-already-booked {
+        font-weight: 500;
+        background: crimson;
+        color: white;
+        padding: 6px 8px;
+        font-size: 12px;
+        margin-bottom: 16px;
+        border-radius: 4px;
+    }
+</style>
+
+<style>
+    .card {
+        height: auto;
+        margin: auto;
+        width: 100%;
+        max-width: 600px;
+        border-radius: 6px;
+        background-color: white;
+        box-shadow: 0 1px 4px rgb(56 65 74 / 21%);
+        display: flex;
+        padding: 1rem 1.4rem;
+    }
+</style>
+<section class="mihi-71" style="background: #f5f5f5;">
+
+    <div class="container">
+        <div class="card">
+
+            <div class="d-flex" style="justify-content:space-between; align-items:center;">
+                <div style="font-weight: 600; color: #72328A; font-size: 18px;">
+                    Event Details
+                </div>
+                <div>
+
+                    <div class=" div-list" ng-if="eventType=='EVENT'">
+
+                        <button type="button" class="btn btn-primary public-primary" style="margin-top: 12px;" ng-if="selectEventDetails.OverlapBookingFlag == 'Y' && selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'N'" ng-click="enrollPublicUser()">Register</button>
+                        <label class="btn btn-primary public-primary" style="margin-top:12px;" ng-if="selectEventDetails.OverlapBookingFlag == 'N' && selectEventDetails.IsAlreadyBooked == 'N'">You can't book this session</label>
+                        <button type="button" class="btn btn-primary public-primary" style="margin-top: 12px;" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IsReviewable == 'N'" ng-click="cancelPublicUserBooking()">Cancel Booking</button>
+                        <button type="button" class="btn btn-primary public-primary" style="margin-top: 12px;" ng-if="!selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IsReviewable == 'Y'" ng-click="reviewSession()">Review Session</button>
+                        <button class="btn btn-danger public-primary" ng-if="selectEventDetails.ATTEND == 'Y'" style="margin-top: 12px;" ng-click="AttendSession(selectEventDetails.Id, 'NORMAL')">Attend</button>
+                        <img src="~/assets/img/QR_CODE_LOGO.png" ng-if="selectEventDetails.ATTEND == 'Y'" ng-click="AttendSession(selectEventDetails.TransactionId, 'QR')" style="height: 40px; width: 40px; margin-top: 12px;" />
+                    </div>
+
+                    <div class="div-flex div-list" ng-if="eventType=='COURSE'">
+                        <button type="button" class="btn btn-primary public-primary" ng-if="courseEventsList[(courseEventsList.length-1)].Value[0].IsBooked == 'N'" ng-click="enrollCourse()">Buy Course</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal-body mt-4" id="eventModalBody" ng-if="eventType=='EVENT'">
+                <div class="event-detail div-flex">
+                    <div class="div-flex">
+                        <div class="title">
+
+                            <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
+                                <div style="display:block" class="titleContainer">
+                                    <p class="title1" style="font-weight: 600; font-size: 16px;"> {{d.formTitle}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
+                        <div class="{{selectEventDetails.customDate}}">{{selectEventDetails.customTime}}</div>
+
+                        <input value="{{selectEventDetails.Id}}" id="newtag-inputHidden" type="hidden">
+
+                        <div ng-repeat="tag in totalSelectListTagify">
+                            <input value="{{selectEventDetails[tag.name]}}" id="newtag-inputHidden{{tag.name}}" type="hidden">
+                            <input value="{{tag.name}}" id="newtag-inputHidden{{selectEventDetails.Id}}" type="hidden">
+                            <input id="newtag-input{{tag.name}}" type="text" value="{{selectEventDetails[tag.name]}}" placeholder="Add tags">
+                        </div>
+
+
+                        <div class="form-group mt-2 p-0" ng-if="selectEventDetails.DOWNLOADABLE_ATTACHMENT && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='null' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!=' '">
+                            <label>Attachment Files</label>
+                            <ul style="list-style-type:none;margin:0;padding:0;margin-top:10px;">
+                                <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='public'"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
+                                <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='user' && selectEventDetails.IsAlreadyBooked == 'Y'"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="div-flex div-list">
+                    <div class="d-flex justify-content-between align-items-center p-0">
+                        <h5 class="list-title mb-0" id="newtabuList"></h5>
+
+                    </div>
+
+                    <label class="pr-2" style="margin-top: 20px; font-weight: 400;" ng-bind-html="selectEventDetails.description | safeHtml">
+                    </label>
+
+                    <ol id="newtabuListUl">
+                    </ol>
+                    <label id="labelWaiting"></label>
+                    <ul id="newtabuListUlWaiting">
+                    </ul>
+
+                </div>
+                <div class="form-group mt-2 p-0" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IS_UPLOAD_REQUIRED=='Y'
+                         && (selectEventDetails.UPLOAD_TIME=='ANYTIME' || selectEventDetails.UPLOAD_TIME=='AFTER')">
+                    <div class="form-group mt-2 p-0">
+                        <label for="SELECT_DOWNLOADABLE_ATTACHMENT">Upload Attachments</label>
+                        <input type="file" style="width: 100%; max-width: 100%;" name="SELECT_DOWNLOADABLE_ATTACHMENT" class="form-control" onchange="angular.element(this).scope().validateForm('SELECT_DOWNLOADABLE_ATTACHMENT',false)" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx" multiple id="SELECT_DOWNLOADABLE_ATTACHMENT" />
+                        <span id="fileError2" style="color:red" class="error-message"></span><br>
+                        <span id="fileSuccess" class="text-success"></span>
+                    </div>
+                    <input type="hidden" ng-model="selectEventDetails.ASSESSMENT_FILES" value="" id="DOWNLOADABLE_ATTACHMENT_FILES" />
+                    <input type="hidden" ng-model="selectEventDetails.ASSESSMENT_FILES_LIST" value="" id="DOWNLOAD_FILE_LIST" />
+
+                    <div class="form-group mt-2 p-0">
+                        <button type="button" onclick="angular.element(this).scope().uploadFiles(true)" id="EventUploadBtn2" class="btn btn-primary disable" disabled>Upload</button>
+                    </div>
+
+                    <ul>
+                        <li style="font-weight:600" ng-repeat="item in selectEventDetails.ASSESSMENT_FILES_LIST_DATA">
+                            <a ng-href="{{item.url}}" target="_blank">{{item.name}}</a>
+                            <button class="btn btn-link" ng-click="selectedEventRemoveFiles($index)"><i class="fa fa-times-circle"></i></button>
+                        </li>
+                    </ul>
+
+                </div>
+
+            </div>
+
+            <div class="modal-body pt-0" id="courseModalBody" ng-if="eventType=='COURSE'">
+                <div>
+                    <label class="lbl-already-booked" ng-if="courseEventsList[(courseEventsList.length-1)].Value[0].IsBooked == 'Y'">You have already booked this course!</label>
+                </div>
+                <div class="event-detail div-flex">
+                    <div class="div-flex">
+                        <div class="title">
+
+                            <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
+                                <div style="display:block" class="titleContainer">
+                                    <p class="title1" style="font-weight:bold; font-size: 16px;"> {{d.formTitle}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="div-flex div-list" ng-if="selectEventDetails.description != '' && selectEventDetails.description != null && selectEventDetails.description != ' ' && selectEventDetails.description != undefined">
+                            <label style="font-weight:bold; font-size: 16px;">Description</label>
+
+                            <label class="pr-2" style="margin-top: 20px; font-weight: 400;" ng-bind-html="selectEventDetails.description | safeHtml">
+                            </label>
+                        </div>
+
+                        <hr />
+
+                        <div class="form-group mt-2 p-0">
+
+                            <label style="font-size: 16px;">Events:</label>
+                            <br />
+                            <div class="events-list-container" id="events-list-container">
+                                <div class="events-list-block" ng-repeat="item in courseEventsList track by $index" ng-class="{'old-session': item.Value[0].IsPreviousSession == 'Y'}" id="{{'event_' + (item.Value[0].IsPreviousSession)}}">
+                                    <div class="event-tracker">
+                                        <i ng-if="item.Value[0].IsPreviousSession == 'N'" class="fa fa-circle-o" aria-hidden="true"></i>
+                                        <i ng-if="item.Value[0].IsPreviousSession == 'Y'" style="color:grey;" class="fa fa-circle-o" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="event-tracker-line"><div></div></div>
+                                    <div class="event-detail">
+                                        <label>{{item.Key}}</label>
+                                        <ul>
+                                            <li ng-repeat="event in item.Value">
+                                                <div>{{event.start}} - {{event.end}}</div>
+                                                <div style="margin-top: 12px; text-align:left;">
+                                                    <button class="btn btn-primary public-primary" style="border-radius: 50px;" ng-if="event.ATTEND == 'Y'" ng-click="AttendSession(event.Id, 'NORMAL')">Attend</button>
+                                                    <img src="~/assets/img/QR_CODE_LOGO.png" ng-if="event.ATTEND == 'Y'" ng-click="AttendSession(event.TransactionId, 'QR')" style="height: 32px; width: 32px;" />
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr />
+                        <div class="form-group mt-2 p-0" ng-if="selectEventDetails.DOWNLOADABLE_ATTACHMENT && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='null' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!=' '">
+
+                            <label>Attachment Files</label>
+
+                            <ul style="padding:0" class="already-uploaded-ul">
+                                <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='public'">
+                                    <a ng-href="{{item.url}}" target="_blank" title="{{item.name}}"><img src="~/assets/css/images/attachment-img.PNG" /></a>
+                                    <div title="{{item.name}}" class="attachment-name">{{item.name}}</div>
+                                </li>
+
+                                <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='user' && selectEventDetails.IsAlreadyBooked == 'Y'">
+                                    <a ng-href="{{item.url}}" target="_blank" title="{{item.name}}"><img src="~/assets/css/images/attachment-img.PNG" /></a>
+                                    <div title="{{item.name}}" class="attachment-name">{{item.name}}</div>
+                                </li>
+                            </ul>
+
+                        </div>
+
+                    </div>
+                </div>
+                
+                <div class="form-group mt-2 p-0" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IS_UPLOAD_REQUIRED=='Y'
+                         && (selectEventDetails.UPLOAD_TIME=='ANYTIME' || selectEventDetails.UPLOAD_TIME=='AFTER')">
+                    <div class="form-group mt-2 p-0">
+                        <label for="SELECT_DOWNLOADABLE_ATTACHMENT">Upload Attachments</label>
+                        <input type="file" name="SELECT_DOWNLOADABLE_ATTACHMENT" class="form-control" onchange="angular.element(this).scope().validateForm('SELECT_DOWNLOADABLE_ATTACHMENT',false)" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx" multiple id="SELECT_DOWNLOADABLE_ATTACHMENT" />
+                        <span id="fileError2" style="color:red" class="error-message"></span><br>
+                        <span id="fileSuccess" class="text-success"></span>
+                    </div>
+                    <input type="hidden" ng-model="selectEventDetails.ASSESSMENT_FILES" value="" id="DOWNLOADABLE_ATTACHMENT_FILES" />
+                    <input type="hidden" ng-model="selectEventDetails.ASSESSMENT_FILES_LIST" value="" id="DOWNLOAD_FILE_LIST" />
+
+                    <div class="form-group mt-2 p-0">
+                        <button type="button" onclick="angular.element(this).scope().uploadFiles(true)" id="EventUploadBtn2" class="btn btn-primary disable" disabled>Upload</button>
+                    </div>
+
+                    <ul>
+                        <li style="font-weight:600" ng-repeat="item in selectEventDetails.ASSESSMENT_FILES_LIST_DATA">
+                            <a ng-href="{{item.url}}" target="_blank">{{item.name}}</a>
+                            <button class="btn btn-link" ng-click="selectedEventRemoveFiles($index)"><i class="fa fa-times-circle"></i></button>
+                        </li>
+                    </ul>
+
+                </div>
+
+
+                <br />
+
+            </div>
+
+            <div class="modal-body" id="serviceModalBody" ng-if="eventType=='SERVICE'">
+                <div class="event-detail div-flex">
+                    <div class="div-flex">
+                        <div class="title">
+                            <label class="pr-2" style=" font-weight: 400;" ng-bind-html="selectEventDetails.description | safeHtml">
+                            </label>
+                            <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
+                                <div style="display:block" class="titleContainer">
+                                    <p class="title1" style="font-weight:bold; font-size: 16px;"> {{d.formTitle}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-if="!selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
+                        <div ng-if="!selectEventDetails.allDay">{{selectEventDetails.customTime}}</div>
+
+                        <div ng-if="selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
+
+                        <input value="{{selectEventDetails.Id}}" id="newtag-inputHidden" type="hidden">
+                        <div ng-repeat="tag in totalSelectListTagify">
+                            <input value="{{selectEventDetails[tag.name]}}" id="newtag-inputHidden{{tag.name}}" type="hidden">
+                            <input value="{{tag.name}}" id="newtag-inputHidden{{selectEventDetails.Id}}" type="hidden">
+                            <input id="newtag-input{{tag.name}}" type="text" value="{{selectEventDetails[tag.name]}}" placeholder="Add tags">
+                        </div>
+
+                        <div class="form-group mt-2 p-0" ng-if="selectEventDetails.DOWNLOADABLE_ATTACHMENT && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='null' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!=' '">
+                            <ul style="list-style-type:none;margin:0;padding:0;margin-top:10px;">
+                                <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='public'"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="div-flex div-list-bar"></div>
+                <div class="div-flex div-list">
+                    <div class="d-flex justify-content-between align-items-center p-0">
+                        <h5 class="list-title mb-0" id="newtabuList"><strong id="strongFormName">0 Student in this Slot</strong></h5>
+
+                    </div>
+                    <ol id="newtabuListUl">
+                    </ol>
+                    <label id="labelWaiting"></label>
+                    <ul id="newtabuListUlWaiting">
+                    </ul>
+                </div>
+                <div class="div-flex">
+                    <p style="font-weight:600">The white area is the available time. Please click on the available time to book.</p>
+                </div>
+
+                <div id="agenda-view2">
+                    <div class="calendar"></div>
+                </div>
+
+            </div>
+
+            <div class="modal fade" id="AdditionalDetailsFormModal" style="z-index: 2000;" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel5" aria-hidden="true">
+                <div class="modal-dialog modal-lg" style="width: 100%;" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Fill your details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" style="padding-top: 0px;">
+                            <div id="service-div"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<script>
+    document.cookie = "cookieName=cookieValue; SameSite=None; Secure";
+
+</script>
+<script src="/fg-assets/lightbox/js/lightbox-2.6.min.js"></script>
+<script src="/Scripts/myscript/commonFunctions.js"></script>
+<script src="/Content/sidebar/js/sidebar-script.js"></script>

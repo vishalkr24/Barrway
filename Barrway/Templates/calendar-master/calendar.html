@@ -1309,6 +1309,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div id="eventEdit" class="cursor-pointer" data-formid="{{selectEventDetails.formID}}" data-formgroupkey="{{selectEventDetails.formGroupKey}}" data-eventid="{{selectEventDetails.Id}}" style="margin-left: 15px;font-size: 20px;"><a> <i class="fa fa-pencil"></i></a></div>
                 <span id="eventDelete" data-formid="{{selectEventDetails.formID}}" data-formgroupkey="{{selectEventDetails.formGroupKey}}" data-eventid="{{selectEventDetails.Id}}" class="btn delete-event cursor-pointer" style="outline:none; font-size: 20px;"><i class="fa fa-trash"></i></span>
+                <span id="eventShare" data-additional-form-id="{{selectEventDetails.ADDITIONAL_FORM_ID}}" data-eventid="{{selectEventDetails.Id}}" onclick="copyLinkToClipboard(this)" class="btn btn-primary cursor-pointer" style=" border-radius:50px; outline:none; padding: 8px 16px;">Share <i class="fa fa-link"></i></span>
             </div>
             <div class="modal-body" style="padding-top:1rem;">
                 <div class="barrway-calendar-event-detail">

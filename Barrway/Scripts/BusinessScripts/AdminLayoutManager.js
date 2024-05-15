@@ -1,7 +1,6 @@
 ﻿$(document).ready(function () {
     setCompanyDetails();
     setTop5Calendars();
-
     //if (localStorage.getItem("CALENDAR_FUNCTION_TYPE") == "QUEUE") {
     //    $("#nav-calendar-master").attr("href", "/calendar/index#/queue-manager")
     //    $("#nav-schedular-form").attr("href", "/calendar/index#/calendar/queue-schedular-form/2311");
@@ -59,6 +58,12 @@ function goToCompanyAdminMaster() {
         return;
     }
     
+}
+
+function copyLinkToClipboard(event) {
+    let copyText = BASE_URL + "Useradmin#/bookEvent/" + event.attributes["data-eventid"].value
+    navigator.clipboard.writeText(copyText);
+    alert("Link copied to clipboard!");
 }
 
 function GenerateEventQR(eventId) {
