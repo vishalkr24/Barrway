@@ -442,6 +442,16 @@
             font-size: 16px;
             font-weight: 600;
         }
+        a.tab {
+            color: #333333;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+            a.tab.active {
+                color: #fff;
+            }
 
         .active {
             background-color: #3fbfc7;
@@ -542,10 +552,10 @@
                                 <div style="width: 100%;">
                                     <div class="tabs">
 
-                                        <label class="tab active" for="radio-1"><a href="/Account/BusinessLogin">Email</a></label>
-
-                                        <label class="tab" for="radio-2"><a href="/Account/BusinessPhoneLogin">Phone</a></label>
-
+                                        @*<label class="tab active" for="radio-1"><a href="/Account/BusinessLogin">Email</a></label>
+                                        <label class="tab" for="radio-2"><a href="/Account/BusinessPhoneLogin">Phone</a></label>*@
+                                        <a class="tab active" href="#">Email</a>
+                                        <a class="tab" href="/Account/BusinessPhoneLogin">Phone</a>
                                     </div>
                                 </div>
 

@@ -251,6 +251,7 @@ namespace Barrway.Controllers
             {
                 return View(model);
             }
+            //if (!string.IsNullOrEmpty(model.USER_PHONE)) { model.USER_PHONE = model.USER_PHONE.Trim().Replace(" ",""); }
 
             var loginresult = await authService.GetUserbyPhone( model.USER_PHONE,  model.Country_Code, model.USER_PASSWORD, (int)FormRole.GENERAL_USER, true);
 
@@ -290,7 +291,6 @@ namespace Barrway.Controllers
             {
                 ModelState.AddModelError("ERROR_MESSAGE", loginresult.Message);
             }
-
             return View(model);
         }
 

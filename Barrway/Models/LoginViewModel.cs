@@ -32,6 +32,7 @@ namespace Barrway.Models
 
         [Required(ErrorMessage = "please enter Country code !")]
         public string Country_Code { get; set; }
+        public string Country_Origin_Code { get; set; }
 
 
         [Required(ErrorMessage = "Please Enter Password!!")]
