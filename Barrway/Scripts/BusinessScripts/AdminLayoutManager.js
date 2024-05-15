@@ -359,9 +359,8 @@ function setCalendarDashboardData() {
                 //add row data on right hand side
                 cellContents = `<td class="login_primary"><a href='javascript:void(0)' style='margin-left:5px;' onclick="ScanStudentQR('${data.EVENT_ID}')"><img src="../../assets/img/qr-scan.png" style="height: 40px; width: 40px;" /></a>
                     <a href='javascript:void(0)' onclick="GenerateEventQR('${data.EVENT_ID}')"><img src="../../assets/img/QR_CODE_LOGO.png" style="height: 40px; width: 40px;" /></a></td>`;
-                cellContents += "<td><div><strong>Date:</strong> " + data.BOOKING_DATE + "</div><div><strong>Service Name:</strong> " + data.SERVICE_NAME + "</div><div><strong>Service Provider:</strong> " + data.SERVICE_PROVIDER + "</div><div><strong>Client Name:</strong> " + data.CLIENT_NAME
+                cellContents += "<td><div><strong>Date:</strong> " + data.BOOKING_DATE + "</div><div><strong>Service Name:</strong> " + data.SERVICE_NAME + "</div><div><strong>Service Provider:</strong> " + data.SERVICE_PROVIDER + "</div><div><strong>Client Name:</strong> " + data.CLIENT_NAME+
                 "</div><div><strong>From Time:</strong> " + data.FROM_TIME + "</div><div><strong>To Time:</strong> " + data.TO_TIME + "</div></td>"
-
                 rowTabletr.innerHTML = cellContents;
 
                 rowTable.appendChild(rowTabletr);

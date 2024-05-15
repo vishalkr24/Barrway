@@ -446,6 +446,17 @@
             font-weight: 600;
         }
 
+        a.tab {
+            color: #333333;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+            a.tab.active {
+                color: #fff;
+            }
+
         .active {
             background-color: #3fbfc7;
         }
@@ -538,9 +549,11 @@
                                 <div style="width:100%;">
                                     <div class="tabs">
 
-                                        <label class="tab active" for="radio-1"><a href="/Account/BusinessSignUp">Email</a></label>
+                                        @*<label class="tab active" for="radio-1"><a href="/Account/BusinessSignUp">Email</a></label>
+                                          <label class="tab" for="radio-2"><a href="/Account/BusinessSignUpPhone">Phone</a></label>*@
 
-                                        <label class="tab" for="radio-2"><a href="/Account/BusinessSignUpPhone">Phone</a></label>
+                                        <a class="tab active" href="#">Email</a>
+                                        <a class="tab" href="/Account/BusinessSignUpPhone">Phone</a>
 
                                     </div>
                                 </div>
@@ -556,27 +569,27 @@
                                             <div class="form-group">
                                                 <label for="username">@Resource.User_name</label>
                                                 @*<input type="text" class="form-control" id="USER_NAME" name="USER_NAME" required placeholder="Username">*@
-                                                @Html.TextBoxFor(model => model.USER_NAME, new { @class = "form-control", @placeholder = "Username", @required = "true" })
+                                                @Html.TextBoxFor(model => model.USER_NAME, new { @class = "form-control", @placeholder = "Username", @required = "true" , @autocomplete = "new-password" })
                                                 @Html.ValidationMessageFor(model => model.USER_NAME, "", new { @class = "invalid-feedback-2" })
 
                                             </div>
                                             <div class="form-group">
                                                 <label for="email">@Resource.Email</label>
                                                 @*<input type="email" class="form-control" id="USER_EMAIL" name="USER_EMAIL" required placeholder="Email">*@
-                                                @Html.TextBoxFor(model => model.USER_EMAIL, new { @class = "form-control", @placeholder = "Email", @required = "true" })
+                                                @Html.TextBoxFor(model => model.USER_EMAIL, new { @class = "form-control", @placeholder = "Email", @required = "true" , @autocomplete = "new-password" })
                                                 @Html.ValidationMessageFor(model => model.USER_EMAIL, "", new { @class = "invalid-feedback-2" })
 
                                             </div>
                                             <div class="form-group">
                                                 <label for="pwd">@Resource.Password</label>
                                                 @*<input type="password" class="form-control" id="USER_PASSWORD" name="USER_PASSWORD" required placeholder="********">*@
-                                                @Html.PasswordFor(model => model.USER_PASSWORD, new { @class = "form-control", @placeholder = "********", @required = "true" })
+                                                @Html.PasswordFor(model => model.USER_PASSWORD, new { @class = "form-control", @placeholder = "********", @required = "true", @autocomplete = "new-password" })
                                                 @Html.ValidationMessageFor(model => model.USER_PASSWORD, "", new { @class = "invalid-feedback-2" })
                                             </div>
                                             <div class="form-group">
                                                 <label for="repwd">@Resource.Retype_Password</label>
                                                 @*<input type="password" class="form-control" id="USER_CONFIRM_PASSWORD" name="USER_CONFIRM_PASSWORD" required placeholder="********">*@
-                                                @Html.PasswordFor(model => model.USER_CONFIRM_PASSWORD, new { @class = "form-control", @placeholder = "********", @required = "true" })
+                                                @Html.PasswordFor(model => model.USER_CONFIRM_PASSWORD, new { @class = "form-control", @placeholder = "********", @required = "true", @autocomplete = "new-password" })
                                                 @Html.ValidationMessageFor(model => model.USER_CONFIRM_PASSWORD, "", new { @class = "invalid-feedback-2" })
                                             </div>
                                             <div class="checkbox">

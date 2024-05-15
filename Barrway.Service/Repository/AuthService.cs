@@ -566,14 +566,14 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
                                     join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.USER_ID = user_m.USER_ID
                                     join BUSINESS_ASSIGNED_USERS_1964 bau on bau.BUSINESS_ACCOUNT_ID = baw.Id
                                     join ROLE_MASTER_1917 user_role on user_role.Id = user_m.ROLE_ID
-                                    where user_m.USER_PHONE = '{phone}' and user_m.Country_Code='{CountryCode}' and user_m.ROLE_ID = '{Role_Id.ToString()}' and bau.ASSIGNED_USER = user_m.Id";
+                                    where Replace(user_m.USER_PHONE,' ','') = '{phone}' and user_m.Country_Code='{CountryCode}' and user_m.ROLE_ID = '{Role_Id.ToString()}' and bau.ASSIGNED_USER = user_m.Id";
                 }
                 else
                 {
                     sqlQuery = $@"select user_m.*, role_m.ROLE_NAME, pua.FIRST_NAME, pua.LAST_NAME from USER_MASTER_1915 user_m
                                      join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
                                      join PUBLIC_USER_ACCOUNT_1943 pua on pua.USER_ID = user_m.USER_ID
-                                    where user_m.USER_PHONE = '{phone}' and user_m.ROLE_ID = '{Role_Id.ToString()}'";
+                                    where Replace(user_m.USER_PHONE,' ','') = '{phone}' and user_m.ROLE_ID = '{Role_Id.ToString()}'";
                 }
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
@@ -600,7 +600,7 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
                 string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME, pua.FIRST_NAME, pua.LAST_NAME from USER_MASTER_1915 user_m
                                      join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
                                      join PUBLIC_USER_ACCOUNT_1943 pua on pua.USER_ID = user_m.USER_ID
-                                                            where user_m.USER_PHONE = '{phone}'";
+                                                            where Replace(user_m.USER_PHONE,' ','') = '{phone}'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
@@ -666,7 +666,7 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
             try
             {
                 
-                   string sqlString = $@" update USER_MASTER_1915 set IS_ACTIVE='Y',IS_PHONE_VERIFIED='Y' where USER_PHONE='{userID}'";
+                   string sqlString = $@" update USER_MASTER_1915 set IS_ACTIVE='Y',IS_PHONE_VERIFIED='Y' where  Replace(USER_PHONE,' ','')='{userID}'";
                     var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
                     if (result > 0)
                     {

@@ -452,6 +452,17 @@
             font-weight: 600;
         }
 
+        a.tab {
+            color: #333333;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+            a.tab.active {
+                color: #fff;
+            }
+
         .active {
             background-color: #3fbfc7;
         }
@@ -556,10 +567,11 @@
                                 <div style="width:100%">
                                     <div class="tabs">
 
-                                        <label class="tab" for="radio-1"><a href="/Account/BusinessSignUp">Email</a></label>
+                                        @*<label class="tab" for="radio-1"><a href="/Account/BusinessSignUp">Email</a></label>
 
-                                        <label class="tab active" for="radio-2"><a href="/Account/BusinessSignUpPhone">Phone</a></label>
-
+                                            <label class="tab active" for="radio-2"><a href="/Account/BusinessSignUpPhone">Phone</a></label>*@
+                                        <a class="tab" href="/Account/BusinessSignUp">Email</a>
+                                        <a class="tab active" href="#">Phone</a>
                                     </div>
                                 </div>
                                 <div class="register">
@@ -569,10 +581,11 @@
                                     <form class="js-validate needs-validation" method="post" action="/Account/BusinessSignUpPhone" novalidate>
 
                                         @Html.AntiForgeryToken()
+                                        @Html.ValidationSummary()
                                         <div class="form-group">
                                             <label for="username">@Resource.User_name</label>
                                             @*<input type="text" class="form-control" id="USER_NAME" name="USER_NAME" required placeholder="Username">*@
-                                            @Html.TextBoxFor(model => model.USER_NAME, new { @class = "form-control", @placeholder = "Username", @required = "true" })
+                                            @Html.TextBoxFor(model => model.USER_NAME, new { @class = "form-control", @placeholder = "Username", @required = "true", @autocomplete = "new-password" })
                                             @Html.ValidationMessageFor(model => model.USER_NAME, "", new { @class = "invalid-feedback-2" })
 
                                         </div>
@@ -582,8 +595,10 @@
                                             <div class="mobileNumberDiv">
 
                                                 @Html.HiddenFor(model => model.Country_Code)
+                                                @Html.HiddenFor(model => model.Country_Origin_Code)
 
-                                                @Html.TextBoxFor(model => model.USER_PHONE, new { @class = "form-control", @placeholder = "Phone", @required = "true" })
+                                                @*@Html.TextBoxFor(model => model.USER_PHONE, new { @class = "form-control", @placeholder = "Phone", @required = "true", @autocomplete = "new-password" })*@
+                                                <input type="text" name="USER_PHONE" id="USER_PHONE" placeholder="Phone" class="form-control" data-val="true" data-val-required="Please enter phone number !" value="" autocomplete="new-password" required />
                                                 @Html.ValidationMessageFor(model => model.USER_PHONE, "", new { @class = "invalid-feedback-2" })
                                                 <span id="valid-msg" class="hide">✓ Valid</span>
                                                 <span id="error-msg" class="hide"></span>
@@ -592,13 +607,13 @@
                                         <div class="form-group">
                                             <label for="pwd">@Resource.Password</label>
                                             @*<input type="password" class="form-control" id="USER_PASSWORD" name="USER_PASSWORD" required placeholder="********">*@
-                                            @Html.PasswordFor(model => model.USER_PASSWORD, new { @class = "form-control", @placeholder = "********", @required = "true" })
+                                            @Html.PasswordFor(model => model.USER_PASSWORD, new { @class = "form-control", @placeholder = "********", @required = "true", @autocomplete = "new-password" })
                                             @Html.ValidationMessageFor(model => model.USER_PASSWORD, "", new { @class = "invalid-feedback-2" })
                                         </div>
                                         <div class="form-group">
                                             <label for="repwd">@Resource.Retype_Password</label>
                                             @*<input type="password" class="form-control" id="USER_CONFIRM_PASSWORD" name="USER_CONFIRM_PASSWORD" required placeholder="********">*@
-                                            @Html.PasswordFor(model => model.USER_CONFIRM_PASSWORD, new { @class = "form-control", @placeholder = "********", @required = "true" })
+                                            @Html.PasswordFor(model => model.USER_CONFIRM_PASSWORD, new { @class = "form-control", @placeholder = "********", @required = "true", @autocomplete = "new-password" })
                                             @Html.ValidationMessageFor(model => model.USER_CONFIRM_PASSWORD, "", new { @class = "invalid-feedback-2" })
                                         </div>
                                         <div class="checkbox">
@@ -626,7 +641,7 @@
                                             @Html.AntiForgeryToken()
 
                                             @*<button class="a" type="submit" id="Google" name="provider" value="Google"><span class="hide-on-large"><i class="bi bi-google" aria-hidden="true"></i></span> <span class="hide-on-small">Register with Google</span> </button>
-                                            <button class="a" type="submit" id="Facebook" name="provider" value="Facebook"> <span class="hide-on-large"><i class="bi bi-facebook" aria-hidden="true"></i></span> <span class="hide-on-small">Register with Facebook</span></button>*@
+                                                <button class="a" type="submit" id="Facebook" name="provider" value="Facebook"> <span class="hide-on-large"><i class="bi bi-facebook" aria-hidden="true"></i></span> <span class="hide-on-small">Register with Facebook</span></button>*@
                                         }
 
                                     </div>
@@ -697,6 +712,22 @@
     <link href="~/assets/intl-tel-input/css/intlTelInput.css" rel="stylesheet" />
     <script src="~/assets/intl-tel-input/js/intlTelInput-jquery.min.js"></script>
     <script src="~/assets/intl-tel-input/js/intlTelInput.js"></script>
+
+    @if (Model != null && !string.IsNullOrEmpty(Model.Country_Origin_Code))
+    {
+        <script>
+        var initialCountry = "@Model.Country_Origin_Code.ToLower()";
+        </script>
+
+    }
+    else
+    {
+
+        <script>
+            var initialCountry = "auto";
+        </script>
+    }
+
     <script>
 
         $(document).ready(function () {
@@ -714,9 +745,9 @@
             $("#countryCode").select2();
 
 
-            
 
-            
+
+
 
            @*<script src="~/assets/intl-tel-input/js/utils.js"></script>*@
             const input = document.querySelector("#USER_PHONE");
@@ -728,16 +759,16 @@
             var country;
             // initialise plugin
             const iti = window.intlTelInput(input, {
-              
-                initialCountry: "auto",
+
+                initialCountry: initialCountry,
                 geoIpLookup: function (callback) {
-                   
+
                     $.get('https://ipinfo.io', function () { }, "jsonp").always(function (resp) {
-                        debugger;
                         var countryCode = (resp && resp.country) ? resp.country : "";
                         var dialCode = getDialCodeByIso2(countryCode);
-                        $("#Country_Code").val(dialCode);
 
+                        $("#Country_Code").val(dialCode);
+                        $('#Country_Origin_Code').val(countryCode);
                         callback(countryCode);
                     });
                 },
@@ -748,20 +779,24 @@
                 //utilsScript: "/assets/intl-tel-input/js/utils.js?1708969428263"
             });
 
+            $(input).on("countrychange", function () {
+                var country = iti.getSelectedCountryData();
+                $("#Country_Code").val(country.dialCode);
+                $('#Country_Origin_Code').val(country.iso2);
+            });
 
-            
             const countryData = window.intlTelInputGlobals.getCountryData();
             function getDialCodeByIso2(iso2) {
-               
+
                 var country = countryData.find(country => country.iso2.toLowerCase() === iso2.toLowerCase());
-              
+
                 return country ? country.dialCode : null;
             }
 
-           
-          
 
-            
+
+
+
 
             const reset = () => {
                 input.classList.remove("error");
@@ -799,15 +834,15 @@
             });
 
 
-            function setContryCodeValue() {              
+            function setContryCodeValue() {
                 var instance = $("[name=USER_PHONE]")
                 instance.intlTelInput();
                 var countrycode = instance.intlTelInput('getSelectedCountryData').dialCode;
                 if (countrycode != undefined) {
                     $("#Country_Code").val(countrycode);
                 }
-                
-                
+
+
             }
 
 
@@ -817,10 +852,16 @@
         })
 
 
-        
+
 
 
     </script>
 
+    @if (Model != null && !string.IsNullOrEmpty(Model.USER_PHONE))
+    {
+        <script>
+        setTimeout(function () {  $('#USER_PHONE').val('@Model.USER_PHONE'); }, 1000);
+        </script>
+    }
 </body>
 </html>

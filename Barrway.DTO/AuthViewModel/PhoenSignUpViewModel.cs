@@ -17,6 +17,7 @@ namespace Barrway.DTO.AuthViewModel
         
         public string USER_PHONE { get; set; }
         public string Country_Code { get; set; }
+        public string Country_Origin_Code { get; set; }
 
 
         [Required(ErrorMessage = "Password is required")]

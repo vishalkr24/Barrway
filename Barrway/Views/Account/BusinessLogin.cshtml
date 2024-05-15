@@ -577,14 +577,14 @@
                                         <div class="form-group">
                                             <label for="email">@Resource.Email</label>
                                             @*<input type="email" class="form-control" id="USER_EMAIL" name="USER_EMAIL" required placeholder="Email">*@
-                                            @Html.TextBoxFor(model => model.USER_EMAIL, new { @class = "form-control", @placeholder = "Email", @required = "true" })
+                                            @Html.TextBoxFor(model => model.USER_EMAIL, new { @class = "form-control", @placeholder = "Email", @required = "true", @autocomplete = "new-password" })
                                             @Html.ValidationMessageFor(model => model.USER_EMAIL, "", new { @class = "invalid-feedback-2" })
 
                                         </div>
                                         <div class="form-group">
                                             <label for="pwd">@Resource.Password</label>
                                             @*<input type="password" class="form-control" id="USER_PASSWORD" name="USER_PASSWORD" required placeholder="********">*@
-                                            @Html.PasswordFor(model => model.USER_PASSWORD, new { @class = "form-control", @placeholder = "********", @required = "true" })
+                                            @Html.PasswordFor(model => model.USER_PASSWORD, new { @class = "form-control", @placeholder = "********", @required = "true", @autocomplete = "new-password" })
                                             @Html.ValidationMessageFor(model => model.USER_PASSWORD, "", new { @class = "invalid-feedback-2" })
                                         </div>
 
