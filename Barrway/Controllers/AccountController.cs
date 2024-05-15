@@ -554,13 +554,13 @@ namespace Barrway.Controllers
                 ModelState.AddModelError("TERMS_ACCEPTED", "Please check our terms & conditions.");
                 return View(model);
             }
-
-            var userByEmail = await authService.GetUserByPhone( model.USER_PHONE, model.Country_Code, (int)FormRole.GENERAL_USER);
+            string phone = model.USER_PHONE.Trim().Replace(" ", "");
+            var userByPhone = await authService.GetUserByPhone(phone, model.Country_Code, (int)FormRole.GENERAL_USER);
             var userByID = await authService.GetUser(model.USER_NAME, FormRole.GENERAL_USER);
 
             string generalRoleId = ((int)FormRole.GENERAL_USER).ToString();
 
-            if (!userByEmail.Status && !userByID.Status)
+            if (!userByPhone.Status && !userByID.Status)
             {
                 // Insert Data in User Master
 
@@ -574,7 +574,7 @@ namespace Barrway.Controllers
                     PROFILE_STATUS = "PENDING",
                     SIGNUP_TYPE = (model.IS_EXTERNAL_SIGNUP) ? "Google" : "Phone",
                     Country_Code = model.Country_Code,
-                    USER_PHONE =  model.USER_PHONE,
+                    USER_PHONE = phone,
                     USER_PASSWORD = model.USER_PASSWORD,
                     USER_ID = model.USER_NAME,
                     ROLE_ID = generalRoleId,
@@ -584,8 +584,11 @@ namespace Barrway.Controllers
                 };
 
                 AddUpdateDelete result = await signupService.RegisterUser(userMaserModel.ToDictionary());
+                if (!result.Status) {
+                    ModelState.AddModelError("", result.Message);
+                    return View(model);
+                }
 
-                
 
                 PublicAccountModel businessModel = new PublicAccountModel()
                 {
@@ -594,18 +597,23 @@ namespace Barrway.Controllers
                 };
 
                 AddUpdateDelete publicResult = await publicUserService.CreatePublicUserAccount(businessModel);
-
-                // Send Activation Link
-                if (!model.IS_EXTERNAL_SIGNUP && publicResult.Status)
+                if (!publicResult.Status)
                 {
-                    var Result = MessageRepository.SendOtpSmS("+"+model.Country_Code + model.USER_PHONE);
+                    ModelState.AddModelError("", publicResult.Message);
+                    return View(model);
+                }
+                // Send Activation Link
+                if (!model.IS_EXTERNAL_SIGNUP)
+                {
+                    var Result = MessageRepository.SendOtpSmS("+"+model.Country_Code + phone);
 
                     if (result.Status)
                     {
                        
-                        Session["VarificationMobileNUmber"] = "+" + model.Country_Code + model.USER_PHONE;
+                        Session["VarificationMobileNUmber"] = "+" + model.Country_Code + phone;
+                        Session["MobileNUmber"] = phone;
                         TempData["VERIFICATION"] = "Pending";
-                        TempData["VERIFICATION_Phone"] = "+" + model.Country_Code + model.USER_PHONE;
+                        TempData["VERIFICATION_Phone"] = "+" + model.Country_Code + phone;
                         TempData["MobileVerificationSuccessMessage"] = "an Otp message has been sent to your registered mobile number !";
                         return RedirectToAction("MobileVerification", "Account");
 
@@ -619,7 +627,7 @@ namespace Barrway.Controllers
                 else
                 {
 
-                    var result2 = await authService.GetUserByPhone(model.USER_PHONE, "+"+model.Country_Code, 1);
+                    var result2 = await authService.GetUserByPhone(phone, "+"+model.Country_Code, 1);
                     if (result2.Status)
                     {
                         var user = result2.Data;
@@ -647,7 +655,7 @@ namespace Barrway.Controllers
             }
             else
             {
-                if (userByEmail.Status)
+                if (userByPhone.Status)
                 {
                     ModelState.AddModelError("USER_PHONE", "Phone is already registered");
                 }
@@ -684,17 +692,18 @@ namespace Barrway.Controllers
             try
             {
                 
-                string MObileNumber = Session["VarificationMobileNUmber"].ToString();
+                string MObileNumber = Session["VarificationMobileNUmber"]?.ToString();
+                string _MObileNumber = Session["MobileNUmber"]?.ToString();
 
-                if(MObileNumber != "")
+                if(!string.IsNullOrEmpty(MObileNumber) && !string.IsNullOrEmpty(_MObileNumber))
                 {
                     var Result = MessageRepository.VarifyOtp(MObileNumber, model.OTP);
                     if (Result.Status == true)
                     {
 
-                        var UserDetails=await authService.GetUserByPhone(MObileNumber);
+                        var UserDetails=await authService.GetUserByPhone(_MObileNumber);
 
-                        var _result = await authService.ChangePhoneVarificationStatus(MObileNumber);
+                        var _result = await authService.ChangePhoneVarificationStatus(_MObileNumber);
 
 
                         TempData["MobileVerificationSuccessMessage"] = "Mobile verification completed successfully !";
@@ -727,17 +736,20 @@ namespace Barrway.Controllers
             try
             {
 
-                string MobileNumber = Session["VarificationMobileNUmber"].ToString();
-                if(MobileNumber != "")
+                string MobileNumber = Session["VarificationMobileNUmber"]?.ToString();
+                if (!string.IsNullOrEmpty(MobileNumber))
                 {
                     var Result = MessageRepository.SendOtpSmS(MobileNumber);
                     TempData["MobileVerificationSuccessMessage"] = "new OTP has been sent !";
+                }
+                else {
+                    TempData["MobileVerificationErroMessage"] = "Session expired!";
                 }
                 return RedirectToAction("MobileVerification", "Account");
             }
             catch (Exception ex)
             {
-                ViewBag.VerificationEmail = TempData.Peek("VERIFICATION_Phone");
+                TempData["MobileVerificationErroMessage"] = ex.Message;
             }
 
             return RedirectToAction("MobileVerification", "Account");

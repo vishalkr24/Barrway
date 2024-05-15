@@ -630,7 +630,7 @@
                                                 @Html.HiddenFor(model => model.Country_Code)
                                                 @Html.HiddenFor(model => model.Country_Origin_Code)
 
-                                                <input type="text" name="USER_PHONE" id="USER_PHONE" placeholder="Phone" class="form-control" data-val="true" data-val-required="Please Enter phone number !" value="" autocomplete="new-password" required />
+                                                <input type="text" name="USER_PHONE" id="USER_PHONE" placeholder="Phone" class="form-control" data-val="true" data-val-required="Please enter phone number !" value="" autocomplete="new-password" required />
 
                                                 @*@Html.TextBoxFor(model => model.USER_PHONE, new { @class = "form-control", @placeholder = "Phone", @required = "true", @autocomplete = "nope" })*@
                                                 @Html.ValidationMessageFor(model => model.USER_PHONE, "", new { @class = "invalid-feedback-2" })
@@ -703,7 +703,7 @@
 
         </script>*@
 
-    @if (Model != null && !string.IsNullOrEmpty(Model.Country_Code))
+    @if (Model != null && !string.IsNullOrEmpty(Model.Country_Origin_Code))
     {
         <script>
             var initialCountry = "@Model.Country_Origin_Code.ToLower()";

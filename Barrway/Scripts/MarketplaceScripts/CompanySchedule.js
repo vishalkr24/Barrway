@@ -57,6 +57,7 @@ $(document).ready(async function () {
 
     var SelectedCalendarViews = (calendarDetails["REQUIRED_CALENDAR_VIEWS"].includes(",")) ? calendarDetails["REQUIRED_CALENDAR_VIEWS"].split(',') : [calendarDetails["REQUIRED_CALENDAR_VIEWS"]];
 
+
     SelectedCalendarViews.forEach(x => {
         switch (x) {
             case 'LIST VIEW':
@@ -99,11 +100,13 @@ $(document).ready(async function () {
     if (calendarDetails["CALENDAR_CATEGORY_ID"] == "4" && calendarDetails["CALENDAR_TYPE"] == "3") {
         is5CType = true;
         $("#year-view-nav").show();
-    } else {
+    }
+    else {
         is5CType = false;
         $("#year-view-nav").hide();
         /*$("#tabs li[data-value='External Events'] a").trigger("click");*/
     }
+
     var resourceKey = { "LOCATION": "2306", "SERVICE PROVIDER": "2304" };
     resourceFormId = "2306";
     let DEFAULT_RESOURCE = calendarDetails["DEFAULT_RESOURCE"];
@@ -263,13 +266,7 @@ $(document).ready(async function () {
             } else {
                 tabsActive();
             }
-
-            
-
-
-            marcketplaceCalendar("", [], resResults, resColumns, activityResults, activityColumns, []);
-
-
+            marcketplaceCalendar("", [], resResults, resColumns, activityResults, activityColumns, [], SelectedCalendarViews);
         }
 
 
@@ -437,7 +434,7 @@ var manageWindowParams = function () {
 
 
 
- function marcketplaceCalendar(calenderType, calenderData, resourceData, resColumns, activityFormData, activityColumn, activityEvents) {
+function marcketplaceCalendar(calenderType, calenderData, resourceData, resColumns, activityFormData, activityColumn, activityEvents, allowTabs) {
 
    
 
@@ -1522,8 +1519,11 @@ var manageWindowParams = function () {
             }
         }
     };
-    var calendarOptions = $.extend({}, defaultOptions, myOptions);
-    $('#list-view div.calendar').fullCalendar(calendarOptions);
+     var calendarOptions = $.extend({}, defaultOptions, myOptions);
+    if (allowTabs.find(x => x =="LIST VIEW")) {
+         $('#list-view div.calendar').fullCalendar(calendarOptions);
+     }
+    
 
     // Agenda View
     myOptions = {
@@ -1611,8 +1611,10 @@ var manageWindowParams = function () {
         },
         droppable: false, // this allows things to be dropped onto the calendar
     };
-    var calendarOptions = $.extend({}, defaultOptions, myOptions);
-    $('#agenda-view div.calendar').fullCalendar(calendarOptions);
+     var calendarOptions = $.extend({}, defaultOptions, myOptions);
+    if (allowTabs.find(x => x == "AGENDA VIEW")) {
+         $('#agenda-view div.calendar').fullCalendar(calendarOptions);
+     }
 
     if (ySelection != 0) {
         if (formDetailsDataInfo != null)
@@ -1988,8 +1990,10 @@ var manageWindowParams = function () {
     }
     calendarOptions = $.extend({}, defaultOptions, resourceOptions, myOptions1);
 
-    $('#timeline-resource-view div.calendar').fullCalendar(calendarOptions);
 
+    if (allowTabs.find(x => x == "TIMELINE VIEW")) {
+         $('#timeline-resource-view div.calendar').fullCalendar(calendarOptions);
+     }
     if (ySelection != 0) {
         if (formDetailsDataInfo != null)
             if (formDetailsDataInfo.calenderSettingsList != null)
@@ -2170,8 +2174,9 @@ var manageWindowParams = function () {
     }
     countLoader = 0;
      calendarOptions = $.extend({}, defaultOptions, resourceOptions, myOptions2);
-     console.log(JSON.stringify(calendarOptions));
-     $('#vertical-resource-view div.calendar').fullCalendar(calendarOptions);
+    if (allowTabs.find(x => x == "VERTICAL VIEW")) {
+         $('#vertical-resource-view div.calendar').fullCalendar(calendarOptions);
+     }
      
     setTimeout(function () {
         $.unblockUI();

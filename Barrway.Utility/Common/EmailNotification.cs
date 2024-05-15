@@ -74,39 +74,95 @@ namespace Barrway.Utility.Common
             // info.  
             return isSend;
         }
+        //public static bool SendEmailAsync(string toemail, string body, string subject)
+        //{
+        //    // Initialization.  
+        //    bool isSend = false;
+
+        //    try
+        //    {
+        //        MailMessage message = new MailMessage();
+
+        //        // Settings.  
+        //        message.To.Add(new MailAddress(toemail));
+        //        message.From = new MailAddress("info@augursinnovation.com");
+        //        message.Subject = subject;
+        //        message.Body = body;
+        //        message.IsBodyHtml = true;
+
+        //        using (var smtp = new SmtpClient())
+        //        {
+
+        //            // Settings.  
+        //            var credential = new NetworkCredential
+        //            {
+        //                UserName = "info@augursinnovation.com",
+        //                Password = "Egoxx123"
+        //            };
+
+        //            // Settings.  
+        //            smtp.UseDefaultCredentials = false;
+        //            smtp.Credentials = credential;
+
+        //            smtp.Host = "mail.augursinnovation.com";
+        //            smtp.Port = 587;
+        //            smtp.EnableSsl = false;
+
+        //            // Sending  
+        //            smtp.Send(message);
+        //            smtp.Dispose();
+        //            message.Dispose();
+        //            // Settings.  
+        //            isSend = true;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Info  
+        //        isSend = false;
+        //        throw ex;
+        //    }
+
+        //    // info.  
+        //    return isSend;
+        //}
+
         public static bool SendEmailAsync(string toemail, string body, string subject)
         {
             // Initialization.  
             bool isSend = false;
-
+            string fromemail = "info@barrway.com";
+            string password = "Geligulu-168";
+            string host = "smtp.office365.com";
+            int port = 587;
+            bool enableSsl = true;
             try
             {
                 MailMessage message = new MailMessage();
 
                 // Settings.  
                 message.To.Add(new MailAddress(toemail));
-                message.From = new MailAddress("info@augursinnovation.com");
+                message.From = new MailAddress(fromemail, "Barrway");
                 message.Subject = subject;
                 message.Body = body;
                 message.IsBodyHtml = true;
-
                 using (var smtp = new SmtpClient())
                 {
 
                     // Settings.  
                     var credential = new NetworkCredential
                     {
-                        UserName = "info@augursinnovation.com",
-                        Password = "Egoxx123"
+                        UserName = fromemail,
+                        Password = password
                     };
 
                     // Settings.  
                     smtp.UseDefaultCredentials = false;
                     smtp.Credentials = credential;
 
-                    smtp.Host = "mail.augursinnovation.com";
-                    smtp.Port = 587;
-                    smtp.EnableSsl = false;
+                    smtp.Host = host;
+                    smtp.Port = port;
+                    smtp.EnableSsl = enableSsl;
 
                     // Sending  
                     smtp.Send(message);
