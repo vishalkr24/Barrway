@@ -61,7 +61,7 @@ function goToCompanyAdminMaster() {
 }
 
 function copyLinkToClipboard(event) {
-    let copyText = BASE_URL + "Useradmin#/bookEvent/" + event.attributes["data-eventid"].value
+    let copyText = BASE_URL + "Useradmin/BookEvent/" + event.attributes["data-eventid"].value
     navigator.clipboard.writeText(copyText);
     alert("Link copied to clipboard!");
 }

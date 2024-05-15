@@ -62,6 +62,9 @@ namespace Barrway.Controllers
                     return RedirectToAction("BusinessLogin");
                 }
             }
+
+            TempData["401ReturnUrl"] = returnUrl;
+
             return View(new LoginViewModel { ReturnUrl = returnUrl });
         }
 
@@ -230,6 +233,14 @@ namespace Barrway.Controllers
                 {
                     return Redirect(returnUrl);
                 }
+                else
+                {
+                    if (!string.IsNullOrEmpty(Session["401ReturnUrl"]?.ToString()))
+                    {
+                        return Redirect(Session["401ReturnUrl"].ToString());
+                    }
+                }
+
                 return Redirect("/UserAdmin#/userdashboard");
                 //return RedirectToAction("Dashboard", "BusinessAdmin");
             }
@@ -339,9 +350,13 @@ namespace Barrway.Controllers
                 {
                     Logout();
                 }
-
-
             }
+
+            if (!string.IsNullOrEmpty(TempData.Peek("401ReturnUrl")?.ToString()))
+            {
+                TempData.Keep("401ReturnUrl");
+            }
+
             return View(new EmailSignUpViewModel() { IS_EXTERNAL_SIGNUP = false });
         }
 
@@ -372,6 +387,7 @@ namespace Barrway.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> BusinessSignUp(EmailSignUpViewModel model)
         {
+            TempData.Keep();
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -411,6 +427,12 @@ namespace Barrway.Controllers
                 };
 
                 AddUpdateDelete result = await signupService.RegisterUser(userMaserModel.ToDictionary());
+
+                if (!string.IsNullOrEmpty(TempData.Peek("401ReturnUrl")?.ToString()))
+                {
+                    Session["401ReturnUrl"] = TempData.Peek("401ReturnUrl")?.ToString();
+                }
+                
 
                 // Business Account Creation START
 
