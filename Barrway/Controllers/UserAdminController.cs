@@ -57,6 +57,18 @@ namespace Barrway.Controllers
             return View();
         }
 
+        public async Task<ActionResult> BookEvent(int Id)
+        {
+            if (Id > 0)
+            {
+                return Redirect("/Useradmin#/bookEvent/" + Id);
+            }
+            else
+            {
+                return Redirect("/Useradmin#/dashboard");
+            }
+        }
+
         public async Task<ActionResult> GetSingleEventDetailsWithFlags(string EventId)
         {
             var eventData = await publicUserService.GetSingleEventDetailsWithFlags(EventId, UserIdentity.UserEmail);
