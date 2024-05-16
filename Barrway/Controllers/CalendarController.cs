@@ -332,7 +332,7 @@ namespace Barrway.Controllers
 
             if (eventDetails != null)
             {
-                description += "Date: " + Convert.ToDateTime(eventDetails["start"]?.ToString()).ToString("dd-MM-yyyy (hh:mm tt)") + "\n";
+                description += "" + Convert.ToDateTime(eventDetails["start"]?.ToString()).ToString("dd-MM-yyyy (hh:mm tt)") + "\n";
                 var FormIdSplit = eventDetails["customForms"].ToString().Split(',');
 
                 // check and add service provider
@@ -340,7 +340,7 @@ namespace Barrway.Controllers
                 {
                     if (!string.IsNullOrEmpty(eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2304")]))
                     {
-                        description += "Service provider: " + eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2304")] + "\n";
+                        description += "" + eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2304")] + "\n";
                     }
                 }
 
@@ -349,7 +349,7 @@ namespace Barrway.Controllers
                 {
                     if (!string.IsNullOrEmpty(eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2303")]))
                     {
-                        description += "Service: " + eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2303")] + "\n";
+                        description += "" + eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2303")] + "\n";
                     }
                 }
 
@@ -359,7 +359,7 @@ namespace Barrway.Controllers
                 {
                     if (!string.IsNullOrEmpty(eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2306")]))
                     {
-                        description += "Location: " + eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2306")] + "\n";
+                        description += "" + eventDetails["customTitle"]?.ToString().Split(',')[Array.IndexOf(FormIdSplit, "2306")] + "\n";
                     }
                 }
 
