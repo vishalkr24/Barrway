@@ -368,9 +368,12 @@
                         <div class="bred-nav">
                             <span><a href="#">{{translation.User}}</a> / <span> <a href="#">{{translation.My_Calendar}}</a> </span></span>
                         </div>
+                        <button ng-click="PdfLink()" ng-disabled="!CMPCODE || CMPCODE==''" class="btn btn-success" style="float:left">Export</button>
                     </div>
                     <div class="col-md-6 p-0">
-                        <select class="form-control" id="company-filter-selector" style="max-width:240px; float:right; text-overflow:ellipsis;">
+
+                        
+                        <select ng-model="CMPCODE" class="form-control" id="company-filter-selector" style="max-width:240px; float:right; text-overflow:ellipsis;">
                             <!--<option value="-1">All Companies</option>-->
                             <option ng-repeat="company in CompanyList" value="{{company.COMPANY_CODE}}">{{company.COMPANY_NAME_ENGLISH}}</option>
                         </select>

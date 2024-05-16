@@ -1634,7 +1634,8 @@
                 case 6:
                     var temp = {};
                     temp.formId = $scope.currentFormId;
-                    var path = API_URL + "api/FormAPI/downloadFiles/" + (!DataService.isEmpty(temp.formId) ? temp.formId : temp.formID) + "/4";
+                    //var path = API_URL + "api/FormAPI/downloadFiles/" + (!DataService.isEmpty(temp.formId) ? temp.formId : temp.formID) + "/4";
+                    var path = BASE_URL + "FormAPI/DownloadExcel?formId=" + (!DataService.isEmpty(temp.formId) ? temp.formId : temp.formID);
                     downloadFileFunc("", path);
                     break;
                 case 7:
