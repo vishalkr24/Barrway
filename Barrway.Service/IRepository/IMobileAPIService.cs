@@ -55,6 +55,10 @@ namespace Barrway.Service.IRepository
 
         Task<FavouriteCalendarDetails> CalendarDtails(FavoriteCalendarViewModel model, string UserId);
 
+        Task<EventDetails> GetSingleEventDetails(string EventId);
+
+     
+
 
 
 
