@@ -237,7 +237,9 @@ namespace Barrway.Controllers
                 {
                     if (!string.IsNullOrEmpty(Session["401ReturnUrl"]?.ToString()))
                     {
-                        return Redirect(Session["401ReturnUrl"].ToString());
+                        string temp = Session["401ReturnUrl"]?.ToString();
+                        Session.Clear();
+                        return Redirect(temp);
                     }
                 }
 
