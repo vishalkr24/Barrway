@@ -158,5 +158,21 @@ namespace Barrway.Controllers.API.v1
             }
         }
 
+
+        [Route("api/Event/GetEventDetails")]
+        [HttpPost]
+        [ResponseType(typeof(EventDetails))]
+        public async Task<IHttpActionResult> GetEventDetails(string EventId)
+        {
+            try
+            {
+                return Ok(await mobileAPIService.GetSingleEventDetails(EventId));
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
+
     }
 }
