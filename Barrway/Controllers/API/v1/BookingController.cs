@@ -43,6 +43,24 @@ namespace Barrway.Controllers.API.v1
         }
 
         [HttpPost]
+        [Route("api/user/BookinggDetails")]
+        [ResponseType(typeof(ModifiedMyBooking))]
+        public async Task<IHttpActionResult> BookinggDetails(string EventId)
+        {
+            try
+            {                              
+                var result = await mobileAPIService.GetMyBookingsDetails( APIUserIdentity.UserEmail, EventId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
+
+
+
+        [HttpPost]
         [Route("api/user/pastbooking")]
         [ResponseType(typeof(List<ModifiedMyBooking>))]
         public async Task<IHttpActionResult> PastBooking(MyBookingApiModel model)
@@ -57,6 +75,9 @@ namespace Barrway.Controllers.API.v1
                 return InternalServerError();
             }
         }
+
+
+        
 
 
         [HttpPost]

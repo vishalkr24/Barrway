@@ -1,5 +1,6 @@
 ﻿using Barrway.DTO.BusinessModels;
 using Barrway.DTO.Common;
+using Barrway.Models;
 using Barrway.Security;
 using Barrway.Service.IRepository;
 using Barrway.Service.Repository;
@@ -21,6 +22,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Cors;
 using System.Web.Mvc;
+using System.Web.WebSockets;
 using static QRCoder.PayloadGenerator;
 
 namespace Barrway.Controllers
@@ -35,9 +37,10 @@ namespace Barrway.Controllers
         private readonly IAuthService authService;
         private readonly IQueueService queueService;
         private readonly IPublicUserService publicUserService;
+        private readonly ICalendarService calendarService;
 
         // GET: Calendar
-        public CalendarController(IMasterService masterService, IFormAPIRepository formAPIRepository, ISqlFunction sqlFunction, IBusinessUserService businessUserService, IAuthService authService, IQueueService queueService, IPublicUserService publicUserService)
+        public CalendarController(IMasterService masterService, IFormAPIRepository formAPIRepository, ISqlFunction sqlFunction, IBusinessUserService businessUserService, IAuthService authService, IQueueService queueService, IPublicUserService publicUserService,ICalendarService calendarService)
         {
             this.masterService = masterService;
             this.formAPIRepository = formAPIRepository;
@@ -46,6 +49,7 @@ namespace Barrway.Controllers
             this.authService = authService;
             this.queueService = queueService;
             this.publicUserService = publicUserService;
+            this.calendarService = calendarService;
         }
 
         public ActionResult Index()
@@ -1708,5 +1712,73 @@ namespace Barrway.Controllers
             }
         }
 
+        public async Task<ActionResult> IndexPdf(string start,string end,string companyCode)
+        {
+            calenderSettingsFormDetails request1 = new calenderSettingsFormDetails() { action = 4, formId = (int)FormSetting.CALENDAR_FORM,IsCustomFilter=true,
+                                                                                        CustomFilters=new List<CustomFilter>() {
+                                                                                            new CustomFilter() { FieldName="COMPANY_CODE",Value=companyCode },
+                                                                                            //new CustomFilter() {FieldName="CALENDAR_CODE",Value=calendarCode } 
+                                                                                        }
+                                                                                        };
+            var CalenderSettingsFormData = await formAPIRepository.getCalenderSettingsFormData(request1);
+
+            DateTime _start,_end;
+            if (!(DateTime.TryParse(start, out _start) && DateTime.TryParse(end, out _end))) {
+
+                return RedirectToAction("Index");
+            }
+            //string filterQuery =$" f.COMPANY_CODE='{companyCode}' and f.CALENDAR_CODE='{calendarCode}' and " +CustomMethods.GetDateQuery(_start, _end); 
+            string filterQuery =$" f.COMPANY_CODE='{companyCode}' and " +CustomMethods.GetDateQuery(_start, _end); 
+
+            Form_DataTable request2 = new Form_DataTable() { action = 1, formId = (int)FormSetting.CALENDAR_FORM, ActivityFormId = (int)FormSetting.SERVICE_MASTER, isCalender = 1, isEvent = 1, resourceFormId = (int)FormSetting.LOCATION_MASTER, filter = new FilterDTO() { field = "start", value = filterQuery }
+            };
+            var result = await formAPIRepository.getReferralFormFields(request2);
+            var eventData = result;
+
+            var mybooking=await calendarService.GetMyBooking(UserIdentity.UserEmail,companyCode,_start, _end);
+
+            var EventIdsBooking = mybooking.Select(x => x["EventId"].ToString()).ToList();
+
+            eventData.events = eventData.events.Where(x => EventIdsBooking.Any(y => y == x["Id"].ToString())).ToList();
+
+            if (eventData.resourceDetails != null && eventData.resourceDetails.Count > 0)
+            {
+                var resourceIds = eventData.resourceDetails.Where(x => x.Id != "" && x.Id != "0").GroupBy(x => x.Id).Select(x => x.Key).ToList();
+                if (eventData.events != null && eventData.events.Count > 0)
+                {
+                    ViewBag.eventData = eventData.events.Select(x => new
+                    {
+                        start = Convert.ToDateTime(x["start"]).ToString("dd-MM-yyyy HH:mm:ss"),
+                        end = Convert.ToDateTime(x["end"]).ToString("dd-MM-yyyy HH:mm:ss"),
+                        resources = x["resources"]?.ToString(),
+                        activities = x["activities"]?.ToString(),
+                        customTitle = x["customTitle"]?.ToString(),
+                        customForms = x["customForms"]?.ToString(),
+                        customFormIds = x["customFormIds"]?.ToString(),
+                        customFourthTitle = x["customFourthTitle"]?.ToString()
+                    }).Where(x => !string.IsNullOrEmpty(x.start) && !string.IsNullOrEmpty(x.end)).GroupBy(x => new { x.start, x.end }).Select(x => new GroupEventDataModel
+                    {
+                        start = DateTimeHelper.ConvertToDateTimeFormate(x.Key.start, "dd-MM-yyyy HH:mm:ss"),
+                        end = DateTimeHelper.ConvertToDateTimeFormate(x.Key.end, "dd-MM-yyyy HH:mm:ss"),
+                        events = x.Select(y => new { resources = y.resources, activities = y.activities, customTitle = y.customTitle, customForms = y.customForms, customFormIds = y.customFormIds, customFourthTitle = y.customFourthTitle }.AsDictionary()).ToList()
+                    }).ToList();
+                }
+            }
+            MyBookingPdfModel pdfModel = new MyBookingPdfModel() { calendarSetting = CalenderSettingsFormData, StudentName = UserIdentity.UserFirstName + " " + UserIdentity.UserLastName };
+            var report = new PartialViewAsPdf("~/Views/Calendar/IndexPdf.cshtml", pdfModel)
+            {
+                PageSize = Rotativa.Options.Size.A4,
+                FileName = "DATA" + DateTime.Now.ToString("ddMMyyyy") + ".pdf",
+                PageOrientation = Rotativa.Options.Orientation.Portrait,
+                CustomSwitches = "--zoom 1.2 " + "--footer-right " + "  \"Page: [page]/[toPage]\"" +
+                " --footer-line --footer-font-size \"9\" --footer-spacing 6 --footer-font-name \"calibri light\""
+            };
+            return report;
+
+            //return View(pdfModel);
+        }
+
     }
+
+    
 }

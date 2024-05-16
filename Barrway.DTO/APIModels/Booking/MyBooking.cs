@@ -90,6 +90,18 @@ namespace Barrway.DTO.APIModels.Booking
         public string LOCATION_TITLE { get; set; }
         public string LOCATION_ID { get; set; }
         public string LOCATION_FORMID { get; set; }
+
+        public List<EventFormDataList> eventFormDatas { get; set; }
+        
+    }
+
+    public class EventFormDataList
+    {
+        public string id { get; set; }
+        public string title { get; set; }
+        public string formid { get; set; }
+        public string formname { get; set; }
+        public int seq { get; set; }
     }
 
     public class ModifiedMyBooking : MyBooking

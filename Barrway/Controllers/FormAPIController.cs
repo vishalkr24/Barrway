@@ -5,17 +5,22 @@ using Barrway.Security;
 using Barrway.Service.IRepository;
 using Barrway.Service.Repository;
 using Barrway.Utility.Common;
+using ClosedXML.Excel;
 using FormGeneratorDTOs.DTOs;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Security;
 
@@ -1050,6 +1055,175 @@ namespace Barrway.Controllers
 
 
 
+        //[HttpGet]
+        //public async Task<ActionResult> ExportAdditionalForm(int formid)
+        //{
+        //    var model = (await formAPIRepository.GetFormRecordList(new { action=32,formid= formid })).Data;
+        //    if (model.data == null) {
+        //        model.data = new List<IDictionary<string, object>>();
+        //    }
+        //    var result=new List<IDictionary<string, object>>();
+
+        //    model.data.ForEach(x =>
+        //    {
+
+
+        //    });
+
+        //    DataTable resultDataTable = DictionaryToDataTable.ToDictionary(model.data);
+
+        //    using (var workbook = new XLWorkbook())
+        //    {
+        //        var worksheet = workbook.Worksheets.Add(resultDataTable, "Registration_Records");
+        //        worksheet.Style.Alignment.WrapText = true;
+        //        worksheet.Columns("A", "V").AdjustToContents();
+
+        //        using (MemoryStream stream = new MemoryStream())
+        //        {
+        //            workbook.SaveAs(stream);
+        //            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"TransactionTable_{DateTimeUtility.Now().ToString("ddMMyyyyHHmmssfff")}.xlsx");
+        //        }
+        //    }
+        //}
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadExcel(int formId)
+        {
+            string apiUrl = $"https://geliform.geligulu.com/barrway/api/FormAPI/downloadFiles/{formId}/4"; // Replace with your API URL
+            string fileName = "downloaded_file.xlsx"; // The name for the downloaded file
+
+            // Create a RestClient with the base URL
+            var client = new RestClient(apiUrl);
+
+            // Create a RestRequest
+            var request = new RestRequest();
+            request.Method = Method.Get;
+
+            try
+            {
+                // Execute the request and get the response
+                var response = await client.ExecuteAsync(request);
+
+                // Check if the response is successful and contains data
+                if (response.IsSuccessful && response.RawBytes != null)
+                {
+                    // Return the file as a download
+                    return File(response.RawBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+                }
+                else
+                {
+                    // Handle error appropriately (e.g., log the error, return an error view, etc.)
+                    return new HttpStatusCodeResult(response.StatusCode, response.ErrorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exception (e.g., log the error, return an error view, etc.)
+                return new HttpStatusCodeResult(500, "Internal server error: " + ex.Message);
+            }
+        }
+
+
+
+
+
+        private async Task<byte[]> DownloadImageAsync(string imageUrl)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                try
+                {
+                    return await httpClient.GetByteArrayAsync(imageUrl);
+                }
+                catch
+                {
+                    // Handle errors (e.g., log the error, return null, etc.)
+                    return null;
+                }
+            }
+        }
+
+        //public async Task<ActionResult> DownloadExcel(int formId)
+        //{
+        //    string apiUrl = $"https://geliform.geligulu.com/barrway/api/FormAPI/downloadFiles/{formId}/4";
+        //    string fileName = "downloaded_file_with_photos.xlsx"; // The name for the downloaded file
+
+        //    // Create a RestClient with the base URL
+        //    var client = new RestClient(apiUrl);
+
+        //    // Create a RestRequest
+        //    var request = new RestRequest();
+        //    request.Method=Method.Get;
+        //    try
+        //    {
+        //        // Execute the request and get the response
+        //        var response = await client.ExecuteAsync(request);
+
+        //        // Check if the response is successful and contains data
+        //        if (response.IsSuccessful && response.RawBytes != null)
+        //        {
+        //            // Load the Excel file into a ClosedXML workbook
+        //            using (var workbook = new XLWorkbook(new MemoryStream(response.RawBytes)))
+        //            {
+        //                var worksheet = workbook.Worksheet(1); // Assumes data is in the first worksheet
+        //                int photoColumnIndex = -1;
+
+        //                // Find the "Photo" column
+        //                var firstRow = worksheet.FirstRowUsed();
+        //                foreach (var cell in firstRow.Cells())
+        //                {
+        //                    if (cell.GetValue<string>().ToLower().Contains("photo"))
+        //                    {
+        //                        photoColumnIndex = cell.Address.ColumnNumber;
+        //                        break;
+        //                    }
+        //                }
+
+        //                if (photoColumnIndex > 0)
+        //                {
+        //                    // Iterate through the rows and attach photos from URLs
+        //                    foreach (var row in worksheet.RowsUsed().Skip(1))
+        //                    {
+        //                        var cellValue = row.Cell(photoColumnIndex).GetValue<string>();
+        //                        if (!string.IsNullOrEmpty(cellValue) && Uri.IsWellFormedUriString(cellValue, UriKind.Absolute))
+        //                        {
+        //                            // Download the image from the URL
+        //                            var imageBytes = await DownloadImageAsync(cellValue);
+        //                            if (imageBytes != null)
+        //                            {
+        //                                using (var stream = new MemoryStream(imageBytes))
+        //                                {
+        //                                    var image = worksheet.AddPicture(stream);
+        //                                    var cell = row.Cell(photoColumnIndex);
+        //                                    image.MoveTo(cell); // Move image to the cell
+        //                                    image.Scale(0.1); // Adjust the scale as needed
+        //                                }
+        //                            }
+        //                        }
+        //                    }
+        //                }
+
+        //                // Save the modified workbook to a memory stream
+        //                var modifiedStream = new MemoryStream();
+        //                workbook.SaveAs(modifiedStream);
+        //                modifiedStream.Position = 0;
+
+        //                // Return the modified file as a download
+        //                return File(modifiedStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            // Handle error appropriately (e.g., log the error, return an error view, etc.)
+        //            return new HttpStatusCodeResult(response.StatusCode, response.ErrorMessage);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Handle exception (e.g., log the error, return an error view, etc.)
+        //        return new HttpStatusCodeResult(500, "Internal server error: " + ex.Message);
+        //    }
+        //}
 
 
         private static bool IsJson(string str)

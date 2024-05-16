@@ -1,0 +1,279 @@
+﻿@using System.Globalization
+@model Barrway.Models.MyBookingPdfModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <style>
+        .cls-body {
+            background-image: none !important;
+        }
+    </style>
+
+    <style>
+
+        * {
+            font-family: 'Times New Roman';
+            font-style: normal;
+            font-weight: normal;
+            font-size: 12px;
+        }
+
+        body {
+            margin: 0px 10mm;
+        }
+    </style>
+    <style>
+
+        .header-text {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .text-title {
+            font-weight: 600;
+            font-size: 18px
+        }
+    </style>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+
+            setTimeout(window.print(), 3000);
+        });
+
+
+    </script>
+</head>
+<body>
+
+
+    @{
+
+        var calendarSetting = Model.calendarSetting.Where(x => x.resourceForm == (int)Barrway.Utility.Common.FormSetting.LOCATION_MASTER).FirstOrDefault();
+        var rowCount = calendarSetting.formDataList.Count();
+        List<string> major = new List<string>();
+        if (!string.IsNullOrEmpty(calendarSetting.majorGroup))
+        {
+            major = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(calendarSetting.majorGroup);
+        }
+        if (major.Count() == 0)
+        {
+            major.Add(calendarSetting.activities);
+        }
+        string minor = calendarSetting.minorGroup;
+        var EventData = ViewBag.eventData as List<Barrway.Models.GroupEventDataModel>;
+
+
+
+    }
+
+    <header>
+        <a href="/UserAdmin#/mycalendar/2305"><img src="/assets/svg/logos/logo.png" style="max-width:200px;width:100%" /></a>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div style="background: #ffffffd4; border-radius: 4px;min-height:500px;">
+                    <div class="col-12" style="margin-top: 50px;">
+                        <p class="text-title">
+                                Student Name：@Model.StudentName
+                            </p>
+                        <p class="text-title">Student ID：@Barrway.Security.UserIdentity.UserName</p>
+                    </div>
+                    <div class="col-12 text-center">
+                        <h2 style="text-align:center;font-size:24px;font-weight:400">Course Timetable 選課時間表</h2>
+                    </div>
+
+                    <table class="table table-bordered" cellpadding="2" cellspacing="0" border="1" style="max-width:900px;margin:0 auto;text-align:center">
+                        <tbody>
+                            <tr>
+                                <td width="100px">
+                                    時間
+                                    Time
+                                </td>
+                                <td colspan="@rowCount">課程 Course</td>
+                            </tr>
+
+                            @*<tr>
+                                <td width="100px">
+                                    12:00-12:30
+                                </td>
+                                <td colspan="@rowCount">
+                                    <div class="header-text">
+                                        Inauguration ceremony 入學典禮
+                                        <br />
+                                        (Hall楊昌煒爵士演講廳)
+                                    </div>
+                                </td>
+
+                            </tr>*@
+                            <tr>
+                                <td>
+                                </td>
+                                @foreach (var item in calendarSetting.formDataList)
+                                {
+                                    string majorString = item["LOCATION_ADDRESS"]?.ToString();
+                                    <td>
+                                        @majorString
+                                    </td>
+                                }
+
+
+
+
+
+                            </tr>
+
+                            @if (EventData != null && EventData.Count > 0)
+                            {
+                                foreach (var item in EventData.OrderBy(x => x.start))
+                                {
+                                    TimeSpan? maxTime = null;
+                                    TimeSpan? minTime = null;
+                                    CultureInfo provider = CultureInfo.InvariantCulture;
+                                    TimeSpan startTime = TimeSpan.Parse(item.start.ToString("HH:mm"));
+                                    TimeSpan endTime = TimeSpan.Parse(item.end.ToString("HH:mm"));
+
+                                    if (!string.IsNullOrEmpty(calendarSetting.maxTime) && !string.IsNullOrEmpty(calendarSetting.minTime))
+                                    {
+
+                                        maxTime = TimeSpan.Parse(calendarSetting.maxTime.Replace(" ", ":"));
+                                        minTime = TimeSpan.Parse(calendarSetting.minTime.Replace(" ", ":"));
+                                    }
+
+                                    //if (maxTime != null && minTime != null)
+                                    //{
+                                    //    if (!(startTime >= minTime && endTime <= maxTime))
+                                    //    {
+                                    //        continue;
+                                    //    }
+                                    //}
+                                    <tr><td style="font-weight:bold" colspan="@(calendarSetting.formDataList.Count()+1)">Transit</td></tr>
+                                    <tr>
+                                        <td>
+                                            @if(item.end.Date > item.start.Date) { 
+                                            <p>@item.start.ToString("ddd dd MMM yyyy") - @item.end.ToString("ddd dd MMM yyyy")</p>
+                                            }
+                                            else {
+                                            <p>@item.start.ToString("ddd dd MMM yyyy")</p>
+                                            }
+                                            
+                                            <p>@item.start.ToString("hh:mm tt") - @item.end.ToString("hh:mm tt")</p>
+                                        </td>
+
+                                        @foreach (var item2 in calendarSetting.formDataList)
+                                        {
+
+                                            var eventData = EventData.Where(x => x.start == item.start && x.end == item.end).FirstOrDefault();
+                                            var evnts = eventData.events.Where(x => x["resources"]?.ToString() == item2["id"]?.ToString()).ToList();
+                                            int i = 0;
+                                            <td>
+
+                                                @foreach (var item3 in evnts)
+                                                {
+
+                                                    //if (item3["customFourthTitle"]?.ToString().Contains(Barrway.Security.UserIdentity.UserName) ?? false)
+                                                    //{
+                                                    string customTitle = "";
+                                                    if (i > 0)
+                                                    {
+                                                        customTitle = "<br/>";
+                                                    }
+                                                    string allcustomForms = item3["customForms"]?.ToString();
+                                                    string allcustomFormIds = item3["customFormIds"]?.ToString();
+                                                    if (!string.IsNullOrEmpty(allcustomForms) && !string.IsNullOrEmpty(allcustomFormIds))
+                                                    {
+                                                        string[] allCustomFormArr = allcustomForms.Split(',');
+                                                        string[] allCustomFormIdsArr = allcustomFormIds.Split(',');
+                                                        //if (allCustomFormArr.Length > 1)
+                                                        //{
+                                                        var courseMasterCalendarSetting = Model.calendarSetting.Where(x => x.resourceForm == (int)Barrway.Utility.Common.FormSetting.SERVICE_MASTER).FirstOrDefault();
+                                                        if (courseMasterCalendarSetting != null)
+                                                        {
+                                                            int index = Model.calendarSetting.ToList().FindIndex(x => x.resourceForm == (int)Barrway.Utility.Common.FormSetting.SERVICE_MASTER);
+                                                            var courseMaster = courseMasterCalendarSetting.formDataList.Where(x => x["id"]?.ToString() == allCustomFormIdsArr[index]).FirstOrDefault();
+                                                            if (courseMaster != null)
+                                                            {
+
+                                                                customTitle += courseMaster["ACTIVITY_NAME"]?.ToString()+"<br/>";
+                                                            }
+                                                        }
+                                                        //}
+                                                        //if (allCustomFormArr.Length > 2)
+                                                        //{
+
+                                                        var staffMasterCalendarSetting = Model.calendarSetting.Where(x => x.resourceForm == (int)Barrway.Utility.Common.FormSetting.SERVICE_PROVIDER_MASTER).FirstOrDefault();
+                                                        if (staffMasterCalendarSetting != null)
+                                                        {
+                                                            int index = Model.calendarSetting.ToList().FindIndex(x => x.resourceForm == (int)Barrway.Utility.Common.FormSetting.SERVICE_PROVIDER_MASTER);
+                                                            var staffMaster = staffMasterCalendarSetting.formDataList.Where(x => x["id"]?.ToString() == allCustomFormIdsArr[index]).FirstOrDefault();
+                                                            if (staffMaster != null)
+                                                            {
+                                                                customTitle += (staffMaster.ContainsKey("FIRST_NAME") ? staffMaster["FIRST_NAME"] : "") + " " + (staffMaster.ContainsKey("LAST_NAME") ? staffMaster["LAST_NAME"] : "");
+                                                            }
+                                                        }
+                                                        //}
+                                                    }
+
+                                                        <div>
+                                                            @Html.Raw(customTitle)
+                                                        </div>
+                                                    //}
+                                                    i++;
+                                                }
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+
+                            }
+
+                            @*<tr>
+                                <td width="100px">
+                                    5:30-6:00 pm
+                                </td>
+                                <td colspan="@calendarSetting.formDataList.Count()">
+                                    <div class="header-text">
+                                        Graduation Ceremony 畢業典禮
+                                        <br />
+                                        (Hall楊昌煒爵士演講廳)
+                                    </div>
+                                </td>
+
+                            </tr>*@
+                        </tbody>
+                    </table>
+
+
+
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top:50px;padding:40px">
+            <h2 style="text-align:left;font-size:24px;font-weight:400">注意事項：</h2>
+            <ol style="margin-top:20px;">
+                <li>	為響應環保，本校講師將提供電子版筆記供同學參閱。同學如擁有電子設備（平板電腦、手提電腦等），請於開學日帶備，以減少耗紙。如有需要，亦可取用實體講義。</li>
+                <li>	本校將於開學日前以電郵向各位同學發送電子版講義及其他注意事項，屆時請回覆電郵。</li>
+                <li>	開學日當天，如需遲到、早退，或遇上其他突發狀況，請致電 6695 2626通知本校，以便安排。</li>
+                <li>	為確保選課公平性，當天請遵照個別選課時間表上課。</li>
+                <li>	本校將於活動當日向同學派發學生證，以作紀念之用。同學須於報名表格上載個人照片，所有個人資料將於活動過後銷毀。</li>
+                <li>	請注意，同學需於活動前繳交$50按金（繳交方法見確認報名之電郵），以確保同學出席活動。如同學在6月21號或之前未繳交訂金，本校會將其學額給予候補名單上的同學。本校將於畢業典禮結束後以現金形式發還按金給同學，同學必須出席全日活動，方可獲發還按金。如有任何困難，請聯絡6695 2626。</li>
+
+            </ol>
+        </div>
+    </div>
+
+
+
+</body>
+</html>

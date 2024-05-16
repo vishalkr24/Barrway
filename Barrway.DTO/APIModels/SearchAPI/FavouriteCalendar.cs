@@ -110,4 +110,80 @@ namespace Barrway.DTO.APIModels.SearchAPI
         public string field { get; set; }
         public string dir { get; set; }
     }
+
+
+    public class EventDetails
+    {
+        public int ROWNUMBER { get; set; }
+        public int Id { get; set; }
+        public string formGroupKey { get; set; }
+        public int formID { get; set; }
+        public int userID { get; set; }
+        public string Current_Status { get; set; }
+        public int cycle { get; set; }
+        public int MasterFormID { get; set; }
+        public string MasterFormRow { get; set; }
+        public int formRecordOrder { get; set; }
+        public int formRecordStatus { get; set; }
+        public object ApprovalStatus { get; set; }
+        public string COMPANY_CODE { get; set; }
+        public string CALENDAR_CODE { get; set; }
+        public object hidden_fullcalendar { get; set; }
+        public object schedulerformgroupkey { get; set; }
+        public string title { get; set; }
+        public DateTime start { get; set; }
+        public DateTime end { get; set; }
+        public string allDay { get; set; }
+        public string resources { get; set; }
+        public string activities { get; set; }
+        public string description { get; set; }
+        public object color { get; set; }
+        public DateTime created_at { get; set; }
+        public DateTime updated_at { get; set; }
+        public object created_by { get; set; }
+        public object updated_by { get; set; }
+        public object resForm_2304 { get; set; }
+        public object actFormID { get; set; }
+        public object parentID { get; set; }
+        public object seperatedFormIDs { get; set; }
+        public object seperatedTitles { get; set; }
+        public object seperatedIds { get; set; }
+        public object seperatedResFormIDs { get; set; }
+        public object seperatedResEntryIDs { get; set; }
+        public object seperatedResColValues { get; set; }
+        public object seperatedColorValues { get; set; }
+        public object tabulator_1683726769059 { get; set; }
+        public object tabulator_1683785383381 { get; set; }
+        public string SCHEDULAR_FORM_ID { get; set; }
+        public object CREATION_TYPE { get; set; }
+        public object SLOT_DURATION_IN_MINS { get; set; }
+        public string EVENT_TYPE { get; set; }
+        public string COMPANY_SUBSCRIPTION_ID { get; set; }
+        public object IS_UPLOAD_REQUIRED { get; set; }
+        public object UPLOAD_TIME { get; set; }
+        public object DOWNLOADABLE_ATTACHMENT { get; set; }
+        public object DOWNLOAD_FILE_LIST { get; set; }
+        public string IS_COURSE_EVENT { get; set; }
+        public string resourceId { get; set; }
+        public string customFourthTitle { get; set; }
+        public string customTitle { get; set; }
+        public string customForms { get; set; }
+        public string customFormIds { get; set; }
+        public string referrences_1 { get; set; }
+        public string referrences_2 { get; set; }
+        public string referrences_3 { get; set; }
+        public int fees_1 { get; set; }
+
+        public List<EventFormData> eventFormDatas { get; set; }
+
+
+    }
+    public class EventFormData
+    {
+        public string id { get; set; }
+        public string title { get; set; }
+        public string formid { get; set; }
+        public string formname { get; set; }
+        public int seq { get; set; }
+    }
 }

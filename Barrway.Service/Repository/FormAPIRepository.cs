@@ -105,6 +105,43 @@ RemoteCertificateValidationCallback
             }
         }
 
+        public async Task<AddUpdateDelete<GetFormRecordListResponseModel>> GetFormRecordList(object data)
+        {
+            try
+            {
+                var dataDic = data.ToDictionary();
+                var request = new RestRequest("api/FormAPI/GetFormRecordList", Method.Post) { RequestFormat = DataFormat.Json };
+                request.AddBody(dataDic);
+                request.AddHeader("content-type", "application/json");
+                ServicePointManager.ServerCertificateValidationCallback = new
+RemoteCertificateValidationCallback
+(
+   delegate { return true; }
+);
+                var response = await _client.ExecuteAsync(request);
+                if (response.Content != null)
+                {
+                    var result = JsonConvert.DeserializeObject<GetFormRecordListResponseModel>(response.Content);
+                    if (result != null)
+                    {
+                        return new AddUpdateDelete<GetFormRecordListResponseModel>() { Status = true, Message = AppMessage.Success, Data = result };
+                    }
+                    else
+                    {
+                        return new AddUpdateDelete<GetFormRecordListResponseModel>() { Status = false, Message = AppMessage.NotFound };
+                    }
+                }
+                else
+                {
+                    return new AddUpdateDelete<GetFormRecordListResponseModel>() { Status = false, Message = response.ErrorMessage };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete<GetFormRecordListResponseModel>() { Status = false, Message = ex.Message };
+            }
+        }
+
         public async Task<AddUpdateDelete<GenerateDynamicFormData>> GeneratedFormData(Form_DataTable data)
         {
             try

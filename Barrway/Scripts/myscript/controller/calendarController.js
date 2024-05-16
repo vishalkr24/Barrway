@@ -16619,6 +16619,7 @@
         $scope.rootScopeSafe = function () {
             $rootScope.safeApply();
         };
+        $scope.CMPCODE = '';
 
         $rootScope.safeApply = function (fn) {
             var phase = this.$root.$$phase;
@@ -16888,9 +16889,20 @@
 
         $scope.manageSelectedCompany = function () {
             if (localStorage.getItem("publicUserSelectedCompany") != null && localStorage.getItem("publicUserSelectedCompany") != undefined && localStorage.getItem("publicUserSelectedCompany") != "null") {
-                $("#company-filter-selector").val(localStorage.getItem("publicUserSelectedCompany"));
+                $("#company-filter-selector").val();
+                $scope.CMPCODE = localStorage.getItem("publicUserSelectedCompany");
             }
         }
+
+        $scope.PdfLink = function () {
+
+            let cmpCode = $('#company-filter-selector').val();
+            var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+            var view = $('#' + current_tab + " div.calendar").fullCalendar("getView");
+            var start = moment(view.start).format("YYYY-MM-DD");
+            var end = moment(view.end).format("YYYY-MM-DD");
+            window.location.href = `/calendar/indexpdf?start=${start}&end=${end}&companyCode=${cmpCode}`;
+        };
 
     }).filter('safeHtml', function ($sce) {
         return function (val) {

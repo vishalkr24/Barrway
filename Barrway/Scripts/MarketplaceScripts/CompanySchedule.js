@@ -14,15 +14,7 @@ $(document).ready(async function () {
     });
 
     $("#nv-company-schedule").addClass("active");
-    /*COMPANY_CODE = getQueryParamValue("CompanyCode");*/
-    /* CALENDAR_CODE = getQueryParamValue("CalendarCode");*/
 
-    console.log(COMPANY_CODE, "COMPANY_CODE");
-    console.log(CALENDAR_CODE, "CALENDAR_CODE");
-
-    //getServiceList(COMPANY_CODE, CALENDAR_CODE);
-
-    /* $('#calendar-selector').val(CALENDAR_CODE);*/
 
     var formdetail = await getFormDetails();
     formDetailsDataInfo = formdetail[0];
@@ -156,7 +148,6 @@ $(document).ready(async function () {
 
         xaxisFormList = [];
         angular.forEach(calenderSettings, function (dataRow, position) {
-            //console.log(dataRow);
             if (dataRow.activitiesForm !== 0)
                 xaxisFormList.push(dataRow);
         });
@@ -1098,6 +1089,11 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
 
         },
         eventClick: async function (calEvent, jsEvent, view) {
+
+            setTimeout(function () {
+                $('.bs-tooltip-auto').remove();
+            }, 500);
+            
 
             //mobile agenda view click open list view day
             if (window.innerWidth <= 576) {
@@ -2533,9 +2529,9 @@ async function loadEventRecordDetails(paramTemp) {
         param.fieldName = "";
         var response = await getReferralFormFieldsAndData(param);
 
-        console.log(response, "response");
+
         $scope.eventData = response;
-        console.log('Transaction table', $scope.eventData)
+
         if (!DataService.isEmpty($scope.otherformDetails)) {
             if (!DataService.isEmpty($scope.otherformDetails.formId)) {
                 var exist = _.findWhere($scope.eventData.formDataHeaders, { "Referral_Forms": $scope.otherformDetails.formId.toString() });
@@ -2687,7 +2683,7 @@ async function getCalendarDetails(id) {
             success: function (response) {
                 hideLoader();
                 resolve(response);
-                console.log(response, "response");
+
             }
         });
 
@@ -2708,7 +2704,7 @@ async function getUserEnrollDetails(id) {
             success: function (response) {
                 hideLoader();
                 resolve(response);
-                console.log(response, "response");
+
             }
         });
 
@@ -3059,7 +3055,6 @@ async function rendarPopupCalendar(assignDate) {
 
             }
             if (eventData.Id == undefined) {
-                console.log(agendaTempHtml);
             } else {
                 if (eventData.EVENT_TYPE == "SCHEDULE" && !eventData.IS_PUBLIC_USER_EVENT) {
                     if (eventData.OverlapBookingFlag == "Y") {
@@ -3251,10 +3246,6 @@ async function rendarPopupCalendar(assignDate) {
                 return;
             }
             var bgevent = exist[0];
-            //console.log(bgevent.activities);
-            //console.log($scope.activityConfig.formDataList[0].DURATION_FIELD);
-
-            //checkServiceDuration,checkServiceDurationDrag
 
             if (checkServiceDuration() && !checkServiceDurationDrag()) {
                 let activity_data = $scope.activityConfig.formDataList.find(x => x.id == bgevent.activities);
@@ -3665,7 +3656,6 @@ function GetAdvancaePopupForMasterData(formid,title) {
                 if (data2 != null && data2 != undefined) {
                     fields = data2.filter(x => x["required"] != undefined && x["required"] == true).map(x => { return { name: x.name,label: x.label }; });
                 }
-                console.log(JSON.stringify(fields));
                 $('#info-master-div').html('');
                 if (fields.length > 0) {
                     //info-master-modal,info-master-div,Service_Location_List,Service_ProviderList,activityResults
