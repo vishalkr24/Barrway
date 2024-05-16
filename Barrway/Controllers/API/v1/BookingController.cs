@@ -43,15 +43,13 @@ namespace Barrway.Controllers.API.v1
         }
 
         [HttpPost]
-        [Route("api/user/UpcommingBookingDetails")]
+        [Route("api/user/BookinggDetails")]
         [ResponseType(typeof(ModifiedMyBooking))]
-        public async Task<IHttpActionResult> UpcommingBookinggDetails(string EventId)
+        public async Task<IHttpActionResult> BookinggDetails(string EventId)
         {
             try
-            {
-               
-                MyBookingApiModel model = new MyBookingApiModel();
-                var result = await mobileAPIService.GetMyBookings(model, APIUserIdentity.UserEmail, "1", EventId);
+            {                              
+                var result = await mobileAPIService.GetMyBookingsDetails( APIUserIdentity.UserEmail, EventId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -79,22 +77,7 @@ namespace Barrway.Controllers.API.v1
         }
 
 
-        [HttpPost]
-        [Route("api/user/PastBookingDetails")]
-        [ResponseType(typeof(ModifiedMyBooking))]
-        public async Task<IHttpActionResult> PastBookingDetails(string EventId)
-        {
-            try
-            {
-                MyBookingApiModel model= new MyBookingApiModel();
-                var result = await mobileAPIService.GetMyBookings(model, APIUserIdentity.UserEmail, "2" , EventId);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError();
-            }
-        }
+        
 
 
         [HttpPost]
