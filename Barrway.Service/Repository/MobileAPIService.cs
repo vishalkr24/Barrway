@@ -720,7 +720,7 @@ namespace Barrway.Service.Repository
             data.isEvent = 1;
             data.isCalender = 1;
             data.formId = (int)FormSetting.CALENDAR_FORM;
-            string filterQuery = GetDateQuery(calendarRequest.start, calendarRequest.end);
+            string filterQuery = CustomMethods.GetDateQuery(calendarRequest.start, calendarRequest.end);
             data.filter = new FilterDTO() { field = "start", value = filterQuery + " and F.COMPANY_CODE=N'" + calendarRequest.COMPANY_CODE + "' and F.CALENDAR_CODE=N'" + calendarRequest.CALENDAR_CODE + "'" };
 
             ReferalFormDataResponseModel result = await formAPIRepository.getReferralFormFields(data);
@@ -1296,19 +1296,6 @@ namespace Barrway.Service.Repository
             {
                 return new FavouriteCalendarDetails();
             }
-        }
-
-
-
-
-        private string GetDateQuery(DateTime start, DateTime end)
-        {
-            string _start = start.ToString("yyyy-MM-dd");
-            string _end = end.ToString("yyyy-MM-dd");
-            return $@"((cast([start] as date) <= '{_start}' and (cast([end] as date) <= '{_end}' and cast([end] as date) >= '{_start}')) or
-										((cast([start] as date) >= '{_start}' and cast([start] as date) <= '{_end}') and (cast([end] as date) <= '{_end}' and cast([end] as date) >= '{_start}')) or
-										((cast([start] as date) <= '{_end}' and cast([start] as date) >= '{_start}') and cast([end] as date) >= '{_end}') or
-										(cast([start] as date) <= '{_start}' and cast([end] as date) >= '{_end}'))";
         }
         #endregion
 

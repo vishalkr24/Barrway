@@ -69,12 +69,12 @@ namespace Barrway.Controllers
             }
         }
 
-        public async Task<ActionResult> GetSingleEventDetailsWithFlags(string EventId)
-        {
-            var eventData = await publicUserService.GetSingleEventDetailsWithFlags(EventId, UserIdentity.UserEmail);
+        //public async Task<ActionResult> GetSingleEventDetailsWithFlags(string EventId)
+        //{
+        //    var eventData = await publicUserService.GetSingleEventDetailsWithFlags(EventId, UserIdentity.UserEmail);
 
-            return Json(eventData);
-        }
+        //    return Json(eventData);
+        //}
 
         [HttpPost]
         public async Task<ActionResult> GetSingleUserByUserId()

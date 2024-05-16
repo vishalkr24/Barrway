@@ -9,6 +9,7 @@ using Barrway.DTO.APIModels.SearchAPI;
 using Barrway.DTO.Common;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System;
 
 namespace Barrway.Service.IRepository
 {
@@ -54,9 +55,6 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> RemoveFavoriteCalendar(FavoriteCalendarViewModel model, string UserId);
 
         Task<FavouriteCalendarDetails> CalendarDtails(FavoriteCalendarViewModel model, string UserId);
-
-
-
 
     }
 }

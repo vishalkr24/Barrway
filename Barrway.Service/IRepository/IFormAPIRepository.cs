@@ -15,6 +15,7 @@ namespace Barrway.Service.IRepository
     {
         Task<AddUpdateDelete<IEnumerable<TabulatorConfigurationsDTO>>> manageTabulatorConfig(TabulatorConfigurationsDTO data);
         Task<AddUpdateDelete<GetFormRecordListResponseModel>> GetFormRecordList(GenerateDynamicFormData data);
+        Task<AddUpdateDelete<GetFormRecordListResponseModel>> GetFormRecordList(object data);
         Task<AddUpdateDelete<GenerateDynamicFormData>> GeneratedFormData(Form_DataTable data);
         Task<AddUpdateDelete<GenerateDynamicFormData>> BulkGeneratedFormData(Form_DataTable data);
         Task<AddUpdateDelete<List<FormTable>>> ManageForm(FormTable data);
