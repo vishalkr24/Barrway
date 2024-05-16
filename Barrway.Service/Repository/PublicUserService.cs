@@ -545,7 +545,7 @@ namespace Barrway.Service.Repository
                 string fullName = publicUser.Data["FIRST_NAME"].ToString() + " " + publicUser.Data["LAST_NAME"].ToString();
                 if (string.IsNullOrEmpty(fullName.Trim()))
                 {
-                    fullName = "Tweety";
+                    fullName = model.participant.EMAIL;
                 }
                 model.participant.STUDENT_NAME = fullName;
 
@@ -1535,6 +1535,14 @@ namespace Barrway.Service.Repository
                     string query = $@"update {tableName} set RECORD_ID = '{recordId}', created_by = '{UserId}' where Id = '{formResult.Id}'";
                     var result = await sqlFunction.ExecuteSqlCommandQuery(query);
 
+                    var result2 = await AddFavoriteCalendar(new FavoriteCalendarModel()
+                    {
+                        COMPANY_CODE = sd["COMPANY_CODE"]?.ToString(),
+                        CALENDAR_CODE = sd["CALENDAR_CODE"]?.ToString(),
+                        IS_PUBLIC_USER = "Y",
+                        USER_ID = UserId
+                    });
+
                     if (result > 0)
                     {
                         return new AddUpdateDelete() { Status = true, Message = "Form saved successfully!" };
@@ -1831,30 +1839,42 @@ namespace Barrway.Service.Repository
 
 
 
-                string query = $@"declare @Ids varchar(max) = stuff((SELECT distinct ',' + cast(calendarDetails.Id as varchar)
-                                  FROM [dbo].[CALENDAR_FORM_1935] calendar
-                                  join TRANSACTION_MASTER_1942 transaction_m on calendar.CALENDAR_CODE = transaction_m.CALENDAR_CODE
-                                  join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
-								  join SERVICE_MASTER_1933 service_m on service_m.Id = transaction_m.ACTIVITY
-                                  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
-								  join BUSINESS_CALENDAR_MASTER_1925 calendarDetails on calendarDetails.CALENDAR_CODE = calendar.CALENDAR_CODE
-								  join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory   ON ',' + calendarDetails.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
-                                  where EMAIL = '{userEmail}' and calendar.Id = transaction_m.SLOT
-								  for xml path('')), 1, 1, '')
+                string query = $@"IF OBJECT_ID(N'tempdb..#temptable') IS NOT NULL  BEGIN DROP TABLE #temptable END;
+                                    with cte as (SELECT distinct top 4 subquery.CALENDAR_CODE, AVG(RowOrder) as avgOrd
+                                    FROM (
+                                        SELECT 
+                                            transaction_m.CALENDAR_CODE, 
+                                            ROW_NUMBER() OVER (ORDER BY transaction_m.created_at DESC) as 'RowOrder'
+                                        FROM 
+                                            [dbo].[CALENDAR_FORM_1935] calendar
+                                            JOIN TRANSACTION_MASTER_1942 transaction_m ON calendar.CALENDAR_CODE = transaction_m.CALENDAR_CODE
+                                            JOIN PARTICIPANT_MASTER_1940 participant ON participant.Id = transaction_m.STUDENT
+                                            JOIN SERVICE_MASTER_1933 service_m ON service_m.Id = transaction_m.ACTIVITY
+                                            JOIN BUSINESS_COMPANY_MASTER_1924 company ON company.COMPANY_CODE = calendar.COMPANY_CODE
+                                            JOIN BUSINESS_CALENDAR_MASTER_1925 calendarDetails ON calendarDetails.CALENDAR_CODE = calendar.CALENDAR_CODE
+                                            JOIN CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory ON ',' + calendarDetails.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
+                                        WHERE 
+                                            participant.EMAIL = '{userEmail}' 
+                                            AND calendar.Id = transaction_m.SLOT
+                                    ) subquery
+                                    group by CALENDAR_CODE 
+                                    order by avgOrd ASC) select * into #temptable from cte;
 
-								  select top 4
+                                    declare @Ids varchar(max) = stuff((select ',' + CALENDAR_CODE from #temptable for xml path('')), 1, 1, '')
+
+								  select
 									  (select 
-	case when (
-		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = '{userId}' and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
-	) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = '{userId}' and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
-	then
-		0
-	else
-		(select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = '{userId}' and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
-	end
-FROM LEDGER_MASTER_1957 led 
-join ORDER_MASTER_1969 ord on ord.ORDER_NO = led.ORDER_NO
-where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) as 'COIN_BALANCE'
+	                                        case when (
+		                                        (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = '{userId}' and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+	                                        ) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = '{userId}' and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
+	                                        then
+		                                        0
+	                                        else
+		                                        (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = '{userId}' and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+	                                        end
+                                        FROM LEDGER_MASTER_1957 led 
+                                        join ORDER_MASTER_1969 ord on ord.ORDER_NO = led.ORDER_NO
+                                        where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) as 'COIN_BALANCE'
 									  ,company.Id as 'CompanyId'
                                       ,calendarDetails.*
 	                                  ,company.COMPANY_NAME_ENGLISH
@@ -1865,12 +1885,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
 									  FROM BUSINESS_CALENDAR_MASTER_1925 calendarDetails
                                   join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
 								  
-                                  where calendarDetails.Id in (select cast(item as integer) from dbo.SplitString(@Ids, ','))";
-
-
-
-
-
+                                  where calendarDetails.CALENDAR_CODE in (select cast(item as varchar(max)) from dbo.SplitString(@Ids, ','))";
 
                 List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
