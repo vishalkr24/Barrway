@@ -437,7 +437,7 @@ namespace Barrway.Service.Repository
 
         public async Task<List<ModifiedMyBooking>> GetMyBookings(MyBookingApiModel modelstring, string email, string Type, string EventId = null)
         {
-            EventId = "1170";
+            
             modelstring.page = modelstring.page == 0 ? 1 : modelstring.page;
             modelstring.size = modelstring.size == 0 ? 10 : modelstring.size;
             string sqlString = $@"DECLARE @retval nvarchar(max);       DECLARE @sQuery nvarchar(max); DECLARE @ParmDefinition nvarchar(max);                        
@@ -507,9 +507,110 @@ namespace Barrway.Service.Repository
         }
 
 
-     
 
-   
+
+        public async Task<ModifiedMyBooking> GetMyBookingsDetails(string email,  string EventId = null)
+        {
+
+
+            string sqlString = $@"DECLARE @retval nvarchar(max);       DECLARE @sQuery nvarchar(max); DECLARE @ParmDefinition nvarchar(max);                        
+                                    DECLARE @customTitleQuery nvarchar(max);
+                                   
+
+                                    IF OBJECT_ID(N'tempdb..#temptable') IS NOT NULL  BEGIN DROP TABLE #temptable END 
+                                    ;with cte1 as( select distinct  f.*,f.resources 'resourceId', transaction_m.Id as 'TransactionId', company.COMPANY_LOGO_PATH, company.Id as 'COMPANY_ID', company.COMPANY_NAME_ENGLISH ,  STUFF((SELECT ',' +  PARTICIPANT_MASTER_1940.[STUDENT_NAME]  
+                                    from TRANSACTION_MASTER_1942 inner join PARTICIPANT_MASTER_1940 on TRANSACTION_MASTER_1942.STUDENT = PARTICIPANT_MASTER_1940.Id where TRANSACTION_MASTER_1942.formGroupKey = f.formGroupKey         FOR XML PATH('')), 1, 1, '') customFourthTitle
+                                    , (dbo.[GetSubQueryCalender](f.formGroupKey)) customTitle,   (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceFormId) from form_calenderreferrence f2     
+                                    where f2.formgroupkey = f.formGroupKey  FOR XML PATH('')), 1, 1, '')   ) customForms  , (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceId) 
+                                    from form_calenderreferrence f2    where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) customFormIds,  '' referrences_1,  '' referrences_2,  '' referrences_3 
+                                    , (select case when (cast(getdate() as datetime) >= cast((DATEADD(minute, -30, f.[start])) as datetime) and cast(getdate() as datetime) <= cast(f.[end] as datetime) ) then 'Y' else 'N' end) as 'ATTEND'
+                                    , case when review.Id is null then 'N' else 'Y' end as 'SESSION_REVIEWED'
+									, review.REVIEW_SCORE
+									, review.REVIEW_COMMENT
+									, transaction_m.ATTENDANCE
+									, calendar.CALENDAR_NAME
+									from CALENDAR_FORM_1935 f 
+                                    join TRANSACTION_MASTER_1942 transaction_m on transaction_m.CALENDAR_CODE = f.CALENDAR_CODE
+                                    join PARTICIPANT_MASTER_1940 participant_m on participant_m.Id = transaction_m.STUDENT
+									join BUSINESS_CALENDAR_MASTER_1925 calendar on calendar.CALENDAR_CODE = f.CALENDAR_CODE
+                                    join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
+									left join SESSION_REVIEWS_1983 review on review.EVENT_ID = transaction_m.SLOT and review.USER_EMAIL = participant_m.EMAIL
+                                    where 
+                                     f.formid=2305 and participant_m.EMAIL = '{email}' and transaction_m.SLOT = f.Id  and f.Id = '{EventId}'
+                                    ),  cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0  )                                    
+
+                                        select* into #temptable from cte2  where len(customtitle)>0;    declare @counter int= 0, @c int= (select min(ROWNUMBER) from #temptable);   
+                                        select @counter = (select max(ROWNUMBER) from #temptable)	while @c <= @counter    begin    select @customTitleQuery = customTitle from #temptable where ROWNUMBER=@c;	SET @sQuery= ' select @retvalOUT = (' + @customTitleQuery + ')'  
+                                        SET @ParmDefinition = N'@retvalOUT nvarchar(max) OUTPUT';   
+                                        EXEC sp_executesql @sQuery, @ParmDefinition, @retvalOUT = @retval OUTPUT; update #temptable set customTitle=@retval where ROWNUMBER=@c;	set @c = @c + 1;  end  select* from #temptable order by cast([start] as datetime) desc
+                                    
+                                     ";
+
+            var MyBooking = (await sqlFunction.ExecuteSqlQuery<MyBooking>(sqlString)).ToList();
+            if (MyBooking.Any())
+            {
+                var modifiedData = modifiedDataUpcomingEvent(MyBooking).FirstOrDefault();
+
+                modifiedData.COMPANY_LOGO_PATH = GetFilepath(modifiedData.COMPANY_LOGO_PATH);
+                if (modifiedData.DOWNLOAD_FILE_LIST != null && modifiedData.DOWNLOAD_FILE_LIST is string downloadFileListString)
+                {
+                    modifiedData.DOWNLOAD_FILE_LIST = JsonConvert.DeserializeObject<dynamic[]>(modifiedData.DOWNLOAD_FILE_LIST.ToString());
+
+                }
+                else
+                {
+                    modifiedData.DOWNLOAD_FILE_LIST = new List<DownloadFile>();
+                }
+
+
+
+                var customFormsSplit = modifiedData.customForms.Split(',').ToList();
+                var customFormIdsSplit = modifiedData.customFormIds.Split(',').ToList();
+                var customTitleSplit = modifiedData.customTitle.Split(',').ToList();
+                string locamaster = ((int)FormSetting.LOCATION_MASTER).ToString();
+                List<EventFormDataList> eventFormDatas = new List<EventFormDataList>();
+                foreach (var item in customFormsSplit)
+                {
+
+
+                    int index = customFormsSplit.FindIndex(x => x == item);
+                    string title = "";
+                    string id = "";
+                    if (customTitleSplit.Count > index)
+                    {
+                        title = customTitleSplit[index];
+                    }
+                    if (customFormIdsSplit.Count > index)
+                    {
+                        id = customFormIdsSplit[index];
+                    }
+                    EventFormDataList formData = new EventFormDataList()
+                    {
+                        title = title,
+                        id = id,
+                        formid = item,
+                        seq = 1
+                    };
+                    eventFormDatas.Add(formData);
+                }
+
+                modifiedData.eventFormDatas = eventFormDatas;
+
+
+
+
+
+                return modifiedData;
+            }
+            else
+            {
+                return new ModifiedMyBooking();
+            }
+
+        }
+
+
+
 
 
 
@@ -1327,7 +1428,43 @@ namespace Barrway.Service.Repository
 
             var result = (await sqlFunction.ExecuteSqlQuery<EventDetails>(query)).FirstOrDefault();
             if (result != null)
-            { 
+            {
+
+                var customFormsSplit = result.customForms.Split(',').ToList();
+                var customFormIdsSplit = result.customFormIds.Split(',').ToList();
+                var customTitleSplit = result.customTitle.Split(',').ToList();                              
+                
+                string locamaster = ((int)FormSetting.LOCATION_MASTER).ToString();
+
+                List<EventFormData> eventFormDatas = new List<EventFormData>();
+                foreach (var item in customFormsSplit)
+                {
+
+
+                    int index = customFormsSplit.FindIndex(x => x == item);
+                    string title = "";
+                    string id = "";
+                    if (customTitleSplit.Count > index)
+                    {
+                        title = customTitleSplit[index];
+                    }
+                    if (customFormIdsSplit.Count > index)
+                    {
+                        id = customFormIdsSplit[index];
+                    }
+                    EventFormData formData = new EventFormData()
+                    {
+                        title = title,
+                        id = id,
+                        formid = item,
+                        seq = 1
+                    };
+                    eventFormDatas.Add(formData);
+                }
+
+                result.eventFormDatas = eventFormDatas;
+
+
                 return result;
             }
             else
