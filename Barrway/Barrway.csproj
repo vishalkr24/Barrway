@@ -3573,6 +3573,7 @@
     <Content Include="Views\Shared\_QRFunctionPartialView.cshtml" />
     <Content Include="Views\Calendar\IndexPdf.cshtml" />
     <Content Include="Views\MarketPlace\TermsConditions.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

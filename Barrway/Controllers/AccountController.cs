@@ -68,6 +68,36 @@ namespace Barrway.Controllers
             return View(new LoginViewModel { ReturnUrl = returnUrl });
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<ActionResult> ForgotPassword()
+        {
+            ViewBag.ErrorMessage = null;
+            if (User.Identity.IsAuthenticated)
+            {
+                LogoutAllSession();
+                return RedirectToAction("ForgotPassword");
+            }
+
+            return View();
+        }
+
+        public async Task<ActionResult> SendPasswordResetLink(DTO.AuthViewModel.ForgotPasswordViewModel model)
+        {
+            var userData = await authService.GetUserByEmail(model.Email);
+
+            if (userData.Status)
+            {
+                // code to send verfication link
+            }
+            else
+            {
+                ViewBag.ErrorMessage = "Enter a valid email id";
+            }
+
+            return View("ForgotPassword");
+        }
+
         private void LogoutAllSession()
         {
             Session.Clear();
@@ -449,7 +479,9 @@ namespace Barrway.Controllers
                 PublicAccountModel businessModel = new PublicAccountModel()
                 {
                     USER_ID = model.USER_NAME,
-                    CURRENT_STEP = "PENDING"
+                    CURRENT_STEP = "PENDING",
+                    FIRST_NAME = model.FIRST_NAME,
+                    LAST_NAME = model.LAST_NAME
                 };
 
                 AddUpdateDelete publicResult = await publicUserService.CreatePublicUserAccount(businessModel);
@@ -540,7 +572,6 @@ namespace Barrway.Controllers
             return View(new PhoenSignUpViewModel() { IS_EXTERNAL_SIGNUP = false });
         }
 
-
         [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -595,7 +626,9 @@ namespace Barrway.Controllers
                 PublicAccountModel businessModel = new PublicAccountModel()
                 {
                     USER_ID = model.USER_NAME,
-                    CURRENT_STEP = "PENDING"
+                    CURRENT_STEP = "PENDING",
+                    FIRST_NAME = model.FIRST_NAME,
+                    LAST_NAME = model.LAST_NAME,
                 };
 
                 AddUpdateDelete publicResult = await publicUserService.CreatePublicUserAccount(businessModel);

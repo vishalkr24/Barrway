@@ -67,7 +67,7 @@
             display: flex;
             widtH: 100%;
             /*background: mintcream;*/
-            background:#ffffff;
+            background: #ffffff;
             transition: 0.5s ease-in-out;
             border-radius: 5px;
             box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.35);
@@ -408,6 +408,7 @@
                     border-bottom-right-radius: 0px;
                     display: block;
                 }
+
                 .signUp .left {
                     /*width: 100%;
                     padding: 80px 60px;
@@ -415,7 +416,7 @@
                     border-top-right-radius: 0px;
                     border-bottom-right-radius: 0px;
                     display: block;*/
-                    display:none;
+                    display: none;
                 }
         }
     </style>
@@ -442,6 +443,7 @@
             font-size: 16px;
             font-weight: 600;
         }
+
         a.tab {
             color: #333333;
             text-decoration: none;
@@ -524,6 +526,16 @@
             }
         }
     </style>
+    <style>
+    .seperator {
+        text-align: center;
+        width: fit-content;
+        padding: 6px;
+        margin: auto;
+        background: white;
+        margin-top: -17px;
+    }
+</style>
 </head>
 
 <body class="d-flex align-items-center min-h-100" style="background: linear-gradient(to right, #e2476c, #3fbfc7);">
@@ -553,7 +565,7 @@
                                     <div class="tabs">
 
                                         @*<label class="tab active" for="radio-1"><a href="/Account/BusinessLogin">Email</a></label>
-                                        <label class="tab" for="radio-2"><a href="/Account/BusinessPhoneLogin">Phone</a></label>*@
+                                            <label class="tab" for="radio-2"><a href="/Account/BusinessPhoneLogin">Phone</a></label>*@
                                         <a class="tab active" href="#">Email</a>
                                         <a class="tab" href="/Account/BusinessPhoneLogin">Phone</a>
                                     </div>
@@ -609,17 +621,30 @@
                                             @Html.AntiForgeryToken()
 
                                             @*<button class="a" type="submit" id="Google" name="provider" value="Google"><span class="hide-on-large"><i class="bi bi-google" aria-hidden="true"></i></span> <span class="hide-on-small">Register with Google</span> </button>
-                                            <button class="a" type="submit" id="Facebook" name="provider" value="Facebook"> <span class="hide-on-large"><i class="bi bi-facebook" aria-hidden="true"></i></span> <span class="hide-on-small">Register with Facebook</span></button>*@
+                                                <button class="a" type="submit" id="Facebook" name="provider" value="Facebook"> <span class="hide-on-large"><i class="bi bi-facebook" aria-hidden="true"></i></span> <span class="hide-on-small">Register with Facebook</span></button>*@
                                         }
 
                                     </div>
-                                    <br /><br /><br />
+                                    <br /><br />
+                                    <div class="forgot-password-container text-center">
+                                        <a href="@Url.Action("ForgotPassword", "Account")">Forgot password?</a>
+                                    </div>
+                                    <div style="margin-top: 16px;">
+                                        <div style="height:1px; background:lightgrey; border-radius: 50%;"></div>
+                                        <div class="seperator-container text-center">
+                                            <div class="seperator">
+                                                or
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="register-btn text-center">
                                         @Resource.Don_t_have_an_account? <a href="/Account/BusinessSignup">@Resource.Register</a>
                                     </div>
 
 
                                 </div>
+                                
                             </div>
                             <div class='left'>
                                 <div class='back'><h1>@Resource.Find_your_service__activity___book_it_in_one_stop</h1></div>

@@ -143,21 +143,21 @@ namespace Barrway.Controllers
             try
             {
                 var userData = await authService.GetUser(User.Identity.Name, FormRole.GENERAL_USER);
-
+                
                 bool UpdatePassword = false;
 
                 List<CustomErrorModel> errorList = new List<CustomErrorModel>();
 
-                if (model.USER_PASSWORD.Length < 6 || model.USER_PASSWORD.Length > 12)
+                if (model.USER_PASSWORD.Length < 8 || model.USER_PASSWORD.Length > 12)
                 {
-                    errorList.Add(new CustomErrorModel() { key = "USER_PASSWORD", message = "Password length should be between 6 and 12" });
+                    errorList.Add(new CustomErrorModel() { key = "USER_PASSWORD", message = "Password length should be between 8 and 12" });
                 }
                 else
                 {
-                    if (userData.Data["USER_PASSWORD"].ToString() != model.USER_PASSWORD)
-                    {
-                        UpdatePassword = true;
-                    }
+                    //if (userData.Data["USER_PASSWORD"].ToString() != model.USER_PASSWORD)
+                    //{
+                    //    UpdatePassword = true;
+                    //}
                 }
 
                 model.USER_ID = User.Identity.Name.ToString();
