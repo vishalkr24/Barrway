@@ -32,7 +32,8 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> sendActivationLink(string userID, string Email, FormRole Role);
        
         Task<AddUpdateDelete> ChangePhoneVarificationStatus(string userID);
-
+        Task<AddUpdateDelete> SendresetpasswordLink(string UserName, string Email);
+            
 
         Task<AddUpdateDelete<IDictionary<string, object>>> GetUserbyPhone(string Phone, string countrycode, string password, int RoleId, bool isToken = false);
         //Task<AddUpdateDelete> GuestUserSignUp();

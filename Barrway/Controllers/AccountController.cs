@@ -88,7 +88,20 @@ namespace Barrway.Controllers
 
             if (userData.Status)
             {
-                // code to send verfication link
+                var linkResult = await authService.SendresetpasswordLink(userData.Data["USER_ID"], model.Email);//USER_EMAILUSER_ID
+
+                if (linkResult.Status)
+                {
+                    TempData["VERIFICATION"] = "Pending";
+                    TempData["VERIFICATION_EMAIL"] = model.Email;
+
+                    TempData["UpdateEmailSussess"] = "varification email has been sent to " + model.Email + " please fallow instructions !";
+
+                    model.Email = "";
+                    return View(model);
+                    //return RedirectToAction("EmailVerification", "Account");
+
+                }// code to send verfication link
             }
             else
             {
@@ -997,6 +1010,12 @@ namespace Barrway.Controllers
         }
 
 
+        public ActionResult Error()
+        {
+
+            return View();
+        }
+
         [HttpGet]
         public async Task<ActionResult> verification(string userName, string token, string role)
         {
@@ -1066,12 +1085,22 @@ namespace Barrway.Controllers
         [HttpGet]
         public async Task<ActionResult> resetpassword(string token)
         {
+
+           
+            ResetPasswordViewModel model = new ResetPasswordViewModel() { token = token };
             if (string.IsNullOrEmpty(token))
             {
                 TempData["failed"] = "Invalid Request";
-                return View();
+                return View(model);
             }
             var result = await authService.GetToken(token);
+
+            if(result.Data["IS_ACTIVE"] != "YES")
+            {
+                TempData["failed"] = "Reset Password Link Expired!";
+                return View(model);
+            }
+
             if (result.Status && (result.Data as IDictionary<string, object>)["IS_ACTIVE"]?.ToString() == "YES")
             {
                 var tokeData = result.Data as IDictionary<string, object>;
@@ -1083,22 +1112,21 @@ namespace Barrway.Controllers
                     if (DateTimeUtility.Now().Subtract(createdTime).TotalHours > 24)
                     {
                         TempData["failed"] = "Reset Password Link Expired!";
-                        return View();
-                    }
-                    TempData["success"] = "reset password link verified please reset your password!";
-                    ResetPasswordViewModel model = new ResetPasswordViewModel() { token = token };
+                        return View(model);
+                    }                    
+                   
                     return View(model);
                 }
                 else
                 {
                     TempData["failed"] = "Invalid Token!";
-                    return View();
+                    return View(model);
                 }
             }
             else
             {
                 TempData["failed"] = "Invalid activation link!";
-                return View();
+                return View(model);
             }
         }
 
@@ -1110,6 +1138,13 @@ namespace Barrway.Controllers
                 return View(model);
             }
             var result = await authService.GetToken(model.token);
+            if (result.Data["IS_ACTIVE"] != "YES")
+            {
+                TempData["failed"] = "Reset Password Link Expired!";
+                return View(model);
+            }
+
+
             if (result.Status && (result.Data as IDictionary<string, object>)["IS_ACTIVE"]?.ToString() == "YES")
             {
                 var tokeData = result.Data as IDictionary<string, object>;
@@ -1119,36 +1154,38 @@ namespace Barrway.Controllers
                 {
 
                     if (DateTimeUtility.Now().Subtract(createdTime).TotalHours > 24)
-                    {
-                        ModelState.AddModelError("", "Reset Password Link Expired!");
-                        return View();
+                    {                       
+                        TempData["ResetError"] = "Reset Password Link Expired!";
+                        return View(model);
                     }
-                    model.newpassword = Aes256CbcEncrypter.Encrypt(model.newpassword);
-                    result = await authService.ResetPassword(model.token, tokeData["USER_NAME"].ToString(), model.newpassword);
+                    //model.newpassword = Aes256CbcEncrypter.Encrypt(model.newpassword);
+                    result = await authService.ResetPassword(model.token, result.Data["USER_ID"].ToString(), model.newpassword);
                     if (result.Status)
                     {
                         ModelState.Clear();
-                        TempData["success"] = "password reset successfully. you can login your account on mobile app.";
+                        TempData["Resetsuccess"] = "password reset successfully. !";
+                        return View();
                     }
                     else
                     {
                         ModelState.Clear();
                         ModelState.AddModelError("", result.Message);
+                        return View(model);
                     }
-                    return View();
+                    
                 }
                 else
                 {
-                    ModelState.Clear();
-                    ModelState.AddModelError("", "Invalid activation link!");
-                    return View();
+                    ModelState.Clear();                   
+                    TempData["ResetError"] = "Invalid activation link!";
+                    return View(model);
                 }
             }
             else
             {
                 ModelState.Clear();
-                ModelState.AddModelError("", "Invalid activation link!");
-                return View();
+                TempData["ResetError"] = "Invalid activation link!";
+                return View(model);
             }
         }
 
