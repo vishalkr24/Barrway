@@ -12,6 +12,9 @@ namespace Barrway.DTO.AuthViewModel
         [Required(ErrorMessage = "User name is required.")]
         public string USER_NAME { get; set; }
 
+        [Required(ErrorMessage = "First name is required.")]
+        public string FIRST_NAME { get; set; }
+        public string LAST_NAME { get; set; }
 
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Enter a valid Email")]
@@ -21,6 +24,7 @@ namespace Barrway.DTO.AuthViewModel
         [Required(ErrorMessage = "Password is required")]
         [MinLength(8, ErrorMessage = "Password length should be greater than 8 characters")]
         [MaxLength(16, ErrorMessage = "Password length should be less than 16 characters")]
+        [RegularExpression("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};:\"\\|,.<>\\/?]).+$", ErrorMessage = "Create a strong password.")]
         public string USER_PASSWORD { get; set; }
 
 

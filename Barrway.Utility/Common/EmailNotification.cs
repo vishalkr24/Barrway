@@ -139,7 +139,7 @@ namespace Barrway.Utility.Common
             try
             {
                 MailMessage message = new MailMessage();
-
+                
                 // Settings.  
                 message.To.Add(new MailAddress(toemail));
                 message.From = new MailAddress(fromemail, "Barrway");

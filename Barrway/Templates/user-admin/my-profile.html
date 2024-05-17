@@ -19,6 +19,12 @@
         margin-top: 0px;
     }
 
+    input.disabled, select.disabled {
+        background: #ebebeb !important;
+        color: #7d7d7d;
+        border: 1px solid #d4d4d4 !important;
+    }
+
     /*.select2-container--default .select2-selection--single {
         border: 1px solid #3fbfc7 !important;
     }*/
@@ -72,7 +78,7 @@
                 <div class="col-md-8" style="padding:0px;">
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <!--<div class="col-md-6">
                             <div class="form-group">
                                 <div>
                                     <label>{{translation.User_Level}}</label>
@@ -80,14 +86,14 @@
                                 <input type="text" class="form-control" placeholder="user level" disabled value="Admin" />
                             </div>
 
-                        </div>
+                        </div>-->
                         
-                        <div class="col-md-6">
+                        <div class="col-md-6  mt-4">
                             <div class="form-group">
                                 <div>
                                     <label>{{translation.User_name}}</label>
                                 </div>
-                                <input type="text" id="USER_ID" readonly class="form-control" placeholder="user name" value="{{userData.USER_ID}}" />
+                                <input type="text" id="USER_ID" readonly class="form-control disabled" disabled placeholder="user name" value="{{userData.USER_ID}}" />
                                 <!--<div class="invalid-feedback-2" id="USER_ID_ERROR">User name is already registered</div>-->
                             </div>
                         </div>
@@ -96,7 +102,7 @@
                                 <div>
                                     <label>{{translation.Password}}</label>
                                 </div>
-                                <input type="password" readonly class="form-control" id="USER_PASSWORD" placeholder="password" value="{{userData.USER_PASSWORD}}" />
+                                <input type="password" readonly class="form-control disabled" disabled id="USER_PASSWORD" placeholder="password" value="{{userData.USER_PASSWORD}}" />
                                 <div class="invalid-feedback-2" id="USER_PASSWORD_ERROR">Password range should be between 6 and 12</div>
                             </div>
                         </div>
@@ -130,7 +136,7 @@
 
                         </div>
 
-                        <div class="col-md-6 mt-4">
+                        <!--<div class="col-md-6 mt-4">
                             <div class="form-group">
                                 <div>
                                     <label>{{translation.Nick_name}} ({{translation.this_will_appear_on_dashboard}}) *</label>
@@ -139,14 +145,14 @@
                                 <div class="invalid-feedback-2" id="NICK_NAME_ERROR">Nick name is required</div>
                             </div>
 
-                        </div>
+                        </div>-->
 
                         <div class="col-md-6 mt-4">
                             <div class="form-group">
                                 <div>
                                     <label>{{translation.Email}}</label>
                                 </div>
-                                <input type="text" class="form-control" id="USER_EMAIL" placeholder="email" value="{{userData.USER_EMAIL}}" />
+                                <input type="text" class="form-control disabled" disabled id="USER_EMAIL" placeholder="email" value="{{userData.USER_EMAIL}}" />
                                 <div class="invalid-feedback-2" id="USER_EMAIL_ERROR">Email is already registered</div>
                             </div>
 

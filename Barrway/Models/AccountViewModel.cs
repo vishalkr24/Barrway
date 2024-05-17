@@ -72,9 +72,10 @@ namespace Barrway.Models
 
     public class ForgotPasswordViewModel
     {
-        [Required]
         [EmailAddress]
-        [Display(Name = "Email")]
         public string Email { get; set; }
+
+        public string Phone { get; set; }
+
     }
 }
