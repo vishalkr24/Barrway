@@ -1,5 +1,6 @@
 ﻿using Barrway.DTO.AuthViewModel;
 using Barrway.DTO.Common;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace Barrway.Utility.Common
 {
     public class SendActivationLink
     {
-        //private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         public static AddUpdateDelete sendlink(UserToken userToken, FormRole Role)
         {
             try
@@ -78,6 +79,7 @@ namespace Barrway.Utility.Common
             }
             catch (Exception ex)
             {
+                logger.Error(ex);
                 return new AddUpdateDelete() { Status = false, Message = ex.Message };
             }
 
@@ -145,6 +147,7 @@ namespace Barrway.Utility.Common
             }
             catch (Exception ex)
             {
+                logger.Error(ex);
                 return new AddUpdateDelete() { Status = false, Message = ex.Message };
             }
 
@@ -194,9 +197,9 @@ namespace Barrway.Utility.Common
             }
             catch (Exception ex)
             {
+                logger.Error(ex);
                 return new AddUpdateDelete() { Status = false, Message = ex.Message };
             }
-
         }
 
     }
