@@ -15,5 +15,6 @@ namespace Barrway.Service.IRepository
         Task<IDictionary<string, object>> GetCalendarMaster(string code);
         Task<List<IDictionary<string, object>>> GetEvents(Form_DataTable data);
         Task<List<IDictionary<string, object>>> GetMyBooking(string email, string companycode, DateTime start, DateTime end);
+        Task<List<IDictionary<string, object>>> GetTransactionAll(string formGroupKey);
     }
 }

@@ -75,9 +75,9 @@
 
     }
 
-    <header>
+    @*<header>
         <a href="/UserAdmin#/mycalendar/2305"><img src="/assets/svg/logos/logo.png" style="max-width:200px;width:100%" /></a>
-    </header>
+    </header>*@
 
     <div class="container-fluid">
         <div class="row">
@@ -85,12 +85,11 @@
                 <div style="background: #ffffffd4; border-radius: 4px;min-height:500px;">
                     <div class="col-12" style="margin-top: 50px;">
                         <p class="text-title">
-                                Student Name：@Model.StudentName
-                            </p>
-                        <p class="text-title">Student ID：@Barrway.Security.UserIdentity.UserName</p>
+                            @Model.StudentName (@Barrway.Security.UserIdentity.UserName)
+                        </p>
                     </div>
                     <div class="col-12 text-center">
-                        <h2 style="text-align:center;font-size:24px;font-weight:400">Course Timetable 選課時間表</h2>
+                        <h2 style="text-align:center;font-size:24px;font-weight:400">Timetable 時間表</h2>
                     </div>
 
                     <table class="table table-bordered" cellpadding="2" cellspacing="0" border="1" style="max-width:900px;margin:0 auto;text-align:center">

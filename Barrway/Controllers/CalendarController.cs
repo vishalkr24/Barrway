@@ -1712,12 +1712,12 @@ namespace Barrway.Controllers
             }
         }
 
-        public async Task<ActionResult> IndexPdf(string start,string end,string companyCode)
+        public async Task<ActionResult> IndexPdf(string start,string end,string companyCode,string calendarCode)
         {
             calenderSettingsFormDetails request1 = new calenderSettingsFormDetails() { action = 4, formId = (int)FormSetting.CALENDAR_FORM,IsCustomFilter=true,
                                                                                         CustomFilters=new List<CustomFilter>() {
                                                                                             new CustomFilter() { FieldName="COMPANY_CODE",Value=companyCode },
-                                                                                            //new CustomFilter() {FieldName="CALENDAR_CODE",Value=calendarCode } 
+                                                                                            new CustomFilter() {FieldName="CALENDAR_CODE",Value=calendarCode } 
                                                                                         }
                                                                                         };
             var CalenderSettingsFormData = await formAPIRepository.getCalenderSettingsFormData(request1);
@@ -1727,8 +1727,8 @@ namespace Barrway.Controllers
 
                 return RedirectToAction("Index");
             }
-            //string filterQuery =$" f.COMPANY_CODE='{companyCode}' and f.CALENDAR_CODE='{calendarCode}' and " +CustomMethods.GetDateQuery(_start, _end); 
-            string filterQuery =$" f.COMPANY_CODE='{companyCode}' and " +CustomMethods.GetDateQuery(_start, _end); 
+            string filterQuery =$" f.COMPANY_CODE='{companyCode}' and f.CALENDAR_CODE='{calendarCode}' and " +CustomMethods.GetDateQuery(_start, _end); 
+            //string filterQuery =$" f.COMPANY_CODE='{companyCode}' and " +CustomMethods.GetDateQuery(_start, _end); 
 
             Form_DataTable request2 = new Form_DataTable() { action = 1, formId = (int)FormSetting.CALENDAR_FORM, ActivityFormId = (int)FormSetting.SERVICE_MASTER, isCalender = 1, isEvent = 1, resourceFormId = (int)FormSetting.LOCATION_MASTER, filter = new FilterDTO() { field = "start", value = filterQuery }
             };

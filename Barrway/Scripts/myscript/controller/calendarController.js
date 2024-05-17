@@ -11631,17 +11631,17 @@
 
                                                         if (!DataService.isEmpty(tempdata)) {
 
-                                                            $("#tabuListUl").append('<li><span>' + filterData[$scope.selectedKeyField] + ' | ' + tempdata + ' (ID: ' + sIdEvent + ') </span></li>');
-                                                            _newtabuListUlHtml += '<li><span>' + filterData[$scope.selectedKeyField] + ' | ' + tempdata + ' (ID: ' + sIdEvent + ') </span></li>';
+                                                            $("#tabuListUl").append('<li><span>' + filterData[$scope.selectedKeyField] + ' | ' + tempdata  + ' </span></li>');
+                                                            _newtabuListUlHtml += '<li><span>' + filterData[$scope.selectedKeyField] + ' | ' + tempdata +  ' </span></li>';
                                                         }
                                                         else {
-                                                            $("#tabuListUl").append('<li><span>' + filterData[$scope.selectedKeyField] + ' (ID: ' + sIdEvent + ') </span></li>');
-                                                            _newtabuListUlHtml += '<li><span>' + filterData[$scope.selectedKeyField] + ' (ID: ' + sIdEvent + ') </span></li>';
+                                                            $("#tabuListUl").append('<li><span>' + filterData[$scope.selectedKeyField] + ' ' +  ' </span></li>');
+                                                            _newtabuListUlHtml += '<li><span>' + filterData[$scope.selectedKeyField] + ' ' +  ' </span></li>';
                                                         }
                                                     }
                                                     else {
-                                                        $("#tabuListUl").append('<li><span>' + filterData[$scope.selectedKeyField] + ' (ID: ' + sIdEvent + ') </span></li>');
-                                                        _newtabuListUlHtml += '<li><span>' + filterData[$scope.selectedKeyField] + ' (ID: ' + sIdEvent + ') </span></li>';
+                                                        $("#tabuListUl").append('<li><span>' + filterData[$scope.selectedKeyField] + ' ' + ' </span></li>');
+                                                        _newtabuListUlHtml += '<li><span>' + filterData[$scope.selectedKeyField] + ' ' +  ' </span></li>';
                                                     }
                                                 }
                                                 else {
@@ -11658,11 +11658,11 @@
                                                             $scope.selectedKeyField = "";
                                                         }
                                                         if (!DataService.isEmpty($scope.selectedKeyField) && !DataService.isEmpty($scope.selectedKeyFieldSecond)) {
-                                                            $("#tabuListUl").append('<li><span>' + filterData[$scope.selectedKeyField] + ' | ' + filterData[$scope.selectedKeyFieldSecond] + ' ( ID:' + sIdEvent + ') </span></li>');
-                                                            _newtabuListUlHtml += '<li><span>' + filterData[$scope.selectedKeyField] + ' | ' + filterData[$scope.selectedKeyFieldSecond] + ' ( ID:' + sIdEvent + ') </span></li>';
+                                                            $("#tabuListUl").append('<li><span>' + filterData[$scope.selectedKeyField] + ' | ' + filterData[$scope.selectedKeyFieldSecond] + ' ' +  ' </span></li>');
+                                                            _newtabuListUlHtml += '<li><span>' + filterData[$scope.selectedKeyField] + ' | ' + filterData[$scope.selectedKeyFieldSecond] + ' ' +  ' </span></li>';
                                                         } else if (!DataService.isEmpty($scope.selectedKeyFieldSecond)) {
-                                                            $("#tabuListUl").append('<li><span>' + filterData[$scope.selectedKeyField] + ' (ID: ' + sIdEvent + ') </span></li>');
-                                                            _newtabuListUlHtml += '<li><span>' + filterData[$scope.selectedKeyField] + ' (ID: ' + sIdEvent + ') </span></li>';
+                                                            $("#tabuListUl").append('<li><span>' + filterData[$scope.selectedKeyField] + ' '+ ' </span></li>');
+                                                            _newtabuListUlHtml += '<li><span>' + filterData[$scope.selectedKeyField] + ' ' + ' </span></li>';
                                                         } else {
                                                             $("#tabuListUl").append('<li><span> (ID: ' + sIdEventd + ')</span></li>');
                                                             _newtabuListUlHtml += '<li><span> (ID: ' + sIdEvent + ')</span></li>';
@@ -11679,8 +11679,8 @@
 
                                                     var formId = $scope.eventData.formDetails.formId;
                                                     //console.log(filterData,"filterData");
-                                                    $("#tabuListUl").append('<li><span>' + filterData[$scope.selectedKeyField] + ' (ID: ' + sIdEvent + ') </span><span data-entryId=' + filterData[$scope.selectedKeyField + "_Id"] + ' data-formGroupKey=' + filterData.formGroupKey + ' id="transList_' + filterData.Id + '" class="editlist cursor-pointer"> <i class="fa fa-pencil"></i></span></li>');
-                                                    _newtabuListUlHtml += '<li><span>' + filterData[$scope.selectedKeyField] + ' (ID: ' + sIdEvent + ') </span><span data-entryId=' + filterData[$scope.selectedKeyField + "_Id"] + ' data-formGroupKey=' + filterData.formGroupKey + ' id="transList_' + filterData.Id + '" class="editlist cursor-pointer"> <i class="fa fa-pencil"></i></span> <span data-entryId=' + filterData.Id + ' data-formGroupKey=' + filterData.formGroupKey + ' data-formId="' + formId + '" id="transList_' + filterData.Id + '" class="Deletelist cursor-pointer"> <i class="fa fa-trash"></i></span>   </li>';
+                                                    $("#tabuListUl").append('<li><span>' + filterData[$scope.selectedKeyField] + '</span></li>');
+                                                    _newtabuListUlHtml += '<li><span>' + filterData[$scope.selectedKeyField] + '  </span> <span data-entryId=' + filterData.Id + ' data-formGroupKey=' + filterData.formGroupKey + ' data-formId="' + formId + '" id="transList_' + filterData.Id + '" class="Deletelist cursor-pointer"> <i class="fa fa-trash"></i></span>   </li>';
                                                 }
                                                 else {
                                                     if (!DataService.isEmpty($scope.formDetailsDataInfo.otherFormFieldName))
@@ -11696,8 +11696,8 @@
                                                             $scope.selectedKeyField = "";
                                                         }
 
-                                                        $("#tabuListUl").append('<li><span>  ' + filterData[$scope.selectedKeyField] + ' (ID: ' + sIdEvent + ') </span><span data-entryId=' + filterData.Id + ' data-formGroupKey=' + filterData.formGroupKey + ' id="transList_' + filterData.Id + '" class="editlist cursor-pointer"> <i class="fa fa-pencil"></i></span></li>');
-                                                        _newtabuListUlHtml += '<li><span>  ' + filterData[$scope.selectedKeyField] + ' (ID: ' + sIdEvent + ') </span><span data-entryId=' + filterData.Id + ' data-formGroupKey=' + filterData.formGroupKey + ' id="transList_' + filterData.Id + '" class="editlist cursor-pointer"> <i class="fa fa-pencil"></i></span></li>';
+                                                        $("#tabuListUl").append('<li><span>  ' + filterData[$scope.selectedKeyField] + ' </span></li>');
+                                                        _newtabuListUlHtml += '<li><span>  ' + filterData[$scope.selectedKeyField] + ' </span></li>';
 
                                                     }
                                                     else {
@@ -11717,17 +11717,17 @@
                                                     if (!DataService.isEmpty($scope.selectedKeyFieldSecond)) {
                                                         var tempdata = filterData[$scope.selectedKeyFieldSecond];
                                                         if (!DataService.isEmpty(tempdata)) {
-                                                            $("#tabuListUl").append('<li><span> W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' | ' + tempdata + ' (ID: ' + sIdEvent + ') </span></li>');
-                                                            _newtabuListUlHtmlWaiting += '<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' | ' + tempdata + ' (ID: ' + sIdEvent + ') </span></li>';
+                                                            $("#tabuListUl").append('<li><span> W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' | ' + tempdata + ' ' + ' </span></li>');
+                                                            _newtabuListUlHtmlWaiting += '<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' | ' + tempdata + ' ' + ' </span></li>';
                                                         }
                                                         else {
-                                                            $("#tabuListUl").append('<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' (ID: ' + sIdEvent + ') </span></li>');
-                                                            _newtabuListUlHtmlWaiting += '<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' (ID: ' + sIdEvent + ') </span></li>';
+                                                            $("#tabuListUl").append('<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' ' +  ' </span></li>');
+                                                            _newtabuListUlHtmlWaiting += '<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' ' +  ' </span></li>';
                                                         }
                                                     }
                                                     else {
-                                                        $("#tabuListUl").append('<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' (ID: ' + sIdEvent + ') </span></li>');
-                                                        _newtabuListUlHtmlWaiting += '<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' (ID: ' + sIdEvent + ') </span></li>';
+                                                        $("#tabuListUl").append('<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' ' +  ' </span></li>');
+                                                        _newtabuListUlHtmlWaiting += '<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' ' +  ' </span></li>';
                                                     }
                                                 }
                                                 else {
@@ -11744,11 +11744,11 @@
                                                             $scope.selectedKeyField = "";
                                                         }
                                                         if (!DataService.isEmpty($scope.selectedKeyField) && !DataService.isEmpty($scope.selectedKeyFieldSecond)) {
-                                                            $("#tabuListUl").append('<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' | ' + filterData[$scope.selectedKeyFieldSecond] + ' ( ID:' + sIdEvent + ') </span></li>');
-                                                            _newtabuListUlHtmlWaiting += '<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' | ' + filterData[$scope.selectedKeyFieldSecond] + ' ( ID:' + sIdEvent + ') </span></li>';
+                                                            $("#tabuListUl").append('<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' | ' + filterData[$scope.selectedKeyFieldSecond] + ' ' +  ' </span></li>');
+                                                            _newtabuListUlHtmlWaiting += '<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' | ' + filterData[$scope.selectedKeyFieldSecond] + ' ' +  ' </span></li>';
                                                         } else if (!DataService.isEmpty($scope.selectedKeyFieldSecond)) {
-                                                            $("#tabuListUl").append('<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' (ID: ' + sIdEvent + ') </span></li>');
-                                                            _newtabuListUlHtmlWaiting += '<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' (ID: ' + sIdEvent + ') </span></li>';
+                                                            $("#tabuListUl").append('<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' '  + ' </span></li>');
+                                                            _newtabuListUlHtmlWaiting += '<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' '  + ' </span></li>';
                                                         } else {
                                                             $("#tabuListUl").append('<li><span> (ID: ' + sIdEvent + ')</span></li>');
                                                             _newtabuListUlHtmlWaiting += '<li><span> (ID: ' + sIdEvent + ')</span></li>';
@@ -11762,8 +11762,8 @@
                                                 }
                                             } else {
                                                 if (!DataService.isEmpty($scope.selectedKeyField)) {
-                                                    $("#tabuListUl").append('<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' (ID: ' + sIdEvent + ') </span><span data-entryId=' + filterData.Id + ' data-formGroupKey=' + filterData.formGroupKey + ' id="transList_' + filterData.Id + '" class="editlist cursor-pointer"> <i class="fa fa-pencil"></i></span></li>');
-                                                    _newtabuListUlHtmlWaiting += '<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' (ID: ' + sIdEvent + ') </span><span data-entryId=' + filterData.Id + ' data-formGroupKey=' + filterData.formGroupKey + ' id="transList_' + filterData.Id + '" class="editlist cursor-pointer"> <i class="fa fa-pencil"></i></span></li>';
+                                                    $("#tabuListUl").append('<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' '  + ' </span></li>');
+                                                    _newtabuListUlHtmlWaiting += '<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' ' + ' </span></li>';
                                                 }
                                                 else {
                                                     if (!DataService.isEmpty($scope.formDetailsDataInfo.otherFormFieldName))
@@ -11778,8 +11778,8 @@
                                                         } else {
                                                             $scope.selectedKeyField = "";
                                                         }
-                                                        $("#tabuListUl").append('<li><span>  W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' (ID: ' + sIdEvent + ') </span><span data-entryId=' + filterData.Id + ' data-formGroupKey=' + filterData.formGroupKey + ' id="transList_' + filterData.Id + '" class="editlist cursor-pointer"> <i class="fa fa-pencil"></i></span></li>');
-                                                        _newtabuListUlHtmlWaiting += '<li><span> W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' (ID: ' + sIdEvent + ') </span><span data-entryId=' + filterData.Id + ' data-formGroupKey=' + filterData.formGroupKey + ' id="transList_' + filterData.Id + '" class="editlist cursor-pointer"> <i class="fa fa-pencil"></i></span></li>';
+                                                        $("#tabuListUl").append('<li><span>  W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' '  + ' </span></li>');
+                                                        _newtabuListUlHtmlWaiting += '<li><span> W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' '  + ' </span></li>';
 
                                                     }
                                                     else {
@@ -16619,7 +16619,7 @@
         $scope.rootScopeSafe = function () {
             $rootScope.safeApply();
         };
-        $scope.CMPCODE = '';
+        //$scope.CMPCODE = '';
 
         $rootScope.safeApply = function (fn) {
             var phase = this.$root.$$phase;
@@ -16635,12 +16635,10 @@
         adminService.postAsync('/UserAdmin/GetAllEnrolledCompaniesData/').then(function (res) {
 
             $scope.CompanyList = res.data.data.Data;
-
             setTimeout(function () {
                 $scope.manageSelectedCompany();
                 usercalendarLoad();
             }, 500)
-
         }, function (err) {
 
         });
@@ -16874,35 +16872,49 @@
 
         }
 
-        //$scope.getCalendarData = function () {
+        $scope.getCalendarData = function () {
+            adminService.postAsync('/UserAdmin/GetAllEnrolledCalendars', { cmpCode: $scope.CMPCODE }).then(function (res) {
+                $scope.selectedCalendarData = res.data.data.Data;
+            }, function (err) {
 
-        //    adminService.postAsync('/UserAdmin/GetAllEnrolledCalendarsData/', { CompanyCode: $("#company-filter-selector option:selected").val() }).then(function (res) {
+            });
 
-        //        $scope.selectedCalendarData = res.data.data.Data;
-        //        console.log($scope.selectedCalendarData);
-
-        //    }, function (err) {
-
-        //    });
-
-        //}
+        }
 
         $scope.manageSelectedCompany = function () {
-            if (localStorage.getItem("publicUserSelectedCompany") != null && localStorage.getItem("publicUserSelectedCompany") != undefined && localStorage.getItem("publicUserSelectedCompany") != "null") {
-                $("#company-filter-selector").val();
-                $scope.CMPCODE = localStorage.getItem("publicUserSelectedCompany");
+            var cmp = localStorage.getItem("publicUserSelectedCompany");
+            if (cmp && cmp.trim() != "" && cmp != "null") {
+                $("#company-filter-selector").val(cmp);
+                $scope.CMPCODE = cmp;
+                $rootScope.safeApply();
+            }
+            else {
+                if ($scope.CompanyList && $scope.CompanyList.length > 0) {
+                    var cmp = $scope.CompanyList[0].COMPANY_CODE;
+                    localStorage.setItem("publicUserSelectedCompany", cmp);
+                    $scope.CMPCODE = cmp;
+                    $rootScope.safeApply();
+                }
+                
             }
         }
 
         $scope.PdfLink = function () {
-
-            let cmpCode = $('#company-filter-selector').val();
             var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
             var view = $('#' + current_tab + " div.calendar").fullCalendar("getView");
             var start = moment(view.start).format("YYYY-MM-DD");
             var end = moment(view.end).format("YYYY-MM-DD");
-            window.location.href = `/calendar/indexpdf?start=${start}&end=${end}&companyCode=${cmpCode}`;
+            window.location.href = `/calendar/indexpdf?start=${start}&end=${end}&companyCode=${$scope.CMPCODE}&calendarCode=${$scope.CLRCODE}`;
         };
+
+
+        var exampleModal = document.getElementById('staticBackdrop')
+        exampleModal.addEventListener('show.bs.modal', function (event) {
+            $scope.selectedCalendarData = [];
+            $scope.getCalendarData();
+
+        });
+
 
     }).filter('safeHtml', function ($sce) {
         return function (val) {

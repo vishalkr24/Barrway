@@ -1044,7 +1044,22 @@ namespace Barrway.Controllers
         [HttpPost]
         public async Task<ActionResult> getReferralFormFieldsAndData(Form_DataTable data)
         {
-            return Json(await formAPIRepository.getReferralFormFieldsAndData(data));
+            var result = await formAPIRepository.getReferralFormFieldsAndData(data);
+
+            if (result.formDataListNew != null && result.formDataListNew.Count() > 0) {
+
+                var allTransaction = await calendarService.GetTransactionAll(data.Id.ToString());
+                result.formDataListNew.ForEach(x =>
+                {
+                    var tran = allTransaction.FirstOrDefault(y => y["Id"].ToString() == x["Id"].ToString());
+                    if (x.ContainsKey("STUDENT") && tran!=null)
+                    {
+                        x["STUDENT"] = tran["FIRST_NAME"] + " " + tran["LAST_NAME"] + " <span class='ev-user-id'> (" + tran["USER_ID"] + ")</span>";
+                    }
+                });
+            }
+
+            return Json(result);
         }
 
         [HttpGet]

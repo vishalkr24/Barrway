@@ -477,6 +477,20 @@ namespace Barrway.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<ActionResult> GetAllEnrolledCalendars(string cmpCode)
+        {
+            try
+            {
+                var result = await publicUserService.GetAllEnrolledCalendars(UserIdentity.UserEmail.ToString(), cmpCode);
+                return Json(new { data = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new AddUpdateDelete() { Message = "Failed", Status = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         [HttpGet]
         public async Task<ActionResult> GetSingleEventDetails(string EventId, string Type)
         {

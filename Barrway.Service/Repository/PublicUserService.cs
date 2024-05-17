@@ -1797,6 +1797,37 @@ namespace Barrway.Service.Repository
             }
         }
 
+        public async Task<AddUpdateDelete> GetAllEnrolledCalendars(string userEmail,string cmpCode)
+        {
+            try
+            {
+
+                string query = $@"SELECT distinct b_clr.CALENDAR_CODE,b_clr.CALENDAR_NAME
+                                  FROM [dbo].[CALENDAR_FORM_1935] calendar
+                                  join TRANSACTION_MASTER_1942 transaction_m on calendar.Id = transaction_m.SLOT
+                                  join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
+                                  join BUSINESS_CALENDAR_MASTER_1925 b_clr on b_clr.CALENDAR_CODE=calendar.CALENDAR_CODE
+                                  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
+                                  where EMAIL = '{userEmail}' and b_clr.COMPANY_CODE='{cmpCode}'";
+
+                List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+
+                if (result.Count > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
+            }
+        }
+
+
         public async Task<AddUpdateDelete> GetRecentlyBookedCalendars(string userEmail, string userId)
         {
             try
