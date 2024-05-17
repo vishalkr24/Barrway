@@ -691,12 +691,12 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
         {
             try
             {
-                string sqlString = $@" update [USER_TOKEN_1950] set VERIFICATION_TIME='{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm:ss")}',[IS_ACTIVE]='NO',updated_at=getdate()  where [TOKEN]='{token}'";
+                string sqlString = $@" update [USER_TOKEN_1923] set VERIFICATION_TIME='{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm:ss")}',[IS_ACTIVE]='NO',updated_at=getdate()  where [TOKEN]='{token}'";
 
                 var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
                 if (result > 0)
                 {
-                    sqlString = $@" update USER_MASTER_1921 set USER_PASSWORD='{newPassword}' where [USER_NAME]=N'{userName}'";
+                    sqlString = $@" update USER_MASTER_1915 set USER_PASSWORD='{newPassword}' where [USER_ID]=N'{userName}'";
                     result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
                     if (result > 0)
                     {
@@ -906,6 +906,41 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
 
 
 
+        public async Task<AddUpdateDelete> SendresetpasswordLink(string UserName, string Email)
+        {
+            var userToken = new UserToken()
+            {
+                EMAIL = Email,
+                USER_ID = UserName,
+                TOKEN = Guid.NewGuid().ToString(),
+                TOKEN_TIME = DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm:ss"),
+                IS_ACTIVE = "YES"
+            };
+            var userTokeDic = userToken.ToDictionary();
+
+            Form_DataTable request = new Form_DataTable();           
+            request.action = (int)FormAction.Save;
+            request.formId = (int)FormSetting.USER_TOKEN; 
+            request.formGroupKey = Guid.NewGuid().ToString();
+            request.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(userTokeDic);
+
+            var result = (await formAPIRepository.GeneratedFormData(request)).Data;
+
+            if (result.res == 1)
+            {
+                var result2 = SendActivationLink.sendlinkForResetPassword(userToken);
+                if (result2.Status)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = "User Activation Link send!" };
+                }
+                return new AddUpdateDelete() { Status = false, Message = result2.Message };
+            }
+            return new AddUpdateDelete() { Status = false, Message = "User Activation Link not generate!" };
+
+
+        }
+
+
         private async Task<AddUpdateDelete> resetpasswordLink(string UserName, string Email)
         {
             var userToken = new UserToken()
@@ -992,5 +1027,6 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
 
         }
 
+        
     }
 }
