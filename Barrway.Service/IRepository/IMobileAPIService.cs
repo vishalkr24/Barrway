@@ -55,6 +55,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> RemoveFavoriteCalendar(FavoriteCalendarViewModel model, string UserId);
 
         Task<FavouriteCalendarDetails> CalendarDtails(FavoriteCalendarViewModel model, string UserId);
-        Task<EventDetails> GetSingleEventDetails(string EventId);
+        Task<EventDetails> GetSingleEventDetails(string EventId);       
+        Task<ModifiedMyBooking> GetMyBookingsDetails(string email, string EventId = null);
     }
 }

@@ -173,5 +173,17 @@ namespace Barrway.DTO.APIModels.SearchAPI
         public string referrences_2 { get; set; }
         public string referrences_3 { get; set; }
         public int fees_1 { get; set; }
+
+        public List<EventFormData> eventFormDatas { get; set; }
+
+
+    }
+    public class EventFormData
+    {
+        public string id { get; set; }
+        public string title { get; set; }
+        public string formid { get; set; }
+        public string formname { get; set; }
+        public int seq { get; set; }
     }
 }

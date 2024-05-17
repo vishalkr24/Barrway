@@ -144,6 +144,11 @@ namespace Barrway.Controllers
             return View();
         }
 
+        public async Task<ActionResult> TermsConditions()
+        {
+            return View();
+        }
+
         public async Task<ActionResult> Tag(string tag)
         {
 
