@@ -96,7 +96,7 @@ namespace Barrway.Service.Repository
 
             if (!string.IsNullOrEmpty(DistrictId))
             {
-                filter += "and company.DISTRICT_ID = '" + DistrictId + "'";
+                filter += "and calendar.DISTRICT_ID = '" + DistrictId + "'";
             }
 
             //   string query = $@"SELECT calendar.[Id]
