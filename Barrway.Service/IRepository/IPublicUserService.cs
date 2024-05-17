@@ -50,5 +50,6 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> CreateDynamicFormEntry(List<IDictionary<string, string>> data, string formId, string UserId, string CalendarCode);
         Task<AddUpdateDelete> MarkPresent(string EventId, string UserEmail);
         Task<AddUpdateDelete> MarkPresentByCompany(string TransactionId, string EventId);
+        Task<AddUpdateDelete> GetAllEnrolledCalendars(string userEmail,string cmpCode);
     }
 }

@@ -2,6 +2,7 @@
 using Barrway.Service.IRepository;
 using Barrway.Utility.Common;
 using FormGeneratorDTOs.DTOs;
+using NLog.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,6 +88,23 @@ namespace Barrway.Service.Repository
 
             var result=await sqlFunction.ExecuteSqlQuery(sqlString);
             return result;
+        }
+
+        public async Task<List<IDictionary<string, object>>> GetTransactionAll(string formGroupKey) {
+
+            string sqlString = $@"select t.Id,t.STUDENT,t.formGroupKey,um.USER_ID,um_p.FIRST_NAME,um_p.LAST_NAME  
+								from TRANSACTION_MASTER_1942 t
+                                  join CALENDAR_FORM_1935 clr on t.SLOT=clr.Id
+								  join PARTICIPANT_MASTER_1940 p on t.STUDENT=p.Id
+
+                                  join USER_MASTER_1915 um on um.USER_EMAIL=p.EMAIL
+
+                                  join PUBLIC_USER_ACCOUNT_1943 um_p on um.USER_ID=um_p.USER_ID
+                                  where t.SLOT='{formGroupKey}'";
+
+            var result = await sqlFunction.ExecuteSqlQuery(sqlString);
+            return result;
+
         }
     }
 }

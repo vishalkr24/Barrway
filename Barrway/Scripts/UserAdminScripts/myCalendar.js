@@ -875,7 +875,6 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 }), $resize);
         },
         eventClick: async function (calEvent, jsEvent, view) {
-            debugger;
             if (Check_IS_SERVICE_TYPE(calendarDetails)) {
                 //customEventDetailsServiceModelPopUp.modal('show');
                 //customEventDetailsServiceModelPopUp.css({ "z-index": "9999" });
@@ -1242,7 +1241,6 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         defaultView: 'month',
         //events: [],  
         events: function (start, end, timezone, callback) {
-            debugger;
             var $scope = angular.element($("#calendar")).scope();
             var param = {};
             param.action = 1;
@@ -1614,7 +1612,6 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
 }
 
 function updateCalendarIcon() {
-    debugger;
     $(".ui-icon-custom-datepicker").addClass("fa fa-calendar");
     $(".ui-icon-custom-datepicker").removeClass("ui-icon")
 }

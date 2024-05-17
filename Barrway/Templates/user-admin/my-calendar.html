@@ -358,21 +358,21 @@
     }
 </style>
 
-<section class="mihi-71">
+<section class="mihi-71" id="mycalendar">
 
     <div class="container">
         <div class="row">
             <div class="col-lg-12 mb-4">
-                <div class="row">
-                    <div class="col-md-6 p-0">
+                <div class="row mt-4">
+                    <div class="col-md-6 p-0 mb-4">
                         <div class="bred-nav">
-                            <span><a href="#">{{translation.User}}</a> / <span> <a href="#">{{translation.My_Calendar}}</a> </span></span>
+                            <span><a href="/UserAdmin#/userdashboard">{{translation.User}}</a> / <span> <a href="#">{{translation.My_Calendar}}</a> </span></span>
                         </div>
-                        <button ng-click="PdfLink()" ng-disabled="!CMPCODE || CMPCODE==''" class="btn btn-success" style="float:left">Export</button>
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" ng-disabled="!CMPCODE || CMPCODE==''" class="btn btn-success" style="float:left">Export</button>
                     </div>
                     <div class="col-md-6 p-0">
 
-                        
+
                         <select ng-model="CMPCODE" class="form-control" id="company-filter-selector" style="max-width:240px; float:right; text-overflow:ellipsis;">
                             <!--<option value="-1">All Companies</option>-->
                             <option ng-repeat="company in CompanyList" value="{{company.COMPANY_CODE}}">{{company.COMPANY_NAME_ENGLISH}}</option>
@@ -452,10 +452,10 @@
 
                             </div>
                             <br />
-                            <div  style="font-weight:bold;" ng-if="!selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
-                            <div  style="font-weight:bold;" ng-if="!selectEventDetails.allDay">{{selectEventDetails.customTime}}</div>
+                            <div style="font-weight:bold;" ng-if="!selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
+                            <div style="font-weight:bold;" ng-if="!selectEventDetails.allDay">{{selectEventDetails.customTime}}</div>
 
-                            <div  style="font-weight:bold;" ng-if="selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
+                            <div style="font-weight:bold;" ng-if="selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
 
                             <div class="temp" ng-repeat="d in selectEventDetails.dropdownList" ng-if="d.formId == '2306'" style="font-weight:bold;">
                                 <span class="titleContainer">
@@ -491,7 +491,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
 
 
                     <div class="form-group mt-2 p-0" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IS_UPLOAD_REQUIRED=='Y'
@@ -526,11 +526,40 @@
                         <button type="button" class="btn btn-primary public-primary" ng-if="!selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IsReviewable == 'Y'" ng-click="reviewSession()">Review Session</button>
                     </div>
                 </div>
-                   
-                </div>
-               
+
             </div>
 
+        </div>
+
+    </div>
+
+
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Export</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>Please select calendar*</label>
+                                <div class="input-group">
+                                    <select ng-model="CLRCODE" class="form-control">
+                                        <option ng-repeat="item in selectedCalendarData" value="{{item.CALENDAR_CODE}}">{{item.CALENDAR_NAME}}</option>
+                                    </select>
+                                    <button class="btn btn-success" ng-disabled="!CLRCODE || CLRCODE=''" type="button" ng-click="PdfLink()"><i class="fa fa-download"></i> PDF</button>
+                                </div>
+                            </div>
+                        </div>
+                 
+                </div>
+                <!--<div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>-->
+            </div>
         </div>
     </div>
 
