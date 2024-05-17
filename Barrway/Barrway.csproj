@@ -3572,6 +3572,7 @@
     <Content Include="Views\Payment\EventOrderDetails.cshtml" />
     <Content Include="Views\Shared\_QRFunctionPartialView.cshtml" />
     <Content Include="Views\Calendar\IndexPdf.cshtml" />
+    <Content Include="Views\MarketPlace\TermsConditions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
