@@ -10,6 +10,7 @@ using FormGeneratorDTOs.DTOs;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using RestSharp;
+using Swashbuckle.Swagger;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -1138,6 +1139,97 @@ namespace Barrway.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult UploadFile(
+ string reqType,
+ string uid,
+ string appId,
+ string appTitle,
+ string formId,
+ string formTitle,
+ bool isImportData,
+ int userId,
+ string actionType,
+ List<HttpPostedFileBase> file1)
+        {
+            if (file1 != null && file1.Count() > 0)
+            {
+                try
+                {
+                    List<string> filepaths=new List<string>();
+                    // Save the file temporarily
+                    foreach (var item in file1) {
+                        var filePath = Path.Combine(Server.MapPath("~/App_Data/TempFileUploads"), Path.GetFileName(item.FileName));
+                        item.SaveAs(filePath);
+                        filepaths.Add(filePath);
+                    }
+                   
+
+                    // Call the external API using RestSharp
+                    var response = ForwardToExternalApi(filepaths, reqType, uid, appId, appTitle, formId, formTitle, isImportData, userId, actionType);
+
+                    // Check the response status and return the appropriate response
+                    if (response.success)
+                    {
+                        return Json(response);
+                    }
+                    else
+                    {
+                        return Json(response);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Json(new FileUploadResponse() { success = false, message = ex.Message });
+                }
+            }
+            else
+            {
+                return Json(new FileUploadResponse() { success = false, message = "No file selected" });
+            }
+        }
+
+
+        private FileUploadResponse ForwardToExternalApi(
+       List<string> filePath,
+       string reqType,
+       string uid,
+       string appId,
+       string appTitle,
+       string formId,
+       string formTitle,
+       bool isImportData,
+       int userId,
+       string actionType)
+        {
+            // Define the API endpoint
+            var baseapi = System.Web.Configuration.WebConfigurationManager.AppSettings["webapibaseurl"].ToString();
+            var apiUrl = $"{baseapi}api/FormAPI/UploadFile?reqType={reqType}&uid={uid}&appId={appId}&appTitle={appTitle}&formId={formId}&formTitle={formTitle}&isImportData={isImportData.ToString().ToLower()}&userId={userId}&actionType={actionType}";
+
+            // Create a RestSharp client
+            var client = new RestClient(apiUrl);
+
+            // Create a request
+            var request = new RestRequest();
+            request.Method = Method.Post;
+
+            int counter = 1;
+            // Add the file to be uploaded
+            foreach (var item in filePath) {
+                request.AddFile("file"+ counter, item);
+                counter++;
+            }
+            
+
+            // Execute the request and return the response
+            var response = client.Execute(request);
+            if (response.IsSuccessful) {
+                var result = JsonConvert.DeserializeObject<FileUploadResponse>(response.Content);
+             return result; 
+            }
+            return new FileUploadResponse() { success=false,message= "Error occurred during file upload: " + response.ErrorMessage};
+        }
+
 
 
 
@@ -1239,6 +1331,7 @@ namespace Barrway.Controllers
         //        return new HttpStatusCodeResult(500, "Internal server error: " + ex.Message);
         //    }
         //}
+        
 
 
         private static bool IsJson(string str)
@@ -1253,5 +1346,15 @@ namespace Barrway.Controllers
                 return false;
             }
         }
+    }
+    public class FileUploadResponse
+    {
+        public string banner { get; set; }
+        public string fileUrl { get; set; }
+        public List<object> images { get; set; }
+        public string fileName { get; set; }
+        public int code { get; set; }
+        public string message { get; set; }
+        public bool success { get; set; }
     }
 }

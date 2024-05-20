@@ -548,6 +548,9 @@
                 /*transform: scale(0.6);*/
             }
         }
+        .validation-summary-errors {
+            color: red;
+        }
     </style>
     
 </head>
@@ -597,7 +600,7 @@
                                                 <div class="form-group">
                                                     <label for="FIRST_NAME">First Name</label>
                                                     @*<input type="text" class="form-control" id="USER_NAME" name="USER_NAME" required placeholder="Username">*@
-                                                    @Html.TextBoxFor(model => model.FIRST_NAME, new { @class = "form-control", @placeholder = "peter", @required = "true" })
+                                                    @Html.TextBoxFor(model => model.FIRST_NAME, new { @class = "form-control", @placeholder = "Peter", @required = "true", @autocomplete = "new-password" })
                                                     @Html.ValidationMessageFor(model => model.FIRST_NAME, "", new { @class = "invalid-feedback-2" })
 
                                                 </div>
@@ -606,7 +609,7 @@
                                                 <div class="form-group">
                                                     <label for="LAST_NAME">Last Name</label>
                                                     @*<input type="text" class="form-control" id="USER_NAME" name="USER_NAME" required placeholder="Username">*@
-                                                    @Html.TextBoxFor(model => model.LAST_NAME, new { @class = "form-control", @placeholder = "parker" })
+                                                    @Html.TextBoxFor(model => model.LAST_NAME, new { @class = "form-control", @placeholder = "Parker", @autocomplete = "new-password" })
                                                     @Html.ValidationMessageFor(model => model.LAST_NAME, "", new { @class = "invalid-feedback-2" })
 
                                                 </div>
@@ -768,11 +771,6 @@
 
             $("#countryCode").select2();
 
-
-
-
-
-
            @*<script src="~/assets/intl-tel-input/js/utils.js"></script>*@
             const input = document.querySelector("#USER_PHONE");
             const errorMsg = document.querySelector("#error-msg");
@@ -810,17 +808,13 @@
             });
 
             const countryData = window.intlTelInputGlobals.getCountryData();
+
             function getDialCodeByIso2(iso2) {
 
                 var country = countryData.find(country => country.iso2.toLowerCase() === iso2.toLowerCase());
 
                 return country ? country.dialCode : null;
             }
-
-
-
-
-
 
             const reset = () => {
                 input.classList.remove("error");
@@ -839,8 +833,6 @@
                 $('#btn_submit').prop('disabled', true);
             };
 
-
-
             $("#USER_PHONE").change(function () {
                 setContryCodeValue();
                 reset();
@@ -854,7 +846,6 @@
                     const msg = errorMap[errorCode] || "Invalid number";
                     showError(msg);
                 }
-
             });
 
 
@@ -865,20 +856,8 @@
                 if (countrycode != undefined) {
                     $("#Country_Code").val(countrycode);
                 }
-
-
             }
-
-
-
-
-
-        })
-
-
-
-
-
+        });
     </script>
 
     @if (Model != null && !string.IsNullOrEmpty(Model.USER_PHONE))

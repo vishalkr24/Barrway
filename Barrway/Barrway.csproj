@@ -526,6 +526,7 @@
     <Compile Include="Security\AuthenticationFailureResult.cs" />
     <Compile Include="Security\HttpAuthenticationChallengeContextExtensions.cs" />
     <Compile Include="Security\JwtAuthenticationAttribute.cs" />
+    <Compile Include="Security\MyAuthorize.cs" />
     <Compile Include="Security\NotImplExceptionFilterAttribute.cs" />
     <Compile Include="Security\SuperBusinessUserAuthorizeAttribute.cs" />
     <Compile Include="Security\SuperAdminAuthorizeAttribute.cs" />
@@ -3578,7 +3579,7 @@
     <Content Include="Views\Account\Error.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
+    <Folder Include="App_Data\TempFileUploads\" />
     <Folder Include="fg-assets\fullcalendar\dist\locale\" />
     <Folder Include="fg-newAssets\icons\" />
     <Folder Include="Logs\" />

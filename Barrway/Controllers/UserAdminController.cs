@@ -23,6 +23,7 @@ using System.Configuration;
 using System.Web.WebPages;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NLog;
 
 namespace Barrway.Controllers
 {
@@ -34,6 +35,7 @@ namespace Barrway.Controllers
         private readonly IAuthService authService;
         private readonly IMasterService masterService;
         private readonly IBusinessUserService businessUserService;
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public UserAdminController(ISqlFunction sqlFunction, IPublicUserService publicUserService, IAuthService authService, IMasterService masterService, IBusinessUserService businessUserService)
         {
@@ -53,7 +55,6 @@ namespace Barrway.Controllers
             {
                 ViewBag.ProfilePic = userData["PROFILE_PHOTO_PATH"]?.ToString();
             }
-
             return View();
         }
 

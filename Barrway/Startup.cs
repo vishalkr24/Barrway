@@ -18,6 +18,7 @@ namespace Barrway
     {
         public void Configuration(IAppBuilder app)
         {
+            ConfigureAuth(app);
             app.Map("/signalr", map =>
             {
                 map.UseCors(CorsOptions.AllowAll);
@@ -25,12 +26,11 @@ namespace Barrway
                 {
                     EnableDetailedErrors = true
                 };
-               
                 map.RunSignalR(hubConfig);
             });
 
             app.UseCors(CorsOptions.AllowAll);
-            ConfigureAuth(app);
+            
         }
     }
 }

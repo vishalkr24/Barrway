@@ -20,6 +20,7 @@ using Barrway.DTO.BusinessModels;
 using System.Web.Security;
 using Barrway.DTO.PublicModels;
 using Barrway.Security;
+using NLog;
 
 namespace Barrway.Controllers
 {
@@ -31,6 +32,7 @@ namespace Barrway.Controllers
         private readonly IBusinessUserService businessUserService;
         private readonly IPublicUserService publicUserService;
         private readonly IMessageRepository MessageRepository;
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public AccountController(IAuthService authService, ISqlFunction sqlFunction, ISignupService signupService, IBusinessUserService businessUserService, IPublicUserService publicUserService, IMessageRepository MessageRepository)
         {
@@ -53,8 +55,8 @@ namespace Barrway.Controllers
                 var user = await authService.GetUser(User.Identity.Name, FormRole.GENERAL_USER);
                 if (user.Status)
                 {
-                    return Redirect("/UserAdmin#/userdashboard");
-                    //return RedirectToAction("Dashboard", "BusinessAdmin");
+                    //return Redirect("/UserAdmin#/userdashboard");
+                    return RedirectToAction("Index", "UserAdmin");
                 }
                 else
                 {
@@ -62,7 +64,6 @@ namespace Barrway.Controllers
                     return RedirectToAction("BusinessLogin");
                 }
             }
-
             TempData["401ReturnUrl"] = returnUrl;
 
             return View(new LoginViewModel { ReturnUrl = returnUrl });
@@ -270,8 +271,8 @@ namespace Barrway.Controllers
                                                     //new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
                                                     }, CookieAuthenticationDefaults.AuthenticationType);
 
-
-                HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = model.REMEMBER_ME }, claims);
+                
+                HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = true }, claims);
                 if (!string.IsNullOrEmpty(returnUrl))
                 {
                     return Redirect(returnUrl);
@@ -285,9 +286,8 @@ namespace Barrway.Controllers
                         return Redirect(temp);
                     }
                 }
-
-                return Redirect("/UserAdmin#/userdashboard");
-                //return RedirectToAction("Dashboard", "BusinessAdmin");
+                //return Redirect("/UserAdmin#/userdashboard");
+                return RedirectToAction("Index", "UserAdmin");
             }
             else
             {
@@ -317,12 +317,27 @@ namespace Barrway.Controllers
 
                 //var assignedData = JsonConvert.DeserializeObject<Dictionary<string, object>>(loginresult.Data["AssignedData"].ToString());
 
+                string firstName = "";
+                string lastName = "";
+
+                if (!string.IsNullOrEmpty(user["FIRST_NAME"]?.ToString()))
+                {
+                    firstName = user["FIRST_NAME"]?.ToString();
+                }
+
+                if (!string.IsNullOrEmpty(user["LAST_NAME"]?.ToString()))
+                {
+                    lastName = user["LAST_NAME"]?.ToString();
+                }
+
                 var claims = new ClaimsIdentity(new[] {
                                                     new Claim(ClaimTypes.NameIdentifier,user["USER_ID"].ToString()),
                                                     new Claim(ClaimTypes.Name,user["USER_ID"].ToString()),
                                                     new Claim(ClaimTypes.Email, user["USER_EMAIL"].ToString()),
                                                     new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
                                                     new Claim(ClaimTypes.Sid, user["Id"].ToString()),
+                                                    new Claim("FirstName", firstName),
+                                                    new Claim("LastName", lastName),
                                                     //new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
                                                     }, CookieAuthenticationDefaults.AuthenticationType);
 
