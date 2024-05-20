@@ -103,7 +103,7 @@ namespace Barrway.Utility.Common
                 var baseUrl = string.Format("{0}://{1}/{2}", HttpContext.Current.Request.Url.Scheme, HttpContext.Current.Request.Url.Authority, $"/");
                 string resetlink = baseUrl + $"Account/resetpassword?token={userToken.TOKEN}";
                 //var logourl = string.Format("{0}://{1}/{2}", HttpContext.Current.Request.Url.Scheme, HttpContext.Current.Request.Url.Authority, $"/otaContent/assets/img/favicon.png");
-                string logourl = baseUrl + "logo.png";
+                string logourl = baseUrl + "assets/marketplace/image/logo.png";
                 string contactlink = "";
                 string contact = "";
                 string fax = "";
@@ -112,7 +112,7 @@ namespace Barrway.Utility.Common
                     "<div class='container'>" +
                     "<div class='themes' style='background-color: #ffffff; width: 50%; margin:20px auto;'>" +
                     "<div style='height: 70px;line-height: 70px;background-color: #ffffff;padding:0 20px; border-radius: 8px 8px 0 0'>" +
-                    "<h2 style='color: #3e6b6b;line-height: 70px;'><img src='" + logourl + "' alt='' style='vertical-align: middle;max-width:100px;width:100%;max-height:100px;height:100px'>Moodie's Care</h2>" +
+                    "<h2 style='color: #3e6b6b;line-height: 70px;'><img src='" + logourl + "' alt='' style='vertical-align: middle;max-width:100px;width:100%;height: 40px;padding: 10px;'>Barrway Business</h2>" +
                     " </div>" +
                     "<div class='content_body' style='padding:20px; text-align: left;'>" +
                     "<h3 style='margin-bottom: 10px; text-align: center;'>Forgot Password</h3>" +
@@ -125,7 +125,7 @@ namespace Barrway.Utility.Common
                 "<p><span style='color:#d7683a'>*</span> If you have any questions or need further assistance, please feel free to <a style='color:#d7683a;text-decoration: none;' target='_blank' href='" + contactlink + "'>contact us</a>.</p>" +
                 "</div>" +
                 "<div style='height:auto;line-height:20px;background-color: #535353;padding:0 20px; border-radius: 0 0 8px 8px; text-align: center;overflow: hidden;'>" +
-                "<h5 style='color: #ece9e0;margin-top: 5px;'><img src='" + logourl + "' alt='logo' style='vertical-align: middle;height: 30px;'>Moodie's Care</h5>" +
+                "<h5 style='color: #ece9e0;margin-top: 5px;'><img src='" + logourl + "' alt='logo' style='vertical-align: middle;height: 30px;'>Barrway Business</h5>" +
                 "<p style='color: #ece9e0;font-size: 13px;'><strong>Tel :</strong> " + AppSettings.telephone + " &nbsp;&nbsp;  <strong>Fax :</strong> " + AppSettings.fax + " &nbsp;&nbsp;  <strong>Email :</strong> " + AppSettings.email + "</p>" +
                 "</div>" +
                 "</div>" +

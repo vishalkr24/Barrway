@@ -874,20 +874,9 @@ var COMPANY_CODE = "";
 
         $scope.fileUploadDataEntry = function (id, uploaderType) {
 
+
             var oFReader = new FileReader();
             var files = document.getElementById(id).files;
-            //alert(uploaderType);
-
-            if (files.length > 1) {
-
-                getMultipleFiles(id);
-
-            }
-            else if (files.length == 1) {
-
-                getSingleFile(id, uploaderType);
-
-            };
             $scope.uploadFileOnly(files, id, uploaderType);
 
         };
@@ -919,6 +908,19 @@ var COMPANY_CODE = "";
                         if (response.data != null && angular.isDefined(response.data)) {
                             if (angular.isDefined(response.data)) {
                                 if (response.data.code == 200) {
+
+
+                                    var oFReader = new FileReader();
+                                    var files = document.getElementById(id).files;
+                                    //alert(uploaderType);
+
+                                    if (files.length > 1) {
+                                        getMultipleFiles(id);
+                                    }
+                                    else if (files.length == 1) {
+                                        getSingleFile(id, uploadType);
+                                    };
+
                                     var urlStr = response.data.fileUrl;
                                     //if()
                                     if (uploadType == "multi") {
@@ -934,6 +936,7 @@ var COMPANY_CODE = "";
                                     }
                                     console.log("uploaded Successfully");
                                 } else {
+                                    document.getElementById(id).value = null;
                                     notifierService.notifySweetAlertMessage('error', 'File', response.data.message);
                                 }
                                 $rootScope.$emit("HideLoading");
@@ -1024,6 +1027,8 @@ var COMPANY_CODE = "";
                                                     text: "You are already enrolled in this event.",
                                                     icon: "error",
                                                     button: "Okay"
+                                                }).then(function (boolValue) {
+                                                    window.location.href = '/useradmin/index';
                                                 });
                                                 //swal({ type: 'error', showCloseButton: true, html: "You are already enrolled in this calendar." });
                                             } else if (data.Message == "LIMIT-ERROR") {
@@ -1032,6 +1037,8 @@ var COMPANY_CODE = "";
                                                     text: "Maximum no. of participants already enrolled in this activity.",
                                                     icon: "error",
                                                     button: "Okay"
+                                                }).then(function (boolValue) {
+                                                    window.location.href = '/useradmin/index';
                                                 });
                                             } else {
                                                 swal({
@@ -1039,7 +1046,9 @@ var COMPANY_CODE = "";
                                                     text: data.Message,
                                                     icon: "error",
                                                     button: "Okay"
-                                                });
+                                                }).then(function (boolValue) {
+                                                    window.location.href = '/useradmin/index';
+                                                });;
                                             }
                                         } else {
                                             swal({
@@ -1048,9 +1057,8 @@ var COMPANY_CODE = "";
                                                 icon: "success",
                                                 button: "Okay"
                                             }).then(function (boolValue) {
-                                                window.location.reload();
+                                                window.location.href = '/useradmin/index';
                                             });
-
                                         }
 
                                         $("#AdditionalDetailsFormModal").modal("hide");

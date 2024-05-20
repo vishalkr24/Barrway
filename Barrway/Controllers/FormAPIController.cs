@@ -1156,10 +1156,27 @@ namespace Barrway.Controllers
             {
                 try
                 {
+
+                    foreach (var file in file1)
+                    {
+                        string fileExtension = Path.GetExtension(file.FileName).ToLower();
+                        if (!IsAllowedFileExtension(fileExtension))
+                        {
+                            return Json(new FileUploadResponse() { success = false, message ="invalid file!" });
+                        }
+                        if (!IsFileValid(file, out string errorMessage))
+                        {
+                            return Json(new FileUploadResponse() { success = false, message = errorMessage });
+                        }
+                    }
+
                     List<string> filepaths=new List<string>();
                     // Save the file temporarily
                     foreach (var item in file1) {
-                        var filePath = Path.Combine(Server.MapPath("~/App_Data/TempFileUploads"), Path.GetFileName(item.FileName));
+                        string timestamp = DateTime.Now.ToString("ddMMyyyyHHmmssfff");
+                        string extension = System.IO.Path.GetExtension(item.FileName);
+                        string newFileName = $"{System.IO.Path.GetFileNameWithoutExtension(item.FileName)}_{timestamp}{extension}";
+                        var filePath = Path.Combine(Server.MapPath("~/App_Data/TempFileUploads"), newFileName);
                         item.SaveAs(filePath);
                         filepaths.Add(filePath);
                     }
@@ -1187,6 +1204,31 @@ namespace Barrway.Controllers
             {
                 return Json(new FileUploadResponse() { success = false, message = "No file selected" });
             }
+        }
+        private bool IsAllowedFileExtension(string fileExtension)
+        {
+            // Define the list of allowed file extensions
+            string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".pdf", ".doc", ".docx", ".xls", ".xlsx" };
+            return allowedExtensions.Contains(fileExtension);
+        }
+        private bool IsFileValid(HttpPostedFileBase file, out string errorMessage)
+        {
+            int MaxFileSize = 3 * 1024 * 1024;
+            errorMessage = string.Empty;
+
+            if (file == null)
+            {
+                errorMessage = "No file uploaded.";
+                return false;
+            }
+
+            if (file.ContentLength > MaxFileSize)
+            {
+                errorMessage = "File size must be less than 3 MB.";
+                return false;
+            }
+
+            return true;
         }
 
 
