@@ -49,5 +49,9 @@ namespace Barrway.Service.IRepository
 
         Task<AddUpdateDelete> GetUserByPhone(string phone, string CountryCode, int Role_Id);
 
+        Task<AddUpdateDelete> GetUserByPhone(string phone, string CountryCode);
+
+        Task<AddUpdateDelete> ResetPasswordPhone(string userName, string newPassword);
+
     }
 }

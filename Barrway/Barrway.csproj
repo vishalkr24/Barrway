@@ -3577,6 +3577,9 @@
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\resetpassword.cshtml" />
     <Content Include="Views\Account\InvalidUrl.cshtml" />
+    <Content Include="Views\Account\PhoneForgotPassword.cshtml" />
+    <Content Include="Views\Account\PhoneOtpVerification.cshtml" />
+    <Content Include="Views\Account\ChangePassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\TempFileUploads\" />

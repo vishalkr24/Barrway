@@ -73,9 +73,20 @@ namespace Barrway.Models
     public class ForgotPasswordViewModel
     {
         [EmailAddress]
-        public string Email { get; set; }
-
-        public string Phone { get; set; }
+        public string Email { get; set; }       
 
     }
+
+    public class ForgotPasswordPhoneViewModel
+    {
+       
+        public string Country_Code { get; set; }
+        public string Country_Origin_Code { get; set; }
+        [Required(ErrorMessage = "Please enter your mobile number")]
+        public string USER_PHONE { get; set; }
+
+    }
+
+
+
 }

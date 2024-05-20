@@ -111,6 +111,205 @@ namespace Barrway.Controllers
             return View(model);
         }
 
+
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<ActionResult> PhoneForgotPassword()
+        {
+            ViewBag.ErrorMessage = null;
+            if (User.Identity.IsAuthenticated)
+            {
+                LogoutAllSession();
+                return RedirectToAction("PhoneForgotPassword");
+            }
+
+            return View();
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<ActionResult> PhoneForgotPassword(ForgotPasswordPhoneViewModel model)
+        {
+
+
+            if (ModelState.IsValid)
+            {
+                var userData = await authService.GetUserByPhone(model.USER_PHONE, model.Country_Code);
+
+                if (userData.Status)
+                {
+
+                    var Result = MessageRepository.SendOtpSmS("+" + model.Country_Code + model.USER_PHONE);
+
+                    if (Result == true)
+                    {
+                        Session["ForgetCountryCode"] = model.Country_Code;
+                        Session["ForgetMobileNumber"] = model.USER_PHONE;
+                        TempData["VERIFICATION"] = "Pending";
+                        TempData["VERIFICATION_Phone"] = "+" + model.Country_Code + model.USER_PHONE;
+                        TempData["MobileVerificationSuccessMessage"] = "an Otp message has been sent to your registered mobile number !";
+                        return RedirectToAction("PhoneOtpVerification", "Account");
+                    }
+                    else
+                    {
+                        return View(model);
+                    }
+
+                }
+                else
+                {
+                    TempData["ForgotPasswordError"] = "mobile number is not registered";
+                }
+
+            }
+            
+            return View(model);
+
+
+        }
+
+
+
+        [AllowAnonymous]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ResendForgetPasswordVerificationOTP()
+        {
+            try
+            {
+
+                string MobileNumber = Session["VERIFICATION_Phone"]?.ToString();
+                if (!string.IsNullOrEmpty(MobileNumber))
+                {
+                    var Result = MessageRepository.SendOtpSmS(MobileNumber);
+                    TempData["MobileVerificationSuccessMessage"] = "new OTP has been sent !";
+                }
+                else
+                {
+                    TempData["MobileVerificationErroMessage"] = "Session expired!";
+                }
+                return RedirectToAction("MobileVerification", "Account");
+            }
+            catch (Exception ex)
+            {
+                TempData["MobileVerificationErroMessage"] = ex.Message;
+            }
+
+            return RedirectToAction("MobileVerification", "Account");
+
+        }
+
+
+
+
+
+        [AllowAnonymous]
+
+        public async Task<ActionResult> PhoneOtpVerification()
+        {
+            return View();
+
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> PhoneOtpVerification(PhoneOtp model)
+        {
+            try
+            {
+
+                string ContryCode = Session["ForgetCountryCode"]?.ToString();
+                string _MobileNumber = Session["ForgetMobileNumber"]?.ToString();
+
+                if (!string.IsNullOrEmpty(ContryCode) && !string.IsNullOrEmpty(_MobileNumber))
+                {
+                    var Result = MessageRepository.VarifyOtp("+"+ContryCode + _MobileNumber, model.OTP);
+                    if (Result.Status == true)
+                    {
+
+                        return RedirectToAction("ChangePassword", "Account");
+                    }
+                    else
+                    {
+                        TempData["MobileVerificationErroMessage"] = "invalid OTP !";
+                    }
+                }
+
+
+
+
+            }
+            catch (Exception ex)
+            {
+                return View(model);
+            }
+            return View(model);
+        }
+
+
+
+
+        [HttpGet]
+        public async Task<ActionResult> ChangePassword()
+        {
+
+
+            //var UserDetails = await authService.GetUserByPhone(_MObileNumber);
+            return View();
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ChangePassword(PhoneResetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                string ContryCode = Session["ForgetCountryCode"]?.ToString();
+                string _MobileNumber = Session["ForgetMobileNumber"]?.ToString();
+
+                if (!string.IsNullOrEmpty(ContryCode) && !string.IsNullOrEmpty(ContryCode))
+                {
+
+                    var userData = await authService.GetUserByPhone(_MobileNumber, ContryCode);
+                    var result = await authService.ResetPasswordPhone(userData.Data["USER_ID"].ToString(), model.newpassword);
+                    if (result.Status)
+                    {
+                        Session["ForgetCountryCode"]="";
+                        Session["ForgetMobileNumber"] = "";
+                        ModelState.Clear();
+                        TempData["Resetsuccess"] = "Password updated successfully !";
+                        return View();
+                    }
+                    else
+                    {
+                        ModelState.Clear();
+                        ModelState.AddModelError("", result.Message);
+                        return View(model);
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("PhoneForgotPassword", "Account");
+                }
+                
+            }
+            else
+            {
+                return View(model);
+            }         
+
+
+        }
+            
+        
+
+
+
+
+
+
+
         private void LogoutAllSession()
         {
             Session.Clear();
