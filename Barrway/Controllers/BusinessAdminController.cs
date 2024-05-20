@@ -1442,6 +1442,7 @@ namespace Barrway.Controllers
                                 //CALENDAR_SUB_CATEGORY_ID = model.CALENDAR_SUB_CATEGORY_ID.ToString(),
                                 CALENDAR_SUB_CATEGORY_ID = string.Join(",", model.CALENDAR_SUB_CATEGORY),
                                 CALENDAR_PHOTO_NAME = fileName,
+                                BOOKING_DEADLINE = model.BOOKING_DEADLINE,
                                 CALENDAR_PHOTO_PATH = path,
                                 SLOT_DURATION_IN_MINS = model.SLOT_DURATION_IN_MINS,
                                 CALENDAR_TEMPLATE_ID = (UserIdentity.Role != "SUPERADMIN_USER") ? ((string.IsNullOrEmpty(model.CALENDAR_TEMPLATE_ID?.ToString())) ? "" : model.CALENDAR_TEMPLATE_ID?.ToString()) : "0",

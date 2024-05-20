@@ -1164,15 +1164,13 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                     customEventDetailsModelPopUp.modal('show');
                     customEventDetailsModelPopUp.css({ "z-index": "9999" });
                 }
-
-                
             }
 
             if (calEvent.DOWNLOAD_FILE_LIST && calEvent.DOWNLOAD_FILE_LIST != '' && calEvent.DOWNLOAD_FILE_LIST != ' ' && calEvent.DOWNLOAD_FILE_LIST != 'null' && IsJsonString(calEvent.DOWNLOAD_FILE_LIST)) {
                 calEvent.DOWNLOADABLE_ATTACHMENT_FILES = JSON.parse(calEvent.DOWNLOAD_FILE_LIST);
             }
             $scope.selectEventDetails = calEvent;
-
+            
             var enrollUser = await getUserEnrollDetails(calEvent.Id);
 
             let is_enroll = false;

@@ -554,7 +554,12 @@
                                                 </div>
 
 
-
+                                                <div class="form-group">
+                                                    <label for="BOOKING_DEADLINE">Booking Deadline (In days)</label>
+                                                    <div class="tom-select-custom">
+                                                        @Html.TextBoxFor(model => model.BOOKING_DEADLINE, new { @class = "form-control", @placeholder = "Default Date", @type="number" })
+                                                    </div>
+                                                </div>
 
 
                                                 <div class="form-group">
