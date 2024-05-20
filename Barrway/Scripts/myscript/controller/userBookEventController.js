@@ -13,11 +13,12 @@ var COMPANY_CODE = "";
         };
 
         $scope.eventType = "";
+        $scope.htmlContentData = '';
 
         $scope.EventId = $stateParams.Id;
 
         adminService.postAsync('/UserAdmin/GetSingleEventDetailsWithFlags/', { EventId: $scope.EventId }).then(function (res) {
-            debugger;
+            //debugger;
             if (res.data.Status) {
                 $scope.selectEventDetails = res.data.Data[0];
                 CALENDAR_CODE = $scope.selectEventDetails.CALENDAR_CODE;
@@ -137,7 +138,7 @@ var COMPANY_CODE = "";
                     $scope.selectEventDetails.dropdownList = [];
                     _.each(listActivities, function (item, key) {
                         var tempDrop = {};
-                        debugger;
+                        //debugger;
                         var indexForm = _.findIndex($scope.selectEventDetails.customFormsSplit, function (itemForm) { return itemForm.trim() == item.activitiesForm.toString() });
                         if (indexForm != -1) {
                             tempDrop.formId = item.activitiesForm.toString();
@@ -207,7 +208,7 @@ var COMPANY_CODE = "";
                 }, 200);
                 $scope.rootScopeSafe();
 
-
+                $scope.renderAdditionalDetailsForm();
 
             }
 
@@ -223,7 +224,7 @@ var COMPANY_CODE = "";
         $scope.bgEventDetails = {};
         
         $scope.AttendSession = function (eventId, type) {
-            debugger;
+            //debugger;
             $("#customEventDetailsModelPopUp").modal("hide")
             if (type == "QR") {
                 $scope.generateQRCode(eventId);
@@ -238,7 +239,7 @@ var COMPANY_CODE = "";
                 url: "/Useradmin/GenerateAttendanceQR?TransactionId=" + TId,
                 type: "Get",
                 success: function (response) {
-                    debugger;
+                    //debugger;
                     if (response != null) {
                         if (response.Status) {
                             $("#GeneratedQRCodeModal img").attr("src", response.Data.QRImageURL.replace("~", ".."));
@@ -296,7 +297,7 @@ var COMPANY_CODE = "";
                             url: result,
                             type: "get",
                             success: function (response) {
-                                debugger;
+                                //debugger;
                                 if (response.Status) {
                                     swal({
                                         icon: "success",
@@ -357,7 +358,6 @@ var COMPANY_CODE = "";
                     CalendarCode: eventData.CALENDAR_CODE
                 },
                 success: function (response) {
-                    debugger;
                     if (response.Status) {
                         var obj = {
                             USER_ID: "",
@@ -429,9 +429,10 @@ var COMPANY_CODE = "";
                                 swal({ type: 'error', showCloseButton: true, html: "something went wrong!" });
                             }
                         })
-                    } else {
-                        $scope.renderAdditionalDetailsForm();
                     }
+                    //else {
+                        
+                    //}
                 },
                 error: function (error) {
                     console.error(error);
@@ -476,7 +477,7 @@ var COMPANY_CODE = "";
                             success: function (response) {
 
 
-                                debugger;
+                                //debugger;
                                 const wrapper = document.createElement('div');
                                 wrapper.innerHTML = `
                                                                                                                                                         <div>${eventData.customTitleSplit[2]}</div><br />
@@ -507,7 +508,7 @@ var COMPANY_CODE = "";
                                     buttons: buttonsWrap
 
                                 }).then(function (check) {
-                                    debugger;
+                                    //debugger;
                                     if (check == true) {
                                         showLoader();
                                         if (response.Status) {
@@ -519,7 +520,7 @@ var COMPANY_CODE = "";
                                                 },
                                                 success: function (response) {
                                                     if (response.Status) {
-                                                        debugger;
+                                                        //debugger;
                                                         var obj = {
                                                             USER_ID: "",
                                                             RESOURCE_NAME: eventData.customTitleSplit[0],
@@ -603,7 +604,7 @@ var COMPANY_CODE = "";
                                         }
 
                                     } else if (check === "other") {
-                                        debugger;
+                                        //debugger;
                                         buyCourse(eventData.activities);
                                     }
                                 });
@@ -630,7 +631,7 @@ var COMPANY_CODE = "";
                 }
 
             }).then(function (response) {
-                debugger;
+                //debugger;
                 if (response) {
                     showLoader();
 
@@ -699,7 +700,7 @@ var COMPANY_CODE = "";
                     Type: 2
                 },
                 success: function (response) {
-                    debugger;
+                    //debugger;
                     $("#customEventDetailsModelPopUp").modal("hide");
                     $("#customEventDetailsServiceModelPopUp").modal("hide");
                     $("#ViewBookingModal .modal-body").html(response);
@@ -730,26 +731,6 @@ var COMPANY_CODE = "";
                         var data = JSON.parse(response[0].fields);
                         $scope.importFormSettings = response[0];
 
-                        if (data["Page 1"] != null && data["Page 1"] != undefined) {
-                            var data2 = JSON.parse(data["Page 1"]);
-                            debugger;
-                            let containerClass = "";
-
-                            dataModelList = [];
-                            data2.forEach(x => {
-
-                                dataModelList.push({
-                                    label: x["label"],
-                                    containerClass: "col-md-" + parseInt((12 / parseInt(100 / parseInt(x["column_width"])))),
-                                    name: x["name"],
-                                    type: x["type"],
-                                    required: x["required"],
-                                    description: x["description"],
-                                    values: (x["type"] == "radio-group" || x["type"] == "select" || x["type"] == "checkbox-group") ? x["values"] : null
-                                });
-
-                            });
-
                             let dataModel = {
                                 Id: 1,
                                 CALENDAR_CODE: $scope.calendarDetails.CALENDAR_CODE,
@@ -757,76 +738,124 @@ var COMPANY_CODE = "";
                                 Is_New: true
                             };
 
-                            $("#service-div").empty();
-                            $("#service-div").append(`<form class="form" id="service-elem"> <div class="row mt-3"></div></form>`)
+                        $scope.htmlContentData = $scope.importFormSettings.formContentHTMLTemp;
 
-                            $("#service-div #service-elem .row").append(response[0].formContentHTMLTemp);
 
-                            $('#service-div #service-elem').on("submit", function (evt) {
-                                debugger;
-                                try {
-                                    if ($('#service-div #service-elem').valid()) {
-                                        evt.preventDefault();
-                                        $scope.createDynamicFormEntry();
-                                    } else {
-                                        evt.preventDefault();
-                                    }
-                                } catch (err) {
-                                    evt.preventDefault();
-                                }
-                            })
 
+
+                        setTimeout(function () {
+                            customEntryElementsValidation();
+                            var dataModelList = $('#customFormNew').serializeArray().map(x => x.name);
                             dataModelList.forEach(x => {
-                                if (x.name == "COMPANY_CODE" || x.name == "CALENDAR_CODE" || x.name == "RECORD_ID") {
-                                    //$("#service-div #service-elem-" + dataModel.Id + " .row ").
-                                    $(`#service-div .border-${x.name}`).hide();
-                                } else {
-                                    if (x.name.includes('button')) {
-                                        $(`#service-div .border-${x.name}0`).addClass("col-sm-2");
-                                        $(`#service-div .border-${x.name}00`).addClass("col-sm-2");
-                                    }
-                                    dataModel[x.name] = "";
+                                if (x == "COMPANY_CODE" || x == "CALENDAR_CODE" || x == "RECORD_ID") {
+                                    $(`#customFormNew .border-${x}`).hide();
                                 }
-
-                                $(`#service-div input[name=${x.name}]`).val(dataModel[x.name]);
+                                if (dataModel[x]) {
+                                    $(`#customFormNew input[name=${x}]`).val(dataModel[x]);
+                                }
                             });
 
-                            dataList = [];
-                            dataList.push(dataModel);
-                            setTimeout(function () {
-                                dataModelList.forEach(x => {
-                                    if (x.type == "file") {
-
-                                    } else {
-                                        $(`#service-div input[name^=${x.name}]`).bind("keyup change paste", function () {
-                                            dataList[0][x.name] = this.value;
-                                        })
-
-                                        $(`#service-div select[name^=${x.name}]`).bind("keyup change paste", function () {
-                                            dataList[0][x.name] = this.value;
-                                        })
-
-                                        $(`#service-div textarea[name^=${x.name}]`).bind("keyup change paste", function () {
-                                            dataList[0][x.name] = this.value;
-                                        })
-                                    }
-
-                                    if (x.type == "select") {
-                                        dataList[0][x.name] = this.value;
-                                    }
-
-                                });
-                            }, 500);
+                        }, 500);
+                        
 
 
-                            var element = document.querySelector('#service-div');
-                            element.scrollTop = element.scrollHeight;
+                        //if (data["Page 1"] != null && data["Page 1"] != undefined) {
+                        //    var data2 = JSON.parse(data["Page 1"]);
+                        //    //debugger;
+                        //    let containerClass = "";
 
-                            $("#customEventDetailsModelPopUp").modal("hide");
-                            $("#customEventDetailsServiceModelPopUp").modal("hide");
-                            $("#AdditionalDetailsFormModal").modal("show");
-                            hideLoader();
-                        }
+                        //    dataModelList = [];
+                        //    data2.forEach(x => {
+
+                        //        dataModelList.push({
+                        //            label: x["label"],
+                        //            containerClass: "col-md-" + parseInt((12 / parseInt(100 / parseInt(x["column_width"])))),
+                        //            name: x["name"],
+                        //            type: x["type"],
+                        //            required: x["required"],
+                        //            description: x["description"],
+                        //            values: (x["type"] == "radio-group" || x["type"] == "select" || x["type"] == "checkbox-group") ? x["values"] : null
+                        //        });
+
+                        //    });
+
+                        //    let dataModel = {
+                        //        Id: 1,
+                        //        CALENDAR_CODE: $scope.calendarDetails.CALENDAR_CODE,
+                        //        COMPANY_CODE: $scope.calendarDetails.COMPANY_CODE,
+                        //        Is_New: true
+                        //    };
+
+                        //    $("#service-div").empty();
+                        //    $("#service-div").append(`<form class="form" id="service-elem"> <div class="row mt-3"></div></form>`)
+
+                        //    $("#service-div #service-elem .row").append(response[0].formContentHTMLTemp);
+
+                        //    $('#service-div #service-elem').on("submit", function (evt) {
+                        //        //debugger;
+                        //        try {
+                        //            if ($('#service-div #service-elem').valid()) {
+                        //                evt.preventDefault();
+                        //                $scope.createDynamicFormEntry();
+                        //            } else {
+                        //                evt.preventDefault();
+                        //            }
+                        //        } catch (err) {
+                        //            evt.preventDefault();
+                        //        }
+                        //    })
+
+                        //    dataModelList.forEach(x => {
+                        //        if (x.name == "COMPANY_CODE" || x.name == "CALENDAR_CODE" || x.name == "RECORD_ID") {
+                        //            //$("#service-div #service-elem-" + dataModel.Id + " .row ").
+                        //            $(`#service-div .border-${x.name}`).hide();
+                        //        } else {
+                        //            if (x.name.includes('button')) {
+                        //                $(`#service-div .border-${x.name}0`).addClass("col-sm-2");
+                        //                $(`#service-div .border-${x.name}00`).addClass("col-sm-2");
+                        //            }
+                        //            dataModel[x.name] = "";
+                        //        }
+
+                        //        $(`#service-div input[name=${x.name}]`).val(dataModel[x.name]);
+                        //    });
+
+                        //    dataList = [];
+                        //    dataList.push(dataModel);
+                        //    setTimeout(function () {
+                        //        dataModelList.forEach(x => {
+                        //            if (x.type == "file") {
+
+                        //            } else {
+                        //                $(`#service-div input[name^=${x.name}]`).bind("keyup change paste", function () {
+                        //                    dataList[0][x.name] = this.value;
+                        //                })
+
+                        //                $(`#service-div select[name^=${x.name}]`).bind("keyup change paste", function () {
+                        //                    dataList[0][x.name] = this.value;
+                        //                })
+
+                        //                $(`#service-div textarea[name^=${x.name}]`).bind("keyup change paste", function () {
+                        //                    dataList[0][x.name] = this.value;
+                        //                })
+                        //            }
+
+                        //            if (x.type == "select") {
+                        //                dataList[0][x.name] = this.value;
+                        //            }
+
+                        //        });
+                        //    }, 500);
+
+
+                        //    var element = document.querySelector('#service-div');
+                        //    element.scrollTop = element.scrollHeight;
+
+                        //    $("#customEventDetailsModelPopUp").modal("hide");
+                        //    $("#customEventDetailsServiceModelPopUp").modal("hide");
+                        //    //$("#AdditionalDetailsFormModal").modal("show");
+                        //    hideLoader();
+                        //}
 
                     }
 
@@ -879,7 +908,7 @@ var COMPANY_CODE = "";
                 angular.forEach(fileData, function (value, key) {
                     //console.log(value);
                     counterfile++;
-                    var NamingIndex = "file" + counterfile.toString();
+                    var NamingIndex = "file1";
                     fd.append(NamingIndex, value);
                 });
                 //fd.append('file', fileData);
@@ -894,13 +923,14 @@ var COMPANY_CODE = "";
                                     //if()
                                     if (uploadType == "multi") {
                                         setHiddenField(id, urlStr);
-                                        debugger;
-                                        dataList[0][id] = urlStr
+                                        //debugger;
+                                        $('#customFormNew input[name="' + id + '"]').val(urlStr);
+                                        //dataList[0][id] = urlStr
                                     }
                                     else {
                                         $("input:hidden[name=" + id + "]").val(urlStr);
-                                        debugger;
-                                        dataList[0][id] = urlStr
+                                        //debugger;
+                                        //dataList[0][id] = urlStr
                                     }
                                     console.log("uploaded Successfully");
                                 } else {
@@ -919,132 +949,151 @@ var COMPANY_CODE = "";
         };
 
         $scope.createDynamicFormEntry = function () {
-            if (validateDynamicForm()) {
-                var eventData = $scope.selectEventDetails;
-                $.ajax({
-                    url: "/UserAdmin/CreateDynamicFormEntry",
-                    method: "POST",
-                    data: {
-                        data: dataList,
-                        formId: $scope.calendarDetails.ADDITIONAL_FORM_ID,
-                        CalendarCode: $scope.calendarDetails.CALENDAR_CODE
-                    },
-                    success: function (response) {
-                        // after success response
-                        debugger;
-                        if (response.Status) {
+            var eventData = $scope.selectEventDetails;
 
-                            swal({
-                                icon: "success",
-                                title: "Great!",
-                                text: "Form saved successfully!",
-                                buttons: {
-                                    confirm: "Okay"
-                                }
-                            }).then(function (value) {
-                                debugger;
-                                if ($scope.IsEventBackground) {
-                                    invokeBookingService($scope.bgEventDetails.start, $scope.bgEventDetails.end, $scope.bgEventDetails.bgevent);
-                                } else {
-                                    var obj = {
-                                        USER_ID: "",
-                                        RESOURCE_NAME: eventData.customTitleSplit[0],
-                                        ACTIVITY_NAME: eventData.customTitleSplit[1],
-                                        FormGroupKey: $scope.selectEventDetails.formGroupKey,
-                                        participant: {
-                                            DESCRIPTION: String(eventData.description),
-                                            COMPANY_CODE: eventData.COMPANY_CODE,
-                                            CALENDAR_CODE: eventData.CALENDAR_CODE
-                                        },
-                                        transaction: {
-                                            SLOT: eventData.Id,
-                                            RESOURCE: eventData.resourceId,
-                                            ACTIVITY: eventData.activities,
-                                            STUDENT: "",
-                                            REMARKS: "",
-                                            FEES: "",
-                                            ATTENDANCE: "NOT-MARKED",
-                                            COMPANY_CODE: eventData.COMPANY_CODE,
-                                            CALENDAR_CODE: eventData.CALENDAR_CODE
-                                        }
+
+            var formDatas = [];
+            
+            var obj = {};
+            dataList.forEach(x => {
+                obj[x.name] = x.value;
+            });
+            formDatas.push(obj);
+
+
+
+            $.ajax({
+                url: "/UserAdmin/CreateDynamicFormEntry",
+                method: "POST",
+                data: {
+                    data: formDatas,
+                    formId: $scope.calendarDetails.ADDITIONAL_FORM_ID,
+                    CalendarCode: $scope.calendarDetails.CALENDAR_CODE
+                },
+                success: function (response) {
+                    $rootScope.$emit("HideLoading");
+                   
+                    // after success response
+                    //debugger;
+                    if (response.Status) {
+
+                        swal({
+                            icon: "success",
+                            title: "Great!",
+                            text: "Form saved successfully!",
+                            buttons: {
+                                confirm: "Okay"
+                            }
+                        }).then(function (value) {
+                            if ($scope.IsEventBackground) {
+                                invokeBookingService($scope.bgEventDetails.start, $scope.bgEventDetails.end, $scope.bgEventDetails.bgevent);
+                            } else {
+                                var obj = {
+                                    USER_ID: "",
+                                    RESOURCE_NAME: eventData.customTitleSplit[0],
+                                    ACTIVITY_NAME: eventData.customTitleSplit[1],
+                                    FormGroupKey: $scope.selectEventDetails.formGroupKey,
+                                    participant: {
+                                        DESCRIPTION: String(eventData.description),
+                                        COMPANY_CODE: eventData.COMPANY_CODE,
+                                        CALENDAR_CODE: eventData.CALENDAR_CODE
+                                    },
+                                    transaction: {
+                                        SLOT: eventData.Id,
+                                        RESOURCE: eventData.resourceId,
+                                        ACTIVITY: eventData.activities,
+                                        STUDENT: "",
+                                        REMARKS: "",
+                                        FEES: "",
+                                        ATTENDANCE: "NOT-MARKED",
+                                        COMPANY_CODE: eventData.COMPANY_CODE,
+                                        CALENDAR_CODE: eventData.CALENDAR_CODE
                                     }
+                                }
 
-                                    $.ajax({
-                                        url: "/UserAdmin/EnrollPublicUserForCalendar",
-                                        type: "POST",
-                                        data: obj,
-                                        success: function (data) {
-                                            hideLoader();
-                                            if (!data.Status) {
-                                                if (data.Message == "ALREADY-ENROLLED") {
-                                                    swal({
-                                                        title: "Can't Enroll Again!",
-                                                        text: "You are already enrolled in this event.",
-                                                        icon: "error",
-                                                        button: "Okay"
-                                                    });
-                                                    //swal({ type: 'error', showCloseButton: true, html: "You are already enrolled in this calendar." });
-                                                } else if (data.Message == "LIMIT-ERROR") {
-                                                    swal({
-                                                        title: "Failed to Enroll!",
-                                                        text: "Maximum no. of participants already enrolled in this activity.",
-                                                        icon: "error",
-                                                        button: "Okay"
-                                                    });
-                                                } else {
-                                                    swal({
-                                                        title: "Warning!",
-                                                        text: data.Message,
-                                                        icon: "error",
-                                                        button: "Okay"
-                                                    });
-                                                }
+                                $.ajax({
+                                    url: "/UserAdmin/EnrollPublicUserForCalendar",
+                                    type: "POST",
+                                    data: obj,
+                                    success: function (data) {
+                                        hideLoader();
+                                        if (!data.Status) {
+                                            if (data.Message == "ALREADY-ENROLLED") {
+                                                swal({
+                                                    title: "Can't Enroll Again!",
+                                                    text: "You are already enrolled in this event.",
+                                                    icon: "error",
+                                                    button: "Okay"
+                                                });
+                                                //swal({ type: 'error', showCloseButton: true, html: "You are already enrolled in this calendar." });
+                                            } else if (data.Message == "LIMIT-ERROR") {
+                                                swal({
+                                                    title: "Failed to Enroll!",
+                                                    text: "Maximum no. of participants already enrolled in this activity.",
+                                                    icon: "error",
+                                                    button: "Okay"
+                                                });
                                             } else {
                                                 swal({
-                                                    title: "Congratulations!",
-                                                    text: "Enrolled Successfully!",
-                                                    icon: "success",
+                                                    title: "Warning!",
+                                                    text: data.Message,
+                                                    icon: "error",
                                                     button: "Okay"
-                                                }).then(function (boolValue) {
-                                                    window.location.reload();
                                                 });
-
                                             }
+                                        } else {
+                                            swal({
+                                                title: "Congratulations!",
+                                                text: "Enrolled Successfully!",
+                                                icon: "success",
+                                                button: "Okay"
+                                            }).then(function (boolValue) {
+                                                window.location.reload();
+                                            });
 
-                                            $("#AdditionalDetailsFormModal").modal("hide");
-                                            $("#AdditionalDetailsFormModal #service-div").empty();
-                                        },
-                                        error: function () {
-                                            swal({ type: 'error', showCloseButton: true, html: "something went wrong!" });
                                         }
-                                    })
-                                }
 
-                            });
+                                        $("#AdditionalDetailsFormModal").modal("hide");
+                                        $("#AdditionalDetailsFormModal #service-div").empty();
+                                    },
+                                    error: function () {
+                                        swal({ type: 'error', showCloseButton: true, html: "something went wrong!" });
+                                    }
+                                })
+                            }
+
+                        });
 
 
 
-                        } else {
-                            swal({
-                                icon: "error",
-                                title: "Error",
-                                text: response.Message
-                            });
-                        }
-
-                    },
-                    error: function (er) {
-                        debugger;
+                    } else {
+                        swal({
+                            icon: "error",
+                            title: "Error",
+                            text: response.Message
+                        });
                     }
-                })
-            }
+
+                    $rootScope.safeApply();
+
+                },
+                error: function (er) {
+                    swal({
+                        icon: "error",
+                        title: "Error",
+                        text: "Some internal error"
+                    });
+                    //debugger;
+                    $rootScope.$emit("HideLoading");
+                }
+            });
 
         }
 
         $scope.enrollPublicUserForRental = function () {
 
             showLoader();
-            debugger;
+            //debugger;
             try {
                 let test1 = moment($scope.selectEventDetails.start);
                 let test2 = moment($scope.selectEventDetails.end)
@@ -1274,7 +1323,345 @@ var COMPANY_CODE = "";
 
         }
 
+        function customEntryElementsValidation() {
+            // imageless captcha varification
+            var $submit = $('#customFormNew').find('button.btn[type="submit"]');
+            // $submit.attr('disabled', 'disabled'); $submit.addClass('disabled');
+            $(document).on('keyup', 'input.cp_text',
+                function () {
+                    imagelessCaptchaVerification($(this), $submit);
+                });
+            var newWindow = null, validationCount = 0, validattfrm = '';
+            $(document).on('click', '.btn-edit', function (e) {
+                //$('.btn-edit').click(function (e){
+                e.preventDefault();
+                $('#FormBody .form-group select,input[type=text],input[type=number],textarea').removeAttr('readonly');
+                $('#FormBody .form-group select,input[type=text],input[type=number],textarea,.date').removeClass('editable-area')
+                $('#FormBody .form-group select').removeAttr(('disabled'));
+                $('#FormBody .form-group .date input[type=text]').removeClass('disabled');
+                $('#FormBody .form-group  input[type=email]').removeAttr('disabled');
+                $('#FormBody .form-group  input[type=password]').removeAttr('disabled');
+                $('#btn_save').attr('value', '@Resources.Resource.Submit');
+                $('#btn_save').removeClass('btn-edit').addClass('btn-success');
+            });
+            $(document).on('click', '#btn_exit', function (e) {
+                var IsPopUp = $("#hfIsPopUp").val();
+                if (IsPopUp == 1) {
+                    window.close();
+                }
+                else {
+                    //var FormId = $("#hfFormId").val();
+                    var url = '@Url.Action("FormMasterTabulator", "FormMaster", new {FormId = "__FormId__"})';
+                    window.location.href = url.replace('__FormId__', 4040).replace("&amp;", "&");
+                }
+            });
+            var uploadPath = "", popupTabulator, tabulators;
+            $(document).on('click', '.btn-success', function (e) {
+                //$('#btn_save').click(function (e) {
+                if (getParameterByName('optid') != null) {
+                    e.preventDefault();
+                    if ($(this).attr('value') == '@Resources.Resource.Edit')
+                        return false;
+                    updateFormData();
+                }
+                else {
 
+                    var arrCtrl = [];
+                    var arrRelationCtrl = [];
+                    var objCtrl = {};
+                    //Push FormName To Array
+                    objCtrl["Name"] = "TableName";
+                    objCtrl["Value"] = $("#lblFormName").val();
+                    arrCtrl.push(objCtrl);
+                    //For main Form Controls
+                    $("#customForm :input").each(function () {
+                        var objCtrl = {};
+
+                        if ($(this).attr('type') == 'text' || $(this).is("textarea") || $(this).attr('type') == 'email' || $(this).attr('type') == 'password') {
+                            objCtrl["Name"] = $(this).attr('name');
+                            if ($(this).parent().hasClass('date')) {
+                                objCtrl["DataType"] = "Date";
+                                objCtrl["Value"] = (jQuery.isEmptyObject($(this).val()) != true ? $(this).val() : '');
+                            }
+                            else {
+                                objCtrl["DataType"] = "Text";
+                                objCtrl["Value"] = (jQuery.isEmptyObject($(this).val()) != true ? $(this).val() : '');
+                            }
+                            arrCtrl.push(objCtrl);
+                        }
+                        else if ($(this).attr('type') == 'number') {
+                            objCtrl["Name"] = $(this).attr('name');
+                            objCtrl["Value"] = (jQuery.isEmptyObject($(this).val()) != true ? $(this).val() : '0');
+                            objCtrl["DataType"] = "Number";
+                            arrCtrl.push(objCtrl);
+                        }
+                        else if ($(this).attr('type') == 'date') {
+                            objCtrl["Name"] = $(this).attr('name');
+                            objCtrl["Value"] = (jQuery.isEmptyObject($(this).val()) != true ? Date.parse($(this).val(), "yyyy-MM-dd HH:mm:ss") : '');
+                            objCtrl["DataType"] = "Date";
+                            arrCtrl.push(objCtrl);
+                            // alert(objCtrl["Value"]);
+                        }
+                        else if ($(this).attr('type') == 'checkbox' || $(this).attr('type') == 'radio') {
+                            objCtrl["Name"] = $(this).attr('name');
+                            objCtrl["Value"] = $(this).prop("checked");
+                            objCtrl["DataType"] = "Bool";
+                            arrCtrl.push(objCtrl);
+                        }
+                    });
+                    $("#customForm").find('select').not('#ddlLanguage').each(function () {
+                        var objCtrl = {};
+                        objCtrl["Name"] = $(this).attr('name');
+                        objCtrl["Value"] = (jQuery.isEmptyObject($(this).val()) != true ? $(this).val() : '0');
+                        objCtrl["DataType"] = "Text";
+                        arrCtrl.push(objCtrl);
+                    });
+                    //For Tabulator
+
+                    $('.tab-content .tab-pane .tabulator').each(function () {
+                        var tableIds = [];
+                        //console.log($(this).find('.tabulator-tableHolder .tabulator-row [tabulator-field="tableid"]').length)
+                        $(this).find('.tabulator-tableHolder .tabulator-row [tabulator-field="tableid"]').each(function () {
+                            tableIds.push({ "Name": 'TableId', "Value": $.trim($(this).text()), "DataType": 'Number' });
+                        })
+                        //var id = $(this).attr('id');
+                        //console.log(id)
+                        //var lbl = $('label[for="' + id + '"]').clone(true);
+                        //lbl.find('a').remove();
+                        //var tabulatorName = lbl.text().split(' ');
+                        //var TabulatorId = $.trim(tabulatorName[0]);
+                        //tabulators[TabulatorId] = tableIds;
+                        ////For Persistent Column Layout
+                        //var columnLayout = localStorage.getItem('tabulator-' + TabulatorId.toLowerCase());// +$.toString(TabulatorId).toLocaleLowerCase()// $("#" + TabulatorId).tabulator("getColumnLayout");
+                        //var columnSort = localStorage.getItem('tabulator-' + TabulatorId.toLowerCase() + "-sort");
+                        //$.cookie(TabulatorId.toLowerCase() + "_ColumnLayout", columnLayout);
+                        //$.cookie(TabulatorId.toLowerCase() + "_ColumnSort", columnSort);
+                    })
+                    if (tabulators != undefined)
+                        arrRelationCtrl.push(tabulators);
+                    $("#hfJsonContent").val(JSON.stringify(arrCtrl));
+                    $("#hfJsonRelationContent").val(JSON.stringify(arrRelationCtrl));
+                }
+            });
+            var checkValue = setInterval(function () {
+                if (newWindow != null) {
+                    if (newWindow.closed) {
+                        newWindow = null;
+                        location.reload(true);
+                        reloadTabulator();
+
+
+                    }
+                }
+            }, 1000);
+            $('button[type="submit"], button[type="submitexcel"]').unbind("click");
+            $('button[type="submit"], button[type="submitexcel"]').on('click', function (elementButton) {
+
+
+                let $this = $(this),
+                    currentType = $this.attr('type');
+                localStorage.setItem("submitType", currentType);
+                if (validationCount == 0) {
+                    validattfrm = $('#customFormNew').formValidation({
+                        framework: 'bootstrap',
+                        excluded: [':disabled'],
+                        icon: {
+                            valid: '',
+                            invalid: '',
+                            validating: 'fa fa-sync fa-pulse'
+                        }
+                    })
+                        .on('success.form.fv', function (e, data) {
+                            e.preventDefault();
+
+                            var invalid = 0;
+                            if ($("input.cp_text").length) {
+                                var $submit = $('#customFormNew').find('button.btn[type="submit"]');
+                                $("input.cp_text").each(function () {
+                                    let status = imagelessCaptchaVerification($(this), $submit);
+                                    invalid = invalid + status;
+                                });
+
+                                if (invalid > 0) {
+                                    return false;
+                                } else {
+                                    angular.element(this).scope().onEntryFormSubmit();
+                                }
+                            }
+                            else {
+
+                                if (localStorage.getItem("submitType") != null) {
+                                    currentType = localStorage.getItem("submitType")
+                                }
+                                if (currentType == "submitexcel") {
+
+                                    textBoxLoader(true);
+                                    if ($scope.formFieldExcelParam.listOfInput.length > 0) {
+                                        angular.forEach($scope.formFieldExcelParam.listOfOutput, function (item) {
+                                            $("#" + item.id).val(item.value);
+                                            $("#" + item.id).addClass("loader");
+                                        })
+                                        updateExcel(false);
+                                    }
+                                    $this.closest('form').find('button[type="submit"]').removeAttr('disabled');
+                                    $this.closest('form').find('button[type="submit"]').removeClass('disabled');
+
+                                }
+                                else {
+                                    $scope.onEntryFormSubmit();
+                                }
+                                localStorage.removeItem("submitType")
+                            }
+                        });
+
+                    validationCount = 1;
+                }
+            });
+        };
+
+
+        $scope.onEntryFormSubmit = function (formFields) {
+            modifyFormData();
+        }
+
+
+        function modifyFormData() {
+            var isCapchaVerified = window["capcha"];
+            if (!DataService.isEmpty(isCapchaVerified))
+                if (!isCapchaVerified) {
+                    notifierService.notifySweetAlertMessage('error', '', 'capcha is not verified');
+                    $rootScope.$emit("HideLoading");
+                    return;
+                }
+            if ($scope.myForm.$invalid) return false;
+            var temp = $("#customFormNew").serializeArray();
+            var names = {};
+            names = (function () {
+                var n = [],
+                    l = temp.length - 1;
+                for (; l >= 0; l--) {
+                    n.push(temp[l].name);
+                }
+                return n;
+            })();
+            var isDropdownCalenderControl = "";
+            var referrrenceFormGroupKey = "";
+            var listOfHidden = $("input[type='hidden']");
+            _.each(listOfHidden, function (item) {
+                if (item.id.contains('isDropdownCalender')) {
+                    isDropdownCalenderControl = item.value;
+                }
+            });
+            if (isDropdownCalenderControl != "") {
+                var exists = _.findWhere(temp, { name: isDropdownCalenderControl });
+                if (!DataService.isEmpty(exists)) {
+                    referrrenceFormGroupKey = $("#" + exists.name + " option[value='" + exists.value + "']").data("formgroupkey");
+                    if (referrrenceFormGroupKey == undefined)
+                        referrrenceFormGroupKey = "";
+                }
+            }
+            var chkListTemp = [];
+            $('#customFormNew').find($('input[type="checkbox"]:not(:checked)')).each(function () {
+                if ($.inArray(this.name, names) === -1) {
+                    //temp.push({ name: this.name, value: '' });
+                    chkListTemp.push({ name: this.name, value: '' });
+                }
+            });
+            if (chkListTemp.length > 0) {
+                chkListTemp = _.uniq(chkListTemp, "name");
+                _.each(chkListTemp, function (itcheck, keyck) {
+                    temp.push({ name: itcheck.name, value: '' });
+                });
+            }
+            var frm = $('#customFormNew').find(":input:not(:hidden)").serialize();
+            // console.log(temp);
+            var param = {};
+            if (!$scope.isEdit) {
+                param.action = 1;
+                param.formGroupKey = uuidv4();
+                if (referrrenceFormGroupKey != "") {
+                    param.formGroupKey = referrrenceFormGroupKey;
+                }
+                temp.push({ "formGroupKey": $scope.freshEntryformGroupKey, "name": "formGroupKey", "value": $scope.freshEntryformGroupKey });
+            }
+            else {
+                param.action = 2;
+                param.formGroupKey = $scope.formGroupKey;
+                param.Id = $scope.rowId;
+                if (referrrenceFormGroupKey != "") {
+                    param.formGroupKey = referrrenceFormGroupKey;
+                }
+                temp.push({ "formGroupKey": $scope.formGroupKey, "name": "formGroupKey", "value": $scope.formGroupKey });
+            }
+
+            var listAllFields = [];
+            angular.forEach($scope.formFields, function (pageData, pageKey) {
+                angular.forEach(pageData, function (item, key) {
+                    listAllFields.push(item);
+                });
+            });
+
+
+            var compareableControls = _.filter(listAllFields, function (item) {
+                return !DataService.isEmpty(item.compare_value_with_control)
+                    && !DataService.isEmpty(item.compare_operation)
+            });
+            if (compareableControls.length > 0) {
+                var temp1 = angular.copy(temp);
+                var compareResult = compareValues(compareableControls, temp1, listAllFields);
+                if (compareResult.length > 2) {
+                    notifierService.notifySweetAlertMessage('error', 'Compare Field', compareResult);
+                    return false;
+                }
+
+            }
+
+            $timeout(function () {
+
+                $rootScope.$emit("ShowLoading");
+                var checkboxGroup = [];
+                var namecheckbox = "";
+                var removeIndexGroup = [];
+                var groupByData = _.groupBy(temp, "name");
+                var newList = [];
+                angular.forEach(groupByData, function (item, key) {
+                    //console.log(item)
+                    //console.log(key)
+                    if (item.length == 1) {
+                        if (key.contains("[]") && item[0].value == "") {
+                        } else {
+                            newList.push({ "name": key, "value": item[0].value });
+                        }
+                        var exists = _.findWhere(listAllFields, { name: key });
+                        if (!DataService.isEmpty(exists)) {
+                            if (!DataService.isEmpty(exists.Referral_Form_Fields)) {
+                                var exists1 = {};
+                                exists1 = _.findWhere(temp, {
+                                    name: exists.Referral_Form_Fields + "_hidden"
+                                });
+                                var exists2 = {}
+                                exists2 = _.findIndex(newList, {
+                                    name: key
+                                });
+                                if (!DataService.isEmpty(exists1))
+                                    if (!DataService.isEmpty(exists2)) {
+                                        newList[exists2].value = exists1.value;
+                                        $scope.strReferenceForm = exists.Referral_Forms;
+                                    }
+                            }
+                        }
+                    }
+                    else if (item.length > 1) {
+                        var tmp = _.map(item, function (t) { return t.value }).join(',');
+                        newList.push({ "name": key, "value": tmp });
+                    }
+                });
+
+                //param.formfieldDataListTemp = JSON.stringify(newList);
+                dataList = newList;
+                $scope.createDynamicFormEntry();
+            }, 180);
+        }
 
     }).filter('safeHtml', function ($sce) {
         return function (val) {

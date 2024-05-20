@@ -527,6 +527,9 @@
                 /*transform: scale(0.6);*/
             }
         }
+        .validation-summary-errors{
+            color:red;
+        }
     </style>
 
 </head>
@@ -566,6 +569,7 @@
                                         <form class="js-validate needs-validation" method="post" action="/Account/BusinessSignUp" novalidate>
 
                                             @Html.AntiForgeryToken()
+                                            @Html.ValidationSummary()
                                             <div class="form-group">
                                                 <label for="username">@Resource.User_name</label>
                                                 @*<input type="text" class="form-control" id="USER_NAME" name="USER_NAME" required placeholder="Username">*@
@@ -578,7 +582,7 @@
                                                     <div class="form-group">
                                                         <label for="FIRST_NAME">First Name</label>
                                                         @*<input type="text" class="form-control" id="USER_NAME" name="USER_NAME" required placeholder="Username">*@
-                                                        @Html.TextBoxFor(model => model.FIRST_NAME, new { @class = "form-control", @placeholder = "peter", @required = "true" })
+                                                        @Html.TextBoxFor(model => model.FIRST_NAME, new { @class = "form-control", @placeholder = "Peter", @required = "true", @autocomplete = "new-password" })
                                                         @Html.ValidationMessageFor(model => model.FIRST_NAME, "", new { @class = "invalid-feedback-2" })
 
                                                     </div>
@@ -587,13 +591,13 @@
                                                     <div class="form-group">
                                                         <label for="LAST_NAME">Last Name</label>
                                                         @*<input type="text" class="form-control" id="USER_NAME" name="USER_NAME" required placeholder="Username">*@
-                                                        @Html.TextBoxFor(model => model.LAST_NAME, new { @class = "form-control", @placeholder = "parker" })
+                                                        @Html.TextBoxFor(model => model.LAST_NAME, new { @class = "form-control", @placeholder = "Parker", @autocomplete = "new-password" })
                                                         @Html.ValidationMessageFor(model => model.LAST_NAME, "", new { @class = "invalid-feedback-2" })
 
                                                     </div>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="form-group">
                                                 <label for="email">@Resource.Email</label>
                                                 @*<input type="email" class="form-control" id="USER_EMAIL" name="USER_EMAIL" required placeholder="Email">*@

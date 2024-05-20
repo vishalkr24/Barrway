@@ -1,5 +1,4 @@
-﻿using NLog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -9,20 +8,24 @@ using System.Web.Routing;
 namespace Barrway.Security
 {
     [AttributeUsageAttribute(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
-    public class PublicAuthorizeAttribute : AuthorizeAttribute
+    public class MyAuthorizeAttribute : AuthorizeAttribute
     {
+
+        //Custom named parameters for annotation
+        public string ResourceKey { get; set; }
+        public string OperationKey { get; set; }
+
         //Called when access is denied
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
             //User isn't logged in
             if (!filterContext.HttpContext.User.Identity.IsAuthenticated)
             {
-                var request = filterContext.HttpContext.Request;
-
                 filterContext.Result = new RedirectToRouteResult(
-                        new RouteValueDictionary(new { controller = "Account", action = "BusinessLogin", returnUrl = request.Url })
+                        new RouteValueDictionary(new { controller = "Account", action = "Login" })
                 );
             }
         }
+
     }
 }

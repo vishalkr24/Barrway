@@ -102,7 +102,7 @@ namespace Barrway.Service.Repository
                     var user = result.FirstOrDefault();
                     if (string.IsNullOrEmpty(user["USER_PASSWORD"]?.ToString()) || user["USER_PASSWORD"].ToString() != password)
                     {
-                        return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Invalid Password" };
+                        return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Invalid email or password" };
                     }
 
                     if (!(user["IS_EMAIL_VERIFIED"]?.ToString() == "Y"))
@@ -155,7 +155,7 @@ namespace Barrway.Service.Repository
                 }
                 else
                 {
-                    return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Invalid Email" };
+                    return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Invalid email or password" };
                 }
             }
             catch (Exception ex)

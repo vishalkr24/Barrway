@@ -28,10 +28,11 @@ namespace Barrway.Utility.Common
                         Fragment = null
                     };
                 string url = urlBuilder.ToString();
-                string verficationlink = System.Web.Configuration.WebConfigurationManager.AppSettings["baseurl"] + $"Account/verification?username={userToken.USER_ID}&token={userToken.TOKEN}&role={Role}";
+                var baseUrl = string.Format("{0}://{1}/{2}", HttpContext.Current.Request.Url.Scheme, HttpContext.Current.Request.Url.Authority, $"/");
+                string verficationlink = baseUrl + $"Account/verification?username={userToken.USER_ID}&token={userToken.TOKEN}&role={Role}";
                 //logger.Info(verficationlink);
                 //string logourl = string.Format("{0}://{1}/{2}", HttpContext.Current.Request.Url.Scheme, HttpContext.Current.Request.Url.Authority, $"/otaContent/assets/img/favicon.png");
-                string logourl = System.Web.Configuration.WebConfigurationManager.AppSettings["baseurl"].ToString() + "assets/marketplace/image/logo.png";
+                string logourl = baseUrl + "assets/marketplace/image/logo.png";
                 if (Role == FormRole.BUSINESS_USER || Role == FormRole.GENERAL_USER)
                 {
                     strBody.Append("<body class='ng-cloak'><div class='form-wrapper-custom-email' style='width: 50%; margin: 0 auto; padding: 1px;' id='loginForm'>" +
@@ -99,9 +100,10 @@ namespace Barrway.Utility.Common
                         Fragment = null
                     };
                 string url = urlBuilder.ToString();
-                string resetlink = System.Web.Configuration.WebConfigurationManager.AppSettings["baseurl"] + $"Account/resetpassword?token={userToken.TOKEN}";
+                var baseUrl = string.Format("{0}://{1}/{2}", HttpContext.Current.Request.Url.Scheme, HttpContext.Current.Request.Url.Authority, $"/");
+                string resetlink = baseUrl + $"Account/resetpassword?token={userToken.TOKEN}";
                 //var logourl = string.Format("{0}://{1}/{2}", HttpContext.Current.Request.Url.Scheme, HttpContext.Current.Request.Url.Authority, $"/otaContent/assets/img/favicon.png");
-                string logourl = System.Web.Configuration.WebConfigurationManager.AppSettings["baseurl"].ToString() + "logo.png";
+                string logourl = baseUrl + "logo.png";
                 string contactlink = "";
                 string contact = "";
                 string fax = "";
@@ -167,9 +169,10 @@ namespace Barrway.Utility.Common
                         Fragment = null
                     };
                 string url = urlBuilder.ToString();
-                string verficationlink = System.Web.Configuration.WebConfigurationManager.AppSettings["baseurl"] + $"Account/VerifiyEmailaddress?username={userToken.USER_ID}&token={userToken.TOKEN}";
+                var baseUrl = string.Format("{0}://{1}/{2}", HttpContext.Current.Request.Url.Scheme, HttpContext.Current.Request.Url.Authority, $"/");
+                string verficationlink = baseUrl + $"Account/VerifiyEmailaddress?username={userToken.USER_ID}&token={userToken.TOKEN}";
 
-                string logourl = System.Web.Configuration.WebConfigurationManager.AppSettings["baseurl"].ToString() + "assets/marketplace/image/logo.png";
+                string logourl = baseUrl + "assets/marketplace/image/logo.png";
 
                 strBody.Append("<body class='ng-cloak'><div class='form-wrapper-custom-email' style='width: 50%; margin: 0 auto; padding: 1px;' id='loginForm'>" +
                                 "<div class='container-custom'><div class='row form-group'><div class='row mb-4'><strong style = 'display:flex; gap:10px; align-items:center;'><img src='" + logourl + "' style='height:40px; transform:translateY(50%); padding:10px;'/><h2 style='color: #3e6b6b;'>Barrway Business</h2></strong></div></div>" +

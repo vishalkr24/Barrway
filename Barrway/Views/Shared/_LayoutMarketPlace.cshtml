@@ -1,5 +1,6 @@
 ﻿@{
-    var baseUrl = System.Web.Configuration.WebConfigurationManager.AppSettings["baseURL"].ToString();
+    //var baseUrl = System.Web.Configuration.WebConfigurationManager.AppSettings["baseURL"].ToString();
+    var baseUrl = string.Format("{0}://{1}/{2}", HttpContext.Current.Request.Url.Scheme, HttpContext.Current.Request.Url.Authority, $"/");
     string token = DateTime.Now.ToString("ddMMyyyyHHmmssffffff");
 
     HttpCookie languageCookie = System.Web.HttpContext.Current.Request.Cookies["Language"];

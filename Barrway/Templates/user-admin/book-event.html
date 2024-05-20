@@ -30,6 +30,195 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.js"></script>
 <script type="text/javascript" src="/fg-assets/js/jAutoCalc.js"></script>
+
+
+
+<link rel="stylesheet" href="fg-assets/formValidation/css/formValidation.min.css">
+<!--<script src="https://www.paypalobjects.com/api/checkout.js"></script>-->
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<link rel="stylesheet" href="fg-assets/css/bootstrap-colorpicker.min.css">
+<script src="fg-assets/js/bootstrap-colorpicker.min.js" type="text/javascript"></script>
+
+<style>
+    .form-group.borderSet.col-sm-6 > .col-sm-12 > div {
+        display: flex;
+        align-items: center;
+    }
+
+    form label {
+        float: none !important;
+        margin-bottom: 0px !important;
+    }
+
+        form label.pull-left {
+            float: none !important;
+            margin-bottom: 0px !important;
+        }
+
+
+    .tab-content .tab-pane.active {
+        display: flex !important;
+        flex-wrap: wrap !important;
+    }
+
+    .tab-content .tab-pane .clearfix {
+        width: 100%;
+    }
+
+    .form-check-inline > label {
+        display: flex;
+    }
+
+        .form-check-inline > label > img {
+            max-height: 30px;
+            object-fit: cover;
+        }
+
+    .form-check > label > img {
+        margin-bottom: 5px;
+        /*     max-height:  30px; */
+    }
+
+    .tagify__input {
+        display: block;
+        width: 100%;
+        height: calc(1.5em + .75rem + 2px);
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+
+    #courseDetails > .table-responsive .table > thead > tr > th:first-child {
+        width: 41.667%;
+    }
+
+    #courseDetails > .form-group {
+        margin-bottom: 0px;
+    }
+
+    #courseDetails > .form-horizontal {
+        font-weight: 500;
+    }
+
+    #courseDetails > .table tbody tr td {
+        border: 0;
+    }
+
+    #courseDetails > .table thead th {
+        border-top: 1px solid;
+        border-color: #000;
+        border-bottom: 1px solid #000;
+    }
+
+    #courseDetails > .table tfoot td {
+        border-top: 1px solid;
+        border-color: #000;
+    }
+
+    .bs-popover-top {
+        min-width: auto !important;
+        width: 180px !important;
+    }
+
+    .jqbtk-container .jqbtk-row {
+        display: flex;
+    }
+
+        .jqbtk-container .jqbtk-row .btn {
+            flex: 1;
+            border: 1px solid #9174ed;
+            border-color: #9174ed;
+            background-color: #b29af8;
+            background-image: -webkit-gradient(linear, left top, left bottom, from(#b29af8), to(#9174ed));
+            background-image: -webkit-linear-gradient(top, #b29af8, #9174ed);
+            background-image: -moz-linear-gradient(top, #b29af8, #9174ed);
+            background-image: -ms-linear-gradient(top, #b29af8, #9174ed);
+            background-image: -o-linear-gradient(top, #b29af8, #9174ed);
+            background-image: linear-gradient(to bottom, #b29af8, #9174ed);
+            filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr=#b29af8, endColorstr=#9174ed);
+            font-size: 21px;
+            padding: 8px;
+            border-radius: 6px !important;
+        }
+
+    .input-group.date.text-with-date-control > .input-group {
+        align-items: center;
+    }
+
+        .input-group.date.text-with-date-control > .input-group .form-control.inputClass {
+            margin-left: 3px;
+        }
+
+        .input-group.date.text-with-date-control > .input-group .input-group-append {
+            margin-right: 6px;
+        }
+
+    .theme-darkPrimary .nav-item .nav-link {
+        border: 1px solid #c3c3c3;
+        background: #efefef;
+        margin-left: 5px;
+        border-radius: 0;
+        font-family: 'Montserrat-bold' !important;
+        color: #000;
+        font-size: 14px;
+    }
+
+        .theme-darkPrimary .nav-item .nav-link.active {
+            background: #3E246B;
+            color: #fff;
+        }
+
+    .theme-darkPrimary-page .nav-item .nav-link {
+        border: 1px solid #c3c3c3;
+        background: #efefef;
+        margin-left: 2px;
+        font-family: 'Montserrat-bold' !important;
+        font-size: 14px;
+    }
+
+        .theme-darkPrimary-page .nav-item .nav-link.active {
+            background: #3E246B;
+            color: #fff;
+        }
+
+    .kbw-signature {
+        display: flex !important;
+    }
+
+        .kbw-signature ~ button.btn-danger {
+            margin-top: 5px;
+        }
+
+    h6 {
+        font-size: 12px;
+    }
+
+    .banner-section .breadcrumb li a {
+        color: #7e3d99;
+        padding: 0;
+        font-size: 14px;
+        font-style: italic;
+        font-family: Roboto;
+        font-weight: 500;
+        letter-spacing: .2px;
+    }
+
+    .charactorcap > canvas {
+        /* pointer-events: none;*/
+        background-color: #adaaaa !important;
+        border: 1px solid #8f8989;
+        width: 184px;
+        height: 58px;
+        padding: 7px;
+    }
+</style>
 <style>
     .fc-timeline .fc-body .fc-scroller {
         height: 500px !important;
@@ -117,7 +306,7 @@
         font-size: 12px;
     }
 
-    hr{
+    hr {
         margin: 0.5rem auto;
     }
 
@@ -486,6 +675,10 @@
         margin-bottom: 16px;
         border-radius: 4px;
     }
+
+    label span.asteriskField {
+        color: #c10000;
+    }
 </style>
 
 <style>
@@ -500,284 +693,310 @@
         display: flex;
         padding: 1rem 1.4rem;
     }
+
+
+    img[id^="banner"] {
+        width: 100% !important;
+    }
 </style>
-<section class="mihi-71" style="background: #f5f5f5;">
+<section class="mihi-71">
 
     <div class="container">
-        <div class="card">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card" style="max-width:100%">
 
-            <div class="d-flex" style="justify-content:space-between; align-items:center;">
-                <div style="font-weight: 600; color: #72328A; font-size: 18px;">
-                    Event Details
-                </div>
-                <div>
+                    <div class="d-flex" style="justify-content:space-between; align-items:center;">
+                        <div style="font-weight: 600; color: #72328A; font-size: 18px;">
+                            Event Details
+                        </div>
+                        <div>
 
-                    <div class=" div-list" ng-if="eventType=='EVENT'">
+                            <div class=" div-list" ng-if="eventType=='EVENT'">
 
-                        <button type="button" class="btn btn-primary public-primary" style="margin-top: 12px;" ng-if="selectEventDetails.OverlapBookingFlag == 'Y' && selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'N'" ng-click="enrollPublicUser()">Register</button>
-                        <label class="btn btn-primary public-primary" style="margin-top:12px;" ng-if="selectEventDetails.OverlapBookingFlag == 'N' && selectEventDetails.IsAlreadyBooked == 'N'">You can't book this session</label>
-                        <button type="button" class="btn btn-primary public-primary" style="margin-top: 12px;" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IsReviewable == 'N'" ng-click="cancelPublicUserBooking()">Cancel Booking</button>
-                        <button type="button" class="btn btn-primary public-primary" style="margin-top: 12px;" ng-if="!selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IsReviewable == 'Y'" ng-click="reviewSession()">Review Session</button>
-                        <button class="btn btn-danger public-primary" ng-if="selectEventDetails.ATTEND == 'Y'" style="margin-top: 12px;" ng-click="AttendSession(selectEventDetails.Id, 'NORMAL')">Attend</button>
-                        <img src="~/assets/img/QR_CODE_LOGO.png" ng-if="selectEventDetails.ATTEND == 'Y'" ng-click="AttendSession(selectEventDetails.TransactionId, 'QR')" style="height: 40px; width: 40px; margin-top: 12px;" />
-                    </div>
+                                <!--<button type="button" class="btn btn-primary public-primary" style="margin-top: 12px;" ng-if="selectEventDetails.OverlapBookingFlag == 'Y' && selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'N'" ng-click="enrollPublicUser()">Register</button>-->
+                                <label class="btn btn-primary public-primary" style="margin-top:12px;" ng-if="selectEventDetails.OverlapBookingFlag == 'N' && selectEventDetails.IsAlreadyBooked == 'N'">You can't book this session</label>
+                                <button type="button" class="btn btn-primary public-primary" style="margin-top: 12px;" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IsReviewable == 'N'" ng-click="cancelPublicUserBooking()">Cancel Booking</button>
+                                <button type="button" class="btn btn-primary public-primary" style="margin-top: 12px;" ng-if="!selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IsReviewable == 'Y'" ng-click="reviewSession()">Review Session</button>
+                                <button class="btn btn-danger public-primary" ng-if="selectEventDetails.ATTEND == 'Y'" style="margin-top: 12px;" ng-click="AttendSession(selectEventDetails.Id, 'NORMAL')">Attend</button>
+                                <img src="~/assets/img/QR_CODE_LOGO.png" ng-if="selectEventDetails.ATTEND == 'Y'" ng-click="AttendSession(selectEventDetails.TransactionId, 'QR')" style="height: 40px; width: 40px; margin-top: 12px;" />
+                            </div>
 
-                    <div class="div-flex div-list" ng-if="eventType=='COURSE'">
-                        <button type="button" class="btn btn-primary public-primary" ng-if="courseEventsList[(courseEventsList.length-1)].Value[0].IsBooked == 'N'" ng-click="enrollCourse()">Buy Course</button>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="modal-body mt-4" id="eventModalBody" ng-if="eventType=='EVENT'">
-                <div class="event-detail div-flex">
-                    <div class="div-flex">
-                        <div class="title">
-
-                            <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
-                                <div style="display:block" class="titleContainer">
-                                    <p class="title1" style="font-weight: 600; font-size: 16px;"> {{d.formTitle}}</p>
-                                </div>
+                            <div class="div-flex div-list" ng-if="eventType=='COURSE'">
+                                <button type="button" class="btn btn-primary public-primary" ng-if="courseEventsList[(courseEventsList.length-1)].Value[0].IsBooked == 'N'" ng-click="enrollCourse()">Buy Course</button>
                             </div>
 
                         </div>
-
-
-                        <div class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
-                        <div class="{{selectEventDetails.customDate}}">{{selectEventDetails.customTime}}</div>
-
-                        <input value="{{selectEventDetails.Id}}" id="newtag-inputHidden" type="hidden">
-
-                        <div ng-repeat="tag in totalSelectListTagify">
-                            <input value="{{selectEventDetails[tag.name]}}" id="newtag-inputHidden{{tag.name}}" type="hidden">
-                            <input value="{{tag.name}}" id="newtag-inputHidden{{selectEventDetails.Id}}" type="hidden">
-                            <input id="newtag-input{{tag.name}}" type="text" value="{{selectEventDetails[tag.name]}}" placeholder="Add tags">
-                        </div>
-
-
-                        <div class="form-group mt-2 p-0" ng-if="selectEventDetails.DOWNLOADABLE_ATTACHMENT && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='null' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!=' '">
-                            <label>Attachment Files</label>
-                            <ul style="list-style-type:none;margin:0;padding:0;margin-top:10px;">
-                                <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='public'"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
-                                <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='user' && selectEventDetails.IsAlreadyBooked == 'Y'"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
-                            </ul>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="div-flex div-list">
-                    <div class="d-flex justify-content-between align-items-center p-0">
-                        <h5 class="list-title mb-0" id="newtabuList"></h5>
-
                     </div>
 
-                    <label class="pr-2" style="margin-top: 20px; font-weight: 400;" ng-bind-html="selectEventDetails.description | safeHtml">
-                    </label>
+                    <div class="modal-body mt-4" id="eventModalBody" ng-show="eventType=='EVENT'">
+                        <div style="display:none">
+                            <div class="event-detail div-flex">
+                                <div class="div-flex">
+                                    <div class="title">
 
-                    <ol id="newtabuListUl">
-                    </ol>
-                    <label id="labelWaiting"></label>
-                    <ul id="newtabuListUlWaiting">
-                    </ul>
+                                        <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
+                                            <div style="display:block" class="titleContainer">
+                                                <p class="title1" style="font-weight: 600; font-size: 16px;"> {{d.formTitle}}</p>
+                                            </div>
+                                        </div>
 
-                </div>
-                <div class="form-group mt-2 p-0" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IS_UPLOAD_REQUIRED=='Y'
-                         && (selectEventDetails.UPLOAD_TIME=='ANYTIME' || selectEventDetails.UPLOAD_TIME=='AFTER')">
-                    <div class="form-group mt-2 p-0">
-                        <label for="SELECT_DOWNLOADABLE_ATTACHMENT">Upload Attachments</label>
-                        <input type="file" style="width: 100%; max-width: 100%;" name="SELECT_DOWNLOADABLE_ATTACHMENT" class="form-control" onchange="angular.element(this).scope().validateForm('SELECT_DOWNLOADABLE_ATTACHMENT',false)" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx" multiple id="SELECT_DOWNLOADABLE_ATTACHMENT" />
-                        <span id="fileError2" style="color:red" class="error-message"></span><br>
-                        <span id="fileSuccess" class="text-success"></span>
-                    </div>
-                    <input type="hidden" ng-model="selectEventDetails.ASSESSMENT_FILES" value="" id="DOWNLOADABLE_ATTACHMENT_FILES" />
-                    <input type="hidden" ng-model="selectEventDetails.ASSESSMENT_FILES_LIST" value="" id="DOWNLOAD_FILE_LIST" />
-
-                    <div class="form-group mt-2 p-0">
-                        <button type="button" onclick="angular.element(this).scope().uploadFiles(true)" id="EventUploadBtn2" class="btn btn-primary disable" disabled>Upload</button>
-                    </div>
-
-                    <ul>
-                        <li style="font-weight:600" ng-repeat="item in selectEventDetails.ASSESSMENT_FILES_LIST_DATA">
-                            <a ng-href="{{item.url}}" target="_blank">{{item.name}}</a>
-                            <button class="btn btn-link" ng-click="selectedEventRemoveFiles($index)"><i class="fa fa-times-circle"></i></button>
-                        </li>
-                    </ul>
-
-                </div>
-
-            </div>
-
-            <div class="modal-body pt-0" id="courseModalBody" ng-if="eventType=='COURSE'">
-                <div>
-                    <label class="lbl-already-booked" ng-if="courseEventsList[(courseEventsList.length-1)].Value[0].IsBooked == 'Y'">You have already booked this course!</label>
-                </div>
-                <div class="event-detail div-flex">
-                    <div class="div-flex">
-                        <div class="title">
-
-                            <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
-                                <div style="display:block" class="titleContainer">
-                                    <p class="title1" style="font-weight:bold; font-size: 16px;"> {{d.formTitle}}</p>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="div-flex div-list" ng-if="selectEventDetails.description != '' && selectEventDetails.description != null && selectEventDetails.description != ' ' && selectEventDetails.description != undefined">
-                            <label style="font-weight:bold; font-size: 16px;">Description</label>
-
-                            <label class="pr-2" style="margin-top: 20px; font-weight: 400;" ng-bind-html="selectEventDetails.description | safeHtml">
-                            </label>
-                        </div>
-
-                        <hr />
-
-                        <div class="form-group mt-2 p-0">
-
-                            <label style="font-size: 16px;">Events:</label>
-                            <br />
-                            <div class="events-list-container" id="events-list-container">
-                                <div class="events-list-block" ng-repeat="item in courseEventsList track by $index" ng-class="{'old-session': item.Value[0].IsPreviousSession == 'Y'}" id="{{'event_' + (item.Value[0].IsPreviousSession)}}">
-                                    <div class="event-tracker">
-                                        <i ng-if="item.Value[0].IsPreviousSession == 'N'" class="fa fa-circle-o" aria-hidden="true"></i>
-                                        <i ng-if="item.Value[0].IsPreviousSession == 'Y'" style="color:grey;" class="fa fa-circle-o" aria-hidden="true"></i>
                                     </div>
-                                    <div class="event-tracker-line"><div></div></div>
-                                    <div class="event-detail">
-                                        <label>{{item.Key}}</label>
-                                        <ul>
-                                            <li ng-repeat="event in item.Value">
-                                                <div>{{event.start}} - {{event.end}}</div>
-                                                <div style="margin-top: 12px; text-align:left;">
-                                                    <button class="btn btn-primary public-primary" style="border-radius: 50px;" ng-if="event.ATTEND == 'Y'" ng-click="AttendSession(event.Id, 'NORMAL')">Attend</button>
-                                                    <img src="~/assets/img/QR_CODE_LOGO.png" ng-if="event.ATTEND == 'Y'" ng-click="AttendSession(event.TransactionId, 'QR')" style="height: 32px; width: 32px;" />
-                                                </div>
-                                            </li>
+
+
+                                    <div class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
+                                    <div class="{{selectEventDetails.customDate}}">{{selectEventDetails.customTime}}</div>
+
+                                    <input value="{{selectEventDetails.Id}}" id="newtag-inputHidden" type="hidden">
+
+                                    <div ng-repeat="tag in totalSelectListTagify">
+                                        <input value="{{selectEventDetails[tag.name]}}" id="newtag-inputHidden{{tag.name}}" type="hidden">
+                                        <input value="{{tag.name}}" id="newtag-inputHidden{{selectEventDetails.Id}}" type="hidden">
+                                        <input id="newtag-input{{tag.name}}" type="text" value="{{selectEventDetails[tag.name]}}" placeholder="Add tags">
+                                    </div>
+
+
+                                    <div class="form-group mt-2 p-0" ng-if="selectEventDetails.DOWNLOADABLE_ATTACHMENT && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='null' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!=' '">
+                                        <label>Attachment Files</label>
+                                        <ul style="list-style-type:none;margin:0;padding:0;margin-top:10px;">
+                                            <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='public'"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
+                                            <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='user' && selectEventDetails.IsAlreadyBooked == 'Y'"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
                                         </ul>
                                     </div>
+
                                 </div>
                             </div>
-                        </div>
+                            <div class="div-flex div-list">
+                                <div class="d-flex justify-content-between align-items-center p-0">
+                                    <h5 class="list-title mb-0" id="newtabuList"></h5>
 
-                        <hr />
-                        <div class="form-group mt-2 p-0" ng-if="selectEventDetails.DOWNLOADABLE_ATTACHMENT && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='null' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!=' '">
+                                </div>
 
-                            <label>Attachment Files</label>
+                                <label class="pr-2" style="margin-top: 20px; font-weight: 400;" ng-bind-html="selectEventDetails.description | safeHtml">
+                                </label>
 
-                            <ul style="padding:0" class="already-uploaded-ul">
-                                <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='public'">
-                                    <a ng-href="{{item.url}}" target="_blank" title="{{item.name}}"><img src="~/assets/css/images/attachment-img.PNG" /></a>
-                                    <div title="{{item.name}}" class="attachment-name">{{item.name}}</div>
-                                </li>
+                                <ol id="newtabuListUl">
+                                </ol>
+                                <label id="labelWaiting"></label>
+                                <ul id="newtabuListUlWaiting">
+                                </ul>
 
-                                <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='user' && selectEventDetails.IsAlreadyBooked == 'Y'">
-                                    <a ng-href="{{item.url}}" target="_blank" title="{{item.name}}"><img src="~/assets/css/images/attachment-img.PNG" /></a>
-                                    <div title="{{item.name}}" class="attachment-name">{{item.name}}</div>
-                                </li>
-                            </ul>
-
-                        </div>
-
-                    </div>
-                </div>
-                
-                <div class="form-group mt-2 p-0" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IS_UPLOAD_REQUIRED=='Y'
+                            </div>
+                            <div class="form-group mt-2 p-0" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IS_UPLOAD_REQUIRED=='Y'
                          && (selectEventDetails.UPLOAD_TIME=='ANYTIME' || selectEventDetails.UPLOAD_TIME=='AFTER')">
-                    <div class="form-group mt-2 p-0">
-                        <label for="SELECT_DOWNLOADABLE_ATTACHMENT">Upload Attachments</label>
-                        <input type="file" name="SELECT_DOWNLOADABLE_ATTACHMENT" class="form-control" onchange="angular.element(this).scope().validateForm('SELECT_DOWNLOADABLE_ATTACHMENT',false)" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx" multiple id="SELECT_DOWNLOADABLE_ATTACHMENT" />
-                        <span id="fileError2" style="color:red" class="error-message"></span><br>
-                        <span id="fileSuccess" class="text-success"></span>
-                    </div>
-                    <input type="hidden" ng-model="selectEventDetails.ASSESSMENT_FILES" value="" id="DOWNLOADABLE_ATTACHMENT_FILES" />
-                    <input type="hidden" ng-model="selectEventDetails.ASSESSMENT_FILES_LIST" value="" id="DOWNLOAD_FILE_LIST" />
-
-                    <div class="form-group mt-2 p-0">
-                        <button type="button" onclick="angular.element(this).scope().uploadFiles(true)" id="EventUploadBtn2" class="btn btn-primary disable" disabled>Upload</button>
-                    </div>
-
-                    <ul>
-                        <li style="font-weight:600" ng-repeat="item in selectEventDetails.ASSESSMENT_FILES_LIST_DATA">
-                            <a ng-href="{{item.url}}" target="_blank">{{item.name}}</a>
-                            <button class="btn btn-link" ng-click="selectedEventRemoveFiles($index)"><i class="fa fa-times-circle"></i></button>
-                        </li>
-                    </ul>
-
-                </div>
-
-
-                <br />
-
-            </div>
-
-            <div class="modal-body" id="serviceModalBody" ng-if="eventType=='SERVICE'">
-                <div class="event-detail div-flex">
-                    <div class="div-flex">
-                        <div class="title">
-                            <label class="pr-2" style=" font-weight: 400;" ng-bind-html="selectEventDetails.description | safeHtml">
-                            </label>
-                            <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
-                                <div style="display:block" class="titleContainer">
-                                    <p class="title1" style="font-weight:bold; font-size: 16px;"> {{d.formTitle}}</p>
+                                <div class="form-group mt-2 p-0">
+                                    <label for="SELECT_DOWNLOADABLE_ATTACHMENT">Upload Attachments</label>
+                                    <input type="file" style="width: 100%; max-width: 100%;" name="SELECT_DOWNLOADABLE_ATTACHMENT" class="form-control" onchange="angular.element(this).scope().validateForm('SELECT_DOWNLOADABLE_ATTACHMENT',false)" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx" multiple id="SELECT_DOWNLOADABLE_ATTACHMENT" />
+                                    <span id="fileError2" style="color:red" class="error-message"></span><br>
+                                    <span id="fileSuccess" class="text-success"></span>
                                 </div>
+                                <input type="hidden" ng-model="selectEventDetails.ASSESSMENT_FILES" value="" id="DOWNLOADABLE_ATTACHMENT_FILES" />
+                                <input type="hidden" ng-model="selectEventDetails.ASSESSMENT_FILES_LIST" value="" id="DOWNLOAD_FILE_LIST" />
+
+                                <div class="form-group mt-2 p-0">
+                                    <button type="button" onclick="angular.element(this).scope().uploadFiles(true)" id="EventUploadBtn2" class="btn btn-primary disable" disabled>Upload</button>
+                                </div>
+
+                                <ul>
+                                    <li style="font-weight:600" ng-repeat="item in selectEventDetails.ASSESSMENT_FILES_LIST_DATA">
+                                        <a ng-href="{{item.url}}" target="_blank">{{item.name}}</a>
+                                        <button class="btn btn-link" ng-click="selectedEventRemoveFiles($index)"><i class="fa fa-times-circle"></i></button>
+                                    </li>
+                                </ul>
+
                             </div>
                         </div>
-                        <div ng-if="!selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
-                        <div ng-if="!selectEventDetails.allDay">{{selectEventDetails.customTime}}</div>
+                        <form name="myForm" class="content tab-content" id="customFormNew" autocomplete="off">
 
-                        <div ng-if="selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
+                            <!--{{myForm.$valid}}-->
+                            <button type="submit" class="fv-hidden-submit" style="display: none; width: 0px; height: 0px;"></button>
 
-                        <input value="{{selectEventDetails.Id}}" id="newtag-inputHidden" type="hidden">
-                        <div ng-repeat="tag in totalSelectListTagify">
-                            <input value="{{selectEventDetails[tag.name]}}" id="newtag-inputHidden{{tag.name}}" type="hidden">
-                            <input value="{{tag.name}}" id="newtag-inputHidden{{selectEventDetails.Id}}" type="hidden">
-                            <input id="newtag-input{{tag.name}}" type="text" value="{{selectEventDetails[tag.name]}}" placeholder="Add tags">
+                            <div ng-bind-html="htmlContentData | to_trustedControl"></div>
+
+                        </form>
+                        <!--<div id="service-div"></div>-->
+                    </div>
+
+                    <div class="modal-body pt-0" id="courseModalBody" ng-if="eventType=='COURSE'">
+                        <div>
+                            <label class="lbl-already-booked" ng-if="courseEventsList[(courseEventsList.length-1)].Value[0].IsBooked == 'Y'">You have already booked this course!</label>
+                        </div>
+                        <div class="event-detail div-flex">
+                            <div class="div-flex">
+                                <div class="title">
+
+                                    <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
+                                        <div style="display:block" class="titleContainer">
+                                            <p class="title1" style="font-weight:bold; font-size: 16px;"> {{d.formTitle}}</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="div-flex div-list" ng-if="selectEventDetails.description != '' && selectEventDetails.description != null && selectEventDetails.description != ' ' && selectEventDetails.description != undefined">
+                                    <label style="font-weight:bold; font-size: 16px;">Description</label>
+
+                                    <label class="pr-2" style="margin-top: 20px; font-weight: 400;" ng-bind-html="selectEventDetails.description | safeHtml">
+                                    </label>
+                                </div>
+
+                                <hr />
+
+                                <div class="form-group mt-2 p-0">
+
+                                    <label style="font-size: 16px;">Events:</label>
+                                    <br />
+                                    <div class="events-list-container" id="events-list-container">
+                                        <div class="events-list-block" ng-repeat="item in courseEventsList track by $index" ng-class="{'old-session': item.Value[0].IsPreviousSession == 'Y'}" id="{{'event_' + (item.Value[0].IsPreviousSession)}}">
+                                            <div class="event-tracker">
+                                                <i ng-if="item.Value[0].IsPreviousSession == 'N'" class="fa fa-circle-o" aria-hidden="true"></i>
+                                                <i ng-if="item.Value[0].IsPreviousSession == 'Y'" style="color:grey;" class="fa fa-circle-o" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="event-tracker-line"><div></div></div>
+                                            <div class="event-detail">
+                                                <label>{{item.Key}}</label>
+                                                <ul>
+                                                    <li ng-repeat="event in item.Value">
+                                                        <div>{{event.start}} - {{event.end}}</div>
+                                                        <div style="margin-top: 12px; text-align:left;">
+                                                            <button class="btn btn-primary public-primary" style="border-radius: 50px;" ng-if="event.ATTEND == 'Y'" ng-click="AttendSession(event.Id, 'NORMAL')">Attend</button>
+                                                            <img src="~/assets/img/QR_CODE_LOGO.png" ng-if="event.ATTEND == 'Y'" ng-click="AttendSession(event.TransactionId, 'QR')" style="height: 32px; width: 32px;" />
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr />
+                                <div class="form-group mt-2 p-0" ng-if="selectEventDetails.DOWNLOADABLE_ATTACHMENT && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='null' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!=' '">
+
+                                    <label>Attachment Files</label>
+
+                                    <ul style="padding:0" class="already-uploaded-ul">
+                                        <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='public'">
+                                            <a ng-href="{{item.url}}" target="_blank" title="{{item.name}}"><img src="~/assets/css/images/attachment-img.PNG" /></a>
+                                            <div title="{{item.name}}" class="attachment-name">{{item.name}}</div>
+                                        </li>
+
+                                        <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='user' && selectEventDetails.IsAlreadyBooked == 'Y'">
+                                            <a ng-href="{{item.url}}" target="_blank" title="{{item.name}}"><img src="~/assets/css/images/attachment-img.PNG" /></a>
+                                            <div title="{{item.name}}" class="attachment-name">{{item.name}}</div>
+                                        </li>
+                                    </ul>
+
+                                </div>
+
+                            </div>
                         </div>
 
-                        <div class="form-group mt-2 p-0" ng-if="selectEventDetails.DOWNLOADABLE_ATTACHMENT && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='null' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!=' '">
-                            <ul style="list-style-type:none;margin:0;padding:0;margin-top:10px;">
-                                <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='public'"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
+                        <div class="form-group mt-2 p-0" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IS_UPLOAD_REQUIRED=='Y'
+                         && (selectEventDetails.UPLOAD_TIME=='ANYTIME' || selectEventDetails.UPLOAD_TIME=='AFTER')">
+                            <div class="form-group mt-2 p-0">
+                                <label for="SELECT_DOWNLOADABLE_ATTACHMENT">Upload Attachments</label>
+                                <input type="file" name="SELECT_DOWNLOADABLE_ATTACHMENT" class="form-control" onchange="angular.element(this).scope().validateForm('SELECT_DOWNLOADABLE_ATTACHMENT',false)" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx" multiple id="SELECT_DOWNLOADABLE_ATTACHMENT" />
+                                <span id="fileError2" style="color:red" class="error-message"></span><br>
+                                <span id="fileSuccess" class="text-success"></span>
+                            </div>
+                            <input type="hidden" ng-model="selectEventDetails.ASSESSMENT_FILES" value="" id="DOWNLOADABLE_ATTACHMENT_FILES" />
+                            <input type="hidden" ng-model="selectEventDetails.ASSESSMENT_FILES_LIST" value="" id="DOWNLOAD_FILE_LIST" />
+
+                            <div class="form-group mt-2 p-0">
+                                <button type="button" onclick="angular.element(this).scope().uploadFiles(true)" id="EventUploadBtn2" class="btn btn-primary disable" disabled>Upload</button>
+                            </div>
+
+                            <ul>
+                                <li style="font-weight:600" ng-repeat="item in selectEventDetails.ASSESSMENT_FILES_LIST_DATA">
+                                    <a ng-href="{{item.url}}" target="_blank">{{item.name}}</a>
+                                    <button class="btn btn-link" ng-click="selectedEventRemoveFiles($index)"><i class="fa fa-times-circle"></i></button>
+                                </li>
+                            </ul>
+
+                        </div>
+
+
+                        <br />
+
+                    </div>
+
+                    <div class="modal-body" id="serviceModalBody" ng-if="eventType=='SERVICE'">
+                        <div class="event-detail div-flex">
+                            <div class="div-flex">
+                                <div class="title">
+                                    <label class="pr-2" style=" font-weight: 400;" ng-bind-html="selectEventDetails.description | safeHtml">
+                                    </label>
+                                    <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
+                                        <div style="display:block" class="titleContainer">
+                                            <p class="title1" style="font-weight:bold; font-size: 16px;"> {{d.formTitle}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-if="!selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
+                                <div ng-if="!selectEventDetails.allDay">{{selectEventDetails.customTime}}</div>
+
+                                <div ng-if="selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
+
+                                <input value="{{selectEventDetails.Id}}" id="newtag-inputHidden" type="hidden">
+                                <div ng-repeat="tag in totalSelectListTagify">
+                                    <input value="{{selectEventDetails[tag.name]}}" id="newtag-inputHidden{{tag.name}}" type="hidden">
+                                    <input value="{{tag.name}}" id="newtag-inputHidden{{selectEventDetails.Id}}" type="hidden">
+                                    <input id="newtag-input{{tag.name}}" type="text" value="{{selectEventDetails[tag.name]}}" placeholder="Add tags">
+                                </div>
+
+                                <div class="form-group mt-2 p-0" ng-if="selectEventDetails.DOWNLOADABLE_ATTACHMENT && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='null' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!=' '">
+                                    <ul style="list-style-type:none;margin:0;padding:0;margin-top:10px;">
+                                        <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='public'"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="div-flex div-list-bar"></div>
+                        <div class="div-flex div-list">
+                            <div class="d-flex justify-content-between align-items-center p-0">
+                                <h5 class="list-title mb-0" id="newtabuList"><strong id="strongFormName">0 Student in this Slot</strong></h5>
+
+                            </div>
+                            <ol id="newtabuListUl">
+                            </ol>
+                            <label id="labelWaiting"></label>
+                            <ul id="newtabuListUlWaiting">
                             </ul>
                         </div>
-
-                    </div>
-                </div>
-                <div class="div-flex div-list-bar"></div>
-                <div class="div-flex div-list">
-                    <div class="d-flex justify-content-between align-items-center p-0">
-                        <h5 class="list-title mb-0" id="newtabuList"><strong id="strongFormName">0 Student in this Slot</strong></h5>
-
-                    </div>
-                    <ol id="newtabuListUl">
-                    </ol>
-                    <label id="labelWaiting"></label>
-                    <ul id="newtabuListUlWaiting">
-                    </ul>
-                </div>
-                <div class="div-flex">
-                    <p style="font-weight:600">The white area is the available time. Please click on the available time to book.</p>
-                </div>
-
-                <div id="agenda-view2">
-                    <div class="calendar"></div>
-                </div>
-
-            </div>
-
-            <div class="modal fade" id="AdditionalDetailsFormModal" style="z-index: 2000;" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel5" aria-hidden="true">
-                <div class="modal-dialog modal-lg" style="width: 100%;" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Fill your details</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="div-flex">
+                            <p style="font-weight:600">The white area is the available time. Please click on the available time to book.</p>
                         </div>
-                        <div class="modal-body" style="padding-top: 0px;">
-                            <div id="service-div"></div>
+
+                        <div id="agenda-view2">
+                            <div class="calendar"></div>
+                        </div>
+
+                    </div>
+
+                    <div class="modal fade" id="AdditionalDetailsFormModal" style="z-index: 2000;" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel5" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" style="width: 100%;" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Fill your details</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body" style="padding-top: 0px;">
+                                    <!--<div id="service-div"></div>-->
+                                </div>
+                            </div>
+
                         </div>
                     </div>
-
                 </div>
             </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+
         </div>
     </div>
 
@@ -790,3 +1009,243 @@
 <script src="/fg-assets/lightbox/js/lightbox-2.6.min.js"></script>
 <script src="/Scripts/myscript/commonFunctions.js"></script>
 <script src="/Content/sidebar/js/sidebar-script.js"></script>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" rel="stylesheet" />
+<!--<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>-->
+
+<script src="fg-assets/js/bootstrap-datetimepicker.js"></script>
+<link rel="stylesheet" href="fg-assets/css/bootstrap-datetimepicker.css">
+<script src="fg-assets/js/jAutoCalc.js"></script>
+<script src="fg-assets/js/jqbtk.min.js"></script>
+<link rel="stylesheet" href="fg-assets/css/style.css">
+<script src="fg-assets/js/bootstrap-slider.js"></script>
+<link rel="stylesheet" href="fg-assets/captcha/MotionCAPTCHA/jquery.motionCaptcha.0.2.css">
+<link rel="stylesheet" href="fg-assets/css/quill.snow.css">
+<script type="text/javascript" src="fg-assets/js/quill.js"></script>
+<!-- <script src="fg-assets/js/qrcode.js"></script>
+<script src="fg-assets/js/jquery.qrcode.js"></script> -->
+<script src="Scripts/jquery.cascadingdropdown.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+        $(".delete-tabulator-row-hard").click(function (event) {
+            event.preventDefault();
+            var tabulatorID = $(this).data('tabulator');
+            var formID = $(this).data('reference-form-id');
+            var counter = 0;
+            var selectedRows = $("#" + tabulatorID).tabulator("getSelectedRows");
+
+            var confirm = window.confirm("Are you sure to delete the selected record(s)?");
+            if (confirm && selectedRows.length > 0) {
+                selectedRows.forEach(function (row) {
+                    var formGroupKey = row.getIndex();
+
+                    $.ajax({
+                        type: "POST",
+                        url: 'tempURLlink/form-generator/public/tempRecordDelete/' + formGroupKey,
+                        data: { formId: formID },
+                        async: false,
+                        success: function (deleted) {
+                            if (deleted == 1) {
+                                $("#" + tabulatorID).tabulator("deselectRow", formGroupKey);
+                                row.delete();
+                                counter++;
+                            }
+                        }
+                    });
+                });
+            }
+            if (counter > 0) {
+                alert(counter + "@Resources.Resource.Recordsdeletedsuccessfully");
+                $("#" + tabulatorID).tabulator("redraw");
+            } else {
+                alert("Record(s) could not be deleted!");
+            }
+            setTabulatorCalc(tabulatorID);
+        });
+        if (getParameterByName('optid') != null) {
+            if (getParameterByName('optid') > 0) {
+                updatetable = $("#lblFormName").val().trim().replace('_EDIT', '');
+                $.ajax({
+                    url: '/FormMaster/GetTableData',
+                    type: "POST",
+                    data: { tableName: updatetable, optionalId: $('#hfIsOptId').val() },
+                    success: function (result) {
+                        console.log(result);
+                        $('#customForm :input').each(function () {
+                            $this = $(this);
+                            $.each(result[0], function (key, value) {
+
+
+                                if (key.trim() == $this.attr('id')) {
+                                    if ($this.parent().hasClass('date')) {
+                                        var date = new Date((parseInt(result[0][key].substr(6))))
+                                        date.setDate(date.getDate() + 1)
+                                        console.log(date.toString());
+
+                                        showdate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getUTCDate());
+                                        $this.val(showdate);
+                                    }
+                                    else
+                                        $this.val(result[0][key]);
+
+                                }
+
+                            });
+
+
+                        });
+
+
+
+
+                        $('select').not('#ddlLanguage').each(function () {
+                            $this = $(this);
+                            $.each(result[0], function (key, value) {
+
+                                if ($this.attr('name') != 'undefined') {
+                                    if (key.trim() == $this.attr('name').replace('[]', '')) {
+
+                                        $this.val(result[0][key]);
+
+                                    }
+                                }
+
+
+                            });
+
+
+
+
+
+                        });
+                    },
+                    error: function (err) {
+                        //alert(err.statusText);
+                    },
+                    complete: function () {
+                        DisableCtrls();
+                    }
+                });
+            }
+
+
+        }
+    });
+    function DisableCtrls() {
+        if ($("#hfIsOptId").val() > 0) {
+
+            $('#FormBody .form-group select,input[type=text],input[type=number],textarea').attr('readonly', 'readonly');
+            $('#FormBody .form-group select,input[type=text],input[type=number],textarea,.date').addClass('form-control editable-area')
+            $('#FormBody .form-group select').attr('disabled', 'disabled');
+            $('#FormBody .form-group .date input[type=text]').attr('disabled', 'disabled');
+            $('#FormBody .form-group  input[type=email]').attr('disabled', 'disabled');
+            $('#FormBody .form-group  input[type=password]').attr('disabled', 'disabled');
+            $('#btn_save').removeClass('btn-success').addClass('btn-edit');
+            $('#btn_save').attr('value', '@Resources.Resource.Edit');
+        }
+
+    }
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+    function enableBtn() {
+        window["capcha"] = true;
+    }
+
+    function HideYesChoceFields(YesChoceFields) {
+        var IDs = YesChoceFields.split(",");
+
+        for (let i = 0; i < IDs.length; i++) {
+            var ID = IDs[i];
+            $("#" + ID).hide();
+            $('label[for=' + ID + ']').hide();
+        }
+
+
+
+    }
+
+    function HideNoChoceFields(NoChoceFields) {
+        var IDs = NoChoceFields.split(",");
+        for (let i = 0; i < IDs.length; i++) {
+            var ID = IDs[i];
+            $("#" + ID).hide();
+            $('label[for=' + ID + ']').hide();
+        }
+
+
+        //$("#" + NoChoceFields).hide();
+        //$('label[for=' + NoChoceFields + ']').hide();
+
+    }
+
+    function YesChangeEvent(FieldId) {
+        if ($('#' + FieldId).is(':checked')) {
+            var YesChoiceId = $("#" + FieldId).attr('yeschoice_fields');
+            var NOChoiceId = $("#" + FieldId).attr('nochoice_fields');
+
+            var NochIDs = NOChoiceId.split(",");
+            var YeschIDs = YesChoiceId.split(",");
+
+            for (let i = 0; i < YeschIDs.length; i++) {
+                var ID = YeschIDs[i];
+                $("#" + ID).show();
+                $('label[for=' + ID + ']').show();
+            }
+
+            for (let i = 0; i < NochIDs.length; i++) {
+                var ID = NochIDs[i];
+                $("#" + ID).hide();
+                $('label[for=' + ID + ']').hide();
+            }
+
+
+        }
+
+
+    }
+
+    function NoChangeEvent(FieldId) {
+        if ($('#' + FieldId).is(':checked')) {
+            var YesChoiceId = $("#" + FieldId).attr('yeschoice_fields');
+            var NOChoiceId = $("#" + FieldId).attr('nochoice_fields');
+
+            var NochIDs = NOChoiceId.split(",");
+            var YeschIDs = YesChoiceId.split(",");
+
+            for (let i = 0; i < YeschIDs.length; i++) {
+                var ID = YeschIDs[i];
+                $("#" + ID).hide();
+                $('label[for=' + ID + ']').hide();
+            }
+
+            for (let i = 0; i < NochIDs.length; i++) {
+                var ID = NochIDs[i];
+                $("#" + ID).show();
+                $('label[for=' + ID + ']').show();
+            }
+
+
+        }
+
+
+    }
+
+
+
+</script>
+<script type="text/javascript" src="fg-assets/formValidation/js/formValidation.min.js"></script>
+<script type="text/javascript" src="fg-assets/formValidation/js/framework/bootstrap.min.js"></script>

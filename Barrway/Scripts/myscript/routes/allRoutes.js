@@ -19,7 +19,11 @@
         $locationProvider.hashPrefix('');
         // use the HTML5 History API 
         var uuid = uuidv4();
-        //$urlRouterProvider.otherwise('/home');
+        let _href = window.location.href.toLowerCase();
+        if ((_href.includes("/useradmin") ||  _href.includes("useradmin/index")) && !_href.includes("#/")) {
+            $urlRouterProvider.otherwise('/userdashboard');
+        }
+        
         $stateProvider.state('login', {
             url: '/login',
             onEnter: function ($window) { $window.document.title = "Form Builder-Login"; },
