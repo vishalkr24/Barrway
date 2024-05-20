@@ -2453,6 +2453,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                                       ,[DISPLAY_MAX_TIME] = '{model.DISPLAY_MAX_TIME}'
                                       ,[DEFAULT_RESOURCE] = '{model.DEFAULT_RESOURCE}'
                                       ,[DEFAULT_DATE] = '{model.DEFAULT_DATE}'
+                                      ,[BOOKING_DEADLINE] = '{model.BOOKING_DEADLINE??"0"}'
                                       ,[NEED_ADDITIONAL_FORM] = '{model.NEED_ADDITIONAL_FORM}'
                                       ,[ALLOW_OVERLAP] = '{model.ALLOW_OVERLAP}'
                                       ,[DEFAULT_CALENDAR_VIEW] = '{model.DEFAULT_CALENDAR_VIEW}'

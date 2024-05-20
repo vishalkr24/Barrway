@@ -1487,6 +1487,8 @@
 
                             <div ng-if="selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
 
+                            <div>Booking deadline: {{moment(selecteEventDetails.BOOKING_DEADLINE).format('DD-MM-YYYY')}}</div>
+
                             <input value="{{selectEventDetails.Id}}" id="newtag-inputHidden" type="hidden">
                             <div ng-repeat="tag in totalSelectListTagify">
                                 <input value="{{selectEventDetails[tag.name]}}" id="newtag-inputHidden{{tag.name}}" type="hidden">
@@ -1821,6 +1823,18 @@
                             });
                         } else {
                             var eventData = $scope.selectEventDetails;
+
+                            if (moment($scope.selectEventDetails.BOOKING_DEADLINE) < moment(new date())) {
+
+                                swal({
+                                    icon: "error",
+                                    title: "Regret",
+                                    text: "Booking deadline is crossed. Can't book this event now."
+                                });
+
+                                return;
+                            }
+
                             $.ajax({
                                 url: "/Useradmin/GetCurrentPackageDetails",
                                 type: "GET",
@@ -1831,21 +1845,19 @@
                                 },
                                 async: false,
                                 success: function (response) {
-
-
                                     debugger;
                                     const wrapper = document.createElement('div');
                                     wrapper.innerHTML = `<div>
-                                                                                                                                                            ${eventData.customDate}
-                                                                                                                                                        </div>
-                                                                                                                                                        <div>
-                                                                                                                                                            ${eventData.customTime}
-                                                                                                                                                        </div>
-                                                                                                                                                        <div>${eventData.customTitleSplit[2]}</div><br />
-                                                                                                                                                        <div>${eventData.customTitleSplit[1]}</div>
-                                                                                                                                                        <div>${eventData.customTitleSplit[0]}</div>
-                                                                                                                                                        ${((response.Data != null) ? `<div>${response.Data} credits</div>` : "")}<br />
-                                                                                                                                                        <h4 style="color:red">${response.Message}</h4>`;
+                                                              ${eventData.customDate}
+                                                         </div>
+                                                         <div>
+                                                              ${eventData.customTime}
+                                                         </div>
+                                                         <div>${eventData.customTitleSplit[2]}</div><br />
+                                                         <div>${eventData.customTitleSplit[1]}</div>
+                                                         <div>${eventData.customTitleSplit[0]}</div>
+                                                            ${((response.Data != null) ? `<div>${response.Data} credits</div>` : "")}<br />
+                                                         <h4 style="color:red">${response.Message}</h4>`;
 
                                     let buttonsWrap = {
                                         cancel: "Cancel",

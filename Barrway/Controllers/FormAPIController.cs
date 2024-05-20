@@ -666,9 +666,6 @@ namespace Barrway.Controllers
                         }
                     }
                 }
-                
-                
-
             }
 
             if (result != null)
@@ -714,9 +711,29 @@ namespace Barrway.Controllers
                             }
                         }
                     }
+
+                    if (!string.IsNullOrEmpty(calendarDetails["BOOKING_DEADLINE"]?.ToString()))
+                    {
+                        int days = 0;
+
+                        try
+                        {
+                            days = Convert.ToInt32(calendarDetails["BOOKING_DEADLINE"].ToString());
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+
+                        foreach (var evt in result.events)
+                        {
+                            days -= 1;
+                            DateTime deadline = Convert.ToDateTime(evt["start"].ToString()).AddDays((days*-1));
+                            evt.Add("BOOKING_DEADLINE", new DateTime(deadline.Year, deadline.Month, deadline.Day, 23, 59, 0));
+                        }
+                    }
                 }
             }
-
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
