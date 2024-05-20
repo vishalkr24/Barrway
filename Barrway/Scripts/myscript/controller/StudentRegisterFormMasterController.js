@@ -727,7 +727,9 @@
                     var ext = filename.substr(filename.lastIndexOf('.') + 1);
                     ext = (!DataService.isEmpty(ext) ? ext.toLowerCase() : ext);
                     if (ext == "jpg" || ext == "jpeg" || ext == "png") {
-                        return "<img src='" + pathImage + "' width='150'>";
+
+                        let imgtag = "<img src='" + pathImage + "' width='150'>";
+                        return "<a href=" + pathImage + " download='' target='_blank'>" + imgtag + "</a>";
                     }
                     else {
                         var nameddd = filename.substring(filename.lastIndexOf('/') + 1);

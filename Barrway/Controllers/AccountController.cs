@@ -96,11 +96,15 @@ namespace Barrway.Controllers
                     TempData["VERIFICATION"] = "Pending";
                     TempData["VERIFICATION_EMAIL"] = model.Email;
 
-                    TempData["UpdateEmailSussess"] = "varification email has been sent to " + model.Email + " please fallow instructions !";
+                    TempData["UpdateEmailSussess"] = $"A verification email has been sent to {model.Email}. Please follow the instructions.";
 
                     model.Email = "";
-                    return View(model);                  
+                    ModelState.Clear();
+                    return View();
+                }
+                else {
 
+                    ViewBag.ErrorMessage = linkResult.Message;
                 }
             }
             else
@@ -1170,10 +1174,8 @@ namespace Barrway.Controllers
             var result = await authService.GetToken(model.token);
             if (result.Data["IS_ACTIVE"] != "YES")
             {
-                TempData["failed"] = "Reset Password Link Expired!";
-                return View(model);
+                TempData["failed"] = "Reset password link expired!";
             }
-
 
             if (result.Status && (result.Data as IDictionary<string, object>)["IS_ACTIVE"]?.ToString() == "YES")
             {
@@ -1185,38 +1187,32 @@ namespace Barrway.Controllers
 
                     if (DateTimeUtility.Now().Subtract(createdTime).TotalHours > 24)
                     {                       
-                        TempData["ResetError"] = "Reset Password Link Expired!";
-                        return View(model);
+                        TempData["failed"] = "Reset password link expired!";
                     }
-                    //model.newpassword = Aes256CbcEncrypter.Encrypt(model.newpassword);
                     result = await authService.ResetPassword(model.token, result.Data["USER_ID"].ToString(), model.newpassword);
                     if (result.Status)
                     {
                         ModelState.Clear();
-                        TempData["Resetsuccess"] = "Password updated successfully !";
-                        return View();
+                        TempData["Resetsuccess"] = "Password updated successfully!";
                     }
                     else
                     {
                         ModelState.Clear();
                         ModelState.AddModelError("", result.Message);
-                        return View(model);
                     }
-                    
                 }
                 else
                 {
                     ModelState.Clear();                   
-                    TempData["ResetError"] = "Invalid activation link!";
-                    return View(model);
+                    TempData["failed"] = "Invalid activation link!";
                 }
             }
             else
             {
                 ModelState.Clear();
-                TempData["ResetError"] = "Invalid activation link!";
-                return View(model);
+                TempData["failed"] = "Invalid activation link!";
             }
+            return View(model);
         }
 
 
@@ -1305,7 +1301,6 @@ namespace Barrway.Controllers
         }
 
         #endregion
-
 
         #region Helpers
         // Used for XSRF protection when adding external logins

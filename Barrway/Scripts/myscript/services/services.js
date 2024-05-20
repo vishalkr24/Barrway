@@ -830,7 +830,7 @@
                     console.log(formda)
                     $http({
                         cache: false,
-                        url: this.apiurl + "/" + col + "?reqType=" + reqType + "&uid=" + uidParam + "&appId=" + appId + "&appTitle=" + appTitle + "&formId=" + formId + "&formTitle=" + FormTitle + "&isImportData=" + isImportData + "&userId=" + userId + "&actionType=" + actionType + "",
+                        url: this.endpoint + "/" + col + "?reqType=" + reqType + "&uid=" + uidParam + "&appId=" + appId + "&appTitle=" + appTitle + "&formId=" + formId + "&formTitle=" + FormTitle + "&isImportData=" + isImportData + "&userId=" + userId + "&actionType=" + actionType + "",
                         method: "POST",
                         data: formda,
                         transformRequest: angular.identity,
