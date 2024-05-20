@@ -532,17 +532,6 @@
 
 <body class="d-flex align-items-center min-h-100" style="background: linear-gradient(to right, #e2476c, #3fbfc7);">
 
-    <script>
-        $(document).ready(function () {
-            localStorage.removeItem("COMPANY_ID");
-            localStorage.removeItem("COMPANY_CODE");
-            localStorage.removeItem("COMPANY_NAME_ENGLISH");
-            localStorage.removeItem("COMPANY_NAME_CHINESE");
-            localStorage.removeItem("COMPANY_CATEGORY_ID");
-            localStorage.removeItem("COMPANY_SUB_CATEGORY_ID");
-        });
-    </script>
-
     <section class="login">
         <div class="container">
             <div class="row">
@@ -555,17 +544,12 @@
                                 </div>
 
                                 <div class="register">
-                                    <h3>Reset password</h3>
-                                    
                                     <br /><br /><br />
                                     <div class="register-btn text-center">
-                                        @if (TempData["Resetsuccess"] != null)
-                                        {
-                                            <p style=" color: green; ">@TempData["Resetsuccess"]</p>
-                                        }
+                                       
                                         @if (TempData["failed"] != null)
                                         {
-                                            <p style=" color: red; ">@TempData["failed"]</p>
+                                            <h3 style=" color: red; ">@TempData["failed"]</h3>
                                         }
 
 

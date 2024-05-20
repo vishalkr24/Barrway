@@ -83,7 +83,7 @@ namespace Barrway.Controllers
             return View();
         }
 
-        public async Task<ActionResult> SendPasswordResetLink(DTO.AuthViewModel.ForgotPasswordViewModel model)
+        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
             var userData = await authService.GetUserByEmail(model.Email);
 
@@ -99,17 +99,16 @@ namespace Barrway.Controllers
                     TempData["UpdateEmailSussess"] = "varification email has been sent to " + model.Email + " please fallow instructions !";
 
                     model.Email = "";
-                    return View(model);
-                    //return RedirectToAction("EmailVerification", "Account");
+                    return View(model);                  
 
-                }// code to send verfication link
+                }
             }
             else
             {
                 ViewBag.ErrorMessage = "Enter a valid email id";
             }
 
-            return View("ForgotPassword");
+            return View(model);
         }
 
         private void LogoutAllSession()
@@ -1025,7 +1024,7 @@ namespace Barrway.Controllers
         }
 
 
-        public ActionResult Error()
+        public ActionResult InvalidUrl()
         {
 
             return View();
@@ -1036,7 +1035,7 @@ namespace Barrway.Controllers
         {
             if (string.IsNullOrEmpty(token))
             {
-                TempData["failed"] = "Invalid Request";
+                TempData["failed"] = "invalid Request";
                 return View();
             }
 
@@ -1106,43 +1105,59 @@ namespace Barrway.Controllers
             if (string.IsNullOrEmpty(token))
             {
                 TempData["failed"] = "Invalid Request";
-                return View(model);
+                //return View(model);
+                return RedirectToAction("InvalidUrl");
             }
             var result = await authService.GetToken(token);
 
-            if(result.Data["IS_ACTIVE"] != "YES")
+            if(result.Status == true)
             {
-                TempData["failed"] = "Reset Password Link Expired!";
-                return View(model);
-            }
-
-            if (result.Status && (result.Data as IDictionary<string, object>)["IS_ACTIVE"]?.ToString() == "YES")
-            {
-                var tokeData = result.Data as IDictionary<string, object>;
-                var _createdTime = tokeData["TOKEN_TIME"]?.ToString();
-                DateTime createdTime;
-                if (DateTime.TryParse(_createdTime, out createdTime))
+                if (result.Data["IS_ACTIVE"] != "YES")
                 {
+                    TempData["failed"] = "Invalid Request!";
+                    return RedirectToAction("InvalidUrl");
+                }
 
-                    if (DateTimeUtility.Now().Subtract(createdTime).TotalHours > 24)
+                if (result.Status && (result.Data as IDictionary<string, object>)["IS_ACTIVE"]?.ToString() == "YES")
+                {
+                    var tokeData = result.Data as IDictionary<string, object>;
+                    var _createdTime = tokeData["TOKEN_TIME"]?.ToString();
+                    DateTime createdTime;
+                    if (DateTime.TryParse(_createdTime, out createdTime))
                     {
-                        TempData["failed"] = "Reset Password Link Expired!";
+
+                        if (DateTimeUtility.Now().Subtract(createdTime).TotalHours > 24)
+                        {
+                            //TempData["failed"] = "Reset Password Link Expired!";
+                            //return View(model);
+                            TempData["failed"] = "Invalid Request!";
+                            return RedirectToAction("InvalidUrl");
+                        }
+
                         return View(model);
-                    }                    
-                   
-                    return View(model);
+                    }
+                    else
+                    {
+                        //TempData["failed"] = "Invalid Token!";
+                        //return View(model);
+
+                        TempData["failed"] = "Invalid Request!";
+                        return RedirectToAction("InvalidUrl");
+                    }
                 }
                 else
                 {
-                    TempData["failed"] = "Invalid Token!";
-                    return View(model);
+                    TempData["failed"] = "Invalid Request !";                    
+                    return RedirectToAction("InvalidUrl");
                 }
             }
             else
             {
-                TempData["failed"] = "Invalid activation link!";
-                return View(model);
+                TempData["failed"] = "Invalid Request !";
+                return RedirectToAction("InvalidUrl");
             }
+
+
         }
 
         [HttpPost]
@@ -1178,7 +1193,7 @@ namespace Barrway.Controllers
                     if (result.Status)
                     {
                         ModelState.Clear();
-                        TempData["Resetsuccess"] = "password reset successfully. !";
+                        TempData["Resetsuccess"] = "Password updated successfully !";
                         return View();
                     }
                     else
