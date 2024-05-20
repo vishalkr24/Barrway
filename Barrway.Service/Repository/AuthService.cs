@@ -25,7 +25,7 @@ namespace Barrway.Service.Repository
         private readonly IMapper mapper;
         private readonly ISqlFunction sqlFunction;
         private readonly IFormAPIRepository formAPIRepository;
-       
+
         private readonly RestClient _client;
         private readonly string _url = ConfigurationManager.AppSettings["webapibaseurl"];
 
@@ -66,7 +66,7 @@ namespace Barrway.Service.Repository
                     if (user["IS_ACTIVE"]?.ToString() == "Y")
                     {
                         return new AddUpdateDelete<IDictionary<string, object>>() { Status = true, Message = "Success", Data = user };
-                        
+
                     }
                     else
                     {
@@ -112,7 +112,7 @@ namespace Barrway.Service.Repository
 
                     if (user["IS_ACTIVE"]?.ToString() == "Y")
                     {
-                        
+
                         if (isToken)
                         {
                             return new AddUpdateDelete<IDictionary<string, object>>() { Status = true, Message = "Success", Data = user };
@@ -129,7 +129,7 @@ namespace Barrway.Service.Repository
                                 return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Access denied!!" };
                             }
                         }
-                        else if(RoleId == 2)
+                        else if (RoleId == 2)
                         {
                             if (user["ROLE_NAME"].ToString().ToUpper() == "PUBLIC_USER")
                             {
@@ -145,7 +145,7 @@ namespace Barrway.Service.Repository
                             return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Something went wrong!!" };
                         }
 
-                        
+
                     }
                     else
                     {
@@ -168,7 +168,7 @@ namespace Barrway.Service.Repository
 
 
 
-        public async Task<AddUpdateDelete<IDictionary<string, object>>> GetUserbyPhone(string Phone,string countrycode, string password, int RoleId, bool isToken = false)
+        public async Task<AddUpdateDelete<IDictionary<string, object>>> GetUserbyPhone(string Phone, string countrycode, string password, int RoleId, bool isToken = false)
         {
             try
             {
@@ -435,7 +435,7 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> GetUser(string userID,FormRole formRole)
+        public async Task<AddUpdateDelete> GetUser(string userID, FormRole formRole)
         {
             try
             {
@@ -460,8 +460,8 @@ join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
 join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
                                     where user_m.USER_ID = '{userID}' and user_m.ROLE_ID = '{((int)formRole).ToString()}'";
                 }
-                
-                
+
+
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
@@ -505,6 +505,35 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
                 return new AddUpdateDelete() { Status = false, Message = ex.Message };
             }
         }
+
+        public async Task<AddUpdateDelete> GetUserByPhone(string phone, string CountryCode)
+        {
+            try
+            {
+                string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME, pua.FIRST_NAME, pua.LAST_NAME from USER_MASTER_1915 user_m
+                                     join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
+                                     join PUBLIC_USER_ACCOUNT_1943 pua on pua.USER_ID = user_m.USER_ID
+                                    where user_m.USER_PHONE='{phone}' and user_m.Country_Code='{CountryCode}'";
+
+                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+                if (result.Count() > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+
+
 
         public async Task<AddUpdateDelete> GetUserByEmail(string email, int Role_Id)
         {
@@ -665,19 +694,19 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
         {
             try
             {
-                
-                   string sqlString = $@" update USER_MASTER_1915 set IS_ACTIVE='Y',IS_PHONE_VERIFIED='Y' where  Replace(USER_PHONE,' ','')='{userID}'";
-                    var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
-                    if (result > 0)
-                    {
 
-                        return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
-                    }
-                    else
-                    {
-                        return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
-                    }
-                
+                string sqlString = $@" update USER_MASTER_1915 set IS_ACTIVE='Y',IS_PHONE_VERIFIED='Y' where  Replace(USER_PHONE,' ','')='{userID}'";
+                var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
+                if (result > 0)
+                {
+
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+
             }
             catch (Exception ex)
             {
@@ -712,6 +741,33 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
                 {
                     return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
                 }
+            }
+            catch (Exception ex)
+            {
+
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
+            }
+
+        }
+
+
+        public async Task<AddUpdateDelete> ResetPasswordPhone(string userName, string newPassword)
+        {
+            try
+            {
+
+                string sqlString = $@" update USER_MASTER_1915 set USER_PASSWORD='{newPassword}' where [USER_ID]=N'{userName}'";
+                var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
+                if (result > 0)
+                {
+
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+
             }
             catch (Exception ex)
             {
@@ -835,7 +891,7 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
                     return new AddUpdateDelete() { Status = false, Message = "Invalid Email or Password" };
                 }
             }
-           
+
 
             return new AddUpdateDelete() { Status = false, Message = "Access denied!!" };
         }
@@ -918,9 +974,9 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
             };
             var userTokeDic = userToken.ToDictionary();
 
-            Form_DataTable request = new Form_DataTable();           
+            Form_DataTable request = new Form_DataTable();
             request.action = (int)FormAction.Save;
-            request.formId = (int)FormSetting.USER_TOKEN; 
+            request.formId = (int)FormSetting.USER_TOKEN;
             request.formGroupKey = Guid.NewGuid().ToString();
             request.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(userTokeDic);
 
@@ -978,19 +1034,19 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
         {
             try
             {
-               
-                   string sqlString = $@" update USER_MASTER_1915 set USER_EMAIL='{Email}'  where [USER_ID]='{userID}'";
-                   var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
-                    if (result > 0)
-                    {
 
-                        return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
-                    }
-                    else
-                    {
-                        return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
-                    }
-                
+                string sqlString = $@" update USER_MASTER_1915 set USER_EMAIL='{Email}'  where [USER_ID]='{userID}'";
+                var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
+                if (result > 0)
+                {
+
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+
             }
             catch (Exception ex)
             {
@@ -1001,7 +1057,7 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
         }
 
 
-        public async Task<AddUpdateDelete> CheckEmailAddressExists(string Email ,string USER_ID)
+        public async Task<AddUpdateDelete> CheckEmailAddressExists(string Email, string USER_ID)
         {
             try
             {
@@ -1027,6 +1083,6 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
 
         }
 
-        
+
     }
 }
