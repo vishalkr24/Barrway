@@ -13,10 +13,6 @@ namespace Barrway.DTO.AuthViewModel
         public string Email { get; set; }
     }
 
-    public class ForgotPasswordViewModel
-    {
-        [Required]
-        public string Email { get; set; }
-    }
+    
 
 }
