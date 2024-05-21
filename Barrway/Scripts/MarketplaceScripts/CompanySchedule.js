@@ -1170,7 +1170,15 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 calEvent.DOWNLOADABLE_ATTACHMENT_FILES = JSON.parse(calEvent.DOWNLOAD_FILE_LIST);
             }
             $scope.selectEventDetails = calEvent;
-            
+
+            $scope.selectEventDetails.BOOKING_DEADLINE_DATE = moment(calEvent.BOOKING_DEADLINE).format("MMM DD, YYYY");
+
+            if (moment() > moment(calEvent.BOOKING_DEADLINE)) {
+                $scope.selectEventDetails.deadlineError = true;
+            } else {
+                $scope.selectEventDetails.deadlineError = false;
+            }
+
             var enrollUser = await getUserEnrollDetails(calEvent.Id);
 
             let is_enroll = false;
