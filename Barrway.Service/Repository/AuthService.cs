@@ -17,6 +17,8 @@ using AutoMapper.Configuration.Annotations;
 using System.Web.Mvc;
 using Barrway.DTO.Common;
 using Barrway.Service.IRepository;
+using System.ComponentModel;
+using System.Web.UI.WebControls;
 
 namespace Barrway.Service.Repository
 {
@@ -1117,6 +1119,14 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
             }
 
+        }
+
+
+        public async Task<List<IDictionary<string, object>>> GetAllUser(string ids) {
+
+            string sqlString = $@"select Id,[USER_NAME] from USER_MASTER_1915  where Id in ({ids})";
+            var result = await sqlFunction.ExecuteSqlQuery(sqlString);
+            return result;
         }
 
 

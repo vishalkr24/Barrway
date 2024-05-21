@@ -1036,9 +1036,6 @@
             param.language = $scope.formSelectedLanguageId;
             param.currentstage = 0;
             $scope.allowViewSumm = "";
-
-            debugger;
-
             mainService.manageForm("ManageForm", param)
                 .then(function (response) {
                     if (response.data != null && angular.isDefined(response.data)) {
@@ -1637,7 +1634,10 @@
                     var temp = {};
                     temp.formId = $scope.currentFormId;
                     //var path = API_URL + "api/FormAPI/downloadFiles/" + (!DataService.isEmpty(temp.formId) ? temp.formId : temp.formID) + "/4";
-                    var path = BASE_URL + "FormAPI/DownloadExcel?formId=" + (!DataService.isEmpty(temp.formId) ? temp.formId : temp.formID);
+                   
+                    let COMPANY_CODE = localStorage.getItem("COMPANY_CODE");
+                    let CALENDAR_CODE = localStorage.getItem("CALENDAR_CODE");
+                    var path = BASE_URL + "FormAPI/DownloadCustomExcel?formId=" + (!DataService.isEmpty(temp.formId) ? temp.formId : temp.formID) + "&iscustom=true&fields=COMPANY_CODE,CALENDAR_CODE&fieldValues=" + COMPANY_CODE + "," + CALENDAR_CODE ;
                     downloadFileFunc("", path);
                     break;
                 case 7:
@@ -3313,6 +3313,15 @@
             finalArray.push({
                 title: getStringFromMultiligualText("Updated At|更新於|更新于", langId), formatter: arrowDataFormat, titleDownload: getStringFromMultiligualText("Updated At|更新於|更新于", langId), width: 140, field: "updated_at", headerFilter: "input"
             });
+
+            if (finalArray.length > 0) {
+                if (!finalArray.find(x => x.field == "USER_ID")) {
+                    finalArray.push({
+                        title: "User Name", width: 140, field: "USER_ID", headerFilter: "input",
+                    });
+                }
+            }
+
             //console.log($scope.filterFieldsList)
             return finalArray;
             //console.log(finalArray,"finalArray");
@@ -3893,7 +3902,15 @@
             //finalArray.push({
             //    title: "Updated At", formatter: arrowDataFormat, titleDownload: "Updated At", width: 140, field: "updated_at", headerFilter: "input"
             //});
-            //console.log($scope.filterFieldsList)           
+            //console.log($scope.filterFieldsList)
+            if (finalArray.length > 0) {
+                if (!finalArray.find(x => x.field == "USER_ID")) {
+                    finalArray.push({
+                        title: "User Name", width: 140, field: "USER_ID"
+                    });
+                }
+            }
+
             return finalArray;
             //  console.log(formDetails);
 
@@ -3944,6 +3961,13 @@
                     }
                 }
             });
+            if (finalArray.length > 0) {
+                if (!finalArray.find(x => x.field == "USER_ID")) {
+                    finalArray.push({
+                        title: "User Name", width: 140, field: "USER_ID"
+                    });
+                }
+            }
             return finalArray;
         }
         function customColumnTypeFunc(field, type) {
@@ -4218,7 +4242,6 @@
                 });
         };
         function bindtabulatorOnly(type, data) {
-            debugger;
             var details = JSON.parse(localStorage.getItem("detail"));
             var languageIdForm = localStorage.getItem("globalLangForm");
             var languageId = localStorage.getItem("globalLang");
@@ -4284,9 +4307,18 @@
 
 
 
-            debugger;
             headers = removeColumns($scope.currentFormId, headers);
             headers = addNewColumns($scope.currentFormId, headers);
+
+            if (headers.find(x => x.rowEdit == true)) {
+                var index = headers.findIndex(x => x.rowEdit == true);
+                var user_index = headers.findIndex(x => x.field == "USER_ID");
+                if (user_index > -1) {
+                    var field = headers[user_index];
+                    headers = headers.filter(x => x.field != "USER_ID");
+                    headers.splice(index+1, 0, field);
+                }
+            }
 
             $timeout(function () {
                 if (!DataService.isEmpty(data))
@@ -4452,21 +4484,7 @@
 
                                                     $("tr", table).append("<td class='media'>" + img + "</td>");
                                                 } else {
-                                                    // No image found
-                                                    //var class_value = value.toLowerCase().replace(' ','_');
                                                     rowRecord += "<div class='" + value.definition.title + "'><strong>" + value.definition.title + ":</strong> " + str + "</div>";
-                                                    /*if (/\.(pdf)$/i.test(data[field])) { // pdf files
-                                                        var link = "<a target='_blank' href='{{url('/file-view/')}}?file=" + data[field] + "'><b>" + data[field] + "</b></a>";
-                                                        rowRecord += "<div class='"+field+"'><strong>" + value + ":</strong> " + link + "</div>";
-                                                    }
-                                                    else{
-                                                        if(typeof data[field] === "string" && data[field].startsWith("uploads")) {
-                                                            var link = "<a href='{{asset('/')}}" + data[field] + "'><b>" + data[field] + "</b></a>";
-                                                            rowRecord += "<div class='"+field+"'><strong>" + value + ":</strong> " + link + "</div>";
-                                                        }
-                                                        else   
-                                                            rowRecord += "<div class='"+field+"'><strong>" + value + ":</strong> " + data[field] + "</div>";
-                                                    }*/
                                                 }
                                         }
                                     });
@@ -4522,7 +4540,7 @@
                         ajaxFiltering: true,
                         ajaxSorting: true,
                         ajaxLoader: true,
-                        ajaxURL: GetFormRecordsUrl($scope.currentFormId),
+                        ajaxURL: BASE_URL + "FormAPI/GetAdditionalFormRecordList",
                         ajaxConfig: "POST", //ajax HTTP request type
                         ajaxContentType: "json",
                         ajaxParams: {
@@ -4590,7 +4608,6 @@
                             //url - the URL of the request
                             //params - the parameters passed with the request
                             //response - the JSON object returned in the body of the response.
-                            debugger;
                             $('#form-records').unblock();
                             $.unblockUI();
                             var result = angular.copy(response.data);
