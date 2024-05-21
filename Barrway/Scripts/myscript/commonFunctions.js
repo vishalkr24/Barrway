@@ -15647,6 +15647,28 @@ function NewformEntryfunctionality(formid, isEdit) {
         $('input#COMPANY_CODE').val(localStorage.getItem("COMPANY_CODE"));
         $('input#CALENDAR_CODE').attr("readonly", true);
         $('input#CALENDAR_CODE').val(localStorage.getItem("CALENDAR_CODE"));
+               
+
+        $("input[name^=IS_SERVICE_PAID]").on("click change", function () {
+
+            let a = this.attributes;
+            let b = this.value;
+
+            if (b == 'N') {
+                $("input[name^=fees_1]").val("0");
+                $("input[name^=fees_1]").attr("disabled", true)
+                $("input[name^=fees_1]").addClass("disabled")
+                $("input[name^=fees_1]").attr("readonly", true)
+            } else {
+                $("input[name^=fees_1]").attr("disabled", false)
+                $("input[name^=fees_1]").removeClass("disabled")
+                $("input[name^=fees_1]").attr("readonly", false)
+            }
+
+            debugger;
+
+        });
+
         if ($('a.breadcrumb-link').length > 1) {
             var ele = $('a.breadcrumb-link')[1]
             $(ele).attr("href", window.location.href.split('#')[0] + "#/calendar/service-master/2303");
@@ -15656,6 +15678,19 @@ function NewformEntryfunctionality(formid, isEdit) {
         } else {
             $('div.border-ACTIVITY_CODE').hide();
         }
+
+        setTimeout(function () {
+            if ($("input[name^=IS_SERVICE_PAID]:checked").val() == 'N') {
+                $("input[name^=fees_1]").val("0");
+                $("input[name^=fees_1]").attr("disabled", true)
+                $("input[name^=fees_1]").attr("readonly", true)
+                $("input[name^=fees_1]").addClass("disabled")
+            } else {
+                $("input[name^=fees_1]").attr("disabled", false)
+                $("input[name^=fees_1]").attr("readonly", false)
+                $("input[name^=fees_1]").removeClass("disabled")
+            }
+        }, 500);
     }
     if (formid == 2304) {
         $('div.border-header_1683116492931').hide();

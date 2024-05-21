@@ -398,6 +398,24 @@ function BindDynamicFormTemplate() {
                 if (formId == 2303) {
                     $("input[name^='SERVICE_PAY_PER']").attr("disabled", "true");
 
+                    $("input[name^=IS_SERVICE_PAID]").on("click change", function () {
+
+                        let a = this.attributes;
+                        let b = this.value;
+
+                        if (b == 'N') {
+                            $("input[name^=fees_1]").val("0");
+                            $("input[name^=fees_1]").attr("disabled", true)
+                            $("input[name^=fees_1]").attr("readonly", true)
+                            $("input[name^=fees_1]").addClass("disabled")
+                        } else {
+                            $("input[name^=fees_1]").attr("disabled", false)
+                            $("input[name^=fees_1]").attr("readonly", false)
+                            $("input[name^=fees_1]").removeClass("disabled")
+                        }
+
+                    });
+
                 }
             }, 500);
 
