@@ -1493,7 +1493,7 @@ namespace Barrway.Service.Repository
             return new AddUpdateDelete() { Status = false, Message = "Invalid response!" };
         }
 
-        public async Task<AddUpdateDelete> CreateDynamicFormEntry(List<IDictionary<string, string>> model, string formId, string UserId, string CalendarCode)
+        public async Task<AddUpdateDelete> CreateDynamicFormEntry(List<IDictionary<string, string>> model, string formId, string UserId, string CalendarCode,string UserName)
         {
             try
             {
@@ -1532,7 +1532,7 @@ namespace Barrway.Service.Repository
 
                     recordId += formResult.Id.ToString().PadLeft(5, '0');
 
-                    string query = $@"update {tableName} set RECORD_ID = '{recordId}', created_by = '{UserId}' where Id = '{formResult.Id}'";
+                    string query = $@"update {tableName} set RECORD_ID = '{recordId}', created_by='{UserId}' where Id = {formResult.Id}";
                     var result = await sqlFunction.ExecuteSqlCommandQuery(query);
 
                     var result2 = await AddFavoriteCalendar(new FavoriteCalendarModel()
@@ -1540,7 +1540,7 @@ namespace Barrway.Service.Repository
                         COMPANY_CODE = sd["COMPANY_CODE"]?.ToString(),
                         CALENDAR_CODE = sd["CALENDAR_CODE"]?.ToString(),
                         IS_PUBLIC_USER = "Y",
-                        USER_ID = UserId
+                        USER_ID = UserName
                     });
 
                     if (result > 0)
@@ -2954,6 +2954,111 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_C
             catch (Exception ex)
             {
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
+            }
+        }
+
+
+        public async Task<List<IDictionary<string, object>>> GetAddtionalFormRecordsList(GenerateDynamicFormData data)
+        {
+            try
+            {
+
+                string tableString = $@"select FormTableName from topicFormDetails where TopicId = (select topicID from form where formID={data.formId})";
+
+                var tbl_res = await sqlFunction.ExecuteSqlQuery(tableString);
+
+                string table_name = "";
+                if (tbl_res.Count() > 0) {
+                    table_name = tbl_res[0]["FormTableName"]?.ToString();
+                }
+                if (string.IsNullOrEmpty(table_name)) {
+                    return new List<IDictionary<string, object>>();
+                }
+
+                
+                string column = "", dir = "";
+                if (data.sorters != null && data.sorters.Count() > 0)
+                {
+                    column = data.sorters.FirstOrDefault().field;
+                    dir = data.sorters.FirstOrDefault().dir;
+                }
+                else
+                {
+                    column = "created_at";
+                    dir = "desc";
+                }
+
+                List<string> applyFilter = new List<string>();
+                IDictionary<string,string> queryFilters= new Dictionary<string, string>() { { "USER_ID","um.USER_ID"} };
+                if (data.filters != null && data.filters.Count() > 0)
+                {
+                    foreach (var item in data.filters)
+                    {
+                        if (item.field != "created_at" && item.field != "updated_at")
+                        {
+                            if (queryFilters.ContainsKey(item.field))
+                            {
+                                string filter = $" {queryFilters[item.field]} like N'%{item.value}%'";
+                                applyFilter.Add(filter);
+                            }
+                            else {
+                                string filter = CustomMethods.generateHeaderFilterSearchQuery(item.field, item.value);
+                                if (!string.IsNullOrEmpty(filter))
+                                    applyFilter.Add(filter);
+                            }
+                        }
+                        else
+                        {
+                            string filter = CustomMethods.datefilter(item.field, item.value);
+                            if (!string.IsNullOrEmpty(filter))
+                                applyFilter.Add(filter);
+                        }
+                    }
+                }
+                if (data.CustomFilters != null && data.CustomFilters.Count() > 0)
+                {
+                    foreach (var item in data.CustomFilters)
+                    {
+                        string filter = $" f.{item.FieldName} ='{item.Value}'";
+                        if (!string.IsNullOrEmpty(filter))
+                            applyFilter.Add(filter);
+                    }
+                }
+                if (data.filter != null)
+                {
+                    if (!string.IsNullOrEmpty(data.filter.value))
+                    {
+                        if (data.filter.type == "=")
+                        {
+                            string filter = data.filter.field + " " + data.filter.type + " N'" + data.filter.value + "'";
+                            applyFilter.Add(filter);
+                        }
+                        else
+                        {
+                            string filter = data.filter.field + " " + data.filter.type + " N'%" + data.filter.value + "%'";
+                            applyFilter.Add(filter);
+                        }
+                    }
+                }
+
+                string applyFilterQuery = string.Join(" and ", applyFilter);
+                applyFilterQuery = applyFilterQuery.TrimEnd("and ".ToCharArray());
+
+                int PageSize = data.size > 0 ? data.size : 20;
+                int PageNumber = data.page > 0 ? data.page : 1;
+
+                string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int= {PageNumber} ; with formdata as ( select  distinct f.*,um.USER_ID 
+                                    from  {table_name}   f 
+                                    join USER_MASTER_1915 um on um.Id=f.created_by  where f.Id!=0 
+                                        {(!string.IsNullOrEmpty(applyFilterQuery) ? "and " + applyFilterQuery : "")}
+                                        ) 
+                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
+                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new List<IDictionary<string, object>>();
             }
         }
     }

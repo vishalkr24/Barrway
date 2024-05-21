@@ -52,6 +52,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetUserByPhone(string phone, string CountryCode);
 
         Task<AddUpdateDelete> ResetPasswordPhone(string userName, string newPassword);
+        Task<List<IDictionary<string, object>>> GetAllUser(string ids);
 
     }
 }

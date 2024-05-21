@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -201,6 +202,24 @@ namespace Barrway.Controllers
             }
 
             return Json(result);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GetAdditionalFormRecordList(GenerateDynamicFormData data)
+        {
+            var result = await publicUserService.GetAddtionalFormRecordsList(data);
+
+            var result_list = result;
+            double last_page = 0;
+            if (result_list != null && result_list.Count() > 0)
+            {
+                var singData = result_list.FirstOrDefault();
+                var total_records = Convert.ToInt32(singData.Where(x => x.Key == "total_records").FirstOrDefault().Value);
+                var size = Convert.ToInt32(singData.Where(x => x.Key == "size").FirstOrDefault().Value);
+                double paging = (double)total_records / size;
+                last_page = Math.Floor(paging) + 1;
+            }
+            return Json(new { data = result_list, last_page });
         }
 
         [HttpPost]
@@ -1091,11 +1110,12 @@ namespace Barrway.Controllers
         //[HttpGet]
         //public async Task<ActionResult> ExportAdditionalForm(int formid)
         //{
-        //    var model = (await formAPIRepository.GetFormRecordList(new { action=32,formid= formid })).Data;
-        //    if (model.data == null) {
+        //    var model = (await formAPIRepository.GetFormRecordList(new { action = 32, formid = formid })).Data;
+        //    if (model.data == null)
+        //    {
         //        model.data = new List<IDictionary<string, object>>();
         //    }
-        //    var result=new List<IDictionary<string, object>>();
+        //    var result = new List<IDictionary<string, object>>();
 
         //    model.data.ForEach(x =>
         //    {
@@ -1122,7 +1142,7 @@ namespace Barrway.Controllers
         [HttpGet]
         public async Task<ActionResult> DownloadExcel(int formId)
         {
-            string apiUrl = $"https://geliform.geligulu.com/barrway/api/FormAPI/downloadFiles/{formId}/4"; // Replace with your API URL
+            string apiUrl = System.Configuration.ConfigurationManager.AppSettings["webapibaseurl"].ToString()+  $"api/FormAPI/downloadFiles/{formId}/4"; // Replace with your API URL
             string fileName = "downloaded_file.xlsx"; // The name for the downloaded file
 
             // Create a RestClient with the base URL
@@ -1155,6 +1175,43 @@ namespace Barrway.Controllers
                 return new HttpStatusCodeResult(500, "Internal server error: " + ex.Message);
             }
         }
+
+        //[HttpGet]
+        //public async Task<ActionResult> DownloadCustomExcel(int formId, string iscustom, string fields, string fieldValues)
+        //{
+        //    string apiUrl = System.Configuration.ConfigurationManager.AppSettings["webapibaseurl"].ToString() + $"api/FormAPI/downloadFiles/{formId}/4/{iscustom}/{fields}/{fieldValues}"; // Replace with your API URL
+        //    string fileName = "downloaded_file.xlsx"; // The name for the downloaded file
+
+        //    // Create a RestClient with the base URL
+        //    var client = new RestClient(apiUrl);
+
+        //    // Create a RestRequest
+        //    var request = new RestRequest();
+        //    request.Method = Method.Get;
+
+        //    try
+        //    {
+        //        // Execute the request and get the response
+        //        var response = await client.ExecuteAsync(request);
+
+        //        // Check if the response is successful and contains data
+        //        if (response.IsSuccessful && response.RawBytes != null)
+        //        {
+        //            // Return the file as a download
+        //            return File(response.RawBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+        //        }
+        //        else
+        //        {
+        //            // Handle error appropriately (e.g., log the error, return an error view, etc.)
+        //            return new HttpStatusCodeResult(response.StatusCode, response.ErrorMessage);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Handle exception (e.g., log the error, return an error view, etc.)
+        //        return new HttpStatusCodeResult(500, "Internal server error: " + ex.Message);
+        //    }
+        //}
 
         [HttpPost]
         public ActionResult UploadFile(
@@ -1248,6 +1305,34 @@ namespace Barrway.Controllers
             return true;
         }
 
+        
+
+        static string GetFileExtension(string url)
+        {
+            // Use Uri class to get the absolute path of the URL
+            Uri uri = new Uri(url);
+            string path = uri.AbsolutePath;
+
+            // Get the file extension
+            return Path.GetExtension(path).ToLower();
+        }
+
+        static bool IsImageFile(string extension)
+        {
+            // List of common image file extensions
+            string[] imageExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".webp" };
+
+            // Check if the extension is in the list of image extensions
+            foreach (string imgExt in imageExtensions)
+            {
+                if (extension == imgExt)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
 
         private FileUploadResponse ForwardToExternalApi(
        List<string> filePath,
@@ -1309,88 +1394,111 @@ namespace Barrway.Controllers
             }
         }
 
-        //public async Task<ActionResult> DownloadExcel(int formId)
-        //{
-        //    string apiUrl = $"https://geliform.geligulu.com/barrway/api/FormAPI/downloadFiles/{formId}/4";
-        //    string fileName = "downloaded_file_with_photos.xlsx"; // The name for the downloaded file
+        [HttpGet]
+        public async Task<ActionResult> DownloadCustomExcel(int formId, string iscustom, string fields, string fieldValues)
+        {
+            string apiUrl = System.Configuration.ConfigurationManager.AppSettings["webapibaseurl"].ToString() + $"api/FormAPI/downloadFiles/{formId}/4/{iscustom}/{fields}/{fieldValues}"; // Replace with your API URL
+            string fileName = "downloaded_file_with_photos.xlsx"; // The name for the downloaded file
 
-        //    // Create a RestClient with the base URL
-        //    var client = new RestClient(apiUrl);
+            // Create a RestClient with the base URL
+            var client = new RestClient(apiUrl);
 
-        //    // Create a RestRequest
-        //    var request = new RestRequest();
-        //    request.Method=Method.Get;
-        //    try
-        //    {
-        //        // Execute the request and get the response
-        //        var response = await client.ExecuteAsync(request);
+            // Create a RestRequest
+            var request = new RestRequest();
+            request.Method = Method.Get;
+            try
+            {
+                // Execute the request and get the response
+                var response = await client.ExecuteAsync(request);
 
-        //        // Check if the response is successful and contains data
-        //        if (response.IsSuccessful && response.RawBytes != null)
-        //        {
-        //            // Load the Excel file into a ClosedXML workbook
-        //            using (var workbook = new XLWorkbook(new MemoryStream(response.RawBytes)))
-        //            {
-        //                var worksheet = workbook.Worksheet(1); // Assumes data is in the first worksheet
-        //                int photoColumnIndex = -1;
+                // Check if the response is successful and contains data
+                if (response.IsSuccessful && response.RawBytes != null)
+                {
+                    // Load the Excel file into a ClosedXML workbook
+                    using (var workbook = new XLWorkbook(new MemoryStream(response.RawBytes)))
+                    {
+                        var worksheet = workbook.Worksheet(1); // Assumes data is in the first worksheet
+                        int photoColumnIndex = -1;
 
-        //                // Find the "Photo" column
-        //                var firstRow = worksheet.FirstRowUsed();
-        //                foreach (var cell in firstRow.Cells())
-        //                {
-        //                    if (cell.GetValue<string>().ToLower().Contains("photo"))
-        //                    {
-        //                        photoColumnIndex = cell.Address.ColumnNumber;
-        //                        break;
-        //                    }
-        //                }
+                        // Find the "Photo" column
+                        var firstRow = worksheet.FirstRowUsed();
+                        foreach (var cell in firstRow.Cells())
+                        {
+                            if (cell.GetValue<string>().ToLower().Contains("photo") || cell.GetValue<string>().ToLower().Contains("file"))
+                            {
+                                photoColumnIndex = cell.Address.ColumnNumber;
+                                break;
+                            }
+                        }
 
-        //                if (photoColumnIndex > 0)
-        //                {
-        //                    // Iterate through the rows and attach photos from URLs
-        //                    foreach (var row in worksheet.RowsUsed().Skip(1))
-        //                    {
-        //                        var cellValue = row.Cell(photoColumnIndex).GetValue<string>();
-        //                        if (!string.IsNullOrEmpty(cellValue) && Uri.IsWellFormedUriString(cellValue, UriKind.Absolute))
-        //                        {
-        //                            // Download the image from the URL
-        //                            var imageBytes = await DownloadImageAsync(cellValue);
-        //                            if (imageBytes != null)
-        //                            {
-        //                                using (var stream = new MemoryStream(imageBytes))
-        //                                {
-        //                                    var image = worksheet.AddPicture(stream);
-        //                                    var cell = row.Cell(photoColumnIndex);
-        //                                    image.MoveTo(cell); // Move image to the cell
-        //                                    image.Scale(0.1); // Adjust the scale as needed
-        //                                }
-        //                            }
-        //                        }
-        //                    }
-        //                }
+                        if (photoColumnIndex > 0)
+                        {
+                            // Iterate through the rows and attach photos from URLs
+                            foreach (var row in worksheet.RowsUsed().Skip(1))
+                            {
+                                var cellValue = row.Cell(photoColumnIndex).GetValue<string>();
+                                if (!string.IsNullOrEmpty(cellValue) && Uri.IsWellFormedUriString(cellValue, UriKind.Absolute))
+                                {
+                                    string extension = GetFileExtension(cellValue);
+                                    if (IsImageFile(extension))
+                                    {
+                                        // Download the image from the URL
+                                        var imageBytes = await DownloadImageAsync(cellValue);
+                                        if (imageBytes != null)
+                                        {
+                                            using (var stream = new MemoryStream(imageBytes))
+                                            {
+                                                var image = worksheet.AddPicture(stream);
+                                                var cell = row.Cell(photoColumnIndex);
+                                                cell.Value = string.Empty;
+                                                // Move image to the cell and fit within the cell
+                                                image.MoveTo(cell);
 
-        //                // Save the modified workbook to a memory stream
-        //                var modifiedStream = new MemoryStream();
-        //                workbook.SaveAs(modifiedStream);
-        //                modifiedStream.Position = 0;
+                                                // Calculate scaling factors to fit image into the cell
+                                                double cellWidth = worksheet.Column(photoColumnIndex).Width * 7; // Column width in points (approximation)
+                                                double cellHeight = row.Height * 1.5; // Row height in points
 
-        //                // Return the modified file as a download
-        //                return File(modifiedStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
-        //            }
-        //        }
-        //        else
-        //        {
-        //            // Handle error appropriately (e.g., log the error, return an error view, etc.)
-        //            return new HttpStatusCodeResult(response.StatusCode, response.ErrorMessage);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Handle exception (e.g., log the error, return an error view, etc.)
-        //        return new HttpStatusCodeResult(500, "Internal server error: " + ex.Message);
-        //    }
-        //}
-        
+                                                using (var img = Image.FromStream(stream))
+                                                {
+                                                    double imgWidth = img.Width;
+                                                    double imgHeight = img.Height;
+
+                                                    double scaleWidth = cellWidth / imgWidth;
+                                                    double scaleHeight = cellHeight / imgHeight;
+
+                                                    // Use the smaller scale factor to fit the image within the cell
+                                                    double scaleFactor = Math.Min(scaleWidth, scaleHeight);
+                                                    image.Scale(scaleFactor);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        // Save the modified workbook to a memory stream
+                        var modifiedStream = new MemoryStream();
+                        workbook.SaveAs(modifiedStream);
+                        modifiedStream.Position = 0;
+
+                        // Return the modified file as a download
+                        return File(modifiedStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+                    }
+                }
+                else
+                {
+                    // Handle error appropriately (e.g., log the error, return an error view, etc.)
+                    return new HttpStatusCodeResult(response.StatusCode, response.ErrorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exception (e.g., log the error, return an error view, etc.)
+                return new HttpStatusCodeResult(500, "Internal server error: " + ex.Message);
+            }
+        }
+
 
 
         private static bool IsJson(string str)

@@ -191,7 +191,7 @@ namespace Barrway.Controllers
             {
                 try
                 {
-                    var result = await publicUserService.CreateDynamicFormEntry(data, formId, UserIdentity.UserID, CalendarCode);
+                    var result = await publicUserService.CreateDynamicFormEntry(data, formId, UserIdentity.UserID, CalendarCode,UserIdentity.UserName);
 
                     return Json(result, JsonRequestBehavior.AllowGet);
                 }
