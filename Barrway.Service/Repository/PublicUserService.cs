@@ -470,6 +470,37 @@ namespace Barrway.Service.Repository
                 model.transaction.transaction_fees = ServiceFees.ToString();
             }
 
+            // check for booking deadline
+
+            var calendarDetails = (await businessUserService.GetCalendarDetails(model.participant.CALENDAR_CODE)).Data as IDictionary<string, object>;
+
+            if (!string.IsNullOrEmpty(calendarDetails["BOOKING_DEADLINE"]?.ToString()))
+            {
+                int days = 0;
+
+                try
+                {
+                    days = Convert.ToInt32(calendarDetails["BOOKING_DEADLINE"].ToString());
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+                days += 1;
+
+                var evt = (await GetSingleEventDetails(model.transaction.SLOT)).Data as IDictionary<string, object>;
+
+                DateTime deadline = Convert.ToDateTime(evt["start"].ToString()).AddDays((days * -1));
+                DateTime deadlineDate = new DateTime(deadline.Year, deadline.Month, deadline.Day, 23, 59, 0);
+
+                if (DateTimeUtility.Now() > deadlineDate)
+                {
+                    return new AddUpdateDelete() { Message = "DEADLINE-CROSSED", Status = false };
+                }
+
+            }
+
 
             // check if the user limit is crossed or not
             if (!isServiceType)

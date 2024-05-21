@@ -2288,6 +2288,13 @@
     <Content Include="Content\underscore.js\underscore-umd.min.js" />
     <Content Include="Content\underscore.js\underscore.js" />
     <Content Include="Content\underscore.js\underscore.min.js" />
+    <Content Include="EmailTemplates\InvitationTemplate.html" />
+    <Content Include="EmailTemplates\ResetPasswordTemplate.html" />
+    <Content Include="EmailTemplates\EmailVerificationTemplate.html" />
+    <Content Include="EmailTemplates\fac.png" />
+    <Content Include="EmailTemplates\ins.png" />
+    <Content Include="EmailTemplates\link.png" />
+    <Content Include="EmailTemplates\logo.png" />
     <Content Include="favicon.ico" />
     <Content Include="fg-assets\admin\css\AdminLTE.min.css" />
     <Content Include="fg-assets\admin\css\bootstrap-multiselect.css" />

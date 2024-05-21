@@ -189,14 +189,15 @@ namespace Barrway.Controllers
                                     {
                                         e["SLOT"] = Convert.ToDateTime(slots[0]).ToString("dd MMMM yyyy (hh:mm tt)") + " - " + Convert.ToDateTime(slots[2]).ToString("dd MMMM yyyy (hh:mm tt)");
                                     }
-                                }catch (Exception)
+                                }
+                                catch (Exception)
                                 {
 
                                 }
-                                
+
                             }
                         }
-                        
+
                     });
                 }
             }
@@ -260,7 +261,7 @@ namespace Barrway.Controllers
 
                             if (data.action == 1)
                             {
-                                serviceId = deserData.Any(x => x["name"]?.ToString() == "activities")? deserData.FirstOrDefault(x => x["name"]?.ToString() == "activities")["value"]?.ToString():"";
+                                serviceId = deserData.Any(x => x["name"]?.ToString() == "activities") ? deserData.FirstOrDefault(x => x["name"]?.ToString() == "activities")["value"]?.ToString() : "";
                                 resourceId = deserData.Any(x => x["name"]?.ToString() == "resources") ? deserData.FirstOrDefault(x => x["name"]?.ToString() == "resources")["value"]?.ToString() : "";
                             }
                             if (data.action == 2)
@@ -301,12 +302,13 @@ namespace Barrway.Controllers
                                     int index = deserData.FindIndex(x => x["name"]?.ToString() == "IS_COURSE_EVENT");
                                     deserData[index] = companyIdDic2;
                                 }
-                                else {
+                                else
+                                {
                                     deserData.Add(companyIdDic2);
                                 }
                                 IsCourseEvent = "N";
                             }
-                            
+
                             var companyIdDic = new Dictionary<string, object>();
 
                             companyIdDic.Add("name", "COMPANY_SUBSCRIPTION_ID");
@@ -341,7 +343,7 @@ namespace Barrway.Controllers
 
             var result = (await formAPIRepository.GeneratedFormData(data)).Data;
 
-            if (IsCourseEvent == "COURSE" && data.action==1)
+            if (IsCourseEvent == "COURSE" && data.action == 1)
             {
                 try
                 {
@@ -456,8 +458,8 @@ namespace Barrway.Controllers
                 {
 
                 }
-                
-               
+
+
             }
 
             return Json(result);
@@ -552,7 +554,7 @@ namespace Barrway.Controllers
                     }
                     else
                     {
-                        data.filter.value = " F.COMPANY_CODE=N'" + data.COMPANY_CODE + "' and F.CALENDAR_CODE=N'" + data.CALENDAR_CODE + "' and "+ data.filter.value;
+                        data.filter.value = " F.COMPANY_CODE=N'" + data.COMPANY_CODE + "' and F.CALENDAR_CODE=N'" + data.CALENDAR_CODE + "' and " + data.filter.value;
                     }
 
                 }
@@ -608,7 +610,7 @@ namespace Barrway.Controllers
                                 {
                                     result.events[j].Add("CALENDAR_NAME", enrolledData.Data[i]["CALENDAR_NAME"].ToString());
                                     result.events[j].Add("COMPANY_NAME_ENGLISH", enrolledData.Data[i]["COMPANY_NAME_ENGLISH"].ToString());
-                                    if (!finalResult.events.Any(x=> x["Id"]?.ToString() == result.events[j]["Id"].ToString()))
+                                    if (!finalResult.events.Any(x => x["Id"]?.ToString() == result.events[j]["Id"].ToString()))
                                     {
                                         finalResult.events.Add(result.events[j]);
                                     }
@@ -654,10 +656,10 @@ namespace Barrway.Controllers
 
                 }
             }
-            
+
             {
                 var alreadyEnrolledEvents = (await publicUserService.GetAlreadyEnrolledEvents(data.COMPANY_CODE, UserIdentity.UserEmail, data.filter.value)).Data as List<IDictionary<string, object>>;
-                if (alreadyEnrolledEvents!= null)
+                if (alreadyEnrolledEvents != null)
                 {
                     if (alreadyEnrolledEvents.Count > 0)
                     {
@@ -731,10 +733,10 @@ namespace Barrway.Controllers
                         }
                     }
 
+                    int days = 0;
+
                     if (!string.IsNullOrEmpty(calendarDetails["BOOKING_DEADLINE"]?.ToString()))
                     {
-                        int days = 0;
-
                         try
                         {
                             days = Convert.ToInt32(calendarDetails["BOOKING_DEADLINE"].ToString());
@@ -743,13 +745,20 @@ namespace Barrway.Controllers
                         {
 
                         }
+                    }
 
-                        foreach (var evt in result.events)
+                    days = (days == 0) ? 0 : days + 1;
+
+                    foreach (var evt in result.events)
+                    {
+                        DateTime deadline = Convert.ToDateTime(evt["start"].ToString());
+                        if (days > 0)
                         {
-                            days -= 1;
-                            DateTime deadline = Convert.ToDateTime(evt["start"].ToString()).AddDays((days*-1));
-                            evt.Add("BOOKING_DEADLINE", new DateTime(deadline.Year, deadline.Month, deadline.Day, 23, 59, 0));
+                            deadline = deadline.AddDays((days * -1));
+                            deadline = (new DateTime(deadline.Year, deadline.Month, deadline.Day, 23, 59, 0));
                         }
+
+                        evt.Add("BOOKING_DEADLINE", deadline.ToString("yyyy-MM-dd HH:mm"));
                     }
                 }
             }
@@ -811,7 +820,7 @@ namespace Barrway.Controllers
                 {
                     // filter out available slots
 
-                    var resourceData = await masterService.GetLocationMasterList(new GenerateDynamicFormData() { action = 1,size = 50, filters = new List<FilterDTO> { new FilterDTO() { type = "=", field = "CALENDAR_CODE", value = data.CALENDAR_CODE} } }, data.COMPANY_CODE, data.CALENDAR_CODE);
+                    var resourceData = await masterService.GetLocationMasterList(new GenerateDynamicFormData() { action = 1, size = 50, filters = new List<FilterDTO> { new FilterDTO() { type = "=", field = "CALENDAR_CODE", value = data.CALENDAR_CODE } } }, data.COMPANY_CODE, data.CALENDAR_CODE);
 
                     var resourceList = resourceData.Data as List<IDictionary<string, object>>;
 
@@ -824,7 +833,7 @@ namespace Barrway.Controllers
 
                     foreach (var resource in resourceList)
                     {
-                        DateTime startDate = (Convert.ToDateTime(data.startDate).Year > DateTimeUtility.Now().Year)? Convert.ToDateTime(data.startDate) : DateTimeUtility.Now();
+                        DateTime startDate = (Convert.ToDateTime(data.startDate).Year > DateTimeUtility.Now().Year) ? Convert.ToDateTime(data.startDate) : DateTimeUtility.Now();
                         DateTime endDate = Convert.ToDateTime(data.endDate).AddDays(-1);
 
                         var events = result.events.Where(x => x["resources"]?.ToString() == resource["Id"]?.ToString()).ToList();
@@ -835,7 +844,8 @@ namespace Barrway.Controllers
 
                             List<(DateTime, DateTime)> ps = new List<(DateTime, DateTime)>();
 
-                            events.ForEach(x => {
+                            events.ForEach(x =>
+                            {
                                 ps.Add((Convert.ToDateTime(x["start"]), Convert.ToDateTime(x["end"])));
                             });
 
@@ -925,19 +935,23 @@ namespace Barrway.Controllers
 
             if (result != null && result.events != null && result.events.Count > 0)
             {
-                if (data.resourceId != 0) {
+                if (data.resourceId != 0)
+                {
 
                     List<IDictionary<string, object>> _events = new List<IDictionary<string, object>>();
                     result.events.ForEach(x =>
                     {
-                        string resourceFormId= data.resourceFormId.ToString();
+                        string resourceFormId = data.resourceFormId.ToString();
                         if (x.ContainsKey("customForms") && x.ContainsKey("customFormIds") && !string.IsNullOrEmpty(x["customFormIds"]?.ToString()) && !string.IsNullOrEmpty(x["customForms"]?.ToString())
-                        && x["customForms"].ToString().Split(',').Contains(resourceFormId) && x["customFormIds"].ToString().Split(',').Length>0) {
+                        && x["customForms"].ToString().Split(',').Contains(resourceFormId) && x["customFormIds"].ToString().Split(',').Length > 0)
+                        {
                             var customFormsSplit = x["customForms"].ToString().Split(',').ToList();
                             var cucustomFormIdsSplit = x["customFormIds"].ToString().Split(',').ToList();
-                           int index= customFormsSplit.FindIndex(y=>y== resourceFormId);
-                            if (index > -1 && cucustomFormIdsSplit.Count()>index) {
-                                if (cucustomFormIdsSplit[index] == data.resourceId.ToString()) {
+                            int index = customFormsSplit.FindIndex(y => y == resourceFormId);
+                            if (index > -1 && cucustomFormIdsSplit.Count() > index)
+                            {
+                                if (cucustomFormIdsSplit[index] == data.resourceId.ToString())
+                                {
                                     _events.Add(x);
                                 }
                             }
@@ -945,7 +959,7 @@ namespace Barrway.Controllers
                     });
 
                     result.events = _events;
-                //result.events=result.events.Where(x=>x.ContainsKey("resourceId") && x["resourceId"]!=null && x["resourceId"].ToString()== data.resourceId.ToString()).ToList();
+                    //result.events=result.events.Where(x=>x.ContainsKey("resourceId") && x["resourceId"]!=null && x["resourceId"].ToString()== data.resourceId.ToString()).ToList();
                 }
                 var markSchedule = result.events.Where(x => x["EVENT_TYPE"]?.ToString() == "SCHEDULE").ToList();
 
@@ -1083,13 +1097,14 @@ namespace Barrway.Controllers
         {
             var result = await formAPIRepository.getReferralFormFieldsAndData(data);
 
-            if (result.formDataListNew != null && result.formDataListNew.Count() > 0) {
+            if (result.formDataListNew != null && result.formDataListNew.Count() > 0)
+            {
 
                 var allTransaction = await calendarService.GetTransactionAll(data.Id.ToString());
                 result.formDataListNew.ForEach(x =>
                 {
                     var tran = allTransaction.FirstOrDefault(y => y["Id"].ToString() == x["Id"].ToString());
-                    if (x.ContainsKey("STUDENT") && tran!=null)
+                    if (x.ContainsKey("STUDENT") && tran != null)
                     {
                         x["STUDENT"] = tran["FIRST_NAME"] + " " + tran["LAST_NAME"] + " <span class='ev-user-id'> (" + tran["USER_ID"] + ")</span>";
                     }
@@ -1236,7 +1251,7 @@ namespace Barrway.Controllers
                         string fileExtension = Path.GetExtension(file.FileName).ToLower();
                         if (!IsAllowedFileExtension(fileExtension))
                         {
-                            return Json(new FileUploadResponse() { success = false, message ="invalid file!" });
+                            return Json(new FileUploadResponse() { success = false, message = "invalid file!" });
                         }
                         if (!IsFileValid(file, out string errorMessage))
                         {
@@ -1244,9 +1259,10 @@ namespace Barrway.Controllers
                         }
                     }
 
-                    List<string> filepaths=new List<string>();
+                    List<string> filepaths = new List<string>();
                     // Save the file temporarily
-                    foreach (var item in file1) {
+                    foreach (var item in file1)
+                    {
                         string timestamp = DateTime.Now.ToString("ddMMyyyyHHmmssfff");
                         string extension = System.IO.Path.GetExtension(item.FileName);
                         string newFileName = $"{System.IO.Path.GetFileNameWithoutExtension(item.FileName)}_{timestamp}{extension}";
@@ -1254,7 +1270,7 @@ namespace Barrway.Controllers
                         item.SaveAs(filePath);
                         filepaths.Add(filePath);
                     }
-                   
+
 
                     // Call the external API using RestSharp
                     var response = ForwardToExternalApi(filepaths, reqType, uid, appId, appTitle, formId, formTitle, isImportData, userId, actionType);
@@ -1359,19 +1375,21 @@ namespace Barrway.Controllers
 
             int counter = 1;
             // Add the file to be uploaded
-            foreach (var item in filePath) {
-                request.AddFile("file"+ counter, item);
+            foreach (var item in filePath)
+            {
+                request.AddFile("file" + counter, item);
                 counter++;
             }
-            
+
 
             // Execute the request and return the response
             var response = client.Execute(request);
-            if (response.IsSuccessful) {
+            if (response.IsSuccessful)
+            {
                 var result = JsonConvert.DeserializeObject<FileUploadResponse>(response.Content);
-             return result; 
+                return result;
             }
-            return new FileUploadResponse() { success=false,message= "Error occurred during file upload: " + response.ErrorMessage};
+            return new FileUploadResponse() { success = false, message = "Error occurred during file upload: " + response.ErrorMessage };
         }
 
 
@@ -1498,6 +1516,7 @@ namespace Barrway.Controllers
                 return new HttpStatusCodeResult(500, "Internal server error: " + ex.Message);
             }
         }
+
 
 
 

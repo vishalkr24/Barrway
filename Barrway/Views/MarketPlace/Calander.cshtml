@@ -1088,22 +1088,20 @@
         <div class="modal-dialog modal-dialog-slideout" role="document" style="max-width:100%">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="exampleModalLabel">@Resource.Event_Details</h4>
+                    <h3 class="modal-title" style="color: #72328A; font-weight: 700;" id="exampleModalLabel">@Resource.Event_Details</h3>
+                    @*<h4 class="modal-title" id="exampleModalLabel">@Resource.Event_Details</h4>*@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body pt-0">
+                    <div>
+                        <label class="lbl-already-booked" ng-if="selectEventDetails.deadlineError && selectEventDetails.IsAlreadyBooked == 'N'">Regret: Deadline Crossed!</label>
+                    </div>
                     <div class="event-detail div-flex">
                         <div class="div-flex">
                             <div class="title">
 
                                 <div class="temp" ng-repeat="d in selectEventDetails.dropdownList">
                                     <div style="display:block" class="titleContainer">
-                                        @*<p class="title1" style="font-size:16px;font-weight:600">
-                                                {{d.dropdownListData.title}}
-                                                <img ng-if="d.formId=='2303'" ng-src="/assets/marketplace/image/Group 811540.png" />
-                                                <img ng-if="d.formId=='2306'" ng-src="/assets/marketplace/image/Real_State_Icons.png" />
-                                                <img ng-if="d.formId=='2304'" ng-src="/assets/marketplace/image/Group 811536.png" />
-                                            </p>*@
                                         <p class="title1" style="font-weight:bold; font-size: 16px;"> {{d.formTitle}}</p>
                                     </div>
                                 </div>
@@ -1115,7 +1113,7 @@
                             <div ng-if="!selectEventDetails.allDay">{{selectEventDetails.customTime}}</div>
 
                             <div ng-if="selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
-
+                            <div style="color: #E2476C; font-weight: 500; padding: 12px 0px; padding-bottom: 8px; ">Booking deadline: {{selectEventDetails.BOOKING_DEADLINE_DATE}}</div>
                             <input value="{{selectEventDetails.Id}}" id="newtag-inputHidden" type="hidden">
 
                             <div ng-repeat="tag in totalSelectListTagify">
@@ -1178,8 +1176,8 @@
 
                     <div class="div-flex div-list">
                         <button type="button" class="btn btn-secondary" style="margin-top: 12px;" data-bs-dismiss="modal" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary public-primary" style="margin-top: 12px;" ng-if="selectEventDetails.OverlapBookingFlag == 'Y' && selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'N'" ng-click="enrollPublicUser()">Enroll</button>
-                        <label class="btn btn-primary public-primary" style="margin-top:12px;" ng-if="selectEventDetails.OverlapBookingFlag == 'N' && selectEventDetails.IsAlreadyBooked == 'N'">You can't book this session</label>
+                        <button type="button" class="btn btn-primary public-primary" style="margin-top: 12px;" ng-if="selectEventDetails.OverlapBookingFlag == 'Y' && selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'N' && !selectEventDetails.deadlineError" ng-click="enrollPublicUser()">Enroll</button>
+                        <label class="btn public-primary" disabled style="margin-top:12px; cursor:not-allowed;" ng-if="(selectEventDetails.OverlapBookingFlag == 'N' && selectEventDetails.IsAlreadyBooked == 'N') || (selectEventDetails.deadlineError && selectEventDetails.IsAlreadyBooked == 'N')">You can't book this session</label>
                         <button type="button" class="btn btn-primary public-primary" style="margin-top: 12px;" ng-if="selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IsReviewable == 'N'" ng-click="cancelPublicUserBooking()">Cancel Booking</button>
                         <button type="button" class="btn btn-primary public-primary" style="margin-top: 12px;" ng-if="!selectEventDetails.isEnroll && selectEventDetails.IsAlreadyBooked == 'Y' && selectEventDetails.IsReviewable == 'Y'" ng-click="reviewSession()">Review Session</button>
                         <button class="btn btn-danger public-primary" ng-if="selectEventDetails.ATTEND == 'Y'" style="margin-top: 12px;" ng-click="AttendSession(selectEventDetails.Id, 'NORMAL')">Attend</button>
@@ -1486,9 +1484,7 @@
                             <div ng-if="!selectEventDetails.allDay">{{selectEventDetails.customTime}}</div>
 
                             <div ng-if="selectEventDetails.allDay" class="{{selectEventDetails.customDate}}">{{selectEventDetails.customDate}}</div>
-
-                            <div>Booking deadline: {{moment(selecteEventDetails.BOOKING_DEADLINE).format('DD-MM-YYYY')}}</div>
-
+                            
                             <input value="{{selectEventDetails.Id}}" id="newtag-inputHidden" type="hidden">
                             <div ng-repeat="tag in totalSelectListTagify">
                                 <input value="{{selectEventDetails[tag.name]}}" id="newtag-inputHidden{{tag.name}}" type="hidden">
@@ -1824,7 +1820,7 @@
                         } else {
                             var eventData = $scope.selectEventDetails;
 
-                            if (moment($scope.selectEventDetails.BOOKING_DEADLINE) < moment(new date())) {
+                            if (moment($scope.selectEventDetails.BOOKING_DEADLINE) < moment()) {
 
                                 swal({
                                     icon: "error",
@@ -1930,15 +1926,20 @@
                                                                                 icon: "error",
                                                                                 button: "Okay"
                                                                             });
-                                                                            //swal({ type: 'error', showCloseButton: true, html: "You are already enrolled in this calendar." });
                                                                         } else if (data.Message == "LIMIT-ERROR") {
                                                                             swal({
-                                                                                title: "Failed to Enroll!",
+                                                                                title: "Regret",
                                                                                 text: "Maximum no. of participants already enrolled in this activity.",
                                                                                 icon: "error",
                                                                                 button: "Okay"
                                                                             });
-                                                                        } else {
+                                                                        } else if (data.Message == "DEADLINE-CROSSED") {
+                                                                            swal({
+                                                                                icon: "error",
+                                                                                title: "Regret",
+                                                                                text: "Booking deadline is crossed. Can't book this event now."
+                                                                            });
+                                                                        }else {
                                                                             swal({
                                                                                 title: "Warning!",
                                                                                 text: data.Message,
