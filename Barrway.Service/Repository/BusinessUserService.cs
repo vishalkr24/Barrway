@@ -16,6 +16,8 @@ using Newtonsoft.Json;
 using System.Security.Cryptography;
 using Barrway.DTO.MarketplaceModels;
 using System.Runtime.InteropServices;
+using System.IO;
+using System.Web;
 
 namespace Barrway.Service.Repository
 {
@@ -204,7 +206,7 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> SendEmailInvite(BusinessUserInvitationModel inviteModel)
+        public async Task<AddUpdateDelete> SendEmailInvite(BusinessUserInvitationModel inviteModel, IDictionary<string, object> userDetails)
         {
             try
             {
@@ -219,6 +221,15 @@ namespace Barrway.Service.Repository
                                         select * from cte";
 
                 var checkResult = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+                var company = await GetSingleCompanyById(inviteModel.COMPANY_ID);
+
+                if (!company.Status)
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "Company not found." };
+                }
+
+                var companyDetails = company.Data as IDictionary<string, object>;
 
                 if (checkResult.Count == 0)
                 {
@@ -248,22 +259,40 @@ namespace Barrway.Service.Repository
                 data.formGroupKey = Guid.NewGuid().ToString();
                 var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
 
-
                 StringBuilder strBody = new StringBuilder();
-                strBody.Append($@"<body>
-                                    <div class='container'>
-                                        <div class='themes' style='background-color: #ffffff; width: 50%; margin:20px auto;'>
-                                            <div style='height: 70px;line-height: 70px;background-color: #ffffff;padding:0 20px; border-radius: 8px 8px 0 0'>
-                                                <h2 style='color: #3e6b6b;line-height: 70px;'>Barrway</h2>
-                                            </div>
-                                            <div class='content_body' style='padding:20px; text-align: left;'>
-                                                <p>Dear User,</p>
-                                                <p>Please click on the following link to view the invitation:</p>
-                                                <p style='text-align: center;'><a target='_blank' href='{ConfigurationManager.AppSettings["baseurl"]?.ToString() + "/BusinessAdmin/ViewInvitation?Token=" + inviteModel.REQUEST_TOKEN}' target='_blank' style='height: 35px;line-height:35px; background-color:#3e6b6b;color:#ece9e0;padding:8px 10px;cursor:pointer; border:0px;font-size:15px;text-decoration: none;'>View Invitation</a></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </body>");
+
+                var baseUrl = string.Format("{0}://{1}/{2}", HttpContext.Current.Request.Url.Scheme, HttpContext.Current.Request.Url.Authority, $"/");
+
+                string emailTemplate = "";
+
+                using (StreamReader sr = new StreamReader(HttpContext.Current.Server.MapPath("~/EmailTemplates/InvitationTemplate.html")))
+                {
+                    emailTemplate = sr.ReadToEnd();
+                }
+
+                strBody.Append(emailTemplate);
+
+                strBody.Replace("<%FIRST_NAME%>", userDetails["FIRST_NAME"]?.ToString() ?? "");
+                strBody.Replace("<%USER_ID%>", userDetails["USER_ID"]?.ToString() ?? "");
+                strBody.Replace("<%RESET_LINK%>", ConfigurationManager.AppSettings["baseurl"]?.ToString() + "/BusinessAdmin/ViewInvitation?Token=" + inviteModel.REQUEST_TOKEN);
+                strBody.Replace("<%BASE_URL%>", baseUrl);
+                strBody.Replace("<%COMPANY_NAME%>", companyDetails["COMPANY_NAME_ENGLISH"]?.ToString());
+                
+
+                //strBody.Append($@"<body>
+                //                    <div class='container'>
+                //                        <div class='themes' style='background-color: #ffffff; width: 50%; margin:20px auto;'>
+                //                            <div style='height: 70px;line-height: 70px;background-color: #ffffff;padding:0 20px; border-radius: 8px 8px 0 0'>
+                //                                <h2 style='color: #3e6b6b;line-height: 70px;'>Barrway</h2>
+                //                            </div>
+                //                            <div class='content_body' style='padding:20px; text-align: left;'>
+                //                                <p>Dear User,</p>
+                //                                <p>Please click on the following link to view the invitation:</p>
+                //                                <p style='text-align: center;'><a target='_blank' href='{ConfigurationManager.AppSettings["baseurl"]?.ToString() + "/BusinessAdmin/ViewInvitation?Token=" + inviteModel.REQUEST_TOKEN}' target='_blank' style='height: 35px;line-height:35px; background-color:#3e6b6b;color:#ece9e0;padding:8px 10px;cursor:pointer; border:0px;font-size:15px;text-decoration: none;'>View Invitation</a></p>
+                //                            </div>
+                //                        </div>
+                //                    </div>
+                //                </body>");
 
                 var result = EmailNotification.SendEmailAsync(inviteModel.INVITED_EMAIL, strBody.ToString(), "Barrway Invite");
                 if (result)

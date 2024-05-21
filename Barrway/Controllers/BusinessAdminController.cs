@@ -26,13 +26,15 @@ namespace Barrway.Controllers
 
         private readonly IBusinessUserService businessUserService;
         private readonly IGlobalMasterService globalMasterService;
+        private readonly IPublicUserService publicUserService;
         private readonly IAuthService authService;
         private readonly IQueueService queueService;
         
-        public BusinessAdminController(IBusinessUserService businessUserService, IGlobalMasterService globalMasterService, IAuthService authService, IQueueService queueService)
+        public BusinessAdminController(IBusinessUserService businessUserService, IGlobalMasterService globalMasterService, IAuthService authService, IQueueService queueService, IPublicUserService publicUserService)
         {
             this.businessUserService = businessUserService;
             this.globalMasterService = globalMasterService;
+            this.publicUserService = publicUserService;
             this.authService = authService;
             this.queueService = queueService;
         }
@@ -986,23 +988,31 @@ namespace Barrway.Controllers
         {
             try
             {
-                if (Email == UserIdentity.UserEmail)
+                var targetUser = await authService.GetUserByEmail(Email);
+
+                if (targetUser.Status)
                 {
-                    return Json(new AddUpdateDelete() { Status = false, Message = "You can't invite your business."}, JsonRequestBehavior.AllowGet);
+                    if (Email == UserIdentity.UserEmail)
+                    {
+                        return Json(new AddUpdateDelete() { Status = false, Message = "You can't invite your business." }, JsonRequestBehavior.AllowGet);
+                    }
+
+                    BusinessUserInvitationModel inviteModel = new BusinessUserInvitationModel()
+                    {
+                        COMPANY_ID = BusinessId,
+                        INVITED_EMAIL = Email,
+                        REQUEST_TOKEN = Guid.NewGuid().ToString(),
+                        SENT_BY = UserIdentity.UserID,
+                        STATUS = "Pending"
+                    };
+
+                    var result = await businessUserService.SendEmailInvite(inviteModel, targetUser.Data as IDictionary<string, object>);
+                    return Json(result, JsonRequestBehavior.AllowGet);
                 }
-
-                BusinessUserInvitationModel inviteModel = new BusinessUserInvitationModel()
+                else
                 {
-                    COMPANY_ID = BusinessId,
-                    INVITED_EMAIL = Email,
-                    REQUEST_TOKEN = Guid.NewGuid().ToString(),
-                    SENT_BY = UserIdentity.UserID,
-                    STATUS = "Pending"
-                };
-
-                var result = await businessUserService.SendEmailInvite(inviteModel);
-                
-                return Json(result, JsonRequestBehavior.AllowGet);
+                    return Json(new AddUpdateDelete() { Status = false, Message = "User not registered with barrway." }, JsonRequestBehavior.AllowGet);
+                }
             }
             catch (Exception ex)
             {

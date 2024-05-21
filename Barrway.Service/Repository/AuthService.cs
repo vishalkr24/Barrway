@@ -26,17 +26,11 @@ namespace Barrway.Service.Repository
         private readonly ISqlFunction sqlFunction;
         private readonly IFormAPIRepository formAPIRepository;
 
-        private readonly RestClient _client;
-        private readonly string _url = ConfigurationManager.AppSettings["webapibaseurl"];
-
         public AuthService(IMapper mapper, ISqlFunction sqlFunction, IFormAPIRepository formAPIRepository)
         {
             this.mapper = mapper;
             this.sqlFunction = sqlFunction;
             this.formAPIRepository = formAPIRepository;
-            //this.userIdentity = userIdentity;
-            //this.zoomService = zoomService;
-            //_client = new RestClient("www.google.com");
         }
 
         public async Task<AddUpdateDelete<IDictionary<string, object>>> GetUser(string email, string password, bool isToken = false)
@@ -917,7 +911,8 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
 
             if (result.res == 1)
             {
-                var result2 = SendActivationLink.sendlink(userToken, Role);
+                var userDetails = await GetSinglePublicUserAccount(userID);
+                var result2 = SendActivationLink.sendlink(userToken, Role, userDetails.Data as IDictionary<string, object>);
                 if (result2.Status)
                 {
                     return new AddUpdateDelete() { Status = true, Message = "User Activation Link send!" };
@@ -960,40 +955,81 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
             return new AddUpdateDelete() { Status = false, Message = "User Activation Link not generate!" };
         }
 
+        private async Task<AddUpdateDelete> GetSinglePublicUserAccount(string UserId)
+        {
+            string query = $@"SELECT publicUser.[Id]
+                              ,publicUser.[USER_ID]
+                              ,publicUser.[USER_EMAIL]
+                              ,publicUser.[USER_PASSWORD]
+                              ,publicUser.[Country_Code]
+                              ,publicUser.[USER_PHONE]
+                              ,publicUser.[IS_EXTERNAL_SIGNUP]
+                              ,publicUser.[IS_EMAIL_VERIFIED]
+                              ,publicUser.[IS_PHONE_VERIFIED]
+                              ,publicUser.[created_at]
+                              ,publicUser.[updated_at]
+                              ,publicUser.[created_by]
+                              ,publicUser.[updated_by]
+                              ,publicUser.[IS_ACTIVE]
+                              ,publicUser.[PROFILE_STATUS]
+                              ,publicUser.[ROLE_ID]
+                              ,publicUser.[SIGNUP_TYPE], publicUser.[Id]      ,publicUser.[created_at]      ,publicUser.[updated_at]      ,publicUser.[created_by]      ,publicUser.[updated_by]      ,publicUser.[USER_ID]      ,[SUBSCRIPTION_PLAN_ID]      ,account.[CURRENT_STEP]     ,[FIRST_NAME]      ,[LAST_NAME]      ,[PROFILE_PHOTO_PATH]      ,[PROFILE_PHOTO_NAME]      ,[CHINESE_NAME]      ,[NICK_NAME]      ,[GENDER]      ,[DATE_OF_BIRTH]  
+                        FROM[dbo].[PUBLIC_USER_ACCOUNT_1943] account 
+                        join USER_MASTER_1915 publicUser on publicUser.USER_ID = account.USER_ID
+                        where publicUser.USER_ID = '" + UserId + "'";
 
+            List<IDictionary<string, object>> businessWebsiteResult = await sqlFunction.ExecuteSqlQuery(query);
+
+            if (businessWebsiteResult.Count > 0)
+            {
+                var businessWebsite = businessWebsiteResult.FirstOrDefault();
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = businessWebsite };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
 
         public async Task<AddUpdateDelete> SendresetpasswordLink(string UserName, string Email)
         {
-            var userToken = new UserToken()
+            var userDetails = await GetSinglePublicUserAccount(UserName);
+
+            if (userDetails.Status)
             {
-                EMAIL = Email,
-                USER_ID = UserName,
-                TOKEN = Guid.NewGuid().ToString(),
-                TOKEN_TIME = DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm:ss"),
-                IS_ACTIVE = "YES"
-            };
-            var userTokeDic = userToken.ToDictionary();
-
-            Form_DataTable request = new Form_DataTable();
-            request.action = (int)FormAction.Save;
-            request.formId = (int)FormSetting.USER_TOKEN;
-            request.formGroupKey = Guid.NewGuid().ToString();
-            request.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(userTokeDic);
-
-            var result = (await formAPIRepository.GeneratedFormData(request)).Data;
-
-            if (result.res == 1)
-            {
-                var result2 = SendActivationLink.sendlinkForResetPassword(userToken);
-                if (result2.Status)
+                var userToken = new UserToken()
                 {
-                    return new AddUpdateDelete() { Status = true, Message = "User Activation Link send!" };
+                    EMAIL = Email,
+                    USER_ID = UserName,
+                    TOKEN = Guid.NewGuid().ToString(),
+                    TOKEN_TIME = DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm:ss"),
+                    IS_ACTIVE = "YES"
+                };
+                var userTokeDic = userToken.ToDictionary();
+
+                Form_DataTable request = new Form_DataTable();
+                request.action = (int)FormAction.Save;
+                request.formId = (int)FormSetting.USER_TOKEN;
+                request.formGroupKey = Guid.NewGuid().ToString();
+                request.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(userTokeDic);
+
+                var result = (await formAPIRepository.GeneratedFormData(request)).Data;
+
+                if (result.res == 1)
+                {
+                    var result2 = SendActivationLink.sendlinkForResetPassword(userToken, userDetails.Data as IDictionary<string, object>);
+                    if (result2.Status)
+                    {
+                        return new AddUpdateDelete() { Status = true, Message = "User Activation Link send!" };
+                    }
+                    return new AddUpdateDelete() { Status = false, Message = result2.Message };
                 }
-                return new AddUpdateDelete() { Status = false, Message = result2.Message };
+                return new AddUpdateDelete() { Status = false, Message = "User Activation Link not generate!" };
             }
-            return new AddUpdateDelete() { Status = false, Message = "User Activation Link not generate!" };
-
-
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = "No user found" };
+            }
         }
 
 
