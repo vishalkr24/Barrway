@@ -319,6 +319,7 @@ namespace Barrway.Service.Repository
             if (businessWebsiteResult.Count > 0)
             {
                 var businessWebsite = businessWebsiteResult.FirstOrDefault();
+                businessWebsite["USER_PASSWORD"] = Aes256CbcEncrypter.Decrypt(businessWebsite["USER_PASSWORD"]?.ToString());
                 return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = businessWebsite };
             }
             else

@@ -305,15 +305,7 @@ namespace Barrway.Controllers
 
 
         }
-            
         
-
-
-
-
-
-
-
         private void LogoutAllSession()
         {
             Session.Clear();
@@ -622,28 +614,6 @@ namespace Barrway.Controllers
             return View(new EmailSignUpViewModel() { IS_EXTERNAL_SIGNUP = false });
         }
 
-
-        
-
-        //[AllowAnonymous]
-        //[HttpGet]
-        //public async Task<ActionResult> SignUp()
-        //{
-        //    if (User.Identity.IsAuthenticated)
-        //    {
-        //        var user = await authService.GetUser(User.Identity.Name, FormRole.PUBLIC_USER);
-        //        if (user.Status)
-        //        {
-        //            return RedirectToAction("Index", "UserAdmin");
-        //        }
-        //        else
-        //        {
-        //            LogoutPublicUser();
-        //        }
-        //    }
-        //    return View(new EmailSignUpViewModel() { ReturnUrl = "" });
-        //}
-
         [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -829,6 +799,8 @@ namespace Barrway.Controllers
             {
                 // Insert Data in User Master
 
+                string encryptedPassword = Aes256CbcEncrypter.Encrypt(model.USER_PASSWORD);
+
                 UserMaserModel userMaserModel = new UserMaserModel()
                 {
                     USER_EMAIL = "",
@@ -840,7 +812,7 @@ namespace Barrway.Controllers
                     SIGNUP_TYPE = (model.IS_EXTERNAL_SIGNUP) ? "Google" : "Phone",
                     Country_Code = model.Country_Code,
                     USER_PHONE = phone,
-                    USER_PASSWORD = model.USER_PASSWORD,
+                    USER_PASSWORD = encryptedPassword,
                     USER_ID = model.USER_NAME,
                     ROLE_ID = generalRoleId,
                     COMPANY_PROFILE_STATUS = "N",

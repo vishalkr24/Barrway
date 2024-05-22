@@ -61,6 +61,7 @@ namespace Barrway.Service.Repository
 
                     if (user["IS_ACTIVE"]?.ToString() == "Y")
                     {
+                        user["USER_PASSWORD"] = Aes256CbcEncrypter.Decrypt(user["USER_PASSWORD"]?.ToString());
                         return new AddUpdateDelete<IDictionary<string, object>>() { Status = true, Message = "Success", Data = user };
 
                     }
@@ -98,6 +99,7 @@ namespace Barrway.Service.Repository
                     var user = result.FirstOrDefault();
                     if (string.IsNullOrEmpty(user["USER_PASSWORD"]?.ToString()) || Aes256CbcEncrypter.Decrypt(user["USER_PASSWORD"].ToString()) != password)
                     {
+                        string a = Aes256CbcEncrypter.Decrypt(user["USER_PASSWORD"].ToString());
                         return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Invalid email or password" };
                     }
 
@@ -111,6 +113,7 @@ namespace Barrway.Service.Repository
 
                         if (isToken)
                         {
+                            user["USER_PASSWORD"] = Aes256CbcEncrypter.Decrypt(user["USER_PASSWORD"]?.ToString());
                             return new AddUpdateDelete<IDictionary<string, object>>() { Status = true, Message = "Success", Data = user };
                         }
 
@@ -192,6 +195,7 @@ namespace Barrway.Service.Repository
 
                         if (isToken)
                         {
+                            user["USER_PASSWORD"] = Aes256CbcEncrypter.Decrypt(user["USER_PASSWORD"]?.ToString());
                             return new AddUpdateDelete<IDictionary<string, object>>() { Status = true, Message = "Success", Data = user };
                         }
 
@@ -245,32 +249,6 @@ namespace Barrway.Service.Repository
 
         }
 
-
-        //public async Task<AddUpdateDelete<IDictionary<string, object>>> ValidateSuperAdminUser(string email, string password, bool isToken = false)
-        //{
-        //    try
-        //    {
-        //        string SupUsername = "Superadmin@augursinnovation.com";
-        //        string SupPassword = "Admin@1234";
-
-        //        if (email == SupUsername && password == SupPassword)
-        //        {
-        //            return new AddUpdateDelete<IDictionary<string, object>> { Status = true, Message = "Success" };
-        //        }
-        //        else
-        //        {
-        //            return new AddUpdateDelete<IDictionary<string, object>> { Status = false, Message = "Invalid email or password." };
-        //        }
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //        return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = ex.Message };
-        //    }
-
-        //}
-
         public async Task<AddUpdateDelete> userEmaillogin(string email, string password)
         {
             try
@@ -297,7 +275,8 @@ namespace Barrway.Service.Repository
 
                     if (user["IS_ACTIVE"]?.ToString() == "YES")
                     {
-                        return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
+                        user["USER_PASSWORD"] = Aes256CbcEncrypter.Decrypt(user["USER_PASSWORD"]?.ToString());
+                        return new AddUpdateDelete() { Status = true, Message = "Success", Data = user };
                     }
                     else
                     {
@@ -345,7 +324,8 @@ namespace Barrway.Service.Repository
 
                     if (user["IS_ACTIVE"]?.ToString() == "YES")
                     {
-                        return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
+                        user["USER_PASSWORD"] = Aes256CbcEncrypter.Decrypt(user["USER_PASSWORD"]?.ToString());
+                        return new AddUpdateDelete() { Status = true, Message = "Success", Data = user };
                     }
                     else
                     {
@@ -417,7 +397,9 @@ namespace Barrway.Service.Repository
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
                 {
-                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
+                    var user = result.FirstOrDefault();
+                    user["USER_PASSWORD"] = Aes256CbcEncrypter.Decrypt(user["USER_PASSWORD"]?.ToString());
+                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = user };
                 }
                 else
                 {
@@ -462,7 +444,9 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
                 {
-                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
+                    var user = result.FirstOrDefault();
+                    user["USER_PASSWORD"] = Aes256CbcEncrypter.Decrypt(user["USER_PASSWORD"]?.ToString());
+                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = user };
                 }
                 else
                 {
@@ -487,8 +471,10 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
-                {
-                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
+                {   
+                    var user = result.FirstOrDefault(); 
+                    user["USER_PASSWORD"] = Aes256CbcEncrypter.Decrypt(user["USER_PASSWORD"]?.ToString());
+                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = user };
                 }
                 else
                 {
@@ -514,7 +500,9 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
                 {
-                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
+                    var user = result.FirstOrDefault();
+                    user["USER_PASSWORD"] = Aes256CbcEncrypter.Decrypt(user["USER_PASSWORD"]?.ToString());
+                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = user };
                 }
                 else
                 {
@@ -560,7 +548,9 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
                 {
-                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
+                    var user = result.FirstOrDefault();
+                    user["USER_PASSWORD"] = Aes256CbcEncrypter.Decrypt(user["USER_PASSWORD"]?.ToString());
+                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = user };
                 }
                 else
                 {
@@ -604,7 +594,9 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
                 {
-                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
+                    var user = result.FirstOrDefault();
+                    user["USER_PASSWORD"] = Aes256CbcEncrypter.Decrypt(user["USER_PASSWORD"]?.ToString());
+                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = user };
                 }
                 else
                 {
@@ -630,7 +622,9 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
                 {
-                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
+                    var user = result.FirstOrDefault();
+                    user["USER_PASSWORD"] = Aes256CbcEncrypter.Decrypt(user["USER_PASSWORD"]?.ToString());
+                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = user };
 
 
                 }
@@ -716,7 +710,6 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
         {
             try
             {
-                newPassword = "Deepak@123";
                 newPassword = Aes256CbcEncrypter.Encrypt(newPassword);
 
                 string sqlString = $@" update [USER_TOKEN_1923] set VERIFICATION_TIME='{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm:ss")}',[IS_ACTIVE]='NO',updated_at=getdate()  where [TOKEN]='{token}'";
@@ -824,77 +817,6 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
             }
         }
 
-        private async Task<AddUpdateDelete> GetUserByRole(string userID, string role)
-        {
-            if (role == "BUSINESS_USER")
-            {
-                string sqlQuery = $@"SELECT business_user.*,user_m.[USER_ID],user_m.[USER_EMAIL],user_m.[USER_PHONE],user_m.[SIGNUP_TYPE],user_m.[IS_ACTIVE],user_m.[IS_EMAIL_VERIFIED], user_m.[IS_PHONE_VERIFIED],user_m.[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS]
-                                    , (select ROLE_TYPE from BUSINESS_ASSIGNED_USERS_1964 where BUSINESS_ACCOUNT_ID = (select top 1 BUSINESS_ACCOUNT_ID from BUSINESS_ASSIGNED_USERS_1964 assigned2 where assigned2.ASSIGNED_USER = user_m.USER_ID and assigned2.ROLE_TYPE = 'SUPERUSER')) as 'ROLE_TYPE'
-                                    FROM[dbo].[BUSINESS_ACCOUNT_WEBSITE_1918] business_user
-                                    join USER_MASTER_1915 user_m  on user_m.[USER_ID]= business_user.[USER_ID]
-                                    join[dbo].[ROLE_MASTER_1917] user_role on user_role.Id = user_m.[ROLE_ID]
-                                    where business_user.[USER_ID]= '" + userID + "' and user_m.ROLE_ID = '1'";
-                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
-
-                if (result.Count() > 0)
-                {
-                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
-                }
-                else
-                {
-                    return new AddUpdateDelete() { Status = false, Message = "Invalid Email or Password" };
-                }
-            }
-
-            if (role == "GENERAL_USER")
-            {
-                string sqlQuery = $@"select * from USER_MASTER_1915 where USER_ID = '{userID}'";
-                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
-
-                if (result.Count() > 0)
-                {
-                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
-                }
-                else
-                {
-                    return new AddUpdateDelete() { Status = false, Message = "Invalid Email or Password" };
-                }
-            }
-
-
-            if (role == "SUPERADMIN_USER")
-            {
-                string sqlQuery = "SELECT user_m.[USER_ID],user_m.[USER_EMAIL],user_m.[USER_PASSWORD],user_m.[USER_PHONE],user_m.[SIGNUP_TYPE],user_m.[IS_ACTIVE],user_m.[IS_EMAIL_VERIFIED], user_m.[IS_PHONE_VERIFIED],user_m.[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS]                       FROM USER_MASTER_1915 user_m                          join[dbo].[ROLE_MASTER_1917] user_role on user_role.Id = user_m.[ROLE_ID]                             where user_m.[USER_ID]= '" + userID + "' and user_m.ROLE_ID = '3'";
-                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
-
-                if (result.Count() > 0)
-                {
-                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
-                }
-                else
-                {
-                    return new AddUpdateDelete() { Status = false, Message = "Invalid Email or Password" };
-                }
-            }
-
-            if (role == "PUBLIC_USER")
-            {
-                string sqlQuery = $@"SELECT public_user.*,user_m.[USER_ID],user_m.[USER_EMAIL],user_m.[USER_PASSWORD],user_m.[USER_PHONE],user_m.[SIGNUP_TYPE],user_m.[IS_ACTIVE],user_m.[IS_EMAIL_VERIFIED], user_m.[IS_PHONE_VERIFIED],user_m.[ROLE_ID],user_role.[ROLE_NAME],[PROFILE_STATUS]                                   , (select ASSIGNED_USER, BUSINESS_ACCOUNT_ID from BUSINESS_ASSIGNED_USERS_1964 where BUSINESS_ACCOUNT_ID = (select top 1 BUSINESS_ACCOUNT_ID from BUSINESS_ASSIGNED_USERS_1964 assigned2 where assigned2.ASSIGNED_USER = user_m.USER_ID and assigned2.ROLE_TYPE = 'SUPERUSER') for JSON auto) as 'AssignedData'                          FROM[dbo].[PUBLIC_USER_ACCOUNT_1943] public_user join USER_MASTER_1915 user_m  on user_m.[USER_ID]= public_user.[USER_ID]                              join[dbo].[ROLE_MASTER_1917] user_role on user_role.Id = user_m.[ROLE_ID]                             where public_user.[USER_ID]= '" + userID + "' and user_m.ROLE_ID = '2'";
-                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
-
-                if (result.Count() > 0)
-                {
-                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
-                }
-                else
-                {
-                    return new AddUpdateDelete() { Status = false, Message = "Invalid Email or Password" };
-                }
-            }
-
-
-            return new AddUpdateDelete() { Status = false, Message = "Access denied!!" };
-        }
         public async Task<AddUpdateDelete> sendActivationLink(string userID, string Email, FormRole Role)
         {
             var userToken = new UserToken()
