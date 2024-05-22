@@ -47,7 +47,7 @@ namespace Barrway.Utility.Common
 
 
 
-                return "Moodies_" + Convert.ToBase64String(encoding.GetBytes(JsonConvert.SerializeObject(keyValues)));
+                return prefix + Convert.ToBase64String(encoding.GetBytes(JsonConvert.SerializeObject(keyValues)));
             }
             catch (Exception e)
             {
