@@ -632,6 +632,7 @@
     <Content Include="assets\img\angle-red.png" />
     <Content Include="assets\img\ban-img.png" />
     <Content Include="assets\img\banner-back.jpg" />
+    <Content Include="assets\img\barrise.png" />
     <Content Include="assets\img\Barrway-horizontallogo-Final-01.svg" />
     <Content Include="assets\img\barwaylogo.svg" />
     <Content Include="assets\img\barway_latest.svg" />
@@ -640,6 +641,7 @@
     <Content Include="assets\img\calender.svg" />
     <Content Include="assets\img\cha.png" />
     <Content Include="assets\img\chat.png" />
+    <Content Include="assets\img\cridcard.png" />
     <Content Include="assets\img\cross.png" />
     <Content Include="assets\img\cusbg.jpg" />
     <Content Include="assets\img\customer-1.png" />
@@ -659,6 +661,7 @@
     <Content Include="assets\img\filter_mob.png" />
     <Content Include="assets\img\filter_up.png" />
     <Content Include="assets\img\five.png" />
+    <Content Include="assets\img\fivestar.png" />
     <Content Include="assets\img\four.png" />
     <Content Include="assets\img\glo.png" />
     <Content Include="assets\img\globe.png" />
@@ -673,7 +676,11 @@
     <Content Include="assets\img\logo.png" />
     <Content Include="assets\img\logo.svg" />
     <Content Include="assets\img\logobeta1.png" />
+    <Content Include="assets\img\logo_usim.png" />
+    <Content Include="assets\img\logo_usim2.png" />
+    <Content Include="assets\img\logo_usim3.png" />
     <Content Include="assets\img\mainhome.png" />
+    <Content Include="assets\img\marketing.png" />
     <Content Include="assets\img\marketplace-detail.jpg" />
     <Content Include="assets\img\minilogo.png" />
     <Content Include="assets\img\news.jpg" />
@@ -699,6 +706,7 @@
     <Content Include="assets\img\p11.png" />
     <Content Include="assets\img\p12.png" />
     <Content Include="assets\img\p2.png" />
+    <Content Include="assets\img\paper-box.png" />
     <Content Include="assets\img\post_img.jpg" />
     <Content Include="assets\img\pro.png" />
     <Content Include="assets\img\purple.png" />
@@ -709,6 +717,7 @@
     <Content Include="assets\img\ques.png" />
     <Content Include="assets\img\rectangle.png" />
     <Content Include="assets\img\Restaurant.png" />
+    <Content Include="assets\img\scaning.png" />
     <Content Include="assets\img\search-icon.png" />
     <Content Include="assets\img\service.jpg" />
     <Content Include="assets\img\slogan.png" />
