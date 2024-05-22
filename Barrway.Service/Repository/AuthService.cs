@@ -509,7 +509,7 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
                 string sqlQuery = $@"select user_m.*, role_m.ROLE_NAME, pua.FIRST_NAME, pua.LAST_NAME from USER_MASTER_1915 user_m
                                      join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID
                                      join PUBLIC_USER_ACCOUNT_1943 pua on pua.USER_ID = user_m.USER_ID
-                                    where user_m.USER_PHONE='{phone}' and user_m.Country_Code='{CountryCode}'";
+                                    where Replace(user_m.USER_PHONE,' ','')='{phone.Replace(" ","")}' and user_m.Country_Code='{CountryCode}'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
