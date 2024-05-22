@@ -175,26 +175,26 @@
                                 int counter = 1;
                                 foreach (var item in EventData.OrderBy(x => x.start))
                                 {
-                                    TimeSpan? maxTime = null;
-                                    TimeSpan? minTime = null;
+                                    TimeSpan? maxTime = new TimeSpan(17, 0, 0);
+                                    TimeSpan? minTime = new TimeSpan(13, 0, 0);
                                     CultureInfo provider = CultureInfo.InvariantCulture;
                                     TimeSpan startTime = TimeSpan.Parse(item.start.ToString("HH:mm"));
                                     TimeSpan endTime = TimeSpan.Parse(item.end.ToString("HH:mm"));
 
-                                    if (!string.IsNullOrEmpty(calendarSetting.maxTime) && !string.IsNullOrEmpty(calendarSetting.minTime))
-                                    {
-
-                                        maxTime = TimeSpan.Parse(calendarSetting.maxTime.Replace(" ", ":"));
-                                        minTime = TimeSpan.Parse(calendarSetting.minTime.Replace(" ", ":"));
-                                    }
-
-                                    //if (maxTime != null && minTime != null)
+                                    //if (!string.IsNullOrEmpty(calendarSetting.maxTime) && !string.IsNullOrEmpty(calendarSetting.minTime))
                                     //{
-                                    //    if (!(startTime >= minTime && endTime <= maxTime))
-                                    //    {
-                                    //        continue;
-                                    //    }
+
+                                    //    maxTime = TimeSpan.Parse(calendarSetting.maxTime.Replace(" ", ":"));
+                                    //    minTime = TimeSpan.Parse(calendarSetting.minTime.Replace(" ", ":"));
                                     //}
+
+                                    if (maxTime != null && minTime != null)
+                                    {
+                                        if (!(startTime >= minTime && endTime <= maxTime))
+                                        {
+                                            continue;
+                                        }
+                                    }
                                     <tr><td style="font-weight:bold" colspan="@(rowCount+1)">Break</td></tr>
                                     <tr>
                                         <td>
@@ -209,8 +209,8 @@
 
                                             <p>
                                                 Session @counter
-                                                <br/>
-                                            @item.start.ToString("HH:mm") - @item.end.ToString("HH:mm")
+                                                <br />
+                                                @item.start.ToString("HH:mm") - @item.end.ToString("HH:mm")
 
                                             </p>
                                         </td>
@@ -226,7 +226,7 @@
                                                 @foreach (var item3 in evnts)
                                                 {
 
-                                                    
+
                                                     string customTitle = "";
                                                     if (i > 0)
                                                     {
@@ -238,7 +238,7 @@
                                                     {
                                                         string[] allCustomFormArr = allcustomForms.Split(',');
                                                         string[] allCustomFormIdsArr = allcustomFormIds.Split(',');
-                                                        
+
                                                         var courseMasterCalendarSetting = Model.calendarSetting.Where(x => x.resourceForm == (int)Barrway.Utility.Common.FormSetting.SERVICE_MASTER).FirstOrDefault();
                                                         if (courseMasterCalendarSetting != null)
                                                         {
@@ -250,7 +250,7 @@
                                                                 customTitle += courseMaster["ACTIVITY_NAME"]?.ToString() + "<br/>";
                                                             }
                                                         }
-                                                        
+
 
                                                         //var staffMasterCalendarSetting = Model.calendarSetting.Where(x => x.resourceForm == (int)Barrway.Utility.Common.FormSetting.SERVICE_PROVIDER_MASTER).FirstOrDefault();
                                                         //if (staffMasterCalendarSetting != null)
@@ -280,16 +280,17 @@
                                 }
 
                             }
-
+                            <tr><td style="font-weight:bold" colspan="@(rowCount+1)">Break</td></tr>
                             <tr>
                                 <td width="100px">
-                                    17:00 - 18:00
+                                    17:15 - 18:00
                                 </td>
                                 <td colspan="@rowCount">
                                     <div class="header-text">
                                         Graduation Ceremony 畢業典禮
-                                        <br />
+                                        <br/>
                                         Venue: D1-LP-02
+
                                     </div>
                                 </td>
 
@@ -314,7 +315,7 @@
             </div>
         </div>
 
-        <div style="margin-top:50px;">
+        <div style="margin-top:30px;">
             <h2 style="text-align:left;font-size:24px;font-weight:400">上課日當日安排及事前準備：</h2>
             <ol style="margin-top:20px;">
                 <li>為確保選課公平性，上課日當天請遵照個別選課時間表上課，不設即場報讀。</li>
@@ -324,7 +325,7 @@
                 <li>本校或會因應最終的選課情況作出調動，如有，將作個別通知。</li>
                 <li>開學日當天，如需遲到、早退，或遇上其他突發狀況，請致電9708 3171通知本校教務處主席邵慧存女士，以便安排。</li>
                 <li>是次活動將借用香港教育大學校園範圍，教大活動信將於同學確認出席後發出，請同學帶備活動信參與活動，否則將會被拒進入大學校園。</li>
-                <li>當天模擬大學將安排專車從大學站接載到香港教育大學校園，如有興趣乘坐，請在選課系統登記時報名，先到先得，逾時不候。</li>
+                <li>當天模擬大學將安排專車從大學站接載往返香港教育大學校園，如有興趣乘坐，請在選課系統登記時報名，先到先得，逾時不候。</li>
 
             </ol>
         </div>
