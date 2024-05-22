@@ -233,7 +233,7 @@ namespace Barrway.Controllers
                         calendarModel.SLOT_DURATION_IN_MINS = calendarModel2.SLOT_DURATION_IN_MINS;
                         calendarModel.TAGS = calendarModel2.TAGS.Split(',').ToList();
                         calendarModel.INTERVAL_TIME = calendarModel2.INTERVAL_TIME;
-                        calendarModel.BOOKING_DEADLINE = calendarModel2.BOOKING_DEADLINE;
+                        calendarModel.BOOKING_DEADLINE = (!string.IsNullOrEmpty(calendarModel2.BOOKING_DEADLINE)) ? Convert.ToDouble(calendarModel2.BOOKING_DEADLINE).ToString("N0") : "0";
                     }
                     else
                     {
