@@ -853,6 +853,8 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
 
         public async Task<AddUpdateDelete> sendEmailVarificationLink(string userID, string Email)
         {
+            
+
             var userToken = new UserToken()
             {
                 EMAIL = Email,
@@ -870,10 +872,11 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
             request.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(userTokeDic);
 
             var result = (await formAPIRepository.GeneratedFormData(request)).Data;
+            var userDetails = await GetSinglePublicUserAccount(userToken.USER_ID);
 
             if (result.res == 1)
             {
-                var result2 = SendActivationLink.sendvarificationLink(userToken);
+                var result2 = SendActivationLink.sendvarificationLink(userToken, userDetails.Data);
                 if (result2.Status)
                 {
                     return new AddUpdateDelete() { Status = true, Message = "User Activation Link send!" };

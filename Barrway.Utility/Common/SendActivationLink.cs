@@ -189,7 +189,7 @@ namespace Barrway.Utility.Common
 
         }
 
-        public static AddUpdateDelete sendvarificationLink(UserToken userToken)
+        public static AddUpdateDelete sendvarificationLink(UserToken userToken, IDictionary<string, object> userDetails)
         {
             try
             {
@@ -208,17 +208,31 @@ namespace Barrway.Utility.Common
 
                 string logourl = baseUrl + "assets/marketplace/image/logo.png";
 
-                strBody.Append("<body class='ng-cloak'><div class='form-wrapper-custom-email' style='width: 50%; margin: 0 auto; padding: 1px;' id='loginForm'>" +
-                                "<div class='container-custom'><div class='row form-group'><div class='row mb-4'><strong style = 'display:flex; gap:10px; align-items:center;'><img src='" + logourl + "' style='height:40px; transform:translateY(50%); padding:10px;'/><h2 style='color: #3e6b6b;'>Barrway Business</h2></strong></div></div>" +
-                                "<div class='row mb-4 choices' style='text-align: center;'><h4 class='text-darkPrimary'>Verification Mail</h4></div>" +
-                                "<div class='row mb-4'><h4>Dear User</h4></div><div class='row form-group'>" +
-                                //"<p>Please varify your email address</p></div>" +
-                                "<div class='row form-group'><p>Please click the following button to varify your email address</p></div>" +
-                                "<div class='row form-group' style='text-align: center;'><a target = '_blank' href='" + verficationlink + "' style='height: 35px; line-height: 35px; background-color: #3e6b6b; color: #ece9e0; padding: 8px 10px; cursor: pointer; border: 0px; font-size: 15px; text-decoration: none;'>Verify email address</a></div>" +
-                                "<div class='row form-group'><label>User Id:</label><strong><label id = 'lblUserId'> " + userToken.USER_ID + " </label></strong></div>" +
-                                "<div class='row form-group'><p>* For any questions, please feel free to contact our customer service hot-line: or email to us at</p></div>" +
-                                "<div class='row form-group'><p>Best Regards,</p><p>Barrway</p></div>" +
-                                "</div></div></body>");
+                string emailTemplate = "";
+
+                using (StreamReader sr = new StreamReader(HttpContext.Current.Server.MapPath("~/EmailTemplates/EmailVerificationTemplate.html")))
+                {
+                    emailTemplate = sr.ReadToEnd();
+                }
+
+                strBody.Append(emailTemplate);
+
+                strBody.Replace("<%FIRST_NAME%>", userDetails["FIRST_NAME"]?.ToString() ?? "");
+                strBody.Replace("<%USER_ID%>", userDetails["USER_ID"]?.ToString() ?? "");
+                strBody.Replace("<%RESET_LINK%>", verficationlink);
+                strBody.Replace("<%BASE_URL%>", baseUrl);
+
+                //strBody.Append("<body class='ng-cloak'><div class='form-wrapper-custom-email' style='width: 50%; margin: 0 auto; padding: 1px;' id='loginForm'>" +
+                //                "<div class='container-custom'><div class='row form-group'><div class='row mb-4'><strong style = 'display:flex; gap:10px; align-items:center;'><img src='" + logourl + "' style='height:40px; transform:translateY(50%); padding:10px;'/><h2 style='color: #3e6b6b;'>Barrway Business</h2></strong></div></div>" +
+                //                "<div class='row mb-4 choices' style='text-align: center;'><h4 class='text-darkPrimary'>Verification Mail</h4></div>" +
+                //                "<div class='row mb-4'><h4>Dear User</h4></div><div class='row form-group'>" +
+                //                //"<p>Please varify your email address</p></div>" +
+                //                "<div class='row form-group'><p>Please click the following button to varify your email address</p></div>" +
+                //                "<div class='row form-group' style='text-align: center;'><a target = '_blank' href='" + verficationlink + "' style='height: 35px; line-height: 35px; background-color: #3e6b6b; color: #ece9e0; padding: 8px 10px; cursor: pointer; border: 0px; font-size: 15px; text-decoration: none;'>Verify email address</a></div>" +
+                //                "<div class='row form-group'><label>User Id:</label><strong><label id = 'lblUserId'> " + userToken.USER_ID + " </label></strong></div>" +
+                //                "<div class='row form-group'><p>* For any questions, please feel free to contact our customer service hot-line: or email to us at</p></div>" +
+                //                "<div class='row form-group'><p>Best Regards,</p><p>Barrway</p></div>" +
+                //                "</div></div></body>");
 
 
                 var result = EmailNotification.SendEmailAsync(userToken.EMAIL, strBody.ToString(), "Verification Mail");
