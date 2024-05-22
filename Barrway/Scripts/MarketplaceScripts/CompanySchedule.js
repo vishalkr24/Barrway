@@ -3320,7 +3320,7 @@ async function rendarPopupCalendar(assignDate) {
                                     ${(customTitleSplit.length > 2) ? `<div>${customTitleSplit[2]}</div><br />` : ''}
                                     <div>${customTitleSplit[1]}</div>
                                     <div>${customTitleSplit[0]}</div>
-                                    ${((response.Data != null) ? `<div>${response.Data} credits</div>` : "")}<br />
+                                    ${((response.Data != null && response.Data != 0) ? `<div>${response.Data} credits</div>` : "")}<br />
                                     <h4 style="color:red">${response.Message}</h4>`;
 
                                 let buttonsWrap = {
