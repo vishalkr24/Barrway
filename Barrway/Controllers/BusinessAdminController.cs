@@ -233,6 +233,7 @@ namespace Barrway.Controllers
                         calendarModel.SLOT_DURATION_IN_MINS = calendarModel2.SLOT_DURATION_IN_MINS;
                         calendarModel.TAGS = calendarModel2.TAGS.Split(',').ToList();
                         calendarModel.INTERVAL_TIME = calendarModel2.INTERVAL_TIME;
+                        calendarModel.BOOKING_DEADLINE = calendarModel2.BOOKING_DEADLINE;
                     }
                     else
                     {
