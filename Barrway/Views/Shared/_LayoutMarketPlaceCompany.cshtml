@@ -149,12 +149,9 @@
                                     userabbr = UserIdentity.UserName[0].ToString();
                                 }
 
-
-
-                                @*<a href="/Useradmin#/myprofile" id="nav-user-icon" style="text-transform:uppercase;">@userabbr </a>*@
                                 if (!string.IsNullOrEmpty(ViewBag.ProfilePic))
                                 {
-                                    <img src="@ViewBag.ProfilePic.Replace("~", "")" onclick="window.location.href = '/Useradmin#/myprofile'" onerror="this.src='/assets/img/160x160/img6.jpg'" style="width: 40px; height: 40px; border-radius: 50px;">
+                                    <img src="@ViewBag.ProfilePic.Replace("~", "")" onclick="window.location.href = '/Useradmin#/userdashboard'" onerror="this.src='/assets/img/160x160/img6.jpg'" style="width: 40px; height: 40px; border-radius: 50px;">
                                 }
                                 else
                                 {
@@ -212,7 +209,7 @@
                                 }
                                 if (!string.IsNullOrEmpty(ViewBag.ProfilePic))
                                 {
-                                    <img src="@ViewBag.ProfilePic.Replace("~", "")" onclick="window.location.href = '/Useradmin#/dashboard'" onerror="this.src='/assets/img/160x160/img6.jpg'" style="width: 40px; height: 40px; border-radius: 50px;">
+                                    <img src="@ViewBag.ProfilePic.Replace("~", "")" onclick="window.location.href = '/Useradmin#/userdashboard'" onerror="this.src='/assets/img/160x160/img6.jpg'" style="width: 40px; height: 40px; border-radius: 50px;">
                                 }
                                 else
                                 {

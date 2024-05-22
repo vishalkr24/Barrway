@@ -49,7 +49,7 @@ namespace Barrway.Service.Repository
                 if (result.Count() > 0)
                 {
                     var user = result.FirstOrDefault();
-                    if (string.IsNullOrEmpty(user["USER_PASSWORD"]?.ToString()) || user["USER_PASSWORD"].ToString() != password)
+                    if (string.IsNullOrEmpty(user["USER_PASSWORD"]?.ToString()) || Aes256CbcEncrypter.Decrypt(user["USER_PASSWORD"].ToString()) != password)
                     {
                         return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Invalid Password" };
                     }
@@ -96,7 +96,7 @@ namespace Barrway.Service.Repository
                 if (result.Count() > 0)
                 {
                     var user = result.FirstOrDefault();
-                    if (string.IsNullOrEmpty(user["USER_PASSWORD"]?.ToString()) || user["USER_PASSWORD"].ToString() != password)
+                    if (string.IsNullOrEmpty(user["USER_PASSWORD"]?.ToString()) || Aes256CbcEncrypter.Decrypt(user["USER_PASSWORD"].ToString()) != password)
                     {
                         return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Invalid email or password" };
                     }
@@ -177,7 +177,7 @@ namespace Barrway.Service.Repository
                 if (result.Count() > 0)
                 {
                     var user = result.FirstOrDefault();
-                    if (string.IsNullOrEmpty(user["USER_PASSWORD"]?.ToString()) || user["USER_PASSWORD"].ToString() != password)
+                    if (string.IsNullOrEmpty(user["USER_PASSWORD"]?.ToString()) || Aes256CbcEncrypter.Decrypt(user["USER_PASSWORD"].ToString()) != password)
                     {
                         return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Invalid Password" };
                     }
@@ -716,6 +716,9 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
         {
             try
             {
+                newPassword = "Deepak@123";
+                newPassword = Aes256CbcEncrypter.Encrypt(newPassword);
+
                 string sqlString = $@" update [USER_TOKEN_1923] set VERIFICATION_TIME='{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm:ss")}',[IS_ACTIVE]='NO',updated_at=getdate()  where [TOKEN]='{token}'";
 
                 var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
@@ -751,6 +754,7 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
         {
             try
             {
+                newPassword = Aes256CbcEncrypter.Encrypt(newPassword);
 
                 string sqlString = $@" update USER_MASTER_1915 set USER_PASSWORD='{newPassword}' where [USER_ID]=N'{userName}'";
                 var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);

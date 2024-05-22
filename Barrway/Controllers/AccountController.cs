@@ -670,6 +670,8 @@ namespace Barrway.Controllers
             {
                 // Insert Data in User Master
 
+                string encryptedPassword = Aes256CbcEncrypter.Encrypt(model.USER_PASSWORD);
+
                 UserMaserModel userMaserModel = new UserMaserModel()
                 {
                     USER_PHONE = "",
@@ -680,7 +682,7 @@ namespace Barrway.Controllers
                     PROFILE_STATUS = "PENDING",
                     SIGNUP_TYPE = (model.IS_EXTERNAL_SIGNUP) ? "GOOGLE" : "EMAIL",
                     USER_EMAIL = model.USER_EMAIL,
-                    USER_PASSWORD = model.USER_PASSWORD,
+                    USER_PASSWORD = encryptedPassword,
                     USER_ID = model.USER_NAME,
                     ROLE_ID = generalRoleId,
                     COMPANY_PROFILE_STATUS = "N",
