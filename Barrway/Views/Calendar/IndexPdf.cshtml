@@ -32,8 +32,8 @@
     <style>
 
         .header-text {
-            font-weight: 600;
-            font-size: 16px;
+            font-weight: 400;
+            font-size: 14px;
         }
 
         .text-title {
@@ -75,21 +75,23 @@
 
     }
 
-    @*<header>
-        <a href="/UserAdmin#/mycalendar/2305"><img src="/assets/svg/logos/logo.png" style="max-width:200px;width:100%" /></a>
-    </header>*@
+    <header>
+        <img src="/assets/img/logo_usim3.png" style="max-width:300px;width:100%" />
+    </header>
 
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
                 <div style="background: #ffffffd4; border-radius: 4px;min-height:500px;">
-                    <div class="col-12" style="margin-top: 50px;">
+                    @*<div class="col-12" style="margin-top: 50px;">
                         <p class="text-title">
                             @Model.StudentName (@Barrway.Security.UserIdentity.UserName)
                         </p>
-                    </div>
+                    </div>*@
                     <div class="col-12 text-center">
-                        <h2 style="text-align:center;font-size:24px;font-weight:400">Timetable 時間表</h2>
+                        @*<h2 style="text-align:center;font-size:24px;font-weight:400">Timetable 時間表</h2>*@
+                        <h2 style="text-align:center;font-size:24px;font-weight:400">選課時間表（2024年6月22日）</h2>
+                        
                     </div>
 
                     <table class="table table-bordered" cellpadding="2" cellspacing="0" border="1" style="max-width:900px;margin:0 auto;text-align:center">
@@ -97,28 +99,64 @@
                             <tr>
                                 <td width="100px">
                                     時間
-                                    Time
                                 </td>
-                                <td colspan="@rowCount">課程 Course</td>
+                                <td colspan="@rowCount">內容</td>
                             </tr>
 
-                            @*<tr>
+                            <tr>
                                 <td width="100px">
-                                    12:00-12:30
+                                    11:00
+                                </td>
+                                <td colspan="@rowCount">
+                                    <div class="header-text">
+                                        前往教育大學的校巴開出（大學站 &rArr; 香港教育大學）
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td width="100px">
+                                    11:30
+                                </td>
+                                <td colspan="@rowCount">
+                                    <div class="header-text">
+                                        入學登記（同學憑取錄信領取學生證及T-shirt）
+                                        <br />
+                                        Venue: D1-LP-07
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td width="100px">
+                                    12:00 - 12:30
                                 </td>
                                 <td colspan="@rowCount">
                                     <div class="header-text">
                                         Inauguration ceremony 入學典禮
                                         <br />
-                                        (Hall楊昌煒爵士演講廳)
+                                        Venue: D1-LP-08
                                     </div>
                                 </td>
 
-                            </tr>*@
+                            </tr>
+                            <tr>
+                                <td width="100px">
+                                    12:30 - 13:00
+                                </td>
+                                <td colspan="@rowCount">
+                                    <div class="header-text">
+                                        迎新營 (Ice-breaking games)
+                                    </div>
+                                </td>
+
+                            </tr>
                             <tr>
                                 <td>
+                                    課室
+                                    Classroom
                                 </td>
-                                @foreach (var item in calendarSetting.formDataList)
+                                @foreach (var item in calendarSetting.formDataList.OrderBy(x => x["SEQ"]))
                                 {
                                     string majorString = item["LOCATION_ADDRESS"]?.ToString();
                                     <td>
@@ -134,6 +172,7 @@
 
                             @if (EventData != null && EventData.Count > 0)
                             {
+                                int counter = 1;
                                 foreach (var item in EventData.OrderBy(x => x.start))
                                 {
                                     TimeSpan? maxTime = null;
@@ -156,17 +195,24 @@
                                     //        continue;
                                     //    }
                                     //}
-                                    <tr><td style="font-weight:bold" colspan="@(calendarSetting.formDataList.Count()+1)">Transit</td></tr>
+                                    <tr><td style="font-weight:bold" colspan="@(rowCount+1)">Break</td></tr>
                                     <tr>
                                         <td>
-                                            @if(item.end.Date > item.start.Date) { 
-                                            <p>@item.start.ToString("ddd dd MMM yyyy") - @item.end.ToString("ddd dd MMM yyyy")</p>
-                                            }
-                                            else {
-                                            <p>@item.start.ToString("ddd dd MMM yyyy")</p>
-                                            }
-                                            
-                                            <p>@item.start.ToString("hh:mm tt") - @item.end.ToString("hh:mm tt")</p>
+                                            @*@if (item.end.Date > item.start.Date)
+                        {
+                            <p>@item.start.ToString("ddd dd MMM yyyy") - @item.end.ToString("ddd dd MMM yyyy")</p>
+                        }
+                        else
+                        {
+                            <p>@item.start.ToString("ddd dd MMM yyyy")</p>
+                        }*@
+
+                                            <p>
+                                                Session @counter
+                                                <br/>
+                                            @item.start.ToString("HH:mm") - @item.end.ToString("HH:mm")
+
+                                            </p>
                                         </td>
 
                                         @foreach (var item2 in calendarSetting.formDataList)
@@ -180,8 +226,7 @@
                                                 @foreach (var item3 in evnts)
                                                 {
 
-                                                    //if (item3["customFourthTitle"]?.ToString().Contains(Barrway.Security.UserIdentity.UserName) ?? false)
-                                                    //{
+                                                    
                                                     string customTitle = "";
                                                     if (i > 0)
                                                     {
@@ -193,62 +238,73 @@
                                                     {
                                                         string[] allCustomFormArr = allcustomForms.Split(',');
                                                         string[] allCustomFormIdsArr = allcustomFormIds.Split(',');
-                                                        //if (allCustomFormArr.Length > 1)
-                                                        //{
+                                                        
                                                         var courseMasterCalendarSetting = Model.calendarSetting.Where(x => x.resourceForm == (int)Barrway.Utility.Common.FormSetting.SERVICE_MASTER).FirstOrDefault();
                                                         if (courseMasterCalendarSetting != null)
                                                         {
-                                                            int index = Model.calendarSetting.ToList().FindIndex(x => x.resourceForm == (int)Barrway.Utility.Common.FormSetting.SERVICE_MASTER);
+                                                            int index = allcustomForms.Split(',').ToList().FindIndex(x => x.ToString() == ((int)Barrway.Utility.Common.FormSetting.SERVICE_MASTER).ToString());
                                                             var courseMaster = courseMasterCalendarSetting.formDataList.Where(x => x["id"]?.ToString() == allCustomFormIdsArr[index]).FirstOrDefault();
                                                             if (courseMaster != null)
                                                             {
 
-                                                                customTitle += courseMaster["ACTIVITY_NAME"]?.ToString()+"<br/>";
+                                                                customTitle += courseMaster["ACTIVITY_NAME"]?.ToString() + "<br/>";
                                                             }
                                                         }
-                                                        //}
-                                                        //if (allCustomFormArr.Length > 2)
-                                                        //{
+                                                        
 
-                                                        var staffMasterCalendarSetting = Model.calendarSetting.Where(x => x.resourceForm == (int)Barrway.Utility.Common.FormSetting.SERVICE_PROVIDER_MASTER).FirstOrDefault();
-                                                        if (staffMasterCalendarSetting != null)
-                                                        {
-                                                            int index = Model.calendarSetting.ToList().FindIndex(x => x.resourceForm == (int)Barrway.Utility.Common.FormSetting.SERVICE_PROVIDER_MASTER);
-                                                            var staffMaster = staffMasterCalendarSetting.formDataList.Where(x => x["id"]?.ToString() == allCustomFormIdsArr[index]).FirstOrDefault();
-                                                            if (staffMaster != null)
-                                                            {
-                                                                customTitle += (staffMaster.ContainsKey("FIRST_NAME") ? staffMaster["FIRST_NAME"] : "") + " " + (staffMaster.ContainsKey("LAST_NAME") ? staffMaster["LAST_NAME"] : "");
-                                                            }
-                                                        }
+                                                        //var staffMasterCalendarSetting = Model.calendarSetting.Where(x => x.resourceForm == (int)Barrway.Utility.Common.FormSetting.SERVICE_PROVIDER_MASTER).FirstOrDefault();
+                                                        //if (staffMasterCalendarSetting != null)
+                                                        //{
+                                                        //    //int index = Model.calendarSetting.ToList().FindIndex(x => x.resourceForm == (int)Barrway.Utility.Common.FormSetting.SERVICE_PROVIDER_MASTER);
+                                                        //    int index = allcustomForms.Split(',').ToList().FindIndex(x => x.ToString() == ((int)Barrway.Utility.Common.FormSetting.SERVICE_PROVIDER_MASTER).ToString());
+                                                        //    var staffMaster = staffMasterCalendarSetting.formDataList.Where(x => x["id"]?.ToString() == allCustomFormIdsArr[index]).FirstOrDefault();
+                                                        //    if (staffMaster != null)
+                                                        //    {
+                                                        //        customTitle += (staffMaster.ContainsKey("FIRST_NAME") ? staffMaster["FIRST_NAME"] : "") + " " + (staffMaster.ContainsKey("LAST_NAME") ? staffMaster["LAST_NAME"] : "");
+                                                        //    }
                                                         //}
+
                                                     }
 
-                                                        <div>
-                                                            @Html.Raw(customTitle)
-                                                        </div>
+                                                    <div>
+                                                        @Html.Raw(customTitle)
+                                                    </div>
                                                     //}
                                                     i++;
                                                 }
                                             </td>
                                         }
+
                                     </tr>
+                                    counter++;
                                 }
 
                             }
 
-                            @*<tr>
+                            <tr>
                                 <td width="100px">
-                                    5:30-6:00 pm
+                                    17:00 - 18:00
                                 </td>
-                                <td colspan="@calendarSetting.formDataList.Count()">
+                                <td colspan="@rowCount">
                                     <div class="header-text">
                                         Graduation Ceremony 畢業典禮
                                         <br />
-                                        (Hall楊昌煒爵士演講廳)
+                                        Venue: D1-LP-02
                                     </div>
                                 </td>
 
-                            </tr>*@
+                            </tr>
+                            <tr>
+                                <td width="100px">
+                                    18:30
+                                </td>
+                                <td colspan="@rowCount">
+                                    <div class="header-text">
+                                        旅遊巴從香港教育大學返回大學站
+                                    </div>
+                                </td>
+
+                            </tr>
                         </tbody>
                     </table>
 
@@ -258,15 +314,17 @@
             </div>
         </div>
 
-        <div style="margin-top:50px;padding:40px">
-            <h2 style="text-align:left;font-size:24px;font-weight:400">注意事項：</h2>
+        <div style="margin-top:50px;">
+            <h2 style="text-align:left;font-size:24px;font-weight:400">上課日當日安排及事前準備：</h2>
             <ol style="margin-top:20px;">
-                <li>	為響應環保，本校講師將提供電子版筆記供同學參閱。同學如擁有電子設備（平板電腦、手提電腦等），請於開學日帶備，以減少耗紙。如有需要，亦可取用實體講義。</li>
-                <li>	本校將於開學日前以電郵向各位同學發送電子版講義及其他注意事項，屆時請回覆電郵。</li>
-                <li>	開學日當天，如需遲到、早退，或遇上其他突發狀況，請致電 6695 2626通知本校，以便安排。</li>
-                <li>	為確保選課公平性，當天請遵照個別選課時間表上課。</li>
-                <li>	本校將於活動當日向同學派發學生證，以作紀念之用。同學須於報名表格上載個人照片，所有個人資料將於活動過後銷毀。</li>
-                <li>	請注意，同學需於活動前繳交$50按金（繳交方法見確認報名之電郵），以確保同學出席活動。如同學在6月21號或之前未繳交訂金，本校會將其學額給予候補名單上的同學。本校將於畢業典禮結束後以現金形式發還按金給同學，同學必須出席全日活動，方可獲發還按金。如有任何困難，請聯絡6695 2626。</li>
+                <li>為確保選課公平性，上課日當天請遵照個別選課時間表上課，不設即場報讀。</li>
+                <li>有關模擬大學上課日的詳細時間安排及課堂選擇，請參考附件時間表及選課系統。</li>
+                <li>為響應環保，本校講師將只提供電子版筆記供同學參閱。同學請於上學日帶備電子設備(平板電腦、手提電腦等)。本校將於17/6或之前將電子版講義上載至選科平台，請於上課前先行下載有關講義。</li>
+                <li>如未能出席活動，請儘快通知本校(WhatsApp 9708 3171)，以便將其學額給予候補名單上的同學。</li>
+                <li>本校或會因應最終的選課情況作出調動，如有，將作個別通知。</li>
+                <li>開學日當天，如需遲到、早退，或遇上其他突發狀況，請致電9708 3171通知本校教務處主席邵慧存女士，以便安排。</li>
+                <li>是次活動將借用香港教育大學校園範圍，教大活動信將於同學確認出席後發出，請同學帶備活動信參與活動，否則將會被拒進入大學校園。</li>
+                <li>當天模擬大學將安排專車從大學站接載到香港教育大學校園，如有興趣乘坐，請在選課系統登記時報名，先到先得，逾時不候。</li>
 
             </ol>
         </div>

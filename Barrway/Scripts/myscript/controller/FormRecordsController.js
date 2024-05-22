@@ -1613,7 +1613,10 @@
                 case 6:
                     var temp = {};
                     temp.formId = $scope.currentFormId;
-                    var path = API_URL + "api/FormAPI/downloadFiles/" + (!DataService.isEmpty(temp.formId) ? temp.formId : temp.formID) + "/4";
+                    //var path = API_URL + "api/FormAPI/downloadFiles/" + (!DataService.isEmpty(temp.formId) ? temp.formId : temp.formID) + "/4";
+                    let COMPANY_CODE = localStorage.getItem("COMPANY_CODE");
+                    let CALENDAR_CODE = localStorage.getItem("CALENDAR_CODE");
+                    var path = BASE_URL + "FormAPI/DownloadExcel?formId=" + (!DataService.isEmpty(temp.formId) ? temp.formId : temp.formID) + "&iscustom=true&fields=COMPANY_CODE,CALENDAR_CODE&fieldValues=" + COMPANY_CODE + "," + CALENDAR_CODE;
                     downloadFileFunc("", path);
                     break;
                 case 7:

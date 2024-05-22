@@ -9,6 +9,7 @@ using ClosedXML.Excel;
 using FormGeneratorDTOs.DTOs;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using NLog;
 using RestSharp;
 using Swashbuckle.Swagger;
 using System;
@@ -37,6 +38,7 @@ namespace Barrway.Controllers
         private readonly IBusinessUserService businessUserService;
         private readonly IMasterService masterService;
         private readonly ISqlFunction sqlFunction;
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         // GET: FormAPI
         public FormAPIController(IFormAPIRepository formAPIRepository, ICalendarService calendarService, IPublicUserService publicUserService, IBusinessUserService businessUserService, IMasterService masterService, ISqlFunction sqlFunction)
@@ -1122,111 +1124,54 @@ namespace Barrway.Controllers
 
 
 
-        //[HttpGet]
-        //public async Task<ActionResult> ExportAdditionalForm(int formid)
-        //{
-        //    var model = (await formAPIRepository.GetFormRecordList(new { action = 32, formid = formid })).Data;
-        //    if (model.data == null)
-        //    {
-        //        model.data = new List<IDictionary<string, object>>();
-        //    }
-        //    var result = new List<IDictionary<string, object>>();
 
-        //    model.data.ForEach(x =>
-        //    {
-
-
-        //    });
-
-        //    DataTable resultDataTable = DictionaryToDataTable.ToDictionary(model.data);
-
-        //    using (var workbook = new XLWorkbook())
-        //    {
-        //        var worksheet = workbook.Worksheets.Add(resultDataTable, "Registration_Records");
-        //        worksheet.Style.Alignment.WrapText = true;
-        //        worksheet.Columns("A", "V").AdjustToContents();
-
-        //        using (MemoryStream stream = new MemoryStream())
-        //        {
-        //            workbook.SaveAs(stream);
-        //            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"TransactionTable_{DateTimeUtility.Now().ToString("ddMMyyyyHHmmssfff")}.xlsx");
-        //        }
-        //    }
-        //}
 
         [HttpGet]
-        public async Task<ActionResult> DownloadExcel(int formId)
+        public async Task<ActionResult> DownloadExcel(int formId, string iscustom, string fields, string fieldValues)
         {
-            string apiUrl = System.Configuration.ConfigurationManager.AppSettings["webapibaseurl"].ToString()+  $"api/FormAPI/downloadFiles/{formId}/4"; // Replace with your API URL
-            string fileName = "downloaded_file.xlsx"; // The name for the downloaded file
-
-            // Create a RestClient with the base URL
-            var client = new RestClient(apiUrl);
-
-            // Create a RestRequest
-            var request = new RestRequest();
-            request.Method = Method.Get;
-
             try
             {
-                // Execute the request and get the response
-                var response = await client.ExecuteAsync(request);
+                string apiUrl = System.Configuration.ConfigurationManager.AppSettings["webapibaseurl"].ToString() + $"api/FormAPI/downloadFiles/{formId}/4/{iscustom}/{fields}/{fieldValues}"; // Replace with your API URL
+                string fileName = formId+$"_downloaded_{DateTime.Now.ToString("ddMMyyyyHHmmssfff")}.xlsx"; // The name for the downloaded file
 
-                // Check if the response is successful and contains data
-                if (response.IsSuccessful && response.RawBytes != null)
+                // Create a RestClient with the base URL
+                var client = new RestClient(apiUrl);
+
+                // Create a RestRequest
+                var request = new RestRequest();
+                request.Method = Method.Get;
+                try
                 {
-                    // Return the file as a download
-                    return File(response.RawBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+                    // Execute the request and get the response
+                    var response = await client.ExecuteAsync(request);
+
+                    // Check if the response is successful and contains data
+                    if (response.IsSuccessful && response.RawBytes != null)
+                    {
+                        // Load the Excel file into a ClosedXML workbook
+                        return File(response.RawBytes.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+                    }
+                    else
+                    {
+                        // Handle error appropriately (e.g., log the error, return an error view, etc.)
+                        return new HttpStatusCodeResult(response.StatusCode, response.ErrorMessage);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    // Handle error appropriately (e.g., log the error, return an error view, etc.)
-                    return new HttpStatusCodeResult(response.StatusCode, response.ErrorMessage);
+                    logger.Error(ex);
+                    // Handle exception (e.g., log the error, return an error view, etc.)
+                    return new HttpStatusCodeResult(500, "Internal server error: " + ex.Message);
                 }
+
             }
             catch (Exception ex)
             {
-                // Handle exception (e.g., log the error, return an error view, etc.)
+                logger.Error(ex);
                 return new HttpStatusCodeResult(500, "Internal server error: " + ex.Message);
             }
         }
 
-        //[HttpGet]
-        //public async Task<ActionResult> DownloadCustomExcel(int formId, string iscustom, string fields, string fieldValues)
-        //{
-        //    string apiUrl = System.Configuration.ConfigurationManager.AppSettings["webapibaseurl"].ToString() + $"api/FormAPI/downloadFiles/{formId}/4/{iscustom}/{fields}/{fieldValues}"; // Replace with your API URL
-        //    string fileName = "downloaded_file.xlsx"; // The name for the downloaded file
-
-        //    // Create a RestClient with the base URL
-        //    var client = new RestClient(apiUrl);
-
-        //    // Create a RestRequest
-        //    var request = new RestRequest();
-        //    request.Method = Method.Get;
-
-        //    try
-        //    {
-        //        // Execute the request and get the response
-        //        var response = await client.ExecuteAsync(request);
-
-        //        // Check if the response is successful and contains data
-        //        if (response.IsSuccessful && response.RawBytes != null)
-        //        {
-        //            // Return the file as a download
-        //            return File(response.RawBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
-        //        }
-        //        else
-        //        {
-        //            // Handle error appropriately (e.g., log the error, return an error view, etc.)
-        //            return new HttpStatusCodeResult(response.StatusCode, response.ErrorMessage);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Handle exception (e.g., log the error, return an error view, etc.)
-        //        return new HttpStatusCodeResult(500, "Internal server error: " + ex.Message);
-        //    }
-        //}
 
         [HttpPost]
         public ActionResult UploadFile(
@@ -1415,132 +1360,143 @@ namespace Barrway.Controllers
         [HttpGet]
         public async Task<ActionResult> DownloadCustomExcel(int formId, string iscustom, string fields, string fieldValues)
         {
-            string apiUrl = System.Configuration.ConfigurationManager.AppSettings["webapibaseurl"].ToString() + $"api/FormAPI/downloadFiles/{formId}/4/{iscustom}/{fields}/{fieldValues}"; // Replace with your API URL
-            string fileName = "downloaded_file_with_photos.xlsx"; // The name for the downloaded file
-
-            // Create a RestClient with the base URL
-            var client = new RestClient(apiUrl);
-
-            // Create a RestRequest
-            var request = new RestRequest();
-            request.Method = Method.Get;
             try
             {
-                // Execute the request and get the response
-                var response = await client.ExecuteAsync(request);
+                string apiUrl = System.Configuration.ConfigurationManager.AppSettings["webapibaseurl"].ToString() + $"api/FormAPI/downloadFiles/{formId}/4/{iscustom}/{fields}/{fieldValues}"; // Replace with your API URL
+                string fileName = formId + $"_downloaded_{DateTime.Now.ToString("ddMMyyyyHHmmssfff")}.xlsx";
 
-                // Check if the response is successful and contains data
-                if (response.IsSuccessful && response.RawBytes != null)
+                // Create a RestClient with the base URL
+                var client = new RestClient(apiUrl);
+
+                // Create a RestRequest
+                var request = new RestRequest();
+                request.Method = Method.Get;
+                try
                 {
-                    // Load the Excel file into a ClosedXML workbook
-                    using (var workbook = new XLWorkbook(new MemoryStream(response.RawBytes)))
+                    // Execute the request and get the response
+                    var response = await client.ExecuteAsync(request);
+
+                    // Check if the response is successful and contains data
+                    if (response.IsSuccessful && response.RawBytes != null)
                     {
-                        var worksheet = workbook.Worksheet(1); // Assumes data is in the first worksheet
-                        int photoColumnIndex = -1;
-
-                        // Find the "Photo" column
-                        var firstRow = worksheet.FirstRowUsed();
-                        foreach (var cell in firstRow.Cells())
+                        // Load the Excel file into a ClosedXML workbook
+                        using (var workbook = new XLWorkbook(new MemoryStream(response.RawBytes)))
                         {
-                            if (cell.GetValue<string>().ToLower().Contains("photo") || cell.GetValue<string>().ToLower().Contains("file"))
-                            {
-                                photoColumnIndex = cell.Address.ColumnNumber;
-                                break;
-                            }
-                        }
+                            var worksheet = workbook.Worksheet(1); // Assumes data is in the first worksheet
+                            int photoColumnIndex = -1;
 
-                        if (photoColumnIndex > 0)
-                        {
-                            // Iterate through the rows and attach photos from URLs
-                            foreach (var row in worksheet.RowsUsed().Skip(1))
+                            // Find the "Photo" column
+                            var firstRow = worksheet.FirstRowUsed();
+                            foreach (var cell in firstRow.Cells())
                             {
-                                var cellValue = row.Cell(photoColumnIndex).GetValue<string>();
-                                if (!string.IsNullOrEmpty(cellValue) && Uri.IsWellFormedUriString(cellValue, UriKind.Absolute))
+                                if (cell.GetValue<string>().ToLower().Contains("photo") || cell.GetValue<string>().ToLower().Contains("file"))
                                 {
-                                    string extension = GetFileExtension(cellValue);
-                                    if (IsImageFile(extension))
+                                    photoColumnIndex = cell.Address.ColumnNumber;
+                                    break;
+                                }
+                            }
+
+                            if (photoColumnIndex > 0)
+                            {
+                                // Iterate through the rows and attach photos from URLs
+                                foreach (var row in worksheet.RowsUsed().Skip(1))
+                                {
+                                    var cellValue = row.Cell(photoColumnIndex).GetValue<string>();
+                                    if (!string.IsNullOrEmpty(cellValue) && Uri.IsWellFormedUriString(cellValue, UriKind.Absolute))
                                     {
-                                        // Download the image from the URL
-                                        var imageBytes = await DownloadImageAsync(cellValue);
-                                        if (imageBytes != null)
+                                        string extension = GetFileExtension(cellValue);
+                                        if (IsImageFile(extension))
                                         {
-                                            using (var stream = new MemoryStream(imageBytes))
+                                            //Download the image from the URL
+                                            var imageBytes = await DownloadImageAsync(cellValue);
+                                            if (imageBytes != null)
                                             {
-                                                var image = worksheet.AddPicture(stream);
+                                                using (var stream = new MemoryStream(imageBytes))
+                                                {
+                                                    var image = worksheet.AddPicture(stream);
+                                                    var cell = row.Cell(photoColumnIndex);
+                                                    cell.Value = string.Empty;
+                                                    // Move image to the cell and fit within the cell
+                                                    image.MoveTo(cell);
+
+                                                    //// Calculate scaling factors to fit image into the cell
+                                                    //double cellWidth = worksheet.Column(photoColumnIndex).Width * 7; // Column width in points (approximation)
+                                                    //double cellHeight = row.Height * 1.5; // Row height in points
+
+                                                    //using (var img = Image.FromStream(stream))
+                                                    //{
+                                                    //    double imgWidth = img.Width;
+                                                    //    double imgHeight = img.Height;
+
+                                                    //    double scaleWidth = cellWidth / imgWidth;
+                                                    //    double scaleHeight = cellHeight / imgHeight;
+
+                                                    //    // Use the smaller scale factor to fit the image within the cell
+                                                    //    double scaleFactor = Math.Min(scaleWidth, scaleHeight);
+                                                    //    image.Scale(scaleFactor);
+                                                    //}
+
+                                                    image.Width = 100;
+                                                    image.Height = 100;
+
+                                                    // Alternatively, if you need to scale the image to fit within 100x100 pixels, use the following:
+                                                    using (var img = Image.FromStream(stream))
+                                                    {
+                                                        double imgWidth = img.Width;
+                                                        double imgHeight = img.Height;
+
+                                                        double scaleWidth = 100 / imgWidth;
+                                                        double scaleHeight = 100 / imgHeight;
+
+                                                        // Use the smaller scale factor to fit the image within 100x100 pixels
+                                                        double scaleFactor = Math.Min(scaleWidth, scaleHeight);
+                                                        image.Scale(scaleFactor);
+
+                                                        // Adjust image dimensions if needed
+                                                        image.Width = (int)(imgWidth * scaleFactor);
+                                                        image.Height = (int)(imgHeight * scaleFactor);
+                                                        row.Height = image.Height;
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
                                                 var cell = row.Cell(photoColumnIndex);
                                                 cell.Value = string.Empty;
-                                                // Move image to the cell and fit within the cell
-                                                image.MoveTo(cell);
-
-                                                //// Calculate scaling factors to fit image into the cell
-                                                //double cellWidth = worksheet.Column(photoColumnIndex).Width * 7; // Column width in points (approximation)
-                                                //double cellHeight = row.Height * 1.5; // Row height in points
-
-                                                //using (var img = Image.FromStream(stream))
-                                                //{
-                                                //    double imgWidth = img.Width;
-                                                //    double imgHeight = img.Height;
-
-                                                //    double scaleWidth = cellWidth / imgWidth;
-                                                //    double scaleHeight = cellHeight / imgHeight;
-
-                                                //    // Use the smaller scale factor to fit the image within the cell
-                                                //    double scaleFactor = Math.Min(scaleWidth, scaleHeight);
-                                                //    image.Scale(scaleFactor);
-                                                //}
-
-                                                image.Width = 100;
-                                                image.Height = 100;
-
-                                                // Alternatively, if you need to scale the image to fit within 100x100 pixels, use the following:
-                                                using (var img = Image.FromStream(stream))
-                                                {
-                                                    double imgWidth = img.Width;
-                                                    double imgHeight = img.Height;
-
-                                                    double scaleWidth = 100 / imgWidth;
-                                                    double scaleHeight = 100 / imgHeight;
-
-                                                    // Use the smaller scale factor to fit the image within 100x100 pixels
-                                                    double scaleFactor = Math.Min(scaleWidth, scaleHeight);
-                                                    image.Scale(scaleFactor);
-
-                                                    // Adjust image dimensions if needed
-                                                    image.Width = (int)(imgWidth * scaleFactor);
-                                                    image.Height = (int)(imgHeight * scaleFactor);
-                                                    row.Height = image.Height;
-                                                }
                                             }
                                         }
                                     }
                                 }
                             }
+
+                            // Save the modified workbook to a memory stream
+                            var modifiedStream = new MemoryStream();
+                            workbook.SaveAs(modifiedStream);
+                            modifiedStream.Position = 0;
+
+                            // Return the modified file as a download
+                            return File(modifiedStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
                         }
-
-                        // Save the modified workbook to a memory stream
-                        var modifiedStream = new MemoryStream();
-                        workbook.SaveAs(modifiedStream);
-                        modifiedStream.Position = 0;
-
-                        // Return the modified file as a download
-                        return File(modifiedStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+                    }
+                    else
+                    {
+                        // Handle error appropriately (e.g., log the error, return an error view, etc.)
+                        return new HttpStatusCodeResult(response.StatusCode, response.ErrorMessage);
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    // Handle error appropriately (e.g., log the error, return an error view, etc.)
-                    return new HttpStatusCodeResult(response.StatusCode, response.ErrorMessage);
+                    logger.Error(ex);
+                    // Handle exception (e.g., log the error, return an error view, etc.)
+                    return new HttpStatusCodeResult(500, "Internal server error: " + ex.Message);
                 }
+
             }
-            catch (Exception ex)
-            {
-                // Handle exception (e.g., log the error, return an error view, etc.)
+            catch (Exception ex) {
+                logger.Error(ex);
                 return new HttpStatusCodeResult(500, "Internal server error: " + ex.Message);
             }
         }
-
-
-
 
         private static bool IsJson(string str)
         {
