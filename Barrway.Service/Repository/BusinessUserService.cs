@@ -277,7 +277,7 @@ namespace Barrway.Service.Repository
                 strBody.Replace("<%RESET_LINK%>", ConfigurationManager.AppSettings["baseurl"]?.ToString() + "/BusinessAdmin/ViewInvitation?Token=" + inviteModel.REQUEST_TOKEN);
                 strBody.Replace("<%BASE_URL%>", baseUrl);
                 strBody.Replace("<%COMPANY_NAME%>", companyDetails["COMPANY_NAME_ENGLISH"]?.ToString());
-                
+
 
                 //strBody.Append($@"<body>
                 //                    <div class='container'>
@@ -1490,7 +1490,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
             {
 
             }
-            
+
 
             if (result.Count > 0)
             {
@@ -2383,10 +2383,14 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
             if (!CalendarDetails.Status)
             {
                 string sqlQuery = $@"select * from BUSINESS_CALENDAR_MASTER_1925 f
-                                        join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
-                                        where f.COMPANY_CODE = '{model.COMPANY_CODE}'";
+                                        where f.COMPANY_CODE = '{model.COMPANY_CODE}' and f.CALENDAR_NAME = N'{model.CALENDAR_NAME}'";
 
-                var companiesCreated = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+                var calendarsDuplicacyCheck = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+
+                if (calendarsDuplicacyCheck.Count > 0)
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "Calendar with same name already exists!" };
+                }
 
                 sqlQuery = $@"select ASSIGNED_CALENDARS from COMPANY_SUBSCRIPTION_DETAILS_1939 subsdet
                                 join BUSINESS_COMPANY_MASTER_1924 company on company.Id = subsdet.COMPANY_ID
@@ -2482,7 +2486,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                                       ,[DISPLAY_MAX_TIME] = '{model.DISPLAY_MAX_TIME}'
                                       ,[DEFAULT_RESOURCE] = '{model.DEFAULT_RESOURCE}'
                                       ,[DEFAULT_DATE] = '{model.DEFAULT_DATE}'
-                                      ,[BOOKING_DEADLINE] = '{model.BOOKING_DEADLINE??"0"}'
+                                      ,[BOOKING_DEADLINE] = '{model.BOOKING_DEADLINE ?? "0"}'
                                       ,[NEED_ADDITIONAL_FORM] = '{model.NEED_ADDITIONAL_FORM}'
                                       ,[ALLOW_OVERLAP] = '{model.ALLOW_OVERLAP}'
                                       ,[DEFAULT_CALENDAR_VIEW] = '{model.DEFAULT_CALENDAR_VIEW}'

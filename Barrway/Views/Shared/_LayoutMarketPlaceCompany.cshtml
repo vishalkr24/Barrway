@@ -278,40 +278,19 @@
                         <li><a href="/Marketplace/News">@Resource.News</a></li>
                         <li><a href="/Account/BusinessSignup">@Resource.Post_your_business</a></li>
 
+
+
                         @if (User.Identity.IsAuthenticated)
                         {
-                            if (UserIdentity.Role == "GENERAL_USER")
-                            {
-                                <li class="rl">
-                                    <a href="/UserAdmin#/userdashboard">@Resource.Account</a>
-                                </li>
-
-                            }
-                            else
-                            {
-                                <li class="rl">
-                                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">@Resource.Register / @Resource.Login </a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="/Account/BusinessSignUp">@Resource.Register</a></li>
-                                        <li><a href="/Account/BusinessLogin">@Resource.Login</a></li>
-                                    </ul>
-                                </li>
-
-                            }
-
+                            <li class="rl">
+                                <a href="/UserAdmin#/userdashboard">@Resource.Account</a>
+                            </li>
                         }
                         else
                         {
-
                             <li class="rl">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">@Resource.Register / @Resource.Login</a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="/Account/BusinessSignUp">@Resource.Register</a></li>
-                                    <li><a href="/Account/BusinessLogin">@Resource.Login</a></li>
-                                </ul>
+                                <a href="/Account/BusinessLogin">@Resource.Register / @Resource.Login</a>
                             </li>
-
-
                         }
 
                         @*<li class="rl">
@@ -343,7 +322,9 @@
                 </div>
                 <div class="col-md-3">
                     <div class="social-links">
-                        <a href="javascript:void(0)">@Resource.social_media_links</a>
+                        <a href="https://www.linkedin.com/company/barrway"><img src="~/assets/marketplace/image/linkin.png" /></a>
+                        <a href="https://www.facebook.com/barrway.biz"><img src="~/assets/marketplace/image/face.png" /></a>
+                        <a href="https://www.instagram.com/barrway_biz/"><img src="~/assets/marketplace/image/ins.png" /></a>
                     </div>
                 </div>
             </div>
@@ -351,6 +332,9 @@
     </section>
 
     <style>
+        .social-links a img {
+            width: 35px;
+        }
 
         .d-none {
             display: none !important;

@@ -239,13 +239,10 @@ namespace Barrway.Controllers
                     {
                         return RedirectToAction("CalendarMaster");
                     }
-                   
+                    
                 }
 
-
-
                 return View(calendarModel);
-
             }
             catch (Exception ex)
             {
@@ -1506,7 +1503,7 @@ namespace Barrway.Controllers
                             else
                             {
                                 ViewBag.IsPartial = IsPartial;
-                                ViewBag.ErrorMessage = "Some error occured while creating Calendar! Please refresh and try again.";
+                                ViewBag.ErrorMessage = result.Message;
                                 ViewBag.IsStep2 = 'Y';
                                 return View("SetupCompanyCalendar", model);
                             }

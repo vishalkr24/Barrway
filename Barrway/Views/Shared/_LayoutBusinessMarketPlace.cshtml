@@ -137,38 +137,20 @@
 
                                     @if (User.Identity.IsAuthenticated)
                                     {
-                                        if (UserIdentity.Role == "GENERAL_USER")
-                                        {
-                                            <ul class="nav navbar-nav navbar-right">
-                                                <li class="rl">
-                                                    <a href="/UserAdmin#/userdashboard">@Resource.Account</a>
-                                                </li>
+                                        <ul class="nav navbar-nav navbar-right">
+                                            <li class="rl">
+                                                <a href="/UserAdmin#/userdashboard">@Resource.Account</a>
+                                            </li>
 
-                                            </ul>
-                                        }
-                                        else
-                                        {
-                                            <ul class="nav navbar-nav navbar-right">
-                                                <li class="rl">
-                                                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)"> @Resource.Register / @Resource.Login</a>
-                                                    <ul class="dropdown-menu">
-                                                        <li><a href="/Account/BusinessSignup">@Resource.Register</a></li>
-                                                        <li><a href="/Account/BusinessLogin">@Resource.Login</a></li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        }
+                                        </ul>
                                     }
                                     else
                                     {
                                         <ul class="nav navbar-nav navbar-right">
                                             <li class="rl">
-                                                <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)"> @Resource.Register / @Resource.Login</a>
-                                                <ul class="dropdown-menu">
-                                                    <li><a href="/Account/BusinessSignup">@Resource.Register</a></li>
-                                                    <li><a href="/Account/BusinessLogin">@Resource.Login</a></li>
-                                                </ul>
+                                                <a href="/UserAdmin#/userdashboard">@Resource.Register / @Resource.Login</a>
                                             </li>
+
                                         </ul>
                                     }
 
