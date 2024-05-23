@@ -11631,17 +11631,17 @@
 
                                                         if (!DataService.isEmpty(tempdata)) {
 
-                                                            $("#tabuListUl").append('<li><span>' + filterData[$scope.selectedKeyField] + ' | ' + tempdata  + ' </span></li>');
-                                                            _newtabuListUlHtml += '<li><span>' + filterData[$scope.selectedKeyField] + ' | ' + tempdata +  ' </span></li>';
+                                                            $("#tabuListUl").append('<li><span>' + filterData[$scope.selectedKeyField] + ' | ' + tempdata + ' </span></li>');
+                                                            _newtabuListUlHtml += '<li><span>' + filterData[$scope.selectedKeyField] + ' | ' + tempdata + ' </span></li>';
                                                         }
                                                         else {
-                                                            $("#tabuListUl").append('<li><span>' + filterData[$scope.selectedKeyField] + ' ' +  ' </span></li>');
-                                                            _newtabuListUlHtml += '<li><span>' + filterData[$scope.selectedKeyField] + ' ' +  ' </span></li>';
+                                                            $("#tabuListUl").append('<li><span>' + filterData[$scope.selectedKeyField] + ' ' + ' </span></li>');
+                                                            _newtabuListUlHtml += '<li><span>' + filterData[$scope.selectedKeyField] + ' ' + ' </span></li>';
                                                         }
                                                     }
                                                     else {
                                                         $("#tabuListUl").append('<li><span>' + filterData[$scope.selectedKeyField] + ' ' + ' </span></li>');
-                                                        _newtabuListUlHtml += '<li><span>' + filterData[$scope.selectedKeyField] + ' ' +  ' </span></li>';
+                                                        _newtabuListUlHtml += '<li><span>' + filterData[$scope.selectedKeyField] + ' ' + ' </span></li>';
                                                     }
                                                 }
                                                 else {
@@ -11658,10 +11658,10 @@
                                                             $scope.selectedKeyField = "";
                                                         }
                                                         if (!DataService.isEmpty($scope.selectedKeyField) && !DataService.isEmpty($scope.selectedKeyFieldSecond)) {
-                                                            $("#tabuListUl").append('<li><span>' + filterData[$scope.selectedKeyField] + ' | ' + filterData[$scope.selectedKeyFieldSecond] + ' ' +  ' </span></li>');
-                                                            _newtabuListUlHtml += '<li><span>' + filterData[$scope.selectedKeyField] + ' | ' + filterData[$scope.selectedKeyFieldSecond] + ' ' +  ' </span></li>';
+                                                            $("#tabuListUl").append('<li><span>' + filterData[$scope.selectedKeyField] + ' | ' + filterData[$scope.selectedKeyFieldSecond] + ' ' + ' </span></li>');
+                                                            _newtabuListUlHtml += '<li><span>' + filterData[$scope.selectedKeyField] + ' | ' + filterData[$scope.selectedKeyFieldSecond] + ' ' + ' </span></li>';
                                                         } else if (!DataService.isEmpty($scope.selectedKeyFieldSecond)) {
-                                                            $("#tabuListUl").append('<li><span>' + filterData[$scope.selectedKeyField] + ' '+ ' </span></li>');
+                                                            $("#tabuListUl").append('<li><span>' + filterData[$scope.selectedKeyField] + ' ' + ' </span></li>');
                                                             _newtabuListUlHtml += '<li><span>' + filterData[$scope.selectedKeyField] + ' ' + ' </span></li>';
                                                         } else {
                                                             $("#tabuListUl").append('<li><span> (ID: ' + sIdEventd + ')</span></li>');
@@ -11721,13 +11721,13 @@
                                                             _newtabuListUlHtmlWaiting += '<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' | ' + tempdata + ' ' + ' </span></li>';
                                                         }
                                                         else {
-                                                            $("#tabuListUl").append('<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' ' +  ' </span></li>');
-                                                            _newtabuListUlHtmlWaiting += '<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' ' +  ' </span></li>';
+                                                            $("#tabuListUl").append('<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' ' + ' </span></li>');
+                                                            _newtabuListUlHtmlWaiting += '<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' ' + ' </span></li>';
                                                         }
                                                     }
                                                     else {
-                                                        $("#tabuListUl").append('<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' ' +  ' </span></li>');
-                                                        _newtabuListUlHtmlWaiting += '<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' ' +  ' </span></li>';
+                                                        $("#tabuListUl").append('<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' ' + ' </span></li>');
+                                                        _newtabuListUlHtmlWaiting += '<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' ' + ' </span></li>';
                                                     }
                                                 }
                                                 else {
@@ -11744,11 +11744,11 @@
                                                             $scope.selectedKeyField = "";
                                                         }
                                                         if (!DataService.isEmpty($scope.selectedKeyField) && !DataService.isEmpty($scope.selectedKeyFieldSecond)) {
-                                                            $("#tabuListUl").append('<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' | ' + filterData[$scope.selectedKeyFieldSecond] + ' ' +  ' </span></li>');
-                                                            _newtabuListUlHtmlWaiting += '<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' | ' + filterData[$scope.selectedKeyFieldSecond] + ' ' +  ' </span></li>';
+                                                            $("#tabuListUl").append('<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' | ' + filterData[$scope.selectedKeyFieldSecond] + ' ' + ' </span></li>');
+                                                            _newtabuListUlHtmlWaiting += '<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' | ' + filterData[$scope.selectedKeyFieldSecond] + ' ' + ' </span></li>';
                                                         } else if (!DataService.isEmpty($scope.selectedKeyFieldSecond)) {
-                                                            $("#tabuListUl").append('<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' '  + ' </span></li>');
-                                                            _newtabuListUlHtmlWaiting += '<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' '  + ' </span></li>';
+                                                            $("#tabuListUl").append('<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' ' + ' </span></li>');
+                                                            _newtabuListUlHtmlWaiting += '<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' ' + ' </span></li>';
                                                         } else {
                                                             $("#tabuListUl").append('<li><span> (ID: ' + sIdEvent + ')</span></li>');
                                                             _newtabuListUlHtmlWaiting += '<li><span> (ID: ' + sIdEvent + ')</span></li>';
@@ -11762,7 +11762,7 @@
                                                 }
                                             } else {
                                                 if (!DataService.isEmpty($scope.selectedKeyField)) {
-                                                    $("#tabuListUl").append('<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' '  + ' </span></li>');
+                                                    $("#tabuListUl").append('<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' ' + ' </span></li>');
                                                     _newtabuListUlHtmlWaiting += '<li><span>W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' ' + ' </span></li>';
                                                 }
                                                 else {
@@ -11778,8 +11778,8 @@
                                                         } else {
                                                             $scope.selectedKeyField = "";
                                                         }
-                                                        $("#tabuListUl").append('<li><span>  W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' '  + ' </span></li>');
-                                                        _newtabuListUlHtmlWaiting += '<li><span> W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' '  + ' </span></li>';
+                                                        $("#tabuListUl").append('<li><span>  W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' ' + ' </span></li>');
+                                                        _newtabuListUlHtmlWaiting += '<li><span> W' + waitingIndex + '. ' + filterData[$scope.selectedKeyField] + ' ' + ' </span></li>';
 
                                                     }
                                                     else {
@@ -15369,7 +15369,7 @@
         function changeViewStateOfCalender(view, data) {
             var temp = {};
             temp.field = "start";
-             if (data.type == "selectedDate") {
+            if (data.type == "selectedDate") {
                 $('#list-view div.calendar').fullCalendar('gotoDate', $scope.formDetailsDataInfo.searchByDate);
                 $('#agenda-view div.calendar').fullCalendar('gotoDate', $scope.formDetailsDataInfo.searchByDate);
                 $('#timeline-resource-view div.calendar').fullCalendar('gotoDate', $scope.formDetailsDataInfo.searchByDate);
@@ -16895,7 +16895,7 @@
                     $scope.CMPCODE = cmp;
                     $rootScope.safeApply();
                 }
-                
+
             }
         }
 
@@ -17725,6 +17725,75 @@
             }
         };
 
+        $scope.cancelPublicUserBooking = function () {
+            var eventData = $scope.selectEventDetails;
+
+            swal({
+                title: "Are you sure to cancel the selected booking?",
+                buttons: {
+                    cancel: "No",
+                    confirm: "Yes"
+                }
+
+            }).then(function (response) {
+                if (response) {
+                    showLoader();
+
+                    var obj = {
+                        USER_ID: "",
+                        RESOURCE_NAME: eventData.customTitleSplit[0],
+                        ACTIVITY_NAME: eventData.customTitleSplit[1],
+                        FormGroupKey: $scope.selectEventDetails.formGroupKey,
+                        participant: {
+                            DESCRIPTION: String(eventData.description),
+                            COMPANY_CODE: eventData.COMPANY_CODE,
+                            CALENDAR_CODE: eventData.CALENDAR_CODE
+                        },
+                        transaction: {
+                            SLOT: eventData.Id,
+                            RESOURCE: eventData.resourceId,
+                            ACTIVITY: eventData.activities,
+                            STUDENT: "",
+                            REMARKS: "",
+                            FEES: "",
+                            ATTENDANCE: "NOT-MARKED",
+                            COMPANY_CODE: eventData.COMPANY_CODE,
+                            CALENDAR_CODE: eventData.CALENDAR_CODE
+                        }
+                    }
+
+                    $.ajax({
+                        url: "/UserAdmin/CancelPublicUserBooking",
+                        type: "POST",
+                        data: obj,
+                        success: function (data) {
+                            hideLoader();
+
+                            swal({
+                                title: (data.Status) ? "Success" : "Error",
+                                text: data.Message,
+                                icon: (data.Status) ? "success" : "error",
+                                button: "Okay"
+                            }).then(function () {
+                                if (data.Status) {
+                                    window.location.reload();
+                                }
+                            });
+
+                        },
+                        error: function () {
+                            hideLoader();
+                            swal({ type: 'error', showCloseButton: true, html: "something went wrong!" });
+                        }
+                    })
+                } else {
+                    hideLoader();
+                }
+            });
+
+
+        }
+
         $scope.validateForm = function (_fileInput, isrequired = false) {
             $('#fileSuccess').html('');
             var fileInput = document.getElementById(_fileInput);
@@ -18287,6 +18356,40 @@
 
         }
 
+    })
+
+    FormGeneratorApp.controller('ChangePasswordController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
+        checkLogin();
+
+        $scope.sendLink = function () {
+
+            $.ajax({
+                url: '/Account/ForgotPassword',
+                type: "POST",
+                data: {
+                    model: {
+                        Email: "authmail@gmail.com"
+                    }
+                    
+                },
+                success: function (result) {
+                    swal({
+                        icon: (result.Status) ? "success" : "error",
+                        title: (result.Status) ? "Success" : "Error",
+                        text: result.Message
+                    }).then(function (check) {
+                        if (result.Status) {
+                            window.location.href = "Useradmin#/userdashboard";
+                        }
+                        
+                    });
+                },
+                error: function (err) {
+                    alert(err.statusText);
+                }
+            });
+
+        }
     })
 
     FormGeneratorApp.controller('UserMyFavoriteController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {

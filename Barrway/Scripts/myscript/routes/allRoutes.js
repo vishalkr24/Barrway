@@ -2142,6 +2142,20 @@
                     parent: 'home'
                 }
             })
+            .state('changePassword', {
+                url: '/changePassword',
+                onEnter: function ($window) { $window.document.title = "Change Password"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/user-admin/change-password.html?token=' + uuid,
+                        controller: 'ChangePasswordController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
             .state('book_event', {
                 url: '/bookEvent/:Id',
                 onEnter: function ($window) { $window.document.title = "Book Event"; },
