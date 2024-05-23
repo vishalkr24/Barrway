@@ -70,7 +70,10 @@
     <Compile Include="APIModels\Account\APIEmailSignUpModel.cs" />
     <Compile Include="APIModels\Account\LoginViewModel.cs" />
     <Compile Include="APIModels\Account\UserClaimViewModel.cs" />
+    <Compile Include="APIModels\Account\UserProfile.cs" />
+    <Compile Include="APIModels\Booking\CancelBookingModel.cs" />
     <Compile Include="APIModels\Booking\PaymentHistoryApiModel.cs" />
+    <Compile Include="APIModels\Booking\SessionReview.cs" />
     <Compile Include="APIModels\Calendar\CalendarRequestModel.cs" />
     <Compile Include="APIModels\Booking\MyBooking.cs" />
     <Compile Include="APIModels\Calendar\MyWalletClanderApiModel.cs" />

@@ -126,4 +126,28 @@ namespace Barrway.DTO.APIModels.Booking
         public List<DownloadFile> DOWNLOAD_FILE_LIST { get; set; }
     }
 
+
+    public class LedgerModel
+    {
+        public string ORDER_NO { get; set; }
+        public double DEBIT_COIN { get; set; }
+        public double CREDIT_COIN { get; set; }
+        public string CALENDAR_CODE { get; set; }
+        public string COMPANY_CODE { get; set; }
+        public string USER_ID { get; set; }
+        public string TRANSACTION_TYPE { get; set; }
+    }
+
+
+    public class CalendarEnrollModel
+    {
+        public string USER_ID { get; set; }
+        public string USER_EMAIL { get; set; }
+        public string RESOURCE_NAME { get; set; }
+        public string ACTIVITY_NAME { get; set; }
+        public string FormGroupKey { get; set; }
+        public CalendarParticipantModel participant { get; set; }
+        public TransactionMasterModel transaction { get; set; }
+    }
+
 }

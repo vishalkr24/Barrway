@@ -179,6 +179,8 @@ namespace Barrway.Service.Repository
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 if (result.Count() > 0)
                 {
+                    var encryptPass = Aes256CbcEncrypter.Encrypt(password);
+
                     var user = result.FirstOrDefault();
                     if (string.IsNullOrEmpty(user["USER_PASSWORD"]?.ToString()) || Aes256CbcEncrypter.Decrypt(user["USER_PASSWORD"].ToString()) != password)
                     {
