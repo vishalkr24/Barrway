@@ -51,6 +51,7 @@
         * {
             transition: unset !important;
         }
+
         body {
             opacity: 0;
         }
@@ -159,7 +160,7 @@
 
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.9.1/fullcalendar.min.css" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.9.1/fullcalendar.print.css" media="print" />
-   
+
     <!-- css -->
     <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/style.css">
     <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/media.css">
@@ -337,7 +338,7 @@
                 width: 180px;
                 background-color: #fff;
                 box-shadow: 0px 4px 4px 0px #ddd;
-                padding:10px 10px;
+                padding: 10px 10px;
             }
 
                 .mobile-new ul.navbar-nav li {
@@ -346,7 +347,7 @@
                     width: 100% !important;
                     margin: 0px 0px;
                 }
-               /* .mobile-chat-noti .dropdown {
+            /* .mobile-chat-noti .dropdown {
                     width: 50%;
                     text-align: center;
                     float: left;
@@ -358,16 +359,18 @@
                 justify-content: space-around;
                 align-items: center;
             }
-            .mobile-chat-noti .dropdown {
-                width: 40px;
-            }
+
+                .mobile-chat-noti .dropdown {
+                    width: 40px;
+                }
+
                     .mobile-chat-noti .dropdown .bi-chat-left-text {
-                    font-size:20px;
+                        font-size: 20px;
                     }
+
             .navbar-nav-wrap-content-end {
-            margin-left:0px !important;
+                margin-left: 0px !important;
             }
-            
         }
     </style>
     <!-- Owl Stylesheets -->
@@ -579,6 +582,11 @@
 
                                 <div class="dropdown-divider"></div>
 
+                                <a class="dropdown-item" href="javascript:void(0)" ui-sref="changePassword()">Change password</a>
+
+
+                                <div class="dropdown-divider"></div>
+
 
                                 <form id="mySignOutForm" name="mySignOutForm" method="post" action="@Url.Action("LogoutPublicUser","Account")">
                                     <a class="dropdown-item" href="javascript:void(0)" onclick="Logout()">@Resource.Sign_out</a>
@@ -751,6 +759,11 @@
 
                                 <a class="dropdown-item" href="javascript:void(0)" ui-sref="my_profile()">@Resource.Profile &amp; @Resource.Account</a>
                                 @*<a class="dropdown-item" href="javascript:void(0)">Settings</a>*@
+
+                                <div class="dropdown-divider"></div>
+
+                                <a class="dropdown-item" href="javascript:void(0)" ui-sref="changePassword()">Change password</a>
+
 
                                 <div class="dropdown-divider"></div>
 
@@ -1614,6 +1627,6 @@
     @*==================*@
 
     <script src="assets/marketplace/owl/owl.carousel.js"></script>
-  
+
 </body>
 </html>

@@ -85,25 +85,53 @@ namespace Barrway.Controllers
 
         public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-            var userData = await authService.GetUserByEmail(model.Email);
+            AddUpdateDelete userData;
+
+            if (User.Identity.IsAuthenticated)
+            {
+                userData = await authService.GetUser(User.Identity.Name);
+
+            }
+            else
+            {
+                userData = await authService.GetUserByEmail(model.Email);
+            }
+
 
             if (userData.Status)
             {
+                if (User.Identity.IsAuthenticated)
+                {
+                    if (string.IsNullOrEmpty(userData.Data["USER_EMAIL"]?.ToString()))
+                    {
+                        return Json(new AddUpdateDelete() { Status = false, Message = "Email Id not registered to send link." });
+                    }
+
+                    model.Email = userData.Data["USER_EMAIL"]?.ToString();
+                }
                 var linkResult = await authService.SendresetpasswordLink(userData.Data["USER_ID"], model.Email);//USER_EMAILUSER_ID
 
                 if (linkResult.Status)
                 {
-                    TempData["VERIFICATION"] = "Pending";
-                    TempData["VERIFICATION_EMAIL"] = model.Email;
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        return Json(new AddUpdateDelete() { Status = true, Message = $"change password email has been sent to {model.Email}. Please follow the instructions." });
+                    }
+                    else
+                    {
+                        TempData["VERIFICATION"] = "Pending";
+                        TempData["VERIFICATION_EMAIL"] = model.Email;
 
-                    TempData["UpdateEmailSussess"] = $"A verification email has been sent to {model.Email}. Please follow the instructions.";
+                        TempData["UpdateEmailSussess"] = $"A verification email has been sent to {model.Email}. Please follow the instructions.";
 
-                    model.Email = "";
-                    ModelState.Clear();
-                    return View();
+                        model.Email = "";
+                        ModelState.Clear();
+                        return View();
+                    }
+
                 }
-                else {
-
+                else
+                {
                     ViewBag.ErrorMessage = linkResult.Message;
                 }
             }
@@ -112,7 +140,15 @@ namespace Barrway.Controllers
                 ViewBag.ErrorMessage = "Enter a valid email id";
             }
 
-            return View(model);
+            if (User.Identity.IsAuthenticated)
+            {
+                return Json(new AddUpdateDelete() { Status = false, Message = ViewBag.ErrorMessage });
+            }
+            else
+            {
+                return View(model);
+            }
+
         }
 
 
@@ -166,7 +202,7 @@ namespace Barrway.Controllers
                 }
 
             }
-            
+
             return View(model);
 
 
@@ -228,7 +264,7 @@ namespace Barrway.Controllers
 
                 if (!string.IsNullOrEmpty(ContryCode) && !string.IsNullOrEmpty(_MobileNumber))
                 {
-                    var Result = MessageRepository.VarifyOtp("+"+ContryCode + _MobileNumber, model.OTP);
+                    var Result = MessageRepository.VarifyOtp("+" + ContryCode + _MobileNumber, model.OTP);
                     if (Result.Status == true)
                     {
 
@@ -279,7 +315,7 @@ namespace Barrway.Controllers
                     var result = await authService.ResetPasswordPhone(userData.Data["USER_ID"].ToString(), model.newpassword);
                     if (result.Status)
                     {
-                        Session["ForgetCountryCode"]="";
+                        Session["ForgetCountryCode"] = "";
                         Session["ForgetMobileNumber"] = "";
                         ModelState.Clear();
                         TempData["Resetsuccess"] = "Password updated successfully !";
@@ -296,16 +332,16 @@ namespace Barrway.Controllers
                 {
                     return RedirectToAction("PhoneForgotPassword", "Account");
                 }
-                
+
             }
             else
             {
                 return View(model);
-            }         
+            }
 
 
         }
-        
+
         private void LogoutAllSession()
         {
             Session.Clear();
@@ -353,7 +389,7 @@ namespace Barrway.Controllers
             {
                 if (UserIdentity.Role == "SUPERADMIN_USER")
                 {
-                    return RedirectToAction("Index","SuperAdmin");
+                    return RedirectToAction("Index", "SuperAdmin");
                 }
                 else
                 {
@@ -465,7 +501,7 @@ namespace Barrway.Controllers
                                                     //new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
                                                     }, CookieAuthenticationDefaults.AuthenticationType);
 
-                
+
                 HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = true }, claims);
                 if (!string.IsNullOrEmpty(returnUrl))
                 {
@@ -503,7 +539,7 @@ namespace Barrway.Controllers
             }
             //if (!string.IsNullOrEmpty(model.USER_PHONE)) { model.USER_PHONE = model.USER_PHONE.Trim().Replace(" ",""); }
 
-            var loginresult = await authService.GetUserbyPhone( model.USER_PHONE,  model.Country_Code, model.USER_PASSWORD, (int)FormRole.GENERAL_USER, true);
+            var loginresult = await authService.GetUserbyPhone(model.USER_PHONE, model.Country_Code, model.USER_PASSWORD, (int)FormRole.GENERAL_USER, true);
 
             if (loginresult.Status)
             {
@@ -666,7 +702,7 @@ namespace Barrway.Controllers
                 {
                     Session["401ReturnUrl"] = TempData.Peek("401ReturnUrl")?.ToString();
                 }
-                
+
 
                 // Business Account Creation START
 
@@ -822,7 +858,8 @@ namespace Barrway.Controllers
                 };
 
                 AddUpdateDelete result = await signupService.RegisterUser(userMaserModel.ToDictionary());
-                if (!result.Status) {
+                if (!result.Status)
+                {
                     ModelState.AddModelError("", result.Message);
                     return View(model);
                 }
@@ -846,11 +883,11 @@ namespace Barrway.Controllers
                 // Send Activation Link
                 if (!model.IS_EXTERNAL_SIGNUP)
                 {
-                    var Result = MessageRepository.SendOtpSmS("+"+model.Country_Code + phone);
+                    var Result = MessageRepository.SendOtpSmS("+" + model.Country_Code + phone);
 
                     if (result.Status)
                     {
-                       
+
                         Session["VarificationMobileNUmber"] = "+" + model.Country_Code + phone;
                         Session["MobileNUmber"] = phone;
                         TempData["VERIFICATION"] = "Pending";
@@ -868,7 +905,7 @@ namespace Barrway.Controllers
                 else
                 {
 
-                    var result2 = await authService.GetUserByPhone(phone, "+"+model.Country_Code, 1);
+                    var result2 = await authService.GetUserByPhone(phone, "+" + model.Country_Code, 1);
                     if (result2.Status)
                     {
                         var user = result2.Data;
@@ -918,7 +955,7 @@ namespace Barrway.Controllers
 
 
         [AllowAnonymous]
-        
+
         public async Task<ActionResult> MobileVerification()
         {
             return View();
@@ -932,17 +969,17 @@ namespace Barrway.Controllers
         {
             try
             {
-                
+
                 string MObileNumber = Session["VarificationMobileNUmber"]?.ToString();
                 string _MObileNumber = Session["MobileNUmber"]?.ToString();
 
-                if(!string.IsNullOrEmpty(MObileNumber) && !string.IsNullOrEmpty(_MObileNumber))
+                if (!string.IsNullOrEmpty(MObileNumber) && !string.IsNullOrEmpty(_MObileNumber))
                 {
                     var Result = MessageRepository.VarifyOtp(MObileNumber, model.OTP);
                     if (Result.Status == true)
                     {
 
-                        var UserDetails=await authService.GetUserByPhone(_MObileNumber);
+                        var UserDetails = await authService.GetUserByPhone(_MObileNumber);
 
                         var _result = await authService.ChangePhoneVarificationStatus(_MObileNumber);
 
@@ -956,7 +993,7 @@ namespace Barrway.Controllers
                     }
                 }
 
-                
+
 
 
             }
@@ -983,7 +1020,8 @@ namespace Barrway.Controllers
                     var Result = MessageRepository.SendOtpSmS(MobileNumber);
                     TempData["MobileVerificationSuccessMessage"] = "new OTP has been sent !";
                 }
-                else {
+                else
+                {
                     TempData["MobileVerificationErroMessage"] = "Session expired!";
                 }
                 return RedirectToAction("MobileVerification", "Account");
@@ -1142,7 +1180,7 @@ namespace Barrway.Controllers
 
         }
 
-       
+
 
 
         [HttpPost]
@@ -1248,7 +1286,8 @@ namespace Barrway.Controllers
                         {
                             int affectedRows = await sqlFunction.ExecuteSqlCommandQuery("update PUBLIC_USER_ACCOUNT_1943 set CURRENT_STEP = 'COMPLETED' where USER_ID = '" + userName + "'");
                             return View();
-                        }else if (role == "GENERAL_USER")
+                        }
+                        else if (role == "GENERAL_USER")
                         {
                             int affectedRows = await sqlFunction.ExecuteSqlCommandQuery("update USER_MASTER_1915 set CURRENT_STEP = 'COMPANY PROFILE' where USER_ID = '" + userName + "'; update PUBLIC_USER_ACCOUNT_1943 set CURRENT_STEP = 'COMPLETED' where USER_ID = '" + userName + "'");
                             return View();
@@ -1279,7 +1318,7 @@ namespace Barrway.Controllers
         public async Task<ActionResult> resetpassword(string token)
         {
 
-           
+
             ResetPasswordViewModel model = new ResetPasswordViewModel() { token = token };
             if (string.IsNullOrEmpty(token))
             {
@@ -1289,7 +1328,7 @@ namespace Barrway.Controllers
             }
             var result = await authService.GetToken(token);
 
-            if(result.Status == true)
+            if (result.Status == true)
             {
                 if (result.Data["IS_ACTIVE"] != "YES")
                 {
@@ -1326,7 +1365,7 @@ namespace Barrway.Controllers
                 }
                 else
                 {
-                    TempData["failed"] = "Invalid Request !";                    
+                    TempData["failed"] = "Invalid Request !";
                     return RedirectToAction("InvalidUrl");
                 }
             }
@@ -1361,7 +1400,7 @@ namespace Barrway.Controllers
                 {
 
                     if (DateTimeUtility.Now().Subtract(createdTime).TotalHours > 24)
-                    {                       
+                    {
                         TempData["failed"] = "Reset password link expired!";
                     }
                     result = await authService.ResetPassword(model.token, result.Data["USER_ID"].ToString(), model.newpassword);
@@ -1378,7 +1417,7 @@ namespace Barrway.Controllers
                 }
                 else
                 {
-                    ModelState.Clear();                   
+                    ModelState.Clear();
                     TempData["failed"] = "Invalid activation link!";
                 }
             }
@@ -1517,7 +1556,7 @@ namespace Barrway.Controllers
 
                 string USER_ID = User.Identity.Name;
 
-                var result = await authService.CheckEmailAddressExists(model.Email , USER_ID);
+                var result = await authService.CheckEmailAddressExists(model.Email, USER_ID);
 
 
                 if (result.Status == true)
@@ -1530,7 +1569,7 @@ namespace Barrway.Controllers
                         TempData["VERIFICATION"] = "Pending";
                         TempData["VERIFICATION_EMAIL"] = model.Email;
 
-                        TempData["UpdateEmailSussess"] = "varification email has been sent to "+ model.Email + " please fallow instructions !";
+                        TempData["UpdateEmailSussess"] = "varification email has been sent to " + model.Email + " please fallow instructions !";
 
                         model.Email = "";
                         return View(model);
@@ -1553,7 +1592,7 @@ namespace Barrway.Controllers
                     return View(model);
                 }
 
-            
+
             }
             catch (Exception ex)
             {
@@ -1591,12 +1630,12 @@ namespace Barrway.Controllers
                     var verificationResult = await authService.UserVerification(token, userName);
                     if (verificationResult.Status)
                     {
-                        TempData["success"] = "Email verification successfull.";                        
+                        TempData["success"] = "Email verification successfull.";
 
                         var Result = await authService.UpdateUserEmailAddress(Email, userName);
 
                         return View();
-                       
+
                     }
                     else
                     {
