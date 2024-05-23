@@ -1,4 +1,5 @@
-﻿using Barrway.DTO.APIModels.Dashboard;
+﻿using Barrway.DTO.APIModels.Account;
+using Barrway.DTO.APIModels.Dashboard;
 using Barrway.Security;
 using Barrway.Service.IRepository;
 using System;
@@ -21,6 +22,22 @@ namespace Barrway.Controllers.API.v1
         {
             this.mobileAPIService = mobileAPIService;
         }
+
+        [HttpGet]
+        [Route("api/User/userdetails")]
+        [ResponseType(typeof(UserProfile))]
+        public async Task<IHttpActionResult> Getuserdetails()
+        {
+            try
+            {
+                return Ok(await mobileAPIService.GetUserProfileDetails(APIUserIdentity.UserName));
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
+
 
         [HttpGet]
         [Route("api/dashboard/filters")]

@@ -10,6 +10,7 @@ using Barrway.DTO.Common;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using Barrway.DTO.APIModels.Account;
 
 namespace Barrway.Service.IRepository
 {
@@ -57,5 +58,17 @@ namespace Barrway.Service.IRepository
         Task<FavouriteCalendarDetails> CalendarDtails(FavoriteCalendarViewModel model, string UserId);
         Task<EventDetails> GetSingleEventDetails(string EventId);       
         Task<ModifiedMyBooking> GetMyBookingsDetails(string email, string EventId = null);
+
+        Task<UserProfile> GetUserProfileDetails(string UserId);
+
+        Task<AddUpdateDelete> SessionReview(SessionReview model);
+
+        Task<AddUpdateDelete> CancelBooking(string SLOT, string USER_EMAIL, string USER_ID);
+
+        Task<AddUpdateDelete> GetUserCoinBalance(string UserId, string CompanyCode, string CalendarCode);
+
+        Task<AddUpdateDelete> GetCalendarDetails(string calendarCode, string UserId = null);
+
+        Task<AddUpdateDelete> GetBookingsForThisMonth(string CompanyCode, string SlotId);
     }
 }

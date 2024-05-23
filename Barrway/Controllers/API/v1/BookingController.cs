@@ -33,7 +33,7 @@ namespace Barrway.Controllers.API.v1
         {
             try
             {
-                var result = await mobileAPIService.GetMyBookings(model,APIUserIdentity.UserEmail, "1");
+                var result = await mobileAPIService.GetMyBookings(model, APIUserIdentity.UserEmail, "1");
                 return Ok(result);
             }
             catch (Exception ex)
@@ -48,8 +48,8 @@ namespace Barrway.Controllers.API.v1
         public async Task<IHttpActionResult> BookinggDetails(string EventId)
         {
             try
-            {                              
-                var result = await mobileAPIService.GetMyBookingsDetails( APIUserIdentity.UserEmail, EventId);
+            {
+                var result = await mobileAPIService.GetMyBookingsDetails(APIUserIdentity.UserEmail, EventId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -57,6 +57,46 @@ namespace Barrway.Controllers.API.v1
                 return InternalServerError();
             }
         }
+
+
+        [HttpPost]
+        [Route("api/user/CancelBooking/{SLOT}")]
+        public async Task<IHttpActionResult> CancelBooking(string SLOT)
+        {
+            try
+            {
+                var result = await mobileAPIService.CancelBooking(SLOT, APIUserIdentity.UserEmail, APIUserIdentity.UserID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
+
+
+        [HttpPost]
+        [Route("api/user/Slot/Review")]
+        public async Task<IHttpActionResult> SessionReview(Session_ReviewViewModel model)
+        {
+            try
+            {
+                SessionReview data = new SessionReview();
+                data.CALENDAR_CODE = model.CALENDAR_CODE;
+                data.EVENT_ID = model.EVENT_ID;
+                data.COMPANY_CODE = model.COMPANY_CODE;
+                data.REVIEW_SCORE = model.REVIEW_SCORE;
+                data.REVIEW_COMMENT = model.REVIEW_COMMENT;
+                data.USER_EMAIL = APIUserIdentity.UserEmail;
+                var result = await mobileAPIService.SessionReview(data);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
+
 
 
 
@@ -77,7 +117,7 @@ namespace Barrway.Controllers.API.v1
         }
 
 
-        
+
 
 
         [HttpPost]
