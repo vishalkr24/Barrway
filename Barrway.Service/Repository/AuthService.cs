@@ -182,7 +182,7 @@ namespace Barrway.Service.Repository
                     var user = result.FirstOrDefault();
                     if (string.IsNullOrEmpty(user["USER_PASSWORD"]?.ToString()) || Aes256CbcEncrypter.Decrypt(user["USER_PASSWORD"].ToString()) != password)
                     {
-                        return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Invalid Password" };
+                        return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Invalid Phone or Password" };
                     }
 
                     if (!(user["IS_PHONE_VERIFIED"]?.ToString() == "Y"))
@@ -717,7 +717,7 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
                 var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
                 if (result > 0)
                 {
-                    sqlString = $@" update USER_MASTER_1915 set USER_PASSWORD='{newPassword}' where [USER_ID]=N'{userName}'";
+                    sqlString = $@" update USER_MASTER_1915 set USER_PASSWORD='{newPassword}',IS_EMAIL_VERIFIED='Y' where [USER_ID]=N'{userName}'";
                     result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
                     if (result > 0)
                     {
@@ -749,7 +749,7 @@ join PUBLIC_USER_ACCOUNT_1943 p_user on p_user.USER_ID=user_m.USER_ID
             {
                 newPassword = Aes256CbcEncrypter.Encrypt(newPassword);
 
-                string sqlString = $@" update USER_MASTER_1915 set USER_PASSWORD='{newPassword}' where [USER_ID]=N'{userName}'";
+                string sqlString = $@" update USER_MASTER_1915 set USER_PASSWORD='{newPassword}',IS_PHONE_VERIFIED='Y' where [USER_ID]=N'{userName}'";
                 var result = await sqlFunction.ExecuteSqlCommandQuery(sqlString);
                 if (result > 0)
                 {

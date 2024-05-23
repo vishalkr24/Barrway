@@ -1240,10 +1240,85 @@ namespace Barrway.Controllers
                 return Json(new FileUploadResponse() { success = false, message = "No file selected" });
             }
         }
+
+        [HttpPost]
+        public ActionResult UploadFileCustom(
+string reqType,
+string uid,
+string appId,
+string appTitle,
+string formId,
+string formTitle,
+bool isImportData,
+int userId,
+string actionType,
+List<HttpPostedFileBase> file1)
+        {
+            if (file1 != null && file1.Count() > 0)
+            {
+                try
+                {
+
+                    foreach (var file in file1)
+                    {
+                        string fileExtension = Path.GetExtension(file.FileName).ToLower();
+                        if (!IsAllowedImageFileExtension(fileExtension))
+                        {
+                            return Json(new FileUploadResponse() { success = false, message = "file format invalid" });
+                        }
+                        if (!IsImageFileValid(file, out string errorMessage))
+                        {
+                            return Json(new FileUploadResponse() { success = false, message = errorMessage });
+                        }
+                    }
+
+                    List<string> filepaths = new List<string>();
+                    // Save the file temporarily
+                    foreach (var item in file1)
+                    {
+                        string timestamp = DateTime.Now.ToString("ddMMyyyyHHmmssfff");
+                        string extension = System.IO.Path.GetExtension(item.FileName);
+                        string newFileName = $"{System.IO.Path.GetFileNameWithoutExtension(item.FileName)}_{timestamp}{extension}";
+                        var filePath = Path.Combine(Server.MapPath("~/App_Data/TempFileUploads"), newFileName);
+                        item.SaveAs(filePath);
+                        filepaths.Add(filePath);
+                    }
+
+
+                    // Call the external API using RestSharp
+                    var response = ForwardToExternalApi(filepaths, reqType, uid, appId, appTitle, formId, formTitle, isImportData, userId, actionType);
+
+                    // Check the response status and return the appropriate response
+                    if (response.success)
+                    {
+                        return Json(response);
+                    }
+                    else
+                    {
+                        return Json(response);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Json(new FileUploadResponse() { success = false, message = ex.Message });
+                }
+            }
+            else
+            {
+                return Json(new FileUploadResponse() { success = false, message = "No file selected" });
+            }
+        }
+
         private bool IsAllowedFileExtension(string fileExtension)
         {
             // Define the list of allowed file extensions
             string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".pdf", ".doc", ".docx", ".xls", ".xlsx" };
+            return allowedExtensions.Contains(fileExtension);
+        }
+        private bool IsAllowedImageFileExtension(string fileExtension)
+        {
+            // Define the list of allowed file extensions
+            string[] allowedExtensions = { ".jpg", ".jpeg" };
             return allowedExtensions.Contains(fileExtension);
         }
         private bool IsFileValid(HttpPostedFileBase file, out string errorMessage)
@@ -1257,6 +1332,7 @@ namespace Barrway.Controllers
                 return false;
             }
 
+           
             if (file.ContentLength > MaxFileSize)
             {
                 errorMessage = "File size must be less than 3 MB.";
@@ -1266,7 +1342,33 @@ namespace Barrway.Controllers
             return true;
         }
 
-        
+        private bool IsImageFileValid(HttpPostedFileBase file, out string errorMessage)
+        {
+            int MaxFileSize = 3 * 1024 * 1024;
+            int MinFileSize = 500 * 1024;
+            errorMessage = string.Empty;
+
+            if (file == null)
+            {
+                errorMessage = "No file uploaded.";
+                return false;
+            }
+
+            if (file.ContentLength < MinFileSize)
+            {
+                errorMessage = "File size must be greater than 500Kb.";
+                return false;
+            }
+            if (file.ContentLength > MaxFileSize)
+            {
+                errorMessage = "File size must be less than 3 MB.";
+                return false;
+            }
+
+            return true;
+        }
+
+
 
         static string GetFileExtension(string url)
         {

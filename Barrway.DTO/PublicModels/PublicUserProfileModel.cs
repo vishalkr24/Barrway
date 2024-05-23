@@ -21,7 +21,7 @@ namespace Barrway.DTO.PublicModels
         public string CHINESE_NAME { get; set; } = String.Empty;
         public string NICK_NAME { get; set; } = String.Empty;
         public string GENDER { get; set; } = String.Empty;
-        public DateTime DATE_OF_BIRTH { get; set; }
+        public DateTime? DATE_OF_BIRTH { get; set; }
 
         public string USER_EMAIL { get; set; } = String.Empty;
 

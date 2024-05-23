@@ -4293,9 +4293,16 @@
                 if ($scope.currentFormId == 2326) {
                     customFilter = [{ "FieldName": "USER_ID", "Value": "" }]
                 } else {
-                    customFilter = [{ "FieldName": "COMPANY_CODE", "Value": localStorage.getItem("COMPANY_CODE") },
-                    { "FieldName": "CALENDAR_CODE", "Value": localStorage.getItem("CALENDAR_CODE") }
-                    ]
+                    if ($scope.currentFormId == 2312) {
+                        customFilter = [{ "FieldName": "f.COMPANY_CODE", "Value": localStorage.getItem("COMPANY_CODE") },
+                        { "FieldName": "f.CALENDAR_CODE", "Value": localStorage.getItem("CALENDAR_CODE") }
+                        ]
+                    } else {
+                        customFilter = [{ "FieldName": "COMPANY_CODE", "Value": localStorage.getItem("COMPANY_CODE") },
+                        { "FieldName": "CALENDAR_CODE", "Value": localStorage.getItem("CALENDAR_CODE") }
+                        ]
+                    }
+                    
                 }
 
                     tabulator = initTabulator('form-records', {

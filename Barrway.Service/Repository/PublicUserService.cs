@@ -379,8 +379,12 @@ namespace Barrway.Service.Repository
                 {
                     subQuery = "USER_PASSWORD = '" + model.USER_PASSWORD + "'";
                 }
+                string dateofbirth = "NULL";
+                if (model.DATE_OF_BIRTH.HasValue) {
+                    dateofbirth = "'"+model.DATE_OF_BIRTH.Value.ToString("yyyy-MM-dd")+"'";
+                }
 
-                string query = $@"update PUBLIC_USER_ACCOUNT_1943 set FIRST_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.FIRST_NAME)}', LAST_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.LAST_NAME)}', CHINESE_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.CHINESE_NAME)}', NICK_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.NICK_NAME)}', GENDER = '{model.GENDER}', DATE_OF_BIRTH = '{model.DATE_OF_BIRTH.ToString("yyyy-MM-ddTHH:mm:ss")}' where USER_ID = '{model.USER_ID}'
+                string query = $@"update PUBLIC_USER_ACCOUNT_1943 set FIRST_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.FIRST_NAME)}', LAST_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.LAST_NAME)}', CHINESE_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.CHINESE_NAME)}', NICK_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.NICK_NAME)}', GENDER = '{model.GENDER}', DATE_OF_BIRTH = {dateofbirth} where USER_ID = '{model.USER_ID}'
                               update USER_MASTER_1915 set {subQuery}  USER_PHONE = '{model.USER_PHONE}',Country_Code='{model.Country_Code}' where USER_ID = '{model.USER_ID}' ";
 
                 int result = await sqlFunction.ExecuteSqlCommandQuery(query);

@@ -1506,7 +1506,7 @@ namespace Barrway.Controllers
         }
 
 
-        [PublicAuthorize(Roles = "PUBLIC_USER,GENERAL_USER")]
+        //[PublicAuthorize(Roles = "PUBLIC_USER,GENERAL_USER")]
         public ActionResult Enteryouremailaddress()
         {
             var username = TempData["USER_ID"] as string;
@@ -1524,7 +1524,7 @@ namespace Barrway.Controllers
                     return View(model);
                 }
 
-                string USER_ID = User.Identity.Name;
+                string USER_ID = model.UserName;
 
                 var result = await authService.CheckEmailAddressExists(model.Email , USER_ID);
 
