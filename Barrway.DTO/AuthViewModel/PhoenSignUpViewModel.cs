@@ -10,6 +10,7 @@ namespace Barrway.DTO.AuthViewModel
     public class PhoenSignUpViewModel
     {
         [Required(ErrorMessage = "User name is required.")]
+        [MaxLength(20, ErrorMessage = "User name max length 20 characters")]
         public string USER_NAME { get; set; }
 
         [Required(ErrorMessage = "First name is required.")]

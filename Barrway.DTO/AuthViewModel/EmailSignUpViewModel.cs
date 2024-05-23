@@ -10,6 +10,7 @@ namespace Barrway.DTO.AuthViewModel
     public class EmailSignUpViewModel
     {
         [Required(ErrorMessage = "User name is required.")]
+        [MaxLength(20,ErrorMessage = "User name max length 20 characters")]
         public string USER_NAME { get; set; }
 
         [Required(ErrorMessage = "First name is required.")]
@@ -31,8 +32,8 @@ namespace Barrway.DTO.AuthViewModel
 
 
         [Required(ErrorMessage = "Confirm your password")]
-        [MinLength(8, ErrorMessage = "Password length should be greater than 8 characters")]
-        [MaxLength(16, ErrorMessage = "Password length should be less than 16 characters")]
+        //[MinLength(8, ErrorMessage = "Password length should be greater than 8 characters")]
+        //[MaxLength(16, ErrorMessage = "Password length should be less than 16 characters")]
         [Compare("USER_PASSWORD", ErrorMessage = "Confirm password does not match")]
 
         public string USER_CONFIRM_PASSWORD { get; set; }

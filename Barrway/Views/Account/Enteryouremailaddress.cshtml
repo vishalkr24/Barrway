@@ -588,7 +588,7 @@
                         <div class='signUp'>
                             <div class='right'>
                                 <div class="logo">
-                                   <a href="/"><img style="width: 260px;" src="../assets/img/logo.png"> <span class="business-label">Business</span></a>
+                                    <a href="/"><img style="width: 260px;" src="../assets/img/logo.png"> <span class="business-label">Business</span></a>
                                 </div>
                                 <div class="card-wrap">
                                     <div class="custome-card">
@@ -599,10 +599,12 @@
                                         }
                                         else
                                         {
+                                            
                                             <h2>Please enter you email address</h2>
                                             <form class="js-validate needs-validation" method="post" action="/Account/Enteryouremailaddress" novalidate>
+                                                    @Html.HiddenFor(x=>x.UserName)
                                                 <div class="input-group">
-                                                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @placeholder = "Email", @required = "true" })
+                                                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @placeholder = "Email", @required = "true", @autocomplete = "new-password" })
                                                     @Html.ValidationMessageFor(model => model.Email, "", new { @class = "invalid-feedback-2" })
 
                                                     @if (TempData["UpdateEmailFailure"] != null)
@@ -643,6 +645,9 @@
         })
 
     </script>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
 </body>
 
 </html>
