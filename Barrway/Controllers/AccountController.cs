@@ -682,6 +682,7 @@ namespace Barrway.Controllers
                 {
                     USER_ID = model.USER_NAME,
                     CURRENT_STEP = "PENDING",
+                    DATE_OF_BIRTH = null,
                     FIRST_NAME = model.FIRST_NAME,
                     LAST_NAME = model.LAST_NAME
                 };
@@ -831,6 +832,7 @@ namespace Barrway.Controllers
                 {
                     USER_ID = model.USER_NAME,
                     CURRENT_STEP = "PENDING",
+                    DATE_OF_BIRTH = null,
                     FIRST_NAME = model.FIRST_NAME,
                     LAST_NAME = model.LAST_NAME,
                 };
