@@ -854,6 +854,188 @@
             color: #495057; /* Adjust text color as needed */
         }
     </style>
+
+
+    <style>
+        .form-group.borderSet.col-sm-6 > .col-sm-12 > div {
+            display: flex;
+            align-items: center;
+        }
+
+        form label {
+            float: none !important;
+            margin-bottom: 0px !important;
+        }
+
+            form label.pull-left {
+                float: none !important;
+                margin-bottom: 0px !important;
+            }
+
+
+        .tab-content .tab-pane.active {
+            display: flex !important;
+            flex-wrap: wrap !important;
+        }
+
+        .tab-content .tab-pane .clearfix {
+            width: 100%;
+        }
+
+        .form-check-inline > label {
+            display: flex;
+        }
+
+            .form-check-inline > label > img {
+                max-height: 30px;
+                object-fit: cover;
+            }
+
+        .form-check > label > img {
+            margin-bottom: 5px;
+            /*     max-height:  30px; */
+        }
+
+        .tagify__input {
+            display: block;
+            width: 100%;
+            height: calc(1.5em + .75rem + 2px);
+            padding: .375rem .75rem;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
+            transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        }
+
+        #courseDetails > .table-responsive .table > thead > tr > th:first-child {
+            width: 41.667%;
+        }
+
+        #courseDetails > .form-group {
+            margin-bottom: 0px;
+        }
+
+        #courseDetails > .form-horizontal {
+            font-weight: 500;
+        }
+
+        #courseDetails > .table tbody tr td {
+            border: 0;
+        }
+
+        #courseDetails > .table thead th {
+            border-top: 1px solid;
+            border-color: #000;
+            border-bottom: 1px solid #000;
+        }
+
+        #courseDetails > .table tfoot td {
+            border-top: 1px solid;
+            border-color: #000;
+        }
+
+        .bs-popover-top {
+            min-width: auto !important;
+            width: 180px !important;
+        }
+
+        .jqbtk-container .jqbtk-row {
+            display: flex;
+        }
+
+            .jqbtk-container .jqbtk-row .btn {
+                flex: 1;
+                border: 1px solid #9174ed;
+                border-color: #9174ed;
+                background-color: #b29af8;
+                background-image: -webkit-gradient(linear, left top, left bottom, from(#b29af8), to(#9174ed));
+                background-image: -webkit-linear-gradient(top, #b29af8, #9174ed);
+                background-image: -moz-linear-gradient(top, #b29af8, #9174ed);
+                background-image: -ms-linear-gradient(top, #b29af8, #9174ed);
+                background-image: -o-linear-gradient(top, #b29af8, #9174ed);
+                background-image: linear-gradient(to bottom, #b29af8, #9174ed);
+                filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr=#b29af8, endColorstr=#9174ed);
+                font-size: 21px;
+                padding: 8px;
+                border-radius: 6px !important;
+            }
+
+        .input-group.date.text-with-date-control > .input-group {
+            align-items: center;
+        }
+
+            .input-group.date.text-with-date-control > .input-group .form-control.inputClass {
+                margin-left: 3px;
+            }
+
+            .input-group.date.text-with-date-control > .input-group .input-group-append {
+                margin-right: 6px;
+            }
+
+        .theme-darkPrimary .nav-item .nav-link {
+            border: 1px solid #c3c3c3;
+            background: #efefef;
+            margin-left: 5px;
+            border-radius: 0;
+            font-family: 'Montserrat-bold' !important;
+            color: #000;
+            font-size: 14px;
+        }
+
+            .theme-darkPrimary .nav-item .nav-link.active {
+                background: #3E246B;
+                color: #fff;
+            }
+
+        .theme-darkPrimary-page .nav-item .nav-link {
+            border: 1px solid #c3c3c3;
+            background: #efefef;
+            margin-left: 2px;
+            font-family: 'Montserrat-bold' !important;
+            font-size: 14px;
+        }
+
+            .theme-darkPrimary-page .nav-item .nav-link.active {
+                background: #3E246B;
+                color: #fff;
+            }
+
+        .kbw-signature {
+            display: flex !important;
+        }
+
+            .kbw-signature ~ button.btn-danger {
+                margin-top: 5px;
+            }
+
+        h6 {
+            font-size: 12px;
+        }
+
+        .banner-section .breadcrumb li a {
+            color: #7e3d99;
+            padding: 0;
+            font-size: 14px;
+            font-style: italic;
+            font-family: Roboto;
+            font-weight: 500;
+            letter-spacing: .2px;
+        }
+
+        .charactorcap > canvas {
+            /* pointer-events: none;*/
+            background-color: #adaaaa !important;
+            border: 1px solid #8f8989;
+            width: 184px;
+            height: 58px;
+            padding: 7px;
+        }
+    </style>
 }
 
 <!-- sliders compnay -->
@@ -2327,7 +2509,9 @@
 
                                     $("#customEventDetailsModelPopUp").modal("hide");
                                     $("#customEventDetailsServiceModelPopUp").modal("hide");
-                                    $("#AdditionalDetailsFormModal").modal("show");
+                                $("#AdditionalDetailsFormModal").modal("show");
+
+                                $('#customFormNew button').closest('.form-group').addClass('col-md-6');
                                     hideLoader();
                             }, 500);
 
