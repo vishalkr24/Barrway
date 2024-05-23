@@ -566,7 +566,7 @@
                                     @if (!IsExternalSignUp)
                                     {
                                         <h3>@Resource.Register </h3>
-                                        <form class="js-validate needs-validation" method="post" action="/Account/BusinessSignUp" novalidate>
+                                        <form class="js-validate needs-validation" method="post" action="/Account/BusinessSignUp" id="myform" novalidate>
 
                                             @Html.AntiForgeryToken()
                                             @Html.ValidationSummary()
@@ -629,7 +629,7 @@
                                             </div>
 
                                             <div class="register-btn">
-                                                <button type="submit" class="btn btn-default">@Resource.Register</button>
+                                                <button type="submit"  id="submitBtn" class="btn btn-default">@Resource.Register</button>
                                             </div>
                                             <div style="display:none;">
                                                 @Html.EditorFor(model => model.IS_EXTERNAL_SIGNUP, new { @class = "form-control", @readonly = true, @style = "visibility:hidden;", @placeholder = "Email", @required = "true" })
@@ -705,7 +705,7 @@
                                             </div>
 
                                             <div class="register-btn">
-                                                <button type="submit" class="btn btn-default">@Resource.Submit</button>
+                                                <button type="submit" id="submitBtn" class="btn btn-default">@Resource.Submit</button>
                                             </div>
                                             <div style="display:none;">
                                                 @Html.EditorFor(model => model.IS_EXTERNAL_SIGNUP, new { @class = "form-control", @readonly = true, @style = "visibility:hidden;", @placeholder = "Email", @required = "true" })
@@ -750,7 +750,17 @@
                     }
                 });
             }
+
+
+
+
+            $('#myform').submit(function () {
+                if (!$('#myform').valid()) return false;
+                $('#submitBtn').attr("disabled", "disabled");
+                return true;
+            });
         })
+
 
     </script>
 

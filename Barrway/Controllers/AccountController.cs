@@ -524,10 +524,17 @@ namespace Barrway.Controllers
                     lastName = user["LAST_NAME"]?.ToString();
                 }
 
+                if (string.IsNullOrEmpty(user["USER_EMAIL"]?.ToString()))
+                {
+                    TempData["USER_ID"] = user["USER_ID"].ToString();
+                    return RedirectToAction("Enteryouremailaddress", "Account");
+                }
+
+
                 var claims = new ClaimsIdentity(new[] {
                                                     new Claim(ClaimTypes.NameIdentifier,user["USER_ID"].ToString()),
                                                     new Claim(ClaimTypes.Name,user["USER_ID"].ToString()),
-                                                    new Claim(ClaimTypes.Email, user["USER_EMAIL"].ToString()),
+                                                    new Claim(ClaimTypes.Email, user["USER_EMAIL"]?.ToString()),
                                                     new Claim(ClaimTypes.Role, user["ROLE_NAME"].ToString()),
                                                     new Claim(ClaimTypes.Sid, user["Id"].ToString()),
                                                     new Claim("FirstName", firstName),
@@ -538,10 +545,10 @@ namespace Barrway.Controllers
 
                 HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = model.REMEMBER_ME }, claims);
 
-                if (string.IsNullOrEmpty(user["USER_EMAIL"].ToString()))
-                {
-                    return RedirectToAction("Enteryouremailaddress", "Account");
-                }
+                //if (string.IsNullOrEmpty(user["USER_EMAIL"]?.ToString()))
+                //{
+                //    return RedirectToAction("Enteryouremailaddress", "Account");
+                //}
 
                 if (!string.IsNullOrEmpty(returnUrl))
                 {
@@ -682,6 +689,7 @@ namespace Barrway.Controllers
                 {
                     USER_ID = model.USER_NAME,
                     CURRENT_STEP = "PENDING",
+                    DATE_OF_BIRTH = null,
                     FIRST_NAME = model.FIRST_NAME,
                     LAST_NAME = model.LAST_NAME
                 };
@@ -831,6 +839,7 @@ namespace Barrway.Controllers
                 {
                     USER_ID = model.USER_NAME,
                     CURRENT_STEP = "PENDING",
+                    DATE_OF_BIRTH = null,
                     FIRST_NAME = model.FIRST_NAME,
                     LAST_NAME = model.LAST_NAME,
                 };
@@ -1500,7 +1509,9 @@ namespace Barrway.Controllers
         [PublicAuthorize(Roles = "PUBLIC_USER,GENERAL_USER")]
         public ActionResult Enteryouremailaddress()
         {
-            return View();
+            var username = TempData["USER_ID"] as string;
+            TempData.Keep();
+            return View(new UpdateUserEmailModel() { UserName=username});
         }
 
         [HttpPost]
@@ -1525,6 +1536,7 @@ namespace Barrway.Controllers
 
                     if (linkResult.Status)
                     {
+                        TempData.Clear();
                         TempData["VERIFICATION"] = "Pending";
                         TempData["VERIFICATION_EMAIL"] = model.Email;
 

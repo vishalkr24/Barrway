@@ -583,7 +583,7 @@
                                 <div class="register">
 
                                     <h3>@Resource.Register </h3>
-                                    <form class="js-validate needs-validation" method="post" action="/Account/BusinessSignUpPhone" novalidate>
+                                    <form class="js-validate needs-validation" id="myform" method="post" action="/Account/BusinessSignUpPhone" novalidate>
 
                                         @Html.AntiForgeryToken()
                                         @Html.ValidationSummary()
@@ -866,5 +866,17 @@
         setTimeout(function () {  $('#USER_PHONE').val('@Model.USER_PHONE'); }, 1000);
         </script>
     }
+
+
+    <script>
+        $(document).ready(function () {
+            $('#myform').submit(function () {
+                if (!$('#myform').valid()) return false;
+                $('#btn_submit').attr("disabled", "disabled");
+                return true;
+            });
+        });
+
+    </script>
 </body>
 </html>

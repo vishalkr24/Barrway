@@ -18138,6 +18138,9 @@
                 const dateStr = res.data.data.Data.DATE_OF_BIRTH;
                 const timestamp = moment(dateStr).valueOf();
                 const formattedDate = moment(timestamp).format("DD-MM-YYYY");
+                if (res.data.data.Data.DATE_OF_BIRTH == null || res.data.data.Data.DATE_OF_BIRTH == '' || res.data.data.Data.DATE_OF_BIRTH == 'null') {
+                    formattedDate = "";
+                }
                 res.data.data.Data.DATE_OF_BIRTH = formattedDate;
                 //res.data.data.Data.DATE_OF_BIRTH =  res.data.data.Data.DATE_OF_BIRTH.substring(0, 10);
                 $("#DATE_OF_BIRTH").val(formattedDate);

@@ -78,36 +78,48 @@
             font-weight: 500;
         }
 
+        .email-container-inner {
+            width: 100%;
+            float: left;
+            background-color: #ffffff;
+        }
+
         @media screen and (max-width:767px) {
             .email-container {
                 max-width: 100%;
+            }
+
+            .header h1 {
+                font-size: 22px;
             }
         }
     </style>
 </head>
 <body>
     <div class="email-container">
-        <div class="header-logo">
-            <img src="<%BASE_URL%>/EmailTemplates/logo.png" alt="Barrway Logo" style="width: 250px;">
+        <div class="email-container-inner" style="background-color:#fff;">
+            <div class="header-logo">
+                <img src="<%BASE_URL%>/EmailTemplates/logo.png" alt="Barrway Logo" style="width: 250px;">
 
-        </div>
-        <div class="header">
-            <h1>You’ve been made an admin</h1>
-        </div>
-        <div class="content">
-            <h3><b>Admin access invite</b></h3>
-            <p>Dear <%FIRST_NAME%> (user ID: <%USER_ID%>)</p>
-            <p>Your are invited to join <%COMPANY_NAME%> as an admin. Please click on the following button to accept the invite:</p>
-            <div class="verification"><a href="<%RESET_LINK%>" class="button">See invite</a></div>
-            <p>
-                If you have any questions or need further assistance, please feel free to email us at <a href="mailto:info@barrway.com">info@barrway.com</a>
-            </p>
-        </div>
-        <div class="footer">
-            <a href="https://www.linkedin.com/company/barrway"><img src="<%BASE_URL%>/EmailTemplates/link.png" alt="LinkedIn"></a>
-            <a href="https://www.facebook.com/barrway.biz"><img src="<%BASE_URL%>/EmailTemplates/fac.png" alt="Facebook"></a>
-            <a href="https://www.instagram.com/barrway_biz/"><img src="<%BASE_URL%>/EmailTemplates/ins.png" alt="Instagram"></a>
-            <p><a href="mailto:info@barrway.com">info@barrway.com</a></p>
+            </div>
+            <div class="header">
+                <h1>You’ve been made an admin</h1>
+            </div>
+            <div class="content">
+                <h3><b>Admin access invite</b></h3>
+                <p>Dear <%FIRST_NAME%> (user ID: <%USER_ID%>)</p>
+                <p>Your are invited to join <%COMPANY_NAME%> as an admin. Please click on the following button to accept the invite:</p>
+                <div class="verification"><a href="<%RESET_LINK%>" class="button">See invite</a></div>
+                <p>
+                    If you have any questions or need further assistance, please feel free to email us at <a href="mailto:info@barrway.com">info@barrway.com</a>
+                </p>
+            </div>
+            <div class="footer">
+                <a href="https://www.linkedin.com/company/barrway"><img src="<%BASE_URL%>/EmailTemplates/link.png" alt="LinkedIn"></a>
+                <a href="https://www.facebook.com/barrway.biz"><img src="<%BASE_URL%>/EmailTemplates/fac.png" alt="Facebook"></a>
+                <a href="https://www.instagram.com/barrway_biz/"><img src="<%BASE_URL%>/EmailTemplates/ins.png" alt="Instagram"></a>
+                <p><a href="mailto:info@barrway.com">info@barrway.com</a></p>
+            </div>
         </div>
     </div>
 </body>

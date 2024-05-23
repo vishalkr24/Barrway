@@ -55,6 +55,7 @@ namespace Barrway.Models
         [EmailAddress(ErrorMessage = "Please Enter Valid Email!")]
         [EmailAnnotation]
         public string Email { get; set; }
+        public string UserName { get; set; } 
 
     }
 
