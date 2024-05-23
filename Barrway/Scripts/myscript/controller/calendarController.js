@@ -18200,24 +18200,24 @@
         $("#DATE_OF_BIRTH").datepicker("option", "dateFormat", "dd-mm-yy");
         $("#user-nav-myprofile").addClass("active")
         adminService.postAsync('/UserAdmin/GetSingleUserByUserId/', { UserId: $("#userIdHidden").val() }).then(function (res) {
-
             if (res.data.data.Status) {
-                res.data.data.Data.PROFILE_PHOTO_PATH = res.data.data.Data.PROFILE_PHOTO_PATH.replace("~", "..");
+                var userData = res.data.data.Data;
+                userData.PROFILE_PHOTO_PATH = userData.PROFILE_PHOTO_PATH.replace("~", "..");
 
-                const dateStr = res.data.data.Data.DATE_OF_BIRTH;
+                const dateStr = userData.DATE_OF_BIRTH;
                 const timestamp = moment(dateStr).valueOf();
-                const formattedDate = moment(timestamp).format("DD-MM-YYYY");
-                if (res.data.data.Data.DATE_OF_BIRTH == null || res.data.data.Data.DATE_OF_BIRTH == '' || res.data.data.Data.DATE_OF_BIRTH == 'null') {
+                let formattedDate = moment(timestamp).format("DD-MM-YYYY");
+                if (userData.DATE_OF_BIRTH == null || userData.DATE_OF_BIRTH == '' || userData.DATE_OF_BIRTH == 'null') {
                     formattedDate = "";
                 }
-                res.data.data.Data.DATE_OF_BIRTH = formattedDate;
+                userData.DATE_OF_BIRTH = formattedDate;
                 //res.data.data.Data.DATE_OF_BIRTH =  res.data.data.Data.DATE_OF_BIRTH.substring(0, 10);
                 $("#DATE_OF_BIRTH").val(formattedDate);
-                $('#countryCode').val(res.data.data.Data.Country_Code).trigger('change');
+                $('#countryCode').val(userData.Country_Code).trigger('change');
 
-                $("#gender-" + res.data.data.Data.GENDER.toLowerCase()).attr("checked", true);
+                $("#gender-" + userData.GENDER.toLowerCase()).attr("checked", true);
 
-                $scope.userData = res.data.data.Data;
+                $scope.userData = userData;
             }
 
         }, function (err) {

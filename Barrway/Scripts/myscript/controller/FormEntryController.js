@@ -640,7 +640,7 @@
             $(document).on('click', '#btn_exit', function (e) {
                 var IsPopUp = $("#hfIsPopUp").val();
                 if (IsPopUp == 1) {
-                    window.close();
+                    //window.close();
                 }
                 else {
                     //var FormId = $("#hfFormId").val();
@@ -3412,7 +3412,7 @@
             var isInformationOnly = $scope.importFormSettings.InformationOnly;
             if (angular.isDefined($scope.formGroupKey)) {
                 if (window.opener && window.opener !== window) {
-                    $window.close();
+                    //$window.close();
                 }
                 else {
                     $window.history.back();
@@ -3426,7 +3426,7 @@
                     }
                 }
                 else if (isInformationOnly == null && $scope.formGroupKey == undefined && $stateParams.popup != undefined) {
-                    $window.close();
+                    //$window.close();
                 }
 
                 else {
@@ -6732,7 +6732,7 @@
 
                                             notifierService.notifyMessage('success', 'FormEntry', response.data.Message);
                                             $rootScope.$emit("HideLoading");
-                                            window.close();
+                                            //window.close();
                                         }
                                     }
                                 });
@@ -7018,12 +7018,13 @@
                                             }
                                         }
                                         if ($scope.isEdit) {
+                                            debugger;
                                             $timeout(function () {
                                                 window.history.back();
                                             }, 1050);
 
                                         }
-                                        window.close();
+                                        //window.close();
                                     }
                                     else if (angular.isUndefined($stateParams.popup)) {
                                         $scope.freshEntryformGroupKey = create_UUID();
@@ -7065,7 +7066,7 @@
                                         //    var newexists = JSON.stringify(newData);
                                         //    localStorage.setItem("formOneData", newexists);
                                         //}
-                                        window.close();
+                                        //window.close();
                                     }
                                     // $("#customFormNew")[0].reset();
                                     $timeout(function () {

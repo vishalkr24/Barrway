@@ -903,7 +903,8 @@ var COMPANY_CODE = "";
                 //fd.append('file', fileData);
 
                 //console.log(fd);
-                mainService.uploadFile("UploadFile", fd, reqType, uid, appIdParam, appTitleParam, formIdParam, formTitleParam, false, userId)
+                let url = formIdParam == '2355' ? 'UploadFileCustom' : 'UploadFile';
+                mainService.uploadFile(url, fd, reqType, uid, appIdParam, appTitleParam, formIdParam, formTitleParam, false, userId)
                     .then(function (response) {
                         if (response.data != null && angular.isDefined(response.data)) {
                             if (angular.isDefined(response.data)) {
