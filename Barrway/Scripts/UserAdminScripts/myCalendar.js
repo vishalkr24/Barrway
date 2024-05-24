@@ -16,7 +16,7 @@ async function usercalendarLoad() {
     totalCompanyCount = $("#company-filter-selector option").length;
     IsCustomFilter = true;
     IsCustomInFilter = false;
-    
+
     if (COMPANY_CODE == "-1") {
         var options = $('select option');
         var values = options.map(function () {
@@ -32,7 +32,7 @@ async function usercalendarLoad() {
         IsCustomFilter = false;
         IsCustomInFilter = true;
     }
-    
+
     var formdetail = await getFormDetails();
     formDetailsDataInfo = formdetail[0];
 
@@ -62,7 +62,7 @@ async function usercalendarLoad() {
     if (calenderSettings[0].formDataList.length > 0) {
         calendarDetails = (await getCalendarDetails(calenderSettings[0].formDataList[0].CALENDAR_CODE)).Data;
     }
-    
+
     if (calenderSettings.length > 0) {
 
         var caledarConfig = calenderSettings;
@@ -190,7 +190,7 @@ async function usercalendarLoad() {
             })
         }
         resResults = resourceConfig.formDataList;
-        
+
         if (resResults.length) {
             _.each(resResults, function (item, key) {
                 var ac_column = "";
@@ -246,7 +246,7 @@ async function usercalendarLoad() {
 
             window["EventBasicDetail"] = eventBasicData;
             tabsActive();
-            
+
             marcketplaceCalendar("", [], resResults, resColumns, activityResults, activityColumns, []);
 
 
@@ -350,12 +350,12 @@ async function getFormDetails() {
 
 async function getCalenderSettings() {
     showLoader();
-    
+
     return new Promise(resolve => {
         $.ajax({
             type: "POST",
             url: BASE_URL + "FormAPI/getCalenderSettingsFormData",
-            data: JSON.stringify({ "action": 4, "IsPublicUser": true, "formId": CalendarFormId, "IsCustomFilter": IsCustomFilter, IsCustomInFilter:IsCustomInFilter, "CustomFilters": [{ "FieldName": "COMPANY_CODE", "Value": COMPANY_CODE }] }),
+            data: JSON.stringify({ "action": 4, "IsPublicUser": true, "formId": CalendarFormId, "IsCustomFilter": IsCustomFilter, IsCustomInFilter: IsCustomInFilter, "CustomFilters": [{ "FieldName": "COMPANY_CODE", "Value": COMPANY_CODE }] }),
             contentType: "application/json",
             success: function (response) {
                 hideLoader();
@@ -617,6 +617,8 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 //}
                 var tempHtml = "";
 
+                debugger;
+
                 if (eventData.title != null && eventData.title.length > 0)
                     rowRecord += "<div class='title " + _tempTitleSecond + "'>" + eventData.title + "</div>";
                 if (!eventData.allDay) {
@@ -646,7 +648,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                             lblColor = tempColor;
                         }
                         if (customLocationTitle != "" && customLocationTitle != null && customLocationTitle != undefined) {
-                            var tempHtml = "<div class='fc-content' id='customLocationTitle' style = 'background:" + (lblColor == undefined || lblColor == "" ? "#7d606c" : lblColor) + ";borderRadius: 3;'><span class='fc-title' title='' > " + customLocationTitle + "</span></div> ";
+                            var tempHtml = "<div class='fc-content' id='customLocationTitle' style = 'background: rgb(63, 191, 199);margin-left: 0px;margin-right: 0px; border-radius: 0px;'><span class='fc-title' title='' > " + customLocationTitle + "</span></div> ";
                             if (current_tab != "agenda-view") {
                                 _mainTempHtml += tempHtml;
                             }
@@ -695,7 +697,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                             lblColor = tempColor;
                         }
                         if (customLocationTitle != "" && customLocationTitle != null && customLocationTitle != undefined) {
-                            var tempHtml = "<div class='fc-content' id='dd' style = 'background:" + (lblColor == undefined || lblColor == "" ? "#7d606c" : lblColor) + ";borderRadius: 3;'><span class='fc-title' title='' > " + customLocationTitle + "</span></div > ";
+                            var tempHtml = "<div class='fc-content' id='dd' style = 'background: rgb(63, 191, 199);margin-left: 0px;margin-right: 0px; border-radius: 0px;'><span class='fc-title' title='' > " + customLocationTitle + "</span></div > ";
                             if (current_tab != "agenda-view") {
                                 _mainTempHtml += tempHtml;
                             }
@@ -707,7 +709,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 listids = event.customFormIds.split(',');
                 var currentId = 0;
                 tempHtml = "";
-                var agendaTempHtml = '<div class="fc-content" style="padding: 2px 1px;border-radius: 3px;background: #ddd;color: #000;" data-original-title="" title="">';
+                var agendaTempHtml = '<div class="fc-content" style="padding: 2px 1px;border-radius: 0px;background: #ddd;color: #000;" data-original-title="" title="">';
                 var agendaTempHtmlSub = '';
                 var titleCounter = 0;
                 _.each(_arrFormIDs, function (dataRow, position) {
@@ -742,10 +744,10 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                             }
                             if (current_tab != "agenda-view") {
                                 if (colorExists.isVisible)
-                                    tempHtml += "<div class='fc-content' id='" + event.Id + "_" + position + "_" + currentId + "' style='background:" + (lblColor == undefined || lblColor == "" ? "#7d606c" : lblColor) + ";borderRadius: 3;'><span class='fc-title'>" + slipTitle + "</span></div>"
+                                    tempHtml += "<div class='fc-content' id='" + event.Id + "_" + position + "_" + currentId + "' style='background: rgb(63, 191, 199);margin-left: 0px;margin-right: 0px; border-radius: 0px;'><span class='fc-title'>" + slipTitle + "</span></div>"
                                 else
                                     if (!colorExists.isVisible && listids.length == 2)
-                                        tempHtml += "<div class='fc-content' id='" + event.Id + "_" + position + "_" + currentId + "' style='background:" + (lblColor == undefined || lblColor == "" ? "#7d606c" : lblColor) + ";borderRadius: 3;'><span class='fc-title'>" + slipTitle + "</span></div>"
+                                        tempHtml += "<div class='fc-content' id='" + event.Id + "_" + position + "_" + currentId + "' style='background: rgb(63, 191, 199);margin-left: 0px;margin-right: 0px; border-radius: 0px;'><span class='fc-title'>" + slipTitle + "</span></div>"
 
 
                             }
@@ -805,13 +807,13 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
 
             }
             if (formDetailsDataInfo.otherFormIsShow != null && formDetailsDataInfo.otherFormIsShow == true) {
-                if (event.customFourthTitle != null && event.customFourthTitle != "") {
-                    var tempHtml = "<div class='fc-content fcTime' id='" + event.Id + "_Time'><small class='time' title=''> " + event.customFourthTitle + "</small></div> ";
-                    if (current_tab != "agenda-view") {
-                        _mainTempHtml += tempHtml;
-                    }
-                    rowTooltipDisplay += event.customFourthTitle + " <br/> "
-                }
+                //if (event.customFourthTitle != null && event.customFourthTitle != "") {
+                //    var tempHtml = "<div class='fc-content fcTime' id='" + event.Id + "_Time'><small class='time' title=''> " + event.customFourthTitle + "</small></div> ";
+                //    if (current_tab != "agenda-view") {
+                //        _mainTempHtml += tempHtml;
+                //    }
+                //    rowTooltipDisplay += event.customFourthTitle + " <br/> "
+                //}
             }
             // For Tag view  //
             //static tagify
@@ -871,7 +873,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 }
             })
                 .empty().append($fcContent.css({
-                    borderRadius: 3,
+                    borderRadius: 0,
                 }), $resize);
         },
         eventClick: async function (calEvent, jsEvent, view) {
@@ -884,7 +886,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 customEventDetailsModelPopUp.css({ "z-index": "9999" });
             }
 
-            
+
 
             var $scope = angular.element($("#calendar")).scope();
             $scope.selectEventDetails = calEvent;
@@ -1196,8 +1198,8 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         };
     var calendarOptions = $.extend({}, defaultOptions, myOptions);
     $('#list-view div.calendar').fullCalendar(calendarOptions);
-    
-    
+
+
 
     // Agenda View
     myOptions = {
@@ -1569,7 +1571,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
     countLoader = 0;
     calendarOptions = $.extend({}, defaultOptions, resourceOptions, myOptions1);
     $('#timeline-resource-view div.calendar').fullCalendar(calendarOptions);
-    
+
 
     if (ySelection != 0) {
         if (formDetailsDataInfo != null)
@@ -2041,7 +2043,7 @@ async function rendarPopupCalendar(assignDate) {
                             lblColor = tempColor;
                         }
                         if (customLocationTitle != "" && customLocationTitle != null && customLocationTitle != undefined) {
-                            var tempHtml = "<div class='fc-content' id='customLocationTitle' style = 'background:" + (lblColor == undefined || lblColor == "" ? "#7d606c" : lblColor) + ";borderRadius: 3;'><span class='fc-title' title='' > " + customLocationTitle + "</span></div> ";
+                            var tempHtml = "<div class='fc-content' id='customLocationTitle' style = 'background: rgb(63, 191, 199);margin-left: 0px;margin-right: 0px; border-radius: 0px;'><span class='fc-title' title='' > " + customLocationTitle + "</span></div> ";
                             if (current_tab != "agenda-view") {
                                 _mainTempHtml += tempHtml;
                             }
@@ -2090,7 +2092,7 @@ async function rendarPopupCalendar(assignDate) {
                             lblColor = tempColor;
                         }
                         if (customLocationTitle != "" && customLocationTitle != null && customLocationTitle != undefined) {
-                            var tempHtml = "<div class='fc-content' id='dd' style = 'background:" + (lblColor == undefined || lblColor == "" ? "#7d606c" : lblColor) + ";borderRadius: 3;'><span class='fc-title' title='' > " + customLocationTitle + "</span></div > ";
+                            var tempHtml = "<div class='fc-content' id='dd' style = 'background: rgb(63, 191, 199);margin-left: 0px;margin-right: 0px; border-radius: 0px;'><span class='fc-title' title='' > " + customLocationTitle + "</span></div > ";
                             if (current_tab != "agenda-view") {
                                 _mainTempHtml += tempHtml;
                             }
@@ -2102,7 +2104,7 @@ async function rendarPopupCalendar(assignDate) {
                 listids = event.customFormIds.split(',');
                 var currentId = 0;
                 tempHtml = "";
-                var agendaTempHtml = '<div class="fc-content" style="padding: 2px 1px;border-radius: 3px;background: #ddd;color: #000;" data-original-title="" title="">';
+                var agendaTempHtml = '<div class="fc-content" style="padding: 2px 1px;border-radius: 0px;background: #ddd;color: #000;" data-original-title="" title="">';
                 var agendaTempHtmlSub = '';
                 var titleCounter = 0;
                 _.each(_arrFormIDs, function (dataRow, position) {
@@ -2137,10 +2139,10 @@ async function rendarPopupCalendar(assignDate) {
                             }
                             if (current_tab != "agenda-view") {
                                 if (colorExists.isVisible)
-                                    tempHtml += "<div class='fc-content' id='" + event.Id + "_" + position + "_" + currentId + "' style='background:" + (lblColor == undefined || lblColor == "" ? "#7d606c" : lblColor) + ";borderRadius: 3;'><span class='fc-title'>" + slipTitle + "</span></div>"
+                                    tempHtml += "<div class='fc-content' id='" + event.Id + "_" + position + "_" + currentId + "' style='background: rgb(63, 191, 199);margin-left: 0px;margin-right: 0px; border-radius: 0px;'><span class='fc-title'>" + slipTitle + "</span></div>"
                                 else
                                     if (!colorExists.isVisible && listids.length == 2)
-                                        tempHtml += "<div class='fc-content' id='" + event.Id + "_" + position + "_" + currentId + "' style='background:" + (lblColor == undefined || lblColor == "" ? "#7d606c" : lblColor) + ";borderRadius: 3;'><span class='fc-title'>" + slipTitle + "</span></div>"
+                                        tempHtml += "<div class='fc-content' id='" + event.Id + "_" + position + "_" + currentId + "' style='background: rgb(63, 191, 199);margin-left: 0px;margin-right: 0px; border-radius: 0px;'><span class='fc-title'>" + slipTitle + "</span></div>"
 
 
                             }
@@ -2200,13 +2202,13 @@ async function rendarPopupCalendar(assignDate) {
 
             }
             if (formDetailsDataInfo.otherFormIsShow != null && formDetailsDataInfo.otherFormIsShow == true) {
-                if (event.customFourthTitle != null && event.customFourthTitle != "") {
-                    var tempHtml = "<div class='fc-content fcTime' id='" + event.Id + "_Time'><small class='time' title=''> " + event.customFourthTitle + "</small></div> ";
-                    if (current_tab != "agenda-view") {
-                        _mainTempHtml += tempHtml;
-                    }
-                    rowTooltipDisplay += event.customFourthTitle + " <br/> "
-                }
+                //if (event.customFourthTitle != null && event.customFourthTitle != "") {
+                //    var tempHtml = "<div class='fc-content fcTime' id='" + event.Id + "_Time'><small class='time' title=''> " + event.customFourthTitle + "</small></div> ";
+                //    if (current_tab != "agenda-view") {
+                //        _mainTempHtml += tempHtml;
+                //    }
+                //    rowTooltipDisplay += event.customFourthTitle + " <br/> "
+                //}
             }
             // For Tag view  //
             //static tagify
@@ -2267,7 +2269,7 @@ async function rendarPopupCalendar(assignDate) {
                 //    }
                 //})
                 .empty().append($fcContent.css({
-                    borderRadius: 3,
+                    borderRadius: 0,
                 }), $resize);
         },
         eventAfterAllRender: function (event, element, view) {
