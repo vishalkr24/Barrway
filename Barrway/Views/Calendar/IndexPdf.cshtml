@@ -215,7 +215,7 @@
                                             </p>
                                         </td>
 
-                                        @foreach (var item2 in calendarSetting.formDataList)
+                                        @foreach (var item2 in calendarSetting.formDataList.OrderBy(x => x["SEQ"]))
                                         {
 
                                             var eventData = EventData.Where(x => x.start == item.start && x.end == item.end).FirstOrDefault();

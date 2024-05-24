@@ -40,7 +40,7 @@ namespace Barrway.Controllers
         private readonly ICalendarService calendarService;
 
         // GET: Calendar
-        public CalendarController(IMasterService masterService, IFormAPIRepository formAPIRepository, ISqlFunction sqlFunction, IBusinessUserService businessUserService, IAuthService authService, IQueueService queueService, IPublicUserService publicUserService,ICalendarService calendarService)
+        public CalendarController(IMasterService masterService, IFormAPIRepository formAPIRepository, ISqlFunction sqlFunction, IBusinessUserService businessUserService, IAuthService authService, IQueueService queueService, IPublicUserService publicUserService, ICalendarService calendarService)
         {
             this.masterService = masterService;
             this.formAPIRepository = formAPIRepository;
@@ -1712,40 +1712,60 @@ namespace Barrway.Controllers
             }
         }
 
-        public async Task<ActionResult> IndexPdf(string start,string end,string companyCode,string calendarCode)
+        public async Task<ActionResult> IndexPdf(string start, string end, string companyCode, string calendarCode)
+        
         {
-            calenderSettingsFormDetails request1 = new calenderSettingsFormDetails() { action = 4, formId = (int)FormSetting.CALENDAR_FORM,IsCustomFilter=true,
-                                                                                        CustomFilters=new List<CustomFilter>() {
+            calenderSettingsFormDetails request1 = new calenderSettingsFormDetails()
+            {
+                action = 4,
+                formId = (int)FormSetting.CALENDAR_FORM,
+                IsCustomFilter = true,
+                CustomFilters = new List<CustomFilter>() {
                                                                                             new CustomFilter() { FieldName="COMPANY_CODE",Value=companyCode },
-                                                                                            new CustomFilter() {FieldName="CALENDAR_CODE",Value=calendarCode } 
+                                                                                            new CustomFilter() {FieldName="CALENDAR_CODE",Value=calendarCode }
                                                                                         }
-                                                                                        };
+            };
             var CalenderSettingsFormData = await formAPIRepository.getCalenderSettingsFormData(request1);
 
-            DateTime _start,_end;
-            if (!(DateTime.TryParse(start, out _start) && DateTime.TryParse(end, out _end))) {
+            DateTime _start, _end;
+            if (!(DateTime.TryParse(start, out _start) && DateTime.TryParse(end, out _end)))
+            {
 
                 return RedirectToAction("Index");
             }
-            string filterQuery =$" f.COMPANY_CODE='{companyCode}' and f.CALENDAR_CODE='{calendarCode}' and " +CustomMethods.GetDateQuery(_start, _end); 
+            string filterQuery = $" f.COMPANY_CODE='{companyCode}' and f.CALENDAR_CODE='{calendarCode}' and " + CustomMethods.GetDateQuery(_start, _end);
             //string filterQuery =$" f.COMPANY_CODE='{companyCode}' and " +CustomMethods.GetDateQuery(_start, _end); 
 
-            Form_DataTable request2 = new Form_DataTable() { action = 1, formId = (int)FormSetting.CALENDAR_FORM, ActivityFormId = (int)FormSetting.SERVICE_MASTER, isCalender = 1, isEvent = 1, resourceFormId = (int)FormSetting.LOCATION_MASTER, filter = new FilterDTO() { field = "start", value = filterQuery }
+            Form_DataTable request2 = new Form_DataTable()
+            {
+                action = 1,
+                formId = (int)FormSetting.CALENDAR_FORM,
+                ActivityFormId = (int)FormSetting.SERVICE_MASTER,
+                isCalender = 1,
+                isEvent = 1,
+                resourceFormId = (int)FormSetting.LOCATION_MASTER,
+                filter = new FilterDTO() { field = "start", value = filterQuery }
             };
             var result = await formAPIRepository.getReferralFormFields(request2);
             var eventData = result;
 
-            var mybooking=await calendarService.GetMyBooking(UserIdentity.UserEmail,companyCode,_start, _end);
+            var mybooking = await calendarService.GetMyBooking(UserIdentity.UserEmail, companyCode, _start, _end);
 
             var EventIdsBooking = mybooking.Select(x => x["EventId"].ToString()).ToList();
 
             eventData.events = eventData.events.Where(x => EventIdsBooking.Any(y => y == x["Id"].ToString())).ToList();
+
+            List<string> resourceIdsList = new List<string>();
 
             if (eventData.resourceDetails != null && eventData.resourceDetails.Count > 0)
             {
                 var resourceIds = eventData.resourceDetails.Where(x => x.Id != "" && x.Id != "0").GroupBy(x => x.Id).Select(x => x.Key).ToList();
                 if (eventData.events != null && eventData.events.Count > 0)
                 {
+                    resourceIdsList = eventData.events.Where(x => !string.IsNullOrEmpty(x["start"]?.ToString()) && !string.IsNullOrEmpty(x["end"]?.ToString()))
+                        .Select(x => x["resources"]?.ToString())
+                        .ToList();
+                    ViewBag.resourceIdsList = resourceIdsList;
                     ViewBag.eventData = eventData.events.Select(x => new
                     {
                         start = Convert.ToDateTime(x["start"]).ToString("dd-MM-yyyy HH:mm:ss"),
@@ -1780,5 +1800,5 @@ namespace Barrway.Controllers
 
     }
 
-    
+
 }
