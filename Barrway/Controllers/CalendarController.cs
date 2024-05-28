@@ -1713,7 +1713,6 @@ namespace Barrway.Controllers
         }
 
         public async Task<ActionResult> IndexPdf(string start, string end, string companyCode, string calendarCode)
-        
         {
             calenderSettingsFormDetails request1 = new calenderSettingsFormDetails()
             {

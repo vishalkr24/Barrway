@@ -426,9 +426,9 @@ namespace Barrway.Service.Repository
         {
             string query = $@"SELECT company.[Id], company.TEMPLATE_ID, company.PALETTE_ID, city.CITY_NAME as 'COMPANY_CITY_NAME', district.DISTRICT_NAME as 'COMPANY_DISTRICT_NAME', country.COUNTRY_NAME as 'COMPANY_COUNTRY_NAME', company.[created_at]      ,company.[updated_at]      ,company.[created_by]      ,company.[updated_by],company.Latitude,company.Longitude,[BUSINESS_ACCOUNT_ID]      ,[COMPANY_CODE],     [COMPANY_EMAIL]      ,[COMPANY_NAME_ENGLISH]      ,[COMPANY_NAME_CHINESE]      ,[COMPANY_LOGO_NAME]      ,[COMPANY_LOGO_PATH]      ,[COMPANY_BANNER_NAME]      ,[COMPANY_BANNER_PATH]      ,[COMPANY_PHONE]      ,[COMPANY_ADDRESS]      ,[FACEBOOK_URL]      ,[INSTAGRAM_URL]      ,[WECHAT_URL]      ,[TWITTER_URL]      ,[PAGE_URL]      ,[COMPANY_DESCRIPTION]      ,[COMPANY_SERVICE]      ,[TAGS]      ,[IS_SEARCHABLE_IN_MARKETPLACE],     [COMPANY_EMAIL]      ,company.[COMPANY_CATEGORY_ID]      ,[COMPANY_SUB_CATEGORY_ID]      ,company.[COUNTRY_ID]      ,company.[CITY_ID]      ,[DISTRICT_ID]      ,[TOTAL_WEBSITE_VISITS]      ,[IS_DEFAULT],[IS_ACTIVE]  
                                 FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company
-                                join DISTRICT_MASTER_1928 district on district.Id = company.DISTRICT_ID
-                                join CITY_MASTER_1927 city on city.Id = company.CITY_ID
-                                join COUNTRY_MASTER_1926 country on country.Id = company.COUNTRY_ID
+                                left join DISTRICT_MASTER_1928 district on district.Id = company.DISTRICT_ID
+                                left join CITY_MASTER_1927 city on city.Id = company.CITY_ID
+                                left join COUNTRY_MASTER_1926 country on country.Id = company.COUNTRY_ID
                                 where IS_ACTIVE = 'Y' and company.Id = '{Id}'";
 
             List<IDictionary<string, object>> BusinessCompanyResult = await sqlFunction.ExecuteSqlQuery(query);

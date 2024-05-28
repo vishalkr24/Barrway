@@ -205,7 +205,7 @@ function setCountryData() {
     console.log(data);
 
     $("#COUNTRY_ID").empty();
-    $("#COUNTRY_ID").append(`<option value="-1" disabled>Select a Country</option>`);
+    $("#COUNTRY_ID").append(`<option value="-1">Select a Country</option>`);
 
     if (data.Status == "true" || data.Status == true) {
         for (var i = 0; i < data.Data.length; i++) {
@@ -221,7 +221,7 @@ function bindCityData(countryId) {
     console.log(data);
 
     $("#CITY_ID").empty();
-    $("#CITY_ID").append(`<option value="-1" disabled>Select a City</option>`);
+    $("#CITY_ID").append(`<option value="-1">Select a City</option>`);
 
     if (data.Status == "true" || data.Status == true) {
         for (var i = 0; i < data.Data.length; i++) {
@@ -236,7 +236,7 @@ function bindDistrictData(cityId) {
     console.log(data);
 
     $("#DISTRICT_ID").empty();
-    $("#DISTRICT_ID").append(`<option value="-1" disabled>Select a District</option>`);
+    $("#DISTRICT_ID").append(`<option value="-1">Select a District</option>`);
 
     if (data.Status == "true" || data.Status == true) {
         for (var i = 0; i < data.Data.length; i++) {
