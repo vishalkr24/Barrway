@@ -17,6 +17,7 @@ using System.Net.Http;
 using Barrway.Utility.Common;
 using Microsoft.AspNet.SignalR;
 using Barrway.WebSocket;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Barrway.Controllers
 {
@@ -68,6 +69,12 @@ namespace Barrway.Controllers
             try
             {
                 //var claimResult = await CheckRoleTypeClaim();
+
+                if (!string.IsNullOrEmpty(TempData["ErrorMessage"]?.ToString()))
+                {
+                    ViewBag.ErrorMessage = TempData["ErrorMessage"]?.ToString();
+                }
+
                 AddUpdateDelete userWebsite = await businessUserService.GetSingleBusinessWebsite(User.Identity.Name);
 
                 if (userWebsite.Status)
@@ -394,6 +401,7 @@ namespace Barrway.Controllers
                     }
                     else
                     {
+                        TempData["ErrorMessage"] = "Company is not active!";
                         return RedirectToAction("Dashboard");
                     }
 
