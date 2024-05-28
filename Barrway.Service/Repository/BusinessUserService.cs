@@ -403,9 +403,9 @@ namespace Barrway.Service.Repository
             int PageNumber = data.page > 0 ? data.page : 1;
 
             string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
-                                    select baw.BUSINESS_CODE, um.USER_EMAIL, f.* 
+                                    select company.COMPANY_NAME_ENGLISH, um.USER_EMAIL, f.* 
                                     from BUSINESS_USER_INVITATION_MANAGER_1965 f
-                                    join BUSINESS_ACCOUNT_WEBSITE_1918 baw on baw.Id = f.BUSINESS_ACCOUNT_ID
+                                    join BUSINESS_COMPANY_MASTER_1924 company on company.Id = f.COMPANY_ID
                                     join USER_MASTER_1915 um on um.Id = f.SENT_BY
                                     where f.SENT_BY = '{UserId}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")} 
                                     )

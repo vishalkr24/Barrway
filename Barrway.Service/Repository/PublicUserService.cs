@@ -512,7 +512,7 @@ namespace Barrway.Service.Repository
             {
                 List<IDictionary<string, object>> totalUsersEnrolled = await sqlFunction.ExecuteSqlQuery($@"select COUNT(*) as 'COUNT' from TRANSACTION_MASTER_1942 transaction_m
                                                                                                         join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
-                                                                                                        where ACTIVITY = '{model.transaction.ACTIVITY.ToString()}'");
+                                                                                                        where ACTIVITY = '{model.transaction.ACTIVITY.ToString()}' and SLOT = '{model.transaction.SLOT.ToString()}'");
 
                 List<IDictionary<string, object>> currentLimit = await sqlFunction.ExecuteSqlQuery($@"select MAXIMUM_NO_OF_PARTICIPANTS from SERVICE_MASTER_1933 where Id = '{model.transaction.ACTIVITY.ToString()}'");
 

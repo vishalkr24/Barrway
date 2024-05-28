@@ -15647,7 +15647,9 @@ function NewformEntryfunctionality(formid, isEdit) {
         $('input#COMPANY_CODE').val(localStorage.getItem("COMPANY_CODE"));
         $('input#CALENDAR_CODE').attr("readonly", true);
         $('input#CALENDAR_CODE').val(localStorage.getItem("CALENDAR_CODE"));
-               
+        
+        $("input#ACTIVITY_NAME").attr("pattern", "[^,]*");
+        $("input#ACTIVITY_NAME").attr("title", "Comma (,) is not allowed");
 
         $("input[name^=IS_SERVICE_PAID]").on("click change", function () {
 
@@ -15707,6 +15709,13 @@ function NewformEntryfunctionality(formid, isEdit) {
         } else {
             $('div.border-RESOURCE_CODE').hide();
         }
+
+        $("input#FIRST_NAME").attr("pattern", "[^,]*");
+        $("input#FIRST_NAME").attr("title", "Comma (,) is not allowed");
+
+        $("input#LAST_NAME").attr("pattern", "[^,]*");
+        $("input#LAST_NAME").attr("title", "Comma (,) is not allowed");
+
     }
     if (formid == 2306) {
         $('div.border-header_1683116492931').hide();
@@ -15723,6 +15732,12 @@ function NewformEntryfunctionality(formid, isEdit) {
         } else {
             $('div.border-LOCATION_CODE').hide();
         }
+
+        $("input#LOCATION_ADDRESS").attr("pattern", "[^,]*");
+        $("input#LOCATION_ADDRESS").attr("title", "Comma (,) is not allowed");
+
+        $("input#LOCATION_BUILDING_NAME").attr("pattern", "[^,]*");
+        $("input#LOCATION_BUILDING_NAME").attr("title", "Comma (,) is not allowed");
     }
     if (formid == 2310) {
         $('div.border-header_1683116492931').hide();
