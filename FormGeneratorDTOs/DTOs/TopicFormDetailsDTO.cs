@@ -90,6 +90,8 @@ namespace FormGeneratorDTOs.DTOs
         public bool IsCustomFilter { get; set; }
         public bool IsCustomInFilter { get; set; }
         public string COMPANY_CODE { get; set; }
+        public string CALENDAR_CODE { get; set; }
+        public bool IsMarketplaceRequest { get; set; }
         public List<CustomFilter> CustomFilters { get; set; }
         
         public string SearchText { get; set; }

@@ -210,15 +210,13 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string sqlQuery = $@"with cte as (select Count(f.Id) as present 
+                string sqlQuery = $@"select (select Count(f.Id) 
                                         from BUSINESS_USER_INVITATION_MANAGER_1965 f
                                         where f.COMPANY_ID = '{inviteModel.COMPANY_ID}' and f.INVITED_EMAIL = '{inviteModel.INVITED_EMAIL}' and f.STATUS in ('OPENED', 'PENDING')
-                                        Union
-                                        select Count(f.Id) as present from BUSINESS_ASSIGNED_USERS_1964 f
+										) as inviteCheck,
+										(select Count(f.Id) as present from BUSINESS_ASSIGNED_USERS_1964 f
                                         join USER_MASTER_1915 um on um.Id = f.ASSIGNED_USER
-                                        where f.COMPANY_ID = '{inviteModel.COMPANY_ID}' and um.USER_EMAIL = '{inviteModel.INVITED_EMAIL}'
-                                        )
-                                        select * from cte";
+                                        where f.COMPANY_ID = '{inviteModel.COMPANY_ID}' and um.USER_EMAIL = '{inviteModel.INVITED_EMAIL}') as userCheck";
 
                 var checkResult = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
@@ -237,14 +235,14 @@ namespace Barrway.Service.Repository
                 }
                 else
                 {
-                    if (Convert.ToInt32(checkResult[0]["present"]?.ToString()) > 0)
+                    if (Convert.ToInt32(checkResult[0]["inviteCheck"]?.ToString()) > 0)
                     {
                         return new AddUpdateDelete() { Status = false, Message = "Invite is already sent to this email. Check the status in Invitation History" };
                     }
 
                     if (checkResult.Count > 1)
                     {
-                        if (Convert.ToInt32(checkResult[1]["present"]?.ToString()) > 0)
+                        if (Convert.ToInt32(checkResult[0]["userCheck"]?.ToString()) > 0)
                         {
                             return new AddUpdateDelete() { Status = false, Message = "User with this email is already assigned to the business." };
                         }
