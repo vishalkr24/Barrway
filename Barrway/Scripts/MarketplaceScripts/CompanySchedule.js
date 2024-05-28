@@ -289,7 +289,7 @@ async function reBindCalender(param) {
 
     var CalanderCode = CALENDAR_CODE;
     param.IsCustomFilter = true;
-    param.CustomFilters = [{ "FieldName": "COMPANY_CODE", "Value": COMPANY_CODE }, { "FieldName": "CALENDAR_CODE", "Value": CalanderCode }];
+    param.CustomFilters = [{ "FieldName": "f.COMPANY_CODE", "Value": COMPANY_CODE }, { "FieldName": "f.CALENDAR_CODE", "Value": CalanderCode }];
     return new Promise(resolve => {
         $.ajax({
             type: "POST",
