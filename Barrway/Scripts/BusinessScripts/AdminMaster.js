@@ -359,7 +359,7 @@ function setInvitationHistoryMaster() {
             { title: 'Sent To', field: 'INVITED_EMAIL' },
 
             { title: 'Sent By', field: 'USER_EMAIL' },
-            { title: 'Business Code', field: 'BUSINESS_CODE' }
+            { title: 'Company Name', field: 'COMPANY_NAME_ENGLISH' }
         ];
 
         setTimeout(function () {

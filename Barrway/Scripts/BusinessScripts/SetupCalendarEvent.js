@@ -13,6 +13,7 @@ var ConfigData = {};
 var ConfigStep = {};
 var CurrentStep = 0;
 var CalendarData = {};
+var formId = 0;
 
 $(document).ready(function () {
 
@@ -240,7 +241,7 @@ function BindMultiViewTemplate() {
 
 function BindDynamicFormTemplate() {
 
-    let formId = ConfigStep.Form_Id;
+    formId = ConfigStep.Form_Id;
 
     $("#step .template-binder").append(`<div class="hed-til">
                             <p class="heading-title step"></p>
@@ -385,7 +386,7 @@ function BindDynamicFormTemplate() {
                 data.forEach(x => {
                     addMoreRow(x, false, false);
                 });
-                
+
                 if (data.length == 0) {
                     addMoreRow(null, false, true);
                 }
@@ -394,30 +395,7 @@ function BindDynamicFormTemplate() {
                 addMoreRow(null, false, true);
             }
 
-            setTimeout(function () {
-                if (formId == 2303) {
-                    $("input[name^='SERVICE_PAY_PER']").attr("disabled", "true");
-
-                    $("input[name^=IS_SERVICE_PAID]").on("click change", function () {
-
-                        let a = this.attributes;
-                        let b = this.value;
-
-                        if (b == 'N') {
-                            $("input[name^=fees_1]").val("0");
-                            $("input[name^=fees_1]").attr("disabled", true)
-                            $("input[name^=fees_1]").attr("readonly", true)
-                            $("input[name^=fees_1]").addClass("disabled")
-                        } else {
-                            $("input[name^=fees_1]").attr("disabled", false)
-                            $("input[name^=fees_1]").attr("readonly", false)
-                            $("input[name^=fees_1]").removeClass("disabled")
-                        }
-
-                    });
-
-                }
-            }, 500);
+            
 
         },
         error: function (er) {
@@ -803,7 +781,7 @@ $(document).on("change", "#exampleFormControlSelect3", function () {
 });
 
 $(document).on("change paste", "#booking-queue-table tbody input,select", function () {
-    
+
     let name = ($(this).attr("type") == "radio") ? $(this).attr("name").split("-") : $(this).attr("id").split("-");
 
     queueList.find(x => x.rowId == name[1])[name[0]] = this.value;
@@ -973,9 +951,8 @@ function addQueueRow(dataElement = null) {
             }).then(function (check) {
                 if (check) {
                     debugger;
-                    let elementsToDelete = queueList.length - rowCount ;
-                    for (var i = 0; i < elementsToDelete; i++)
-                    {
+                    let elementsToDelete = queueList.length - rowCount;
+                    for (var i = 0; i < elementsToDelete; i++) {
                         if (queueList[queueList.length - 1].Id == undefined || queueList[queueList.length - 1].Id == null) {
                             $("#queue-table-row-" + queueList[queueList.length - 1].rowId).remove();
                             queueList.pop();
@@ -1358,7 +1335,7 @@ function generateInputBox(modelItem, id, additionalClass) {
         case "text":
             value = `
                     <label for="${modelItem.name}${id}">${modelItem.label}*</label>
-                    <input class="form-control ${additionalClass}" type="text" name="${modelItem.name}${id}" data-input-id="${id}"/>`;
+                    <input class="form-control ${additionalClass}" type="text" pattern="[^,]*" title="Comma (,) is not allowed" name="${modelItem.name}${id}" data-input-id="${id}"/>`;
             break;
         case "number":
             value = `
@@ -1435,7 +1412,7 @@ function addMoreRow(dataItem, isRemovable, isNew) {
                                                 ${generateInputBox(x, dataModel.Id, "")}
                                             </div>
                                         </div>`);
-        
+
         if (x.name == "SERVICE_PAY_PER") {
             if (CalendarData.Data.CALENDAR_TYPE == "1" && CalendarData.Data.CALENDAR_CATEGORY_ID == "1") {
                 dataModel[x.name] = "COURSE";
@@ -1448,12 +1425,12 @@ function addMoreRow(dataItem, isRemovable, isNew) {
             if (dataModel[x.name] != null && dataModel[x.name] != "") {
                 $(`input[name=${x.name}${dataModel.Id}][data-input-value=${dataModel[x.name]}]`).prop("checked", true);
             }
-            
+
         } else {
             $(`input[name=${x.name}${dataModel.Id}]`).val(dataModel[x.name]);
         }
 
-        
+
     });
 
     dataList.push(dataModel);
@@ -1467,12 +1444,36 @@ function addMoreRow(dataItem, isRemovable, isNew) {
                 } else {
                     dataList.find(y => y.Id == inputId)[x.name] = this.value;
                 }
-                
-                
+
+
             })
         });
     }, 500);
 
+    setTimeout(function () {
+        if (formId == 2303) {
+            $("input[name^='SERVICE_PAY_PER']").attr("disabled", "true");
+
+            $("input[name^=IS_SERVICE_PAID]").on("click change", function () {
+                debugger
+                let a = this.attributes["data-input-id"].value;
+                let b = this.value;
+
+                if (b == 'N') {
+                    $("input[name^=fees_1" + a + "]").val("0");
+                    $("input[name^=fees_1" + a + "]").attr("disabled", true)
+                    $("input[name^=fees_1" + a + "]").attr("readonly", true)
+                    $("input[name^=fees_1" + a + "]").addClass("disabled")
+                } else {
+                    $("input[name^=fees_1" + a + "]").attr("disabled", false)
+                    $("input[name^=fees_1" + a + "]").attr("readonly", false)
+                    $("input[name^=fees_1" + a + "]").removeClass("disabled")
+                }
+
+            });
+
+        }
+    }, 500);
 
     var element = document.querySelector('#service-div');
     element.scrollTop = element.scrollHeight;
@@ -1493,8 +1494,12 @@ function validateDynamicForm() {
 
     dataList.forEach(x => {
         for (const key in x) {
-            if (x[key] === "" || x[key] === null) {
+            let inputValue = x[key];
+            debugger;
+            if (inputValue === "" || inputValue === null || String(inputValue).contains(',')) {
                 check = false;
+                alert("Please remove comma from the fields.")
+                break;
             }
         }
     })

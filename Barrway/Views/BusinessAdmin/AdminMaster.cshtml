@@ -50,31 +50,31 @@
 
                     @*<div class="selector-container">
 
-                        <input type="radio" name="assign-module-radio" class="assign-module-radio" checked value="Company" style="display:none;" id="assign-company-module" />
-                        <label for="assign-company-module" class="">Company</label>
+                            <input type="radio" name="assign-module-radio" class="assign-module-radio" checked value="Company" style="display:none;" id="assign-company-module" />
+                            <label for="assign-company-module" class="">Company</label>
 
-                        <input type="radio" name="assign-module-radio" class="assign-module-radio" value="Business" style="display:none;" id="assign-business-module" />
-                        <label for="assign-business-module" class="pl-2">Business</label>
+                            <input type="radio" name="assign-module-radio" class="assign-module-radio" value="Business" style="display:none;" id="assign-business-module" />
+                            <label for="assign-business-module" class="pl-2">Business</label>
 
-                    </div>
-
-                    <div id="company-selector-section">
-                        Select Companies to Assign
-                        <div id="tom-select-container">
-                            <select id="company-selector" autocomplete="off" multiple>
-                                <option value="">Select Companies...</option>
-                                <option selected value="4"></option>
-                            </select>
                         </div>
 
-                    </div>*@
-                <p class="pt-4" style="font-size: smaller;">
-                    <b>Note:</b> <br />
-                    &bull; Assigning other user as the Super user of the company will give that user rights to add or remove users from selected company.<br />
-                    &bull; Once the user is assigned as the Super User you will become a admin of the same company.
-                </p>
+                        <div id="company-selector-section">
+                            Select Companies to Assign
+                            <div id="tom-select-container">
+                                <select id="company-selector" autocomplete="off" multiple>
+                                    <option value="">Select Companies...</option>
+                                    <option selected value="4"></option>
+                                </select>
+                            </div>
+
+                        </div>*@
+                    <p class="pt-4" style="font-size: smaller;">
+                        <b>Note:</b> <br />
+                        &bull; Assigning other user as the Super user of the company will give that user rights to add or remove users from selected company.<br />
+                        &bull; Once the user is assigned as the Super User you will become a admin of the same company.
+                    </p>
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -142,7 +142,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header" style="text-align:right;">
-                    <span type="button" onclick="$('#InviteUserModal').modal('hide')"  style=" font-size: 50px; float: right; position: relative; line-height: 18px; left: 90%;">&times;</span>
+                    <span type="button" onclick="$('#InviteUserModal').modal('hide')" style=" font-size: 50px; float: right; position: relative; line-height: 18px; left: 90%;">&times;</span>
                 </div>
 
                 <div class="modal-body" style="padding: 0px 40px;">
@@ -167,7 +167,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    
+
                 </div>
 
             </div>
@@ -237,20 +237,13 @@
                     border-radius: 0px;
                     border-bottom-right-radius: 0px;
                 }
-
             }
 
             .invitation-btn {
-                left: 4px !important;
-                border-radius: 4px !important;
-                width: 40px !important;
-                position: relative !important;
-                top: 1px !important;
-                padding: 7px !important;
                 background: white !important;
                 color: black !important;
                 border: 2px solid #88579a !important;
-                font-size: 15px;
+                border-radius: 4px !important;
             }
         </style>
 
@@ -260,27 +253,28 @@
             </div>
             <div class="col-md-12 form-inner" style="max-width:100%;">
                 <div style="">
-                    @*<div class="input-holder">
-                            <input type="text" class="form-control" placeholder="registered email address..." id="invite-input" />
 
-                            <button class="btn btn-primary" onclick="sendInvitation()">Invite</button>
+
+                    <div class="d-flex" style="align-items:end; justify-content:space-between;">
+                        <div class="d-flex align-items-end">
+                            <div>
+                                <label>Group Records By:</label>
+                                <select id="filter-admin-records" class="form-control" onchange="groupAdminRecords(this.value)" style="max-width: 150px;">
+                                    <option value="USER_EMAIL">Email</option>
+                                    <option value="USER_ID">User Id</option>
+                                    <option selected value="ROLE_TYPE">Role</option>
+                                </select>
+                            </div>
+                            <div>
+                                <button style=" margin-left: 8px;" title="View Invitations" class="btn btn-primary invitation-btn" onclick="setInvitationHistoryMaster()">History</button>
+                            </div>
+
+                        </div>
+                        <div>
+                            <button style="margin-top:-40px;" class="btn btn-primary" onclick="openInviteModal()">Add User</button>
                         </div>
 
-                        <button title="View Invitations" class="btn btn-primary invitation-btn" onclick="setInvitationHistoryMaster()"><i class="fa fa-list" aria-hidden="true"></i></button>
-                        <div style="height:20px;">
-                            <div id="EmailError" style="font-size:smaller; display:none; color:crimson; padding: 4px; width: 100%;">
-                                Invalid Email Address!
-                            </div>
-                        </div>*@
 
-                    <div class="">
-                        <label>Group Records By:</label>
-                        <select id="filter-admin-records" class="form-control" onchange="groupAdminRecords(this.value)" style="max-width: 150px;">
-                            <option value="USER_EMAIL">Email</option>
-                            <option value="USER_ID">User Id</option>
-                            <option selected value="ROLE_TYPE">Role</option>
-                        </select>
-                        <button style="float:right; margin-top:-40px;" class="btn btn-primary" onclick="openInviteModal()">Add User</button>
                     </div>
 
                 </div>
