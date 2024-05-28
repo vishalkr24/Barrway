@@ -1360,7 +1360,7 @@
     </script>
     <script>
         $(document).ready(function () {
-            if (("@ViewBag.SuccessMessage" != null && "@ViewBag.SuccessMessage" != "") || ("@ViewBag.ErrorMessage" != null && "@ViewBag.ErrorMessage" != "")) {
+            if (("@ViewBag.SuccessMessage" != null && "@ViewBag.SuccessMessage" != "" && "@ViewBag.SuccessMessage" != "null") || ("@ViewBag.ErrorMessage" != null && "@ViewBag.ErrorMessage" != "" && "@ViewBag.ErrorMessage" != "null")) {
                 swal({
                     icon: ("@ViewBag.SuccessMessage" != "" && "@ViewBag.SuccessMessage" != null) ? "success" : "error",
                     title: ("@ViewBag.SuccessMessage" != "" && "@ViewBag.SuccessMessage" != null) ? "Success" : "Error",
