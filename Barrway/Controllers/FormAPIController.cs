@@ -716,6 +716,8 @@ namespace Barrway.Controllers
             if (!data.IsPublicUser)
             {
                 var calendarDetailsResult = await businessUserService.GetCalendarDetails(data.CALENDAR_CODE);
+                var service = await businessUserService.GetServiceList(data.CALENDAR_CODE, data.COMPANY_CODE);
+
                 if (calendarDetailsResult.Status)
                 {
                     var calendarDetails = calendarDetailsResult.Data as IDictionary<string, object>;
@@ -735,7 +737,18 @@ namespace Barrway.Controllers
                         }
                     }
 
+                    string needOnlinePaymentFlag = "N";
+
                     int days = 0;
+
+                    if (service.Data != null)
+                    {
+                        var serviceData = service.Data as List<IDictionary<string, object>>;
+                        if (serviceData.Any(x => x["Id"]?.ToString() == result.events[0]["activities"]?.ToString()))
+                        {
+                            needOnlinePaymentFlag = serviceData.FirstOrDefault(x => x["Id"]?.ToString() == result.events[0]["activities"]?.ToString())["NEED_ONLINE_PAYMENT"]?.ToString();
+                        }
+                    }
 
                     if (!string.IsNullOrEmpty(calendarDetails["BOOKING_DEADLINE"]?.ToString()))
                     {
@@ -760,6 +773,7 @@ namespace Barrway.Controllers
                             deadline = (new DateTime(deadline.Year, deadline.Month, deadline.Day, 23, 59, 0));
                         }
 
+                        evt.Add("NEED_ONLINE_PAYMENT", needOnlinePaymentFlag);
                         evt.Add("BOOKING_DEADLINE", deadline.ToString("yyyy-MM-dd HH:mm"));
                     }
                 }

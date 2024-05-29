@@ -153,7 +153,7 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> GetSingleBusinessWebsite(string UserId)
         {
-            string query = "SELECT * FROM USER_MASTER_1915 where USER_ID = '" + UserId + "'";
+            string query = "SELECT * FROM USER_MASTER_1915 where USER_ID = N'" + UserId + "'";
 
             List<IDictionary<string, object>> businessWebsiteResult = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -332,7 +332,7 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> UpdateInvitationStatus(string Token, string Status, string UserId)
         {
-            string query = $@"update USER_MASTER_1915 set COMPANY_PROFILE_STATUS = 'Y', COMPANY_CALENDAR_STATUS = 'Y', CURRENT_STEP = 'COMPLETED', PROFILE_STATUS = 'COMPLETED' where USER_ID = '{UserId}'";
+            string query = $@"update USER_MASTER_1915 set COMPANY_PROFILE_STATUS = 'Y', COMPANY_CALENDAR_STATUS = 'Y', CURRENT_STEP = 'COMPLETED', PROFILE_STATUS = 'COMPLETED' where USER_ID = N'{UserId}'";
 
             var updateResult = await sqlFunction.ExecuteSqlCommandQuery(query);
 
@@ -830,7 +830,7 @@ namespace Barrway.Service.Repository
                                       FROM [dbo].[USER_MASTER_1915] user_m
                                       join ROLE_MASTER_1917 role_m on role_m.Id = user_m.ROLE_ID 
                                       join BUSINESS_ACCOUNT_WEBSITE_1918 business on business.USER_ID = user_m.USER_ID
-                                      where user_m.ROLE_ID = 1 and business.Id = (select Id from BUSINESS_ACCOUNT_WEBSITE_1918 where USER_ID = '{UserId}') {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+                                      where user_m.ROLE_ID = 1 and business.Id = (select Id from BUSINESS_ACCOUNT_WEBSITE_1918 where USER_ID = N'{UserId}') {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
                                     )
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
 
@@ -1411,7 +1411,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
 								  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = schedular.COMPANY_CODE
 								  join BUSINESS_ASSIGNED_USERS_1964 bau on bau.COMPANY_ID = company.Id
 								  join USER_MASTER_1915 um on um.Id = bau.ASSIGNED_USER
-                                  where schedular.Id = '{ScheduleId}' and um.USER_ID = '{UserId}'";
+                                  where schedular.Id = '{ScheduleId}' and um.USER_ID = N'{UserId}'";
 
             var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
@@ -1432,7 +1432,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
 								  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = schedular.COMPANY_CODE
 								  join BUSINESS_ASSIGNED_USERS_1964 bau on bau.COMPANY_ID = company.Id
 								  join USER_MASTER_1915 um on um.Id = bau.ASSIGNED_USER
-                                  where schedular.COMPANY_CODE = '{CompanyCode}' and schedular.CALENDAR_CODE = '{CalendarCode}' and um.USER_ID = '{UserId}' order by created_at desc";
+                                  where schedular.COMPANY_CODE = '{CompanyCode}' and schedular.CALENDAR_CODE = '{CalendarCode}' and um.USER_ID = N'{UserId}' order by created_at desc";
 
             var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
@@ -1624,7 +1624,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                 isActiveString = "Y";
             }
 
-            string query = $@"UPDATE BUSINESS_COMPANY_MASTER_1924 SET COMPANY_PROFILE_STATUS = '{isActiveString}' WHERE USER_ID = '{userId}'";
+            string query = $@"UPDATE BUSINESS_COMPANY_MASTER_1924 SET COMPANY_PROFILE_STATUS = '{isActiveString}' WHERE USER_ID = N'{userId}'";
 
             int result = await sqlFunction.ExecuteSqlCommandQuery(query);
 
@@ -1698,7 +1698,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
 
                         if (website.Data["COMPANY_PROFILE_STATUS"].ToString() == "N")
                         {
-                            query = "update USER_MASTER_1915 set COMPANY_PROFILE_STATUS = 'Y', updated_at = '" + DateTimeUtility.Now().ToString("yyyy-MM-dd") + "' where USER_ID = '" + UserName + "'";
+                            query = "update USER_MASTER_1915 set COMPANY_PROFILE_STATUS = 'Y', updated_at = '" + DateTimeUtility.Now().ToString("yyyy-MM-dd") + "' where USER_ID = N'" + UserName + "'";
                             saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                         }
 
@@ -1706,12 +1706,12 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                         {
                             if (website.Data["CURRENT_STEP"].ToString() == "COMPANY PROFILE")
                             {
-                                query = "update USER_MASTER_1915 set CURRENT_STEP = 'CALENDAR', updated_at = '" + DateTimeUtility.Now().ToString("yyyy-MM-dd") + "'  where USER_ID = '" + UserName + "'";
+                                query = "update USER_MASTER_1915 set CURRENT_STEP = 'CALENDAR', updated_at = '" + DateTimeUtility.Now().ToString("yyyy-MM-dd") + "'  where USER_ID = N'" + UserName + "'";
                                 saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                             }
                             else if (website.Data["CURRENT_STEP"].ToString() == "COMPANY WEBSITE")
                             {
-                                query = "update USER_MASTER_1915 set CURRENT_STEP = 'COMPLETED', updated_at = '" + DateTimeUtility.Now().ToString("yyyy-MM-dd") + "'  where USER_ID = '" + UserName + "'";
+                                query = "update USER_MASTER_1915 set CURRENT_STEP = 'COMPLETED', updated_at = '" + DateTimeUtility.Now().ToString("yyyy-MM-dd") + "'  where USER_ID = N'" + UserName + "'";
                                 saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
 
                                 // registration and 3 steps are completed here and now activate free plan of user
@@ -1862,7 +1862,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                     {
                         if (website.Data["COMPANY_PROFILE_STATUS"].ToString() == "N")
                         {
-                            query = "update USER_MASTER_1915 set COMPANY_PROFILE_STATUS = 'Y', updated_at = getdate() where USER_ID = '" + UserName + "'";
+                            query = "update USER_MASTER_1915 set COMPANY_PROFILE_STATUS = 'Y', updated_at = getdate() where USER_ID = N'" + UserName + "'";
                             saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                         }
 
@@ -1871,12 +1871,12 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                         {
                             if (website.Data["CURRENT_STEP"].ToString() == "COMPANY PROFILE")
                             {
-                                query = "update USER_MASTER_1915 set CURRENT_STEP = 'CALENDAR', updated_at = getdate()  where USER_ID = '" + UserName + "'";
+                                query = "update USER_MASTER_1915 set CURRENT_STEP = 'CALENDAR', updated_at = getdate()  where USER_ID = N'" + UserName + "'";
                                 saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                             }
                             else if (website.Data["CURRENT_STEP"].ToString() == "COMPANY WEBSITE")
                             {
-                                query = "update USER_MASTER_1915 set CURRENT_STEP = 'COMPLETED', updated_at = getdate()  where USER_ID = '" + UserName + "'";
+                                query = "update USER_MASTER_1915 set CURRENT_STEP = 'COMPLETED', updated_at = getdate()  where USER_ID = N'" + UserName + "'";
                                 saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                             }
 
@@ -2429,13 +2429,13 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                             {
                                 if (website.Data["COMPANY_CALENDAR_STATUS"].ToString() == "N")
                                 {
-                                    query = "update USER_MASTER_1915 set COMPANY_CALENDAR_STATUS = 'Y', updated_at = getdate() where USER_ID = '" + UserId + "'";
+                                    query = "update USER_MASTER_1915 set COMPANY_CALENDAR_STATUS = 'Y', updated_at = getdate() where USER_ID = N'" + UserId + "'";
                                     saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                                 }
 
                                 if (website.Data["CURRENT_STEP"].ToString() == "CALENDAR")
                                 {
-                                    query = "update USER_MASTER_1915 set CURRENT_STEP = 'COMPANY WEBSITE', updated_at = getdate()  where USER_ID = '" + UserId + "'";
+                                    query = "update USER_MASTER_1915 set CURRENT_STEP = 'COMPANY WEBSITE', updated_at = getdate()  where USER_ID = N'" + UserId + "'";
                                     saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                                 }
                             }
@@ -2512,7 +2512,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
 
                         if (website.Data["CURRENT_STEP"].ToString() == "CALENDAR")
                         {
-                            query = "update USER_MASTER_1915 set CURRENT_STEP = 'COMPANY WEBSITE', updated_at = getdate()  where USER_ID = '" + UserId + "'";
+                            query = "update USER_MASTER_1915 set CURRENT_STEP = 'COMPANY WEBSITE', updated_at = getdate()  where USER_ID = N'" + UserId + "'";
                             saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                         }
                     }
