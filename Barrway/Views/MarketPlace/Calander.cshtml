@@ -854,8 +854,6 @@
             color: #495057; /* Adjust text color as needed */
         }
     </style>
-
-
     <style>
         .form-group.borderSet.col-sm-6 > .col-sm-12 > div {
             display: flex;
@@ -2055,6 +2053,7 @@
                                                          <div>${eventData.customTitleSplit[1]}</div>
                                                          <div>${eventData.customTitleSplit[0]}</div>
                                                             ${((response.Data != null && response.Data != 0) ? `<div>${response.Data} credits</div>` : "")}<br />
+                                                            ${((eventData.NEED_ONLINE_PAYMENT == 'N') ? `<div>You will need to handle the payment with the company's staff.</div>` : "")}<br />
                                                          <h4 style="color:red">${response.Message}</h4>`;
 
                                     let buttonsWrap = {
@@ -2066,7 +2065,7 @@
                                         confirm: (response.Status) ? "Use Credits" : "Buy Package"
                                     }
 
-                                    if (response.Data == 0) {
+                                    if (response.Data == 0 || eventData.NEED_ONLINE_PAYMENT == 'N') {
                                         buttonsWrap = {
                                             cancel: "Cancel",
                                             confirm: "Yes"
@@ -2238,6 +2237,7 @@
                                                          <div>${eventData.customTitleSplit[1]}</div>
                                                          <div>${eventData.customTitleSplit[0]}</div>
                                                          ${((response.Data != null) ? `<div>${response.Data} credits</div>` : "")}<br />
+                                                         ${((eventData.NEED_ONLINE_PAYMENT == 'N') ? `<div>You will need to handle the payment with the company's staff.</div>` : "")}<br />
                                                          <h4 style="color:red">${response.Message}</h4>`;
 
                                     let buttonsWrap = {
@@ -2249,7 +2249,7 @@
                                         confirm: (response.Status) ? "Use Credits" : "Buy Package"
                                     }
 
-                                    if (response.Data == 0) {
+                                    if (response.Data == 0 || eventData.NEED_ONLINE_PAYMENT == 'N') {
                                         buttonsWrap = {
                                             cancel: "Cancel",
                                             confirm: "Yes"

@@ -75,7 +75,7 @@ namespace Barrway.Service.Repository
                               ,publicUser.[SIGNUP_TYPE], publicUser.[Id]      ,publicUser.[created_at]      ,publicUser.[updated_at]      ,publicUser.[created_by]      ,publicUser.[updated_by]      ,publicUser.[USER_ID]      ,[SUBSCRIPTION_PLAN_ID]      ,account.[CURRENT_STEP]     ,[FIRST_NAME]      ,[LAST_NAME]      ,[PROFILE_PHOTO_PATH]      ,[PROFILE_PHOTO_NAME]      ,[CHINESE_NAME]      ,[NICK_NAME]      ,[GENDER]      ,[DATE_OF_BIRTH]  
                         FROM[dbo].[PUBLIC_USER_ACCOUNT_1943] account 
                         join USER_MASTER_1915 publicUser on publicUser.USER_ID = account.USER_ID
-                        where publicUser.USER_ID = '" + UserId + "'";
+                        where publicUser.USER_ID = N'" + UserId + "'";
 
             var _UserProfile = (await sqlFunction.ExecuteSqlQuery<UserProfile>(query)).FirstOrDefault();
 
@@ -833,7 +833,7 @@ namespace Barrway.Service.Repository
                                                     (
                                                     select case when (sum(CREDIT_COIN) - sum(DEBIT_COIN) <= 0) then 0 else sum(CREDIT_COIN) - sum(DEBIT_COIN) end from LEDGER_MASTER_1957 where ORDER_NO = PAYMENT_ID
                                                     ) as 'Balance'
-                                                    from PAYMENT_HISTORY_MASTER_1956 where COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE.ToString()}' and STATUS = 'complete' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE and USER_ID = '{model.USER_ID}'
+                                                    from PAYMENT_HISTORY_MASTER_1956 where COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE.ToString()}' and STATUS = 'complete' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE and USER_ID = N'{model.USER_ID}'
                                                     order by cast(created_at as datetime)";
 
                     var orderNoResult = await sqlFunction.ExecuteSqlQuery(orderNoQuery);
@@ -919,7 +919,7 @@ namespace Barrway.Service.Repository
                     }
                     else
                     {
-                        query = $@"delete from COMPANY_UPCOMING_BOOKINGS_1945 where USER_ID = '{USER_ID}' and EVENT_ID = (select top 1 SLOT from TRANSACTION_MASTER_1942 where Id = '{result[0]["Id"]?.ToString()}'); delete from TRANSACTION_MASTER_1942 where Id = '{result[0]["Id"]?.ToString()}';";
+                        query = $@"delete from COMPANY_UPCOMING_BOOKINGS_1945 where USER_ID = N'{USER_ID}' and EVENT_ID = (select top 1 SLOT from TRANSACTION_MASTER_1942 where Id = '{result[0]["Id"]?.ToString()}'); delete from TRANSACTION_MASTER_1942 where Id = '{result[0]["Id"]?.ToString()}';";
                     }
 
                     var result2 = await sqlFunction.ExecuteSqlCommandQuery(query);
@@ -996,7 +996,7 @@ namespace Barrway.Service.Repository
                               ,publicUser.[SIGNUP_TYPE], publicUser.[Id]      ,publicUser.[created_at]      ,publicUser.[updated_at]      ,publicUser.[created_by]      ,publicUser.[updated_by]      ,publicUser.[USER_ID]      ,[SUBSCRIPTION_PLAN_ID]      ,account.[CURRENT_STEP]     ,[FIRST_NAME]      ,[LAST_NAME]      ,[PROFILE_PHOTO_PATH]      ,[PROFILE_PHOTO_NAME]      ,[CHINESE_NAME]      ,[NICK_NAME]      ,[GENDER]      ,[DATE_OF_BIRTH]  
                         FROM[dbo].[PUBLIC_USER_ACCOUNT_1943] account 
                         join USER_MASTER_1915 publicUser on publicUser.USER_ID = account.USER_ID
-                        where publicUser.USER_ID = '" + UserId + "'";
+                        where publicUser.USER_ID = N'" + UserId + "'";
 
             List<IDictionary<string, object>> businessWebsiteResult = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -1130,16 +1130,16 @@ namespace Barrway.Service.Repository
             {
                 string query = $@"select 
 	                                case when (
-		                                (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 f join ORDER_MASTER_1969 ord on ord.ORDER_NO = f.PAYMENT_ID where f.USER_ID = '{UserId}' and f.CALENDAR_CODE = '{CalendarCode}' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE and ord.ORDER_TYPE = 'PACKAGE') - SUM(led.DEBIT_COIN)
-	                                ) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 f join ORDER_MASTER_1969 ord on ord.ORDER_NO = f.PAYMENT_ID where f.USER_ID = '{UserId}' and f.CALENDAR_CODE = '{CalendarCode}' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE and ord.ORDER_TYPE = 'PACKAGE') - SUM(led.DEBIT_COIN) <= 0
+		                                (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 f join ORDER_MASTER_1969 ord on ord.ORDER_NO = f.PAYMENT_ID where f.USER_ID = N'{UserId}' and f.CALENDAR_CODE = '{CalendarCode}' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE and ord.ORDER_TYPE = 'PACKAGE') - SUM(led.DEBIT_COIN)
+	                                ) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 f join ORDER_MASTER_1969 ord on ord.ORDER_NO = f.PAYMENT_ID where f.USER_ID = N'{UserId}' and f.CALENDAR_CODE = '{CalendarCode}' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE and ord.ORDER_TYPE = 'PACKAGE') - SUM(led.DEBIT_COIN) <= 0
 	                                then
 		                                0
 	                                else
-		                                (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 f join ORDER_MASTER_1969 ord on ord.ORDER_NO = f.PAYMENT_ID where  f.USER_ID = '{UserId}' and f.CALENDAR_CODE = '{CalendarCode}' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE and ord.ORDER_TYPE = 'PACKAGE') - SUM(led.DEBIT_COIN)
+		                                (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 f join ORDER_MASTER_1969 ord on ord.ORDER_NO = f.PAYMENT_ID where  f.USER_ID = N'{UserId}' and f.CALENDAR_CODE = '{CalendarCode}' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE and ord.ORDER_TYPE = 'PACKAGE') - SUM(led.DEBIT_COIN)
 	                                end as 'COIN_BALANCE'
                                 FROM LEDGER_MASTER_1957 led 
                                 join ORDER_MASTER_1969 ord on ord.ORDER_NO = led.ORDER_NO
-                                where led.USER_ID = '{UserId}' and ord.ORDER_TYPE = 'PACKAGE'  and led.COMPANY_CODE = '{CompanyCode}' and led.CALENDAR_CODE = '{CalendarCode}'";
+                                where led.USER_ID = N'{UserId}' and ord.ORDER_TYPE = 'PACKAGE'  and led.COMPANY_CODE = '{CompanyCode}' and led.CALENDAR_CODE = '{CalendarCode}'";
 
                 List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -1573,7 +1573,7 @@ namespace Barrway.Service.Repository
             {
 
                 string query = $@"declare @CompanyCodes varchar(max) = (select stuff((select distinct ',' + COMPANY_CODE  from PAYMENT_HISTORY_MASTER_1956 payment 
-											  where payment.STATUS = 'complete' and payment.USER_ID = '{userName}' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd")}' < payment.CREDIT_EXPIRE_DATE
+											  where payment.STATUS = 'complete' and payment.USER_ID = N'{userName}' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd")}' < payment.CREDIT_EXPIRE_DATE
 											  for xml path('')), 1, 1, '')) 
 
 											  SELECT distinct company.[COMPANY_CODE],company.[Id]
@@ -1585,7 +1585,7 @@ namespace Barrway.Service.Repository
                                           ,[COMPANY_NAME_ENGLISH] as COMPANY_NAME
                                       FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company
                                       join FAVORITE_CALENDAR_MASTER_1949 favorite on favorite.COMPANY_CODE = company.COMPANY_CODE
-                                      where favorite.USER_ID = '{userName}' and company.COMPANY_CODE not in (select cast(item as varchar) from dbo.SplitString(@CompanyCodes, ','))";
+                                      where favorite.USER_ID = N'{userName}' and company.COMPANY_CODE not in (select cast(item as varchar) from dbo.SplitString(@CompanyCodes, ','))";
 
                 var result = (await sqlFunction.ExecuteSqlQuery<MyFavouriteCompany>(query)).ToList();
                 if (result.Any())
@@ -1613,7 +1613,7 @@ namespace Barrway.Service.Repository
 
                 string CompanyLogic = "";
 
-                string Fev_query = $@"SELECT [Id],[created_at],[updated_at],[created_by],[updated_by],[COMPANY_CODE],[CALENDAR_CODE],[USER_ID],[IS_PUBIC_USER] FROM [dbo].[FAVORITE_CALENDAR_MASTER_1949] calendarDetails where USER_ID = '{userId}' {CompanyLogic} ";
+                string Fev_query = $@"SELECT [Id],[created_at],[updated_at],[created_by],[updated_by],[COMPANY_CODE],[CALENDAR_CODE],[USER_ID],[IS_PUBIC_USER] FROM [dbo].[FAVORITE_CALENDAR_MASTER_1949] calendarDetails where USER_ID = N'{userId}' {CompanyLogic} ";
 
                 List<IDictionary<string, object>> Fev_result = await sqlFunction.ExecuteSqlQuery(Fev_query);
 
@@ -1659,7 +1659,7 @@ namespace Barrway.Service.Repository
                 int PageNumber = data.page > 0 ? data.page : 1;
 
                 string query = $@"declare @CalendarCodes varchar(max) = (select stuff((select distinct ',' + CALENDAR_CODE  from PAYMENT_HISTORY_MASTER_1956 payment 
-											  where payment.STATUS = 'complete' and payment.USER_ID = '{userId}' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd")}' < payment.CREDIT_EXPIRE_DATE
+											  where payment.STATUS = 'complete' and payment.USER_ID = N'{userId}' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd")}' < payment.CREDIT_EXPIRE_DATE
 											  for xml path('')), 1, 1, '')) 
                                   declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
                                               
@@ -1679,16 +1679,16 @@ namespace Barrway.Service.Repository
                                                   ,company.COMPANY_LOGO_PATH
                                                   ,subCategory.CALENDAR_SUB_CATEGORY_NAME
 												  ,(select  case when (
-		                                                        (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = '{userId}' and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
-	                                                        ) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = '{userId}' and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
+		                                                        (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = N'{userId}' and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN)
+	                                                        ) is null or (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = N'{userId}' and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE) - SUM(led.DEBIT_COIN) <= 0
 	                                                        then
 		                                                        0
 	                                                        else
-		                                                        (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = '{userId}' and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE)
+		                                                        (select sum(B_COIN_PURCHASE) from PAYMENT_HISTORY_MASTER_1956 pay join ORDER_MASTER_1969 ord on ord.ORDER_NO = pay.PAYMENT_ID where ord.ORDER_TYPE = 'PACKAGE' and pay.USER_ID = N'{userId}' and pay.CALENDAR_CODE = calendarDetails.CALENDAR_CODE and '{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' < CREDIT_EXPIRE_DATE)
 	                                                        end
                                                         FROM LEDGER_MASTER_1957 led 
                                                         join ORDER_MASTER_1969 ord on ord.ORDER_NO = led.ORDER_NO
-                                                        where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = '{userId}' and led.CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) as 'COIN_BALANCE', 'Y' as 'PURCHASED'
+                                                        where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_CODE = calendarDetails.CALENDAR_CODE ) as 'COIN_BALANCE', 'Y' as 'PURCHASED'
                                               FROM [dbo].BUSINESS_CALENDAR_MASTER_1925 calendarDetails
                                               join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendarDetails.COMPANY_CODE
 								              join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory ON ',' + calendarDetails.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
@@ -1891,7 +1891,7 @@ namespace Barrway.Service.Repository
                 string query = $@"SELECT BC.Id,Ph.COMPANY_CODE, BC.COMPANY_NAME_ENGLISH as COMPANY_NAME
                                     FROM payment_history_master_1956 Ph
                                     INNER JOIN BUSINESS_COMPANY_MASTER_1924 BC ON BC.COMPANY_CODE = PH.COMPANY_CODE
-                                    WHERE USER_ID = '{userName}' 
+                                    WHERE USER_ID = N'{userName}' 
                                     GROUP BY Ph.COMPANY_CODE, BC.COMPANY_NAME_ENGLISH ,BC.Id";
 
                 var result = (await sqlFunction.ExecuteSqlQuery<MyFavouriteCompany>(query)).ToList();
@@ -1918,7 +1918,7 @@ namespace Barrway.Service.Repository
 
                 string query = $@"SELECT  DISTINCT YEAR(Ph.PAID_DATE) AS PAYMENTYEAR
                                 FROM payment_history_master_1956  Ph
-                                WHERE USER_ID='{userName}' ";
+                                WHERE USER_ID=N'{userName}' ";
 
                 var result = (await sqlFunction.ExecuteSqlQuery<object>(query)).ToList();
                 if (result.Any())
@@ -1982,7 +1982,7 @@ namespace Barrway.Service.Repository
                                             ON              f.[PLAN_ID] = a_0.[Id]
                                             inner join      BUSINESS_COMPANY_MASTER_1924 BC on BC.COMPANY_CODE=f.COMPANY_CODE
 	                                        inner join      BUSINESS_CALENDAR_MASTER_1925   Bcl on Bcl.CALENDAR_CODE=f.CALENDAR_CODE
-                                            WHERE           f.id!=0  and USER_ID='{userName}' {searchFilter}   )
+                                            WHERE           f.id!=0  and USER_ID=N'{userName}' {searchFilter}   )
                             SELECT   Count(*) OVER() total_records,@PageSize  size,@PageNumber     AS 'page',* FROM     formdata ORDER BY [formRecordOrder] ASC offset @PageSize * (@PageNumber - 1) rows FETCH next @PageSize rows only OPTION(recompile);";
 
 
@@ -2007,7 +2007,7 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDeleteAPI> AddToFavoriteCalendar(FavoriteCalendarViewModel model,string UserId)
         {
-            string query = $@"select * from FAVORITE_CALENDAR_MASTER_1949 where USER_ID = '{UserId}' and CALENDAR_CODE = '{model.CALENDAR_CODE}' and COMPANY_CODE = '{model.COMPANY_CODE}'";
+            string query = $@"select * from FAVORITE_CALENDAR_MASTER_1949 where USER_ID = N'{UserId}' and CALENDAR_CODE = '{model.CALENDAR_CODE}' and COMPANY_CODE = '{model.COMPANY_CODE}'";
 
             var result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -2046,7 +2046,7 @@ namespace Barrway.Service.Repository
             try
             {
 
-                string query = $@"delete from FAVORITE_CALENDAR_MASTER_1949 where USER_ID = '{UserId}' and CALENDAR_CODE = '{model.CALENDAR_CODE}' and COMPANY_CODE = '{model.COMPANY_CODE}'";
+                string query = $@"delete from FAVORITE_CALENDAR_MASTER_1949 where USER_ID = N'{UserId}' and CALENDAR_CODE = '{model.CALENDAR_CODE}' and COMPANY_CODE = '{model.COMPANY_CODE}'";
 
                 int result = await sqlFunction.ExecuteSqlCommandQuery(query);
 
@@ -2108,7 +2108,7 @@ namespace Barrway.Service.Repository
                                   ,[DEFAULT_DISPLAY_DATE]
                                   ,[DEFAULT_DATE]
                                   ,[SERVICE_CHARGE_BY]
-	                              ,case when  (select top 1 count(Id) from FAVORITE_CALENDAR_MASTER_1949 where COMPANY_CODE='{model.COMPANY_CODE}' and CALENDAR_CODE='{model.CALENDAR_CODE}' and USER_ID='{UserId}')='1' then 'Y' else 'N' end as IsFavourite
+	                              ,case when  (select top 1 count(Id) from FAVORITE_CALENDAR_MASTER_1949 where COMPANY_CODE='{model.COMPANY_CODE}' and CALENDAR_CODE='{model.CALENDAR_CODE}' and USER_ID=N'{UserId}')='1' then 'Y' else 'N' end as IsFavourite
                                   ,[ALLOW_OVERLAP] from BUSINESS_CALENDAR_MASTER_1925  
 	                                where  COMPANY_CODE='{model.COMPANY_CODE}' and  CALENDAR_CODE='{model.CALENDAR_CODE}'";
 

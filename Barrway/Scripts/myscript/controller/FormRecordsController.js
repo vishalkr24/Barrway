@@ -1642,6 +1642,7 @@
             $scope.isEdit = isEdit;
             var fullPath = "";
             var qrString = $location.search();
+            
             if ($scope.isEdit) {
                 if (angular.isDefined(qrString.check) && angular.isDefined($scope.userDetail.reqType)) {
                     fullPath = baseUrl + "#/form/editEntry/" + formId + "/" + formGroupKey + "/" + rowId + '?popup=1&isAnonymous=1';

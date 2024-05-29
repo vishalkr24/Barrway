@@ -109,6 +109,7 @@ namespace Barrway.Controllers
 
                     model.Email = userData.Data["USER_EMAIL"]?.ToString();
                 }
+
                 var linkResult = await authService.SendresetpasswordLink(userData.Data["USER_ID"], model.Email);//USER_EMAILUSER_ID
 
                 if (linkResult.Status)
@@ -1286,17 +1287,17 @@ namespace Barrway.Controllers
 
                         if (role == "BUSINESS_USER")
                         {
-                            int affectedRows = await sqlFunction.ExecuteSqlCommandQuery("update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'COMPANY PROFILE' where USER_ID = '" + userName + "'");
+                            int affectedRows = await sqlFunction.ExecuteSqlCommandQuery("update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'COMPANY PROFILE' where USER_ID = N'" + userName + "'");
                             return View();
                         }
                         else if (role == "PUBLIC_USER")
                         {
-                            int affectedRows = await sqlFunction.ExecuteSqlCommandQuery("update PUBLIC_USER_ACCOUNT_1943 set CURRENT_STEP = 'COMPLETED' where USER_ID = '" + userName + "'");
+                            int affectedRows = await sqlFunction.ExecuteSqlCommandQuery("update PUBLIC_USER_ACCOUNT_1943 set CURRENT_STEP = 'COMPLETED' where USER_ID = N'" + userName + "'");
                             return View();
                         }
                         else if (role == "GENERAL_USER")
                         {
-                            int affectedRows = await sqlFunction.ExecuteSqlCommandQuery("update USER_MASTER_1915 set CURRENT_STEP = 'COMPANY PROFILE' where USER_ID = '" + userName + "'; update PUBLIC_USER_ACCOUNT_1943 set CURRENT_STEP = 'COMPLETED' where USER_ID = '" + userName + "'");
+                            int affectedRows = await sqlFunction.ExecuteSqlCommandQuery("update USER_MASTER_1915 set CURRENT_STEP = 'COMPANY PROFILE' where USER_ID = N'" + userName + "'; update PUBLIC_USER_ACCOUNT_1943 set CURRENT_STEP = 'COMPLETED' where USER_ID = '" + userName + "'");
                             return View();
                         }
 

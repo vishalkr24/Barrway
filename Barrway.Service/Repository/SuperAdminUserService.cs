@@ -309,7 +309,7 @@ namespace Barrway.Service.Repository
                                           left join BUSINESS_CALENDAR_MASTER_1925 cal on cal.COMPANY_CODE = f.COMPANY_CODE
                                           left join CALENDAR_CATEGORY_MASTER_1929 cat on cat.Id = cal.CALENDAR_CATEGORY_ID
                                           left join  CALENDAR_SUB_CATEGORY_MASTER_1930  subCategory on EXISTS(SELECT * FROM split_string(cal.[CALENDAR_SUB_CATEGORY_ID] , ',') where tuple=subCategory.[Id]) 
-                                          where BUSINESS_ACCOUNT_ID = (select Id from BUSINESS_ACCOUNT_WEBSITE_1918 where USER_ID = '{UserId}') {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+                                          where BUSINESS_ACCOUNT_ID = (select Id from BUSINESS_ACCOUNT_WEBSITE_1918 where USER_ID = N'{UserId}') {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
                                     )
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
 
