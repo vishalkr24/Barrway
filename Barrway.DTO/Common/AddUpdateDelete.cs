@@ -68,6 +68,7 @@ namespace Barrway.DTO.Common
         public int res { get; set; }
         public string SearchText { get; set; }
         public string Short { get; set; }
+        public string ASC { get; set; }
         public string CategoryId { get; set; }
         public string SubCategoryId { get; set; }
 
