@@ -479,12 +479,12 @@ var COMPANY_CODE = "";
 
                                 //debugger;
                                 const wrapper = document.createElement('div');
-                                wrapper.innerHTML = `
-                                                                                                                                                        <div>${eventData.customTitleSplit[2]}</div><br />
-                                                                                                                                                        <div>${eventData.customTitleSplit[1]}</div>
-                                                                                                                                                        <div>${eventData.customTitleSplit[0]}</div>
-                                                                                                                                                        ${((response.Data != null) ? `<div>${response.Data} credits</div>` : "")}<br />
-                                                                                                                                                        <h4 style="color:red">${response.Message}</h4>`;
+                                wrapper.innerHTML = `<div>${eventData.customTitleSplit[2]}</div><br />
+                                                <div>${eventData.customTitleSplit[1]}</div>
+                                                <div>${eventData.customTitleSplit[0]}</div>
+                                                ${(((response.Data.fees != null && response.Data.fees != 0) || eventData.NEED_ONLINE_PAYMENT == 'N') ? `<div>${response.Data.fees} credits</div>` : "")}<br />
+                                                ${((eventData.NEED_ONLINE_PAYMENT == 'N') ? `<div>You will need to handle the payment with the ${response.Data.company} staff.</div>` : "")}<br />
+                                                <h4 style="color:red">${response.Message}</h4>`;
 
                                 let buttonsWrap = {
                                     cancel: "Cancel",
@@ -495,7 +495,7 @@ var COMPANY_CODE = "";
                                     confirm: (response.Status) ? "Use Credits" : "Buy Package"
                                 }
 
-                                if (response.Data == 0) {
+                                if (response.Data.fees == 0 || eventData.NEED_ONLINE_PAYMENT == 'N') {
                                     buttonsWrap = {
                                         cancel: "Cancel",
                                         confirm: "Yes"
