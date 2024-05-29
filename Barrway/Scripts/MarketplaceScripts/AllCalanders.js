@@ -1,17 +1,36 @@
-﻿var Id, SubCategoryId, Short;
+﻿var Id, SubCategoryId, Short, ASC;
 
 $(document).ready(function () {
     $(".dropdown").addClass("active");
     scaltonLoader();
     remove_hash_from_url();
+    ASC = "Y";
+    Short = $("#filter-category-master").val();
     Id = getUrlVars()["Category"];
     SubCategoryId = getUrlVars()["subcategory"];
     SetAllCalanders(1, Short);
 
 
     $("#filter-category-master").change(function () {
+        Short = $("#filter-category-master").val();
         SetAllCalanders(1, Short);
     });
+
+
+
+    $(".filter-btn").click(function () {
+        if (ASC == 'Y') {
+            ASC = "N";
+            $('.filter-btn img').attr('src', '/assets/img/filter_down.png');
+            SetAllCalanders(1, Short);
+        }
+        else {
+            ASC = "Y";
+            $('.filter-btn img').attr('src', '/assets/img/filter_up.png');
+            SetAllCalanders(1, Short);
+        }
+    });
+
 
 });
 
@@ -41,8 +60,7 @@ function remove_hash_from_url() {
 function SetAllCalanders(pageNumber, Short) {
     scaltonLoader();
     remove_hash_from_url();
-    var CategoryId = Id;
-    Short = $("#filter-category-master").val();
+    var CategoryId = Id;    
     $("#list-view").show();
     $("#detail-view").hide();
     $.ajax({
@@ -55,7 +73,8 @@ function SetAllCalanders(pageNumber, Short) {
             res: 0,
             CategoryId: CategoryId,
             SubCategoryId: SubCategoryId,
-            Short: Short
+            Short: Short,
+            ASC: ASC
 
         },
         success: function (response) {

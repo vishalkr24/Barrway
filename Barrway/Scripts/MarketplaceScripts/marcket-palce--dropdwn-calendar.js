@@ -3,7 +3,7 @@
         $('.calendar-service').val($(this).val());
         if ($(this).val() != '') {
             var searchSrevice = $('.calendar-service option:selected').first().text();
-            var param = { "action": 29, "formTableColumnData": `   (   (   SERVICE_MASTER_1933.ACTIVITY_NAME like N'${searchSrevice}'    )        )   `, "formTableColumnName": "    left join SERVICE_MASTER_1933 on SERVICE_MASTER_1933.formId=f1.referrenceFormId and SERVICE_MASTER_1933.Id=f1.referrenceId  ", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 }
+            var param = { "action": 29, "CALENDAR_CODE": CALENDAR_CODE, "IsMarketplaceRequest": true, "COMPANY_CODE": COMPANY_CODE, "formTableColumnData": `   (   (   SERVICE_MASTER_1933.ACTIVITY_NAME like N'${searchSrevice}'    )        )   `, "formTableColumnName": "    left join SERVICE_MASTER_1933 on SERVICE_MASTER_1933.formId=f1.referrenceFormId and SERVICE_MASTER_1933.Id=f1.referrenceId  ", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 }
             console.log(param, "param");
             var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
             var view = $('#' + current_tab + ' div.calendar').fullCalendar('getView');
@@ -15,7 +15,7 @@
 
 
         } else {
-            var param = { "action": 29, "formTableColumnData": "", "formTableColumnName": "", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 };
+            var param = { "action": 29, "CALENDAR_CODE": CALENDAR_CODE, "IsMarketplaceRequest": true, "COMPANY_CODE": COMPANY_CODE, "formTableColumnData": "", "formTableColumnName": "", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 };
             var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
             var view = $('#' + current_tab + ' div.calendar').fullCalendar('getView');
             param.filter = changeStateOfCalenderController(view);
@@ -38,7 +38,7 @@
         $('.calendar-service-Location').val($(this).val());
         if ($(this).val() != '') {
             var searchSrevice = $('.calendar-service-Location option:selected').first().text();
-            var param = { "action": 29, "formTableColumnData": `   (   (   LOCATION_MASTER_1936.LOCATION_ADDRESS like N'${searchSrevice}'    )        )   `, "formTableColumnName": "    left join LOCATION_MASTER_1936 on LOCATION_MASTER_1936.formId=f1.referrenceFormId and LOCATION_MASTER_1936.Id=f1.referrenceId  ", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 }
+            var param = { "action": 29, "CALENDAR_CODE": CALENDAR_CODE, "IsMarketplaceRequest": true, "COMPANY_CODE": COMPANY_CODE, "formTableColumnData": `   (   (   LOCATION_MASTER_1936.LOCATION_ADDRESS like N'${searchSrevice}'    )        )   `, "formTableColumnName": "    left join LOCATION_MASTER_1936 on LOCATION_MASTER_1936.formId=f1.referrenceFormId and LOCATION_MASTER_1936.Id=f1.referrenceId  ", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 }
             console.log(param, "param");
             var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
             var view = $('#' + current_tab + ' div.calendar').fullCalendar('getView');
@@ -50,7 +50,7 @@
 
 
         } else {
-            var param = { "action": 29, "formTableColumnData": "", "formTableColumnName": "", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 };
+            var param = { "action": 29, "CALENDAR_CODE": CALENDAR_CODE, "IsMarketplaceRequest": true, "COMPANY_CODE": COMPANY_CODE, "formTableColumnData": "", "formTableColumnName": "", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 };
             var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
             var view = $('#' + current_tab + ' div.calendar').fullCalendar('getView');
             param.filter = changeStateOfCalenderController(view);
@@ -66,7 +66,7 @@
         $('.calendar-service-Provider').val($(this).val());
         if ($(this).val() != '') {
             var searchSrevice = $('.calendar-service-Provider option:selected').first().attr('data-filter');
-            var param = { "action": 29, "formTableColumnData": `   (   (   SERVICE_PROVIDER_MASTER_1934.FIRST_NAME like N'${searchSrevice}'    )        )   `, "formTableColumnName": "    left join SERVICE_PROVIDER_MASTER_1934 on SERVICE_PROVIDER_MASTER_1934.formId=f1.referrenceFormId and SERVICE_PROVIDER_MASTER_1934.Id=f1.referrenceId  ", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 }
+            var param = { "action": 29, "CALENDAR_CODE": CALENDAR_CODE, "IsMarketplaceRequest": true, "COMPANY_CODE": COMPANY_CODE, "formTableColumnData": `   (   (   SERVICE_PROVIDER_MASTER_1934.FIRST_NAME like N'${searchSrevice}'    )        )   `, "formTableColumnName": "    left join SERVICE_PROVIDER_MASTER_1934 on SERVICE_PROVIDER_MASTER_1934.formId=f1.referrenceFormId and SERVICE_PROVIDER_MASTER_1934.Id=f1.referrenceId  ", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 }
             console.log(param, "param");
             var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
             var view = $('#' + current_tab + ' div.calendar').fullCalendar('getView');
@@ -78,7 +78,7 @@
 
 
         } else {
-            var param = { "action": 29, "formTableColumnData": "", "formTableColumnName": "", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 };
+            var param = { "action": 29, "CALENDAR_CODE": CALENDAR_CODE, "IsMarketplaceRequest": true, "COMPANY_CODE": COMPANY_CODE, "formTableColumnData": "", "formTableColumnName": "", "formId": 2305, "FormTableName": "CALENDAR_FORM_1935", "created_by": 30314, "update_by": 30314 };
             var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
             var view = $('#' + current_tab + ' div.calendar').fullCalendar('getView');
             param.filter = changeStateOfCalenderController(view);

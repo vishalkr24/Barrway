@@ -1727,6 +1727,8 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 int PageSize = data.size > 0 ? data.size : 20;
                 int PageNumber = data.page > 0 ? data.page : 1;
 
+                string AscDEsc = "";
+
                 string filter = "";
                 string Short = "";
 
@@ -1759,6 +1761,27 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 else
                 {
                     Short += "ORDER BY [SEQUENCE]";
+                }
+
+
+                if (!string.IsNullOrEmpty(data.ASC))
+                {
+                    if (data.ASC == "Y")
+                    {
+
+                        Short += " ,[created_at] asc";
+                    }
+                    else
+                    {
+                        Short += " ,[created_at] DESC";
+                    }
+                    
+                    
+                    
+                }
+                else
+                {
+                    AscDEsc += " ,[created_at] DESC";
                 }
 
 

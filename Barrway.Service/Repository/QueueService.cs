@@ -231,7 +231,7 @@ namespace Barrway.Service.Repository
                     model.SESSION_ID = result.FirstOrDefault()["Id"]?.ToString();
                 }
 
-                query = $@"select * from TICKET_MASTER_1975 where SESSION_ID = '{model.SESSION_ID}' and QUEUE_ID = '{model.QUEUE_ID}' and USER_ID = '{model.USER_ID}' and STATUS not in ('DELETED', 'SERVED')";
+                query = $@"select * from TICKET_MASTER_1975 where SESSION_ID = '{model.SESSION_ID}' and QUEUE_ID = '{model.QUEUE_ID}' and USER_ID = N'{model.USER_ID}' and STATUS not in ('DELETED', 'SERVED')";
 
                 var result2 = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -240,7 +240,7 @@ namespace Barrway.Service.Repository
                     return new AddUpdateDelete() { Status = false, Message = ("You have already booked this ticket: " + (result2.FirstOrDefault()["TICKET_NUMBER"]?.ToString() ?? "(ticket not found)") + ".\n\nThis ticket will be removed and new ticket will be assigned.\n\nAre you sure to continue? "), Data = model };
                 }
 
-                query = $@"delete from TICKET_MASTER_1975 where SESSION_ID = '{model.SESSION_ID}' and QUEUE_ID = '{model.QUEUE_ID}' and USER_ID = '{model.USER_ID}' and STATUS not in ('DELETED', 'SERVED')";
+                query = $@"delete from TICKET_MASTER_1975 where SESSION_ID = '{model.SESSION_ID}' and QUEUE_ID = '{model.QUEUE_ID}' and USER_ID = N'{model.USER_ID}' and STATUS not in ('DELETED', 'SERVED')";
 
                 var result3 = await sqlFunction.ExecuteSqlCommandQuery(query);
 

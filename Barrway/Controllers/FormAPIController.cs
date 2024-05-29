@@ -171,6 +171,92 @@ namespace Barrway.Controllers
                             e["end"] = Convert.ToDateTime(e["end"]).ToString("yyyy-MM-ddTHH:mm:ss");
                         }
                     });
+
+                    if (data.IsMarketplaceRequest)
+                    {
+                        var alreadyEnrolledEvents = (await publicUserService.GetAlreadyEnrolledEvents(data.COMPANY_CODE, UserIdentity.UserEmail, data.filter.value)).Data as List<IDictionary<string, object>>;
+                        if (alreadyEnrolledEvents != null)
+                        {
+                            if (alreadyEnrolledEvents.Count > 0)
+                            {
+                                if (result != null)
+                                {
+                                    foreach (var item in result.data)
+                                    {
+                                        if (alreadyEnrolledEvents.Any(x => x["Id"]?.ToString() == item["Id"]?.ToString()))
+                                        {
+                                            item.Add("IsAlreadyBooked", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["IsAlreadyBooked"]);
+                                            item.Add("OverlapBookingFlag", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["OverlapBookingFlag"]);
+                                            item.Add("ATTEND", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["ATTEND"]);
+                                            item.Add("IsReviewable", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["IsReviewable"]);
+                                            item.Add("TransactionId", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["TransactionId"]);
+                                        }
+                                        else
+                                        {
+                                            item.Add("IsAlreadyBooked", 'N');
+                                            item.Add("OverlapBookingFlag", 'Y');
+                                            item.Add("IsReviewable", 'N');
+                                            item.Add("ATTEND", 'N');
+                                            item.Add("TransactionId", '0');
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        var calendarDetailsResult = await businessUserService.GetCalendarDetails(data.CALENDAR_CODE);
+                        var service = await businessUserService.GetServiceList(data.CALENDAR_CODE, data.COMPANY_CODE);
+
+                        if (calendarDetailsResult.Status)
+                        {
+                            var calendarDetails = calendarDetailsResult.Data as IDictionary<string, object>;
+
+                            string needOnlinePaymentFlag = "N";
+
+                            int days = 0;
+
+                            if (service.Data != null)
+                            {
+                                var serviceData = service.Data as List<IDictionary<string, object>>;
+                                if (serviceData.Any(x => x["Id"]?.ToString() == result.data[0]["activities"]?.ToString()))
+                                {
+                                    needOnlinePaymentFlag = serviceData.FirstOrDefault(x => x["Id"]?.ToString() == result.data[0]["activities"]?.ToString())["NEED_ONLINE_PAYMENT"]?.ToString();
+                                }
+                            }
+
+                            if (!string.IsNullOrEmpty(calendarDetails["BOOKING_DEADLINE"]?.ToString()))
+                            {
+                                try
+                                {
+                                    days = Convert.ToInt32(calendarDetails["BOOKING_DEADLINE"].ToString());
+                                }
+                                catch (Exception ex)
+                                {
+
+                                }
+                            }
+
+                            days = (days == 0) ? 0 : days + 1;
+
+                            foreach (var evt in result.data)
+                            {
+                                DateTime deadline = Convert.ToDateTime(evt["start"].ToString());
+                                if (days > 0)
+                                {
+                                    deadline = deadline.AddDays((days * -1));
+                                    deadline = (new DateTime(deadline.Year, deadline.Month, deadline.Day, 23, 59, 0));
+                                }
+
+                                evt.Add("NEED_ONLINE_PAYMENT", needOnlinePaymentFlag);
+                                evt.Add("BOOKING_DEADLINE", deadline.ToString("yyyy-MM-dd HH:mm"));
+                            }
+                        }
+                    }
+
+                    
+
+                        
+
                 }
             }
 
@@ -716,6 +802,8 @@ namespace Barrway.Controllers
             if (!data.IsPublicUser)
             {
                 var calendarDetailsResult = await businessUserService.GetCalendarDetails(data.CALENDAR_CODE);
+                var service = await businessUserService.GetServiceList(data.CALENDAR_CODE, data.COMPANY_CODE);
+
                 if (calendarDetailsResult.Status)
                 {
                     var calendarDetails = calendarDetailsResult.Data as IDictionary<string, object>;
@@ -735,7 +823,18 @@ namespace Barrway.Controllers
                         }
                     }
 
+                    string needOnlinePaymentFlag = "N";
+
                     int days = 0;
+
+                    if (service.Data != null)
+                    {
+                        var serviceData = service.Data as List<IDictionary<string, object>>;
+                        if (serviceData.Any(x => x["Id"]?.ToString() == result.events[0]["activities"]?.ToString()))
+                        {
+                            needOnlinePaymentFlag = serviceData.FirstOrDefault(x => x["Id"]?.ToString() == result.events[0]["activities"]?.ToString())["NEED_ONLINE_PAYMENT"]?.ToString();
+                        }
+                    }
 
                     if (!string.IsNullOrEmpty(calendarDetails["BOOKING_DEADLINE"]?.ToString()))
                     {
@@ -760,6 +859,7 @@ namespace Barrway.Controllers
                             deadline = (new DateTime(deadline.Year, deadline.Month, deadline.Day, 23, 59, 0));
                         }
 
+                        evt.Add("NEED_ONLINE_PAYMENT", needOnlinePaymentFlag);
                         evt.Add("BOOKING_DEADLINE", deadline.ToString("yyyy-MM-dd HH:mm"));
                     }
                 }
