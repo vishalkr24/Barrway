@@ -15681,6 +15681,27 @@ function NewformEntryfunctionality(formid, isEdit) {
             $('div.border-ACTIVITY_CODE').hide();
         }
 
+        $.ajax({
+            url: "/BusinessAdmin/GetSingleCalendar",
+            method: "post",
+            data: {
+                CalendarCode: localStorage.getItem("CALENDAR_CODE")
+            },
+            success: function (response) {
+                if (response.Status) {
+                    if (response.Data.SERVICE_CHARGE_BY == 'COURSE') {
+                        $("input[name=SERVICE_PAY_PER][value=COURSE]").attr("checked", true)
+                        $("input[name=SERVICE_PAY_PER][value=CLASS]").attr("checked", false)
+                        $("input[name=SERVICE_PAY_PER][value=CLASS]").attr("disabled", true)
+                    } else {
+                        $("input[name=SERVICE_PAY_PER][value=CLASS]").attr("checked", true)
+                        $("input[name=SERVICE_PAY_PER][value=COURSE]").attr("checked", false)
+                        $("input[name=SERVICE_PAY_PER][value=COURSE]").attr("disabled", true)
+                    }
+                }
+            }
+        })
+
         setTimeout(function () {
             if ($("input[name^=IS_SERVICE_PAID]:checked").val() == 'N') {
                 $("input[name^=fees_1]").val("0");

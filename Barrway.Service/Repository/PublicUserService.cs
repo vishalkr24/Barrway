@@ -2435,7 +2435,8 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
             {
                 var balance = await GetUserCoinBalance(UserId, CompanyCode, CalendarCode);
                 var service = await sqlFunction.ExecuteSqlQuery("select fees_1, IS_SERVICE_PAID from SERVICE_MASTER_1933 where Id = " + ServiceId);
-                var calendar = await sqlFunction.ExecuteSqlQuery($@"select * from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE = '{CalendarCode}'");
+                var calendar = await sqlFunction.ExecuteSqlQuery($@"select cmp.COMPANY_NAME_ENGLISH, cal.* from BUSINESS_CALENDAR_MASTER_1925 cal
+                                                                    join BUSINESS_COMPANY_MASTER_1924 cmp on cmp.COMPANY_CODE = cal.COMPANY_CODE where cal.CALENDAR_CODE = '{CalendarCode}'");
 
                 bool IsServicePaid = false;
                 double ServiceFees = 0;
@@ -2499,19 +2500,19 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
                     {
                         if (Convert.ToInt32(balance.Data) < ServiceFees)
                         {
-                            return new AddUpdateDelete() { Status = false, Message = $"You have {balance.Data} credits, not enough to book this slot.", Data = ServiceFees.ToString() };
+                            return new AddUpdateDelete() { Status = false, Message = $"You have {balance.Data} credits, not enough to book this slot.", Data = new { fees = ServiceFees.ToString(), company = calendar[0]["COMPANY_NAME_ENGLISH"].ToString() } };
                         }
                     }
                     else
                     {
-                        return new AddUpdateDelete() { Status = false, Message = $"You have {balance.Data} credits, not enough to book this slot.", Data = ServiceFees.ToString() };
+                        return new AddUpdateDelete() { Status = false, Message = $"You have {balance.Data} credits, not enough to book this slot.", Data = new { fees = ServiceFees.ToString(), company = calendar[0]["COMPANY_NAME_ENGLISH"].ToString() } };
                     }
 
-                    return new AddUpdateDelete() { Status = true, Message = "" + ServiceFees.ToString() + " credits will be deducted from your " + calendar[0]["CALENDAR_NAME"].ToString() + " Calendar package.<br />(Balance after purchase " + (Convert.ToInt32(balance.Data) - ServiceFees).ToString() + " credits).", Data = ServiceFees.ToString() };
+                    return new AddUpdateDelete() { Status = true, Message = "" + ServiceFees.ToString() + " credits will be deducted from your " + calendar[0]["CALENDAR_NAME"].ToString() + " Calendar package.<br />(Balance after purchase " + (Convert.ToInt32(balance.Data) - ServiceFees).ToString() + " credits).", Data = new { fees = ServiceFees.ToString(), company = calendar[0]["COMPANY_NAME_ENGLISH"].ToString() } };
                 }
                 else
                 {
-                    return new AddUpdateDelete() { Status = true, Message = "Are you sure to book this event?", Data = ServiceFees.ToString() };
+                    return new AddUpdateDelete() { Status = true, Message = "Are you sure to book this event?", Data = new { fees = ServiceFees.ToString(), company = calendar[0]["COMPANY_NAME_ENGLISH"].ToString() } };
                 }
 
             }

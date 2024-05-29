@@ -2123,6 +2123,7 @@
                                             $scope.navigateButtonFunc("default", "default");
 
                                             NewformEntryfunctionality($scope.currentFormId, $scope.isEdit);
+
                                         }, 150);
 
 
@@ -6144,7 +6145,7 @@
             } else {
 
             }
-            
+
 
             if ($scope.isEdit == true) {
                 if (DataService.isEmpty($scope.formDetailsDataInfo.recordAccessSecurity.own.edit_time) || $scope.formDetailsDataInfo.recordAccessSecurity.own.edit_time == 0 && $scope.formDetailsDataInfo.userID == $scope.userDetail.Id) {
