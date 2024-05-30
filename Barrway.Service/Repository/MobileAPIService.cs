@@ -245,7 +245,7 @@ namespace Barrway.Service.Repository
             string filterQuery = "";
             if (filterQueryList.Count() > 0)
             {
-                
+
                 filterQuery = " AND (" + string.Join(" and ", filterQueryList) + ")";
                 //filterQuery = " AND (" + string.Join(" OR ", filterQueryList) + ")";
             }
@@ -482,7 +482,7 @@ namespace Barrway.Service.Repository
 
         public async Task<List<ModifiedMyBooking>> GetMyBookings(MyBookingApiModel modelstring, string email, string Type, string EventId = null)
         {
-            
+
             modelstring.page = modelstring.page == 0 ? 1 : modelstring.page;
             modelstring.size = modelstring.size == 0 ? 10 : modelstring.size;
             string sqlString = $@"DECLARE @retval nvarchar(max);       DECLARE @sQuery nvarchar(max); DECLARE @ParmDefinition nvarchar(max);                        
@@ -886,7 +886,7 @@ namespace Barrway.Service.Repository
 
 
 
-        public async Task<AddUpdateDelete> CancelBooking(string SLOT,string USER_EMAIL,string USER_ID)
+        public async Task<AddUpdateDelete> CancelBooking(string SLOT, string USER_EMAIL, string USER_ID)
         {
             string query = $@"select ser.CANCELLATION_BEFORE, cf.[start], cf.[end], ser.[SERVICE_PAY_PER], t.* from CALENDAR_FORM_1935 cf
                                 join TRANSACTION_MASTER_1942 t on t.SLOT = cf.Id
@@ -1235,7 +1235,7 @@ namespace Barrway.Service.Repository
 
 
 
-        public async Task<ModifiedMyBooking> GetMyBookingsDetails(string email,  string EventId = null)
+        public async Task<ModifiedMyBooking> GetMyBookingsDetails(string email, string EventId = null)
         {
 
 
@@ -1555,7 +1555,22 @@ namespace Barrway.Service.Repository
             data.isCalender = 1;
             data.formId = (int)FormSetting.CALENDAR_FORM;
             string filterQuery = CustomMethods.GetDateQuery(calendarRequest.start, calendarRequest.end);
-            data.filter = new FilterDTO() { field = "start", value = filterQuery + " and F.COMPANY_CODE=N'" + calendarRequest.COMPANY_CODE + "' and F.CALENDAR_CODE=N'" + calendarRequest.CALENDAR_CODE + "'" };
+
+            string fiterstring = "";
+
+            if (!string.IsNullOrEmpty(calendarRequest.COMPANY_CODE))
+            {
+                fiterstring += " and F.COMPANY_CODE=N'" + calendarRequest.COMPANY_CODE + "'";
+            }
+
+
+            if (!string.IsNullOrEmpty(calendarRequest.CALENDAR_CODE))
+            {
+                fiterstring += "' and F.CALENDAR_CODE=N'" + calendarRequest.CALENDAR_CODE + "'";
+            }
+
+            data.filter = new FilterDTO() { field = "start", value = filterQuery + fiterstring };
+            //data.filter = new FilterDTO() { field = "start", value = filterQuery + " and F.COMPANY_CODE=N'" + calendarRequest.COMPANY_CODE + "' and F.CALENDAR_CODE=N'" + calendarRequest.CALENDAR_CODE + "'" };
 
             ReferalFormDataResponseModel result = await formAPIRepository.getReferralFormFields(data);
 
@@ -1637,11 +1652,11 @@ namespace Barrway.Service.Repository
                     }
                 }
 
-               
+
 
                 if (!string.IsNullOrEmpty(data.CalendarCode) && !string.IsNullOrEmpty(data.COMPANY_CODE))
                 {
-                    FilterString = " WHERE  COMPANY_CODE='" + data.COMPANY_CODE + "' AND CALENDAR_CODE='"+ data.CalendarCode + "'";
+                    FilterString = " WHERE  COMPANY_CODE='" + data.COMPANY_CODE + "' AND CALENDAR_CODE='" + data.CalendarCode + "'";
                 }
                 else if (!string.IsNullOrEmpty(data.CalendarCode))
                 {
@@ -1653,7 +1668,7 @@ namespace Barrway.Service.Repository
                 }
 
 
-                
+
 
                 int PageSize = data.size > 0 ? data.size : 20;
                 int PageNumber = data.page > 0 ? data.page : 1;
@@ -1947,7 +1962,7 @@ namespace Barrway.Service.Repository
                 int PageSize = data.size > 0 ? data.size : 20;
                 int PageNumber = data.page > 0 ? data.page : 1;
 
-                if (data.COMPANY_CODE !="")
+                if (data.COMPANY_CODE != "")
                 {
                     searchFilter += " and f.COMPANY_CODE ='" + data.COMPANY_CODE + "'";
                 }
@@ -2005,7 +2020,7 @@ namespace Barrway.Service.Repository
         }
 
 
-        public async Task<AddUpdateDeleteAPI> AddToFavoriteCalendar(FavoriteCalendarViewModel model,string UserId)
+        public async Task<AddUpdateDeleteAPI> AddToFavoriteCalendar(FavoriteCalendarViewModel model, string UserId)
         {
             string query = $@"select * from FAVORITE_CALENDAR_MASTER_1949 where USER_ID = '{UserId}' and CALENDAR_CODE = '{model.CALENDAR_CODE}' and COMPANY_CODE = '{model.COMPANY_CODE}'";
 
@@ -2066,7 +2081,7 @@ namespace Barrway.Service.Repository
         }
 
 
-       
+
 
         public async Task<FavouriteCalendarDetails> CalendarDtails(FavoriteCalendarViewModel model, string UserId)
         {
@@ -2113,11 +2128,11 @@ namespace Barrway.Service.Repository
 	                                where  COMPANY_CODE='{model.COMPANY_CODE}' and  CALENDAR_CODE='{model.CALENDAR_CODE}'";
 
                 var result = (await sqlFunction.ExecuteSqlQuery<FavouriteCalendarDetails>(query)).FirstOrDefault();
-                if (result !=null)
+                if (result != null)
                 {
 
                     result.CALENDAR_PHOTO_PATH = GetFilepath(result.CALENDAR_PHOTO_PATH);
-                  
+
                     return result;
                 }
                 else
@@ -2158,8 +2173,8 @@ namespace Barrway.Service.Repository
 
                 var customFormsSplit = result.customForms.Split(',').ToList();
                 var customFormIdsSplit = result.customFormIds.Split(',').ToList();
-                var customTitleSplit = result.customTitle.Split(',').ToList();                              
-                
+                var customTitleSplit = result.customTitle.Split(',').ToList();
+
                 string locamaster = ((int)FormSetting.LOCATION_MASTER).ToString();
 
                 List<EventFormData> eventFormDatas = new List<EventFormData>();
@@ -2198,10 +2213,10 @@ namespace Barrway.Service.Repository
                 return new EventDetails();
             }
 
-            
+
 
         }
-      #endregion
+        #endregion
 
     }
 }
