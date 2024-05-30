@@ -725,7 +725,6 @@ namespace Barrway.Controllers
                 PublicAccountModel businessModel = new PublicAccountModel()
                 {
                     USER_ID = model.USER_NAME,
-                    CURRENT_STEP = "PENDING",
                     DATE_OF_BIRTH = null,
                     FIRST_NAME = model.FIRST_NAME,
                     LAST_NAME = model.LAST_NAME
@@ -876,7 +875,6 @@ namespace Barrway.Controllers
                 PublicAccountModel businessModel = new PublicAccountModel()
                 {
                     USER_ID = model.USER_NAME,
-                    CURRENT_STEP = "PENDING",
                     DATE_OF_BIRTH = null,
                     FIRST_NAME = model.FIRST_NAME,
                     LAST_NAME = model.LAST_NAME,
@@ -1284,20 +1282,9 @@ namespace Barrway.Controllers
                     if (verificationResult.Status)
                     {
                         TempData["success"] = "Email verification successfull.";
-
-                        if (role == "BUSINESS_USER")
+                        if (role == "GENERAL_USER")
                         {
-                            int affectedRows = await sqlFunction.ExecuteSqlCommandQuery("update BUSINESS_ACCOUNT_WEBSITE_1918 set CURRENT_STEP = 'COMPANY PROFILE' where USER_ID = N'" + userName + "'");
-                            return View();
-                        }
-                        else if (role == "PUBLIC_USER")
-                        {
-                            int affectedRows = await sqlFunction.ExecuteSqlCommandQuery("update PUBLIC_USER_ACCOUNT_1943 set CURRENT_STEP = 'COMPLETED' where USER_ID = N'" + userName + "'");
-                            return View();
-                        }
-                        else if (role == "GENERAL_USER")
-                        {
-                            int affectedRows = await sqlFunction.ExecuteSqlCommandQuery("update USER_MASTER_1915 set CURRENT_STEP = 'COMPANY PROFILE' where USER_ID = N'" + userName + "'; update PUBLIC_USER_ACCOUNT_1943 set CURRENT_STEP = 'COMPLETED' where USER_ID = '" + userName + "'");
+                            int affectedRows = await sqlFunction.ExecuteSqlCommandQuery("update USER_MASTER_1915 set CURRENT_STEP = 'COMPANY PROFILE' where USER_ID = N'" + userName + "'");
                             return View();
                         }
 
