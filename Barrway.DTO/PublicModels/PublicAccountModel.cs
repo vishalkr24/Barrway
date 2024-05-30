@@ -13,10 +13,8 @@ namespace Barrway.DTO.PublicModels
     public class PublicAccountModel
     {
         public string Id { get; set; }
-        public string CURRENT_STEP { get; set; }
         public string SUBSCRIPTION_PLAN_ID { get; set; }
         public string USER_ID { get; set; }
-
         public string PROFILE_PHOTO_PATH { get; set; } = string.Empty;
         public string PROFILE_PHOTO_NAME { get; set; } = string.Empty;
         public string FIRST_NAME { get; set; } = string.Empty;

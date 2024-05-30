@@ -86,8 +86,7 @@ namespace Barrway.Controllers.API.v1
 
                 PublicAccountModel businessModel = new PublicAccountModel()
                 {
-                    USER_ID = model.USER_NAME,
-                    CURRENT_STEP = "PENDING"
+                    USER_ID = model.USER_NAME
                 };
 
                 AddUpdateDelete publicResult = await publicUserService.CreatePublicUserAccount(businessModel);

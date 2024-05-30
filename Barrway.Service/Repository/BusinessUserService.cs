@@ -330,7 +330,7 @@ namespace Barrway.Service.Repository
 
         public async Task<AddUpdateDelete> UpdateInvitationStatus(string Token, string Status, string UserId)
         {
-            string query = $@"update USER_MASTER_1915 set COMPANY_PROFILE_STATUS = 'Y', COMPANY_CALENDAR_STATUS = 'Y', CURRENT_STEP = 'COMPLETED', PROFILE_STATUS = 'COMPLETED' where USER_ID = N'{UserId}'";
+            string query = $@"update USER_MASTER_1915 set COMPANY_PROFILE_STATUS = 'Y', COMPANY_CALENDAR_STATUS = 'Y', CURRENT_STEP = 'COMPLETED' where USER_ID = N'{UserId}'";
 
             var updateResult = await sqlFunction.ExecuteSqlCommandQuery(query);
 
