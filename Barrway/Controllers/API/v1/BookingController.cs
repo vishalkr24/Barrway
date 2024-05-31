@@ -65,8 +65,8 @@ namespace Barrway.Controllers.API.v1
         {
             try
             {
-                var result = await mobileAPIService.CancelBooking(SLOT, APIUserIdentity.UserEmail, APIUserIdentity.UserID);
-                return Ok(result);
+                var result = await mobileAPIService.CancelBooking(SLOT, APIUserIdentity.UserEmail, APIUserIdentity.UserName); //APIUserIdentity.UserID
+                return Ok(result); 
             }
             catch (Exception ex)
             {
