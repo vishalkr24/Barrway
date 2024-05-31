@@ -4131,7 +4131,56 @@
 
         }
 
+        $(document).on('click', '.img-wrapclose', function () {
+            try {
+                var id = $((this).parentElement.parentElement.parentElement.parentElement).find("input[type='file']").attr('id');
+                var fileString = $("input:hidden[name=" + id + "]").val();
+                if (typeof fileString === "undefined") {
+                    id = $((this).parentElement.parentElement.parentElement.parentElement).find("input[type='file']").attr('id');
+                    $("input:hidden[name=" + singleId + "]").attr('value', '');
+                    fileString = '';
+                    (this).parentElement.parentElement.parentElement.getElementsByTagName('input')[0].value = "";
+                } else {
+                    //(this).parentElement.parentElement.parentElement.parentElement.getElementsByTagName('input')[0].value = "";
+                    document.getElementById(id).value = null;
+                }
+                fileString = fileString.split(',');
+                var removeTofile = (this).parentElement.getElementsByTagName('p')[0].innerHTML;
+                var newStringUrl = "";
+                angular.forEach(fileString, function (value1, key) {
+                    var innerArr = value1.split('/');
+                    var fileNameFromUrl = innerArr[innerArr.length - 1];
+                    //removeTofile = removeTofile.substr(removeTofile.indexOf())
+                    removeTofile = removeTofile.substr(0, removeTofile.lastIndexOf("."));
+                    fileNameFromUrl = fileNameFromUrl.substr(0, fileNameFromUrl.lastIndexOf("."));
+                    if (!fileNameFromUrl.includes(removeTofile)) {
+                        if (newStringUrl == "")
+                            newStringUrl = value1;
+                        else {
+                            if (newStringUrl.indexOf(value1) == -1)
+                                newStringUrl += "," + value1;
+                        }
+                    }
+                });
+                $("input:hidden[name=" + id + "]").attr('value', newStringUrl);
+            }
+            catch (ex) {
+                //for single upload 
+                var singleId = (this).parentElement.parentElement.parentElement.getElementsByTagName('input')[0].id;
+                $("input:hidden[name=" + singleId + "]").attr('value', '');
+            }
 
+            try {
+                (this).parentElement.getElementsByTagName('img')[0].src = "";
+            }
+            catch (e) {
+                console.log((this).parentElement.getElementsByTagName('p')[0]);
+                var p = (this).parentElement.getElementsByTagName('p')[0];
+                p.innerHTML = '';
+            }
+
+            $(this).parent().addClass("hidden");
+        });
 
     </script>
 

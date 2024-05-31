@@ -1533,6 +1533,11 @@ namespace Barrway.Service.Repository
         {
             try
             {
+                var checkUserAdditionalForm = await CheckAddtionalFormUserEntry(Convert.ToInt32(formId), Convert.ToInt32(UserId));
+                if (checkUserAdditionalForm) { 
+                return new AddUpdateDelete() { Status=false,Message= "Our records indicate that you have already completed this form." };
+                }
+
                 List<string> requestList = new List<string>();
                 List<string> formGroupKeyListTemp = new List<string>();
                 Dictionary<string, object> sd = new Dictionary<string, object>();
@@ -1597,6 +1602,37 @@ namespace Barrway.Service.Repository
             catch (Exception ex)
             {
                 return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+        private async Task<bool> CheckAddtionalFormUserEntry(int formId, int createdId)
+        {
+            try
+            {
+
+                string tableString = $@"select FormTableName from topicFormDetails where TopicId = (select topicID from form where formID={formId})";
+
+                var tbl_res = await sqlFunction.ExecuteSqlQuery(tableString);
+
+                string table_name = "";
+                if (tbl_res.Count() > 0)
+                {
+                    table_name = tbl_res[0]["FormTableName"]?.ToString();
+                }
+                if (string.IsNullOrEmpty(table_name))
+                {
+                    return false;
+                }
+
+                string sqlQuery = $@"select  distinct f.*,um.USER_ID 
+                                    from  {table_name}   f 
+                                    join USER_MASTER_1915 um on um.Id=f.created_by  where f.Id!=0 and f.created_by={createdId}";
+                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+                return result.Count() > 0;
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
 
@@ -3098,5 +3134,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
                 return new List<IDictionary<string, object>>();
             }
         }
+
+        
     }
 }
