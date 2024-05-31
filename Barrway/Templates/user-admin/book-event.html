@@ -359,6 +359,22 @@
     img[id^="banner"] {
         width: 100% !important;
     }
+
+    input:disabled,
+    select:disabled,
+    textarea:disabled,
+    button:disabled {
+        background-color: #f0f0f0; /* Light gray background */
+        color: #a0a0a0; /* Gray text */
+        border: 1px solid #d0d0d0; /* Light gray border */
+        cursor: not-allowed; /* Change cursor to indicate disabled state */
+    }
+
+        /* Additional styling for a more consistent look */
+        input:disabled::placeholder,
+        textarea:disabled::placeholder {
+            color: #d0d0d0; /* Placeholder text color */
+        }
 </style>
 <section class="mihi-71">
 
@@ -467,6 +483,14 @@
 
                             </div>
                         </div>
+
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p class="text-danger" style="font-weight:bold" ng-show="selectEventDetails.IS_ADDITIONAL_FORM_ENTRY">Our records indicate that you have already completed this form.</p>
+                            </div>
+                        </div>
+
                         <form name="myForm" class="content tab-content" id="customFormNew" autocomplete="off">
 
                             <!--{{myForm.$valid}}-->
@@ -902,7 +926,6 @@
 <script>
     $(document).on('click', '.img-wrapclose', function () {
         try {
-            debugger;
             var id = $((this).parentElement.parentElement.parentElement.parentElement).find("input[type='file']").attr('id');
             var fileString = $("input:hidden[name=" + id + "]").val();
             if (typeof fileString === "undefined") {
@@ -920,26 +943,24 @@
             angular.forEach(fileString, function (value1, key) {
                 var innerArr = value1.split('/');
                 var fileNameFromUrl = innerArr[innerArr.length - 1];
-                if (removeTofile !== fileNameFromUrl) {
+                //removeTofile = removeTofile.substr(removeTofile.indexOf())
+                removeTofile = removeTofile.substr(0, removeTofile.lastIndexOf("."));
+                fileNameFromUrl = fileNameFromUrl.substr(0, fileNameFromUrl.lastIndexOf("."));
+                if (!fileNameFromUrl.includes(removeTofile)) {
                     if (newStringUrl == "")
                         newStringUrl = value1;
                     else {
                         if (newStringUrl.indexOf(value1) == -1)
                             newStringUrl += "," + value1;
                     }
-
                 }
-                console.log(value1);
             });
             $("input:hidden[name=" + id + "]").attr('value', newStringUrl);
         }
         catch (ex) {
             //for single upload 
             var singleId = (this).parentElement.parentElement.parentElement.getElementsByTagName('input')[0].id;
-
             $("input:hidden[name=" + singleId + "]").attr('value', '');
-
-            // (this).parentElement.parentElement.parentElement.getElementsByTagName('input')[0].val('')
         }
 
         try {

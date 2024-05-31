@@ -3647,11 +3647,67 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
             var result = await sqlFunction.ExecuteSqlQuery(sqlString);
             if (result.Count() > 0)
             {
-                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result.FirstOrDefault() };
+                bool IS_ADDITIONAL_FORM_ENTRY= false;
+                string clr_code = result[0]["CALENDAR_CODE"]?.ToString()??"";
+                if (!string.IsNullOrEmpty(clr_code)) {
+                    sqlString = $"select *from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE='{clr_code}'";
+                    var clr_result = await sqlFunction.ExecuteSqlQuery(sqlString);
+                    if (clr_result.Count() > 0) {
+
+                        string add_formid = clr_result[0]["ADDITIONAL_FORM_ID"]?.ToString() ?? "";
+
+                        sqlString = $"select *from USER_MASTER_1915 where USER_EMAIL='{email}'";
+
+                        var user_result = await sqlFunction.ExecuteSqlQuery(sqlString);
+                        if (user_result.Count() > 0) {
+                            int id = Convert.ToInt32(user_result[0]["Id"]);
+                            int _add_formid;
+                            if (int.TryParse(add_formid, out _add_formid)) {
+                                IS_ADDITIONAL_FORM_ENTRY = await CheckAddtionalFormUserEntry(_add_formid, id);
+                            }
+                        }
+                    }
+                }
+                var enroll = result.FirstOrDefault();
+
+                enroll.Add("IS_ADDITIONAL_FORM_ENTRY", IS_ADDITIONAL_FORM_ENTRY);
+
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = enroll };
             }
             else
             {
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
+        private async Task<bool> CheckAddtionalFormUserEntry(int formId, int createdId)
+        {
+            try
+            {
+
+                string tableString = $@"select FormTableName from topicFormDetails where TopicId = (select topicID from form where formID={formId})";
+
+                var tbl_res = await sqlFunction.ExecuteSqlQuery(tableString);
+
+                string table_name = "";
+                if (tbl_res.Count() > 0)
+                {
+                    table_name = tbl_res[0]["FormTableName"]?.ToString();
+                }
+                if (string.IsNullOrEmpty(table_name))
+                {
+                    return false;
+                }
+
+                string sqlQuery = $@"select  distinct f.*,um.USER_ID 
+                                    from  {table_name}   f 
+                                    join USER_MASTER_1915 um on um.Id=f.created_by  where f.Id!=0 and f.created_by={createdId}";
+                var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
+                return result.Count() > 0;
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
 

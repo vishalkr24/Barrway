@@ -1650,49 +1650,38 @@ List<HttpPostedFileBase> file1)
                                             {
                                                 using (var stream = new MemoryStream(imageBytes))
                                                 {
-                                                    var image = worksheet.AddPicture(stream);
-                                                    var cell = row.Cell(photoColumnIndex);
-                                                    cell.Value = string.Empty;
-                                                    // Move image to the cell and fit within the cell
-                                                    image.MoveTo(cell);
-
-                                                    //// Calculate scaling factors to fit image into the cell
-                                                    //double cellWidth = worksheet.Column(photoColumnIndex).Width * 7; // Column width in points (approximation)
-                                                    //double cellHeight = row.Height * 1.5; // Row height in points
-
-                                                    //using (var img = Image.FromStream(stream))
-                                                    //{
-                                                    //    double imgWidth = img.Width;
-                                                    //    double imgHeight = img.Height;
-
-                                                    //    double scaleWidth = cellWidth / imgWidth;
-                                                    //    double scaleHeight = cellHeight / imgHeight;
-
-                                                    //    // Use the smaller scale factor to fit the image within the cell
-                                                    //    double scaleFactor = Math.Min(scaleWidth, scaleHeight);
-                                                    //    image.Scale(scaleFactor);
-                                                    //}
-
-                                                    image.Width = 100;
-                                                    image.Height = 100;
-
-                                                    // Alternatively, if you need to scale the image to fit within 100x100 pixels, use the following:
-                                                    using (var img = Image.FromStream(stream))
+                                                    try
                                                     {
-                                                        double imgWidth = img.Width;
-                                                        double imgHeight = img.Height;
+                                                        var image = worksheet.AddPicture(stream);
+                                                        var cell = row.Cell(photoColumnIndex);
+                                                        cell.Value = string.Empty;
+                                                        // Move image to the cell and fit within the cell
+                                                        image.MoveTo(cell);
 
-                                                        double scaleWidth = 100 / imgWidth;
-                                                        double scaleHeight = 100 / imgHeight;
+                                                        image.Width = 100;
+                                                        image.Height = 100;
 
-                                                        // Use the smaller scale factor to fit the image within 100x100 pixels
-                                                        double scaleFactor = Math.Min(scaleWidth, scaleHeight);
-                                                        image.Scale(scaleFactor);
+                                                        // Alternatively, if you need to scale the image to fit within 100x100 pixels, use the following:
+                                                        using (var img = Image.FromStream(stream))
+                                                        {
+                                                            double imgWidth = img.Width;
+                                                            double imgHeight = img.Height;
 
-                                                        // Adjust image dimensions if needed
-                                                        image.Width = (int)(imgWidth * scaleFactor);
-                                                        image.Height = (int)(imgHeight * scaleFactor);
-                                                        row.Height = image.Height;
+                                                            double scaleWidth = 100 / imgWidth;
+                                                            double scaleHeight = 100 / imgHeight;
+
+                                                            // Use the smaller scale factor to fit the image within 100x100 pixels
+                                                            double scaleFactor = Math.Min(scaleWidth, scaleHeight);
+                                                            image.Scale(scaleFactor);
+
+                                                            // Adjust image dimensions if needed
+                                                            image.Width = (int)(imgWidth * scaleFactor);
+                                                            image.Height = (int)(imgHeight * scaleFactor);
+                                                            row.Height = image.Height;
+                                                        }
+                                                    }
+                                                    catch (Exception ex) { 
+                                                    
                                                     }
                                                 }
                                             }

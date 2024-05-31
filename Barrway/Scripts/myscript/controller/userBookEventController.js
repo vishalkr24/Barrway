@@ -94,6 +94,9 @@ var COMPANY_CODE = "";
                     if (IsJsonString(enrolled_data.ASSESSMENT_FILES_LIST)) {
                         $scope.selectEventDetails.ASSESSMENT_FILES_LIST_DATA = JSON.parse(enrolled_data.ASSESSMENT_FILES_LIST);
                     }
+                    $scope.selectEventDetails.IS_ADDITIONAL_FORM_ENTRY = enrolled_data.IS_ADDITIONAL_FORM_ENTRY;
+                } else {
+                    $scope.selectEventDetails.IS_ADDITIONAL_FORM_ENTRY = false;
                 }
 
                 if (!(moment().local().diff(moment($scope.selectEventDetails.start).format(), 'minute') <= 0)) {
@@ -754,6 +757,10 @@ var COMPANY_CODE = "";
                                     $(`#customFormNew input[name=${x}]`).val(dataModel[x]);
                                 }
                             });
+
+                            if ($scope.selectEventDetails.IS_ADDITIONAL_FORM_ENTRY) {
+                                $('#customFormNew :input').prop('disabled', true);
+                            }
 
                         }, 500);
                         
