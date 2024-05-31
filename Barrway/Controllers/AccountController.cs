@@ -642,7 +642,7 @@ namespace Barrway.Controllers
                 var user = await authService.GetUser(User.Identity.Name, FormRole.GENERAL_USER);
                 if (user.Status)
                 {
-                    return RedirectToAction("Dashboard", "UserAdmin");
+                    return RedirectToAction("Dashboard", "BusinessAdmin");
                 }
                 else
                 {

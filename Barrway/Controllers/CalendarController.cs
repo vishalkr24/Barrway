@@ -889,7 +889,7 @@ namespace Barrway.Controllers
                         // add or edit schedule
                         string formGroupKey = CustomMethods.CreateUUID();
 
-                        var response = await businessUserService.AddSchedularForm(data, formGroupKey);
+                        var response = await businessUserService.AddSchedularForm(data, formGroupKey, UserIdentity.UserName);
 
                         var executeResponse = await ExecuteSchedularForm((string.IsNullOrEmpty(data.Id)) ? response.Data.Id.ToString() : data.Id);
 
@@ -914,7 +914,7 @@ namespace Barrway.Controllers
                             if (Convert.ToInt32(data.Id) > 0)
                             {
                                 string formGroupKey = CustomMethods.CreateUUID();
-                                var response = await businessUserService.AddSchedularForm(data, formGroupKey);
+                                var response = await businessUserService.AddSchedularForm(data, formGroupKey, UserIdentity.UserName);
 
                                 return Json(new AddUpdateDelete() { Status = true, Message = "Success" }, JsonRequestBehavior.AllowGet);
                             }
@@ -955,7 +955,8 @@ namespace Barrway.Controllers
 
                             string formGroupKey = CustomMethods.CreateUUID();
 
-                            var response = await businessUserService.AddSchedularForm(data, formGroupKey);
+                            var response = await businessUserService.AddSchedularForm(data, formGroupKey, UserIdentity.UserName);
+
 
                             var executeResponse = await ExecuteSchedularForm(response.Data.Id.ToString(), response.Data.formGroupKey.ToString());
 

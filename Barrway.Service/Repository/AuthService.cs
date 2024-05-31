@@ -56,7 +56,7 @@ namespace Barrway.Service.Repository
 
                     if (!(user["IS_EMAIL_VERIFIED"]?.ToString() == "Y"))
                     {
-                        return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Email not verified, please contact support team." };
+                        return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Email not verified, click on forgot password and reset your password for email verification." };
                     }
 
                     if (user["IS_ACTIVE"]?.ToString() == "Y")
@@ -105,7 +105,7 @@ namespace Barrway.Service.Repository
 
                     if (!(user["IS_EMAIL_VERIFIED"]?.ToString() == "Y"))
                     {
-                        return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Email not verified, please contact support team." };
+                        return new AddUpdateDelete<IDictionary<string, object>>() { Status = false, Message = "Email not verified, click on forgot password and reset your password for email verification" };
                     }
 
                     if (user["IS_ACTIVE"]?.ToString() == "Y")
@@ -272,7 +272,7 @@ namespace Barrway.Service.Repository
 
                     if (!(user["IS_EMAIL_VERIFIED"]?.ToString() == "YES"))
                     {
-                        return new AddUpdateDelete() { Status = false, Message = "Email not verified, please contact support team." };
+                        return new AddUpdateDelete() { Status = false, Message = "Email not verified, click on forgot password and reset your password for email verification" };
                     }
 
                     if (user["IS_ACTIVE"]?.ToString() == "YES")
