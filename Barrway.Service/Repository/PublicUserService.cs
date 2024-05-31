@@ -212,7 +212,7 @@ namespace Barrway.Service.Repository
         }
 
 
-        public async Task<AddUpdateDelete> GetSingleEventDetails (string EventId)
+        public async Task<AddUpdateDelete> GetSingleEventDetails(string EventId)
         {
             string query = $@"DECLARE @retval nvarchar(max);       DECLARE @sQuery nvarchar(max); DECLARE @ParmDefinition nvarchar(max);                        
                             DECLARE @customTitleQuery nvarchar(max);                          
@@ -380,8 +380,9 @@ namespace Barrway.Service.Repository
                     subQuery = "USER_PASSWORD = '" + model.USER_PASSWORD + "'";
                 }
                 string dateofbirth = "NULL";
-                if (model.DATE_OF_BIRTH.HasValue) {
-                    dateofbirth = "'"+model.DATE_OF_BIRTH.Value.ToString("yyyy-MM-dd")+"'";
+                if (model.DATE_OF_BIRTH.HasValue)
+                {
+                    dateofbirth = "'" + model.DATE_OF_BIRTH.Value.ToString("yyyy-MM-dd") + "'";
                 }
 
                 string query = $@"update PUBLIC_USER_ACCOUNT_1943 set FIRST_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.FIRST_NAME)}', LAST_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.LAST_NAME)}', CHINESE_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.CHINESE_NAME)}', NICK_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.NICK_NAME)}', GENDER = '{model.GENDER}', DATE_OF_BIRTH = {dateofbirth} where USER_ID = N'{model.USER_ID}'
@@ -407,136 +408,25 @@ namespace Barrway.Service.Repository
         public async Task<AddUpdateDelete> EnrollPublicUserForCalendar(CalendarEnrollModel model, bool isServiceType = false, string PaymentId = null)
         {
             var user = await authService.GetUser(model.USER_ID, FormRole.GENERAL_USER);
+            string MasterQuery = "";
+            
+            MasterQuery = $@"select dbo.CheckOneToManyBookingValidations('{model.participant.CALENDAR_CODE}','{model.transaction.SLOT}','{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}','{PaymentId}','{model.USER_ID}','{model.USER_EMAIL}','{model.participant.COMPANY_CODE}','{model.transaction.ACTIVITY}','{model.transaction.RESOURCE}') as 'check'";
 
+            // check the validations
+            var dataCheck = await sqlFunction.ExecuteSqlQuery(MasterQuery);
 
-            // check for sufficient B$ Balance
-            var balance = await GetUserCoinBalance(model.USER_ID, model.participant.COMPANY_CODE, model.participant.CALENDAR_CODE);
-            var service = await sqlFunction.ExecuteSqlQuery("select fees_1, IS_SERVICE_PAID from SERVICE_MASTER_1933 where Id = " + model.transaction.ACTIVITY);
-
-            bool IsServicePaid = false;
-            int ServiceFees = 0;
-
-            if (!string.IsNullOrEmpty(service[0]["IS_SERVICE_PAID"]?.ToString()))
+            if (dataCheck != null)
             {
-                if (service[0]["IS_SERVICE_PAID"]?.ToString() == "Y")
+                if (dataCheck.Count > 0)
                 {
-                    if (!string.IsNullOrEmpty(service[0]["fees_1"]?.ToString()))
+                    var splitResult = dataCheck.FirstOrDefault()["check"]?.ToString().Split(',').ToList();
+
+                    if (splitResult[1]?.ToString() == "N")
                     {
-                        if (Convert.ToInt32(service[0]["fees_1"]) > 0)
-                        {
-                            IsServicePaid = true;
-                            ServiceFees = Convert.ToInt32(service[0]["fees_1"]);
-                        }
-                        else
-                        {
-                            IsServicePaid = false;
-                            ServiceFees = 0;
-                        }
-                    }
-                    else
-                    {
-                        IsServicePaid = false;
-                        ServiceFees = 0;
+                        return new AddUpdateDelete() { Status = false, Message = splitResult[0] };
                     }
                 }
-                else
-                {
-                    IsServicePaid = false;
-                    ServiceFees = 0;
-                }
-
             }
-            else
-            {
-                IsServicePaid = false;
-                ServiceFees = 0;
-            }
-
-            if (IsServicePaid && string.IsNullOrEmpty(PaymentId))
-            {
-                if (balance.Data > 0)
-                {
-                    if (Convert.ToInt32(balance.Data) < Convert.ToInt32(service[0]["fees_1"]))
-                    {
-                        return new AddUpdateDelete() { Status = false, Message = "You don't have enough credits of this calendar to book this slot." };
-                    }
-                    else
-                    {
-                        model.transaction.transaction_fees = ServiceFees.ToString();
-                    }
-                }
-                else
-                {
-                    return new AddUpdateDelete() { Status = false, Message = "You don't have enough credits of this calendar to book this slot." };
-                }
-            }
-            else
-            {
-                model.transaction.transaction_fees = ServiceFees.ToString();
-            }
-
-            // check for booking deadline
-
-            var calendarDetails = (await businessUserService.GetCalendarDetails(model.participant.CALENDAR_CODE)).Data as IDictionary<string, object>;
-
-            if (!string.IsNullOrEmpty(calendarDetails["BOOKING_DEADLINE"]?.ToString()))
-            {
-                int days = 0;
-
-                try
-                {
-                    days = Convert.ToInt32(calendarDetails["BOOKING_DEADLINE"].ToString());
-                }
-                catch (Exception ex)
-                {
-
-                }
-
-                days += 1;
-
-                var evt = (await GetSingleEventDetails(model.transaction.SLOT)).Data as IDictionary<string, object>;
-
-                DateTime deadline = Convert.ToDateTime(evt["start"].ToString()).AddDays((days * -1));
-                DateTime deadlineDate = new DateTime(deadline.Year, deadline.Month, deadline.Day, 23, 59, 0);
-
-                if (DateTimeUtility.Now() > deadlineDate)
-                {
-                    return new AddUpdateDelete() { Message = "DEADLINE-CROSSED", Status = false };
-                }
-
-            }
-
-
-            // check if the user limit is crossed or not
-            if (!isServiceType)
-            {
-                List<IDictionary<string, object>> totalUsersEnrolled = await sqlFunction.ExecuteSqlQuery($@"select COUNT(*) as 'COUNT' from TRANSACTION_MASTER_1942 transaction_m
-                                                                                                        join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
-                                                                                                        where ACTIVITY = '{model.transaction.ACTIVITY.ToString()}' and SLOT = '{model.transaction.SLOT.ToString()}'");
-
-                List<IDictionary<string, object>> currentLimit = await sqlFunction.ExecuteSqlQuery($@"select MAXIMUM_NO_OF_PARTICIPANTS from SERVICE_MASTER_1933 where Id = '{model.transaction.ACTIVITY.ToString()}'");
-
-                try
-                {
-                    if (!string.IsNullOrEmpty(currentLimit[0]["MAXIMUM_NO_OF_PARTICIPANTS"].ToString()))
-                    {
-                        if (Convert.ToInt32(currentLimit[0]["MAXIMUM_NO_OF_PARTICIPANTS"].ToString()) > 0)
-                        {
-                            if (Convert.ToInt32(totalUsersEnrolled[0]["COUNT"].ToString()) >= Convert.ToInt32(currentLimit[0]["MAXIMUM_NO_OF_PARTICIPANTS"].ToString()))
-                            {
-                                return new AddUpdateDelete() { Message = "LIMIT-ERROR", Status = false };
-                            }
-                        }
-                    }
-
-                }
-                catch (Exception ex)
-                {
-
-                }
-            }
-
-            // Check if the user already exist in the participant master
 
             List<IDictionary<string, object>> participantCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from PARTICIPANT_MASTER_1940 where EMAIL = '{user.Data["USER_EMAIL"]}' and COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE}'");
 
@@ -609,6 +499,23 @@ namespace Barrway.Service.Repository
                     return new AddUpdateDelete() { Message = "Failed to add participant", Status = false };
                 }
 
+            }
+
+            // recheck the validations
+            dataCheck = await sqlFunction.ExecuteSqlQuery(MasterQuery);
+            
+            if (dataCheck != null)
+            {
+                if (dataCheck.Count > 0)
+                {
+                    var splitResult = dataCheck.FirstOrDefault()["check"]?.ToString().Split(',').ToList();
+
+                    if (splitResult[1]?.ToString() == "N")
+                    {
+                        return new AddUpdateDelete() { Status = false, Message = splitResult[0] };
+                    }
+
+                }
             }
 
             // send Entry into transaction master
@@ -1529,7 +1436,7 @@ namespace Barrway.Service.Repository
             return new AddUpdateDelete() { Status = false, Message = "Invalid response!" };
         }
 
-        public async Task<AddUpdateDelete> CreateDynamicFormEntry(List<IDictionary<string, string>> model, string formId, string UserId, string CalendarCode,string UserName)
+        public async Task<AddUpdateDelete> CreateDynamicFormEntry(List<IDictionary<string, string>> model, string formId, string UserId, string CalendarCode, string UserName)
         {
             try
             {
@@ -1869,7 +1776,7 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> GetAllEnrolledCalendars(string userEmail,string cmpCode)
+        public async Task<AddUpdateDelete> GetAllEnrolledCalendars(string userEmail, string cmpCode)
         {
             try
             {
@@ -2350,7 +2257,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
 
                             if (result.Count > 0)
                             {
-                                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success,Data= TableName };
+                                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = TableName };
                             }
                             else
                             {
@@ -2813,25 +2720,25 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
                                         item.Add("OverlapBookingFlag", "N");
                                     }
 
-                                    item["IsAlreadyBooked"] = 'Y';
-                                    item["ATTEND"] = alreadyEnrolledEvents.FirstOrDefault(x => x["SLOT"]?.ToString() == item["Id"]?.ToString())["ATTEND"];
+                                    item["IsAlreadyBooked"] = "Y";
+                                    item["ATTEND"] = alreadyEnrolledEvents.FirstOrDefault(x => x["SLOT"]?.ToString() == item["Id"]?.ToString())["ATTEND"]?.ToString();
                                     item["TransactionId"] = alreadyEnrolledEvents.FirstOrDefault(x => x["SLOT"]?.ToString() == item["Id"]?.ToString())["Id"];
                                     //if (DateTimeUtility.Now() > Convert.ToDateTime(alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["end"]?.ToString()) && alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["SESSION_REVIEWED"]?.ToString() == "N")
                                     if (DateTimeUtility.Now() > Convert.ToDateTime(item["start"]?.ToString()))
                                     {
-                                        item["IsReviewable"] = 'Y';
+                                        item["IsReviewable"] = "Y";
                                     }
                                     else
                                     {
-                                        item["IsReviewable"] = 'N';
+                                        item["IsReviewable"] = "N";
                                     }
                                 }
                                 else
                                 {
-                                    item["IsAlreadyBooked"] = 'N';
-                                    item["IsReviewable"] = 'N';
+                                    item["IsAlreadyBooked"] = "N";
+                                    item["IsReviewable"] = "N";
                                     item["ATTEND"] = 'N';
-                                    item["TransactionId"] = '0';
+                                    item["TransactionId"] = "0";
 
 
                                     if (checkOverlapBooking)
@@ -3041,14 +2948,16 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
                 var tbl_res = await sqlFunction.ExecuteSqlQuery(tableString);
 
                 string table_name = "";
-                if (tbl_res.Count() > 0) {
+                if (tbl_res.Count() > 0)
+                {
                     table_name = tbl_res[0]["FormTableName"]?.ToString();
                 }
-                if (string.IsNullOrEmpty(table_name)) {
+                if (string.IsNullOrEmpty(table_name))
+                {
                     return new List<IDictionary<string, object>>();
                 }
 
-                
+
                 string column = "", dir = "";
                 if (data.sorters != null && data.sorters.Count() > 0)
                 {
@@ -3062,7 +2971,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
                 }
 
                 List<string> applyFilter = new List<string>();
-                IDictionary<string,string> queryFilters= new Dictionary<string, string>() { { "USER_ID","um.USER_ID"} };
+                IDictionary<string, string> queryFilters = new Dictionary<string, string>() { { "USER_ID", "um.USER_ID" } };
                 if (data.filters != null && data.filters.Count() > 0)
                 {
                     foreach (var item in data.filters)
@@ -3074,7 +2983,8 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
                                 string filter = $" {queryFilters[item.field]} like N'%{item.value}%'";
                                 applyFilter.Add(filter);
                             }
-                            else {
+                            else
+                            {
                                 string filter = CustomMethods.generateHeaderFilterSearchQuery(item.field, item.value);
                                 if (!string.IsNullOrEmpty(filter))
                                     applyFilter.Add(filter);
