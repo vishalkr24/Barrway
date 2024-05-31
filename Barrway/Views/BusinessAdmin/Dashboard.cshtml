@@ -4,6 +4,15 @@
     ViewBag.Title = @Resource.Dashboard;
 }
 
+<style>
+    .setup-card{
+        min-width: max-content;
+        max-width: 320px;
+    }
+
+
+</style>
+
 <main id="content" role="main" class="main" style="display:none;">
     <!-- Content -->
     <div class="content container-fluid">
@@ -16,26 +25,26 @@
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <div class="row" style="max-width: 80%;">
+                <div class="row">
                     
-                    <div class="startbusiness row" style="margin-left:0px;">
+                    <div class="startbusiness row" style="margin-left:0px; max-width:100%;">
                         <div class="col-md-12">
                             <div class="hed-til">
-                                <h1>3 Steps to start your business here.</h1>
+                                <h1>4 Steps to start your business here.</h1>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="setup-card">
                             <div class="setup">
                                 <span>@Resource.Step 1</span>
                                 <br />
                                 <h3>@Resource.Set_up_company_profile</h3>
-                                
+
                                 <span id="CompanyProfileSetupBtn" onclick="location.href = '/BusinessAdmin/SetupCompanyProfile?IsNew=true'">
                                     <a href="javascript:void(0)" class="purple">@Resource.Go</a>
                                 </span>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="setup-card">
                             <div class="setup">
                                 <span>@Resource.Step 2</span>
                                 <br />
@@ -46,9 +55,20 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="setup-card">
                             <div class="setup">
                                 <span>@Resource.Step 3</span>
+                                <br />
+                                <h3>Setup up business schedule</h3>
+
+                                <span id="CalendarSetupBtn" onclick="location.href = '/BusinessAdmin/SetupCompanyCalendar?IsPartial=true'">
+                                    <a href="javascript:void(0)" class="purple">@Resource.Go</a>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="setup-card">
+                            <div class="setup">
+                                <span>@Resource.Step 4</span>
                                 <br />
                                 <h3>@Resource.Set_up_company_webiste</h3>
 
@@ -57,7 +77,18 @@
                                 </span>
                             </div>
                         </div>
-                        
+                        <div class="setup-card">
+                            <div class="setup d-flex align-items-center" style="height: 139.05px;">
+                                <div style="width:40%" class="text-center">
+                                    <img src="~/assets/img/setup_demo.png" style="width: 100%; max-width: 75px; height: 80px;" />
+                                </div>
+                                <div style="width: 60%; padding-left: 4px; font-size: 24px; font-weight: bold; color: #E2476C;">
+                                    Quick start guide
+                                </div>
+
+                            </div>
+                            
+                        </div>
                     </div>
                 </div>
             </div>
