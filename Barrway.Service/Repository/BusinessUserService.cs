@@ -2433,7 +2433,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
 
                                 if (website.Data["CURRENT_STEP"].ToString() == "CALENDAR")
                                 {
-                                    query = "update USER_MASTER_1915 set CURRENT_STEP = 'COMPANY WEBSITE', updated_at = getdate()  where USER_ID = N'" + UserId + "'";
+                                    query = "update USER_MASTER_1915 set CURRENT_STEP = 'SCHEDULE', updated_at = getdate()  where USER_ID = N'" + UserId + "'";
                                     saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
                                 }
                             }
@@ -2721,7 +2721,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
             }
         }
 
-        public async Task<AddUpdateDelete> AddSchedularForm(SchedularFormModel model, string formGroupKey)
+        public async Task<AddUpdateDelete> AddSchedularForm(SchedularFormModel model, string formGroupKey, string UserId)
         {
             bool createNewSchedule = false;
             if (!string.IsNullOrEmpty(model.Id))
@@ -2766,6 +2766,15 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                         formGroupKey = data.formGroupKey
                     };
 
+                    var website = await GetSingleBusinessWebsite(UserId);
+                    if (website.Status)
+                    {
+                        if (website.Data["CURRENT_STEP"].ToString() == "SCHEDULE")
+                        {
+                            string query = "update USER_MASTER_1915 set CURRENT_STEP = 'COMPANY WEBSITE', updated_at = getdate()  where USER_ID = N'" + UserId + "'";
+                            var saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
+                        }
+                    }
 
                     return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = result };
                 }

@@ -82,7 +82,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetSchedule(string CompanyCode, string CalendarCode, string UserId);
         Task<AddUpdateDelete> GetCourseEvents(string ServiceId, string UserEmail);
 
-        Task<AddUpdateDelete> AddSchedularForm(SchedularFormModel model, string formGroupKey);
+        Task<AddUpdateDelete> AddSchedularForm(SchedularFormModel model, string formGroupKey, string UserId);
 
         Task<AddUpdateDelete> DeleteSchedule(int ScheduleId, bool deleteForm);
 

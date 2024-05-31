@@ -85,6 +85,12 @@ function setPageStatus() {
         $("#content-2").show();
         $("#content").hide();
     } else {
+
+        if (response.Data.CURRENT_STEP == "COMPANY WEBSITE") {
+            $("#ScheduleSetupBtn").empty();
+            $("#ScheduleSetupBtn").append(`<a href="javascript:void(0)" class="activated">Done </a>`);
+        }
+
         if (response.Data.COMPANY_PROFILE_STATUS == "Y") {
             $("#CompanyProfileSetupBtn").empty();
             $("#CompanyProfileSetupBtn").append(`<a href="/BusinessAdmin/CompanyMaster" class="activated">View > </a>`);
