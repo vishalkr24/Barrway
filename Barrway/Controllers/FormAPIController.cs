@@ -827,7 +827,7 @@ namespace Barrway.Controllers
 
                     int days = 0;
 
-                    if (service.Data != null)
+                    if (service.Data != null && result.events!=null && result.events.Count()>0)
                     {
                         var serviceData = service.Data as List<IDictionary<string, object>>;
                         if (serviceData.Any(x => x["Id"]?.ToString() == result.events[0]["activities"]?.ToString()))
@@ -849,7 +849,7 @@ namespace Barrway.Controllers
                     }
 
                     days = (days == 0) ? 0 : days + 1;
-
+                    if(result.events!=null && result.events.Count>0)
                     foreach (var evt in result.events)
                     {
                         DateTime deadline = Convert.ToDateTime(evt["start"].ToString());
