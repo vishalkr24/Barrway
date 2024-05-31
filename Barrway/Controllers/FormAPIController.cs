@@ -880,6 +880,7 @@ namespace Barrway.Controllers
                             }
                         }
 
+
                         days = (days == 0) ? 0 : days + 1;
 
                         foreach (var evt in result.events)
