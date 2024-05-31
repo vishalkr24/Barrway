@@ -1181,7 +1181,7 @@ namespace Barrway.Service.Repository
                 return new AddUpdateDelete() { Status = false, Message = "Please enter company code" };
             }
 
-            if (model.REVIEW_SCORE > 0)
+            if (model.REVIEW_SCORE <= 0)
             {
                 return new AddUpdateDelete() { Status = false, Message = "review score is required" };
             }
