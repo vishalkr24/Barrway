@@ -358,7 +358,7 @@
                 SCH_DESCRIPTION: "",
                 SCH_FROM_DATE: $("#SCH_FROM_DATE").val(),
                 SCH_TO_DATE: $("#SCH_TO_DATE").val(),
-                SCH_ALTERNATIVE_WEEK: $("#ALTERNATE_WEEK option:selected").val(),
+                SCH_ALTERNATIVE_WEEK: $("#SCH_ALTERNATE_WEEK option:selected").val(),
                 IF_SLOT_EXIST: "SKIP",
                 IF_SLOT_DOES_NOT_EXIST: "INSERT",
                 table: $scope.scheduleList,

@@ -1217,7 +1217,7 @@ namespace Barrway.Controllers
                                     if (string.IsNullOrEmpty(x.start) || string.IsNullOrEmpty(x.end))
                                     {
                                         // if time is not mentioned then skip that day
-                                        dateTracker = dateTracker.AddDays(1);
+                                        //dateTracker = dateTracker.AddDays(1);
                                         continue;
                                     }
                                     else
@@ -1599,15 +1599,15 @@ namespace Barrway.Controllers
                                 {
                                     var weekNum = ((int)dateTracker.DayOfWeek);
 
-                                    if (weekNum % 2 == 0)
+                                    if (weekNum == 0)
                                     {
-                                        dateTracker = dateTracker.AddDays(7);
+                                        dateTracker = dateTracker.AddDays(8);
                                         continue;
                                     }
                                 }
                                 else if (data.SCH_ALTERNATIVE_WEEK == "EVERY-3-WEEK")
                                 {
-                                    var weekNum = GetWeekNumberOfMonth(start);
+                                    var weekNum = GetWeekNumberOfMonth(dateTracker);
                                     if (weekNum > 3)
                                     {
                                         dateTracker = dateTracker.AddDays((7 * 3));
@@ -1616,7 +1616,7 @@ namespace Barrway.Controllers
                                 }
                                 else if (data.SCH_ALTERNATIVE_WEEK == "EVERY-4-WEEK")
                                 {
-                                    var weekNum = GetWeekNumberOfMonth(start.AddDays(1));
+                                    var weekNum = GetWeekNumberOfMonth(dateTracker.AddDays(1));
                                     if (weekNum > 4)
                                     {
                                         dateTracker = dateTracker.AddDays((7 * 4));

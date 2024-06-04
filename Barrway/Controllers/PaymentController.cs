@@ -497,8 +497,6 @@ namespace Barrway.Controllers
             {
                 return RedirectToAction("OrderFailed");
             }
-
-
         }
 
 
