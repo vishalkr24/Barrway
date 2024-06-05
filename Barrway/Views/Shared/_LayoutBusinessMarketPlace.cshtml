@@ -57,6 +57,17 @@
             width: 35px;
         }
     </style>
+    <script>
+        $(document).ready(function () {
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
+            $.ajaxSetup({
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('RequestVerificationToken', token);
+                }
+            });
+        });
+    </script>
 </head>
 <body>
     <script>
@@ -166,6 +177,7 @@
     </section>
     <div>
         @RenderBody()
+        @Html.AntiForgeryToken()
     </div>
 
     <section class="footer">

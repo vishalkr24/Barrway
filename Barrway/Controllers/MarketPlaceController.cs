@@ -20,6 +20,7 @@ using System.Web.Mvc;
 
 namespace Barrway.Controllers
 {
+   
     public class MarketPlaceController : BaseController
     {
         private readonly IBusinessUserService businessUserService;
@@ -216,7 +217,7 @@ namespace Barrway.Controllers
 
 
 
-
+        [ValidateAjaxAntiForgeryToken]
         public async Task<ActionResult> Subcategory()
         {
             return View();

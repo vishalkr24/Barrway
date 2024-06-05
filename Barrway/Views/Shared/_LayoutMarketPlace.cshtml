@@ -51,7 +51,17 @@
     <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/style.css">
     <link rel="stylesheet" type="text/css" href="~/assets/marketplace/css/media.css">
 
+    <script>
+        $(document).ready(function () {
+            var token = $('input[name="__RequestVerificationToken"]').val();
 
+            $.ajaxSetup({
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('RequestVerificationToken', token);
+                }
+            });
+        });
+    </script>
 </head>
 <body>
     <style>
@@ -231,6 +241,8 @@
 
     <div>
         @RenderBody()
+
+        @Html.AntiForgeryToken()
     </div>
 
     <section class="footer">
@@ -416,7 +428,7 @@
                 dropdownMenu.append(listItem);
             });
         }
-
+       
     </script>
 </body>
 </html>

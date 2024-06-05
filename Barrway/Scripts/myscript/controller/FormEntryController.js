@@ -7019,10 +7019,9 @@
                                             }
                                         }
                                         if ($scope.isEdit) {
-                                            debugger;
-                                            $timeout(function () {
-                                                window.history.back();
-                                            }, 1050);
+                                            //$timeout(function () {
+                                            //    //window.history.back();
+                                            //}, 1050);
 
                                         }
                                         //window.close();
