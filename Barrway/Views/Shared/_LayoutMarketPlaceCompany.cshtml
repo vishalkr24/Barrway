@@ -118,6 +118,18 @@
             }
         }
     </style>
+
+    <script>
+        $(document).ready(function () {
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
+            $.ajaxSetup({
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('RequestVerificationToken', token);
+                }
+            });
+        });
+    </script>
 </head>
 <body ng-app="FormGeneratorApp">
     @RenderPage("~/Views/Shared/_QRFunctionPartialView.cshtml", null)
@@ -234,6 +246,8 @@
 
     <div>
         @RenderBody()
+
+        @Html.AntiForgeryToken()
     </div>
 
     <style>

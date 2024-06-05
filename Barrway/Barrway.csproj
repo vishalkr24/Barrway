@@ -535,6 +535,7 @@
     <Compile Include="Security\TokenManager.cs" />
     <Compile Include="Security\APIUserIdentity.cs" />
     <Compile Include="Security\UserIdentity.cs" />
+    <Compile Include="Security\ValidateAjaxAntiForgeryTokenAttribute.cs" />
     <Compile Include="Security\ValidateModelAttribute.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="WebSocket\QueueManager.cs" />
