@@ -461,8 +461,8 @@ namespace Barrway.Service.Repository
 
                 // add entry in participant master table
                 var publicUser = await GetSinglePublicUserAccount(model.USER_ID);
-                var userData = await authService.GetUser(model.USER_ID);
-                model.participant.STUDENT_ID = userData.Data["Id"]?.ToString();
+                
+                model.participant.STUDENT_ID = model.USER_ID;
 
                 model.participant.NICKNAME = publicUser.Data["NICK_NAME"].ToString();
                 model.participant.EMAIL = user.Data["USER_EMAIL"].ToString();
@@ -788,8 +788,8 @@ namespace Barrway.Service.Repository
 
                     // add entry in participant master table
                     var publicUser = await GetSinglePublicUserAccount(model.USER_ID);
-                    var userData = await authService.GetUser(model.USER_ID);
-                    model.participant.STUDENT_ID = userData.Data["Id"]?.ToString();
+
+                    model.participant.STUDENT_ID = model.USER_ID;
 
                     model.participant.NICKNAME = publicUser.Data["NICK_NAME"].ToString();
                     model.participant.EMAIL = user.Data["USER_EMAIL"].ToString();
@@ -1100,7 +1100,7 @@ namespace Barrway.Service.Repository
                 participant.IS_ACTIVE = "Y";
                 participant.STUDENT_NAME = publicUser.Data["FIRST_NAME"].ToString() + " " + publicUser.Data["LAST_NAME"].ToString();
                 
-                participant.STUDENT_ID = userData.Data["Id"]?.ToString();
+                participant.STUDENT_ID = UserId;
                 Form_DataTable data = new Form_DataTable();
                 data.action = (int)FormAction.Save;
                 data.formId = (int)FormSetting.PARTICIPANT_MASTER;
@@ -1133,7 +1133,7 @@ namespace Barrway.Service.Repository
             return new AddUpdateDelete() { Status = true, Message = "Success", Data = model };
         }
 
-        public async Task<AddUpdateDelete> BookingServiceEvent(RequestEventViewModel eventModal, string userName, string UserId, string PaymentId = null)
+        public async Task<AddUpdateDelete> BookingServiceEvent(RequestEventViewModel eventModal, string userName, string PaymentId = null)
         {
             if (eventModal != null)
             {
@@ -1227,7 +1227,7 @@ namespace Barrway.Service.Repository
                             participant["GENDER"] = publicUserData["GENDER"]?.ToString() ?? "";
                             participant["IS_ACTIVE"] = "Y";
                             participant["STUDENT_NAME"] = (publicUserData["FIRST_NAME"]?.ToString() ?? "" + " " + publicUserData["LAST_NAME"]?.ToString() ?? "").Trim();
-                            participant["STUDENT_ID"] = userResult.Data["Id"]?.ToString();
+                            participant["STUDENT_ID"] = userName;
 
                             Form_DataTable data = new Form_DataTable();
                             data.action = (int)FormAction.Save;
@@ -1441,11 +1441,11 @@ namespace Barrway.Service.Repository
             return new AddUpdateDelete() { Status = false, Message = "Invalid response!" };
         }
 
-        public async Task<AddUpdateDelete> CreateDynamicFormEntry(List<IDictionary<string, string>> model, string formId, string UserId, string CalendarCode, string UserName)
+        public async Task<AddUpdateDelete> CreateDynamicFormEntry(List<IDictionary<string, string>> model, string formId, string CalendarCode, string UserName)
         {
             try
             {
-                var checkUserAdditionalForm = await CheckAddtionalFormUserEntry(Convert.ToInt32(formId), Convert.ToInt32(UserId));
+                var checkUserAdditionalForm = await CheckAddtionalFormUserEntry(Convert.ToInt32(formId), UserName);
                 if (checkUserAdditionalForm) { 
                 return new AddUpdateDelete() { Status=false,Message= "Our records indicate that you have already completed this form." };
                 }
@@ -1474,7 +1474,7 @@ namespace Barrway.Service.Repository
 
                 if (formResult.res > 0)
                 {
-                    string tableName = (await CheckAdditionalFormDetails(CalendarCode, UserId)).Data;
+                    string tableName = (await CheckAdditionalFormDetails(CalendarCode, UserName)).Data;
 
                     string recordId = "";
 
@@ -1485,7 +1485,7 @@ namespace Barrway.Service.Repository
 
                     recordId += formResult.Id.ToString().PadLeft(5, '0');
 
-                    string query = $@"update {tableName} set RECORD_ID = '{recordId}', USER_ID='{UserId}' where Id = {formResult.Id}";
+                    string query = $@"update {tableName} set RECORD_ID = '{recordId}', USER_ID='{UserName}' where Id = {formResult.Id}";
                     var result = await sqlFunction.ExecuteSqlCommandQuery(query);
 
                     var result2 = await AddFavoriteCalendar(new FavoriteCalendarModel()
@@ -1517,7 +1517,7 @@ namespace Barrway.Service.Repository
             }
         }
 
-        private async Task<bool> CheckAddtionalFormUserEntry(int formId, int createdId)
+        private async Task<bool> CheckAddtionalFormUserEntry(int formId, string userName)
         {
             try
             {
@@ -1538,7 +1538,7 @@ namespace Barrway.Service.Repository
 
                 string sqlQuery = $@"select  distinct f.*,um.USER_ID 
                                     from  {table_name}   f 
-                                    join USER_MASTER_1915 um on um.Id=f.created_by  where f.Id!=0 and f.created_by={createdId}";
+                                    join USER_MASTER_1915 um on um.Id=f.created_by  where f.Id!=0 and f.USER_ID={userName}";
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 return result.Count() > 0;
             }
