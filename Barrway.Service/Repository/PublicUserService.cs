@@ -461,10 +461,11 @@ namespace Barrway.Service.Repository
 
                 // add entry in participant master table
                 var publicUser = await GetSinglePublicUserAccount(model.USER_ID);
+                var userData = await authService.GetUser(model.USER_ID);
+                model.participant.STUDENT_ID = userData.Data["Id"]?.ToString();
 
                 model.participant.NICKNAME = publicUser.Data["NICK_NAME"].ToString();
                 model.participant.EMAIL = user.Data["USER_EMAIL"].ToString();
-
                 model.participant.ADDRESS = "";
                 model.participant.GENDER = publicUser.Data["GENDER"].ToString();
                 model.participant.IS_ACTIVE = "Y";
@@ -787,10 +788,11 @@ namespace Barrway.Service.Repository
 
                     // add entry in participant master table
                     var publicUser = await GetSinglePublicUserAccount(model.USER_ID);
+                    var userData = await authService.GetUser(model.USER_ID);
+                    model.participant.STUDENT_ID = userData.Data["Id"]?.ToString();
 
                     model.participant.NICKNAME = publicUser.Data["NICK_NAME"].ToString();
                     model.participant.EMAIL = user.Data["USER_EMAIL"].ToString();
-
                     model.participant.ADDRESS = "";
                     model.participant.GENDER = publicUser.Data["GENDER"].ToString();
                     model.participant.IS_ACTIVE = "Y";
@@ -1086,7 +1088,7 @@ namespace Barrway.Service.Repository
             {
                 // add entry in participant master table
                 var publicUser = await GetSinglePublicUserAccount(UserId);
-
+                var userData = await authService.GetUser(UserId);
                 CalendarParticipantModel participant = new CalendarParticipantModel();
 
                 participant.NICKNAME = publicUser.Data["NICK_NAME"].ToString();
@@ -1097,7 +1099,8 @@ namespace Barrway.Service.Repository
                 participant.GENDER = publicUser.Data["GENDER"].ToString();
                 participant.IS_ACTIVE = "Y";
                 participant.STUDENT_NAME = publicUser.Data["FIRST_NAME"].ToString() + " " + publicUser.Data["LAST_NAME"].ToString();
-
+                
+                participant.STUDENT_ID = userData.Data["Id"]?.ToString();
                 Form_DataTable data = new Form_DataTable();
                 data.action = (int)FormAction.Save;
                 data.formId = (int)FormSetting.PARTICIPANT_MASTER;
@@ -1213,6 +1216,7 @@ namespace Barrway.Service.Repository
                         else
                         {
                             var publicUser = await GetSinglePublicUserAccount(userName);
+
                             var publicUserData = publicUser.Data as IDictionary<string, object>;
                             IDictionary<string, object> participant = new Dictionary<string, object>();
                             participant["NICKNAME"] = publicUserData["NICK_NAME"]?.ToString() ?? "";
@@ -1223,6 +1227,7 @@ namespace Barrway.Service.Repository
                             participant["GENDER"] = publicUserData["GENDER"]?.ToString() ?? "";
                             participant["IS_ACTIVE"] = "Y";
                             participant["STUDENT_NAME"] = (publicUserData["FIRST_NAME"]?.ToString() ?? "" + " " + publicUserData["LAST_NAME"]?.ToString() ?? "").Trim();
+                            participant["STUDENT_ID"] = userResult.Data["Id"]?.ToString();
 
                             Form_DataTable data = new Form_DataTable();
                             data.action = (int)FormAction.Save;
@@ -1480,7 +1485,7 @@ namespace Barrway.Service.Repository
 
                     recordId += formResult.Id.ToString().PadLeft(5, '0');
 
-                    string query = $@"update {tableName} set RECORD_ID = '{recordId}', created_by='{UserId}' where Id = {formResult.Id}";
+                    string query = $@"update {tableName} set RECORD_ID = '{recordId}', USER_ID='{UserId}' where Id = {formResult.Id}";
                     var result = await sqlFunction.ExecuteSqlCommandQuery(query);
 
                     var result2 = await AddFavoriteCalendar(new FavoriteCalendarModel()
@@ -2251,7 +2256,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
                         {
                             TableName = TableNameRaw[0]["TableName"]?.ToString();
 
-                            query = $@"select * from {TableName} where created_by = '{UserId}' and COMPANY_CODE = (select COMPANY_CODE from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE = '{CalendarCode}')";
+                            query = $@"select * from {TableName} where USER_ID = '{UserId}' and COMPANY_CODE = (select COMPANY_CODE from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE = '{CalendarCode}')";
 
                             result = await sqlFunction.ExecuteSqlQuery(query);
 
