@@ -2971,7 +2971,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
                 }
 
                 List<string> applyFilter = new List<string>();
-                IDictionary<string, string> queryFilters = new Dictionary<string, string>() { { "USER_ID", "um.USER_ID" } };
+                IDictionary<string, string> queryFilters = new Dictionary<string, string>() { { "REG_USER_NAME", "um.USER_ID" } };
                 if (data.filters != null && data.filters.Count() > 0)
                 {
                     foreach (var item in data.filters)
@@ -3030,7 +3030,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
                 int PageSize = data.size > 0 ? data.size : 20;
                 int PageNumber = data.page > 0 ? data.page : 1;
 
-                string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int= {PageNumber} ; with formdata as ( select  distinct f.*,um.USER_ID 
+                string sqlQuery = $@"declare @PageSize int={PageSize} ,  @PageNumber int= {PageNumber} ; with formdata as ( select  distinct f.*,um.USER_ID [REG_USER_NAME]
                                     from  {table_name}   f 
                                     join USER_MASTER_1915 um on um.Id=f.created_by  where f.Id!=0 
                                         {(!string.IsNullOrEmpty(applyFilterQuery) ? "and " + applyFilterQuery : "")}

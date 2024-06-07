@@ -3315,9 +3315,9 @@
             });
 
             if (finalArray.length > 0) {
-                if (!finalArray.find(x => x.field == "USER_ID")) {
+                if (!finalArray.find(x => x.field == "REG_USER_NAME")) {
                     finalArray.push({
-                        title: "User Name", width: 140, field: "USER_ID", headerFilter: "input",
+                        title: "User Name", width: 140, field: "REG_USER_NAME", headerFilter: "input",
                     });
                 }
             }
@@ -3904,9 +3904,9 @@
             //});
             //console.log($scope.filterFieldsList)
             if (finalArray.length > 0) {
-                if (!finalArray.find(x => x.field == "USER_ID")) {
+                if (!finalArray.find(x => x.field == "REG_USER_NAME")) {
                     finalArray.push({
-                        title: "User Name", width: 140, field: "USER_ID"
+                        title: "User Name", width: 140, field: "REG_USER_NAME"
                     });
                 }
             }
@@ -3962,9 +3962,9 @@
                 }
             });
             if (finalArray.length > 0) {
-                if (!finalArray.find(x => x.field == "USER_ID")) {
+                if (!finalArray.find(x => x.field == "REG_USER_NAME")) {
                     finalArray.push({
-                        title: "User Name", width: 140, field: "USER_ID"
+                        title: "User Name", width: 140, field: "REG_USER_NAME"
                     });
                 }
             }
@@ -4312,10 +4312,10 @@
 
             if (headers.find(x => x.rowEdit == true)) {
                 var index = headers.findIndex(x => x.rowEdit == true);
-                var user_index = headers.findIndex(x => x.field == "USER_ID");
+                var user_index = headers.findIndex(x => x.field == "REG_USER_NAME");
                 if (user_index > -1) {
                     var field = headers[user_index];
-                    headers = headers.filter(x => x.field != "USER_ID");
+                    headers = headers.filter(x => x.field != "REG_USER_NAME");
                     headers.splice(index+1, 0, field);
                 }
             }
@@ -4343,8 +4343,8 @@
                         persistenceMode: true,
                         persistentLayout: true,
                         persistence: {
-                            sort: true, //persist column sorting
-                            filter: true, //persist filter sorting
+                            sort: false, //persist column sorting
+                            filter: false, //persist filter sorting
                             columns: false, //persist columns
                         },
                         persistenceWriterFunc: function (id, type, data) {

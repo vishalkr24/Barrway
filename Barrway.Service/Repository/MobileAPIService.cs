@@ -1582,6 +1582,51 @@ namespace Barrway.Service.Repository
         }
 
 
+        //public async Task<List<IDictionary<string, object>>> GetUserEvents(string userEmail)
+        //{
+        //    string sqlString = $@"SELECT distinct calendar.[COMPANY_CODE]
+        //                          FROM [dbo].[CALENDAR_FORM_1935] calendar
+        //                          join TRANSACTION_MASTER_1942 transaction_m on calendar.CALENDAR_CODE = transaction_m.CALENDAR_CODE
+        //                          join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
+        //                          join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
+        //                          where EMAIL = '{userEmail}' and calendar.Id = transaction_m.SLOT";
+        //    var result = await sqlFunction.ExecuteSqlQuery(sqlString);
+
+        //    Form_DataTable data = mapper.Map<Form_DataTable>(calendarRequest);
+        //    data.action = 1;
+        //    data.ActivityFormId = (int)FormSetting.SERVICE_MASTER;
+        //    data.resourceFormId = (int)FormSetting.LOCATION_MASTER;
+        //    data.isEvent = 1;
+        //    data.isCalender = 1;
+        //    data.formId = (int)FormSetting.CALENDAR_FORM;
+        //    string filterQuery = CustomMethods.GetDateQuery(calendarRequest.start, calendarRequest.end);
+
+        //    string fiterstring = "";
+
+        //    if (!string.IsNullOrEmpty(calendarRequest.COMPANY_CODE))
+        //    {
+        //        fiterstring += " and F.COMPANY_CODE=N'" + calendarRequest.COMPANY_CODE + "'";
+        //    }
+
+
+        //    if (!string.IsNullOrEmpty(calendarRequest.CALENDAR_CODE))
+        //    {
+        //        fiterstring += "' and F.CALENDAR_CODE=N'" + calendarRequest.CALENDAR_CODE + "'";
+        //    }
+
+        //    data.filter = new FilterDTO() { field = "start", value = filterQuery + fiterstring };
+        //    //data.filter = new FilterDTO() { field = "start", value = filterQuery + " and F.COMPANY_CODE=N'" + calendarRequest.COMPANY_CODE + "' and F.CALENDAR_CODE=N'" + calendarRequest.CALENDAR_CODE + "'" };
+
+        //    ReferalFormDataResponseModel result = await formAPIRepository.getReferralFormFields(data);
+
+        //    if (result != null && result.events != null)
+        //    {
+        //        return result.events;
+        //    }
+        //    return new List<IDictionary<string, object>>();
+        //}
+
+
         public async Task<List<MyFavouriteCompany>> GetMyfavoriteCompanyList(string userName)
         {
             try
@@ -1628,7 +1673,7 @@ namespace Barrway.Service.Repository
 
                 string CompanyLogic = "";
 
-                string Fev_query = $@"SELECT [Id],[created_at],[updated_at],[created_by],[updated_by],[COMPANY_CODE],[CALENDAR_CODE],[USER_ID],[IS_PUBIC_USER] FROM [dbo].[FAVORITE_CALENDAR_MASTER_1949] calendarDetails where USER_ID = N'{userId}' {CompanyLogic} ";
+                string Fev_query = $@"SELECT [Id],[created_at],[updated_at],[created_by],[updated_by],[COMPANY_CODE],[CALENDAR_CODE],[USER_ID],[IS_PUBIC_USER] FROM [dbo].[FAVORITE_CALENDAR_MASTER_1949] where USER_ID = N'{userId}'";
 
                 List<IDictionary<string, object>> Fev_result = await sqlFunction.ExecuteSqlQuery(Fev_query);
 
@@ -2123,7 +2168,10 @@ namespace Barrway.Service.Repository
                                   ,[DEFAULT_DISPLAY_DATE]
                                   ,[DEFAULT_DATE]
                                   ,[SERVICE_CHARGE_BY]
-	                              ,case when  (select top 1 count(Id) from FAVORITE_CALENDAR_MASTER_1949 where COMPANY_CODE='{model.COMPANY_CODE}' and CALENDAR_CODE='{model.CALENDAR_CODE}' and USER_ID=N'{UserId}')='1' then 'Y' else 'N' end as IsFavourite
+	                              ,case when  (select top 1 count(Id) from FAVORITE_CALENDAR_MASTER_1949 where COMPANY_CODE='{model.COMPANY_CODE}' and CALENDAR_CODE='{model.CALENDAR_CODE}' and USER_ID=N'{UserId}')=1
+                                   OR (SELECT Count(distinct company.Id) FROM [dbo].[BUSINESS_COMPANY_MASTER_1924] company join PAYMENT_HISTORY_MASTER_1956 p on p.COMPANY_CODE=company.COMPANY_CODE
+									   where p.STATUS = 'complete' and p.USER_ID = N'{UserId}' and '{DateTimeUtility.Now().ToString("yyyy-MM-dd")}' < p.CREDIT_EXPIRE_DATE and p.COMPANY_CODE='{model.COMPANY_CODE}' and p.CALENDAR_CODE='{model.CALENDAR_CODE}')=1
+                                   then 'Y' else 'N' end as IsFavourite
                                   ,[ALLOW_OVERLAP] from BUSINESS_CALENDAR_MASTER_1925  
 	                                where  COMPANY_CODE='{model.COMPANY_CODE}' and  CALENDAR_CODE='{model.CALENDAR_CODE}'";
 
