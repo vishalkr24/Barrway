@@ -721,9 +721,11 @@ namespace Barrway.Service.Repository
                 // add entry in participant master table
                 var publicUser = await GetSinglePublicUserAccount(model.USER_ID);
 
+                model.participant.STUDENT_ID = model.USER_ID;
+
                 model.participant.NICKNAME = publicUser.Data["NICK_NAME"].ToString();
                 model.participant.EMAIL = user.Data["USER_EMAIL"].ToString();
-
+                
                 model.participant.ADDRESS = "";
                 model.participant.GENDER = publicUser.Data["GENDER"].ToString();
                 model.participant.IS_ACTIVE = "Y";

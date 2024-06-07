@@ -191,7 +191,7 @@ namespace Barrway.Controllers
             {
                 try
                 {
-                    var result = await publicUserService.CreateDynamicFormEntry(data, formId, UserIdentity.UserID, CalendarCode,UserIdentity.UserName);
+                    var result = await publicUserService.CreateDynamicFormEntry(data, formId, CalendarCode, UserIdentity.UserName);
 
                     return Json(result, JsonRequestBehavior.AllowGet);
                 }
@@ -386,8 +386,7 @@ namespace Barrway.Controllers
         {
             try
             {
-                string UserId = UserIdentity.UserID;
-                var result = await publicUserService.CheckAdditionalFormDetails(CalendarCode, UserId);
+                var result = await publicUserService.CheckAdditionalFormDetails(CalendarCode, UserIdentity.UserName);
 
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
@@ -447,7 +446,7 @@ namespace Barrway.Controllers
         {
             try
             {
-                var result = await publicUserService.BookingServiceEvent(model, User.Identity.Name, UserIdentity.UserID);
+                var result = await publicUserService.BookingServiceEvent(model, User.Identity.Name);
 
                 if (result.Status)
                 {
