@@ -1359,6 +1359,7 @@ namespace Barrway.Service.Repository
                             transaction["RESOURCE"] = eventModal.resourceId;
                             transaction["ACTIVITY"] = eventModal.activityId;
                             transaction["STUDENT"] = StudentId;
+                            transaction["TRAN_USER_ID"] = userName;
                             transaction["REMARKS"] = "";
                             transaction["transaction_fees"] = ServiceFees.ToString();
                             transaction["ATTENDANCE"] = "YES";

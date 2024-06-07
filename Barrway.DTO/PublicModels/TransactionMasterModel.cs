@@ -15,6 +15,7 @@ namespace Barrway.DTO.PublicModels
         public string STUDENT { get; set; }
         public string REMARKS { get; set; }
         public string transaction_fees { get; set; }
+        public string TRAN_USER_ID { get; set; }
         public string FEES { get; set; }
         public string FEES1 { get; set; }
         public string FEES2 { get; set; }

@@ -216,6 +216,7 @@ namespace Barrway.Controllers
             {
                 model.USER_ID = User.Identity.Name;
                 model.USER_EMAIL = UserIdentity.UserEmail;
+                model.transaction.TRAN_USER_ID = UserIdentity.UserName;
 
                 var result = await publicUserService.EnrollPublicUserForCalendar(model);
 
@@ -242,6 +243,7 @@ namespace Barrway.Controllers
             {
                 model.USER_ID = User.Identity.Name;
                 model.USER_EMAIL = UserIdentity.UserEmail;
+                model.transaction.TRAN_USER_ID = UserIdentity.UserName;
 
                 var result = await publicUserService.EnrollCourse(model);
 
