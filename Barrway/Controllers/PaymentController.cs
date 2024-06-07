@@ -314,6 +314,7 @@ namespace Barrway.Controllers
                         },
                         transaction = new DTO.PublicModels.TransactionMasterModel()
                         {
+                            TRAN_USER_ID = UserIdentity.UserName,
                             SLOT = PackageData["Id"].ToString(),
                             RESOURCE = PackageData["resources"].ToString(),
                             ACTIVITY = PackageData["activities"].ToString(),
@@ -377,6 +378,7 @@ namespace Barrway.Controllers
                         },
                         transaction = new DTO.PublicModels.TransactionMasterModel()
                         {
+                            TRAN_USER_ID = UserIdentity.UserName,
                             SLOT = "",
                             RESOURCE = "",
                             ACTIVITY = PackageData["Id"].ToString(),
