@@ -70,5 +70,10 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetCalendarDetails(string calendarCode, string UserId = null);
 
         Task<AddUpdateDelete> GetBookingsForThisMonth(string CompanyCode, string SlotId);
+
+        Task<List<IDictionary<string, object>>> GetUserEvents(UserEventsViewmodel model, string userEmail);
+
+
+       
     }
 }
