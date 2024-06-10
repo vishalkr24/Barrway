@@ -1584,49 +1584,47 @@ namespace Barrway.Service.Repository
         }
 
 
-        //public async Task<List<IDictionary<string, object>>> GetUserEvents(string userEmail)
-        //{
-        //    string sqlString = $@"SELECT distinct calendar.[COMPANY_CODE]
-        //                          FROM [dbo].[CALENDAR_FORM_1935] calendar
-        //                          join TRANSACTION_MASTER_1942 transaction_m on calendar.CALENDAR_CODE = transaction_m.CALENDAR_CODE
-        //                          join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
-        //                          join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
-        //                          where EMAIL = '{userEmail}' and calendar.Id = transaction_m.SLOT";
-        //    var result = await sqlFunction.ExecuteSqlQuery(sqlString);
+        public class companyList
+        {
+            public string COMPANY_CODE { get; set; }
+        }
 
-        //    Form_DataTable data = mapper.Map<Form_DataTable>(calendarRequest);
-        //    data.action = 1;
-        //    data.ActivityFormId = (int)FormSetting.SERVICE_MASTER;
-        //    data.resourceFormId = (int)FormSetting.LOCATION_MASTER;
-        //    data.isEvent = 1;
-        //    data.isCalender = 1;
-        //    data.formId = (int)FormSetting.CALENDAR_FORM;
-        //    string filterQuery = CustomMethods.GetDateQuery(calendarRequest.start, calendarRequest.end);
+        public async Task<List<IDictionary<string, object>>> GetUserEvents(UserEventsViewmodel model,string userEmail )
+        {
+            
+            string sqlString = $@"SELECT distinct calendar.[COMPANY_CODE]
+                                  FROM [dbo].[CALENDAR_FORM_1935] calendar
+                                  join TRANSACTION_MASTER_1942 transaction_m on calendar.CALENDAR_CODE = transaction_m.CALENDAR_CODE
+                                  join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
+                                  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
+                                  where EMAIL = '{userEmail}' and calendar.Id = transaction_m.SLOT";            
+            var result = (await sqlFunction.ExecuteSqlQuery<companyList>(sqlString)).ToList();
+            string companycode = string.Join(", ", result.Select(x => x.COMPANY_CODE));
+            
+            var calendarRequest = new CalendarRequestModel() { COMPANY_CODE= companycode,start=model.start,end=model.end };
 
-        //    string fiterstring = "";
+            Form_DataTable data = mapper.Map<Form_DataTable>(calendarRequest);
+            data.action = 1;
+            data.ActivityFormId = (int)FormSetting.SERVICE_MASTER;
+            data.resourceFormId = (int)FormSetting.LOCATION_MASTER;
+            data.isEvent = 1;
+            data.IsCustomFilter = true;
+            data.isCalender = 1;
+            data.formId = (int)FormSetting.CALENDAR_FORM;
+            string filterQuery = CustomMethods.GetDateQuery(calendarRequest.start, calendarRequest.end);
+            data.filter = new FilterDTO() { field = "start", value = filterQuery  };
+            List<CustomFilter> _customFilters = new List<CustomFilter>();
+            _customFilters.Add(new CustomFilter() { FieldName = "CALENDAR_CODE", Value = calendarRequest.COMPANY_CODE });
+            data.CustomFilters = _customFilters;
+            ReferalFormDataResponseModel Dataresult = await formAPIRepository.getReferralFormFields(data);
 
-        //    if (!string.IsNullOrEmpty(calendarRequest.COMPANY_CODE))
-        //    {
-        //        fiterstring += " and F.COMPANY_CODE=N'" + calendarRequest.COMPANY_CODE + "'";
-        //    }
-
-
-        //    if (!string.IsNullOrEmpty(calendarRequest.CALENDAR_CODE))
-        //    {
-        //        fiterstring += "' and F.CALENDAR_CODE=N'" + calendarRequest.CALENDAR_CODE + "'";
-        //    }
-
-        //    data.filter = new FilterDTO() { field = "start", value = filterQuery + fiterstring };
-        //    //data.filter = new FilterDTO() { field = "start", value = filterQuery + " and F.COMPANY_CODE=N'" + calendarRequest.COMPANY_CODE + "' and F.CALENDAR_CODE=N'" + calendarRequest.CALENDAR_CODE + "'" };
-
-        //    ReferalFormDataResponseModel result = await formAPIRepository.getReferralFormFields(data);
-
-        //    if (result != null && result.events != null)
-        //    {
-        //        return result.events;
-        //    }
-        //    return new List<IDictionary<string, object>>();
-        //}
+            if (result != null && Dataresult.events != null)
+            {
+                return Dataresult.events;
+            }
+           
+            return new List<IDictionary<string, object>>();
+        }
 
 
         public async Task<List<MyFavouriteCompany>> GetMyfavoriteCompanyList(string userName)

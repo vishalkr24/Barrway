@@ -40,6 +40,24 @@ namespace Barrway.Controllers.API.v1
             }
         }
 
+        [Route("api/calendar/Userevents")]
+        [HttpPost]
+        [ResponseType(typeof(List<IDictionary<string, object>>))]
+        public async Task<IHttpActionResult> Userevents(UserEventsViewmodel model)
+        {
+            try
+            {
+
+                return Ok(await mobileAPIService.GetUserEvents(model,APIUserIdentity.UserEmail));
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
+
+
+
 
 
         [Route("api/calendar/myfavorite/companys")]
