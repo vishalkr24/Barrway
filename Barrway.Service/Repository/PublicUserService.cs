@@ -409,7 +409,7 @@ namespace Barrway.Service.Repository
         {
             var user = await authService.GetUser(model.USER_ID, FormRole.GENERAL_USER);
             string MasterQuery = "";
-            
+
             MasterQuery = $@"select dbo.CheckOneToManyBookingValidations('{model.participant.CALENDAR_CODE}','{model.transaction.SLOT}','{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}','{PaymentId}','{model.USER_ID}','{model.USER_EMAIL}','{model.participant.COMPANY_CODE}','{model.transaction.ACTIVITY}','{model.transaction.RESOURCE}') as 'check'";
 
             // check the validations
@@ -461,7 +461,7 @@ namespace Barrway.Service.Repository
 
                 // add entry in participant master table
                 var publicUser = await GetSinglePublicUserAccount(model.USER_ID);
-                
+
                 model.participant.STUDENT_ID = model.USER_ID;
 
                 model.participant.NICKNAME = publicUser.Data["NICK_NAME"].ToString();
@@ -504,7 +504,7 @@ namespace Barrway.Service.Repository
 
             // recheck the validations
             dataCheck = await sqlFunction.ExecuteSqlQuery(MasterQuery);
-            
+
             if (dataCheck != null)
             {
                 if (dataCheck.Count > 0)
@@ -1099,7 +1099,7 @@ namespace Barrway.Service.Repository
                 participant.GENDER = publicUser.Data["GENDER"].ToString();
                 participant.IS_ACTIVE = "Y";
                 participant.STUDENT_NAME = publicUser.Data["FIRST_NAME"].ToString() + " " + publicUser.Data["LAST_NAME"].ToString();
-                
+
                 participant.STUDENT_ID = UserId;
                 Form_DataTable data = new Form_DataTable();
                 data.action = (int)FormAction.Save;
@@ -1447,8 +1447,9 @@ namespace Barrway.Service.Repository
             try
             {
                 var checkUserAdditionalForm = await CheckAddtionalFormUserEntry(Convert.ToInt32(formId), UserName);
-                if (checkUserAdditionalForm) { 
-                return new AddUpdateDelete() { Status=false,Message= "Our records indicate that you have already completed this form." };
+                if (checkUserAdditionalForm)
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "Our records indicate that you have already completed this form." };
                 }
 
                 List<string> requestList = new List<string>();
@@ -3051,6 +3052,6 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
             }
         }
 
-        
+
     }
 }

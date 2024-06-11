@@ -1498,7 +1498,12 @@ function validateDynamicForm() {
             debugger;
             if (inputValue === "" || inputValue === null || String(inputValue).contains(',')) {
                 check = false;
-                alert("Please remove comma from the fields.")
+                if (String(inputValue).contains(',')) {
+                    alert("Please remove comma from the fields.")
+                } else {
+                    alert("All fields are mandatory.")
+                }
+                
                 break;
             }
         }
