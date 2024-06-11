@@ -110,5 +110,23 @@ namespace Barrway.Controllers.API.v1
                 return InternalServerError();
             }
         }
+
+
+        [Route("api/blogs/blogDetail/{blogId?}")]
+        [HttpPost]
+        [ResponseType(typeof(BlogDetailModel))]
+        public async Task<IHttpActionResult> GetblogDetail(int blogId)
+        {
+            try
+            {
+                var result = await mobileAPIService.GetBlogdetail(blogId);
+                
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
     }
 }

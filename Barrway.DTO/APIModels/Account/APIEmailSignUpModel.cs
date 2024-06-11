@@ -22,7 +22,15 @@ namespace Barrway.DTO.APIModels.Account
         [MinLength(8, ErrorMessage = "Password length should be greater than 8 characters")]
         [MaxLength(16, ErrorMessage = "Password length should be less than 16 characters")]
         public string USER_PASSWORD { get; set; }
+        [Required(ErrorMessage = "Phoene is required")]
+
+        public string USER_PHONE { get; set; }
+        [Required(ErrorMessage = "Country code is required")]
+        public string Country_Code { get; set; }
+       
 
         public bool IS_EXTERNAL_SIGNUP { get; set; } = false;
+
+
     }
 }

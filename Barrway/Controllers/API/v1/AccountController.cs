@@ -47,6 +47,25 @@ namespace Barrway.Controllers.API.v1
             return new LoginResponse() { Status = false, Message = result.Message };
         }
 
+        [Route("api/account/loginPhone")]
+        [ApiKeyAuthorizationFilter]
+        [HttpPost]
+        public async Task<LoginResponse> UserPhoneLogin(LoginPhoneViewModel model)
+        {
+
+            var result = await authService.GetUserbyPhone(model.USER_PHONE,model.Country_Code, model.USER_PASSWORD, (int)FormRole.GENERAL_USER, true);
+            if (result.Status)
+            {
+                var access_token = TokenManager.GenerateToken(result.Data);
+                return new LoginResponse() { Status = true, Message = result.Message, Data = result.Data, access_token = access_token, expires_in = AppSettings.token_expire_time };
+            }
+            return new LoginResponse() { Status = false, Message = result.Message };
+        }
+
+
+
+
+
         [Route("api/account/signup")]
         [ApiKeyAuthorizationFilter]
         [HttpPost]
@@ -62,7 +81,7 @@ namespace Barrway.Controllers.API.v1
                 // Insert Data in User Master
                 UserMaserModel userMaserModel = new UserMaserModel()
                 {
-                    USER_PHONE = "",
+                    
                     IS_ACTIVE = (model.IS_EXTERNAL_SIGNUP) ? "Y" : "Y",
                     IS_EMAIL_VERIFIED = (model.IS_EXTERNAL_SIGNUP) ? "Y" : "Y",
                     IS_PHONE_VERIFIED = "N",
@@ -70,6 +89,8 @@ namespace Barrway.Controllers.API.v1
                     PROFILE_STATUS = "PENDING",
                     SIGNUP_TYPE = (model.IS_EXTERNAL_SIGNUP) ? "GOOGLE" : "EMAIL",
                     USER_EMAIL = model.USER_EMAIL,
+                    Country_Code = model.Country_Code,
+                    USER_PHONE = model.USER_PHONE,
                     USER_PASSWORD = model.USER_PASSWORD,
                     USER_ID = model.USER_NAME,
                     ROLE_ID = generalRoleId,
@@ -128,5 +149,8 @@ namespace Barrway.Controllers.API.v1
                 return new LoginResponse() { Status = false, Message=AppMessage.InvaidRequest };
             }
         }
+
+        
+
     }
 }
