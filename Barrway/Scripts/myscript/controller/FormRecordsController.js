@@ -52,7 +52,7 @@
             $scope.importDataFileParam.fileType = "csv";
             $scope.importDataFileParam.typeOfAction = "Append";
             $scope.formAllDatafields = [];
-            $scope.paginationSizeFormRecords = 300;
+            $scope.paginationSizeFormRecords = $stateParams.formId =='2312'? 100:300;
             $scope.getLanguage();
             //Deisy 06102020  
             $scope.ApplyMultilingualText();
@@ -1616,7 +1616,7 @@
                     //var path = API_URL + "api/FormAPI/downloadFiles/" + (!DataService.isEmpty(temp.formId) ? temp.formId : temp.formID) + "/4";
                     let COMPANY_CODE = localStorage.getItem("COMPANY_CODE");
                     let CALENDAR_CODE = localStorage.getItem("CALENDAR_CODE");
-                    var path = BASE_URL + "FormAPI/DownloadExcel?formId=" + (!DataService.isEmpty(temp.formId) ? temp.formId : temp.formID) + "&iscustom=true&fields=COMPANY_CODE,CALENDAR_CODE&fieldValues=" + COMPANY_CODE + "," + CALENDAR_CODE;
+                    var path = BASE_URL + "FormAPI/DownloadExcel?formId=" + (!DataService.isEmpty(temp.formId) ? temp.formId : temp.formID) + "&iscustom=true&fields=f.COMPANY_CODE,f.CALENDAR_CODE&fieldValues=" + COMPANY_CODE + "," + CALENDAR_CODE;
                     downloadFileFunc("", path);
                     break;
                 case 7:

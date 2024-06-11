@@ -580,7 +580,7 @@ namespace Barrway.Service.Repository
                                                    , '{model.transaction.SLOT}', '{model.USER_ID}')";
 
 
-            var upcomingResult = await sqlFunction.ExecuteSqlCommandQuery(upcomingBookingQuery);
+            //var upcomingResult = await sqlFunction.ExecuteSqlCommandQuery(upcomingBookingQuery);
 
             if (Convert.ToInt32(model.transaction.transaction_fees) > 0)
             {
@@ -900,7 +900,7 @@ namespace Barrway.Service.Repository
 
                 }
 
-                var upcomingResult = await sqlFunction.ExecuteSqlCommandQuery(upcomingBookingQuery);
+                //var upcomingResult = await sqlFunction.ExecuteSqlCommandQuery(upcomingBookingQuery);
 
                 if (Convert.ToInt32(model.transaction.transaction_fees) > 0)
                 {
@@ -998,7 +998,8 @@ namespace Barrway.Service.Repository
                     }
                     else
                     {
-                        query = $@"delete from COMPANY_UPCOMING_BOOKINGS_1945 where USER_ID = N'{model.USER_ID}' and EVENT_ID = (select top 1 SLOT from TRANSACTION_MASTER_1942 where Id = '{result[0]["Id"]?.ToString()}'); delete from TRANSACTION_MASTER_1942 where Id = '{result[0]["Id"]?.ToString()}';";
+                        //query = $@"delete from COMPANY_UPCOMING_BOOKINGS_1945 where USER_ID = N'{model.USER_ID}' and EVENT_ID = (select top 1 SLOT from TRANSACTION_MASTER_1942 where Id = '{result[0]["Id"]?.ToString()}'); delete from TRANSACTION_MASTER_1942 where Id = '{result[0]["Id"]?.ToString()}';";
+                        query = $@"delete from TRANSACTION_MASTER_1942 where Id = {result[0]["Id"]}";
                     }
 
                     var result2 = await sqlFunction.ExecuteSqlCommandQuery(query);
@@ -1385,7 +1386,7 @@ namespace Barrway.Service.Repository
                             upCommingBooking["RESOURCE_NAME"] = eventModal.resourceTitle;
                             upCommingBooking["STUDENT_NAME"] = StudentId ?? "";
 
-                            var upcommingBookingResult = await UpCommingBookingAdd(upCommingBooking);
+                            //var upcommingBookingResult = await UpCommingBookingAdd(upCommingBooking);
 
                             if (ServiceFees > 0)
                             {

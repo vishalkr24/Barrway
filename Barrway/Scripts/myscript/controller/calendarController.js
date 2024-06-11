@@ -10272,6 +10272,7 @@
                     success: function (response) {
                         $("#customEventDetailsModelPopUp").modal("hide");
                         if (response.Status) {
+                            $(".calendar").fullCalendar('removeEvents');
                             $(".calendar").fullCalendar('refetchEvents');
                             notifierService.notifyMessage('success', 'Calender', "Update Successfully");
                         } else {
@@ -12193,8 +12194,10 @@
                 newParam.otherreference_form = temp.otherreference_form;
             }
             if (param.selectedId != "") {
+                var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+
                 var list = window["EventBasicDetail"];
-                var eventlist = window["CalendarEventList"];
+                var eventlist = $("#" + current_tab + " .calendar").fullCalendar('clientEvents');
                 var rowId = parseInt(param.selectedId);
                 var exists = _.findWhere(eventlist, {
                     Id: rowId
