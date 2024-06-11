@@ -374,6 +374,32 @@ namespace Barrway.Service.Repository
             blogs.ForEach(x => x.TAG = formatTagsString(x.TAG));
             return blogs;
         }
+
+
+        public async Task<AddUpdateDelete<BlogDetailModel>> GetBlogdetail(int  BlogId)
+        {   try
+            {
+                string sqlString = $@"select blog.Id, blog.created_at, blog.BLOG_TITLE,blog.[IMAGE],blog.YOUTUBE_LINK,blog.TAG,blog_c.BLOG_CATEGORY,blog.BLOG_CATEGORY,blog.IS_FEATURED,blog.IS_HOT 
+                                  BLOG_CATEGORY_ID from BLOG_1980 blog join BLOG_CATEGORY_1981 blog_c on blog.BLOG_CATEGORY=blog_c.Id where blog.Id ='{BlogId}';";
+                var blogs = (await sqlFunction.ExecuteSqlQuery<BlogDetailModel>(sqlString)).FirstOrDefault();
+                if(blogs != null)
+                {
+                    blogs.TAG = formatTagsString(blogs.TAG);
+                    return new AddUpdateDelete<BlogDetailModel>() { Status = true, Message = "success", Data = blogs };
+                }
+                else
+                {
+                    return new AddUpdateDelete<BlogDetailModel>() { Status = false, Message = "No data found !" };
+                }
+               
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete<BlogDetailModel>() { Status = false, Message = "Error" };
+            }
+        }
+
+
         public async Task<Company> GetCompany(string companyCode)
         {
             string query = $@"SELECT company.[Id], company.[IS_TEMPLATE], company.TEMPLATE_ID,company.Latitude,company.Longitude, company.PALETTE_ID, 
@@ -473,10 +499,6 @@ namespace Barrway.Service.Repository
             response.SERVICE_LIST.ForEach(x => x.CALENDAR_PHOTO_PATH = GetFilepath(x.CALENDAR_PHOTO_PATH));
             return response;
         }
-
-
-
-
 
 
 
@@ -883,8 +905,6 @@ namespace Barrway.Service.Repository
             }
 
         }
-
-
 
 
 
@@ -1614,7 +1634,7 @@ namespace Barrway.Service.Repository
             string filterQuery = CustomMethods.GetDateQuery(calendarRequest.start, calendarRequest.end);
             data.filter = new FilterDTO() { field = "start", value = filterQuery  };
             List<CustomFilter> _customFilters = new List<CustomFilter>();
-            _customFilters.Add(new CustomFilter() { FieldName = "CALENDAR_CODE", Value = calendarRequest.COMPANY_CODE });
+            _customFilters.Add(new CustomFilter() { FieldName = "COMPANY_CODE", Value = calendarRequest.COMPANY_CODE });
             data.CustomFilters = _customFilters;
             ReferalFormDataResponseModel Dataresult = await formAPIRepository.getReferralFormFields(data);
 
@@ -2265,6 +2285,90 @@ namespace Barrway.Service.Repository
 
         }
         #endregion
+
+
+        public async Task<AddUpdateDelete> UpdateUserProfileData(UpdateUserProfileModel model)
+        {
+            try
+            {
+                string subQuery = "";
+                string ChQuery = "";
+
+                ChQuery = $@"select USER_EMAIL from USER_MASTER_1915 where USER_EMAIL='{model.USER_EMAIL}' and USER_ID !='{model.USER_ID}'";
+
+                List<IDictionary<string, object>> Email = await sqlFunction.ExecuteSqlQuery(ChQuery);
+
+                if (Email.Count > 0)
+                {
+
+                    return new AddUpdateDelete() { Status = false, Message = "This email addres is already in use with diffrent user" };
+                }
+
+                if (!string.IsNullOrEmpty(model.USER_PHONE))
+                {
+                    ChQuery = $@"select USER_PHONE from USER_MASTER_1915 where USER_PHONE='{model.USER_PHONE}' and USER_ID !='{model.USER_ID}'";
+
+                    List<IDictionary<string, object>> Mobile = await sqlFunction.ExecuteSqlQuery(ChQuery);
+
+                    if (Mobile.Count > 0)
+                    {
+                        return new AddUpdateDelete() { Status = false, Message = "This Phone number is already in use with diffrent user" };
+                    }
+                }
+
+
+
+                
+                string dateofbirth = "NULL";
+                if (model.DATE_OF_BIRTH.HasValue)
+                {
+                    dateofbirth = "'" + model.DATE_OF_BIRTH.Value.ToString("yyyy-MM-dd") + "'";
+                }
+
+                string query = $@"update PUBLIC_USER_ACCOUNT_1943 set FIRST_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.FIRST_NAME)}', LAST_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.LAST_NAME)}', CHINESE_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.CHINESE_NAME)}', NICK_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.NICK_NAME)}', GENDER = '{model.GENDER}', DATE_OF_BIRTH = {dateofbirth} where USER_ID = N'{model.USER_ID}'
+                              update USER_MASTER_1915 set {subQuery}  USER_PHONE = '{model.USER_PHONE}',Country_Code='{model.Country_Code}' where USER_ID = N'{model.USER_ID}' ";
+
+                int result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                if (result > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+
+        public async Task<AddUpdateDelete> changespassword(userPassword model,string USER_ID)
+        {
+            try
+            {               
+                string query = $@"update USER_MASTER_1915 set  USER_PASSWORD = '{model.newpassword}' where USER_ID = N'{USER_ID}' ";
+
+                int result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                if (result > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
 
     }
 }
