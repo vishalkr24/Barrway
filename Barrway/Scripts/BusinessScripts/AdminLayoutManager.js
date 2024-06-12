@@ -193,18 +193,23 @@ function setCalendarDashboardData() {
             }, headerSort: false
         },
         {
-            title: 'Date', field: 'BOOKING_DATE', headerFilter: "input"
+            title: 'From Time', field: 'start', headerFilter: "input", formatter: function (cell, formatter) {
+                return moment(cell.getData().start).format("YYYY-MM-DD HH:mm");
+            }
         },
+        {
+            title: 'To Time', field: 'end', headerFilter: "input", formatter: function (cell, formatter) {
+                return moment(cell.getData().end).format("YYYY-MM-DD HH:mm");
+            }
+        },
+        //{
+        //    title: 'Date', field: 'BOOKING_DATE', headerFilter: "input"
+        //},
         { title: 'Service', field: 'SERVICE_NAME', headerFilter: "input" },
         { title: 'Service Provider', field: 'SERVICE_PROVIDER', headerFilter: "input" },
         { title: 'Location', field: 'LOCATION_NAME', headerFilter: "input" },
-        { title: 'Client Name', field: 'CLIENT_NAME', headerFilter: "input" },
-        {
-            title: 'From Time', field: 'FROM_TIME', headerFilter: "input"
-        },
-        {
-            title: 'To Time', field: 'TO_TIME', headerFilter: "input"
-        }
+        /*{ title: 'Client Name', field: 'CLIENT_NAME', headerFilter: "input" },*/
+        
     ];
     var columns2 = [{ title: 'FROM_TIME', field: 'FROM_TIME', visible: false } ];
     var CalendarMasterList = function () {
@@ -219,7 +224,7 @@ function setCalendarDashboardData() {
                 layout: "fitDataFill",
                 responsiveLayout: false,
                 initialSort: [
-                    { column: "FROM_TIME", dir: "desc" }
+                    { column: "[start]", dir: "asc" }
                 ],
                 persistenceID: "persisrecords",
                 persistenceMode: true,
@@ -267,7 +272,7 @@ function setCalendarDashboardData() {
                     }
                 },
                 /// pagination: "local",              
-                ajaxFiltering: false,
+                ajaxFiltering: true,
                 ajaxSorting: true,
                 ajaxLoader: true,
                 ajaxURL: "/Calendar/GetCalendarUpcomingBookingsData",

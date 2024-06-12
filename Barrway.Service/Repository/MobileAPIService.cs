@@ -21,6 +21,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Twilio.TwiML.Voice;
 using Barrway.DTO.APIModels.Account;
+using Barrway.DTO.APIModels.Payment;
 
 namespace Barrway.Service.Repository
 {
@@ -2260,9 +2261,132 @@ namespace Barrway.Service.Repository
             {
                 return new EventDetails();
             }
+        }
+        #endregion
 
 
 
+        #region
+
+        public async Task<AddUpdateDelete> GetSingleCalendarPackage(string PackageId)
+        {
+            try
+            {
+
+                var query = $@"SELECT [Id]
+                                  ,[CALENDAR_CODE]
+                                  ,[COMPANY_CODE]
+                                  ,[PACKAGE_NAME]
+                                  ,[PACKAGE_PRICE]
+                                  ,[PRICE_PER_SLOT]
+                                  ,[PACKAGE_COIN]
+                                  ,[PACKAGE_SEQUENCE]
+                                  ,[PACKAGE_DESCRIPTION]
+                                  ,[IS_ACTIVE]
+                                  ,[VALIDITY_IN_MONTHS]
+                              FROM [dbo].[CALENDAR_PACKAGE_MASTER_1952] where Id = '{PackageId}'";
+                var result = await sqlFunction.ExecuteSqlQuery(query);
+
+                if (result.Count > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = result.FirstOrDefault() };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "No Package found" };
+                }
+                
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message.ToString() };
+            }
+        }
+
+        public async Task<AddUpdateDelete> CreatePaymentTracker(PaymentTrackerModel model)
+        {
+            try
+            {
+                Form_DataTable data = new Form_DataTable();
+                data.action = (int)FormAction.Save;
+                data.formId = (int)FormSetting.PAYMENT_TRACKER;
+                data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.ToDictionary());
+                data.formGroupKey = Guid.NewGuid().ToString();
+                var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+                if (formResult.res == 1)
+                {
+                    return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Message = formResult.Message, Status = false };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message.ToString() };
+            }
+        }
+
+        public async Task<AddUpdateDelete> CreatePaymentHistory(PaymentHistoryModel model)
+        {
+            try
+            {
+                Form_DataTable data = new Form_DataTable();
+                data.action = (int)FormAction.Save;
+                data.formId = (int)FormSetting.PAYMENT_HISTORY_MASTER;
+                data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.ToDictionary());
+                data.formGroupKey = Guid.NewGuid().ToString();
+                var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+                if (formResult.res == 1)
+                {
+                    return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = formResult.Id.ToString() };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Message = formResult.Message, Status = false };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message.ToString() };
+            }
+        }
+
+        public async Task<AddUpdateDelete> CreateOrder(OrderModel model)
+        {
+            try
+            {
+                Form_DataTable data = new Form_DataTable();
+                data.action = (int)FormAction.Save;
+                data.formId = (int)FormSetting.ORDER_MASTER;
+                data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(model.ToDictionary());
+                data.formGroupKey = Guid.NewGuid().ToString();
+                var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+                if (formResult.res == 1)
+                {
+                    string OrderNo = "ORD" + formResult.Id.ToString().PadLeft(5, '0');
+                    var query = $@"update ORDER_MASTER_1969 set ORDER_NO = '{OrderNo}' where Id = '{formResult.Id.ToString()}'";
+                    var result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                    return new AddUpdateDelete() { Message = AppMessage.Success, Status = true, Data = OrderNo };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Message = formResult.Message, Status = false };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message.ToString() };
+            }
         }
         #endregion
 
