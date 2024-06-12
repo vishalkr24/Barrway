@@ -988,7 +988,7 @@ namespace Barrway.Controllers
             var result = await formAPIRepository.ManageCalenderReferrenceNew(data);
             if (result != null && result.Any(x => x.res == 1))
             {
-                await calendarService.UpdateCalendarReference(data);
+                //await calendarService.UpdateCalendarReference(data);
             }
             return Json(result);
         }
