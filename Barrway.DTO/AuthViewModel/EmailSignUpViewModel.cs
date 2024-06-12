@@ -14,7 +14,10 @@ namespace Barrway.DTO.AuthViewModel
         public string USER_NAME { get; set; }
 
         [Required(ErrorMessage = "First name is required.")]
+        [RegularExpression(@"/^[-\w\s]+$/", ErrorMessage = "Name can not have special characters")]
         public string FIRST_NAME { get; set; }
+
+        [RegularExpression(@"/^[-\w\s]+$/", ErrorMessage = "Name can not have special characters")]
         public string LAST_NAME { get; set; }
 
         [Required(ErrorMessage = "Email is required")]
