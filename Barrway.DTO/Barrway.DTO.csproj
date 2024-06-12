@@ -85,6 +85,12 @@
     <Compile Include="APIModels\Dashboard\FeatureBlogModel.cs" />
     <Compile Include="APIModels\Dashboard\FeatureCompanyModel.cs" />
     <Compile Include="APIModels\Dashboard\SearchFilterModel.cs" />
+    <Compile Include="APIModels\Payment\CalendarPackageModel.cs" />
+    <Compile Include="APIModels\Payment\ApiOrderModel.cs" />
+    <Compile Include="APIModels\Payment\OrderDetailsViewModel.cs" />
+    <Compile Include="APIModels\Payment\OrderModel.cs" />
+    <Compile Include="APIModels\Payment\PaymentHistoryModel.cs" />
+    <Compile Include="APIModels\Payment\PaymentTrackerModel.cs" />
     <Compile Include="APIModels\SearchAPI\CompanySearchApiModel.cs" />
     <Compile Include="APIModels\SearchAPI\BlogSearchAPIModel.cs" />
     <Compile Include="APIModels\SearchAPI\FavouriteCalendar.cs" />

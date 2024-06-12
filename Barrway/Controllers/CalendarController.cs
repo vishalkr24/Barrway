@@ -1698,14 +1698,6 @@ namespace Barrway.Controllers
                     double paging = (double)total_records / size;
                     last_page = Math.Floor(paging) + 1;
 
-                    transactionList.ForEach(x =>
-                    {
-                        x["BOOKING_DATE"] = Convert.ToDateTime(x["BOOKING_DATE"]).ToString("dd-MM-yyyy");
-                        x["FROM_TIME"] = Convert.ToDateTime(x["FROM_TIME"]).ToString("HH:mm tt");
-                        x["TO_TIME"] = Convert.ToDateTime(x["TO_TIME"]).ToString("HH:mm tt");
-
-                    });
-
                 }
                
                 return Json(new { data = transactionList, last_page }, JsonRequestBehavior.AllowGet);

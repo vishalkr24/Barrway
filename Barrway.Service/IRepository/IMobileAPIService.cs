@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using Barrway.DTO.APIModels.Account;
+using Barrway.DTO.APIModels.Payment;
 
 namespace Barrway.Service.IRepository
 {
@@ -80,7 +81,18 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> changespassword(userPassword model, string USER_ID);
 
 
+        #region
 
+        Task<AddUpdateDelete> GetSingleCalendarPackage(string PackageId);
+
+        Task<AddUpdateDelete> CreatePaymentTracker(PaymentTrackerModel model);
+
+        Task<AddUpdateDelete> CreatePaymentHistory(PaymentHistoryModel model);
+
+        Task<AddUpdateDelete> CreateLedgerEntry(LedgerModel model);
+        Task<AddUpdateDelete> CreateOrder(OrderModel model);
+
+        #endregion
 
     }
 }

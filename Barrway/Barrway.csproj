@@ -486,6 +486,7 @@
     <Compile Include="Controllers\API\v1\BookingController.cs" />
     <Compile Include="Controllers\API\v1\CompanyController.cs" />
     <Compile Include="Controllers\API\v1\DashboardController.cs" />
+    <Compile Include="Controllers\API\v1\PaymentController.cs" />
     <Compile Include="Controllers\API\v1\SearchAPIController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BusinessMarketplaceController.cs" />
