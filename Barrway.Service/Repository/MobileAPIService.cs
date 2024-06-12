@@ -1629,6 +1629,7 @@ namespace Barrway.Service.Repository
             var calendarRequest = new CalendarRequestModel() { COMPANY_CODE= companycode,start=model.start,end=model.end };
 
             Form_DataTable data = mapper.Map<Form_DataTable>(calendarRequest);
+            data.IsPublicUser = true;
             data.action = 1;
             data.ActivityFormId = (int)FormSetting.SERVICE_MASTER;
             data.resourceFormId = (int)FormSetting.LOCATION_MASTER;

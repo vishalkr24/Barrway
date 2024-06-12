@@ -40,7 +40,7 @@ namespace Barrway.Controllers.API.v1
             }
         }
 
-        [Route("api/calendar/Userevents")]
+        [Route("api/calendar/myevents")]
         [HttpPost]
         [ResponseType(typeof(List<IDictionary<string, object>>))]
         public async Task<IHttpActionResult> Userevents(UserEventsViewmodel model)
