@@ -2917,7 +2917,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
                                     where f.formid=2305 and participant_m.EMAIL = '{UserEmail}' and transaction_m.SLOT = f.Id and cast(f.[end] as datetime) > cast('{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' as datetime)
                                     order by cast(f.[start] as datetime)
                                     ) ,
-                                    cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
+                                    cte2 as ( select ROW_NUMBER() OVER(ORDER BY start) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
 
 
                                     select* into #temptable from cte2  where len(customtitle)>0;    declare @counter int= 0, @c int= 1;   
