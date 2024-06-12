@@ -38,10 +38,12 @@ namespace Barrway.Controllers
         private readonly IBusinessUserService businessUserService;
         private readonly IMasterService masterService;
         private readonly ISqlFunction sqlFunction;
+        private readonly ICommonService commonService;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         // GET: FormAPI
-        public FormAPIController(IFormAPIRepository formAPIRepository, ICalendarService calendarService, IPublicUserService publicUserService, IBusinessUserService businessUserService, IMasterService masterService, ISqlFunction sqlFunction)
+        public FormAPIController(IFormAPIRepository formAPIRepository, ICalendarService calendarService, IPublicUserService publicUserService, 
+            IBusinessUserService businessUserService, IMasterService masterService, ISqlFunction sqlFunction,ICommonService commonService)
         {
             this.formAPIRepository = formAPIRepository;
             this.calendarService = calendarService;
@@ -49,6 +51,7 @@ namespace Barrway.Controllers
             this.businessUserService = businessUserService;
             this.masterService = masterService;
             this.sqlFunction = sqlFunction;
+            this.commonService = commonService;
         }
 
         [HttpPost]
@@ -660,248 +663,9 @@ namespace Barrway.Controllers
                 }
             }
             ReferalFormDataResponseModel result = await formAPIRepository.getReferralFormFields(data);
-
-            //ReferalFormDataResponseModel result = new ReferalFormDataResponseModel();
-            //result.events=await calendarService.GetEvents(data);
-
-            ReferalFormDataResponseModel finalResult = new ReferalFormDataResponseModel();
-
-            if (data.IsPublicUser)
-            {
-                var enrolledData = await publicUserService.GetAllEnrolledCalendarsData(data.COMPANY_CODE, UserIdentity.UserEmail, "", data.IsCustomInFilter);
-
-                if (enrolledData.Status)
-                {
-                    finalResult.activityDetails = new List<DynamicDropdownNew>();
-                    finalResult.resourceDetails = new List<DynamicDropdownNew>();
-                    finalResult.events = new List<IDictionary<string, object>>();
-                    finalResult.activityEvents = new List<IDictionary<string, object>>();
-
-                    for (int i = 0; i < enrolledData.Data.Count; i++)
-                    {
-                        try
-                        {
-                            // filter activity Details
-                            for (int j = 0; j < result.activityDetails.Count; j++)
-                            {
-                                if (!string.IsNullOrEmpty(result.activityDetails[j].title))
-                                {
-                                    if ((enrolledData.Data[i]["customForms"]).Contains(result.activityDetails[j].title))
-                                    {
-                                        finalResult.activityDetails.Add(result.activityDetails[j]);
-                                    }
-                                }
-
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-
-                        }
-
-
-
-                        // filter events
-                        try
-                        {
-                            for (int j = 0; j < result.events.Count; j++)
-                            {
-                                if (enrolledData.Data[i]["Id"].ToString() == result.events[j]["Id"].ToString())
-                                {
-                                    result.events[j].Add("CALENDAR_NAME", enrolledData.Data[i]["CALENDAR_NAME"].ToString());
-                                    result.events[j].Add("COMPANY_NAME_ENGLISH", enrolledData.Data[i]["COMPANY_NAME_ENGLISH"].ToString());
-                                    if (!finalResult.events.Any(x => x["Id"]?.ToString() == result.events[j]["Id"].ToString()))
-                                    {
-                                        finalResult.events.Add(result.events[j]);
-                                    }
-                                }
-                            }
-
-                            // filter activity events
-                            for (int j = 0; j < result.activityEvents.Count; j++)
-                            {
-                                if (enrolledData.Data[i]["Id"].ToString() == result.activityEvents[j]["Id"].ToString())
-                                {
-                                    if (!finalResult.activityEvents.Any(x => x["Id"]?.ToString() == result.activityEvents[j]["Id"].ToString()))
-                                    {
-                                        finalResult.activityEvents.Add(result.activityEvents[j]);
-                                    }
-                                }
-                            }
-
-                            // filter resource details
-                            for (int j = 0; j < result.resourceDetails.Count; j++)
-                            {
-                                if (!string.IsNullOrEmpty(result.resourceDetails[j].title))
-                                {
-                                    if ((enrolledData.Data[i]["customForms"]).Contains(result.resourceDetails[j].title))
-                                    {
-                                        if (!finalResult.resourceDetails.Any(x => x.Id?.ToString() == result.resourceDetails[j].Id.ToString()))
-                                        {
-                                            finalResult.resourceDetails.Add(result.resourceDetails[j]);
-                                        }
-                                    }
-                                }
-                            }
-
-                        }
-                        catch (Exception ex)
-                        {
-
-                        }
-
-                    }
-
-                    result = finalResult;
-
-                }
-            }
-
-            {
-                var alreadyEnrolledEvents = (await publicUserService.GetAlreadyEnrolledEvents(data.COMPANY_CODE, UserIdentity.UserEmail, data.filter.value)).Data as List<IDictionary<string, object>>;
-                if (alreadyEnrolledEvents != null)
-                {
-                    if (result != null)
-                    {
-                        foreach (var item in result.events)
-                        {
-                            if (alreadyEnrolledEvents.Count > 0)
-                            {
-                                if (alreadyEnrolledEvents.Any(x => x["Id"]?.ToString() == item["Id"]?.ToString()))
-                                {
-                                    item.Add("IsAlreadyBooked", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["IsAlreadyBooked"]);
-                                    item.Add("OverlapBookingFlag", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["OverlapBookingFlag"]);
-                                    item.Add("ATTEND", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["ATTEND"]);
-                                    item.Add("IsReviewable", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["IsReviewable"]);
-                                    item.Add("TransactionId", alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["TransactionId"]);
-                                }
-                                else
-                                {
-                                    item.Add("IsAlreadyBooked", 'N');
-                                    item.Add("OverlapBookingFlag", 'Y');
-                                    item.Add("IsReviewable", 'N');
-                                    item.Add("ATTEND", 'N');
-                                    item.Add("TransactionId", '0');
-                                }
-                            }                            
-                            else
-                            {
-                                item.Add("IsAlreadyBooked", 'N');
-                                item.Add("OverlapBookingFlag", 'Y');
-                                item.Add("IsReviewable", 'N');
-                                item.Add("ATTEND", 'N');
-                                item.Add("TransactionId", '0');
-                            }
-                        }
-                    }
-                   
-                    
-                }
-            }
-
-            if (result != null)
-            {
-                if (result.events != null && result.events.Count() > 0)
-                {
-                    result.events.ForEach(e =>
-                    {
-                        if (e.ContainsKey("start") && e["start"] != null)
-                        {
-                            e["start"] = Convert.ToDateTime(e["start"]).ToString("yyyy-MM-ddTHH:mm:ss");
-                        }
-                        if (e.ContainsKey("end") && e["end"] != null)
-                        {
-                            e["end"] = Convert.ToDateTime(e["end"]).ToString("yyyy-MM-ddTHH:mm:ss");
-                        }
-                        if (e.ContainsKey("title") && e["title"] != null)
-                        {
-                            e["title"] = "";
-                        }
-                    });
-                }
-            }
-
-            if (!data.IsPublicUser)
-            {
-                var calendarDetailsResult = await businessUserService.GetCalendarDetails(data.CALENDAR_CODE);
-                var service = await businessUserService.GetServiceList(data.CALENDAR_CODE, data.COMPANY_CODE);
-
-                if (calendarDetailsResult.Status)
-                {
-                    var calendarDetails = calendarDetailsResult.Data as IDictionary<string, object>;
-                    if (calendarDetails.ContainsKey("category") && calendarDetails["category"] != null)
-                    {
-                        var calendarCategory = calendarDetails["category"] as IDictionary<string, object>;
-                        if (calendarCategory.ContainsKey("IS_SERVICE_TYPE"))
-                        {
-                            string is_service_type = calendarCategory["IS_SERVICE_TYPE"]?.ToString() ?? "";
-                            if (is_service_type != "N")
-                            {
-                                if (result != null && result.events != null)
-                                {
-                                    result.events = result.events.Where(x => x.ContainsKey("EVENT_TYPE") && x["EVENT_TYPE"]?.ToString() != "BOOKING").ToList();
-                                }
-                            }
-                        }
-                    }
-
-                    if (result.events != null && result.events.Count() > 0)
-                    {
-                        string needOnlinePaymentFlag = "N";
-
-                        int days = 0;
-
-                        if (service.Data != null)
-                        {
-                            var serviceData = service.Data as List<IDictionary<string, object>>;
-                            try
-                            {
-                                if (serviceData.Any(x => x["Id"]?.ToString() == result.events[0]["activities"]?.ToString()))
-                                {
-                                    needOnlinePaymentFlag = serviceData.FirstOrDefault(x => x["Id"]?.ToString() == result.events[0]["activities"]?.ToString())["NEED_ONLINE_PAYMENT"]?.ToString();
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-
-                            }
-
-                        }
-
-                        if (!string.IsNullOrEmpty(calendarDetails["BOOKING_DEADLINE"]?.ToString()))
-                        {
-                            try
-                            {
-                                days = Convert.ToInt32(calendarDetails["BOOKING_DEADLINE"].ToString());
-                            }
-                            catch (Exception ex)
-                            {
-
-                            }
-                        }
-
-
-                        days = (days == 0) ? 0 : days + 1;
-
-                        foreach (var evt in result.events)
-                        {
-                            DateTime deadline = Convert.ToDateTime(evt["start"].ToString());
-                            if (days > 0)
-                            {
-                                deadline = deadline.AddDays((days * -1));
-                                deadline = (new DateTime(deadline.Year, deadline.Month, deadline.Day, 23, 59, 0));
-                            }
-
-                            evt.Add("NEED_ONLINE_PAYMENT", needOnlinePaymentFlag);
-                            evt.Add("BOOKING_DEADLINE", deadline.ToString("yyyy-MM-dd HH:mm"));
-                        }
-                    }
-                    
-                }
-            }
+            await commonService.ModifyEventsData(data, result,UserIdentity.UserEmail);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
-
 
         [HttpPost]
         public async Task<ActionResult> getReferralFormFieldsListView(Form_DataTable data)

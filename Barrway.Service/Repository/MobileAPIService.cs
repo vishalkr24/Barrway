@@ -30,14 +30,16 @@ namespace Barrway.Service.Repository
         private readonly IFormAPIRepository formAPIRepository;
         private readonly IMapper mapper;
         private readonly IAuthService authService;
+        private readonly ICommonService commonService;
         private readonly string baseUrl = ConfigurationManager.AppSettings["baseurl"];
 
-        public MobileAPIService(ISqlFunction sqlFunction, IFormAPIRepository formAPIRepository, IMapper mapper, IAuthService authService)
+        public MobileAPIService(ISqlFunction sqlFunction, IFormAPIRepository formAPIRepository, IMapper mapper, IAuthService authService,ICommonService commonService)
         {
             this.sqlFunction = sqlFunction;
             this.formAPIRepository = formAPIRepository;
             this.mapper = mapper;
             this.authService = authService;
+            this.commonService = commonService;
         }
 
         public async Task<SearchFilterModel> GetSearchFilter()
@@ -1589,17 +1591,19 @@ namespace Barrway.Service.Repository
             public string COMPANY_CODE { get; set; }
         }
 
-        public async Task<List<IDictionary<string, object>>> GetUserEvents(UserEventsViewmodel model,string userEmail )
+        public async Task<List<IDictionary<string, object>>> GetUserEvents(UserEventsViewmodel model,string userEmail)
         {
             
             string sqlString = $@"SELECT distinct calendar.[COMPANY_CODE]
                                   FROM [dbo].[CALENDAR_FORM_1935] calendar
-                                  join TRANSACTION_MASTER_1942 transaction_m on calendar.CALENDAR_CODE = transaction_m.CALENDAR_CODE
+                                  join TRANSACTION_MASTER_1942 transaction_m on calendar.CALENDAR_CODE = transaction_m.CALENDAR_CODE and calendar.Id = transaction_m.SLOT
                                   join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
-                                  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
-                                  where EMAIL = '{userEmail}' and calendar.Id = transaction_m.SLOT";            
+                                  join USER_MASTER_1915 um on um.[USER_ID]=participant.STUDENT_ID
+                                  join BUSINESS_CALENDAR_MASTER_1925 c on c.CALENDAR_CODE=calendar.CALENDAR_CODE
+								  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
+                                  where um.USER_EMAIL = '{userEmail}'";            
             var result = (await sqlFunction.ExecuteSqlQuery<companyList>(sqlString)).ToList();
-            string companycode = string.Join(", ", result.Select(x => x.COMPANY_CODE));
+            string companycode = "'"+string.Join("','", result.Select(x => x.COMPANY_CODE))+"'";
             
             var calendarRequest = new CalendarRequestModel() { COMPANY_CODE= companycode,start=model.start,end=model.end };
 
@@ -1608,21 +1612,21 @@ namespace Barrway.Service.Repository
             data.ActivityFormId = (int)FormSetting.SERVICE_MASTER;
             data.resourceFormId = (int)FormSetting.LOCATION_MASTER;
             data.isEvent = 1;
-            data.IsCustomFilter = true;
+            data.IsCustomInFilter = true;
             data.isCalender = 1;
             data.formId = (int)FormSetting.CALENDAR_FORM;
             string filterQuery = CustomMethods.GetDateQuery(calendarRequest.start, calendarRequest.end);
             data.filter = new FilterDTO() { field = "start", value = filterQuery  };
             List<CustomFilter> _customFilters = new List<CustomFilter>();
-            _customFilters.Add(new CustomFilter() { FieldName = "CALENDAR_CODE", Value = calendarRequest.COMPANY_CODE });
+            _customFilters.Add(new CustomFilter() { FieldName = "COMPANY_CODE", Value = calendarRequest.COMPANY_CODE });
             data.CustomFilters = _customFilters;
-            ReferalFormDataResponseModel Dataresult = await formAPIRepository.getReferralFormFields(data);
+            ReferalFormDataResponseModel eventsResult = await formAPIRepository.getReferralFormFields(data);
 
-            if (result != null && Dataresult.events != null)
+            if (result != null && eventsResult.events != null)
             {
-                return Dataresult.events;
+              await commonService.ModifyEventsData(data, eventsResult, userEmail);
+              return eventsResult.events;
             }
-           
             return new List<IDictionary<string, object>>();
         }
 
