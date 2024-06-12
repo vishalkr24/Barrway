@@ -12634,6 +12634,7 @@
                                     $scope.allReferrenceData.groupColumns.name = firstName.field;
                                 }
                                 $scope.formDataTabulatorTempWithoutGroupBy = $scope.allReferrenceData.formDataListNew;
+                                $scope.formDataTabulatorTempWithoutGroupBy.forEach(x => x.isSelected = false);
                                 //console.log($scope.formDataTabulatorTempWithoutGroupBy, 'allReferrenceData')
                                 //console.log($scope.allReferrenceData.formDataHeaders, 'Header')
 
@@ -12899,8 +12900,17 @@
                 _.each($scope.selectedTabulatorListStudent, function (item) {
                     window["popupTabulatorstudent"].getRows()
                         .filter(row => row.getData().Id.toString() == item[$scope.selectedKeyField])
-                        .forEach(row => row.toggleSelect());
+                        .forEach(row => {
+                            row.toggleSelect()
+                            row.getData().isSelected = true;
+                        }
+                    );
                 });
+                if ($scope.selectedTabulatorListStudent.length > 0) {
+                    window["popupTabulatorstudent"].setSort([
+                        { column: "isSelected", dir: "desc" }
+                    ]);
+                }
             }
         };
         function saveEventModelpopTabulator() {
@@ -13406,6 +13416,7 @@
             });
 
             finalArray.unshift({ title: "formId", visible: false });
+            finalArray.unshift({ title: "isSelected", field:"isSelected", visible: false });
 
             //finalArray.unshift({ title: "Id", field:"Id", visible: false });
             finalArray.unshift({ title: "formGroupKey", visible: false });
