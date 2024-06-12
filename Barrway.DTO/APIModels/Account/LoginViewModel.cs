@@ -17,4 +17,17 @@ namespace Barrway.DTO.APIModels.Account
         [Required(ErrorMessage = "Please Enter Password!!")]
         public string USER_PASSWORD { get; set; }
     }
+
+
+    public class LoginPhoneViewModel
+    {
+        [Required(ErrorMessage = "Phoene is required")]
+        public string USER_PHONE { get; set; }
+        [Required(ErrorMessage = "Country code is required")]
+        public string Country_Code { get; set; }
+
+        [Required(ErrorMessage = "Please Enter Password!!")]
+        public string USER_PASSWORD { get; set; }
+    }
+
 }

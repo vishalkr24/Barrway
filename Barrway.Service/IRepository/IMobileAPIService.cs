@@ -74,6 +74,12 @@ namespace Barrway.Service.IRepository
 
         Task<List<IDictionary<string, object>>> GetUserEvents(UserEventsViewmodel model, string userEmail);
 
+        Task<AddUpdateDelete<BlogDetailModel>> GetBlogdetail(int BlogId);
+
+        Task<AddUpdateDelete> UpdateUserProfileData(UpdateUserProfileModel model);
+
+        Task<AddUpdateDelete> changespassword(userPassword model, string USER_ID);
+
 
         #region
 
@@ -87,8 +93,6 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> CreateOrder(OrderModel model);
 
         #endregion
-
-
 
     }
 }
