@@ -12712,6 +12712,7 @@
             /* Save Selected Student*/
 
             $("#get-tabulator-valuescalender").click(function () {
+                debugger;
                 var formID = $("#addTransactionRecordTabulatorModal input[name=formID]").val();
                 var oneToMany = $("#addTransactionRecordTabulatorModal input[name='modal-one-to-many']").val();
                 $rootScope.onetomany = $("#addTransactionRecordTabulatorModal input[name='modal-one-to-many']").val();
@@ -12904,7 +12905,7 @@
                             row.toggleSelect()
                             row.getData().isSelected = true;
                         }
-                    );
+                        );
                 });
                 if ($scope.selectedTabulatorListStudent.length > 0) {
                     window["popupTabulatorstudent"].setSort([
@@ -13416,7 +13417,7 @@
             });
 
             finalArray.unshift({ title: "formId", visible: false });
-            finalArray.unshift({ title: "isSelected", field:"isSelected", visible: false });
+            finalArray.unshift({ title: "isSelected", field: "isSelected", visible: false });
 
             //finalArray.unshift({ title: "Id", field:"Id", visible: false });
             finalArray.unshift({ title: "formGroupKey", visible: false });
@@ -16036,97 +16037,125 @@
             $rootScope.$emit("ShowLoading");
             mainService.manageCalenderReferrenceNew("ManageCalenderReferrenceNew", newParam)
                 .then(function (response) {
+
                     if (response.data != null && angular.isDefined(response.data)) {
-                        //var temp = response.data;    
-                        var tempTabulatorData = response.data;
-                        if (newParam.action == 4 || newParam.action == 1) {
 
-                            if ($scope.otherformSelectionDropdown && $scope.otherformSelectionDropdown != "") {
-                                var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
-                                $('div.calendar').fullCalendar('refetchEvents');
-                                $scope.otherformSelectionDropdown = "";
+                        if (angular.isDefined(response.data.Status) && response.data.Status == false) {
+                            $rootScope.$emit("HideLoading");
+                            
+                            let participantData = JSON.parse(response.data.Data.formfieldDataListTemp);
+                            let participantString = "";
 
-                                //if (!DataService.isEmpty($scope.formDetailsDataInfo.otherformid)) {
-                                //    if (!DataService.isEmpty(newParam.formfieldDataListTemp)) {
-                                //        var studentList = JSON.parse(newParam.formfieldDataListTemp);
-                                //        if (!DataService.isEmpty($scope.formDetailsDataInfo.otherFormFieldName)) {
-                                //            var studentNameField = JSON.parse($scope.formDetailsDataInfo.otherFormFieldName)
-                                //            studentNameField = studentNameField[0];
-                                //            _.each(studentList, function (item) {
-                                //                customFourthTitle += item[studentNameField] + " , ";
-                                //            });
-                                //            if (customFourthTitle.length > 0) {
-                                //                customFourthTitle = customFourthTitle.substring(0, customFourthTitle.length - 2);
-                                //            }
-                                //        }
-                                //    }
-                                //}
-                                //newParam.customFourthTitle = customFourthTitle;
-                                //reBindCalenderEvents(newParam, 1);
-                                $rootScope.$emit("HideLoading");
+                            participantData.filter(x=> x["OverlapBookingFlag"] == "N").forEach(x => {
+                                participantString += `<li>${x["STUDENT_NAME"]} (${x["EMAIL"]})</li>`;
+                            })
 
-                                return;
-                            }
+                            const wrapper = document.createElement('div');
+                            wrapper.innerHTML = `<div>Students with overlaping slots are:</div></br><div style="text-align: left!important;">
+                                                  <ol>${participantString}</ol></div>`;
 
-                            var dataArray = [];
-                            var oneToManyTempData = [];
-                            newParam.formGroupKey = $scope.tabuListLink.formGroupKey;
-                            newParam.Id = $scope.tabuListLink.selectedId;
-                            loadEventRecordDetails(newParam);
-                            //console.log(tempTabulatorData);
-                            var customFourthTitle = "";
-                            if (tempTabulatorData.length > 0) {
-                                if (tempTabulatorData[0].res == 1) {
-                                    if (!DataService.isEmpty($scope.formDetailsDataInfo.otherformid)) {
-                                        if (!DataService.isEmpty(newParam.formfieldDataListTemp)) {
-                                            var studentList = JSON.parse(newParam.formfieldDataListTemp);
-                                            if (!DataService.isEmpty($scope.formDetailsDataInfo.otherFormFieldName)) {
-                                                var studentNameField = JSON.parse($scope.formDetailsDataInfo.otherFormFieldName)
-                                                studentNameField = studentNameField[0];
-                                                _.each(studentList, function (item) {
-                                                    customFourthTitle += item[studentNameField] + " , ";
-                                                });
-                                                if (customFourthTitle.length > 0) {
-                                                    customFourthTitle = customFourthTitle.substring(0, customFourthTitle.length - 2);
+                            swal({
+                                icon: "error",
+                                title: response.data.Message,
+                                content: wrapper
+                            });
+
+                        } else {
+                            //var temp = response.data;    
+                            var tempTabulatorData = response.data;
+                            if (newParam.action == 4 || newParam.action == 1) {
+
+                                if ($scope.otherformSelectionDropdown && $scope.otherformSelectionDropdown != "") {
+                                    var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+                                    $('div.calendar').fullCalendar('refetchEvents');
+                                    $scope.otherformSelectionDropdown = "";
+
+                                    //if (!DataService.isEmpty($scope.formDetailsDataInfo.otherformid)) {
+                                    //    if (!DataService.isEmpty(newParam.formfieldDataListTemp)) {
+                                    //        var studentList = JSON.parse(newParam.formfieldDataListTemp);
+                                    //        if (!DataService.isEmpty($scope.formDetailsDataInfo.otherFormFieldName)) {
+                                    //            var studentNameField = JSON.parse($scope.formDetailsDataInfo.otherFormFieldName)
+                                    //            studentNameField = studentNameField[0];
+                                    //            _.each(studentList, function (item) {
+                                    //                customFourthTitle += item[studentNameField] + " , ";
+                                    //            });
+                                    //            if (customFourthTitle.length > 0) {
+                                    //                customFourthTitle = customFourthTitle.substring(0, customFourthTitle.length - 2);
+                                    //            }
+                                    //        }
+                                    //    }
+                                    //}
+                                    //newParam.customFourthTitle = customFourthTitle;
+                                    //reBindCalenderEvents(newParam, 1);
+                                    $rootScope.$emit("HideLoading");
+
+                                    return;
+                                }
+
+                                var dataArray = [];
+                                var oneToManyTempData = [];
+                                newParam.formGroupKey = $scope.tabuListLink.formGroupKey;
+                                newParam.Id = $scope.tabuListLink.selectedId;
+                                loadEventRecordDetails(newParam);
+                                //console.log(tempTabulatorData);
+                                var customFourthTitle = "";
+                                if (tempTabulatorData.length > 0) {
+                                    if (tempTabulatorData[0].res == 1) {
+                                        if (!DataService.isEmpty($scope.formDetailsDataInfo.otherformid)) {
+                                            if (!DataService.isEmpty(newParam.formfieldDataListTemp)) {
+                                                var studentList = JSON.parse(newParam.formfieldDataListTemp);
+                                                if (!DataService.isEmpty($scope.formDetailsDataInfo.otherFormFieldName)) {
+                                                    var studentNameField = JSON.parse($scope.formDetailsDataInfo.otherFormFieldName)
+                                                    studentNameField = studentNameField[0];
+                                                    _.each(studentList, function (item) {
+                                                        customFourthTitle += item[studentNameField] + " , ";
+                                                    });
+                                                    if (customFourthTitle.length > 0) {
+                                                        customFourthTitle = customFourthTitle.substring(0, customFourthTitle.length - 2);
+                                                    }
                                                 }
                                             }
                                         }
+                                        newParam.customFourthTitle = customFourthTitle;
+                                        reBindCalenderEvents(newParam, 1);
                                     }
-                                    newParam.customFourthTitle = customFourthTitle;
-                                    reBindCalenderEvents(newParam, 1);
                                 }
-                            }
 
 
-                            if (!$("body .popover").hasClass("isPopoverLoaded")) {
-                                $("#tabuListLink").on("click", function () {
-                                    var dialog = $ngBootbox.customDialog({
-                                        templateUrl: 'tabulatorModal.html',
-                                        scope: $scope,
-                                        title: 'Student',
-                                        size: "large"
+                                if (!$("body .popover").hasClass("isPopoverLoaded")) {
+                                    $("#tabuListLink").on("click", function () {
+                                        var dialog = $ngBootbox.customDialog({
+                                            templateUrl: 'tabulatorModal.html',
+                                            scope: $scope,
+                                            title: 'Student',
+                                            size: "large"
+                                        });
+                                        loadEventTabulator();
+                                        // $("body .popover").removeClass('isPopoverLoaded');
                                     });
-                                    loadEventTabulator();
-                                    // $("body .popover").removeClass('isPopoverLoaded');
-                                });
-                                $("#addTransactionRecord").on("click", function () {
-                                    var dialog = $ngBootbox.customDialog({
-                                        templateUrl: 'addTransactionRecordTabulatorModal.html',
-                                        scope: $scope,
-                                        title: 'Student',
-                                        size: "large"
+                                    $("#addTransactionRecord").on("click", function () {
+                                        var dialog = $ngBootbox.customDialog({
+                                            templateUrl: 'addTransactionRecordTabulatorModal.html',
+                                            scope: $scope,
+                                            title: 'Student',
+                                            size: "large"
+                                        });
+                                        loadStudentTabulator();
+                                        //$("body .popover").removeClass('isPopoverLoaded');
                                     });
-                                    loadStudentTabulator();
-                                    //$("body .popover").removeClass('isPopoverLoaded');
-                                });
+                                }
+
+
+
+
                             }
-
-
-
-
-                        }
                         //$rootScope.$emit("HideLoading");
+                        }
+
+                        
                     }
+
+
                 }, function (err) {
                     $rootScope.$emit("HideLoading");
                     console.log("some error occured." + err);
@@ -18384,7 +18413,7 @@
                     model: {
                         Email: "authmail@gmail.com"
                     }
-                    
+
                 },
                 success: function (result) {
                     swal({
@@ -18395,7 +18424,7 @@
                         if (result.Status) {
                             window.location.href = "Useradmin#/userdashboard";
                         }
-                        
+
                     });
                 },
                 error: function (err) {

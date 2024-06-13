@@ -98,7 +98,7 @@ namespace Barrway.Service.Repository
                         join CALENDAR_FORM_1935 f on f.Id = transaction_m.SLOT
                         join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
                         left join SESSION_REVIEWS_1983 review on review.EVENT_ID = transaction_m.SLOT and review.USER_EMAIL = participant.EMAIL
-                        where participant.EMAIL = '{UserEmail}' and f.Id = '{EventId}'";
+                        where participant.EMAIL = '{UserEmail}' and transaction_m.COMPANY_CODE = (select COMPANY_CODE from CALENDAR_FORM_1935 where Id = {EventId})";
 
                 var alreadyEnrolledEvents = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -128,25 +128,25 @@ namespace Barrway.Service.Repository
                                         item.Add("OverlapBookingFlag", "N");
                                     }
 
-                                    item["IsAlreadyBooked"] = 'Y';
+                                    item["IsAlreadyBooked"] = "Y";
                                     item["ATTEND"] = alreadyEnrolledEvents.FirstOrDefault(x => x["SLOT"]?.ToString() == item["Id"]?.ToString())["ATTEND"];
                                     item["TransactionId"] = alreadyEnrolledEvents.FirstOrDefault(x => x["SLOT"]?.ToString() == item["Id"]?.ToString())["Id"];
                                     //if (DateTimeUtility.Now() > Convert.ToDateTime(alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["end"]?.ToString()) && alreadyEnrolledEvents.FirstOrDefault(x => x["Id"]?.ToString() == item["Id"]?.ToString())["SESSION_REVIEWED"]?.ToString() == "N")
                                     if (DateTimeUtility.Now() > Convert.ToDateTime(item["start"]?.ToString()))
                                     {
-                                        item["IsReviewable"] = 'Y';
+                                        item["IsReviewable"] = "Y";
                                     }
                                     else
                                     {
-                                        item["IsReviewable"] = 'N';
+                                        item["IsReviewable"] = "N";
                                     }
                                 }
                                 else
                                 {
-                                    item["IsAlreadyBooked"] = 'N';
-                                    item["IsReviewable"] = 'N';
-                                    item["ATTEND"] = 'N';
-                                    item["TransactionId"] = '0';
+                                    item["IsAlreadyBooked"] = "N";
+                                    item["IsReviewable"] = "N";
+                                    item["ATTEND"] = "N";
+                                    item["TransactionId"] = "0";
 
                                     if (checkOverlapBooking)
                                     {
@@ -208,6 +208,123 @@ namespace Barrway.Service.Repository
             catch (Exception ex)
             {
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
+            }
+        }
+
+        public async Task<AddUpdateDelete> CheckOverlappingSlotByUserList(string EventId, List<IDictionary<string, string>> EmailList)
+        {
+            try
+            {
+                List<string> _emailList = new List<string>();
+
+                EmailList.ForEach(email =>
+                {
+                    _emailList.Add("'" + email["EMAIL"]?.ToString() + "'");
+                });
+
+                string query = $@"
+                                DECLARE @retval nvarchar(max);       DECLARE @sQuery nvarchar(max); DECLARE @ParmDefinition nvarchar(max);                        
+                                DECLARE @customTitleQuery nvarchar(max);                          
+                                IF OBJECT_ID(N'tempdb..#temptable') IS NOT NULL  BEGIN DROP TABLE #temptable END   ;with cte1 as( select distinct  f.*,f.resources 'resourceId'  ,  STUFF((SELECT ',' +  PARTICIPANT_MASTER_1940.[STUDENT_NAME]  
+                                from TRANSACTION_MASTER_1942 inner join PARTICIPANT_MASTER_1940 on TRANSACTION_MASTER_1942.STUDENT = PARTICIPANT_MASTER_1940.Id where TRANSACTION_MASTER_1942.formGroupKey = f.formGroupKey         FOR XML PATH('')), 1, 1, '') customFourthTitle
+                                , (dbo.[GetSubQueryCalender](f.formGroupKey)) customTitle,   (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceFormId) from form_calenderreferrence f2     
+                                where f2.formgroupkey = f.formGroupKey  FOR XML PATH('')), 1, 1, '')   ) customForms  , (  select STUFF((SELECT ',' + convert(nvarchar, f2.referrenceId) from form_calenderreferrence f2    
+                                where f2.formgroupkey = f.formGroupKey   FOR XML PATH('')), 1, 1, '')   ) customFormIds,  '' referrences_1,  '' referrences_2,  '' referrences_3, calendar.ALLOW_OVERLAP
+                                
+                                from CALENDAR_FORM_1935 f  
+                                  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
+								  join BUSINESS_CALENDAR_MASTER_1925 calendar on calendar.CALENDAR_CODE = f.CALENDAR_CODE
+                                where
+                                f.Id = '{EventId}' ),
+                                cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
+                                select* into #temptable from cte2  where len(customtitle)>0;    declare @counter int= 0, @c int= 1;   
+                                select @counter = (select count(1) from #temptable)	while @c <= @counter    begin    select @customTitleQuery = customTitle from #temptable where ROWNUMBER=@c;	SET @sQuery= ' select @retvalOUT = (' + @customTitleQuery + ')'  
+                                SET @ParmDefinition = N'@retvalOUT nvarchar(max) OUTPUT';
+                                EXEC sp_executesql @sQuery, @ParmDefinition, @retvalOUT = @retval OUTPUT;    update #temptable set customTitle=@retval where ROWNUMBER=@c;	set @c = @c + 1;  end  select *, 'N' as 'IsAlreadyBooked', 'N' as 'ATTEND', '0' as 'TransactionId', 'N' as 'IsReviewable' from #temptable
+                                ";
+
+                var result = await sqlFunction.ExecuteSqlQuery(query);
+
+                query = $@"select transaction_m.* 
+                        , 'Y' as 'IsAlreadyBooked'
+                        , f.[start], f.[end]
+                        , (select case when ((cast('{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' as datetime) >= cast((DATEADD(minute, -30, f.[start])) as datetime) and cast('{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' as datetime) <= cast(f.[end] as datetime) ) and transaction_m.ATTENDANCE not in ('PRESENT', 'ABSENT')) then 'Y' else 'N' end) as 'ATTEND'
+                        , case when review.Id is not null then 'Y' else 'N' end as 'SESSION_REVIEWED'
+                        from TRANSACTION_MASTER_1942 transaction_m 
+                        join CALENDAR_FORM_1935 f on f.Id = transaction_m.SLOT
+                        join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
+                        left join SESSION_REVIEWS_1983 review on review.EVENT_ID = transaction_m.SLOT and review.USER_EMAIL = participant.EMAIL
+                        where participant.EMAIL in ({string.Join(",", _emailList)}) and transaction_m.COMPANY_CODE = (select COMPANY_CODE from CALENDAR_FORM_1935 where Id = {EventId}) and f.resources not in (select resources from CALENDAR_FORM_1935 where Id = {EventId})";
+
+                var alreadyEnrolledEvents = await sqlFunction.ExecuteSqlQuery(query);
+
+                DateTime eventStartTime = Convert.ToDateTime(result.FirstOrDefault()["start"]?.ToString());
+                DateTime eventEndTime = Convert.ToDateTime(result.FirstOrDefault()["end"]?.ToString());
+
+                if (result != null)
+                {
+                    foreach (var item in EmailList)
+                    {
+                        if (alreadyEnrolledEvents != null)
+                        {
+                            if (alreadyEnrolledEvents.Count > 0)
+                            {
+                                bool checkOverlapBooking = true;
+
+                                bool bookingFlag = true;
+                                // check list of events which are booked of same day at [item] event
+                                if (alreadyEnrolledEvents.Any(x => eventStartTime.Date == Convert.ToDateTime(x["start"]?.ToString()).Date && x["STUDENT"]?.ToString() == item["Id"]?.ToString()))
+                                {
+                                    // there are enrolled events of current day
+
+                                    List<IDictionary<string, object>> listOfSameDayEvents = alreadyEnrolledEvents.Where(x => eventStartTime.Date == Convert.ToDateTime(x["start"]?.ToString()).Date).ToList();
+
+                                    if (listOfSameDayEvents.Any(x => !TimeSlotCompare(
+                                        new CommonTimeObject()
+                                        {
+                                            start = eventStartTime.ToString("HH:mm"),
+                                            end = eventEndTime.ToString("HH:mm")
+                                        },
+                                        new CommonTimeObject()
+                                        {
+                                            start = Convert.ToDateTime(x["start"]?.ToString()).ToString("HH:mm"),
+                                            end = Convert.ToDateTime(x["end"]?.ToString()).ToString("HH:mm")
+                                        }))
+                                    )
+                                    {
+                                        bookingFlag = false;
+                                    }
+                                }
+
+                                if (bookingFlag)
+                                {
+                                    EmailList.FirstOrDefault(x=> x["EMAIL"]?.ToString() == item["EMAIL"]?.ToString()).Add("OverlapBookingFlag", "Y");
+                                }
+                                else
+                                {
+                                    EmailList.FirstOrDefault(x => x["EMAIL"]?.ToString() == item["EMAIL"]?.ToString()).Add("OverlapBookingFlag", "N");
+                                }
+                            }
+                            else
+                            {
+                                EmailList.FirstOrDefault(x => x["EMAIL"]?.ToString() == item["EMAIL"]?.ToString()).Add("OverlapBookingFlag", "Y");
+                            }
+                        }
+                        else
+                        {
+                            EmailList.FirstOrDefault(x => x["EMAIL"]?.ToString() == item["EMAIL"]?.ToString()).Add("OverlapBookingFlag", "Y");
+                        }
+                    }
+                }
+
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = EmailList };
+
+
+
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError, Data = EmailList };
             }
         }
 

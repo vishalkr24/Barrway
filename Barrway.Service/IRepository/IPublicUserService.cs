@@ -20,6 +20,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> CreatePublicUserAccount(PublicAccountModel model);
         Task<AddUpdateDelete> GetSingleEventDetails(string EventId);
         Task<AddUpdateDelete> GetSingleEventDetailsWithFlags(string EventId, string UserEmail);
+        Task<AddUpdateDelete> CheckOverlappingSlotByUserList(string EventId, List<IDictionary<string, string>> EmailList);
         Task<AddUpdateDelete> GetLatestEventByServiceId(string ServiceId);
         Task<AddUpdateDelete> GetSingleServiceDetails(string EventId);
         Task<AddUpdateDelete> GetSinglePublicUserAccount(string UserId);
