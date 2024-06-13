@@ -209,8 +209,6 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                     dir = "desc";
                 }
 
-
-
                 List<string> applyFilter = new List<string>();
 
                 if (data.filter != null)
@@ -224,6 +222,8 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                             applyFilter.Add("f.[" + data.filter.field + "] " + data.filter.type + " '" + data.filter.value + "'");
                 }
 
+                bool _calendarCheck = false;
+                string calendarFilter = "";
 
                 if (data.filters != null && data.filters.Count() > 0)
                 {
@@ -238,8 +238,17 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                             }
                             else
                             {
-                                string filter = "f.[" + item.field + "] like N'%" + item.value + "%'";
-                                applyFilter.Add(filter);
+                                if (item.field == "CALENDAR_CODE")
+                                {
+                                    _calendarCheck = true;
+                                    calendarFilter = $"and f.CALENDAR_CODE = '{item.value}'";
+                                }
+                                else
+                                {
+                                    string filter = "f.[" + item.field + "] like N'%" + item.value + "%'";
+                                    applyFilter.Add(filter);
+                                }
+                                
                             }
                         }
 
@@ -253,10 +262,10 @@ join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CO
                 int PageNumber = data.page > 0 ? data.page : 1;
 
                 string strSql = $@"declare @PageSize int={PageSize} ,  @PageNumber int={PageNumber} ; with formdata as (
-select calendar.CALENDAR_NAME, company.COMPANY_NAME_ENGLISH, f.* from [dbo].[SERVICE_PROVIDER_MASTER_1934] f
-join BUSINESS_CALENDAR_MASTER_1925 calendar on calendar.CALENDAR_CODE = f.CALENDAR_CODE
-join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
-                                    where f.COMPANY_CODE='{companyCode}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+                                    select calendar.CALENDAR_NAME, company.COMPANY_NAME_ENGLISH, f.* from [dbo].[SERVICE_PROVIDER_MASTER_1934] f
+                                    join BUSINESS_CALENDAR_MASTER_1925 calendar on calendar.CALENDAR_CODE = f.CALENDAR_CODE
+                                    join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
+                                    where ( (f.COMPANY_CODE='{companyCode}' {((_calendarCheck)? calendarFilter : "" )} ) or (f.COMPANY_CODE='{companyCode}' and f.SHOW_IN_ALL_CALENDARS = 'Y')) {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
                                     )
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
 

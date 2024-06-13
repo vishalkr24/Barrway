@@ -42,8 +42,8 @@ namespace Barrway.Controllers
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         // GET: FormAPI
-        public FormAPIController(IFormAPIRepository formAPIRepository, ICalendarService calendarService, IPublicUserService publicUserService, 
-            IBusinessUserService businessUserService, IMasterService masterService, ISqlFunction sqlFunction,ICommonService commonService)
+        public FormAPIController(IFormAPIRepository formAPIRepository, ICalendarService calendarService, IPublicUserService publicUserService,
+            IBusinessUserService businessUserService, IMasterService masterService, ISqlFunction sqlFunction, ICommonService commonService)
         {
             this.formAPIRepository = formAPIRepository;
             this.calendarService = calendarService;
@@ -213,7 +213,7 @@ namespace Barrway.Controllers
                                     }
                                 }
                             }
-                            
+
                         }
 
                         var calendarDetailsResult = await businessUserService.GetCalendarDetails(data.CALENDAR_CODE);
@@ -268,9 +268,9 @@ namespace Barrway.Controllers
                         }
                     }
 
-                    
 
-                        
+
+
 
                 }
             }
@@ -663,7 +663,7 @@ namespace Barrway.Controllers
                 }
             }
             ReferalFormDataResponseModel result = await formAPIRepository.getReferralFormFields(data);
-            await commonService.ModifyEventsData(data, result,UserIdentity.UserEmail);
+            await commonService.ModifyEventsData(data, result, UserIdentity.UserEmail);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
@@ -985,6 +985,48 @@ namespace Barrway.Controllers
         [HttpPost]
         public async Task<ActionResult> ManageCalenderReferrenceNew(FormCalenderReferrenceTable data)
         {
+
+            if (data.formId == 2312)
+            {
+
+                var parseData = JsonConvert.DeserializeObject<List<IDictionary<string, string>>>(data.formfieldDataListTemp);
+
+                if (parseData != null && parseData.Count > 0)
+                {
+                    if (parseData.Any(x => x.ContainsKey("2305_RowId")))
+                    {
+                        string eventId = parseData.FirstOrDefault(x => x.ContainsKey("2305_RowId"))["2305_RowId"]?.ToString();
+
+                        List<IDictionary<string, string>> keyValuePairs = new List<IDictionary<string, string>>();
+
+                        parseData.ForEach(async _x =>
+                        {
+                            keyValuePairs.Add(_x);
+                        });
+
+                        var checkResult = await publicUserService.CheckOverlappingSlotByUserList(eventId, keyValuePairs);
+
+                        if (checkResult.Status)
+                        {
+                            var checkData = checkResult.Data as List<IDictionary<string, string>>;
+                            if (checkData != null && checkData.Count > 0)
+                            {
+                                if (checkData.Any(x=> x["OverlapBookingFlag"]?.ToString() == "N"))
+                                {
+                                    parseData = checkData;
+                                    data.formfieldDataListTemp = JsonConvert.SerializeObject(parseData);
+                                    return Json(new AddUpdateDelete() { Status = false, Message = "Can't enroll in overlapping slots!", Data = data }, JsonRequestBehavior.AllowGet);
+                                }
+                                    
+                            }
+                        }
+
+                    }
+                }
+
+            }
+
+
             var result = await formAPIRepository.ManageCalenderReferrenceNew(data);
             if (result != null && result.Any(x => x.res == 1))
             {
@@ -1031,7 +1073,7 @@ namespace Barrway.Controllers
             try
             {
                 string apiUrl = System.Configuration.ConfigurationManager.AppSettings["webapibaseurl"].ToString() + $"api/FormAPI/downloadFiles/{formId}/4/{iscustom}/{fields}/{fieldValues}"; // Replace with your API URL
-                string fileName = formId+$"_downloaded_{DateTime.Now.ToString("ddMMyyyyHHmmssfff")}.xlsx"; // The name for the downloaded file
+                string fileName = formId + $"_downloaded_{DateTime.Now.ToString("ddMMyyyyHHmmssfff")}.xlsx"; // The name for the downloaded file
 
                 // Create a RestClient with the base URL
                 var client = new RestClient(apiUrl);
@@ -1231,7 +1273,7 @@ List<HttpPostedFileBase> file1)
                 return false;
             }
 
-           
+
             if (file.ContentLength > MaxFileSize)
             {
                 errorMessage = "File size must be less than 3 MB.";
@@ -1444,8 +1486,9 @@ List<HttpPostedFileBase> file1)
                                                             row.Height = image.Height;
                                                         }
                                                     }
-                                                    catch (Exception ex) { 
-                                                    
+                                                    catch (Exception ex)
+                                                    {
+
                                                     }
                                                 }
                                             }
@@ -1482,7 +1525,8 @@ List<HttpPostedFileBase> file1)
                 }
 
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 logger.Error(ex);
                 return new HttpStatusCodeResult(500, "Internal server error: " + ex.Message);
             }
