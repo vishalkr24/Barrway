@@ -152,22 +152,22 @@ namespace Barrway.Service.Repository
                                     {
                                         bool bookingFlag = true;
                                         // check list of events which are booked of same day at [item] event
-                                        if (alreadyEnrolledEvents.Any(x => Convert.ToDateTime(item["start"]?.ToString()).Date == Convert.ToDateTime(x["start"]?.ToString()).Date))
+                                        if (alreadyEnrolledEvents.Any(x => !TimeSlotCompare(new CommonTimeObject() { start = item["start"]?.ToString(), end = item["end"]?.ToString() }, new CommonTimeObject() { start = x["start"]?.ToString(), end = x["end"]?.ToString() })))
                                         {
                                             // there are enrolled events of current day
 
-                                            List<IDictionary<string, object>> listOfSameDayEvents = alreadyEnrolledEvents.Where(x => Convert.ToDateTime(item["start"]?.ToString()).Date == Convert.ToDateTime(x["start"]?.ToString()).Date).ToList();
+                                            List<IDictionary<string, object>> listOfSameDayEvents = alreadyEnrolledEvents.Where(x => !TimeSlotCompare(new CommonTimeObject() { start = item["start"]?.ToString(), end = item["end"]?.ToString() }, new CommonTimeObject() { start = x["start"]?.ToString(), end = x["end"]?.ToString() })).ToList();
 
                                             if (listOfSameDayEvents.Any(x => !TimeSlotCompare(
                                                 new CommonTimeObject()
                                                 {
-                                                    start = Convert.ToDateTime(item["start"]?.ToString()).ToString("HH:mm"),
-                                                    end = Convert.ToDateTime(item["end"]?.ToString()).ToString("HH:mm")
+                                                    start = Convert.ToDateTime(item["start"]?.ToString()).ToString("yyyy-MM-dd HH:mm"),
+                                                    end = Convert.ToDateTime(item["end"]?.ToString()).ToString("yyyy-MM-dd HH:mm")
                                                 },
                                                 new CommonTimeObject()
                                                 {
-                                                    start = Convert.ToDateTime(x["start"]?.ToString()).ToString("HH:mm"),
-                                                    end = Convert.ToDateTime(x["end"]?.ToString()).ToString("HH:mm")
+                                                    start = Convert.ToDateTime(x["start"]?.ToString()).ToString("yyyy-MM-dd HH:mm"),
+                                                    end = Convert.ToDateTime(x["end"]?.ToString()).ToString("yyyy-MM-dd HH:mm")
                                                 }))
                                             )
                                             {
@@ -273,22 +273,22 @@ namespace Barrway.Service.Repository
 
                                 bool bookingFlag = true;
                                 // check list of events which are booked of same day at [item] event
-                                if (alreadyEnrolledEvents.Any(x => eventStartTime.Date == Convert.ToDateTime(x["start"]?.ToString()).Date && x["STUDENT"]?.ToString() == item["Id"]?.ToString()))
+                                if (alreadyEnrolledEvents.Any(x => !TimeSlotCompare(new CommonTimeObject() { start = eventStartTime.ToString(), end = eventEndTime.ToString() }, new CommonTimeObject() { start = x["start"]?.ToString() , end = x["end"]?.ToString() }) && x["STUDENT"]?.ToString() == item["Id"]?.ToString()))
                                 {
                                     // there are enrolled events of current day
 
-                                    List<IDictionary<string, object>> listOfSameDayEvents = alreadyEnrolledEvents.Where(x => eventStartTime.Date == Convert.ToDateTime(x["start"]?.ToString()).Date).ToList();
+                                    List<IDictionary<string, object>> listOfSameDayEvents = alreadyEnrolledEvents.Where(x => !TimeSlotCompare(new CommonTimeObject() { start = eventStartTime.ToString(), end = eventEndTime.ToString() }, new CommonTimeObject() { start = x["start"]?.ToString(), end = x["end"]?.ToString() }) && x["STUDENT"]?.ToString() == item["Id"]?.ToString()).ToList();
 
                                     if (listOfSameDayEvents.Any(x => !TimeSlotCompare(
                                         new CommonTimeObject()
                                         {
-                                            start = eventStartTime.ToString("HH:mm"),
-                                            end = eventEndTime.ToString("HH:mm")
+                                            start = eventStartTime.ToString("yyyy-MM-dd HH:mm"),
+                                            end = eventEndTime.ToString("yyyy-MM-dd HH:mm")
                                         },
                                         new CommonTimeObject()
                                         {
-                                            start = Convert.ToDateTime(x["start"]?.ToString()).ToString("HH:mm"),
-                                            end = Convert.ToDateTime(x["end"]?.ToString()).ToString("HH:mm")
+                                            start = Convert.ToDateTime(x["start"]?.ToString()).ToString("yyyy-MM-dd HH:mm"),
+                                            end = Convert.ToDateTime(x["end"]?.ToString()).ToString("yyyy-MM-dd HH:mm")
                                         }))
                                     )
                                     {
@@ -2870,22 +2870,22 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
                                     {
                                         bool bookingFlag = true;
                                         // check list of events which are booked of same day at [item] event
-                                        if (alreadyEnrolledEvents.Any(x => Convert.ToDateTime(item["start"]?.ToString()).Date == Convert.ToDateTime(x["start"]?.ToString()).Date))
+                                        if (alreadyEnrolledEvents.Any(x => !TimeSlotCompare(new CommonTimeObject() { start = item["start"]?.ToString(), end = item["end"]?.ToString() }, new CommonTimeObject() { start = x["start"]?.ToString(), end = x["end"]?.ToString() })))
                                         {
                                             // there are enrolled events of current day
 
-                                            List<IDictionary<string, object>> listOfSameDayEvents = alreadyEnrolledEvents.Where(x => Convert.ToDateTime(item["start"]?.ToString()).Date == Convert.ToDateTime(x["start"]?.ToString()).Date).ToList();
+                                            List<IDictionary<string, object>> listOfSameDayEvents = alreadyEnrolledEvents.Where(x => !TimeSlotCompare(new CommonTimeObject() { start = item["start"]?.ToString(), end = item["end"]?.ToString() }, new CommonTimeObject() { start = x["start"]?.ToString(), end = x["end"]?.ToString() })).ToList();
 
                                             if (listOfSameDayEvents.Any(x => !TimeSlotCompare(
                                                 new CommonTimeObject()
                                                 {
-                                                    start = Convert.ToDateTime(item["start"]?.ToString()).ToString("HH:mm"),
-                                                    end = Convert.ToDateTime(item["end"]?.ToString()).ToString("HH:mm")
+                                                    start = Convert.ToDateTime(item["start"]?.ToString()).ToString("yyyy-MM-dd HH:mm"),
+                                                    end = Convert.ToDateTime(item["end"]?.ToString()).ToString("yyyy-MM-dd HH:mm")
                                                 },
                                                 new CommonTimeObject()
                                                 {
-                                                    start = Convert.ToDateTime(x["start"]?.ToString()).ToString("HH:mm"),
-                                                    end = Convert.ToDateTime(x["end"]?.ToString()).ToString("HH:mm")
+                                                    start = Convert.ToDateTime(x["start"]?.ToString()).ToString("yyyy-MM-dd HH:mm"),
+                                                    end = Convert.ToDateTime(x["end"]?.ToString()).ToString("yyyy-MM-dd HH:mm")
                                                 }))
                                             )
                                             {
@@ -2933,11 +2933,11 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
         {
             bool testResult = true;
 
-            timeA.start = Convert.ToDateTime(timeA.start).ToShortTimeString();
-            timeA.end = Convert.ToDateTime(timeA.end).ToShortTimeString();
+            //timeA.start = Convert.ToDateTime(timeA.start).ToShortTimeString();
+            //timeA.end = Convert.ToDateTime(timeA.end).ToShortTimeString();
 
-            timeB.start = Convert.ToDateTime(timeB.start).ToShortTimeString();
-            timeB.end = Convert.ToDateTime(timeB.end).ToShortTimeString();
+            //timeB.start = Convert.ToDateTime(timeB.start).ToShortTimeString();
+            //timeB.end = Convert.ToDateTime(timeB.end).ToShortTimeString();
 
             // case 1
             if (Convert.ToDateTime(timeA.start) <= Convert.ToDateTime(timeB.start) && (Convert.ToDateTime(timeA.end) <= Convert.ToDateTime(timeB.end) && Convert.ToDateTime(timeA.end) > Convert.ToDateTime(timeB.start)))
