@@ -285,7 +285,7 @@ namespace Barrway.Controllers
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             else
-            {
+            {    
                 return Json(new AddUpdateDelete() { Status = false, Message = "Please login to start marking attendance." }, JsonRequestBehavior.AllowGet);
             }
         }
