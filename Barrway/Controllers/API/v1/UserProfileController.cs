@@ -23,6 +23,25 @@ namespace Barrway.Controllers.API.v1
             this.mobileAPIService = mobileAPIService;
         }
 
+
+        [HttpGet]
+        [Route("api/User/userdetails")]
+        [ResponseType(typeof(UserProfile))]
+        public async Task<IHttpActionResult> Getuserdetails()
+        {
+            try
+            {
+                return Ok(await mobileAPIService.GetUserProfileDetails(APIUserIdentity.UserName));
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
+
+
+
+
         [HttpPost]
         [Route("api/user/UpdateuserProfile")]
         [ResponseType(typeof(List<AddUpdateDelete>))]
@@ -32,8 +51,7 @@ namespace Barrway.Controllers.API.v1
             {
                 var Data = new UpdateUserProfileModel
                 {
-                    CURRENT_STEP = model.CURRENT_STEP,
-                    SUBSCRIPTION_PLAN_ID = model.SUBSCRIPTION_PLAN_ID,
+                   
                     USER_ID = APIUserIdentity.UserName,
                     FIRST_NAME = model.FIRST_NAME,
                     LAST_NAME = model.LAST_NAME,

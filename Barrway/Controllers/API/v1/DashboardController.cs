@@ -23,20 +23,7 @@ namespace Barrway.Controllers.API.v1
             this.mobileAPIService = mobileAPIService;
         }
 
-        [HttpGet]
-        [Route("api/User/userdetails")]
-        [ResponseType(typeof(UserProfile))]
-        public async Task<IHttpActionResult> Getuserdetails()
-        {
-            try
-            {
-                return Ok(await mobileAPIService.GetUserProfileDetails(APIUserIdentity.UserName));
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError();
-            }
-        }
+        
 
 
         [HttpGet]
