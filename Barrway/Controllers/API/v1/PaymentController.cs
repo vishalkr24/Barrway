@@ -6,6 +6,7 @@ using Barrway.Security;
 using Barrway.Service.IRepository;
 using Barrway.Utility.Common;
 using Newtonsoft.Json;
+using Stripe;
 using Stripe.Checkout;
 using System;
 using System.Collections.Generic;
@@ -109,34 +110,18 @@ namespace Barrway.Controllers.API.v1
 
                 metaData.Add("Data", temp.ToString());
 
-                var options = new SessionCreateOptions
+                var options = new PaymentIntentCreateOptions
                 {
-                    LineItems = new List<SessionLineItemOptions>
-                    {
-                        new SessionLineItemOptions
-                        {
-                            PriceData = new SessionLineItemPriceDataOptions
-                            {
-                               UnitAmount = Convert.ToInt32(PackageData.Data["PACKAGE_PRICE"])*100,
-                               Currency = "hkd",
-                               ProductData = new SessionLineItemPriceDataProductDataOptions
-                               {
-                                   Name = PackageData.Data["PACKAGE_NAME"]?.ToString(),
-                                   Description = PackageData.Data["PACKAGE_DESCRIPTION"]?.ToString()
-                               }
-
-                            },
-                            Quantity = 1
-                        }
-                    },
-                    Mode = "payment",
                     Metadata = metaData,
-                    SuccessUrl = ConfigurationManager.AppSettings["baseurl"] + "api/payment/success?SessionId={CHECKOUT_SESSION_ID}",
-                    CancelUrl = ConfigurationManager.AppSettings["baseurl"] + "api/payment/cancel?SessionId={CHECKOUT_SESSION_ID}"
+                    Amount = Convert.ToInt32(PackageData.Data["PACKAGE_PRICE"]) * 100,
+                    Currency = "hkd",
+                    AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
+                    {
+                        Enabled = true,
+                    },
                 };
-
-                var service = new SessionService();
-                Session session = service.Create(options);
+                var service = new PaymentIntentService();
+                PaymentIntent p_intent = service.Create(options);
 
                 PaymentTrackerModel tracker = new PaymentTrackerModel()
                 {
@@ -148,7 +133,7 @@ namespace Barrway.Controllers.API.v1
 
                 var resultTracker = await mobileAPIService.CreatePaymentTracker(tracker);
 
-                return Ok(new AddUpdateDelete() { Status = true, Data = session, Message = "Success" });
+                return Ok(new AddUpdateDelete() { Status = true, Data = p_intent, Message = "Success" });
             }
             catch (Exception ex)
             {
@@ -162,11 +147,11 @@ namespace Barrway.Controllers.API.v1
         {
             if (SessionId != null)
             {
-                var service = new SessionService();
+                var service = new PaymentIntentService();
                 var session = service.Get(SessionId);
                 var PackageData = JsonConvert.DeserializeObject<IDictionary<string, object>>(session.Metadata["Data"]);
 
-                string query = $@"update ORDER_MASTER_1969 set PAYMENT_STATUS = '{session.Status}',PAYMENT_ID = '{session.PaymentIntentId}' where ORDER_NO = '{PackageData["OrderNo"].ToString()}' ";
+                string query = $@"update ORDER_MASTER_1969 set PAYMENT_STATUS = '{session.Status}',PAYMENT_ID = '{session.Id}' where ORDER_NO = '{PackageData["OrderNo"].ToString()}' ";
                 var updateResult = await sqlFunction.ExecuteSqlCommandQuery(query);
 
                 PaymentTrackerModel tracker = new PaymentTrackerModel()
@@ -226,11 +211,11 @@ namespace Barrway.Controllers.API.v1
         {
             if (SessionId != null)
             {
-                var service = new SessionService();
+                var service = new PaymentIntentService();
                 var session = service.Get(SessionId);
                 var PackageData = JsonConvert.DeserializeObject<IDictionary<string, object>>(session.Metadata["Data"]);
 
-                string query = $@"update ORDER_MASTER_1969 set PAYMENT_STATUS = '{session.Status}',PAYMENT_ID = '{session.PaymentIntentId}' where ORDER_NO = '{PackageData["OrderNo"].ToString()}' ";
+                string query = $@"update ORDER_MASTER_1969 set PAYMENT_STATUS = '{session.Status}',PAYMENT_ID = '{session.Id}' where ORDER_NO = '{PackageData["OrderNo"].ToString()}' ";
                 var updateResult = await sqlFunction.ExecuteSqlCommandQuery(query);
 
                 PaymentTrackerModel tracker = new PaymentTrackerModel()
@@ -251,7 +236,7 @@ namespace Barrway.Controllers.API.v1
                     CLIENT_PAID_HKD = Convert.ToDouble(PackageData["PACKAGE_PRICE"]),
                     PAID_DATE = DateTimeUtility.Now(),
                     METHOD = "Card",
-                    PAYMENT_ID = session.PaymentIntentId,
+                    PAYMENT_ID = session.Id,
                     PLAN_ID = (PackageData["Id"]).ToString(),
                     CREDIT_EXPIRE_DATE = DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm"),
                     STATUS = session.Status
@@ -368,34 +353,19 @@ namespace Barrway.Controllers.API.v1
 
                 metaData.Add("Data", temp.ToString());
 
-                var options = new SessionCreateOptions
+
+                var options = new PaymentIntentCreateOptions
                 {
-                    LineItems = new List<SessionLineItemOptions>
-                    {
-                        new SessionLineItemOptions
-                        {
-                            PriceData = new SessionLineItemPriceDataOptions
-                            {
-                               UnitAmount = Convert.ToInt32(EventData.Data["fees_1"])*100,
-                               Currency = "hkd",
-                               ProductData = new SessionLineItemPriceDataProductDataOptions
-                               {
-                                   Name =  "Event Purchase",
-                                   Description = "Single Event Purchase"
-                               }
-
-                            },
-                            Quantity = 1
-                        }
-                    },
-                    Mode = "payment",
                     Metadata = metaData,
-                    SuccessUrl = ConfigurationManager.AppSettings["baseurl"] + "api/payment/EventSuccess?SessionId={CHECKOUT_SESSION_ID}",
-                    CancelUrl = ConfigurationManager.AppSettings["baseurl"] + "api/payment/EventCancel?SessionId={CHECKOUT_SESSION_ID}"
+                    Amount = Convert.ToInt32(EventData.Data["fees_1"]) * 100,
+                    Currency = "hkd",
+                    AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
+                    {
+                        Enabled = true,
+                    },
                 };
-
-                var service = new SessionService();
-                Session session = service.Create(options);
+                var service = new PaymentIntentService();
+                PaymentIntent p_intent = service.Create(options);
 
                 PaymentTrackerModel tracker = new PaymentTrackerModel()
                 {
@@ -407,7 +377,7 @@ namespace Barrway.Controllers.API.v1
 
                 var resultTracker = await mobileAPIService.CreatePaymentTracker(tracker);
 
-                return Ok(new AddUpdateDelete() { Status = true, Data = session, Message = "Success" });
+                return Ok(new AddUpdateDelete() { Status = true, Data = p_intent, Message = "Success" });
             }
             catch (Exception ex)
             {
@@ -421,7 +391,7 @@ namespace Barrway.Controllers.API.v1
         {
             if (SessionId != null)
             {
-                var service = new SessionService();
+                var service = new PaymentIntentService();
                 var session = service.Get(SessionId);
                 IDictionary<string, object> eventData;
 
@@ -429,7 +399,7 @@ namespace Barrway.Controllers.API.v1
 
                 var PackageData = (await publicUserService.GetSingleEventDetails(eventData["Id"]?.ToString())).Data;
                 
-                string query = $@"update ORDER_MASTER_1969 set PAYMENT_STATUS = '{session.Status}', PAYMENT_ID = '{session.PaymentIntentId}' where ORDER_NO = '{eventData["OrderNo"].ToString()}' ";
+                string query = $@"update ORDER_MASTER_1969 set PAYMENT_STATUS = '{session.Status}', PAYMENT_ID = '{session.Id}' where ORDER_NO = '{eventData["OrderNo"].ToString()}' ";
                 var updateResult = await sqlFunction.ExecuteSqlCommandQuery(query);
 
                 PaymentTrackerModel tracker = new PaymentTrackerModel()
@@ -516,11 +486,11 @@ namespace Barrway.Controllers.API.v1
         {
             if (SessionId != null)
             {
-                var service = new SessionService();
+                var service = new PaymentIntentService();
                 var session = service.Get(SessionId);
                 var PackageData = JsonConvert.DeserializeObject<IDictionary<string, object>>(session.Metadata["Data"]);
 
-                string query = $@"update ORDER_MASTER_1969 set PAYMENT_STATUS = '{session.Status}',PAYMENT_ID = '{session.PaymentIntentId}' where ORDER_NO = '{PackageData["OrderNo"].ToString()}' ";
+                string query = $@"update ORDER_MASTER_1969 set PAYMENT_STATUS = '{session.Status}',PAYMENT_ID = '{session.Id}' where ORDER_NO = '{PackageData["OrderNo"].ToString()}' ";
                 var updateResult = await sqlFunction.ExecuteSqlCommandQuery(query);
 
                 PaymentTrackerModel tracker = new PaymentTrackerModel()
