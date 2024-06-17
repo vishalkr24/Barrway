@@ -382,7 +382,7 @@ namespace Barrway.Service.Repository
         public async Task<AddUpdateDelete<BlogDetailModel>> GetBlogdetail(int  BlogId)
         {   try
             {
-                string sqlString = $@"select blog.Id, blog.created_at, blog.BLOG_TITLE,blog.[IMAGE],blog.YOUTUBE_LINK,blog.TAG,blog_c.BLOG_CATEGORY,blog.BLOG_CATEGORY,blog.IS_FEATURED,blog.IS_HOT 
+                string sqlString = $@"select blog.Id, blog.created_at, blog.BLOG_TITLE,blog.BLOG_CONTENT,blog.[IMAGE],blog.YOUTUBE_LINK,blog.TAG,blog_c.BLOG_CATEGORY,blog.BLOG_CATEGORY,blog.IS_FEATURED,blog.IS_HOT 
                                   BLOG_CATEGORY_ID from BLOG_1980 blog join BLOG_CATEGORY_1981 blog_c on blog.BLOG_CATEGORY=blog_c.Id where blog.Id ='{BlogId}';";
                 var blogs = (await sqlFunction.ExecuteSqlQuery<BlogDetailModel>(sqlString)).FirstOrDefault();
                 if(blogs != null)
