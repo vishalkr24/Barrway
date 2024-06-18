@@ -29,6 +29,7 @@ namespace Barrway.DTO.APIModels.Dashboard
         public int Id { get; set; }
         public DateTime created_at { get; set; }
         public string BLOG_TITLE { get; set; }
+        public string BLOG_CONTENT { get; set; }
         public string IMAGE { get; set; }
         public string YOUTUBE_LINK { get; set; }
         public string TAG { get; set; }

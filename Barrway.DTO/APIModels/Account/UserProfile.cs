@@ -42,8 +42,7 @@ namespace Barrway.DTO.APIModels.Account
     public class UpdateUserProfileModel
     {
         public string Id { get; set; } = String.Empty;
-        public string CURRENT_STEP { get; set; } = String.Empty;
-        public string SUBSCRIPTION_PLAN_ID { get; set; } = String.Empty;
+      
         public string USER_ID { get; set; } = String.Empty;        
         public string FIRST_NAME { get; set; } = String.Empty;
         public string LAST_NAME { get; set; } = String.Empty;
@@ -61,9 +60,7 @@ namespace Barrway.DTO.APIModels.Account
 
     public class UpdateUserProfileViewModel
     {
-        public string Id { get; set; } = String.Empty;
-        public string CURRENT_STEP { get; set; } = String.Empty;
-        public string SUBSCRIPTION_PLAN_ID { get; set; } = String.Empty;       
+        public string Id { get; set; } = String.Empty;            
         public string FIRST_NAME { get; set; } = String.Empty;
         public string LAST_NAME { get; set; } = String.Empty;
         public string CHINESE_NAME { get; set; } = String.Empty;

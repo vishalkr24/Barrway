@@ -74,24 +74,30 @@ namespace Barrway.Controllers.API.v1
             var userByEmail = await authService.GetUserByEmail(model.USER_EMAIL, (int)FormRole.GENERAL_USER);
             var userByID = await authService.GetUser(model.USER_NAME, FormRole.GENERAL_USER);
 
+            string phone = model.USER_PHONE.Trim().Replace(" ", "");
+            var userByPhone = await authService.GetUserByPhone(phone, model.Country_Code, (int)FormRole.GENERAL_USER);
+
             string generalRoleId = ((int)FormRole.GENERAL_USER).ToString();
 
-            if (!userByEmail.Status && !userByID.Status)
+            if (!userByEmail.Status && !userByID.Status && !userByPhone.Status)
             {
+
+                //var encryptPass = Aes256CbcEncrypter.Encrypt(password);
+
                 // Insert Data in User Master
                 UserMaserModel userMaserModel = new UserMaserModel()
                 {
                     
                     IS_ACTIVE = (model.IS_EXTERNAL_SIGNUP) ? "Y" : "Y",
                     IS_EMAIL_VERIFIED = (model.IS_EXTERNAL_SIGNUP) ? "Y" : "Y",
-                    IS_PHONE_VERIFIED = "N",
+                    IS_PHONE_VERIFIED = "Y",
                     IS_EXTERNAL_SIGNUP = (model.IS_EXTERNAL_SIGNUP) ? "Y" : "N",
                     PROFILE_STATUS = "PENDING",
                     SIGNUP_TYPE = (model.IS_EXTERNAL_SIGNUP) ? "GOOGLE" : "EMAIL",
                     USER_EMAIL = model.USER_EMAIL,
                     Country_Code = model.Country_Code,
                     USER_PHONE = model.USER_PHONE,
-                    USER_PASSWORD = model.USER_PASSWORD,
+                    USER_PASSWORD = Aes256CbcEncrypter.Encrypt(model.USER_PASSWORD),
                     USER_ID = model.USER_NAME,
                     ROLE_ID = generalRoleId,
                     COMPANY_PROFILE_STATUS = "N",
