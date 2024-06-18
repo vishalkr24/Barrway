@@ -2949,6 +2949,7 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
 
     // Agenda View
     myOptions = {
+        defaultDate: moment(new Date()).startOf('month'),
         header: {
             left: 'prev,next today',
             center: 'title',
@@ -2957,7 +2958,6 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
         defaultView: 'month',
         //events: [],  
         events: function (start, end, timezone, callback) {
-
             var $scopeVar = angular.element($("#calendar")).scope();
             var param = {};
             param.action = 1;
