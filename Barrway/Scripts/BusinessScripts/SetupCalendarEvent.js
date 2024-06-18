@@ -123,7 +123,6 @@ function backToStep(stepId) {
 }
 
 function bindStep(step) {
-    debugger;
     $("#ddlMasterCalendar").val(createdCalendarCode);
     localStorage.setItem("CALENDAR_CODE", createdCalendarCode)
     $(".selectable-calendar-item").removeClass("selected");
@@ -461,7 +460,6 @@ function BindStaffServiceMappingTemplate() {
                                 </div>
                             </div>
                         </div>`);
-    debugger;
 
     let serviceMasterData = getServiceMasterDataByCalendar(createdCompanyCode, createdCalendarCode).data;
     let serviceProviderMasterData = getServiceProviderDataByCalendar(createdCompanyCode, createdCalendarCode).data;
@@ -504,7 +502,6 @@ function BindStaffServiceMappingTemplate() {
     } else {
         $(".tab-notification").text("Please create staff and services in previous steps!")
     }
-    debugger;
     let mappingData = GetStaffServiceMappingData(createdCalendarCode);
 
     if (mappingData.Status) {
@@ -828,7 +825,6 @@ function fillQueueResource(id = null) {
             $("#QUEUE_RESOURCE_ID-" + y.rowId).append(binderString);
         })
     } else {
-        debugger;
         var value = $("#QUEUE_BY-" + id).val();
         var binderString = `<option selected value="-1">Select resource</option>`;
         $("#QUEUE_RESOURCE_ID-" + id).empty();
@@ -950,7 +946,6 @@ function addQueueRow(dataElement = null) {
                 confirm: "Ok"
             }).then(function (check) {
                 if (check) {
-                    debugger;
                     let elementsToDelete = queueList.length - rowCount;
                     for (var i = 0; i < elementsToDelete; i++) {
                         if (queueList[queueList.length - 1].Id == undefined || queueList[queueList.length - 1].Id == null) {
@@ -1194,7 +1189,6 @@ function addQueue1Row(dataElement = null) {
                 confirm: "Ok"
             }).then(function (check) {
                 if (check) {
-                    debugger;
                     let elementsToDelete = queueList.length - rowCount;
                     for (var i = 0; i < elementsToDelete; i++) {
                         if (queueList[queueList.length - 1].Id == undefined || queueList[queueList.length - 1].Id == null) {
@@ -1455,7 +1449,6 @@ function addMoreRow(dataItem, isRemovable, isNew) {
             $("input[name^='SERVICE_PAY_PER']").attr("disabled", "true");
 
             $("input[name^=IS_SERVICE_PAID]").on("click change", function () {
-                debugger
                 let a = this.attributes["data-input-id"].value;
                 let b = this.value;
 
@@ -1495,7 +1488,6 @@ function validateDynamicForm() {
     dataList.forEach(x => {
         for (const key in x) {
             let inputValue = x[key];
-            debugger;
             if (inputValue === "" || inputValue === null || String(inputValue).contains(',')) {
                 check = false;
                 if (String(inputValue).contains(',')) {

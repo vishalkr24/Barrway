@@ -2648,6 +2648,8 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
                                     <div id="addTransactionRecord" class="edit-event-student cursor-pointer d-inline-block"><i class="fa fa-plus"></i></div>  </div>  </div>   <ul id="tabuListUl">  </ul></div>`
 
             }
+            element.attr("id", current_tab+"-" + event.Id);
+
             element.append(_mainTempHtml)
             tableTempHtml = "<div class='event-detail div-flex'><div class='div-flex'>" + rowRecord + "</div><div class='btn-box'>" + actionRow + "</div><div class='div-flex div-list-bar'></div>" + tempHtmlTable + "</div>";
             let $fcContent = element.find(".fc-content").detach(),
@@ -15667,7 +15669,6 @@ function NewformEntryfunctionality(formid, isEdit) {
                 $("input[name^=fees_1]").attr("readonly", false)
             }
 
-            debugger;
 
         });
 
@@ -15818,6 +15819,20 @@ function NewformEntryfunctionality(formid, isEdit) {
 
     }
 
+
+
+    if (!isEdit) {
+        var scope = angular.element($("#tabs")).scope();
+        if (scope.importFormSettings.applicationId != 351) {
+            if ($("#CALENDAR_CODE").length > 0)
+                $("#CALENDAR_CODE").val(localStorage.getItem("CALENDAR_CODE"));
+            if ($("#COMPANY_CODE").length > 0)
+                $("#COMPANY_CODE").val(localStorage.getItem("COMPANY_CODE"));
+            //if ($("#USER_ID").length > 0)
+            //    $("#USER_ID").val($('#logon-user-id').val());
+        }
+    }
+    
 }
 
 
@@ -15841,6 +15856,12 @@ function GetGeneratedFormDataUrl(formid, isEdit) {
     }
     if (formid == 2312) {
         return "Calendar/AddTransactionMaster";
+    }
+
+
+    var scope = angular.element($("#tabs")).scope();
+    if (scope.importFormSettings.applicationId != 351) {
+        return "FormAPI/GeneratedAdditionalFormData";
     }
 
     return "FormAPI/GeneratedFormData";

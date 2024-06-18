@@ -1236,11 +1236,14 @@
                             <ul style="padding:0">
                                 <li ng-repeat="item in createEventDetails.DOWNLOADABLE_ATTACHMENT_FILES">
                                     <a ng-href="{{item.url}}" target="_blank">{{item.name}}</a>
-                                    <select ng-model="item.type" class="form-control-sm" ng-change="changeUploadFileType(false)">
-                                        <option value="public">Public</option>
-                                        <option value="user">User</option>
-                                    </select>
-                                    <button class="btn btn-link" ng-click="removeFiles($index)"><i class="fa fa-times-circle"></i></button>
+                                    <span>
+                                        <select ng-model="item.type" class="form-control-sm" ng-change="changeUploadFileType(false)" style="width:200px">
+                                            <option value="public">Public</option>
+                                            <option value="user">Enrolled user </option>
+                                            <option value="register">Company registered user</option>
+                                        </select>
+                                        <button class="btn btn-link" ng-click="removeFiles($index)"><i class="fa fa-times-circle"></i></button>
+                                    </span>
                                 </li>
                             </ul>
 
@@ -1426,13 +1429,16 @@
                             <ul>
                                 <li style="font-weight:600" ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES">
                                     <a ng-href="{{item.url}}" target="_blank">{{item.name}}</a>
+                                    <span>
+                                        <select ng-model="item.type" class="form-control-sm" ng-change="changeUploadFileType(true)" style="width:200px">
+                                            <option value="public">Public</option>
+                                            <option value="user">Enrolled user </option>
+                                            <option value="register">Company registered user</option>
+                                        </select>
 
-                                    <select ng-model="item.type" class="form-control-sm" ng-change="changeUploadFileType(true)">
-                                        <option value="public">Public</option>
-                                        <option value="user">User</option>
-                                    </select>
-
-                                    <button class="btn btn-link" ng-click="selectedEventRemoveFiles($index)"><i class="fa fa-times-circle"></i></button>
+                                        <button class="btn btn-link" ng-click="selectedEventRemoveFiles($index)"><i class="fa fa-times-circle"></i></button>
+                                    </span>
+                                    
                                 </li>
                             </ul>
 

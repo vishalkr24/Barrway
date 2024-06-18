@@ -1,5 +1,4 @@
 ﻿$(document).ready(function () {
-    debugger;
     var palettes = getCompanyWebsitePalette().Data;
     var paletteId = $("#hiddenInputPaletteId").val();
 

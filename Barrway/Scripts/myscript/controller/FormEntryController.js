@@ -7126,7 +7126,10 @@
 
                                             notifierService.notifyMessage('success', 'FormEntry', exists.Message);
                                             $timeout(function () {
-                                                window.location.href = "/calendar/index#/calendar/service-provider-master/" + $scope.currentFormId;
+                                                if ($scope.importFormSettings.applicationId != 351) {
+                                                    window.location.href = "/calendar/index#/student-register-form-master/";
+                                                }
+                                                //window.location.href = "/calendar/index#/calendar/service-provider-master/" + $scope.currentFormId;
                                                 //location.reload();
                                             }, 1000);
                                         }
@@ -7160,7 +7163,11 @@
                                             window.history.back();
                                         }
                                         else {
-                                            window.location.href = "/calendar/index#/calendar/service-provider-master/" + $scope.currentFormId;
+                                            if ($scope.importFormSettings.applicationId != 351) {
+                                                window.location.href = "/calendar/index#/student-register-form-master/";
+                                            } else {
+                                                window.history.back();
+                                            }
                                             //location.reload();
                                         }
 

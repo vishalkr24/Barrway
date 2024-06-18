@@ -1,20 +1,15 @@
 ﻿using Barrway.DTO.Common;
 using Barrway.DTO.FormAPI;
-using Barrway.Resources;
 using Barrway.Security;
 using Barrway.Service.IRepository;
-using Barrway.Service.Repository;
 using Barrway.Utility.Common;
 using ClosedXML.Excel;
 using FormGeneratorDTOs.DTOs;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using NLog;
 using RestSharp;
-using Swashbuckle.Swagger;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.IO;
@@ -23,9 +18,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Configuration;
 using System.Web.Mvc;
-using System.Web.Security;
 
 namespace Barrway.Controllers
 {
@@ -446,6 +439,8 @@ namespace Barrway.Controllers
 
             var result = (await formAPIRepository.GeneratedFormData(data)).Data;
 
+
+
             if (IsCourseEvent == "COURSE" && data.action == 1)
             {
                 try
@@ -563,6 +558,48 @@ namespace Barrway.Controllers
                 }
 
 
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> GeneratedAdditionalFormData(Form_DataTable data)
+        {
+            string userId = "";
+            string calendarCode = "";
+            string comapnyCode = "";
+            var deserData = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(data.formfieldDataListTemp);
+            if (deserData == null || deserData.Count()==0) {
+                return Json(new GenerateDynamicFormData(){ res=0,Message=AppMessage.InvaidRequest});
+            }
+            if (deserData.Any(x => x["name"]?.ToString() == "COMPANY_CODE"))
+            {
+                comapnyCode = deserData.FirstOrDefault(x => x["name"]?.ToString() == "COMPANY_CODE")["value"]?.ToString();
+            }
+            if (deserData.Any(x => x["name"]?.ToString() == "CALENDAR_CODE"))
+            {
+                calendarCode = deserData.FirstOrDefault(x => x["name"]?.ToString() == "CALENDAR_CODE")["value"]?.ToString();
+            }
+            if (deserData.Any(x => x["name"]?.ToString() == "USER_ID"))
+            {
+                userId = deserData.FirstOrDefault(x => x["name"]?.ToString() == "USER_ID")["value"]?.ToString();
+            }
+
+            var result = await publicUserService.CreateDynamicFormEntry(data, comapnyCode, calendarCode, userId);
+
+            if (!result.Status) {
+                if (result.Data != null) {
+                    return Json(result.Data);
+                }
+                else
+                {
+                    return Json(new GenerateDynamicFormData() { res = 0, Message = result.Message });
+                }
+            }
+            if (result.Status)
+            {
+                return Json(result.Data);
             }
 
             return Json(result);

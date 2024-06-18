@@ -1350,10 +1350,11 @@
 
 
                             <div class="form-group mt-2 p-0" ng-if="selectEventDetails.DOWNLOADABLE_ATTACHMENT && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='null' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!=' '">
-                                <label>Document download</label>
+                                <label ng-show="selectEventDetails.downloadLabelShow">Document download</label>
                                 <ul style="list-style-type:none;margin:0;padding:0;margin-top:10px;">
                                     <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='public'"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
                                     <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='user' && selectEventDetails.IsAlreadyBooked == 'Y'"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
+                                    <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='register' && calendarDetails.IS_ADDITIONAL_FORM_ENTRY"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
                                 </ul>
                             </div>
 
@@ -1617,7 +1618,7 @@
                             <hr />
                             <div class="form-group mt-2 p-0" ng-if="selectEventDetails.DOWNLOADABLE_ATTACHMENT && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='null' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!=' '">
 
-                                <label>Document download</label>
+                                <label ng-show="selectEventDetails.downloadLabelShow">Document download</label>
 
                                 <ul style="padding:0" class="already-uploaded-ul">
                                     <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='public'">
@@ -1626,6 +1627,11 @@
                                     </li>
 
                                     <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='user' && selectEventDetails.IsAlreadyBooked == 'Y'">
+                                        <a ng-href="{{item.url}}" target="_blank" title="{{item.name}}"><img src="~/assets/css/images/attachment-img.PNG" /></a>
+                                        <div title="{{item.name}}" class="attachment-name">{{item.name}}</div>
+                                    </li>
+                                    
+                                    <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='register' && calendarDetails.IS_ADDITIONAL_FORM_ENTRY">
                                         <a ng-href="{{item.url}}" target="_blank" title="{{item.name}}"><img src="~/assets/css/images/attachment-img.PNG" /></a>
                                         <div title="{{item.name}}" class="attachment-name">{{item.name}}</div>
                                     </li>
@@ -1719,8 +1725,11 @@
                             </div>
 
                             <div class="form-group mt-2 p-0" ng-if="selectEventDetails.DOWNLOADABLE_ATTACHMENT && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='null' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!=' '">
+                                <label ng-show="selectEventDetails.downloadLabelShow">Document download</label>
                                 <ul style="list-style-type:none;margin:0;padding:0;margin-top:10px;">
                                     <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='public'"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
+                                    <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='user' && selectEventDetails.IsAlreadyBooked == 'Y'"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
+                                    <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='register' && calendarDetails.IS_ADDITIONAL_FORM_ENTRY==true"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
                                 </ul>
                             </div>
 
@@ -2551,8 +2560,11 @@
                                 customEntryElementsValidation();
                                 var dataModelList = $('#customFormNew').serializeArray().map(x => x.name);
                                 dataModelList.forEach(x => {
-                                    if (x == "COMPANY_CODE" || x == "CALENDAR_CODE" || x == "RECORD_ID") {
+                                    if (x == "COMPANY_CODE" || x == "CALENDAR_CODE" || x == "RECORD_ID" || x == "USER_ID") {
                                         $(`#customFormNew .border-${x}`).hide();
+                                    }
+                                    if (x == "USER_ID") {
+                                        $(`#USER_ID`).val($('#logon-user-id').val());
                                     }
                                     if (dataModel[x]) {
                                         $(`#customFormNew input[name=${x}]`).val(dataModel[x]);

@@ -34,7 +34,6 @@ function GetBlogs(pageNumber, blog_tag, Hot) {
         },
         async: true,
         success: function (response) {
-            debugger;
             var nextPage = 0;
             if (pageNumber == response.last_page) {
                 nextPage = response.last_page;

@@ -13,11 +13,8 @@ function setSubscriptionPlans() {
 
     if (data.Status) {
         var plans = data.Data;
-        debugger;
         var currentPlanData = GetCompanyActiveSubscriptionPlan(localStorage.getItem("COMPANY_ID"));
 
-        console.log(currentPlanData)
-        debugger;
         if (currentPlanData.Data != null) {
             var currentPlan = currentPlanData.Data;
 
