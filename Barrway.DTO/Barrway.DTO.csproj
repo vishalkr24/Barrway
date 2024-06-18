@@ -74,6 +74,7 @@
     <Compile Include="APIModels\Booking\CancelBookingModel.cs" />
     <Compile Include="APIModels\Booking\PaymentHistoryApiModel.cs" />
     <Compile Include="APIModels\Booking\SessionReview.cs" />
+    <Compile Include="APIModels\Calendar\CalendarFilterModel.cs" />
     <Compile Include="APIModels\Calendar\CalendarRequestModel.cs" />
     <Compile Include="APIModels\Booking\MyBooking.cs" />
     <Compile Include="APIModels\Calendar\MyWalletClanderApiModel.cs" />

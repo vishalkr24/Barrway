@@ -22,6 +22,7 @@ namespace Barrway.Service.IRepository
         Task<List<RootCalendarModel>> GetDashboardCalendarList();
         Task<List<CompanyModel>> GetFeatureCompanies();
         Task<List<BlogModel>> GetFeatureBlogs();
+        Task<AddUpdateDelete> GetCalendarsByCompanyCode(string CompanyCode);
         Task<List<CalendarModel>> GetCalendarsSearchResult(SearchAPIModel data, List<string> filters = null);
 
         Task<List<CompanyModel>> GetCompaniesSearchResult(CompanySearchApiModel data);
@@ -73,6 +74,8 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetBookingsForThisMonth(string CompanyCode, string SlotId);
 
         Task<List<IDictionary<string, object>>> GetUserEvents(UserEventsViewmodel model, string userEmail);
+
+        Task<AddUpdateDelete> GetCalendarFilters(int FilterType, string CompanyCode, string CalendarCode);
 
         Task<AddUpdateDelete<BlogDetailModel>> GetBlogdetail(int BlogId);
 
