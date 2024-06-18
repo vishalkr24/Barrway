@@ -20,6 +20,7 @@ using System.Diagnostics;
 using Newtonsoft.Json;
 using System.IO;
 using System.Web;
+using Twilio.TwiML.Voice;
 
 namespace Barrway.Service.Repository
 {
@@ -1564,14 +1565,13 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                var checkUserAdditionalForm = await CheckAddtionalFormUserEntry(Convert.ToInt32(formId), UserName);
-                if (checkUserAdditionalForm)
+                string sqlString = $@"select *from USER_MASTER_1915 where USER_ID=N'{UserName}'";
+                var userResult = await sqlFunction.ExecuteSqlQuery(sqlString);
+                if (userResult.Count() == 0)
                 {
-                    return new AddUpdateDelete() { Status = false, Message = "Our records indicate that you have already completed this form." };
+                    return new AddUpdateDelete() { Status = false, Message = "user id not found!" };
                 }
 
-                List<string> requestList = new List<string>();
-                List<string> formGroupKeyListTemp = new List<string>();
                 Dictionary<string, object> sd = new Dictionary<string, object>();
 
                 var assign = model.FirstOrDefault();
@@ -1582,27 +1582,36 @@ namespace Barrway.Service.Repository
                     {
                         sd.Add(keyValuePair.Key, keyValuePair.Value.ToString());
                     }
-
                 }
+                string companyCode = "";
+                if (sd.ContainsKey("COMPANY_CODE"))
+                {
+                    companyCode = sd["COMPANY_CODE"]?.ToString();
+                }
+
+                var checkUserAdditionalForm = await CheckAddtionalFormUserEntry(Convert.ToInt32(formId), UserName, companyCode);
+                if (checkUserAdditionalForm)
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "Our records indicate that you have already completed this form." };
+                }
+
+                List<string> requestList = new List<string>();
+                List<string> formGroupKeyListTemp = new List<string>();
+                
 
                 Form_DataTable data = new Form_DataTable();
                 data.action = (int)FormAction.Save;
                 data.formId = Convert.ToInt32(formId);
                 data.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(sd);
                 data.formGroupKey = Guid.NewGuid().ToString();
+                data.created_by = Convert.ToInt32(userResult.FirstOrDefault()["Id"]);
                 var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
 
                 if (formResult.res > 0)
                 {
                     string tableName = (await CheckAdditionalFormDetails(CalendarCode, UserName)).Data;
-
                     string recordId = "";
-
-                    if (sd.ContainsKey("COMPANY_CODE"))
-                    {
-                        recordId = sd["COMPANY_CODE"]?.ToString() + "-";
-                    }
-
+                    recordId = companyCode + "-";
                     recordId += formResult.Id.ToString().PadLeft(5, '0');
 
                     string query = $@"update {tableName} set RECORD_ID = '{recordId}', USER_ID='{UserName}' where Id = {formResult.Id}";
@@ -1637,7 +1646,107 @@ namespace Barrway.Service.Repository
             }
         }
 
-        private async Task<bool> CheckAddtionalFormUserEntry(int formId, string userName)
+
+        public async Task<AddUpdateDelete<GenerateDynamicFormData>> CreateDynamicFormEntry(Form_DataTable data,string companyCode, string calendarCode, string userId)
+        {
+            try
+            {
+                string sqlString = $@"select *from USER_MASTER_1915 where USER_ID=N'{userId}'";
+                var userResult = await sqlFunction.ExecuteSqlQuery(sqlString);
+                if (userResult.Count() == 0) {
+                    return new AddUpdateDelete<GenerateDynamicFormData>() { Status = false, Message = "user id not found!" };
+                }
+                var user= userResult.FirstOrDefault();
+                data.created_by = Convert.ToInt32(user["Id"]);
+                var checkUserAdditionalForm = await CheckAddtionalFormUserEntry(data.formId, userId, companyCode);
+                if (checkUserAdditionalForm)
+                {
+                    return new AddUpdateDelete<GenerateDynamicFormData>() { Status = false, Message = "Our records indicate that you have already completed this form." };
+                }
+                
+                var formResult = (await formAPIRepository.GeneratedFormData(data)).Data;
+
+                if (formResult.res > 0)
+                {
+                    string tableName = (await CheckAdditionalFormDetails(calendarCode, userId)).Data;
+
+                    string recordId = companyCode+"-";
+
+
+                    recordId += formResult.Id.ToString().PadLeft(5, '0');
+
+                    string query = $@"update {tableName} set RECORD_ID = '{recordId}', USER_ID=N'{userId}',created_by={data.created_by} where Id = {formResult.Id}";
+                    var result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                    var result2 = await AddFavoriteCalendar(new FavoriteCalendarModel()
+                    {
+                        COMPANY_CODE = companyCode,
+                        CALENDAR_CODE = calendarCode,
+                        IS_PUBLIC_USER = "Y",
+                        USER_ID = userId
+                    });
+
+                    List<IDictionary<string, object>> participantCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from PARTICIPANT_MASTER_1940 where STUDENT_ID = N'{userId}' and COMPANY_CODE = '{companyCode}' and CALENDAR_CODE = '{calendarCode}'");
+                    if (participantCheckResult.Count() == 0)
+                    {
+                        var publicUser = await GetSinglePublicUserAccount(userId);
+                        CalendarParticipantModel participant = new CalendarParticipantModel();
+
+                        participant.STUDENT_ID = userId;
+                        participant.CALENDAR_CODE = calendarCode;
+                        participant.COMPANY_CODE = companyCode;
+                        participant.NICKNAME = publicUser.Data["NICK_NAME"]?.ToString();
+                        participant.EMAIL = user["USER_EMAIL"].ToString();
+                        participant.ADDRESS = "";
+                        participant.GENDER = publicUser.Data["GENDER"].ToString();
+                        participant.IS_ACTIVE = "Y";
+                        string fullName = publicUser.Data["FIRST_NAME"].ToString() + " " + publicUser.Data["LAST_NAME"].ToString();
+                        if (string.IsNullOrEmpty(fullName.Trim()))
+                        {
+                            fullName = participant.EMAIL;
+                        }
+                        participant.STUDENT_NAME = fullName;
+
+                        Form_DataTable data2 = new Form_DataTable();
+                        data2.action = (int)FormAction.Save;
+                        data2.formId = (int)FormSetting.PARTICIPANT_MASTER;
+                        data2.formfieldDataListTemp = CustomMethods.ConvertDicToNameValuePair(participant.ToDictionary());
+                        data2.formGroupKey = Guid.NewGuid().ToString();
+                        var formResult2 = (await formAPIRepository.GeneratedFormData(data2)).Data;
+
+                        if (formResult2.res == 1)
+                        {
+                            string ParticipantCode = "PC" + formResult.Id.ToString().PadLeft(5, '0');
+
+                            string query2 = $@"UPDATE [dbo].[PARTICIPANT_MASTER_1940]
+                                   SET [PARTICIPANT_CODE] = '{ParticipantCode}'
+                                 WHERE Id = '{formResult2.Id.ToString()}'";
+                            int saveResult = await sqlFunction.ExecuteSqlCommandQuery(query);
+                        }
+                    }
+
+                    return new AddUpdateDelete<GenerateDynamicFormData>() { Status = true, Message = "Form saved successfully!", Data = formResult };
+                    //if (result > 0)
+                    //{
+                    //    return new AddUpdateDelete<GenerateDynamicFormData>() { Status = true, Message = "Form saved successfully!",Data= formResult };
+                    //}
+                    //else
+                    //{
+                    //    //return new AddUpdateDelete<GenerateDynamicFormData>() { Status = true, Message = "Form saved! Record_Id has not been updated.",Data=formResult };
+                    //}
+                }
+                else
+                {
+                    return new AddUpdateDelete<GenerateDynamicFormData>() { Status = false, Message = "Form not saved. Please try again!",Data= formResult };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete<GenerateDynamicFormData>() { Status = false, Message = ex.Message };
+            }
+        }
+
+        private async Task<bool> CheckAddtionalFormUserEntry(int formId, string userName,string companyCode)
         {
             try
             {
@@ -1658,7 +1767,7 @@ namespace Barrway.Service.Repository
 
                 string sqlQuery = $@"select  distinct f.*,um.USER_ID 
                                     from  {table_name}   f 
-                                    join USER_MASTER_1915 um on um.Id=f.created_by  where f.Id!=0 and f.USER_ID={userName}";
+                                    join USER_MASTER_1915 um on um.Id=f.created_by  where f.Id!=0 and f.USER_ID=N'{userName}' and f.COMPANY_CODE='{companyCode}'";
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 return result.Count() > 0;
             }
@@ -2365,29 +2474,23 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
 
                     if (result[0]["Result"]?.ToString() == "false")
                     {
-                        query = $@"select replace(t.topicTitle, ' ', '_') + '_' + cast(f.topicID as varchar(6)) as TableName from form f
-                                    join topic t on t.topicID = f.topicID
-                                    where f.formID = (select ADDITIONAL_FORM_ID from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE = '{CalendarCode}')";
+                        query = $@"select tf.Id,tf.TopicId,tf.FormTableName from topicFormDetails tf
+                                   join topic t on t.topicID=tf.TopicId
+                                   join form f on f.topicID=t.topicID
+                                   where f.formID= (select top 1 ADDITIONAL_FORM_ID from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE = '{CalendarCode}')";
                         var TableNameRaw = await sqlFunction.ExecuteSqlQuery(query);
 
                         string TableName = "";
 
                         if (TableNameRaw.Count > 0)
                         {
-                            TableName = TableNameRaw[0]["TableName"]?.ToString();
+                            TableName = TableNameRaw[0]["FormTableName"]?.ToString();
 
-                            query = $@"select * from {TableName} where USER_ID = '{UserId}' and COMPANY_CODE = (select COMPANY_CODE from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE = '{CalendarCode}')";
+                            //query = $@"select * from {TableName} where USER_ID = '{UserId}' and COMPANY_CODE = (select COMPANY_CODE from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE = '{CalendarCode}')";
 
-                            result = await sqlFunction.ExecuteSqlQuery(query);
+                            //result = await sqlFunction.ExecuteSqlQuery(query);
 
-                            if (result.Count > 0)
-                            {
-                                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = TableName };
-                            }
-                            else
-                            {
-                                return new AddUpdateDelete() { Status = false, Message = AppMessage.Success, Data = TableName };
-                            }
+                            return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = TableName };
                         }
                         else
                         {

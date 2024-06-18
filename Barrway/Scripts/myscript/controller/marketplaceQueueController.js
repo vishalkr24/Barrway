@@ -6,7 +6,7 @@
         $scope.currentCalendarCode = $("#currentCalendarCode").val();
         $scope.currentCompanyCode = $("#currentCompanyCode").val();
         $scope.currentUserId = $("#currentUserId").val();
-        debugger;
+       
         var chat = $.connection.queueManager;
         var isHubConnected = false;
 
@@ -96,7 +96,7 @@
         };
 
         chat.client.updateQueueTicketList = function (response) {
-            debugger;
+           
             if (response.Status) {
                 angular.element($('#quequeDiv')).scope().queueTicketList = response.Data;
 
@@ -130,7 +130,7 @@
         }
 
         chat.client.updateMarketplaceQueues = function (response) {
-            debugger;
+           
             if (response.Status) {
                 angular.element($('#quequeDiv')).scope().queueList = response.Data;
                 $scope.getQueueTicketList();

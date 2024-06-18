@@ -75,7 +75,6 @@
 });
 
 function submitTemplate() {
-    debugger;
     let PaletteId = String($("input[name=color-palette]:checked").val());
     let TemplateId = String($("input[name=site-template]:checked").val());
     TemplateId = TemplateId.substring(1, TemplateId.length);

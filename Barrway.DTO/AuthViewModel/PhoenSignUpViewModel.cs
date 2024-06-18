@@ -11,10 +11,16 @@ namespace Barrway.DTO.AuthViewModel
     {
         [Required(ErrorMessage = "User name is required.")]
         [MaxLength(20, ErrorMessage = "User name max length 20 characters")]
+        [RegularExpression("^[a-zA-Z][a-zA-Z0-9_@-]*$", ErrorMessage = "Username must start with a letter and can only contain letters, numbers, and the characters '_', '@', and '-'.")]
         public string USER_NAME { get; set; }
 
         [Required(ErrorMessage = "First name is required.")]
+        [RegularExpression(@"^[^\d!@#$%^&*()_+=[\]{};:'""|,.<>/?\\]+$", ErrorMessage = "First name must only contain letters.")]
+        [MaxLength(30, ErrorMessage = "First name max length 30 characters")]
         public string FIRST_NAME { get; set; }
+
+        [RegularExpression(@"^[^\d!@#$%^&*()_+=[\]{};:'""|,.<>/?\\]+$", ErrorMessage = "Last name must only contain letters.")]
+        [MaxLength(30, ErrorMessage = "Last name max length 30 characters")]
         public string LAST_NAME { get; set; }
 
         [Required(ErrorMessage = "Phoen is required")]

@@ -431,7 +431,6 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
     calendarObject = new FullCalendar.Calendar(calendarEl, {
         initialView: 'multiMonthYear',
         events: function (cal_obj, callback) {
-            debugger;
             var $scope = angular.element($("#calendar")).scope();
             var param = {};
             param.action = 1;
@@ -588,7 +587,6 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
 
 
     function calculateDate(startDate, counter, type) {
-        debugger;
 
         let dateObject = moment(moment(startDate).format("YYYY-MM-DD"))
 
@@ -721,7 +719,6 @@ async function rendarPopupCalendar(assignDate) {
 
 
 function bookingService(star, end, bgevent) {
-    debugger;
     var data = {
         "start": star,
         "end": end,

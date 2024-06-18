@@ -8375,7 +8375,7 @@
 
     //start of tasklist
     FormGeneratorApp.controller('TaskListController', function ($scope, $http, $state, $rootScope, $location, $window, mainService, notifierService, googleService, Facebook, DataService, $timeout, $ngBootbox, tabulatorConfiguratorSettings) {
-        debugger;
+       
         function cellFormatterBackgroundColor(cell) {
             $scope.cellFormatterBackgroundColorCustom(cell, $scope.tabulatorConfiguratorSettings);
             if (!DataService.isEmpty(cell.getValue()))
@@ -8624,7 +8624,6 @@
                     dataLoaded: function (data) {
                         //data - all data loaded into the table                        
                         var count = 0;
-                        debugger
                         if (data.length > 0)
                         if (data.length > 0)
                             count = data[0].total_records;
@@ -8735,7 +8734,6 @@
             };
 
             $scope.ApplyMultilingualText = function () {
-                debugger;
                 var langId = '1';
                 if (localStorage.getItem("globalLangForm") != null && localStorage.getItem("globalLangForm") != 'null') {
                     langId = localStorage.getItem("globalLangForm");
@@ -9312,7 +9310,7 @@
             };
 
             $scope.ApplyMultilingualText = function () {
-                debugger;
+                
                 var langId = '1';
                 if (localStorage.getItem("globalLangForm") != null && localStorage.getItem("globalLangForm") != 'null') {
                     langId = localStorage.getItem("globalLangForm");

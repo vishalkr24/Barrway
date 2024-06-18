@@ -57,11 +57,12 @@ async function usercalendarLoad() {
     var activities = [];
 
     window["EventBasicDetail"] = manageWindowParams();
-
+    var $scope = angular.element($("#calendar")).scope();
     var calenderSettings = await getCalenderSettings();
     if (calenderSettings[0].formDataList.length > 0) {
         calendarDetails = (await getCalendarDetails(calenderSettings[0].formDataList[0].CALENDAR_CODE)).Data;
     }
+    $scope.calendarDetails = calendarDetails;
 
     if (calenderSettings.length > 0) {
 
@@ -71,7 +72,7 @@ async function usercalendarLoad() {
         var activityConfig = caledarConfig.find(x => x.activitiesForm != 0 && x.IsDefault);
         ySelection = resourceConfig.resourceForm;
         xSelection = activityConfig.activitiesForm;
-        var $scope = angular.element($("#calendar")).scope();
+       
 
         $scope.otherFormId = 0;
         $scope.otherFormId = formDetailsDataInfo.otherformid;
@@ -617,8 +618,6 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 //}
                 var tempHtml = "";
 
-                debugger;
-
                 if (eventData.title != null && eventData.title.length > 0)
                     rowRecord += "<div class='title " + _tempTitleSecond + "'>" + eventData.title + "</div>";
                 if (!eventData.allDay) {
@@ -887,10 +886,24 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
             }
 
 
-
             var $scope = angular.element($("#calendar")).scope();
+
+            if (calEvent.DOWNLOAD_FILE_LIST && calEvent.DOWNLOAD_FILE_LIST != '' && calEvent.DOWNLOAD_FILE_LIST != ' ' && calEvent.DOWNLOAD_FILE_LIST != 'null' && IsJsonString(calEvent.DOWNLOAD_FILE_LIST)) {
+                
+                calEvent.DOWNLOADABLE_ATTACHMENT_FILES = JSON.parse(calEvent.DOWNLOAD_FILE_LIST);
+                var downloadLabelShow = false;
+                if (calEvent.DOWNLOADABLE_ATTACHMENT_FILES.find(x => x.type == "register" && calendarDetails.IS_ADDITIONAL_FORM_ENTRY)) {
+                    downloadLabelShow = true;
+                } else if (calEvent.DOWNLOADABLE_ATTACHMENT_FILES.find(x => x.type == "user" && calEvent.IsAlreadyBooked == "Y")) {
+                    downloadLabelShow = true;
+                } else if (calEvent.DOWNLOADABLE_ATTACHMENT_FILES.find(x => x.type == "public")) {
+                    downloadLabelShow = true;
+                }
+                calEvent.downloadLabelShow = downloadLabelShow;
+            }
+
             $scope.selectEventDetails = calEvent;
-            $scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES = ($scope.selectEventDetails.DOWNLOAD_FILE_LIST != null && $scope.selectEventDetails.DOWNLOAD_FILE_LIST != '' && $scope.selectEventDetails.DOWNLOAD_FILE_LIST != ' ' && $scope.selectEventDetails.DOWNLOAD_FILE_LIST != undefined) ? JSON.parse($scope.selectEventDetails.DOWNLOAD_FILE_LIST) : null;
+            //$scope.selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES = ($scope.selectEventDetails.DOWNLOAD_FILE_LIST != null && $scope.selectEventDetails.DOWNLOAD_FILE_LIST != '' && $scope.selectEventDetails.DOWNLOAD_FILE_LIST != ' ' && $scope.selectEventDetails.DOWNLOAD_FILE_LIST != undefined) ? JSON.parse($scope.selectEventDetails.DOWNLOAD_FILE_LIST) : null;
             if (!(moment().local().diff(calEvent.start.format(), 'minute') <= 0)) {
                 $scope.selectEventDetails.isEnroll = false;
             } else {

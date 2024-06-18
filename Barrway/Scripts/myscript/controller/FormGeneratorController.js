@@ -1890,7 +1890,7 @@
 
         });
         $scope.saveFormProperties = function (inst, pages, fieldsData) {
-            debugger;
+           
             if (DataService.isEmpty($scope.importFormSettings.title)) {
                 notifierService.notifyMessage('error', 'Form Setting ', "Form cannot be saved when form name is empty. Please go to Settings to input a form name.");
                 $rootScope.$emit("HideLoading");
@@ -2165,7 +2165,7 @@
 
             if (!DataService.isEmpty($scope.importFormSettings.topicTitle))
                 $scope.importFormSettings.topicName = $scope.importFormSettings.topicTitle;
-            debugger;
+           
             dynamicTableCreation(param);
             //console.log('hi blocked');
             //return false;
@@ -3162,7 +3162,7 @@
             }
         });
         function save_form_editor(fbInstances, fbInstancePages) {
-            debugger;
+          
             console.log(fbInstances, "fbInstances");
             console.log(fbInstancePages, "fbInstancePages");
 

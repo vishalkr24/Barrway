@@ -11,13 +11,18 @@ namespace Barrway.DTO.AuthViewModel
     {
         [Required(ErrorMessage = "User name is required.")]
         [MaxLength(20,ErrorMessage = "User name max length 20 characters")]
+        [RegularExpression("^[a-zA-Z][a-zA-Z0-9_@-]*$", ErrorMessage = "Username must start with a letter and can only contain letters, numbers, and the characters '_', '@', and '-'.")]
         public string USER_NAME { get; set; }
 
         [Required(ErrorMessage = "First name is required.")]
-        [RegularExpression(@"/^[-\w\s]+$/", ErrorMessage = "Name can not have special characters")]
+        //[RegularExpression("^[a-zA-Z]*$", ErrorMessage = "Only alphabetic characters are allowed.")]
+        [RegularExpression(@"^[^\d!@#$%^&*()_+=[\]{};:'""|,.<>/?\\]+$", ErrorMessage = "First name must only contain letters.")]
+        [MaxLength(30, ErrorMessage = "First name max length 30 characters")]
+        // string pattern = @"^[^\d\s!@#$%^&*()_+=[\]{};:'""\\|,.<>/?`~]+$";
         public string FIRST_NAME { get; set; }
 
-        [RegularExpression(@"/^[-\w\s]+$/", ErrorMessage = "Name can not have special characters")]
+        [RegularExpression(@"^[^\d!@#$%^&*()_+=[\]{};:'""|,.<>/?\\]+$", ErrorMessage = "Last name must only contain letters.")]
+        [MaxLength(30, ErrorMessage = "Last name max length 30 characters")]
         public string LAST_NAME { get; set; }
 
         [Required(ErrorMessage = "Email is required")]

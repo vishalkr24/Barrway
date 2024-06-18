@@ -12712,7 +12712,6 @@
             /* Save Selected Student*/
 
             $("#get-tabulator-valuescalender").click(function () {
-                debugger;
                 var formID = $("#addTransactionRecordTabulatorModal input[name=formID]").val();
                 var oneToMany = $("#addTransactionRecordTabulatorModal input[name='modal-one-to-many']").val();
                 $rootScope.onetomany = $("#addTransactionRecordTabulatorModal input[name='modal-one-to-many']").val();
@@ -15900,10 +15899,13 @@
                             var exists = response.data;
                             if (exists.res == 1) {
                                 notifierService.notifyMessage('success', 'FormRecord', exists.Message);
+                                $("#customEventDetailsModelPopUp").modal("hide");
+                                var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
 
-                                $timeout(function () {
-                                    location.reload();
-                                }, 150);
+
+                                setTimeout(function () {
+                                    $("#" + current_tab + "-" + $scope.selectEventDetails.Id).trigger("click");
+                                }, 500);
 
                                 //window["formGroupKeyList"] = null;
                             }

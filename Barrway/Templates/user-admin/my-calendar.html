@@ -483,10 +483,11 @@
                             <label class="pr-2" style="font-weight: 400;" ng-bind-html="selectEventDetails.description | safeHtml"></label>
 
                             <div class="form-group mt-2 p-0" ng-if="selectEventDetails.DOWNLOADABLE_ATTACHMENT && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='' && selectEventDetails.DOWNLOADABLE_ATTACHMENT!='null'">
-                                <label>Document download</label>
+                                <label ng-show="selectEventDetails.downloadLabelShow">Document download</label>
                                 <ul style="list-style-type:none;margin:0;padding:0;margin-top:10px;">
                                     <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='public'"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
                                     <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='user' && selectEventDetails.IsAlreadyBooked == 'Y'"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
+                                    <li ng-repeat="item in selectEventDetails.DOWNLOADABLE_ATTACHMENT_FILES" ng-if="item.type=='register' && calendarDetails.IS_ADDITIONAL_FORM_ENTRY"><a ng-href="{{item.url}}" target="_blank"><i class="fa fa-file"></i> {{item.name}}</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -550,7 +551,7 @@
                                     <select ng-model="CLRCODE" class="form-control">
                                         <option ng-repeat="item in selectedCalendarData" value="{{item.CALENDAR_CODE}}">{{item.CALENDAR_NAME}}</option>
                                     </select>
-                                    <button class="btn btn-success" ng-disabled="!CLRCODE || CLRCODE=''" type="button" ng-click="PdfLink()"><i class="fa fa-download"></i> PDF</button>
+                                    <button class="btn btn-success" ng-disabled="!CLRCODE || CLRCODE==''" type="button" ng-click="PdfLink()"><i class="fa fa-download"></i> PDF</button>
                                 </div>
                             </div>
                         </div>
@@ -571,6 +572,6 @@
 </script>
 <script src="fg-assets/lightbox/js/lightbox-2.6.min.js"></script>
 <!--<script src="Scripts/UserAdminScripts/myCalendar.js"></script>-->
-<script src="Scripts/UserAdminScripts/myCalendar.js"></script>
+<script src="Scripts/UserAdminScripts/myCalendar.js?v=1"></script>
 <script src="Scripts/myscript/controller/calendarController.js"></script>
 <script src="Content/sidebar/js/sidebar-script.js"></script>

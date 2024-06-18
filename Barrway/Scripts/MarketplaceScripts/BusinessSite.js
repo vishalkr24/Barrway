@@ -9,7 +9,6 @@ $(document).ready(function () {
     });
   
     $(".filter-btn").click(function () {
-        debugger;
         if (Featured == 'N') {
             Featured = 'Y';
             $('.filter-btn img').attr('src', '/assets/img/filter_down.png');

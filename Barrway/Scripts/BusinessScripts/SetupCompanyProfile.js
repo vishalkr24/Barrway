@@ -11,7 +11,6 @@
 
 function setCompanyWebsite() {
     var response = getCompanyWebsite();
-    debugger
     if (response.Data.COMPANY_PROFILE_STATUS == "Y") {
         $("#companyProfileSkipButton").hide();
     }

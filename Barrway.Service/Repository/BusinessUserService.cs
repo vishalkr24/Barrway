@@ -3634,7 +3634,8 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
             {
                 bool IS_ADDITIONAL_FORM_ENTRY= false;
                 string clr_code = result[0]["CALENDAR_CODE"]?.ToString()??"";
-                if (!string.IsNullOrEmpty(clr_code)) {
+                string cmp_code = result[0]["COMPANY_CODE"]?.ToString()??"";
+                if (!string.IsNullOrEmpty(clr_code) && !string.IsNullOrEmpty(cmp_code)) {
                     sqlString = $"select *from BUSINESS_CALENDAR_MASTER_1925 where CALENDAR_CODE='{clr_code}'";
                     var clr_result = await sqlFunction.ExecuteSqlQuery(sqlString);
                     if (clr_result.Count() > 0) {
@@ -3648,7 +3649,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                             int id = Convert.ToInt32(user_result[0]["Id"]);
                             int _add_formid;
                             if (int.TryParse(add_formid, out _add_formid)) {
-                                IS_ADDITIONAL_FORM_ENTRY = await CheckAddtionalFormUserEntry(_add_formid, id);
+                                IS_ADDITIONAL_FORM_ENTRY = await CheckAddtionalFormUserEntry(_add_formid, id,cmp_code);
                             }
                         }
                     }
@@ -3665,7 +3666,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
             }
         }
 
-        private async Task<bool> CheckAddtionalFormUserEntry(int formId, int createdId)
+        public async Task<bool> CheckAddtionalFormUserEntry(int formId, int createdId,string companyCode)
         {
             try
             {
@@ -3686,7 +3687,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
 
                 string sqlQuery = $@"select  distinct f.*,um.USER_ID 
                                     from  {table_name}   f 
-                                    join USER_MASTER_1915 um on um.Id=f.created_by  where f.Id!=0 and f.created_by={createdId}";
+                                    join USER_MASTER_1915 um on um.Id=f.created_by  where f.Id!=0 and f.created_by={createdId} and f.COMPANY_CODE='{companyCode}'";
                 var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
                 return result.Count() > 0;
             }

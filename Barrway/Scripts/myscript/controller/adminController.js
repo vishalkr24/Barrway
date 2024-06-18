@@ -2969,7 +2969,6 @@
 function validateSchedularFormData(data) {
 
     var finalCheck = true;
-    debugger;
     if (data.SCH_LOCATION == "" || data.SCH_LOCATION == null) {
         finalCheck = false;
         $("#SCH_LOCATION_ERROR").show();

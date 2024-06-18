@@ -750,8 +750,11 @@ var COMPANY_CODE = "";
                             customEntryElementsValidation();
                             var dataModelList = $('#customFormNew').serializeArray().map(x => x.name);
                             dataModelList.forEach(x => {
-                                if (x == "COMPANY_CODE" || x == "CALENDAR_CODE" || x == "RECORD_ID") {
+                                if (x == "COMPANY_CODE" || x == "CALENDAR_CODE" || x == "RECORD_ID" || x == "USER_ID") {
                                     $(`#customFormNew .border-${x}`).hide();
+                                }
+                                if (x == "USER_ID") {
+                                    $(`#USER_ID`).val($('#logon-user-id').val());
                                 }
                                 if (dataModel[x]) {
                                     $(`#customFormNew input[name=${x}]`).val(dataModel[x]);
