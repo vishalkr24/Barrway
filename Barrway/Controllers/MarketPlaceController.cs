@@ -936,6 +936,21 @@ namespace Barrway.Controllers
                     calendarDetails_data.Add("setup_matrix", jsonData["Type" + clr_categoryId].ToString());
                     calendarDetails.Data = calendarDetails_data;
                 }
+                if (User.Identity.IsAuthenticated)
+                {
+                    if (calendarDetails_data.ContainsKey("ADDITIONAL_FORM_ID") && calendarDetails_data["ADDITIONAL_FORM_ID"] != null)
+                    {
+                        string companyCode = calendarDetails_data["COMPANY_CODE"]?.ToString() ?? "";
+                        string add_formid = calendarDetails_data["ADDITIONAL_FORM_ID"]?.ToString() ?? "";
+                        int _add_formid;
+                        if (int.TryParse(add_formid, out _add_formid))
+                        {
+                          bool  IS_ADDITIONAL_FORM_ENTRY = await businessUserService.CheckAddtionalFormUserEntry(_add_formid, Convert.ToInt32(UserIdentity.UserID), companyCode);
+                          calendarDetails_data.Add("IS_ADDITIONAL_FORM_ENTRY", IS_ADDITIONAL_FORM_ENTRY);
+                          calendarDetails.Data=calendarDetails_data;
+                        }
+                    }
+                }
             }
             return Json(calendarDetails);
         }

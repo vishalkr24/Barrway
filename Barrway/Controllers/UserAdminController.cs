@@ -208,6 +208,8 @@ namespace Barrway.Controllers
             }
         }
 
+
+
         [ValidateInput(false)]
         [HttpPost]
         public async Task<ActionResult> EnrollPublicUserForCalendar(CalendarEnrollModel model)

@@ -586,7 +586,10 @@
 
 
                                 <div class="dropdown-divider"></div>
-
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <input type="hidden" id="logon-user-id" value="@Barrway.Security.UserIdentity.UserName" />
+                                }
 
                                 <form id="mySignOutForm" name="mySignOutForm" method="post" action="@Url.Action("LogoutPublicUser","Account")">
                                     <a class="dropdown-item" href="javascript:void(0)" onclick="Logout()">@Resource.Sign_out</a>

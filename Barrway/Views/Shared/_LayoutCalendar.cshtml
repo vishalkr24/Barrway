@@ -648,7 +648,9 @@
                                         @*<a class="dropdown-item" href="javascript:void(0)">Manage team</a>*@
 
                                         <div class="dropdown-divider hide-for-superadmin"></div>
-
+                                        @if (User.Identity.IsAuthenticated) { 
+                                            <input type="hidden" id="logon-user-id" value="@Barrway.Security.UserIdentity.UserName"/>
+                                        }
                                         <form id="mySignOutForm" name="mySignOutForm" method="post" action="@Url.Action("Logout","Account")">
                                             <a class="dropdown-item" href="javascript:void(0)" onclick="Logout()">@Resource.Sign_out</a>
                                         </form>

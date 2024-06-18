@@ -43,9 +43,9 @@ $(document).ready(async function () {
     window["EventBasicDetail"] = manageWindowParams();
 
     calenderSettings = await getCalenderSettings();
-    
+    var $scope = angular.element($("#calendar")).scope();
     calendarDetails = (await getCalendarDetails(CALENDAR_CODE)).Data;
-    
+    $scope.calendarDetails = calendarDetails;
 
     var SelectedCalendarViews = (calendarDetails["REQUIRED_CALENDAR_VIEWS"].includes(",")) ? calendarDetails["REQUIRED_CALENDAR_VIEWS"].split(',') : [calendarDetails["REQUIRED_CALENDAR_VIEWS"]];
 
@@ -111,7 +111,7 @@ $(document).ready(async function () {
         var activityConfig = caledarConfig.find(x => x.activitiesForm != 0 && x.IsDefault);
         ySelection = resourceConfig.resourceForm;
         xSelection = activityConfig.activitiesForm;
-        var $scope = angular.element($("#calendar")).scope();
+       
 
         $scope.resourceConfig = resourceConfig;
         $scope.activityConfig = activityConfig;
@@ -1168,6 +1168,15 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
 
             if (calEvent.DOWNLOAD_FILE_LIST && calEvent.DOWNLOAD_FILE_LIST != '' && calEvent.DOWNLOAD_FILE_LIST != ' ' && calEvent.DOWNLOAD_FILE_LIST != 'null' && IsJsonString(calEvent.DOWNLOAD_FILE_LIST)) {
                 calEvent.DOWNLOADABLE_ATTACHMENT_FILES = JSON.parse(calEvent.DOWNLOAD_FILE_LIST);
+                var downloadLabelShow = false;
+                if (calEvent.DOWNLOADABLE_ATTACHMENT_FILES.find(x => x.type == "register" && calendarDetails.IS_ADDITIONAL_FORM_ENTRY)) {
+                    downloadLabelShow = true;
+                } else if (calEvent.DOWNLOADABLE_ATTACHMENT_FILES.find(x => x.type == "user" && calEvent.IsAlreadyBooked=="Y")) {
+                    downloadLabelShow = true;
+                } else if (calEvent.DOWNLOADABLE_ATTACHMENT_FILES.find(x => x.type == "public")) {
+                    downloadLabelShow = true;
+                }
+                calEvent.downloadLabelShow = downloadLabelShow;
             }
             $scope.selectEventDetails = calEvent;
 

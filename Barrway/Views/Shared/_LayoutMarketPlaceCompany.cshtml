@@ -234,6 +234,11 @@
                                 <a href="/Account/BusinessLogin" id="nav-user-icon" style="text-transform:uppercase;">B</a>
                             }
 
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <input type="hidden" id="logon-user-id" value="@Barrway.Security.UserIdentity.UserName" />
+                            }
+
                         </li>
                     </ul>
 
