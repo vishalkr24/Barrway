@@ -81,7 +81,9 @@ namespace Barrway.Service.IRepository
 
         Task<AddUpdateDelete> UpdateUserProfileData(UpdateUserProfileModel model);
 
-        Task<AddUpdateDelete> changespassword(userPassword model, string USER_ID);
+        //Task<AddUpdateDelete> changespassword(userPassword model, string USER_ID);
+        Task<AddUpdateDelete> CheckRegisteredPhoneNo(RequestMobileNoChangeOTPViewModel model, string User_Id);
+        Task<AddUpdateDelete> UpdateRegisteredPhoneNo(UpdateMobileNoViewModel model, string User_Id);
 
 
         #region

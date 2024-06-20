@@ -2573,42 +2573,13 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string subQuery = "";
-                string ChQuery = "";
-
-                ChQuery = $@"select USER_EMAIL from USER_MASTER_1915 where USER_EMAIL='{model.USER_EMAIL}' and USER_ID !='{model.USER_ID}'";
-
-                List<IDictionary<string, object>> Email = await sqlFunction.ExecuteSqlQuery(ChQuery);
-
-                if (Email.Count > 0)
-                {
-
-                    return new AddUpdateDelete() { Status = false, Message = "This email addres is already in use with diffrent user" };
-                }
-
-                if (!string.IsNullOrEmpty(model.USER_PHONE))
-                {
-                    ChQuery = $@"select USER_PHONE from USER_MASTER_1915 where USER_PHONE='{model.USER_PHONE}' and USER_ID !='{model.USER_ID}'";
-
-                    List<IDictionary<string, object>> Mobile = await sqlFunction.ExecuteSqlQuery(ChQuery);
-
-                    if (Mobile.Count > 0)
-                    {
-                        return new AddUpdateDelete() { Status = false, Message = "This Phone number is already in use with diffrent user" };
-                    }
-                }
-
-
-
-
                 string dateofbirth = "NULL";
                 if (model.DATE_OF_BIRTH.HasValue)
                 {
                     dateofbirth = "'" + model.DATE_OF_BIRTH.Value.ToString("yyyy-MM-dd") + "'";
                 }
 
-                string query = $@"update PUBLIC_USER_ACCOUNT_1943 set FIRST_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.FIRST_NAME)}', LAST_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.LAST_NAME)}', CHINESE_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.CHINESE_NAME)}', NICK_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.NICK_NAME)}', GENDER = '{model.GENDER}', DATE_OF_BIRTH = {dateofbirth} where USER_ID = N'{model.USER_ID}'
-                              update USER_MASTER_1915 set {subQuery}  USER_PHONE = '{model.USER_PHONE}',Country_Code='{model.Country_Code}' where USER_ID = N'{model.USER_ID}' ";
+                string query = $@"update PUBLIC_USER_ACCOUNT_1943 set FIRST_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.FIRST_NAME)}', LAST_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.LAST_NAME)}', CHINESE_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.CHINESE_NAME)}', NICK_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.NICK_NAME)}', GENDER = '{model.GENDER}', DATE_OF_BIRTH = {dateofbirth} where USER_ID = N'{model.USER_ID}'";
 
                 int result = await sqlFunction.ExecuteSqlCommandQuery(query);
 
@@ -2627,29 +2598,87 @@ namespace Barrway.Service.Repository
             }
         }
 
-
-        public async Task<AddUpdateDelete> changespassword(userPassword model, string USER_ID)
+        public async Task<AddUpdateDelete> CheckRegisteredPhoneNo(RequestMobileNoChangeOTPViewModel model, string User_Id)
         {
             try
             {
-                string query = $@"update USER_MASTER_1915 set  USER_PASSWORD = '{model.newpassword}' where USER_ID = N'{USER_ID}' ";
+                AddUpdateDelete response = new AddUpdateDelete() { Data = null, Message = "Change type not defined", Status = false };
 
-                int result = await sqlFunction.ExecuteSqlCommandQuery(query);
+                // check phone
+                string query = $@"select * from USER_MASTER_1915 where USER_ID != N'{User_Id}' and USER_PHONE = '{model.New_Phone}' and COUNTRY_CODE = '{model.Country_Code}'";
 
-                if (result > 0)
+                var result = await sqlFunction.ExecuteSqlQuery(query);
+
+                if (result.Count > 0)
                 {
-                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                    response.Message = "Phone No. already registered!";
                 }
                 else
                 {
-                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                    response.Message = "Success";
+                    response.Status = true;
                 }
+
+                return response;
             }
             catch (Exception ex)
             {
                 return new AddUpdateDelete() { Status = false, Message = ex.Message };
             }
         }
+
+        public async Task<AddUpdateDelete> UpdateRegisteredPhoneNo(UpdateMobileNoViewModel model, string User_Id)
+        {
+            try
+            {
+                AddUpdateDelete response = new AddUpdateDelete() { Data = null, Message = "Change type not defined", Status = false };
+
+                // change phone
+                string query = $@"update USER_MASTER_1915 set USER_PHONE = '{model.New_Phone}', COUNTRY_CODE = '{model.Country_Code}' where USER_ID = N'{User_Id}'";
+
+                var result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                if (result > 0)
+                {
+                    response.Message = "Phone No. updated successfully!";
+                    response.Status = true;
+                }
+                else
+                {
+                    response.Message = "Failed to update Mobile No.";
+                    response.Status = false;
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+        //public async Task<AddUpdateDelete> changespassword(userPassword model, string USER_ID)
+        //{
+        //    try
+        //    {
+        //        string query = $@"update USER_MASTER_1915 set  USER_PASSWORD = '{model.newpassword}' where USER_ID = N'{USER_ID}' ";
+
+        //        int result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+        //        if (result > 0)
+        //        {
+        //            return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+        //        }
+        //        else
+        //        {
+        //            return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new AddUpdateDelete() { Status = false, Message = ex.Message };
+        //    }
+        //}
 
 
     }
