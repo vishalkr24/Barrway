@@ -2,6 +2,7 @@
 using Barrway.DTO.Common;
 using Barrway.Security;
 using Barrway.Service.IRepository;
+using Barrway.Service.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,10 +18,12 @@ namespace Barrway.Controllers.API.v1
     public class UserProfileController : ApiController
     {
         private readonly IMobileAPIService mobileAPIService;
+        private readonly IMessageRepository messageRepository;
 
-        public UserProfileController(IMobileAPIService mobileAPIService)
+        public UserProfileController(IMobileAPIService mobileAPIService, IMessageRepository messageRepository)
         {
             this.mobileAPIService = mobileAPIService;
+            this.messageRepository = messageRepository;
         }
 
 
@@ -45,23 +48,19 @@ namespace Barrway.Controllers.API.v1
         [HttpPost]
         [Route("api/user/UpdateuserProfile")]
         [ResponseType(typeof(List<AddUpdateDelete>))]
-        public async Task<AddUpdateDelete> UpdateuserProfile(UpdateUserProfileViewModel model)
+        public async Task<AddUpdateDelete> UpdateuserProfile(UpdateUserProfileAPIViewModel model)
         {
             try
             {
                 var Data = new UpdateUserProfileModel
                 {
-                   
                     USER_ID = APIUserIdentity.UserName,
                     FIRST_NAME = model.FIRST_NAME,
                     LAST_NAME = model.LAST_NAME,
                     CHINESE_NAME = model.CHINESE_NAME,
                     NICK_NAME = model.NICK_NAME,
                     GENDER = model.GENDER,
-                    DATE_OF_BIRTH = model.DATE_OF_BIRTH,
-                    USER_EMAIL = model.USER_EMAIL,
-                    Country_Code = model.Country_Code,
-                    USER_PHONE = model.USER_PHONE
+                    DATE_OF_BIRTH = model.DATE_OF_BIRTH
                 };
 
                 var result = await mobileAPIService.UpdateUserProfileData(Data);
@@ -74,22 +73,67 @@ namespace Barrway.Controllers.API.v1
         }
 
         [HttpPost]
-        [Route("api/user/changePassword")]
-        [ResponseType(typeof(List<AddUpdateDelete>))]
-        public async Task<AddUpdateDelete> changePassword(userPassword model)
+        [Route("api/user/RequestMobileNoChangeOTP")]
+        public async Task<IHttpActionResult> CheckMobileNo(RequestMobileNoChangeOTPViewModel model)
         {
-            try
-            {
-                
+            var check = await mobileAPIService.CheckRegisteredPhoneNo(model, APIUserIdentity.UserName);
 
-                var result = await mobileAPIService.changespassword(model, APIUserIdentity.UserName);
-                return result;
-            }
-            catch (Exception ex)
+            if (check.Status)
             {
-                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+
+                var Result = messageRepository.SendOtpSmS("+" + model.Country_Code + model.New_Phone);
+
+                if (Result)
+                {
+                    return Ok(new AddUpdateDelete() { Status = true, Message = "OTP Sent successfully to +" + model.Country_Code + model.New_Phone + "." });
+                }
+                else
+                {
+                    return Ok(new AddUpdateDelete() { Status = false, Message = "Failed to send OTP." });
+                }
+
+            }
+            else
+            {
+                return Ok(check);
             }
         }
+
+        [HttpPost]
+        [Route("api/user/UpdateMobileNo")]
+        public async Task<IHttpActionResult> UpdateMobileNo(UpdateMobileNoViewModel model)
+        {
+
+            var Result = messageRepository.VarifyOtp("+" + model.Country_Code + model.New_Phone, model.OTP);
+
+            if (Result.Status == true)
+            {
+                var result = await mobileAPIService.UpdateRegisteredPhoneNo(model, APIUserIdentity.UserName);
+                return Ok(result);
+            }
+            else
+            {
+                return Ok(new AddUpdateDelete() { Status = false, Message = "Enter a valid OTP!" });
+            }
+        }
+
+        //[HttpPost]
+        //[Route("api/user/changePassword")]
+        //[ResponseType(typeof(List<AddUpdateDelete>))]
+        //public async Task<AddUpdateDelete> changePassword(userPassword model)
+        //{
+        //    try
+        //    {
+
+
+        //        var result = await mobileAPIService.changespassword(model, APIUserIdentity.UserName);
+        //        return result;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new AddUpdateDelete() { Status = false, Message = ex.Message };
+        //    }
+        //}
 
     }
 }
