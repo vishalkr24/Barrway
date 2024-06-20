@@ -13589,6 +13589,10 @@
             var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
             var view = $('#' + current_tab + ' div.calendar').fullCalendar('getView');
             newParam.filter = changeStateOfCalenderController(view);
+            newParam.CustomFilters = [{ "FieldName": "COMPANY_CODE", "Value": localStorage.getItem("COMPANY_CODE") },
+            { "FieldName": "CALENDAR_CODE", "Value": localStorage.getItem("CALENDAR_CODE") }
+            ];
+            newParam.IsCustomFilter = true;
             mainService.getFormRecordList("GetFormRecordList", newParam)
                 .then(function (response) {
                     if (response.data != null && angular.isDefined(response.data)) {
