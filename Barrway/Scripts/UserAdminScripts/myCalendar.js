@@ -521,21 +521,12 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
         navLinks: true, // can click day/week names to navigate views
         editable: false,
         eventLimit: 4, // allow "more" link when too many events            
-        loading: function (bool) {
-            var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
-            if (bool) {
-                showLoader(".calendar .fc-view-container");
-            }
-            else {
-                $(".calendar .fc-view-container").unblock();
-            }
-            //$('#loading').toggle(bool);
-        },
         eventRender: function (event, element) {
             //if (countLoader == 0) {
             //    showLoader();
             //    countLoader++;
             //}
+           
             var $scope = angular.element($("#calendar")).scope();
             var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
             var current_subtab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').find('.ui-state-active').attr('class');
@@ -1068,7 +1059,6 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
 
         },
         eventAfterAllRender: function (event, element, view) {
-
             var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
 
             if (current_tab == "agenda-view") {
@@ -1089,12 +1079,13 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                 $('.fc-list-item').bstooltip({ html: true });
                 $('.fc-day-grid-event').bstooltip({ html: true });
                 $('.fc-time-grid-event').bstooltip({ html: true });
-                setTimeout(function () {
-                    $('#agenda-view div.calendar').fullCalendar('render');
-                    $('#timeline-resource-view div.calendar').fullCalendar('render');
-                    $('#vertical-resource-view div.calendar').fullCalendar('render');
-                }, 150);
             }, 150);
+            //setTimeout(function () {
+            //    $('#agenda-view div.calendar').fullCalendar('render');
+            //    //$('#timeline-resource-view div.calendar').fullCalendar('render');
+            //    $('#vertical-resource-view div.calendar').fullCalendar('render');
+            //}, 150);
+
         },
 
         //  eventDragStop: function (event, jsEvent, ui, view) {
@@ -1106,6 +1097,17 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
 
         // List View
         myOptions = {
+            loading: function (bool) {
+
+                var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+                if (bool) {
+                    showLoader("#list-view div.calendar .fc-view-container");
+                }
+                else {
+                    $("#list-view div.calendar .fc-view-container").unblock();
+                }
+                //$('#loading').toggle(bool);
+            },
             header: {
                 left: 'prev,next today datePickerButton4',
                 center: 'title',
@@ -1202,7 +1204,8 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                     complete: function () {
                         var _ScrollOffset = window["scrollOffset"];
                         window.scrollTo(0, _ScrollOffset);
-                        $.unblockUI();
+                        //$.unblockUI();
+                        $("#list-view div.calendar .fc-view-container").unblock();
                         // $("#" + current_tab + " div.calendar").unblock();
                     }
                 });
@@ -1216,6 +1219,17 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
 
     // Agenda View
     myOptions = {
+        loading: function (bool) {
+
+            var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+            if (bool) {
+                showLoader("#agenda-view div.calendar .fc-view-container");
+            }
+            else {
+                $("#agenda-view div.calendar .fc-view-container").unblock();
+            }
+            //$('#loading').toggle(bool);
+        },
         header: {
             left: 'prev,next today datePickerButton3',
             center: 'title',
@@ -1291,6 +1305,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                             $('#agenda-view div.calendar').fullCalendar('removeEvents');
                         }
                         assignEvents(angular.copy(calenderData));
+                      
                         callback(calenderData);
                         window["eventListTemp"] = calenderData;
                         window["eventListTempAgenda"] = calenderData;
@@ -1300,6 +1315,7 @@ function marcketplaceCalendar(calenderType, calenderData, resourceData, resColum
                         callback([]);
                 },
                 beforeSend: function () {
+                  
                     //showLoader();
                 },
                 complete: function () {

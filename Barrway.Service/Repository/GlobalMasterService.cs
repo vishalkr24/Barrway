@@ -91,56 +91,13 @@ namespace Barrway.Service.Repository
 
             if (!string.IsNullOrEmpty(SubCategoryId))
             {
-                filter += "and CALENDAR_SUB_CATEGORY_ID = '" + SubCategoryId + "'";
+                filter += "and subCategory.Id =" + SubCategoryId;
             }
 
             if (!string.IsNullOrEmpty(DistrictId))
             {
                 filter += "and calendar.DISTRICT_ID = '" + DistrictId + "'";
             }
-
-            //   string query = $@"SELECT calendar.[Id]
-            //                     ,calendar.[created_at]
-            //                     ,calendar.[updated_at]
-            //                     ,calendar.[created_by]
-            //                     ,calendar.[updated_by]
-            //                     ,[CALENDAR_NAME]
-            //                     ,[CALENDAR_PHOTO_NAME]
-            //                     ,[CALENDAR_PHOTO_PATH]
-            //                     ,[IS_VISIBLE]
-            //                     ,calendar.[COUNTRY_ID]
-            //                     ,calendar.[CITY_ID]
-            //                     ,calendar.[DISTRICT_ID]
-            //                     ,calendar.[CALENDAR_CATEGORY_ID]
-            //                     ,calendar.[CALENDAR_COMMON_CATEGORY_ID]
-            //                     ,calendar.[CALENDAR_SUB_CATEGORY_ID]
-            //                     ,calendar.[CALENDAR_TYPE]
-            //                     ,calendar.[COMPANY_CODE]
-            //                     ,calendar.[CALENDAR_CODE]
-            //                  ,[CALENDAR_SUB_CATEGORY_NAME]
-            //                  ,[CMN_CATEGORY_NAME]
-            //                  ,[DISTRICT_NAME]
-            //                  ,calendar.TAGS
-            //                  ,[COMPANY_NAME_ENGLISH]
-            //                     ,[COMPANY_NAME_CHINESE]
-            //                     ,[COMPANY_LOGO_NAME]
-            //                     ,[COMPANY_LOGO_PATH]
-            //                     ,[COMPANY_BANNER_NAME]
-            //                     ,[COMPANY_BANNER_PATH]
-            //,[IS_SEARCHABLE_IN_MARKETPLACE]
-            //                     ,company.PAGE_URL
-            //                     ,calendar.IS_FEATURED
-            //                     ,category.Id AS  CategoryId                    
-            //                FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
-            //                join CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory on subCategory.Id = calendar.CALENDAR_SUB_CATEGORY_ID
-            //                join CALENDAR_COMMON_CATEGORY_1978 category on category.Id = calendar.CALENDAR_COMMON_CATEGORY_ID
-            //                join DISTRICT_MASTER_1928 district on district.Id = calendar.DISTRICT_ID
-            //                join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
-
-            //                where calendar.STATUS = 'PUBLISH' and company.IS_SEARCHABLE_IN_MARKETPLACE = 'Y' and company.IS_ACTIVE = 'Y' and company.IS_TEMPLATE = 'N' and calendar.CALENDAR_USE_TYPE = 'PUBLIC' and calendar.IS_VISIBLE_ON_MARKETPLACE_HOME='Y'  {(!string.IsNullOrEmpty(filter) ? filter : "")} ORDER BY  calendar.[PRIORITY] DESC , calendar.[SEQUENCE] asc";
-
-
-
 
             string query = $@"select *from(SELECT distinct calendar.[Id]
                               ,calendar.[created_at]
