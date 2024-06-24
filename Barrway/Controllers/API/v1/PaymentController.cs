@@ -174,7 +174,7 @@ namespace Barrway.Controllers.API.v1
                     METHOD = "Card",
                     PAYMENT_ID = PackageData["OrderNo"].ToString(),
                     PLAN_ID = (PackageData["Id"]).ToString(),
-                    STATUS = session.Status,
+                    STATUS = "complete",
                     CREDIT_EXPIRE_DATE = DateTimeUtility.Now().AddMonths(Convert.ToInt32(PackageData["VALIDITY_IN_MONTHS"])).ToString("yyyy-MM-dd HH:mm"),
                     USER_ID = User.Identity.Name
                 };

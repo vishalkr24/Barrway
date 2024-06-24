@@ -94,6 +94,9 @@
     h6 {
         font-size: 14px;
     }
+    div#Page1 ul#pills-tab1 li {
+        display: none;
+    }
 </style>
 <div class="card card-default">
     <div class="card-header">
@@ -130,26 +133,26 @@
                     </i> <span class="action-name">{{m_nm}}</span>
                 </a>
             </div>
-            <div class="table-controls col-sm-12 col-lg-12" ng-show="formDataInfo.created_byname!=undefined && (!isSaveEvent || isEdit)">
+            <!--<div class="table-controls col-sm-12 col-lg-12" ng-show="formDataInfo.created_byname!=undefined && (!isSaveEvent || isEdit)">
                 <div class="row">
                     <div class="col-sm-4 created_by"><h6>Created By:<strong> {{(formDataInfo.userID==userDetail.Id)?'You':formDataInfo.created_byname}}</strong> </h6></div>
                     <div class="col-sm-4 created_at"><h6>Created At:  <strong>{{ToCustomDateTime(formDataInfo.created_at)}} </strong></h6></div>
                     <div class="col-sm-4 updated_at"><h6>Last Updated At: <strong> {{ToCustomDateTime(formDataInfo.updated_at)}}</strong> </h6></div>
 
                     <div class="col-sm-4 PaymentStatus" ng-if="PPControl==true" ng-switch="formDataInfo.PaymentStatus">
-                        <h4 ng-switch-when="1"><strong>Payment :</strong> Completed</h4><!--Payment status-->
-                        <h4 ng-switch-default><strong>Payment :</strong>Not Done</h4>
+                        <h4 ng-switch-when="1"><strong>Payment :</strong> Completed</h4>--><!--Payment status-->
+                        <!--<h4 ng-switch-default><strong>Payment :</strong>Not Done</h4>
 
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-12 col-lg-12 text-left" ng-show="formDataInfo.created_byname!=undefined && (!isSaveEvent || isEdit)">
+            </div>-->
+            <!--<div class="col-sm-12 col-lg-12 text-left" ng-show="formDataInfo.created_byname!=undefined && (!isSaveEvent || isEdit)">
                 <a class="btn btn-primary btn-sm" ng-disabled="formDataInfo.presId==0" ui-sref="editFormEntryData({formId:currentFormId,formGroupKey:formGroupKey,Id:formDataInfo.presId})" title="Previous"><i class="fa fa-backward"></i></a>
                 <a class="btn btn-primary btn-sm" ng-disabled="formDataInfo.nextId==0" ui-sref="editFormEntryData({formId:currentFormId,formGroupKey:formGroupKey,Id:formDataInfo.nextId})" title="Next">
 
                     <i class="fa fa-forward"></i>
                 </a>
-            </div>
+            </div>-->
             <div id="tabs" class="col-sm-12 col-lg-12 text-left">
                 <!--<ul class="nav nav-tabs" role="tablist" ng-show="pageLength>1">
                     <li role="presentation" ng-class="{ 'active': $index == 0}" ng-repeat="(key, value) in formFields track by $index"><a data-target="#page-{{$index}}" aria-controls="page-1" role="tab" data-toggle="tab" aria-expanded="true">{{key}}<i class="fa"></i></a></li>

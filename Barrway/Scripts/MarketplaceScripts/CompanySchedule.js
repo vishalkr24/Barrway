@@ -371,7 +371,10 @@ async function getCalenderSettings() {
         $.ajax({
             type: "POST",
             url: BASE_URL + "FormAPI/getCalenderSettingsFormData",
-            data: JSON.stringify({ "action": 4, "formId": CalendarFormId, "IsCustomFilter": true, "CustomFilters": [{ "FieldName": "COMPANY_CODE", "Value": COMPANY_CODE }, { "FieldName": "CALENDAR_CODE", "Value": CalanderCode }] }),
+            data: JSON.stringify({
+                "action": 4, "formId": CalendarFormId, "IsCustomFilter": true, "CustomFilters": [{ "FieldName": "COMPANY_CODE", "Value": COMPANY_CODE }, { "FieldName": "CALENDAR_CODE", "Value": CalanderCode }],
+                "excludeFilters": [{ "field": "CALENDAR_CODE", "formid": 2304 }]
+            }),
             contentType: "application/json",
             success: function (response) {
                 hideLoader();
