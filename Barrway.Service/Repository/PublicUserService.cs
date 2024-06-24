@@ -1656,7 +1656,23 @@ namespace Barrway.Service.Repository
                 if (userResult.Count() == 0) {
                     return new AddUpdateDelete<GenerateDynamicFormData>() { Status = false, Message = "user id not found!" };
                 }
-                var user= userResult.FirstOrDefault();
+                var user = userResult.FirstOrDefault();
+                if (user["USER_EMAIL"]==null || string.IsNullOrEmpty(user["USER_EMAIL"].ToString()))
+                {
+                    return new AddUpdateDelete<GenerateDynamicFormData>() { Status = false, Message = "user email empty!" };
+                }
+                if (string.IsNullOrEmpty(user["IS_ACTIVE"]?.ToString()) ||  user["IS_ACTIVE"].ToString()=="N")
+                {
+                    return new AddUpdateDelete<GenerateDynamicFormData>() { Status = false, Message = "user not active!" };
+                }
+
+                //if (user["IS_EMAIL_VERIFIED"] == null || string.IsNullOrEmpty(user["IS_EMAIL_VERIFIED"].ToString()))
+                //{
+                //    return new AddUpdateDelete<GenerateDynamicFormData>() { Status = false, Message = "user email empty!" };
+                //}
+
+
+
                 data.created_by = Convert.ToInt32(user["Id"]);
                 var checkUserAdditionalForm = await CheckAddtionalFormUserEntry(data.formId, userId, companyCode);
                 if (checkUserAdditionalForm)
