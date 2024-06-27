@@ -15,4 +15,19 @@ namespace Barrway.DTO.FormAPI
         public List<DynamicDropdownNew> activityDetails { get; set; }
 
     }
+
+    public class EventLIst
+    {
+        public string Date { get; set; }
+        public List<EventTiming> EventTiming { get; set; }
+
+    }
+
+    public class EventTiming
+    {
+        public string Timeing { get; set; }
+    }
+
+
+
 }

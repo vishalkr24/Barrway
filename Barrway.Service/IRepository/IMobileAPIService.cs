@@ -80,6 +80,7 @@ namespace Barrway.Service.IRepository
 
         Task<AddUpdateDelete> changespassword(userPassword model, string USER_ID);
 
+        Task<List<IDictionary<string, object>>> GetCalnderEvents(CalendarEvents Request);
 
         #region
 
