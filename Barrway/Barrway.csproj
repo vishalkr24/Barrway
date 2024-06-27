@@ -3445,6 +3445,7 @@
     <Content Include="Templates\calendar-master\business-user-master.html" />
     <Content Include="Templates\calendar-master\calendar-package-master.html" />
     <Content Include="Templates\calendar-master\additional-form-master.html" />
+    <Content Include="Templates\calendar-master\individual-schedular-form.html" />
     <Content Include="Templates\calendar-master\session-schedular-form.html" />
     <Content Include="Templates\calendar-master\schedular-form.html" />
     <Content Include="Templates\calendar-master\transaction-master.html" />

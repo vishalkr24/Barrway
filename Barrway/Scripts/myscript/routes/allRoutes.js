@@ -1943,6 +1943,20 @@
                     parent: 'home'
                 }
             })
+            .state('individual_schedular_form', {
+                url: '/calendar/individual-schedular-form/:Id',
+                onEnter: function ($window) { $window.document.title = "Schedular Form"; },
+                views: {
+                    'content': {
+                        templateUrl: '/Templates/calendar-master/individual-schedular-form.html?token=' + uuid,
+                        controller: 'NewIndividualSchedularFormController'
+                    }
+                },
+                ncyBreadcrumb: {
+                    label: 'admin-users',
+                    parent: 'home'
+                }
+            })
             .state('session_schedular_form', {
                 url: '/calendar/schedular-form/session/:Id',
                 onEnter: function ($window) { $window.document.title = "Schedular Form"; },
