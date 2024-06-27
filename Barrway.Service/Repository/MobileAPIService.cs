@@ -1627,6 +1627,44 @@ namespace Barrway.Service.Repository
         }
 
 
+        public async Task<List<IDictionary<string, object>>> GetCalnderEvents(CalendarEvents Request)
+        {
+            try
+            {
+                List<EventLIst> EventData = new List<EventLIst>();
+                Form_DataTable data = new Form_DataTable();
+                data.action = 1;
+                data.ActivityFormId = (int)FormSetting.SERVICE_MASTER;
+                data.resourceFormId = (int)FormSetting.LOCATION_MASTER;
+                data.isEvent = 1;
+                data.isCalender = 1;
+                data.formId = (int)FormSetting.CALENDAR_FORM;
+                data.COMPANY_CODE = Request.COMPANY_CODE;
+                data.CALENDAR_CODE = Request.CALENDAR_CODE;
+                string filterQuery = CustomMethods.GetDateQuery(Request.start, Request.end);
+                data.filter = new FilterDTO() { field = "start", value = filterQuery };
+                if (!string.IsNullOrEmpty(data?.COMPANY_CODE) || !string.IsNullOrEmpty(data?.CALENDAR_CODE))
+                {
+                    data.filter.value = " F.COMPANY_CODE=N'" + data.COMPANY_CODE + "' and F.CALENDAR_CODE=N'" + data.CALENDAR_CODE + "' and " + data.filter.value;
+                }
+
+                ReferalFormDataResponseModel result = await formAPIRepository.getReferralFormFields(data);
+
+                if (result != null && result.events != null)
+                {
+
+
+                    return result.events;
+                }
+                return new List<IDictionary<string, object>>();
+            }
+            catch (Exception ex)
+            {
+                return new List<IDictionary<string, object>>();
+            }
+        }
+
+
         public class companyList
         {
             public string COMPANY_CODE { get; set; }

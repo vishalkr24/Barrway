@@ -85,6 +85,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> CheckRegisteredPhoneNo(RequestMobileNoChangeOTPViewModel model, string User_Id);
         Task<AddUpdateDelete> UpdateRegisteredPhoneNo(UpdateMobileNoViewModel model, string User_Id);
 
+        Task<List<IDictionary<string, object>>> GetCalnderEvents(CalendarEvents Request);
 
         #region
 

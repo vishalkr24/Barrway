@@ -22,6 +22,21 @@ namespace Barrway.DTO.APIModels.Calendar
         public DateTime end{ get; set; }
     }
 
+    public class CalendarEvents
+    {
+
+        public string COMPANY_CODE { get; set; }
+        public string CALENDAR_CODE { get; set; }
+        [Required(ErrorMessage = "start date time required")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
+        public DateTime start { get; set; }
+        [Required(ErrorMessage = "end date time required")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
+        public DateTime end { get; set; }
+    }
+
+
+
     public class FavoriteCalendarViewModel
     {
      
