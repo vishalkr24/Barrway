@@ -895,6 +895,74 @@ namespace Barrway.Controllers
 
                         return executeResponse;
                     }
+                    else if (data.SCHEDULAR_TYPE == "INDIVIDUAL")
+                    {
+                        // add or edit schedule
+                        //var slotCheck = await businessUserService.CheckOverlapingSlots(data);
+
+                        //if (slotCheck.Status)
+                        //{
+                        //    return Json(new AddUpdateDelete() { Status = false, Data = slotCheck, Message = "Slots Overlaping!" });
+                        //}
+
+                        List<IndividualEventModel> eventList = JsonConvert.DeserializeObject<List<IndividualEventModel>>(data.SCH_SCHEDULE_TABLE);
+
+                        bool createNewSchedule = false;
+
+                        if (!string.IsNullOrEmpty(data.Id))
+                        {
+                            // Edit Existing Schedule
+                            if (Convert.ToInt32(data.Id) > 0)
+                            {
+                                string formGroupKey = CustomMethods.CreateUUID();
+                                var response = await businessUserService.AddSchedularForm(data, formGroupKey, UserIdentity.UserName);
+
+                                return Json(new AddUpdateDelete() { Status = true, Message = "Success" }, JsonRequestBehavior.AllowGet);
+                            }
+                            else
+                            {
+                                createNewSchedule = true;
+                            }
+                        }
+                        else
+                        {
+                            // Create a new Schedule
+                            createNewSchedule = true;
+                        }
+
+                        if (createNewSchedule)
+                        {
+                            var calendarCountCheckData = await businessUserService.GetSessionsForThisMonth(data.COMPANY_CODE, data.CALENDAR_CODE);
+                            var package = await businessUserService.GetCompanyActiveSubscriptionDetails(data.COMPANY_CODE, true);
+
+                            if (!calendarCountCheckData.Status)
+                            {
+                                return Json(calendarCountCheckData);
+                            }
+                            else
+                            {
+                                DateTime PackageValidity = Convert.ToDateTime(calendarCountCheckData.Data["VALID_TILL"]?.ToString());
+
+                                if (PackageValidity < Convert.ToDateTime(data.SCH_TO_DATE))
+                                {
+                                    data.SCH_TO_DATE = PackageValidity.ToString("yyyy-MM-dd");
+                                }
+
+                                if (Convert.ToInt32(calendarCountCheckData.Data["AVAILABLE_SESSIONS"]?.ToString()) < eventList.Count)
+                                {
+                                    return Json(new AddUpdateDelete() { Status = false, Message = $"You can only create {calendarCountCheckData.Data["AVAILABLE_SESSIONS"]?.ToString()} sessions for this month. Upgrade your plan to create all the sessions." });
+                                }
+                            }
+
+                            string formGroupKey = CustomMethods.CreateUUID();
+
+                            var response = await businessUserService.AddSchedularForm(data, formGroupKey, UserIdentity.UserName);
+
+                            var executeResponse = await ExecuteSchedularForm(response.Data.Id.ToString(), response.Data.formGroupKey.ToString());
+
+                            return executeResponse;
+                        }
+                    }
                     else
                     {
                         // add or edit schedule
@@ -1172,7 +1240,7 @@ namespace Barrway.Controllers
                             }
 
                         }
-                        else
+                        else if (data.SCHEDULAR_TYPE == "CALENDAR")
                         {
                             var calendarCountCheckData = await businessUserService.GetSessionsForThisMonth(data.COMPANY_CODE, data.CALENDAR_CODE);
                             var package = await businessUserService.GetCompanyActiveSubscriptionDetails(data.COMPANY_CODE, true);
@@ -1454,7 +1522,7 @@ namespace Barrway.Controllers
                                         string resourceId = data.SCH_RESOURCE;
 
                                         eventCounter++;
-                                        script += $@"declare @insertedEventId{slotCounter} int;  insert into CALENDAR_FORM_1935([IS_COURSE_EVENT]
+                                        script += $@"insert into CALENDAR_FORM_1935([IS_COURSE_EVENT]
                                                               ,[SCHEDULAR_FORM_ID]
                                                               ,[formGroupKey]
                                                               ,[formID]
@@ -1478,118 +1546,14 @@ namespace Barrway.Controllers
                                                               ,[created_at], [updated_at],[EVENT_TYPE]) 
 	                                                          values('{IsCourseEvent}', '{SchedularFormId}', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter}', '{SlotStartTime.ToString("yyyy-MM-ddTHH:mm:ss")}', '{SlotEndTime.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_RESOURCE)}', '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_ACTIVITY)}', '{package.Data["SUBS_ID"]?.ToString()}', '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_DESCRIPTION)}', getDate(), getDate(),'SCHEDULE');
 
-                                                            SET @insertedEventId{slotCounter} = SCOPE_IDENTITY();
-
                                                             {referenceResourceEntry}                                                                    
 
                                                             {referenceActivityEntry}
                                                             
                                                             insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
-                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_LOCATION)}', 'LOCATION_MASTER_1936', 'LOCATION_ADDRESS', {(int)FormSetting.CALENDAR_FORM}, '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_LOCATION)}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_LOCATION)}', 'LOCATION_MASTER_1936', 'LOCATION_ADDRESS', {(int)FormSetting.CALENDAR_FORM}, '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_LOCATION)}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate());
 
-
-                                                            declare @SlotId{slotCounter} int = (select top 1 cf.Id from CALENDAR_FORM_1935 cf
-                                                                join TRANSACTION_MASTER_1942 t on t.SLOT = cf.Id
-                                                                where cf.IS_COURSE_EVENT = 'Y' and activities = '{serviceId}'
-                                                                order by cf.created_at desc);
-
-                                                            if (@SlotId{slotCounter} is not null and @SlotId{slotCounter} != '')
-                                                            begin
-                                                                INSERT INTO [dbo].[TRANSACTION_MASTER_1942]
-                                                                           ([formGroupKey]
-                                                                           ,[formID]
-                                                                           ,[userID]
-                                                                           ,[Current_Status]
-                                                                           ,[cycle]
-                                                                           ,[MasterFormID]
-                                                                           ,[MasterFormRow]
-                                                                           ,[formRecordOrder]
-                                                                           ,[formRecordStatus]
-                                                                           ,[ApprovalStatus]
-                                                                           ,[text_1683717657815]
-                                                                           ,[created_at]
-                                                                           ,[updated_at]
-                                                                           ,[created_by]
-                                                                           ,[updated_by]
-                                                                           ,[SLOT]
-                                                                           ,[RESOURCE]
-                                                                           ,[ACTIVITY]
-                                                                           ,[STUDENT]
-                                                                           ,[REMARKS]
-                                                                           ,[FEES]
-                                                                           ,[FEES_1]
-                                                                           ,[FEES_2]
-                                                                           ,[FEES_LIST]
-                                                                           ,[ATTENDANCE]
-                                                                           ,[hidden_1683717028956]
-                                                                           ,[COMPANY_CODE]
-                                                                           ,[CALENDAR_CODE]
-                                                                           ,[resForm_2304]
-                                                                           ,[actFormID]
-                                                                           ,[parentID]
-                                                                           ,[seperatedFormIDs]
-                                                                           ,[seperatedTitles]
-                                                                           ,[seperatedIds]
-                                                                           ,[seperatedResFormIDs]
-                                                                           ,[seperatedResEntryIDs]
-                                                                           ,[seperatedResColValues]
-                                                                           ,[seperatedColorValues]
-                                                                           ,[USERTOKEN]
-                                                                           ,[ATTACHMENT_FROM_PARTICIPANTS]
-                                                                           ,[COMMENTS_FROM_PARTICIPANT]
-                                                                           ,[ATTACHMENT_FROM_STAFF]
-                                                                           ,[COMMENTS_FROM_STAFF]
-                                                                           ,[transaction_fees]
-                                                                           ,[ASSESSMENT_FILES]
-                                                                           ,[ASSESSMENT_FILES_LIST])
-                                                                     select '{formGroupKey}'
-                                                                      ,[formID]
-                                                                      ,[userID]
-                                                                      ,[Current_Status]
-                                                                      ,[cycle]
-                                                                      ,[MasterFormID]
-                                                                      ,[MasterFormRow]
-                                                                      ,[formRecordOrder]
-                                                                      ,[formRecordStatus]
-                                                                      ,[ApprovalStatus]
-                                                                      ,[text_1683717657815]
-                                                                      ,'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'
-                                                                      ,'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}'
-                                                                      ,[created_by]
-                                                                      ,[updated_by]
-                                                                      ,(select @insertedEventId{slotCounter})
-                                                                      ,'{resourceId}'
-                                                                      ,[ACTIVITY]
-                                                                      ,[STUDENT]
-                                                                      ,[REMARKS]
-                                                                      ,[FEES]
-                                                                      ,[FEES_1]
-                                                                      ,[FEES_2]
-                                                                      ,[FEES_LIST]
-                                                                      ,'NOT-MARKED'
-                                                                      ,[hidden_1683717028956]
-                                                                      ,[COMPANY_CODE]
-                                                                      ,[CALENDAR_CODE]
-                                                                      ,[resForm_2304]
-                                                                      ,[actFormID]
-                                                                      ,[parentID]
-                                                                      ,[seperatedFormIDs]
-                                                                      ,[seperatedTitles]
-                                                                      ,[seperatedIds]
-                                                                      ,[seperatedResFormIDs]
-                                                                      ,[seperatedResEntryIDs]
-                                                                      ,[seperatedResColValues]
-                                                                      ,[seperatedColorValues]
-                                                                      ,[USERTOKEN]
-                                                                      ,[ATTACHMENT_FROM_PARTICIPANTS]
-                                                                      ,[COMMENTS_FROM_PARTICIPANT]
-                                                                      ,[ATTACHMENT_FROM_STAFF]
-                                                                      ,[COMMENTS_FROM_STAFF]
-                                                                      ,[transaction_fees]
-                                                                      ,[ASSESSMENT_FILES]
-                                                                      ,[ASSESSMENT_FILES_LIST]
-                                                                  FROM [dbo].[TRANSACTION_MASTER_1942] t where t.ACTIVITY = '{serviceId}' and t.SLOT = @SlotId{slotCounter};
-                                                            end                                                            
+                                   
 ";
                                     }
 
@@ -1656,7 +1620,137 @@ namespace Barrway.Controllers
                                 return Json(new AddUpdateDelete() { Status = false, Message = "No Sessions Created. Session limit reached as per your plan. Upgrade your plan to create more sessions." }, JsonRequestBehavior.AllowGet);
                             }
                         }
+                        else
+                        {
+                            var calendarCountCheckData = await businessUserService.GetSessionsForThisMonth(data.COMPANY_CODE, data.CALENDAR_CODE);
+                            var package = await businessUserService.GetCompanyActiveSubscriptionDetails(data.COMPANY_CODE, true);
 
+                            List<IDictionary<string, object>> serviceListRaw = (await businessUserService.GetServiceList(data.CALENDAR_CODE, data.COMPANY_CODE)).Data;
+
+                            
+
+                            string script = "";
+                            int eventCounter = 0;
+                            bool caseBreak = false;
+
+                            int slotCounter = 1;
+
+                            List<IndividualEventModel> eventList = JsonConvert.DeserializeObject<List<IndividualEventModel>>(data.SCH_SCHEDULE_TABLE);
+
+                            foreach (var item in eventList)
+                            {
+                                var serviceData = serviceListRaw.FirstOrDefault(x => x["Id"]?.ToString() == item.SCH_ACTIVITY);
+                                string IsCourseEvent = "N";
+
+                                if (!string.IsNullOrEmpty(item.SCH_ACTIVITY) && item.SCH_ACTIVITY != "-1")
+                                {
+                                    IsCourseEvent = ((!string.IsNullOrEmpty(serviceData["SERVICE_PAY_PER"]?.ToString()) && serviceData["SERVICE_PAY_PER"]?.ToString() == "COURSE") ? "Y" : "N");
+                                }
+
+                                if (Convert.ToInt32(calendarCountCheckData.Data["AVAILABLE_SESSIONS"]?.ToString()) <= eventCounter)
+                                {
+                                    caseBreak = true;
+                                    break;
+                                }
+
+                                string SchedularFormId = Id;
+
+                                CalendarFormModel eventData = new CalendarFormModel()
+                                {
+                                    end = item.SCH_TO_DATE.ToString("yyyy-MM-ddTHH:mm:ss"),
+                                    resources = item.SCH_RESOURCE,
+                                    activities = item.SCH_ACTIVITY,
+                                    start = item.SCH_FROM_DATE.ToString("yyyy-MM-ddTHH:mm:ss"),
+                                    title = "Slot " + slotCounter++
+                                };
+
+                                formGroupKey = Guid.NewGuid().ToString();
+                                string referenceResourceEntry = "";
+
+                                if (!string.IsNullOrEmpty(item.SCH_RESOURCE))
+                                {
+                                    referenceResourceEntry = $@"
+                                                            insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_PROVIDER_MASTER}, '{SQLUtility.TreatSingleQuoteForQuery(item.SCH_RESOURCE)}', 'SERVICE_PROVIDER_MASTER_1934', 'FIRST_NAME', {(int)FormSetting.CALENDAR_FORM}, '{SQLUtility.TreatSingleQuoteForQuery(item.SCH_RESOURCE)}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                                                            ";
+                                }
+
+                                string referenceActivityEntry = "";
+
+                                if (!string.IsNullOrEmpty(item.SCH_ACTIVITY) && item.SCH_ACTIVITY != "-1")
+                                {
+                                    referenceActivityEntry = $@"
+                                                            insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.SERVICE_MASTER}, '{SQLUtility.TreatSingleQuoteForQuery(item.SCH_ACTIVITY)}', 'SERVICE_MASTER_1933', 'ACTIVITY_NAME', {(int)FormSetting.CALENDAR_FORM}, '{SQLUtility.TreatSingleQuoteForQuery(item.SCH_ACTIVITY)}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate())
+                                                            ";
+                                }
+
+                                string serviceId = item.SCH_ACTIVITY;
+                                string resourceId = item.SCH_RESOURCE;
+
+                                eventCounter++;
+                                script += $@"declare @insertedEventId{slotCounter} int;  insert into CALENDAR_FORM_1935([IS_COURSE_EVENT]
+                                                              ,[SCHEDULAR_FORM_ID]
+                                                              ,[formGroupKey]
+                                                              ,[formID]
+                                                              ,[userID]
+                                                              ,[Current_Status]
+                                                              ,[cycle]
+                                                              ,[MasterFormID]
+                                                              ,[MasterFormRow]
+                                                              ,[formRecordOrder]
+                                                              ,[formRecordStatus]
+                                                              ,[COMPANY_CODE]
+                                                              ,[CALENDAR_CODE]
+                                                              ,[title]
+                                                              ,[start]
+                                                              ,[end]
+                                                              ,[allDay]
+                                                              ,[resources]
+                                                              ,[activities]
+                                                              ,[COMPANY_SUBSCRIPTION_ID]
+                                                              ,[description]
+                                                              ,[created_at], [updated_at],[EVENT_TYPE]) 
+	                                                          values('{IsCourseEvent}', '{SchedularFormId}', '{formGroupKey}', {(int)FormSetting.CALENDAR_FORM}, 30314, '0', 0, 0, '0', (select (Max(formRecordOrder)+1) from CALENDAR_FORM_1935), '0', '{data.COMPANY_CODE}', '{data.CALENDAR_CODE}', 'Slot {slotCounter}', '{item.SCH_FROM_DATE.ToString("yyyy-MM-ddTHH:mm:ss")}', '{item.SCH_TO_DATE.ToString("yyyy-MM-ddTHH:mm:ss")}', 'false', '{SQLUtility.TreatSingleQuoteForQuery(item.SCH_RESOURCE)}', '{SQLUtility.TreatSingleQuoteForQuery(data.SCH_ACTIVITY)}', '{package.Data["SUBS_ID"]?.ToString()}', '{SQLUtility.TreatSingleQuoteForQuery(item.SCH_DESCRIPTION)}', getDate(), getDate(),'SCHEDULE');
+
+                                                            {referenceResourceEntry}                                                                    
+
+                                                            {referenceActivityEntry}
+                                                            
+                                                            insert into form_calenderreferrence(formId, formgroupkey, currentFormType, referrenceFormId, referrenceId, referrenceFormTable, referrenceColumnName, resourceFormId, resourceId, created_by, created_at, updated_by, updated_at)
+                                                            values({(int)FormSetting.CALENDAR_FORM}, '{formGroupKey}', 0, {(int)FormSetting.LOCATION_MASTER}, '{SQLUtility.TreatSingleQuoteForQuery(item.SCH_LOCATION)}', 'LOCATION_MASTER_1936', 'LOCATION_ADDRESS', {(int)FormSetting.CALENDAR_FORM}, '{SQLUtility.TreatSingleQuoteForQuery(item.SCH_LOCATION)}', '{(int)FormSetting.CreatedUser}', getDate(), '{(int)FormSetting.CreatedUser}', getDate());
+";
+
+                            }
+
+                            if (!string.IsNullOrEmpty(script))
+                            {
+                                var count = await sqlFunction.ExecuteSqlCommandQuery(script);
+
+                                if (count > 0)
+                                {
+                                    if (caseBreak)
+                                    {
+                                        if (eventCounter == 0)
+                                        {
+                                            return Json(new AddUpdateDelete() { Status = false, Message = "No Sessions Created. Session limit reached as per your plan. Upgrade your plan to create more sessions." }, JsonRequestBehavior.AllowGet);
+                                        }
+                                        else
+                                        {
+                                            return Json(new AddUpdateDelete() { Status = true, Message = eventCounter + " Sessions Created. Session limit reached as per your plan. Upgrade your plan to create more sessions." }, JsonRequestBehavior.AllowGet);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        return Json(new AddUpdateDelete() { Status = true, Message = "Success" }, JsonRequestBehavior.AllowGet);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                return Json(new AddUpdateDelete() { Status = false, Message = "No Sessions Created. Session limit reached as per your plan. Upgrade your plan to create more sessions." }, JsonRequestBehavior.AllowGet);
+                            }
+                        }
                     }
 
                 }
@@ -1699,7 +1793,7 @@ namespace Barrway.Controllers
                     last_page = Math.Floor(paging) + 1;
 
                 }
-               
+
                 return Json(new { data = transactionList, last_page }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
