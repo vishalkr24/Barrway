@@ -254,7 +254,7 @@ namespace Barrway.Service.Repository
                         from TRANSACTION_MASTER_1942 transaction_m 
                         join CALENDAR_FORM_1935 f on f.Id = transaction_m.SLOT
                         join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
-                        left join SESSION_REVIEWS_1983 review on review.EVENT_ID = transaction_m.SLOT and review.USER_EMAIL = participant.EMAIL
+                        left join SESSION_REVIEWS_1983 review on review.EVENT_ID = transaction_m.SLOT and review.USER_ID = participant.STUDENT_ID
                         where participant.STUDENT_ID in ({string.Join(",", userId_list)}) and transaction_m.COMPANY_CODE = (select COMPANY_CODE from CALENDAR_FORM_1935 where Id = {EventId}) and f.resources not in (select resources from CALENDAR_FORM_1935 where Id = {EventId})";
 
                 var alreadyEnrolledEvents = await sqlFunction.ExecuteSqlQuery(query);
@@ -2933,7 +2933,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
                         from TRANSACTION_MASTER_1942 transaction_m 
                         join CALENDAR_FORM_1935 f on f.Id = transaction_m.SLOT
                         join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
-                        left join SESSION_REVIEWS_1983 review on review.EVENT_ID = transaction_m.SLOT and review.USER_EMAIL = participant.EMAIL
+                        left join SESSION_REVIEWS_1983 review on review.EVENT_ID = transaction_m.SLOT and review.USER_ID = participant.STUDENT_ID
                         where participant.STUDENT_ID = N'{userName}' and transaction_m.COMPANY_CODE = '{CompanyCode}'";
 
                 var alreadyEnrolledEvents = await sqlFunction.ExecuteSqlQuery(query);
