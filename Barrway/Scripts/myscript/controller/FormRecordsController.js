@@ -4628,7 +4628,7 @@
                                 item.updated_at = $scope.ToCustomDateTime(item.updated_at);
                             });
                             var temp = _.filter(result, function (item) { return (checkDeleteEditAccessRight(2, item)) });
-
+                            debugger;
                             response.data = temp;
                             if (!DataService.isEmpty(response.data)) {
                                 return response;

@@ -34,7 +34,7 @@ namespace Barrway.Service.Repository
         private readonly ICommonService commonService;
         private readonly string baseUrl = ConfigurationManager.AppSettings["baseurl"];
 
-        public MobileAPIService(ISqlFunction sqlFunction, IFormAPIRepository formAPIRepository, IMapper mapper, IAuthService authService,ICommonService commonService)
+        public MobileAPIService(ISqlFunction sqlFunction, IFormAPIRepository formAPIRepository, IMapper mapper, IAuthService authService, ICommonService commonService)
         {
             this.sqlFunction = sqlFunction;
             this.formAPIRepository = formAPIRepository;
@@ -175,6 +175,25 @@ namespace Barrway.Service.Repository
             var featureBlogs = (await sqlFunction.ExecuteSqlQuery<BlogModel>(sqlString)).ToList();
             featureBlogs.ForEach(x => x.TAG = formatTagsString(x.TAG));
             return featureBlogs;
+        }
+
+        public async Task<AddUpdateDelete> GetCalendarsByCompanyCode(string CompanyCode)
+        {
+            string query = $@"SELECT calendar.[Id], calendar.CALENDAR_FUNCTION_TYPE, calendar.STATUS, calendar.[created_at], company.IS_ACTIVE      ,calendar.[updated_at]      ,calendar.[created_by]      ,calendar.[updated_by]      ,[CALENDAR_NAME]     ,calendar.[CALENDAR_CODE]      ,[CALENDAR_PHOTO_NAME]      ,[CALENDAR_PHOTO_PATH]      ,[IS_VISIBLE]      ,calendar.[COUNTRY_ID]      ,calendar.[CITY_ID]      ,calendar.[DISTRICT_ID]      ,[CALENDAR_CATEGORY_ID]      ,[CALENDAR_SUB_CATEGORY_ID]      ,calendar.[COMPANY_CODE]  FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
+                                join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE 
+                                join CALENDAR_COMMON_CATEGORY_1978 category on category.Id = calendar.CALENDAR_COMMON_CATEGORY_ID
+                                where company.IS_ACTIVE = 'Y' and company.COMPANY_CODE = '{CompanyCode}' and calendar.CALENDAR_USE_TYPE = 'PUBLIC' and calendar.STATUS = 'PUBLISH'";
+
+            var result = await sqlFunction.ExecuteSqlQuery<CalendarModel>(query);
+
+            if (result.Count() > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
         }
 
         public async Task<List<CalendarModel>> GetCalendarsSearchResult(SearchAPIModel data, List<string> filters = null)
@@ -379,13 +398,14 @@ namespace Barrway.Service.Repository
         }
 
 
-        public async Task<AddUpdateDelete<BlogDetailModel>> GetBlogdetail(int  BlogId)
-        {   try
+        public async Task<AddUpdateDelete<BlogDetailModel>> GetBlogdetail(int BlogId)
+        {
+            try
             {
                 string sqlString = $@"select blog.Id, blog.created_at, blog.BLOG_TITLE,blog.BLOG_CONTENT,blog.[IMAGE],blog.YOUTUBE_LINK,blog.TAG,blog_c.BLOG_CATEGORY,blog.BLOG_CATEGORY,blog.IS_FEATURED,blog.IS_HOT 
                                   BLOG_CATEGORY_ID from BLOG_1980 blog join BLOG_CATEGORY_1981 blog_c on blog.BLOG_CATEGORY=blog_c.Id where blog.Id ='{BlogId}';";
                 var blogs = (await sqlFunction.ExecuteSqlQuery<BlogDetailModel>(sqlString)).FirstOrDefault();
-                if(blogs != null)
+                if (blogs != null)
                 {
                     blogs.TAG = formatTagsString(blogs.TAG);
                     return new AddUpdateDelete<BlogDetailModel>() { Status = true, Message = "success", Data = blogs };
@@ -394,7 +414,7 @@ namespace Barrway.Service.Repository
                 {
                     return new AddUpdateDelete<BlogDetailModel>() { Status = false, Message = "No data found !" };
                 }
-               
+
             }
             catch (Exception ex)
             {
@@ -532,7 +552,7 @@ namespace Barrway.Service.Repository
                                     join PARTICIPANT_MASTER_1940 participant_m on participant_m.Id = transaction_m.STUDENT
 									join BUSINESS_CALENDAR_MASTER_1925 calendar on calendar.CALENDAR_CODE = f.CALENDAR_CODE
                                     join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
-									left join SESSION_REVIEWS_1983 review on review.EVENT_ID = transaction_m.SLOT and review.USER_EMAIL = participant_m.EMAIL
+									left join SESSION_REVIEWS_1983 review on review.EVENT_ID = transaction_m.SLOT and review.USER_ID = participant_m.STUDENT_ID
                                     where 
                                     {((Type == "1") ? $@"'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' <= cast(f.[start] as datetime)" : $@"'{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' > cast(f.[end] as datetime)")}
                                     and f.formid=2305 and participant_m.EMAIL = '{email}' and transaction_m.SLOT = f.Id {((!string.IsNullOrEmpty(EventId) ? $@" and f.Id = '{EventId}'" : ""))}
@@ -712,7 +732,7 @@ namespace Barrway.Service.Repository
 
             // Check if the user already exist in the participant master
 
-            List<IDictionary<string, object>> participantCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from PARTICIPANT_MASTER_1940 where EMAIL = '{user.Data["USER_EMAIL"]}' and COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE}'");
+            List<IDictionary<string, object>> participantCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from PARTICIPANT_MASTER_1940 where STUDENT_ID = N'{model.USER_ID}' and COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE}'");
 
             string StudentId = "";
             if (participantCheckResult.Count > 0)
@@ -750,7 +770,7 @@ namespace Barrway.Service.Repository
 
                 model.participant.NICKNAME = publicUser.Data["NICK_NAME"].ToString();
                 model.participant.EMAIL = user.Data["USER_EMAIL"].ToString();
-                
+
                 model.participant.ADDRESS = "";
                 model.participant.GENDER = publicUser.Data["GENDER"].ToString();
                 model.participant.IS_ACTIVE = "Y";
@@ -911,13 +931,13 @@ namespace Barrway.Service.Repository
 
 
 
-        public async Task<AddUpdateDelete> CancelBooking(string SLOT, string USER_EMAIL, string USER_ID)
+        public async Task<AddUpdateDelete> CancelBooking(string SLOT, string USER_ID)
         {
             string query = $@"select ser.CANCELLATION_BEFORE, cf.[start], cf.[end], ser.[SERVICE_PAY_PER], t.* from CALENDAR_FORM_1935 cf
                                 join TRANSACTION_MASTER_1942 t on t.SLOT = cf.Id
                                 join PARTICIPANT_MASTER_1940 p on p.Id = t.STUDENT
 								join SERVICE_MASTER_1933 ser on ser.Id = t.ACTIVITY
-                                where cf.Id = '{SLOT}' and p.EMAIL = '{USER_EMAIL}'";
+                                where cf.Id = '{SLOT}' and p.STUDENT_ID = N'{USER_ID}'";
             var result = await sqlFunction.ExecuteSqlQuery(query);
 
             if (result.Count > 0)
@@ -1215,13 +1235,13 @@ namespace Barrway.Service.Repository
 
             string query = $@"select * from TRANSACTION_MASTER_1942 t
                             join PARTICIPANT_MASTER_1940 participant on participant.Id = t.STUDENT
-                            where t.SLOT = '{model.EVENT_ID}' and participant.EMAIL = '{model.USER_EMAIL}'";
+                            where t.SLOT = '{model.EVENT_ID}' and participant.STUDENT_ID = N'{model.USER_ID}'";
 
             var result = await sqlFunction.ExecuteSqlQuery(query);
 
             if (result.Count > 0)
             {
-                query = $@"select * from SESSION_REVIEWS_1983 where EVENT_ID = '{model.EVENT_ID}' and USER_EMAIL = '{model.USER_EMAIL}'";
+                query = $@"select * from SESSION_REVIEWS_1983 where EVENT_ID = '{model.EVENT_ID}' and USER_ID = N'{model.USER_ID}'";
                 var result2 = await sqlFunction.ExecuteSqlQuery(query);
 
                 if (result2.Count == 0)
@@ -1285,7 +1305,7 @@ namespace Barrway.Service.Repository
                                     join PARTICIPANT_MASTER_1940 participant_m on participant_m.Id = transaction_m.STUDENT
 									join BUSINESS_CALENDAR_MASTER_1925 calendar on calendar.CALENDAR_CODE = f.CALENDAR_CODE
                                     join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
-									left join SESSION_REVIEWS_1983 review on review.EVENT_ID = transaction_m.SLOT and review.USER_EMAIL = participant_m.EMAIL
+									left join SESSION_REVIEWS_1983 review on review.EVENT_ID = transaction_m.SLOT and review.USER_ID = participant_m.STUDENT_ID
                                     where 
                                      f.formid=2305 and participant_m.EMAIL = '{email}' and transaction_m.SLOT = f.Id  and f.Id = '{EventId}'
                                     ),  cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0  )                                    
@@ -1607,14 +1627,52 @@ namespace Barrway.Service.Repository
         }
 
 
+        public async Task<List<IDictionary<string, object>>> GetCalnderEvents(CalendarEvents Request)
+        {
+            try
+            {
+                List<EventLIst> EventData = new List<EventLIst>();
+                Form_DataTable data = new Form_DataTable();
+                data.action = 1;
+                data.ActivityFormId = (int)FormSetting.SERVICE_MASTER;
+                data.resourceFormId = (int)FormSetting.LOCATION_MASTER;
+                data.isEvent = 1;
+                data.isCalender = 1;
+                data.formId = (int)FormSetting.CALENDAR_FORM;
+                data.COMPANY_CODE = Request.COMPANY_CODE;
+                data.CALENDAR_CODE = Request.CALENDAR_CODE;
+                string filterQuery = CustomMethods.GetDateQuery(Request.start, Request.end);
+                data.filter = new FilterDTO() { field = "start", value = filterQuery };
+                if (!string.IsNullOrEmpty(data?.COMPANY_CODE) || !string.IsNullOrEmpty(data?.CALENDAR_CODE))
+                {
+                    data.filter.value = " F.COMPANY_CODE=N'" + data.COMPANY_CODE + "' and F.CALENDAR_CODE=N'" + data.CALENDAR_CODE + "' and " + data.filter.value;
+                }
+
+                ReferalFormDataResponseModel result = await formAPIRepository.getReferralFormFields(data);
+
+                if (result != null && result.events != null)
+                {
+
+
+                    return result.events;
+                }
+                return new List<IDictionary<string, object>>();
+            }
+            catch (Exception ex)
+            {
+                return new List<IDictionary<string, object>>();
+            }
+        }
+
+
         public class companyList
         {
             public string COMPANY_CODE { get; set; }
         }
 
-        public async Task<List<IDictionary<string, object>>> GetUserEvents(UserEventsViewmodel model,string userEmail)
+        public async Task<List<IDictionary<string, object>>> GetUserEvents(UserEventsViewmodel model, string userEmail)
         {
-            
+
             string sqlString = $@"SELECT distinct calendar.[COMPANY_CODE]
                                   FROM [dbo].[CALENDAR_FORM_1935] calendar
                                   join TRANSACTION_MASTER_1942 transaction_m on calendar.CALENDAR_CODE = transaction_m.CALENDAR_CODE and calendar.Id = transaction_m.SLOT
@@ -1622,11 +1680,11 @@ namespace Barrway.Service.Repository
                                   join USER_MASTER_1915 um on um.[USER_ID]=participant.STUDENT_ID
                                   join BUSINESS_CALENDAR_MASTER_1925 c on c.CALENDAR_CODE=calendar.CALENDAR_CODE
 								  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
-                                  where um.USER_EMAIL = '{userEmail}'";            
+                                  where um.USER_EMAIL = '{userEmail}'";
             var result = (await sqlFunction.ExecuteSqlQuery<companyList>(sqlString)).ToList();
-            string companycode = "'"+string.Join("','", result.Select(x => x.COMPANY_CODE))+"'";
-            
-            var calendarRequest = new CalendarRequestModel() { COMPANY_CODE= companycode,start=model.start,end=model.end };
+            string companycode = "'" + string.Join("','", result.Select(x => x.COMPANY_CODE)) + "'";
+
+            var calendarRequest = new CalendarRequestModel() { COMPANY_CODE = companycode, start = model.start, end = model.end };
 
             Form_DataTable data = mapper.Map<Form_DataTable>(calendarRequest);
             data.IsPublicUser = true;
@@ -1638,7 +1696,7 @@ namespace Barrway.Service.Repository
             data.isCalender = 1;
             data.formId = (int)FormSetting.CALENDAR_FORM;
             string filterQuery = CustomMethods.GetDateQuery(calendarRequest.start, calendarRequest.end);
-            data.filter = new FilterDTO() { field = "start", value = filterQuery  };
+            data.filter = new FilterDTO() { field = "start", value = filterQuery };
             List<CustomFilter> _customFilters = new List<CustomFilter>();
             _customFilters.Add(new CustomFilter() { FieldName = "COMPANY_CODE", Value = calendarRequest.COMPANY_CODE });
             data.CustomFilters = _customFilters;
@@ -1646,12 +1704,145 @@ namespace Barrway.Service.Repository
 
             if (result != null && eventsResult.events != null)
             {
-              await commonService.ModifyEventsData(data, eventsResult, userEmail);
-              return eventsResult.events;
+                await commonService.ModifyEventsData(data, eventsResult, userEmail);
+                return eventsResult.events;
             }
             return new List<IDictionary<string, object>>();
         }
 
+        public async Task<AddUpdateDelete> GetCalendarFilters(int FilterType, string CompanyCode, string CalendarCode)
+        {
+            try
+            {
+                if (FilterType == 1)
+                {
+                    // return calendar filter master
+                    var calendarData = await GetCalendarsByCompanyCode(CompanyCode);
+
+                    List<CalendarFilterModel> calendarFilter = new List<CalendarFilterModel>();
+
+                    if (calendarData.Status)
+                    {
+                        var calendarDataRaw = calendarData.Data as List<CalendarModel>;
+
+                        calendarDataRaw.ForEach(x =>
+                        {
+                            calendarFilter.Add(new CalendarFilterModel()
+                            {
+                                Id = x.Id,
+                                Name = x.CALENDAR_NAME + " (" + x.CALENDAR_CODE + ")",
+                                Code = x.CALENDAR_CODE
+                            });
+                        });
+
+                    }
+
+                    return new AddUpdateDelete() { Status = true, Message = "Success", Data = calendarFilter };
+                }
+                else
+                {
+                    var dataModel = new calenderSettingsFormDetails()
+                    {
+                        action = 4,
+                        formId = 2305,
+                        IsCustomFilter = true,
+                        CustomFilters = new List<CustomFilter>()
+                        {
+                            new CustomFilter()
+                            {
+                                FieldName = "COMPANY_CODE",
+                                Value = CompanyCode
+                            },
+                            new CustomFilter()
+                            {
+                                FieldName = "CALENDAR_CODE",
+                                Value = CalendarCode
+                            }
+                        }
+                    };
+
+                    var rawData = await formAPIRepository.getCalenderSettingsFormData(dataModel);
+
+                    if (rawData != null && rawData.Count() > 0)
+                    {
+
+                        if (FilterType == 2)
+                        {
+                            // return service filter master
+                            var filterData = rawData.FirstOrDefault(x => x.activitiesForm != 0 && x.IsDefault).formDataList;
+
+                            List<CalendarFilterModel> serviceFilter = new List<CalendarFilterModel>();
+
+                            if (filterData != null && filterData.Count > 0)
+                            {
+                                filterData.ForEach(x =>
+                                {
+                                    serviceFilter.Add(new CalendarFilterModel()
+                                    {
+                                        Id = Convert.ToInt32(x["id"]?.ToString()),
+                                        Name = x["ACTIVITY_NAME"]?.ToString(),
+                                        Code = x["ACTIVITY_CODE"]?.ToString()
+                                    });
+                                });
+                            }
+
+                            return new AddUpdateDelete() { Status = true, Message = "Success", Data = serviceFilter };
+                        }
+                        else if (FilterType == 3)
+                        {
+                            // return service provider filter master
+                            var filterData = rawData.FirstOrDefault(x => x.resourceForm == 2304).formDataList;
+
+                            List<CalendarFilterModel> serviceProviderFilter = new List<CalendarFilterModel>();
+
+                            if (filterData != null && filterData.Count > 0)
+                            {
+                                filterData.ForEach(x =>
+                                {
+                                    serviceProviderFilter.Add(new CalendarFilterModel()
+                                    {
+                                        Id = Convert.ToInt32(x["id"]?.ToString()),
+                                        Name = x["FIRST_NAME"]?.ToString() + " " + x["FIRST_NAME"]?.ToString() + x["CHINESE_NAME"]?.ToString(),
+                                        Code = x["RESOURCE_CODE"]?.ToString()
+                                    });
+                                });
+                            }
+
+                            return new AddUpdateDelete() { Status = true, Message = "Success", Data = serviceProviderFilter };
+                        }
+                        else
+                        {
+                            // return location filter master
+                            var filterData = rawData.FirstOrDefault(x => x.resourceForm == 2306).formDataList;
+                            List<CalendarFilterModel> locationFilter = new List<CalendarFilterModel>();
+
+                            if (filterData != null && filterData.Count > 0)
+                            {
+                                filterData.ForEach(x =>
+                                {
+                                    locationFilter.Add(new CalendarFilterModel()
+                                    {
+                                        Id = Convert.ToInt32(x["id"]?.ToString()),
+                                        Name = x["LOCATION_ADDRESS"]?.ToString(),
+                                        Code = x["LOCATION_CODE"]?.ToString()
+                                    });
+                                });
+                            }
+
+                            return new AddUpdateDelete() { Status = true, Message = "Success", Data = locationFilter };
+                        }
+                    }
+                    else
+                    {
+                        return new AddUpdateDelete() { Status = true, Message = "No data found", Data = null };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = "Something went wrong.", Data = null };
+            }
+        }
 
         public async Task<List<MyFavouriteCompany>> GetMyfavoriteCompanyList(string userName)
         {
@@ -2320,7 +2511,7 @@ namespace Barrway.Service.Repository
                 {
                     return new AddUpdateDelete() { Status = false, Message = "No Package found" };
                 }
-                
+
 
             }
             catch (Exception ex)
@@ -2420,42 +2611,13 @@ namespace Barrway.Service.Repository
         {
             try
             {
-                string subQuery = "";
-                string ChQuery = "";
-
-                ChQuery = $@"select USER_EMAIL from USER_MASTER_1915 where USER_EMAIL='{model.USER_EMAIL}' and USER_ID !='{model.USER_ID}'";
-
-                List<IDictionary<string, object>> Email = await sqlFunction.ExecuteSqlQuery(ChQuery);
-
-                if (Email.Count > 0)
-                {
-
-                    return new AddUpdateDelete() { Status = false, Message = "This email addres is already in use with diffrent user" };
-                }
-
-                if (!string.IsNullOrEmpty(model.USER_PHONE))
-                {
-                    ChQuery = $@"select USER_PHONE from USER_MASTER_1915 where USER_PHONE='{model.USER_PHONE}' and USER_ID !='{model.USER_ID}'";
-
-                    List<IDictionary<string, object>> Mobile = await sqlFunction.ExecuteSqlQuery(ChQuery);
-
-                    if (Mobile.Count > 0)
-                    {
-                        return new AddUpdateDelete() { Status = false, Message = "This Phone number is already in use with diffrent user" };
-                    }
-                }
-
-
-
-                
                 string dateofbirth = "NULL";
                 if (model.DATE_OF_BIRTH.HasValue)
                 {
                     dateofbirth = "'" + model.DATE_OF_BIRTH.Value.ToString("yyyy-MM-dd") + "'";
                 }
 
-                string query = $@"update PUBLIC_USER_ACCOUNT_1943 set FIRST_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.FIRST_NAME)}', LAST_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.LAST_NAME)}', CHINESE_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.CHINESE_NAME)}', NICK_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.NICK_NAME)}', GENDER = '{model.GENDER}', DATE_OF_BIRTH = {dateofbirth} where USER_ID = N'{model.USER_ID}'
-                              update USER_MASTER_1915 set {subQuery}  USER_PHONE = '{model.USER_PHONE}',Country_Code='{model.Country_Code}' where USER_ID = N'{model.USER_ID}' ";
+                string query = $@"update PUBLIC_USER_ACCOUNT_1943 set FIRST_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.FIRST_NAME)}', LAST_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.LAST_NAME)}', CHINESE_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.CHINESE_NAME)}', NICK_NAME = N'{SQLUtility.TreatSingleQuoteForQuery(model.NICK_NAME)}', GENDER = '{model.GENDER}', DATE_OF_BIRTH = {dateofbirth} where USER_ID = N'{model.USER_ID}'";
 
                 int result = await sqlFunction.ExecuteSqlCommandQuery(query);
 
@@ -2474,29 +2636,87 @@ namespace Barrway.Service.Repository
             }
         }
 
-
-        public async Task<AddUpdateDelete> changespassword(userPassword model,string USER_ID)
+        public async Task<AddUpdateDelete> CheckRegisteredPhoneNo(RequestMobileNoChangeOTPViewModel model, string User_Id)
         {
             try
-            {               
-                string query = $@"update USER_MASTER_1915 set  USER_PASSWORD = '{model.newpassword}' where USER_ID = N'{USER_ID}' ";
+            {
+                AddUpdateDelete response = new AddUpdateDelete() { Data = null, Message = "Change type not defined", Status = false };
 
-                int result = await sqlFunction.ExecuteSqlCommandQuery(query);
+                // check phone
+                string query = $@"select * from USER_MASTER_1915 where USER_ID != N'{User_Id}' and USER_PHONE = '{model.New_Phone}' and COUNTRY_CODE = '{model.Country_Code}'";
 
-                if (result > 0)
+                var result = await sqlFunction.ExecuteSqlQuery(query);
+
+                if (result.Count > 0)
                 {
-                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+                    response.Message = "Phone No. already registered!";
                 }
                 else
                 {
-                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                    response.Message = "Success";
+                    response.Status = true;
                 }
+
+                return response;
             }
             catch (Exception ex)
             {
                 return new AddUpdateDelete() { Status = false, Message = ex.Message };
             }
         }
+
+        public async Task<AddUpdateDelete> UpdateRegisteredPhoneNo(UpdateMobileNoViewModel model, string User_Id)
+        {
+            try
+            {
+                AddUpdateDelete response = new AddUpdateDelete() { Data = null, Message = "Change type not defined", Status = false };
+
+                // change phone
+                string query = $@"update USER_MASTER_1915 set USER_PHONE = '{model.New_Phone}', COUNTRY_CODE = '{model.Country_Code}' where USER_ID = N'{User_Id}'";
+
+                var result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                if (result > 0)
+                {
+                    response.Message = "Phone No. updated successfully!";
+                    response.Status = true;
+                }
+                else
+                {
+                    response.Message = "Failed to update Mobile No.";
+                    response.Status = false;
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
+        //public async Task<AddUpdateDelete> changespassword(userPassword model, string USER_ID)
+        //{
+        //    try
+        //    {
+        //        string query = $@"update USER_MASTER_1915 set  USER_PASSWORD = '{model.newpassword}' where USER_ID = N'{USER_ID}' ";
+
+        //        int result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+        //        if (result > 0)
+        //        {
+        //            return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+        //        }
+        //        else
+        //        {
+        //            return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new AddUpdateDelete() { Status = false, Message = ex.Message };
+        //    }
+        //}
 
 
     }

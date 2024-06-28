@@ -74,7 +74,7 @@ namespace Barrway.Service.Repository
             var result = await sqlFunction.ExecuteSqlQuery(sqlString);
             return result;
         }
-        public async Task<List<IDictionary<string, object>>> GetMyBooking(string email,string companycode,DateTime start,DateTime end) {
+        public async Task<List<IDictionary<string, object>>> GetMyBooking(string userName,string companycode,DateTime start,DateTime end) {
 
             string filterQuery = $" f.COMPANY_CODE='{companycode}' and " + CustomMethods.GetDateQuery(start, end);
 
@@ -84,7 +84,7 @@ namespace Barrway.Service.Repository
                                     join PARTICIPANT_MASTER_1940 participant_m on participant_m.Id = transaction_m.STUDENT
 									join BUSINESS_CALENDAR_MASTER_1925 calendar on calendar.CALENDAR_CODE = f.CALENDAR_CODE
                                     join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
-                                    where participant_m.EMAIL='{email}' and " + filterQuery;
+                                    where participant_m.STUDENT_ID=N'{userName}' and " + filterQuery;
 
             var result=await sqlFunction.ExecuteSqlQuery(sqlString);
             return result;

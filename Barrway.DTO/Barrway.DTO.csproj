@@ -74,6 +74,7 @@
     <Compile Include="APIModels\Booking\CancelBookingModel.cs" />
     <Compile Include="APIModels\Booking\PaymentHistoryApiModel.cs" />
     <Compile Include="APIModels\Booking\SessionReview.cs" />
+    <Compile Include="APIModels\Calendar\CalendarFilterModel.cs" />
     <Compile Include="APIModels\Calendar\CalendarRequestModel.cs" />
     <Compile Include="APIModels\Booking\MyBooking.cs" />
     <Compile Include="APIModels\Calendar\MyWalletClanderApiModel.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="AuthViewModel\PhoenSignUpViewModel.cs" />
     <Compile Include="AuthViewModel\UserToken.cs" />
     <Compile Include="BusinessModels\CalendaLocationMasterModel.cs" />
+    <Compile Include="BusinessModels\IndividualEventModel.cs" />
     <Compile Include="BusinessModels\SessionReviewModel.cs" />
     <Compile Include="BusinessModels\TicketMasterModel.cs" />
     <Compile Include="BusinessModels\QueueSessionMappingModel.cs" />

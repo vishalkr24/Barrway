@@ -63,7 +63,7 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> GetSingleEventDetailsWithFlags(string EventId, string UserEmail)
+        public async Task<AddUpdateDelete> GetSingleEventDetailsWithFlags(string EventId, string userName)
         {
             try
             {
@@ -98,8 +98,8 @@ namespace Barrway.Service.Repository
                         from TRANSACTION_MASTER_1942 transaction_m 
                         join CALENDAR_FORM_1935 f on f.Id = transaction_m.SLOT
                         join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
-                        left join SESSION_REVIEWS_1983 review on review.EVENT_ID = transaction_m.SLOT and review.USER_EMAIL = participant.EMAIL
-                        where participant.EMAIL = '{UserEmail}' and transaction_m.COMPANY_CODE = (select COMPANY_CODE from CALENDAR_FORM_1935 where Id = {EventId})";
+                        left join SESSION_REVIEWS_1983 review on review.EVENT_ID = transaction_m.SLOT and review.USER_ID = participant.STUDENT_ID
+                        where participant.STUDENT_ID = N'{userName}' and transaction_m.COMPANY_CODE = (select COMPANY_CODE from CALENDAR_FORM_1935 where Id = {EventId})";
 
                 var alreadyEnrolledEvents = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -212,15 +212,15 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> CheckOverlappingSlotByUserList(string EventId, List<IDictionary<string, string>> EmailList)
+        public async Task<AddUpdateDelete> CheckOverlappingSlotByUserList(string EventId, List<IDictionary<string, string>> partcipantList)
         {
             try
             {
-                List<string> _emailList = new List<string>();
+                List<string> userId_list = new List<string>();
 
-                EmailList.ForEach(email =>
+                partcipantList.ForEach(email =>
                 {
-                    _emailList.Add("'" + email["EMAIL"]?.ToString() + "'");
+                    userId_list.Add("'" + email["STUDENT_ID"]?.ToString() + "'");
                 });
 
                 string query = $@"
@@ -254,8 +254,8 @@ namespace Barrway.Service.Repository
                         from TRANSACTION_MASTER_1942 transaction_m 
                         join CALENDAR_FORM_1935 f on f.Id = transaction_m.SLOT
                         join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
-                        left join SESSION_REVIEWS_1983 review on review.EVENT_ID = transaction_m.SLOT and review.USER_EMAIL = participant.EMAIL
-                        where participant.EMAIL in ({string.Join(",", _emailList)}) and transaction_m.COMPANY_CODE = (select COMPANY_CODE from CALENDAR_FORM_1935 where Id = {EventId}) and f.resources not in (select resources from CALENDAR_FORM_1935 where Id = {EventId})";
+                        left join SESSION_REVIEWS_1983 review on review.EVENT_ID = transaction_m.SLOT and review.USER_ID = participant.STUDENT_ID
+                        where participant.STUDENT_ID in ({string.Join(",", userId_list)}) and transaction_m.COMPANY_CODE = (select COMPANY_CODE from CALENDAR_FORM_1935 where Id = {EventId}) and f.resources not in (select resources from CALENDAR_FORM_1935 where Id = {EventId})";
 
                 var alreadyEnrolledEvents = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -264,7 +264,7 @@ namespace Barrway.Service.Repository
 
                 if (result != null)
                 {
-                    foreach (var item in EmailList)
+                    foreach (var item in partcipantList)
                     {
                         if (alreadyEnrolledEvents != null)
                         {
@@ -299,33 +299,33 @@ namespace Barrway.Service.Repository
 
                                 if (bookingFlag)
                                 {
-                                    EmailList.FirstOrDefault(x=> x["EMAIL"]?.ToString() == item["EMAIL"]?.ToString()).Add("OverlapBookingFlag", "Y");
+                                    partcipantList.FirstOrDefault(x=> x["STUDENT_ID"]?.ToString() == item["STUDENT_ID"]?.ToString()).Add("OverlapBookingFlag", "Y");
                                 }
                                 else
                                 {
-                                    EmailList.FirstOrDefault(x => x["EMAIL"]?.ToString() == item["EMAIL"]?.ToString()).Add("OverlapBookingFlag", "N");
+                                    partcipantList.FirstOrDefault(x => x["STUDENT_ID"]?.ToString() == item["STUDENT_ID"]?.ToString()).Add("OverlapBookingFlag", "N");
                                 }
                             }
                             else
                             {
-                                EmailList.FirstOrDefault(x => x["EMAIL"]?.ToString() == item["EMAIL"]?.ToString()).Add("OverlapBookingFlag", "Y");
+                                partcipantList.FirstOrDefault(x => x["STUDENT_ID"]?.ToString() == item["STUDENT_ID"]?.ToString()).Add("OverlapBookingFlag", "Y");
                             }
                         }
                         else
                         {
-                            EmailList.FirstOrDefault(x => x["EMAIL"]?.ToString() == item["EMAIL"]?.ToString()).Add("OverlapBookingFlag", "Y");
+                            partcipantList.FirstOrDefault(x => x["STUDENT_ID"]?.ToString() == item["STUDENT_ID"]?.ToString()).Add("OverlapBookingFlag", "Y");
                         }
                     }
                 }
 
-                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = EmailList };
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = partcipantList };
 
 
 
             }
             catch (Exception ex)
             {
-                return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError, Data = EmailList };
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError, Data = partcipantList };
             }
         }
 
@@ -546,7 +546,7 @@ namespace Barrway.Service.Repository
                 }
             }
 
-            List<IDictionary<string, object>> participantCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from PARTICIPANT_MASTER_1940 where EMAIL = '{user.Data["USER_EMAIL"]}' and COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE}'");
+            List<IDictionary<string, object>> participantCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from PARTICIPANT_MASTER_1940 where STUDENT_ID = N'{model.USER_ID}' and COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE}'");
 
             string StudentId = "";
             if (participantCheckResult.Count > 0)
@@ -867,14 +867,14 @@ namespace Barrway.Service.Repository
                                     case when (t.Id is not null and p.Id is not null) then 'Y' else 'N' end as 'IsBooked'
                                     ,f.* from CALENDAR_FORM_1935 f 
                                     left join TRANSACTION_MASTER_1942 t on f.Id = t.SLOT
-                                    left join (select * from PARTICIPANT_MASTER_1940 where EMAIL = '{model.participant.EMAIL}') p on p.Id = t.STUDENT
+                                    left join (select * from PARTICIPANT_MASTER_1940 where STUDENT_ID = N'{model.USER_ID}') p on p.Id = t.STUDENT
                                     where f.IS_COURSE_EVENT = 'Y' and f.activities = '{model.transaction.ACTIVITY}' and f.[start] >= '{DateTimeUtility.Now().ToString("yyyy-MM-dd")}'";
 
             var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
             if (result.Count > 0)
             {
-                List<IDictionary<string, object>> participantCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from PARTICIPANT_MASTER_1940 where EMAIL = '{user.Data["USER_EMAIL"]}' and COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE}'");
+                List<IDictionary<string, object>> participantCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from PARTICIPANT_MASTER_1940 where STUDENT_ID = N'{model.USER_ID}' and COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE}'");
 
                 string StudentId = "";
                 if (participantCheckResult.Count > 0)
@@ -1089,7 +1089,7 @@ namespace Barrway.Service.Repository
                                 join TRANSACTION_MASTER_1942 t on t.SLOT = cf.Id
                                 join PARTICIPANT_MASTER_1940 p on p.Id = t.STUDENT
 								join SERVICE_MASTER_1933 ser on ser.Id = t.ACTIVITY
-                                where cf.Id = '{model.transaction.SLOT}' and p.EMAIL = '{model.USER_EMAIL}'";
+                                where cf.Id = '{model.transaction.SLOT}' and p.STUDENT_ID = N'{model.USER_ID}'";
             var result = await sqlFunction.ExecuteSqlQuery(query);
 
             if (result.Count > 0)
@@ -1148,13 +1148,13 @@ namespace Barrway.Service.Repository
         {
             string query = $@"select * from TRANSACTION_MASTER_1942 t
                             join PARTICIPANT_MASTER_1940 participant on participant.Id = t.STUDENT
-                            where t.SLOT = '{model.EVENT_ID}' and participant.EMAIL = '{model.USER_EMAIL}'";
+                            where t.SLOT = '{model.EVENT_ID}' and participant.STUDENT_ID = N'{model.USER_ID}'";
 
             var result = await sqlFunction.ExecuteSqlQuery(query);
 
             if (result.Count > 0)
             {
-                query = $@"select * from SESSION_REVIEWS_1983 where EVENT_ID = '{model.EVENT_ID}' and USER_EMAIL = '{model.USER_EMAIL}'";
+                query = $@"select * from SESSION_REVIEWS_1983 where EVENT_ID = '{model.EVENT_ID}' and USER_ID = N'{model.USER_ID}'";
                 var result2 = await sqlFunction.ExecuteSqlQuery(query);
 
                 if (result2.Count == 0)
@@ -1190,11 +1190,11 @@ namespace Barrway.Service.Repository
 
         }
 
-        public async Task<AddUpdateDelete> EnrollParticipantForCalendar(CalendarFormModel model, string UserId, string UserEmail)
+        public async Task<AddUpdateDelete> EnrollParticipantForCalendar(CalendarFormModel model, string UserId,string userEmail)
         {
             // Check if the user already exist in the participant master
 
-            List<IDictionary<string, object>> participantCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from PARTICIPANT_MASTER_1940 where EMAIL = '{UserEmail}' and COMPANY_CODE = '{model.COMPANY_CODE}' and CALENDAR_CODE = '{model.CALENDAR_CODE}'");
+            List<IDictionary<string, object>> participantCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from PARTICIPANT_MASTER_1940 where STUDENT_ID = N'{UserId}' and COMPANY_CODE = '{model.COMPANY_CODE}' and CALENDAR_CODE = '{model.CALENDAR_CODE}'");
 
             string StudentId = "";
             if (participantCheckResult.Count > 0)
@@ -1211,7 +1211,7 @@ namespace Barrway.Service.Repository
                 CalendarParticipantModel participant = new CalendarParticipantModel();
 
                 participant.NICKNAME = publicUser.Data["NICK_NAME"].ToString();
-                participant.EMAIL = UserEmail;
+                participant.EMAIL = userEmail;
                 participant.CALENDAR_CODE = model.CALENDAR_CODE;
                 participant.COMPANY_CODE = model.COMPANY_CODE;
                 participant.ADDRESS = "";
@@ -1324,7 +1324,7 @@ namespace Barrway.Service.Repository
                     {
                         var userData = userResult.Data as IDictionary<string, object>;
                         string user_email = userData["USER_EMAIL"]?.ToString() ?? "";
-                        List<IDictionary<string, object>> participantCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from PARTICIPANT_MASTER_1940 where EMAIL = '{user_email}' and COMPANY_CODE = '{eventModal.companyCode}' and CALENDAR_CODE = '{eventModal.calendarCode}'");
+                        List<IDictionary<string, object>> participantCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from PARTICIPANT_MASTER_1940 where STUDENT_ID = N'{userName}' and COMPANY_CODE = '{eventModal.companyCode}' and CALENDAR_CODE = '{eventModal.calendarCode}'");
 
 
                         string StudentId = "";
@@ -1656,7 +1656,23 @@ namespace Barrway.Service.Repository
                 if (userResult.Count() == 0) {
                     return new AddUpdateDelete<GenerateDynamicFormData>() { Status = false, Message = "user id not found!" };
                 }
-                var user= userResult.FirstOrDefault();
+                var user = userResult.FirstOrDefault();
+                if (user["USER_EMAIL"]==null || string.IsNullOrEmpty(user["USER_EMAIL"].ToString()))
+                {
+                    return new AddUpdateDelete<GenerateDynamicFormData>() { Status = false, Message = "user email empty!" };
+                }
+                if (string.IsNullOrEmpty(user["IS_ACTIVE"]?.ToString()) ||  user["IS_ACTIVE"].ToString()=="N")
+                {
+                    return new AddUpdateDelete<GenerateDynamicFormData>() { Status = false, Message = "user not active!" };
+                }
+
+                //if (user["IS_EMAIL_VERIFIED"] == null || string.IsNullOrEmpty(user["IS_EMAIL_VERIFIED"].ToString()))
+                //{
+                //    return new AddUpdateDelete<GenerateDynamicFormData>() { Status = false, Message = "user email empty!" };
+                //}
+
+
+
                 data.created_by = Convert.ToInt32(user["Id"]);
                 var checkUserAdditionalForm = await CheckAddtionalFormUserEntry(data.formId, userId, companyCode);
                 if (checkUserAdditionalForm)
@@ -1777,14 +1793,14 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> MarkPresent(string EventId, string UserEmail)
+        public async Task<AddUpdateDelete> MarkPresent(string EventId, string userName)
         {
             try
             {
                 string query = $@"select cf.[start], cf.[end], t.* from TRANSACTION_MASTER_1942 t
                                   join CALENDAR_FORM_1935 cf on cf.Id = t.SLOT
 								  join PARTICIPANT_MASTER_1940 part on part.Id = t.STUDENT
-                                  where t.SLOT = '{EventId}' and part.EMAIL = '{UserEmail}'";
+                                  where t.SLOT = '{EventId}' and part.STUDENT_ID = N'{userName}'";
 
                 var result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -1980,7 +1996,7 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> GetAllEnrolledCompaniesData(string userEmail, bool IsDistinct = true)
+        public async Task<AddUpdateDelete> GetAllEnrolledCompaniesData(string userName, bool IsDistinct = true)
         {
             try
             {
@@ -1991,7 +2007,7 @@ namespace Barrway.Service.Repository
                                   join TRANSACTION_MASTER_1942 transaction_m on calendar.CALENDAR_CODE = transaction_m.CALENDAR_CODE
                                   join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
                                   join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
-                                  where EMAIL = '{userEmail}' and calendar.Id = transaction_m.SLOT";
+                                  where participant.STUDENT_ID = N'{userName}' and calendar.Id = transaction_m.SLOT";
 
                 List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -2010,7 +2026,7 @@ namespace Barrway.Service.Repository
             }
         }
 
-        public async Task<AddUpdateDelete> GetAllEnrolledCalendars(string userEmail, string cmpCode)
+        public async Task<AddUpdateDelete> GetAllEnrolledCalendars(string userName, string cmpCode)
         {
             try
             {
@@ -2021,7 +2037,7 @@ namespace Barrway.Service.Repository
                                   join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
                                   join BUSINESS_CALENDAR_MASTER_1925 b_clr on b_clr.CALENDAR_CODE=calendar.CALENDAR_CODE
                                   join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
-                                  where EMAIL = '{userEmail}' and b_clr.COMPANY_CODE='{cmpCode}'";
+                                  where participant.STUDENT_ID = N'{userName}' and b_clr.COMPANY_CODE='{cmpCode}'";
 
                 List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -2041,7 +2057,7 @@ namespace Barrway.Service.Repository
         }
 
 
-        public async Task<AddUpdateDelete> GetRecentlyBookedCalendars(string userEmail, string userId)
+        public async Task<AddUpdateDelete> GetRecentlyBookedCalendars(string userId)
         {
             try
             {
@@ -2098,7 +2114,7 @@ namespace Barrway.Service.Repository
                                             JOIN BUSINESS_CALENDAR_MASTER_1925 calendarDetails ON calendarDetails.CALENDAR_CODE = calendar.CALENDAR_CODE
                                             JOIN CALENDAR_SUB_CATEGORY_MASTER_1930 subCategory ON ',' + calendarDetails.CALENDAR_SUB_CATEGORY_ID + ',' LIKE '%,' + CAST(subCategory.Id AS NVARCHAR(MAX)) + ',%'
                                         WHERE 
-                                            participant.EMAIL = '{userEmail}' 
+                                            participant.STUDENT_ID = N'{userId}' 
                                             AND calendar.Id = transaction_m.SLOT
                                     ) subquery
                                     group by CALENDAR_CODE 
@@ -2345,7 +2361,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
             }
         }
 
-        public async Task<AddUpdateDelete> GetUserBCoinMaster(GenerateDynamicFormData data, string userName, string userEmail)
+        public async Task<AddUpdateDelete> GetUserBCoinMaster(GenerateDynamicFormData data, string userName)
         {
             try
             {
@@ -2693,7 +2709,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
             }
         }
 
-        public async Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetMyAttendanceList(GenerateDynamicFormData data, string userEmail)
+        public async Task<AddUpdateDelete<List<IDictionary<string, object>>>> GetMyAttendanceList(GenerateDynamicFormData data, string userName)
         {
             try
             {
@@ -2804,7 +2820,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
                                     join SERVICE_MASTER_1933 service_m on service_m.Id = f.ACTIVITY
                                     join SERVICE_PROVIDER_MASTER_1934 service_p_m on service_p_m.Id = calendar.[resources]
                                     join LOCATION_MASTER_1936 location_m on location_m.Id = f.[RESOURCE]
-                                    where participant.EMAIL = '{userEmail}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
+                                    where participant.STUDENT_ID = N'{userName}' {(!string.IsNullOrEmpty(applyFilterQuery) ? " and " + applyFilterQuery : "")}
                                     )
                                     Select COUNT(*) OVER() total_records,@PageSize size, @PageNumber as 'page',* from formdata  ORDER BY {column} {dir} OFFSET @PageSize * (@PageNumber - 1) ROWS   FETCH NEXT @PageSize ROWS ONLY OPTION(RECOMPILE);";
 
@@ -2825,7 +2841,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
 
 
 
-        public async Task<AddUpdateDelete> GetAllEnrolledCalendarsData(string CompanyCode, string UserEmail, string filterDate = null, bool IsCustomInFilter = false)
+        public async Task<AddUpdateDelete> GetAllEnrolledCalendarsData(string CompanyCode, string userName, string filterDate = null, bool IsCustomInFilter = false)
         {
             try
             {
@@ -2861,7 +2877,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
                                   join BUSINESS_CALENDAR_MASTER_1925 calendar on calendar.CALENDAR_CODE = f.CALENDAR_CODE
                                   join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
                                   join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
-                                where   f.formid=2305 and {CompanyCondition}  participant.EMAIL = '{UserEmail}'  ) ,
+                                where   f.formid=2305 and {CompanyCondition}  participant.STUDENT_ID = N'{userName}'  ) ,
                                 cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
                                 select* into #temptable from cte2  where len(customtitle)>0;    declare @counter int= 0, @c int= 1;   
                                 select @counter = (select count(1) from #temptable)	while @c <= @counter    begin    select @customTitleQuery = customTitle from #temptable where ROWNUMBER=@c;	SET @sQuery= ' select @retvalOUT = (' + @customTitleQuery + ')'  
@@ -2881,7 +2897,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
 
 
 
-        public async Task<AddUpdateDelete> GetAlreadyEnrolledEvents(string CompanyCode, string UserEmail, string FilterDate)
+        public async Task<AddUpdateDelete> GetAlreadyEnrolledEvents(string CompanyCode, string userName, string FilterDate)
         {
             try
             {
@@ -2917,8 +2933,8 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
                         from TRANSACTION_MASTER_1942 transaction_m 
                         join CALENDAR_FORM_1935 f on f.Id = transaction_m.SLOT
                         join PARTICIPANT_MASTER_1940 participant on participant.Id = transaction_m.STUDENT
-                        left join SESSION_REVIEWS_1983 review on review.EVENT_ID = transaction_m.SLOT and review.USER_EMAIL = participant.EMAIL
-                        where participant.EMAIL = '{UserEmail}' and transaction_m.COMPANY_CODE = '{CompanyCode}'";
+                        left join SESSION_REVIEWS_1983 review on review.EVENT_ID = transaction_m.SLOT and review.USER_ID = participant.STUDENT_ID
+                        where participant.STUDENT_ID = N'{userName}' and transaction_m.COMPANY_CODE = '{CompanyCode}'";
 
                 var alreadyEnrolledEvents = await sqlFunction.ExecuteSqlQuery(query);
 
@@ -3069,7 +3085,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
             return testResult;
         }
 
-        public async Task<AddUpdateDelete> GetFullCalendarEvents(string StartDate, string EndDate, string UserEmail)
+        public async Task<AddUpdateDelete> GetFullCalendarEvents(string StartDate, string EndDate, string userName)
         {
             try
             {
@@ -3087,7 +3103,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
                                     join TRANSACTION_MASTER_1942 transaction_m on transaction_m.CALENDAR_CODE = f.CALENDAR_CODE
                                     join PARTICIPANT_MASTER_1940 participant_m on participant_m.Id = transaction_m.STUDENT
                                     join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
-                                    where  (CAST([start] as date) >= CAST('{StartDate}' as date) and  CAST([start] as date) <=CAST('{EndDate}' as date) )    and f.formid=2305   and participant_m.EMAIL = '{UserEmail}' and transaction_m.SLOT = f.Id
+                                    where  (CAST([start] as date) >= CAST('{StartDate}' as date) and  CAST([start] as date) <=CAST('{EndDate}' as date) )    and f.formid=2305   and participant_m.STUDENT_ID = N'{userName}' and transaction_m.SLOT = f.Id
                                     ) ,
                                     cte2 as ( select ROW_NUMBER() OVER(ORDER BY Id) ROWNUMBER , * from cte1	 where len(customtitle)>0) 
 
@@ -3116,7 +3132,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
                 return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
             }
         }
-        public async Task<AddUpdateDelete> GetMyUpcomingBookings(string UserEmail)
+        public async Task<AddUpdateDelete> GetMyUpcomingBookings(string userName)
         {
             try
             {
@@ -3134,7 +3150,7 @@ where ord.ORDER_TYPE = 'PACKAGE' and led.USER_ID = N'{userId}' and led.CALENDAR_
                                     join TRANSACTION_MASTER_1942 transaction_m on transaction_m.CALENDAR_CODE = f.CALENDAR_CODE
                                     join PARTICIPANT_MASTER_1940 participant_m on participant_m.Id = transaction_m.STUDENT
                                     join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = f.COMPANY_CODE
-                                    where f.formid=2305 and participant_m.EMAIL = '{UserEmail}' and transaction_m.SLOT = f.Id and cast(f.[end] as datetime) > cast('{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' as datetime)
+                                    where f.formid=2305 and participant_m.STUDENT_ID = N'{userName}' and transaction_m.SLOT = f.Id and cast(f.[end] as datetime) > cast('{DateTimeUtility.Now().ToString("yyyy-MM-dd HH:mm")}' as datetime)
                                     order by cast(f.[start] as datetime)
                                     ) ,
                                     cte2 as ( select ROW_NUMBER() OVER(ORDER BY start) ROWNUMBER , * from cte1	 where len(customtitle)>0) 

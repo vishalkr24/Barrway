@@ -65,7 +65,7 @@ namespace Barrway.Controllers.API.v1
         {
             try
             {
-                var result = await mobileAPIService.CancelBooking(SLOT, APIUserIdentity.UserEmail, APIUserIdentity.UserName); //APIUserIdentity.UserID
+                var result = await mobileAPIService.CancelBooking(SLOT, APIUserIdentity.UserName); //APIUserIdentity.UserID
                 return Ok(result); 
             }
             catch (Exception ex)
@@ -87,7 +87,7 @@ namespace Barrway.Controllers.API.v1
                 data.COMPANY_CODE = model.COMPANY_CODE;
                 data.REVIEW_SCORE = model.REVIEW_SCORE;
                 data.REVIEW_COMMENT = model.REVIEW_COMMENT;
-                data.USER_EMAIL = APIUserIdentity.UserEmail;
+                data.USER_ID = APIUserIdentity.UserName;
                 var result = await mobileAPIService.SessionReview(data);
                 return Ok(result);
             }

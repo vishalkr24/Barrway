@@ -481,6 +481,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\API\v1\AccountController.cs" />
+    <Compile Include="Controllers\API\v1\EventCalanderController.cs" />
     <Compile Include="Controllers\API\v1\UserProfileController.cs" />
     <Compile Include="Controllers\API\v1\CalendarController.cs" />
     <Compile Include="Controllers\API\v1\BookingController.cs" />
@@ -3445,6 +3446,7 @@
     <Content Include="Templates\calendar-master\business-user-master.html" />
     <Content Include="Templates\calendar-master\calendar-package-master.html" />
     <Content Include="Templates\calendar-master\additional-form-master.html" />
+    <Content Include="Templates\calendar-master\individual-schedular-form.html" />
     <Content Include="Templates\calendar-master\session-schedular-form.html" />
     <Content Include="Templates\calendar-master\schedular-form.html" />
     <Content Include="Templates\calendar-master\transaction-master.html" />
