@@ -34,7 +34,7 @@ namespace Barrway.Service.Repository
         private readonly ICommonService commonService;
         private readonly string baseUrl = ConfigurationManager.AppSettings["baseurl"];
 
-        public MobileAPIService(ISqlFunction sqlFunction, IFormAPIRepository formAPIRepository, IMapper mapper, IAuthService authService,ICommonService commonService)
+        public MobileAPIService(ISqlFunction sqlFunction, IFormAPIRepository formAPIRepository, IMapper mapper, IAuthService authService, ICommonService commonService)
         {
             this.sqlFunction = sqlFunction;
             this.formAPIRepository = formAPIRepository;
@@ -379,13 +379,14 @@ namespace Barrway.Service.Repository
         }
 
 
-        public async Task<AddUpdateDelete<BlogDetailModel>> GetBlogdetail(int  BlogId)
-        {   try
+        public async Task<AddUpdateDelete<BlogDetailModel>> GetBlogdetail(int BlogId)
+        {
+            try
             {
                 string sqlString = $@"select blog.Id, blog.created_at, blog.BLOG_TITLE,blog.BLOG_CONTENT,blog.[IMAGE],blog.YOUTUBE_LINK,blog.TAG,blog_c.BLOG_CATEGORY,blog.BLOG_CATEGORY,blog.IS_FEATURED,blog.IS_HOT 
                                   BLOG_CATEGORY_ID from BLOG_1980 blog join BLOG_CATEGORY_1981 blog_c on blog.BLOG_CATEGORY=blog_c.Id where blog.Id ='{BlogId}';";
                 var blogs = (await sqlFunction.ExecuteSqlQuery<BlogDetailModel>(sqlString)).FirstOrDefault();
-                if(blogs != null)
+                if (blogs != null)
                 {
                     blogs.TAG = formatTagsString(blogs.TAG);
                     return new AddUpdateDelete<BlogDetailModel>() { Status = true, Message = "success", Data = blogs };
@@ -394,7 +395,7 @@ namespace Barrway.Service.Repository
                 {
                     return new AddUpdateDelete<BlogDetailModel>() { Status = false, Message = "No data found !" };
                 }
-               
+
             }
             catch (Exception ex)
             {
@@ -750,7 +751,7 @@ namespace Barrway.Service.Repository
 
                 model.participant.NICKNAME = publicUser.Data["NICK_NAME"].ToString();
                 model.participant.EMAIL = user.Data["USER_EMAIL"].ToString();
-                
+
                 model.participant.ADDRESS = "";
                 model.participant.GENDER = publicUser.Data["GENDER"].ToString();
                 model.participant.IS_ACTIVE = "Y";
@@ -1607,7 +1608,7 @@ namespace Barrway.Service.Repository
         }
 
 
-        public async Task<List<IDictionary<string, object>>> GetCalnderEvents(CalendarEvents Request)
+        public async Task<List<EventLIst>> GetCalnderEvents(CalendarEvents Request)
         {
             try
             {
@@ -1633,16 +1634,136 @@ namespace Barrway.Service.Repository
                 if (result != null && result.events != null)
                 {
 
+                    //List<Event> events = JsonConvert.DeserializeObject<List<Event>>(JsonConvert.SerializeObject(result.events));
+                    //var groupedEvents = events.GroupBy(e => e.Start.Date)
+                    //                          .Select(g => new
+                    //                          {
+                    //                              Date = g.Key,
+                    //                              Times = g.Select(e => e.Start.ToString("HH:mm")).Distinct().ToList()
+                    //                          })
+                    //                          .ToList();
 
-                    return result.events;
+                    //foreach (var group in groupedEvents)
+                    //{
+                    //    List<EventTiming> timing = new List<EventTiming>();                        
+                    //    var Date = group.Date.ToString("yyyy-MM-dd");
+                    //    group.Times.ForEach(time => timing.Add(new EventTiming { Timeing = time }));
+                    //    EventData.Add(new EventLIst { Date = Date, _EventTiming = timing });
+                    //}
+
+
+                    ////return groupedEvents.ToList();
+
+
+
+                    //List<Event> events = JsonConvert.DeserializeObject<List<Event>>(JsonConvert.SerializeObject(result.events));
+
+                    //var groupedEvents = events.GroupBy(e => e.Start.Date)
+                    //                          .Select(g => new EventLIst
+                    //                          {
+                    //                              Date = g.Key.ToString("yyyy-MM-dd"),
+                    //                              EventTimes = g.Select(e => new EventTiming { Timeing = e.Start.ToString("HH:mm") })
+                    //                                             .Distinct()
+                    //                                             .ToList()
+                    //                          })
+                    //                          .ToList();
+                    //return groupedEvents;
+
+
+                    List<Event> events = JsonConvert.DeserializeObject<List<Event>>(JsonConvert.SerializeObject(result.events));
+
+                    var groupedEvents = events.GroupBy(e => e.Start.Date)
+                                              .Select(g => new EventLIst
+                                              {
+                                                  Date = g.Key.ToString("yyyy-MM-dd"),
+                                                  EventTimes = g.Select(e => new EventTiming
+                                                  {
+                                                      Timeing = e.Start.ToString("hh:mm tt")
+                                                  })
+                                                                .Distinct()
+                                                                .ToList()
+                                              })
+                                              .ToList();
+                    return groupedEvents;
+
+
+
+
+
+
+
                 }
-                return new List<IDictionary<string, object>>();
+                return new List<EventLIst>();
             }
             catch (Exception ex)
             {
-                return new List<IDictionary<string, object>>();
+                return new List<EventLIst>();
             }
         }
+
+
+        public class Event
+        {
+            public int ROWNUMBER { get; set; }
+            public int Id { get; set; }
+            public string FormGroupKey { get; set; }
+            public int FormID { get; set; }
+            public int UserID { get; set; }
+            public string Current_Status { get; set; }
+            public int Cycle { get; set; }
+            public int MasterFormID { get; set; }
+            public string MasterFormRow { get; set; }
+            public int FormRecordOrder { get; set; }
+            public int FormRecordStatus { get; set; }
+            public string ApprovalStatus { get; set; }
+            public string COMPANY_CODE { get; set; }
+            public string CALENDAR_CODE { get; set; }
+            public string Hidden_Fullcalendar { get; set; }
+            public string SchedulerFormGroupKey { get; set; }
+            public string Title { get; set; }
+            public DateTime Start { get; set; }
+            public DateTime End { get; set; }
+            public string AllDay { get; set; }
+            public string Resources { get; set; }
+            public string Activities { get; set; }
+            public string Description { get; set; }
+            public string Color { get; set; }
+            public DateTime Created_At { get; set; }
+            public DateTime Updated_At { get; set; }
+            public string Created_By { get; set; }
+            public string Updated_By { get; set; }
+            public string ResForm_2304 { get; set; }
+            public string ActFormID { get; set; }
+            public string ParentID { get; set; }
+            public string SeperatedFormIDs { get; set; }
+            public string SeperatedTitles { get; set; }
+            public string SeperatedIds { get; set; }
+            public string SeperatedResFormIDs { get; set; }
+            public string SeperatedResEntryIDs { get; set; }
+            public string SeperatedResColValues { get; set; }
+            public string SeperatedColorValues { get; set; }
+            public string Tabulator_1683726769059 { get; set; }
+            public string Tabulator_1683785383381 { get; set; }
+            public string SCHEDULAR_FORM_ID { get; set; }
+            public string CREATION_TYPE { get; set; }
+            public string SLOT_DURATION_IN_MINS { get; set; }
+            public string EVENT_TYPE { get; set; }
+            public string COMPANY_SUBSCRIPTION_ID { get; set; }
+            public string IS_UPLOAD_REQUIRED { get; set; }
+            public string UPLOAD_TIME { get; set; }
+            public string DOWNLOADABLE_ATTACHMENT { get; set; }
+            public string DOWNLOAD_FILE_LIST { get; set; }
+            public string IS_COURSE_EVENT { get; set; }
+            public string ResourceId { get; set; }
+            public string CustomFourthTitle { get; set; }
+            public string CustomTitle { get; set; }
+            public string CustomForms { get; set; }
+            public string CustomFormIds { get; set; }
+            public string Referrences_1 { get; set; }
+            public string Referrences_2 { get; set; }
+            public string Referrences_3 { get; set; }
+        }
+
 
 
         public class companyList
@@ -1650,9 +1771,9 @@ namespace Barrway.Service.Repository
             public string COMPANY_CODE { get; set; }
         }
 
-        public async Task<List<IDictionary<string, object>>> GetUserEvents(UserEventsViewmodel model,string userEmail)
+        public async Task<List<IDictionary<string, object>>> GetUserEvents(UserEventsViewmodel model, string userEmail)
         {
-            
+
             string sqlString = $@"SELECT distinct calendar.[COMPANY_CODE]
                                   FROM [dbo].[CALENDAR_FORM_1935] calendar
                                   join TRANSACTION_MASTER_1942 transaction_m on calendar.CALENDAR_CODE = transaction_m.CALENDAR_CODE and calendar.Id = transaction_m.SLOT
@@ -1660,11 +1781,11 @@ namespace Barrway.Service.Repository
                                   join USER_MASTER_1915 um on um.[USER_ID]=participant.STUDENT_ID
                                   join BUSINESS_CALENDAR_MASTER_1925 c on c.CALENDAR_CODE=calendar.CALENDAR_CODE
 								  join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
-                                  where um.USER_EMAIL = '{userEmail}'";            
+                                  where um.USER_EMAIL = '{userEmail}'";
             var result = (await sqlFunction.ExecuteSqlQuery<companyList>(sqlString)).ToList();
-            string companycode = "'"+string.Join("','", result.Select(x => x.COMPANY_CODE))+"'";
-            
-            var calendarRequest = new CalendarRequestModel() { COMPANY_CODE= companycode,start=model.start,end=model.end };
+            string companycode = "'" + string.Join("','", result.Select(x => x.COMPANY_CODE)) + "'";
+
+            var calendarRequest = new CalendarRequestModel() { COMPANY_CODE = companycode, start = model.start, end = model.end };
 
             Form_DataTable data = mapper.Map<Form_DataTable>(calendarRequest);
             data.IsPublicUser = true;
@@ -1676,7 +1797,7 @@ namespace Barrway.Service.Repository
             data.isCalender = 1;
             data.formId = (int)FormSetting.CALENDAR_FORM;
             string filterQuery = CustomMethods.GetDateQuery(calendarRequest.start, calendarRequest.end);
-            data.filter = new FilterDTO() { field = "start", value = filterQuery  };
+            data.filter = new FilterDTO() { field = "start", value = filterQuery };
             List<CustomFilter> _customFilters = new List<CustomFilter>();
             _customFilters.Add(new CustomFilter() { FieldName = "COMPANY_CODE", Value = calendarRequest.COMPANY_CODE });
             data.CustomFilters = _customFilters;
@@ -1684,8 +1805,8 @@ namespace Barrway.Service.Repository
 
             if (result != null && eventsResult.events != null)
             {
-              await commonService.ModifyEventsData(data, eventsResult, userEmail);
-              return eventsResult.events;
+                await commonService.ModifyEventsData(data, eventsResult, userEmail);
+                return eventsResult.events;
             }
             return new List<IDictionary<string, object>>();
         }
@@ -2358,7 +2479,7 @@ namespace Barrway.Service.Repository
                 {
                     return new AddUpdateDelete() { Status = false, Message = "No Package found" };
                 }
-                
+
 
             }
             catch (Exception ex)
@@ -2485,7 +2606,7 @@ namespace Barrway.Service.Repository
 
 
 
-                
+
                 string dateofbirth = "NULL";
                 if (model.DATE_OF_BIRTH.HasValue)
                 {
@@ -2513,10 +2634,10 @@ namespace Barrway.Service.Repository
         }
 
 
-        public async Task<AddUpdateDelete> changespassword(userPassword model,string USER_ID)
+        public async Task<AddUpdateDelete> changespassword(userPassword model, string USER_ID)
         {
             try
-            {               
+            {
                 string query = $@"update USER_MASTER_1915 set  USER_PASSWORD = '{model.newpassword}' where USER_ID = N'{USER_ID}' ";
 
                 int result = await sqlFunction.ExecuteSqlCommandQuery(query);
