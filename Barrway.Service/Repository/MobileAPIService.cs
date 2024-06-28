@@ -732,7 +732,7 @@ namespace Barrway.Service.Repository
 
             // Check if the user already exist in the participant master
 
-            List<IDictionary<string, object>> participantCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from PARTICIPANT_MASTER_1940 where EMAIL = '{user.Data["USER_EMAIL"]}' and COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE}'");
+            List<IDictionary<string, object>> participantCheckResult = await sqlFunction.ExecuteSqlQuery($@"select * from PARTICIPANT_MASTER_1940 where STUDENT_ID = N'{model.USER_ID}' and COMPANY_CODE = '{model.participant.COMPANY_CODE}' and CALENDAR_CODE = '{model.participant.CALENDAR_CODE}'");
 
             string StudentId = "";
             if (participantCheckResult.Count > 0)
@@ -931,13 +931,13 @@ namespace Barrway.Service.Repository
 
 
 
-        public async Task<AddUpdateDelete> CancelBooking(string SLOT, string USER_EMAIL, string USER_ID)
+        public async Task<AddUpdateDelete> CancelBooking(string SLOT, string USER_ID)
         {
             string query = $@"select ser.CANCELLATION_BEFORE, cf.[start], cf.[end], ser.[SERVICE_PAY_PER], t.* from CALENDAR_FORM_1935 cf
                                 join TRANSACTION_MASTER_1942 t on t.SLOT = cf.Id
                                 join PARTICIPANT_MASTER_1940 p on p.Id = t.STUDENT
 								join SERVICE_MASTER_1933 ser on ser.Id = t.ACTIVITY
-                                where cf.Id = '{SLOT}' and p.EMAIL = '{USER_EMAIL}'";
+                                where cf.Id = '{SLOT}' and p.STUDENT_ID = N'{USER_ID}'";
             var result = await sqlFunction.ExecuteSqlQuery(query);
 
             if (result.Count > 0)
@@ -1235,13 +1235,13 @@ namespace Barrway.Service.Repository
 
             string query = $@"select * from TRANSACTION_MASTER_1942 t
                             join PARTICIPANT_MASTER_1940 participant on participant.Id = t.STUDENT
-                            where t.SLOT = '{model.EVENT_ID}' and participant.EMAIL = '{model.USER_EMAIL}'";
+                            where t.SLOT = '{model.EVENT_ID}' and participant.STUDENT_ID = N'{model.USER_ID}'";
 
             var result = await sqlFunction.ExecuteSqlQuery(query);
 
             if (result.Count > 0)
             {
-                query = $@"select * from SESSION_REVIEWS_1983 where EVENT_ID = '{model.EVENT_ID}' and USER_EMAIL = '{model.USER_EMAIL}'";
+                query = $@"select * from SESSION_REVIEWS_1983 where EVENT_ID = '{model.EVENT_ID}' and USER_ID = N'{model.USER_ID}'";
                 var result2 = await sqlFunction.ExecuteSqlQuery(query);
 
                 if (result2.Count == 0)

@@ -16069,7 +16069,7 @@
                             let participantString = "";
 
                             participantData.filter(x=> x["OverlapBookingFlag"] == "N").forEach(x => {
-                                participantString += `<li>${x["STUDENT_NAME"]} (${x["EMAIL"]})</li>`;
+                                participantString += `<li>${x["STUDENT_NAME"]} (${x["STUDENT_ID"]})</li>`;
                             })
 
                             const wrapper = document.createElement('div');

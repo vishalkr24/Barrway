@@ -1838,7 +1838,7 @@ namespace Barrway.Controllers
             var result = await formAPIRepository.getReferralFormFields(request2);
             var eventData = result;
 
-            var mybooking = await calendarService.GetMyBooking(UserIdentity.UserEmail, companyCode, _start, _end);
+            var mybooking = await calendarService.GetMyBooking(UserIdentity.UserName, companyCode, _start, _end);
 
             var EventIdsBooking = mybooking.Select(x => x["EventId"].ToString()).ToList();
 

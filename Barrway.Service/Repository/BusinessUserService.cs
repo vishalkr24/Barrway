@@ -1433,7 +1433,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
             }
         }
 
-        public async Task<AddUpdateDelete> GetCourseEvents(string ServiceId, string UserEmail)
+        public async Task<AddUpdateDelete> GetCourseEvents(string ServiceId, string userName)
         {
             string sqlQuery = $@"select 
                                     case when (t.Id is not null and p.Id is not null) then 'Y' else 'N' end as 'IsBooked'
@@ -1441,14 +1441,14 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
                                     ,(select case when (f.[start] < '{DateTimeUtility.Now().ToString("yyyy-MM-dd")}') then 'Y' else 'N' end) as 'IsPreviousSession'                              
                                     ,f.* from CALENDAR_FORM_1935 f 
                                     left join TRANSACTION_MASTER_1942 t on f.Id = t.SLOT
-                                    left join (select * from PARTICIPANT_MASTER_1940 where EMAIL = '{UserEmail}') p on p.Id = t.STUDENT
+                                    left join (select * from PARTICIPANT_MASTER_1940 where STUDENT_ID = N'{userName}') p on p.Id = t.STUDENT
                                     where f.IS_COURSE_EVENT = 'Y' and f.activities = '{ServiceId}'";
 
             var result = await sqlFunction.ExecuteSqlQuery(sqlQuery);
 
             sqlQuery = $@"select distinct substring(f.[start], 1, 10) as 'start' from CALENDAR_FORM_1935 f 
                                     left join TRANSACTION_MASTER_1942 t on f.Id = t.SLOT
-                                    left join (select * from PARTICIPANT_MASTER_1940 where EMAIL = '{UserEmail}') p on p.Id = t.STUDENT
+                                    left join (select * from PARTICIPANT_MASTER_1940 where STUDENT_ID = '{userName}') p on p.Id = t.STUDENT
                                     where f.IS_COURSE_EVENT = 'Y' and f.activities = '{ServiceId}'";
 
             var Dates = await sqlFunction.ExecuteSqlQuery(sqlQuery);
@@ -3620,14 +3620,14 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
         }
 
 
-        public async Task<AddUpdateDelete> GetEnrollUserDetails(int eventId, string email)
+        public async Task<AddUpdateDelete> GetEnrollUserDetails(int eventId, string userName)
         {
 
             string sqlString = $@"select clr.*,pr.STUDENT_NAME,pr.STUDENT_ID,pr.EMAIL,trm.ATTENDANCE,trm.ASSESSMENT_FILES,trm.ASSESSMENT_FILES_LIST,trm.ID TRANSACTION_ID
                                   from CALENDAR_FORM_1935 clr
                                   join TRANSACTION_MASTER_1942  trm on clr.formGroupKey=trm.formGroupKey
                                   join PARTICIPANT_MASTER_1940 pr on pr.Id=trm.STUDENT
-                                  where clr.Id={eventId} and pr.EMAIL='{email}'";
+                                  where clr.Id={eventId} and pr.STUDENT_ID=N'{userName}'";
 
             var result = await sqlFunction.ExecuteSqlQuery(sqlString);
             if (result.Count() > 0)
@@ -3642,7 +3642,7 @@ FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
 
                         string add_formid = clr_result[0]["ADDITIONAL_FORM_ID"]?.ToString() ?? "";
 
-                        sqlString = $"select *from USER_MASTER_1915 where USER_EMAIL='{email}'";
+                        sqlString = $"select *from USER_MASTER_1915 where USER_ID='{userName}'";
 
                         var user_result = await sqlFunction.ExecuteSqlQuery(sqlString);
                         if (user_result.Count() > 0) {

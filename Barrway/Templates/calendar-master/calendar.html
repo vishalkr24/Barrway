@@ -1153,7 +1153,7 @@
                     <div class="div-flex event-detail-modal-inner">
                         <div class="title" ng-show="IS_EXIST_PRE_DEFINED_ACTIVITIES">
 
-                            <div class="temp" ng-repeat="d in createEventDetails.dropdownList">
+                            <div class="temp" ng-repeat="d in createEventDetails.dropdownList" ng-if="d.formId!=2310">
                                 <span class="titleContainer">
                                     <span class="title1"> {{d.formTitle}}</span>
 
