@@ -94,7 +94,8 @@
 
 
 function getServiceProviderData(calenderSettings) {
-    Service_ProviderList = calenderSettings.find(x => x.resourceForm == 2304).formDataList;;
+    Service_ProviderList = calenderSettings.find(x => x.resourceForm == 2304).formDataList;
+    Service_ProviderList = Service_ProviderList.filter(x => x.CALENDAR_CODE == CALENDAR_CODE || x.SHOW_IN_ALL_CALENDARS == 'Y');
     var serviceProvider = $(".calendar-service-Provider").empty();
     serviceProvider.append($('<option>', {
         value: "",
@@ -106,7 +107,7 @@ function getServiceProviderData(calenderSettings) {
     $.each(Service_ProviderList, function (index, item) {
         serviceProvider.append($('<option>', {
             value: item.id,
-            text: item.FIRST_NAME + " " + item.LAST_NAME
+            text: item.FIRST_NAME
         }).attr('data-filter', item.FIRST_NAME));
     });
 }

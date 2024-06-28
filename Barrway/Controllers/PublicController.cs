@@ -267,7 +267,7 @@ namespace Barrway.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                var result = await publicUserService.MarkPresent(EventId, UserIdentity.UserEmail);
+                var result = await publicUserService.MarkPresent(EventId, UserIdentity.UserName);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             else

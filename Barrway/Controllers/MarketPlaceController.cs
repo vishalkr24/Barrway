@@ -99,7 +99,7 @@ namespace Barrway.Controllers
 
         public async Task<ActionResult> GetCourseEvents(string ServiceId)
         {
-            var EventsData = await businessUserService.GetCourseEvents(ServiceId, (User.Identity.IsAuthenticated) ? UserIdentity.UserEmail : "");
+            var EventsData = await businessUserService.GetCourseEvents(ServiceId, (User.Identity.IsAuthenticated) ? UserIdentity.UserName : "");
 
             return Json(EventsData, JsonRequestBehavior.AllowGet);
         }

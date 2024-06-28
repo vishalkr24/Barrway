@@ -56,9 +56,20 @@ namespace Barrway.Controllers.API.v1
             }
         }
 
-
-
-
+        [Route("api/calendar/getFilters")]
+        [HttpPost]
+        // filter type : 1= Calendar, 2= Service, 3= Service Provider
+        public async Task<IHttpActionResult> GetCalendarFilters(int FilterType, string CompanyCode, string CalendarCode = null)
+        {
+            try
+            {
+                return Ok(await mobileAPIService.GetCalendarFilters(FilterType, CompanyCode, CalendarCode));
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
 
         [Route("api/calendar/myfavorite/companys")]
         [HttpGet]

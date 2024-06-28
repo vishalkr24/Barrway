@@ -62,8 +62,64 @@ namespace Barrway.Controllers.API.v1
             return new LoginResponse() { Status = false, Message = result.Message };
         }
 
+        [Route("api/account/SendResetPasswordLink")]
+        [ApiKeyAuthorizationFilter]
+        [HttpPost]
+        public async Task<IHttpActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            AddUpdateDelete userData;
+            string ErrorMessage = "";
+
+            if (User.Identity.IsAuthenticated)
+            {
+                userData = await authService.GetUser(APIUserIdentity.UserName);
+
+            }
+            else
+            {
+                userData = await authService.GetUserByEmail(model.Email);
+            }
 
 
+            if (userData.Status)
+            {
+                if (User.Identity.IsAuthenticated)
+                {
+                    if (string.IsNullOrEmpty(userData.Data["USER_EMAIL"]?.ToString()))
+                    {
+                        return Json(new AddUpdateDelete() { Status = false, Message = "Email Id not registered to send link." });
+                    }
+
+                    model.Email = userData.Data["USER_EMAIL"]?.ToString();
+                }
+
+                var linkResult = await authService.SendresetpasswordLink(userData.Data["USER_ID"], model.Email);//USER_EMAILUSER_ID
+
+                if (linkResult.Status)
+                {
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        return Json(new AddUpdateDelete() { Status = true, Message = $"change password email has been sent to {model.Email}. Please follow the instructions." });
+                    }
+                    else
+                    {
+                        return Json(new AddUpdateDelete() { Status = true, Message = $"A verification email has been sent to {model.Email}. Please follow the instructions." });
+                    }
+
+                }
+                else
+                {
+                    ErrorMessage = linkResult.Message;
+                }
+            }
+            else
+            {
+                ErrorMessage = "Enter a valid email id";
+            }
+
+            return Json(new AddUpdateDelete() { Status = false, Message = ErrorMessage });
+
+        }
 
 
         [Route("api/account/signup")]

@@ -11,7 +11,8 @@ namespace Barrway.DTO.AuthViewModel
     {
         [Required(ErrorMessage = "User name is required.")]
         [MaxLength(20,ErrorMessage = "User name max length 20 characters")]
-        [RegularExpression("^[a-zA-Z][a-zA-Z0-9_@-]*$", ErrorMessage = "Username must start with a letter and can only contain letters, numbers, and the characters '_', '@', and '-'.")]
+        //[RegularExpression("^[a-zA-Z][a-zA-Z0-9_@-]*$", ErrorMessage = "Username must start with a letter and can only contain letters, numbers, and the characters '_', '@', and '-'.")]
+        [RegularExpression("^[a-zA-Z0-9]+$", ErrorMessage = "The Username field can only contain alphabets and numbers.")]
         public string USER_NAME { get; set; }
 
         [Required(ErrorMessage = "First name is required.")]

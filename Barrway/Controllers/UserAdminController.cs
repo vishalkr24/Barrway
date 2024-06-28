@@ -72,7 +72,7 @@ namespace Barrway.Controllers
 
         public async Task<ActionResult> GetSingleEventDetailsWithFlags(string EventId)
         {
-            var eventData = await publicUserService.GetSingleEventDetailsWithFlags(EventId, UserIdentity.UserEmail);
+            var eventData = await publicUserService.GetSingleEventDetailsWithFlags(EventId, UserIdentity.UserName);
 
             return Json(eventData);
         }
@@ -290,7 +290,7 @@ namespace Barrway.Controllers
             {
                 if (User.Identity.IsAuthenticated)
                 {
-                    model.USER_EMAIL = UserIdentity.UserEmail;
+                    model.USER_ID = UserIdentity.UserName;
                     var result = await publicUserService.AddSessionReview(model);
                     return Redirect("/UserAdmin#/mybookings/2354");
                 }
@@ -310,7 +310,7 @@ namespace Barrway.Controllers
         {
             try
             {
-                var result = await publicUserService.EnrollParticipantForCalendar(model, UserIdentity.UserName, UserIdentity.UserEmail);
+                var result = await publicUserService.EnrollParticipantForCalendar(model, UserIdentity.UserName,UserIdentity.UserEmail);
                 var a = Convert.ToDateTime(model.start);
                 CalendarFormModel eventData = result.Data;
 
@@ -472,7 +472,7 @@ namespace Barrway.Controllers
         {
             try
             {
-                var result = await publicUserService.GetAllEnrolledCompaniesData(UserIdentity.UserEmail.ToString());
+                var result = await publicUserService.GetAllEnrolledCompaniesData(UserIdentity.UserName);
 
                 return Json(new { data = result });
             }
@@ -487,7 +487,7 @@ namespace Barrway.Controllers
         {
             try
             {
-                var result = await publicUserService.GetAllEnrolledCalendars(UserIdentity.UserEmail.ToString(), cmpCode);
+                var result = await publicUserService.GetAllEnrolledCalendars(UserIdentity.UserName, cmpCode);
                 return Json(new { data = result });
             }
             catch (Exception ex)
@@ -502,7 +502,7 @@ namespace Barrway.Controllers
             try
             {
                 SessionReviewViewModel model = new SessionReviewViewModel();
-                var result = await masterService.GetMyBookings(UserIdentity.UserEmail, Type, EventId);
+                var result = await masterService.GetMyBookings(UserIdentity.UserName, Type, EventId);
 
                 if (result.Status)
                 {
@@ -541,7 +541,7 @@ namespace Barrway.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                var result = await masterService.GetMyBookings(UserIdentity.UserEmail, Type);
+                var result = await masterService.GetMyBookings(UserIdentity.UserName, Type);
 
                 return Json(result.Data, JsonRequestBehavior.AllowGet);
             }
@@ -554,7 +554,7 @@ namespace Barrway.Controllers
         [HttpPost]
         public async Task<ActionResult> GetMyAttendanceList(GenerateDynamicFormData data)
         {
-            var locationListData = await publicUserService.GetMyAttendanceList(data, UserIdentity.UserEmail);
+            var locationListData = await publicUserService.GetMyAttendanceList(data, UserIdentity.UserName);
             var locationList = locationListData.Data;
             double last_page = 0;
             if (locationList != null && locationList.Count() > 0)
@@ -574,7 +574,7 @@ namespace Barrway.Controllers
         {
             try
             {
-                var result = await publicUserService.GetRecentlyBookedCalendars(UserIdentity.UserEmail.ToString(), UserIdentity.UserName);
+                var result = await publicUserService.GetRecentlyBookedCalendars(UserIdentity.UserName);
 
                 return Json(result);
             }
@@ -588,7 +588,7 @@ namespace Barrway.Controllers
         {
             try
             {
-                var transactionData = await publicUserService.GetUserBCoinMaster(data, UserIdentity.UserName, UserIdentity.UserEmail);
+                var transactionData = await publicUserService.GetUserBCoinMaster(data, UserIdentity.UserName);
                 var transactionList = transactionData.Data[0];
                 double last_page = 0;
                 if (transactionList != null && transactionList.Count > 0)
@@ -687,7 +687,7 @@ namespace Barrway.Controllers
         {
             try
             {
-                var result = await publicUserService.GetAllEnrolledCalendarsData(CompanyCode, UserIdentity.UserEmail, Convert.ToDateTime(filterDate).ToString("yyyy-MM-dd"));
+                var result = await publicUserService.GetAllEnrolledCalendarsData(CompanyCode, UserIdentity.UserName, Convert.ToDateTime(filterDate).ToString("yyyy-MM-dd"));
 
                 return Json(new { data = result });
             }
@@ -702,7 +702,7 @@ namespace Barrway.Controllers
         {
             try
             {
-                var result = await publicUserService.GetFullCalendarEvents(StartDate, EndDate, UserIdentity.UserEmail);
+                var result = await publicUserService.GetFullCalendarEvents(StartDate, EndDate, UserIdentity.UserName);
                 List<IDictionary<string, object>> finalResult = new List<IDictionary<string, object>>();
 
                 for (int i = 0; i < result.Data.Count; i++)
@@ -730,7 +730,7 @@ namespace Barrway.Controllers
         {
             try
             {
-                var result = await publicUserService.GetMyUpcomingBookings(UserIdentity.UserEmail);
+                var result = await publicUserService.GetMyUpcomingBookings(UserIdentity.UserName);
                 List<IDictionary<string, object>> finalResult = new List<IDictionary<string, object>>();
 
                 for (int i = 0; i < result.Data.Count; i++)
@@ -948,7 +948,7 @@ namespace Barrway.Controllers
             {
                 return Json(new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound }, JsonRequestBehavior.AllowGet);
             }
-            return Json(await businessUserService.GetEnrollUserDetails(id, UserIdentity.UserEmail), JsonRequestBehavior.AllowGet);
+            return Json(await businessUserService.GetEnrollUserDetails(id, UserIdentity.UserName), JsonRequestBehavior.AllowGet);
         }
 
 
@@ -1001,7 +1001,7 @@ namespace Barrway.Controllers
                 if (int.TryParse(eventid, out _eventId))
                 {
 
-                    var upload_result = (await businessUserService.GetEnrollUserDetails(_eventId, UserIdentity.UserEmail)).Data as IDictionary<string, object>;
+                    var upload_result = (await businessUserService.GetEnrollUserDetails(_eventId, UserIdentity.UserName)).Data as IDictionary<string, object>;
                     if (upload_result != null)
                     {
                         var result = upload_result;
