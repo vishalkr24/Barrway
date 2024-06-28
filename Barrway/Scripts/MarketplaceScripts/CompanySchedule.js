@@ -3658,7 +3658,9 @@ function GetAdvancaePopupForMasterData(formid,title) {
     var data = { action: 7, formid: formid };
 
 
-    var excludeFields = [{formid: 2303, fields: ["REST_PERIOD_BETWEEN_SESSION", "IS_SERVICE_PAID", "NEED_ONLINE_PAYMENT", "SERVICE_PAY_PER"]}];
+    var excludeFields = [{ formid: 2303, fields: ["REST_PERIOD_BETWEEN_SESSION", "IS_SERVICE_PAID", "NEED_ONLINE_PAYMENT", "SERVICE_PAY_PER"] },
+        { formid: 2304, fields: ["SHOW_IN_ALL_CALENDARS"] }];
+   
 
     showLoader();
     $.ajax({

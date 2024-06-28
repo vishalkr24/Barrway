@@ -170,7 +170,7 @@ namespace Barrway.Controllers
 
                     if (data.IsMarketplaceRequest)
                     {
-                        var alreadyEnrolledEvents = (await publicUserService.GetAlreadyEnrolledEvents(data.COMPANY_CODE, UserIdentity.UserEmail, data.filter.value)).Data as List<IDictionary<string, object>>;
+                        var alreadyEnrolledEvents = (await publicUserService.GetAlreadyEnrolledEvents(data.COMPANY_CODE, UserIdentity.UserName, data.filter.value)).Data as List<IDictionary<string, object>>;
                         if (alreadyEnrolledEvents != null)
                         {
                             if (result != null)
@@ -631,7 +631,7 @@ namespace Barrway.Controllers
                     List<IDictionary<string, object>> tempResults = new List<IDictionary<string, object>>();
                     try
                     {
-                        var enrolledData = await publicUserService.GetAllEnrolledCompaniesData(UserIdentity.UserEmail, false);
+                        var enrolledData = await publicUserService.GetAllEnrolledCompaniesData(UserIdentity.UserName, false);
                         for (int i = 0; i < resourceData.Count; i++)
                         {
                             for (int j = 0; j < enrolledData.Data.Count; j++)
@@ -700,7 +700,7 @@ namespace Barrway.Controllers
                 }
             }
             ReferalFormDataResponseModel result = await formAPIRepository.getReferralFormFields(data);
-            await commonService.ModifyEventsData(data, result, UserIdentity.UserEmail);
+            await commonService.ModifyEventsData(data, result, UserIdentity.UserName);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
@@ -1003,7 +1003,7 @@ namespace Barrway.Controllers
                             var usertrnsactionData = getallTransactionUser.Data;
                             if (e.ContainsKey("Id") && e["Id"] != null && e["Id"].ToString() != "0")
                             {
-                                if (usertrnsactionData.Any(x => Convert.ToInt32(x["EventId"]) == Convert.ToInt32(e["Id"]) && x["EMAIL"] != null && x["EMAIL"].ToString() == UserIdentity.UserEmail))
+                                if (usertrnsactionData.Any(x => Convert.ToInt32(x["EventId"]) == Convert.ToInt32(e["Id"]) && x["STUDENT_ID"] != null && x["STUDENT_ID"].ToString() == UserIdentity.UserName))
                                 {
                                     e["IS_PUBLIC_USER_EVENT"] = true;
                                 }

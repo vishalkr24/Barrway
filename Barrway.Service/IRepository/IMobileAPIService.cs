@@ -65,7 +65,7 @@ namespace Barrway.Service.IRepository
 
         Task<AddUpdateDelete> SessionReview(SessionReview model);
 
-        Task<AddUpdateDelete> CancelBooking(string SLOT, string USER_EMAIL, string USER_ID);
+        Task<AddUpdateDelete> CancelBooking(string SLOT, string USER_ID);
 
         Task<AddUpdateDelete> GetUserCoinBalance(string UserId, string CompanyCode, string CalendarCode);
 
