@@ -19,7 +19,7 @@ namespace Barrway.DTO.FormAPI
     public class EventLIst
     {
         public string Date { get; set; }
-        public List<EventTiming> EventTiming { get; set; }
+        public List<EventTiming> EventTimes { get; set; }
 
     }
 

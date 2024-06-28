@@ -492,6 +492,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BusinessMarketplaceController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
+    <Compile Include="Controllers\PublicCalendarController.cs" />
     <Compile Include="Controllers\PublicController.cs" />
     <Compile Include="Controllers\BusinessAdminController.cs" />
     <Compile Include="Controllers\BusinessCalendarController.cs" />
@@ -544,6 +545,13 @@
     <Compile Include="WebSocket\QueueManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\CalanderScheduler\fullcalendar\main.css" />
+    <Content Include="assets\CalanderScheduler\fullcalendar\main.js" />
+    <Content Include="assets\CalanderScheduler\icons\arrow %281%29.svg" />
+    <Content Include="assets\CalanderScheduler\icons\calendar %281%29.svg" />
+    <Content Include="assets\CalanderScheduler\icons\clock.png" />
+    <Content Include="assets\CalanderScheduler\icons\clock.svg" />
+    <Content Include="assets\CalanderScheduler\script\index.js" />
     <Content Include="assets\css\custom-styles.css" />
     <Content Include="assets\css\docs.css" />
     <Content Include="assets\css\images\attachment-img.PNG" />
@@ -3603,6 +3611,8 @@
     <Content Include="Views\Account\PhoneForgotPassword.cshtml" />
     <Content Include="Views\Account\PhoneOtpVerification.cshtml" />
     <Content Include="Views\Account\ChangePassword.cshtml" />
+    <Content Include="Views\PublicCalendar\Index.cshtml" />
+    <Content Include="Views\PublicCalendar\SchortCodetoembade.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\TempFileUploads\" />

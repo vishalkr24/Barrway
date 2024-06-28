@@ -1627,7 +1627,7 @@ namespace Barrway.Service.Repository
         }
 
 
-        public async Task<List<IDictionary<string, object>>> GetCalnderEvents(CalendarEvents Request)
+        public async Task<List<EventLIst>> GetCalnderEvents(CalendarEvents Request)
         {
             try
             {
@@ -1653,16 +1653,136 @@ namespace Barrway.Service.Repository
                 if (result != null && result.events != null)
                 {
 
+                    //List<Event> events = JsonConvert.DeserializeObject<List<Event>>(JsonConvert.SerializeObject(result.events));
+                    //var groupedEvents = events.GroupBy(e => e.Start.Date)
+                    //                          .Select(g => new
+                    //                          {
+                    //                              Date = g.Key,
+                    //                              Times = g.Select(e => e.Start.ToString("HH:mm")).Distinct().ToList()
+                    //                          })
+                    //                          .ToList();
 
-                    return result.events;
+                    //foreach (var group in groupedEvents)
+                    //{
+                    //    List<EventTiming> timing = new List<EventTiming>();                        
+                    //    var Date = group.Date.ToString("yyyy-MM-dd");
+                    //    group.Times.ForEach(time => timing.Add(new EventTiming { Timeing = time }));
+                    //    EventData.Add(new EventLIst { Date = Date, _EventTiming = timing });
+                    //}
+
+
+                    ////return groupedEvents.ToList();
+
+
+
+                    //List<Event> events = JsonConvert.DeserializeObject<List<Event>>(JsonConvert.SerializeObject(result.events));
+
+                    //var groupedEvents = events.GroupBy(e => e.Start.Date)
+                    //                          .Select(g => new EventLIst
+                    //                          {
+                    //                              Date = g.Key.ToString("yyyy-MM-dd"),
+                    //                              EventTimes = g.Select(e => new EventTiming { Timeing = e.Start.ToString("HH:mm") })
+                    //                                             .Distinct()
+                    //                                             .ToList()
+                    //                          })
+                    //                          .ToList();
+                    //return groupedEvents;
+
+
+                    List<Event> events = JsonConvert.DeserializeObject<List<Event>>(JsonConvert.SerializeObject(result.events));
+
+                    var groupedEvents = events.GroupBy(e => e.Start.Date)
+                                              .Select(g => new EventLIst
+                                              {
+                                                  Date = g.Key.ToString("yyyy-MM-dd"),
+                                                  EventTimes = g.Select(e => new EventTiming
+                                                  {
+                                                      Timeing = e.Start.ToString("hh:mm tt")
+                                                  })
+                                                                .Distinct()
+                                                                .ToList()
+                                              })
+                                              .ToList();
+                    return groupedEvents;
+
+
+
+
+
+
+
                 }
-                return new List<IDictionary<string, object>>();
+                return new List<EventLIst>();
             }
             catch (Exception ex)
             {
-                return new List<IDictionary<string, object>>();
+                return new List<EventLIst>();
             }
         }
+
+
+        public class Event
+        {
+            public int ROWNUMBER { get; set; }
+            public int Id { get; set; }
+            public string FormGroupKey { get; set; }
+            public int FormID { get; set; }
+            public int UserID { get; set; }
+            public string Current_Status { get; set; }
+            public int Cycle { get; set; }
+            public int MasterFormID { get; set; }
+            public string MasterFormRow { get; set; }
+            public int FormRecordOrder { get; set; }
+            public int FormRecordStatus { get; set; }
+            public string ApprovalStatus { get; set; }
+            public string COMPANY_CODE { get; set; }
+            public string CALENDAR_CODE { get; set; }
+            public string Hidden_Fullcalendar { get; set; }
+            public string SchedulerFormGroupKey { get; set; }
+            public string Title { get; set; }
+            public DateTime Start { get; set; }
+            public DateTime End { get; set; }
+            public string AllDay { get; set; }
+            public string Resources { get; set; }
+            public string Activities { get; set; }
+            public string Description { get; set; }
+            public string Color { get; set; }
+            public DateTime Created_At { get; set; }
+            public DateTime Updated_At { get; set; }
+            public string Created_By { get; set; }
+            public string Updated_By { get; set; }
+            public string ResForm_2304 { get; set; }
+            public string ActFormID { get; set; }
+            public string ParentID { get; set; }
+            public string SeperatedFormIDs { get; set; }
+            public string SeperatedTitles { get; set; }
+            public string SeperatedIds { get; set; }
+            public string SeperatedResFormIDs { get; set; }
+            public string SeperatedResEntryIDs { get; set; }
+            public string SeperatedResColValues { get; set; }
+            public string SeperatedColorValues { get; set; }
+            public string Tabulator_1683726769059 { get; set; }
+            public string Tabulator_1683785383381 { get; set; }
+            public string SCHEDULAR_FORM_ID { get; set; }
+            public string CREATION_TYPE { get; set; }
+            public string SLOT_DURATION_IN_MINS { get; set; }
+            public string EVENT_TYPE { get; set; }
+            public string COMPANY_SUBSCRIPTION_ID { get; set; }
+            public string IS_UPLOAD_REQUIRED { get; set; }
+            public string UPLOAD_TIME { get; set; }
+            public string DOWNLOADABLE_ATTACHMENT { get; set; }
+            public string DOWNLOAD_FILE_LIST { get; set; }
+            public string IS_COURSE_EVENT { get; set; }
+            public string ResourceId { get; set; }
+            public string CustomFourthTitle { get; set; }
+            public string CustomTitle { get; set; }
+            public string CustomForms { get; set; }
+            public string CustomFormIds { get; set; }
+            public string Referrences_1 { get; set; }
+            public string Referrences_2 { get; set; }
+            public string Referrences_3 { get; set; }
+        }
+
 
 
         public class companyList
@@ -2611,6 +2731,36 @@ namespace Barrway.Service.Repository
         {
             try
             {
+
+                string subQuery = "";
+                string ChQuery = "";
+
+                ChQuery = $@"select USER_EMAIL from USER_MASTER_1915 where USER_EMAIL='{model.USER_EMAIL}' and USER_ID !='{model.USER_ID}'";
+
+                List<IDictionary<string, object>> Email = await sqlFunction.ExecuteSqlQuery(ChQuery);
+
+                if (Email.Count > 0)
+                {
+
+                    return new AddUpdateDelete() { Status = false, Message = "This email addres is already in use with diffrent user" };
+                }
+
+                if (!string.IsNullOrEmpty(model.USER_PHONE))
+                {
+                    ChQuery = $@"select USER_PHONE from USER_MASTER_1915 where USER_PHONE='{model.USER_PHONE}' and USER_ID !='{model.USER_ID}'";
+
+                    List<IDictionary<string, object>> Mobile = await sqlFunction.ExecuteSqlQuery(ChQuery);
+
+                    if (Mobile.Count > 0)
+                    {
+                        return new AddUpdateDelete() { Status = false, Message = "This Phone number is already in use with diffrent user" };
+                    }
+                }
+
+
+
+
+
                 string dateofbirth = "NULL";
                 if (model.DATE_OF_BIRTH.HasValue)
                 {
@@ -2657,6 +2807,13 @@ namespace Barrway.Service.Repository
                     response.Status = true;
                 }
 
+
+        public async Task<AddUpdateDelete> changespassword(userPassword model, string USER_ID)
+        {
+            try
+            {
+                string query = $@"update USER_MASTER_1915 set  USER_PASSWORD = '{model.newpassword}' where USER_ID = N'{USER_ID}' ";
+
                 return response;
             }
             catch (Exception ex)
@@ -2670,6 +2827,7 @@ namespace Barrway.Service.Repository
             try
             {
                 AddUpdateDelete response = new AddUpdateDelete() { Data = null, Message = "Change type not defined", Status = false };
+
 
                 // change phone
                 string query = $@"update USER_MASTER_1915 set USER_PHONE = '{model.New_Phone}', COUNTRY_CODE = '{model.Country_Code}' where USER_ID = N'{User_Id}'";
