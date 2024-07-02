@@ -234,6 +234,11 @@
                                             <i class="fa fa-plus"> </i>
                                             <span class="action-name">{{translation.Execute}}</span>
                                         </a>
+                                        <a data-action="entry" class="btn btn-primary mb-2 mb-lg-0" ui-sref="individual_schedular_form({Id: 0})" ng-show="allowAddDelete==true && formDetailsDataInfo.currentFormType!=1 && !isInvoiceForm" ng-if="!isTransactionForm">
+
+                                            <i class="fa fa-plus"></i>
+                                            <span class="action-name">Individual</span>
+                                        </a>
                                         <a data-action="entry" class="btn btn-primary mb-2 mb-lg-0" ui-sref="schedular_form({Id: 0})" ng-show="allowAddDelete==true && formDetailsDataInfo.currentFormType!=1 && !isInvoiceForm" ng-if="!isTransactionForm">
 
                                             <i class="fa fa-plus"></i>

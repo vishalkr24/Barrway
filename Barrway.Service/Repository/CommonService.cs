@@ -22,11 +22,11 @@ namespace Barrway.Service.Repository
             this.businessUserService = businessUserService;
         }
 
-        public async Task ModifyEventsData(Form_DataTable data, ReferalFormDataResponseModel result,string userEmail)
+        public async Task ModifyEventsData(Form_DataTable data, ReferalFormDataResponseModel result,string userName)
         {
             if (data.IsPublicUser)
             {
-                var enrolledData = await publicUserService.GetAllEnrolledCalendarsData(data.COMPANY_CODE, userEmail, "", data.IsCustomInFilter);
+                var enrolledData = await publicUserService.GetAllEnrolledCalendarsData(data.COMPANY_CODE, userName, "", data.IsCustomInFilter);
 
                 if (enrolledData.Status)
                 {
@@ -43,7 +43,7 @@ namespace Barrway.Service.Repository
             }
 
 
-            var alreadyEnrolledEvents = (await publicUserService.GetAlreadyEnrolledEvents(data.COMPANY_CODE, userEmail, data.filter.value)).Data as List<IDictionary<string, object>>;
+            var alreadyEnrolledEvents = (await publicUserService.GetAlreadyEnrolledEvents(data.COMPANY_CODE, userName, data.filter.value)).Data as List<IDictionary<string, object>>;
             if (alreadyEnrolledEvents != null)
             {
                 if (result != null)

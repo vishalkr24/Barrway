@@ -10,7 +10,7 @@ namespace Barrway.DTO.APIModels.Booking
     public class SessionReview
     {
         public string EVENT_ID { get; set; }
-        public string USER_EMAIL { get; set; }
+        public string USER_ID { get; set; }
         public string CALENDAR_CODE { get; set; }
         public string COMPANY_CODE { get; set; }
         public double REVIEW_SCORE { get; set; }

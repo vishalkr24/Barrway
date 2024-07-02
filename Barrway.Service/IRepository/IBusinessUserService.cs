@@ -80,7 +80,7 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> GetCalendarUpcomingBookings(GenerateDynamicFormData data, string CompanyCode, string CalendarCode);
         Task<AddUpdateDelete> GetSchedule(string ScheduleId, string UserId);
         Task<AddUpdateDelete> GetSchedule(string CompanyCode, string CalendarCode, string UserId);
-        Task<AddUpdateDelete> GetCourseEvents(string ServiceId, string UserEmail);
+        Task<AddUpdateDelete> GetCourseEvents(string ServiceId, string userName);
 
         Task<AddUpdateDelete> AddSchedularForm(SchedularFormModel model, string formGroupKey, string UserId);
 
@@ -152,7 +152,7 @@ namespace Barrway.Service.IRepository
         //Task<AddUpdateDelete> GetBlogsTags();
         Task<Resultdata> GetAllBlogsTags();
         Task<AddUpdateDelete> GetBlogbyId(string Id);
-        Task<AddUpdateDelete> GetEnrollUserDetails(int eventId, string email);
+        Task<AddUpdateDelete> GetEnrollUserDetails(int eventId, string userName);
         Task<AddUpdateDelete> updateAssesstmentUploadFiles(int transactionId, string downloadable_attachment, string download_file_list);
 
         Task<AddUpdateDelete> GetCalanderSubCategoryNameList(string CompanyCode);

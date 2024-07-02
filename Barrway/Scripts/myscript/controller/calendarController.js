@@ -10775,8 +10775,18 @@
 
             angular.forEach($scope.calenderSettingsFormDetailsDataList, function (dataRow, position) {
                 //console.log(dataRow);
-                if (dataRow.activitiesForm !== 0)
+                if (dataRow.activitiesForm !== 0) {
                     $scope.xaxisFormList.push(dataRow);
+                }
+
+                if(dataRow.resourceActivityForm == "2306") {
+                    dataRow.formDataList = _.sortBy(dataRow.formDataList, "SEQ");
+                }
+                if (dataRow.resourceActivityForm == "2304") {
+                    dataRow.formDataList = _.filter(dataRow.formDataList, function (item) { return item.CALENDAR_CODE == localStorage.getItem("CALENDAR_CODE") || item.SHOW_IN_ALL_CALENDARS == 'Y' });
+                    dataRow.formDataListGroupBy = _.filter(dataRow.formDataListGroupBy, function (item) { return dataRow.formDataList.find(x => x.FIRST_NAME == item.FIRST_NAME) });
+                }
+
             });
             var exists = _.findWhere($scope.xaxisFormList, { IsDefault: true });
             if (!DataService.isEmpty(exists)) {
@@ -10984,6 +10994,12 @@
                                                 //{                                                                 //}
                                                 if (listSettings.resourceActivityForm == "2306") {
                                                     listSettings.formDataList = _.sortBy(listSettings.formDataList, "SEQ");
+                                                    data = _.sortBy(data, "SEQ");
+                                                }
+                                                if (listSettings.resourceActivityForm == "2304") {
+                                                    //_.filter(result, function (item) { return item[referral_field_name] == optionValue });
+                                                    listSettings.formDataList = _.filter(listSettings.formDataList, function (item) { return item.CALENDAR_CODE == localStorage.getItem("CALENDAR_CODE") || item.SHOW_IN_ALL_CALENDARS=='Y' });
+                                                    data = _.filter(data, function (item) { return item.CALENDAR_CODE == localStorage.getItem("CALENDAR_CODE") || item.SHOW_IN_ALL_CALENDARS=='Y' });
                                                 }
 
                                                 if (node.id == "#") {
@@ -16053,7 +16069,7 @@
                             let participantString = "";
 
                             participantData.filter(x=> x["OverlapBookingFlag"] == "N").forEach(x => {
-                                participantString += `<li>${x["STUDENT_NAME"]} (${x["EMAIL"]})</li>`;
+                                participantString += `<li>${x["STUDENT_NAME"]} (${x["STUDENT_ID"]})</li>`;
                             })
 
                             const wrapper = document.createElement('div');

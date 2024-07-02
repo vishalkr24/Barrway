@@ -33,6 +33,8 @@
                 "Sat": [],
                 "Sun": []
             };
+            
+            $scope.scheduleEventsList = [];
 
             $scope.serviceDetails = null;
 
@@ -133,6 +135,32 @@
             }, 1000);
 
         };
+
+        $scope.AddScheduleEvent = function () {
+
+            let Id = getMaxIdScheduleEventsList();
+
+            $scope.scheduleEventsList.push({
+                Id: Id
+            });
+        }
+
+        $scope.removeScheduleEvent = function (Id) {
+            $scope.scheduleEventsList.splice($scope.scheduleEventsList.findIndex(x => x.Id == Id), 1);
+        }
+
+        function getMaxIdScheduleEventsList(abbr) {
+
+            let maxValue = 0;
+
+            if ($scope.scheduleEventsList.length > 0) {
+                $scope.scheduleEventsList.forEach(x => {
+                    if (x => x.Id > maxValue) maxValue = x.Id;
+                });
+            }
+
+            return parseInt(maxValue) + 1;
+        }
 
         $scope.BindView = function () {
             debugger;
@@ -262,7 +290,7 @@
             $("#elements-row-" + abbr + " .form-element[data-element-id=SCH_" + id + "]").remove();
 
         }
-
+        
         function getMaxId(abbr) {
             $scope.scheduleList[abbr];
 
@@ -276,7 +304,7 @@
 
             return parseInt(maxValue) + 1;
         }
-
+        
         $scope.validateSchedularForm = function () {
             let finalStatus = true;
 
@@ -1062,6 +1090,404 @@
             }
         }
 
+        $scope.init();
+    });
+
+    FormGeneratorApp.controller('NewIndividualSchedularFormController', function ($scope, $rootScope, $filter, $http, $location, $window, mainService, adminService, $state, $stateParams, DataService, $timeout, notifierService, CookiesPersistenceService, $ngBootbox, translationService) {
+        checkLogin();
+
+        var queueList = [];
+        var sessionList = [];
+        var createdCalendarCode = localStorage.getItem("CALENDAR_CODE");
+        var createdCompanyCode = localStorage.getItem("COMPANY_CODE");
+        $scope.SchedularId = null;
+        $scope.isQueue = -1;
+        $scope.showStaff = true;
+
+        $rootScope.safeApply = function (fn) {
+            var phase = this.$root.$$phase;
+            if (phase == '$apply' || phase == '$digest') {
+                if (fn && (typeof (fn) === 'function')) {
+                    fn();
+                }
+            } else {
+                this.$apply(fn);
+            }
+        };
+
+        $scope.init = function () {
+            
+
+            $scope.scheduleEventsList = [];
+
+            $scope.serviceDetails = null;
+
+            adminService.postAsync('/Calendar/GetLocationMasterList/', { companyCode: localStorage.getItem("COMPANY_CODE"), filters: [{ field: "CALENDAR_CODE", type: "=", value: localStorage.getItem("CALENDAR_CODE") }] }).then(function (res) {
+
+                $scope.locationList = res.data.data;
+
+            }, function (err) {
+
+            });
+
+            adminService.postAsync('/Calendar/GetServiceMasterList/', { companyCode: localStorage.getItem("COMPANY_CODE"), filters: [{ field: "CALENDAR_CODE", type: "=", value: localStorage.getItem("CALENDAR_CODE") }] }).then(function (res) {
+
+                $scope.serviceList = res.data.data;
+
+            }, function (err) {
+
+            });
+
+            adminService.postAsync('/Calendar/GetServiceProviderMasterList/', { companyCode: localStorage.getItem("COMPANY_CODE"), filters: [{ field: "CALENDAR_CODE", type: "=", value: localStorage.getItem("CALENDAR_CODE") }] }).then(function (res) {
+
+                $scope.serviceProviderList = res.data.data;
+
+            }, function (err) {
+
+            });
+
+            setTimeout(function () {
+                $scope.CalendarData = getSingleCalendar(localStorage.getItem("CALENDAR_CODE"));
+                $scope.ConfigData = JSON.parse(getScheduleTypeJson());
+                $scope.BindView();
+                
+                $scope.isEdit = false;
+                debugger;
+                if ($stateParams.Id != null && $stateParams.Id != "" && $stateParams.Id != 0) {
+                    try {
+                        $scope.SchedularId = parseInt($stateParams.Id);
+                        $scope.isEdit = true;
+                    } catch (ex) {
+                        $scope.SchedularId = 0;
+                        $scope.isEdit = false;
+                    }
+                }
+
+
+                if ($scope.isEdit) {
+                    adminService.postAsync('/Calendar/GetSchedule/', { ScheduleId: $scope.SchedularId }).then(function (response) {
+
+                        $scope.ScheduleData = response.data.data[0];
+                        $scope.scheduleList = JSON.parse($scope.ScheduleData.SCH_SCHEDULE_TABLE);
+                        $scope.executeScheduleList();
+
+                        $("#SCH_LOCATION").val($scope.ScheduleData.SCH_LOCATION)
+                        $("#SCH_ACTIVITY").val($scope.ScheduleData.SCH_ACTIVITY)
+                        $("#SCH_RESOURCE").val($scope.ScheduleData.SCH_RESOURCE)
+
+                        $("#SCH_FROM_DATE").val($scope.ScheduleData.SCH_FROM_DATE)
+                        $("#SCH_TO_DATE").val($scope.ScheduleData.SCH_TO_DATE)
+
+                        $("#SCH_SESSION_DURATION").val($scope.ScheduleData.DURATION_FIELD)
+                        $("#SCH_REST_PERIOD").val($scope.ScheduleData.REST_PERIOD_BETWEEN_SESSION)
+
+                        $("input[name='alternate-week'][value='" + $scope.ScheduleData.SCH_ALTERNATIVE_WEEK + "']").attr("checked", true)
+                        debugger;
+                        if ($scope.ScheduleData.IS_UPLOAD_REQUIRED == "Y" || $scope.ScheduleData.IS_UPLOAD_REQUIRED == "N") {
+                            $("input[name='IS_UPLOAD_REQUIRED'][value='" + $scope.ScheduleData.IS_UPLOAD_REQUIRED + "']").prop("checked", true)
+                            $("input[name='IS_UPLOAD_REQUIRED']").trigger("change");
+
+                            if ($scope.ScheduleData.IS_UPLOAD_REQUIRED == "Y") {
+                                $("#UPLOAD_TIME").val($scope.ScheduleData.UPLOAD_TIME);
+                            }
+                        }
+
+                        $scope.DOWNLOADABLE_ATTACHMENT_FILES = JSON.parse($scope.ScheduleData.DOWNLOAD_FILE_LIST);
+                        $rootScope.safeApply();
+                        $scope.DOWNLOADABLE_ATTACHMENT = $scope.ScheduleData.DOWNLOADABLE_ATTACHMENT;
+                        $scope.DOWNLOAD_FILE_LIST = $scope.ScheduleData.DOWNLOAD_FILE_LIST;
+                        $scope.UPLOAD_TIME = $scope.ScheduleData.UPLOAD_TIME;
+                    })
+                } else {
+                    $scope.AddScheduleEvent();
+                }
+
+            }, 500);
+
+        };
+
+        $scope.AddScheduleEvent = function () {
+
+            let Id = getMaxIdScheduleEventsList();
+            
+            let dataModel = angular.copy ($scope.scheduleEventModel);
+
+            dataModel.Id = Id;
+
+            $scope.scheduleEventsList.push(dataModel);
+
+            $scope.BindView();
+            
+        }
+
+        $scope.scheduleEventModel = {
+            Id: 0,
+            SCH_FROM_DATE: "",
+            SCH_TO_DATE: "",
+            SCH_LOCATION: "-1",
+            SCH_RESOURCE: -1,
+            SCH_ACTIVITY: -1,
+            SCH_DESCRIPTION: ""
+        };
+
+        $scope.removeScheduleEvent = function (Id) {
+            if ($scope.scheduleEventsList.length <= 1) {
+                notifierService.notifyMessage("error", "Error", "Can't remove all items.")
+                return;
+            }
+            $scope.scheduleEventsList.splice($scope.scheduleEventsList.findIndex(x => x.Id == Id), 1);
+        }
+
+        function getMaxIdScheduleEventsList(abbr) {
+
+            let maxValue = 0;
+
+            if ($scope.scheduleEventsList.length > 0) {
+                $scope.scheduleEventsList.forEach(x => {
+                    if (x => x.Id > maxValue) maxValue = x.Id;
+                });
+            }
+
+            return parseInt(maxValue) + 1;
+        }
+
+        $scope.BindView = function () {
+            debugger;
+            $scope.ViewName = "";
+
+            if ($scope.ConfigData["Type" + $scope.CalendarData.Data.CALENDAR_CATEGORY_ID].Is_Category_Based == true) {
+                $scope.ViewName = $scope.ConfigData["Type" + $scope.CalendarData.Data.CALENDAR_CATEGORY_ID].Category["Category" + $scope.CalendarData.Data.CALENDAR_TYPE].View_Name;
+            } else {
+                $scope.ViewName = $scope.ConfigData["Type" + $scope.CalendarData.Data.CALENDAR_CATEGORY_ID].View_Name;
+            }
+
+            if ($scope.ViewName == "S3A") {
+                $scope.isQueue = 0;
+                $scope.showStaff = true;
+            } else if ($scope.ViewName == "S3B") {
+                $scope.isQueue = 0;
+                $scope.showStaff = true;
+            }
+            else if ($scope.ViewName == "S3D") {
+                $scope.isQueue = 0;
+                $scope.showStaff = false;
+            }
+            else if ($scope.ViewName == "S3E") {
+                $scope.isQueue = 0;
+                $scope.showStaff = false;
+            }
+            else if ($scope.ViewName == "S3F") {
+                $scope.isQueue = 1;
+                bindQueueSchedule();
+            }
+            else if ($scope.ViewName == "S3G") {
+                $scope.isQueue = 0;
+                $scope.showStaff = false;
+            }
+            else if ($scope.ViewName == "S3H") {
+                $scope.isQueue = 2;
+                bindSessionSchedule();
+            }
+            $scope.$apply();
+
+        }
+        
+        $scope.executeScheduleList = function () {
+
+            let dayList = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+            dayList.forEach(abbr => {
+                $scope.scheduleList[abbr].forEach(evt => {
+                    $("#elements-row-" + abbr).append(`<div class="schedular-element form-element"  data-element-id="SCH_${evt.Id}">
+                                        <div>
+                                            ${(abbr == "Mon") ? "<b>From</b>" : ""}
+                                            <input type="time" class="form-control" name="form-time-input" data-input-day="${abbr}" value="${evt.start}" data-input-type="start" data-input-id="${evt.Id}" />
+                                        </div>
+                                        <div> <b>--</b> </div>
+                                        <div>
+                                            ${(abbr == "Mon") ? "<b>To</b>" : ""}
+                                            <input type="time" class="form-control" name="form-time-input" data-input-day="${abbr}" value="${evt.end}" data-input-type="end" data-input-id="${evt.Id}" />
+                                        </div>
+                                        <div class="delete-element">
+                                            <button class="btn btn-primary" onclick="angular.element(this).scope().deleteFormElement('${abbr}', ${evt.Id})"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                        </div>
+                                    </div>`);
+                })
+
+            })
+
+
+        }
+        
+        $scope.validateSchedularForm = function () {
+            let finalStatus = true;
+
+            $scope.scheduleEventsList.forEach(sch_event => {
+                if ($scope.ViewName == "S3A" || $scope.ViewName == "S3G") {
+                    if (sch_event.SCH_ACTIVITY == "-1" || sch_event.SCH_ACTIVITY == "") {
+                        $("#SCH_ACTIVITY_ERROR-" + sch_event.Id).show();
+                        finalStatus = false;
+                    } else {
+                        $("#SCH_ACTIVITY_ERROR-" + sch_event.Id).hide();
+                    }
+
+                    if (sch_event.SCH_RESOURCE == "-1" || sch_event.SCH_RESOURCE == "") {
+                        $("#SCH_RESOURCE_ERROR-" + sch_event.Id).show();
+                        finalStatus = false;
+                    } else {
+                        $("#SCH_RESOURCE_ERROR-" + sch_event.Id).hide();
+                    }
+                }
+
+                if (sch_event.SCH_FROM_DATE == "" || sch_event.SCH_FROM_DATE == null) {
+                    $("#SCH_FROM_DATE_ERROR-" + sch_event.Id).show();
+                    finalStatus = false;
+                } else {
+                    $("#SCH_FROM_DATE_ERROR-" + sch_event.Id).hide();
+                }
+
+                if (sch_event.SCH_TO_DATE == "" || sch_event.SCH_TO_DATE == null) {
+                    $("#SCH_TO_DATE_ERROR-" + sch_event.Id).show();
+                    finalStatus = false;
+                } else {
+                    $("#SCH_TO_DATE_ERROR-" + sch_event.Id).hide();
+                }
+                
+            });
+            
+
+            return finalStatus
+        }
+        
+        $scope.saveSchedularForm = function (isCopy = false) {
+            
+            var temp = angular.copy($scope.scheduleEventsList);
+
+            temp.forEach(x => {
+                x.SCH_FROM_DATE = moment(x.SCH_FROM_DATE).format("YYYY-MM-DD HH:mm");
+                x.SCH_TO_DATE = moment(x.SCH_TO_DATE).format("YYYY-MM-DD HH:mm");
+            });
+
+            var data = {
+                SCH_SCHEDULE_TABLE: JSON.stringify(temp),
+                COMPANY_CODE: localStorage.getItem("COMPANY_CODE"),
+                CALENDAR_CODE: localStorage.getItem("CALENDAR_CODE"),
+                SCH__NAME: "",
+                SCH_LOCATION: "",
+                SCH_ACTIVITY: "",
+                SCH_RESOURCE: "",
+                SCH_MEDIUM: "ZOOM",
+                DURATION_FIELD: "",
+                REST_PERIOD_BETWEEN_SESSION: "",
+                MAXIMUM_NO_OF_PARTICIPANTS: "",
+                SCH_DESCRIPTION: "",
+                SCH_FROM_DATE: moment($scope.scheduleEventsList[0].SCH_FROM_DATE).format("YYYY-MM-DD HH:mm"),
+                SCH_TO_DATE: moment($scope.scheduleEventsList[$scope.scheduleEventsList.length-1].SCH_TO_DATE).format("YYYY-MM-DD HH:mm"),
+                SCH_ALTERNATIVE_WEEK: "EVERY-WEEK",
+                IF_SLOT_EXIST: "SKIP",
+                IF_SLOT_DOES_NOT_EXIST: "INSERT",
+                table: null,
+                CREATION_TYPE: "AUTOMATIC"
+            };
+            console.log(data);
+            debugger;
+            if ($scope.validateSchedularForm()) {
+                //data = JSON.stringify(data);
+
+                if ($scope.ViewName == "S3D" || $scope.ViewName == "S3E" || $scope.ViewName == "S3G") {
+                    data.SCH_RESOURCE = null;
+                }
+
+                data.SCHEDULAR_TYPE = "INDIVIDUAL";
+
+                adminService.postAsync(((isCopy) ? '/Calendar/CopyToNewSchedule' : '/Calendar/AddSchedule/'), { dataList: [data] }).then(function (res) {
+                    if (!res.data.Status) {
+                        swal({
+                            icon: "error",
+                            title: "Error",
+                            text: res.data.Message
+                        }).then(function () {
+                            debugger;
+                            if (res.data.Message == "Slots Overlaping!") {
+                                let arr = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+                                arr.forEach(x => {
+                                    let data = res.data.Data.Data.table[x];
+
+                                    data.forEach(y => {
+                                        if (y.IsOverlapped == "true") {
+                                            $("#elements-row-" + x + " div[data-element-id=SCH_" + y.Id + "]").addClass("error")
+                                        } else {
+                                            $("#elements-row-" + x + " div[data-element-id=SCH_" + y.Id + "]").removeClass("error")
+                                        }
+                                    });
+                                })
+                            }
+                        });
+
+                    } else {
+                        swal({
+                            icon: "success",
+                            title: "Success",
+                            text: res.data.Message
+                        }).then(function (check) {
+                            $scope.SchedularId = 0;
+                            window.location.replace("/calendar/index#/calender/2305");
+                        })
+
+                        //window.location.reload();
+                    }
+
+                }, function (err) {
+                    alert("something went wrong!!");
+                });
+            } else {
+                notifierService.notifyMessage("error", "Alert", "Please re-check the form")
+            }
+
+
+        }
+        
+        
+        
+        // add file upload code 02-04-24 developer deepak
+
+        $scope.validateForm = function (_fileInput, isrequired = false, isEvent = false) {
+            var fileInput = document.getElementById(_fileInput);
+            var fileError = document.getElementById((isEvent ? "fileError2" : "fileError"));
+            var EventUploadBtn = $((isEvent ? "#EventUploadBtn2" : "#EventUploadBtn"));
+            var allowedExtensions = ['image/jpeg', 'image/png', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+            var maxSize = 5 * 1024 * 1024; // 5MB
+            if (fileInput.files.length === 0 && isrequired) {
+                fileError.textContent = 'Please select a file.';
+                EventUploadBtn.attr("disabled", "disabled");
+                EventUploadBtn.addClass("disabled");
+                return false;
+            }
+
+            for (var i = 0; i < fileInput.files.length; i++) {
+                if (!allowedExtensions.includes(fileInput.files[i].type)) {
+                    fileError.textContent = 'Invalid file type. Allowed types are: image, PDF, Word document, Excel.';
+                    EventUploadBtn.attr("disabled", "disabled");
+                    EventUploadBtn.addClass("disabled");
+                    return false;
+                }
+
+                var fileSize = fileInput.files[i].size; // in bytes
+
+
+                if (fileSize > maxSize) {
+                    fileError.textContent = 'File size exceeds the maximum limit of 5MB.';
+                    return;
+                }
+            }
+
+            EventUploadBtn.removeAttr("disabled");
+            EventUploadBtn.removeClass("disabled");
+            fileError.textContent = '';
+            return true;
+        }
+        
         $scope.init();
     });
 

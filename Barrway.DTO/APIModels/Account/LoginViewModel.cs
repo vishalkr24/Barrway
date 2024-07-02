@@ -30,4 +30,11 @@ namespace Barrway.DTO.APIModels.Account
         public string USER_PASSWORD { get; set; }
     }
 
+    public class ForgotPasswordViewModel
+    {
+        [EmailAddress]
+        public string Email { get; set; }
+
+    }
+
 }

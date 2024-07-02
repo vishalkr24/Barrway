@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Barrway.DTO.APIModels.Account
 {
-    
+
     public class UserProfile
     {
         public int Id { get; set; }
         public string USER_ID { get; set; }
-        public string USER_EMAIL { get; set; }       
+        public string USER_EMAIL { get; set; }
         public string Country_Code { get; set; }
         public string USER_PHONE { get; set; }
         public string IS_EXTERNAL_SIGNUP { get; set; }
@@ -24,7 +24,7 @@ namespace Barrway.DTO.APIModels.Account
         public string updated_by { get; set; }
         public string IS_ACTIVE { get; set; }
         public string PROFILE_STATUS { get; set; }
-        public string ROLE_ID { get; set; } 
+        public string ROLE_ID { get; set; }
         public string SIGNUP_TYPE { get; set; }
         public string SUBSCRIPTION_PLAN_ID { get; set; }
         public string CURRENT_STEP { get; set; }
@@ -42,8 +42,8 @@ namespace Barrway.DTO.APIModels.Account
     public class UpdateUserProfileModel
     {
         public string Id { get; set; } = String.Empty;
-      
-        public string USER_ID { get; set; } = String.Empty;        
+
+        public string USER_ID { get; set; } = String.Empty;
         public string FIRST_NAME { get; set; } = String.Empty;
         public string LAST_NAME { get; set; } = String.Empty;
         public string CHINESE_NAME { get; set; } = String.Empty;
@@ -60,7 +60,7 @@ namespace Barrway.DTO.APIModels.Account
 
     public class UpdateUserProfileViewModel
     {
-        public string Id { get; set; } = String.Empty;            
+        public string Id { get; set; } = String.Empty;
         public string FIRST_NAME { get; set; } = String.Empty;
         public string LAST_NAME { get; set; } = String.Empty;
         public string CHINESE_NAME { get; set; } = String.Empty;
@@ -73,7 +73,28 @@ namespace Barrway.DTO.APIModels.Account
 
     }
 
-    
+    public class UpdateUserProfileAPIViewModel
+    {
+        public string FIRST_NAME { get; set; } = String.Empty;
+        public string LAST_NAME { get; set; } = String.Empty;
+        public string CHINESE_NAME { get; set; } = String.Empty;
+        public string NICK_NAME { get; set; } = String.Empty;
+        public string GENDER { get; set; } = String.Empty;
+        public DateTime? DATE_OF_BIRTH { get; set; }
+    }
+
+    public class RequestMobileNoChangeOTPViewModel
+    {
+        public string New_Phone { get; set; } = String.Empty;
+        public int Country_Code { get; set; }
+    }
+
+    public class UpdateMobileNoViewModel
+    {
+        public string New_Phone { get; set; } = String.Empty;
+        public int Country_Code { get; set; }
+        public string OTP { get; set; } = String.Empty;
+    }
 
     public class userPassword
     {
