@@ -35,6 +35,16 @@ namespace Barrway.DTO.APIModels.Calendar
         public DateTime end { get; set; }
     }
 
+    public class CalendarEventsViewModel
+    {
+
+        public string COMPANY_CODE { get; set; }
+        public string CALENDAR_CODE { get; set; }
+        public string start { get; set; }      
+        public string end { get; set; }
+
+    }
+
 
 
     public class FavoriteCalendarViewModel

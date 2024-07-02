@@ -1,0 +1,131 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    //Layout = "~/Views/Shared/_LayoutMarketPlace.cshtml";
+    Layout = null;
+    var baseUrl = string.Format("{0}://{1}/{2}", HttpContext.Current.Request.Url.Scheme, HttpContext.Current.Request.Url.Authority, $"/");
+
+}
+
+
+<script>
+        var BASE_URL = '@baseUrl';
+</script>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Calendly</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <!-- Calendar -->
+    <link href='/assets/CalanderScheduler/fullcalendar/main.css' rel='stylesheet' />
+    <script src='/assets/CalanderScheduler/fullcalendar/main.js'></script>
+    <!-- Styles -->
+
+
+
+
+
+</head>
+
+<body>
+    <div class="Barrwaycalendy">
+        <!--<div class="BarrwayCalenderHome">
+            <div class="container">
+                <section class="description-section">
+                    <hgroup>
+                        <h4 id="scheduler"></h4>
+                        <h2 id="event"></h2>
+                        <div class="icon-text-div">
+                            <img src="/assets/CalanderScheduler/icons/clock.png" alt="clock-icon">
+                            <h4 id="duration"></h4>
+                        </div>
+                    </hgroup>
+                    <p id=description></p>
+                </section>
+                <div class="divider"></div>
+                <section id="calendar-section" class="body-section">
+                    <h3>Select a Date & Time</h3>
+                    <div id="schedule-div">
+                        <div id="available-times-div">-->
+        <!-- Available times -->
+        <!--</div>
+                        <div id="calendar"></div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div class="BarrwayCalenderRegister">
+            <div class="container">
+                <section class="description-section">
+                    <button class="back-btn" onclick="goBack()"><img class="arrow-icon" src="/assets/CalanderScheduler/icons/arrow (1).svg" alt="back-arrow"></button>
+                    <hgroup>
+                        <h4 id="scheduler">ACME Sales</h4>
+                        <h2 id="event">Pricing Review</h2>
+                        <div class="icon-text-div">
+                            <img src="/assets/CalanderScheduler/icons/clock.svg" alt="clock-icon">
+                            <h4 id="duration">15 min</h4>
+                        </div>
+                        <br>
+                        <div class="icon-text-div">
+                            <img src="/assets/CalanderScheduler/icons/calendar (1).svg" alt="calendar-icon">
+                            <h4 id="event-time-stamp">9:00am - 9:15am, Monday, July 13, 2020</h4>
+                        </div>
+                    </hgroup>
+                </section>
+                <div class="divider"></div>
+                <section id="register-section" class="body-section">
+                    <form action="confirm.html">
+                        <h3>Enter Details</h3>
+                        <label for="name">Name</label>
+                        <input type="text" name="" id="name" required>
+                        <label for="email">Email</label>
+                        <input type="email" name="" id="email" required>
+
+                        <label for="Phone">Phone</label>
+                        <div style="width: 433px; display: flex;">
+                            <select name="CountryCode" id="CountryCode" style="width:150px">
+                            </select>
+                            <input type="text" name="Phone" id="Phone" style="width: 250px; margin-left: 10px;" placeholder="Phone" data-val="true" required />
+
+                        </div>
+
+
+                        <label for="Phone">Job title</label>
+                        <input type="text" name="Job_title" id="Job_title" required>
+
+                        <label for="Company">Company</label>
+                        <input type="text" name="Company" id="Company" required>
+
+                        <label for="Website">Website</label>
+                        <input type="text" name="Website" id="Website" required>
+
+                        <label for="meeting_shaire">Please share anything that will help prepare for our meeting.</label>
+
+
+                        <textarea name="meeting_shaire" id="meeting_shaire" rows="4" cols="50">
+                    </textarea>
+
+                        <label for="Job_Title">Job Title</label>
+                        <input type="text" name="Job_Title" id="Job_Title" required>
+
+                        <button id="submit-btn" type="submit" style="margin-bottom:20px;">Schedule Event</button>
+                    </form>
+                </section>
+
+            </div>
+        </div>-->
+    </div>
+
+    <script src="~/assets/CalanderScheduler/script/index.js"></script>
+
+
+
+
+</body>
+</html>
+

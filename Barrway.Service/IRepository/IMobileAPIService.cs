@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System;
 using Barrway.DTO.APIModels.Account;
 using Barrway.DTO.APIModels.Payment;
+using Barrway.DTO.FormAPI;
 
 namespace Barrway.Service.IRepository
 {
@@ -85,7 +86,9 @@ namespace Barrway.Service.IRepository
         Task<AddUpdateDelete> CheckRegisteredPhoneNo(RequestMobileNoChangeOTPViewModel model, string User_Id);
         Task<AddUpdateDelete> UpdateRegisteredPhoneNo(UpdateMobileNoViewModel model, string User_Id);
 
-        Task<List<IDictionary<string, object>>> GetCalnderEvents(CalendarEvents Request);
+       
+
+        Task<List<EventLIst>> GetCalnderEvents(CalendarEvents Request);
 
         #region
 
