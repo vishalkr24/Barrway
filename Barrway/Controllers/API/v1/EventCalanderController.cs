@@ -24,12 +24,16 @@ namespace Barrway.Controllers.API.v1
         [Route("api/calendar/CalanderEvents")]
         [HttpPost]
         [ResponseType(typeof(List<IDictionary<string, object>>))]
-        public async Task<IHttpActionResult> GetCalanderEvents(CalendarEvents model)
+        public async Task<IHttpActionResult> GetCalanderEvents(CalendarEventsViewModel model)
         {
             try
             {
-
-                return Ok(await mobileAPIService.GetCalnderEvents(model));
+                CalendarEvents data = new CalendarEvents();
+                data.CALENDAR_CODE = data.CALENDAR_CODE;
+                data.COMPANY_CODE = data.COMPANY_CODE;
+                data.start = DateTime.Parse(model.start); 
+                data.end = DateTime.Parse(model.end);
+                return Ok(await mobileAPIService.GetCalnderEvents(data));
             }
             catch (Exception ex)
             {
