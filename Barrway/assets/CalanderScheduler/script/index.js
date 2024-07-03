@@ -1044,7 +1044,7 @@ const event = {
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const timesAvailable = ["9:00am", "10:00am", "11:00am", "2:00pm", "3:00pm"];
-const EventDates = ["2024-06-27", "2024-06-28", "2024-06-29", , "2024-06-30", , "2024-07-01", "2024-07-02",  "2024-07-03"];
+const EventDates = ["2024-06-27", "2024-06-28", "2024-06-29", , "2024-06-30", , "2024-07-01", "2024-07-02", "2024-07-03"];
 
 
 document.getElementById("event").textContent = event.name;
@@ -1065,15 +1065,15 @@ Clandercontent.classList.add("visible");
 
 // Calendar
 document.addEventListener('DOMContentLoaded', function () {
-    
+
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         height: 'auto',
         showNonCurrentDates: false,
         selectable: true,
-        select: function(info) {
-            
+        select: function (info) {
+
             var currentDay = new Date();
             var daySelected = info.start;
 
@@ -1086,7 +1086,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const isDateHighlighted = isDateAvailable(info.startStr, storedEventData);
 
-            if (isDateHighlighted==true &&  (daySelected >= currentDay)) {
+            if (isDateHighlighted == true && (daySelected >= currentDay)) {
 
                 var timeDiv = document.getElementById("available-times-div");
 
@@ -1095,14 +1095,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 const eventTimes = getEventTimes(info.startStr, storedEventData);
-                console.log(`Event times for ${info.startStr}:`, eventTimes);
+
 
 
                 //Heading - Date Selected
                 var h4 = document.createElement("h4");
                 var h4node = document.createTextNode(
                     days[daySelected.getDay()] + ", " +
-                    months[daySelected.getMonth()] + " " + 
+                    months[daySelected.getMonth()] + " " +
                     daySelected.getDate());
                 h4.appendChild(h4node);
 
@@ -1125,7 +1125,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     // When time is selected
                     var last = null;
-                    timeBtn.addEventListener("click", function() {
+                    timeBtn.addEventListener("click", function () {
                         if (last != null) {
                             console.log(last);
                             last.parentNode.removeChild(last.parentNode.lastChild);
@@ -1136,10 +1136,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         confirmBtn.appendChild(confirmTxt);
                         this.parentNode.appendChild(confirmBtn);
                         event.time = this.textContent;
-                        confirmBtn.addEventListener("click", function() { 
-                            event.date = 
+                        confirmBtn.addEventListener("click", function () {
+                            event.date =
                                 days[daySelected.getDay()] + ", " +
-                                months[daySelected.getMonth()] + " " + 
+                                months[daySelected.getMonth()] + " " +
                                 daySelected.getDate();
                             //sessionStorage.setItem("eventObj", JSON.stringify(event));
                             //console.log(event);
@@ -1159,13 +1159,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 var containerDiv = document.getElementsByClassName("container")[0];
                 containerDiv.classList.add("time-div-active");
-                
+
                 document.getElementById("calendar-section").style.flex = "2";
 
                 timeDiv.style.display = "initial";
 
             }
-            
+
         },
     });
     calendar.render();
@@ -1173,29 +1173,68 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+
+
+
+
+
+
 // Call highlightDates when the page has fully loaded
 window.addEventListener('load', function () {
-    const model = {
-        COMPANY_CODE: 'CMP00079', // Replace with your actual COMPANY_CODE
-        CALENDAR_CODE: 'CLR00101', // Replace with your actual CALENDAR_CODE
-        start: new Date('2024-06-1'), // Replace with your actual start date/time
-        end: new Date('2024-06-31') // Replace with your actual end date/time
+    const today = new Date();
+    const year = today.getFullYear(); // Get the current year
+    const month = (today.getMonth() + 1).toString().padStart(2, '0'); // Get the current month (1-12) and format to 2 digits
+    const date = today.getDate().toString().padStart(2, '0');
+    const NDate = parseFloat(date) + 1;
+
+    localStorage.setItem('eventyear', year);
+    localStorage.setItem('month', month);
+
+    let divElement = document.querySelector('.Barrwaycalendy');
+    let calendar_Code = divElement.getAttribute('calendar-Code');
+    let Conmpany_code = divElement.getAttribute('Conmpany-code');
+
+    let _startDate = year + '-' + month + '-' + NDate;
+    let _EndDate = year + '-' + month + '-31';
+
+
+
+    const data = {
+        COMPANY_CODE: Conmpany_code, 
+        CALENDAR_CODE: calendar_Code
     };
 
-    getCalendarEvents(model)
+    getCalendarEventDetails(data)
         .then(data => {
-            console.log(data, "EventDatesdata");
-            const eventDataJSON = JSON.stringify(data);            
-            localStorage.setItem('eventData', eventDataJSON);
-            highlightDates(data);
+            console.log(data, "EventDetails");            
+           
         })
         .catch(error => {
             // Handle errors
         });
 
 
+
+
+    const model = {
+        COMPANY_CODE: Conmpany_code, // Replace with your actual COMPANY_CODE
+        CALENDAR_CODE: calendar_Code, // Replace with your actual CALENDAR_CODE
+        start: _startDate, // Replace with your actual start date/time
+        end: _EndDate // Replace with your actual end date/time
+    };
+
+    getCalendarEvents(model)
+        .then(data => {
+            console.log(data, "EventDatesdata");
+            const eventDataJSON = JSON.stringify(data);
+            localStorage.setItem('eventData', eventDataJSON);
+            highlightDates(data);
+        })
+        .catch(error => {
+            // Handle errors
+        });
     //console.log(EventDates,"EventDates")
-   
+
 });
 
 
@@ -1211,7 +1250,7 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener('DOMContentLoaded', function () {
     const prevButtons = document.querySelectorAll('.fc-next-button');
     prevButtons.forEach(button => {
-        button.addEventListener('click', handlePrevButtonClick);
+        button.addEventListener('click', handleNextButtonClick);
     });
 });
 
@@ -1250,14 +1289,74 @@ function goBack() {
 // previous button click handaling
 function handlePrevButtonClick() {
 
-    const model = {
-        COMPANY_CODE: 'CMP00079', // Replace with your actual COMPANY_CODE
-        CALENDAR_CODE: 'CLR00101', // Replace with your actual CALENDAR_CODE
-        start: new Date('2024-06-1'), // Replace with your actual start date/time
-        end: new Date('2024-06-30') // Replace with your actual end date/time
-    };
+    const today = new Date();
+    const year = today.getFullYear();
+    const currentMonth = today.getMonth() + 1; 
+    const formattedMonth = currentMonth.toString().padStart(2, '0');
+    const month = localStorage.getItem('month');
+    const Pmonth = parseFloat(month) - 1;
+    
+    localStorage.setItem('month', Pmonth);
+    if (Pmonth >= parseFloat(formattedMonth)) {
+        
+        let _startDate = year + '-' + Pmonth + '-01';
+        let _EndDate = year + '-' + Pmonth + '-31';
 
-    getCalendarEvents(model)
+        let divElement = document.querySelector('.Barrwaycalendy');
+        let calendar_Code = divElement.getAttribute('calendar-Code');
+        let Conmpany_code = divElement.getAttribute('Conmpany-code');
+
+        const model = {
+            COMPANY_CODE: Conmpany_code, 
+            CALENDAR_CODE: calendar_Code,
+            start: _startDate, 
+            end: _EndDate 
+        };
+        getCalendarEvents(model)
+            .then(data => {
+                console.log(data, "EventDatesdata");
+                const eventDataJSON = JSON.stringify(data);
+                localStorage.setItem('eventData', eventDataJSON);
+                highlightDates(data);
+            })
+            .catch(error => {
+                // Handle errors
+            });
+
+
+    }
+
+
+
+
+
+
+}
+
+//next month events data
+function handleNextButtonClick() {
+
+    const today = new Date();
+    const year = today.getFullYear();
+    //const currentMonth = today.getMonth() + 1;
+    const month = localStorage.getItem('month');
+    const Nextmonth = (parseFloat(month) + 1);
+    localStorage.setItem('month', Nextmonth);
+
+    let divElement = document.querySelector('.Barrwaycalendy');
+    let calendar_Code = divElement.getAttribute('calendar-Code');
+    let Conmpany_code = divElement.getAttribute('Conmpany-code');
+    let _startDate = year+'-'+ Nextmonth +'-01';
+    let _EndDate = year+'-'+ Nextmonth +'-31';
+    const Nmodel = {
+        COMPANY_CODE: Conmpany_code,
+        CALENDAR_CODE: calendar_Code,
+        start: _startDate,
+        end: _EndDate
+        //start: new Date(_startDate),
+        //end: new Date(_EndDate)
+    };
+    getCalendarEvents(Nmodel)
         .then(data => {
             console.log(data, "EventDatesdata");
             const eventDataJSON = JSON.stringify(data);
@@ -1267,10 +1366,6 @@ function handlePrevButtonClick() {
         .catch(error => {
             // Handle errors
         });
-
-
-   
-
 }
 
 
@@ -1316,32 +1411,55 @@ function isDateAvailable(dateToCheck, storedEventData) {
 
 
 
-async function getCalendarEvents(model) {
+async function getCalendarEvents(Data) {
     try {
         const url = 'https://localhost:44360/api/calendar/CalanderEvents'; // Replace with your actual API URL
-
+       
         // Format dates as ISO strings for transmission
-        model.start = model.start.toISOString();
-        model.end = model.end.toISOString();
+        //Data.start = Data.start.toISOString();
+        //Data.end = Data.end.toISOString();
 
+        Data.start = Data.start;
+        Data.end = Data.end;
         const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 // Add any necessary headers here
             },
-            body: JSON.stringify(model) // Convert model object to JSON string
+            body: JSON.stringify(Data) // Convert model object to JSON string
         });
 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
-
-        const data = await response.json();
-        console.log('Calendar events:', data);
+        const data = await response.json();       
         return data; // Return the response data if needed
     } catch (error) {
         console.error('Error fetching calendar events:', error);
         throw error; // Handle or rethrow the error as needed
+    }
+}
+
+
+async function getCalendarEventDetails(Data) {
+    try {
+        const url = 'https://localhost:44360/api/calendar/CalanderEvents';         
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',               
+            },
+            body: JSON.stringify(Data) 
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data; 
+    } catch (error) {
+        console.error('Error fetching calendar events:', error);
+        throw error;
     }
 }
