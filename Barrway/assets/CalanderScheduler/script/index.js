@@ -1193,8 +1193,27 @@ window.addEventListener('load', function () {
     let divElement = document.querySelector('.Barrwaycalendy');
     let calendar_Code = divElement.getAttribute('calendar-Code');
     let Conmpany_code = divElement.getAttribute('Conmpany-code');
+
     let _startDate = year + '-' + month + '-' + NDate;
     let _EndDate = year + '-' + month + '-31';
+
+
+
+    const data = {
+        COMPANY_CODE: Conmpany_code, 
+        CALENDAR_CODE: calendar_Code
+    };
+
+    getCalendarEventDetails(data)
+        .then(data => {
+            console.log(data, "EventDetails");            
+           
+        })
+        .catch(error => {
+            // Handle errors
+        });
+
+
 
 
     const model = {
@@ -1419,5 +1438,28 @@ async function getCalendarEvents(Data) {
     } catch (error) {
         console.error('Error fetching calendar events:', error);
         throw error; // Handle or rethrow the error as needed
+    }
+}
+
+
+async function getCalendarEventDetails(Data) {
+    try {
+        const url = 'https://localhost:44360/api/calendar/CalanderEvents';         
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',               
+            },
+            body: JSON.stringify(Data) 
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data; 
+    } catch (error) {
+        console.error('Error fetching calendar events:', error);
+        throw error;
     }
 }

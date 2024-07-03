@@ -2757,6 +2757,7 @@ namespace Barrway.Service.Repository
                     }
                 }
 
+
                 string dateofbirth = "NULL";
                 if (model.DATE_OF_BIRTH.HasValue)
                 {
