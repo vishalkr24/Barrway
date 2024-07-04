@@ -1159,7 +1159,7 @@
 
                                 </span>
                                 <div class="popoverSelect">
-                                    <select class="form-control serchselectChossen form-control-sm w-50" data-placeholder="Choose a Option..." data-id="dropdwn_{{d.formId}}" ng-init="d.selectionDropdown=d.Id" ng-model="d.selectionDropdown">
+                                    <select class="form-control serchselectChossen form-control-sm w-50" data-placeholder="Choose a Option..." ng-change="changeRefrenceForm(d.formId,$ev)" data-id="dropdwn_{{d.formId}}" ng-init="d.selectionDropdown=d.Id" ng-model="d.selectionDropdown">
                                         <option value=""></option>
                                         <option value="{{dform.id}}" ng-repeat="dform in d.dropdownListData.formDataList|orderBy:d.dropdownListData.activities">{{dform[d.dropdownListData.activities]}}</option>
                                     </select>
@@ -1186,7 +1186,9 @@
                                 <input type="text" class="form-control" ng-model="createEventDetails.activityTitle" placeholder="Activity Name" />
                             </div>
                         </div>
-
+                        <div class="" style="margin:3px 0px;" ng-if="sduration && sduration!=''">
+                            <ul><li class="text-info">Service Duration Applied: {{sduration}} minutes</li></ul>
+                        </div>
 
                         <div class="{{createEventDetails.customDate}}">{{createEventDetails.customDate}}</div>
                         <!--<div>{{createEventDetails.customTime}}</div>-->

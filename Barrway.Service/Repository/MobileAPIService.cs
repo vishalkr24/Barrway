@@ -1599,7 +1599,32 @@ namespace Barrway.Service.Repository
 
             if (!string.IsNullOrEmpty(calendarRequest.CALENDAR_CODE))
             {
-                fiterstring += "' and F.CALENDAR_CODE=N'" + calendarRequest.CALENDAR_CODE + "'";
+                fiterstring += " and F.CALENDAR_CODE=N'" + calendarRequest.CALENDAR_CODE + "'";
+            }
+
+            if (calendarRequest.calendarFilters != null)
+            {
+                if (calendarRequest.calendarFilters.Count > 0)
+                {
+                    calendarRequest.calendarFilters.ForEach(x =>
+                    {
+                        // code to apply filter 
+
+                        //switch (x.FilterType)
+                        //{
+                        //    case 2:
+                        //        fiterstring += $@" and (SERVICE_MASTER_1933.ACTIVITY_NAME like N'Cycle Repairing')";
+                        //        break;
+                        //    case 3:
+                        //        fiterstring += $@" and (LOCATION_MASTER_1936.LOCATION_ADDRESS like N'{x.FilterValue}')";
+                        //        break;
+                        //    case 4:
+                        //        fiterstring += $@" and (SERVICE_PROVIDER_MASTER_1934.FIRST_NAME like N'{x.FilterValue}')";
+                        //        break;
+                        //}
+                        
+                    });
+                }
             }
 
             data.filter = new FilterDTO() { field = "start", value = filterQuery + fiterstring };
