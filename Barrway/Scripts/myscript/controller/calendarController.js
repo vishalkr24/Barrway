@@ -9861,6 +9861,37 @@
             $scope.createEventDetails = {};
         };
 
+        $scope.changeRefrenceForm = function (formid) {
+            var service = $scope.createEventDetails.dropdownList.find(x => x.formId == formid);
+            var current_tab = $('#tabs .ui-tabs-panel:eq(' + $("#tabs").tabs("option", "active") + ')').attr('id');
+            if (current_tab == "vertical-resource-view") {
+                if (service.formTitle && service.formTitle.toLowerCase().contains("service")) {
+                    var value = $(`[data-id="dropdwn_${formid}"]`).val();
+                    if (value && isNumber(value)) {
+                        var data = service.dropdownListData.formDataList.find(x => x.id == value);
+                        if (data['DURATION_FIELD'] && isNumber(data['DURATION_FIELD'])) {
+                            $scope.sduration = data['DURATION_FIELD'];
+                            var duration = data['DURATION_FIELD'];
+                            $scope.createEventDetails.end = moment($scope.createEventDetails.start, "YYYY/MM/DD HH:mm").add(duration, 'minutes').format("YYYY/MM/DD HH:mm");
+                            $scope.createEventDetails.endTime = moment($scope.createEventDetails.end).format("HH:mm");
+                            $scope.createEventDetails.endTimeFormat = moment($scope.createEventDetails.end).format("HH:mm A");
+                            $('#createEventDetails_endTime').val(moment($scope.createEventDetails.end).format("HH:mm"));
+                            
+                        } else {
+                            $scope.sduration ="";
+                        }
+                    } else {
+                        $scope.sduration = "";
+
+                    }
+                }
+            }
+            $rootScope.safeApply();
+        }
+        
+        function isNumber(value) {
+            return !isNaN(Number(value));
+        }
         $scope.GenerateEventQR = function (eventId) {
             $.ajax({
                 url: "/Calendar/GenerateEventQR",
