@@ -94,6 +94,7 @@ namespace Barrway.Service.IRepository
 
         Task<List<EventLIst>> GetCalnderEvents(CalendarEvents Request);
 
+        Task<AddUpdateDelete> GetcalanderDetails(FavoriteCalendarViewModel model);
         #region
 
         Task<AddUpdateDelete> GetSingleCalendarPackage(string PackageId);
