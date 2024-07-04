@@ -2,7 +2,7 @@
 
 const container = document.querySelector('.Barrwaycalendy');
 const tempContainer = document.createElement('div');
-tempContainer.innerHTML = `
+tempContainer.innerHTML = `<div  id="loader" class="Cal_loader-wrap cal_loader_hide"><div class="Cal_spinner"></div></div>
     <div class="BarrwayCalenderHome">
         <div class="container Schedular_container">
             <section class="description-section">
@@ -31,8 +31,8 @@ tempContainer.innerHTML = `
             <section class="description-section">
                 <button class="back-btn" onclick="goBack()"><img class="arrow-icon" src="https://localhost:44360/assets/CalanderScheduler/icons/arrow (1).svg" alt="back-arrow"></button>
                 <hgroup>
-                    <h4 id="scheduler">ACME Sales</h4>
-                    <h2 id="event">Pricing Review</h2>
+                    <h4 id="Register_scheduler">ACME Sales</h4>
+                    <h2 id="Register_event">Pricing Review</h2>
                     <div class="icon-text-div">
                         <img src="https://localhost:44360/assets/CalanderScheduler/icons/clock.svg" alt="clock-icon">
                         <h4 id="duration">15 min</h4>
@@ -40,7 +40,7 @@ tempContainer.innerHTML = `
                     <br>
                     <div class="icon-text-div">
                         <img src="https://localhost:44360/assets/CalanderScheduler/icons/calendar (1).svg" alt="calendar-icon">
-                        <h4 id="event-time-stamp">9:00am - 9:15am, Monday, July 13, 2020</h4>
+                        <h4 id="Register_event-time-stamp">9:00am - 9:15am, Monday, July 13, 2020</h4>
                     </div>
                 </hgroup>
             </section>
@@ -1181,6 +1181,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Call highlightDates when the page has fully loaded
 window.addEventListener('load', function () {
+    showloader();
     const today = new Date();
     const year = today.getFullYear(); // Get the current year
     const month = (today.getMonth() + 1).toString().padStart(2, '0'); // Get the current month (1-12) and format to 2 digits
@@ -1200,14 +1201,24 @@ window.addEventListener('load', function () {
 
 
     const data = {
-        COMPANY_CODE: Conmpany_code, 
+        COMPANY_CODE: Conmpany_code,
         CALENDAR_CODE: calendar_Code
     };
-
+   
     getCalendarEventDetails(data)
         .then(data => {
-            console.log(data, "EventDetails");            
            
+            var EventDetails = data.Data;
+            console.log(EventDetails, "EventDetails");
+            document.getElementById("scheduler").textContent = EventDetails.COMPANY_NAME_ENGLISH;
+            document.getElementById("event").textContent = EventDetails.CALENDAR_NAME;
+
+            document.getElementById("Register_scheduler").textContent = EventDetails.COMPANY_NAME_ENGLISH;
+            document.getElementById("Register_event").textContent = EventDetails.CALENDAR_NAME;
+
+           //Register_
+
+
         })
         .catch(error => {
             // Handle errors
@@ -1229,6 +1240,8 @@ window.addEventListener('load', function () {
             const eventDataJSON = JSON.stringify(data);
             localStorage.setItem('eventData', eventDataJSON);
             highlightDates(data);
+
+            removeLoader();
         })
         .catch(error => {
             // Handle errors
@@ -1288,29 +1301,28 @@ function goBack() {
 
 // previous button click handaling
 function handlePrevButtonClick() {
-
+    showloader();
     const today = new Date();
     const year = today.getFullYear();
-    const currentMonth = today.getMonth() + 1; 
+    const currentMonth = today.getMonth() + 1;
     const formattedMonth = currentMonth.toString().padStart(2, '0');
-    const month = localStorage.getItem('month');
-    const Pmonth = parseFloat(month) - 1;
-    
-    localStorage.setItem('month', Pmonth);
-    if (Pmonth >= parseFloat(formattedMonth)) {
-        
-        let _startDate = year + '-' + Pmonth + '-01';
-        let _EndDate = year + '-' + Pmonth + '-31';
+    const month = GetMonthYear().month;
+  
+   
+    if (parseFloat(month) >= parseFloat(formattedMonth)) {
+
+        let _startDate = GetMonthYear().year + '-' + GetMonthYear().month + '-01';
+        let _EndDate = GetMonthYear().year + '-' + GetMonthYear().month + '-31';
 
         let divElement = document.querySelector('.Barrwaycalendy');
         let calendar_Code = divElement.getAttribute('calendar-Code');
         let Conmpany_code = divElement.getAttribute('Conmpany-code');
 
         const model = {
-            COMPANY_CODE: Conmpany_code, 
+            COMPANY_CODE: Conmpany_code,
             CALENDAR_CODE: calendar_Code,
-            start: _startDate, 
-            end: _EndDate 
+            start: _startDate,
+            end: _EndDate
         };
         getCalendarEvents(model)
             .then(data => {
@@ -1318,12 +1330,17 @@ function handlePrevButtonClick() {
                 const eventDataJSON = JSON.stringify(data);
                 localStorage.setItem('eventData', eventDataJSON);
                 highlightDates(data);
+                removeLoader();
             })
             .catch(error => {
                 // Handle errors
+                removeLoader();
             });
 
 
+    }
+    else {
+        removeLoader();
     }
 
 
@@ -1335,37 +1352,44 @@ function handlePrevButtonClick() {
 
 //next month events data
 function handleNextButtonClick() {
-
+    showloader();   
     const today = new Date();
     const year = today.getFullYear();
-    //const currentMonth = today.getMonth() + 1;
-    const month = localStorage.getItem('month');
-    const Nextmonth = (parseFloat(month) + 1);
-    localStorage.setItem('month', Nextmonth);
+    const currentMonth = today.getMonth() + 1;
+    const formattedMonth = currentMonth.toString().padStart(2, '0');
+    const month = GetMonthYear().month;
+    if (parseFloat(month) >= parseFloat(formattedMonth)) {
+        let divElement = document.querySelector('.Barrwaycalendy');
+        let calendar_Code = divElement.getAttribute('calendar-Code');
+        let Conmpany_code = divElement.getAttribute('Conmpany-code');
+        let _startDate = GetMonthYear().year + '-' + GetMonthYear().month + '-01';
+        let _EndDate = GetMonthYear().year + '-' + GetMonthYear().month + '-31';
+        const Nmodel = {
+            COMPANY_CODE: Conmpany_code,
+            CALENDAR_CODE: calendar_Code,
+            start: _startDate,
+            end: _EndDate
+            //start: new Date(_startDate),
+            //end: new Date(_EndDate)
+        };
+        getCalendarEvents(Nmodel)
+            .then(data => {
+                console.log(data, "EventDatesdata");
+                const eventDataJSON = JSON.stringify(data);
+                localStorage.setItem('eventData', eventDataJSON);
+                highlightDates(data);
+                removeLoader();
+            })
+            .catch(error => {
+                // Handle errors
+                removeLoader();
+            });
+    }
+    else {
+        removeLoader();
+    }
 
-    let divElement = document.querySelector('.Barrwaycalendy');
-    let calendar_Code = divElement.getAttribute('calendar-Code');
-    let Conmpany_code = divElement.getAttribute('Conmpany-code');
-    let _startDate = year+'-'+ Nextmonth +'-01';
-    let _EndDate = year+'-'+ Nextmonth +'-31';
-    const Nmodel = {
-        COMPANY_CODE: Conmpany_code,
-        CALENDAR_CODE: calendar_Code,
-        start: _startDate,
-        end: _EndDate
-        //start: new Date(_startDate),
-        //end: new Date(_EndDate)
-    };
-    getCalendarEvents(Nmodel)
-        .then(data => {
-            console.log(data, "EventDatesdata");
-            const eventDataJSON = JSON.stringify(data);
-            localStorage.setItem('eventData', eventDataJSON);
-            highlightDates(data);
-        })
-        .catch(error => {
-            // Handle errors
-        });
+    
 }
 
 
@@ -1414,7 +1438,7 @@ function isDateAvailable(dateToCheck, storedEventData) {
 async function getCalendarEvents(Data) {
     try {
         const url = 'https://localhost:44360/api/calendar/CalanderEvents'; // Replace with your actual API URL
-       
+
         // Format dates as ISO strings for transmission
         //Data.start = Data.start.toISOString();
         //Data.end = Data.end.toISOString();
@@ -1432,10 +1456,12 @@ async function getCalendarEvents(Data) {
 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
+            removeLoader();
         }
-        const data = await response.json();       
+        const data = await response.json();
         return data; // Return the response data if needed
     } catch (error) {
+        removeLoader();
         console.error('Error fetching calendar events:', error);
         throw error; // Handle or rethrow the error as needed
     }
@@ -1444,22 +1470,55 @@ async function getCalendarEvents(Data) {
 
 async function getCalendarEventDetails(Data) {
     try {
-        const url = 'https://localhost:44360/api/calendar/CalanderEvents';         
+        const url = 'https://localhost:44360/api/calendar/CalanderDetails';
         const response = await fetch(url, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',               
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(Data) 
+            body: JSON.stringify(Data)
         });
 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        return data; 
+        return data;
     } catch (error) {
         console.error('Error fetching calendar events:', error);
         throw error;
     }
+}
+
+
+function removeLoader() {
+    const div = document.getElementById('loader');
+    div.classList.add('cal_loader_hide');
+}
+
+// Function to remove the class 'cal_loader_hide' from the div
+function showloader() {
+    const div = document.getElementById('loader');
+    div.classList.remove('cal_loader_hide');
+}
+
+
+function GetMonthYear() {
+    const h2Element = document.querySelector('.fc-toolbar-title');
+    const textContent = h2Element.textContent;
+    const months = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+
+    // Split the input string to extract month name and year
+    const [monthName, year] = textContent.split(" ");
+
+    // Find the month index (0-11), add 1 to convert to 1-12
+    const monthNumber = months.indexOf(monthName) + 1;
+
+    return {
+        month: monthNumber,
+        year: parseInt(year)
+    };
 }

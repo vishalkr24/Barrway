@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using Twilio.TwiML.Voice;
 using Barrway.DTO.APIModels.Account;
 using Barrway.DTO.APIModels.Payment;
+using Barrway.DTO.PublicModels;
 
 namespace Barrway.Service.Repository
 {
@@ -94,10 +95,6 @@ namespace Barrway.Service.Repository
                 return null;
             }
         }
-
-
-
-
 
         public async Task<List<CategoryModel>> GetCategoryList()
         {
@@ -1380,12 +1377,6 @@ namespace Barrway.Service.Repository
 
         }
 
-
-
-
-
-
-
         private List<ModifiedMyBooking> modifiedDataUpcomingEvent(List<MyBooking> data)
         {
             List<ModifiedMyBooking> modifiedData = new List<ModifiedMyBooking>();
@@ -1523,9 +1514,6 @@ namespace Barrway.Service.Repository
 
             return modifiedBooking;
         }
-
-
-
         public static List<IDictionary<string, object>> RemoveDuplicates(List<IDictionary<string, object>> list, string key)
         {
 
@@ -1611,7 +1599,32 @@ namespace Barrway.Service.Repository
 
             if (!string.IsNullOrEmpty(calendarRequest.CALENDAR_CODE))
             {
-                fiterstring += "' and F.CALENDAR_CODE=N'" + calendarRequest.CALENDAR_CODE + "'";
+                fiterstring += " and F.CALENDAR_CODE=N'" + calendarRequest.CALENDAR_CODE + "'";
+            }
+
+            if (calendarRequest.calendarFilters != null)
+            {
+                if (calendarRequest.calendarFilters.Count > 0)
+                {
+                    calendarRequest.calendarFilters.ForEach(x =>
+                    {
+                        // code to apply filter 
+
+                        //switch (x.FilterType)
+                        //{
+                        //    case 2:
+                        //        fiterstring += $@" and (SERVICE_MASTER_1933.ACTIVITY_NAME like N'Cycle Repairing')";
+                        //        break;
+                        //    case 3:
+                        //        fiterstring += $@" and (LOCATION_MASTER_1936.LOCATION_ADDRESS like N'{x.FilterValue}')";
+                        //        break;
+                        //    case 4:
+                        //        fiterstring += $@" and (SERVICE_PROVIDER_MASTER_1934.FIRST_NAME like N'{x.FilterValue}')";
+                        //        break;
+                        //}
+                        
+                    });
+                }
             }
 
             data.filter = new FilterDTO() { field = "start", value = filterQuery + fiterstring };
@@ -1719,6 +1732,74 @@ namespace Barrway.Service.Repository
                 return new List<EventLIst>();
             }
         }
+
+
+
+        public async Task<AddUpdateDelete> GetcalanderDetails(FavoriteCalendarViewModel model)
+        {
+            try
+            {
+                string query = $@"select *from(SELECT distinct calendar.[Id]
+                              ,calendar.[created_at]
+                              ,calendar.[updated_at]
+                              ,calendar.[created_by]
+                              ,calendar.[updated_by]
+                              ,[CALENDAR_NAME]
+                              ,[CALENDAR_PHOTO_NAME]
+                              ,[CALENDAR_PHOTO_PATH]
+                              ,[IS_VISIBLE]
+                              ,calendar.[COUNTRY_ID]
+                              ,calendar.[CITY_ID]
+                              ,calendar.[DISTRICT_ID]
+                              ,calendar.[CALENDAR_CATEGORY_ID]
+                              ,calendar.[CALENDAR_COMMON_CATEGORY_ID]
+                              ,calendar.[CALENDAR_SUB_CATEGORY_ID]
+                              ,calendar.[CALENDAR_TYPE]
+                              ,calendar.[COMPANY_CODE]
+                              ,calendar.[CALENDAR_CODE]
+                              ,(STUFF((SELECT ',' + CONVERT(NVARCHAR(MAX), d.[CALENDAR_SUB_CATEGORY_NAME]) FROM CALENDAR_SUB_CATEGORY_MASTER_1930 AS d INNER JOIN BUSINESS_CALENDAR_MASTER_1925 AS ei ON ',' + CONVERT(VARCHAR(12), ei.[CALENDAR_SUB_CATEGORY_ID]) + ',' LIKE '%,' + CONVERT(VARCHAR(12), d.[Id]) + ',%' WHERE ei.[Id] = calendar.[Id] ORDER BY d.[CALENDAR_SUB_CATEGORY_NAME] FOR XML PATH('')), 1, 1, N'')) as CALENDAR_SUB_CATEGORY_NAME
+	                          ,[CMN_CATEGORY_NAME]
+	                          ,[DISTRICT_NAME]
+	                          ,calendar.TAGS
+	                          ,[COMPANY_NAME_ENGLISH]
+                              ,[COMPANY_NAME_CHINESE]
+                              ,[COMPANY_LOGO_NAME]
+                              ,[COMPANY_LOGO_PATH]
+                              ,[COMPANY_BANNER_NAME]
+                              ,[COMPANY_BANNER_PATH]
+							  ,[IS_SEARCHABLE_IN_MARKETPLACE]
+                              ,company.PAGE_URL
+                              ,calendar.IS_FEATURED
+                              ,category.Id AS  CategoryId      
+                              ,calendar.[PRIORITY],calendar.[SEQUENCE]
+                         FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
+                         left join  CALENDAR_SUB_CATEGORY_MASTER_1930  subCategory on EXISTS(SELECT * FROM split_string(calendar.[CALENDAR_SUB_CATEGORY_ID] , ',') where tuple=subCategory.[Id]) 
+                         join CALENDAR_COMMON_CATEGORY_1978 category on category.Id = calendar.CALENDAR_COMMON_CATEGORY_ID
+                         join DISTRICT_MASTER_1928 district on district.Id = calendar.DISTRICT_ID
+                         join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
+                         where  calendar.CALENDAR_CODE='CLR00101' and   company.COMPANY_CODE='CMP00079' ) as t ";
+
+                List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+
+                if (result.Count > 0)
+                {
+
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result.FirstOrDefault() };
+
+
+
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
+            }
+        }
+
 
 
         public class Event
@@ -2804,6 +2885,14 @@ namespace Barrway.Service.Repository
                     response.Status = true;
                 }
 
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
 
         public async Task<AddUpdateDelete> changespassword(userPassword model, string USER_ID)
         {
@@ -2811,7 +2900,17 @@ namespace Barrway.Service.Repository
             {
                 string query = $@"update USER_MASTER_1915 set  USER_PASSWORD = '{model.newpassword}' where USER_ID = N'{USER_ID}' ";
 
-                return response;
+                var result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                if (result > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = "Phone No. updated successfully!" };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "Failed to update Mobile No." };
+
+                }
             }
             catch (Exception ex)
             {
@@ -2849,6 +2948,23 @@ namespace Barrway.Service.Repository
                 return new AddUpdateDelete() { Status = false, Message = ex.Message };
             }
         }
+
+        public async Task<AddUpdateDelete> UpdatePublicUserProfilePic(PublicAccountModel model)
+        {
+            string query = $@"update PUBLIC_USER_ACCOUNT_1943 set PROFILE_PHOTO_NAME = '{SQLUtility.TreatSingleQuoteForQuery(model.PROFILE_PHOTO_NAME)}', PROFILE_PHOTO_PATH = '{SQLUtility.TreatSingleQuoteForQuery(model.PROFILE_PHOTO_PATH)}' where USER_ID = N'{model.USER_ID}'";
+
+            int result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+            if (result > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
 
         //public async Task<AddUpdateDelete> changespassword(userPassword model, string USER_ID)
         //{
