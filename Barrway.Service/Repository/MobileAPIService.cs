@@ -1709,6 +1709,74 @@ namespace Barrway.Service.Repository
         }
 
 
+
+        public async Task<AddUpdateDelete> GetcalanderDetails(FavoriteCalendarViewModel model)
+        {
+            try
+            {
+                string query = $@"select *from(SELECT distinct calendar.[Id]
+                              ,calendar.[created_at]
+                              ,calendar.[updated_at]
+                              ,calendar.[created_by]
+                              ,calendar.[updated_by]
+                              ,[CALENDAR_NAME]
+                              ,[CALENDAR_PHOTO_NAME]
+                              ,[CALENDAR_PHOTO_PATH]
+                              ,[IS_VISIBLE]
+                              ,calendar.[COUNTRY_ID]
+                              ,calendar.[CITY_ID]
+                              ,calendar.[DISTRICT_ID]
+                              ,calendar.[CALENDAR_CATEGORY_ID]
+                              ,calendar.[CALENDAR_COMMON_CATEGORY_ID]
+                              ,calendar.[CALENDAR_SUB_CATEGORY_ID]
+                              ,calendar.[CALENDAR_TYPE]
+                              ,calendar.[COMPANY_CODE]
+                              ,calendar.[CALENDAR_CODE]
+                              ,(STUFF((SELECT ',' + CONVERT(NVARCHAR(MAX), d.[CALENDAR_SUB_CATEGORY_NAME]) FROM CALENDAR_SUB_CATEGORY_MASTER_1930 AS d INNER JOIN BUSINESS_CALENDAR_MASTER_1925 AS ei ON ',' + CONVERT(VARCHAR(12), ei.[CALENDAR_SUB_CATEGORY_ID]) + ',' LIKE '%,' + CONVERT(VARCHAR(12), d.[Id]) + ',%' WHERE ei.[Id] = calendar.[Id] ORDER BY d.[CALENDAR_SUB_CATEGORY_NAME] FOR XML PATH('')), 1, 1, N'')) as CALENDAR_SUB_CATEGORY_NAME
+	                          ,[CMN_CATEGORY_NAME]
+	                          ,[DISTRICT_NAME]
+	                          ,calendar.TAGS
+	                          ,[COMPANY_NAME_ENGLISH]
+                              ,[COMPANY_NAME_CHINESE]
+                              ,[COMPANY_LOGO_NAME]
+                              ,[COMPANY_LOGO_PATH]
+                              ,[COMPANY_BANNER_NAME]
+                              ,[COMPANY_BANNER_PATH]
+							  ,[IS_SEARCHABLE_IN_MARKETPLACE]
+                              ,company.PAGE_URL
+                              ,calendar.IS_FEATURED
+                              ,category.Id AS  CategoryId      
+                              ,calendar.[PRIORITY],calendar.[SEQUENCE]
+                         FROM [dbo].[BUSINESS_CALENDAR_MASTER_1925] calendar
+                         left join  CALENDAR_SUB_CATEGORY_MASTER_1930  subCategory on EXISTS(SELECT * FROM split_string(calendar.[CALENDAR_SUB_CATEGORY_ID] , ',') where tuple=subCategory.[Id]) 
+                         join CALENDAR_COMMON_CATEGORY_1978 category on category.Id = calendar.CALENDAR_COMMON_CATEGORY_ID
+                         join DISTRICT_MASTER_1928 district on district.Id = calendar.DISTRICT_ID
+                         join BUSINESS_COMPANY_MASTER_1924 company on company.COMPANY_CODE = calendar.COMPANY_CODE
+                         where  calendar.CALENDAR_CODE='CLR00101' and   company.COMPANY_CODE='CMP00079' ) as t ";
+
+                List<IDictionary<string, object>> result = await sqlFunction.ExecuteSqlQuery(query);
+
+                if (result.Count > 0)
+                {
+
+                    return new AddUpdateDelete() { Status = true, Message = AppMessage.Success, Data = result.FirstOrDefault() };
+
+
+
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.SomeInternalError };
+            }
+        }
+
+
+
         public class Event
         {
             public int ROWNUMBER { get; set; }

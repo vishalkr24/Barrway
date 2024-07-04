@@ -20,6 +20,27 @@ namespace Barrway.Controllers.API.v1
             this.mobileAPIService = mobileAPIService;
         }
 
+
+        [AllowAnonymous]
+        [Route("api/calendar/CalanderDetails")]
+        [HttpPost]
+        [ResponseType(typeof(List<IDictionary<string, object>>))]
+        public async Task<IHttpActionResult> CalanderDetails(FavoriteCalendarViewModel model)
+        {
+            try
+            {
+
+                return Ok(await mobileAPIService.GetcalanderDetails(model));
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError();
+            }
+        }
+
+
+
+
         [AllowAnonymous]
         [Route("api/calendar/CalanderEvents")]
         [HttpPost]
