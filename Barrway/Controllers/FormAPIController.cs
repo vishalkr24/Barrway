@@ -56,6 +56,18 @@ namespace Barrway.Controllers
         [HttpPost]
         public async Task<ActionResult> ManageForm(FormTable data)
         {
+
+            if(!string.IsNullOrEmpty(data.customForms) && data.customForms.Contains("2310"))
+            {
+                string[] customFormsSplit= data.customForms.Split(',');
+                int index = customFormsSplit.ToList().FindIndex(x=>x=="2310");
+                customFormsSplit = customFormsSplit.Where(x => x != "2310").ToArray();
+                data.customForms=string.Join(",", customFormsSplit);
+                string[] customFormIdsSplit = data.customFormIds.Split(',');
+                customFormIdsSplit = customFormIdsSplit.Where(x => x != customFormIdsSplit[index]).ToArray();
+                data.customFormIds = string.Join(",", customFormIdsSplit);
+            }
+
             var result = (await formAPIRepository.ManageForm(data)).Data;
             if (data.formId == (int)FormSetting.CALENDAR_FORM && data.action == (int)FormAction.ManageForm)
             {

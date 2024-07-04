@@ -4491,6 +4491,8 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
             $scopeVar.rootScopeSafe(); 
             setTimeout(function () {               
                 createCustomEventDetailsModelPopUp.modal('show');
+                $scopeVar.sduration = '';
+                $scopeVar.rootScopeSafe();
                 createCustomEventDetailsModelPopUp.css({ "z-index": "9999" });
 
                 _.each($scopeVar.totalSelectListTagify, function (item, key) {
@@ -4734,6 +4736,8 @@ function loadCalendarWithEventFunction(calenderType, calenderData, resourceData,
             $scopeVar.rootScopeSafe();
             setTimeout(function () {                
                 createCustomEventDetailsModelPopUp.modal('show');
+                $scopeVar.sduration = '';
+                $scopeVar.rootScopeSafe();
                 createCustomEventDetailsModelPopUp.css({ "z-index": "9999" });
 
                 _.each($scopeVar.totalSelectListTagify, function (item, key) {
