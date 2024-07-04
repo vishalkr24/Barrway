@@ -6,7 +6,6 @@ using Barrway.Service.IRepository;
 using Barrway.Service.Repository;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -147,7 +146,7 @@ namespace Barrway.Controllers.API.v1
                 Directory.CreateDirectory(folderPath);
             }
 
-            string root = System.Web.HttpContext.Current.Server.MapPath("~/UploadPublicUser/ProfilePhoto/" + userId);
+            string root = System.Web.HttpContext.Current.Server.MapPath(folderPath);
             var provider = new MultipartFormDataStreamProvider(root);
 
             try
@@ -189,14 +188,12 @@ namespace Barrway.Controllers.API.v1
 
                 string filePath = Path.Combine(root, fname);
 
-                string fileUrl = Path.Combine(ConfigurationManager.AppSettings["baseurl"]?.ToString(), "UploadPublicUser/ProfilePhoto/" + userId + "/" + fname);
-
                 using (var image = Image.FromFile(file.LocalFileName))
                 {
                     image.Save(filePath, ImageFormat.Jpeg);
                 }
 
-                return Ok(new AddUpdateDelete() { Status = true, Message = "Success", Data = fileUrl });
+                return Ok(new AddUpdateDelete() { Status = true, Message = "Success", Data = filePath });
 
             }
             catch (Exception ex)
