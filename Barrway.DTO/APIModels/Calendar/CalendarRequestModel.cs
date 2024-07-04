@@ -1,5 +1,6 @@
 ﻿using Microsoft.SqlServer.Server;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Barrway.DTO.APIModels.Calendar
@@ -14,12 +15,20 @@ namespace Barrway.DTO.APIModels.Calendar
         //public int ActivityFormId { get; set; }
         public string COMPANY_CODE { get; set; }
         public string CALENDAR_CODE { get; set; }
-        [Required (ErrorMessage ="start date time required")]
+        [Required(ErrorMessage = "start date time required")]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
-        public DateTime start{ get; set; }
+        public DateTime start { get; set; }
         [Required(ErrorMessage = "end date time required")]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
-        public DateTime end{ get; set; }
+        public DateTime end { get; set; }
+
+        public List<CalendarAPIFilterModel> calendarFilters { get; set; }
+    }
+
+    public class CalendarAPIFilterModel
+    {
+        public int FilterType { get; set; }
+        public string FilterValue { get; set; }
     }
 
     public class CalendarEvents
@@ -40,7 +49,7 @@ namespace Barrway.DTO.APIModels.Calendar
 
         public string COMPANY_CODE { get; set; }
         public string CALENDAR_CODE { get; set; }
-        public string start { get; set; }      
+        public string start { get; set; }
         public string end { get; set; }
 
     }
@@ -49,11 +58,11 @@ namespace Barrway.DTO.APIModels.Calendar
 
     public class FavoriteCalendarViewModel
     {
-     
+
         public string COMPANY_CODE { get; set; }
-  
+
         public string CALENDAR_CODE { get; set; }
-     
+
 
     }
 
