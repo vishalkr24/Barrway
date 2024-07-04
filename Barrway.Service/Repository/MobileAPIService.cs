@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using Twilio.TwiML.Voice;
 using Barrway.DTO.APIModels.Account;
 using Barrway.DTO.APIModels.Payment;
+using Barrway.DTO.PublicModels;
 
 namespace Barrway.Service.Repository
 {
@@ -94,10 +95,6 @@ namespace Barrway.Service.Repository
                 return null;
             }
         }
-
-
-
-
 
         public async Task<List<CategoryModel>> GetCategoryList()
         {
@@ -1380,12 +1377,6 @@ namespace Barrway.Service.Repository
 
         }
 
-
-
-
-
-
-
         private List<ModifiedMyBooking> modifiedDataUpcomingEvent(List<MyBooking> data)
         {
             List<ModifiedMyBooking> modifiedData = new List<ModifiedMyBooking>();
@@ -1523,9 +1514,6 @@ namespace Barrway.Service.Repository
 
             return modifiedBooking;
         }
-
-
-
         public static List<IDictionary<string, object>> RemoveDuplicates(List<IDictionary<string, object>> list, string key)
         {
 
@@ -2804,6 +2792,14 @@ namespace Barrway.Service.Repository
                     response.Status = true;
                 }
 
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new AddUpdateDelete() { Status = false, Message = ex.Message };
+            }
+        }
+
 
         public async Task<AddUpdateDelete> changespassword(userPassword model, string USER_ID)
         {
@@ -2811,7 +2807,17 @@ namespace Barrway.Service.Repository
             {
                 string query = $@"update USER_MASTER_1915 set  USER_PASSWORD = '{model.newpassword}' where USER_ID = N'{USER_ID}' ";
 
-                return response;
+                var result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+                if (result > 0)
+                {
+                    return new AddUpdateDelete() { Status = true, Message = "Phone No. updated successfully!" };
+                }
+                else
+                {
+                    return new AddUpdateDelete() { Status = false, Message = "Failed to update Mobile No." };
+
+                }
             }
             catch (Exception ex)
             {
@@ -2849,6 +2855,23 @@ namespace Barrway.Service.Repository
                 return new AddUpdateDelete() { Status = false, Message = ex.Message };
             }
         }
+
+        public async Task<AddUpdateDelete> UpdatePublicUserProfilePic(PublicAccountModel model)
+        {
+            string query = $@"update PUBLIC_USER_ACCOUNT_1943 set PROFILE_PHOTO_NAME = '{SQLUtility.TreatSingleQuoteForQuery(model.PROFILE_PHOTO_NAME)}', PROFILE_PHOTO_PATH = '{SQLUtility.TreatSingleQuoteForQuery(model.PROFILE_PHOTO_PATH)}' where USER_ID = N'{model.USER_ID}'";
+
+            int result = await sqlFunction.ExecuteSqlCommandQuery(query);
+
+            if (result > 0)
+            {
+                return new AddUpdateDelete() { Status = true, Message = AppMessage.Success };
+            }
+            else
+            {
+                return new AddUpdateDelete() { Status = false, Message = AppMessage.NotFound };
+            }
+        }
+
 
         //public async Task<AddUpdateDelete> changespassword(userPassword model, string USER_ID)
         //{
